@@ -1,0 +1,62 @@
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.example-base-structure {
+  position: relative;
+  width: 100%;
+  min-width: 100%;
+
+  .example-base-components-list {
+    overflow-y: auto;
+    border-right: 1px solid;
+    min-width: 253px;
+    padding: 16px 8px;
+
+    lux-panel {
+      padding: 0 0 16px 0;
+
+      ::ng-deep {
+        mat-expansion-panel {
+          box-shadow: unset;
+        }
+
+        mat-expansion-panel-header {
+          font-size: 1rem;
+        }
+
+        mat-expansion-panel-header,
+        .mat-expansion-panel-body {
+          padding: 0 0.75em;
+        }
+
+        .mat-expansion-panel-body {
+          padding: 0;
+        }
+
+        lux-panel-content {
+          display: block;
+        }
+      }
+    }
+
+    .example-component-list-item {
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.125em 0 0.125em 2em;
+    }
+  }
+
+  .example-base-content {
+    padding: 16px 8px;
+    position: relative;
+    display: flex;
+    flex: 0 0 calc(100% - 302px);
+
+    router-outlet + ::ng-deep * {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+@use "sass:map";
+
+$lux-palette_primary: () !default;
+$lux-palette_accent: () !default;
+$lux-palette_warn: () !default;
+
+$lux-primary-color: mustOverriden !default;
+$lux-accent-color: mustOverriden !default;
+$lux-warn-color: mustOverriden !default;

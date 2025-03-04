@@ -1,0 +1,20 @@
+<div class="lux-master-header-container-ac">
+  @if (!luxToggleHidden) {
+  <lux-button
+    [luxIconName]="iconName"
+    [luxRounded]="true"
+    luxTagId="master-detail.toggle"
+    luxAriaLabel="{{ getAriaLabelForOpenCloseButton(iconName) }}"
+    luxAriaLabelSelector="button"
+    [luxAriaExpanded]="iconName === 'lux-interface-arrows-button-left'"
+    luxAriaExpandedSelector="button"
+    (luxClicked)="clicked(toggleButton)"
+    class="master-ac-toggle"
+    #toggleButton
+  ></lux-button>
+  }
+
+  <div class="lux-master-header-content-container-ac" #headerContentContainer>
+    <ng-content></ng-content>
+  </div>
+</div>

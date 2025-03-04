@@ -1,0 +1,34 @@
+<lux-dialog-structure>
+  <lux-dialog-title i18n="@@luxc.file-preview.filter-save-dialog.title">Filter speichern</lux-dialog-title>
+  <lux-dialog-content>
+    <div class="lux-filter-save-dialog-form-container lux-flex lux-flex-col lux-gap-2">
+      <lux-input-ac
+        luxLabel="Name"
+        i18n-luxLabel="@@luxc.file-preview.filter-save-dialog.name.lbl"
+        [(luxValue)]="filterName"
+        [luxRequired]="true"
+        [luxControlValidators]="validateForbiddenName()"
+        [luxErrorCallback]="filterErrorCallback"
+        luxAutocomplete="off"
+        (keydown.enter)="onSave()"
+      ></lux-input-ac>
+    </div>
+  </lux-dialog-content>
+  <lux-dialog-actions class="lux-filter-dialog-action">
+    <lux-button
+      luxLabel="Speichern"
+      i18n-luxLabel="@@luxc.file-preview.filter-save-dialog.save.lbl"
+      [luxColor]="luxDialogRef.data.luxButtonDialogSave"
+      [luxDisabled]="!filterName"
+      [luxFlat]="true"
+      (luxClicked)="onSave()"
+    ></lux-button>
+    <lux-button
+      luxLabel="Abbrechen"
+      i18n-luxLabel="@@luxc.file-preview.filter-save-dialog.cancel.lbl"
+      [luxColor]="luxDialogRef.data.luxButtonDialogCancel"
+      [luxStroked]="true"
+      (luxClicked)="luxDialogRef.closeDialog(false)"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>

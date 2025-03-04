@@ -1,0 +1,56 @@
+@if (formGroup) {
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [formGroup]="formGroup"
+  [luxNoLabels]="luxNoLabels"
+  [luxNoBottomLabel]="luxNoBottomLabel"
+  [luxNoTopLabel]="luxNoTopLabel"
+  [luxLabelLongFormat]="luxLabelLongFormat"
+  [ngClass]="matSelect && matSelect.panelOpen ? 'lux-panel-opened' : ''"
+  luxTagId="luxSelectWrapper"
+>
+  <!--
+    Material-Workaround: Inccorect use of <label for=FORM_ELEMENT> (Browser-Fehler in der Debug-Console)
+    ------------------------------------------------------------------------------------------------------------------
+    Das mat-select nutzt intern kein echtes HTML-Element wie das select und darum wird der obige Fehler geworfen.
+    Die aktuelle Lösung ist ein zusätliches Select einzufügen und zu verstecken, damit der Fehler verschwindet.
+    Wenn der Fehler in den Material Components behoben wurde, dann das unsichtbare Select wieder entfernt werden.
+    -->
+  <select [id]="uid" style="display: none"></select>
+  <mat-select
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [placeholder]="luxPlaceholder"
+    [multiple]="luxMultiple"
+    [compareWith]="compareObjects"
+    [required]="luxRequired"
+    [disableRipple]="true"
+    [formControl]="formControl"
+    [attr.aria-invalid]="formControl.invalid"
+    [attr.aria-required]="luxRequired"
+    [attr.aria-readonly]="luxReadonly"
+    [id]="uid"
+    [panelClass]="[luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac', luxReadonly ? 'lux-display-none' : '']"
+    [luxAriaLabelledby]="uid + '-label'"
+    [luxAriaDescribedby]="descripedBy()"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    #select
+  >
+    @for (item of luxOptions; track item; let i = $index) {
+    <mat-option [value]="luxPickValue ? _luxOptionsPickValue[i] : item" class="option-height">
+      <ng-container *ngTemplateOutlet="tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate; context: { $implicit: item }">
+      </ng-container>
+    </mat-option>
+    }
+  </mat-select>
+</lux-form-control-wrapper>
+}
+
+<ng-template #noTemplateRefTemplate let-option>
+  @if (option && luxOptionLabelProp && option[luxOptionLabelProp]) {
+  {{ option | luxRenderProperty : luxOptionLabelProp }}
+  } @else { @if (!!option) {
+  {{ option }}
+  } }
+</ng-template>

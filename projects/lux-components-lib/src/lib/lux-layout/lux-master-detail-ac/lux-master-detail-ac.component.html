@@ -1,0 +1,162 @@
+<div
+  class="lux-master-detail-ac"
+  [ngClass]="{ 'lux-master-detail-ac-mobile': isMobile }"
+  (swipeleft)="onSwipeLeft()"
+  (swiperight)="onSwipeRight()"
+>
+  <div
+    class="lux-master-ac-container"
+    tabindex="1"
+    luxTagIdHandler
+    [luxTagId]="luxTagIdMaster"
+    [luxCustomTagId]="luxTagIdMaster"
+    [ngClass]="{
+      'lux-master-ac-container-mobile': isMobile,
+      'lux-master-ac-container-medium': isMedium,
+      'lux-empty-elements-aligned': alignEmptyIndicators,
+      'lux-master-closed': !luxOpen && !isMobile,
+      'lux-display-none': !luxOpen && isMobile
+    }"
+    #masterContainer
+  >
+    <!-- Header Element über der Master-Liste -->
+    <!-- Wird keine Header übergeben, wird eine leere Card erzeugt, andem der Button hängt -->
+    <lux-master-header-ac
+      (luxOpened)="toggleList($event)"
+      [luxToggleHidden]="(isMobile && !this.luxSelectedDetail && !luxOpen) || isMobile"
+      [ngClass]="{
+        'lux-empty-master-header': !showMasterHeader && !isMobile && luxOpen
+      }"
+    >
+      @if (luxOpen) {
+      <ng-content select="lux-master-header-content-ac"></ng-content>
+      }
+    </lux-master-header-ac>
+
+    <!-- Master Simple Component gesetzt? -> Standard Lux Liste als Master nutzen  (window:keydown)="handleMasterKeyInput($event)" -->
+    <div [ngClass]="{ 'lux-display-none': !luxOpen && !isMobile }" class="lux-master-view-ac">
+      <lux-list
+        class="lux-overflow-wrap-break-word"
+        luxInfiniteScroll
+        [luxScrollPercent]="85"
+        [luxImmediateCallback]="true"
+        [luxIsLoading]="luxMasterIsLoading"
+        [luxEmptyIconSize]="luxEmptyIconMasterSize"
+        [luxEmptyLabel]="luxEmptyLabelMaster"
+        [luxEmptyIconName]="luxEmptyIconMaster"
+        [luxSelectedPosition]="selectedPosition"
+        (luxSelectedPositionChange)="onSelectedChange($event)"
+        (luxScrolled)="onInfiniteScrollingLoad()"
+      >
+        @for (masterElement of luxMasterList; track masterElement) {
+        <lux-list-item
+          [luxTitleLineBreak]="luxTitleLineBreak"
+          luxTitle="{{ masterElement | luxPropertyFromObject : masterSimple?.luxTitleProp ?? '' }}"
+          luxTitleTooltip="{{ masterElement | luxPropertyFromObject : masterSimple?.luxTitleTooltipProp ?? '' }}"
+          luxSubTitle="{{ masterElement | luxPropertyFromObject : masterSimple?.luxSubTitleProp ?? '' }}"
+          luxSubTitleTooltip="{{ masterElement | luxPropertyFromObject : masterSimple?.luxSubTitleTooltipProp ?? '' }}"
+        >
+          <lux-list-item-icon>
+            <ng-container *ngTemplateOutlet="masterSimple?.iconTempRef ?? null; context: { $implicit: masterElement }"></ng-container>
+          </lux-list-item-icon>
+          <lux-list-item-content>
+            <ng-container *ngTemplateOutlet="masterSimple?.contentTempRef ?? null; context: { $implicit: masterElement }"></ng-container>
+          </lux-list-item-content>
+        </lux-list-item>
+        }
+
+        <div
+          #masterSpinnerCard
+          [@masterIsLoadingChanged]="luxMasterIsLoading"
+          class="lux-master-progress-container"
+          [ngClass]="{ 'lux-spinner-hidden': !luxMasterIsLoading }"
+        >
+          @if (luxMasterIsLoading) {
+          <br />
+          }
+          <mat-progress-spinner class="lux-m-3" color="primary" mode="indeterminate" diameter="48"> </mat-progress-spinner>
+          @if (luxMasterIsLoading) {
+          <br />
+          }
+        </div>
+      </lux-list>
+    </div>
+
+    <!-- Footer Element unter der Master-Liste -->
+    @if (luxOpen) {
+    <ng-content select="lux-master-footer-ac"></ng-content>
+    }
+  </div>
+  <!-- Detail - Container -->
+  <div
+    luxTagIdHandler
+    class="lux-detail-ac-container lux-overflow-y-auto"
+    [ngClass]="{
+      'lux-display-none': isDetailInvisible(),
+      'lux-detail-ac-container-mobile': isMobile,
+      'lux-detail-ac-container-medium': isMedium,
+      'lux-empty-detail': selectedPosition < 0
+    }"
+    [luxTagId]="luxTagIdDetail"
+    [luxCustomTagId]="luxTagIdDetail"
+    tabindex="2"
+  >
+    <!-- Button für die Mobile Ansicht -->
+    @if (!luxOpen && isMobile) {
+    <div class="back-to-master-button-container lux-mb-3">
+      <lux-button
+        [luxRounded]="true"
+        class="back-to-master-button"
+        luxIconName="lux-interface-arrows-button-left"
+        luxTagId="back-to-master-btn"
+        (luxClicked)="onOpenMaster()"
+      ></lux-button>
+      <span class="back-to-master-label" i18n="@@luxc.master-detail.back-to-master-label">Zurück zur Liste</span>
+    </div>
+    }
+    <!-- Detail-Header -->
+    <div class="detail-header-container" [ngClass]="{ 'lux-display-none': selectedPosition < 0 }">
+      @if (!detailHeader && luxDefaultDetailHeader) {
+      <lux-card
+        luxTitle="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxTitleProp ?? '' }}"
+        luxTitleTooltip="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxTitleTooltipProp ?? '' }}"
+        luxSubTitle="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxSubTitleProp ?? '' }}"
+        luxSubTitleTooltip="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxSubTitleTooltipProp ?? '' }}"
+        [luxTitleLineBreak]="luxTitleLineBreak"
+        class="lux-detail-header-ac lux-mb-4"
+        luxTagId="defaultDetailHeader"
+      >
+        @if (luxMasterList[selectedPosition]) {
+        <lux-card-content>
+          <ng-container
+            *ngTemplateOutlet="masterSimple?.contentTempRef ?? null; context: { $implicit: luxMasterList[selectedPosition] }"
+          ></ng-container>
+        </lux-card-content>
+        }
+      </lux-card>
+      } @if (detailHeader) {
+      <ng-content select="lux-detail-header-ac"></ng-content>
+      }
+    </div>
+    <div class="lux-detail-view-container" [ngClass]="{ 'lux-display-none': selectedPosition < 0 }">
+      <ng-template #detailViewContainerRef></ng-template>
+    </div>
+    <!-- Das Empty-Icon und Empty-Label, wenn kein Detail gegeben ist -->
+    <div
+      class="lux-detail-empty-container lux-mt-4"
+      [ngClass]="{ 'lux-display-none': (isMobile && luxOpen) || selectedPosition > -1 }"
+      #detailEmpty
+    >
+      <lux-icon
+        class="lux-detail-empty-icon"
+        luxMargin="0 0 8px 0"
+        [luxIconName]="luxEmptyIconDetail"
+        [luxIconSize]="luxEmptyIconDetailSize"
+      >
+      </lux-icon>
+      <span class="lux-detail-empty-icon-text">
+        <strong>{{ luxEmptyLabelDetail }}</strong>
+      </span>
+    </div>
+  </div>
+</div>

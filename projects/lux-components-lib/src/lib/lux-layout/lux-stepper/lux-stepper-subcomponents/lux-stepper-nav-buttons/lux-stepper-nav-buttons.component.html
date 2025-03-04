@@ -1,0 +1,37 @@
+<div class="lux-mt-3 lux-flex lux-place-content-end lux-items-center">
+  <!-- Previous-Button -->
+  @if (luxIndex > 0) {
+  <lux-button
+    [luxLabel]="luxStepperConfig?.luxPreviousButtonConfig?.label"
+    [luxColor]="luxStepperConfig?.luxPreviousButtonConfig?.color"
+    [luxIconName]="luxStepperConfig?.luxPreviousButtonConfig?.iconName"
+    (luxClicked)="luxPrevClick.emit()"
+    luxTagId="luxStepper.previousStep"
+  >
+  </lux-button>
+  }
+  <!-- Next-Button -->
+  @if (luxIndex < (luxStepperConfig?.luxSteps?.length ?? 0) - 1) {
+  <lux-button
+    [luxLabel]="luxStepperConfig?.luxNextButtonConfig?.label"
+    [luxColor]="luxStepperConfig?.luxNextButtonConfig?.color"
+    [luxIconName]="luxStepperConfig?.luxNextButtonConfig?.iconName"
+    (luxClicked)="luxNextClick.emit()"
+    [luxDisabled]="!luxStep.isCompleted() && luxStepperConfig && luxStepperConfig.luxLinear"
+    luxTagId="luxStepper.nextStep"
+  >
+  </lux-button>
+  }
+  <!-- Finish-Button -->
+  @if (luxIndex === (luxStepperConfig?.luxSteps?.length ?? 0) - 1) {
+  <lux-button
+    [luxLabel]="luxStepperConfig?.luxFinishButtonConfig?.label"
+    [luxColor]="luxStepperConfig?.luxFinishButtonConfig?.color"
+    [luxIconName]="luxStepperConfig?.luxFinishButtonConfig?.iconName"
+    (luxClicked)="luxFinClick.emit()"
+    [luxDisabled]="!luxStep.isCompleted() && luxStepperConfig && luxStepperConfig.luxLinear"
+    luxTagId="luxStepper.finished"
+  >
+  </lux-button>
+  }
+</div>

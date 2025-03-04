@@ -1,0 +1,16 @@
+<nav class="lux-breadcrumb" aria-label="Seitenpfad">
+  @for (item of luxEntries; track item; let islast = $last) {
+  <ol class="lux-breadcrumb-container">
+    @if (!islast) {
+    <li class="lux-breadcrumb-item" [ngClass]="{ 'lux-breadcrumb-item-mobile': mobileView }">
+      <a (click)="clicked(item)" (keydown.enter)="clicked(item)" (keydown.space)="clicked(item)" tabindex="0">{{ item.name }}</a>
+      <lux-icon luxIconName="lux-interface-arrows-right" [luxIconSize]="getIconSize()" luxPadding="4px 3px 4px 6px"></lux-icon>
+    </li>
+    } @else {
+    <li class="lux-breadcrumb-current-item" [ngClass]="{ 'lux-breadcrumb-current-item-mobile': mobileView }">
+      <a aria-current="page">{{ item.name }}</a>
+    </li>
+    }
+  </ol>
+  }
+</nav>

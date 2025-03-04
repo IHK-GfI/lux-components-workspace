@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "updateDependenciesSchema",
+  "title": "Aktualisiert die Abhängigkeiten im LUX-Componentsprojekt",
+  "type": "object",
+  "description": "Aktualisiert die Abhängigkeiten im LUX-Componentsprojekt",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Der Projektname",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Generiert mehr Logausgaben",
+      "default": false
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

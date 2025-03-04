@@ -1,0 +1,17 @@
+<mat-expansion-panel
+  [disabled]="luxDisabled"
+  [expanded]="luxExpanded"
+  [hideToggle]="luxHideToggle"
+  [togglePosition]="luxTogglePosition"
+  (opened)="onOpened()"
+  (closed)="onClosed()"
+  class="lux-panel"
+  [class.lux-panel-mobile]="mobile"
+>
+  <mat-expansion-panel-header [expandedHeight]="luxExpandedHeaderHeight ?? '4em'" [collapsedHeight]="luxCollapsedHeaderHeight ?? '64px'">
+    <ng-content select="lux-panel-header-title"></ng-content>
+    <ng-content select="lux-panel-header-description"></ng-content>
+  </mat-expansion-panel-header>
+  <ng-content select="lux-panel-content"></ng-content>
+  <ng-content select="lux-panel-action"></ng-content>
+</mat-expansion-panel>

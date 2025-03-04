@@ -1,0 +1,64 @@
+<example-base-structure
+  exampleTitle="Timestamp"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/luxRelativeTimestamp-v18"
+>
+  <example-base-content class="lux-flex lux-flex-col lux-gap-3">
+    <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-2">
+      <div class="lux-flex gt-md:lux-gap-2 lt-lg:lux-flex-col">
+        <div class="gt-md:lux-flex-basis-40">Timestamp:</div>
+        <div>
+          <b> {{ now }}&nbsp; </b>
+        </div>
+      </div>
+      <div class="lux-flex gt-md:lux-gap-2 lt-lg:lux-flex-col">
+        <div class="gt-md:lux-flex-basis-40">Pipe <i>luxRelativeTimestamp</i>:</div>
+        <div>
+          <b> {{ now | luxRelativeTimestamp : defaultText : prefix }}&nbsp; </b>
+        </div>
+      </div>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <div class="lux-flex lux-gap-2 lt-sm:lux-flex-col lt-sm:lux-gap-0">
+      <lux-datepicker-ac class="lux-flex-auto" luxLabel="timestamp" [(luxValue)]="nowISO" (luxValueChange)="updateNow($event)">
+        <lux-form-hint>
+          Hier kann ein Datum für das Beispiel eingetragen werden.<br />
+          Das Beispiel nimmt dann den Timestamp aus dem Date-Objekt.
+        </lux-form-hint>
+      </lux-datepicker-ac>
+
+      <div class="lux-flex lux-flex-none lux-gap-2">
+        <lux-button
+          class="lux-flex lux-flex-none round-btn"
+          luxIconName="lux-interface-delete-1"
+          luxColor="warn"
+          luxTagId="timestamp.btn.clear"
+          [luxRounded]="true"
+          (luxClicked)="clearNow()"
+        ></lux-button>
+        <lux-button
+          class="lux-flex lux-flex-none round-btn"
+          luxIconName="lux-interface-arrows-turn-backward"
+          luxColor="primary"
+          luxTagId="timestamp.btn.undo"
+          [luxRounded]="true"
+          (luxClicked)="resetNow()"
+        ></lux-button>
+      </div>
+    </div>
+    <lux-input-ac
+      luxAutocomplete="off"
+      luxName="timestamp_defaultText"
+      luxLabel="defaultText"
+      luxHint="Dieser Parameter bestimmt den Standard-Text welcher wiedergegeben wird wenn der Timestamp nicht gegeben ist."
+      [(luxValue)]="defaultText"
+    >
+    </lux-input-ac>
+    <lux-input-ac luxName="timestamp_prefix" luxAutocomplete="off" luxLabel="prefix" [(luxValue)]="prefix">
+      <lux-form-hint>
+        Dieser Parameter legt den Präfix für die relativen Zeitangaben fest.<br />
+        Standardmäßig werden die Präfixe 'in' und 'vor' benutzt.
+      </lux-form-hint>
+    </lux-input-ac>
+  </example-base-simple-options>
+</example-base-structure>

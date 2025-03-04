@@ -1,0 +1,31 @@
+:host ::ng-deep .demo-year-2017 {
+  background: rgba(46, 84, 125, 0.5) !important;
+}
+
+:host ::ng-deep .demo-year-2018 {
+  background: rgba(209, 174, 194, 0.5) !important;
+}
+
+.aktion-button ::ng-deep button {
+  width: 250px;
+}
+
+lux-button.lux-table-example {
+  width: 45px;
+  ::ng-deep {
+    button {
+      width: 45px;
+      min-width: 45px;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
+
+$icon-shift: 42px;
+
+.example-base-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}

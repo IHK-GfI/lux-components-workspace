@@ -1,0 +1,117 @@
+<h1 class="lux-sr-only">Beispiel für lux-stepper-large</h1>
+<div class="example-lux-stepper-large" [ngStyle]="{ maxWidth: maxWidth }" [ngClass]="{ 'authentic-example': theme === 'authentic' }">
+  <lux-stepper-large
+    [luxStepValidationActive]="stepValidationActive"
+    [luxA11YMode]="luxA11YMode"
+    [(luxCurrentStepNumber)]="currentStepIndex"
+    [luxPrevButtonConfig]="dataService.prevButtonConfig"
+    [luxNextButtonConfig]="dataService.nextButtonConfig"
+    [luxFinButtonConfig]="dataService.finButtonConfig"
+    (luxStepChanged)="onStepChanged($event)"
+    (luxStepperFinished)="onFinish()"
+    (luxOnNextStepNotComplete)="onStepNotComplete()"
+    [ngClass]="{ 'authentic-example': theme === 'authentic' }"
+  >
+    <lux-stepper-large-step luxTitle="Allgemein" [luxCompleted]="allowed">
+      <h2 class="example-lux-stepper-large-h2">Lorem Ipsum</h2>
+      <h3>Validierung</h3>
+      <p>
+        Über das folgende Toggle kann die Validierung der Schritte (de-)aktiviert werden. Wenn die Validierung deaktiviert wird, dann ist er
+        Weiter-Button immer aktiv und nur die Veto-Funktionen können das Navigieren zum nächsten Schritt verhindern.
+      </p>
+      <lux-toggle-ac luxLabel="Validierung der Schritte aktivieren" [(luxChecked)]="stepValidationActive"></lux-toggle-ac>
+      <lux-toggle-ac luxLabel="luxA11YMode aktivieren" [(luxChecked)]="luxA11YMode" [luxDisabled]="!stepValidationActive"></lux-toggle-ac>
+      <p>
+        Um die Barrierefreiheit zu verbessern kann anstatt den Weiter Button zu deaktivieren, das Attribut
+        <code>aria-disabled</code> verwendet werden. Der Button bleibt immer aktiv, es wird jedoch bei einem Fehler im Schritt nicht weiter
+        navigiert und ein Output-Event wird geworfen.
+      </p>
+
+      <h3>Füllschritte 1 bis 5</h3>
+      <p style="margin-bottom: 0">
+        Die Füllschritte 1 bis 5 gibt es nur, damit ein großer Stepper mit zweistelliger Schrittanzahl manuell getestet werden kann. Um den
+        Stepper zu Testzwecken schneller durchklicken zu können, kann das folgende Toggle aktiviert werden. Wenn das Toggle aktiv ist,
+        reicht es bei den Füllschritten 1 bis 5 aus, auf den Weiter-Button zu klicken. Wenn das Toggle deaktiviert ist, muss zusätzlich noch
+        das Toggle im Füllschritt aktiviert werden.
+      </p>
+      <lux-toggle-ac luxLabel="Füllschritte 1...5 auf erledigt setzen." [(luxChecked)]="completed"></lux-toggle-ac>
+
+      <h3>Einwilligung</h3>
+      <p>
+        Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
+        autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at
+        vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla
+        facilisi.
+      </p>
+      <lux-select-ac
+        [luxOptions]="options"
+        [(luxSelected)]="maxWidth"
+        luxLabel="Stepperbreite (max)"
+        luxName="stepper-large.example.stepperwidth"
+        [luxRequired]="true"
+        class="lux-max-width-96"
+      ></lux-select-ac>
+
+      <lux-toggle-ac
+        luxLabel="Ich habe verstanden und möchte fortfahren"
+        [(luxChecked)]="allowed"
+        [luxRequired]="true"
+        #requiredCheck
+      ></lux-toggle-ac>
+
+      <lux-stepper-large-example-error-message-box class="lux-mt-5" luxTitle="Allgemein" [luxCompleted]="allowed">
+      </lux-stepper-large-example-error-message-box>
+    </lux-stepper-large-step>
+
+    <app-stepper-large-example-step-prev-button></app-stepper-large-example-step-prev-button>
+    <app-stepper-large-example-step-next-button></app-stepper-large-example-step-next-button>
+    <app-stepper-large-example-step-fin-button></app-stepper-large-example-step-fin-button>
+
+    <app-stepper-large-example-step-veto></app-stepper-large-example-step-veto>
+
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 1 - Lorem ipsum dolor" [luxDisabled]="true">
+    </lux-stepper-large-extern-step-example>
+    <lux-stepper-large-extern-step-example
+      [luxCompleted]="completed"
+      luxTitle="Füllschritt 2 - Duis autem vel eum iriure dolor in hendrerit"
+      [luxDisabled]="true"
+    ></lux-stepper-large-extern-step-example>
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 3 - Ut wisi enim ad, iriure dolor in hendrerit">
+    </lux-stepper-large-extern-step-example>
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 4 - Nam liber tempor">
+    </lux-stepper-large-extern-step-example>
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 5 - Duis autem vel ">
+    </lux-stepper-large-extern-step-example>
+
+    <lux-stepper-large-step luxTitle="Zusammenfassung" [luxCompleted]="true">
+      <h2 class="example-lux-stepper-large-h2">Zusammenfassung</h2>
+
+      <h3>Konfiguration: Zurück-Button</h3>
+      <p>
+        Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis
+        at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla
+        facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
+        aliquam erat volutpat.
+      </p>
+      <pre>{{ dataService.prevButtonConfig | json }}</pre>
+
+      <h3>Konfiguration: Weiter-Button</h3>
+      <p>
+        Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
+        autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at
+        vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla
+        facilisi.
+      </p>
+      <pre>{{ dataService.nextButtonConfig | json }}</pre>
+
+      <h3>Konfiguration: Abschließen-Button</h3>
+      <p>
+        Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem
+        ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+        volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
+        consequat.
+      </p>
+      <pre>{{ dataService.finButtonConfig | json }}</pre>
+    </lux-stepper-large-step>
+  </lux-stepper-large>
+</div>

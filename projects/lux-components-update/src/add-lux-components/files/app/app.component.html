@@ -1,0 +1,34 @@
+<div class="lux-app-container">
+  <lux-app-header-ac
+    luxAppTitle="Change Me"
+    luxAppTitleShort="CM"
+    luxBrandLogoSrc="assets/svg/box.svg"
+    luxAppLogoSrc="assets/svg/demoAppLogo.svg"
+    [luxUserName]="'Max Mustermann'"
+    (luxAppLogoClicked)="router.navigate(['/'])"
+    (luxBrandLogoClicked)="router.navigate(['/'])"
+  >
+    <lux-app-header-ac-nav-menu [luxNavMenuMaximumExtended]="5">
+      <lux-app-header-ac-nav-menu-item luxLabel="Home" luxIconName="lux-home-1" (luxClicked)="router.navigate(['/'])">
+      </lux-app-header-ac-nav-menu-item>
+      <lux-app-header-ac-nav-menu-item
+        luxLabel="Profil"
+        luxIconName="lux-interface-user-single"
+        (luxClicked)="router.navigate(['/profil'])"
+      >
+      </lux-app-header-ac-nav-menu-item>
+      <lux-app-header-ac-nav-menu-item
+        luxLabel="Lizenzhinweise"
+        luxIconName="lux-interface-file-text"
+        (luxClicked)="router.navigate(['/license-hint'])"
+      >
+      </lux-app-header-ac-nav-menu-item>
+    </lux-app-header-ac-nav-menu>
+
+    <lux-app-header-ac-user-menu luxTooltip="Usermenü"></lux-app-header-ac-user-menu>
+  </lux-app-header-ac>
+
+  <lux-app-content luxAriaRoleMainLabel=""></lux-app-content>
+
+  <lux-app-footer luxVersion="0.1"></lux-app-footer>
+</div>

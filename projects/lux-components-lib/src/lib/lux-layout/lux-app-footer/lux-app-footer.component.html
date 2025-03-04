@@ -1,0 +1,48 @@
+<div
+  class="lux-app-footer lux-p-3 lt-md:lux-p-2"
+  [luxAriaRole]="luxAriaRoleFooterLabel ? 'contentinfo' : undefined"
+  [luxAriaLabel]="luxAriaRoleFooterLabel"
+  [ngClass]="{ 'lux-centered': luxCenteredView }"
+  [ngStyle]="{ 'max-width': luxCenteredView ? luxCenteredWidth : '100%' }"
+>
+  @if (luxVersion) {
+  <div class="version lt-lg:lux-display-none" i18n="@@luxc.app-footer.version">Version {{ luxVersion }}</div>
+  } @if (linkInfos) {
+  <div class="lux-app-footer-links">
+    @for (linkItem of linkInfos; track linkItem) { @if (linkItem.alwaysVisible || desktopView) {
+    <lux-link [luxLabel]="linkItem.label" [luxHref]="linkItem.path" [luxBlank]="linkItem.blank"> </lux-link>
+    } }
+  </div>
+  }
+
+  <div class="lux-app-footer-buttons">
+    <lux-menu
+      [luxDisplayExtended]="true"
+      [luxDisplayMenuLeft]="false"
+      [luxMaximumExtended]="10"
+      luxMenuIconName="lux-interface-setting-menu-vertical"
+      luxTagId="app_footer_menu"
+      #buttonMenu
+    >
+      @for (menuItem of buttonInfos; track menuItem) {
+      <lux-menu-item
+        [luxLabel]="menuItem.label"
+        [luxIconName]="menuItem.iconName"
+        [luxTagId]="menuItem.label"
+        [luxPrio]="menuItem.prio"
+        [luxHidden]="menuItem.hidden"
+        [luxAlwaysVisible]="menuItem.alwaysVisible"
+        [luxDisabled]="menuItem.disabled"
+        [luxRaised]="menuItem.raised"
+        [luxFlat]="menuItem.flat"
+        [luxStroked]="menuItem.stroked"
+        [luxColor]="menuItem.color"
+        [luxButtonTooltip]="menuItem.tooltip"
+        [luxMenuTooltip]="menuItem.tooltipMenu"
+        (luxClicked)="sendButtonCommand(menuItem.cmd)"
+      >
+      </lux-menu-item>
+      }
+    </lux-menu>
+  </div>
+</div>

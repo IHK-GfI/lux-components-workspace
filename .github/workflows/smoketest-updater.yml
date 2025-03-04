@@ -1,0 +1,22 @@
+name: smoketest - updater
+
+on:
+  push:
+    paths:
+      - 'projects/lux-components-update/**'
+
+jobs:
+  build-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - run: |
+          npm install
+          npm run updater:test
+          npm run updater:pack
+          cd dist/updater
+          ls -lR

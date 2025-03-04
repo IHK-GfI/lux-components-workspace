@@ -1,0 +1,47 @@
+@if (formGroup) {
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [luxNoLabels]="luxNoLabels"
+  [luxNoBottomLabel]="luxNoBottomLabel"
+  [luxNoTopLabel]="luxNoTopLabel"
+  [formGroup]="formGroup"
+  [luxLabelLongFormat]="luxLabelLongFormat"
+  [ngClass]="matSelect && matSelect.panelOpen ? 'lux-panel-opened' : ''"
+  luxTagId="luxLookupComboboxWrapper"
+>
+  <mat-select
+    luxSelectOptionHeight
+    [placeholder]="luxPlaceholder"
+    [multiple]="luxMultiple"
+    [required]="luxRequired"
+    [formControl]="formControl"
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [panelClass]="[luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac', luxReadonly ? 'lux-display-none' : '']"
+    [disableRipple]="true"
+    [errorStateMatcher]="stateMatcher"
+    [compareWith]="compareByKey"
+    (focusin)="luxFocusIn.emit($event)"
+    (focusout)="luxFocusOut.emit($event)"
+    [id]="uid"
+    [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
+    [attr.aria-invalid]="formControl.invalid"
+    [attr.aria-required]="luxRequired"
+    [attr.aria-readonly]="luxReadonly"
+  >
+    @if (luxWithEmptyEntry && !luxMultiple) {
+    <mat-option [value]="undefined" class="option-height"></mat-option>
+    } @for (entry of displayedEntries; track entry) { @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
+    <mat-option
+      class="option-height"
+      [value]="entry"
+      [ngClass]="{ invalid: entry.isUngueltig }"
+      [ngStyle]="getStyles(entry.isUngueltig)"
+      [disabled]="entry.isUngueltig && disableUngueltige()"
+    >
+      <span>{{ getLabel(entry) }}</span>
+    </mat-option>
+    } }
+  </mat-select>
+</lux-form-control-wrapper>
+}

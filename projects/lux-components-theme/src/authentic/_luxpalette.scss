@@ -1,0 +1,106 @@
+@use "sass:map";
+/*
+  Dieses Partial-SCSS dient der Verwaltung der Farb-Paletten für die LUX-Components.
+*/
+$lux-palette_primary: (
+  50 : #e0e7ed,
+  100 : #b3c2d1,
+  200 : #8099b3,
+  300 : #4d7094,
+  400 : #26527d,
+  500 : #003366,
+  600 : #002d5d,
+  700 : #002753,
+  800 : #002049,
+  900 : #001438,
+  A100 : rgba(24, 186, 255, 1),
+  A200 : rgba(0, 152, 218, 1),
+  A400 : rgba(0, 134, 192, 1),
+  A700 : rgba(0, 124, 177, 1),
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$lux-palette_accent: (
+  50 : #ebf7ed,
+  100 : #ccebd1,
+  200 : #abdeb3,
+  300 : #89d194,
+  400 : #6fc77d,
+  500 : #56bd66,
+  600 : #4fb75e,
+  700 : #45ae53,
+  800 : #3ca649,
+  900 : #2b9838,
+  A100 : rgba(184, 255, 179, 1),
+  A200 : rgba(126, 255, 117, 1),
+  A400 : rgba(102, 255, 92, 1),
+  A700 : rgba(88, 255, 77, 1),
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$lux-palette_warn: (
+  50 : #ffcacf,
+  100 : #f59594,
+  200 : #ed6b6a,
+  300 : #f64543,
+  400 : #fb2f24,
+  500 : #ec2125,
+  600 : #da101f,
+  700 : #ce0017,
+  800 : #c00007,
+  900 : #bf0006,
+  A100 : rgba(237, 95, 122, 1),
+  A200 : rgba(63, 155, 218, 1),
+  A400 : rgba(244, 203, 37, 1),
+  A700 : rgba(237, 110, 17, 1),
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #ffffff,
+  )
+);
+
+$lux-primary-color: map.get($lux-palette_primary, 500);
+$lux-accent-color: map.get($lux-palette_accent, 500);
+$lux-warn-color: map.get($lux-palette_warn, 500);

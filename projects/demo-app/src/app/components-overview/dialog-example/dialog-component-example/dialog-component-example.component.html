@@ -1,0 +1,41 @@
+<lux-dialog-structure>
+  <lux-dialog-title>Speichern <i>(Sichern Sie Ihre Daten)</i></lux-dialog-title>
+  <lux-dialog-content>
+    <div class="content">
+      <lux-card luxTagId="card-lorem-ipsum">
+        <lux-card-content>Lorem ipsum dolor sit amet.</lux-card-content>
+      </lux-card>
+      <span>Ihre Daten werden im Anschluss an diesen Dialog gespeichert.</span>
+      <b>Zusatzinformationen</b>
+      <lux-textarea-ac luxName="dialog_Anmerkung" luxLabel="Anmerkung" luxPlaceholder="Anmerkungen" [luxMinRows]="1"> </lux-textarea-ac>
+      <lux-file-upload></lux-file-upload>
+      <div class="toggle-agb-container">
+        <lux-toggle-ac
+          luxLabel="AGB gelesen"
+          luxHint="Ich habe die AGB und Datenschutzvereinbarungen gelesen und akzeptiere diese."
+          [luxRequired]="true"
+          [luxNoTopLabel]="true"
+          #agbAcceptedToggle
+        >
+        </lux-toggle-ac>
+        <lux-button
+          class="info-btn"
+          luxIconName="lux-interface-alert-information-circle"
+          luxColor="primary"
+          luxAriaLabel="Erläuterung zu AGB gelesen"
+          luxTagId="dialog.component.agb.info"
+          (luxClicked)="openInfoDialog()"
+        ></lux-button>
+      </div>
+    </div>
+  </lux-dialog-content>
+  <lux-dialog-actions>
+    <lux-button
+      luxLabel="OK"
+      luxColor="primary"
+      [luxDisabled]="!agbAcceptedToggle.luxChecked"
+      [luxFlat]="true"
+      (luxClicked)="luxDialogRef.closeDialog(true)"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>

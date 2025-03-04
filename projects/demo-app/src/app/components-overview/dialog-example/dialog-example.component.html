@@ -1,0 +1,171 @@
+<example-base-structure
+  exampleTitle="Dialog"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90dialog-v18"
+>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    <h3>Allgemeine Properties</h3>
+    <lux-input-ac
+      luxName="dialog_width"
+      luxLabel="width"
+      luxHint="Diese Property legt die Breite des Dialogs fest."
+      [(luxValue)]="dialogConfig.width"
+    >
+    </lux-input-ac>
+    <lux-input-ac
+      luxName="dialog_height"
+      luxLabel="height"
+      luxHint="Diese Property legt die Höhe des Dialogs fest."
+      [(luxValue)]="dialogConfig.height"
+    >
+    </lux-input-ac>
+    @if (!useContentTemplate) {
+    <lux-input-ac
+      luxName="dialog_panelClass"
+      luxLabel="panelClass"
+      [luxValue]="dialogConfig.panelClass"
+      (luxBlur)="updatePanelClass(panelClassInput.luxValue)"
+      #panelClassInput
+    >
+      <lux-form-hint>
+        Diese Property eventuelle CSS-Klassen für den Dialog fest.<br />
+        Für das Beispiel die Werte komma-getrennt eintragen.<br /><br />
+        Um die Klassen zu prüfen, den Dialog öffnen und in den Dev-Tools nach dem Element "cdk-overlay-pane" suchen.
+      </lux-form-hint>
+    </lux-input-ac>
+    }
+    <lux-toggle-ac
+      luxLabel="disableClose"
+      luxHint="Wenn aktiv, kann der Dialog nur über die Actions geschlossen werden."
+      [(luxChecked)]="dialogConfig.disableClose"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    <lux-radio-ac
+      luxLabel="defaultButton"
+      luxHint="Legt fest, welcher Button verwendet wird, wenn man den Dialog direkt mit Return schließt."
+      [luxOptions]="defaultButtonOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="pickValueFn"
+      [(luxSelected)]="defaultButton"
+      [luxOrientationVertical]="false"
+    ></lux-radio-ac>
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <h3>Properties für Preset-Dialoge</h3>
+    <lux-input-ac
+      luxName="dialog_title"
+      luxLabel="title"
+      luxHint="Diese Property enthält den Titel des Dialogs."
+      [(luxValue)]="dialogConfig.title"
+    >
+    </lux-input-ac>
+    <lux-input-ac
+      luxName="dialog_icon"
+      luxLabel="dialogIcon"
+      luxHint="Diese Property enthält den Iconnamen des Dialogs."
+      [(luxValue)]="dialogConfig.iconName"
+    >
+    </lux-input-ac>
+    <lux-toggle-ac
+      luxLabel="Content-Template nutzen"
+      luxHint="Wenn aktiv, wird dem Dialog ein 'TemplateRef' für den Inhalt übergeben."
+      [(luxChecked)]="useContentTemplate"
+      (luxCheckedChange)="useContentTemplateChange($event)"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    @if (useContentTemplate) {
+    <pre class="lux-label">{{ contentTemplateString }}</pre>
+    } @if (!useContentTemplate) {
+    <lux-input-ac
+      luxName="dialog_content"
+      luxLabel="content"
+      luxHint="Über diese Eigenschaft der eigentliche Inhalt des Dialogs bestimmt."
+      [(luxValue)]="dialogConfig.content"
+    >
+    </lux-input-ac>
+    }
+    <lux-accordion luxMode="flat" [luxMulti]="true">
+      <lux-panel>
+        <lux-panel-header-title> confirmAction - Optionen </lux-panel-header-title>
+        <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
+          <ng-container *ngTemplateOutlet="dialogActionTemplate; context: { $implicit: dialogConfig.confirmAction }"> </ng-container>
+        </lux-panel-content>
+      </lux-panel>
+      <lux-panel>
+        <lux-panel-header-title> declineAction - Optionen </lux-panel-header-title>
+        <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
+          <ng-container *ngTemplateOutlet="dialogActionTemplate; context: { $implicit: dialogConfig.declineAction }"> </ng-container>
+        </lux-panel-content>
+      </lux-panel>
+    </lux-accordion>
+    <h3>Beispiel für "data" für eigene Dialoge</h3>
+    <lux-input-ac luxName="dialog_data" luxLabel="data" [(luxValue)]="exampleData">
+      <lux-form-hint>
+        Dieses Objekt wird einem eigenen Dialog während 'openComponent' mitgegeben und enthält Daten, die für die Dialog-Componente wichtig
+        sein könnten.
+      </lux-form-hint>
+    </lux-input-ac>
+  </example-base-advanced-options>
+  <example-base-options-actions class="lux-flex lux-flex-wrap lux-gap-2">
+    <lux-button luxLabel="Öffnen [Preset]" [luxStroked]="true" (luxClicked)="openDialog()"> </lux-button>
+    <lux-button luxLabel="Öffnen [Custom]" [luxStroked]="true" (luxClicked)="openDialogComponent()"> </lux-button>
+  </example-base-options-actions>
+</example-base-structure>
+
+<ng-template #contentTemplate>
+  <i>Achtung: Ihre Daten werden gelöscht.</i><br />
+  <b>Möchten Sie fortfahren?</b>
+</ng-template>
+
+<ng-template let-actionConfig #dialogActionTemplate>
+  <lux-input-ac
+    luxName="dialog_label"
+    luxLabel="label"
+    luxHint="Diese Property enthält das Label der Aktion."
+    [(luxValue)]="actionConfig.label"
+  >
+  </lux-input-ac>
+  <lux-input-ac
+    luxName="dialog_iconName"
+    luxLabel="iconName"
+    luxHint="Diese Property bestimmt das Icon der Aktion"
+    [(luxValue)]="actionConfig.iconName"
+  >
+  </lux-input-ac>
+  <lux-select-ac
+    luxLabel="color"
+    luxHint="Diese Property definiert die Farbe der Aktion."
+    [(luxSelected)]="actionConfig.color"
+    [luxOptions]="['primary', 'accent', 'warn', 'default']"
+  >
+  </lux-select-ac>
+  <lux-toggle-ac
+    luxLabel="flat"
+    luxHint="Wenn aktiv, wird die Aktion hervorgehoben dargestellt."
+    [(luxChecked)]="actionConfig.flat"
+    [luxNoTopLabel]="true"
+  >
+  </lux-toggle-ac>
+  <lux-toggle-ac
+    luxLabel="disabled"
+    luxHint="Wenn aktiv, wird die Aktion deaktiviert."
+    [(luxChecked)]="actionConfig.disabled"
+    [luxNoTopLabel]="true"
+  >
+  </lux-toggle-ac>
+  <lux-toggle-ac
+    luxLabel="rounded"
+    luxHint="Wenn aktiv, wird die Aktion als Kreis dargestellt. Sollte dann aber kein Label enthalten."
+    [(luxChecked)]="actionConfig.rounded"
+    [luxNoTopLabel]="true"
+  >
+  </lux-toggle-ac>
+</ng-template>

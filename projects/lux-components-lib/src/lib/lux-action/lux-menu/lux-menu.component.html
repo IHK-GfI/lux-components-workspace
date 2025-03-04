@@ -1,0 +1,124 @@
+<div class="lux-flex lux-place-content-end lux-items-stretch">
+  <div class="lux-menu-extended lux-flex lux-flex-auto lux-place-content-end lux-items-center" #menuExtendedContainer>
+    <!-- Trigger, wenn luxDisplayMenuLeft === false -->
+    @if (!luxDisplayMenuLeft) {
+    <ng-container [ngTemplateOutlet]="menuTriggerTemplate"></ng-container>
+    } @for (menuItem of visibleMenuItems; track menuItem) {
+    <lux-button
+      class="lux-menu-item"
+      [luxLabel]="menuItem.luxHideLabelIfExtended ? '' : menuItem.luxLabel"
+      [luxColor]="menuItem.luxColor"
+      [luxRaised]="menuItem.luxRaised"
+      [luxFlat]="menuItem.luxFlat"
+      [luxStroked]="menuItem.luxStroked"
+      [luxIconName]="menuItem.luxIconName"
+      [luxDisabled]="menuItem.luxDisabled"
+      [luxTagId]="menuItem.luxTagId"
+      [luxRounded]="menuItem.luxRounded"
+      [luxButtonBadge]="menuItem.luxButtonBadge"
+      [luxButtonBadgeColor]="menuItem.luxButtonBadgeColor"
+      (luxClicked)="menuItemClicked(menuItem, $event)"
+      luxAriaLabel="{{ menuItem.luxLabel }}"
+      luxAriaLabelSelector="button"
+      luxTabIndex="0"
+      [luxTooltip]="menuItem.luxButtonTooltip"
+      [luxApplyToChildren]="true"
+      [ngClass]="menuItem.luxClass ?? ''"
+      [ngStyle]="{ display: !menuItem.extended || menuItem.luxHidden ? 'none' : 'inline-block' }"
+    >
+    </lux-button>
+    }
+    <!-- Trigger, wenn luxDisplayMenuLeft === true -->
+    @if (luxDisplayMenuLeft) {
+    <ng-container [ngTemplateOutlet]="menuTriggerTemplate"></ng-container>
+    }
+  </div>
+</div>
+
+<!-- Das eigentliche Material-Menu -->
+<mat-menu [classList]="'lux-menu-panel ' + luxClassName" (closed)="onMenuClosed()" #menu="matMenu">
+  <!-- Alle darin angezeigten MenuItems (Vorausgesetzt diese sind nicht als extended gekennzeichnet) -->
+  @for (menuItem of menuItems; track menuItem) { @if (!menuItem.extended && !menuItem.luxHidden) {
+  <button
+    mat-menu-item
+    [disableRipple]="true"
+    class="lux-menu-item"
+    [class.with-badge]="menuItem.luxButtonBadge"
+    [luxTooltip]="menuItem.luxMenuTooltip"
+    [disabled]="menuItem.luxDisabled"
+    luxTagIdHandler
+    [luxTagId]="menuItem.luxTagId"
+    [ngClass]="menuItem.luxClass ?? ''"
+    (click)="menuItemClicked(menuItem, $event)"
+  >
+    @if (menuItem.luxIconName) {
+    <lux-icon
+      [luxIconName]="menuItem.luxIconName"
+      luxPadding="0"
+      [luxMargin]="menuItem.luxIconShowRight ? '0 0 0 16px' : '0 16px 0 0'"
+      luxIconSize="20px"
+      class="lux-menu-item-icon"
+    ></lux-icon>
+    }
+    <span class="lux-button-label">
+      {{ menuItem.luxLabel }}
+    </span>
+    @if (menuItem.luxButtonBadge) {
+    <span class="lux-button-badge-container">
+      @if (menuItem.luxButtonBadge && !menuItem.luxDisabled) {
+      <span
+        class="lux-button-badge lux-bg-color-primary-500 lux-m-2"
+        [ngClass]="{
+          'lux-bg-color-primary-500': menuItem.luxButtonBadgeColor === 'primary',
+          'lux-bg-color-warn-500': menuItem.luxButtonBadgeColor === 'warn',
+          'lux-bg-color-accent-500': menuItem.luxButtonBadgeColor === 'accent'
+        }"
+      >
+        {{ menuItem.luxButtonBadge }}
+      </span>
+      }
+    </span>
+    }
+  </button>
+  } }
+</mat-menu>
+
+<!-- Der Trigger des Menus -->
+<ng-template #menuTriggerTemplate>
+  <div
+    [matMenuTriggerFor]="menu"
+    role="button"
+    [luxAriaLabel]="luxAriaMenuTriggerLabel"
+    class="lux-menu-trigger lux-color-primary-500"
+    [ngClass]="{ 'lux-display-none-important': hideToggle }"
+    #menuTrigger
+    (menuOpened)="onMenuOpened()"
+    #triggerdiv
+  ></div>
+
+  <!-- Custom-Trigger, der über Content-Projection geladen werden kann -->
+  @if (!hideToggle) {
+  <div class="lux-menu-custom-trigger">
+    <ng-content select="lux-menu-trigger"> </ng-content>
+  </div>
+  }
+
+  <!-- Default-Trigger -->
+  @if (!luxMenuTriggerComponent && hasVisibleMenuItems()) {
+  <lux-button
+    class="lux-menu-trigger-default"
+    luxTagId="lux-menu-default-trigger"
+    [luxLabel]="luxMenuLabel"
+    [luxIconName]="luxMenuIconName"
+    [luxAriaLabel]="luxAriaMenuTriggerLabel"
+    luxAriaLabelSelector="button"
+    luxTabIndex="0"
+    [luxApplyToChildren]="true"
+    [luxIconShowRight]="luxMenuTriggerIconShowRight"
+    [luxDisabled]="luxToggleDisabled"
+    (luxClicked)="triggerdiv.click()"
+    #defaultTrigger
+  >
+  </lux-button>
+  }
+</ng-template>

@@ -1,0 +1,8 @@
+@if (luxLabel) {
+<div class="lux-label-container">
+  {{ luxLabel }}
+</div>
+}
+<div class="lux-checkbox-container" [ngClass]="{ 'lux-vertical': luxVertical }">
+  <ng-content></ng-content>
+</div>

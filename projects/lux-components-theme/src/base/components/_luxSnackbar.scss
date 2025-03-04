@@ -1,0 +1,44 @@
+@use "sass:map";
+@use "../luxcommon";
+@use "../luxelevations";
+
+.cdk-overlay-container {
+  .mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    min-width: unset;
+    border-radius: 4px;
+  }
+
+  .mat-mdc-snack-bar-container.lux-snackbar {
+    @include luxelevations.lux-elevation-z6();
+
+    position: relative;
+    margin: 0 !important;
+
+    // Die Snackbar wird durch die App umpositioniert, bevor sie sichtbar geschaltet wird.
+    // Würde man die Snackbar nicht verstecken, würde sie von der initialen Position zur neuen
+    // springen.
+    visibility: hidden;
+
+    .mat-mdc-snack-bar-label {
+      visibility: hidden;
+    }
+
+    @each $colorName, $colorNameHex in luxcommon.$colorsForDarkBg {
+      .lux-snackbar-content .lux-bg-color-#{"" + $colorName + ""} {
+        color: $colorNameHex;
+        background-color: transparent;
+      }
+    }
+
+    mat-icon.mat-icon.lux-icon {
+      width: 2em;
+      height: 2em;
+    }
+  }
+
+  .mat-snack-bar-handset snack-bar-container.mat-snack-bar-container.lux-snackbar {
+    left: 8px;
+    width: auto !important;
+    margin-right: 10px !important;
+  }
+}

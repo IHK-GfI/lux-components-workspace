@@ -1,0 +1,27 @@
+<mat-card
+  appearance="outlined"
+  (click)="clicked()"
+  (keydown.enter)="clicked()"
+  (keydown.space)="clicked()"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  tabindex="0"
+  class="lux-cursor lux-tile-ac"
+  [luxBadgeNotification]="getBadgeContent()"
+  [luxBadgeColor]="luxNotificationColor"
+  luxBadgePosition="above after"
+  [luxBadgeSize]="luxNotificationSize"
+  [luxBadgeCap]="luxCounterCap"
+  role="link"
+  [attr.aria-label]="luxLabel"
+  [attr.aria-description]="luxSubTitle"
+>
+  <div class="lux-tile-content">
+    <mat-card-title class="lux-tile-title">{{ luxLabel }}</mat-card-title>
+    <div class="lux-tile-icon-container">
+      <ng-content select="lux-icon"></ng-content>
+      <ng-content select="lux-image"></ng-content>
+    </div>
+    <mat-card-subtitle class="lux-tile-subtitle">{{ luxSubTitle }}</mat-card-subtitle>
+  </div>
+</mat-card>

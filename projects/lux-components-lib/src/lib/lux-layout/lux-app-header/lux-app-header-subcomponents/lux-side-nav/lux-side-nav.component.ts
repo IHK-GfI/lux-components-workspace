@@ -1,0 +1,183 @@
+import { NgStyle, NgTemplateOutlet } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  ContentChildren,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList,
+  ViewChild,
+  inject
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { LuxLinkComponent } from '../../../../lux-action/lux-link/lux-link.component';
+import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaRoleDirective } from '../../../../lux-directives/lux-aria/lux-aria-role.directive';
+import { LuxIconComponent } from '../../../../lux-icon/lux-icon/lux-icon.component';
+import { LuxAppService } from '../../../../lux-util/lux-app.service';
+import { LuxUtil } from '../../../../lux-util/lux-util';
+import { LuxDividerComponent } from '../../../lux-divider/lux-divider.component';
+import { sideNavAnimation, sideNavOverlayAnimation } from './lux-side-nav-model/lux-side-nav-animations';
+import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-nav-item.component';
+
+@Component({
+  selector: 'lux-side-nav',
+  templateUrl: './lux-side-nav.component.html',
+  animations: [sideNavAnimation, sideNavOverlayAnimation],
+  imports: [NgStyle, LuxAriaRoleDirective, LuxAriaLabelDirective, LuxDividerComponent, NgTemplateOutlet, LuxLinkComponent, LuxIconComponent]
+})
+export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
+  private appService = inject(LuxAppService);
+
+  @Input() luxDashboardLink?: string;
+  @Input() luxDashboardLinkTitle = 'LUX Dashboard';
+  @Input() luxOpenLinkBlank?: boolean;
+  @Input() luxAriaRoleNavigationLabel = $localize`:@@luxc.side-nav.ariarolenavigation:Anwendungsmenü / Navigation`;
+
+  @Output() luxSideNavExpandedChange = new EventEmitter<boolean>();
+
+  @ContentChildren(LuxSideNavItemComponent, { descendants: true }) sideNavItems!: QueryList<LuxSideNavItemComponent>;
+  @ContentChildren(LuxSideNavItemComponent, { descendants: false }) directSideNavItems!: QueryList<LuxSideNavItemComponent>;
+
+  @ViewChild('sideNav', { read: ElementRef, static: true }) sideNavEl!: ElementRef;
+  @ViewChild('sideNavHeader', { read: ElementRef, static: true }) sideNavHeaderEl!: ElementRef;
+  @ViewChild('sideNavFooter', { read: ElementRef, static: true }) sideNavFooterEl!: ElementRef;
+
+  top?: string;
+  left?: string;
+  bottom?: string;
+  right?: string;
+  focusElement: any;
+  height?: number;
+  width?: number;
+  visibility = 'hidden';
+  _sideNavExpanded = false;
+
+  get sideNavExpanded(): boolean {
+    return this._sideNavExpanded;
+  }
+
+  set sideNavExpanded(expanded: boolean) {
+    this._sideNavExpanded = expanded;
+    this.luxSideNavExpandedChange.next(this._sideNavExpanded);
+  }
+
+  private itemClickSubscriptions: Subscription[] = [];
+  private subscription?: Subscription;
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (LuxUtil.isKeyEscape(event) && this.sideNavExpanded) {
+      // Escape soll nur das Menü schließen, wenn es auch geöffnet ist.
+      this.toggle();
+    }
+  }
+
+  @HostListener('window:resize') windowResize() {
+    this.calculateWidthHeight();
+    this.calculateAppMenuPosition();
+  }
+
+  ngAfterViewInit() {
+    this.subscription = this.sideNavItems.changes.subscribe(() => this.updateItemClickListeners());
+    this.updateItemClickListeners();
+    this.calculateWidthHeight();
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+    this.itemClickSubscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+  }
+
+  toggle() {
+    this.calculateAppMenuPosition();
+
+    this.sideNavExpanded = !this.sideNavExpanded;
+
+    if (this.sideNavExpanded) {
+      this.visibility = 'visible';
+      this.calculateWidthHeight();
+
+      // Hier wird sich der Menübutton zwischengespeichert
+      this.focusElement = document.activeElement;
+    } else {
+      setTimeout(() => {
+        // Wenn das SideNavMenü geschlossen wird, wird wieder der SideNavMenübutton fokussiert.
+        if (this.focusElement) {
+          this.focusElement.focus();
+        }
+      });
+    }
+  }
+
+  private calculateAppMenuPosition() {
+    this.top = this.appService.getAppTop() + 'px';
+    this.left = this.appService.getAppLeft() + 'px';
+    this.bottom = this.appService.getAppBottom() + 'px';
+    this.right = this.appService.getAppRight() + 'px';
+  }
+
+  /**
+   * Wenn die Animation beendet ist, wird das Menü ausgeblendet, damit der Fokus weiter zum Inhalt springt und nicht
+   * durch das versteckte Menü wandert. Das ist auch für Screenreader nötig.
+   */
+  updateSideNavAfterAnimationIsFinished() {
+    this.visibility = this.sideNavExpanded ? 'visible' : 'hidden';
+
+    // Den Fokus auf den ersten Button setzen
+    if (this.sideNavExpanded && this.sideNavEl && this.sideNavEl.nativeElement) {
+      setTimeout(() => {
+        const firstButton = (this.sideNavEl.nativeElement as HTMLElement).querySelector('button');
+        if (firstButton) {
+          firstButton.focus();
+        }
+      });
+    }
+  }
+
+  open() {
+    this.sideNavExpanded = true;
+    this.calculateWidthHeight();
+  }
+
+  close() {
+    this.sideNavExpanded = false;
+  }
+
+  /**
+   * Berechnet die Höhe für den Container der SideNavMenuItems.
+   * Dafür wird die Gesamthöhe minus der Höhe des Headers und des Footers sowie eine feste Höhe
+   * für den App-Header gerechnet.
+   */
+  private calculateWidthHeight() {
+    setTimeout(() => {
+      const totalHeight = this.sideNavEl.nativeElement.offsetHeight;
+      const headerHeight = this.sideNavHeaderEl.nativeElement.offsetHeight;
+      const footerHeight = this.sideNavFooterEl.nativeElement.offsetHeight;
+      this.height = totalHeight - headerHeight - footerHeight;
+      this.width = this.sideNavEl.nativeElement.offsetWidth + 20 /* Sicherheitsaufschlag (Schatten, Scrollbar,...) */;
+    });
+  }
+
+  /**
+   * Hängt sich an die Klick-Events der einzelnen SideNavItems, um so, je nach Einstellung der Items,
+   * die SideNav zu schließen.
+   */
+  private updateItemClickListeners() {
+    this.itemClickSubscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+
+    this.sideNavItems.forEach((item: LuxSideNavItemComponent) => {
+      this.itemClickSubscriptions.push(
+        item.luxClicked.subscribe(() => {
+          if (item.luxCloseOnClick) {
+            this.close();
+          }
+        })
+      );
+    });
+  }
+}

@@ -1,0 +1,42 @@
+<div
+  class="lux-textbox-container"
+  tabindex="0"
+  [ngClass]="{
+    'lux-no-icon': !luxIcon,
+    'lux-red': luxColor === 'red',
+    'lux-yellow': luxColor === 'yellow',
+    'lux-green': luxColor === 'green',
+    'lux-blue': luxColor === 'blue'
+  }"
+>
+  @if (luxIcon) {
+  <lux-icon luxIconName="{{ luxIcon }}" class="lux-textbox-icon"></lux-icon>
+  } @if (luxTitle) { @switch (luxHeading) { @case (1) {
+  <h1 class="lux-textbox-title" title="{{ luxTitle }}">
+    {{ luxTitle }}
+  </h1>
+  } @case (2) {
+  <h2 class="lux-textbox-title" title="{{ luxTitle }}">
+    {{ luxTitle }}
+  </h2>
+  } @default {
+  <h3 class="lux-textbox-title" title="{{ luxTitle }}">
+    {{ luxTitle }}
+  </h3>
+  } @case (4) {
+  <h4 class="lux-textbox-title" title="{{ luxTitle }}">
+    {{ luxTitle }}
+  </h4>
+  } @case (5) {
+  <h5 class="lux-textbox-title" title="{{ luxTitle }}">
+    {{ luxTitle }}
+  </h5>
+  } @case (6) {
+  <h6 class="lux-textbox-title" title="{{ luxTitle }}">
+    {{ luxTitle }}
+  </h6>
+  } } }
+  <div class="lux-textbox-content">
+    <ng-content></ng-content>
+  </div>
+</div>

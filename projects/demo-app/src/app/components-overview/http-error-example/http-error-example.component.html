@@ -1,0 +1,17 @@
+<example-base-structure
+  exampleTitle="HTTP-Error"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90http%E2%80%90error-v18"
+>
+  <example-base-content>
+    <lux-http-error (luxMessageBoxClosed)="disabled = true"></lux-http-error>
+  </example-base-content>
+  <example-base-simple-options>
+    <div class="lux-flex lux-flex-col lux-gap-4">
+      <lux-button luxLabel="Fehler ausblenden" [luxStroked]="true" (luxClicked)="clearErrors()" [luxDisabled]="disabled"> </lux-button>
+      <h3>Fehler einblenden</h3>
+      <lux-button luxLabel="Als Map" [luxStroked]="true" (luxClicked)="createErrors()"> </lux-button>
+      <lux-button luxLabel="Als String-Array" [luxStroked]="true" (luxClicked)="createErrorMessageStrings()"> </lux-button>
+      <lux-button luxLabel="Als Objekte" [luxStroked]="true" (luxClicked)="createErrorToStringObjects()"> </lux-button>
+    </div>
+  </example-base-simple-options>
+</example-base-structure>

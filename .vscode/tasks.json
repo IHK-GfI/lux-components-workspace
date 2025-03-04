@@ -1,0 +1,168 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm -> install",
+      "type": "shell",
+      "command": "npm install",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "found \\d vulnerabilities"
+          }
+        }
+      }
+    },
+    {
+      "label": "npm -> start:demo",
+      "type": "npm",
+      "script": "start:demo",
+      "isBackground": true,
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    },
+    {
+      "label": "npm -> start:dev",
+      "type": "npm",
+      "script": "start:dev",
+      "isBackground": true,
+      "presentation": {
+        "focus": true,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    },
+    {
+      "label": "npm -> debug schematics",
+      "type": "npm",
+      "script": "pack:updater",
+      "isBackground": true,
+      "presentation": {
+        "focus": false,
+        "panel": "shared",
+        "reveal": "never",
+        "revealProblems": "onProblem",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    },
+    {
+      "label": "npm -> test:components (headless)",
+      "type": "npm",
+      "script": "test:components",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never",
+        "revealProblems": "onProblem",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "TOTAL: \\d{3} SUCCESS"
+          }
+        }
+      }
+    },
+    {
+      "label": "npm -> pack:updater",
+      "type": "npm",
+      "script": "pack:updater",
+      "isBackground": true,
+      "presentation": {
+        "focus": false,
+        "panel": "shared",
+        "reveal": "never",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    },
+    {
+      "label": "updater -> update schematics",
+      "type": "shell",
+      "command": "npx copyfiles --verbose --up 2 dist/updater/src/**/*js node_modules/@ihk-gfi/lux-components-update",
+      "presentation": {
+        "focus": false,
+        "panel": "shared",
+        "reveal": "never",
+        "showReuseMessage": true,
+        "clear": true
+      },
+      "problemMatcher": [],
+      "dependsOn": ["npm -> pack:updater"]
+    }
+  ]
+}

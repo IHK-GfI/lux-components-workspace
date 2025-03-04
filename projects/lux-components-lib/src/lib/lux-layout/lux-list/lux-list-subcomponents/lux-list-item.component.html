@@ -1,0 +1,18 @@
+<lux-card
+  [ngClass]="{ 'lux-list-item-selected': luxSelected }"
+  class="lux-item"
+  [luxTitle]="luxTitle"
+  [luxTitleTooltip]="luxTitleTooltip"
+  [luxSubTitle]="luxSubTitle"
+  [luxSubTitleTooltip]="luxSubTitleTooltip"
+  [luxTitleLineBreak]="luxTitleLineBreak"
+  [luxUseTabIndex]="false"
+  (luxClicked)="clicked($event)"
+>
+  <lux-card-info>
+    <ng-content select="lux-list-item-icon"></ng-content>
+  </lux-card-info>
+  <lux-card-content>
+    <ng-content select="lux-list-item-content"></ng-content>
+  </lux-card-content>
+</lux-card>

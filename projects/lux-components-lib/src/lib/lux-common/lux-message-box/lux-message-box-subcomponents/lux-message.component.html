@@ -1,0 +1,20 @@
+@if (luxMessage) {
+<div class="lux-message-container {{ backgroundCSSClass }} {{ fontCSSClass }}" luxAriaRole="listitem">
+  @if (luxMessage.iconName) {
+  <lux-icon [luxIconName]="luxMessage.iconName" luxIconSize="20px" luxPadding="4px" class="lux-message-icon"></lux-icon>
+  } @if (!luxMessage.iconName) {
+  <div class="lux-message-icon"></div>
+  }
+  <p tabindex="0" class="lux-message-text">{{ luxMessage.text }}</p>
+  <lux-button
+    class="lux-close-message-btn"
+    [luxRounded]="true"
+    luxIconName="lux-interface-delete-1"
+    luxTagId="lux-message-box-close-btn"
+    (luxClicked)="close()"
+    i18n-luxAriaLabel="@@luxc.message.btn.close.arialabel"
+    luxAriaLabel="Meldung schließen"
+  >
+  </lux-button>
+</div>
+}

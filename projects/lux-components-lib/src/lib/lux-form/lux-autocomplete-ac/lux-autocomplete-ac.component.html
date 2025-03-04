@@ -1,0 +1,67 @@
+@if (formGroup) {
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [formGroup]="formGroup"
+  [luxNoLabels]="luxNoLabels"
+  [luxNoBottomLabel]="luxNoBottomLabel"
+  [luxNoTopLabel]="luxNoTopLabel"
+  [luxLabelLongFormat]="luxLabelLongFormat"
+  luxTagId="luxAutocompleteWrappper"
+>
+  <div class="lux-input-row-authentic">
+    @if (inputPrefix) {
+    <span class="lux-input-prefix-container" matPrefix>
+      <ng-content select="lux-input-ac-prefix"></ng-content>
+    </span>
+    }
+    <input
+      type="text"
+      matInput
+      autocomplete="off"
+      luxTagIdHandler
+      [luxNameAttr]="luxName"
+      [luxTagId]="luxTagId"
+      [formControl]="formControl"
+      [placeholder]="luxPlaceholder"
+      [matAutocomplete]="auto"
+      [readonly]="luxReadonly"
+      [required]="luxRequired"
+      (click)="onClick($event)"
+      (blur)="luxBlur.emit($event)"
+      (focus)="onFocus($event)"
+      (focusin)="onFocusIn($event)"
+      (focusout)="onFocusOut($event)"
+      [id]="uid"
+      [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
+      #autoCompleteInput
+    />
+    @if (inputSuffix) {
+    <span class="lux-input-suffix-container" matSuffix>
+      <ng-content select="lux-input-ac-suffix"></ng-content>
+    </span>
+    }
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [class]="!luxDense ? 'lux-autocomplete-panel-ac' : 'lux-autocomplete-panel-dense-ac'"
+      [panelWidth]="luxPanelWidth"
+      [disableRipple]="true"
+      [displayWith]="displayFn.bind(this)"
+      (optionSelected)="selected($event)"
+    >
+      @for (option of displayedOptions; track option) {
+      <mat-option [value]="option">
+        <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: option }"></ng-container>
+      </mat-option>
+      }
+    </mat-autocomplete>
+  </div>
+</lux-form-control-wrapper>
+}
+
+<ng-template #optionTemplate let-option>
+  @if (option[luxOptionLabelProp]) {
+  {{ option | luxRenderProperty : luxOptionLabelProp }}
+  } @else {
+  {{ option }}
+  }
+</ng-template>

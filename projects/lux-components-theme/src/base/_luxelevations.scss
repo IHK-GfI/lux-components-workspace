@@ -1,0 +1,49 @@
+@use "@angular/material" as mat;
+
+/* 
+  Mixins für die Bestimmung der Schatten, um den Components eine "Höhe" zu geben
+  Sortierung erfolgt nach "Material Design Specification" 
+  https://material.io/design/environment/elevation.html#default-elevations
+  und nutzt die "Elevation Sass mixins" von @angular/material/core/style/elevation.scss
+  https://material.angular.io/guide/elevation
+  Wichtig: Hierbei handelt es sich um eine reine optische Elevation.
+  Der z-index wird dadurch nicht verändert!
+
+  Folgenden Components wurden die lux-elevation-z# mixins zugewiesen
+  lux-elevation-z0: (kein Schatten/niedrigste Ebene)
+  - im lux-Master-Detail wird die Card ohne Schatten genutzt, im Header der lux-rounded-Button ohne Schatten
+  lux-elevation-z1: (Strukturierende Elemente ohne Funktion)
+  - lux-card,lux-master-header/-footer/detail-contianer, wegen der geringen Größe Toggle-Thumb,
+  lux-elevation-z2: ("klickbare" Elemente)
+  - lux-buttons (luxRaised/luxRounded), lux-tile, lux-accordion
+  lux-elevation-z4: (Listen/Menüs im cdk-overlay)
+  - lux-message-box, lux-datepicker, lux-datetimepicker, lux-autocomplete, lux-select, lux-menu
+  lux-elevation-z6:
+  - lux-snackbar, lux-app-header
+  lux-elevation-z16:
+  - lux-side-nav (drawer)
+  lux-elevation-z24: (höchste Ebene)
+  - lux-dialog 
+*/
+
+@mixin lux-elevation-z0 {
+  @include mat.elevation(0);
+}
+@mixin lux-elevation-z1 {
+  @include mat.elevation(1);
+}
+@mixin lux-elevation-z2 {
+  @include mat.elevation(2);
+}
+@mixin lux-elevation-z4 {
+  @include mat.elevation(4);
+}
+@mixin lux-elevation-z6 {
+@include mat.elevation(6);
+}
+@mixin lux-elevation-z16 {
+  @include mat.elevation(16);
+}
+@mixin lux-elevation-z24 {
+  @include mat.elevation(24);
+}

@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.lux-panel {
+
+  ::ng-deep .mat-expansion-panel-header:not([aria-disabled='true']) {
+
+    .mat-expansion-panel-header-title {
+      //color: $dark-primary-text;
+    }
+
+    .mat-expansion-panel-header-description {
+      //color: $dark-secondary-text;
+    }
+  }
+
+  ::ng-deep lux-panel-content {
+    margin-bottom: var(--lux-theme-outline-width);
+  }
+}
+
+.lux-panel-mobile {
+  .mat-expansion-panel-header {
+    padding: 0 12px !important;
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 0 12px 8px !important;
+
+    .mat-expansion-panel-header,
+    .mat-expansion-panel-content {
+      position: relative;
+    }
+  }
+}

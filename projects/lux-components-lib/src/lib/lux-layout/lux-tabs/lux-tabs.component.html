@@ -1,0 +1,156 @@
+<div [ngClass]="{ 'lux-tabs-show-border': luxShowBorder }">
+  <mat-tab-group
+    [mat-stretch-tabs]="false"
+    [dynamicHeight]="false"
+    [selectedIndex]="luxActiveTab"
+    (selectedTabChange)="tabChange$.next($event)"
+    [disableRipple]="true"
+    class="lux-tab-group"
+    [ngClass]="{
+      'lux-tabs-show-divider': luxDisplayDivider,
+      'lux-tabs-mobile': smallDevice
+    }"
+    #matTabs
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [luxCustomTagId]="luxTagId"
+  >
+    @for (luxTab of luxTabs; track luxTab) {
+    <mat-tab
+      [label]="luxTab.luxTitle"
+      [labelClass]="luxTab.luxIconName || luxTab.luxImageSrc ? ['lux-tab-with-icon'] : []"
+      [disabled]="luxTab.luxDisabled"
+    >
+      <ng-template matTabLabel>
+        <ng-container *ngTemplateOutlet="tabLabelTemplate; context: { $implicit: luxTab }"></ng-container>
+      </ng-template>
+    </mat-tab>
+    }
+  </mat-tab-group>
+
+  @for (luxTab of luxTabs; track trackTab(i, luxTab); let i = $index) { @if (!luxLazyLoading) {
+  <section
+    luxTagIdHandler
+    [luxTagId]="luxTab.luxTagIdContent"
+    [luxCustomTagId]="luxTab.luxTagIdContent"
+    [class.lux-display-none]="i !== luxActiveTab"
+    class="lux-mt-3 lux-tab-content"
+    [ngClass]="{ 'lux-pl-4': luxShowBorder, 'lux-pr-4': luxShowBorder }"
+  >
+    <ng-container *ngTemplateOutlet="luxTab.contentTemplate"></ng-container>
+    <span>&nbsp;</span>
+  </section>
+  } @if (luxLazyLoading && i === luxActiveTab) {
+  <section
+    luxTagIdHandler
+    [luxTagId]="luxTab.luxTagIdContent"
+    [luxCustomTagId]="luxTab.luxTagIdContent"
+    class="lux-mt-3 lux-tab-content"
+    [ngClass]="{ 'lux-pl-4': luxShowBorder, 'lux-pr-4': luxShowBorder }"
+  >
+    <ng-container *ngTemplateOutlet="luxTab.contentTemplate"></ng-container>
+    <span>&nbsp;</span>
+  </section>
+  } }
+</div>
+<ng-template #tabLabelTemplate let-luxTab>
+  <div luxTagIdHandler [luxTagId]="luxTab.luxTagIdHeader" [luxCustomTagId]="luxTab.luxTagIdHeader" class="lux-mt-3 lux-mb-3">
+    <div class="lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto gt-sm:lux-flex-col xs:lux-flex-row">
+      <div class="lux-flex lux-place-content-center lux-items-center lux-flex-grow-0 lux-flex-shrink-0">
+        @if (luxTab.luxImageSrc && !luxTab.luxIconName) {
+        <div class="lux-tab-header-image-container lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-full">
+          @if (luxTab.luxImageAlign === 'right' || luxTab.luxImageAlign === 'center') {
+          <div class="lux-tab-header-image-left"></div>
+          }
+          <lux-image
+            class="lux-tab-header-image lux-flex-grow-0 lux-flex-shrink-0"
+            [luxBadgeNotification]="smallDevice || (!smallDevice && !luxTab.luxTitle) ? luxTab.luxCounter : ''"
+            [luxBadgeNoBorder]="true"
+            luxBadgeColor="primary"
+            [luxBadgeDisabled]="luxTab.luxDisabled"
+            [luxBadgeCap]="luxTab.luxCounterCap"
+            [luxBadgeOverlap]="false"
+            [luxImageSrc]="luxTab.luxImageSrc"
+            [luxImageWidth]="luxTab.luxImageWidth"
+            [luxImageHeight]="luxTab.luxImageHeight"
+          >
+          </lux-image>
+          @if (luxTab.luxImageAlign === 'left' || luxTab.luxImageAlign === 'center') {
+          <div class="lux-tab-header-image-right"></div>
+          }
+        </div>
+        } @if (luxTab.luxIconName) {
+        <lux-icon
+          class="lux-tab-icon"
+          [luxIconName]="luxTab.luxIconName"
+          [luxIconSize]="luxIconSize"
+          [luxBadgeNotification]="smallDevice || (!smallDevice && !luxTab.luxTitle) ? luxTab.luxCounter : ''"
+          [luxBadgeNoBorder]="true"
+          luxBadgeColor="primary"
+          [luxBadgeDisabled]="luxTab.luxDisabled"
+          [luxBadgeCap]="luxTab.luxCounterCap"
+          [luxBadgeOverlap]="false"
+        ></lux-icon>
+        } @if (smallDevice || (!smallDevice && !luxTab.luxTitle)) {
+        <span
+          [ngClass]="[
+            'lux-tabs-notification-icon',
+            'lux-tabs-notification-icon-position-after-icon',
+            getNotificationIconColorClassForTab(luxTab),
+            luxTab.luxCounter !== null && luxTab.luxCounter !== undefined ? 'lux-counter-visible' : ''
+          ]"
+        ></span>
+        }
+      </div>
+      <div class="lux-flex" [ngClass]="{ 'lux-label-lower': !smallDevice }">
+        @if (luxTab.luxIconName || luxTab.luxImageSrc) {
+        <div
+          class="lux-tab-title"
+          [ngClass]="{ 'lux-uppercase': labelUppercase, 'lux-display-none': smallDevice }"
+          [luxBadgeNotification]="!smallDevice && luxTab.luxTitle ? luxTab.luxCounter : ''"
+          [luxBadgeNoBorder]="true"
+          luxBadgeColor="primary"
+          [luxBadgeDisabled]="luxTab.luxDisabled"
+          [luxBadgeCap]="luxTab.luxCounterCap"
+          [luxBadgeOverlap]="false"
+        >
+          {{ luxTab.luxTitle }}
+          @if (luxTab.luxShowNotification && !smallDevice && luxTab.luxTitle) {
+          <span
+            [ngClass]="[
+              'lux-tabs-notification-icon',
+              'lux-tabs-notification-icon-position-after-label',
+              getNotificationIconColorClassForTab(luxTab),
+              luxTab.luxCounter !== null && luxTab.luxCounter !== undefined ? 'lux-counter-visible' : ''
+            ]"
+          ></span>
+          }
+        </div>
+        } @if (!luxTab.luxIconName && !luxTab.luxImageSrc) {
+        <div
+          class="lux-tab-title"
+          [ngClass]="{ 'lux-uppercase': labelUppercase }"
+          [luxBadgeNotification]="!luxTab.luxIconName ? luxTab.luxCounter : ''"
+          [luxBadgeNoBorder]="true"
+          luxBadgeColor="primary"
+          [luxBadgeDisabled]="luxTab.luxDisabled"
+          [luxBadgeCap]="luxTab.luxCounterCap"
+          [luxBadgeOverlap]="false"
+        >
+          {{ luxTab.luxTitle }}
+          @if (luxTab.luxShowNotification && !smallDevice && luxTab.luxTitle) {
+          <span
+            [ngClass]="[
+              'lux-tabs-notification-icon',
+              'lux-tabs-notification-icon-position-after-label',
+              getNotificationIconColorClassForTab(luxTab),
+              luxTab.luxCounter !== null && luxTab.luxCounter !== undefined ? 'lux-counter-visible' : ''
+            ]"
+          ></span>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

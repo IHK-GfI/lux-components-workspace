@@ -1,0 +1,25 @@
+<lux-file-preview-toolbar>
+  <lux-button
+    [luxIconName]="downloadIconName"
+    (luxClicked)="onDownload()"
+    luxColor="accent"
+    [luxRaised]="true"
+    [luxTagId]="downloadTagId"
+    [luxAriaLabel]="downloadAriaLabel"
+  ></lux-button>
+  <lux-button
+    [luxIconName]="closeIconName"
+    (luxClicked)="onClose()"
+    [luxRaised]="true"
+    [luxTagId]="closeTagId"
+    [luxAriaLabel]="closeAriaLabel"
+  ></lux-button>
+</lux-file-preview-toolbar>
+
+<div class="overlay-content" [ngStyle]="{ width: width + 'px', height: height + 'px' }">
+  @if (url) {
+  <object [data]="url" type="application/pdf" width="100%" height="98%" standby="PDF wird geladen...">
+    <p>Ihr Browser unterstützt keine PDF-Vorschau.</p>
+  </object>
+  }
+</div>

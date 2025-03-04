@@ -1,0 +1,2 @@
+ng lint lux-components-lib
+ng lint demo-app

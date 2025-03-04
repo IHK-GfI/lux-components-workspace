@@ -1,0 +1,13 @@
+<div class="lux-flex lux-justify-between lux-items-center lux-border-box">
+  <div class="lux-file-name">
+    @if (!mobileView) {
+    <div>
+      <lux-icon class="lux-flex lux-flex-none lux-border-box" luxIconName="lux-interface-content-file" luxIconSize="1x"></lux-icon>
+      <div class="lux-crop lux-flex-auto lux-border-box">{{ data.fileObject?.name }}</div>
+    </div>
+    }
+  </div>
+  <div class="lux-flex lux-gap-4 lux-justify-end lux-items-center lux-flex-none">
+    <ng-content></ng-content>
+  </div>
+</div>

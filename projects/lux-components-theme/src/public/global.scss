@@ -1,0 +1,52 @@
+// Media Queries
+$mat-xsmall: "max-width: 599px" !default;
+$mat-small: "max-width: 959px" !default;
+$mat-medium: "max-width: 1279px" !default;
+$mat-large: "max-width: 1919px" !default;
+$mat-xlarge: "max-width: 5000px" !default;
+
+// Font
+$app-font-family:
+  Source Sans Pro,
+  Helvetica Neue,
+  sans-serif !default;
+
+html body {
+  --mat-checkbox-label-text-font: #{$app-font-family};
+  --mat-switch-label-text-font: #{$app-font-family};
+  --mat-stepper-container-text-font: #{$app-font-family};
+  --mat-stepper-header-label-text-font: #{$app-font-family};
+  --mat-expansion-header-text-font: #{$app-font-family};
+  --mat-expansion-container-text-font: #{$app-font-family};
+  --mat-datepicker-calendar-text-font: #{$app-font-family};
+  --mat-legacy-button-toggle-text-font: #{$app-font-family};
+  --mat-standard-button-toggle-text-font: #{$app-font-family};
+  --mat-bottom-sheet-container-text-font: #{$app-font-family};
+  --mat-badge-text-font: #{$app-font-family};
+  --mat-toolbar-title-text-font: #{$app-font-family};
+  --mat-stepper-container-text-font: #{$app-font-family};
+  --mat-stepper-header-label-text-font: #{$app-font-family};
+  --mat-expansion-header-text-font: #{$app-font-family};
+  --mat-expansion-container-text-font: #{$app-font-family};
+  --mat-datepicker-calendar-text-font: #{$app-font-family};
+  --mat-legacy-button-toggle-text-font: #{$app-font-family};
+  --mat-standard-button-toggle-text-font: #{$app-font-family};
+  --mat-bottom-sheet-container-text-font: #{$app-font-family};
+  --mat-badge-text-font: #{$app-font-family};
+  --mat-table-header-headline-font: #{$app-font-family};
+  --mat-table-row-item-label-text-font: #{$app-font-family};
+  --mat-table-footer-supporting-text-font: #{$app-font-family};
+  --mat-paginator-container-text-font: #{$app-font-family};
+  --mat-menu-item-label-text-font: #{$app-font-family};
+  --mat-select-trigger-text-font: #{$app-font-family};
+  --mdc-filled-text-field-label-text-font: #{$app-font-family};
+  --mdc-outlined-text-field-label-text-font: #{$app-font-family};
+  --mat-form-field-container-text-font: #{$app-font-family};
+  --mat-form-field-subscript-text-font: #{$app-font-family};
+  --mat-optgroup-label-text-font: #{$app-font-family};
+  --mat-option-label-text-font: #{$app-font-family};
+}
+
+.mat-mdc-tooltip-surface {
+  --mdc-plain-tooltip-supporting-text-font: #{$app-font-family};
+}

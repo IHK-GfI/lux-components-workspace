@@ -1,0 +1,19 @@
+<div class="lux-lang-select lux-flex lux-flex-grow-0 lux-flex-shrink-0 lux-flex-basis-auto lux-place-content-center">
+  <lux-menu
+    class="lux-lang-select-menu"
+    luxAriaMenuTriggerLabel="Sprachmenü"
+    i18n-luxAriaMenuTriggerLabel="@@luxc.lang-select.aria.langmenu.btn"
+    [luxMenuLabel]="selectedLocale.labelSelected"
+    luxMenuIconName=""
+    [luxDisplayExtended]="false"
+  >
+    @for (item of localeOptions; track item.label) {
+    <lux-menu-item
+      class="lux-lang-select-menu-item"
+      [luxLabel]="item.label"
+      luxIconName="lux-travel-map-rectangle-flag"
+      (luxClicked)="onLocaleChanged(item)"
+    ></lux-menu-item>
+    }
+  </lux-menu>
+</div>

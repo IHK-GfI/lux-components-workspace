@@ -1,0 +1,23 @@
+@use "@angular/material" as mat;
+@use "luxpalette";
+
+@include mat.core();
+
+$lux-primary: mat.m2-define-palette(luxpalette.$lux-palette_primary);
+$lux-accent: mat.m2-define-palette(luxpalette.$lux-palette_accent);
+$lux-warn: mat.m2-define-palette(luxpalette.$lux-palette_warn);
+$lux-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $lux-primary,
+      accent: $lux-accent,
+      warn: $lux-warn
+    ),
+    typography: mat.m2-define-typography-config(),
+    density: 0
+  )
+);
+
+html {
+  @include mat.all-component-themes($lux-theme);
+}

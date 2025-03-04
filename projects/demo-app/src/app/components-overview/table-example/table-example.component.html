@@ -1,0 +1,274 @@
+<example-base-structure
+  exampleTitle="Tabelle"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90table-v18"
+>
+  <example-base-content class="example-base-content">
+    <div [ngStyle]="{ height: calculateProportions ? tableHeightPx + 'px' : 'unset' }" class="lux-table-example">
+      <lux-table
+        [luxMinWidthPx]="minWidthPx"
+        [luxData]="dataSource"
+        [luxShowPagination]="pagination"
+        [luxColWidthsPercent]="columnWidthOption"
+        [luxShowFilter]="filter"
+        [luxFilterText]="filterText"
+        [luxPageSize]="pageSize"
+        [luxClasses]="cssClass"
+        [luxPageSizeOptions]="pageSizeOption"
+        [luxMultiSelect]="multiSelect"
+        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick"
+        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty"
+        [luxNoDataText]="noDataText"
+        [(luxSelected)]="selected"
+        [luxCompareWith]="compareFn"
+        (luxSelectedChange)="onSelectedChange($event)"
+        (luxSelectedAsArrayChange)="onSelectedAsArrayChange($event)"
+        [luxHideBorders]="hideBorders"
+        [luxAutoPaginate]="autoPagination"
+        [luxPagerDisabled]="pagerDisabled"
+        [luxPagerTooltip]="pagerTooltip"
+        [luxPagerFirstLastButton]="pagerFirstLastButton"
+        [luxAlignElementsTop]="alignElementsTop"
+        #myTable
+      >
+        <lux-table-column
+          luxColumnDef="name"
+          [luxSortable]="nameConfig.sortable"
+          [luxSticky]="nameConfig.sticky"
+          [luxResponsiveAt]="nameConfig.responsiveAt"
+          [luxResponsiveBehaviour]="nameConfig.responsiveBehaviour?.value"
+        >
+          <lux-table-column-header>
+            <ng-template><span [luxTooltip]="'Tooltip Spalte \'Name\''">Name</span></ng-template>
+          </lux-table-column-header>
+          <lux-table-column-content>
+            <ng-template let-element>
+              @if (!element.editable) {
+              <span>{{ element.name }}</span>
+              } @if (element.editable) {
+              <lux-input-ac
+                luxAriaLabel="Name"
+                luxTagId="table.row.control.name"
+                class="lux-table-no-label"
+                [(luxValue)]="element.name"
+                [luxNoLabels]="true"
+              ></lux-input-ac>
+              }
+            </ng-template>
+          </lux-table-column-content>
+          <lux-table-column-footer>
+            <ng-template> Name Footer </ng-template>
+          </lux-table-column-footer>
+        </lux-table-column>
+        <lux-table-column
+          luxColumnDef="symbol"
+          [luxSortable]="symbolConfig.sortable"
+          [luxSticky]="symbolConfig.sticky"
+          [luxResponsiveAt]="symbolConfig.responsiveAt"
+          [luxResponsiveBehaviour]="symbolConfig.responsiveBehaviour?.value"
+        >
+          <lux-table-column-header>
+            <ng-template>
+              <span [luxTooltip]="'Tooltip Spalte \'Symbol\''">Symbol</span>
+            </ng-template>
+          </lux-table-column-header>
+          <lux-table-column-content>
+            <ng-template let-element>
+              @if (!element.editable) {
+              <span>{{ element.symbol | lowercase }}</span>
+              }
+              <div class="lux-flex lux-flex-wrap">
+                @if (element.editable) {
+                <lux-input-ac
+                  luxAriaLabel="Symbol"
+                  luxTagId="table.row.control.symbol"
+                  class="lux-table-no-label"
+                  [(luxValue)]="element.symbol"
+                  [luxNoLabels]="true"
+                ></lux-input-ac>
+                }
+              </div>
+            </ng-template>
+          </lux-table-column-content>
+          <lux-table-column-footer>
+            <ng-template> Symbol Footer </ng-template>
+          </lux-table-column-footer>
+        </lux-table-column>
+        @if (!multiSelect || !multiSelectOnlyCheckboxClick) {
+        <lux-table-column
+          luxColumnDef="date"
+          [luxSortable]="dateConfig.sortable"
+          [luxSticky]="dateConfig.sticky"
+          [luxResponsiveAt]="dateConfig.responsiveAt"
+          [luxResponsiveBehaviour]="dateConfig.responsiveBehaviour?.value"
+        >
+          <lux-table-column-header>
+            <ng-template>Datum</ng-template>
+          </lux-table-column-header>
+          <lux-table-column-content>
+            <ng-template let-element
+              ><span>{{ element.date | date : 'dd.MM.yyyy' }}</span></ng-template
+            >
+          </lux-table-column-content>
+          <lux-table-column-footer>
+            <ng-template> Datum Footer </ng-template>
+          </lux-table-column-footer>
+        </lux-table-column>
+        } @if (multiSelect && multiSelectOnlyCheckboxClick) {
+        <lux-table-column luxColumnDef="Aktion" [luxSortable]="false">
+          <lux-table-column-header>
+            <ng-template>Aktion</ng-template>
+          </lux-table-column-header>
+          <lux-table-column-content>
+            <ng-template let-element>
+              @if (!element.editable) {
+              <lux-button
+                luxAriaLabel="Editieren"
+                luxTagId="table.row.action.edit"
+                class="lux-table-example"
+                luxColor="primary"
+                luxIconName="lux-interface-edit-write-2"
+                (luxClicked)="onEdit(element)"
+              ></lux-button>
+              } @if (element.editable) {
+              <lux-button
+                luxAriaLabel="Speichern"
+                luxTagId="table.row.action.save"
+                class="lux-table-example"
+                luxColor="primary"
+                luxIconName="lux-save"
+                (luxClicked)="onSave(element)"
+              ></lux-button>
+              } @if (element.editable) {
+              <lux-button
+                luxAriaLabel="Abbrechen"
+                luxTagId="table.row.action.cancel"
+                class="lux-table-example"
+                luxColor="primary"
+                luxIconName="lux-interface-arrows-round-left"
+                (luxClicked)="onCancel(element)"
+              ></lux-button>
+              }
+            </ng-template>
+          </lux-table-column-content>
+          <lux-table-column-footer>
+            <ng-template> Aktion Footer </ng-template>
+          </lux-table-column-footer>
+        </lux-table-column>
+        }
+      </lux-table>
+    </div>
+    <lux-textbox luxColor="blue" luxIcon="lux-interface-favorite-like-1" luxTitle="Formcontrols in editierbaren Tabellen anpassen">
+      <p>
+        Die Lux-Form-Controls haben standardmäßig einen Label- und einen Hint/Error-Container. In editierbaren Tabellen werden diese jedoch
+        nicht benötigt. <br />
+        Für diesen Anwendungsfall kann ab Version 13.0.0 das Attribut <strong>luxNoLabels</strong> bei den Form-Controls genutzt werden.
+        Zusätzlich wird für Theme-Authentic das Padding innerhalb der Form-Controls automatisch verringert.
+      </p>
+      <div class="code-section">
+        <lux-markdown [luxData]="markdownData"></lux-markdown>
+      </div>
+    </lux-textbox>
+    <h3 style="margin-bottom: 0">Test-Tabelle zum Prüfen der eingesetzten Schriftarten</h3>
+    <p style="margin: 0">
+      Innerhalb einer Tabelle soll nur eine Schriftart verwendet werden. Unabhängig von der Art der Formatierung des Tabellen-Eintrags. Die
+      Schriftart wird dabei durch das jeweilige Theme bestimmt. Bei den Themes Authentic und Green ist es die Schrift "Source Sans Pro".
+    </p>
+    <lux-table [luxData]="fontExample">
+      <lux-table-column luxColumnDef="example1">
+        <lux-table-column-header><ng-template>ohne &lt;...&gt;</ng-template></lux-table-column-header>
+        <lux-table-column-content
+          ><ng-template let-element>{{ element.content }}</ng-template></lux-table-column-content
+        >
+        <lux-table-column-footer><ng-template>Footertext</ng-template></lux-table-column-footer>
+      </lux-table-column>
+      <lux-table-column luxColumnDef="example2">
+        <lux-table-column-header
+          ><ng-template><span>Mit &lt;span&gt;</span></ng-template></lux-table-column-header
+        >
+        <lux-table-column-content
+          ><ng-template let-element
+            ><span>{{ element.content }}</span></ng-template
+          ></lux-table-column-content
+        >
+        <lux-table-column-footer
+          ><ng-template><span>Footertext</span></ng-template></lux-table-column-footer
+        >
+      </lux-table-column>
+      <lux-table-column luxColumnDef="example3">
+        <lux-table-column-header
+          ><ng-template><div>Mit &lt;div&gt;</div></ng-template></lux-table-column-header
+        >
+        <lux-table-column-content
+          ><ng-template let-element
+            ><div>{{ element.content }}</div></ng-template
+          ></lux-table-column-content
+        >
+        <lux-table-column-footer
+          ><ng-template><div>Footertext</div></ng-template></lux-table-column-footer
+        >
+      </lux-table-column>
+      <lux-table-column luxColumnDef="example4">
+        <lux-table-column-header
+          ><ng-template><p style="margin: 0">Mit &lt;p&gt;</p></ng-template></lux-table-column-header
+        >
+        <lux-table-column-content
+          ><ng-template let-element
+            ><p>{{ element.content }}</p></ng-template
+          ></lux-table-column-content
+        >
+        <lux-table-column-footer
+          ><ng-template><p>Footertext</p></ng-template></lux-table-column-footer
+        >
+      </lux-table-column>
+    </lux-table>
+  </example-base-content>
+  <example-base-simple-options>
+    <table-example-simple-options [tableExample]="this" class="lux-flex lux-flex-col lux-gap-4"></table-example-simple-options>
+  </example-base-simple-options>
+  <example-base-advanced-options>
+    <table-example-advanced-options [tableExample]="this" class="lux-flex lux-flex-col lux-gap-4"></table-example-advanced-options>
+  </example-base-advanced-options>
+  <example-base-options-actions class="lux-flex">
+    <lux-menu
+      class="lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-64 lux-min-width-64 lux-max-width-64"
+      luxMenuIconName="lux-interface-setting-menu-vertical"
+      [luxDisplayExtended]="true"
+      [luxDisplayMenuLeft]="false"
+      [luxMaximumExtended]="4"
+    >
+      <lux-menu-item
+        luxLabel="Ersten 5 auswählen"
+        [luxRaised]="true"
+        [luxDisabled]="!multiSelect"
+        (luxClicked)="preselect()"
+        luxTagId="menu-select-5"
+      >
+      </lux-menu-item>
+      <lux-menu-item
+        luxLabel="Tabelle leeren"
+        luxColor="warn"
+        [luxDisabled]="dataSource.length === 0"
+        [luxRaised]="true"
+        (luxClicked)="clearData()"
+        luxTagId="menu-clear"
+      >
+      </lux-menu-item>
+      <lux-menu-item
+        luxLabel="Tabelle befüllen (300)"
+        luxColor="accent"
+        (luxClicked)="loadData(true)"
+        [luxRaised]="true"
+        luxTagId="menu-fill-300"
+      >
+      </lux-menu-item>
+      <lux-menu-item
+        luxLabel="Tabelle befüllen (30)"
+        luxColor="accent"
+        (luxClicked)="loadData(false)"
+        [luxRaised]="true"
+        luxTagId="menu-fill-30"
+      >
+      </lux-menu-item>
+    </lux-menu>
+  </example-base-options-actions>
+</example-base-structure>

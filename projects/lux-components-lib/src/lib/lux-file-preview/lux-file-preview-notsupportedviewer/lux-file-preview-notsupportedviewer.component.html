@@ -1,0 +1,23 @@
+<lux-file-preview-toolbar>
+  <lux-button
+    luxIconName="lux-interface-download-button-2"
+    (luxClicked)="onDownload()"
+    luxColor="accent"
+    [luxRaised]="true"
+    luxTagId="file-preview-download-btn"
+    luxAriaLabel="Datei herunterladen"
+    i18n-luxAriaLabel="@@luxc.file-preview.notsupportedviewer.download.arialabel"
+  ></lux-button>
+  <lux-button
+    luxIconName="lux-close"
+    (luxClicked)="onClose()"
+    [luxRaised]="true"
+    luxTagId="file-preview-close-btn"
+    luxAriaLabel="Dateivorschau schließen"
+    i18n-luxAriaLabel="@@luxc.file-preview.notsupportedviewer.close.arialabel"
+  ></lux-button>
+</lux-file-preview-toolbar>
+<div class="message-box lux-flex lux-flex-col lux-place-content-center lux-items-center lux-gap-5">
+  <div i18n="@@luxc.file-preview.notsupportedviewer.message">Dieses Dateiformat kann in der Vorschau nicht angezeigt werden.</div>
+  <lux-button [luxLabel]="downloadLabel" (luxClicked)="onDownload()" [luxRaised]="true" luxColor="accent"></lux-button>
+</div>

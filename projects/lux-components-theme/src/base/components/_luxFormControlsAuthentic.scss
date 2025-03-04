@@ -1,0 +1,673 @@
+@use "sass:map";
+@use "../luxcommon";
+@use "../luxpalette";
+@use "../../public/global";
+@use "../luxelevations";
+@use "../luxfocus";
+@use "../../base/luxSvgIcons" as luxicons;
+
+/*
+ * Theming for LUX-Autocomplete
+ */
+div.mat-mdc-autocomplete-panel.lux-autocomplete-panel-ac {
+  padding-top: 0;
+  padding-bottom: 0;
+
+  mat-option {
+    .mat-pseudo-checkbox {
+      display: none;
+    }
+  }
+
+  .mat-mdc-option {
+    .mdc-list-item__primary-text {
+      min-height: #{luxcommon.$lux-panel-option-min-height};
+      padding: #{luxcommon.$lux-panel-option-padding};
+    }
+  }
+}
+
+/*
+ * Theming for LUX-Select
+ */
+.mat-mdc-select-panel {
+  --mat-full-pseudo-checkbox-selected-checkmark-color: #ffffff;
+}
+
+div.mat-mdc-select-panel {
+  &.lux-select-panel-ac {
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .mat-mdc-option {
+      --mat-option-selected-state-label-text-color: #ffffff;
+      --mat-option-selected-state-layer-color: #{luxcommon.$lux-hover-color};
+      --mat-option-focus-state-layer-color: #{luxcommon.$lux-hover-color};
+      --mat-option-hover-state-layer-color: #{luxcommon.$lux-hover-color};
+
+      .mdc-list-item__primary-text {
+        min-height: #{luxcommon.$lux-panel-option-min-height};
+        padding: #{luxcommon.$lux-panel-option-padding};
+      }
+    }
+  }
+
+  &.lux-select-panel-ac-multiple {
+    .mat-mdc-option {
+      .mdc-list-item__primary-text {
+        min-height: #{luxcommon.$lux-panel-option-min-height};
+        padding: #{luxcommon.$lux-panel-option-padding};
+      }
+    }
+  }
+}
+
+lux-select-ac,
+lux-lookup-combobox-ac {
+  mat-select {
+    font-family: luxcommon.$app-font-family;
+    height: calc(1.5em - 1px) !important;
+    // bisher noch nicht klar, warum das mat-select einen Pixel an Höhe mehr beansprucht, als es tatsächlich Hoch ist
+    // daher wird hier die Höhe korrigiert, damit die Baseline eingehalten ist
+
+    .mat-mdc-select-arrow-wrapper {
+      margin-left: 2px;
+      height: 24px;
+      width: 24px;
+
+      .mat-mdc-select-arrow {
+        border: none;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background-color: luxpalette.$lux-primary-color;
+        -webkit-mask: url(luxicons.$arrow-button-down);
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        -webkit-mask-size: cover;
+        mask: url(luxicons.$arrow-button-down);
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: cover;
+      }
+    }
+
+    &[aria-readonly="true"] {
+      .mat-mdc-select-arrow {
+        background-color: luxcommon.$dark-disabled-text;
+      }
+      .mat-mdc-select-trigger {
+        cursor: text;
+      }
+    }
+
+    &[aria-readonly="false"] .mat-mdc-select-arrow {
+      background-color: luxpalette.$lux-primary-color;
+    }
+
+    &[aria-disabled="true"] .mat-mdc-select-arrow {
+      background-color: luxcommon.$dark-disabled-text;
+    }
+
+    &[aria-disabled="false"] .mat-mdc-select-arrow {
+      background-color: luxpalette.$lux-primary-color;
+    }
+  }
+}
+
+// Checkbox wird im Cdk-Overlay dargestellt und hängt nicht unter der Component selbst.
+.lux-select-panel-ac .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full,
+.lux-select-panel-ac-multiple .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full {
+  background-color: luxpalette.$lux-primary-color;
+}
+
+.cdk-overlay-pane {
+  .mat-option {
+    font-family: luxcommon.$app-font-family;
+  }
+  .mat-mdc-autocomplete-panel.lux-autocomplete-panel-ac,
+  .mat-mdc-autocomplete-panel.lux-autocomplete-panel-dense-ac,
+  .mat-mdc-select-panel.lux-select-panel-ac,
+  .mat-mdc-select-panel.lux-select-panel-ac-multiple {
+    border: 2px solid luxpalette.$lux-primary-color;
+    border-radius: luxcommon.$app-border-radius !important;
+    box-shadow: none !important;
+  }
+}
+
+/*
+* Theming für Lux-Checkbox
+*/
+html .mat-mdc-checkbox .mat-internal-form-field {
+  --mat-switch-label-text-size: 16px;
+  --mat-checkbox-label-text-line-height: 24px;
+}
+
+lux-checkbox-ac {
+  input:focus ~ .mdc-checkbox__background,
+  input:hover ~ .mdc-checkbox__background,
+  .mat-mdc-checkbox-touch-target:hover ~ .mdc-checkbox__background {
+    border-color: luxcommon.$dark-secondary-text !important;
+  }
+
+  input:focus-visible ~ .mdc-checkbox__background {
+    border-color: luxcommon.$dark-secondary-text !important;
+    @include luxfocus.focus-dark-mixin;
+  }
+
+  .mdc-checkbox {
+    padding: 0;
+    //Bei mehrzeiligen Labels soll die Checkbox oben und nicht zentriert angezeigt werden.
+    //Deswegen wird hier das Margin-top: auto überschrieben.
+    align-self: flex-start;
+    margin-top: 0.2em;
+
+    .mdc-checkbox__background {
+      top: 0;
+      left: 0;
+    }
+
+    .mat-mdc-checkbox-touch-target {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  label {
+    font-family: luxcommon.$app-font-family;
+    font-size: luxcommon.$form-control-font-size;
+    color: luxcommon.$dark-primary-text;
+    letter-spacing: normal;
+    cursor: pointer;
+  }
+
+  .mat-mdc-checkbox-ripple,
+  .mdc-checkbox__ripple {
+    display: none;
+  }
+
+  & .mat-mdc-checkbox-disabled {
+    .mdc-checkbox {
+      color: #ffffff;
+    }
+  }
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+  }
+}
+
+lux-datepicker-ac,
+lux-datetimepicker-ac {
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
+    display: block;
+  }
+  mat-datepicker-toggle {
+    height: 24px;
+    width: 24px;
+
+    .mdc-icon-button.mat-mdc-icon-button.mat-mdc-button-base {
+      height: 24px;
+      width: 24px;
+      padding: 0;
+
+      lux-icon.lux-datepicker-toggle-icon,
+      mat-icon.mat-icon {
+        height: 24px;
+        width: 24px;
+        padding: 0px !important;
+      }
+
+      &[disabled="true"] {
+        svg {
+          color: luxcommon.$dark-disabled-text;
+        }
+      }
+    }
+  }
+}
+.cdk-overlay-pane .mat-datepicker-content,
+.lux-datetimepicker-overlay .mat-mdc-card.lux-card {
+  --mat-datepicker-calendar-container-shape: #{luxcommon.$app-border-radius};
+
+  border: 2px solid luxpalette.$lux-primary-color;
+  box-shadow: none !important;
+  margin: 13px -9px 0;
+
+  & .mat-calendar-header button:hover {
+    background-color: #fff !important;
+    color: map-get(luxpalette.$lux-palette_primary, 300);
+  }
+}
+
+/*
+* Theming für lux-Toggle
+*/
+$toggleHandleSize: 23;
+$toggleBorderWidth: 2;
+$toggleMarginLeft: $toggleBorderWidth + 1;
+
+html lux-toggle-ac .mat-mdc-slide-toggle {
+  --mat-switch-label-text-size: 16px;
+  --mdc-switch-track-width: 50px;
+  --mdc-switch-track-height: 30px;
+  --mdc-switch-track-shape: 15px;
+  --mdc-switch-handle-width: 30px;
+  --mat-switch-track-outline-width: #{$toggleBorderWidth}px !important;
+  --mat-switch-track-outline-color: #{luxcommon.$dark-disabled-text} !important;
+  --mat-switch-selected-track-outline-width: #{$toggleBorderWidth}px !important;
+  --mat-switch-selected-track-outline-color: #{luxpalette.$lux-primary-color} !important;
+  --mat-switch-selected-handle-size: #{$toggleHandleSize}px;
+  --mat-switch-pressed-handle-size: #{$toggleHandleSize}px;
+  --mat-switch-with-icon-handle-size: #{$toggleHandleSize}px;
+  --mdc-switch-selected-icon-size: #{$toggleHandleSize}px;
+  --mdc-switch-selected-handle-size: #{$toggleHandleSize}px;
+  --mdc-switch-unselected-icon-size: #{$toggleHandleSize}px;
+  --mat-switch-unselected-handle-size: #{$toggleHandleSize}px;
+  --mdc-switch-selected-icon-color: #{luxpalette.$lux-primary-color};
+  --mdc-switch-state-layer-size: 40px;
+
+  .mat-internal-form-field {
+    letter-spacing: normal;
+  }
+}
+
+lux-toggle-ac {
+  mat-slide-toggle {
+    max-height: 26px;
+
+    .mdc-switch__ripple {
+      display: none;
+    }
+
+    // Farben
+    button {
+      &.mdc-switch--disabled {
+        &.mdc-switch--checked {
+          .mdc-switch__icons {
+            --mdc-switch-disabled-selected-icon-opacity: 1;
+            svg.mdc-switch__icon--on {
+              fill: luxcommon.$dark-disabled-text;
+              background: white;
+            }
+          }
+        }
+
+        &:not(.mdc-switch--checked) {
+          .mdc-switch__track {
+            opacity: 1;
+            --mat-switch-disabled-unselected-track-outline-color: #e0e0e0;
+            --mat-switch-disabled-unselected-track-outline-width: #{$toggleBorderWidth}px;
+            &::before {
+              background: transparent;
+            }
+          }
+        }
+      }
+
+      &:not(.mdc-switch--disabled) {
+        &.mdc-switch--checked {
+          .mdc-switch__icons {
+            svg.mdc-switch__icon--on {
+              background-color: white;
+            }
+          }
+        }
+      }
+    }
+
+    // Layout
+    button {
+      .mdc-switch__handle {
+        margin-left: #{$toggleMarginLeft}px !important;
+      }
+
+      .mdc-switch__icons {
+        svg.mdc-switch__icon--on {
+          border-radius: 50%;
+        }
+
+        svg.mdc-switch__icon--off {
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+
+    button {
+      pointer-events: none;
+
+      .mdc-switch__track {
+        pointer-events: none;
+
+        &::before {
+          pointer-events: none;
+        }
+
+        &::after {
+          pointer-events: none;
+        }
+      }
+
+      .mdc-switch__handle {
+        pointer-events: none;
+      }
+
+      .mdc-switch__handle-track {
+        pointer-events: none;
+      }
+
+      .mdc-switch__icons {
+        pointer-events: none;
+
+        svg.mdc-switch__icon--on {
+          pointer-events: none;
+        }
+
+        svg.mdc-switch__icon--off {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Theming for LUX-Radio
+ */
+html .mat-mdc-radio-button {
+  --mat-radio-label-text-size: 16px;
+}
+
+.mat-mdc-radio-button .mat-internal-form-field {
+  --mat-radio-label-text-line-height: 24px;
+
+  label {
+    letter-spacing: normal;
+  }
+}
+
+lux-radio-ac {
+  .mat-mdc-radio-button .mdc-radio {
+    padding: 0;
+  }
+
+  mat-radio-button:not(.mat-mdc-radio-checked) input:hover ~ .mdc-radio__background div.mdc-radio__outer-circle,
+  mat-radio-button:not(.mat-mdc-radio-checked) .mat-mdc-radio-touch-target:hover ~ .mdc-radio__background div.mdc-radio__outer-circle {
+    border-color: luxcommon.$dark-secondary-text !important;
+  }
+
+  input:focus-visible ~ .mdc-radio__background {
+    border-color: luxcommon.$dark-secondary-text !important;
+    @include luxfocus.focus-dark-mixin;
+  }
+
+  .mdc-radio__background {
+    // damit ist der Focus-Indicator rund, wie bei Toggle-Thumb und Chips
+    border-radius: 50%;
+
+    &::before {
+      // Ripple ausblenden
+      display: none;
+    }
+  }
+
+  .mdc-label {
+    color: luxcommon.$dark-primary-text;
+    font-family: luxcommon.$app-font-family;
+  }
+
+  .mat-mdc-radio-group {
+    display: flex;
+    box-sizing: border-box;
+    place-content: stretch flex-start;
+    align-items: stretch;
+
+    &.lux-horizontal {
+      gap: 0.75em;
+      flex-direction: row;
+      flex-flow: wrap;
+      max-height: 100%;
+    }
+    &.lux-vertical {
+      gap: 0;
+      flex-direction: column;
+      max-width: 100%;
+    }
+
+    .mat-mdc-radio-button {
+      flex: 0 0 auto;
+      box-sizing: border-box;
+
+      .mdc-radio__native-control:disabled + .mdc-radio__background {
+        div.mdc-radio__inner-circle {
+          border-color: luxcommon.$dark-disabled-text;
+        }
+
+        div.mdc-radio__outer-circle {
+          border-color: luxcommon.$dark-disabled-text;
+        }
+      }
+    }
+  }
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+  }
+
+  .mdc-radio .mat-mdc-radio-touch-target {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/*
+ * Theming for LUX-Input/LUX-Textarea
+*/
+// Umstylen des Standard-Aussehens von Inputs/Textareas
+input,
+input.mat-input-element,
+textarea {
+  font: inherit;
+  background: 0 0;
+  color: currentColor;
+  border: none;
+  outline: 0;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  vertical-align: bottom;
+  text-align: inherit;
+  font-size: luxcommon.$form-control-font-size;
+}
+lux-textarea-ac text-area {
+  line-height: normal;
+}
+
+/**
+ * Theming für LUX-Chips
+ */
+// $chipsBorderRadius: 20;
+lux-chips-ac {
+  --mdc-chip-container-shape-radius: 20px;
+  --mdc-chip-outline-width: 1px;
+
+  .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
+    span.mdc-evolution-chip__action::before {
+      border: none;
+    }
+
+    &.lux-chip-color-default {
+      background-color: var(--lux-theme-primary-500) !important;
+
+      .mat-mdc-chip-action-label {
+        color: white;
+      }
+
+      lux-icon {
+        color: white;
+        opacity: 1;
+      }
+    }
+
+    &.lux-chip-color-primary {
+      background-color: var(--lux-theme-primary-500) !important;
+
+      .mat-mdc-chip-action-label {
+        color: white;
+      }
+
+      lux-icon {
+        color: white;
+        opacity: 1;
+      }
+    }
+
+    &.lux-chip-color-accent {
+      background-color: var(--lux-theme-accent-500) !important;
+
+      .mat-mdc-chip-action-label {
+        color: white;
+      }
+
+      lux-icon {
+        color: white;
+        opacity: 1;
+      }
+    }
+
+    &.lux-chip-color-warn {
+      background-color: var(--lux-theme-warn-500) !important;
+
+      .mat-mdc-chip-action-label {
+        color: white;
+      }
+
+      lux-icon {
+        color: white;
+        opacity: 1;
+      }
+    }
+  }
+
+  .lux-chips-autocomplete-icon {
+    color: var(--lux-theme-primary-500);
+    font-size: 1.5rem;
+    padding-right: 4px;
+    cursor: pointer;
+
+    &.lux-disabled {
+      color: var(--lux-theme-dark-disabled-text);
+      cursor: default;
+    }
+  }
+
+  .lux-chips {
+    .mat-mdc-chip-list-disabled {
+      color: luxcommon.$app-data-bg !important;
+      opacity: 1;
+
+      .mdc-evolution-chip__text-label {
+        color: luxcommon.$app-data-bg;
+      }
+
+      lux-icon {
+        mat-icon {
+          color: luxcommon.$app-data-bg;
+        }
+      }
+    }
+  }
+
+  .lux-hide-input-border .lux-form-control-container-authentic {
+    border: none;
+    padding: 0;
+    box-shadow: none !important; // den Focus-indicator für das Inputausblenden
+  }
+}
+.lux-chips-ac-autocomplete-panel.mat-mdc-autocomplete-panel,
+.lux-chips-ac-autocomplete-panel-dense.mat-mdc-autocomplete-panel {
+  margin-top: -18px;
+  margin-left: 0;
+  margin-right: 0;
+  border-radius: 4px;
+
+  box-shadow: none !important;
+  border: 2px solid luxpalette.$lux-primary-color;
+}
+.lux-chips-ac-autocomplete-panel-dense.mat-mdc-autocomplete-panel {
+  margin-top: -18px;
+}
+
+/*
+ * Theming for LUX-Slider
+ */
+lux-slider-ac {
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic.lux-no-input-row {
+    padding-top: 20px;
+    padding-bottom: 4px;
+
+    mat-slider,
+    mat-slider input {
+      max-height: 24px;
+    }
+
+    mat-slider.mat-primary .mdc-slider__value-indicator {
+      background-color: var(--lux-theme-primary-500);
+
+      &::before {
+        border-top-color: var(--lux-theme-primary-500);
+      }
+    }
+
+    mat-slider.mat-accent .mdc-slider__value-indicator {
+      background-color: var(--lux-theme-accent-500);
+
+      &::before {
+        border-top-color: var(--lux-theme-accent-500);
+      }
+    }
+
+    mat-slider.mat-warn .mdc-slider__value-indicator {
+      background-color: var(--lux-theme-warn-500);
+
+      &::before {
+        border-top-color: var(--lux-theme-warn-500);
+      }
+    }
+
+    .mat-mdc-slider-visual-thumb .mat-ripple {
+      display: none;
+    }
+
+    .mdc-slider__thumb {
+      height: 24px;
+    }
+
+    mat-slider-visual-thumb div.mdc-slider__value-indicator-container {
+      bottom: 27px;
+
+      .mdc-slider__value-indicator {
+        border-radius: 50%;
+        max-height: 23px;
+        min-width: 20px;
+        padding-left: 2px;
+        padding-right: 2px;
+        opacity: 1;
+      }
+
+      .mdc-slider__value-indicator-text {
+        min-width: 100%;
+        font-size: 12px;
+      }
+    }
+  }
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+  }
+}

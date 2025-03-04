@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "../../dist/updater/src",
+    "resolveJsonModule": true,
+    "esModuleInterop": false,
+    "types": ["node"],
+    "moduleResolution": "node",
+    "module": "commonjs"
+  },
+  "include": ["src", "src/**/*.json"],
+  "exclude": ["src/**/files/**/*", "node_modules", "**/*.spec.ts"]
+}

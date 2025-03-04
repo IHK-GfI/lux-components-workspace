@@ -1,0 +1,41 @@
+@use "sass:map";
+@use "../luxpalette";
+
+lux-icon {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+
+  &.lux-icon-rounded {
+    mat-icon.lux-icon {
+      border-radius: 50%;
+
+      &.lux-icon-rounded-1em {
+        padding: 4px !important;
+      }
+      &.lux-icon-rounded-2em {
+        padding: 8px !important;
+      }
+      &.lux-icon-rounded-3em {
+        padding: 12px !important;
+      }
+      &.lux-icon-rounded-4em,
+      &.lux-icon-rounded-5em {
+        padding: 16px !important;
+      }
+    }
+  }
+
+  &.lux-error-icon {
+    font-size: 12px;
+
+    mat-icon.lux-icon {
+      padding: 0 !important;
+      color: luxpalette.$lux-warn-color;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

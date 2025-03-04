@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "types": ["jasmine"],
+    "paths": {
+      "*": ["node_modules/*"]
+    }
+  },
+  "include": ["src", "src/**/*.json", "**/*.spec.ts"],
+  "exclude": ["src/**/files/**/*", "node_modules"]
+}

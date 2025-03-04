@@ -1,0 +1,69 @@
+<div class="lux-datetime-overlay-content">
+  <lux-card luxTagId="lux-datetimepicker-overlay-card-content">
+    <lux-card-content class="lux-flex lux-flex-col">
+      <mat-calendar
+        class="lux-datetime-overlay-calendar"
+        [dateFilter]="dateTimePicker._luxCustomFilter"
+        [startView]="dateTimePicker.luxStartView"
+        [(selected)]="selected"
+        [startAt]="startDate"
+        [minDate]="minCalendarDate"
+        [maxDate]="maxCalendarDate"
+        [headerComponent]="getHeaderByTheme()"
+      ></mat-calendar>
+      <lux-divider [luxInset]="true"></lux-divider>
+      <div class="lux-datetime-time-container lux-mt-3">
+        <lux-icon luxIconName="lux-interface-time-clock-circle" luxIconSize="2x" class="lux-datetime-icon lux-color-blue"></lux-icon>
+        <div class="lux-flex lux-place-content-center lux-items-center">
+          <lux-input-ac
+            luxLabel=""
+            class="lux-datetime-hour"
+            luxAriaLabel="Stunden"
+            luxAriaLabelSelector="input"
+            i18n-luxAriaLabel="@@luxc.datetimepicker.panel.hours.arialabel"
+            luxAutocomplete="off"
+            [(luxValue)]="hours"
+            (luxFocusIn)="selectHours()"
+            (luxFocusOut)="fillHours()"
+            (keydown.arrowUp)="incrementHour()"
+            (keydown.arrowDown)="decrementHour()"
+            [luxMaxLength]="2"
+            [luxHideCounterLabel]="true"
+            [luxNoLabels]="true"
+            luxTagId="lux-datetimepicker-hours"
+            #hoursInput
+          ></lux-input-ac>
+          <div style="text-align: center; flex: 1 1 15px; box-sizing: border-box; max-width: 15px; min-width: 15px">:</div>
+          <lux-input-ac
+            luxLabel=""
+            luxAriaLabel="Minuten"
+            i18n-luxAriaLabel="@@luxc.datetimepicker.panel.minutes.arialabel"
+            luxAriaLabelSelector="input"
+            class="lux-datetime-minute"
+            luxAutocomplete="off"
+            [(luxValue)]="minutes"
+            (luxFocusIn)="selectMinutes()"
+            (luxFocusOut)="fillMinutes()"
+            (keydown.arrowUp)="incrementMinutes()"
+            (keydown.arrowDown)="decrementMinutes()"
+            [luxMaxLength]="2"
+            [luxHideCounterLabel]="true"
+            [luxNoLabels]="true"
+            luxTagId="lux-datetimepicker-minutes"
+            #minutesInput
+          ></lux-input-ac>
+        </div>
+      </div>
+      <div class="lux-datetime-error-message-container lux-pt-2">
+        @if (!selected && touched) {
+        <mat-error i18n="@@luxc.datetimepicker.invalid.date">Bitte wählen Sie ein Datum aus</mat-error>
+        } @if ((!this.hours || !this.minutes) && selected && touched) {
+        <mat-error i18n="@@luxc.datetimepicker.invalid.time">Bitte geben Sie eine Zeit ein</mat-error>
+        }
+      </div>
+    </lux-card-content>
+    <lux-card-actions>
+      <lux-button luxLabel="OK" luxColor="primary" [luxFlat]="true" (luxClicked)="onOk()" class="lux-mb-3"></lux-button>
+    </lux-card-actions>
+  </lux-card>
+</div>

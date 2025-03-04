@@ -1,0 +1,45 @@
+@if (formGroup) {
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [luxNoInputRow]="true"
+  [formGroup]="formGroup"
+  [luxIgnoreDefaultLabel]="true"
+  [luxNoLabels]="luxNoLabels"
+  [luxNoBottomLabel]="luxNoBottomLabel"
+  [luxNoTopLabel]="luxNoTopLabel"
+  (click)="formControl.markAsTouched()"
+  luxTagId="luxToggleWrapper"
+>
+  <mat-slide-toggle
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [disableRipple]="true"
+    [required]="luxRequired"
+    [formControl]="formControl"
+    color="primary"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    [id]="uid"
+    [luxAriaDescribedby]="descripedBy()"
+    luxAriaDescribedbySelector=".mat-slide-toggle-input"
+    [luxAriaRequired]="luxRequired"
+    luxAriaRequiredSelector=".mat-slide-toggle-input"
+    [luxAriaInvalid]="'' + formControl.invalid"
+    luxAriaInvalidSelector=".mat-slide-toggle-input"
+    tabIndex="{{ luxReadonly ? -1 : 0 }}"
+    #slidetoggle
+  >
+    @if (formLabelComponent || luxLabel) {
+    <span class="lux-form-label">
+      @if (luxLabel) {
+      {{ luxLabel }}
+      } @else {
+      <ng-container *ngTemplateOutlet="formLabelComponent?.templateRef ?? null"></ng-container>
+      }<!-- Einzeilig lassen, sonst bricht das Label an dem Leerzeichen um. -->
+      {{ luxRequired ? '&nbsp;*' : ''
+      }}<!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
+    </span>
+    }
+  </mat-slide-toggle>
+</lux-form-control-wrapper>
+}

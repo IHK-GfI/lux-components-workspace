@@ -1,0 +1,58 @@
+@mixin minified-button {
+  lux-button {
+    cursor: pointer !important;
+    display: flex;
+    align-items: center;
+
+    ::ng-deep button {
+      padding: 0;
+      height: 24px;
+      max-height: 24px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+/* Gemeinsames Stylen der einzelnen File-Components */
+:host {
+  display: flex;
+  position: relative;
+
+  &.lux-file-highlight {
+    // Pseudo-Element zum Highlighten des Drop-Bereichs
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(gray, 0.5);
+      opacity: 0.5;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+  }
+
+  /* Anpassungen am LuxMenu, u.a. blenden wir hier das Label im Extended-Menu aus */
+  lux-menu ::ng-deep {
+    .lux-menu-extended {
+      .lux-menu-trigger,
+      > lux-button {
+        margin: 0 !important;
+      }
+    }
+
+    @include minified-button;
+  }
+}
+
+/* Die eigentliche File-Inputs und den Download-Anchor blenden wir aus */
+.lux-file-input,
+.lux-file-download-anchor {
+  display: none;
+}

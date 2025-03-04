@@ -1,0 +1,39 @@
+{
+  "name": "@ihk-gfi/lux-components-update",
+  "version": "19.0.0-rc.1",
+  "description": "Schematics für die Aktualisierung von LUX-Applikationen",
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "clean": "del-cli --force ../../dist/updater/",
+    "pack-copy-base-files": "copyfiles -f collection.json package.json README.md ../../LICENSE ./../../dist/updater",
+    "pack-copy-template-dirs": "copyfiles \"./src/**/files/**\" ./../../dist/updater",
+    "pack": "npm run build && npm run pack-copy-base-files && npm run pack-copy-template-dirs",
+    "security": "npm audit --registry=https://registry.npmjs.org --audit-level high",
+    "smoketest": "npm run test && npm run pack",
+    "test": "npm run pack && tsc -p tsconfig.spec.json && jasmine ../../dist/updater/**/*.spec.js"
+  },
+  "keywords": [
+    "schematics",
+    "lux-components",
+    "jast"
+  ],
+  "workspaces": [
+    "./projects/*",
+    "./dist/*"
+  ],
+  "license": "IHK-GfI Open-Source-Lizenz",
+  "schematics": "./collection.json",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "cheerio": "1.0.0-rc.12",
+    "htmlparser2": "^9.1.0",
+    "jsdom": "^25.0.0",
+    "jsonc-parser": "^3.2.1",
+    "semver": "^7.6.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^18.11.9",
+    "@types/semver": "^7.5.8"
+  }
+}

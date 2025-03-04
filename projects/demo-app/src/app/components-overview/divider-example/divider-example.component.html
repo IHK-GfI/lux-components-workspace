@@ -1,0 +1,26 @@
+<example-base-structure
+  exampleTitle="Divider"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90divider-v18"
+>
+  <example-base-content [ngClass]="vertical ? 'lux-flex' : 'lux-flex lux-flex-col'">
+    <h3>Example h2 #1</h3>
+    <lux-divider [luxInset]="inset" [luxVertical]="vertical"></lux-divider>
+    <h3>Example h2 #2</h3>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac luxLabel="luxInset" [(luxChecked)]="inset" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Diese Property schaltet den Divider von eine absoluten in eine statische Position um.<br />
+        Das hat zur Folge, dass der Divider sein Parent-Element nicht mehr überragt.
+      </lux-form-hint>
+    </lux-toggle-ac>
+
+    <lux-toggle-ac luxLabel="luxVertical" [(luxChecked)]="vertical" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Diese Property schaltet den Divider von einer horizontalen in eine vertikale Ansicht um.<br />
+        Die umgebenden Elemente müssen allerdings auch passend ausgerichtet sein, zum Beispiel wird hier die Ausrichtung für die vertikale
+        Ansicht von "column" zu "row" geändert.
+      </lux-form-hint>
+    </lux-toggle-ac>
+  </example-base-simple-options>
+</example-base-structure>

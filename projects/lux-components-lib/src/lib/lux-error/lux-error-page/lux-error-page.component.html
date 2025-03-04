@@ -1,0 +1,19 @@
+<lux-card class="lux-error-page" id="ErrorPage" luxTagId="luxErrorPage">
+  <lux-card-content class="lux-flex lux-flex-col lux-justify-center lux-items-center">
+    <lux-icon [luxIconName]="errorConfig.iconName" [luxIconSize]="errorConfig.iconSize" class="lux-color-gray lux-flex-none"></lux-icon>
+    <h2 class="lux-ml-3 lux-mr-3" style="text-align: center">{{ errorConfig.errorText }}</h2>
+    @if (errorConfig.homeRedirectText && errorConfig.homeRedirectUrl) {
+    <lux-button luxColor="primary" [luxLabel]="errorConfig.homeRedirectText" (luxClicked)="clickHomeRedirect()" class="lux-flex-none">
+    </lux-button>
+    } @if (error) { @if (error.errorId) {
+    <p i18n="@@luxc.errorpage.error_number" class="lux-color-dark-secondary-text lux-flex-none">Fehlernummer: {{ error.errorId }}</p>
+    } @if (error.errorMessage) {
+    <lux-panel luxExpandedHeaderHeight="50px" luxCollapsedHeaderHeight="50px">
+      <lux-panel-header-title i18n="@@luxc.errorpage.error_title">Fehlermeldung</lux-panel-header-title>
+      <lux-panel-content>
+        <p>{{ error.errorMessage }}</p>
+      </lux-panel-content>
+    </lux-panel>
+    } }
+  </lux-card-content>
+</lux-card>

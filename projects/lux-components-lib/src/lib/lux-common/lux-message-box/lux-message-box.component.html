@@ -1,0 +1,29 @@
+@if (luxMessages && luxMessages.length > 0) {
+<div
+  @messageBoxVisibility
+  luxAriaLabel="Meldungen"
+  i18n-luxAriaLabel="@@luxc.message.container.arialabel"
+  class="lux-message-box-content"
+  tabindex="0"
+  #messagebox
+>
+  <div role="list">
+    @for (displayedMessage of displayedMessages; track displayedMessage.text) {
+    <lux-message class="lux-message-box" [luxMessage]="displayedMessage" (luxMessageClosed)="messageClosed($event)"> </lux-message>
+    }
+  </div>
+  <div
+    class="lux-message-box-footer"
+    [ngClass]="{ 'lux-display-none': luxMessages.length === 1 || luxMaximumDisplayed >= luxMessages.length }"
+  >
+    <mat-paginator
+      [length]="luxMessages.length"
+      [pageSize]="luxMaximumDisplayed"
+      [hidePageSize]="true"
+      [pageIndex]="luxIndex"
+      (page)="pageChanged($event)"
+    >
+    </mat-paginator>
+  </div>
+</div>
+}

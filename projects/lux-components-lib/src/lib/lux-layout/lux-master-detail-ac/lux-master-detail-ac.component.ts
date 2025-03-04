@@ -1,0 +1,435 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  ContentChild,
+  DoCheck,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  ViewContainerRef,
+  inject
+} from '@angular/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { BehaviorSubject, ReplaySubject, Subscription, tap } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
+import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
+import { LuxCustomTagIdDirective } from '../../lux-directives/lux-tag-id/lux-custom-tag-id.directive';
+import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
+import { LuxPropertyFromObjectPipe } from '../../lux-pipes/lux-property-from-object/lux-property-from-object.pipe';
+import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
+import { LuxUtil } from '../../lux-util/lux-util';
+import { LuxCardContentComponent } from '../lux-card/lux-card-subcomponents/lux-card-content.component';
+import { LuxCardComponent } from '../lux-card/lux-card.component';
+import { LuxListItemContentComponent } from '../lux-list/lux-list-subcomponents/lux-list-item-content.component';
+import { LuxListItemIconComponent } from '../lux-list/lux-list-subcomponents/lux-list-item-icon.component';
+import { LuxListItemComponent } from '../lux-list/lux-list-subcomponents/lux-list-item.component';
+import { LuxListComponent } from '../lux-list/lux-list.component';
+import { LuxTabsComponent } from '../lux-tabs/lux-tabs.component';
+import { LuxDetailHeaderAcComponent } from './lux-detail-header-ac/lux-detail-header-ac.component';
+import { LuxDetailViewAcComponent } from './lux-detail-view-ac/lux-detail-view-ac.component';
+import { LuxDetailWrapperAcComponent } from './lux-detail-view-ac/lux-detail-wrapper-ac.component';
+import { LuxMasterFooterAcComponent } from './lux-master-footer-ac/lux-master-footer-ac.component';
+import { LuxMasterHeaderAcComponent } from './lux-master-header-ac/lux-master-header-ac.component';
+import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-ac.component';
+
+@Component({
+  selector: 'lux-master-detail-ac',
+  templateUrl: './lux-master-detail-ac.component.html',
+  styleUrls: ['./lux-master-detail-ac.component.scss'],
+  animations: [
+    trigger('masterIsLoadingChanged', [
+      state('true', style({ opacity: 1 })),
+      state('false', style({ opacity: 0 })),
+      transition('1 => 0', animate('0.5s')),
+      transition('0 => 1', animate('1s'))
+    ])
+  ],
+  imports: [
+    NgClass,
+    LuxTagIdDirective,
+    LuxCustomTagIdDirective,
+    LuxMasterHeaderAcComponent,
+    LuxListComponent,
+    LuxInfiniteScrollDirective,
+    LuxListItemComponent,
+    LuxListItemIconComponent,
+    NgTemplateOutlet,
+    LuxListItemContentComponent,
+    MatProgressSpinner,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxButtonComponent,
+    LuxIconComponent,
+    LuxPropertyFromObjectPipe
+  ]
+})
+export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContentInit, AfterViewInit, DoCheck, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private cfr = inject(ComponentFactoryResolver);
+  private liveAnnouncer = inject(LiveAnnouncer);
+  private mediaObserver = inject(LuxMediaQueryObserverService);
+
+  @Output() luxSelectedDetailChange = new EventEmitter<T | null>();
+  @Output() luxScrolled = new EventEmitter<void>();
+
+  @ContentChild(LuxMasterListAcComponent) masterSimple?: LuxMasterListAcComponent;
+  @ContentChild(LuxDetailViewAcComponent) detailView!: LuxDetailViewAcComponent;
+  @ContentChild(LuxMasterFooterAcComponent, { read: ElementRef }) masterFooter?: ElementRef;
+  @ContentChild(LuxDetailHeaderAcComponent, { read: ElementRef }) detailHeader?: ElementRef;
+
+  @ViewChildren(LuxListComponent, { read: ElementRef, emitDistinctChangesOnly: false }) luxMasterQueryList!: QueryList<ElementRef>;
+  @ViewChildren(LuxListItemComponent) luxMasterListItemQueryList!: QueryList<LuxListItemComponent>;
+  @ViewChild(LuxMasterHeaderAcComponent, { read: ElementRef, static: true }) masterHeader?: ElementRef;
+  @ViewChild(LuxMasterHeaderAcComponent, { static: true }) masterHeaderComponent?: LuxMasterHeaderAcComponent;
+  @ViewChild(LuxListItemComponent, { read: ElementRef }) luxMasterEntryElementRef?: ElementRef;
+  @ContentChild(LuxTabsComponent) tabsComponent?: LuxTabsComponent;
+  @ViewChild('masterSpinnerCard', { read: ElementRef, static: true }) masterSpinnerCard?: ElementRef;
+  @ViewChild('detailContainer', { read: ElementRef }) detailFrame?: ElementRef;
+  @ViewChild('detailEmpty', { read: ElementRef, static: true }) detailEmpty?: ElementRef;
+  @ViewChild('detailViewContainerRef', { read: ViewContainerRef, static: true }) detailViewContainerRef!: ViewContainerRef;
+  @ViewChild('masterContainer', { read: ElementRef, static: true }) masterContainer?: ElementRef;
+
+  private _luxOpen = true;
+  private _luxMasterList = new BehaviorSubject<any[]>([]);
+  private _luxSelectedDetail: T | null = null;
+
+  private masterListLength = 0;
+  private maxItemsVisible?: number;
+  private updateDetail$ = new ReplaySubject<any>(1);
+  private subscriptions: Subscription[] = [];
+
+  isMobile: boolean;
+  isMedium: boolean;
+  detailContext = { $implicit: {} };
+  showMasterHeader?: boolean;
+  // Enthält die Position des aktuell selektierten Elements
+  selectedPosition = -1;
+
+  // Flag, das bestimmt, ob die Empty-Anzeigen der Masterliste anhand der Detail-Ansicht ausgerichtet werden
+  alignEmptyIndicators = true;
+
+  @Input() luxEmptyIconMaster = 'lux-interface-alert-information-circle';
+  @Input() luxEmptyLabelMaster = $localize`:@@luxc.master-detail.master.empty_label:Keine Einträge vorhanden`;
+  @Input() luxEmptyIconDetail = 'lux-interface-alert-information-circle';
+  @Input() luxEmptyLabelDetail = $localize`:@@luxc.master-detail.detail.empty_label:Kein Element ausgewählt`;
+  @Input() luxEmptyIconMasterSize = '5x';
+  @Input() luxEmptyIconDetailSize = '5x';
+  @Input() luxMasterSpinnerDelay = 1000;
+  @Input() luxTagIdMaster?: string;
+  @Input() luxTagIdDetail?: string;
+  @Input() luxTitleLineBreak = false;
+  @Input() luxMasterIsLoading = false;
+  @Input() luxCompareWith = (o1: T, o2: T) => o1 === o2;
+  @Input() luxDefaultDetailHeader = true;
+
+  get luxOpen() {
+    return this._luxOpen;
+  }
+
+  @Input()
+  set luxOpen(open) {
+    this._luxOpen = open;
+  }
+
+  /* Selected Detail Get/Set */
+  get luxSelectedDetail() {
+    return this._luxSelectedDetail;
+  }
+
+  @Input()
+  set luxSelectedDetail(value) {
+    this.updateDetail$.next(value);
+  }
+
+  /* Master List Get/Set */
+  get luxMasterList() {
+    return this._luxMasterList.getValue();
+  }
+
+  @Input()
+  set luxMasterList(value: any[]) {
+    if (this.masterListLength && value && this.masterListLength < value.length) {
+      this.announcePossibleInfiniteScrolling();
+    }
+    this._luxMasterList.next(value ? value : []);
+    this.masterListLength = value ? value.length : 0;
+  }
+
+  constructor() {
+    this.isMobile = this.mediaObserver.isXS() || this.mediaObserver.isSM();
+    this.isMedium = this.mediaObserver.isMD();
+    this.subscriptions.push(
+      this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
+        this.isMobile = this.mediaObserver.isXS() || this.mediaObserver.isSM();
+        this.isMedium = this.mediaObserver.isMD();
+      })
+    );
+  }
+
+  ngOnInit() {
+    this.handleMasterListUpdate();
+  }
+
+  ngAfterContentInit() {
+    LuxUtil.assertNonNull('detailView', this.detailView);
+  }
+
+  ngAfterViewInit() {
+    LuxUtil.assertNonNull('detailViewContainerRef', this.detailViewContainerRef);
+    this.showMasterHeader = this.masterHeaderComponent?.headerContentContainer.nativeElement.children.length > 0;
+    this.handleDetailUpdate();
+    this.handleMasterQueryList();
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  ngDoCheck() {
+    // Wurde ein Element in die Masterliste gepusht oder entfernt?
+    if (this.luxMasterList && this.luxMasterList.length !== this.masterListLength) {
+      if (this.luxMasterList.length > this.masterListLength) {
+        this.announcePossibleInfiniteScrolling();
+      }
+
+      // Wenn ja, dass selektierte Detail neu rendern
+      this.masterListLength = this.luxMasterList.length;
+      this.luxSelectedDetail = this.luxMasterList[this.selectedPosition];
+
+      this.announcePossibleInfiniteScrolling();
+    }
+
+    // Ausrichtung der Empty-Indikatoren der Masterliste prüfen
+    if (!this.isMobile && (!this.luxMasterList || this.luxMasterList.length === 0)) {
+      this.checkEmptyIndicatorAlignment();
+    }
+  }
+
+  /**
+   * Wenn in der LuxList ein neuer Selected-Wert gepusht wird, diesen abfangen und
+   * ein neues Detail auswählen.
+   * @param index
+   */
+  onSelectedChange(index: number) {
+    if (index > -1) {
+      this.selectedPosition = index;
+
+      this.updateDetail$.next(this.luxMasterList[index]);
+
+      if (this.isMobile) {
+        this.onCloseMaster();
+      }
+    }
+  }
+
+  onOpenMaster() {
+    this.luxOpen = true;
+  }
+
+  onCloseMaster() {
+    this.luxOpen = false;
+  }
+
+  /**
+   * Bestimmt, ob die Masterliste auf- oder eingeklappt ist.
+   * @param open
+   */
+  toggleList(open: boolean) {
+    if (open) {
+      this.onOpenMaster();
+    } else {
+      this.onCloseMaster();
+    }
+
+    if (this.tabsComponent) {
+      this.tabsComponent.rerenderTabs();
+    }
+  }
+
+  /**
+   * Prüft, ob die Detailansicht gerade für den User sichtbar ist.
+   * @returns boolean
+   */
+  isDetailInvisible(): boolean {
+    return this.isMobile && this.luxOpen;
+  }
+
+  onInfiniteScrollingLoad() {
+    this.luxScrolled.emit();
+  }
+
+  onSwipeLeft() {
+    if (this.isMobile) {
+      this.onCloseMaster();
+    }
+  }
+
+  onSwipeRight() {
+    if (this.isMobile) {
+      this.onOpenMaster();
+    }
+  }
+
+  /**
+   * Kapselung von der übergebenen luxCompareWith-Funktion.
+   * Fängt undefinierte Objekte ab und returned stattdessen false.
+   * @param o1
+   * @param o2
+   */
+  compareObjects(o1: T | null, o2: T | null) {
+    if (!o1 || !o2) {
+      return false;
+    }
+    return this.luxCompareWith(o1, o2);
+  }
+
+  /**
+   * Kümmert sich um Änderungen an der HTML-Node der Master-Liste.
+   * Rückt dabei das selektierte Element in den Fokus und berechnet wie viele Elemente
+   * gerade in der Liste sichtbar sein können (für das Durchschalten mit Pfeiltasten benötigt).
+   */
+  private handleMasterQueryList() {
+    this.subscriptions.push(
+      this.luxMasterQueryList.changes.subscribe((masterListElements: QueryList<ElementRef>) => {
+        if (masterListElements.first) {
+          const { nativeElement } = masterListElements.first;
+          this.maxItemsVisible = Math.floor(nativeElement.offsetHeight / nativeElement.offsetHeight);
+        }
+        // Der Abschnitt hier fängt den Fall ab, dass z.B. das LuxMasterList-Array selbst angepasst wird (z.B. durch Array.reverse).
+        // Das sorgt dafür, dass das visuell selektierte Element auch das passende zur Detail-View ist.
+        const newSelectedPosition: number = this.luxMasterList.indexOf(this.luxSelectedDetail);
+        if (newSelectedPosition !== this.selectedPosition) {
+          setTimeout(() => {
+            this.selectedPosition = newSelectedPosition;
+          });
+        }
+      })
+    );
+  }
+
+  /**
+   * Kümmert sich um Änderungen an dem selektierten Detail.
+   * Dabei werden mehrere Zuweisungen an das Detail über throttleTime gebündelt und nur das Aktuellste genommen.
+   * Anschließend wird die Komponente angewiesen das neue Detail-Objekt zu rendern.
+   */
+  private handleDetailUpdate() {
+    this.subscriptions.push(
+      this.updateDetail$.asObservable().subscribe((detail: any) => {
+        if (!detail) {
+          this.detailViewContainerRef.clear();
+          this.setNewDetail(detail);
+        } else {
+          if (!this.compareObjects(this.luxSelectedDetail, detail)) {
+            this.detailViewContainerRef.clear();
+
+            if (detail) {
+              this.detailContext = { $implicit: detail };
+
+              // Den Detail-Wrapper erzeugen und abfangen, wann die Nodes geladen worden sind
+              const child = this.cfr.resolveComponentFactory(LuxDetailWrapperAcComponent);
+              const childRef = this.detailViewContainerRef.createComponent(child);
+              const instance = childRef.instance;
+              instance.luxDetailContext = this.detailContext;
+              instance.luxDetailTemplate = this.detailView.tempRef;
+              this.subscriptions.push(
+                instance.luxDetailRendered.subscribe(() => {
+                  this.setNewDetail(detail);
+                })
+              );
+              // Die Detailansicht nach dem Wechsel wieder nach oben scrollen lassen
+              this.detailViewContainerRef.element.nativeElement.parentNode.scrollTop = 0;
+
+              this.cdr.detectChanges();
+            }
+          }
+        }
+      })
+    );
+  }
+
+  /**
+   * Wird aufgerufen, nachdem ein neues Detail-Template gerendert wurde und aktualisiert
+   * luxSelectedDetail dementsprechend.
+   * @param detail
+   */
+  private setNewDetail(detail: any) {
+    if (!this.compareObjects(this.luxSelectedDetail, detail)) {
+      this._luxSelectedDetail = detail;
+      this.selectedPosition = this.luxMasterList.indexOf(detail);
+      this.luxSelectedDetailChange.emit(this.luxSelectedDetail);
+      // Die Master-Liste fokussieren (die Liste gibt es nur einmal, weil wir auf Changes hören, ist sie aber in einer QueryList)
+      this.luxMasterQueryList.first.nativeElement.focus();
+
+      if (this.isMobile && this.luxMasterList.length !== 0) {
+        this.luxOpen = false;
+      }
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
+   * Kümmert sich um den Fall, dass die Master-Liste selbst sich ändert.
+   */
+  private handleMasterListUpdate() {
+    this.subscriptions.push(
+      this._luxMasterList
+        .asObservable()
+        .pipe(
+          // Workaround um ExpressionChanged-Fehler zu vermeiden
+          delay(0),
+          tap(() => {
+            if (!this.luxMasterList || this.luxMasterList.length === 0) {
+              this.luxSelectedDetail = null;
+            }
+          })
+        )
+        .subscribe()
+    );
+  }
+
+  /**
+   * Prüft, ob das Header- oder -Footer-Element der Masterliste ca. 50 % der Master-Höhe einnehmen.
+   *
+   * Wenn ja, wird die Ausrichtung des Master-Empty-Labels und Master-Empty-Icons nicht mehr anhand des Details bestimmt.
+   */
+  private checkEmptyIndicatorAlignment() {
+    const headerHeight = this.masterHeader ? this.masterHeader.nativeElement.offsetHeight : 0;
+    const footerHeight = this.masterFooter ? this.masterFooter.nativeElement.offsetHeight : 0;
+
+    if (this.masterContainer) {
+      // Max-Height ist die Hälfte der Master-Container Höhe minus eine kleine Pauschale von 100px damit
+      // die Ansicht nicht zu knapp ist
+      const maxHeight = this.masterContainer.nativeElement.offsetHeight / 2 - 100;
+      this.alignEmptyIndicators = !(headerHeight > maxHeight || footerHeight > maxHeight);
+    }
+  }
+
+  /**
+   * Meldet über den LiveAnnouncer, dass evtl. weitere Daten via InfiniteScrolling nachgeladen werden könnten.
+   *
+   * "assertive", damit die Meldung auf jeden Fall vom ScreenReader vorgelesen wird und nicht von etwaigen anderen
+   * Aussagen verdeckt wird.
+   */
+  private announcePossibleInfiniteScrolling() {
+    this.liveAnnouncer.announce(
+      'Die Masterliste hat weitere Einträge erhalten. ' +
+        'Aufgrund des Infinite-Scrollings könnten vielleicht noch mehr Einträge nachgeladen werden.',
+      'assertive'
+    );
+  }
+}

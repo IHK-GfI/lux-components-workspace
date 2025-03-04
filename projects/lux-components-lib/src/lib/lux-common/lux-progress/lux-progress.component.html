@@ -1,0 +1,25 @@
+<div [class]="animDurationCSS" [ngClass]="['lux-progress-' + luxSize, luxType === 'Spinner' ? 'spinner-padding' : '']">
+  @switch (luxType) { @case ('Progressbar') {
+  <mat-progress-bar
+    [luxAriaLabel]="luxAriaLabel"
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [luxCustomTagId]="luxTagId"
+    [ngClass]="[typeCSS, 'lux-color-' + luxColor]"
+    [mode]="luxMode"
+    [value]="luxValue"
+  >
+  </mat-progress-bar>
+  } @case ('Spinner') {
+  <mat-progress-spinner
+    [luxAriaLabel]="luxAriaLabel"
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [luxCustomTagId]="luxTagId"
+    [ngClass]="[typeCSS, 'lux-color-' + luxColor]"
+    [mode]="luxMode"
+    [value]="luxValue"
+  >
+  </mat-progress-spinner>
+  } }
+</div>

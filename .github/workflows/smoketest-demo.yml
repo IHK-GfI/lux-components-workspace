@@ -1,0 +1,21 @@
+name: smoketest - demo
+
+on:
+  push:
+    paths:
+      - 'projects/demo-app/**'
+
+jobs:
+  build-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - run: |
+          npm install
+          npm run demo:pack
+          cd dist/demo-app
+          ls -lR

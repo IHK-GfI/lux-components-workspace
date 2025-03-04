@@ -1,0 +1,42 @@
+<div id="Home" luxAriaRole="main" class="page-content lux-flex lux-flex-col">
+  <h1 class="page-title">Die Komponenten von A-Z</h1>
+  <div class="lux-flex lux-flex-wrap lux-justify-start lux-align-start lux-gap-6">
+    <lux-input-ac
+      luxAriaLabel="Suchbegriff"
+      luxTagId="Suchbegriff"
+      [luxNoTopLabel]="true"
+      luxPlaceholder="Suchbegriff eingeben"
+      [(luxValue)]="filterValue"
+      luxAutocomplete="off"
+    >
+      <lux-input-ac-prefix class="lux-mr-3" luxTagId="searchInput">
+        <lux-icon luxIconName="lux-interface-search"></lux-icon>
+      </lux-input-ac-prefix>
+      <lux-input-ac-suffix>
+        <lux-icon luxIconName="lux-interface-delete-circle" class="lux-reset-icon lux-color-blue" (click)="filterValue = ''"></lux-icon>
+      </lux-input-ac-suffix>
+    </lux-input-ac>
+  </div>
+  <div class="lux-flex lux-flex-wrap lux-justify-start lux-align-start lux-gap-6 lux-mb-4">
+    @for (component of navigationService.getFilteredComponents(filterValue) | luxAlphabeticallySorted; track component.label) {
+    <div class="lux-tile-ac-wrapper-demo">
+      <lux-tile-ac
+        [luxLabel]="component.label"
+        luxSubTitle="Modul: LUX-{{ component.moduleName | uppercase }}"
+        (luxClicked)="component.onclick()"
+        [luxTagId]="component.label"
+        [luxBadgeNotification]="component.news ? 'neu' : ''"
+        luxBadgeColor="accent"
+        luxBadgeSize="large"
+        class="lux-flex-auto"
+      >
+        @if (!component.useImage) {
+        <lux-icon [luxIconName]="navigationService.moduleIcons.get(component.moduleName)"></lux-icon>
+        } @if (component.useImage) {
+        <lux-image [luxImageSrc]="component.icon" luxImageWidth="100%" luxImageHeight="100%"></lux-image>
+        }
+      </lux-tile-ac>
+    </div>
+    }
+  </div>
+</div>

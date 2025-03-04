@@ -1,0 +1,16 @@
+<div>
+  @if (!isObserved) {
+  <img [src]="luxImageSrc" class="lux-image" [alt]="luxAlt" [ngStyle]="{ width: luxImageWidth, height: luxImageHeight }" />
+  } @else {
+  <img
+    [src]="luxImageSrc"
+    (click)="clicked($event)"
+    (keydown.enter)="clicked($event)"
+    (keydown.space)="clicked($event)"
+    [attr.tabindex]="0"
+    class="lux-image lux-clickable"
+    [alt]="luxAlt"
+    [ngStyle]="{ width: luxImageWidth, height: luxImageHeight }"
+  />
+  }
+</div>

@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "updateEnMessagesSchema",
+  "title": "Aktualisiert die englischen Übersetzungen im Projekt.",
+  "type": "object",
+  "description": "Aktualisiert die englischen Übersetzungen im Projekt.",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Der Projektname",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Generiert mehr Logausgaben",
+      "default": false
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

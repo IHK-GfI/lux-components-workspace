@@ -1,0 +1,62 @@
+<example-base-structure
+  exampleTitle="Infinite-Scrolling"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/luxinfinitescroll-v18"
+>
+  <example-base-content>
+    @if (created) {
+    <lux-list
+      class="infinite-list"
+      luxInfiniteScroll
+      [luxImmediateCallback]="immediateCallback"
+      [luxIsLoading]="isLoading"
+      [luxScrollPercent]="scrollPercent"
+      (luxScrolled)="onScroll()"
+    >
+      @for (listItem of listItems; track trackByFn($index, listItem)) {
+      <lux-list-item [luxTitle]="listItem">
+        <lux-list-item-icon>
+          <lux-icon [luxIconName]="'lux-interface-setting-cog'" luxIconSize="1x"></lux-icon>
+        </lux-list-item-icon>
+        <lux-list-item-content> Content </lux-list-item-content>
+      </lux-list-item>
+      }
+    </lux-list>
+    }
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxImmediateCallback" [(luxChecked)]="immediateCallback" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Bestimmt ob bei Initiierung ein luxScrolled-Event abgegeben wird.<br />
+        Damit diese Property greift, bitte in den Optionen den Buttpn "Neu generieren" anklicken.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="luxIsLoading"
+      luxHint="Teilt der Component mit, ob gerade Daten geladen werden. Wenn true, werden keine luxScrolled-Events emittet."
+      [(luxChecked)]="isLoading"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    <lux-input-ac
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      luxName="infinite-scrolling_luxScrollPercent"
+      luxLabel="luxScrollPercent"
+      luxHint="Bestimmt die Prozentzahl in der Scrollbar, ab der das luxScrolled-Event emitted wird."
+      [(luxValue)]="scrollPercent"
+    >
+    </lux-input-ac>
+  </example-base-simple-options>
+  <example-base-options-actions>
+    <div class="lux-simple-form row">
+      <lux-button luxLabel="Neu generieren" [luxStroked]="true" (luxClicked)="recreateList()" luxTagId="menu-item-regenerate"> </lux-button>
+      <lux-button luxLabel="Reset" [luxStroked]="true" (luxClicked)="reset()" luxTagId="menu-item-reset"> </lux-button>
+    </div>
+  </example-base-options-actions>
+</example-base-structure>

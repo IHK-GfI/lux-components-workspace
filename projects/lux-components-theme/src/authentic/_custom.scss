@@ -1,0 +1,797 @@
+@use "sass:map";
+@use "../base/luxelevations";
+@use "../base/luxfocus";
+@use "@angular/material" as mat;
+@use "../public/global";
+@use "luxcommon";
+@use "luxpalette";
+@use "../base/luxSvgIcons" as luxicons;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: rgba(black, 0.87);
+  font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
+}
+
+div,
+span,
+p,
+label {
+  font-family: luxcommon.$app-font-family;
+}
+
+// Optionen werden im Cdk-Overlay dargestellt und hängen nicht unter der Component selbst.
+// eigentlich nur für select-panel nötig
+.lux-autocomplete-panel-ac,
+.lux-select-panel-ac,
+.lux-select-panel-ac-multiple {
+  .mat-mdc-option {
+    &.invalid {
+      color: luxpalette.$lux-warn-color;
+      font-weight: 300;
+
+      .mat-pseudo-checkbox {
+        color: luxcommon.$dark-disabled-text;
+      }
+
+      .mdc-list-item__primary-text {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+// Hintergrundfarbe
+lux-app-content {
+  background-color: #fff; //Fallback
+  background-image: luxcommon.$app-gradient;
+}
+
+/*
+ * Theming for LUX-Accordion
+ */
+lux-accordion lux-panel {
+  padding: 0px;
+}
+
+mat-expansion-panel.mat-expansion-panel:not([class*="mat-elevation-z"]) {
+  @include luxelevations.lux-elevation-z0;
+  border: 1px solid rgba(black, 0.12);
+  border-radius: 4px;
+}
+
+lux-accordion {
+  .mat-expansion-panel-header .mat-content {
+    flex-direction: column; //damit sind Title und Description untereinander
+
+    .mat-expansion-panel-header-description {
+      margin-top: 4px;
+      font-weight: 400;
+    }
+  }
+
+  .mat-expansion-panel-header .mat-expansion-indicator::after {
+    color: map.get(luxpalette.$lux-palette-primary, 500);
+  }
+
+  .mat-expansion-panel-header .mat-expansion-indicator {
+    position: relative;
+    transform-origin: center;
+    width: 1em;
+    height: 1em;
+    &::after {
+      content: "";
+      position: absolute;
+      width: 1em;
+      height: 1em;
+      margin: 0px;
+      padding: 0px;
+      border: none;
+      transform: rotate(0deg);
+      background-color: luxpalette.$lux-primary-color;
+      -webkit-mask: url(luxicons.$arrow-button-down);
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      -webkit-mask-size: cover;
+      mask: url(luxicons.$arrow-button-down);
+      mask-repeat: no-repeat;
+      mask-position: center;
+      mask-size: cover;
+    }
+
+    &:hover::after {
+      background-color: map.get(luxpalette.$lux-palette-primary, 300);
+    }
+  }
+
+  mat-expansion-panel-header.mat-expansion-panel-header,
+  mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded,
+  mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded:focus {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    .mat-expansion-panel-header-title,
+    .mat-expansion-panel-header-description {
+      font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
+    }
+    .mat-expansion-panel-header-title {
+      font-weight: 500;
+    }
+
+    &[aria-disabled="false"] .mat-expansion-panel-header-description {
+      color: luxcommon.$dark-primary-text;
+    }
+
+    &[aria-disabled="true"] {
+      background-color: white !important;
+    }
+  }
+
+  .mat-accordion.lux-primary {
+    mat-expansion-panel-header.mat-expansion-panel-header,
+    mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
+      background-color: map.get(luxpalette.$lux-palette-primary, 100);
+      @include mat.expansion-overrides(
+        (
+          header-hover-state-layer-color: map.get(luxpalette.$lux-palette-primary, 100)
+        )
+      );
+    }
+  }
+
+  .mat-accordion.lux-accent {
+    mat-expansion-panel-header.mat-expansion-panel-header,
+    mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
+      background-color: map.get(luxpalette.$lux-palette-accent, 100);
+      @include mat.expansion-overrides(
+        (
+          header-hover-state-layer-color: map.get(luxpalette.$lux-palette-accent, 100)
+        )
+      );
+    }
+  }
+
+  .mat-accordion.lux-warn {
+    mat-expansion-panel-header.mat-expansion-panel-header,
+    mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
+      background-color: map.get(luxpalette.$lux-palette-warn, 50);
+      @include mat.expansion-overrides(
+        (
+          header-hover-state-layer-color: map.get(luxpalette.$lux-palette-warn, 50)
+        )
+      );
+    }
+  }
+
+  .mat-accordion.lux-neutral {
+    mat-expansion-panel-header.mat-expansion-panel-header,
+    mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
+      background-color: white;
+      @include mat.expansion-overrides(
+        (
+          header-hover-state-layer-color: white
+        )
+      );
+    }
+  }
+
+  @include mat.expansion-overrides(
+    (
+      header-disabled-state-text-color: luxcommon.$dark-disabled-text
+    )
+  );
+  
+  lux-panel-content lux-card mat-card {
+    .lux-card-title {
+      line-height: normal;
+    }
+  }
+}
+
+/**
+* Theming für lux-Badge-notification
+*/
+.lux-badge-notification {
+  &.mat-badge:not(.mat-badge-disabled).mat-badge-accent .mat-badge-content {
+    background-color: map.get(luxpalette.$lux-palette_accent, 500);
+  }
+
+  &.mat-badge .mat-badge-content {
+    font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
+    border: 1px solid #fff;
+  }
+
+  &.mat-badge.lux-badge-no-border .mat-badge-content {
+    border: 1px solid transparent;
+  }
+
+  &.lux-badge-color-default {
+    &.mat-badge:not(.mat-badge-disabled) .mat-badge-content {
+      color: white;
+      background: map.get(luxcommon.$componentBgColors, "gray");
+    }
+  }
+  &.mat-badge-disabled .mat-badge-content {
+    color: white;
+  }
+}
+
+/*
+ * Theming for Side-Nav im Demo
+ */
+example-root {
+  .example-base-components-list {
+    mat-expansion-panel-header {
+      font-weight: 600;
+      font-size: 1rem;
+
+      .mat-expansion-indicator {
+        position: relative;
+        transform-origin: center;
+        width: 1rem;
+        height: 1rem;
+        &::after {
+          content: "";
+          position: absolute;
+          width: 1rem;
+          height: 1rem;
+          margin: 0px;
+          padding: 0px;
+          border: none;
+          transform: rotate(0deg);
+          background-color: luxpalette.$lux-primary-color;
+          -webkit-mask: url(luxicons.$arrow-button-down);
+          -webkit-mask-repeat: no-repeat;
+          -webkit-mask-position: center;
+          -webkit-mask-size: cover;
+          mask: url(luxicons.$arrow-button-down);
+          mask-repeat: no-repeat;
+          mask-position: center;
+          mask-size: cover;
+        }
+      }
+
+      &:hover {
+        background-color: #fff !important;
+      }
+    }
+
+    .example-component-list-item {
+      line-height: normal;
+      &.example-component-list-item-selected {
+        text-shadow:
+          0 0 0.65px #003366,
+          0 0 0.65px #003366;
+        line-height: normal;
+        color: luxpalette.$lux-primary-color;
+        border: none;
+        background-color: #fff !important;
+        &::after {
+          content: "";
+          position: absolute;
+          width: 1rem;
+          height: 1rem;
+          right: auto;
+          left: auto;
+          top: auto;
+          bottom: auto;
+          margin: 0.125em 0.3em;
+          background-color: luxpalette.$lux-primary-color;
+          -webkit-mask: url(luxicons.$checkmark);
+          -webkit-mask-repeat: no-repeat;
+          -webkit-mask-position: center;
+          -webkit-mask-size: cover;
+          mask: url(luxicons.$checkmark);
+          mask-repeat: no-repeat;
+          mask-position: center;
+          mask-size: cover;
+          border: none;
+        }
+      }
+      &:hover,
+      &:focus-visible,
+      &.example-component-list-item-selected:hover,
+      &.example-component-list-item-selected:focus-visible {
+        color: #fff;
+        background-color: luxcommon.$lux-hover-color !important;
+        border-radius: 0;
+        &::after {
+          background-color: #fff;
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Theming for LUX-Button
+ */
+lux-button button.lux-button {
+  letter-spacing: 1.25px;
+
+  //Theming für den Text-Button
+  &.mat-mdc-button:not([disabled]) {
+    &:hover {
+      color: luxcommon.$dark-secondary-text;
+      background-color: transparent !important;
+    }
+    &:focus-visible:not(:hover) {
+      background-color: transparent !important;
+      @include luxfocus.lux-button-focus;
+    }
+    &:active {
+      color: luxcommon.$dark-primary-text !important;
+    }
+
+    &.mat-primary {
+      &:hover {
+        color: map.get(luxpalette.$lux-palette-primary, 300);
+        background-color: transparent !important;
+      }
+      &:focus-visible:not(:hover) {
+        background-color: transparent !important;
+        @include luxfocus.lux-button-focus;
+      }
+      &:active {
+        color: map.get(luxpalette.$lux-palette-primary, 700) !important;
+      }
+    }
+
+    &.mat-accent {
+      &:hover {
+        color: map.get(luxpalette.$lux-palette-accent, 300) !important;
+        background-color: transparent !important;
+      }
+      &:focus-visible:not(:hover) {
+        background-color: transparent !important;
+        @include luxfocus.lux-button-focus;
+      }
+      &:active {
+        color: map.get(luxpalette.$lux-palette-accent, 700) !important;
+      }
+    }
+
+    &.mat-warn {
+      &:hover {
+        color: map.get(luxpalette.$lux-palette-warn, 300);
+        background-color: transparent !important;
+      }
+      &:focus-visible:not(:hover) {
+        color: map.get(luxpalette.$lux-palette-warn, 500);
+        background-color: transparent !important;
+        @include luxfocus.lux-button-focus;
+      }
+      &:active {
+        color: map.get(luxpalette.$lux-palette-warn, 700) !important;
+      }
+    }
+  }
+
+  //Theming für den Stroked-Button
+  &.mat-mdc-outlined-button:not([disabled]) {
+    border-color: luxcommon.$dark-secondary-text;
+
+    &:hover {
+      color: luxcommon.$dark-secondary-text;
+      background-color: transparent !important;
+      border-color: luxcommon.$dark-primary-text;
+    }
+
+    &:focus-visible:not(:hover) {
+      color: luxcommon.$dark-primary-text;
+      background-color: transparent !important;
+      border-color: luxcommon.$dark-primary-text;
+      @include luxfocus.lux-button-focus;
+    }
+    &:active {
+      color: luxcommon.$dark-primary-text;
+      background-color: transparent !important;
+    }
+    &.mat-primary {
+      border-color: map.get(luxpalette.$lux-palette-primary, 400);
+
+      &:hover {
+        color: map.get(luxpalette.$lux-palette-primary, 300);
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-primary, 300);
+      }
+      &:focus-visible:not(:hover) {
+        color: map.get(luxpalette.$lux-palette-primary, 500);
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-primary, 500);
+        @include luxfocus.lux-button-focus;
+      }
+      &:active {
+        color: map.get(luxpalette.$lux-palette-primary, 700);
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-primary, 700);
+      }
+    }
+
+    &.mat-accent {
+      color: luxcommon.$dark-primary-text;
+      border-color: map.get(luxpalette.$lux-palette-accent, 400);
+      &:hover {
+        color: luxcommon.$dark-secondary-text !important;
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-accent, 300);
+      }
+      &:focus-visible:not(:hover) {
+        color: luxcommon.$dark-primary-text;
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-accent, 500);
+        @include luxfocus.lux-button-focus;
+      }
+      &:active {
+        color: luxcommon.$dark-primary-text !important;
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-accent, 700);
+      }
+    }
+
+    &.mat-warn {
+      border-color: map.get(luxpalette.$lux-palette-warn, 500);
+      &:hover {
+        color: map.get(luxpalette.$lux-palette-warn, 300);
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-warn, 300);
+      }
+      &:focus-visible:not(:hover) {
+        color: map.get(luxpalette.$lux-palette-warn, 500);
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-warn, 500);
+        @include luxfocus.lux-button-focus;
+      }
+      &:active {
+        color: map.get(luxpalette.$lux-palette-warn, 700);
+        background-color: transparent !important;
+        border-color: map.get(luxpalette.$lux-palette-warn, 700);
+      }
+    }
+  }
+
+  &.mat-mdc-button:disabled,
+  &.mat-mdc-raised-button:disabled,
+  &.mat-mdc-fab:disabled,
+  &.mat-mdc-outlined-button:disabled,
+  &.mat-mdc-unelevated-button:disabled {
+    color: luxcommon.$dark-disabled-text;
+    &.lux-stroked {
+      color: luxcommon.$dark-disabled-text;
+      border-color: luxcommon.$dark-disabled-text;
+    }
+  }
+
+  //Theming für den Raised-Button, Flat-Button, Fab(Rounded)-Button
+  &.mat-mdc-raised-button:not([disabled]),
+  &.mat-mdc-unelevated-button:not([disabled]),
+  &.mat-mdc-fab:not([disabled]) {
+    &:hover {
+      color: luxcommon.$dark-secondary-text;
+      background-color: #ffffff !important;
+      &.lux-stroked {
+        color: map.get(luxpalette.$lux-palette-primary, 300);
+        background-color: #ffffff !important;
+      }
+    }
+
+    &:focus-visible:not(:hover) {
+      color: luxcommon.$dark-primary-text;
+      background-color: #ffffff !important;
+      @include luxfocus.lux-button-focus;
+      &.lux-stroked {
+        background-color: transparent !important;
+      }
+    }
+    &:active {
+      color: luxcommon.$dark-primary-text;
+      background-color: #ffffff !important;
+      &.lux-stroked {
+        color: map.get(luxpalette.$lux-palette-primary, 700);
+        background-color: transparent !important;
+      }
+    }
+
+    &.mat-primary {
+      &:hover {
+        color: #ffffff;
+        background-color: map.get(luxpalette.$lux-palette-primary, 300) !important;
+        &.lux-stroked {
+          color: map.get(luxpalette.$lux-palette-primary, 300);
+          background-color: #ffffff !important;
+        }
+      }
+      &:focus-visible:not(:hover) {
+        color: #ffffff;
+        background-color: map.get(luxpalette.$lux-palette-primary, 500) !important;
+        @include luxfocus.lux-button-focus;
+        &.lux-stroked {
+          color: luxpalette.$lux-primary-color;
+          background-color: transparent !important;
+        }
+      }
+      &:active {
+        background-color: map.get(luxpalette.$lux-palette-primary, 700) !important;
+        &.lux-stroked {
+          color: map.get(luxpalette.$lux-palette-primary, 700);
+          background-color: transparent !important;
+        }
+      }
+    }
+
+    &.mat-accent {
+      color: luxcommon.$dark-primary-text;
+      &.lux-fab-rounded-default:hover {
+        background-color: #ffffff !important;
+        &.lux-stroked {
+          color: luxcommon.$dark-secondary-text;
+          background-color: #ffffff !important;
+        }
+      }
+      &:not(.lux-fab-rounded-default):hover {
+        background-color: map.get(luxpalette.$lux-palette-accent, 300) !important;
+        &.lux-stroked {
+          color: luxcommon.$dark-secondary-text;
+          background-color: transparent !important;
+        }
+      }
+      &:focus-visible:not(:hover) {
+        background-color: map.get(luxpalette.$lux-palette-accent, 500) !important;
+        @include luxfocus.lux-button-focus;
+        &.lux-stroked {
+          background-color: transparent !important;
+        }
+      }
+      &:active {
+        background-color: map.get(luxpalette.$lux-palette-accent, 700) !important;
+        &.lux-stroked {
+          color: map.get(luxpalette.$lux-palette-accent, 700) !important;
+          background-color: transparent !important;
+        }
+      }
+    }
+
+    &.mat-warn {
+      &:hover {
+        color: #ffffff;
+        background-color: map.get(luxpalette.$lux-palette-warn, 300) !important;
+        &.lux-stroked {
+          color: map.get(luxpalette.$lux-palette-warn, 300);
+          background-color: transparent !important;
+        }
+      }
+      &:focus-visible:not(:hover) {
+        color: #ffffff;
+        background-color: map.get(luxpalette.$lux-palette-warn, 500) !important;
+        @include luxfocus.lux-button-focus;
+        &.lux-stroked {
+          color: luxpalette.$lux-warn-color;
+          background-color: transparent !important;
+        }
+      }
+      &:active {
+        background-color: map.get(luxpalette.$lux-palette-warn, 700) !important;
+        &.lux-stroked {
+          color: map.get(luxpalette.$lux-palette-warn, 700);
+          background-color: transparent !important;
+        }
+      }
+    }
+  }
+
+  //Mat-Fab soll in Authentic flat sein
+  &.mat-mdc-fab,
+  &.mat-mdc-fab:not([disabled]):active {
+    @include luxelevations.lux-elevation-z0;
+  }
+}
+
+/*
+* Theming für Stepper-Large
+*/
+lux-stepper-large {
+  background-color: transparent;
+  .lux-stepper-large-nav-container,
+  .lux-stepper-large-content-container {
+    border: 1px solid luxcommon.$app-border-color;
+    border-radius: 4px;
+    background-color: luxcommon.$app-content-bg;
+  }
+
+  //Desktop-View
+  .lux-stepper-large-nav-item {
+    font-size: 1rem;
+    font-weight: 400;
+
+    .lux-stepper-large-nav-item-number-container {
+      border-radius: 50%;
+      font-weight: 600;
+      max-width: 36px;
+      max-height: 36px;
+      box-sizing: border-box;
+      padding: 6px 9px;
+      background-color: #fff;
+    }
+
+    .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link,
+    .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link:hover {
+      color: luxpalette.$lux_primary-color;
+    }
+
+    &.lux-active:not(.lux-disabled) {
+      a {
+        font-weight: 600;
+        text-decoration-thickness: 2px;
+      }
+      .lux-stepper-large-nav-item-number-container {
+        color: luxcommon.$lux-stepper-large-nav-item-active-fc;
+        background-color: luxcommon.$lux-stepper-large-nav-item-active-bg;
+        border: 1px solid luxcommon.$lux-stepper-large-nav-item-active-bg;
+      }
+
+      .lux-stepper-large-nav-item-label {
+        color: #003366;
+      }
+    }
+
+    &.lux-touched:not(.lux-disabled, .lux-active) {
+      a {
+        text-decoration: underline;
+        font-weight: 600;
+      }
+
+      &.lux-completed:not(.lux-active) {
+        .lux-stepper-large-nav-item-number-container {
+          border: 1px solid luxcommon.$app-border-color;
+        }
+
+        a {
+          font-weight: 600;
+          &::after {
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
+          }
+        }
+      }
+
+      &:not(.lux-completed):not(.lux-active) {
+        .lux-stepper-large-nav-item-number-container {
+          color: luxpalette.$lux_primary-color;
+          background-color: luxcommon.$lux-stepper-large-nav-item-completed-bg;
+          border: 1px solid luxcommon.$app-border-color;
+        }
+        .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link:hover {
+          color: luxcommon.$lux-hover-color;
+        }
+      }
+    }
+
+    &:not(.lux-touched) {
+      opacity: 1;
+      color: #003366;
+
+      .lux-stepper-large-nav-item-number-container {
+        color: luxpalette.$lux-primary-color;
+        background-color: #fff;
+        border: 1px solid luxcommon.$app-border-color;
+      }
+    }
+    &.lux-disabled {
+      .lux-stepper-large-nav-item-number-container {
+        color: luxcommon.$dark-disabled-text;
+        background-color: #fff;
+        border: 1px solid luxcommon.$app-border-color;
+      }
+
+      .lux-stepper-large-nav-item-label {
+        color: luxcommon.$dark-disabled-text;
+      }
+    }
+  }
+}
+
+//Stepper-Large Mobile-View
+.lux-stepper-large-mobile-nav-header {
+  div {
+    font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
+  }
+}
+.lux-stepper-large-mobile-nav-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  font-size: 1.125rem;
+
+  .lux-stepper-large-mobile-nav-item-number-container {
+    border-radius: 50%;
+  }
+
+  &.lux-active:not(.lux-disabled) {
+    a {
+      font-weight: 600;
+    }
+    .lux-stepper-large-mobile-nav-item-number-container {
+      color: luxcommon.$lux-stepper-large-nav-item-active-fc;
+      background-color: luxcommon.$lux-stepper-large-nav-item-active-bg;
+    }
+
+    .lux-stepper-large-nav-item-label {
+      color: #003366;
+    }
+  }
+
+  &.lux-touched:not(.lux-disabled) {
+    a {
+      text-decoration: underline;
+      font-weight: 400;
+    }
+
+    &.lux-completed:not(.lux-active) {
+      .lux-stepper-large-mobile-nav-item-number-container {
+        border: 1px solid luxcommon.$app-border-color;
+      }
+
+      a {
+        font-weight: 400;
+      }
+    }
+
+    &:not(.lux-completed):not(.lux-active) {
+      .lux-stepper-large-mobile-nav-item-number-container {
+        color: luxpalette.$lux-primary-color;
+        background-color: luxcommon.$lux-stepper-large-nav-item-completed-bg;
+        border: 1px solid luxcommon.$app-border-color;
+      }
+    }
+  }
+
+  &:not(.lux-touched) {
+    opacity: 1;
+    color: #003366;
+
+    .lux-stepper-large-mobile-nav-item-number-container {
+      color: luxpalette.$lux-primary-color;
+      background-color: #fff;
+      border: 1px solid luxcommon.$app-border-color;
+    }
+  }
+  &.lux-disabled {
+    .lux-stepper-large-nav-item-number-container {
+      color: luxcommon.$dark-disabled-text;
+      background-color: #fff;
+      border: 1px solid luxcommon.$app-border-color;
+    }
+
+    .lux-stepper-large-mobile-nav-item-label {
+      color: luxcommon.$dark-disabled-text;
+    }
+  }
+
+  .lux-stepper-large-mobile-nav-item-label-container {
+    .lux-stepper-large-mobile-nav-item-complete {
+      color: luxcommon.$lux-stepper-large-completed-fc;
+      font-size: 1.125rem;
+    }
+  }
+}
+
+lux-file-upload {
+  .lux-file-upload-view-item-delete-button button.lux-button.mat-mdc-button {
+    color: luxpalette.$lux-primary-color;
+
+    &:hover {
+      color: luxcommon.$lux-hover-color;
+    }
+  }
+
+  .lux-file-upload-container .lux-file-upload-view-item-container {
+    margin-left: luxcommon.$outline-width;
+    margin-right: luxcommon.$outline-width;
+  }
+}

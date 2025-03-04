@@ -1,0 +1,22 @@
+name: smoketest - theme
+
+on:
+  push:
+    paths:
+      - 'projects/lux-components-theme/**'
+
+jobs:
+  build-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - run: |
+          npm install
+          npm run theme:test
+          npm run theme:pack
+          cd dist/theme
+          ls -lR

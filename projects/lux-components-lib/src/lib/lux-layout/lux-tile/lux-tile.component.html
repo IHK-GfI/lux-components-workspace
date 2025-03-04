@@ -1,0 +1,39 @@
+<mat-card
+  (click)="clicked()"
+  (keydown.enter)="clicked()"
+  (keydown.space)="clicked()"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  tabindex="0"
+  class="lux-cursor lux-tile lux-tile-mobile-view"
+  [ngClass]="{ 'lux-tile-desktop-view': !mobileView, 'lux-tile-mobile': mobileView, 'lux-tile-shadow': luxShowShadow }"
+  [luxBadgeNotification]="luxCounter ? '' + luxCounter : ''"
+  luxBadgeColor="accent"
+  [luxBadgeCap]="luxCounterCap"
+  [luxBadgeOverlap]="true"
+>
+  <mat-card-content>
+    <div class="lux-tile-content-container lux-flex lux-flex-col">
+      <div class="lux-tile-icon lux-flex lux-place-content-center lux-items-center" [ngClass]="{ 'lux-tile-mobile': mobileView }">
+        <ng-content select="lux-icon"></ng-content>
+        <ng-content select="lux-image"></ng-content>
+      </div>
+
+      <h2 class="lux-tile-label lux-flex lux-place-content-center lux-items-center" [attr.aria-label]="luxLabel">
+        <span>{{ luxLabel }}</span>
+      </h2>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+@if (luxShowNotification !== undefined && luxShowNotification !== null) {
+<div
+  class="lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-full"
+  [ngClass]="[
+    'lux-tile-notification-icon',
+    getNotificationIconColorClass(),
+    luxCounter !== null && luxCounter !== undefined ? 'lux-badge-notification-visible' : '',
+    mobileView ? 'lux-tile-notification-mobile' : ''
+  ]"
+></div>
+}

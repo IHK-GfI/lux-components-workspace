@@ -1,0 +1,60 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "update-standalone-imports": {
+      "description": "Entfernt die Modul-Importe und fügt die Standalone-Importe hinzu",
+      "factory": "./src/update-standalone-imports/index#updateStandAloneImports",
+      "schema": "./src/update-standalone-imports/schema.json"
+    },
+    "update-18.4.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.4.0",
+      "factory": "./src/updates/18.4.0/index#update180400",
+      "schema": "./src/updates/18.4.0/schema.json"
+    },
+    "update-18.3.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.3.0",
+      "factory": "./src/updates/18.3.0/index#update180300",
+      "schema": "./src/updates/18.3.0/schema.json"
+    },
+    "update-18.2.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.2.0",
+      "factory": "./src/updates/18.2.0/index#update180200",
+      "schema": "./src/updates/18.2.0/schema.json"
+    },
+    "update-18.1.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.1.0",
+      "factory": "./src/updates/18.1.0/index#update180100",
+      "schema": "./src/updates/18.1.0/schema.json"
+    },
+    "update-18.0.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.0.0",
+      "factory": "./src/updates/18.0.0/index#update180000",
+      "schema": "./src/updates/18.0.0/schema.json"
+    },
+    "update-dependencies": {
+      "description": "Aktualisiert die Abhängigkeiten im LUX-Componentsprojekt",
+      "factory": "./src/update-dependencies/index#updateDependencies",
+      "schema": "./src/update-dependencies/schema.json"
+    },
+    "update-en-messages": {
+      "description": "Aktualisiert die englischen Übersetzungen im Projekt",
+      "factory": "./src/update-en-messages/index#updateEnMessages",
+      "schema": "./src/update-en-messages/schema.json"
+    },
+    "add-lux-components": {
+      "description": "Fügt die LUX-Components zum Projekt hinzu",
+      "factory": "./src/add-lux-components/index#addLuxComponents",
+      "schema": "./src/add-lux-components/schema.json"
+    },
+    "change-theme-to-authentic": {
+      "description": "Wechselt zum Authentic-Theme",
+      "factory": "./src/theme/change-theme-to-authentic/index#changeToThemeAuthentic",
+      "schema": "./src/theme/change-theme-to-authentic/schema.json"
+    },
+    "change-to-lux-icons": {
+      "description": "Die neuen LUX-Icons werden im Projekt eingerichtet",
+      "factory": "./src/theme/change-to-lux-icons/index#changeToLuxIcons",
+      "schema": "./src/theme/change-to-lux-icons/schema.json"
+    }
+  }
+}

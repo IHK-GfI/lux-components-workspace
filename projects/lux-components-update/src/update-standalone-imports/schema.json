@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "updateStandAloneImportsSchema",
+  "title": "ToDo",
+  "type": "object",
+  "description": "ToDo",
+  "properties": {
+    "path": {
+      "type": "string",
+      "description": "ToDo",
+      "x-prompt": "Which path in your project should be migrated?",
+      "default": "./"
+    },
+    "import": {
+      "type": "string",
+      "description": "ToDo",
+      "default": "@ihk-gfi/lux-components-lib"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

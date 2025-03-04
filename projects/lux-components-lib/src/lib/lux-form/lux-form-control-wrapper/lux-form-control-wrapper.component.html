@@ -1,0 +1,88 @@
+<div
+  class="lux-form-control-wrapper"
+  [ngClass]="{
+    'lux-form-control-error-authentic': shouldDisplayError(),
+    'lux-form-control-disabled-authentic': luxFormComponent.luxDisabled,
+    'lux-form-control-readonly-authentic': luxFormComponent.luxReadonly,
+    'lux-focused-authentic': focused,
+    'lux-dense-authentic': luxFormComponent.luxDense
+  }"
+  (focusin)="focusin()"
+  (focusout)="focusout()"
+>
+  <!-- Container für das Label -->
+  @if (!luxNoTopLabel && !luxNoLabels) {
+  <div class="lux-form-control-label-authentic" [ngClass]="{ 'lux-label-long-format': luxLabelLongFormat }">
+    <!-- Hier wird entweder das luxLabel oder das übergebene Tag heraus gerendert -->
+    @if (!luxIgnoreDefaultLabel) {
+    <div class="lux-label-authentic">
+      @if (luxFormComponent.formLabelComponent || luxFormComponent.luxLabel) {
+      <label class="lux-form-label-authentic" [id]="luxFormComponent.uid + '-label'" [for]="luxFormComponent.uid">
+        @if (luxFormComponent.luxLabel) {
+        {{ luxFormComponent.luxLabel }}
+        } @else {
+        <ng-container *ngTemplateOutlet="luxFormComponent.formLabelComponent?.templateRef ?? null"></ng-container>
+        } @if (luxFormComponent.luxRequired) {
+        <span aria-hidden="true">&nbsp;*</span>
+        }
+      </label>
+      }
+    </div>
+    }
+  </div>
+  }
+  <!-- Container für das FormControl -->
+  <div class="lux-form-control-container-authentic" [ngClass]="{ 'lux-no-input-row': luxNoInputRow }">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Container für das Hint und den Error und den Counter -->
+  @if (!luxNoBottomLabel && !luxNoLabels) {
+  <div class="lux-form-control-misc-authentic" [ngClass]="{ 'lux-no-input-row': luxNoInputRow }">
+    @switch (shouldDisplayError()) { @case (true) {
+    <div class="lux-form-control-error-container">
+      <lux-icon
+        class="lux-color-red lux-alert-icon"
+        luxIconName="lux-interface-alert-warning-triangle"
+        luxIconSize="14px"
+        luxPadding="1px"
+        luxMargin="0px 2px 0px 0px"
+      ></lux-icon>
+      <mat-error [id]="luxFormComponent.uid + '-error'">
+        {{ luxFormComponent.errorMessage }}
+      </mat-error>
+      @if (luxDisplayClearErrorButton) {
+      <lux-icon
+        luxIconName="lux-interface-delete-1"
+        luxAriaLabel="Fehlermeldung löschen"
+        i18n-luxAriaLabel="@@luxc.form.delete.error.button"
+        class="lux-error-icon"
+        [tabIndex]="0"
+        (keydown.enter)="onCloseErrorMessage()"
+        (click)="onCloseErrorMessage()"
+      ></lux-icon>
+      }
+    </div>
+    } @default {
+    <!-- Hier wird entweder das luxHint oder das übergebene Tag heraus gerendert -->
+    @if ( (luxFormComponent.formHintComponent || luxFormComponent.luxHint) && (!luxFormComponent.luxHintShowOnlyOnFocus ||
+    (luxFormComponent.luxHintShowOnlyOnFocus && focused)) ) {
+    <mat-hint [id]="luxFormComponent.uid + '-hint'">
+      @if (luxFormComponent.luxHint) {
+      {{ luxFormComponent.luxHint }}
+      } @else {
+      <ng-container *ngTemplateOutlet="luxFormComponent.formHintComponent?.templateRef ?? null"></ng-container>
+      }
+    </mat-hint>
+    } } }
+    <!-- Container für Character-Counter -->
+    @if (!luxHideCounterLabel && luxCounterLabel) {
+    <div class="lux-form-control-character-counter-authentic">
+      @if (focused) {
+      {{ luxCounterLabel }}
+      }
+    </div>
+    }
+  </div>
+  }
+</div>

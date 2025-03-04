@@ -1,0 +1,72 @@
+@if (formGroup) {
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [formGroup]="formGroup"
+  [luxNoLabels]="luxNoLabels"
+  [luxNoBottomLabel]="luxNoBottomLabel"
+  [luxNoTopLabel]="luxNoTopLabel"
+  [luxCounterLabel]="counterLabel"
+  [luxHideCounterLabel]="luxHideCounterLabel"
+  [luxLabelLongFormat]="luxLabelLongFormat"
+  luxTagId="luxInputWrapper"
+>
+  <div class="lux-input-row-authentic">
+    @if (inputPrefix) {
+    <span class="lux-input-prefix-container" matPrefix>
+      <ng-content select="lux-input-ac-prefix"></ng-content>
+    </span>
+    } @if (luxType !== 'number') {
+    <input
+      matInput
+      luxTagIdHandler
+      [luxNameAttr]="luxName"
+      [luxTagId]="luxTagId"
+      [placeholder]="luxPlaceholder"
+      [type]="luxType"
+      [luxMaxLengthAttr]="luxMaxLength"
+      [formControl]="formControl"
+      [required]="luxRequired"
+      [readonly]="luxReadonly"
+      [autocomplete]="luxAutocomplete"
+      (blur)="luxBlur.emit($event)"
+      (focus)="onFocus($event)"
+      (focusin)="onFocusIn($event)"
+      (focusout)="onFocusOut($event)"
+      [luxAriaDescribedby]="descripedBy()"
+      [id]="uid"
+      #input
+    />
+    } @if (luxType === 'number') {
+    <input
+      matInput
+      luxTagIdHandler
+      [luxNameAttr]="luxName"
+      [luxTagId]="luxTagId"
+      [placeholder]="luxPlaceholder"
+      type="number"
+      [luxMaxLengthAttr]="luxMaxLength"
+      [formControl]="formControl"
+      [required]="luxRequired"
+      [readonly]="luxReadonly"
+      [autocomplete]="luxAutocomplete"
+      [ngClass]="{
+        'lux-number ': luxType === 'number',
+        'lux-number-left': luxType !== 'number' || (luxType === 'number' && luxNumberAlignLeft)
+      }"
+      (blur)="luxBlur.emit($event)"
+      (focus)="onFocus($event)"
+      (focusin)="onFocusIn($event)"
+      (focusout)="onFocusOut($event)"
+      (keydown)="onKeyDown($event)"
+      [luxAriaDescribedby]="descripedBy()"
+      [id]="uid"
+      #input
+    />
+    } @if (inputSuffix) {
+    <span class="lux-input-suffix-container" matSuffix>
+      <ng-content select="lux-input-ac-suffix"></ng-content>
+    </span>
+    }
+  </div>
+</lux-form-control-wrapper>
+}

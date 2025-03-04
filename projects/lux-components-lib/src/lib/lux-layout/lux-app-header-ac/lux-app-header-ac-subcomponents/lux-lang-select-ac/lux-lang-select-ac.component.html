@@ -1,0 +1,35 @@
+<lux-menu
+  class="lux-lang-select-menu-ac"
+  luxAriaMenuTriggerLabel="Sprachmenü"
+  i18n-luxAriaMenuTriggerLabel="@@luxc.lang-select.aria.langmenu.btn"
+  [luxDisplayExtended]="false"
+  (luxMenuOpened)="onMenuOpened()"
+  (luxMenuClosed)="onMenuClosed()"
+>
+  @for (item of localeOptions; track item) {
+  <lux-menu-item
+    class="lux-lang-select-menu-item"
+    [luxLabel]="item.label"
+    [luxClass]="item === selectedLocale ? 'lux-selected-item-ac' : ''"
+    [luxDisabled]="item === selectedLocale"
+    (luxClicked)="onLocaleChanged(item)"
+  ></lux-menu-item>
+  }
+  <lux-menu-trigger>
+    <lux-button
+      [luxRounded]="true"
+      luxColor="primary"
+      luxIconName="lux-programming-web"
+      class="lang-select-trigger-ac"
+      luxAriaLabel="Spracheinstellungen"
+      i18n-luxAriaLabel="@@luxc.app-header.lang.select.trigger"
+      aria-haspopup="true"
+      luxTagId="lang-select-trigger-btn"
+      [ngClass]="{ 'menu-opened': menuOpened, 'lang-select-trigger-mobile': mobileView }"
+      luxTagId="lang-select-trigger-btn"
+      luxTooltip="Sprache wechseln"
+      [luxTooltipShowDelay]="1500"
+      #customTrigger
+    ></lux-button>
+  </lux-menu-trigger>
+</lux-menu>

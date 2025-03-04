@@ -1,0 +1,30 @@
+:host.lux-app-footer-no-fixed {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    .lux-app-content-container {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      position: unset;
+      top: unset;
+      left: unset;
+      right: unset;
+      bottom: unset;
+    }
+}
+
+:host {
+  position: relative;
+  flex: 1 1 100%;
+  overflow-y: auto;
+
+  .lux-app-content-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}

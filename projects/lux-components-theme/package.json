@@ -1,0 +1,45 @@
+﻿{
+  "name": "@ihk-gfi/lux-components-theme",
+  "version": "19.0.0-rc.1",
+  "description": "",
+  "private": false,
+  "scripts": {
+    "build-authentic": "del-cli --force ./../../dist/theme/*authentic*.* && sass --style=compressed --load-path=../../node_modules src/authentic/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic-min.css && sass --load-path=../../node_modules src/authentic/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic.css",
+    "build-green": "del-cli --force ./../../dist/theme/*green*.* && sass --style=compressed --load-path=../../node_modules src/green/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-green-min.css && sass --load-path=../../node_modules src/green/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-green.css",
+    "build": "npm run clean && npm run build-authentic && npm run build-green",
+    "clean": "del-cli --force ./../../dist/theme/*.* && del-cli --force ../../dist/theme/",
+    "pack-copy-base-files": "copyfiles -f package.json README.md ../../LICENSE ./../../dist/theme",
+    "pack-copy-src-dirs": "copyfiles \"./src/**\" ./../../dist/theme",
+    "pack-copy-prebuilt-themes": "copyfiles \"./../../dist/theme/**\" ./../../dist/theme",
+    "pack": "npm run build && npm run pack-copy-base-files && npm run pack-copy-src-dirs && npm run pack-copy-prebuilt-themes",
+    "smoketest": "npm run test && npm run pack",
+    "test": "npm run build",
+    "watch": "npm-watch"
+  },
+  "author": "Thomas Dickhut",
+  "license": "IHK-GfI Open-Source-Lizenz",
+  "peerDependencies": {
+    "@angular/material": "^19.0.0"
+  },
+  "watch": {
+    "build-authentic": {
+      "patterns": [
+        "src/authentic"
+      ],
+      "extensions": "scss"
+    },
+    "build-green": {
+      "patterns": [
+        "src/green"
+      ],
+      "extensions": "scss"
+    },
+    "build": {
+      "patterns": [
+        "src/base",
+        "src/public"
+      ],
+      "extensions": "scss"
+    }
+  }
+}

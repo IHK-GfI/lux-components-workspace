@@ -1,0 +1,107 @@
+// Allgemein
+$dark-primary-text: #003366;
+$dark-secondary-text: #003366;
+$dark-disabled-text: #636d76;
+$dark-dividers: rgba(black, 0.2);
+$dark-focused: rgba(black, 0.12);
+
+$light-primary-text: white;
+$light-secondary-text: rgba(white, 0.7);
+$light-disabled-text: rgba(white, 0.5);
+$light-dividers: #e3ebf5;
+$light-focused: rgba(white, 0.12);
+
+// App
+$app-header-bg: #ffffff;
+$app-content-bg: #ffffff;
+$app-footer-bg: #e3ebf5;
+$app-data-bg: #ffffff;
+$app-gradient: linear-gradient(90deg, #ffffff 0%, #f8fbff 100%);
+$app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, #f8fbff 100%);
+$app-border-color: rgba(black, 0.12);
+$app-headline-font: Korb, "Blogger Sans", "Source Sans Pro", Arial, sans-serif;
+$app-font-family: "Source Sans Pro", Arial, sans-serif;
+$app-button-font-family: "Blogger Sans", $app-font-family;
+$app-border-radius: 4px;
+
+// Form
+$form-border-color: rgba(0, 0, 0, 0.42);
+$form-control-font-size: 1rem;
+$form-control-buffer: 6px;
+
+// Button
+$button-height: 45px;
+$button-font-size: 22px;
+$button-fav-height: 45px;
+
+// Fokus
+$outline-width: 4px;
+$outline-style: solid;
+$outline-color-bright: #ffffff;
+$outline-color-dark: #2e8533;
+
+// Hover
+$lux-hover-color: #e3ebf5;
+$lux-hover-color-for-dark-background: #e3ebf5;
+
+// Selektion
+$lux-selected-border-color: #2e8533;
+$lux-selected-bg-color: #e3ebf5;
+
+// Stepper (large)
+$lux-stepper-large-backdrop-bg: #636d76;
+$lux-stepper-large-completed-fc: #2e8533;
+
+$lux-stepper-large-nav-item-active-fc: #ffffff;
+$lux-stepper-large-nav-item-active-bg: #003366;
+$lux-stepper-large-nav-item-disabled-fg: #003366;
+$lux-stepper-large-nav-item-disabled-bg: #eff3f6;
+$lux-stepper-large-nav-item-completed-fg: #ffffff;
+$lux-stepper-large-nav-item-completed-bg: #2e8533;
+
+// Overlay
+$lux-overlay-backdrop-color: rgba(0, 0, 0, 0.12);
+
+// Options in Panels (z.B. Select, AutoComplete und Menu)
+$lux-panel-option-min-height: 24px;
+$lux-panel-option-padding: 12px 0;
+
+// Hintergrundfarben (z.B. Badge oder Progress)
+$componentBgColors: (
+  "red": #db272e,
+  "green": #56bd66,
+  "purple": #9900b8,
+  "blue": #003366,
+  "gray": #636d76,
+  "orange": #c75000,
+  "brown": #783f04,
+  "black": black,
+  "white": #ffffff,
+  "yellow": rgba(244, 203, 37, 1),
+  "pink": #ea515a,
+  "lightblue": rgba(63, 155, 218, 1)
+);
+
+// Vordergrundfarben (z.B. Badge)
+$componentFontColors: (
+  black: #000000,
+  white: #ffffff
+);
+
+// Farben für einen dunklen Hintergrund (z.B. Snackbar).
+$colorsForDarkBg: (
+  "red": #f17474,
+  "green": #53b12b,
+  "purple": #e561ff,
+  "blue": #729eca,
+  "gray": #c8c8c8,
+  "orange": #ec9c1b,
+  "brown": #eb7c05,
+  "white": #ffffff
+);
+
+// Tile
+$lux-tile-font-hover-color: #2e8533;
+$lux-tile-icon-color: #56bd66;
+$lux-tile-borderradius: 24px;
+$lux-tile-bottom-line-color: #56bd66;

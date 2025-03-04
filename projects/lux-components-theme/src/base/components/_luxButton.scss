@@ -1,0 +1,205 @@
+@use "sass:map";
+@use "sass:color";
+@use "../luxpalette";
+@use "../luxcommon";
+@use "../luxelevations";
+@use "../luxfocus";
+@use "../../public/global";
+
+/*
+ * Styling for LUX-Button
+ */
+lux-button button.lux-button {
+  font-family: global.$app-font-family;
+  font-size: luxcommon.$button-font-size;
+  font-weight: 600;
+  height: luxcommon.$button-height;
+
+  &.mat-mdc-fab {
+    border-radius: 50%;
+
+    .mat-mdc-button-touch-target {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  &:not(.mat-mdc-fab) {
+    border-radius: 4px;
+    border-width: 1px;
+  }
+
+  &.mdc-button {
+    padding: 0 16px;
+    letter-spacing: 1.25px;
+  }
+
+  &.mat-mdc-button.mat-unthemed {
+    color: map.get(luxpalette.$lux-palette_primary, 500);
+  }
+
+  .lux-button-content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  &.mat-mdc-button:disabled,
+  &.mat-mdc-raised-button:disabled,
+  &.mat-mdc-raised-button:disabled:not([class*="mat-elevation-z"]),
+  &.mat-mdc-unelevated-button:disabled,
+  &.mat-mdc-outlined-button:disabled,
+  &.mat-mdc-fab:disabled {
+    color: luxcommon.$dark-disabled-text;
+    @include luxelevations.lux-elevation-z0;
+  }
+
+  &.mat-mdc-raised-button:not([class*="mat-elevation-z"]) {
+    @include luxelevations.lux-elevation-z2;
+  }
+
+  &.lux-button-rounded {
+    height: luxcommon.$button-fav-height;
+    width: luxcommon.$button-fav-height;
+
+    @include luxelevations.lux-elevation-z2;
+
+    lux-icon.lux-button-icon-round {
+      line-height: 1;
+    }
+
+    &.lux-stroked {
+      color: luxpalette.$lux-primary-color;
+      border: 1px solid luxcommon.$app-border-color;
+      background-color: transparent;
+      &.mat-primary {
+        border-color: luxpalette.$lux-primary-color;
+      }
+      &.mat-accent {
+        color: luxcommon.$dark-disabled-text;
+        border-color: luxpalette.$lux-accent-color;
+      }
+      &.mat-warn {
+        color: luxpalette.$lux-warn-color;
+        border-color: luxpalette.$lux-warn-color;
+      }
+    }
+  }
+
+  lux-icon.lux-button-icon:not(.lux-button-icon-round) {
+    line-height: 1;
+  }
+
+  .lux-button-badge {
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 11px;
+    line-height: normal;
+    max-width: 38px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+}
+
+/*
+ * Focus / Hover / Disabled
+ */
+lux-button {
+  button:not([disabled]) {
+    .mat-mdc-button-persistent-ripple::before {
+      background-color: transparent;
+    }
+
+    &.mat-mdc-fab:active,
+    &.mat-mdc-fab:focus {
+      box-shadow: none;
+    }
+
+    &.lux-button-rounded.mat-accent.lux-fab-rounded-default {
+      background-color: white;
+    }
+
+    &.lux-button-rounded.mat-primary:not(.lux-stroked) {
+      color: white;
+    }
+
+    &.lux-button-rounded.mat-warn {
+      color: white;
+    }
+
+    &.lux-button-rounded.lux-stroked.mat-accent.lux-fab-stroked-default {
+      background-color: white;
+      border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &:focus-visible {
+      @include luxfocus.lux-button-focus;
+    }
+
+    &:not(.mat-mdc-fab):not(.mat-mdc-raised-button):not(.mat-mdc-unelevated-button),
+    &.mat-mdc-outlined-button {
+      &:hover {
+        background-color: color.adjust(luxcommon.$lux-hover-color, $lightness: -10%);
+
+        &.mat-accent {
+          color: map.get(luxpalette.$lux-palette_accent, 900);
+        }
+
+        &.mat-warn {
+        }
+
+        &.mat-primary {
+        }
+      }
+    }
+
+    &.mat-mdc-fab:hover,
+    &.mat-mdc-raised-button:hover,
+    &.mat-mdc-unelevated-button:hover {
+      background-color: color.adjust(luxcommon.$lux-hover-color, $lightness: -10%) !important;
+
+      &.mat-accent {
+        background-color: color.adjust(map.get(luxpalette.$lux-palette_accent, 500), $lightness: 10%) !important;
+      }
+
+      &.mat-warn {
+        background-color: color.adjust(map.get(luxpalette.$lux-palette_warn, 500), $lightness: 10%) !important;
+      }
+
+      &.mat-primary {
+        background-color: color.adjust(map.get(luxpalette.$lux-palette_primary, 500), $lightness: 10%) !important;
+      }
+    }
+    &.mat-mdc-fab.lux-button-rounded.lux-stroked:active {
+      box-shadow: unset;
+    }
+
+    &.mat-mdc-fab:focus-visible:not(:hover),
+    &.mat-mdc-raised-button:focus-visible:not(:hover),
+    &.mat-mdc-unelevated-button:focus-visible:not(:hover) {
+      background-color: white !important;
+
+      &.mat-accent {
+        background-color: color.adjust(map.get(luxpalette.$lux-palette_accent, 500), $lightness: 5%) !important;
+      }
+
+      &.mat-warn {
+        background-color: color.adjust(map.get(luxpalette.$lux-palette_warn, 500), $lightness: 5%) !important;
+      }
+
+      &.mat-primary {
+        background-color: color.adjust(map.get(luxpalette.$lux-palette_primary, 500), $lightness: 5%) !important;
+      }
+    }
+  }
+
+  button.mat-mdc-fab span.mdc-button__label {
+    display: inline-flex;
+  }
+}

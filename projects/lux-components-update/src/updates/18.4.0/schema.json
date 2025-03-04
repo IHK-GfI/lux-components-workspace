@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "luxupdate180400Schema",
+  "title": "Aktualisiert das LUX-Componentsprojekt",
+  "type": "object",
+  "description": "Aktualisiert das LUX-Componentsprojekt",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Der Projektname",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Generiert mehr Logausgaben",
+      "default": false
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

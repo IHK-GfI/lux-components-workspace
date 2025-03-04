@@ -1,0 +1,19 @@
+mat-error,
+mat-hint {
+  font-size: 0.75em;
+  position: absolute;
+  top: 0;
+}
+
+.mat-form-field-invalid + .hint-error-box .mat-mdc-form-field-hint {
+  display: none;
+}
+
+.hint-error-box {
+  position: relative;
+  margin-top: -2em;
+}
+
+.lux-readonly {
+  pointer-events: none;
+}

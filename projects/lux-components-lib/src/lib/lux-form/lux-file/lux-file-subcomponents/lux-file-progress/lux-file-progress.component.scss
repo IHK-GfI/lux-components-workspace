@@ -1,0 +1,16 @@
+.lux-file-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  pointer-events: none;
+
+  lux-progress {
+    height: 48px !important;
+    width: 48px !important;
+  }
+}

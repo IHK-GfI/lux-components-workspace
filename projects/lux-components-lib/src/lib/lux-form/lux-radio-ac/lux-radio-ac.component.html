@@ -1,0 +1,53 @@
+@if (formGroup) {
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [luxNoInputRow]="true"
+  [luxLabelLongFormat]="luxLabelLongFormat"
+  [formGroup]="formGroup"
+  [luxNoLabels]="luxNoLabels"
+  [luxNoBottomLabel]="luxNoBottomLabel"
+  [luxNoTopLabel]="luxNoTopLabel"
+  luxTagId="luxRadioWrapper"
+>
+  <mat-radio-group
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [name]="luxGroupName"
+    [formControl]="formControl"
+    [ngClass]="{ 'lux-vertical': isVertical, 'lux-horizontal': !isVertical }"
+    [required]="luxRequired"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    [luxAriaLabelledby]="uid + '-label'"
+    [id]="uid"
+  >
+    @for (option of luxOptions; track option; let i = $index) {
+    <mat-radio-button
+      [value]="luxPickValue ? _luxOptionsPickValue[i] : option"
+      [disableRipple]="true"
+      color="primary"
+      [luxAriaDescribedby]="descripedBy()"
+      luxAriaDescribedbySelector=".mat-radio-input"
+      [luxAriaRequired]="luxRequired"
+      [disabled]="isDisabled(option)"
+      luxAriaRequiredSelector=".mat-radio-input"
+      [luxAriaInvalid]="'' + formControl.invalid"
+      luxAriaInvalidSelector=".mat-radio-input"
+    >
+      <ng-container
+        *ngTemplateOutlet="tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate; context: { $implicit: option }"
+      ></ng-container>
+    </mat-radio-button>
+    }
+  </mat-radio-group>
+  <ng-content select="lux-form-hint"></ng-content>
+</lux-form-control-wrapper>
+}
+
+<ng-template #noTemplateRefTemplate let-option>
+  @if (option && luxOptionLabelProp && option[luxOptionLabelProp]) {
+  {{ option | luxRenderProperty : luxOptionLabelProp }}
+  } @else { @if (!!option) {
+  {{ option }}
+  } }
+</ng-template>

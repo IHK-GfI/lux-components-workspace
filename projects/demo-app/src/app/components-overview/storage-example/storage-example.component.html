@@ -1,0 +1,126 @@
+<example-base-structure
+  exampleTitle="Storage"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/util-v16#luxstorageservice"
+>
+  <example-base-content class="lux-flex lux-flex-col">
+    <div class="example-storage-list">
+      <h3>Aktuelle LocalStorage-Einträge</h3>
+      @for (item of [].constructor(storageLength); track item; let i = $index) {
+      <div class="lux-highlight-section lux-flex lux-flex-col lux-gap-4">
+        <div class="lux-flex lux-flex-col lux-gap-2">
+          <div class="lux-flex">
+            <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Key:</b></div>
+            <div class="lux-flex-auto">{{ localStorage.key(i) }}</div>
+          </div>
+          <div class="lux-flex">
+            <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Value:</b></div>
+            <div class="lux-flex-auto">{{ luxStorageService.getItemAsObservable(localStorage.key(i)!) | async }}</div>
+          </div>
+        </div>
+        @if (!localStorage.key(i)!.endsWith('sensitive')) {
+        <div class="lux-flex lux-gap-2 lt-md:lux-flex-col lt-md:lux-gap-0">
+          <lux-input-ac class="lux-flex-auto" luxLabel="Neuer Value" #luxInput [luxNoBottomLabel]="true"></lux-input-ac>
+          <div class="lux-flex lux-flex-none lux-gap-2">
+            <lux-button
+              class="lux-flex lux-flex-none round-btn"
+              luxIconName="lux-interface-arrows-synchronize"
+              luxColor="accent"
+              luxTagId="refresh-storage-entry-btn"
+              [luxRounded]="true"
+              [luxDisabled]="!luxInput.luxValue"
+              luxAriaLabel="Wert speichern"
+              (luxClicked)="updateExisting(localStorage.key(i)!, luxInput)"
+            >
+            </lux-button>
+            <lux-button
+              class="lux-flex lux-flex-none round-btn"
+              luxIconName="lux-interface-delete-1"
+              luxColor="warn"
+              luxTagId="remove-storage-entry-btn"
+              [luxRounded]="true"
+              (luxClicked)="luxStorageService.removeItem(localStorage.key(i)!)"
+              luxAriaLabel="Wert löschen"
+            >
+            </lux-button>
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </example-base-content>
+  <example-base-simple-options>
+    <div class="lux-flex lux-flex-col lux-highlight-section">
+      Im Chrome kann der Storage wie folgt geändert werden: <br />
+      <ol>
+        <li>mit F12 die Developer Tools öffnen</li>
+        <li>auf den Reiter 'Application' wechseln</li>
+        <li>links den 'Local Storage' aufklappen</li>
+        <li>die URL der App anklicken</li>
+        <li>den Wert des gesuchten Schlüssels ändern (Doppelklick auf den Wert)</li>
+        <li>mit Return den neuen Wert übernehmen</li>
+      </ol>
+    </div>
+    <div class="lux-highlight-section column">
+      <lux-input-ac
+        luxLabel="Key"
+        luxHint="Hier kann ein Key für einen Storage-Eintrag gesetzt werden."
+        luxAutocomplete="off"
+        [(luxValue)]="key"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxLabel="Value"
+        luxHint="Hier kann der Wert für den Key {{ key }} eingetragen werden."
+        luxAutocomplete="off"
+        [(luxValue)]="value"
+      >
+      </lux-input-ac>
+      <lux-toggle-ac luxLabel="sensitive" [(luxChecked)]="sensitive" [luxNoTopLabel]="true">
+        <lux-form-hint>
+          Dieser Wert bestimmt, ob der eingetragene Schlüssel als 'empfindlicher' Datensatz gilt.<br />
+          Sensible Datensätze können über den <i>LuxStorageService</i> gezielt entfernt werden.
+        </lux-form-hint>
+      </lux-toggle-ac>
+      <lux-button
+        class="lux-flex lux-max-width-40"
+        luxLabel="Hinzufügen"
+        luxColor="primary"
+        [luxStroked]="true"
+        (luxClicked)="submit()"
+        [luxDisabled]="!key"
+        luxTagId="add-new-storage-entry-btn"
+        luxAriaLabel="Wert hinzufügen"
+      >
+      </lux-button>
+    </div>
+  </example-base-simple-options>
+  <example-base-options-actions class="lux-flex">
+    <lux-menu
+      class="lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-64 lux-min-width-64 lux-max-width-64"
+      luxMenuIconName="lux-interface-setting-menu-vertical"
+      [luxDisplayExtended]="true"
+      [luxMaximumExtended]="2"
+      [luxDisplayMenuLeft]="false"
+    >
+      <lux-menu-item
+        luxLabel="Sensible Daten löschen"
+        [luxStroked]="true"
+        [luxDisabled]="storageLength === 0"
+        luxColor="warn"
+        (luxClicked)="clearSensitiveItems()"
+        luxTagId="menu-sensible-data"
+      >
+      </lux-menu-item>
+      <lux-menu-item
+        luxLabel="Alle Daten löschen"
+        [luxStroked]="true"
+        [luxDisabled]="storageLength === 0"
+        luxColor="warn"
+        (luxClicked)="clearAll()"
+        luxTagId="menu-all-data"
+      >
+      </lux-menu-item>
+    </lux-menu>
+  </example-base-options-actions>
+</example-base-structure>

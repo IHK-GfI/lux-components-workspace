@@ -1,0 +1,91 @@
+@use "sass:map";
+@use "../luxfocus";
+@use "../luxcommon";
+@use "../luxpalette";
+
+$textbox_yellow: rgba(244, 203, 37, 1);
+$textbox_yellow_light: rgba(253, 248, 225, 1);
+
+lux-textbox {
+  .lux-textbox-container {
+    display: grid;
+    grid-template-columns: 1.5em 1fr;
+    gap: 1.5em;
+    row-gap: 1em;
+    border: 1px solid map.get(luxpalette.$lux-palette-primary, 500);
+    border-radius: 4px;
+    padding: 1.5em;
+
+    background-color: #ffffff;
+
+    h1.lux-textbox-title,
+    h2.lux-textbox-title,
+    h3.lux-textbox-title,
+    h4.lux-textbox-title,
+    h5.lux-textbox-title,
+    h6.lux-textbox-title {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .lux-textbox-icon {
+      width: 24px;
+      height: 24px;
+      justify-self: start;
+      align-self: start;
+      color: luxpalette.$lux-primary-color;
+      mat-icon.mat-icon.lux-icon {
+        padding: 0 !important;
+      }
+    }
+
+    .lux-textbox-content {
+      color: luxcommon.$dark-primary-text;
+      grid-column-start: 2;
+      font-size: 1rem;
+      p {
+        padding: 0;
+        margin: 0;
+      }
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    &.lux-no-icon {
+      grid-template-columns: 1fr;
+
+      .lux-text-box-title,
+      .lux-textbox-content {
+        grid-column: 1 / -1;
+      }
+    }
+
+    &.lux-blue {
+      background: linear-gradient(90deg, map.get(luxpalette.$lux-palette-primary, 50), #ffffff);
+    }
+    &.lux-green {
+      background: linear-gradient(90deg, map.get(luxpalette.$lux-palette-accent, 50), #ffffff);
+      border-color: luxpalette.$lux-accent-color;
+      lux-icon.lux-textbox-icon {
+        color: luxpalette.$lux-accent-color;
+      }
+    }
+    &.lux-red {
+      background: linear-gradient(90deg, map.get(luxpalette.$lux-palette-warn, 50), #ffffff);
+      border-color: luxpalette.$lux-warn-color;
+      lux-icon.lux-textbox-icon {
+        color: luxpalette.$lux-warn-color;
+      }
+    }
+    &.lux-yellow {
+      background: linear-gradient(90deg, $textbox_yellow_light, #ffffff);
+      border-color: $textbox_yellow;
+      lux-icon.lux-textbox-icon {
+        color: $textbox_yellow;
+      }
+    }
+  }
+}

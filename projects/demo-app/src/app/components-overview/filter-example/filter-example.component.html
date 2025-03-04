@@ -1,0 +1,428 @@
+<example-base-structure
+  exampleTitle="Filter"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90filter%E2%80%90form-v18"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <lux-filter-form
+        (luxOnFilter)="onFilter($event)"
+        [(luxFilterExpanded)]="expanded"
+        [luxFilterValues]="initFilter"
+        (luxOnSave)="onSave($event)"
+        (luxOnLoad)="onLoad($event)"
+        (luxOnReset)="onReset()"
+        (luxOnDelete)="onDelete($event)"
+        [luxTitle]="title"
+        [luxHideMenu]="hideMenu"
+        [luxShowChips]="showFilterChips"
+        [luxHideChipsBorder]="hideChipsBorder"
+        [luxStoredFilters]="storedFilters"
+        [luxShowAsCard]="false"
+        [luxButtonFlat]="buttonFlat"
+        [luxButtonFilterColor]="buttonFilterColor"
+        [luxButtonDialogSave]="buttonDialogSave"
+        [luxButtonDialogLoad]="buttonDialogLoad"
+        [luxButtonDialogDelete]="buttonDialogDelete"
+        [luxButtonDialogCancel]="buttonDialogCancel"
+        [luxButtonDialogClose]="buttonDialogClose"
+        [luxDisableShortcut]="disableShortcut"
+        class="lux-ml-1 lux-mr-1 lux-mb-3 lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
+      >
+        <div class="lux-mt-4 lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
+          <lux-lookup-autocomplete-ac
+            luxLabel="Lookup Autocomplete"
+            luxLookupId="filter_lookup_autocomplete"
+            luxControlBinding="autocompleteLookup"
+            luxTableNo="1002"
+            luxRenderProp="kurzText"
+            [luxParameters]="parameters"
+            [luxFilterDisabled]="autoCompleteLookupDisabled"
+            [luxFilterHidden]="autoCompleteLookupHidden"
+            luxFilterItem
+          ></lux-lookup-autocomplete-ac>
+          <lux-lookup-combobox-ac
+            luxLabel="Lookup Combobox"
+            luxLookupId="filter_lookup_combobox"
+            luxControlBinding="comboboxLookup"
+            [luxMultiple]="true"
+            luxTableNo="1002"
+            luxRenderProp="kurzText"
+            [luxParameters]="parameters"
+            [luxFilterDisabled]="selectLookupDisabled"
+            [luxFilterHidden]="selectLookupHidden"
+            luxFilterItem
+          ></lux-lookup-combobox-ac>
+          <lux-input-ac
+            luxLabel="Input"
+            luxName="filter_input"
+            luxAutocomplete="off"
+            luxControlBinding="input"
+            [luxRequired]="true"
+            [luxFilterDisabled]="inputDisabled"
+            [luxFilterHidden]="inputHidden"
+            luxFilterItem
+          ></lux-input-ac>
+          <lux-autocomplete-ac
+            luxLabel="Autocomplete"
+            [luxOptions]="autoCompleteOptions"
+            luxControlBinding="autocomplete"
+            [luxFilterDisabled]="autoCompleteDisabled"
+            [luxFilterHidden]="autoCompleteHidden"
+            luxFilterItem
+          ></lux-autocomplete-ac>
+          <lux-datepicker-ac
+            luxLabel="Datepicker"
+            luxName="filter_datepicker"
+            luxControlBinding="datepicker"
+            [luxFilterDisabled]="datepickerDisabled"
+            [luxFilterHidden]="datepickerHidden"
+            luxFilterItem
+          ></lux-datepicker-ac>
+          <lux-datetimepicker-ac
+            luxLabel="Datetimepicker"
+            luxName="filter_datetimepicker"
+            luxControlBinding="datetimepicker"
+            [luxFilterDisabled]="datetimepickerDisabled"
+            [luxFilterHidden]="datetimepickerHidden"
+            luxFilterItem
+          ></lux-datetimepicker-ac>
+          <lux-select-ac
+            luxLabel="Single-Select"
+            luxControlBinding="singleSelect"
+            luxOptionLabelProp="label"
+            [luxMultiple]="false"
+            [luxOptions]="singleSelectOptions"
+            [luxCompareWith]="compareValueFn"
+            [luxFilterDisabled]="singleSelectDisabled"
+            [luxFilterHidden]="singleSelectHidden"
+            luxFilterColor="accent"
+            luxFilterItem
+            [luxNoBottomLabel]="true"
+          ></lux-select-ac>
+          <lux-select-ac
+            luxLabel="Multi-Select"
+            luxControlBinding="multiSelect"
+            luxOptionLabelProp="label"
+            [luxMultiple]="true"
+            [luxOptions]="multiSelectOptions"
+            [luxCompareWith]="compareValueFn"
+            [luxFilterDisabled]="multiSelectDisabled"
+            [luxFilterHidden]="multiSelectHidden"
+            luxFilterColor="accent"
+            luxFilterItem
+            [luxNoBottomLabel]="true"
+          ></lux-select-ac>
+          <lux-toggle-ac
+            luxLabel="Toggle"
+            luxControlBinding="toggle"
+            [luxFilterRenderFn]="renderToggleFn"
+            [luxFilterDisabled]="toggleSelectDisabled"
+            [luxFilterHidden]="toggleSelectHidden"
+            luxFilterColor="warn"
+            luxFilterItem
+            [luxNoTopLabel]="true"
+          ></lux-toggle-ac>
+          <lux-radio-ac
+            [luxNoTopLabel]="true"
+            [luxOrientationVertical]="false"
+            [luxOptions]="radioOptions"
+            luxControlBinding="radio"
+            luxOptionLabelProp="label"
+            [luxPickValue]="radioPickValueFn"
+            luxFilterItem
+            luxFilterLabel="Radio"
+            [luxFilterDisabled]="radioSelectDisabled"
+            [luxFilterHidden]="radioSelectHidden"
+          >
+          </lux-radio-ac>
+        </div>
+      </lux-filter-form>
+      <div class="lux-highlight-section column lux-ml-2 lux-mr-2">
+        <h2 class="lux-highlight-section-label">Filter</h2>
+        <pre>{{ currentFilter | json }}</pre>
+      </div>
+      <!-- Beispiel als Card -->
+      <h2>Lux-Filter-Form in einer Card</h2>
+      <lux-filter-form
+        [luxTitle]="title"
+        [luxHideMenu]="hideMenu"
+        [luxHideChipsBorder]="hideChipsBorder"
+        [luxShowAsCard]="true"
+        [luxExpandedLabelOpen]="openLabel"
+        [luxExpandedLabelClose]="closeLabel"
+        [luxFilterValues]="initFilterAc"
+        [luxShowChips]="showFilterChips"
+        [luxStoredFilters]="storedFiltersAc"
+        [luxButtonFlat]="buttonFlat"
+        [luxButtonFilterColor]="buttonFilterColor"
+        [luxButtonDialogSave]="buttonDialogSave"
+        [luxButtonDialogLoad]="buttonDialogLoad"
+        [luxButtonDialogDelete]="buttonDialogDelete"
+        [luxButtonDialogCancel]="buttonDialogCancel"
+        [luxButtonDialogClose]="buttonDialogClose"
+        [luxDisableShortcut]="disableShortcut"
+        (luxOnSave)="onSaveAc($event)"
+        (luxOnLoad)="onLoadAc($event)"
+        (luxOnReset)="onReset()"
+        (luxOnDelete)="onDelete($event)"
+        (luxOnFilter)="onFilterAc($event)"
+      >
+        <div class="lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
+          <lux-input-ac
+            luxLabel="Input-Ac"
+            luxName="filter_input_ac"
+            luxAutocomplete="off"
+            luxControlBinding="input"
+            luxFilterItem
+          ></lux-input-ac>
+          <lux-autocomplete-ac
+            luxLabel="Autocomplete-Ac"
+            [luxOptions]="autoCompleteOptions"
+            luxControlBinding="autocomplete"
+            [luxFilterDisabled]="autoCompleteDisabled"
+            [luxFilterHidden]="autoCompleteHidden"
+            luxFilterItem
+          ></lux-autocomplete-ac>
+        </div>
+        <lux-filter-form-extended>
+          <div class="lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
+            <lux-lookup-autocomplete-ac
+              luxLabel="Lookup Autocomplete-Ac"
+              luxLookupId="filter_lookup_autocomplete_ac"
+              luxControlBinding="autocompleteLookup"
+              luxTableNo="1002"
+              luxRenderProp="kurzText"
+              [luxParameters]="parameters"
+              [luxFilterDisabled]="autoCompleteLookupDisabled"
+              [luxFilterHidden]="autoCompleteLookupHidden"
+              luxFilterItem
+            ></lux-lookup-autocomplete-ac>
+            <lux-lookup-combobox-ac
+              luxLabel="Lookup Combobox-Ac"
+              luxLookupId="filter_lookup_combobox_ac"
+              luxControlBinding="comboboxLookup"
+              [luxMultiple]="true"
+              luxTableNo="1002"
+              luxRenderProp="kurzText"
+              [luxParameters]="parameters"
+              [luxFilterDisabled]="selectLookupDisabled"
+              [luxFilterHidden]="selectLookupHidden"
+              luxFilterItem
+            ></lux-lookup-combobox-ac>
+            <lux-datepicker-ac
+              luxLabel="Datepicker-Ac"
+              luxName="filter_datepicker_ac"
+              luxControlBinding="datepicker"
+              [luxFilterDisabled]="datepickerDisabled"
+              [luxFilterHidden]="datepickerHidden"
+              luxFilterItem
+            ></lux-datepicker-ac>
+            <lux-datetimepicker-ac
+              luxLabel="Datetimepicker-Ac"
+              luxName="filter_datetimepicker_ac"
+              luxControlBinding="datetimepicker"
+              [luxFilterDisabled]="datetimepickerDisabled"
+              [luxFilterHidden]="datetimepickerHidden"
+              luxFilterItem
+            ></lux-datetimepicker-ac>
+            <lux-select-ac
+              luxLabel="Single-Select-Ac"
+              luxControlBinding="singleSelect"
+              luxOptionLabelProp="label"
+              [luxMultiple]="false"
+              [luxOptions]="singleSelectOptions"
+              [luxCompareWith]="compareValueFn"
+              [luxFilterDisabled]="singleSelectDisabled"
+              [luxFilterHidden]="singleSelectHidden"
+              luxFilterColor="accent"
+              luxFilterItem
+              [luxNoBottomLabel]="true"
+            ></lux-select-ac>
+            <lux-select-ac
+              luxLabel="Multi-Select-Ac"
+              luxControlBinding="multiSelect"
+              luxOptionLabelProp="label"
+              [luxMultiple]="true"
+              [luxOptions]="multiSelectOptions"
+              [luxCompareWith]="compareValueFn"
+              [luxFilterDisabled]="multiSelectDisabled"
+              [luxFilterHidden]="multiSelectHidden"
+              luxFilterColor="accent"
+              luxFilterItem
+              [luxNoBottomLabel]="true"
+            ></lux-select-ac>
+            <lux-toggle-ac
+              luxLabel="Toggle-Ac"
+              luxName="filter_toggle_ac"
+              luxControlBinding="toggle"
+              [luxFilterRenderFn]="renderToggleFn"
+              [luxFilterDisabled]="toggleSelectDisabled"
+              [luxFilterHidden]="toggleSelectHidden"
+              luxFilterColor="warn"
+              luxFilterItem
+              [luxNoTopLabel]="true"
+            ></lux-toggle-ac>
+            <lux-radio-ac
+              [luxNoTopLabel]="true"
+              [luxOrientationVertical]="false"
+              [luxOptions]="radioOptions"
+              luxControlBinding="radio"
+              luxOptionLabelProp="label"
+              [luxPickValue]="radioPickValueFn"
+              luxFilterItem
+              luxFilterLabel="Radio"
+              [luxFilterDisabled]="radioSelectDisabled"
+              [luxFilterHidden]="radioSelectHidden"
+            ></lux-radio-ac>
+          </div>
+        </lux-filter-form-extended>
+      </lux-filter-form>
+    </div>
+  </example-base-content>
+  <example-base-simple-options>
+    <h3 class="lux-highlight-section-label">Basis</h3>
+    <lux-input-ac luxLabel="luxTitle" [(luxValue)]="title"></lux-input-ac>
+    <lux-toggle-ac luxLabel="luxHideMenu" [(luxChecked)]="hideMenu" [luxNoLabels]="true"></lux-toggle-ac>
+
+    <h3 class="lux-highlight-section-label">Button</h3>
+    <div class="lux-flex lux-flex-col lux-gap-4">
+      <div>
+        <lux-toggle-ac luxLabel="luxButtonFilterFlat" [(luxChecked)]="buttonFlat" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxHideChipsBorder" [(luxChecked)]="hideChipsBorder" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+      <lux-select-ac
+        luxLabel="luxButtonFilterColor"
+        [(luxSelected)]="buttonFilterColor"
+        [luxOptions]="buttonColorOptions"
+        [luxNoBottomLabel]="true"
+      ></lux-select-ac>
+      <lux-select-ac
+        luxLabel="luxButtonDialogSave"
+        [(luxSelected)]="buttonDialogSave"
+        [luxOptions]="buttonColorOptions"
+        [luxNoBottomLabel]="true"
+      ></lux-select-ac>
+      <lux-select-ac
+        luxLabel="luxButtonDialogCancel"
+        [(luxSelected)]="buttonDialogCancel"
+        [luxOptions]="buttonColorOptions"
+        [luxNoBottomLabel]="true"
+      ></lux-select-ac>
+      <lux-select-ac
+        luxLabel="luxButtonDialogLoad"
+        [(luxSelected)]="buttonDialogLoad"
+        [luxOptions]="buttonColorOptions"
+        [luxNoBottomLabel]="true"
+      ></lux-select-ac>
+      <lux-select-ac
+        luxLabel="luxButtonDialogDelete"
+        [(luxSelected)]="buttonDialogDelete"
+        [luxOptions]="buttonColorOptions"
+        [luxNoBottomLabel]="true"
+      ></lux-select-ac>
+      <lux-select-ac
+        luxLabel="luxButtonDialogClose"
+        [(luxSelected)]="buttonDialogClose"
+        [luxOptions]="buttonColorOptions"
+        [luxNoBottomLabel]="true"
+      ></lux-select-ac>
+    </div>
+    <h3>Button-Label für die erweiterte Filteroptionen</h3>
+    <h4>Gilt nur für den Filter in einer Card</h4>
+    <div class="lux-flex lux-flex-col lux-gap-4">
+      <lux-input-ac luxLabel="Label-Text zum Öffnen" [(luxValue)]="openLabel" [luxNoBottomLabel]="true"></lux-input-ac>
+      <lux-input-ac luxLabel="Label-Text zum Schließen" [(luxValue)]="closeLabel" [luxNoBottomLabel]="true"></lux-input-ac>
+    </div>
+    <h3>Tastaturkürzel</h3>
+    <div class="lux-flex lux-flex-col lux-gap-4 filter-config-item column">
+      <lux-toggle-ac
+        luxLabel="luxDisableShortcut"
+        [(luxChecked)]="disableShortcut"
+        luxHint='Über dieses Property kann das Tastaturkürzel "Shift + Enter" zum Auslösen des Filters abgeschaltet werden.'
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+    </div>
+    <h3>Modell</h3>
+    <div class="lux-flex lux-flex-col lux-gap-4 filter-config-item column">
+      <lux-textarea-ac
+        luxLabel="Filterwert"
+        luxTagId="filter-value"
+        [(luxValue)]="replaceFilterJson"
+        luxHint="JSON-Format"
+      ></lux-textarea-ac>
+      <lux-button luxLabel="Filterwert ersetzen" luxColor="primary" (luxClicked)="onSetFilter()"></lux-button>
+    </div>
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Input</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="inputDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="inputHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Lookup-Autocomplete</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="autoCompleteLookupDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="autoCompleteLookupHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Lookup-Combobox</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="selectLookupDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="selectLookupHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Autocomplete</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="autoCompleteDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="autoCompleteHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Datepicker</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="datepickerDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="datepickerHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Datetimepicker</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="datetimepickerDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="datetimepickerHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Single-Select</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="singleSelectDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="singleSelectHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Multi-Select</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="multiSelectDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="multiSelectHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Toggle</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="toggleSelectDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="toggleSelectHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Radio</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="radioSelectDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="radioSelectHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+  </example-base-advanced-options>
+</example-base-structure>

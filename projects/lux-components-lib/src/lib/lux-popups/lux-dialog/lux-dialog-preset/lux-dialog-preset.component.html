@@ -1,0 +1,51 @@
+@if (data) {
+<lux-dialog-structure [luxDialogIcon]="data.iconName">
+  <lux-dialog-title>{{ data.title }}</lux-dialog-title>
+  <lux-dialog-content>
+    @if (data.contentTemplate) {
+    <ng-container *ngTemplateOutlet="data.contentTemplate"></ng-container>
+    } @if (data.content && !data.contentTemplate) {
+    {{ data.content }}
+    }
+  </lux-dialog-content>
+  <lux-dialog-actions>
+    @if (data.confirmAction) {
+    <lux-button
+      class="lux-mr-4 lux-dialog-preset-confirm"
+      luxTabIndex="0"
+      [luxPotentialChildren]="['button']"
+      [luxLabel]="data.confirmAction.label"
+      [luxColor]="data.confirmAction.color"
+      [luxRaised]="data.confirmAction.raised"
+      [luxFlat]="data.confirmAction.flat"
+      [luxStroked]="data.confirmAction.outlined"
+      [luxIconName]="data.confirmAction.iconName"
+      [luxTagId]="data.confirmAction.tagId"
+      [luxDisabled]="data.confirmAction.disabled"
+      [luxRounded]="data.confirmAction.rounded"
+      (luxClicked)="onConfirmClick()"
+      #confirmButton
+    >
+    </lux-button>
+    } @if (data.declineAction) {
+    <lux-button
+      class="lux-dialog-preset-decline"
+      luxTabIndex="0"
+      [luxPotentialChildren]="['button']"
+      [luxLabel]="data.declineAction.label"
+      [luxColor]="data.declineAction.color"
+      [luxRaised]="data.declineAction.raised"
+      [luxFlat]="data.declineAction.flat"
+      [luxStroked]="data.declineAction.outlined"
+      [luxIconName]="data.declineAction.iconName"
+      [luxTagId]="data.declineAction.tagId"
+      [luxDisabled]="data.declineAction.disabled"
+      [luxRounded]="data.declineAction.rounded"
+      (luxClicked)="onDeclineClick()"
+      #declineButton
+    >
+    </lux-button>
+    }
+  </lux-dialog-actions>
+</lux-dialog-structure>
+}

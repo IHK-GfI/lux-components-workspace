@@ -1,0 +1,25 @@
+<h1 class="lux-sr-only">Testseite für die Ausrichtung der Formularelemente</h1>
+<lux-tabs
+  luxTagId="baseline-tabs"
+  [luxDisplayDivider]="true"
+  [luxActiveTab]="0"
+  luxAriaRole="main"
+  [luxLazyLoading]="true"
+  [luxShowBorder]="true"
+>
+  <lux-tab luxTitle="Baseline">
+    <ng-template>
+      <lux-baseline></lux-baseline>
+    </ng-template>
+  </lux-tab>
+  <lux-tab luxTitle="Card">
+    <ng-template>
+      <lux-baseline-card></lux-baseline-card>
+    </ng-template>
+  </lux-tab>
+  <lux-tab luxTitle="Accordion">
+    <ng-template>
+      <lux-baseline-accordion></lux-baseline-accordion>
+    </ng-template>
+  </lux-tab>
+</lux-tabs>

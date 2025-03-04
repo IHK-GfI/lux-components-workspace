@@ -1,0 +1,8 @@
+<div
+  class="lux-app-content-container lux-theme-{{ themeName }}"
+  [luxAriaRole]="luxAriaRoleMainLabel ? 'main' : undefined"
+  [luxAriaLabel]="luxAriaRoleMainLabel"
+>
+  <router-outlet></router-outlet>
+  <ng-content></ng-content>
+</div>

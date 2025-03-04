@@ -1,0 +1,20 @@
+<div
+  class="link-wrapper"
+  tabindex="{{ luxDisabled ? -1 : 0 }}"
+  luxAriaRole="link"
+  luxAriaLabel="{{ luxLabel }}"
+  [ngClass]="[luxDisabled ? 'lux-disabled' : '']"
+  (click)="!luxDisabled ? redirectToHref($event) : null"
+  (keydown.enter)="!luxDisabled ? redirectToHref($event) : null"
+  (auxclick)="!luxDisabled ? auxClicked($event) : null"
+>
+  @if (!luxIconShowRight && luxIconName) {
+  <lux-icon [luxIconName]="luxIconName"></lux-icon>
+  }
+  <span class="lux-link-plain-text">
+    {{ luxLabel }}
+  </span>
+  @if (luxIconShowRight && luxIconName) {
+  <lux-icon [luxIconName]="luxIconName"></lux-icon>
+  }
+</div>

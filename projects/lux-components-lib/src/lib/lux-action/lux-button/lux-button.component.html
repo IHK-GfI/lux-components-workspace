@@ -1,0 +1,129 @@
+@if (luxRaised && !luxRounded && !luxFlat && !luxStroked) {
+<button
+  mat-raised-button
+  [disableRipple]="true"
+  [color]="luxColor"
+  (click)="clicked($event)"
+  (auxclick)="auxClicked($event)"
+  [disabled]="luxDisabled"
+  [type]="luxType"
+  class="lux-button"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  [ngClass]="{ 'lux-icon-button': !!luxIconName }"
+  [attr.aria-label]="luxLabel ? luxLabel : ''"
+>
+  <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+</button>
+} @if (!luxRaised && !luxRounded && luxFlat && !luxStroked) {
+<button
+  mat-flat-button
+  [disableRipple]="true"
+  [color]="luxColor"
+  (click)="clicked($event)"
+  (auxclick)="auxClicked($event)"
+  [disabled]="luxDisabled"
+  [type]="luxType"
+  class="lux-button"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  [ngClass]="{ 'lux-icon-button': !!luxIconName }"
+  [attr.aria-label]="luxLabel ? luxLabel : ''"
+>
+  <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+</button>
+} @if (!luxRaised && !luxRounded && !luxFlat && luxStroked) {
+<button
+  mat-stroked-button
+  [disableRipple]="true"
+  [color]="luxColor"
+  (click)="clicked($event)"
+  (auxclick)="auxClicked($event)"
+  [disabled]="luxDisabled"
+  [type]="luxType"
+  class="lux-button"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  [ngClass]="{ 'lux-icon-button': !!luxIconName }"
+  [attr.aria-label]="luxLabel ? luxLabel : ''"
+>
+  <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+</button>
+} @if (!luxRaised && !luxRounded && !luxFlat && !luxStroked) {
+<button
+  mat-button
+  [disableRipple]="true"
+  [color]="luxColor"
+  (click)="clicked($event)"
+  (auxclick)="auxClicked($event)"
+  [disabled]="luxDisabled"
+  [type]="luxType"
+  class="lux-button"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  [ngClass]="{ 'lux-icon-button': !!luxIconName }"
+  [attr.aria-label]="luxLabel ? luxLabel : ''"
+>
+  <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+</button>
+} @if (luxRounded && !luxStroked) {
+<button
+  mat-fab
+  [disableRipple]="true"
+  [color]="luxColor"
+  (click)="clicked($event)"
+  (auxclick)="auxClicked($event)"
+  [disabled]="luxDisabled"
+  [type]="luxType"
+  class="lux-button lux-button-rounded"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-rounded-default': !luxColor }"
+  [attr.aria-label]="luxLabel ? luxLabel : luxIconName"
+>
+  <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="18px" class="lux-button-icon-round"></lux-icon>
+</button>
+} @if (luxRounded && luxStroked) {
+<button
+  mat-fab
+  [disableRipple]="true"
+  [color]="luxColor"
+  (click)="clicked($event)"
+  (auxclick)="auxClicked($event)"
+  [disabled]="luxDisabled"
+  [type]="luxType"
+  class="lux-button lux-button-rounded lux-stroked"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-stroked-default': !luxColor }"
+  [attr.aria-label]="luxLabel ? luxLabel : luxIconName"
+>
+  <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="18px" class="lux-button-icon-round"></lux-icon>
+</button>
+}
+
+<ng-template #luxButtonContent>
+  <div class="lux-button-content-container">
+    @if (luxIconName && !luxIconShowRight) {
+    <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="14px" class="lux-button-icon"></lux-icon>
+    } @if (luxLabel) {
+    <span class="lux-button-label">
+      {{ luxLabel }}
+    </span>
+    } @if (luxButtonBadge && !luxDisabled) {
+    <span
+      class="lux-button-badge lux-bg-color-primary-500"
+      [ngClass]="{
+        'lux-bg-color-primary-500': luxButtonBadgeColor === 'primary',
+        'lux-bg-color-warn-500': luxButtonBadgeColor === 'warn',
+        'lux-bg-color-accent-500': luxButtonBadgeColor === 'accent',
+        'lux-mr-3': !!luxIconName && luxIconShowRight
+      }"
+    >
+      {{ luxButtonBadge }}
+    </span>
+    } @if (luxIconName && luxIconShowRight) {
+    <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="14px" class="lux-button-icon"></lux-icon>
+    }
+  </div>
+</ng-template>

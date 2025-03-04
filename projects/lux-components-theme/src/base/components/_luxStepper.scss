@@ -1,0 +1,352 @@
+@use "sass:map";
+@use "../luxpalette";
+@use "../luxcommon";
+@use "../luxfocus";
+
+/*
+ * Theming for LUX-Stepper bisheriges styling
+ */
+lux-stepper {
+  position: relative;
+  display: block;
+
+  .lux-stepper-content-section,
+  .mat-horizontal-stepper-content[aria-expanded="true"],
+  .mat-vertical-stepper-content {
+    padding: 8px;
+  }
+  .mat-horizontal-stepper-header-container {
+    padding: 8px 8px 0 8px;
+  }
+  .mat-vertical-stepper-header {
+    margin: 8px 8px 0 8px;
+  }
+  mat-step-header {
+    margin: luxcommon.$outline-width;
+
+    // Anpassungen an standard Step-Aussehen, die Stepper Icons/Zahlen sollen größer sein, als bei Material
+    .mat-step-icon,
+    .mat-step-icon-not-touched {
+      width: 40px;
+      height: 40px;
+      font-size: 2em;
+      box-sizing: border-box;
+    }
+
+    .mat-step-label {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      position: relative;
+      font-size: luxcommon.$form-control-font-size;
+      font-weight: normal;
+    }
+  }
+  // Text für optionale Steps unterhalb des Labels darstellen
+  .mat-step-optional {
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+    font-style: italic;
+  }
+
+  // falls eine lux-card als erste component im step-content ist, die margins von ihr entfernen
+  lux-step-content > lux-card > mat-card {
+    margin: 0 !important;
+  }
+  .mat-stepper-horizontal,
+  .mat-stepper-vertical {
+    background-color: transparent;
+  }
+
+  .mat-horizontal-content-container {
+    padding: 0;
+  }
+  // Overlay, wenn der Stepper deaktiviert wurde
+  .lux-stepper-disabled-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  //Anpassung für die vertikale Ausrichtung
+  lux-stepper-vertical {
+    .mat-step-label {
+      height: 44px !important;
+    }
+    .mat-step-optional {
+      bottom: 0;
+    }
+    .mat-vertical-content {
+      padding: 0 !important;
+    }
+    .mat-step-header {
+      padding-left: 10px;
+    }
+    .mat-stepper-vertical-line::before {
+      top: -10px;
+      bottom: -18px;
+    }
+  }
+
+  // Styling für Icons luxUseCustomIcons=true
+  // selected und/oder bearbeitete Steps: background-color: primary; color: #fff;
+  // not selected und/oder nicht bearbeitete steps: background-color: #fff; color: primary; border: 1px solid $app-border-color;
+  .lux-ignore-mat-step-icons {
+    mat-step-header {
+      color: luxpalette.$lux-primary-color;
+
+      // Die standard Icons ausblenden
+      .mat-step-icon,
+      .mat-step-icon-not-touched {
+        display: none;
+      }
+      .mat-step-label {
+        overflow: unset;
+      }
+
+      // Immer die normalen Icons darstellen
+      lux-icon.lux-stepper-edited-icon {
+        display: none;
+      }
+
+      lux-icon.lux-stepper-normal-icon {
+        display: block;
+      }
+
+      // Wenn der Step erfolgreich editiert wurde, das Edited-Icon darstellen
+      .mat-step-icon-state-edit + .mat-step-label {
+        lux-icon.lux-stepper-edited-icon {
+          display: block;
+        }
+        lux-icon.lux-stepper-normal-icon {
+          display: none;
+        }
+      }
+
+      &.lux-step-header-touched {
+        .lux-stepper-edited-icon,
+        .lux-stepper-normal-icon {
+          mat-icon {
+            color: luxcommon.$app-data-bg;
+            background-color: luxpalette.$lux-primary-color;
+          }
+        }
+
+        lux-step-header {
+          color: luxpalette.$lux-primary-color;
+        }
+      }
+
+      &:not(.lux-step-header-touched) {
+        .lux-stepper-edited-icon,
+        .lux-stepper-normal-icon {
+          mat-icon {
+            color: luxcommon.$app-data-bg;
+            background-color: luxcommon.$dark-secondary-text;
+          }
+        }
+      }
+    }
+  }
+
+  // luxUseCustomIcons=false
+  mat-step-header.mat-step-header {
+    color: luxpalette.$lux-primary-color;
+    &[aria-selected="true"] {
+      .mat-step-icon,
+      .mat-step-icon-selected {
+        color: luxcommon.$app-data-bg;
+        background-color: luxpalette.$lux-primary-color;
+      }
+      lux-step-header {
+        color: luxpalette.$lux-primary-color;
+      }
+    }
+
+    &[aria-selected="false"] {
+      color: luxpalette.$lux-primary-color;
+      .mat-step-icon,
+      .mat-step-label {
+        color: luxpalette.$lux-primary-color;
+        background-color: transparent;
+      }
+      .mat-step-icon {
+        border: 1px solid luxcommon.$app-border-color;
+      }
+
+      .mat-step-icon-state-edit {
+        color: luxcommon.$app-data-bg;
+        background-color: luxpalette.$lux-primary-color;
+      }
+    }
+  }
+
+  // Anpassungen fuer Mobile
+  .lux-stepper-mobile {
+    .lux-stepper-content-section,
+    .mat-horizontal-stepper-content[aria-expanded="true"],
+    .mat-vertical-stepper-content {
+      padding: 4px;
+    }
+
+    .mat-vertical-stepper-content {
+      padding-left: 8px;
+    }
+
+    .mat-horizontal-stepper-header-container {
+      padding: 4px 4px 0 4px;
+    }
+
+    .mat-vertical-stepper-header {
+      margin: 4px 4px 0 4px;
+    }
+
+    mat-horizontal-stepper {
+      lux-step-header {
+        display: none;
+      }
+
+      .mat-stepper-horizontal-line {
+        margin: 0;
+        min-width: 16px;
+      }
+
+      mat-step-header {
+        padding: 0 8px;
+      }
+    }
+
+    mat-horizontal-stepper.lux-ignore-mat-step-icons .mat-step-label {
+      justify-content: center;
+      min-width: 40px;
+
+      .lux-stepper-edited-icon,
+      .lux-stepper-normal-icon {
+        margin: 0 !important;
+      }
+    }
+
+    mat-horizontal-stepper:not(.lux-ignore-mat-step-icons) {
+      .mat-step-label {
+        display: none;
+      }
+      .mat-step-icon {
+        margin: 0 !important;
+      }
+    }
+  }
+
+  // HOVER / FOCUS / SELECTED
+
+  mat-step-header {
+    --mat-stepper-header-hover-state-layer-shape: #{luxcommon.$app-border-radius};
+    &:hover {
+      background-color: transparent !important;
+      border-radius: 0;
+      &[aria-selected="false"],
+      &[aria-selected="true"] {
+        div.mat-step-icon.mat-step-icon-state-number,
+        div.mat-step-icon.mat-step-icon-state-edit {
+          background-color: luxcommon.$lux-hover-color;
+          color: #fff;
+          border-color: luxcommon.$lux-hover-color;
+        }
+        div.mat-step-label lux-step-header {
+          color: luxcommon.$lux-hover-color;
+        }
+      }
+    }
+  }
+
+  mat-step-header[tabindex="0"]:focus-visible {
+    background-color: transparent !important;
+    @include luxfocus.focus-dark-mixin;
+    border-radius: 4px;
+  }
+
+  lux-stepper-vertical mat-step-header {
+    &[aria-selected="true"] {
+      @include luxfocus.lux-selected-mixin-reverse-ac;
+    }
+
+    &[aria-selected="false"] {
+      div.mat-step-icon.mat-step-icon-state-number,
+      div.mat-step-icon.mat-step-icon-state-edit {
+        background-color: #fff;
+        color: luxpalette.$lux-primary-color;
+        border: 1px solid luxcommon.$app-border-color;
+      }
+      div.mat-step-label lux-step-header {
+        color: luxpalette.$lux-primary-color;
+      }
+    }
+  }
+
+  lux-stepper-horizontal mat-step-sheader {
+    &[aria-selected="true"] {
+      div.mat-step-label.mat-step-label-active.mat-step-label-selected lux-step-header {
+        font-weight: 500;
+      }
+      &:after {
+        border-bottom: none;
+      }
+    }
+
+    &[aria-selected="false"] {
+      div.mat-step-icon.mat-step-icon-state-number,
+      div.mat-step-icon.mat-step-icon-state-edit {
+        background-color: #fff;
+        color: luxpalette.$lux-primary-color;
+        border: 1px solid luxcommon.$app-border-color;
+      }
+      div.mat-step-label lux-step-header {
+        color: luxpalette.$lux-primary-color;
+      }
+    }
+  }
+
+  .lux-ignore-mat-step-icons mat-step-header {
+    &[aria-selected="false"] {
+      .lux-stepper-edited-icon,
+      .lux-stepper-normal-icon {
+        mat-icon {
+          color: luxpalette.$lux-primary-color;
+          background-color: #fff;
+          border: 1px solid luxcommon.$app-border-color;
+        }
+      }
+    }
+    &[aria-selected="true"] {
+      .lux-stepper-edited-icon,
+      .lux-stepper-normal-icon {
+        mat-icon {
+          color: #fff;
+          background-color: luxpalette.$lux-primary-color;
+          border: 1px solid luxcommon.$app-border-color;
+        }
+      }
+    }
+    &:hover {
+      background-color: transparent !important;
+      border-radius: 0;
+      &[aria-selected="false"],
+      &[aria-selected="true"] {
+        .lux-stepper-edited-icon,
+        .lux-stepper-normal-icon {
+          mat-icon {
+            background-color: luxcommon.$lux-hover-color;
+            color: #fff;
+            border-color: luxcommon.$lux-hover-color;
+          }
+        }
+      }
+      div.mat-step-label lux-step-header {
+        color: luxcommon.$lux-hover-color;
+      }
+    }
+  }
+}

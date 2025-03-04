@@ -1,0 +1,54 @@
+<lux-file-preview-toolbar>
+  @if (zoomActive) {
+  <lux-button
+    luxIconName="lux-interface-edit-zoom-in"
+    (luxClicked)="onZoomIn()"
+    [luxRaised]="true"
+    luxTagId="file-preview-zoomin-btn"
+    luxAriaLabel="Hinein zoomen"
+    i18n-luxAriaLabel="@@luxc.file-preview.imgviewer.zoomin.arialabel"
+  ></lux-button>
+  } @if (zoomActive) {
+  <lux-button
+    luxIconName="lux-interface-edit-zoom-out"
+    (luxClicked)="onZoomOut()"
+    [luxRaised]="true"
+    luxTagId="file-preview-zoomout-btn"
+    luxAriaLabel="Heraus zoomen"
+    i18n-luxAriaLabel="@@luxc.file-preview.imgviewer.zoomout.arialabel"
+  ></lux-button>
+  }
+  <lux-button
+    [luxIconName]="downloadIconName"
+    (luxClicked)="onDownload()"
+    luxColor="accent"
+    [luxRaised]="true"
+    [luxTagId]="downloadTagId"
+    [luxAriaLabel]="downloadAriaLabel"
+  ></lux-button>
+  <lux-button
+    [luxIconName]="closeIconName"
+    (luxClicked)="onClose()"
+    [luxRaised]="true"
+    [luxTagId]="closeTagId"
+    [luxAriaLabel]="closeAriaLabel"
+  ></lux-button>
+</lux-file-preview-toolbar>
+
+<div class="overlay-content" [ngStyle]="{ 'max-width': width + 'px', 'max-height': height + 'px' }">
+  @if (url) {
+  <img
+    [src]="url"
+    [alt]="previewData.fileObject && previewData.fileObject.name ? previewData.fileObject.name : ''"
+    (load)="onLoad()"
+    [ngStyle]="{
+      'max-width': width + zoomWidth + 'px',
+      'max-height': height + zoomWidth + 'px',
+      display: loading ? 'none' : 'block'
+    }"
+    #previewImg
+  />
+  } @if (loading && !startPhase) {
+  <div class="message-box">Lade...</div>
+  }
+</div>

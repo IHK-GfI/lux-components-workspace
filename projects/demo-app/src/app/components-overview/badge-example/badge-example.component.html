@@ -1,0 +1,69 @@
+<example-base-structure
+  exampleTitle="Badge"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90badge-v18"
+>
+  <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col">
+    <div class="lux-flex lux-flex-col lux-gap-3">
+      <div class="lux-flex lux-flex-col lux-app-data-bg lux-highlight-section" [ngStyle]="{ backgroundColor: backgroundColor }">
+        <h3 class="lux-highlight-section-label">Default</h3>
+        <div class="lux-flex lux-flex-wrap lux-col-gap-3 lux-row-gap-1">
+          @for (color of colors; track color) {
+          <lux-badge [luxIconName]="iconName" [luxColor]="color" [luxUppercase]="uppercase">
+            <lux-label luxId="bsp-badge-label">
+              {{ text }}
+            </lux-label>
+          </lux-badge>
+          }
+        </div>
+      </div>
+      <div class="lux-flex lux-flex-col lux-hover-bg lux-highlight-section">
+        <h3 class="lux-highlight-section-label">Hover</h3>
+        <div class="lux-flex lux-flex-wrap lux-col-gap-3 lux-row-gap-1">
+          @for (color of colors; track color) {
+          <lux-badge [luxIconName]="iconName" [luxColor]="color" [luxUppercase]="uppercase">
+            <lux-label luxId="bsp-badge-label">
+              {{ text }}
+            </lux-label>
+          </lux-badge>
+          }
+        </div>
+      </div>
+      <div class="lux-flex lux-flex-col lux-selected-bg lux-highlight-section">
+        <h3 class="lux-highlight-section-label">Focus</h3>
+        <div class="lux-flex lux-flex-wrap lux-col-gap-3 lux-row-gap-1">
+          @for (color of colors; track color) {
+          <lux-badge [luxIconName]="iconName" [luxColor]="color" [luxUppercase]="uppercase">
+            <lux-label luxId="bsp-badge-label">
+              {{ text }}
+            </lux-label>
+          </lux-badge>
+          }
+        </div>
+      </div>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-input-ac
+      luxLabel="luxIconName"
+      luxHint="Diese Property definiert das Icon, welches in dem Badge angezeigt wird."
+      [(luxValue)]="iconName"
+    >
+    </lux-input-ac>
+    <lux-input-ac
+      luxLabel="Badge Text"
+      luxHint="Der Text-Inhalt der Badge wird über Content-Projection mithilfe der lux-label Component eingebunden."
+      [(luxValue)]="text"
+    >
+    </lux-input-ac>
+    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+      <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
+    </lux-input-ac>
+    <lux-toggle-ac
+      [(luxChecked)]="uppercase"
+      luxLabel="luxUppercase"
+      luxHint="Die Property ermöglicht eine Uppercase-Darstellung des Textes in der Badge einzuschalten."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+  </example-base-simple-options>
+</example-base-structure>

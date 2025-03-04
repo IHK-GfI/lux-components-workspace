@@ -1,0 +1,36 @@
+@use "sass:list";
+// Einstellung der Höhe des Progresses
+$sizes: 'small', 'medium', 'large';
+$sizesPx: '6px', '12px', '24px';
+$sizesPxSpinner: '24px', '48px', '96px';
+
+@for $i from 1 through list.length($sizes) {
+  .lux-progress-#{list.nth($sizes, $i)} ::ng-deep {
+
+    mat-progress-bar {
+      min-height: #{list.nth($sizesPx, $i)};
+    }
+    
+    .mdc-linear-progress__bar {
+      min-height: #{list.nth($sizesPx, $i)};
+    }
+
+    .mat-mdc-progress-bar .mdc-linear-progress__buffer-bar {
+      background-color: #bcc8d5;
+    }
+
+    .mdc-linear-progress__buffer{
+      min-height: #{list.nth($sizesPx, $i)};
+    }
+
+    .mat-mdc-progress-bar .mdc-linear-progress__bar-inner {
+      border-top-width: #{list.nth($sizesPx, $i)};
+    }
+
+    mat-progress-spinner,
+    mat-progress-spinner > svg {
+      height: #{list.nth($sizesPxSpinner, $i)} !important;
+      width: #{list.nth($sizesPxSpinner, $i)} !important;
+    }
+  }
+}
