@@ -31,13 +31,9 @@
   >
     @if (formLabelComponent || luxLabel) {
     <span class="lux-form-label">
-      @if (luxLabel) {
-      {{ luxLabel }}
-      } @else {
+      @if (luxLabel) {&nbsp;{{ luxLabel }}&nbsp;} @else {<!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
       <ng-container *ngTemplateOutlet="formLabelComponent?.templateRef ?? null"></ng-container>
-      }<!-- Einzeilig lassen, sonst bricht das Label an dem Leerzeichen um. -->
-      {{ luxRequired ? '&nbsp;*' : ''
-      }}<!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
+      }{{ luxRequired ? '&nbsp;*' : '' }}<!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
     </span>
     }
   </mat-slide-toggle>

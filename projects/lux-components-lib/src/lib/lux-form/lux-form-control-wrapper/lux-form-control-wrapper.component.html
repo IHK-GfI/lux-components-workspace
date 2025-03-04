@@ -18,11 +18,9 @@
     <div class="lux-label-authentic">
       @if (luxFormComponent.formLabelComponent || luxFormComponent.luxLabel) {
       <label class="lux-form-label-authentic" [id]="luxFormComponent.uid + '-label'" [for]="luxFormComponent.uid">
-        @if (luxFormComponent.luxLabel) {
-        {{ luxFormComponent.luxLabel }}
-        } @else {
-        <ng-container *ngTemplateOutlet="luxFormComponent.formLabelComponent?.templateRef ?? null"></ng-container>
-        } @if (luxFormComponent.luxRequired) {
+        @if (luxFormComponent.luxLabel) {&nbsp;{{ luxFormComponent.luxLabel }}&nbsp;} @else { <!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
+        <ng-container *ngTemplateOutlet="luxFormComponent.formLabelComponent?.templateRef ?? null"></ng-container>} @if
+        (luxFormComponent.luxRequired) {
         <span aria-hidden="true">&nbsp;*</span>
         }
       </label>
