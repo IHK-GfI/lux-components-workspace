@@ -16,7 +16,7 @@ jobs:
           node-version: 22
       - run: |
           npm install
-          npm run components:test
-          npm run components:pack
+          npm run test:components
+          npm run pack:components
           cd dist/lux-components-lib
           ls -lR

@@ -16,7 +16,7 @@ jobs:
           node-version: 22
       - run: |
           npm install
-          npm run updater:test
-          npm run updater:pack
+          npm run test:updater
+          npm run pack:updater
           cd dist/updater
           ls -lR

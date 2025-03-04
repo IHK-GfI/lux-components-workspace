@@ -16,6 +16,6 @@ jobs:
           node-version: 22
       - run: |
           npm install
-          npm run demo:pack
+          npm run pack:demo
           cd dist/demo-app
           ls -lR
