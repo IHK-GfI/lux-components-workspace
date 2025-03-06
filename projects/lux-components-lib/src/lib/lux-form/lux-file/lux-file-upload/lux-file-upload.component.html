@@ -2,6 +2,7 @@
   <div
     class="lux-file-upload-drop-container"
     [tabindex]="luxDisabled || luxReadonly ? '-1' : '0'"
+    (click)="onUpload()"
     (keydown.enter)="onUpload()"
     [ngClass]="{ 'lux-file-upload-drag-active': isDragActive, 'lux-file-upload-drop-container-disabled': luxDisabled }"
   >
@@ -14,7 +15,13 @@
       </div>
     </div>
     @if (forceProgressIndeterminate) {
-    <mat-progress-bar class="lux-file-upload-drop-container-progress" color="primary" mode="indeterminate"> </mat-progress-bar>
+    <mat-progress-bar
+      class="lux-file-upload-drop-container-progress"
+      color="primary"
+      mode="indeterminate"
+      [luxAriaLabel]="ariaLabelProgress"
+    >
+    </mat-progress-bar>
     } @if (!forceProgressIndeterminate) {
     <div class="lux-file-upload-drop-container-no-progress"></div>
     }

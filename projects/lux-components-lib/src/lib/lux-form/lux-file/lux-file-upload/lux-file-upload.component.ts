@@ -48,6 +48,8 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   @Input() luxUploadIcon = 'lux-programming-cloud-upload';
   @Input() luxDeleteIcon = 'lux-interface-delete-bin-1';
 
+  ariaLabelProgress = $localize`:@@luxc.progress.arialabel:Ladeanzeige`;
+
   get luxUploadActionConfig(): ILuxFilesActionConfig {
     return this._luxUploadActionConfig;
   }
