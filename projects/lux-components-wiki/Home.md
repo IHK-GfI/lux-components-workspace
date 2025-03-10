@@ -10,8 +10,8 @@
 
 ## Demos
 
-- [Develop](https://lux-demo-dev.applicationplatform.gfi.ihk.de)
-- [Master](https://lux-demo.applicationplatform.gfi.ihk.de)
+- [Develop](https://lux-demo-dev.gfi.ihk.de)
+- [Master](https://lux-demo.gfi.ihk.de)
 
 Die Demo kann auch lokal ausgeführt werden:
 

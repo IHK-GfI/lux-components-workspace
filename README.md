@@ -19,11 +19,11 @@ _Angular_-Klassenbibliothek, die via NPM in das eigene Projekt eingebunden wird.
 
 Live-Demo (_develop_-Branch):
 
-- [https://lux-demo-dev.applicationplatform.gfi.ihk.de](https://lux-demo-dev.applicationplatform.gfi.ihk.de)
+- [https://lux-demo-dev.gfi.ihk.de](https://lux-demo-dev.gfi.ihk.de)
 
 Live-Demo (_main_-Branch):
 
-- [https://lux-demo.applicationplatform.gfi.ihk.de](https://lux-demo.applicationplatform.gfi.ihk.de)
+- [https://lux-demo.gfi.ihk.de](https://lux-demo.gfi.ihk.de)
 
 Die Demo lokal starten:
 

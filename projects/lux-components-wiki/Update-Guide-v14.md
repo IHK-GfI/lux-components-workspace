@@ -60,7 +60,7 @@ Das Schematic kann wie folgt ausgeführt werden:
 ng g @ihk-gfi/lux-components-update:change-to-lux-icons
 ```
 
-Das Schematic enthält eine Liste mit FA- und Material-Icons und mappt diese automatisch auf die neuen LUX-Icons. Das Schematic sollte die meisten Icons automatisch ersetzen, erhebt aber keinen Anspruch auf Vollständigkeit. Die verbleiben Icons müssen manuell ersetzt werden. Die neue [Icon-Suche](https://lux-demo-dev.applicationplatform.gfi.ihk.de/components-overview/example/icon-overview) in der LUX-Components-Demo könnte dabei eine Hilfe sein.
+Das Schematic enthält eine Liste mit FA- und Material-Icons und mappt diese automatisch auf die neuen LUX-Icons. Das Schematic sollte die meisten Icons automatisch ersetzen, erhebt aber keinen Anspruch auf Vollständigkeit. Die verbleiben Icons müssen manuell ersetzt werden. Die neue [Icon-Suche](https://lux-demo-dev.gfi.ihk.de/components-overview/example/icon-overview) in der LUX-Components-Demo könnte dabei eine Hilfe sein.
 
 Bitte den Umstieg auf einem eigenen Branch ausführen. Die Anwendung muss vollständig getestet werden. Bei den neuen Icons handelt es sich um SVG-Icons und nicht länger um Font-Icons. D.h. in den SCSS-Styles müssen die individuellen Font-Size-Angaben durch Width-Angaben angepasst werden.
 
