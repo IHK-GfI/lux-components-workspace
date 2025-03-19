@@ -43,9 +43,9 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
   @ViewChild('fileBaseWithoutComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithoutComponent!: LuxFileUploadComponent;
   @ViewChild('fileBaseWithComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithComponent!: LuxFileUploadComponent;
 
-  override label = $localize`:@@luxc.file.upload.label:Zum Hochladen Datei hier ablegen oder `;
-  labelLink = $localize`:@@luxc.file.upload.label.link:Datei durchsuchen`;
-  labelLinkShort = $localize`:@@luxc.file.upload.label.link.short:Datei hochladen`;
+  override label = `Zum Hochladen Datei hier ablegen oder `;
+  labelLink = `Datei durchsuchen`;
+  labelLinkShort = `Datei hochladen`;
   uploadIcon = 'lux-programming-cloud-upload';
   deleteIcon = 'lux-interface-delete-bin-5';
   multiple = true;
