@@ -1,7 +1,6 @@
 import { callRule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { of as observableOf } from 'rxjs';
 import { updateDependencies } from '../../update-dependencies';
 import { getPackageJsonDependency } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
@@ -65,7 +64,7 @@ describe('update180000', () => {
         `
       );
 
-      callRule(updateDependencies(), observableOf(appTree), context).subscribe({
+      callRule(updateDependencies(), appTree, context).subscribe({
         next: (successTree: Tree) => {
           expect(getPackageJsonDependency(successTree, '@ihk-gfi/lux-components').version).not.toEqual('16.5.0');
           expect(getPackageJsonDependency(successTree, '@ihk-gfi/lux-components').version).toEqual('18.0.0');
@@ -89,7 +88,7 @@ describe('update180000', () => {
 
       appTree.create(filePath, angularJson01);
 
-      callRule(updateAngularJson(testOptions), observableOf(appTree), context).subscribe({
+      callRule(updateAngularJson(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           const content = successTree.read(filePath)?.toString();
 
@@ -113,7 +112,7 @@ describe('update180000', () => {
 
       appTree.create(filePath, formControlsHtml);
 
-      callRule(updateFormControls(testOptions), observableOf(appTree), context).subscribe({
+      callRule(updateFormControls(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           const content = successTree.read(filePath)?.toString();
           expect(content).not.toContain(`luxOptionMultiline`);
@@ -131,7 +130,7 @@ describe('update180000', () => {
 
       appTree.create(filePath, tabsHtml);
 
-      callRule(updateTabs(testOptions), observableOf(appTree), context).subscribe({
+      callRule(updateTabs(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           const content = successTree.read(filePath)?.toString();
           expect(content).not.toContain(`luxTabAnimationActive`);
@@ -149,7 +148,7 @@ describe('update180000', () => {
 
       appTree.create(filePath, chipsHtml);
 
-      callRule(updateChips(testOptions), observableOf(appTree), context).subscribe({
+      callRule(updateChips(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           const content = successTree.read(filePath)?.toString();
 
@@ -170,7 +169,7 @@ describe('update180000', () => {
 
       appTree.create(filePath, sliderHtml);
 
-      callRule(updateSlider(testOptions), observableOf(appTree), context).subscribe({
+      callRule(updateSlider(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           const content = successTree.read(filePath)?.toString();
 
@@ -192,7 +191,7 @@ describe('update180000', () => {
 
       appTree.create(filePath, styleScss01);
 
-      callRule(updateStylesScss(testOptions), observableOf(appTree), context).subscribe({
+      callRule(updateStylesScss(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           const content = successTree.read(filePath)?.toString();
 
@@ -212,7 +211,7 @@ describe('update180000', () => {
 
       appTree.create(filePath, styleScss01);
 
-      callRule(updateStylesCss(testOptions), observableOf(appTree), context).subscribe({
+      callRule(updateStylesCss(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           const content = successTree.read(filePath)?.toString();
 

@@ -1,7 +1,6 @@
 import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { of as observableOf } from 'rxjs';
 import { getPackageJsonDependency } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
@@ -61,7 +60,7 @@ describe('update180400', () => {
         `
       );
 
-      callRule(update180400(testOptions), observableOf(appTree), context).subscribe(
+      callRule(update180400(testOptions), appTree, context).subscribe(
         () => {
           expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).not.toEqual('18.3.0');
           expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).toEqual('18.4.0');

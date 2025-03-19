@@ -40,21 +40,6 @@
       "description": "Aktualisiert die englischen Übersetzungen im Projekt",
       "factory": "./src/update-en-messages/index#updateEnMessages",
       "schema": "./src/update-en-messages/schema.json"
-    },
-    "add-lux-components": {
-      "description": "Fügt die LUX-Components zum Projekt hinzu",
-      "factory": "./src/add-lux-components/index#addLuxComponents",
-      "schema": "./src/add-lux-components/schema.json"
-    },
-    "change-theme-to-authentic": {
-      "description": "Wechselt zum Authentic-Theme",
-      "factory": "./src/theme/change-theme-to-authentic/index#changeToThemeAuthentic",
-      "schema": "./src/theme/change-theme-to-authentic/schema.json"
-    },
-    "change-to-lux-icons": {
-      "description": "Die neuen LUX-Icons werden im Projekt eingerichtet",
-      "factory": "./src/theme/change-to-lux-icons/index#changeToLuxIcons",
-      "schema": "./src/theme/change-to-lux-icons/schema.json"
     }
   }
 }

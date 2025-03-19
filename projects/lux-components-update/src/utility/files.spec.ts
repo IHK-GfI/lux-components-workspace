@@ -1,14 +1,13 @@
 import { callRule, Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { of as observableOf } from 'rxjs';
 import { replaceRule } from './files';
 import {
-  RemoveHtmlAttributeItem,
-  RemoveHtmlTagAttributeItem,
-  ReplaceHtmlAttributeItem,
-  ReplaceHtmlTagAttributeItem,
-  ReplaceItem
+    RemoveHtmlAttributeItem,
+    RemoveHtmlTagAttributeItem,
+    ReplaceHtmlAttributeItem,
+    ReplaceHtmlTagAttributeItem,
+    ReplaceItem
 } from './replace-item';
 import { appOptions, workspaceOptions } from './test';
 import { UtilConfig } from './util';
@@ -43,7 +42,7 @@ describe('file', () => {
 
       callRule(
         replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem('before', 'after', false)),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {
@@ -64,7 +63,7 @@ describe('file', () => {
 
       callRule(
         replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem(/before/m, 'after', false)),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {
@@ -85,7 +84,7 @@ describe('file', () => {
 
       callRule(
         replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem('before', 'after', true)),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {
@@ -106,7 +105,7 @@ describe('file', () => {
 
       callRule(
         replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceStringAllFile.json', new ReplaceItem(/before/gm, 'after', true)),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {
@@ -127,7 +126,7 @@ describe('file', () => {
 
       callRule(
         replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceHtmlAttribut.html', new ReplaceHtmlAttributeItem('luxColor', '$1="color2"')),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {
@@ -155,7 +154,7 @@ describe('file', () => {
 
       callRule(
         replaceRule(testOptions, 'startMsg', 'endMsg', 'replaceHtmlAttribut.html', new RemoveHtmlAttributeItem('luxColor')),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {
@@ -184,7 +183,7 @@ describe('file', () => {
           'removeHtmlTagAttribut.html',
           new RemoveHtmlTagAttributeItem('lux-slider-ac', 'luxVertical')
         ),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {
@@ -210,7 +209,7 @@ describe('file', () => {
           'replaceHtmlTagAttribut.html',
           new ReplaceHtmlTagAttributeItem('lux-slider-ac', 'luxVertical', 'luxVertical2', 'color2')
         ),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe({
         next: (successTree: Tree) => {

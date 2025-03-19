@@ -1,7 +1,6 @@
 import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { of as observableOf } from 'rxjs';
 import { appOptions, workspaceOptions } from '../utility/test';
 import { UtilConfig } from '../utility/util';
 import { updateEnMessages } from './index';
@@ -50,7 +49,7 @@ describe('updateEnMessages', () => {
       appTree.create(filePathLCEn, i18nEnLuxC);
       appTree.create(filePathSDEn, i18nEnStamm);
 
-      callRule(updateEnMessages(), observableOf(appTree), context).subscribe({
+      callRule(updateEnMessages(), appTree, context).subscribe({
         next: (success) => {
           expect(success.exists(filePathDe)).toBeTrue();
           expect(success.exists(filePathEn)).toBeTrue();

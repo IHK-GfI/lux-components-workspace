@@ -1,7 +1,6 @@
 import { callRule, Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { of as observableOf } from 'rxjs';
 import { deleteJsonArray, findObjectPropertyInArray, findStringInArray, updateJsonArray, updateJsonValue } from './json';
 import { appOptions, workspaceOptions } from './test';
 import { UtilConfig } from './util';
@@ -36,7 +35,7 @@ describe('json', () => {
 
       callRule(
         updateJsonValue(filePath, ['projects', 'lux-components', 'architect', 'build', 'options', 'aaa'], 'bbb'),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -54,7 +53,7 @@ describe('json', () => {
 
       callRule(
         updateJsonValue(filePath, ['projects', 'lux-components', 'architect', 'build', 'options', 'aaa'], false),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -74,7 +73,7 @@ describe('json', () => {
 
       callRule(
         updateJsonArray(filePath, ['projects', 'lux-components', 'architect', 'build', 'options', 'assets'], 'aaa'),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -92,7 +91,7 @@ describe('json', () => {
 
       callRule(
         updateJsonArray(filePath, ['projects', 'lux-components', 'architect', 'build', 'options', 'assets'], 'aaa'),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -110,7 +109,7 @@ describe('json', () => {
 
       callRule(
         updateJsonArray(filePath, ['projects', 'lux-components', 'architect', 'build', 'options', 'assets'], 'aaa'),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -130,7 +129,7 @@ describe('json', () => {
 
       callRule(
         updateJsonArray(filePath, ['projects', 'lux-components', 'architect', 'build', 'options', 'assets'], 'bbb'),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -156,7 +155,7 @@ describe('json', () => {
           true,
           (node) => node.value === 'bbb'
         ),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -184,7 +183,7 @@ describe('json', () => {
         updateJsonArray(filePath, ['projects', 'lux-components', 'architect', 'build', 'options', 'budgets'], newValue, true, (node) =>
           findObjectPropertyInArray(node, 'type', 'initial')
         ),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -209,7 +208,7 @@ describe('json', () => {
           true,
           (node) => node.value === 'notThere'
         ),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
@@ -231,7 +230,7 @@ describe('json', () => {
 
       callRule(
         deleteJsonArray(filePath, ['files'], (node) => findStringInArray(node, 'polyfills.ts')),
-        observableOf(appTree),
+        appTree,
         context
       ).subscribe(
         (success: Tree) => {
