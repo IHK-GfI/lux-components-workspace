@@ -12,6 +12,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
+    "smoketest": "npm run pack:theme && npm run test:theme && npm run pack:updater && npm run test:updater && npm run pack:components && npm run test:components && npm run pack:demo",
     "pack:demo": "ng build demo-app --localize",
     "pack:components": "ng build lux-components-lib",
     "pack:theme": "npm run pack --workspace=projects/lux-components-theme",
