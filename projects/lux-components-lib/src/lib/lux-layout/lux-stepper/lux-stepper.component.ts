@@ -238,19 +238,19 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
       const instanceIconEdited: LuxIconComponent = componentIconEdited.instance;
 
       instanceIconEdited.luxIconName = this.luxEditedIconName;
-      instanceIconEdited.luxIconSize = '20px';
+      instanceIconEdited.luxIconSize = '1.25rem';
       instanceIconEdited.luxRounded = true;
-      instanceIconEdited.luxMargin = '0 8px 0 0';
-      instanceIconEdited.luxPadding = '10px';
+      instanceIconEdited.luxMargin = '0 0.5rem 0 0';
+      instanceIconEdited.luxPadding = '0.625rem';
       componentIconEdited.location.nativeElement.className += ' lux-stepper-edited-icon';
 
       const componentIconNormal: ComponentRef<LuxIconComponent> = stepLabel.createComponent(factory);
       const instanceIconNormal: LuxIconComponent = componentIconNormal.instance;
       instanceIconNormal.luxIconName = luxStep.luxIconName;
-      instanceIconNormal.luxIconSize = '20px';
+      instanceIconNormal.luxIconSize = '1.25rem';
       instanceIconNormal.luxRounded = true;
-      instanceIconNormal.luxMargin = '0 8px 0 0';
-      instanceIconNormal.luxPadding = '10px';
+      instanceIconNormal.luxMargin = '0 0.5rem 0 0';
+      instanceIconNormal.luxPadding = '0.625rem';
       componentIconNormal.location.nativeElement.className += ' lux-stepper-normal-icon';
     }
   }

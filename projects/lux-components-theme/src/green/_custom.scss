@@ -7,7 +7,7 @@
 @use "luxcommon";
 @use "luxpalette";
 
-$button-font-size: 22px;
+$button-font-size: 1.375rem;
 $light-green: #e4f1e4;
 $medium-green: #9ad7a3;
 $dark-green: #2e8533;
@@ -179,8 +179,8 @@ lux-button button.lux-button {
     height: luxcommon.$button-height;
 
     lux-icon.lux-button-icon mat-icon.mat-icon.lux-icon {
-      height: 22px !important;
-      width: 22px !important;
+      height: 1.375rem !important;
+      width: 1.375rem !important;
     }
   }
 
@@ -192,8 +192,8 @@ lux-button button.lux-button {
 
     & lux-icon.lux-button-icon-round {
       mat-icon.mat-icon.lux-icon {
-        height: 22px !important;
-        width: 22px !important;
+        height: 1.375rem !important;
+        width: 1.375rem !important;
       }
     }
     &.lux-stroked {
@@ -213,10 +213,10 @@ lux-button button.lux-button {
   }
 
   .lux-button-badge {
-    border-radius: 8px;
-    padding: 2px 8px;
-    font-size: 14px;
-    max-width: 48px;
+    border-radius: 0.5rem;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.875rem;
+    max-width: 3rem;
   }
 }
 
@@ -231,11 +231,11 @@ lux-button button.lux-button {
     }
 
     button {
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-left: 1rem;
+      padding-right: 1rem;
 
       &.lux-button {
-        font-size: 14px;
+        font-size: 0.875rem;
       }
     }
   }
@@ -754,9 +754,9 @@ lux-file-input-ac {
   .lux-menu-extended {
     gap: 4px;
     lux-button button.lux-button lux-icon.lux-button-icon:not(.lux-button-icon-round) mat-icon.lux-icon {
-      height: 14px !important;
-      width: 14px !important;
-      font-size: 14px;
+      height: 0.875rem !important;
+      width: 0.875rem !important;
+      font-size: 0.875rem;
     }
   }
 }

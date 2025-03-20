@@ -16,7 +16,7 @@ export class LuxIconComponent {
 
   private _luxIconSize: string | undefined = '';
   private _luxIconName = '';
-  private _luxPadding = '4px';
+  private _luxPadding = '0.25rem';
   private _backgroundCSSClass = '';
   private _fontCSSClass = 'blue';
 
@@ -62,7 +62,7 @@ export class LuxIconComponent {
     } else if (this.luxIconSize) {
       this._luxIconSize = iconSizeValue;
     } else {
-      this._luxIconSize = '24px'; //default-Size für mat-icon
+      this._luxIconSize = '1.5rem'; //default-Size für mat-icon
     }
   }
 

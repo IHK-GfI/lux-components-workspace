@@ -1,7 +1,7 @@
 @if (luxMessage) {
 <div class="lux-message-container {{ backgroundCSSClass }} {{ fontCSSClass }}" luxAriaRole="listitem">
   @if (luxMessage.iconName) {
-  <lux-icon [luxIconName]="luxMessage.iconName" luxIconSize="20px" luxPadding="4px" class="lux-message-icon"></lux-icon>
+  <lux-icon [luxIconName]="luxMessage.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon"></lux-icon>
   } @if (!luxMessage.iconName) {
   <div class="lux-message-icon"></div>
   }

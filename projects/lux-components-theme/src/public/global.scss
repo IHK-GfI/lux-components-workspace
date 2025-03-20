@@ -45,8 +45,69 @@ html body {
   --mat-form-field-subscript-text-font: #{$app-font-family};
   --mat-optgroup-label-text-font: #{$app-font-family};
   --mat-option-label-text-font: #{$app-font-family};
+
+  --mat-option-label-text-size: 1rem;
+  --mat-optgroup-label-text-size: 1rem;
+  --mat-card-title-text-size: 1.25rem;
+  --mat-card-subtitle-text-size: 0.875rem;
+  --mdc-filled-text-field-label-text-size: 1rem;
+  --mdc-outlined-text-field-label-text-size: 1rem;
+  --mat-form-field-container-text-size: 1rem;
+  --mat-form-field-subscript-text-size: 0.75rem;
+  --mat-select-trigger-text-size: 1rem;
+  --mdc-dialog-supporting-text-size: 1rem;
+  --mdc-slider-label-label-text-size: 0.875rem;
+  --mat-menu-item-label-text-size: 1rem;
+  --mdc-list-list-item-label-text-size: 1rem;
+  --mdc-list-list-item-supporting-text-size: 0.875rem;
+  --mdc-list-list-item-trailing-supporting-text-size: 0.75rem;
+  --mat-paginator-container-text-size: 0.75rem;
+  --mat-paginator-select-trigger-text-size: 0.75rem;
+  --mat-checkbox-label-text-size: 0.875rem;
+  --mdc-text-button-label-text-size: 0.875rem;
+  --mdc-filled-button-label-text-size: 0.875rem;
+  --mdc-protected-button-label-text-size: 0.875rem;
+  --mdc-outlined-button-label-text-size: 0.875rem;
+  --mdc-extended-fab-label-text-size: 0.875rem;
+  --mdc-snackbar-supporting-text-size: 0.875rem;
+  --mat-table-row-item-label-text-size: 0.875rem;
+  --mat-table-footer-supporting-text-size: 0.875rem;
+  --mat-badge-text-size: 0.75rem;
+  --mat-badge-small-size-text-size: 0.5625rem;
+  --mat-badge-large-size-text-size: 1.5rem;
+  --mat-bottom-sheet-container-text-size: 0.875rem;
+  --mat-legacy-button-toggle-label-text-size: 1rem;
+  --mat-standard-button-toggle-label-text-size: 1rem;
+  --mat-datepicker-calendar-text-size: 0.8125rem;
+  --mat-datepicker-calendar-body-label-text-size: 0.875rem;
+  --mat-datepicker-calendar-period-button-text-size: 0.875rem;
+  --mat-datepicker-calendar-header-text-size: 0.6875rem;
+  --mat-expansion-header-text-size: 0.875rem;
+  --mat-expansion-container-text-size: 0.875rem;
+  --mat-grid-list-tile-header-primary-text-size: 0.875rem;
+  --mat-grid-list-tile-header-secondary-text-size: 0.75rem;
+  --mat-grid-list-tile-footer-primary-text-size: 0.875rem;
+  --mat-grid-list-tile-footer-secondary-text-size: 0.75rem;
+  --mat-stepper-header-label-text-size: 0.875rem;
+  --mat-stepper-header-error-state-label-text-size: 1rem;
+  --mat-stepper-header-selected-state-label-text-size: 1rem;
+  --mat-toolbar-title-text-size: 1.25rem;
+  --mat-tree-node-text-size: 0.875rem;
+}
+
+.mat-mdc-snack-bar-container .mdc-snackbar__label {
+  --mdc-snackbar-supporting-text-line-height: 1.25rem;
+}
+
+.mat-mdc-radio-button .mat-internal-form-field {
+  --mat-radio-label-text-size: 0.875rem;
+}
+
+.mat-mdc-standard-chip .mdc-evolution-chip__text-label {
+  --mdc-chip-label-text-size: 0.875rem;
 }
 
 .mat-mdc-tooltip-surface {
   --mdc-plain-tooltip-supporting-text-font: #{$app-font-family};
+  --mdc-plain-tooltip-supporting-text-size: 0.75rem;
 }
