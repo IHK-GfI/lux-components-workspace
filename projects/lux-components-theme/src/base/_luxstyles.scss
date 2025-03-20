@@ -577,7 +577,7 @@ $notificationSizes: (18, 24, 30);
   &.mat-badge-small {
     .mat-badge-content {
       padding-top: 0;
-      font-size: 9px;
+      font-size: 0.5625rem;
       width: #{nth($notificationSizes, 1)}px;
       height: #{nth($notificationSizes, 1)}px;
     }
@@ -586,7 +586,7 @@ $notificationSizes: (18, 24, 30);
   &.mat-badge-medium {
     .mat-badge-content {
       padding-top: 0;
-      font-size: 12px;
+      font-size: 0.75rem;
       width: #{nth($notificationSizes, 2)}px;
       height: #{nth($notificationSizes, 2)}px;
     }
@@ -595,7 +595,7 @@ $notificationSizes: (18, 24, 30);
   &.mat-badge-large {
     .mat-badge-content {
       padding-top: 0;
-      font-size: 15px;
+      font-size: 0.9375rem;
       width: #{nth($notificationSizes, 3)}px;
       height: #{nth($notificationSizes, 3)}px;
     }

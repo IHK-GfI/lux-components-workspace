@@ -139,8 +139,8 @@ lux-lookup-combobox-ac {
 * Theming für Lux-Checkbox
 */
 html .mat-mdc-checkbox .mat-internal-form-field {
-  --mat-switch-label-text-size: 16px;
-  --mat-checkbox-label-text-line-height: 24px;
+  --mat-switch-label-text-size: 1rem;
+  --mat-checkbox-label-text-line-height: 1.5rem;
 }
 
 lux-checkbox-ac {
@@ -161,15 +161,20 @@ lux-checkbox-ac {
     //Deswegen wird hier das Margin-top: auto überschrieben.
     align-self: flex-start;
     margin-top: 0.2em;
+    flex: 0 0 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
 
     .mdc-checkbox__background {
       top: 0;
       left: 0;
+      width: 1.125rem;
+      height: 1.125rem;
     }
 
     .mat-mdc-checkbox-touch-target {
-      width: 24px;
-      height: 24px;
+      width: 1.5rem;
+      height: 1.5rem;
     }
   }
 
@@ -248,7 +253,7 @@ $toggleBorderWidth: 2;
 $toggleMarginLeft: $toggleBorderWidth + 1;
 
 html lux-toggle-ac .mat-mdc-slide-toggle {
-  --mat-switch-label-text-size: 16px;
+  --mat-switch-label-text-size: 1rem;
   --mdc-switch-track-width: 50px;
   --mdc-switch-track-height: 30px;
   --mdc-switch-track-shape: 15px;
@@ -496,6 +501,11 @@ lux-chips-ac {
   --mdc-chip-container-shape-radius: 20px;
   --mdc-chip-outline-width: 1px;
 
+  .mat-mdc-chip-remove .mat-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
   .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
     span.mdc-evolution-chip__action::before {
       border: none;
@@ -662,7 +672,7 @@ lux-slider-ac {
 
       .mdc-slider__value-indicator-text {
         min-width: 100%;
-        font-size: 12px;
+        font-size: 0.75rem;
       }
     }
   }

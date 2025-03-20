@@ -11,23 +11,23 @@ lux-icon {
       border-radius: 50%;
 
       &.lux-icon-rounded-1em {
-        padding: 4px !important;
+        padding: 0.25rem !important;
       }
       &.lux-icon-rounded-2em {
-        padding: 8px !important;
+        padding: 0.5rem !important;
       }
       &.lux-icon-rounded-3em {
-        padding: 12px !important;
+        padding: 0.75rem !important;
       }
       &.lux-icon-rounded-4em,
       &.lux-icon-rounded-5em {
-        padding: 16px !important;
+        padding: 1rem !important;
       }
     }
   }
 
   &.lux-error-icon {
-    font-size: 12px;
+    font-size: 0.75rem;
 
     mat-icon.lux-icon {
       padding: 0 !important;
