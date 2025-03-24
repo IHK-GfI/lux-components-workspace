@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
+  LuxAutofocusDirective,
   LuxButtonComponent,
   LuxFileInputAcComponent,
   LuxFormHintComponent,
@@ -29,6 +30,7 @@ import { FileExampleComponent } from '../file-example.component';
     LuxInputAcComponent,
     LuxFormHintComponent,
     LuxFileInputAcComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ReactiveFormsModule,

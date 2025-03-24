@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, inject, LOCALE_ID } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxDateFilterAcFn,
   LuxDatepickerAcComponent,
   LuxFormHintComponent,
@@ -36,6 +37,7 @@ interface DatepickerDummyForm {
     LuxInputAcComponent,
     LuxFormHintComponent,
     LuxDatepickerAcComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

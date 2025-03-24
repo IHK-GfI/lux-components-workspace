@@ -1,6 +1,7 @@
 import { NgStyle } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
 import {
+  LuxAutofocusDirective,
   LuxButtonComponent,
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
@@ -25,6 +26,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     NgStyle,

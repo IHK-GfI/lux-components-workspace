@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxFormHintComponent,
   LuxInputAcComponent,
   LuxSelectAcComponent,
@@ -34,6 +35,7 @@ interface TextareaDummyForm {
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

@@ -1,6 +1,7 @@
 import { NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import {
+  LuxAutofocusDirective,
   LuxFormHintComponent,
   LuxIconComponent,
   LuxImageComponent,
@@ -24,6 +25,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxToggleAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     NgStyle,

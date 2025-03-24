@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxAccordionComponent,
+  LuxAutofocusDirective,
   LuxChipAcComponent,
   LuxChipAcGroupComponent,
   LuxChipsAcComponent,
@@ -36,6 +37,7 @@ import { logResult, setRequiredValidatorForFormControl } from '../../example-bas
     LuxChipsAcComponent,
     LuxChipAcGroupComponent,
     LuxChipAcComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ReactiveFormsModule,

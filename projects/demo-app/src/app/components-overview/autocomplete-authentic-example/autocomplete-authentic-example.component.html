@@ -6,6 +6,8 @@
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-autocomplete-ac
+        luxAutofocus
+        [luxAutofocusComponent]="autocomplete"
         [luxLabel]="label"
         [luxPlaceholder]="placeholder"
         [luxHint]="hint"
@@ -36,6 +38,7 @@
         (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
         (luxOptionSelected)="log(showOutputEvents, 'luxOptionSelected', $event)"
         luxTagId="autocomplete-non-reactive"
+        #autocomplete
       >
         @if (showPrefix) {
         <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks"></lux-icon>&nbsp; </lux-input-ac-prefix>

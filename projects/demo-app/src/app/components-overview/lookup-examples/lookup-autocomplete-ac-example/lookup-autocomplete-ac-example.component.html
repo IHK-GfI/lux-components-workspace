@@ -6,6 +6,8 @@
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-lookup-autocomplete-ac
+        luxAutofocus
+        [luxAutofocusComponent]="firstlookup"
         [luxPlaceholder]="placeholder"
         [luxLabel]="label"
         [luxHint]="hint"
@@ -36,6 +38,7 @@
         (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
         luxLookupId="normalautocomplete"
         luxTagId="lkpexample1"
+        #firstlookup
       >
       </lux-lookup-autocomplete-ac>
       <example-value [value]="value"></example-value>

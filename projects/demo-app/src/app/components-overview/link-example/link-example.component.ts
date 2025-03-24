@@ -1,5 +1,6 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import {
+  LuxAutofocusDirective,
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
@@ -25,6 +26,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,

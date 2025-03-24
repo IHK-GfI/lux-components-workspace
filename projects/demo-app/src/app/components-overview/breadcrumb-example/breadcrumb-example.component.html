@@ -4,7 +4,7 @@
 >
   <example-base-content>
     <h3>Beispiel mit Angular Router</h3>
-    <lux-breadcrumb [luxEntries]="entries" (luxClicked)="onClickedEntry($event)"></lux-breadcrumb>
+    <lux-breadcrumb luxAutofocus [luxEntries]="entries" (luxClicked)="onClickedEntry($event)"></lux-breadcrumb>
     @if (clickedEntry) {
     <example-value [value]="clickedEntry"></example-value>
     }

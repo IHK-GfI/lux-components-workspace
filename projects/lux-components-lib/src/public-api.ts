@@ -26,6 +26,7 @@ export * from './lib/lux-directives/lux-aria/lux-aria-label.directive';
 export * from './lib/lux-directives/lux-aria/lux-aria-labelledby.directive';
 export * from './lib/lux-directives/lux-aria/lux-aria-required.directive';
 export * from './lib/lux-directives/lux-aria/lux-aria-role.directive';
+export * from './lib/lux-directives/lux-autofocus/lux-autofocus.directive';
 export * from './lib/lux-directives/lux-badge-notification/lux-badge-notification.directive';
 export * from './lib/lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
 export * from './lib/lux-directives/lux-infinite-scroll/lux-scroll-position';
@@ -329,3 +330,4 @@ export * from './lib/lux-markdown/lux-markdown.component';
  */
 export * from './lib/lux-theme/lux-theme';
 export * from './lib/lux-theme/lux-theme.service';
+

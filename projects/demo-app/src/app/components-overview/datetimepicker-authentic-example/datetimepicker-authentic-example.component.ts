@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxDatetimepickerAcComponent,
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -30,6 +31,7 @@ interface DatetimeDummyForm {
     LuxInputAcComponent,
     LuxFormHintComponent,
     LuxDatetimepickerAcComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

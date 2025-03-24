@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutocompleteAcComponent,
+  LuxAutofocusDirective,
   LuxFormHintComponent,
   LuxIconComponent,
   LuxInputAcComponent,
@@ -51,7 +52,8 @@ interface AutocompleteForm {
     LuxInputAcPrefixComponent,
     LuxInputAcSuffixComponent,
     LuxSelectAcComponent,
-    LuxToggleAcComponent
+    LuxToggleAcComponent,
+    LuxAutofocusDirective
   ]
 })
 export class AutocompleteAuthenticExampleComponent {
