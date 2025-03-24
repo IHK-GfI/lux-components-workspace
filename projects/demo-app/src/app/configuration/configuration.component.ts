@@ -5,6 +5,7 @@ import {
   LuxAppFooterButtonInfo,
   LuxAppFooterButtonService,
   LuxAriaRoleDirective,
+  LuxAutofocusDirective,
   LuxCardComponent,
   LuxCardContentComponent,
   LuxCheckboxContainerAcComponent,
@@ -29,6 +30,7 @@ import { Subscription } from 'rxjs';
     LuxToggleAcComponent,
     LuxSelectAcComponent,
     LuxInputAcComponent,
+    LuxAutofocusDirective,
     JsonPipe
   ]
 })

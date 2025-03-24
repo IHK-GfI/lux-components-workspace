@@ -3,6 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxAutocompleteAcComponent,
+  LuxAutofocusDirective,
   LuxCardComponent,
   LuxCardContentComponent,
   LuxCheckboxAcComponent,
@@ -68,6 +69,7 @@ interface FormCommonUser {
     LuxChipAcComponent,
     LuxCheckboxAcComponent,
     LuxAutocompleteAcComponent,
+    LuxAutofocusDirective,
     ReactiveFormsModule,
     UpperCasePipe,
     LowerCasePipe,

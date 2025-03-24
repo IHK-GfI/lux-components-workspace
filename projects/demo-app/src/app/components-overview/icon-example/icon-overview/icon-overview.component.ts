@@ -5,6 +5,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   LuxAriaLabelDirective,
+  LuxAutofocusDirective,
   LuxCardComponent,
   LuxCardContentComponent,
   LuxCardInfoComponent,
@@ -48,6 +49,7 @@ declare interface SearchBinding {
     LuxInputAcComponent,
     LuxChipsAcComponent,
     LuxChipAcComponent,
+    LuxAutofocusDirective,
     NgTemplateOutlet,
     NgClass
   ]

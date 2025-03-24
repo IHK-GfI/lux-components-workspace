@@ -7,6 +7,8 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <h4>Chips (ohne Group)</h4>
       <lux-chips-ac
+        luxAutofocus
+        [luxAutofocusComponent]="firstchipGroup"
         [luxStrict]="strict"
         [luxDisabled]="disabled"
         [luxInputAllowed]="inputAllowed"
@@ -19,6 +21,7 @@
         [luxDense]="denseFormat"
         [luxHideBorder]="hideBorder"
         (luxChipAdded)="chipAdded($event)"
+        #firstchipGroup
       >
         @for (chip of chips; track chip.label; let i = $index) {
         <lux-chip-ac

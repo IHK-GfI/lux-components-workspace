@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
   LuxAccordionComponent,
+  LuxAutofocusDirective,
   LuxFormHintComponent,
   LuxInputAcComponent,
   LuxPanelComponent,
@@ -37,6 +38,7 @@ import { TabsExampleContentComponent } from './tabs-example-content/tabs-example
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     NgStyle,

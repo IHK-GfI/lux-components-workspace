@@ -2,6 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxButtonComponent,
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -39,6 +40,7 @@ interface RadioDummyForm {
     LuxRadioAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

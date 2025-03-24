@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ILuxBreadcrumbEntry,
+  LuxAutofocusDirective,
   LuxBreadcrumbComponent,
   LuxButtonComponent,
   LuxDividerComponent,
@@ -24,6 +25,7 @@ import { ExampleValueComponent } from '../../example-base/example-value/example-
     LuxDividerComponent,
     LuxToggleAcComponent,
     LuxInputAcComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

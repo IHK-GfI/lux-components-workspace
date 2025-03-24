@@ -8,9 +8,10 @@
         <h3 class="lux-highlight-section-label">Alle Button-Variationen</h3>
         <div class="lux-flex lux-flex-wrap lux-gap-4">
           <div class="lux-flex lux-flex-wrap lux-gap-4">
-            <div class="lux-flex lux-flex-col lux-gap-4">
+            <div class="lux-flex lux-flex-col lux-gap-4" luxAutofocus luxAutofocusSelector="#lux-button-0 button">
               @for (color of colors; track color; let i = $index) {
               <lux-button
+                id="lux-button-{{ i }}"
                 [luxLabel]="label"
                 [luxColor]="color.value"
                 [luxIconName]="iconName"

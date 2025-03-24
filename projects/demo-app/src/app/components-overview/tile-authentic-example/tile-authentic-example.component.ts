@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {
+  LuxAutofocusDirective,
   LuxBadgeNotificationSize,
   LuxFormHintComponent,
   LuxIconComponent,
@@ -31,6 +32,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxRadioAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,

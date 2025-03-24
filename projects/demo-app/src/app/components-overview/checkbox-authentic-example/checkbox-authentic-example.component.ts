@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxButtonComponent,
   LuxCheckboxAcComponent,
   LuxFormHintComponent,
@@ -37,6 +38,7 @@ interface CheckboxAgbDummyForm {
     LuxInputAcComponent,
     LuxFormHintComponent,
     LuxCheckboxAcComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

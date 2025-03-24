@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LuxAriaRoleDirective, LuxIconComponent, LuxTileAcComponent } from 'lux-components-lib';
+import { LuxAriaRoleDirective, LuxAutofocusDirective, LuxIconComponent, LuxTileAcComponent } from 'lux-components-lib';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [LuxIconComponent, LuxTileAcComponent, LuxAriaRoleDirective]
+  imports: [LuxIconComponent, LuxTileAcComponent, LuxAriaRoleDirective, LuxAutofocusDirective]
 })
 export class HomeComponent {
   private router = inject(Router);

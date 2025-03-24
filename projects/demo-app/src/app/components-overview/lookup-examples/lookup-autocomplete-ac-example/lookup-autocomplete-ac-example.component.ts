@@ -2,6 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxFormHintComponent,
   LuxInputAcComponent,
   LuxLookupAutocompleteAcComponent,
@@ -26,6 +27,7 @@ import { LookupExampleComponent } from '../lookup-example.component';
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

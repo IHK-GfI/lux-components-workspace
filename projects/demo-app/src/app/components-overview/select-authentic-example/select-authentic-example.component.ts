@@ -2,6 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxButtonComponent,
   LuxFormHintComponent,
   LuxFormSelectableBase,
@@ -39,6 +40,7 @@ interface SelectDummyForm {
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,

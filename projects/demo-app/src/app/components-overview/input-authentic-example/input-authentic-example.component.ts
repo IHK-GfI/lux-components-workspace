@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
+  LuxAutofocusDirective,
   LuxButtonComponent,
   LuxCardActionsComponent,
   LuxCardComponent,
@@ -58,7 +59,8 @@ interface InputDummyForm {
     ExampleFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
-    ExampleBaseAdvancedOptionsComponent
+    ExampleBaseAdvancedOptionsComponent,
+    LuxAutofocusDirective
   ]
 })
 export class InputAuthenticExampleComponent {
