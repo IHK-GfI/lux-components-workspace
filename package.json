@@ -27,6 +27,7 @@
     "test:theme": "npm run smoketest --workspace=projects/lux-components-theme",
     "test:updater": "npm run smoketest --workspace=projects/lux-components-update",
     "util:check-demo-conditions": "node scripts/check-demo-conditions.js",
+    "util:move-de-files": "node scripts/move-de-files.js",
     "util:clean-all": "npm run util:delete-dist && del-cli --force .angular && del-cli --force package-lock.json && del-cli --force node_modules",
     "util:delete-dist": "del-cli --force dist/",
     "util:wait-and-start-demo": "wait-on dist/lux-components-lib/public-api.d.ts dist/theme/prebuilt-themes/luxtheme-authentic.css && npm run start",
