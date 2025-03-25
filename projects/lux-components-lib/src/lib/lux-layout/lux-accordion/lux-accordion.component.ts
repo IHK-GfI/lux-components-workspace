@@ -6,7 +6,7 @@ import { LuxAccordionColor, LuxAccordionColors } from '../../lux-util/lux-colors
 import { LuxUtil } from '../../lux-util/lux-util';
 
 export declare type LuxModeType = MatAccordionDisplayMode;
-export declare type LuxTogglePosition = MatAccordionTogglePosition;
+export declare type LuxTogglePosition = MatAccordionTogglePosition | undefined;
 
 @Component({
   selector: 'lux-accordion',
@@ -28,18 +28,18 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
     return this._luxColor;
   }
 
-  _luxDisabled = false;
-  _luxHideToggle = false;
+  _luxDisabled?: boolean;
+  _luxHideToggle?: boolean;
   _luxExpandedHeaderHeight?: string;
   _luxCollapsedHeaderHeight?: string;
-  _luxTogglePosition: LuxTogglePosition = 'after';
+  _luxTogglePosition?: LuxTogglePosition;
 
   @Input()
   get luxDisabled() {
     return this._luxDisabled;
   }
 
-  set luxDisabled(disabled: boolean) {
+  set luxDisabled(disabled: boolean | undefined) {
     this._luxDisabled = disabled;
 
     this.changed$.next('luxDisabled');
@@ -50,7 +50,7 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
     return this._luxHideToggle;
   }
 
-  set luxHideToggle(hideToggle: boolean) {
+  set luxHideToggle(hideToggle: boolean | undefined) {
     this._luxHideToggle = hideToggle;
 
     this.changed$.next('luxHideToggle');
@@ -83,7 +83,7 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
     return this._luxTogglePosition;
   }
 
-  set luxTogglePosition(position: MatAccordionTogglePosition) {
+  set luxTogglePosition(position: LuxTogglePosition) {
     this._luxTogglePosition = position;
 
     this.changed$.next('luxTogglePosition');

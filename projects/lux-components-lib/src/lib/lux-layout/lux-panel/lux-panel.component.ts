@@ -15,10 +15,10 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   protected parent = inject(LuxAccordionComponent, { optional: true, host: true, skipSelf: true });
   protected mediaQuery = inject(LuxMediaQueryObserverService);
 
-  @Input() luxDisabled = false;
+  @Input() luxDisabled?: boolean;
   @Input() luxExpanded = false;
-  @Input() luxHideToggle = false;
-  @Input() luxTogglePosition: LuxTogglePosition = 'after';
+  @Input() luxHideToggle?: boolean;
+  @Input() luxTogglePosition?: LuxTogglePosition;
 
   @Input() luxCollapsedHeaderHeight?: string;
   @Input() luxExpandedHeaderHeight?: string;
@@ -57,7 +57,11 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
         this.luxCollapsedHeaderHeight = this.parent.luxCollapsedHeaderHeight;
       }
       if (this.luxTogglePosition === undefined) {
-        this.luxTogglePosition = this.parent.luxTogglePosition;
+        if (this.parent.luxTogglePosition === undefined) {
+          this.luxTogglePosition = 'after';
+        } else {
+          this.luxTogglePosition = this.parent.luxTogglePosition;
+        }
       }
 
       // Um eine zyklische Abhängigkeit mit dem lux-accordion zu vermeiden,
