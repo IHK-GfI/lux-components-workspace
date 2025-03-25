@@ -450,6 +450,11 @@ mat-expansion-panel.mat-expansion-panel:not([class*="mat-elevation-z"]) {
   --mat-expansion-container-shape: #{luxcommon.$app-border-radius};
 }
 
+//Von Material wird ein Margin gesetzt wenn der Indicator links ist und das Panel disabled wird. Damit wird das Margin überschrieben und der Header des Panels wird nicht verschoben.
+mat-expansion-panel-header.mat-expansion-toggle-indicator-before .mat-content.mat-content-hide-toggle {
+  margin: 0;
+}
+
 /*
  * Theming for LUX-Errorpage
  */
