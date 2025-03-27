@@ -50,20 +50,32 @@
     <div class="lux-flex lux-flex-wrap">
       <lux-button
         class="lux-mr-4 lux-mb-3"
-        luxLabel="Snackbar einblenden"
+        luxLabel="Component-Snackbar"
+        luxTooltip="Dieser Button öffnet eine einfache Snackbar über die Methode openComponent(). Es werden die Eingaben aller Felder von oben verwendet."
+        [luxTooltipShowDelay]="1000"
         luxColor="primary"
-        [luxFlat]="true"
+        [luxStroked]="true"
         (luxClicked)="openSnackbar()"
       >
       </lux-button>
       <lux-button
-        class="lux-mr-4 lux-mb-3"
-        luxLabel="Snackbar ausblenden"
-        luxColor="primary"
-        [luxStroked]="true"
-        (luxClicked)="dismissSnackbar()"
+      class="lux-mr-4 lux-mb-3"
+      luxLabel="Text-Snackbar"
+      luxTooltip="Dieser Button öffnet eine einfache Snackbar über die Methode openText(). Es werden nur die beiden Felder 'text' und 'action' verwendet."
+      [luxTooltipShowDelay]="1000"
+      luxColor="primary"
+      [luxStroked]="true"
+      (luxClicked)="openSnackbarText()"
       >
-      </lux-button>
+    </lux-button>
+    <lux-button
+      class="lux-mr-4 lux-mb-3"
+      luxLabel="Ausblenden"
+      luxColor="primary"
+      [luxStroked]="true"
+      (luxClicked)="dismissSnackbar()"
+    >
+    </lux-button>
     </div>
   </example-base-options-actions>
 </example-base-structure>

@@ -7,7 +7,8 @@ import {
   LuxSnackbarColors,
   LuxSnackbarConfig,
   LuxSnackbarService,
-  LuxToggleAcComponent
+  LuxToggleAcComponent,
+  LuxTooltipDirective
 } from 'lux-components-lib';
 import { Subscription } from 'rxjs';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -23,6 +24,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxToggleAcComponent,
     LuxSelectAcComponent,
     LuxInputAcComponent,
+    LuxTooltipDirective,
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseOptionsActionsComponent
@@ -55,6 +57,12 @@ export class SnackbarExampleComponent implements OnDestroy {
     if (this.actionSubscription) {
       this.actionSubscription.unsubscribe();
     }
+  }
+
+  openSnackbarText() {
+    this.snackbar.openText(this.snackbarConfig.text ?? '---', this.duration, this.snackbarConfig.action);
+    this.dismissSubscription = this.snackbar.afterDismissed().subscribe(this.observeDismiss.bind(this));
+    this.actionSubscription = this.snackbar.onAction().subscribe(this.observeAction.bind(this));
   }
 
   openSnackbar() {
