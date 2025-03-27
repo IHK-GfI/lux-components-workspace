@@ -19,10 +19,6 @@
     // springen.
     visibility: hidden;
 
-    .mat-mdc-snack-bar-label {
-      visibility: hidden;
-    }
-
     @each $colorName, $colorNameHex in luxcommon.$colorsForDarkBg {
       .lux-snackbar-content .lux-bg-color-#{"" + $colorName + ""} {
         color: $colorNameHex;

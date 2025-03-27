@@ -143,13 +143,11 @@ export class LuxSnackbarService implements OnDestroy {
     if (snackbarContainerArr.length > 0) {
       const snackbarEl = snackbarContainerArr[0] as HTMLElement;
       const snackbarElParent = snackbarContainerArr[0].parentElement as HTMLElement;
-      const snackbarLabelEL = snackbarEl.getElementsByClassName('mat-mdc-snack-bar-label')[0] as HTMLElement;
       // Die Overlay-Paine für die Snackbar muss verschoben werden, da diese sonst den Header blockiert
       snackbarElParent.style.top = this.appService.getAppTop() + this.appService.getHeaderHeight() + 3 /* Abstand zum Header */ + 'px';
       snackbarElParent.style.right = this.appService.getAppRight() + 3 /* Abstand zum Rand */ + 'px';
       snackbarElParent.style.position = 'absolute';
       snackbarEl.style.visibility = 'visible';
-      snackbarLabelEL.style.visibility = 'visible';
     } else {
       if (logError) {
         console.error('Snackbar (mat-mdc-snack-bar-container) could not be found! The snackbar is not shown.');
