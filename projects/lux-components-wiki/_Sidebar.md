@@ -3,6 +3,9 @@
 - [Home](home)
 
 - Versionen
+  - v19
+    - [Dokumentation](Home-v19)
+    - [Update Guide](update-guide-v19)
   - v18
     - [Dokumentation](Home-v18)
     - [Update Guide](update-guide-v18)
