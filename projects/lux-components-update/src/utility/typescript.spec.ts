@@ -3,14 +3,14 @@ import * as path from 'path';
 import { appOptions, workspaceOptions } from '../utility/test';
 import { UtilConfig } from '../utility/util';
 import {
-  addClassProperty,
-  addComponentimport,
-  addConstructorContent,
-  addimport,
-  addInterface,
-  removeComponentProvider,
-  removeimport,
-  removeInterface
+    addClassProperty,
+    addComponentImport,
+    addConstructorContent,
+    addImport,
+    addInterface,
+    removeComponentProvider,
+    removeImport,
+    removeInterface
 } from './typescript';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -51,7 +51,7 @@ export class HomeComponent {
 }`
       );
 
-      addComponentimport(appTree, filePath, 'Aaa', false);
+      addComponentImport(appTree, filePath, 'Aaa', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('imports: [Aaa]');
@@ -75,7 +75,7 @@ export class HomeComponent {
 }`
       );
 
-      addComponentimport(appTree, filePath, 'Aaa', false);
+      addComponentImport(appTree, filePath, 'Aaa', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('imports: [ Aaa ]');
@@ -99,7 +99,7 @@ export class HomeComponent {
 }`
       );
 
-      addComponentimport(appTree, filePath, 'Aaa', false);
+      addComponentImport(appTree, filePath, 'Aaa', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('imports: [Aaa, LuxLayoutModule, LuxIconModule]');
@@ -122,7 +122,7 @@ export class HomeComponent {
 }`
       );
 
-      addComponentimport(appTree, filePath, 'Aaa', false);
+      addComponentImport(appTree, filePath, 'Aaa', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('  imports: [Aaa],');
@@ -697,7 +697,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      addimport(appTree, filePath, '@angular/core', 'OnChanges', false);
+      addImport(appTree, filePath, '@angular/core', 'OnChanges', false);
 
       const content = appTree.read(filePath)?.toString();
 
@@ -730,7 +730,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      addimport(appTree, filePath, '@angular/core', 'OnChanges', false);
+      addImport(appTree, filePath, '@angular/core', 'OnChanges', false);
 
       const content = appTree.read(filePath)?.toString();
 
@@ -764,7 +764,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      addimport(appTree, filePath, '@angular/core', 'OnChanges', false);
+      addImport(appTree, filePath, '@angular/core', 'OnChanges', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnChanges, OnDestroy, Component } from '@angular/core';");
@@ -797,7 +797,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      addimport(appTree, filePath, '@angular/core', 'OnChanges', false);
+      addImport(appTree, filePath, '@angular/core', 'OnChanges', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnInit, OnChanges } from '@angular/core';");
@@ -830,7 +830,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      addimport(appTree, filePath, '@angular/core', 'OnChanges', false);
+      addImport(appTree, filePath, '@angular/core', 'OnChanges', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnInit, Component, OnChanges } from '@angular/core';");
@@ -863,7 +863,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      addimport(appTree, filePath, '@angular/core', 'OnChanges', false);
+      addImport(appTree, filePath, '@angular/core', 'OnChanges', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain(`import { OnInit, Component, OnChanges } from "@angular/core";`);
@@ -898,7 +898,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, '@angular/core', 'OnInit', false);
+      removeImport(appTree, filePath, '@angular/core', 'OnInit', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { Component } from '@angular/core';");
@@ -931,7 +931,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, '@angular/core', 'OnInit', false);
+      removeImport(appTree, filePath, '@angular/core', 'OnInit', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain(`import { Component } from "@angular/core";`);
@@ -964,7 +964,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, '@angular/core', 'OnInit', false);
+      removeImport(appTree, filePath, '@angular/core', 'OnInit', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnDestroy, Component } from '@angular/core';");
@@ -997,7 +997,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, '@angular/core', 'OnInit', false);
+      removeImport(appTree, filePath, '@angular/core', 'OnInit', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnDestroy,Component } from '@angular/core';");
@@ -1030,7 +1030,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, '@angular/core', 'OnInit', false);
+      removeImport(appTree, filePath, '@angular/core', 'OnInit', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { Component } from '@angular/core';");
@@ -1063,7 +1063,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, '@angular/common/locales/global/de', undefined, false);
+      removeImport(appTree, filePath, '@angular/common/locales/global/de', undefined, false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).not.toContain('import');
@@ -1096,7 +1096,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, 'nichtDaAaa', undefined, false);
+      removeImport(appTree, filePath, 'nichtDaAaa', undefined, false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import '@angular/common/locales/global/de';");
@@ -1129,7 +1129,7 @@ export class AnbindungLazyComponent implements OnInit {
         `
       );
 
-      removeimport(appTree, filePath, '@angular/core', 'OnInit', false);
+      removeImport(appTree, filePath, '@angular/core', 'OnInit', false);
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { Component } from '@angular/core';");

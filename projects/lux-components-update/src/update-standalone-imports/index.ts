@@ -1,11 +1,12 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { readFile } from '../utility/files';
-import { addComponentimport, addimport, removeComponentimport, removeimport } from '../utility/typescript';
+import { findModule, readFile } from '../utility/files';
+import { addComponentImport, addImport, removeComponentImport, removeImport } from '../utility/typescript';
 import { messageInfoRule } from '../utility/util';
 
-interface Options {
+export interface Options {
   path: string;
   import: string;
+  module: boolean;
 }
 
 interface ComponentInfo {
@@ -48,6 +49,8 @@ class AttributeChecker implements HtmlChecker {
 const OLD_MODULE_NAMES = [
   'LuxActionModule',
   'LuxBreadcrumbModule',
+  'LuxDirectivesModule',
+  'LuxMarkdownModule',
   'LuxCommonModule',
   'LuxErrorModule',
   'LuxFilePreviewModule',
@@ -154,7 +157,7 @@ const componentInfos: ComponentInfo[] = [
     className: 'LuxTagIdDirective'
   },
   {
-    htmlChecker: new TagChecker('luxTooltip'),
+    htmlChecker: new AttributeChecker('luxTooltip'),
     className: 'LuxTooltipDirective'
   },
   {
@@ -645,18 +648,18 @@ const componentInfos: ComponentInfo[] = [
 
 const DEFAULT_OPTIONS_PATH = './';
 
-export function updateStandAloneimports(options: Options): Rule {
+export function updateStandAloneImports(options: Options): Rule {
   return chain([
-    messageInfoRule(`Die imports werden aktualisiert...`),
-    updateStandAloneimportsIntern(options),
-    messageInfoRule(`Die imports wurden aktualisiert.`)
+    messageInfoRule(`Die Imports werden aktualisiert...`),
+    updateStandAloneImportsIntern(options),
+    messageInfoRule(`Die Imports wurden aktualisiert.`)
   ]);
 }
 
-function updateStandAloneimportsIntern(options: Options): Rule {
+function updateStandAloneImportsIntern(options: Options): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     let resolvedPath = options?.path ?? DEFAULT_OPTIONS_PATH;
-
+    
     if (resolvedPath === DEFAULT_OPTIONS_PATH) {
       resolvedPath = '/';
     }
@@ -669,22 +672,25 @@ function updateStandAloneimportsIntern(options: Options): Rule {
       if (path.endsWith('.html')) {
         const htmlPath = path;
 
-        const tsPath = path.replace('.html', '.ts');
+        let tsPath = path.replace('.html', '.ts');
         if (tree.exists(tsPath)) {
           const htmlContent = readFile(tree, htmlPath);
-          const tsContent = readFile(tree, tsPath);
 
           for (const componentInfo of componentInfos) {
             if (componentInfo.htmlChecker.test(htmlContent)) {
-              addimport(tree, tsPath, options.import, componentInfo.className, false);
-              addComponentimport(tree, tsPath, componentInfo.className, false);
+              if (options.module) {
+                tsPath = findModule(tree, tsPath.substring(0, tsPath.lastIndexOf('/')));
+              }
+
+              addImport(tree, tsPath, options.import, componentInfo.className, false);
+              addComponentImport(tree, tsPath, componentInfo.className, false);
             }
           }
         }
       } else if (path.endsWith('.ts')) {
         OLD_MODULE_NAMES.forEach((oldModuleName) => {
-          removeimport(tree, path, options.import, oldModuleName);
-          removeComponentimport(tree, path, oldModuleName);
+          removeImport(tree, path, options.import, oldModuleName);
+          removeComponentImport(tree, path, oldModuleName);
         });
       }
     });

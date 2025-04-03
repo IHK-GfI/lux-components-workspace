@@ -142,7 +142,7 @@ export function removeInterface(tree: Tree, filePath: string, interfaceName: str
   }
 }
 
-export function addimport(tree: Tree, filePath: string, packageName: string, importName?: string, logMessage = true) {
+export function addImport(tree: Tree, filePath: string, packageName: string, importName?: string, logMessage = true) {
   const content = (tree.read(filePath) as Buffer).toString();
   const fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
   const sourceFile = ts.createSourceFile(`${fileName}`, content, ts.ScriptTarget.Latest, true);
@@ -155,23 +155,23 @@ export function addimport(tree: Tree, filePath: string, packageName: string, imp
 
   if (importNodes) {
     importNodes.forEach((node) => {
-      const luxComponentsimport = node
+      const luxComponentsImport = node
         .getChildren()
         .find((n) => n.kind === ts.SyntaxKind.StringLiteral && (n.getText() === `'${packageName}'` || n.getText() === `"${packageName}"`));
-      if (luxComponentsimport) {
+      if (luxComponentsImport) {
         importNode = node;
 
         if (!found && importName) {
           const importClauseNode = (importNode as ts.Node).getChildren().find((n) => n.kind === ts.SyntaxKind.ImportClause);
 
           if (importClauseNode) {
-            const namedimportsNode = importClauseNode.getChildren().find((n) => n.kind === ts.SyntaxKind.NamedImports);
+            const namedImportsNode = importClauseNode.getChildren().find((n) => n.kind === ts.SyntaxKind.NamedImports);
 
-            if (!namedimportsNode) {
-              throw new SchematicsException(`In der Datei ${filePath} gibt es keine Namedimports.`);
+            if (!namedImportsNode) {
+              throw new SchematicsException(`In der Datei ${filePath} gibt es keine NamedImports.`);
             }
 
-            const syntaxListNode = namedimportsNode.getChildren().find((n) => n.kind === ts.SyntaxKind.SyntaxList);
+            const syntaxListNode = namedImportsNode.getChildren().find((n) => n.kind === ts.SyntaxKind.SyntaxList);
 
             if (!syntaxListNode) {
               throw new SchematicsException(`In der Datei ${filePath} gibt es keine SyntaxList für den import.`);
@@ -193,13 +193,13 @@ export function addimport(tree: Tree, filePath: string, packageName: string, imp
       const importClauseNode = (importNode as ts.Node).getChildren().find((n) => n.kind === ts.SyntaxKind.ImportClause);
 
       if (importClauseNode) {
-        const namedimportsNode = importClauseNode.getChildren().find((n) => n.kind === ts.SyntaxKind.NamedImports);
+        const namedImportsNode = importClauseNode.getChildren().find((n) => n.kind === ts.SyntaxKind.NamedImports);
 
-        if (!namedimportsNode) {
-          throw new SchematicsException(`In der Datei ${filePath} gibt es keine Namedimports.`);
+        if (!namedImportsNode) {
+          throw new SchematicsException(`In der Datei ${filePath} gibt es keine NamedImports.`);
         }
 
-        const syntaxListNode = namedimportsNode.getChildren().find((n) => n.kind === ts.SyntaxKind.SyntaxList);
+        const syntaxListNode = namedImportsNode.getChildren().find((n) => n.kind === ts.SyntaxKind.SyntaxList);
 
         if (!syntaxListNode) {
           throw new SchematicsException(`In der Datei ${filePath} gibt es keine SyntaxList für den import.`);
@@ -233,7 +233,7 @@ export function addimport(tree: Tree, filePath: string, packageName: string, imp
   }
 }
 
-export function removeimport(tree: Tree, filePath: string, packageName: string, importName?: string, logMessage = true) {
+export function removeImport(tree: Tree, filePath: string, packageName: string, importName?: string, logMessage = true) {
   const content = (tree.read(filePath) as Buffer).toString();
   const fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
   const sourceFile = ts.createSourceFile(`${fileName}`, content, ts.ScriptTarget.Latest, true);
@@ -261,13 +261,13 @@ export function removeimport(tree: Tree, filePath: string, packageName: string, 
             throw new SchematicsException(`In der Datei ${filePath} gibt es keine importClause.`);
           }
 
-          const namedimportsNode = importClauseNode.getChildren().find((n) => n.kind === ts.SyntaxKind.NamedImports);
+          const namedImportsNode = importClauseNode.getChildren().find((n) => n.kind === ts.SyntaxKind.NamedImports);
 
-          if (!namedimportsNode) {
-            throw new SchematicsException(`In der Datei ${filePath} gibt es keine Namedimports.`);
+          if (!namedImportsNode) {
+            throw new SchematicsException(`In der Datei ${filePath} gibt es keine NamedImports.`);
           }
 
-          const syntaxListNode = namedimportsNode.getChildren().find((n) => n.kind === ts.SyntaxKind.SyntaxList);
+          const syntaxListNode = namedImportsNode.getChildren().find((n) => n.kind === ts.SyntaxKind.SyntaxList);
 
           if (!syntaxListNode) {
             throw new SchematicsException(`In der Datei ${filePath} gibt es keine SyntaxList.`);
@@ -320,7 +320,7 @@ export function removeimport(tree: Tree, filePath: string, packageName: string, 
   }
 }
 
-export function addComponentimport(tree: Tree, filePath: string, importName: string, logMessage = true) {
+export function addComponentImport(tree: Tree, filePath: string, importName: string, logMessage = true) {
   const content = (tree.read(filePath) as Buffer).toString();
   const fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
   const sourceFile = ts.createSourceFile(`${fileName}`, content, ts.ScriptTarget.Latest, true);
@@ -379,7 +379,7 @@ export function addComponentimport(tree: Tree, filePath: string, importName: str
   }
 }
 
-export function removeComponentimport(tree: Tree, filePath: string, providerName: string, logMessage = true) {
+export function removeComponentImport(tree: Tree, filePath: string, providerName: string, logMessage = true) {
   removeComponentArrayValue(tree, filePath, 'imports', providerName, logMessage);
 }
 
