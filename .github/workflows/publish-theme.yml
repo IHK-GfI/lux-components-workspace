@@ -1,8 +1,6 @@
 name: publish - theme
 
-on:
-  release:
-    types: [created]
+on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
 
 jobs:
   build:
