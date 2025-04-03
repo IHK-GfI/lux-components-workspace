@@ -126,6 +126,9 @@
             "production": {
               "buildTarget": "demo-app:build:production"
             },
+            "en": {
+              "buildTarget": "demo-app:build:en"
+            },
             "development": {
               "buildTarget": "demo-app:build:development"
             }
