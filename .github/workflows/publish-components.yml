@@ -4,7 +4,7 @@ on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
 
 jobs:
   build:
-    if: github.event.release.name && contains(github.event.release.name, 'LUX-Components-Lib')
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +18,7 @@ jobs:
            ls -lR
 
   publish-npm:
-    if: github.event.release.name && contains(github.event.release.name, 'LUX-Components-Lib')
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -29,13 +29,16 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Publish NPM
         run: |
+          npm install
+          npm run pack:components
           cd dist/lux-components-lib
           ls -lR
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM}}
 
   publish-gpr:
-    if: github.event.release.name && contains(github.event.release.name, 'LUX-Components-Lib')
+    if: github.ref == 'refs/heads/main'
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +50,10 @@ jobs:
           scope: '@ihk-gfi'
       - name: Publish Github
         run: |
+          npm install
+          npm run pack:components
           cd dist/lux-components-lib
           ls -lR
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB}}
