@@ -1,6 +1,6 @@
 {
   "name": "@ihk-gfi/lux-components-workspace",
-  "version": "19.0.0",
+  "version": "19.0.0-rc.1",
   "license": "IHK-GfI Open-Source-Lizenz",
   "engines": {
     "node": ">=18.19.1 <23.0.0"
@@ -12,7 +12,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "smoketest": "npm run pack:theme && npm run test:theme && npm run pack:updater && npm run test:updater && npm run pack:components && npm run test:components && npm run pack:demo",
+    "smoketest": "npm run pack:all && npm run test:all",
     "pack:demo": "ng build demo-app --localize",
     "pack:components": "ng build lux-components-lib",
     "pack:theme": "npm run pack --workspace=projects/lux-components-theme",
@@ -24,6 +24,7 @@
     "tar:theme": "npm run pack:theme && cd dist/theme && npm pack && cd ../..",
     "tar:updater": "npm run pack:updater && cd dist/updater && npm pack && cd ../..",
     "tar:all": "npm run util:delete-dist && npm run tar:theme && npm run tar:components && npm run tar:updater",
+    "test:all": "npm run test:theme && npm run test:updater && npm run test:components",
     "test:components": "ng lint lux-components-lib && ng test lux-components-lib --watch=false --browsers=ChromeHeadless --code-coverage=true",
     "test-browser:components": "ng test lux-components-lib",
     "test:theme": "npm run smoketest --workspace=projects/lux-components-theme",
@@ -54,7 +55,7 @@
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
     "@ihk-gfi/lux-components-icons-and-fonts": "1.8.0",
-    "@ihk-gfi/lux-components-theme": "18.3.0",
+    "@ihk-gfi/lux-components-theme": "19.0.0-rc.1",
     "dompurify": "~3.2.4",
     "marked": "15.0.7",
     "ngx-cookie-service": "^19.1.2",
