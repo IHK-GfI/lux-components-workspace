@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxInputAcComponent,
-  LuxStepperLargeClickEvent,
-  LuxStepperLargeStepComponent,
-  LuxThemePalette,
-  LuxToggleAcComponent,
-  LuxUtil,
-  LuxVetoState
-} from 'lux-components-lib';
+    LuxInputAcComponent,
+    LuxStepperLargeClickEvent,
+    LuxStepperLargeStepComponent,
+    LuxThemePalette,
+    LuxToggleAcComponent,
+    LuxUtil,
+    LuxVetoState
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';

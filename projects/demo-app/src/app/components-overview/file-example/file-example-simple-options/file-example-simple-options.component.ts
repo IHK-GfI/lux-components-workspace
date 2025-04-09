@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
-  LuxUtil
-} from 'lux-components-lib';
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxInputAcSuffixComponent,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent,
+    LuxUtil
+} from '@ihk-gfi/lux-components';
 import { ExampleFormDisableComponent } from '../../../example-base/example-form-disable/example-form-disable.component';
 import { FileExampleComponent } from '../file-example.component';
 

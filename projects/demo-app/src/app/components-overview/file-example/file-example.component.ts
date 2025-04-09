@@ -6,10 +6,10 @@ import {
   ILuxFileActionConfig,
   ILuxFileListActionConfig,
   ILuxFileObject,
-  LuxFilePreviewService,
   LuxFormFileBase,
   LuxSnackbarService
-} from 'lux-components-lib';
+} from '@ihk-gfi/lux-components';
+import { LuxFilePreviewService } from '@ihk-gfi/lux-components/lux-file-preview';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { logResult, setRequiredValidatorForFormControl } from '../../example-base/example-base-util/example-base-helper';

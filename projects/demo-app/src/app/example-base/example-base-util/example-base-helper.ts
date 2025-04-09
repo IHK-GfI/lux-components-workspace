@@ -1,5 +1,5 @@
 import { FormGroup, Validators } from '@angular/forms';
-import { LuxValidationErrors } from 'lux-components-lib';
+import { LuxValidationErrors } from '@ihk-gfi/lux-components';
 
 /**
  * Fügt dem FormControl den required-Validator hinzu bzw. entfernt ihn.

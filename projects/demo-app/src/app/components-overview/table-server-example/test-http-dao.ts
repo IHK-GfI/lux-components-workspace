@@ -1,4 +1,4 @@
-import { ILuxTableHttpDao, LuxConsoleService } from 'lux-components-lib';
+import { ILuxTableHttpDao, LuxConsoleService } from '@ihk-gfi/lux-components';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 

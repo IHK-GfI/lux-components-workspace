@@ -2,13 +2,13 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
-  LuxButtonComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxDatepickerAcComponent,
-  LuxInputAcComponent
-} from 'lux-components-lib';
+    LuxAutocompleteAcComponent,
+    LuxButtonComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxDatepickerAcComponent,
+    LuxInputAcComponent
+} from '@ihk-gfi/lux-components';
 import { ICountry } from '../model/country.interface';
 import { FormBase } from '../model/form-base.class';
 import { TableExampleDataProviderService } from '../table-example-data-provider.service';

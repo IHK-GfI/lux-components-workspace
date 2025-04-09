@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { LuxAriaRoleDirective, LuxAutofocusDirective, LuxIconComponent, LuxTileAcComponent } from 'lux-components-lib';
+import { LuxAriaRoleDirective, LuxAutofocusDirective, LuxIconComponent, LuxTileAcComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'app-home',

@@ -1,20 +1,20 @@
 import { Component, inject } from '@angular/core';
 import {
-  ILuxDialogPresetConfig,
-  LuxAriaLabelDirective,
-  LuxButtonComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxDialogActionsComponent,
-  LuxDialogContentComponent,
-  LuxDialogRef,
-  LuxDialogService,
-  LuxDialogStructureComponent,
-  LuxDialogTitleComponent,
-  LuxFileUploadComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    ILuxDialogPresetConfig,
+    LuxAriaLabelDirective,
+    LuxButtonComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxDialogActionsComponent,
+    LuxDialogContentComponent,
+    LuxDialogRef,
+    LuxDialogService,
+    LuxDialogStructureComponent,
+    LuxDialogTitleComponent,
+    LuxFileUploadComponent,
+    LuxTextareaAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'app-dialog-component-example',

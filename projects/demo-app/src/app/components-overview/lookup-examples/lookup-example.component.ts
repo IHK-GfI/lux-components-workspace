@@ -1,20 +1,20 @@
 import { Directive, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import {
-  LuxBehandlungsOptionenUngueltige,
-  LuxFieldValues,
-  LuxLookupCompareFn,
-  luxLookupCompareKeyFn,
-  luxLookupCompareKurzTextFn,
-  LuxLookupHandlerService,
-  LuxLookupParameters,
-  LuxLookupTableEntry
-} from 'lux-components-lib';
+    LuxBehandlungsOptionenUngueltige,
+    LuxFieldValues,
+    LuxLookupCompareFn,
+    luxLookupCompareKeyFn,
+    luxLookupCompareKurzTextFn,
+    LuxLookupHandlerService,
+    LuxLookupParameters,
+    LuxLookupTableEntry
+} from '@ihk-gfi/lux-components';
 import {
-  emptyErrorCallback,
-  exampleErrorCallback,
-  logResult,
-  setRequiredValidatorForFormControl
+    emptyErrorCallback,
+    exampleErrorCallback,
+    logResult,
+    setRequiredValidatorForFormControl
 } from '../../example-base/example-base-util/example-base-helper';
 
 interface LookupDummyForm {

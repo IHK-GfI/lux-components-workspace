@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import {
-  LuxButtonComponent,
-  LuxFormHintComponent,
-  LuxIconComponent,
-  LuxInfiniteScrollDirective,
-  LuxInputAcComponent,
-  LuxListComponent,
-  LuxListItemComponent,
-  LuxListItemContentComponent,
-  LuxListItemIconComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxButtonComponent,
+    LuxFormHintComponent,
+    LuxIconComponent,
+    LuxInfiniteScrollDirective,
+    LuxInputAcComponent,
+    LuxListComponent,
+    LuxListItemComponent,
+    LuxListItemContentComponent,
+    LuxListItemIconComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

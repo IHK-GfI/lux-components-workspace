@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
-import { LuxUtil } from '../lux-util/lux-util';
+import { LuxUtil } from '@ihk-gfi/lux-components';
 import { LuxMarkdownComponent } from './lux-markdown.component';
 
 describe('LuxMarkdownComponent', () => {

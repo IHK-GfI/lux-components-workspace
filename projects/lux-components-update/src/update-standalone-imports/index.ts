@@ -5,13 +5,13 @@ import { messageInfoRule } from '../utility/util';
 
 export interface Options {
   path: string;
-  import: string;
   module: boolean;
 }
 
 interface ComponentInfo {
   htmlChecker: HtmlChecker;
   className: string;
+  importName?: string;
 }
 
 interface HtmlChecker {
@@ -530,7 +530,8 @@ const componentInfos: ComponentInfo[] = [
   },
   {
     htmlChecker: new TagChecker('lux-file-preview'),
-    className: 'LuxFilePreviewComponent'
+    className: 'LuxFilePreviewComponent',
+    importName: '@ihk-gfi/lux-components/file-preview'
   },
   {
     htmlChecker: new TagChecker('lux-file-preview-toolbar'),
@@ -570,7 +571,13 @@ const componentInfos: ComponentInfo[] = [
   },
   {
     htmlChecker: new TagChecker('lux-html'),
-    className: 'LuxHtmlComponent'
+    className: 'LuxHtmlComponent',
+    importName: '@ihk-gfi/lux-components/lux-html'
+  },
+  {
+    htmlChecker: new TagChecker('lux-markdown'),
+    className: 'LuxMarkdownComponent',
+    importName: '@ihk-gfi/lux-components/lux-markdown'
   },
   {
     htmlChecker: new TagChecker('lux-icon'),
@@ -682,14 +689,14 @@ function updateStandAloneImportsIntern(options: Options): Rule {
                 tsPath = findModule(tree, tsPath.substring(0, tsPath.lastIndexOf('/')));
               }
 
-              addImport(tree, tsPath, options.import, componentInfo.className, false);
+              addImport(tree, tsPath, componentInfo.importName ?? '@ihk-gfi/lux-components', componentInfo.className, false);
               addComponentImport(tree, tsPath, componentInfo.className, false);
             }
           }
         }
       } else if (path.endsWith('.ts')) {
         OLD_MODULE_NAMES.forEach((oldModuleName) => {
-          removeImport(tree, path, options.import, oldModuleName);
+          removeImport(tree, path, '@ihk-gfi/lux-components', oldModuleName);
           removeComponentImport(tree, path, oldModuleName);
         });
       }

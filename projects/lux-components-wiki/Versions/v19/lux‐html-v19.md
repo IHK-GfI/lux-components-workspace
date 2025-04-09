@@ -18,9 +18,10 @@
 Wichtig! Bevor die Komponente verwendet werden kann, muss die Dependency "dompurify" in der package.json hinzugefügt
 werden.
 
-| Name     | Beschreibung  |
-| -------- | ------------- |
-| selector | lux-html      |
+| Name     | Beschreibung                     |
+| -------- | -------------------------------- |
+| selector | lux-html                         |
+| import   | @ihk-gfi/lux-components/lux-html |
 
 ### @Input
 

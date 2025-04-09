@@ -36,7 +36,7 @@
     "util:wait-and-start-demo": "wait-on dist/lux-components-lib/public-api.d.ts dist/theme/prebuilt-themes/luxtheme-authentic.css && npm run start",
     "watch:components": "npm run watch lux-components-lib",
     "watch:theme": "npm run watch --workspace=projects/lux-components-theme",
-    "xi18n:components": "ng extract-i18n demo-app --output-path projects/demo-app/src/locale && copyfiles --up 2 \"./projects/demo-app/src/locale/**\" ./projects/lux-components-lib",
+    "xi18n:components": "ng extract-i18n demo-app --output-path projects/demo-app/src/locale && copyfiles --up 3 \"./projects/demo-app/src/locale/**\" ./projects/lux-components-lib",
     "prepare": "husky"
   },
   "workspaces": [
@@ -75,7 +75,7 @@
     "@types/dompurify": "~3.0.5",
     "@types/jasmine": "~5.1.7",
     "@types/uuid": "^10.0.0",
-    "angular-eslint": "19.2.0",
+    "angular-eslint": "19.3.0",
     "copyfiles": "^2.4.1",
     "del-cli": "^5.1.0",
     "eslint": "^9.21.0",

@@ -1,15 +1,15 @@
 import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
-  ILuxFileActionConfig,
-  ILuxFileObject,
-  LuxAutofocusDirective,
-  LuxButtonComponent,
-  LuxFileInputAcComponent,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    ILuxFileActionConfig,
+    ILuxFileObject,
+    LuxAutofocusDirective,
+    LuxButtonComponent,
+    LuxFileInputAcComponent,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { map, take } from 'rxjs/operators';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';

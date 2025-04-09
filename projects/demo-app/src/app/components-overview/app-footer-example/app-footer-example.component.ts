@@ -1,21 +1,21 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import {
-  ILuxAppFooterButtonInfo,
-  LuxAccordionComponent,
-  LuxAppFooterButtonInfo,
-  LuxAppFooterButtonService,
-  LuxAppFooterLinkInfo,
-  LuxAppFooterLinkService,
-  LuxButtonComponent,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxSnackbarService,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    ILuxAppFooterButtonInfo,
+    LuxAccordionComponent,
+    LuxAppFooterButtonInfo,
+    LuxAppFooterButtonService,
+    LuxAppFooterLinkInfo,
+    LuxAppFooterLinkService,
+    LuxButtonComponent,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderTitleComponent,
+    LuxSelectAcComponent,
+    LuxSnackbarService,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 

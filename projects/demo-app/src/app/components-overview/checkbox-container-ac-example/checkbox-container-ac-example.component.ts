@@ -1,12 +1,12 @@
 import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
-  LuxCheckboxAcComponent,
-  LuxCheckboxContainerAcComponent,
-  LuxInputAcComponent,
-  LuxMediaQueryObserverService,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxCheckboxAcComponent,
+    LuxCheckboxContainerAcComponent,
+    LuxInputAcComponent,
+    LuxMediaQueryObserverService,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

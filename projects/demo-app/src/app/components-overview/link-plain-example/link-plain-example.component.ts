@@ -1,13 +1,13 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  LuxComponentsConfigParameters,
-  LuxComponentsConfigService,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxLinkPlainComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxComponentsConfigParameters,
+    LuxComponentsConfigService,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxLinkPlainComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

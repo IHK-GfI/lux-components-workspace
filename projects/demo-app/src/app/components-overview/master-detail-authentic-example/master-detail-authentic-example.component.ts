@@ -1,27 +1,27 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  LuxAppFooterButtonInfo,
-  LuxAppFooterButtonService,
-  LuxButtonComponent,
-  LuxConsoleService,
-  LuxDetailHeaderAcComponent,
-  LuxDetailViewAcComponent,
-  LuxFilterFormComponent,
-  LuxFilterFormExtendedComponent,
-  LuxIconComponent,
-  LuxMasterDetailAcComponent,
-  LuxMasterFooterAcComponent,
-  LuxMasterHeaderContentAcComponent,
-  LuxMasterListAcComponent,
-  LuxMenuComponent,
-  LuxMenuItemComponent,
-  LuxRelativeTimestampPipe,
-  LuxSelectAcComponent,
-  LuxTabComponent,
-  LuxTabsComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAppFooterButtonInfo,
+    LuxAppFooterButtonService,
+    LuxButtonComponent,
+    LuxConsoleService,
+    LuxDetailHeaderAcComponent,
+    LuxDetailViewAcComponent,
+    LuxFilterFormComponent,
+    LuxFilterFormExtendedComponent,
+    LuxIconComponent,
+    LuxMasterDetailAcComponent,
+    LuxMasterFooterAcComponent,
+    LuxMasterHeaderContentAcComponent,
+    LuxMasterListAcComponent,
+    LuxMenuComponent,
+    LuxMenuItemComponent,
+    LuxRelativeTimestampPipe,
+    LuxSelectAcComponent,
+    LuxTabComponent,
+    LuxTabsComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { of } from 'rxjs';
 import { delay, take, tap } from 'rxjs/operators';
 import { DetailExampleComponent } from './detail-example/detail-example.component';

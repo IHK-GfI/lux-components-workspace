@@ -4,7 +4,6 @@ import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
   LuxInputAcComponent,
-  LuxMarkdownComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxTableColumnComponent,
@@ -14,7 +13,8 @@ import {
   LuxTableComponent,
   LuxTextboxComponent,
   LuxTooltipDirective
-} from 'lux-components-lib';
+} from '@ihk-gfi/lux-components';
+import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';

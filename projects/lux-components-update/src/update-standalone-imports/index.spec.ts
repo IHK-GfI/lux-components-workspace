@@ -12,7 +12,6 @@ describe('updateStandAloneImports', () => {
 
   const testOptions: Options = {
     path: '/',
-    import: '@ihk-gfi/lux-components-lib',
     module: true
   };
 

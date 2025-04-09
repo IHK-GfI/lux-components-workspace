@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
-import { LuxStepperLargeStepComponent, LuxToggleAcComponent } from 'lux-components-lib';
+import { LuxStepperLargeStepComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';

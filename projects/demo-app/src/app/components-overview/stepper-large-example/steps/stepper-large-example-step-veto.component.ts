@@ -1,12 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import {
-  ILuxDialogPresetConfig,
-  LuxDialogService,
-  LuxSnackbarService,
-  LuxStepperLargeClickEvent,
-  LuxStepperLargeStepComponent,
-  LuxVetoState
-} from 'lux-components-lib';
+    ILuxDialogPresetConfig,
+    LuxDialogService,
+    LuxSnackbarService,
+    LuxStepperLargeClickEvent,
+    LuxStepperLargeStepComponent,
+    LuxVetoState
+} from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'app-stepper-large-example-step-veto',

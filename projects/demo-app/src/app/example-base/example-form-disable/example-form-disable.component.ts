@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { LuxButtonComponent, LuxToggleAcComponent } from 'lux-components-lib';
+import { LuxButtonComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'example-form-disable',

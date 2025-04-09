@@ -2,14 +2,14 @@ import { JsonPipe } from '@angular/common';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
-  LuxAutofocusDirective,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxLookupComboboxAcComponent,
-  LuxLookupTableEntry,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAutofocusDirective,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxLookupComboboxAcComponent,
+    LuxLookupTableEntry,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LuxCardComponent, LuxCardContentComponent, LuxMarkdownComponent } from 'lux-components-lib';
+import { LuxCardComponent, LuxCardContentComponent } from '@ihk-gfi/lux-components';
+import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 
 @Component({
   selector: 'app-license-hint',

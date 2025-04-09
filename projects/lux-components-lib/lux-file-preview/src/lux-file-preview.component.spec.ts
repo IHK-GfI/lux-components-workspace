@@ -5,12 +5,12 @@ import { Platform } from '@angular/cdk/platform';
 import { PortalModule } from '@angular/cdk/portal';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, inject, TestBed, waitForAsync } from '@angular/core/testing';
-import { LuxTestHelper } from '../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components';
 import { LUX_FILE_PREVIEW_DATA } from './lux-file-preview-config';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { LuxFilePreviewRef } from '../lux-file-preview/lux-file-preview-ref';
+import { LuxFilePreviewRef } from './lux-file-preview-ref';
 import { LuxFilePreviewComponent } from './lux-file-preview.component';
 import { LuxFilePreviewService } from './lux-file-preview.service';
 

@@ -1,15 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { LuxHtmlComponent, LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { marked } from 'marked';
-import { LuxHtmlComponent } from '../lux-html/lux-html/lux-html.component';
-import { LuxSanitizeConfig } from '../lux-html/lux-sanitize/lux-sanitize-config';
-import { LuxUtil } from '../lux-util/lux-util';
 
 @Component({
   selector: 'lux-markdown',
   templateUrl: './lux-markdown.component.html',
   imports: [LuxHtmlComponent]
 })
-export class LuxMarkdownComponent implements AfterViewInit {
+export class LuxMarkdownComponent {
   @Input() luxSanitizeConfig?: LuxSanitizeConfig;
   @Input() luxStyle = '';
   @Input() luxClass = '';
@@ -29,9 +27,4 @@ export class LuxMarkdownComponent implements AfterViewInit {
   @ViewChild('content', { read: ElementRef }) contentRef!: ElementRef;
 
   constructor() {}
-
-  ngAfterViewInit() {
-    LuxUtil.assertNonNull('contentComponent', this.contentComponent);
-    LuxUtil.assertNonNull('contentRef', this.contentRef);
-  }
 }

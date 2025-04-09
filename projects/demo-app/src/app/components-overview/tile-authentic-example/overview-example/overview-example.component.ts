@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LuxIconComponent, LuxTileAcComponent } from 'lux-components-lib';
+import { LuxIconComponent, LuxTileAcComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'lux-overview-example',

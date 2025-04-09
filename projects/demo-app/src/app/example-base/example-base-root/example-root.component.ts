@@ -2,15 +2,15 @@ import { NgClass } from '@angular/common';
 import { Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import {
-  LuxAlphabeticallySortedPipe,
-  LuxAriaLabelDirective,
-  LuxAriaRoleDirective,
-  LuxMediaQueryObserverService,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxUtil
-} from 'lux-components-lib';
+    LuxAlphabeticallySortedPipe,
+    LuxAriaLabelDirective,
+    LuxAriaRoleDirective,
+    LuxMediaQueryObserverService,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderTitleComponent,
+    LuxUtil
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from '../../components-overview/components-overview-navigation.service';
 

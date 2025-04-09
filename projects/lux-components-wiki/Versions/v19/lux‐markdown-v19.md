@@ -19,6 +19,7 @@ werden.
 | Name     | Beschreibung      |
 | -------- | ----------------- |
 | selector | lux-markdown      |
+| import   | @ihk-gfi/lux-components/lux-markdown |
 
 ### @Input
 

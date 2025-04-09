@@ -1,5 +1,5 @@
 import { Directive, OnDestroy } from '@angular/core';
-import { ICustomCSSConfig, LuxTableComponent } from 'lux-components-lib';
+import { ICustomCSSConfig, LuxTableComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ColumnConfig } from './column-config';
 

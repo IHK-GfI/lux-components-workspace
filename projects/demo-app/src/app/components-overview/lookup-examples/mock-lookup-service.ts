@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LuxLookupParameters, LuxLookupService, LuxLookupTableEntry } from 'lux-components-lib';
+import { LuxLookupParameters, LuxLookupService, LuxLookupTableEntry } from '@ihk-gfi/lux-components';
 import { of } from 'rxjs';
 import { mockResult } from './mock-result';
 

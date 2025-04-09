@@ -1,17 +1,17 @@
 import { AfterViewInit, Component, OnDestroy, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  ILuxError,
-  ILuxErrorPageConfig,
-  LuxButtonComponent,
-  LuxConsoleService,
-  LuxErrorService,
-  LuxErrorStoreService,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    ILuxError,
+    ILuxErrorPageConfig,
+    LuxButtonComponent,
+    LuxConsoleService,
+    LuxErrorService,
+    LuxErrorStoreService,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

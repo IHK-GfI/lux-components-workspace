@@ -1,5 +1,5 @@
 import { Directive, HostListener, inject } from '@angular/core';
-import { LuxSnackbarService } from 'lux-components-lib';
+import { LuxSnackbarService } from '@ihk-gfi/lux-components';
 import { IUnsavedDataCheck } from '../unsaved-data-guard/unsaved-data-check.interface';
 
 @Directive()

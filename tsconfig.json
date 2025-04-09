@@ -8,7 +8,10 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "paths": {
-      "lux-components-lib": ["./dist/lux-components-lib"]
+      "@ihk-gfi/lux-components": ["./dist/lux-components-lib"],
+      "@ihk-gfi/lux-components/lux-file-preview": ["./dist/lux-components-lib/lux-file-preview"],
+      "@ihk-gfi/lux-components/lux-html": ["./dist/lux-components-lib/lux-html"],
+      "@ihk-gfi/lux-components/lux-markdown": ["./dist/lux-components-lib/lux-markdown"]
     },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

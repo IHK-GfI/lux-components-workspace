@@ -2,20 +2,20 @@ import { JsonPipe } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  LuxAppFooterButtonInfo,
-  LuxAppFooterButtonService,
-  LuxAriaRoleDirective,
-  LuxAutofocusDirective,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCheckboxContainerAcComponent,
-  LuxComponentsConfigParameters,
-  LuxComponentsConfigService,
-  LuxIconComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAppFooterButtonInfo,
+    LuxAppFooterButtonService,
+    LuxAriaRoleDirective,
+    LuxAutofocusDirective,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCheckboxContainerAcComponent,
+    LuxComponentsConfigParameters,
+    LuxComponentsConfigService,
+    LuxIconComponent,
+    LuxInputAcComponent,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 
 @Component({

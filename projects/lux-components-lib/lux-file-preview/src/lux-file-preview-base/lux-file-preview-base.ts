@@ -1,6 +1,6 @@
 import { Directive, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { LuxUtil } from '../../lux-util/lux-util';
+import { LuxUtil } from '@ihk-gfi/lux-components';
 import { LUX_FILE_PREVIEW_DATA } from '../lux-file-preview-config';
 import { LuxFilePreviewData } from '../lux-file-preview-data';
 import { LuxFilePreviewRef } from '../lux-file-preview-ref';

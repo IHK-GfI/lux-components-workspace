@@ -1,15 +1,15 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import {
-  LuxAutofocusDirective,
-  LuxComponentsConfigParameters,
-  LuxComponentsConfigService,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxLinkComponent,
-  LuxSelectAcComponent,
-  LuxThemePalette,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAutofocusDirective,
+    LuxComponentsConfigParameters,
+    LuxComponentsConfigService,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxLinkComponent,
+    LuxSelectAcComponent,
+    LuxThemePalette,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';

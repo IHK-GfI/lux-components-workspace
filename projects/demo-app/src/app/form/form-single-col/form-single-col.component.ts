@@ -2,19 +2,19 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxChipAcComponent,
-  LuxChipsAcComponent,
-  LuxDatepickerAcComponent,
-  LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAutocompleteAcComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxChipAcComponent,
+    LuxChipsAcComponent,
+    LuxDatepickerAcComponent,
+    LuxIconComponent,
+    LuxInputAcComponent,
+    LuxInputAcSuffixComponent,
+    LuxRadioAcComponent,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ICountry } from '../model/country.interface';
 import { FormBase } from '../model/form-base.class';
 import { IGender } from '../model/gender.interface';

@@ -1,21 +1,21 @@
 import { UpperCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-  LuxAutocompleteAcComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCheckboxAcComponent,
-  LuxChipAcGroupComponent,
-  LuxChipsAcComponent,
-  LuxDatepickerAcComponent,
-  LuxInputAcComponent,
-  LuxLinkComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxTabIndexDirective,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAutocompleteAcComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCheckboxAcComponent,
+    LuxChipAcGroupComponent,
+    LuxChipsAcComponent,
+    LuxDatepickerAcComponent,
+    LuxInputAcComponent,
+    LuxLinkComponent,
+    LuxRadioAcComponent,
+    LuxSelectAcComponent,
+    LuxTabIndexDirective,
+    LuxTextareaAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 

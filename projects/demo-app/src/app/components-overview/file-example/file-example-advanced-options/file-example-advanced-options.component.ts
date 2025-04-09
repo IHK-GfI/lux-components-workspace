@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  LuxAccordionComponent,
-  LuxInputAcComponent,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxToggleAcComponent,
-  LuxUtil
-} from 'lux-components-lib';
+    LuxAccordionComponent,
+    LuxInputAcComponent,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderTitleComponent,
+    LuxToggleAcComponent,
+    LuxUtil
+} from '@ihk-gfi/lux-components';
 import { FileExampleComponent } from '../file-example.component';
 
 @Component({

@@ -1,15 +1,15 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, DoCheck, OnDestroy, inject } from '@angular/core';
 import {
-  LuxAriaLabelDirective,
-  LuxButtonComponent,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxMenuComponent,
-  LuxMenuItemComponent,
-  LuxStorageService,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAriaLabelDirective,
+    LuxButtonComponent,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxMenuComponent,
+    LuxMenuItemComponent,
+    LuxStorageService,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Observable, Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { LuxStepperLargeStepComponent, LuxTextboxComponent } from 'lux-components-lib';
+import { LuxStepperLargeStepComponent, LuxTextboxComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
 

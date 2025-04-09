@@ -1,15 +1,15 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { MatSnackBarDismiss } from '@angular/material/snack-bar';
 import {
-  LuxButtonComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxSnackbarColors,
-  LuxSnackbarConfig,
-  LuxSnackbarService,
-  LuxToggleAcComponent,
-  LuxTooltipDirective
-} from 'lux-components-lib';
+    LuxButtonComponent,
+    LuxInputAcComponent,
+    LuxSelectAcComponent,
+    LuxSnackbarColors,
+    LuxSnackbarConfig,
+    LuxSnackbarService,
+    LuxToggleAcComponent,
+    LuxTooltipDirective
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

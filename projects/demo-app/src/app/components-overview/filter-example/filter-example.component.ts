@@ -1,28 +1,28 @@
 import { JsonPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import {
-  LuxAutocompleteAcComponent,
-  LuxButtonComponent,
-  LuxDatepickerAcComponent,
-  LuxDatetimepickerAcComponent,
-  LuxFieldValues,
-  LuxFilter,
-  LuxFilterFormComponent,
-  LuxFilterFormExtendedComponent,
-  LuxFilterItem,
-  LuxFilterItemDirective,
-  LuxInputAcComponent,
-  LuxLookupAutocompleteAcComponent,
-  LuxLookupComboboxAcComponent,
-  LuxLookupParameters,
-  LuxMediaQueryObserverService,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxThemePalette,
-  LuxToggleAcComponent,
-  LuxUtil
-} from 'lux-components-lib';
+    LuxAutocompleteAcComponent,
+    LuxButtonComponent,
+    LuxDatepickerAcComponent,
+    LuxDatetimepickerAcComponent,
+    LuxFieldValues,
+    LuxFilter,
+    LuxFilterFormComponent,
+    LuxFilterFormExtendedComponent,
+    LuxFilterItem,
+    LuxFilterItemDirective,
+    LuxInputAcComponent,
+    LuxLookupAutocompleteAcComponent,
+    LuxLookupComboboxAcComponent,
+    LuxLookupParameters,
+    LuxMediaQueryObserverService,
+    LuxRadioAcComponent,
+    LuxSelectAcComponent,
+    LuxTextareaAcComponent,
+    LuxThemePalette,
+    LuxToggleAcComponent,
+    LuxUtil
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';

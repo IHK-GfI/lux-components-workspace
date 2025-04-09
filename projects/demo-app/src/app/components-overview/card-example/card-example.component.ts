@@ -1,18 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { Validators } from '@angular/forms';
 import {
-  LuxButtonComponent,
-  LuxCardActionsComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCardContentExpandedComponent,
-  LuxCardInfoComponent,
-  LuxFormHintComponent,
-  LuxIconComponent,
-  LuxInputAcComponent,
-  LuxSnackbarService,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxButtonComponent,
+    LuxCardActionsComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCardContentExpandedComponent,
+    LuxCardInfoComponent,
+    LuxFormHintComponent,
+    LuxIconComponent,
+    LuxInputAcComponent,
+    LuxSnackbarService,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

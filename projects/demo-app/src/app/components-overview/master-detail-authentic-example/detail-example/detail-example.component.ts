@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import {
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxDividerComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxDividerComponent,
+    LuxInputAcComponent,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'detail-example',

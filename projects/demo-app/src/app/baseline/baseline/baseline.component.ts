@@ -2,28 +2,28 @@ import { NgClass } from '@angular/common';
 import { Component, HostBinding } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  ILuxFileObject,
-  LuxAriaRoleDirective,
-  LuxAutocompleteAcComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCardContentExpandedComponent,
-  LuxCheckboxAcComponent,
-  LuxDatepickerAcComponent,
-  LuxFileInputAcComponent,
-  LuxFormHintComponent,
-  LuxFormLabelComponent,
-  LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
-  LuxInputAcSuffixComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxSliderAcComponent,
-  LuxTextareaAcComponent,
-  LuxTextboxComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    ILuxFileObject,
+    LuxAriaRoleDirective,
+    LuxAutocompleteAcComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCardContentExpandedComponent,
+    LuxCheckboxAcComponent,
+    LuxDatepickerAcComponent,
+    LuxFileInputAcComponent,
+    LuxFormHintComponent,
+    LuxFormLabelComponent,
+    LuxIconComponent,
+    LuxInputAcComponent,
+    LuxInputAcPrefixComponent,
+    LuxInputAcSuffixComponent,
+    LuxRadioAcComponent,
+    LuxSelectAcComponent,
+    LuxSliderAcComponent,
+    LuxTextareaAcComponent,
+    LuxTextboxComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 
 interface DummyForm {
   input: FormControl<string | null>;

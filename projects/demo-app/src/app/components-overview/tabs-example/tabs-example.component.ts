@@ -2,19 +2,19 @@ import { NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
-  LuxAccordionComponent,
-  LuxAutofocusDirective,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxTabComponent,
-  LuxTabsComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAccordionComponent,
+    LuxAutofocusDirective,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderTitleComponent,
+    LuxSelectAcComponent,
+    LuxTabComponent,
+    LuxTabsComponent,
+    LuxTextareaAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

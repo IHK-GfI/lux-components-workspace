@@ -2,25 +2,25 @@ import { JsonPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
-  LuxAutofocusDirective,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCheckboxAcComponent,
-  LuxChipAcComponent,
-  LuxChipAcGroupComponent,
-  LuxChipsAcComponent,
-  LuxConsoleService,
-  LuxDatepickerAcComponent,
-  LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
-  LuxInputAcSuffixComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAutocompleteAcComponent,
+    LuxAutofocusDirective,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCheckboxAcComponent,
+    LuxChipAcComponent,
+    LuxChipAcGroupComponent,
+    LuxChipsAcComponent,
+    LuxConsoleService,
+    LuxDatepickerAcComponent,
+    LuxIconComponent,
+    LuxInputAcComponent,
+    LuxInputAcPrefixComponent,
+    LuxInputAcSuffixComponent,
+    LuxRadioAcComponent,
+    LuxSelectAcComponent,
+    LuxTextareaAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { FormBase } from '../model/form-base.class';
 
 interface FormCommonOption {

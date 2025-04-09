@@ -4,26 +4,26 @@ import { Subscription } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-  LuxAriaLabelDirective,
-  LuxAutofocusDirective,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCardInfoComponent,
-  LuxChipAcComponent,
-  LuxChipsAcComponent,
-  LuxIconColor,
-  LuxIconComponent,
-  LuxIconRegistryService,
-  LuxInfiniteScrollDirective,
-  LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
-  LuxInputAcSuffixComponent,
-  LuxMediaQueryObserverService,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxSvgIcon,
-  LuxTooltipDirective
-} from 'lux-components-lib';
+    LuxAriaLabelDirective,
+    LuxAutofocusDirective,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCardInfoComponent,
+    LuxChipAcComponent,
+    LuxChipsAcComponent,
+    LuxIconColor,
+    LuxIconComponent,
+    LuxIconRegistryService,
+    LuxInfiniteScrollDirective,
+    LuxInputAcComponent,
+    LuxInputAcPrefixComponent,
+    LuxInputAcSuffixComponent,
+    LuxMediaQueryObserverService,
+    LuxRadioAcComponent,
+    LuxSelectAcComponent,
+    LuxSvgIcon,
+    LuxTooltipDirective
+} from '@ihk-gfi/lux-components';
 
 declare interface SearchBinding {
   label: string;

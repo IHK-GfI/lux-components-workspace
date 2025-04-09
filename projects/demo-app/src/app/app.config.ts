@@ -2,7 +2,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { LuxComponentsConfigModule, LuxComponentsConfigParameters } from 'lux-components-lib';
+import { LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 

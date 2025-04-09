@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import {
   LuxFormHintComponent,
-  LuxHtmlComponent,
   LuxInputAcComponent,
-  LuxSanitizeConfig,
   LuxTextareaAcComponent,
   LuxToggleAcComponent
-} from 'lux-components-lib';
+} from '@ihk-gfi/lux-components';
+import { LuxHtmlComponent, LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

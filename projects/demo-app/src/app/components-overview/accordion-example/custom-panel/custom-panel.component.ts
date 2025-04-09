@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
 import {
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderDescriptionComponent,
-  LuxPanelHeaderTitleComponent
-} from 'lux-components-lib';
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderDescriptionComponent,
+    LuxPanelHeaderTitleComponent
+} from '@ihk-gfi/lux-components';
 import { logResult } from '../../../example-base/example-base-util/example-base-helper';
 
 @Component({

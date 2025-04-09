@@ -1,16 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  LuxAccordionComponent,
-  LuxFormHintComponent,
-  LuxFormLabelComponent,
-  LuxInputAcComponent,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
-  LuxUtil
-} from 'lux-components-lib';
+    LuxAccordionComponent,
+    LuxFormHintComponent,
+    LuxFormLabelComponent,
+    LuxInputAcComponent,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderTitleComponent,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent,
+    LuxUtil
+} from '@ihk-gfi/lux-components';
 import { ResponsiveBehaviour } from '../responsive-behaviour';
 import { ResponsiveBehaviourFilteredPipe } from '../responsive-behaviour-filtered.pipe';
 import { TableExampleBaseClass } from '../table-example-base.class';

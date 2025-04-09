@@ -6,7 +6,7 @@
     "lux-components-lib": {
       "projectType": "library",
       "root": "projects/lux-components-lib",
-      "sourceRoot": "projects/lux-components-lib/src",
+      "sourceRoot": "projects/lux-components-lib",
       "prefix": "lux",
       "architect": {
         "build": {

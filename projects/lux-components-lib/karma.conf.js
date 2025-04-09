@@ -80,7 +80,7 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './../../dist//lux-components-lib-coverage'),
+      dir: require('path').join(__dirname, './../../dist/lux-components-lib-coverage'),
       subdir: '.',
       reporters: [{ type: 'html' }, { type: 'text-summary' }],
       check: {

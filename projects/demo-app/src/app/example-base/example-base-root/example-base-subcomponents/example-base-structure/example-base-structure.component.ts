@@ -2,17 +2,17 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, ContentChild, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  LuxAppFooterButtonInfo,
-  LuxAppFooterButtonService,
-  LuxCardActionsComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxComponentsConfigParameters,
-  LuxComponentsConfigService,
-  LuxMediaQueryObserverService,
-  LuxTabComponent,
-  LuxTabsComponent
-} from 'lux-components-lib';
+    LuxAppFooterButtonInfo,
+    LuxAppFooterButtonService,
+    LuxCardActionsComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxComponentsConfigParameters,
+    LuxComponentsConfigService,
+    LuxMediaQueryObserverService,
+    LuxTabComponent,
+    LuxTabsComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../example-base-options/example-base-advanced-options.component';

@@ -1,20 +1,20 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, OnDestroy, TemplateRef, ViewChild, inject } from '@angular/core';
 import {
-  ILuxDialogPresetConfig,
-  LuxAccordionComponent,
-  LuxButtonComponent,
-  LuxDialogDefaultButton,
-  LuxDialogService,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    ILuxDialogPresetConfig,
+    LuxAccordionComponent,
+    LuxButtonComponent,
+    LuxDialogDefaultButton,
+    LuxDialogService,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderTitleComponent,
+    LuxRadioAcComponent,
+    LuxSelectAcComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';

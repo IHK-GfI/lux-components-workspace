@@ -1,14 +1,14 @@
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import {
-  LuxComponentsConfigParameters,
-  LuxComponentsConfigService,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxMediaQueryObserverService,
-  LuxSelectAcComponent,
-  LuxTenantLogoComponent,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxComponentsConfigParameters,
+    LuxComponentsConfigService,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxMediaQueryObserverService,
+    LuxSelectAcComponent,
+    LuxTenantLogoComponent,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { TenantLogoExampleConfigData } from './tenant-logo-example-config-data';
 

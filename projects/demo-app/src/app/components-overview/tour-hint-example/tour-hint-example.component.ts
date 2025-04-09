@@ -1,17 +1,17 @@
 import { Component, inject } from '@angular/core';
 import {
-  ILuxTourHintStepConfig,
-  LuxButtonComponent,
-  LuxCardActionsComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent,
-  LuxTooltipDirective,
-  LuxTourHintService
-} from 'lux-components-lib';
+    ILuxTourHintStepConfig,
+    LuxButtonComponent,
+    LuxCardActionsComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxInputAcComponent,
+    LuxSelectAcComponent,
+    LuxTextareaAcComponent,
+    LuxToggleAcComponent,
+    LuxTooltipDirective,
+    LuxTourHintService
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

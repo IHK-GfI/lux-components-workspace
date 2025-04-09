@@ -16,7 +16,7 @@ jobs:
           node-version: 22
       - run: |
           npm install
-          npm run test:theme
           npm run pack:theme
+          npm run test:theme
           cd dist/theme
           ls -lR

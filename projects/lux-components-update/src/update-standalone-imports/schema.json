@@ -13,10 +13,6 @@
       "type": "boolean",
       "x-prompt": "Sollen die Components-Importe in den Modulen hinzugefügt werden?",
       "default": true
-    },
-    "import": {
-      "type": "string",
-      "default": "@ihk-gfi/lux-components"
     }
   },
   "required": [],

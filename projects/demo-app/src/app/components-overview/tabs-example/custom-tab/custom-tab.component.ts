@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
-import { LuxTabComponent } from 'lux-components-lib';
+import { LuxTabComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'custom-tab',

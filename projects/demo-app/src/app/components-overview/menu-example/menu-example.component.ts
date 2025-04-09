@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import {
-  LuxAccordionComponent,
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxMenuComponent,
-  LuxMenuItemComponent,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderDescriptionComponent,
-  LuxSelectAcComponent,
-  LuxThemePalette,
-  LuxToggleAcComponent
-} from 'lux-components-lib';
+    LuxAccordionComponent,
+    LuxFormHintComponent,
+    LuxInputAcComponent,
+    LuxMenuComponent,
+    LuxMenuItemComponent,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderDescriptionComponent,
+    LuxSelectAcComponent,
+    LuxThemePalette,
+    LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

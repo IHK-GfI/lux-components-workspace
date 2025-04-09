@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { LuxThemeService } from 'lux-components-lib';
+import { LuxThemeService } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 

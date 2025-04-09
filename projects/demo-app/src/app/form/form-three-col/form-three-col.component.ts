@@ -2,14 +2,14 @@ import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCheckboxAcComponent,
-  LuxInputAcComponent,
-  LuxRadioAcComponent,
-  LuxTextareaAcComponent
-} from 'lux-components-lib';
+    LuxAutocompleteAcComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCheckboxAcComponent,
+    LuxInputAcComponent,
+    LuxRadioAcComponent,
+    LuxTextareaAcComponent
+} from '@ihk-gfi/lux-components';
 import { ICompanyType } from '../model/company-type.interface';
 import { ICountry } from '../model/country.interface';
 import { FormBase } from '../model/form-base.class';

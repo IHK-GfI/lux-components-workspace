@@ -26,9 +26,10 @@ Bevor die LuxFilePreview verwendet werden kann, muss das Projekt einmalig angepa
 
 ### Allgemein
 
-| Name     | Beschreibung         |
-| -------- | -------------------- |
-| selector | lux-file-preview     |
+| Name     | Beschreibung                             |
+| -------- | ---------------------------------------- |
+| selector | lux-file-preview                         |
+| import   | @ihk-gfi/lux-components/lux-file-preview |
 
 ## Classes / Services
 

@@ -17,7 +17,7 @@ jobs:
       - run: |
           npm install
           npm run pack:theme
-          npm run test:components
           npm run pack:components
+          npm run test:components
           cd dist/lux-components-lib
           ls -lR

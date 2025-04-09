@@ -3,20 +3,20 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  LuxAccordionComponent,
-  LuxAutocompleteAcComponent,
-  LuxCheckboxAcComponent,
-  LuxInputAcComponent,
-  LuxLinkPlainComponent,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderDescriptionComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxTextboxComponent,
-  LuxThemeService
-} from 'lux-components-lib';
+    LuxAccordionComponent,
+    LuxAutocompleteAcComponent,
+    LuxCheckboxAcComponent,
+    LuxInputAcComponent,
+    LuxLinkPlainComponent,
+    LuxPanelComponent,
+    LuxPanelContentComponent,
+    LuxPanelHeaderDescriptionComponent,
+    LuxPanelHeaderTitleComponent,
+    LuxSelectAcComponent,
+    LuxTextareaAcComponent,
+    LuxTextboxComponent,
+    LuxThemeService
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 
 interface DummyForm {

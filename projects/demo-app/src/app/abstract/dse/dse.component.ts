@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LuxCardComponent, LuxCardContentComponent } from 'lux-components-lib';
+import { LuxCardComponent, LuxCardContentComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'lux-dse',

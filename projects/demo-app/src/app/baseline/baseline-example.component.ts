@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LuxAriaRoleDirective, LuxTabComponent, LuxTabsComponent } from 'lux-components-lib';
+import { LuxAriaRoleDirective, LuxTabComponent, LuxTabsComponent } from '@ihk-gfi/lux-components';
 import { BaselineAccordionComponent } from './baseline-accordion/baseline-accordion.component';
 import { BaselineCardComponent } from './baseline-card/baseline-card.component';
 import { BaselineComponent } from './baseline/baseline.component';

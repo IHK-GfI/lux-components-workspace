@@ -1,15 +1,15 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
 import { Component, ViewChild, inject } from '@angular/core';
 import {
-  LuxConsoleService,
-  LuxMenuComponent,
-  LuxMenuItemComponent,
-  LuxTableColumnComponent,
-  LuxTableColumnContentComponent,
-  LuxTableColumnFooterComponent,
-  LuxTableColumnHeaderComponent,
-  LuxTableComponent
-} from 'lux-components-lib';
+    LuxConsoleService,
+    LuxMenuComponent,
+    LuxMenuItemComponent,
+    LuxTableColumnComponent,
+    LuxTableColumnContentComponent,
+    LuxTableColumnFooterComponent,
+    LuxTableColumnHeaderComponent,
+    LuxTableComponent
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';

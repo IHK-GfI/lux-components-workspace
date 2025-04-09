@@ -1,9 +1,12 @@
 {
   "name": "@ihk-gfi/lux-components",
   "version": "19.0.0-rc.1",
+  "license": "IHK-GfI Open-Source-Lizenz",
   "peerDependencies": {
     "@angular/common": "^19.0.0",
-    "@angular/core": "^19.0.0",
+    "@angular/core": "^19.0.0"
+  },
+  "optionalDependencies": {
     "dompurify": "^3.0.0",
     "marked": "^15.0.0"
   },
