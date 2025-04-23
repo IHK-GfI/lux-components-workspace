@@ -1,0 +1,124 @@
+@use "sass:map";
+@use "../luxcommon";
+@use "../luxelevations";
+@use "../luxpalette";
+
+.lux-chat {
+    height: 100%;
+}
+
+.lux-chat-layout-vertical {
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.lux-chat-layout-horizontal {
+    flex: 1;
+
+    display: flex;
+    flex-direction: row;
+    overflow-y: auto;
+}
+
+.lux-chat-layout-container {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 16px 8px 32px;
+}
+
+.lux-chat-base {
+    flex: 1;
+    overflow-y: auto;
+
+    scroll-behavior: smooth;
+
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.lux-chat-entry-container {
+    min-width: 260px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    border-radius: 10px;
+
+    @include luxelevations.lux-elevation-z1;
+
+    &:hover {
+        .lux-chat-entry-actions {
+            .lux-chat-entry-actions-container {
+                top: -46px;
+                opacity: 100%;
+            }
+        }
+    }
+}
+
+.lux-chat-entry-container-left {
+    background-color: map.get(luxpalette.$lux-palette_accent, 50);
+    border-bottom-left-radius: 0;
+    align-self: flex-start;
+    max-width: 55%;
+
+}
+
+.lux-chat-entry-container-right {
+    background-color: map.get(luxpalette.$lux-palette_primary, 50);
+    border-bottom-right-radius: 0;
+    align-self: flex-end;
+    max-width: 55%;
+}
+
+.lux-chat-entry-header {
+    margin-top: -13px;
+    margin-left: -13px;
+    margin-bottom: 16px;
+    margin-right: -13px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.lux-chat-entry-footer {
+    text-align: end;
+    transform: translate(10px, 15px);
+    font-size: 1rem;
+    color: luxcommon.$dark-disabled-text;
+}
+
+.lux-chat-entry-actions {
+    position: relative;
+    width: 100%;
+    height: 0;
+
+    display: flex;
+    justify-content: end;
+
+    .lux-chat-entry-actions-container {
+        z-index: 10;
+
+        padding: 2px;
+        position: absolute;
+        top: -28px;
+
+        transition: top 120ms ease-in-out, opacity 120ms ease-in-out;
+        opacity: 0;
+    
+        background-color: white;
+        border-radius: 4px;
+        
+        @include luxelevations.lux-elevation-z2;
+    }
+}
+

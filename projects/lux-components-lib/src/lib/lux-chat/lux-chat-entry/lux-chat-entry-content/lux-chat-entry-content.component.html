@@ -1,0 +1,9 @@
+<ng-template let-item #core>
+    <div class="lux-chat-entry-content">
+        <ng-container *ngTemplateOutlet="contentTemplateRef ?? default; context: { $implicit: item }"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template let-item #default>
+    <lux-markdown [luxSanitizeConfig]="sanitizeConfig" luxData="{{item.content}}"></lux-markdown>
+</ng-template>
