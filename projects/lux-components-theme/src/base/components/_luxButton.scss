@@ -5,6 +5,7 @@
 @use "../luxelevations";
 @use "../luxfocus";
 @use "../../public/global";
+@use "@angular/material" as mat;
 
 /*
  * Styling for LUX-Button
@@ -76,15 +77,102 @@ lux-button button.lux-button {
       background-color: transparent;
       &.mat-primary {
         border-color: luxpalette.$lux-primary-color;
+        mat-progress-spinner {
+          @include mat.progress-spinner-overrides((
+            active-indicator-color: luxpalette.$lux-primary-color
+          ));
+        }
       }
       &.mat-accent {
         color: luxcommon.$dark-disabled-text;
         border-color: luxpalette.$lux-accent-color;
+        mat-progress-spinner {
+          @include mat.progress-spinner-overrides((
+            active-indicator-color: luxcommon.$dark-primary-text
+          ));
+        }
       }
       &.mat-warn {
         color: luxpalette.$lux-warn-color;
         border-color: luxpalette.$lux-warn-color;
+        mat-progress-spinner {
+          @include mat.progress-spinner-overrides((
+            active-indicator-color: luxpalette.$lux-warn-color
+          ));
+        }
       }
+    }
+
+    &.mat-primary,
+    &.mat-warn{
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides((
+          active-indicator-color: white
+        ));
+      }
+    }
+    &.mat-accent {
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides((
+          active-indicator-color: luxcommon.$dark-primary-text
+        ));
+      }
+    }
+  }
+
+  &.mat-mdc-raised-button {
+    &.mat-primary,
+    &.mat-warn{
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides((
+          active-indicator-color: white
+        ));
+      }
+    }
+    &.mat-accent {
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides((
+          active-indicator-color: luxcommon.$dark-primary-text
+        ));
+      }
+    }
+  }
+
+  &.mat-mdc-unelevated-button {
+    &.mat-primary,
+    &.mat-warn{
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides((
+          active-indicator-color: white
+        ));
+      }
+    }
+    &.mat-accent {
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides((
+          active-indicator-color: luxcommon.$dark-primary-text
+        ));
+      }
+    }
+  }
+
+  &.mat-mdc-outlined-button {
+    &.mat-accent {
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides((
+          active-indicator-color: luxcommon.$dark-primary-text
+        ));
+      }
+    }
+  }
+
+  .lux-button-spinner {
+    mat-progress-spinner{
+      width: 0.875rem !important;
+      height: 0.875rem !important;
+    }
+    .spinner-padding{
+      padding: 0;
     }
   }
 

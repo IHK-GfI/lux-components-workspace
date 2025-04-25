@@ -1,15 +1,19 @@
 import { NgStyle } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
 import {
-    LuxAutofocusDirective,
-    LuxButtonComponent,
-    LuxComponentsConfigParameters,
-    LuxComponentsConfigService,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxThemePalette,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxComponentsConfigParameters,
+  LuxComponentsConfigService,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxProgressModeType,
+  LuxSelectAcComponent,
+  LuxThemePalette,
+  LuxToggleAcComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCardActionsComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -30,7 +34,10 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     NgStyle,
-    ExampleBaseSimpleOptionsComponent
+    ExampleBaseSimpleOptionsComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCardActionsComponent
   ]
 })
 export class ButtonExampleComponent implements OnDestroy {
@@ -61,6 +68,12 @@ export class ButtonExampleComponent implements OnDestroy {
   buttonBadge = '';
   buttonBadgeColor: LuxThemePalette = 'primary';
   subscription: Subscription;
+  spinnerModes = ['determinate', 'indeterminate'];
+  spinnerMode: LuxProgressModeType = 'determinate';
+  spinnerValue = 70;
+  spinnerExampleLoading = false;
+  spinnerExampleFirstname = '';
+  spinnerExampleLastname = '';
 
   get allUpperCase() {
     return this.config.labelConfiguration!.allUppercase;
@@ -94,5 +107,30 @@ export class ButtonExampleComponent implements OnDestroy {
 
   onBadgeColorChanged(badgeColor: { label: string; value: LuxThemePalette }) {
     this.buttonBadgeColor = badgeColor.value;
+  }
+
+  addBarProgress() {
+    this.spinnerValue = this.spinnerValue + 10 > 100 ? 100 : this.spinnerValue + 10;
+  }
+
+  subtractBarProgress() {
+    this.spinnerValue = this.spinnerValue - 10 < 0 ? 0 : this.spinnerValue - 10;
+  }
+
+  spinnerExampleUpdateLoading(event: Event) {
+    this.spinnerExampleLoading = true;
+    setTimeout(() => {
+      this.spinnerExampleLoading = false;
+      this.spinnerExampleFirstname = '';
+      this.spinnerExampleLastname = '';
+    }, 4000);
+    this.log(this.showOutputEvents, 'Button clicked', event);
+  }
+
+  spinnerExampleClear(event: Event) {
+    this.spinnerExampleFirstname = '';
+    this.spinnerExampleLastname = '';
+    this.spinnerExampleLoading = false;
+    this.log(this.showOutputEvents, 'Button clicked', event);
   }
 }
