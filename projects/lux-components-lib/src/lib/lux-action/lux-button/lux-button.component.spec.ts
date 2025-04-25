@@ -198,6 +198,77 @@ describe('LuxButtonComponent', () => {
       Checker.checkLuxLabel(fixture);
     }));
   });
+
+  describe('Attribut "luxLoading"', () => {
+    let fixture: ComponentFixture<MockButtonLoadingComponent>;
+    let testComponent: MockButtonLoadingComponent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(MockButtonLoadingComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('Button (normal) anklicken"', fakeAsync(() => {
+      fixture.componentInstance.raised = false;
+      fixture.componentInstance.round = false;
+      fixture.componentInstance.flat = false;
+      fixture.componentInstance.outlined = false;
+      fixture.detectChanges();
+
+      Checker.checkLuxLoading(fixture);
+    }));
+
+    it('Button (raised) anklicken"', fakeAsync(() => {
+      fixture.componentInstance.raised = true;
+      fixture.componentInstance.round = false;
+      fixture.componentInstance.flat = false;
+      fixture.componentInstance.outlined = false;
+      fixture.detectChanges();
+
+      Checker.checkLuxLoading(fixture);
+    }));
+
+    it('Button (round)" anklicken', fakeAsync(() => {
+      fixture.componentInstance.raised = false;
+      fixture.componentInstance.round = true;
+      fixture.componentInstance.flat = false;
+      fixture.componentInstance.outlined = false;
+      fixture.detectChanges();
+
+      Checker.checkLuxLoading(fixture);
+    }));
+
+    it('Button (flat) anklicken"', fakeAsync(() => {
+      fixture.componentInstance.raised = false;
+      fixture.componentInstance.round = false;
+      fixture.componentInstance.flat = true;
+      fixture.componentInstance.outlined = false;
+      fixture.detectChanges();
+
+      Checker.checkLuxLoading(fixture);
+    }));
+
+    it('Button (stroked) anklicken"', fakeAsync(() => {
+      fixture.componentInstance.raised = false;
+      fixture.componentInstance.round = false;
+      fixture.componentInstance.flat = false;
+      fixture.componentInstance.outlined = true;
+      fixture.detectChanges();
+
+      Checker.checkLuxLoading(fixture);
+    }));
+
+    it('Button (stroked & rounded) anklicken"', fakeAsync(() => {
+      fixture.componentInstance.raised = false;
+      fixture.componentInstance.round = true;
+      fixture.componentInstance.flat = false;
+      fixture.componentInstance.outlined = true;
+      fixture.detectChanges();
+
+      Checker.checkLuxLoading(fixture);
+    }));
+  });
 });
 
 class Checker {
@@ -258,6 +329,27 @@ class Checker {
     expect(buttonEl.nativeElement.getAttribute('aria-label')).toContain('Lorem ipsum 4711');
     expect(onClickSpy).not.toHaveBeenCalled();
   }
+
+  static checkLuxLoading(fixture: ComponentFixture<MockButtonLoadingComponent>) {
+    // Vorbedingungen testen
+    const onClickSpy = spyOn(fixture.componentInstance, 'onClick');
+    const buttonLoadingEl = fixture.debugElement.query(By.css('lux-progress'));
+    expect(buttonLoadingEl).toBeNull();
+
+    // Änderungen durchführen
+    fixture.componentInstance.loading = true;
+    fixture.detectChanges();
+
+    const buttonEl = fixture.debugElement.query(By.css('button'));
+    buttonEl.nativeElement.click();
+    fixture.detectChanges();
+
+    // Nachbedingungen testen
+    const buttonLoadingChangeEl = fixture.debugElement.query(By.css('lux-progress'));
+    expect(buttonLoadingChangeEl).not.toBeNull();
+    expect(onClickSpy).toHaveBeenCalled();
+    discardPeriodicTasks();
+  }
 }
 
 @Component({
@@ -305,6 +397,33 @@ class MockButtonLabelComponent {
   label = '';
   flat = false;
   outlined = false;
+
+  onClick() {}
+}
+
+@Component({
+  template: `
+    <lux-button
+      [luxLabel]="label"
+      [luxDisabled]="disabled"
+      (luxClicked)="onClick()"
+      [luxRounded]="round"
+      [luxRaised]="raised"
+      [luxFlat]="flat"
+      [luxStroked]="outlined"
+      [luxLoading]="loading"
+    ></lux-button>
+  `,
+  imports: [LuxButtonComponent]
+})
+class MockButtonLoadingComponent {
+  disabled = false;
+  round = false;
+  raised = false;
+  label = '';
+  flat = false;
+  outlined = false;
+  loading = false;
 
   onClick() {}
 }

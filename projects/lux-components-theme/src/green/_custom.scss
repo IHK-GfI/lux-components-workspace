@@ -184,6 +184,13 @@ lux-button button.lux-button {
     }
   }
 
+  .lux-button-spinner {
+    mat-progress-spinner{
+      width: 1.375rem !important;
+      height: 1.375rem !important;
+    }
+  }
+
   &.mat-mdc-fab.lux-button-rounded {
     border-radius: 16px !important;
     height: luxcommon.$button-fav-height;

@@ -8,12 +8,13 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-component-base.class';
+import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-progress/lux-progress.component';
 
 @Component({
   selector: 'lux-button',
   templateUrl: './lux-button.component.html',
   styleUrls: ['./lux-button.component.scss'],
-  imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, LuxIconComponent]
+  imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, LuxIconComponent, LuxProgressComponent]
 })
 export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit, OnDestroy {
   elementRef = inject(ElementRef);
@@ -31,6 +32,9 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   @Input() luxThrottleTime!: number;
   @Input() luxButtonBadge?: string;
   @Input() luxButtonBadgeColor?: LuxThemePalette = 'primary';
+  @Input() luxSpinnerMode: LuxProgressModeType = 'indeterminate';
+  @Input() luxSpinnerValue = 70;
+  @Input() luxLoading = false;
 
   @Output() luxAuxClicked = new EventEmitter<Event>();
 
