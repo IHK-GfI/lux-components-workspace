@@ -1,6 +1,6 @@
 <ng-template let-item #core>
     <div class="lux-chat-entry-footer">
-        <ng-container *ngTemplateOutlet="footerTemplateRef ?? default; context: { $implicit: item }"></ng-container>
+        <ng-container *ngTemplateOutlet="footerTemplateRef ?? null; context: { $implicit: item }"></ng-container>
     </div>
 </ng-template>
 

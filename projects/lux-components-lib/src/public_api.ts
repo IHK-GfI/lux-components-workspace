@@ -281,20 +281,6 @@ export * from './lib/lux-tour-hint/lux-tour-hint.component';
 export * from './lib/lux-tour-hint/lux-tour-hint.service';
 
 /**
- * LUX-Chat
- */
-export * from './lib/lux-chat/lux-chat.component';
-export * from './lib/lux-chat/lux-chat-header/lux-chat-header.component';
-export * from './lib/lux-chat/lux-chat-input/lux-chat-input.component';
-export * from './lib/lux-chat/lux-chat-entry/lux-chat-entry.component';
-export * from './lib/lux-chat/lux-chat-entry/lux-chat-entry-header/lux-chat-entry-header.component';
-export * from './lib/lux-chat/lux-chat-entry/lux-chat-entry-content/lux-chat-entry-content.component';
-export * from './lib/lux-chat/lux-chat-entry/lux-chat-entry-footer/lux-chat-entry-footer.component';
-export * from './lib/lux-chat/lux-chat-entry/lux-chat-entry-actions/lux-chat-entry-actions.component';
-export * from './lib/lux-chat/lux-chat-data';
-export * from './lib/lux-chat/lux-chat-data-entry';
-
-/**
  * LUX-Breadcrumb
  */
 export * from './lib/lux-breadcrumb/lux-breadcrumb-model/lux-breadcrumb-entry.interface';

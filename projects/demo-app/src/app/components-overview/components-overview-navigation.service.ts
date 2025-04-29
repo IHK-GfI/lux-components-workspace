@@ -31,7 +31,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['tenant-logo', 'lux-image-picture-landscape-1'],
     ['tour-hint', 'lux-programming-browser-window'],
     ['breadcrumb', 'lux-interface-cursor-arrow-1'],
-    ['communication', 'lux-ovals']
+    ['chat', 'lux-ovals']
   ]);
 
   private create(moduleName: string, label: string, news = false) {
@@ -103,7 +103,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('popup', 'Snackbar'),
     this.create('tenant-logo', 'Tenant-Logo'),
     this.create('tour-hint', 'Tour-Hint'),
-    this.create('communication', 'Chat'),
+    this.create('chat', 'Chat'),
     this.create('breadcrumb', 'Breadcrumb')
   ];
 

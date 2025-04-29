@@ -5,5 +5,8 @@
 </ng-template>
 
 <ng-template let-item #default>
-    <b>{{item.user}}</b>
+    @if(checkShowHeader(item)){
+        <span *ngIf="!item.isUser">{{item.user}}</span>
+        <span>{{item.time | date:'HH:mm'}}</span>
+    }
 </ng-template>

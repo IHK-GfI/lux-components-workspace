@@ -1,0 +1,52 @@
+<div class="lux-chat">
+    <div class="lux-chat-layout-vertical">
+        <!-- Sidebars top -->
+
+        <div class="lux-chat-layout-horizontal">
+            <!-- Sidebars left -->
+
+            <div class="lux-chat-layout-container">
+                @if (compChatHeader) {
+                    <ng-content select="lux-chat-header"></ng-content>
+                }
+                @else{
+                    <lux-chat-header>
+                        <p class="default-chat-header-title">
+                            <b>{{ chatData?.title }}</b><br/>
+                            @if(chatData){
+                                Erstellt: <b>{{ chatData!.created_at | luxRelativeTimestamp:undefined:undefined:-11:0 }}</b>
+                            }
+                        </p>
+                    </lux-chat-header>
+                }
+                
+                <lux-divider></lux-divider>
+
+                <div class="lux-chat-base" (mousewheel)="onChatScroll($event)" #chatBase>
+                    @for (item of chatData?.data; track $index) {
+                        <ng-container *ngTemplateOutlet="compChatEntry?.templateRef ?? defaultEntry.templateRef; context: { $implicit: item }"></ng-container>
+                    }
+                </div>
+
+                @if(compChatInput){
+                    <ng-content select="lux-chat-input"></ng-content>
+                }
+                @else {
+                    <lux-chat-input>
+                        <lux-textarea-ac luxTagId="chatInput" [(luxValue)]="chatInput" luxAutocomplete="off" [luxNoTopLabel]="true" [luxNoBottomLabel]="true"
+                            [luxMaxRows]="4"
+                            (keyup.enter)="onChatEntered($event)"></lux-textarea-ac>
+                    </lux-chat-input>
+                }
+            </div>
+
+            <!-- Sidebars right -->
+        </div>
+
+        <!-- Sidebars bottom -->
+    </div>
+</div>
+
+<lux-chat-entry #defaultEntry>
+
+</lux-chat-entry>

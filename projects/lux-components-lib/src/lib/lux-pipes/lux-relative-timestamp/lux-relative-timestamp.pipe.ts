@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
 
 export const day = $localize`:@@luxc.relative-timestamp.days:Tagen`;
 export const week = $localize`:@@luxc.relative-timestamp.weeks:Wochen`;
@@ -27,46 +27,89 @@ export const timeDeltasRelative = [
 
 @Pipe({ name: 'luxRelativeTimestamp' })
 export class LuxRelativeTimestampPipe implements PipeTransform {
-  transform(timestamp: number | null, defaultText = '', prefix?: string): string {
+  private matDateLocale = inject(LOCALE_ID);
+
+  transform(timestamp: number | Date | null, defaultText = '', prefix?: string, relativeUntilMin?: number, relativeUntilMax?: number): string {
     if (!timestamp) {
       return defaultText;
     }
 
     const now = new Date();
-    const then = new Date(timestamp);
+    const then = timestamp instanceof Date ? timestamp : new Date(timestamp);
 
     const delta = this.calcDiff(now, then);
     let timeName = null;
 
-    for (const timeDelta of timeDeltas) {
-      const tempDelta = delta < 0 ? delta * -1 : delta;
-
-      if (tempDelta >= timeDelta.days) {
-        let timeUnits = timeDelta.name === day ? tempDelta : Math.floor(tempDelta / timeDelta.dayUnit);
-        timeUnits *= timeUnits < 0 ? -1 : 1;
-
-        if (!prefix) {
-          if (delta < 0) {
-            timeName = $localize`:@@luxc.relative-timestamp.past:${prefixPast} ${timeUnits} ${timeDelta.name}`;
-          } else {
-            timeName = $localize`:@@luxc.relative-timestamp.future:${prefixFuture} ${timeUnits} ${timeDelta.name}`;
-          }
-        } else {
-          timeName = `${prefix} ${timeUnits} ${timeDelta.name}`;
-        }
-        break;
-      }
+    let showAsRelative = true;
+    if(relativeUntilMin !== undefined && delta <= relativeUntilMin) {
+      showAsRelative = false;
+    } else if(relativeUntilMax != undefined && delta > relativeUntilMax){
+      showAsRelative = false;
     }
 
-    if (timeName === null) {
-      for (const timeDelta of timeDeltasRelative) {
-        if (delta === timeDelta.days) {
-          timeName = timeDelta.name;
+    if(showAsRelative){
+      for (const timeDelta of timeDeltas) {
+        const tempDelta = delta < 0 ? delta * -1 : delta;
+
+        if (tempDelta >= timeDelta.days) {
+          let timeUnits = timeDelta.name === day ? tempDelta : Math.floor(tempDelta / timeDelta.dayUnit);
+          timeUnits *= timeUnits < 0 ? -1 : 1;
+
+          if (!prefix) {
+            if (delta < 0) {
+              timeName = $localize`:@@luxc.relative-timestamp.past:${prefixPast} ${timeUnits} ${timeDelta.name}`;
+            } else {
+              timeName = $localize`:@@luxc.relative-timestamp.future:${prefixFuture} ${timeUnits} ${timeDelta.name}`;
+            }
+          } else {
+            timeName = `${prefix} ${timeUnits} ${timeDelta.name}`;
+          }
           break;
         }
       }
+
+      if (timeName === null) {
+        for (const timeDelta of timeDeltasRelative) {
+          if (delta === timeDelta.days) {
+            timeName = timeDelta.name;
+            break;
+          }
+        }
+      }
+    } else {
+      const locale = this.getLocale();
+      const weekdayLong = then.toLocaleString(locale, { weekday: 'long' });
+      const monthNameLong = then.toLocaleString(locale, { month: 'long' });
+      
+      timeName = weekdayLong + ", " + then.getDate() + ". " + monthNameLong;
+
+      if(then.getUTCFullYear() < now.getUTCFullYear()){
+        const year = then.toLocaleString(locale, { year: 'numeric' })
+        timeName += " " + year;
+      }
     }
+
     return timeName ?? '';
+  }
+
+  private getLocale(){
+    let locale;
+
+    switch (this.matDateLocale) {
+      case 'de':
+        locale = 'de-De';
+        break;
+      case 'en':
+        locale = 'en-US';
+        break;
+      case 'fr':
+        locale = 'fr-FR';
+        break;
+      default:
+        locale = this.matDateLocale;
+    }
+
+    return locale;
   }
 
   private calcDiff(a: Date, b: Date) {

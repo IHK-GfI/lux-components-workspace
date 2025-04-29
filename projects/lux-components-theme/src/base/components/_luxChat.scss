@@ -45,56 +45,72 @@
 
 }
 
+.lux-chat-entry-date-split {
+    text-align: center;
+}
+
 .lux-chat-entry-container {
-    min-width: 260px;
-    padding: 20px;
-    margin-bottom: 20px;
-
-    border-radius: 10px;
-
-    @include luxelevations.lux-elevation-z1;
+    min-width: 20px;
+    max-width: 55%;
+    margin-bottom: 8px;
 
     &:hover {
-        .lux-chat-entry-actions {
-            .lux-chat-entry-actions-container {
-                top: -46px;
-                opacity: 100%;
+        .lux-chat-entry-card {
+            .lux-chat-entry-actions {
+                .lux-chat-entry-actions-container {
+                    transform: translate(0px, calc(-100% - 1px));
+                    opacity: 100%;
+                }
             }
         }
     }
 }
 
+.lux-chat-entry-card {
+    padding: 1px 20px;
+    border-radius: 10px;
+}
+
 .lux-chat-entry-container-left {
-    background-color: map.get(luxpalette.$lux-palette_accent, 50);
-    border-bottom-left-radius: 0;
+    .lux-chat-entry-card {
+        background-color: map.get(luxpalette.$lux-palette_accent, 50);
+        border-bottom-left-radius: 0;
+    }
+
     align-self: flex-start;
-    max-width: 55%;
 
 }
 
 .lux-chat-entry-container-right {
-    background-color: map.get(luxpalette.$lux-palette_primary, 50);
-    border-bottom-right-radius: 0;
+    .lux-chat-entry-header {
+        justify-content: end;
+    }
+
+    .lux-chat-entry-card {
+        background-color: map.get(luxpalette.$lux-palette_primary, 50);
+        border-bottom-right-radius: 0;
+    }
+
     align-self: flex-end;
-    max-width: 55%;
 }
 
 .lux-chat-entry-header {
-    margin-top: -13px;
-    margin-left: -13px;
-    margin-bottom: 16px;
-    margin-right: -13px;
-
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 8px;
+
+    font-size: 1rem;
+    font-weight: 500;
+    color: luxcommon.$dark-disabled-text;
+}
+
+.lux-chat-entry-content {
+    font-size: 1.125rem;
+    word-wrap: break-word;
+    overflow-x: hidden;
 }
 
 .lux-chat-entry-footer {
-    text-align: end;
-    transform: translate(10px, 15px);
-    font-size: 1rem;
-    color: luxcommon.$dark-disabled-text;
 }
 
 .lux-chat-entry-actions {
@@ -108,17 +124,20 @@
     .lux-chat-entry-actions-container {
         z-index: 10;
 
-        padding: 2px;
+        padding: 2px 8px;
         position: absolute;
-        top: -28px;
+        right: -20px;
 
-        transition: top 120ms ease-in-out, opacity 120ms ease-in-out;
+        transition: transform 120ms ease-in-out, opacity 100ms ease-in-out;
+        transform: translate(0px, -1px);
         opacity: 0;
     
         background-color: white;
         border-radius: 4px;
-        
-        @include luxelevations.lux-elevation-z2;
+        @include luxelevations.lux-elevation-z1;
+
+        display: flex;
+        flex-direction: row;
     }
 }
 

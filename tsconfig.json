@@ -11,7 +11,8 @@
       "@ihk-gfi/lux-components": ["./dist/lux-components-lib"],
       "@ihk-gfi/lux-components/lux-file-preview": ["./dist/lux-components-lib/lux-file-preview"],
       "@ihk-gfi/lux-components/lux-html": ["./dist/lux-components-lib/lux-html"],
-      "@ihk-gfi/lux-components/lux-markdown": ["./dist/lux-components-lib/lux-markdown"]
+      "@ihk-gfi/lux-components/lux-markdown": ["./dist/lux-components-lib/lux-markdown"],
+      "@ihk-gfi/lux-components/lux-chat": ["./dist/lux-components-lib/lux-chat"],
     },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

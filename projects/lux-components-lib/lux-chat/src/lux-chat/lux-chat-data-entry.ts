@@ -9,7 +9,6 @@ export class LuxChatDataEntry {
     }
 
     get isUser(): boolean {
-        // console.log("CHECK", this.chatControlRef, this.chatControlRef.userName, this.user);
         return this.chatControlRef.userName === this.user;
     }
 
