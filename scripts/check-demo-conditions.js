@@ -19,3 +19,28 @@ if (!fs.existsSync(pathLib)) {
   console.log(`Es wird das Script ${chalk.yellowBright('npm run pack:components')} gestartet...\n`);
   execSync('npm run pack:components', { stdio: 'inherit' });
 }
+
+//Prüfen ob relative Imports in der Demo sind
+const glob = require("glob");
+
+const files = glob.sync("./projects/demo-app/src/app/components-overview/**/*.ts");
+
+files.forEach((file) => {
+  const content = fs.readFileSync(file, "utf8");
+  const lines = content.split("\n");
+
+  lines.forEach((line, index) => {
+    if (line.includes("import")) {
+      const importLib = line.match(/lux-components-lib/);
+      if (importLib) {
+        console.error("Check Demo Imports");
+        console.error(`  ${file} Line ${index + 1}: relativen lib Import gefunden!`);
+        console.error(`  `);
+        console.warn(`  Keine relativen Imports in der Demo-App verwenden! Alle Componenten müssen aus @ihk-gfi/lux-components importiert werden.`);
+        console.error(`  `);
+
+        process.exit(1);
+      }
+    }
+  });
+});
