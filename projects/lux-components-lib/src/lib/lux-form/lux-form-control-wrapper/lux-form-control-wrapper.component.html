@@ -65,7 +65,7 @@
     <!-- Hier wird entweder das luxHint oder das übergebene Tag heraus gerendert -->
     @if ( (luxFormComponent.formHintComponent || luxFormComponent.luxHint) && (!luxFormComponent.luxHintShowOnlyOnFocus ||
     (luxFormComponent.luxHintShowOnlyOnFocus && focused)) ) {
-    <mat-hint [id]="luxFormComponent.uid + '-hint'">
+    <mat-hint [id]="luxFormComponent.uid + '-hint'" [attr.aria-disabled]="luxFormComponent.luxDisabled">
       @if (luxFormComponent.luxHint) {
       {{ luxFormComponent.luxHint }}
       } @else {
