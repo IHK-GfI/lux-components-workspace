@@ -3,11 +3,13 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { replaceRule } from './files';
 import {
-    RemoveHtmlAttributeItem,
-    RemoveHtmlTagAttributeItem,
-    ReplaceHtmlAttributeItem,
-    ReplaceHtmlTagAttributeItem,
-    ReplaceItem
+  AddTransUnitItem,
+  RemoveHtmlAttributeItem,
+  RemoveHtmlTagAttributeItem,
+  RemoveTransUnitItem,
+  ReplaceHtmlAttributeItem,
+  ReplaceHtmlTagAttributeItem,
+  ReplaceItem
 } from './replace-item';
 import { appOptions, workspaceOptions } from './test';
 import { UtilConfig } from './util';
@@ -222,7 +224,99 @@ describe('file', () => {
       });
     });
   });
+
+  it('Sollte eine TransUnit hinzufügen (RegExp)', (done) => {
+    const filePath = testOptions.path + '/replaceRule/addTransUnitItem.html';
+
+    appTree.create(filePath, transUnitItemHtml);
+
+    const newTransUnit = `<trans-unit id="luxc.chips.remove" datatype="html">
+        <source>entfernen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/core/lib/lux-form/lux-chips-ac/lux-chips-ac.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>`;
+
+    callRule(
+      replaceRule(
+        testOptions,
+        'startMsg',
+        'endMsg',
+        'addTransUnitItem.html',
+        new AddTransUnitItem('luxc.message.btn.close.arialabel', newTransUnit)
+      ),
+      appTree,
+      context
+    ).subscribe({
+      next: (successTree: Tree) => {
+        const content = successTree.read(filePath)?.toString();
+        expect(content).toContain(newTransUnit);
+        expect(content).toContain('luxc.message.btn.close.arialabel');
+        done();
+      },
+      error: (reason) => expect(reason).toBeUndefined()
+    });
+  });
+
+  it('Sollte eine TransUnit löschen (RegExp)', (done) => {
+    const filePath = testOptions.path + '/replaceRule/removeTransUnitItem.html';
+
+    appTree.create(filePath, transUnitItemHtml);
+
+    callRule(
+      replaceRule(
+        testOptions,
+        'startMsg',
+        'endMsg',
+        'removeTransUnitItem.html',
+        new RemoveTransUnitItem('luxc.message.btn.close.arialabel')
+      ),
+      appTree,
+      context
+    ).subscribe({
+      next: (successTree: Tree) => {
+        const content = successTree.read(filePath)?.toString();
+        expect(content).not.toContain('luxc.message.btn.close.arialabel');
+
+        done();
+      },
+      error: (reason) => expect(reason).toBeUndefined()
+    });
+  });
 });
+
+const transUnitItemHtml = `
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="de" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="luxc.menu.trigger.btn" datatype="html">
+        <source>Menü</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/core/lib/lux-action/lux-menu/lux-menu.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.message.btn.close.arialabel" datatype="html">
+        <source>Meldung schließen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/core/lib/lux-common/lux-message-box/lux-message-box-subcomponents/lux-message.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.message.container.arialabel" datatype="html">
+        <source>Meldungen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/core/lib/lux-common/lux-message-box/lux-message-box.component.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
+
+`;
 
 const replaceStringAllFile = `
 {

@@ -90,28 +90,6 @@ export const runInstallAndLogToDos: (context: SchematicContext, messages: string
   }
 };
 
-export function updateI18nFile(tree: Tree, language: string, insertTransUnitId: string, translations: string) {
-  let filePath: string;
-  if (language === 'en') {
-    filePath = '/src/locale/messages.en.xlf';
-  } else if (language === 'fr') {
-    filePath = '/src/locale/messages.fr.xlf';
-  } else {
-    filePath = '/src/locale/messages.xlf';
-  }
-
-  if (tree.exists(filePath)) {
-    let insertTranslation = `<trans-unit id="${insertTransUnitId}" datatype="html">`;
-    let content = (tree.read(filePath) as Buffer).toString();
-    let modifiedContent = replaceAll(content, insertTranslation, translations + '\n      ' + insertTranslation);
-
-    if (content !== modifiedContent) {
-      tree.overwrite(filePath, modifiedContent);
-      logInfo(`Sprachdatei ${filePath} angepasst.`);
-    }
-  }
-}
-
 export function applyRuleIfFileExists(rule: Rule, path: string): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     if (tree.exists(path)) {

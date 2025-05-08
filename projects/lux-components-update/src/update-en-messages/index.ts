@@ -15,8 +15,8 @@ export function updateEnMessages(): Rule {
 
 function updateEnMessagesIntern(): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    const filePathLCEn = '/node_modules/@ihk-gfi/lux-components/src/locale/messages.en.xlf';
-    const filePathSDEn = '/node_modules/@ihk-gfi/lux-stammdaten/src/locale/messages.en.xlf';
+    const filePathLCEn = '/node_modules/@ihk-gfi/lux-components/locale/messages.en.xlf';
+    const filePathSDEn = '/node_modules/@ihk-gfi/lux-stammdaten/locale/messages.en.xlf';
     const filePathAPPEn = '/src/locale/messages.en.xlf';
     const filePathAPPDe = '/src/locale/messages.xlf';
 

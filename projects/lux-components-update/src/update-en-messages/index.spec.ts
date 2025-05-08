@@ -43,8 +43,8 @@ describe('updateEnMessages', () => {
       appTree.create(filePathDe, i18nDeApp);
       appTree.create(filePathEn, i18nEnApp);
 
-      const filePathLCEn = '/node_modules/@ihk-gfi/lux-components/src/locale/messages.en.xlf';
-      const filePathSDEn = '/node_modules/@ihk-gfi/lux-stammdaten/src/locale/messages.en.xlf';
+      const filePathLCEn = '/node_modules/@ihk-gfi/lux-components/locale/messages.en.xlf';
+      const filePathSDEn = '/node_modules/@ihk-gfi/lux-stammdaten/locale/messages.en.xlf';
 
       appTree.create(filePathLCEn, i18nEnLuxC);
       appTree.create(filePathSDEn, i18nEnStamm);

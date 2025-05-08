@@ -47,41 +47,50 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 1. `npm install -g @angular/cli@19`
 
-2. Die Datei _package-lock.json_ löschen.
+1. Die Datei _package-lock.json_ löschen.
 
-3. Die Abhängigkeit _ngx-cookie-service_ in der _package.json_ auf die Version _19.0.0_ setzen, aber **ohne** ein `npm install` auszuführen.
+1. Die Abhängigkeit _ngx-cookie-service_ in der _package.json_ auf die Version _19.0.0_ setzen, aber **ohne** ein `npm install` auszuführen.
 
-4. Angular auf 19 aktualisieren:
+1. In der Datei _angular.json_ alle Vorkommen von _ngx-build-plus:_ in _@angular-devkit/build-angular:_ ersetzen.
+
+1. Angular auf 19 aktualisieren:
 
    `ng update @angular/core@19 @angular/cli@19 --allow-dirty --force`
 
-   _angular.json_: ngx-build-plus -> @angular-devkit/build-angular:
+   Die Rückfrage nach dem _use-application-builder_ bestätigen.
+   Die Rückfrage nach dem _provide-initializer_ bestätigen.
 
    `ng update @angular/cdk@19 @angular/material@19 @angular-eslint/schematics@19 --allow-dirty --force`
 
-5. LUX-Components-Updater aktualisieren:
+1. LUX-Components-Updater aktualisieren:
 
    `npm install @ihk-gfi/lux-components-update@19 --save-dev --force`
 
-6. Updater ausführen:
+1. Updater ausführen:
 
    `ng g @ihk-gfi/lux-components-update:update-19.0.0`
 
-7. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
+1. Imports anpassen:
 
-8. Abhängigkeiten aktualisieren:
+   `ng g @ihk-gfi/lux-components-update:update-standalone-imports`
 
-   `npm install`
+   Die Imports in den Testfällen (*.spec.ts) müssen manuell angepasst werden.
 
-9. (Optional): Die deutschen Übersetzungen der LUX-Components im Projekt aktualisieren:
+1. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
 
-   `npm run xi18n`
+1. Abhängigkeiten aktualisieren:
 
-10. (Optional): Die englischen Übersetzungen der LUX-Components im Projekt aktualisieren:
+    `npm install`
 
-   `ng g @ihk-gfi/lux-components-update:update-en-messages`
+1. (Optional): Die deutschen Übersetzungen der LUX-Components im Projekt aktualisieren:
 
-11. Fertig!
+    `npm run xi18n`
+
+1. (Optional): Die englischen Übersetzungen der LUX-Components im Projekt aktualisieren:
+
+    `ng g @ihk-gfi/lux-components-update:update-en-messages`
+
+1. Fertig!
 
 #### Nach dem Update
 
@@ -89,7 +98,11 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 - Einen Smoketest (build, lint und test) ausführen:
 
   `npm run smoketest`
-
+- Es wird empfohlen die folgenen Schematics auszuführen:
+  - `ng generate @angular/core:standalone-migration` (Umstellung auf die neuen Standalone-Components)
+  - `ng generate @angular/core:inject-migration` (Umstellung auf die inject-Funktion, anstatt Konstruktor-Injektion)
+  - `ng generate @angular/core:route-lazy-loading` (Umstellung der Route auf Lazy Loading)
+  - `ng generate @angular/core:cleanup-unused-imports` (Importe aufräumen)
 - Anwendung vollständig testen.
 - Fertig!
 

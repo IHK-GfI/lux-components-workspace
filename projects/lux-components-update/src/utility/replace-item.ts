@@ -37,3 +37,15 @@ export class RemoveHtmlAttributeItem extends ReplaceItem {
     super(new RegExp(String.raw`(\[?\(?${attributeName}\)?\]?)\s?=\s?"[^"]*"`, 'gm'), '', true);
   }
 }
+
+export class RemoveTransUnitItem extends ReplaceItem {
+  constructor(transUnitId: string) {
+    super(new RegExp(String.raw`<trans-unit id="${transUnitId}"[\s\S]*?<\/trans-unit>`, 'gm'), '', true);
+  }
+}
+
+export class AddTransUnitItem extends ReplaceItem {
+  constructor(transUnitId: string, newTransUnit: string) {
+    super(new RegExp(String.raw`<trans-unit id="${transUnitId}" datatype="html">`, 'gm'), `${newTransUnit}\n      <trans-unit id="${transUnitId}" datatype="html">`, true);
+  }
+}

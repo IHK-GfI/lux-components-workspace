@@ -238,6 +238,27 @@ export function findObjectPropertyInArray(node: Node, propertyName: string, prop
   return found;
 }
 
+export function findObjectContainsInArray(node: Node, propertyName: string, value: string): boolean {
+  let found = false;
+
+  if (node.type === 'object' && node.children && node.children.length > 0) {
+    const assetObjectChildren = node.children;
+    if (assetObjectChildren) {
+      for (let j = 0; j < assetObjectChildren.length; j++) {
+        if (assetObjectChildren[j].type === 'property') {
+          const propertyChildren = assetObjectChildren[j].children ?? [];
+          if (propertyChildren.length > 1 && propertyChildren[0].value === propertyName && propertyChildren[1].value?.includes(value)) {
+            found = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  return found;
+}
+
 export function findStringInArray(arrayNode: Node, value: string): boolean {
   let found = false;
 

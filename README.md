@@ -30,7 +30,7 @@ Die Demo lokal starten:
 - Die _LUX-Components_ via Git klonen.
   
   _Bitte unter Windows sicherstellen, dass lange Dateipfade unterstützt werden:_<br>
-  `git config --system core.longpaths true`
+  `git config --global core.longpaths true`
 - In das entsprechende Verzeichnis wechseln.
 - `npm install` ausführen.
 - `npm run start:demo` ausführen.

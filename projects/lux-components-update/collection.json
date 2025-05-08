@@ -6,30 +6,10 @@
       "factory": "./src/update-standalone-imports/index#updateStandAloneImports",
       "schema": "./src/update-standalone-imports/schema.json"
     },
-    "update-18.4.0": {
-      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.4.0",
-      "factory": "./src/updates/18.4.0/index#update180400",
-      "schema": "./src/updates/18.4.0/schema.json"
-    },
-    "update-18.3.0": {
-      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.3.0",
-      "factory": "./src/updates/18.3.0/index#update180300",
-      "schema": "./src/updates/18.3.0/schema.json"
-    },
-    "update-18.2.0": {
-      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.2.0",
-      "factory": "./src/updates/18.2.0/index#update180200",
-      "schema": "./src/updates/18.2.0/schema.json"
-    },
-    "update-18.1.0": {
-      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.1.0",
-      "factory": "./src/updates/18.1.0/index#update180100",
-      "schema": "./src/updates/18.1.0/schema.json"
-    },
-    "update-18.0.0": {
-      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 18.0.0",
-      "factory": "./src/updates/18.0.0/index#update180000",
-      "schema": "./src/updates/18.0.0/schema.json"
+    "update-19.0.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 19.0.0",
+      "factory": "./src/updates/19.0.0/index#update190000",
+      "schema": "./src/updates/19.0.0/schema.json"
     },
     "update-dependencies": {
       "description": "Aktualisiert die Abhängigkeiten im LUX-Componentsprojekt",
