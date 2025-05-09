@@ -329,6 +329,31 @@ function updateMessages(options: Options): Rule {
       </context-group>
     </trans-unit>`;
 
+    const listBeforeId = `luxc.master-detail.back-to-master-label`;
+    const deList = `<trans-unit id="luxc.list.arialabel" datatype="html">
+        <source>Liste</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-list/lux-list.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-list/lux-list.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>`;
+    const enList = `<trans-unit id="luxc.list.arialabel" datatype="html">
+        <source>Liste</source>
+        <target>List</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-list/lux-list.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-list/lux-list.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit>`;
+
     return chain([
       replaceRule(
         options,
@@ -337,7 +362,8 @@ function updateMessages(options: Options): Rule {
         deFilePath,
         new RemoveTransUnitItem(zoomId),
         new AddTransUnitItem(chipRemoveBeforeId, deChipRemove),
-        new AddTransUnitItem(stepperNotCompletedBeforeId, deStepperNotCompleted)
+        new AddTransUnitItem(stepperNotCompletedBeforeId, deStepperNotCompleted),
+        new AddTransUnitItem(listBeforeId, deList)
       ),
       
       replaceRule(
@@ -347,7 +373,8 @@ function updateMessages(options: Options): Rule {
         enFilePath,
         new RemoveTransUnitItem(zoomId),
         new AddTransUnitItem(chipRemoveBeforeId, enChipRemove),
-        new AddTransUnitItem(stepperNotCompletedBeforeId, enStepperNotCompleted)
+        new AddTransUnitItem(stepperNotCompletedBeforeId, enStepperNotCompleted),
+        new AddTransUnitItem(listBeforeId, enList)
       )
     ]);
   };

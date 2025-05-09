@@ -26,9 +26,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-list        |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-list     |
 
 ### @Input
 
@@ -37,6 +37,7 @@
 | luxEmptyIconName    | string | Bestimmt das Icon, welches angezeigt werden soll wenn keine Einträge in der Liste vorhanden sind.  |
 | luxEmptyIconSize    | string | Bestimmt die Größe des Icons (reicht von 1x bis 5x).                                               |
 | luxEmptyLabel       | string | Bestimmt das Label, welches angezeigt werden soll wenn keine Einträge in der Liste vorhanden sind. |
+| luxLabel            | string | Bestimmt das Aria-Label, welches für die Barrierefreiheit verwendet wird.                          |
 | luxSelectedPosition | number | Diese Property bestimmt das selektierte ListItem dieser Liste.                                     |
 
 ### @Output
@@ -133,7 +134,7 @@ onClick(that: any) {
 Html
 
 ```html
-<lux-list>
+<lux-list luxLabel="Meine Liste">
   <ng-container *ngFor="let listItem of listItems">
     <lux-list-item
       [luxTitle]="listItem.title"
@@ -169,6 +170,7 @@ Html
   luxEmptyIconName="lux-interface-delete-1"
   luxEmptyLabel="Keine Informationen gefunden."
   luxEmptyIconSize="2x"
+  luxLabel="Meine Liste"
 >
   <ng-container *ngFor="let listItem of listItems">
     <lux-list-item
