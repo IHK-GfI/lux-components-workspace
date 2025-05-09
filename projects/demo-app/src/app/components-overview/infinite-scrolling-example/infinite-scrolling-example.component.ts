@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import {
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxIconComponent,
-    LuxInfiniteScrollDirective,
-    LuxInputAcComponent,
-    LuxListComponent,
-    LuxListItemComponent,
-    LuxListItemContentComponent,
-    LuxListItemIconComponent,
-    LuxToggleAcComponent
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxIconComponent,
+  LuxInfiniteScrollDirective,
+  LuxInputAcComponent,
+  LuxListComponent,
+  LuxListItemComponent,
+  LuxListItemContentComponent,
+  LuxListItemIconComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -38,7 +38,8 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseOptionsActionsComponent
   ]
 })
-export class InfiniteScrollingExampleComponent {
+export class InfiniteScrollingExampleComponent implements OnInit {
+  cdr = inject(ChangeDetectorRef)
   showOutputEvents = false;
   listItems: string[] = [];
   log = logResult;
@@ -48,7 +49,7 @@ export class InfiniteScrollingExampleComponent {
   isLoading = false;
   scrollPercent = 85;
 
-  constructor() {
+  ngOnInit() {
     this.createListItems();
     this.recreateList();
   }
@@ -78,5 +79,6 @@ export class InfiniteScrollingExampleComponent {
     for (let i = 0; i < 10; i++) {
       this.listItems.push('Test #' + this.listItems.length);
     }
+    this.cdr.detectChanges();
   }
 }

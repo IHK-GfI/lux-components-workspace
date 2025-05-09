@@ -8,6 +8,7 @@ import {
   HostListener,
   Input,
   OnDestroy,
+  OnInit,
   Output,
   QueryList
 } from '@angular/core';
@@ -22,7 +23,7 @@ import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.com
   templateUrl: './lux-list.component.html',
   imports: [LuxAriaLabelledbyDirective, LuxIconComponent]
 })
-export class LuxListComponent implements AfterViewInit, OnDestroy {
+export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   private _luxSelectedPosition = 0;
 
   private previousFocusedPosition?: number;
@@ -39,10 +40,14 @@ export class LuxListComponent implements AfterViewInit, OnDestroy {
   @Input() luxEmptyIconName = 'lux-interface-alert-information-circle';
   @Input() luxEmptyIconSize = '5x';
   @Input() luxEmptyLabel = $localize`:@@luxc.list.empty_label:Keine Einträge vorhanden`;
+  @Input() set luxLabel(value: string) {
+    this.label = value || $localize`:@@luxc.list.arialabel:Liste`;
+  }
 
   @HostBinding('attr.role') role = 'listbox';
   @HostBinding('attr.tabindex') tabindex = '0';
   @HostBinding('attr.aria-multiselectable') ariaMulti = 'true';
+  @HostBinding('attr.aria-label') label = $localize`:@@luxc.list.arialabel:Liste`;
 
   @HostListener('focus') onFocus() {
     // Wenn die Liste den Focus erhält, soll direkt das selektierte Element (bzw. das erste Element) focussiert werden.
@@ -77,6 +82,18 @@ export class LuxListComponent implements AfterViewInit, OnDestroy {
 
   isEmpty() {
     return !this.luxItems || this.luxItems.length === 0;
+  }
+
+  ngOnInit() {
+    const defaultLabel = $localize`:@@luxc.list.arialabel:Liste`;
+    if (this.label === defaultLabel) {
+      console.warn(
+        'lux-list:\n' +
+          'Die Property "luxLabel" wurde nicht gesetzt.\n' +
+          'Bitte ein sprechendes Label setzen, damit dieses von Screenreadern vorgelesen werden kann.\n' +
+          `Es wird das Standardlabel "${defaultLabel}" verwendet.`
+      );
+    }
   }
 
   ngAfterViewInit() {

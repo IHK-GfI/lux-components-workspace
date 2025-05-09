@@ -132,6 +132,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   @Input() luxTagIdMaster?: string;
   @Input() luxTagIdDetail?: string;
   @Input() luxTitleLineBreak = false;
+  @Input() luxMasterListLabel = $localize`:@@luxc.list.arialabel:Liste`
   @Input() luxMasterIsLoading = false;
   @Input() luxCompareWith = (o1: T, o2: T) => o1 === o2;
   @Input() luxDefaultDetailHeader = true;

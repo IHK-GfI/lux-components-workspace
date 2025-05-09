@@ -51,6 +51,7 @@ Erhält die Masterliste den Focus (mit dem "Tab"-Key) wird jetzt direkt das sele
 | luxEmptyLabelDetail    | string       | Label welches dargestellt werden soll, wenn kein Detail-Element selektiert ist.                                                                                                     |
 | luxCompareWith         | Function     | Funktion, welche zwei Objekte entgegen nimmt und von der Komponente zum Vergleich auf Gleichheit der einzelnen Master-Einträge verwendet wird. Löst den luxCompareParameterName ab. |
 | luxSelectedDetail      | \<T \| null> | Enthält das aktuell selektierte Element aus der Master-Liste. Kann mithilfe von Two-Way-Binding von außen definiert werden.                                                         |
+| luxMasterListLabel     | string       | Bestimmt das Aria-Label der Liste, welches für die Barrierefreiheit verwendet wird.                                                                                                 |
 | luxMasterList          | []\<any>     | Enthält die aktuelle Master-Liste.                                                                                                                                                  |
 | luxMasterSpinnerDelay  | number       | Die Zeitverzögerung in ms bis der Spinner angezeigt wird.                                                                                                                           |
 | luxMasterIsLoading     | boolean      | Boolean-Flag der bestimmt, ob der Spinner angezeigt wird. Beim Setzen auf "true" wird die Verzögerung durch luxMasterSpinnerDelay berücksichtigt.                                   |
@@ -194,6 +195,7 @@ Html
 ```html
 <lux-master-detail-ac
   class="lux-flex-auto lux-min-height-full lux-min-width-full"
+  luxMasterListLabel="Meine Liste"
   [luxMasterSpinnerDelay]="500"
   luxEmptyIconDetail="lux-interface-edit-pencil"
   luxEmptyIconMaster="lux-interface-edit-pencil"
