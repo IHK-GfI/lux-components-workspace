@@ -246,7 +246,7 @@ Die Konfiguration in der _app.module.ts_ muss wie folgt angepasst werden:
 ```ts
 const myConfiguration: LuxComponentsConfigParameters = {
   ...
-  iconBasePath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.8.0/',
+  iconBasePath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.10.0/',
   ...
 };
 ```
@@ -256,7 +256,7 @@ Derselbe Pfad muss in der _styles.scss_ eingesetzt werden:
 ```scss
 @import '@ihk-gfi/lux-components-theme/src/base/luxfonts';
 
-$basepath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.8.0/';
+$basepath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.10.0/';
 
 @include web-fonts($basepath);
 ```
@@ -264,7 +264,7 @@ $basepath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.8.0/';
 D.h. die Icons and Fonts müssen nicht mit der App ausgeliefert werden. Sie werden direkt vom CDN-Server geladen.
 
 Im CDN müssen die Icons in den Unterordner _assets_ angelegt werden.
-Z.B. _`https://[my-domain].de/lux-components/icons-and-fonts/v1.8.0/assets/icons/Interface-Essentials/Validation/interface-validation-check-circle--checkmark-addition-circle-success-check-validation-add-form.svg`_
+Z.B. _`https://[my-domain].de/lux-components/icons-and-fonts/v1.10.0/assets/icons/Interface-Essentials/Validation/interface-validation-check-circle--checkmark-addition-circle-success-check-validation-add-form.svg`_
 
 **_Wichtig!_** Falls eine CSP (Content Security Policy) den Zugriff auf Icon-Ressourcen einschränkt, muss diese um die CDN-Url (z.B. https://[my-domain].de ) erweitert werden.
 Z.B. in Spring-Boot-Projekten kann die CSP (siehe _http - security - csp - connect-src_) über die Konfigurationsdateien _application.yml_, _application-dev.yml_,... festgelegt werden.

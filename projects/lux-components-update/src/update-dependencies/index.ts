@@ -12,7 +12,7 @@ export function updateDependencies(): Rule {
 
     updateDep('@ihk-gfi/lux-components', '19.0.0', addOrUpdate),
     updateDep('@ihk-gfi/lux-components-theme', '19.0.0', addOrUpdate),
-    updateDep('@ihk-gfi/lux-components-icons-and-fonts', '1.8.0', addOrUpdate),
+    updateDep('@ihk-gfi/lux-components-icons-and-fonts', '1.10.0', addOrUpdate),
 
     deleteDep('ng2-pdf-viewer'),
     deleteDep('pdfjs-dist'),

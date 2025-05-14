@@ -54,7 +54,7 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
-    "@ihk-gfi/lux-components-icons-and-fonts": "1.8.0",
+    "@ihk-gfi/lux-components-icons-and-fonts": "1.10.0",
     "@ihk-gfi/lux-components-theme": "19.0.0-rc.1",
     "dompurify": "~3.2.4",
     "marked": "15.0.7",

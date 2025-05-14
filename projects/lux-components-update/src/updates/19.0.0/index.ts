@@ -171,6 +171,20 @@ export function updateAngularJson(options: Options): Rule {
       updateJsonValue(filePath, lintPatternPath, lintPatternValue),
       updateJsonValue(filePath, lintConfigPath, lintConfigValue),
       deleteJsonArray(filePath, cliPath, cliFn),
+      replaceRule(
+        options,
+        'Icons-and-Fonts auf v1.10.0 wird aktualisiert...',
+        'Icons-and-Fonts auf v1.10.0 wurde aktualisiert.',
+        (options.path ?? '') +'src/styles.scss',
+        new ReplaceItem('icons-and-fonts/v1.8.0', 'icons-and-fonts/v1.10.0', true)
+      ),
+      replaceRule(
+        options,
+        'Icons-and-Fonts auf v1.10.0 wird aktualisiert...',
+        'Icons-and-Fonts auf v1.10.0 wurde aktualisiert.',
+        (options.path ?? '') +'src/app/app.module.ts',
+        new ReplaceItem('icons-and-fonts/v1.8.0', 'icons-and-fonts/v1.10.0', true)
+      ),
       messageSuccessRule(`angular.json wurde angepasst.`)
     ]);
   };
