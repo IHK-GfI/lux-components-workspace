@@ -163,6 +163,24 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     this.cdr.detectChanges();
   }
 
+  fixRoleAttributes() {
+    // Workaround: Der Stepper setzt die Rolle "tablist" auf den Header, was nicht korrekt ist.
+    // Für den vertikalen Stepper wurde keine einfacher Workaround gefunden.
+    if (!this.luxVerticalStepper) {
+      if (this.elementRef && this.elementRef.nativeElement) {
+        const stepperElements = this.elementRef.nativeElement.getElementsByClassName('mat-stepper-horizontal');
+        if (stepperElements.length > 0) {
+          stepperElements[0].removeAttribute('role');
+        }
+
+        const headerElements = this.elementRef.nativeElement.getElementsByClassName('mat-horizontal-stepper-header-container');
+        if (headerElements.length > 0) {
+          headerElements[0].setAttribute('role', 'tablist');
+        }
+      }
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
     if (this.subscription) {
@@ -322,6 +340,12 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
 
   @Input() set luxVerticalStepper(vertical: boolean) {
     this.stepperConfiguration.luxVerticalStepper = vertical;
+
+    if (!vertical) {
+      setTimeout(() => {
+        this.fixRoleAttributes();
+      });
+    }
   }
 
   /**** Getter/Setter luxLinear ****/
