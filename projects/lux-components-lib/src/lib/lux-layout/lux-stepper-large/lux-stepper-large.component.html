@@ -7,7 +7,7 @@
   </div>
   <div class="lux-stepper-large-content-container">
     <div class="lux-stepper-large-content" [id]="'lux-stepper-large-content' + luxCurrentStepNumber" role="tabpanel">
-      <a aria-label="Inhalt" id="luxstepperlargecontentanchor"></a>
+      <a aria-hidden="true" id="luxstepperlargecontentanchor"></a>
       <ng-container *ngTemplateOutlet="content"></ng-container>
     </div>
     <div class="lux-stepper-large-button-container">
@@ -17,7 +17,7 @@
 </div>
 } @else {
 <div class="lux-stepper-large-mobile-container">
-  <a aria-label="Inhalt" id="luxstepperlargemobilecontentanchor"></a>
+  <a aria-hidden="true" id="luxstepperlargemobilecontentanchor"></a>
   <div class="lux-stepper-large-mobile-header">
     <div class="lux-stepper-large-mobile-header-label">SCHRITT {{ luxCurrentStepNumber + 1 }} VON {{ steps.length }}</div>
     <lux-button
