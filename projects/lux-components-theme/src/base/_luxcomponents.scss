@@ -239,6 +239,22 @@ $fileUploadProgressSize: 8px;
     }
   }
 
+  .lux-file-upload-error-container-no-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: fit-content;
+
+    margin: 2px 5px;
+    font-size: 0.75rem;
+    background-color: luxcommon.$form-error-msg-background;
+    border-radius: 4px;
+    padding-left: 2px;
+    padding-right: 2px;
+    color: map-get(luxpalette.$lux-palette_warn, 900) !important;
+  }
+
   .lux-file-upload-hint-container {
     margin-top: 4px;
     margin-bottom: 12px;

@@ -17,8 +17,6 @@
   color: luxcommon.$dark-secondary-text;
 }
 
-$light-red: rgb(255, 228, 231); //lux-warn-50 mit opacity: 0.5
-
 lux-form-control-wrapper {
   width: 100%;
 
@@ -165,14 +163,14 @@ lux-form-control-wrapper {
           }
         }
         .mat-mdc-form-field-error {
-          background-color: $light-red;
+          background-color: luxcommon.$form-error-msg-background;
           border-radius: 4px;
           padding-right: 2px;
           color: map-get(luxpalette.$lux-palette_warn, 900) !important;
           box-shadow:
-            -18px 0px 0 0 $light-red,
-            -18px -1px 0 0 $light-red,
-            0 -1px 0 0 $light-red;
+            -18px 0px 0 0 luxcommon.$form-error-msg-background,
+            -18px -1px 0 0 luxcommon.$form-error-msg-background,
+            0 -1px 0 0 luxcommon.$form-error-msg-background;
         }
       }
     }

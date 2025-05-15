@@ -35,13 +35,21 @@
     <ng-container *ngTemplateOutlet="formHintComponent?.templateRef ?? null"></ng-container>
     }
   </mat-hint>
-  } @else {
+  } @else if (!errorMessage) {
   <div class="lux-hint lux-file-upload-no-hint-container"></div>
-  } @if (!displayClearErrorButton && !forceProgressIndeterminate) {
-  <mat-error [id]="uid + '-misc'" class="lux-file-upload-error-message">
-    {{ errorMessage }}
-  </mat-error>
-  } @if (errorMessage && displayClearErrorButton && formControl?.touched) {
+  } @if (!displayClearErrorButton && errorMessage  && !forceProgressIndeterminate && formControl?.touched) {
+  <div class="lux-file-upload-error-container-no-button">
+    <lux-icon
+      class="lux-color-red lux-alert-icon"
+      luxIconName="lux-interface-alert-warning-triangle"
+      luxIconSize="0.75rem"
+      luxPadding="1px"
+    ></lux-icon>
+    <mat-error [id]="uid + '-misc'">
+      {{ errorMessage }}
+    </mat-error>
+  </div>
+  } @if (displayClearErrorButton && errorMessage  && !forceProgressIndeterminate && formControl?.touched) {
   <div class="lux-file-upload-error-container">
     <lux-icon
       class="lux-file-upload-error-icon"
