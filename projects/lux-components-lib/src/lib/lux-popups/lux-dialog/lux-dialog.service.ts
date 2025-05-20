@@ -82,6 +82,19 @@ export class LuxDialogService {
         }
       }
 
+      // Workaround: https://github.com/IHK-GfI/lux-components-workspace/issues/3
+      // Blocked aria-hidden on an element because its descendant retained focus. 
+      // The focus must not be hidden from assistive technology users. 
+      // Avoid using aria-hidden on a focused element or its ancestor. 
+      // Consider using the inert attribute instead, which will also prevent focus. 
+      // For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+      // Element with focus: ...
+      // Ancestor with aria-hidden: <app-root>
+      const activeElement = document.activeElement as HTMLElement;
+      if (activeElement) {
+        activeElement.blur();
+      }
+
       // Dialog öffnen und Konfiguration übergeben
       const matDialogRef = this.matDialog.open(component, {
         width: config.width,
@@ -90,6 +103,12 @@ export class LuxDialogService {
         restoreFocus: true,
         disableClose: config.disableClose,
         panelClass
+      });
+
+      matDialogRef.afterClosed().subscribe(() => {
+        if (activeElement) {
+          activeElement.focus();
+        }
       });
 
       this.luxDialogRef.init(matDialogRef, data);
