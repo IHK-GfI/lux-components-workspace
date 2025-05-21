@@ -3,41 +3,41 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } fr
 import { HammerModule } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import {
-    LuxAlphabeticallySortedPipe,
-    LuxAppContentComponent,
-    LuxAppFooterComponent,
-    LuxAppFooterFixedService,
-    LuxAppFooterLinkInfo,
-    LuxAppFooterLinkService,
-    LuxAppHeaderAcActionNavComponent,
-    LuxAppHeaderAcActionNavItemComponent,
-    LuxAppHeaderAcActionNavItemCustomComponent,
-    LuxAppHeaderAcComponent,
-    LuxAppHeaderAcNavMenuComponent,
-    LuxAppHeaderAcNavMenuItemComponent,
-    LuxAppHeaderAcUserMenuComponent,
-    LuxAppHeaderActionNavComponent,
-    LuxAppHeaderActionNavItemComponent,
-    LuxAppHeaderActionNavItemCustomComponent,
-    LuxAppHeaderComponent,
-    LuxAppHeaderRightNavComponent,
-    LuxAppService,
-    LuxAriaLabelDirective,
-    LuxButtonComponent,
-    LuxConsoleService,
-    LuxLinkPlainComponent,
-    LuxLookupService,
-    LuxMediaQueryObserverService,
-    LuxMenuComponent,
-    LuxMenuItemComponent,
-    LuxSideNavComponent,
-    LuxSideNavFooterComponent,
-    LuxSideNavHeaderComponent,
-    LuxSideNavItemComponent,
-    LuxSnackbarService,
-    LuxTenantLogoComponent,
-    LuxThemeService,
-    LuxTooltipDirective
+  LuxAlphabeticallySortedPipe,
+  LuxAppContentComponent,
+  LuxAppFooterComponent,
+  LuxAppFooterFixedService,
+  LuxAppFooterLinkInfo,
+  LuxAppFooterLinkService,
+  LuxAppHeaderAcActionNavComponent,
+  LuxAppHeaderAcActionNavItemComponent,
+  LuxAppHeaderAcActionNavItemCustomComponent,
+  LuxAppHeaderAcComponent,
+  LuxAppHeaderAcNavMenuComponent,
+  LuxAppHeaderAcNavMenuItemComponent,
+  LuxAppHeaderAcUserMenuComponent,
+  LuxAppHeaderActionNavComponent,
+  LuxAppHeaderActionNavItemComponent,
+  LuxAppHeaderActionNavItemCustomComponent,
+  LuxAppHeaderComponent,
+  LuxAppHeaderRightNavComponent,
+  LuxAppService,
+  LuxAriaLabelDirective,
+  LuxButtonComponent,
+  LuxConsoleService,
+  LuxLinkPlainComponent,
+  LuxLookupService,
+  LuxMediaQueryObserverService,
+  LuxMenuComponent,
+  LuxMenuItemComponent,
+  LuxSideNavComponent,
+  LuxSideNavFooterComponent,
+  LuxSideNavHeaderComponent,
+  LuxSideNavItemComponent,
+  LuxSnackbarService,
+  LuxTenantLogoComponent,
+  LuxThemeService,
+  LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
@@ -160,7 +160,7 @@ export class AppComponent implements OnInit, OnDestroy {
   onChangeTheme(themeName: string) {
     this.themeService.setTheme(themeName);
     this.themeName = themeName;
-    this.router.navigate(['/home']);
+    window.location.reload();
   }
 
   toggleLogin() {
