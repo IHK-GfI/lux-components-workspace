@@ -2,8 +2,8 @@
 name: Bug report
 about: Erstelle einen Issue, der genau beschreibt was wir verbessern sollen.
 title: ''
-labels: bug
-assignees: thodic77
+labels: ''
+assignees: ''
 
 ---
 

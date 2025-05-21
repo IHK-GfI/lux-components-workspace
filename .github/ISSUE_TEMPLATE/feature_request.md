@@ -2,8 +2,8 @@
 name: Feature request
 about: Eine Idee für dieses Repository vorschlagen
 title: ''
-labels: enhancement
-assignees: thodic77
+labels: ''
+assignees: ''
 
 ---
 
