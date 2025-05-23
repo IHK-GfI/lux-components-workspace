@@ -36,6 +36,10 @@ import { ILuxFileObject } from '../lux-file-model/lux-file-object.interface';
 import { LuxFileProgressComponent } from '../lux-file-subcomponents/lux-file-progress/lux-file-progress.component';
 import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component';
 
+/**
+ * @deprecated Diese Klasse ist veraltet und sollte nicht mehr verwendet werden.
+ * Verwende stattdessen `LuxFileUploadComponent`.
+ */
 @Component({
   selector: 'lux-file-list',
   templateUrl: './lux-file-list.component.html',

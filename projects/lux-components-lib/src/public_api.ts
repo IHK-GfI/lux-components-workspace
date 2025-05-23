@@ -102,6 +102,7 @@ export * from './lib/lux-form/lux-file/lux-file-model/lux-file-list-action-confi
 export * from './lib/lux-form/lux-file/lux-file-model/lux-file-object.interface';
 export * from './lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component';
 export * from './lib/lux-form/lux-file/lux-file-subcomponents/lux-file-progress/lux-file-progress.component';
+export * from './lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component';
 export * from './lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component';
 export * from './lib/lux-form/lux-file/lux-file-upload/lux-file-upload.component';
 export * from './lib/lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';

@@ -1,15 +1,21 @@
-<div class="lux-file-upload-container">
+<div class="lux-file-upload-container" [ngClass]="{'lux-file-upload-container-disabled': luxDisabled}">
+  @if(!luxListOnly) {
   <div
     class="lux-file-upload-drop-container"
     [tabindex]="luxDisabled || luxReadonly ? '-1' : '0'"
     (click)="onUpload()"
     (keydown.enter)="onUpload()"
-    [ngClass]="{ 'lux-file-upload-drag-active': isDragActive, 'lux-file-upload-drop-container-disabled': luxDisabled }"
+    [ngClass]="{
+      'lux-file-upload-drag-active': isDragActive,
+      'lux-file-upload-drop-container-readonly': luxReadonly,
+      'lux-file-upload-drop-container-disabled': luxDisabled,
+      'lux-file-upload-loading': forceProgressIndeterminate
+    }"
   >
     <div class="lux-file-upload-drop-label-container">
       <lux-icon class="lux-file-upload-icon" [luxIconName]="luxUploadIcon" luxIconSize="2x" luxPadding="0" luxMargin="0"></lux-icon>
       <div class="lux-file-upload-label-container">
-        <div class="lux-file-upload-label">
+        <div class="lux-file-upload-label" [attr.data-label]="isMobile ? (luxLabelLink + '&nbsp;&nbsp;') : (luxLabel + ' ' + luxLabelLink + '&nbsp;&nbsp;')">
           <ng-container *ngTemplateOutlet="isMobile ? mobileLabelTemplate : desktopLabelTemplate"></ng-container>
         </div>
       </div>
@@ -26,8 +32,7 @@
     <div class="lux-file-upload-drop-container-no-progress"></div>
     }
   </div>
-
-  @if ((formHintComponent || luxHint) && !(formControl?.getError('required') && formControl?.touched)) {
+  } @if ((formHintComponent || luxHint) && !(formControl?.getError('required') && formControl?.touched) && !luxListOnly) {
   <mat-hint class="lux-hint lux-file-upload-hint-container" [id]="uid + '-misc'">
     @if (luxHint) {
     {{ luxHint }}
@@ -37,7 +42,7 @@
   </mat-hint>
   } @else if (!errorMessage) {
   <div class="lux-hint lux-file-upload-no-hint-container"></div>
-  } @if (!displayClearErrorButton && errorMessage  && !forceProgressIndeterminate && formControl?.touched) {
+  } @if (!displayClearErrorButton && errorMessage && !forceProgressIndeterminate && formControl?.touched && !luxListOnly) {
   <div class="lux-file-upload-error-container-no-button">
     <lux-icon
       class="lux-color-red lux-alert-icon"
@@ -49,7 +54,7 @@
       {{ errorMessage }}
     </mat-error>
   </div>
-  } @if (displayClearErrorButton && errorMessage  && !forceProgressIndeterminate && formControl?.touched) {
+  } @if (displayClearErrorButton && errorMessage && !forceProgressIndeterminate && formControl?.touched && !luxListOnly) {
   <div class="lux-file-upload-error-container">
     <lux-icon
       class="lux-file-upload-error-icon"
@@ -69,48 +74,70 @@
       (luxClicked)="onCloseErrorMessage()"
     ></lux-button>
   </div>
-  } @for (file of luxSelected; track file; let i = $index) {
-  <div class="lux-file-upload-view-item-container" [ngClass]="{ 'lux-file-upload-view-item-disabled': luxDisabled }" #fileEntry>
-    <div class="lux-file-upload-view-item">
-      <lux-icon
-        class="lux-file-upload-view-item-icon"
-        luxPadding="0"
-        luxMargin="0"
-        [luxIconName]="fileIcons[i]"
-        luxIconSize="2x"
-        aria-hidden="true"
-      >
-      </lux-icon>
-      <div class="lux-file-upload-view-item-label-container">
-        <div class="lux-file-upload-view-label">
-          @if (file.namePrefix) {
-          <span [ngStyle]="{ color: !luxDisabled ? file.namePrefixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
-            file.namePrefix
-          }}</span>
-          }<span class="lux-file-upload-label-text">{{ file.name }}</span>
-          @if (file.nameSuffix) {
-          <span [ngStyle]="{ color: !luxDisabled ? file.nameSuffixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
-            file.nameSuffix
-          }}</span>
-          }
-        </div>
-      </div>
-      @if (file.size) {
-      <span class="lux-file-upload-label-file-size">{{ Math.ceil(file.size / 1024) + ' KB' }}</span>
-      } @if (!luxReadonly) {
-      <lux-button
-        luxAriaLabel="Button zum Löschen der Datei {{ file.name }}"
-        i18n-luxAriaLabel="@@luxc.file.upload.delete.btn.arialabel"
-        [luxTagId]="uid + '-delete-button_' + i"
-        [luxIconName]="luxDeleteIcon"
-        class="lux-file-upload-view-item-delete-button"
-        [luxDisabled]="luxDisabled"
-        (luxClicked)="openDeleteDialog(i)"
-      ></lux-button>
-      }
-    </div>
-  </div>
   }
+
+  <div class="lux-flex lux-flex-col lux-file-upload-view-container" [ngClass]="{ 'lux-empty': !luxSelected || luxSelected.length === 0 }">
+    @for (file of luxSelected; track file; let i = $index) {
+    <div class="lux-file-upload-view-item-container" [ngClass]="{ 'lux-file-upload-view-item-disabled': luxDisabled }" #fileEntry>
+      <div class="lux-file-upload-view-item">
+        <lux-icon
+          class="lux-file-upload-view-item-icon"
+          luxPadding="0"
+          luxMargin="0"
+          [luxIconName]="fileIcons[i]"
+          [luxIconSize]="theme === 'green' ? '2x' : '1.125rem'"
+          aria-hidden="true"
+        >
+        </lux-icon>
+        <div class="lux-file-upload-view-item-label-container">
+          <div class="lux-file-upload-view-label">
+            @if (file.namePrefix) {
+            <span [ngStyle]="{ color: !luxDisabled ? file.namePrefixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
+              file.namePrefix
+            }}</span>
+            }<span class="lux-file-upload-label-text">
+              @if (!luxViewActionConfig.hidden && ! luxDisabled) {
+              <lux-link-plain [luxLabel]="file.name" (luxClicked)="viewFile(file)"></lux-link-plain>
+              } @else {
+              {{ file.name }}
+              }</span
+            >
+            @if (file.nameSuffix) {
+            <span [ngStyle]="{ color: !luxDisabled ? file.nameSuffixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
+              file.nameSuffix
+            }}</span>
+            }
+          </div>
+        </div>
+        @if (file.size) {
+        <span class="lux-file-upload-label-file-size">{{
+          file.size > 1000 * 1024 ? (file.size / (1000 * 1024)).toFixed(1) + '&nbsp;MB' : Math.ceil(file.size / 1024) + '&nbsp;KB'
+        }}</span>
+        } @for (customConfig of luxCustomActionConfigs; track customConfig; let j = $index) { @if(!luxReadonly && !luxDisabled &&
+        !luxListOnly && !customConfig.hidden) {
+        <lux-button
+          class="lux-file-upload-view-item-button lux-file-upload-view-item-custom-button"
+          [luxAriaLabel]="customConfig.label"
+          luxTagId="lux-file-upload-entry-custom{{ j }}"
+          [luxIconName]="customConfig.iconName"
+          [luxDisabled]="customConfig.disabled || luxDisabled"
+          (luxClicked)="customConfig.onClick ? customConfig.onClick(file) : noop()"
+        ></lux-button>
+        } } @if (!luxReadonly && !luxDisabled && !luxListOnly && !luxDeleteActionConfig.hidden) {
+        <lux-button
+          luxAriaLabel="Button zum Löschen der Datei {{ file.name }}"
+          i18n-luxAriaLabel="@@luxc.file.upload.delete.btn.arialabel"
+          [luxTagId]="uid + '-delete-button_' + i"
+          [luxIconName]="luxDeleteIcon"
+          class="lux-file-upload-view-item-button lux-file-upload-view-item-delete-button"
+          [luxDisabled]="luxDisabled"
+          (luxClicked)="openDeleteDialog(i)"
+        ></lux-button>
+        }
+      </div>
+    </div>
+    }
+  </div>
 
   <!-- File-Upload Input -->
   <input
@@ -124,17 +151,27 @@
   />
 </div>
 
+<!-- Download-Node -->
+<a class="lux-file-download" aria-hidden="true" download="" #downloadLink></a>
+
 <ng-template #desktopLabelTemplate>
+  @if(theme === 'green') {
   <span class="lux-file-upload-label-text">{{ luxLabel }}</span
   ><a class="lux-file-upload-link">{{ luxLabelLink }}</a
   >@if (luxRequired) {
   <span>&nbsp;*</span>
+  } } @else {
+  <span class="lux-file-upload-label-text">{{ luxLabel }}</span
+  ><lux-link-plain class="lux-file-upload-link" [luxLabel]="luxLabelLink + (luxRequired ? '&nbsp;*' : '')" [luxDisabled]="luxDisabled"></lux-link-plain>
   }
 </ng-template>
 
 <ng-template #mobileLabelTemplate>
+  @if(theme === 'green') {
   <a class="lux-file-upload-link">{{ luxLabelLinkShort }}</a
   >@if (luxRequired) {
   <span>&nbsp;*</span>
+  } } @else {
+  <lux-link-plain class="lux-file-upload-link" [luxLabel]="luxLabelLink + (luxRequired ? '&nbsp;*' : '')" [luxDisabled]="luxDisabled"></lux-link-plain>
   }
 </ng-template>

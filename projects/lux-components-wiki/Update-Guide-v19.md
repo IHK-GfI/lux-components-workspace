@@ -21,7 +21,7 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 ### Technische Änderungen
 
-- ToDo
+- Die Komponente LUX-File-List wurde als deprecated markiert. Bitte die Komponente LUX-File-Upload verwenden.
 
 ### Optische Änderungen
 

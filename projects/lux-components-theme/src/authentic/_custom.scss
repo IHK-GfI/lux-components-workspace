@@ -83,6 +83,7 @@ lux-accordion {
     transform-origin: center;
     width: 1em;
     height: 1em;
+
     &::after {
       content: "";
       position: absolute;
@@ -113,10 +114,12 @@ lux-accordion {
   mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded:focus {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+
     .mat-expansion-panel-header-title,
     .mat-expansion-panel-header-description {
       font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
     }
+
     .mat-expansion-panel-header-title {
       font-weight: 500;
     }
@@ -183,7 +186,7 @@ lux-accordion {
       header-disabled-state-text-color: luxcommon.$dark-disabled-text
     )
   );
-  
+
   lux-panel-content lux-card mat-card {
     .lux-card-title {
       line-height: normal;
@@ -214,6 +217,7 @@ lux-accordion {
       background: map.get(luxcommon.$componentBgColors, "gray");
     }
   }
+
   &.mat-badge-disabled .mat-badge-content {
     color: white;
   }
@@ -233,6 +237,7 @@ example-root {
         transform-origin: center;
         width: 1rem;
         height: 1rem;
+
         &::after {
           content: "";
           position: absolute;
@@ -261,14 +266,14 @@ example-root {
 
     .example-component-list-item {
       line-height: normal;
+
       &.example-component-list-item-selected {
-        text-shadow:
-          0 0 0.65px #003366,
-          0 0 0.65px #003366;
+        text-shadow: 0 0 0.65px #003366, 0 0 0.65px #003366;
         line-height: normal;
         color: luxpalette.$lux-primary-color;
         border: none;
         background-color: #fff !important;
+
         &::after {
           content: "";
           position: absolute;
@@ -291,6 +296,7 @@ example-root {
           border: none;
         }
       }
+
       &:hover,
       &:focus-visible,
       &.example-component-list-item-selected:hover,
@@ -298,6 +304,7 @@ example-root {
         color: #fff;
         background-color: luxcommon.$lux-hover-color !important;
         border-radius: 0;
+
         &::after {
           background-color: #fff;
         }
@@ -318,10 +325,12 @@ lux-button button.lux-button {
       color: luxcommon.$dark-secondary-text;
       background-color: transparent !important;
     }
+
     &:focus-visible:not(:hover) {
       background-color: transparent !important;
       @include luxfocus.lux-button-focus;
     }
+
     &:active {
       color: luxcommon.$dark-primary-text !important;
     }
@@ -331,10 +340,12 @@ lux-button button.lux-button {
         color: map.get(luxpalette.$lux-palette-primary, 300);
         background-color: transparent !important;
       }
+
       &:focus-visible:not(:hover) {
         background-color: transparent !important;
         @include luxfocus.lux-button-focus;
       }
+
       &:active {
         color: map.get(luxpalette.$lux-palette-primary, 700) !important;
       }
@@ -345,10 +356,12 @@ lux-button button.lux-button {
         color: map.get(luxpalette.$lux-palette-accent, 300) !important;
         background-color: transparent !important;
       }
+
       &:focus-visible:not(:hover) {
         background-color: transparent !important;
         @include luxfocus.lux-button-focus;
       }
+
       &:active {
         color: map.get(luxpalette.$lux-palette-accent, 700) !important;
       }
@@ -359,11 +372,13 @@ lux-button button.lux-button {
         color: map.get(luxpalette.$lux-palette-warn, 300);
         background-color: transparent !important;
       }
+
       &:focus-visible:not(:hover) {
         color: map.get(luxpalette.$lux-palette-warn, 500);
         background-color: transparent !important;
         @include luxfocus.lux-button-focus;
       }
+
       &:active {
         color: map.get(luxpalette.$lux-palette-warn, 700) !important;
       }
@@ -386,10 +401,12 @@ lux-button button.lux-button {
       border-color: luxcommon.$dark-primary-text;
       @include luxfocus.lux-button-focus;
     }
+
     &:active {
       color: luxcommon.$dark-primary-text;
       background-color: transparent !important;
     }
+
     &.mat-primary {
       border-color: map.get(luxpalette.$lux-palette-primary, 400);
 
@@ -398,12 +415,14 @@ lux-button button.lux-button {
         background-color: transparent !important;
         border-color: map.get(luxpalette.$lux-palette-primary, 300);
       }
+
       &:focus-visible:not(:hover) {
         color: map.get(luxpalette.$lux-palette-primary, 500);
         background-color: transparent !important;
         border-color: map.get(luxpalette.$lux-palette-primary, 500);
         @include luxfocus.lux-button-focus;
       }
+
       &:active {
         color: map.get(luxpalette.$lux-palette-primary, 700);
         background-color: transparent !important;
@@ -414,17 +433,20 @@ lux-button button.lux-button {
     &.mat-accent {
       color: luxcommon.$dark-primary-text;
       border-color: map.get(luxpalette.$lux-palette-accent, 400);
+
       &:hover {
         color: luxcommon.$dark-secondary-text !important;
         background-color: transparent !important;
         border-color: map.get(luxpalette.$lux-palette-accent, 300);
       }
+
       &:focus-visible:not(:hover) {
         color: luxcommon.$dark-primary-text;
         background-color: transparent !important;
         border-color: map.get(luxpalette.$lux-palette-accent, 500);
         @include luxfocus.lux-button-focus;
       }
+
       &:active {
         color: luxcommon.$dark-primary-text !important;
         background-color: transparent !important;
@@ -434,17 +456,20 @@ lux-button button.lux-button {
 
     &.mat-warn {
       border-color: map.get(luxpalette.$lux-palette-warn, 500);
+
       &:hover {
         color: map.get(luxpalette.$lux-palette-warn, 300);
         background-color: transparent !important;
         border-color: map.get(luxpalette.$lux-palette-warn, 300);
       }
+
       &:focus-visible:not(:hover) {
         color: map.get(luxpalette.$lux-palette-warn, 500);
         background-color: transparent !important;
         border-color: map.get(luxpalette.$lux-palette-warn, 500);
         @include luxfocus.lux-button-focus;
       }
+
       &:active {
         color: map.get(luxpalette.$lux-palette-warn, 700);
         background-color: transparent !important;
@@ -459,6 +484,7 @@ lux-button button.lux-button {
   &.mat-mdc-outlined-button:disabled,
   &.mat-mdc-unelevated-button:disabled {
     color: luxcommon.$dark-disabled-text;
+
     &.lux-stroked {
       color: luxcommon.$dark-disabled-text;
       border-color: luxcommon.$dark-disabled-text;
@@ -472,6 +498,7 @@ lux-button button.lux-button {
     &:hover {
       color: luxcommon.$dark-secondary-text;
       background-color: #ffffff !important;
+
       &.lux-stroked {
         color: map.get(luxpalette.$lux-palette-primary, 300);
         background-color: #ffffff !important;
@@ -482,13 +509,16 @@ lux-button button.lux-button {
       color: luxcommon.$dark-primary-text;
       background-color: #ffffff !important;
       @include luxfocus.lux-button-focus;
+
       &.lux-stroked {
         background-color: transparent !important;
       }
     }
+
     &:active {
       color: luxcommon.$dark-primary-text;
       background-color: #ffffff !important;
+
       &.lux-stroked {
         color: map.get(luxpalette.$lux-palette-primary, 700);
         background-color: transparent !important;
@@ -499,22 +529,27 @@ lux-button button.lux-button {
       &:hover {
         color: #ffffff;
         background-color: map.get(luxpalette.$lux-palette-primary, 300) !important;
+
         &.lux-stroked {
           color: map.get(luxpalette.$lux-palette-primary, 300);
           background-color: #ffffff !important;
         }
       }
+
       &:focus-visible:not(:hover) {
         color: #ffffff;
         background-color: map.get(luxpalette.$lux-palette-primary, 500) !important;
         @include luxfocus.lux-button-focus;
+
         &.lux-stroked {
           color: luxpalette.$lux-primary-color;
           background-color: transparent !important;
         }
       }
+
       &:active {
         background-color: map.get(luxpalette.$lux-palette-primary, 700) !important;
+
         &.lux-stroked {
           color: map.get(luxpalette.$lux-palette-primary, 700);
           background-color: transparent !important;
@@ -524,29 +559,37 @@ lux-button button.lux-button {
 
     &.mat-accent {
       color: luxcommon.$dark-primary-text;
+
       &.lux-fab-rounded-default:hover {
         background-color: #ffffff !important;
+
         &.lux-stroked {
           color: luxcommon.$dark-secondary-text;
           background-color: #ffffff !important;
         }
       }
+
       &:not(.lux-fab-rounded-default):hover {
         background-color: map.get(luxpalette.$lux-palette-accent, 300) !important;
+
         &.lux-stroked {
           color: luxcommon.$dark-secondary-text;
           background-color: transparent !important;
         }
       }
+
       &:focus-visible:not(:hover) {
         background-color: map.get(luxpalette.$lux-palette-accent, 500) !important;
         @include luxfocus.lux-button-focus;
+
         &.lux-stroked {
           background-color: transparent !important;
         }
       }
+
       &:active {
         background-color: map.get(luxpalette.$lux-palette-accent, 700) !important;
+
         &.lux-stroked {
           color: map.get(luxpalette.$lux-palette-accent, 700) !important;
           background-color: transparent !important;
@@ -558,22 +601,27 @@ lux-button button.lux-button {
       &:hover {
         color: #ffffff;
         background-color: map.get(luxpalette.$lux-palette-warn, 300) !important;
+
         &.lux-stroked {
           color: map.get(luxpalette.$lux-palette-warn, 300);
           background-color: transparent !important;
         }
       }
+
       &:focus-visible:not(:hover) {
         color: #ffffff;
         background-color: map.get(luxpalette.$lux-palette-warn, 500) !important;
         @include luxfocus.lux-button-focus;
+
         &.lux-stroked {
           color: luxpalette.$lux-warn-color;
           background-color: transparent !important;
         }
       }
+
       &:active {
         background-color: map.get(luxpalette.$lux-palette-warn, 700) !important;
+
         &.lux-stroked {
           color: map.get(luxpalette.$lux-palette-warn, 700);
           background-color: transparent !important;
@@ -594,6 +642,7 @@ lux-button button.lux-button {
 */
 lux-stepper-large {
   background-color: transparent;
+
   .lux-stepper-large-nav-container,
   .lux-stepper-large-content-container {
     border: 1px solid luxcommon.$app-border-color;
@@ -626,6 +675,7 @@ lux-stepper-large {
         font-weight: 600;
         text-decoration-thickness: 2px;
       }
+
       .lux-stepper-large-nav-item-number-container {
         color: luxcommon.$lux-stepper-large-nav-item-active-fc;
         background-color: luxcommon.$lux-stepper-large-nav-item-active-bg;
@@ -650,6 +700,7 @@ lux-stepper-large {
 
         a {
           font-weight: 600;
+
           &::after {
             width: 16px;
             height: 16px;
@@ -664,6 +715,7 @@ lux-stepper-large {
           background-color: luxcommon.$lux-stepper-large-nav-item-completed-bg;
           border: 1px solid luxcommon.$app-border-color;
         }
+
         .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link:hover {
           color: luxcommon.$lux-hover-color;
         }
@@ -680,6 +732,7 @@ lux-stepper-large {
         border: 1px solid luxcommon.$app-border-color;
       }
     }
+
     &.lux-disabled {
       .lux-stepper-large-nav-item-number-container {
         color: luxcommon.$dark-disabled-text;
@@ -700,6 +753,7 @@ lux-stepper-large {
     font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
   }
 }
+
 .lux-stepper-large-mobile-nav-item {
   display: flex;
   flex-direction: row;
@@ -716,6 +770,7 @@ lux-stepper-large {
     a {
       font-weight: 600;
     }
+
     .lux-stepper-large-mobile-nav-item-number-container {
       color: luxcommon.$lux-stepper-large-nav-item-active-fc;
       background-color: luxcommon.$lux-stepper-large-nav-item-active-bg;
@@ -761,6 +816,7 @@ lux-stepper-large {
       border: 1px solid luxcommon.$app-border-color;
     }
   }
+
   &.lux-disabled {
     .lux-stepper-large-nav-item-number-container {
       color: luxcommon.$dark-disabled-text;
@@ -782,16 +838,99 @@ lux-stepper-large {
 }
 
 lux-file-upload {
-  .lux-file-upload-view-item-delete-button button.lux-button.mat-mdc-button {
+  .lux-file-upload-view-item-button button.lux-button.mat-mdc-button {
     color: luxpalette.$lux-primary-color;
+
+    mat-icon {
+      width: 1.125rem !important;
+      height: 1.125rem !important;
+    }
 
     &:hover {
       color: luxcommon.$lux-hover-color;
     }
   }
 
-  .lux-file-upload-container .lux-file-upload-view-item-container {
-    margin-left: luxcommon.$outline-width;
-    margin-right: luxcommon.$outline-width;
+  .lux-file-upload-container {
+    .lux-file-upload-drop-container {
+      &:not(.lux-file-upload-drag-active):not(.lux-file-upload-drop-container-disabled) {
+        background-image: luxcommon.$app-gradient;
+      }
+
+      .lux-file-upload-drop-label-container {
+        padding: 16px 48px 12px 48px;
+      }
+    }
+  }
+
+  .lux-file-upload-error-container {
+    margin-top: 16px;
+    margin-bottom: 0;
+
+    .lux-file-upload-error-button {
+      button.mat-mdc-button {
+        border-radius: 8px;
+        min-width: 24px;
+        min-height: 24px;
+
+        .lux-button-icon mat-icon.mat-icon.lux-icon {
+          width: 1.125rem !important;
+          height: 1.125rem !important;
+        }
+      }
+    }
+  }
+
+  .lux-file-upload-view-container {
+    &:not(.lux-empty) {
+      margin-top: 16px;
+      margin-bottom: 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(black, 0.12);
+    }
+  }
+
+  .lux-file-upload-view-item-container {
+    background-color: white;
+    padding: 11px 15px 11px 26px;
+    border-radius: 4px;
+    border-bottom: 1px solid rgba(black, 0.12);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin: 0;
+
+    &:last-child {
+      border: none;
+      border-radius: 4px;
+    }
+
+    .lux-file-upload-label-text lux-link-plain .link-wrapper .lux-link-plain-text {
+      color: luxpalette.$lux-primary-color;
+      text-decoration: underline;
+    }
+
+    .lux-file-upload-view-item {
+      .lux-file-upload-view-item-icon {
+        display: flex;
+        flex: 0 0 20px;
+      }
+
+      .lux-file-upload-label-file-size {
+        margin-right: 20px;
+      }
+
+      lux-button.lux-file-upload-view-item-button {
+        button.mat-mdc-button {
+          border-radius: 8px;
+          min-width: 24px;
+          min-height: 24px;
+
+          .lux-button-icon mat-icon.mat-icon.lux-icon {
+            width: 1.125rem;
+            height: 1.125rem;
+          }
+        }
+      }
+    }
   }
 }

@@ -4,10 +4,13 @@ import { MatError, MatHint } from '@angular/material/form-field';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
+import { LuxLinkPlainComponent } from "../../../lux-action/lux-link-plain/lux-link-plain.component";
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
 import { ILuxDialogConfig } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../../lux-popups/lux-dialog/lux-dialog.service';
+import { LuxTheme } from '../../../lux-theme/lux-theme';
+import { LuxThemeService } from '../../../lux-theme/lux-theme.service';
 import { LuxMediaQueryObserverService } from '../../../lux-util/lux-media-query-observer.service';
 import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
@@ -32,12 +35,14 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
     LuxFileCaptureDirective,
     LuxAriaLabelDirective,
     LuxButtonComponent,
-    LuxIconComponent
-  ]
+    LuxIconComponent,
+    LuxLinkPlainComponent
+]
 })
 export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements OnInit, AfterViewInit, OnDestroy {
   private dialogService = inject(LuxDialogService);
   private queryService = inject(LuxMediaQueryObserverService);
+  private themeService = inject(LuxThemeService);
 
   @ViewChildren('fileEntry', { read: ElementRef }) fileEntries!: QueryList<ElementRef>;
 
@@ -46,9 +51,11 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   @Input() luxLabelLinkShort = $localize`:@@luxc.file.upload.label.link.short:Datei hochladen`;
   @Input() luxMultiple = true;
   @Input() luxUploadIcon = 'lux-programming-cloud-upload';
-  @Input() luxDeleteIcon = 'lux-interface-delete-bin-1';
+  @Input() luxDeleteIcon = '';
+  @Input() luxListOnly = false;
 
   ariaLabelProgress = $localize`:@@luxc.progress.arialabel:Ladeanzeige`;
+  theme = this.themeService.getTheme().name;
 
   get luxUploadActionConfig(): ILuxFilesActionConfig {
     return this._luxUploadActionConfig;
@@ -136,9 +143,23 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   };
 
   override ngOnInit(): void {
+    if (!this.luxDeleteIcon) {
+      	if (this.theme === 'authentic') {
+          this.luxDeleteIcon = 'lux-interface-delete-1';
+        } else {
+          this.luxDeleteIcon = 'lux-interface-delete-bin-5';
+        }
+    }
+    
     this.subscriptions.push(
       this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
         this.isMobile = query === 'xs' || query === 'sm';
+      })
+    );
+
+    this.subscriptions.push(
+      this.themeService.getThemeAsObservable().subscribe((theme: LuxTheme) => {
+        this.theme = theme.name;
       })
     );
 

@@ -354,6 +354,68 @@ function updateMessages(options: Options): Rule {
         </context-group>
       </trans-unit>`;
 
+    const fileRenameId = `luxc.file.replace.dialog.title.multiple`;
+    const deFileRename = `<trans-unit id="luxc.file.rename.dialog.title" datatype="html">
+        <source> Wollen Sie die Datei umbenennen? </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">4,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.rename.input.lbl" datatype="html">
+        <source>Neuer Dateiname</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.rename.dialog.cancel.lbl" datatype="html">
+        <source>Abbrechen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.rename.dialog.rename.lbl" datatype="html">
+        <source>Umbenennen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+      </trans-unit>`;
+    const enFileRename = `<trans-unit id="luxc.file.rename.dialog.title" datatype="html">
+        <source> Wollen Sie die Datei umbenennen? </source>
+        <target>Do you want to rename the file?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">4,7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.rename.input.lbl" datatype="html">
+        <source>Neuer Dateiname</source>
+        <target>New file name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">9,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.rename.dialog.cancel.lbl" datatype="html">
+        <source>Abbrechen</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">21,22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.rename.dialog.rename.lbl" datatype="html">
+        <source>Umbenennen</source>
+        <target>Rename</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">28,29</context>
+        </context-group>
+      </trans-unit>`;
+
     return chain([
       replaceRule(
         options,
@@ -363,7 +425,8 @@ function updateMessages(options: Options): Rule {
         new RemoveTransUnitItem(zoomId),
         new AddTransUnitItem(chipRemoveBeforeId, deChipRemove),
         new AddTransUnitItem(stepperNotCompletedBeforeId, deStepperNotCompleted),
-        new AddTransUnitItem(listBeforeId, deList)
+        new AddTransUnitItem(listBeforeId, deList),
+        new AddTransUnitItem(fileRenameId, deFileRename)
       ),
       
       replaceRule(
@@ -374,7 +437,8 @@ function updateMessages(options: Options): Rule {
         new RemoveTransUnitItem(zoomId),
         new AddTransUnitItem(chipRemoveBeforeId, enChipRemove),
         new AddTransUnitItem(stepperNotCompletedBeforeId, enStepperNotCompleted),
-        new AddTransUnitItem(listBeforeId, enList)
+        new AddTransUnitItem(listBeforeId, enList),
+        new AddTransUnitItem(fileRenameId, enFileRename)
       )
     ]);
   };
