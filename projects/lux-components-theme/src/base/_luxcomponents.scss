@@ -143,6 +143,11 @@ $fileUploadProgressSize: 8px;
   flex-direction: column;
   flex: 1 1 auto;
 
+  .lux-file-upload-view-container {
+    margin-left: luxcommon.$outline-width;
+    margin-right: luxcommon.$outline-width;
+  }
+
   .lux-file-upload-drop-container {
     display: flex;
     flex-direction: column;
@@ -176,6 +181,7 @@ $fileUploadProgressSize: 8px;
 
       .lux-file-upload-link {
         cursor: default;
+        text-decoration: none;
       }
     }
 
@@ -208,12 +214,14 @@ $fileUploadProgressSize: 8px;
     align-items: center;
     flex: 1 1 auto;
     gap: 12px;
-
-    border: 1px solid var(--lux-theme-warn-500);
+    
+    border: 1px solid var(--lux-theme-warn-900);
     border-radius: 4px;
-    color: var(--lux-theme-warn-500);
+    color: map.get(luxpalette.$lux-palette-warn, 900) !important;
+    background-color: luxcommon.$form-error-msg-background;
     padding: 18px 15px 15px 26px;
-    margin-bottom: 12px;
+    margin-left: luxcommon.$outline-width;
+    margin-right: luxcommon.$outline-width;
 
     .lux-file-upload-error-icon {
       display: flex;
@@ -227,14 +235,11 @@ $fileUploadProgressSize: 8px;
 
     .lux-file-upload-error-button {
       display: flex;
-      flex: 0 0 auto;
+      align-items: center;
 
-      button {
+      button.mat-mdc-button {
         padding: 0;
         margin: 0;
-        border-radius: 8px;
-        min-width: 40px;
-        min-height: 30px;
       }
     }
   }
@@ -257,11 +262,12 @@ $fileUploadProgressSize: 8px;
 
   .lux-file-upload-hint-container {
     margin-top: 4px;
-    margin-bottom: 12px;
+    padding-left: luxcommon.$outline-width;
+    padding-right: luxcommon.$outline-width;
   }
 
   .lux-file-upload-no-hint-container {
-    min-height: 12px;
+    min-height: 0;
   }
 
   .lux-file-upload-view-item-container {
@@ -271,18 +277,11 @@ $fileUploadProgressSize: 8px;
     align-items: center;
     flex: 1 1 auto;
     gap: 12px;
-
-    background-color: var(--lux-theme-selected-bg-color);
-    border: 1px solid var(--lux-theme-accent-500);
-    border-radius: 4px;
     color: var(--lux-theme-primary-500);
-    padding: 18px 15px 18px 26px;
-    margin-bottom: 12px;
 
     &.lux-file-upload-view-item-disabled {
       color: var(--lux-theme-dark-disabled-text);
       background-color: var(--lux-theme-app-data-bg);
-      border: 1px solid var(--lux-theme-dark-disabled-text);
     }
 
     .lux-file-upload-view-item {
@@ -293,9 +292,9 @@ $fileUploadProgressSize: 8px;
       flex: 1 1 auto;
       gap: 12px;
 
-      .lux-file-upload-view-item-icon {
-        display: flex;
-        flex: 0 0 30px;
+      .lux-file-upload-label-text {
+        hyphens: auto;
+        word-break: break-all;
       }
 
       .lux-file-upload-view-item-label-container {
@@ -303,21 +302,13 @@ $fileUploadProgressSize: 8px;
         flex: 1 1 auto;
       }
 
-      lux-button.lux-file-upload-view-item-delete-button {
+      lux-button.lux-file-upload-view-item-button {
         display: flex;
         align-items: center;
 
         button.mat-mdc-button {
           padding: 0;
           margin: 0;
-          border-radius: 8px;
-          min-width: 40px;
-          min-height: 30px;
-
-          .lux-button-icon mat-icon.mat-icon.lux-icon {
-            width: 24px !important;
-            height: 24px !important;
-          }
         }
       }
     }

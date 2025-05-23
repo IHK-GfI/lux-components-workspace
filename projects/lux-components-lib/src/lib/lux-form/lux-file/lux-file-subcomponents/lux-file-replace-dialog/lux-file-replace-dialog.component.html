@@ -25,7 +25,8 @@
     <lux-button
       luxLabel="Abbrechen"
       i18n-luxLabel="@@luxc.file.replace.dialog.cancel.lbl"
-      [luxRaised]="true"
+      luxColor="primary"
+      [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog(false)"
       class="lux-mr-4"
     ></lux-button>
@@ -33,7 +34,7 @@
       luxLabel="Ersetzen"
       i18n-luxLabel="@@luxc.file.replace.dialog.replace.lbl"
       luxColor="primary"
-      [luxRaised]="true"
+      [luxFlat]="true"
       (luxClicked)="luxDialogRef.closeDialog(true)"
     ></lux-button>
   </lux-dialog-actions>

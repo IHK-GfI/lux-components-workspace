@@ -1,16 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
-    ILuxFileObject,
-    ILuxFilesListActionConfig,
-    LuxAutofocusDirective,
-    LuxFileUploadComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
-    LuxUtil
+  ILuxFileActionConfig,
+  ILuxFileObject,
+  ILuxFilesListActionConfig,
+  LuxAutofocusDirective,
+  LuxDialogService,
+  LuxFileRenameDialogComponent,
+  LuxFileUploadComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxInputAcSuffixComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { map, take } from 'rxjs/operators';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -41,16 +44,32 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleBaseAdvancedOptionsComponent
   ]
 })
-export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig> implements OnInit {
+export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig> implements OnInit, AfterViewInit {
+  @ViewChildren(LuxFileUploadComponent) fileUploads!: QueryList<LuxFileUploadComponent>;
   @ViewChild('fileBaseWithoutComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithoutComponent!: LuxFileUploadComponent;
   @ViewChild('fileBaseWithComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithComponent!: LuxFileUploadComponent;
 
+  dialogService = inject(LuxDialogService);
   override label = `Zum Hochladen Datei hier ablegen oder `;
   labelLink = `Datei durchsuchen`;
   labelLinkShort = `Datei hochladen`;
   uploadIcon = 'lux-programming-cloud-upload';
-  deleteIcon = 'lux-interface-delete-bin-5';
+  deleteIcon = '';
   multiple = true;
+  listOnly = false;
+
+  customActionConfigs: ILuxFileActionConfig[] = [
+    {
+      disabled: false,
+      hidden: false,
+      iconName: 'lux-interface-edit-write-2',
+      label: 'Dialog öffnen',
+      prio: 15,
+      onClick: (fileObject: ILuxFileObject) => {
+        this.openDialog(fileObject);
+      }
+    }
+  ];
 
   override ngOnInit() {
     this.maxSize = 10;
@@ -60,6 +79,36 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
       this.maxSize
     } Megabytes hochladen.`;
     super.ngOnInit();
+  }
+
+  ngAfterViewInit() {
+    this.fileComponents = this.fileUploads.toArray();
+  }
+
+  toogleCustomActionConfig() {
+    this.customActionConfigs[0] = {
+      ...this.customActionConfigs[0],
+      hidden: !this.customActionConfigs[0].hidden,
+    }
+  }
+
+  toogleViewConfig() {
+    this.viewActionConfig = {
+      ...this.viewActionConfig,
+      hidden: !this.viewActionConfig.hidden,
+    }
+
+    this.viewActionConfigForm = {
+      ...this.viewActionConfigForm,
+      hidden: !this.viewActionConfigForm.hidden,
+    }
+  }
+
+  toogleDeleteConfig() {
+    this.deleteActionConfig = {
+      ...this.deleteActionConfig,
+      hidden: !this.deleteActionConfig.hidden,
+    }
   }
 
   initSelected() {
@@ -96,5 +145,19 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
         this.onUpload(files);
       }
     };
+  }
+
+  openDialog(fileObject: ILuxFileObject) {
+    const dialogRef = this.dialogService.openComponent(LuxFileRenameDialogComponent,{
+      disableClose: false,
+      width: 'auto',
+      height: 'auto',
+    }, fileObject);
+
+    dialogRef.dialogClosed.subscribe((newFileName: any) => {
+      if (typeof newFileName === 'string' && newFileName.length > 0) {
+        fileObject.name = newFileName;
+      }
+    });
   }
 }

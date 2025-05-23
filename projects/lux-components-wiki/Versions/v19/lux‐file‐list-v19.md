@@ -1,5 +1,7 @@
 # LUX-File-List
 
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
+
 ![Beispielbild LUX-File-List](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img.png)
 
 - [LUX-File-List](#lux-file-list)
@@ -27,6 +29,8 @@
 | Name     | Beschreibung  |
 | -------- | ------------- |
 | selector | lux-file-list |
+
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
 ### @Input
 
@@ -129,6 +133,8 @@ Dieses Interface enthält die möglichen Einstellungen für die Action-Buttons d
 
 ### 1. Simple
 
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
+
 ![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-01-01.png)
 
 ![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-01-02.png)
@@ -180,6 +186,8 @@ Html
 
 ### 2. Mit Formular
 
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
+
 ![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-02.png)
 
 Ts
@@ -228,6 +236,8 @@ Html
 
 ### 3. Mit Upload-URL
 
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
+
 ![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-03.png)
 
 Html
@@ -242,6 +252,8 @@ Html
 ```
 
 ### 4. Mit Base64-Callback
+
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
 ![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-04.gif)
 
@@ -314,6 +326,8 @@ Empty' : 'Empty' }}
 
 ### 5. Mit Download
 
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
+
 ![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-05.png)
 
 Ts
@@ -364,6 +378,8 @@ Html
 ```
 
 ### 6. Mit Dateieinschränkungen
+
+**Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
 ![Beispielbild 06-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-06.gif)
 

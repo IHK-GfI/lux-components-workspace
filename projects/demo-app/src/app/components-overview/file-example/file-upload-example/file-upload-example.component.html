@@ -10,6 +10,7 @@
         [luxLabel]="label"
         [luxLabelLink]="labelLink"
         [luxLabelLinkShort]="labelLinkShort"
+        [luxListOnly]="listOnly"
         [luxUploadIcon]="uploadIcon"
         [luxDeleteIcon]="deleteIcon"
         [luxRequired]="required"
@@ -20,8 +21,10 @@
         [luxMaxSizeMB]="maxSize"
         [luxUploadActionConfig]="uploadActionConfig"
         [luxViewActionConfig]="viewActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
         [luxDeleteActionConfig]="deleteActionConfig"
         [luxDownloadActionConfig]="downloadActionConfig"
+        [luxCustomActionConfigs]="customActionConfigs"
         [luxMaximumExtended]="maximumExtended"
         [luxCapture]="capture"
         [luxAccept]="accept"
@@ -45,6 +48,7 @@
           [luxLabel]="label"
           [luxLabelLink]="labelLink"
           [luxLabelLinkShort]="labelLinkShort"
+          [luxListOnly]="listOnly"
           [luxUploadIcon]="uploadIcon"
           [luxDeleteIcon]="deleteIcon"
           [luxReadonly]="readonly"
@@ -56,6 +60,7 @@
           [luxViewActionConfig]="viewActionConfigForm"
           [luxDeleteActionConfig]="deleteActionConfig"
           [luxDownloadActionConfig]="downloadActionConfig"
+          [luxCustomActionConfigs]="customActionConfigs"
           [luxMaximumExtended]="maximumExtended"
           [luxCapture]="capture"
           [luxAccept]="accept"
@@ -88,9 +93,18 @@
     <lux-input-ac luxLabel="luxDeleteIcon" [(luxValue)]="deleteIcon"></lux-input-ac>
 
     <lux-toggle-ac
+      [(luxChecked)]="listOnly"
+      luxLabel="luxListOnly"
+      luxHint="Reine Anzeige der Dateien ohne Upload-Option."
+      [luxNoLabels]="true"
+    >
+    </lux-toggle-ac>
+
+    <lux-toggle-ac
       [(luxChecked)]="multiple"
       luxLabel="luxMultiple"
       luxHint="Dieses Flag legt fest, ob nur eine oder mehrere Dateien selektiert werden können."
+      [luxNoLabels]="true"
     >
     </lux-toggle-ac>
 
@@ -110,12 +124,25 @@
     </lux-toggle-ac>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac luxLabel="Output-Events loggen" luxHint="(Console --> F12/CMD+ALT+I)" [(luxChecked)]="showOutputEvents"> </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Vorschaulink anzeigen" [luxChecked]="true" (luxCheckedChange)="toogleViewConfig()" [luxNoLabels]="true">
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Löschbutton anzeigen" [luxChecked]="true" (luxCheckedChange)="toogleDeleteConfig()" [luxNoLabels]="true">
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Custombutton anzeigen" [luxChecked]="true" (luxCheckedChange)="toogleCustomActionConfig()" [luxNoLabels]="true">
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoLabels]="true"
+    >
+    </lux-toggle-ac>
 
     <lux-toggle-ac
       [(luxChecked)]="contentAsBlob"
       luxLabel="luxContentAsBlob"
       luxHint="Diese Eigenschaft bestimmt ob die Dateien als Blob gespeichert werden sollen oder als Base64-String."
+      [luxNoLabels]="true"
     >
     </lux-toggle-ac>
 

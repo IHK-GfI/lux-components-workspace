@@ -17,13 +17,15 @@ export class LuxFilePreviewComponent implements OnInit {
   @ViewChild(LuxFilePreviewImgViewerComponent) imgViewer?: LuxFilePreviewImgViewerComponent;
   @ViewChild(LuxFilePreviewNotSupportedViewerComponent) notSupportedViewer?: LuxFilePreviewNotSupportedViewerComponent;
 
-  fileType: 'img' | 'pdf' | 'notsupported' = 'notsupported';
+  fileType: 'img' | 'pdf' | 'txt' | 'notsupported' = 'notsupported';
 
   ngOnInit(): void {
     if (this.data && this.data.fileObject && this.data.fileObject.type.indexOf('image/') > -1) {
       this.fileType = 'img';
     } else if (this.data && this.data.fileObject && this.data.fileObject.type.indexOf('application/pdf') > -1) {
       this.fileType = 'pdf';
+    } else if (this.data && this.data.fileObject && this.data.fileObject.type.indexOf('text/plain') > -1) {
+      this.fileType = 'txt';
     } else {
       this.fileType = 'notsupported';
     }
