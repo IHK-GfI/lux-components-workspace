@@ -504,6 +504,7 @@ lux-chips-ac {
   .mat-mdc-chip-remove .mat-icon {
     width: 1.125rem;
     height: 1.125rem;
+    min-height: unset;
   }
 
   .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
@@ -512,7 +513,7 @@ lux-chips-ac {
     }
 
     &.lux-chip-color-default {
-      background-color: var(--lux-theme-primary-500) !important;
+      background-color: var(--lux-theme-primary-500);
 
       .mat-mdc-chip-action-label {
         color: white;
@@ -525,7 +526,7 @@ lux-chips-ac {
     }
 
     &.lux-chip-color-primary {
-      background-color: var(--lux-theme-primary-500) !important;
+      background-color: var(--lux-theme-primary-500);
 
       .mat-mdc-chip-action-label {
         color: white;
@@ -538,20 +539,15 @@ lux-chips-ac {
     }
 
     &.lux-chip-color-accent {
-      background-color: var(--lux-theme-accent-500) !important;
-
-      .mat-mdc-chip-action-label {
-        color: white;
-      }
+      background-color: var(--lux-theme-accent-500);
 
       lux-icon {
-        color: white;
         opacity: 1;
       }
     }
 
     &.lux-chip-color-warn {
-      background-color: var(--lux-theme-warn-500) !important;
+      background-color: map-get(map-get(luxpalette.$lux-palettes-new, 'error'), 40);
 
       .mat-mdc-chip-action-label {
         color: white;
@@ -611,6 +607,32 @@ lux-chips-ac {
 }
 .lux-chips-ac-autocomplete-panel-dense.mat-mdc-autocomplete-panel {
   margin-top: -18px;
+}
+
+@media (prefers-contrast: more) {
+  .mat-mdc-standard-chip .mdc-evolution-chip__text-label {
+    --mdc-chip-label-text-weight: 600;
+  }
+
+  lux-chips-ac {
+    .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
+      &.lux-chip-color-accent {
+        background-color: #00531d;
+
+        .mat-mdc-chip-action-label {
+          color: white;
+        }
+
+        lux-icon {
+          color: white;
+        }
+      }
+
+      &.lux-chip-color-warn {
+        background-color: #a9000f;
+      }
+    }
+  }
 }
 
 /*

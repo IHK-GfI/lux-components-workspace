@@ -1,19 +1,18 @@
-import { UpperCasePipe } from '@angular/common';
 import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
 import {
-    LuxAlphabeticallySortedPipe,
-    LuxAppFooterButtonService,
-    LuxAriaLabelDirective,
-    LuxAriaRoleDirective,
-    LuxAutofocusDirective,
-    LuxBadgeNotificationDirective,
-    LuxIconComponent,
-    LuxImageComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxTileAcComponent,
-    LuxUtil
+  LuxAlphabeticallySortedPipe,
+  LuxAppFooterButtonService,
+  LuxAriaLabelDirective,
+  LuxAriaRoleDirective,
+  LuxAutofocusDirective,
+  LuxBadgeNotificationDirective,
+  LuxIconComponent,
+  LuxImageComponent,
+  LuxInputAcComponent,
+  LuxInputAcPrefixComponent,
+  LuxInputAcSuffixComponent,
+  LuxTileAcComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { ComponentsOverviewNavigationService } from './components-overview-navigation.service';
 
@@ -32,8 +31,7 @@ import { ComponentsOverviewNavigationService } from './components-overview-navig
     LuxInputAcSuffixComponent,
     LuxInputAcPrefixComponent,
     LuxInputAcComponent,
-    LuxAutofocusDirective,
-    UpperCasePipe
+    LuxAutofocusDirective
   ]
 })
 export class ComponentsOverviewComponent implements OnInit, AfterViewInit {

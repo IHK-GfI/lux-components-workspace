@@ -45,6 +45,7 @@
   <div
     class="lux-stepper-large-nav-item"
     [id]="'luxstepperlargenavitem' + (i + 1)"
+    [inert]="step.luxDisabled"
     [ngClass]="{
       'lux-touched': step.luxTouched,
       'lux-active': i === luxCurrentStepNumber,

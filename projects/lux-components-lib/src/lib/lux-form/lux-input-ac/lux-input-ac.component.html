@@ -12,7 +12,7 @@
 >
   <div class="lux-input-row-authentic">
     @if (inputPrefix) {
-    <span class="lux-input-prefix-container" matPrefix>
+    <span class="lux-input-prefix-container" [attr.aria-disabled]="luxDisabled ? 'true' : null" matPrefix>
       <ng-content select="lux-input-ac-prefix"></ng-content>
     </span>
     } @if (luxType !== 'number') {
@@ -63,7 +63,7 @@
       #input
     />
     } @if (inputSuffix) {
-    <span class="lux-input-suffix-container" matSuffix>
+    <span class="lux-input-suffix-container" [attr.aria-disabled]="luxDisabled ? 'true' : null" matSuffix>
       <ng-content select="lux-input-ac-suffix"></ng-content>
     </span>
     }

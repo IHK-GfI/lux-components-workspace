@@ -82,7 +82,7 @@ Ts
 constructor(private snackbar: LuxSnackbarService) {
     this.snackbar.open(2000, {
         text: 'Es sind neue Informationen verfügbar.',
-        textColor: 'gray',
+        textColor: 'white',
         iconName: 'lux-info',
         iconSize: '2x',
         iconColor: 'green',

@@ -19,6 +19,7 @@
     (focusin)="onFocusIn($event)"
     (focusout)="onFocusOut($event)"
     [luxAriaLabelledby]="uid + '-label'"
+    [attr.aria-disabled]="luxDisabled ? 'true' : null"
     [id]="uid"
   >
     @for (option of luxOptions; track option; let i = $index) {

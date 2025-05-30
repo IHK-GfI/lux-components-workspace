@@ -24,6 +24,7 @@
     (focusin)="luxFocusIn.emit($event)"
     (focusout)="luxFocusOut.emit($event)"
     [id]="uid"
+    [luxAriaLabelledby]="uid + '-label'"
     [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
     [attr.aria-invalid]="formControl.invalid"
     [attr.aria-required]="luxRequired"

@@ -67,6 +67,10 @@ lux-menu {
   border: 2px solid luxpalette.$lux-primary-color;
   box-shadow: none !important;
 
+  .mat-mdc-menu-item:not([disabled]).cdk-program-focused {
+    background-color: transparent;
+  }
+
   .mat-mdc-menu-item,
   .mat-mdc-menu-item:has(.material-icons, mat-icon, [matButtonIcon]) {
     padding: 0 16px;

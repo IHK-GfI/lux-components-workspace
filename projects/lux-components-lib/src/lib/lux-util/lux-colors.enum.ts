@@ -1,6 +1,6 @@
 export declare type LuxThemePalette = 'primary' | 'accent' | 'warn' | undefined;
 export declare type LuxFgColor = 'white' | 'black';
-export declare type LuxBgBaseColor = 'red' | 'green' | 'purple' | 'blue' | 'gray' | 'orange' | 'brown' | 'yellow' | 'pink' | 'lightblue';
+export declare type LuxBgBaseColor = 'red' | 'green' | 'purple' | 'blue' | 'gray' | 'orange' | 'yellow' | 'pink' | 'lightblue';
 export declare type LuxBgAllColor = LuxBgBaseColor | 'black' | 'white';
 export declare type LuxBadgeColor = LuxBgBaseColor | 'black';
 export declare type LuxIconColor = LuxBgBaseColor | 'black';
@@ -17,7 +17,6 @@ export const LuxBgAllColors: LuxBgAllColor[] = [
   'blue',
   'gray',
   'orange',
-  'brown',
   'black',
   'white',
   'yellow',
@@ -25,17 +24,15 @@ export const LuxBgAllColors: LuxBgAllColor[] = [
   'lightblue'
 ];
 export const LuxBadgeColors: LuxBadgeColor[] = [
-  'red',
-  'green',
-  'purple',
   'blue',
-  'gray',
+  'green',
+  'red',
   'orange',
-  'brown',
-  'black',
   'yellow',
+  'lightblue',
   'pink',
-  'lightblue'
+  'gray',
+  'purple'
 ];
 export const LuxIconColors: LuxIconColor[] = [
   'red',
@@ -44,14 +41,13 @@ export const LuxIconColors: LuxIconColor[] = [
   'blue',
   'gray',
   'orange',
-  'brown',
   'black',
   'yellow',
   'pink',
   'lightblue'
 ];
-export const LuxMessageBoxColors: LuxMessageBoxColor[] = ['red', 'green', 'purple', 'blue', 'gray', 'orange', 'brown', 'white'];
-export const LuxProgressColors: LuxProgressColor[] = ['red', 'green', 'purple', 'blue', 'gray', 'orange', 'brown'];
-export const LuxSnackbarColors: LuxSnackbarColor[] = ['red', 'green', 'purple', 'blue', 'gray', 'orange', 'brown', 'white'];
+export const LuxMessageBoxColors: LuxMessageBoxColor[] = ['white', 'blue', 'red', 'green', 'gray', 'orange', 'yellow', 'purple'];
+export const LuxProgressColors: LuxProgressColor[] = ['red', 'green', 'purple', 'blue', 'gray', 'orange'];
+export const LuxSnackbarColors: LuxSnackbarColor[] = ['white', 'red', 'blue', 'green', 'orange', 'yellow'];
 export const LuxTextboxColors: LuxTextboxColor[] = ['red', 'blue', 'green', 'yellow'];
 export const LuxAccordionColors: LuxAccordionColor[] = ['primary', 'accent', 'warn', 'neutral'];

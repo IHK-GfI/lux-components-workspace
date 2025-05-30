@@ -12,7 +12,7 @@
       'lux-file-upload-loading': forceProgressIndeterminate
     }"
   >
-    <div class="lux-file-upload-drop-label-container">
+    <div class="lux-file-upload-drop-label-container" [attr.aria-disabled]="luxDisabled ? 'true' : null">
       <lux-icon class="lux-file-upload-icon" [luxIconName]="luxUploadIcon" luxIconSize="2x" luxPadding="0" luxMargin="0"></lux-icon>
       <div class="lux-file-upload-label-container">
         <div class="lux-file-upload-label" [attr.data-label]="isMobile ? (luxLabelLink + '&nbsp;&nbsp;') : (luxLabel + ' ' + luxLabelLink + '&nbsp;&nbsp;')">
@@ -76,7 +76,7 @@
   </div>
   }
 
-  <div class="lux-flex lux-flex-col lux-file-upload-view-container" [ngClass]="{ 'lux-empty': !luxSelected || luxSelected.length === 0 }">
+  <div class="lux-flex lux-flex-col lux-file-upload-view-container" [attr.aria-disabled]="luxDisabled ? 'true' : null" [ngClass]="{ 'lux-empty': !luxSelected || luxSelected.length === 0 }">
     @for (file of luxSelected; track file; let i = $index) {
     <div class="lux-file-upload-view-item-container" [ngClass]="{ 'lux-file-upload-view-item-disabled': luxDisabled }" #fileEntry>
       <div class="lux-file-upload-view-item">

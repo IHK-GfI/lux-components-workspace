@@ -51,6 +51,6 @@ export class LuxSnackbarComponent implements OnInit {
    */
   private checkColorInEnum(colorToCheck: string | undefined): LuxSnackbarColor {
     const found = LuxSnackbarColors.find((entry) => entry === colorToCheck);
-    return found ?? 'gray';
+    return found ?? 'white';
   }
 }

@@ -5,6 +5,15 @@
 @use "../luxelevations";
 @use "../luxfocus";
 
+button.lux-menu-item.lux-user-name-label {
+  opacity: 1;
+  color: #003366;
+  background-color: #f0f3f6;
+  .mat-mdc-menu-item-text {
+    font-weight: 600;
+  }
+}
+
 lux-app-header {
   flex: 0 0 auto;
   max-height: 65px;

@@ -65,7 +65,7 @@
         }
       </div>
       } @else { @if (luxSelected) {
-      <div class="lux-file-list-entries">
+      <div class="lux-file-list-entries" [attr.aria-disabled]="luxDisabled ? 'true' : null">
         <!-- Mehrere Dateien ausgewählt -->
         @if (isArray(luxSelected)) {
         <lux-divider></lux-divider>

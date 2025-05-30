@@ -1,14 +1,14 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { MatSnackBarDismiss } from '@angular/material/snack-bar';
 import {
-    LuxButtonComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxSnackbarColors,
-    LuxSnackbarConfig,
-    LuxSnackbarService,
-    LuxToggleAcComponent,
-    LuxTooltipDirective
+  LuxButtonComponent,
+  LuxInputAcComponent,
+  LuxSelectAcComponent,
+  LuxSnackbarColors,
+  LuxSnackbarConfig,
+  LuxSnackbarService,
+  LuxToggleAcComponent,
+  LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -39,15 +39,15 @@ export class SnackbarExampleComponent implements OnDestroy {
 
   showOutputEvents = false;
 
-  duration = 10000;
+  duration = 5000;
   snackbarConfig: LuxSnackbarConfig = {
     text: 'Text',
-    textColor: 'gray',
+    textColor: 'white',
     iconName: 'lux-interface-alert-information-circle',
-    iconColor: 'gray',
+    iconColor: 'white',
     iconSize: '2x',
     action: 'Action',
-    actionColor: 'gray'
+    actionColor: 'white'
   };
 
   ngOnDestroy(): void {
@@ -69,6 +69,19 @@ export class SnackbarExampleComponent implements OnDestroy {
     this.snackbar.open(this.duration, this.snackbarConfig);
     this.dismissSubscription = this.snackbar.afterDismissed().subscribe(this.observeDismiss.bind(this));
     this.actionSubscription = this.snackbar.onAction().subscribe(this.observeAction.bind(this));
+  }
+
+  openSnackbarShow() {
+    let time = 0;
+    this.colors.forEach((color) => {
+      setTimeout(() => {
+        this.snackbarConfig.textColor = color;
+        this.snackbarConfig.iconColor = color;
+        this.snackbarConfig.actionColor = color;
+        this.snackbar.open(this.duration, this.snackbarConfig);
+      }, time);
+      time += this.duration;
+    });
   }
 
   dismissSnackbar() {
