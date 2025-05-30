@@ -128,7 +128,7 @@ describe('LuxHttpErrorComponent', () => {
     expect(messageText.nativeElement.textContent).toBe('Error 0');
     expect(messageIcon.nativeElement).toBeDefined();
     expect(messageContainer.nativeElement.className).toContain('lux-bg-color-red');
-    expect(messageContainer.nativeElement.className).toContain('lux-font-color-white');
+    expect(messageContainer.nativeElement.className).toContain('lux-font-color-red');
 
     handleIconRequests(httpController, fixture);
   }));
@@ -160,7 +160,7 @@ describe('LuxHttpErrorComponent', () => {
     expect(messageText.nativeElement.textContent).toBe('Error 404');
     expect(messageIcon.nativeElement).toBeDefined();
     expect(messageContainer.nativeElement.className).toContain('lux-bg-color-red');
-    expect(messageContainer.nativeElement.className).toContain('lux-font-color-white');
+    expect(messageContainer.nativeElement.className).toContain('lux-font-color-red');
 
     handleIconRequests(httpController, fixture);
   }));
@@ -192,7 +192,7 @@ describe('LuxHttpErrorComponent', () => {
     expect(messageText.nativeElement.textContent).toBe('404');
     expect(messageIcon.nativeElement).toBeDefined();
     expect(messageContainer.nativeElement.className).toContain('lux-bg-color-red');
-    expect(messageContainer.nativeElement.className).toContain('lux-font-color-white');
+    expect(messageContainer.nativeElement.className).toContain('lux-font-color-red');
 
     handleIconRequests(httpController, fixture);
   }));

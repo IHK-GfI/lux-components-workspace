@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "luxpalette";
+
 // Allgemein
 $dark-primary-text: #003366;
 $dark-secondary-text: #003366;
@@ -69,35 +72,41 @@ $lux-panel-option-padding: 12px 0;
 
 // Hintergrundfarben (z.B. Badge oder Progress)
 $componentBgColors: (
-  "red": #db272e,
-  "green": #56bd66,
-  "purple": #9900b8,
-  "blue": #003366,
-  "gray": #636d76,
-  "orange": #c75000,
-  "brown": #783f04,
-  "black": black,
+  "red": map-get(map-get(luxpalette.$lux-palettes-new, 'error'), 40),
+  "green": map-get(map-get(luxpalette.$lux-palettes-new, 'tertiary'), 70),
+  "purple": #715289,
+  "blue": map-get(map-get(luxpalette.$lux-palettes-new, 'primary'), 20),
+  "gray": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 40),
+  "orange":  #fc791f,
+  "black":  map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
   "white": #ffffff,
-  "yellow": rgba(244, 203, 37, 1),
-  "pink": #ea515a,
-  "lightblue": rgba(63, 155, 218, 1)
+  "yellow": #fbd12c,
+  "pink":  #fc6b85,
+  "lightblue": #4fa8e8
 );
 
 // Vordergrundfarben (z.B. Badge)
 $componentFontColors: (
-  black: #000000,
-  white: #ffffff
+  "red": #ffffff,
+  "green": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "purple": #ffffff,
+  "blue": #ffffff,
+  "gray": #ffffff,
+  "orange": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "black": #ffffff,
+  "white": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "yellow": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "pink": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "lightblue": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10)
 );
 
 // Farben für einen dunklen Hintergrund (z.B. Snackbar).
 $colorsForDarkBg: (
   "red": #f17474,
   "green": #53b12b,
-  "purple": #e561ff,
-  "blue": #729eca,
-  "gray": #c8c8c8,
+  "blue": map-get(map-get(luxpalette.$lux-palettes-new, 'primary'), 80),
   "orange": #ec9c1b,
-  "brown": #eb7c05,
+  "yellow": #fbd12c,
   "white": #ffffff
 );
 

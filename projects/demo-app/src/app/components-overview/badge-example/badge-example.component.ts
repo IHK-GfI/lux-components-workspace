@@ -1,12 +1,11 @@
-import { NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-    LuxBadgeColors,
-    LuxBadgeComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxLabelComponent,
-    LuxToggleAcComponent
+  LuxBadgeColors,
+  LuxBadgeComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxLabelComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -20,7 +19,6 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     LuxLabelComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
-    NgStyle,
     ExampleBaseSimpleOptionsComponent,
     LuxFormHintComponent,
     LuxInputAcComponent,

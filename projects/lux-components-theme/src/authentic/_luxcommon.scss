@@ -43,8 +43,8 @@ $app-header-bg: map.get(luxpalette.$lux-palette_primary, 50);
 $app-content-bg: #ffffff;
 $app-footer-bg: map.get(luxpalette.$lux-palette_primary, 50);
 $app-data-bg: #ffffff;
-$app-gradient: linear-gradient(90deg, #ffffff 0%, #f8fbff 100%);
-$app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, #f8fbff 100%);
+$app-gradient: linear-gradient(90deg, #ffffff 0%, map-get(map-get(luxpalette.$lux-palettes-new, 'primary'), 98) 100%);
+$app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, map-get(map-get(luxpalette.$lux-palettes-new, 'primary'), 98) 100%);
 $app-border-color: rgba(black, 0.12);
 $app-border-radius: 4px;
 
@@ -93,35 +93,41 @@ $lux-panel-option-padding: 12px 0;
 
 // Hintergrundfarben (z.B. Badge oder Progress)
 $componentBgColors: (
-  "red": luxpalette.$lux-warn-color,
-  "green": luxpalette.$lux-accent-color,
-  "purple": #9900b8,
-  "blue": luxpalette.$lux-primary-color,
-  "gray": #666666,
-  "orange": rgba(237, 110, 17, 1),
-  "brown": #783f04,
-  "black": $dark-primary-text,
+  "red": map-get(map-get(luxpalette.$lux-palettes-new, 'error'), 40),
+  "green": map-get(map-get(luxpalette.$lux-palettes-new, 'tertiary'), 70),
+  "purple": #715289,
+  "blue": map-get(map-get(luxpalette.$lux-palettes-new, 'primary'), 20),
+  "gray": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 40),
+  "orange":  #fc791f,
+  "black":  map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
   "white": #ffffff,
-  "yellow": rgba(244, 203, 37, 1),
-  "pink": rgba(237, 95, 122, 1),
-  "lightblue": rgba(63, 155, 218, 1)
+  "yellow": #fbd12c,
+  "pink":  #fc6b85,
+  "lightblue": #4fa8e8
 );
 
 // Vordergrundfarben (z.B. Badge)
 $componentFontColors: (
-  black: #000000,
-  white: #ffffff
+  "red": #ffffff,
+  "green": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "purple": #ffffff,
+  "blue": #ffffff,
+  "gray": #ffffff,
+  "orange": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "black": #ffffff,
+  "white": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "yellow": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "pink": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10),
+  "lightblue": map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10)
 );
 
 // Farben für einen dunklen Hintergrund (z.B. Snackbar).
 $colorsForDarkBg: (
   "red": #f17474,
   "green": #53b12b,
-  "purple": #e561ff,
-  "blue": #729eca,
-  "gray": #c8c8c8,
+  "blue": map-get(map-get(luxpalette.$lux-palettes-new, 'primary'), 80),
   "orange": #ec9c1b,
-  "brown": #eb7c05,
+  "yellow": #fbd12c,
   "white": #ffffff
 );
 

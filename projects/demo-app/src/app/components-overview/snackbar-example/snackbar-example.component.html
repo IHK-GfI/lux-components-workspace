@@ -45,6 +45,8 @@
       [(luxSelected)]="snackbarConfig.actionColor"
     >
     </lux-select-ac>
+    <lux-input-ac luxLabel="duration" luxHint="Diese Property definiert wie lange die Snackbar angezeigt wird." luxType="number" [luxNumberAlignLeft]="true" [(luxValue)]="duration">
+    </lux-input-ac>
   </example-base-simple-options>
   <example-base-options-actions>
     <div class="lux-flex lux-flex-wrap">
@@ -56,6 +58,16 @@
         luxColor="primary"
         [luxStroked]="true"
         (luxClicked)="openSnackbar()"
+      >
+      </lux-button>
+      <lux-button
+        class="lux-mr-4 lux-mb-3"
+        luxLabel="Farbshow-Snackbar"
+        luxTooltip="Dieser Button öffnet pro Farbe eine Snackbar im Abstand von 5 Sekunden."
+        [luxTooltipShowDelay]="1000"
+        luxColor="primary"
+        [luxStroked]="true"
+        (luxClicked)="openSnackbarShow()"
       >
       </lux-button>
       <lux-button

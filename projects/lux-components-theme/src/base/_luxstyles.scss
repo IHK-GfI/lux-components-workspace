@@ -611,8 +611,19 @@ $notificationSizes: (18, 24, 30);
     border: 2px solid transparent;
   }
 
+  &.mat-badge:not(.mat-badge-disabled).mat-badge-primary .mat-badge-content {
+    color: #ffffff;
+    background-color: #003366;
+  }
+
   &.mat-badge:not(.mat-badge-disabled).mat-badge-accent .mat-badge-content {
-    background-color: map.get(luxcommon.$componentBgColors, "green");
+    color: #1c1b1b;
+    background-color: #56bd66;
+  }
+
+  &.mat-badge:not(.mat-badge-disabled).mat-badge-warn .mat-badge-content {
+    color: #ffffff;
+    background-color: #C00013;
   }
 
   &.lux-badge-color-default {

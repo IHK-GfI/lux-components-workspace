@@ -28,6 +28,7 @@
       (focusin)="onFocusIn($event)"
       (focusout)="onFocusOut($event)"
       [luxAriaDescribedby]="descripedBy()"
+      [attr.aria-disabled]="luxDisabled ? 'true' : null"
       #visibleInput
     />
     <div class="lux-file-menu-container">

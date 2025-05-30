@@ -196,14 +196,7 @@ export class LuxUtil {
     const found = LuxBgAllColors.find((entry) => entry === color);
     if (found) {
       result.backgroundCSSClass = 'lux-bg-color-' + color;
-      switch (color) {
-        case 'white':
-          result.fontCSSClass = 'lux-font-color-black';
-          break;
-        default:
-          result.fontCSSClass = 'lux-font-color-white';
-          break;
-      }
+      result.fontCSSClass = 'lux-font-color-' + color;
     }
 
     return result;

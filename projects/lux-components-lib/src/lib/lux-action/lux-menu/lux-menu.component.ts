@@ -33,9 +33,6 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
 @Component({
   selector: 'lux-menu',
   templateUrl: './lux-menu.component.html',
-  host: {
-    'aria-label': 'Menu'
-  },
   imports: [
     NgTemplateOutlet,
     LuxButtonComponent,

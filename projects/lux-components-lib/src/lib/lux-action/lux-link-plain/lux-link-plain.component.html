@@ -3,6 +3,7 @@
   tabindex="{{ luxDisabled ? -1 : 0 }}"
   luxAriaRole="link"
   luxAriaLabel="{{ luxLabel }}"
+  [attr.aria-disabled]="luxDisabled ? 'true' : null"
   [ngClass]="[luxDisabled ? 'lux-disabled' : '']"
   (click)="!luxDisabled ? redirectToHref($event) : null"
   (keydown.enter)="!luxDisabled ? redirectToHref($event) : null"

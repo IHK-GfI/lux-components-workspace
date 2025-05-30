@@ -39,8 +39,8 @@ lux-message-box {
 
       & lux-button {
         button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
-          color: #fff;
-          background-color: transparent;
+          color: inherit !important;
+          background-color: transparent !important;
           @include luxelevations.lux-elevation-z0();
         }
 
@@ -81,7 +81,7 @@ lux-message-box {
 
     .mat-mdc-fab.mat-unthemed,
     .mat-mdc-mini-fab.mat-unthemed {
-      background-color: transparent;
+      background-color: transparent !important;
     }
 
     & .lux-message-container.lux-bg-color-white {
@@ -92,7 +92,7 @@ lux-message-box {
 
       & lux-button button.lux-button.mat-mdc-fab:not([disabled]).lux-fab-rounded-default {
         &:hover {
-          color: #ffffff;
+          color: #ffffff !important;
           background-color: luxpalette.$lux-primary-color !important;
         }
 
@@ -111,16 +111,46 @@ lux-message-box {
 
       & lux-button button.lux-button.mat-mdc-fab:not([disabled]).lux-fab-rounded-default {
         &:hover {
-          color: white;
+          color: white !important;
           background-color: rgba(1, 1, 1, 0.2) !important;
         }
 
         &:focus-visible {
           @include luxfocus.focus-bright-mixin;
-          color: white;
+          color: white !important;
           background-color: transparent !important;
         }
       }
+    }
+  }
+}
+
+@media (prefers-contrast: more) {
+  lux-message-box {
+    .lux-message-container {
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+    
+    .lux-bg-color-red {
+      background-color: map-get(map-get(luxpalette.$lux-palettes-new, 'error'), 35);
+    }
+    .lux-font-color-green {
+      color: #ffffff;
+    }
+    .lux-bg-color-green {
+      background-color: map-get(map-get(luxpalette.$lux-palettes-new, 'tertiary'), 30);
+    }
+    .lux-bg-color-gray {
+      background-color: map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10);
+    }
+    .lux-bg-color-orange {
+      background-color: map-get(luxcommon.$colorsForDarkBg, 'yellow');
+    }
+    .lux-bg-color-purple {
+      background-color: map-get(map-get(luxpalette.$lux-palettes-new, 'neutral'), 10);
     }
   }
 }
