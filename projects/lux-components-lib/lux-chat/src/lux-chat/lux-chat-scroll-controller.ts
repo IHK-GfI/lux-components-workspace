@@ -1,3 +1,5 @@
+import { EMPTY, Observable } from "rxjs";
+
 export class ScrollController {
     private running = false;
   
@@ -5,8 +7,10 @@ export class ScrollController {
     private deltaScroll = 0;
     private deltaTime = 0;
     private steps = 0;
+
+    private onFinishListener: any[] = [];
   
-    public scrollTo(el: Element, scrollPos: number, time: number, pixelPerStep: number, smoothScrolling = true){
+    public scrollTo(el: Element, scrollPos: number, time: number, pixelPerStep: number, smoothScrolling = true, onFinish?: () => void){
         this.element = el;
     
         const dist = scrollPos - (el.clientHeight + el.scrollTop);
@@ -28,6 +32,10 @@ export class ScrollController {
         this.deltaScroll = dist / this.steps;
         this.deltaTime = time / this.steps;
     
+        if(onFinish){
+            this.onFinishListener.push(onFinish);
+        }
+        
         if(!this.running){
             this.running = true;
             setTimeout(() => this.update());
@@ -46,6 +54,13 @@ export class ScrollController {
         else {
             this.element.scrollTop = this.element.scrollHeight;
             this.running = false;
+
+            const len = this.onFinishListener.length;
+            for(let i=0;i<len;i++){
+                this.onFinishListener[i]();
+            }
+
+            this.onFinishListener = this.onFinishListener.slice(len);
         }
     }
 

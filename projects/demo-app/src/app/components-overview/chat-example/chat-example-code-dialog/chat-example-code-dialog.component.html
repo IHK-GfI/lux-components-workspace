@@ -1,0 +1,12 @@
+<lux-dialog-structure>
+    <lux-dialog-title>Generierter Code</lux-dialog-title>
+    <lux-dialog-content>
+        <div class="config-example-code-block">
+            {{luxDialogRef.data}}
+        </div>
+    </lux-dialog-content>
+    <lux-dialog-actions>
+        <lux-button luxLabel="Kopieren" luxColor="primary" [luxFlat]="true" style="padding-right: 8px;" (luxClicked)="copyToClipboard()"></lux-button>
+        <lux-button luxLabel="Ok" luxColor="accent" [luxFlat]="true" (luxClicked)="luxDialogRef.closeDialog()"></lux-button>
+    </lux-dialog-actions>
+</lux-dialog-structure>

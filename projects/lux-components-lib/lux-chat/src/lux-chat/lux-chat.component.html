@@ -20,9 +20,9 @@
                     </lux-chat-header>
                 }
                 
-                <lux-divider></lux-divider>
+                <lux-divider [luxInset]="true"></lux-divider>
 
-                <div class="lux-chat-base" (mousewheel)="onChatScroll($event)" #chatBase>
+                <div class="lux-chat-base" (scroll)="onChatScroll($event)" #chatBase>
                     @for (item of chatData?.data; track $index) {
                         <ng-container *ngTemplateOutlet="compChatEntry?.templateRef ?? defaultEntry.templateRef; context: { $implicit: item }"></ng-container>
                     }

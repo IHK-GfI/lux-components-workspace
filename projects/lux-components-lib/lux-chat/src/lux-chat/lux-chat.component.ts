@@ -58,13 +58,12 @@ export class LuxChatComponent implements LuxChatControlRef {
   public chatInput = "";
   public chatAutoScroll = true;
   private scrollController = new ScrollController();
-
+  private lastScroll = 0;
 
   public onChatEntered(event: Event): void {
     event.stopPropagation();
 
     this.chatData?.addChatEntry(this.userName, this.chatInput, new Date());
-    //this.chatOut.emit(this.chatInput);
 
     this.chatInput = ""
   }
@@ -76,32 +75,38 @@ export class LuxChatComponent implements LuxChatControlRef {
   }
 
   public scrollToBottomForced(smoothScrolling = true) {
-    this.chatAutoScroll = true;
     this.doScrollToBottom(smoothScrolling);
   }
 
   private doScrollToBottom(smoothScrolling = true){
     setTimeout(() =>{
+      this.chatAutoScroll = true;
       const baseEl = this.chatBase.nativeElement;
-      this.scrollController.scrollTo(baseEl, baseEl.scrollHeight, 100, 10, smoothScrolling);
+      this.scrollController.scrollTo(baseEl, baseEl.scrollHeight, 100, 10, smoothScrolling, () => {
+        this.chatAutoScroll = true;
+      });
     }, 2);
   }
 
-  public onChatScroll(e: any){
+  public onChatScroll(e: any) {
     const scrollTop = this.chatBase.nativeElement.scrollTop;
     const scrollHeight = this.chatBase.nativeElement.scrollHeight;
     const elHeight = this.chatBase.nativeElement.clientHeight;
 
     if(scrollHeight <= elHeight) return;
 
-    if(this.chatAutoScroll && e.deltaY < 0){
+    const deltaY = scrollTop - this.lastScroll;
+
+    if(this.chatAutoScroll && deltaY < 0){
       this.chatAutoScroll = false;
     }
-    else if(!this.chatAutoScroll && e.deltaY > 0){
-      if(scrollTop + e.deltaY + elHeight >= scrollHeight){
+    else if(!this.chatAutoScroll && deltaY > 0){
+      if(scrollTop + deltaY + elHeight >= scrollHeight){
         this.chatAutoScroll = true;
       }
     }
+
+    this.lastScroll = scrollTop;
   }
 
 }

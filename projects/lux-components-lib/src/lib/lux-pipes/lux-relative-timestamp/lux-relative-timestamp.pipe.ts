@@ -41,9 +41,9 @@ export class LuxRelativeTimestampPipe implements PipeTransform {
     let timeName = null;
 
     let showAsRelative = true;
-    if(relativeUntilMin !== undefined && delta <= relativeUntilMin) {
+    if((relativeUntilMin || relativeUntilMin === 0) && delta <= relativeUntilMin) {
       showAsRelative = false;
-    } else if(relativeUntilMax != undefined && delta > relativeUntilMax){
+    } else if((relativeUntilMax || relativeUntilMax === 0) && delta > relativeUntilMax){
       showAsRelative = false;
     }
 
@@ -83,7 +83,7 @@ export class LuxRelativeTimestampPipe implements PipeTransform {
       
       timeName = weekdayLong + ", " + then.getDate() + ". " + monthNameLong;
 
-      if(then.getUTCFullYear() < now.getUTCFullYear()){
+      if(then.getFullYear() < now.getFullYear()){
         const year = then.toLocaleString(locale, { year: 'numeric' })
         timeName += " " + year;
       }

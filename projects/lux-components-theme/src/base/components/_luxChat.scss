@@ -30,7 +30,7 @@
     display: flex;
     flex-direction: column;
 
-    margin: 16px 8px 32px;
+    margin: 16px 8px;
 }
 
 .lux-chat-base {
@@ -43,6 +43,10 @@
     display: flex;
     flex-direction: column;
 
+}
+
+.default-chat-header-title {
+    margin: 0;
 }
 
 .lux-chat-entry-date-split {
@@ -67,7 +71,7 @@
 }
 
 .lux-chat-entry-card {
-    padding: 1px 20px;
+    padding: 0px 20px;
     border-radius: 10px;
 }
 

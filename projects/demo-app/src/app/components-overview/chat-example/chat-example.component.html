@@ -1,15 +1,149 @@
-<div style="width: 100%; height: 530px;">
-    <lux-chat userName="User2" [chatData]="chatData">
-        <lux-chat-entry>
-            <lux-chat-entry-actions>
-                <ng-template let-item>
-                    <lux-icon style="cursor: pointer;" luxIconName="lux-mail-smiley-happy-face"></lux-icon>
-                    <lux-icon style="cursor: pointer;" luxIconName="lux-mail-smiley-straight-face"></lux-icon>
-                    <lux-icon style="cursor: pointer;" luxIconName="lux-mail-smiley-sad-face"></lux-icon>
-                    <lux-divider [luxVertical]="true"></lux-divider>
-                    <lux-icon style="cursor: pointer;" luxIconName="lux-interface-setting-menu-horizontal"></lux-icon>
-                </ng-template>
-            </lux-chat-entry-actions>
-        </lux-chat-entry>
-    </lux-chat>
-</div>
+<example-base-structure
+  exampleTitle="Chat"
+>
+  <example-base-content>
+    <div class="chat-example">
+        <lux-chat [userName]="userName" [chatData]="chatData">
+
+          @if(advancedHeaderTemplate.id === 1){
+            <lux-chat-header>
+              <h1>{{chatData.title}}</h1>
+            </lux-chat-header>
+          }
+          @else if(advancedHeaderTemplate.id === 2){
+            <lux-chat-header>
+              <h3>--- {{chatData.title}} ---</h3>
+            </lux-chat-header>
+          }
+          @else if(advancedHeaderTemplate.id === 3){
+            <lux-chat-header>
+              <p>
+                <b>{{chatData.title}}</b><br>
+                {{chatData.data.length}} Einträge.
+              </p>
+            </lux-chat-header>
+          }
+
+          @if(advancedEntryHeaderTemplate.id !== 0 || advancedEntryContentTemplate.id !== 0 || advancedEntryActionsTemplate.id !== 0){
+            <lux-chat-entry>
+              @if(advancedEntryHeaderTemplate.id === 1){
+                <lux-chat-entry-header>
+                  <ng-template let-item>
+                    <span>{{item.user}}</span>
+                    <span>{{item.time | date:'HH:mm'}}</span>
+                  </ng-template>
+                </lux-chat-entry-header>
+              }
+
+              @if(advancedEntryContentTemplate.id === 1){
+                <lux-chat-entry-content>
+                  <ng-template let-item>{{item.content}}</ng-template>
+                </lux-chat-entry-content>
+              }
+              @else if(advancedEntryContentTemplate.id === 2){
+                <lux-chat-entry-content>
+                  <ng-template let-item>
+                    <div style="padding-bottom: 6px;">
+                      {{item.content}}<br>
+                      <lux-button luxLabel="Quellen" [luxRaised]="true"></lux-button>
+                    </div>
+                  </ng-template>
+                </lux-chat-entry-content>
+              }
+
+              @if(advancedEntryActionsTemplate.id === 1){
+                <lux-chat-entry-actions>
+                  <ng-template>
+                    <lux-icon luxIconName="lux-mail-smiley-happy-face"></lux-icon>
+                    <lux-icon luxIconName="lux-mail-smiley-straight-face"></lux-icon>
+                    <lux-icon luxIconName="lux-mail-smiley-sad-face"></lux-icon>
+                    <lux-icon luxIconName="lux-interface-favorite-like-1"></lux-icon>
+                    <lux-icon luxIconName="lux-interface-favorite-dislike-1"></lux-icon>
+                  </ng-template>
+                </lux-chat-entry-actions>
+              }
+              @else if(advancedEntryActionsTemplate.id === 2){
+                <lux-chat-entry-actions>
+                  <ng-template>
+                    <lux-icon luxIconName="lux-interface-setting-menu-horizontal"></lux-icon>
+                  </ng-template>
+                </lux-chat-entry-actions>
+              }
+            </lux-chat-entry>
+          }
+
+          @if(advancedInputTemplate.id === 1){
+            <lux-chat-input>
+              <div style="display: flex; flex-direction: row; gap: 8px;">
+                <lux-input-ac style="flex: 1 0 auto;" luxTagId="chatInput" [(luxValue)]="chatInput" luxAutocomplete="off" [luxNoTopLabel]="true" [luxNoBottomLabel]="true"
+                  (keyup.enter)="onChatEntered($event)"></lux-input-ac>
+                <lux-button style="flex: 0 0 auto; margin: auto;" luxLabel="Senden" [luxRaised]="true" (luxClicked)="onChatEntered()"></lux-button>
+              </div>
+            </lux-chat-input>
+          }
+
+        </lux-chat>
+    </div>
+
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-input-ac [(luxValue)]="userName" luxLabel="userName"> </lux-input-ac>
+
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-select-ac [(luxSelected)]="advancedHeaderTemplate" [luxOptions]="advancedHeaderOptions" luxLabel="lux-chat-header">
+      <ng-template let-option>
+        {{option.label}}
+      </ng-template>
+    </lux-select-ac>
+    <div class="config-example-code-block">
+      {{advancedHeaderTemplate.content}}
+    </div>
+    <lux-divider [luxInset]="true"></lux-divider>
+
+    <lux-select-ac [(luxSelected)]="advancedEntryHeaderTemplate" [luxOptions]="advancedEntryHeaderOptions" luxLabel="lux-chat-entry-header">
+      <ng-template let-option>
+        {{option.label}}
+      </ng-template>
+    </lux-select-ac>
+    <div class="config-example-code-block">
+      {{advancedEntryHeaderTemplate.content}}
+    </div>
+    <lux-divider [luxInset]="true"></lux-divider>
+
+    <lux-select-ac [(luxSelected)]="advancedEntryContentTemplate" [luxOptions]="advancedEntryContentOptions" luxLabel="lux-chat-entry-content">
+      <ng-template let-option>
+        {{option.label}}
+      </ng-template>
+    </lux-select-ac>
+    <div class="config-example-code-block">
+      {{advancedEntryContentTemplate.content}}
+    </div>
+    <lux-divider [luxInset]="true"></lux-divider>
+
+    <lux-select-ac [(luxSelected)]="advancedEntryActionsTemplate" [luxOptions]="advancedEntryActionsOptions" luxLabel="lux-chat-entry-actions">
+      <ng-template let-option>
+        {{option.label}}
+      </ng-template>
+    </lux-select-ac>
+    <div class="config-example-code-block">
+      {{advancedEntryActionsTemplate.content}}
+    </div>
+    <lux-divider [luxInset]="true"></lux-divider>
+
+    <lux-select-ac [(luxSelected)]="advancedInputTemplate" [luxOptions]="advancedInputOptions" luxLabel="lux-chat-input">
+      <ng-template let-option>
+        {{option.label}}
+      </ng-template>
+    </lux-select-ac>
+    <div class="config-example-code-block">
+      {{advancedInputTemplate.content}}
+    </div>
+    <lux-divider [luxInset]="true"></lux-divider>
+  </example-base-advanced-options>
+
+  <example-base-options-actions>
+    <lux-button [luxRaised]="true" luxLabel="Quellcode Generieren" luxColor="primary" (luxClicked)="generateAndShowCode()"></lux-button>
+  </example-base-options-actions>
+
+</example-base-structure>

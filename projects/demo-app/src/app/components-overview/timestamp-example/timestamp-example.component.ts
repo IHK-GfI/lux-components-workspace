@@ -32,6 +32,8 @@ export class TimestampExampleComponent {
 
   defaultText = '';
   prefix?: string;
+  relativeUntilMin?: number;
+  relativeUntilMax?: number;
 
   constructor() {
     this.now = this.initialNow;
