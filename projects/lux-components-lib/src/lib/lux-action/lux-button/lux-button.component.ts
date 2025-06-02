@@ -1,5 +1,15 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject
+} from '@angular/core';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { Subject, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
@@ -18,6 +28,9 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, LuxIconComponent, LuxProgressComponent]
 })
 export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit, OnDestroy {
+  /**
+   * @internal
+   */
   elementRef = inject(ElementRef);
   componentsConfigService = inject(LuxComponentsConfigService);
   tooltipDirective?: LuxTooltipDirective;
