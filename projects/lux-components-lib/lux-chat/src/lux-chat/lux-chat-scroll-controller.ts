@@ -12,6 +12,8 @@ export class ScrollController {
   
     public scrollTo(el: Element, scrollPos: number, time: number, pixelPerStep: number, smoothScrolling = true, onFinish?: () => void){
         this.element = el;
+
+        console.log("Scroll", scrollPos, time, pixelPerStep, smoothScrolling);
     
         const dist = scrollPos - (el.clientHeight + el.scrollTop);
         if(Math.abs(dist) <= 2 || !smoothScrolling){
@@ -20,9 +22,13 @@ export class ScrollController {
         }
     
         const calcSteps = Math.abs(dist) / pixelPerStep;
+
+        console.log("steps: ", calcSteps)
     
         if(calcSteps >= time) {
             const newPixelPerStep = Math.ceil(Math.abs(dist) / time);
+            console.log("newPixelPerStep", newPixelPerStep);
+
             this.scrollTo(el, scrollPos, time, newPixelPerStep);
             return;
         }

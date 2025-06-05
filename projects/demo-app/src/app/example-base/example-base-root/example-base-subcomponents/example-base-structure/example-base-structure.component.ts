@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../example-base-options/example-base-simple-options.component';
+import { ExampleBaseContentActionsComponent } from '../example-base-content/example-base-content-actions.component';
 
 @Component({
   selector: 'example-base-structure',
@@ -45,6 +46,7 @@ export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
   @Input() exampleDocumentationHref = '';
 
   @ContentChild(ExampleBaseContentComponent) contentComponent?: ExampleBaseContentComponent;
+  @ContentChild(ExampleBaseContentActionsComponent) aCcontentComponent?: ExampleBaseContentActionsComponent;
   @ContentChild(ExampleBaseSimpleOptionsComponent) simpleOptionsComponent?: ExampleBaseSimpleOptionsComponent;
   @ContentChild(ExampleBaseAdvancedOptionsComponent) advancedOptionsComponent?: ExampleBaseAdvancedOptionsComponent;
 

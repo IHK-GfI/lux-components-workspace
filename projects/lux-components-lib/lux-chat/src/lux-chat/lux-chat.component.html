@@ -1,9 +1,15 @@
 <div class="lux-chat">
     <div class="lux-chat-layout-vertical">
         <!-- Sidebars top -->
+        @for(sidebar of sidebars_top; track $index){
+           <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+        }
 
         <div class="lux-chat-layout-horizontal">
             <!-- Sidebars left -->
+            @for(sidebar of sidebars_left; track $index){
+               <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+            }
 
             <div class="lux-chat-layout-container">
                 @if (compChatHeader) {
@@ -14,7 +20,7 @@
                         <p class="default-chat-header-title">
                             <b>{{ chatData?.title }}</b><br/>
                             @if(chatData){
-                                Erstellt: <b>{{ chatData!.created_at | luxRelativeTimestamp:undefined:undefined:-11:0 }}</b>
+                                {{defaultChatHeaderDatePrefix}}: <b>{{ chatData!.created_at | luxRelativeTimestamp:undefined:undefined:-11:0 }}</b>
                             }
                         </p>
                     </lux-chat-header>
@@ -22,7 +28,7 @@
                 
                 <lux-divider [luxInset]="true"></lux-divider>
 
-                <div class="lux-chat-base" (scroll)="onChatScroll($event)" #chatBase>
+                <div class="lux-chat-base" (scroll)="onChatScroll($event)" tabindex="0" #chatBase>
                     @for (item of chatData?.data; track $index) {
                         <ng-container *ngTemplateOutlet="compChatEntry?.templateRef ?? defaultEntry.templateRef; context: { $implicit: item }"></ng-container>
                     }
@@ -33,17 +39,23 @@
                 }
                 @else {
                     <lux-chat-input>
-                        <lux-textarea-ac luxTagId="chatInput" [(luxValue)]="chatInput" luxAutocomplete="off" [luxNoTopLabel]="true" [luxNoBottomLabel]="true"
+                        <lux-textarea-ac luxAriaLabel="Chat Eingabe" luxAriaLabelSelector="textarea" i18n-luxAriaLabel="@@luxc.chat.eingabe.arialabel" luxTagId="chatInput" [(luxValue)]="chatInput" luxAutocomplete="off" [luxNoTopLabel]="true" [luxNoBottomLabel]="true"
                             [luxMaxRows]="4"
-                            (keyup.enter)="onChatEntered($event)"></lux-textarea-ac>
+                            (keydown.enter)="onChatEntered($event)"></lux-textarea-ac>
                     </lux-chat-input>
                 }
             </div>
 
             <!-- Sidebars right -->
+            @for(sidebar of sidebars_right; track $index){
+                <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+            }
         </div>
 
         <!-- Sidebars bottom -->
+        @for(sidebar of sidebars_bottom; track $index){
+            <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+        }
     </div>
 </div>
 

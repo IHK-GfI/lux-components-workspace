@@ -1,6 +1,6 @@
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { LuxButtonComponent, LuxDialogService, LuxDividerComponent, LuxIconComponent, LuxInputAcComponent, LuxSelectAcComponent } from '@ihk-gfi/lux-components';
-import { LuxChatComponent, LuxChatData, LuxChatEntryActionsComponent, LuxChatEntryContentComponent, LuxChatEntryComponent, LuxChatHeaderComponent, LuxChatInputComponent, LuxChatEntryHeaderComponent } from '@ihk-gfi/lux-components/lux-chat';
+import { LuxChatComponent, LuxChatData, LuxChatEntryActionsComponent, LuxChatEntryContentComponent, LuxChatEntryComponent, LuxChatHeaderComponent, LuxChatInputComponent, LuxChatEntryHeaderComponent, LuxChatSidebarComponent, Side } from '@ihk-gfi/lux-components/lux-chat';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -8,6 +8,7 @@ import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-
 import { DatePipe } from '@angular/common';
 import { ExampleBaseOptionsActionsComponent } from "../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component";
 import { ChatExampleCodeDialogComponent } from './chat-example-code-dialog/chat-example-code-dialog.component';
+import { LuxToggleAcComponent } from "../../../../../lux-components-lib/src/lib/lux-form/lux-toggle-ac/lux-toggle-ac.component";
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -27,6 +28,7 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     LuxChatEntryHeaderComponent,
     LuxChatEntryActionsComponent,
     LuxChatInputComponent,
+    LuxChatSidebarComponent,
     LuxButtonComponent,
     LuxChatEntryContentComponent,
     LuxChatHeaderComponent,
@@ -39,7 +41,9 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     LuxDividerComponent,
     LuxIconComponent,
     DatePipe,
-    ExampleBaseOptionsActionsComponent
+    ExampleBaseOptionsActionsComponent,
+    LuxToggleAcComponent,
+    
 ],
   templateUrl: './chat-example.component.html',
   styleUrl: './chat-example.component.scss'
@@ -49,6 +53,12 @@ export class ChatExampleComponent {
   private dialogService = inject(LuxDialogService);
 
   private groupChat = new LuxChatData("Mein Gruppen Chat", new Date("2024-11-05T10:30:00Z"))
+  private nutzerAChat = new LuxChatData("Chat mit Nutzer A", new Date("2022-01-14T22:11:00Z"))
+
+  public allChats = [
+    this.groupChat,
+    this.nutzerAChat
+  ];
 
   public chatData = this.groupChat;
 
@@ -59,6 +69,7 @@ export class ChatExampleComponent {
     {id: 1, label: "H1 Titel", content: "<lux-chat-header>\n\t<h1>{{chatData.title}}</h1>\n</lux-chat-header>"},
     {id: 2, label: "H3 Titel", content: "<lux-chat-header>\n\t<h3>{{chatData.title}}</h3>\n</lux-chat-header>"},
     {id: 3, label: "Titel und Anzahl Nachrichten", content: "<lux-chat-header>\n\t<p>\n\t\t<b>{{chatData.title}}</b><br>\n\t\t{{chatData.data.length}} Einträge.\n\t</p>\n</lux-chat-header>"},
+    {id: 4, label: "Header mit Button zur Historie.", content: "<lux-chat-header>\n\t<div style=\"display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 20px;\">\n\t\t<lux-icon role=\"button\" (click)=\"doShowHistory()\" style=\"cursor: pointer;\" [luxIconName]=\"sidebarHistoryVisible ? 'lux-book-readme' : 'lux-hand-held'\" [luxRounded]=\"true\"></lux-icon>\n\t\t<p>\n\t\t\t<b>{{ chatData.title }}</b><br/>\n\t\t\tErstellt am: <b>{{ chatData.created_at | date:'dd.MM.yyyy, HH:mm:ss' }}</b>\n\t\t</p>\n\t</div>\n</lux-chat-header>"}
   ];
   public advancedHeaderTemplate: {id: number, label: string, content: string} = this.advancedHeaderOptions[0];
 
@@ -91,6 +102,11 @@ export class ChatExampleComponent {
 
   public chatInput = "";
 
+  public sidebarHistorySide: Side = 'left';
+  public sidebarHistoryVisible = false;
+  public sidebarHistoryOverlay = true;
+
+
   public showChatEntryActions = false;
 
   @ViewChild('generateCodeDialog', {read: TemplateRef})
@@ -98,12 +114,13 @@ export class ChatExampleComponent {
 
   constructor(){
     this.initGroupChat();
+    this.initNutzerAChat();
   }
 
   private initGroupChat(){
     this.groupChat.addChatEntry("Nutzer A", "Erster Eintrag!", new Date("2024-11-05T10:30:00Z"));
     this.groupChat.addChatEntry("Nutzer B", "Hey, ich bin Nutzer B.", new Date("2024-11-05T10:32:00Z"));
-    this.groupChat.addChatEntry("Nutzer B", "Wenn ich innerhalb von 5 minuten schreibe, dann wird die Zeitangabe zusammengefasst.", new Date("2024-11-05T10:34:00Z"));
+    this.groupChat.addChatEntry("Nutzer B", "Wenn ich innerhalb von 5 Minuten schreibe, dann wird die Zeitangabe zusammengefasst.", new Date("2024-11-05T10:34:00Z"));
     this.groupChat.addChatEntry("Nutzer A", "...", new Date("2024-11-05T10:37:00Z"));
     this.groupChat.addChatEntry("Nutzer C", "Hey, ich bin neu hier.", new Date("2024-11-05T10:37:00Z"));
     this.groupChat.addChatEntry("Nutzer A", "Hallo Nutzer C.", new Date("2024-11-06T09:12:00Z"));
@@ -116,7 +133,7 @@ export class ChatExampleComponent {
     
     this.groupChat.addChatEntry("Nutzer B", "Diese Nachricht wurde vor 2 Tagen geschrieben.", new Date(nowTime - 2 * DAY_IN_MILLIS));
     this.groupChat.addChatEntry("Nutzer B", "Diese Nachricht wurde gestern geschrieben.", new Date(nowTime - 1 * DAY_IN_MILLIS));
-    this.groupChat.addChatEntry("Nutzer B", "Diese nachricht wurde heute geschrieben.", new Date(nowTime - 1 * HOUR));
+    this.groupChat.addChatEntry("Nutzer B", "Diese Nachricht wurde heute geschrieben.", new Date(nowTime - 1 * HOUR));
     this.groupChat.addChatEntry("Nutzer B", "Wie ihr sehen könnt wird für heute und gestern eine relative Bezeichnung gewählt.", new Date(nowTime - 1 * HOUR + 2 * MINUTE));
     this.groupChat.addChatEntry("Nutzer A", "... Ich habe mich das schon länger gefragt, aber wem erklärst du das eigentlich?!", new Date(nowTime - 10 * MINUTE));
     this.groupChat.addChatEntry("Nutzer B", "Schreib du doch auch mal was, damit Nutzer A weiss wen ich meine.", new Date(nowTime - 6 * MINUTE));
@@ -128,6 +145,24 @@ export class ChatExampleComponent {
         }, 1000);
       }
     });
+  }
+
+  private initNutzerAChat(){
+    const curUsername = this.userName;
+    this.nutzerAChat.addChatEntry("Nutzer A", "Hey, wie geht es dir?", new Date("2022-01-14T22:11:00Z"));
+    this.nutzerAChat.addChatEntry(curUsername, "Hallo, wer bist du?", new Date("2022-01-14T23:00:00Z"));
+    this.nutzerAChat.addChatEntry(curUsername, "Ich habe dich anscheinend noch nicht eingespeichert.", new Date("2022-01-14T23:01:00Z"));
+    this.nutzerAChat.addChatEntry("Nutzer A", "...", new Date("2022-01-15T08:21:00Z"));
+    this.nutzerAChat.addChatEntry("Nutzer A", "Luke, ich bin dein Vater!", new Date("2022-01-15T08:21:10Z"));
+  }
+
+  public doShowHistory(): void {
+    this.sidebarHistoryVisible = !this.sidebarHistoryVisible;
+  }
+
+  public onHistoryChatClicked(chat: LuxChatData): void {
+    this.chatData = chat;
+    this.sidebarHistoryVisible = false;
   }
 
   public onChatEntered(event?: Event): void {

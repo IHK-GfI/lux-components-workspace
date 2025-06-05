@@ -14,6 +14,8 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+
+    position: relative;
 }
 
 .lux-chat-layout-horizontal {
@@ -21,7 +23,10 @@
 
     display: flex;
     flex-direction: row;
+    overflow-x: hidden;
     overflow-y: auto;
+    
+    position: relative;
 }
 
 .lux-chat-layout-container {
@@ -105,7 +110,7 @@
 
     font-size: 1rem;
     font-weight: 500;
-    color: luxcommon.$dark-disabled-text;
+    color: luxcommon.$dark-secondary-text;
 }
 
 .lux-chat-entry-content {
@@ -145,3 +150,156 @@
     }
 }
 
+lux-chat-input {
+    margin-top: 8px;
+}
+
+$sidebarContainerPadding: 16px;
+
+.chat-sidebar-container {
+    overflow: hidden;
+    min-width: 100px; 
+    min-height: 100px; 
+    background-color: lightblue;
+
+    border: 1px solid rgba(0, 0, 0, .12);
+    background-color: #fff;
+    padding: $sidebarContainerPadding;
+
+    display: flex;
+    flex-direction: column;
+    
+    // Animation for sliding in / out
+    transition: transform 300ms ease-in-out;
+
+    &.overlay {
+        position: absolute;
+        box-sizing: border-box;
+        z-index: 2;
+
+        &.top {
+            width: 100%;
+        }
+
+        &.left {
+            height: 100%;
+        }
+
+        &.bottom {
+            width: 100%;
+        }
+
+        &.right {
+            height: 100%;
+        }
+    }
+
+    &.top {
+        top: 0;
+        left: 0;
+
+        transform: translateY(-100%);
+
+        &.sidebar-show {
+            transform: translateY(0);
+        }
+
+        .chat-sidebar-content {
+            flex-direction: row;
+            
+            width: calc(100% - ($sidebarContainerPadding * 2));
+            overflow-x: auto;
+        }
+    }
+
+    &.left {
+        top: 0;
+        left: 0;
+
+        transform: translateX(-100%);
+
+        &.sidebar-show {
+            transform: translateX(0);
+        }
+
+        .chat-sidebar-content {
+            flex-direction: column;
+            
+            height: calc(100% - ($sidebarContainerPadding * 2));
+            overflow-y: auto;
+        }
+    }
+
+    &.bottom {
+        bottom: 0;
+        left: 0;
+
+        transform: translateY(100%);
+
+        &.sidebar-show {
+            transform: translateY(0);
+        }
+        
+        .chat-sidebar-content {
+            flex-direction: row;
+            
+            width: calc(100% - ($sidebarContainerPadding * 2));
+            overflow-x: auto;
+        }
+    }
+
+    &.right {
+        top: 0;
+        right: 0;
+
+        transform: translateX(100%);
+
+        &.sidebar-show {
+            transform: translateX(0);
+        }
+        
+        .chat-sidebar-content {
+            flex-direction: column;
+
+            height: calc(100% - ($sidebarContainerPadding * 2));
+            overflow-y: auto;
+        }
+    }
+}
+
+.chat-sidebar-header {
+    flex: 0;
+
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 8px;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+.chat-sidebar-content {
+    flex: 1 0 auto;
+
+    display: flex;
+    overflow: hidden; //TODO: Check if this doesn't hinder anything
+}
+
+.chat-sidebar-close-icon {
+    color: #036;
+
+    ::ng-deep .mat-icon {
+        padding: 0 !important;
+        height: 29px;
+        width: 29px;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

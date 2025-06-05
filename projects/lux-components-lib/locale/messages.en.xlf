@@ -2,6 +2,22 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="luxc.chat.eingabe.arialabel" datatype="html">
+        <source>Chat Eingabe</source>
+        <target>Chat Input</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../../projects/lux-components-lib/lux-chat/src/lux-chat/lux-chat.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.chat.default.header.date.prefix" datatype="html">
+        <source>Erstellt</source>
+        <target>Created at</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../../projects/lux-components-lib/lux-chat/src/lux-chat/lux-chat.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="luxc.menu.trigger.btn" datatype="html">
         <source>Menü</source>
         <target>Menu</target>

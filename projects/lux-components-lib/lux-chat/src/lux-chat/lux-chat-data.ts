@@ -25,7 +25,6 @@ export class LuxChatData implements LuxChatControlRef {
     }
 
     addChatEntry(userName: string, content: string, time: Date, smoothScrolling = true): LuxChatDataEntry {
-        console.log("[" + content + "]???????", time);
         const chatEntry = new LuxChatDataEntry(this, userName, content, time);
         this.data.push(chatEntry);
         this.chatDataUpdate.emit(chatEntry);

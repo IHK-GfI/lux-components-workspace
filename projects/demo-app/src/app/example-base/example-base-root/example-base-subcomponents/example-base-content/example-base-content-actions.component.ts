@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'example-base-content-actions',
-  template: '<ng-content select="lux-button"></ng-content>'
+  template: '<ng-content></ng-content>'
 })
 export class ExampleBaseContentActionsComponent {
   constructor() {}

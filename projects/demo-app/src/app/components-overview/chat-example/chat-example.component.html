@@ -5,6 +5,14 @@
     <div class="chat-example">
         <lux-chat [userName]="userName" [chatData]="chatData">
 
+          <lux-chat-sidebar [side]="sidebarHistorySide" [(visible)]="sidebarHistoryVisible" [overlay]="sidebarHistoryOverlay" title="Historie">
+            <div style="width: 300px;">
+              @for(chat of allChats; track $index){
+                <div class="example-sidebar-history-item" (click)="onHistoryChatClicked(chat)" (keydown.enter)="onHistoryChatClicked(chat)" tabindex="0">{{chat.title}}</div>
+              }
+            </div>
+          </lux-chat-sidebar>
+
           @if(advancedHeaderTemplate.id === 1){
             <lux-chat-header>
               <h1>{{chatData.title}}</h1>
@@ -21,6 +29,17 @@
                 <b>{{chatData.title}}</b><br>
                 {{chatData.data.length}} Einträge.
               </p>
+            </lux-chat-header>
+          }
+          @else if(advancedHeaderTemplate.id === 4){
+            <lux-chat-header>
+              <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 20px;">
+                <lux-icon (click)="doShowHistory()" style="cursor: pointer;" [luxIconName]="sidebarHistoryVisible ? 'lux-book-readme' : 'lux-hand-held'" [luxRounded]="true"></lux-icon>
+                <p>
+                    <b>{{ chatData.title }}</b><br/>
+                    Erstellt am: <b>{{ chatData.created_at | date:'dd.MM.yyyy, HH:mm:ss' }}</b>
+                </p>
+              </div>
             </lux-chat-header>
           }
 
@@ -72,10 +91,11 @@
             </lux-chat-entry>
           }
 
+
           @if(advancedInputTemplate.id === 1){
             <lux-chat-input>
               <div style="display: flex; flex-direction: row; gap: 8px;">
-                <lux-input-ac style="flex: 1 0 auto;" luxTagId="chatInput" [(luxValue)]="chatInput" luxAutocomplete="off" [luxNoTopLabel]="true" [luxNoBottomLabel]="true"
+                <lux-input-ac style="flex: 1 0 auto;" luxTagId="chatInput" luxAriaLabel="Chat Eingabe" [(luxValue)]="chatInput" luxAutocomplete="off" [luxNoTopLabel]="true" [luxNoBottomLabel]="true"
                   (keyup.enter)="onChatEntered($event)"></lux-input-ac>
                 <lux-button style="flex: 0 0 auto; margin: auto;" luxLabel="Senden" [luxRaised]="true" (luxClicked)="onChatEntered()"></lux-button>
               </div>
@@ -84,10 +104,16 @@
 
         </lux-chat>
     </div>
-
   </example-base-content>
+
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac [(luxValue)]="userName" luxLabel="userName"> </lux-input-ac>
+
+    <lux-divider [luxInset]="true"></lux-divider>
+
+    <h3>Sidebar</h3>
+    <lux-select-ac luxLabel="side" [(luxSelected)]="sidebarHistorySide" [luxOptions]="['top', 'left', 'bottom', 'right']"></lux-select-ac>
+    <lux-toggle-ac luxLabel="overlay" [(luxChecked)]="sidebarHistoryOverlay"></lux-toggle-ac>
 
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
@@ -143,7 +169,8 @@
   </example-base-advanced-options>
 
   <example-base-options-actions>
-    <lux-button [luxRaised]="true" luxLabel="Quellcode Generieren" luxColor="primary" (luxClicked)="generateAndShowCode()"></lux-button>
+    <lux-button [luxRaised]="true" [luxLabel]="'Sidebar ' + (sidebarHistoryVisible ? 'verstecken' : 'zeigen')" luxColor="primary" (luxClicked)="doShowHistory()"></lux-button>
+    <lux-button [luxRaised]="true" luxLabel="Quellcode Generieren" luxColor="warn" (luxClicked)="generateAndShowCode()"></lux-button>
   </example-base-options-actions>
 
 </example-base-structure>
