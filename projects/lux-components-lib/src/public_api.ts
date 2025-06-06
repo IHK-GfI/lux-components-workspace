@@ -100,6 +100,7 @@ export * from './lib/lux-form/lux-file/lux-file-model/lux-file-capture.directive
 export * from './lib/lux-form/lux-file/lux-file-model/lux-file-error.interface';
 export * from './lib/lux-form/lux-file/lux-file-model/lux-file-list-action-config.interface';
 export * from './lib/lux-form/lux-file/lux-file-model/lux-file-object.interface';
+export * from './lib/lux-form/lux-file/lux-file-model/lux-file-upload-action-config.interface';
 export * from './lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component';
 export * from './lib/lux-form/lux-file/lux-file-subcomponents/lux-file-progress/lux-file-progress.component';
 export * from './lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component';

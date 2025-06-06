@@ -311,6 +311,11 @@ $fileUploadProgressSize: 8px;
           margin: 0;
         }
       }
+
+      lux-button.lux-file-upload-view-item-button button:disabled {
+        color: var(--lux-theme-dark-disabled-text);
+        background-color: var(--lux-theme-app-data-bg);
+      }
     }
   }
 

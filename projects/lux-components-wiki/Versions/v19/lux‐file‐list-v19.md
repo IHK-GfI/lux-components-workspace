@@ -14,6 +14,7 @@
     - [ILuxFileError](#iluxfileerror)
     - [LuxFileErrorCause](#luxfileerrorcause)
     - [ILuxFilesActionConfig](#iluxfilesactionconfig)
+    - [ILuxFileListDeleteActionConfig](#iluxfilelistdeleteactionconfig)
   - [Beispiele](#beispiele)
     - [1. Simple](#1-simple)
     - [2. Mit Formular](#2-mit-formular)
@@ -128,6 +129,14 @@ Dieses Interface enthält die möglichen Einstellungen für die Action-Buttons d
 | prio     | number                           | Über die Priorität kann die Anzeigereihenfolge beeinflusst werden.                            |
 | label    | string                           | Die Bezeichnung                                                                               |
 | onClick? | (file: ILuxFileObject[]) => void | Optionaler Callback, welcher bei der Durchführung der Aktion aufgerufen wird.                 |
+
+### ILuxFileListDeleteActionConfig
+
+Dieses Interface erweitert _ILuxFileListActionConfig_.
+
+| Name         | Typ                               | Beschreibung                                                                |
+| ------------ | --------------------------------- | --------------------------------------------------------------------------- |
+| isDeletable? | (file: ILuxFileObject) => boolean | Optionaler Callback, der prüft, ob der Delete-Button aktiviert werden darf. |
 
 ## Beispiele
 

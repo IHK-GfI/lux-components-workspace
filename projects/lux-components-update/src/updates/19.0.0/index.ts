@@ -3,17 +3,24 @@ import * as chalk from 'chalk';
 import { Node } from 'jsonc-parser';
 import { updateDependencies } from '../../update-dependencies/index';
 import { deleteFile, moveFilesToDirectory, replaceRule } from '../../utility/files';
-import { deleteJsonArray, deleteJsonValue, findObjectContainsInArray, findStringInArray, updateJsonArray, updateJsonValue } from '../../utility/json';
+import {
+  deleteJsonArray,
+  deleteJsonValue,
+  findObjectContainsInArray,
+  findStringInArray,
+  updateJsonArray,
+  updateJsonValue
+} from '../../utility/json';
 import { logInfoWithDescriptor, logSuccess } from '../../utility/logging';
 import { AddTransUnitItem, RemoveTransUnitItem, ReplaceItem } from '../../utility/replace-item';
 import { applyRuleIf, finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
 import { validateLuxComponentsVersion, validateNodeVersion } from '../../utility/validation';
 
 export interface Options {
-  project: string,
-  path: string,
-  verbose: boolean
-};
+  project: string;
+  path: string;
+  verbose: boolean;
+}
 
 export const updateMajorVersion = '19';
 export const updateMinVersion = '18.5.0';
@@ -107,7 +114,7 @@ export function updatePackageJson(options: Options): Rule {
       updateJsonValue(filePath, startEnScriptJsonPath, startEnScriptJsonValue, true),
       deleteJsonValue(filePath, ['scripts', 'test_no_sm']),
       replaceRule(
-      options,
+        options,
         `lint --fix wird angepasst...`,
         `lint --fix wurde angepasst.`,
         filePath,
@@ -122,7 +129,7 @@ export function updateAngularJson(options: Options): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     const filePath = (options.path ?? '') + '/angular.json';
 
-    const localizePath = ['projects', options.project, "architect", 'build', 'options', 'localize'];
+    const localizePath = ['projects', options.project, 'architect', 'build', 'options', 'localize'];
     const localizeValue = true;
 
     const polyfillsI18nPath = ['projects', options.project, 'architect', 'build', 'options', 'polyfills'];
@@ -141,21 +148,21 @@ export function updateAngularJson(options: Options): Rule {
     const enPath = ['projects', options.project, 'architect', 'build', 'configurations', 'en', 'localize'];
 
     const lintPatternPath = ['projects', options.project, 'architect', 'lint', 'options', 'lintFilePatterns'];
-    const lintPatternValue = ["src/app/**/*.ts", "src/app/**/*.html"];
+    const lintPatternValue = ['src/app/**/*.ts', 'src/app/**/*.html'];
 
     const lintConfigPath = ['projects', options.project, 'architect', 'lint', 'options', 'eslintConfig'];
     const lintConfigValue = 'eslint.config.js';
 
     const cliPath = ['cli', 'schematicCollections'];
     const cliFn = (node: Node) => findStringInArray(node, '@angular-eslint/schematics');
-    
+
     return chain([
       messageInfoRule(`angular.json wird angepasst...`),
       replaceRule(
         options,
         'Attribut "browserTarget" wird umbenannt in "buildTarget"...',
         'Attribut "luxOptionMultiline" wurde entfernt.',
-        (options.path ?? '') +'angular.json',
+        (options.path ?? '') + 'angular.json',
         new ReplaceItem('browserTarget', 'buildTarget', true)
       ),
       updateJsonValue(filePath, localizePath, localizeValue),
@@ -175,14 +182,14 @@ export function updateAngularJson(options: Options): Rule {
         options,
         'Icons-and-Fonts auf v1.10.0 wird aktualisiert...',
         'Icons-and-Fonts auf v1.10.0 wurde aktualisiert.',
-        (options.path ?? '') +'src/styles.scss',
+        (options.path ?? '') + 'src/styles.scss',
         new ReplaceItem('icons-and-fonts/v1.8.0', 'icons-and-fonts/v1.10.0', true)
       ),
       replaceRule(
         options,
         'Icons-and-Fonts auf v1.10.0 wird aktualisiert...',
         'Icons-and-Fonts auf v1.10.0 wurde aktualisiert.',
-        (options.path ?? '') +'src/app/app.module.ts',
+        (options.path ?? '') + 'src/app/app.module.ts',
         new ReplaceItem('icons-and-fonts/v1.8.0', 'icons-and-fonts/v1.10.0', true)
       ),
       messageSuccessRule(`angular.json wurde angepasst.`)
@@ -245,7 +252,6 @@ export function updateTsConfigSpecJson(options: Options): Rule {
 export function updateMainTs(options: Options): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     const filePath = (options.path ?? '') + '/src/main.ts';
-    
 
     return chain([
       messageInfoRule(`main.ts wird angepasst...`),
@@ -264,7 +270,6 @@ export function updateMainTs(options: Options): Rule {
 export function updateTestTs(options: Options): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     const filePath = (options.path ?? '') + '/src/main.ts';
-    
 
     return chain([
       messageInfoRule(`test.ts wird angepasst...`),
@@ -284,9 +289,9 @@ function updateMessages(options: Options): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     const deFilePath = (options.path ?? '') + '/src/locale/messages.xlf';
     const enFilePath = (options.path ?? '') + '/src/locale/messages.en.xlf';
-    
+
     const zoomId = 'luxc.file-preview.pdfviewer.zoom.arialabel';
-    
+
     const chipRemoveBeforeId = `luxc.chips.input.placeholder.lbl`;
     const deChipRemove = `<trans-unit id="luxc.chips.remove" datatype="html">
         <source>entfernen</source>
@@ -299,7 +304,7 @@ function updateMessages(options: Options): Rule {
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>`;
-      const enChipRemove = `<trans-unit id="luxc.chips.remove" datatype="html">
+    const enChipRemove = `<trans-unit id="luxc.chips.remove" datatype="html">
         <source>entfernen</source>
         <target>remove</target>
         <context-group purpose="location">
@@ -416,6 +421,23 @@ function updateMessages(options: Options): Rule {
         </context-group>
       </trans-unit>`;
 
+    const fileFileDeleteProtectionId = `luxc.file.replace.dialog.cancel.lbl`;
+    const deFileDeleteProtection = `<trans-unit id="luxc.file.replace.dialog.deleteprotection" datatype="html">
+        <source>Es soll eine Datei ersetzt werden, die weder erstetzt noch gelöscht werden darf!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
+          <context context-type="linenumber">24,28</context>
+        </context-group>
+      </trans-unit>`;
+    const enFileDeleteProtection = `<trans-unit id="luxc.file.replace.dialog.deleteprotection" datatype="html">
+        <source>Es soll eine Datei ersetzt werden, die weder erstetzt noch gelöscht werden darf!</source>
+        <target>A file is to be replaced that must not be replaced or deleted!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
+          <context context-type="linenumber">24,28</context>
+        </context-group>
+      </trans-unit>`;
+
     return chain([
       replaceRule(
         options,
@@ -426,9 +448,10 @@ function updateMessages(options: Options): Rule {
         new AddTransUnitItem(chipRemoveBeforeId, deChipRemove),
         new AddTransUnitItem(stepperNotCompletedBeforeId, deStepperNotCompleted),
         new AddTransUnitItem(listBeforeId, deList),
-        new AddTransUnitItem(fileRenameId, deFileRename)
+        new AddTransUnitItem(fileRenameId, deFileRename),
+        new AddTransUnitItem(fileFileDeleteProtectionId, deFileDeleteProtection)
       ),
-      
+
       replaceRule(
         options,
         `Messages (en) werden angepasst...`,
@@ -438,7 +461,8 @@ function updateMessages(options: Options): Rule {
         new AddTransUnitItem(chipRemoveBeforeId, enChipRemove),
         new AddTransUnitItem(stepperNotCompletedBeforeId, enStepperNotCompleted),
         new AddTransUnitItem(listBeforeId, enList),
-        new AddTransUnitItem(fileRenameId, enFileRename)
+        new AddTransUnitItem(fileRenameId, enFileRename),
+        new AddTransUnitItem(fileFileDeleteProtectionId, enFileDeleteProtection)
       )
     ]);
   };

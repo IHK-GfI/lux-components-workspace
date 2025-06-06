@@ -18,6 +18,7 @@ import { ILuxFileActionConfig, ILuxFilesActionConfig } from '../lux-file-model/l
 import { LuxFileCaptureDirective } from '../lux-file-model/lux-file-capture.directive';
 import { LuxFileErrorCause } from '../lux-file-model/lux-file-error.interface';
 import { ILuxFileObject } from '../lux-file-model/lux-file-object.interface';
+import { ILuxFileUploadDeleteActionConfig } from '../lux-file-model/lux-file-upload-action-config.interface';
 import { LuxFileDeleteDialogComponent } from '../lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component';
 import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component';
 
@@ -67,11 +68,11 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
     }
   }
 
-  get luxDeleteActionConfig(): ILuxFileActionConfig {
+  get luxDeleteActionConfig(): ILuxFileUploadDeleteActionConfig {
     return this._luxDeleteActionConfig;
   }
 
-  @Input() set luxDeleteActionConfig(config: ILuxFileActionConfig) {
+  @Input() set luxDeleteActionConfig(config: ILuxFileUploadDeleteActionConfig) {
     if (config) {
       this._luxDeleteActionConfig = config;
     }
@@ -104,11 +105,14 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
     label: $localize`:@@luxc.file-list.upload.lbl:Hochladen`
   };
 
-  _luxDeleteActionConfig: ILuxFileActionConfig = {
+  _luxDeleteActionConfig: ILuxFileUploadDeleteActionConfig = {
     disabled: false,
     hidden: false,
     iconName: 'lux-interface-delete-bin-2',
-    label: $localize`:@@luxc.form-file-base.delete.action.lbl:Löschen`
+    label: $localize`:@@luxc.form-file-base.delete.action.lbl:Löschen`,
+    isDeletable: (_file: ILuxFileObject) => {
+      return true;
+    },
   };
   _luxViewActionConfig: ILuxFileActionConfig = {
     disabled: false,
@@ -228,6 +232,7 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
       // Prüfen, ob die Dateien bereits vorhanden sind
       let selectedFilesArray: ILuxFileObject[] = [];
       const replaceableFilesMap = new Map<number, File>();
+      let replaceFileDeleteProtection = false;
       if (this.luxSelected) {
         files = Array.from(files);
         selectedFilesArray = Array.isArray(this.luxSelected) ? this.luxSelected : [this.luxSelected];
@@ -236,6 +241,7 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
           const index = selectedFilesArray.findIndex((compareFile: ILuxFileObject) => compareFile.name === file.name);
           if (index > -1) {
             replaceableFilesMap.set(index, file);
+            replaceFileDeleteProtection = replaceFileDeleteProtection || (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false);
           }
         });
       }
@@ -244,7 +250,8 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
         if (replaceableFilesMap.size > 0) {
           this.dialogService.storeDialogRef();
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
-            multiple: this.luxMultiple
+            multiple: this.luxMultiple,
+            deleteProtection: replaceFileDeleteProtection
           });
           this.forceProgressIndeterminate = false;
 
@@ -289,7 +296,8 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
         } else if (files.length === 1 && this.luxSelected && this.luxSelected.length > 0) {
           this.dialogService.storeDialogRef();
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
-            multiple: this.luxMultiple
+            multiple: this.luxMultiple,
+            deleteProtection: this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false
           });
           this.forceProgressIndeterminate = false;
 

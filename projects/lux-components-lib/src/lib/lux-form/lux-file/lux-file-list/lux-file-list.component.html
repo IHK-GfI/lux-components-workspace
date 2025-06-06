@@ -14,7 +14,7 @@
       [luxIconName]="luxDeleteActionConfig.iconNameHeader"
       luxTagId="lux-file-clear"
       luxColor="primary"
-      [luxDisabled]="!luxSelected || luxSelected.length === 0 || luxDeleteActionConfig.disabledHeader || luxDisabled || luxReadonly"
+      [luxDisabled]="!luxSelected || luxSelected.length === 0 || luxDeleteActionConfig.disabledHeader || luxDisabled || luxReadonly || hasOnlyDeleteProtectedFiles()"
       (luxClicked)="clearFiles($event)"
       [luxAriaLabel]="luxDeleteActionConfig.labelHeader"
       luxAriaLabelSelector="button"
@@ -185,7 +185,7 @@
         <lux-menu-item
           luxTagId="lux-file-list-entry-remove"
           [luxIconName]="luxDeleteActionConfig.iconName"
-          [luxDisabled]="luxDeleteActionConfig.disabled || luxDisabled || luxReadonly"
+          [luxDisabled]="luxDeleteActionConfig.disabled || luxDisabled || luxReadonly || (luxDeleteActionConfig.isDeletable ? !luxDeleteActionConfig.isDeletable(selectedFile) : false)"
           [luxLabel]="luxDeleteActionConfig.label"
           [luxHideLabelIfExtended]="true"
           [luxAlwaysVisible]="true"

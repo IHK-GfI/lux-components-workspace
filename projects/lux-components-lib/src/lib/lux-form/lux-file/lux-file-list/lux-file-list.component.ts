@@ -31,7 +31,7 @@ import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
 import { ILuxFileActionConfig } from '../lux-file-model/lux-file-action-config.interface';
 import { LuxFileCaptureDirective } from '../lux-file-model/lux-file-capture.directive';
 import { LuxFileErrorCause } from '../lux-file-model/lux-file-error.interface';
-import { ILuxFileListActionConfig, ILuxFilesListActionConfig } from '../lux-file-model/lux-file-list-action-config.interface';
+import { ILuxFileListDeleteActionConfig, ILuxFilesListActionConfig } from '../lux-file-model/lux-file-list-action-config.interface';
 import { ILuxFileObject } from '../lux-file-model/lux-file-object.interface';
 import { LuxFileProgressComponent } from '../lux-file-subcomponents/lux-file-progress/lux-file-progress.component';
 import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component';
@@ -99,7 +99,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     label: $localize`:@@luxc.file-list.upload.lbl:Hochladen`,
     labelHeader: $localize`:@@luxc.file-list.upload_title.lbl:Neue Dateien hochladen`
   };
-  _luxDeleteActionConfig: ILuxFileListActionConfig = {
+  _luxDeleteActionConfig: ILuxFileListDeleteActionConfig = {
     disabled: false,
     disabledHeader: false,
     hidden: false,
@@ -107,7 +107,10 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     iconName: 'lux-interface-delete-bin-5',
     iconNameHeader: 'lux-interface-delete-bin-5',
     label: $localize`:@@luxc.file-list.delete.lbl:Löschen`,
-    labelHeader: $localize`:@@luxc.file-list.delete_title.lbl:Alle Dateien entfernen`
+    labelHeader: $localize`:@@luxc.file-list.delete_title.lbl:Alle Dateien entfernen`,
+    isDeletable: (_file: ILuxFileObject) => {
+      return true;
+    },
   };
   _luxViewActionConfig: ILuxFileActionConfig = {
     disabled: false,
@@ -132,11 +135,11 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     }
   }
 
-  get luxDeleteActionConfig(): ILuxFileListActionConfig {
+  get luxDeleteActionConfig(): ILuxFileListDeleteActionConfig {
     return this._luxDeleteActionConfig;
   }
 
-  @Input() set luxDeleteActionConfig(config: ILuxFileListActionConfig) {
+  @Input() set luxDeleteActionConfig(config: ILuxFileListDeleteActionConfig) {
     if (config) {
       this._luxDeleteActionConfig = config;
     }
@@ -254,11 +257,28 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     this.formControl.markAsTouched();
     this.formControl.markAsDirty();
 
-    const deletedFiles = this.luxSelected;
+    if (!this.luxSelected) {
+      this.luxSelected = [];
+    }
 
-    this.resetSelected();
+    const deletedFiles = this.luxSelected
+      ? [
+          ...this.luxSelected.filter((file) =>
+            this.luxDeleteActionConfig.isDeletable ? this.luxDeleteActionConfig.isDeletable!(file) : true
+          )
+        ]
+      : [];
+    this.luxSelected = this.luxSelected
+      ? [
+          ...this.luxSelected.filter((file) =>
+            this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable!(file) : false
+          )
+        ]
+      : [];
+
     this.notifyFormValueChanged();
     this.clearFormControlErrors();
+    
     if (deletedFiles) {
       deletedFiles.forEach((file) => {
         if (this.luxDeleteActionConfig.onClick) {
@@ -290,6 +310,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
       // Prüfen, ob die Dateien bereits vorhanden sind
       let selectedFilesArray: ILuxFileObject[] = [];
       const replaceableFilesMap = new Map<number, File>();
+      let replaceFileDeleteProtection = false;
       if (this.luxSelected) {
         files = Array.from(files);
         selectedFilesArray = Array.isArray(this.luxSelected) ? this.luxSelected : [this.luxSelected];
@@ -298,6 +319,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
           const index = selectedFilesArray.findIndex((compareFile: ILuxFileObject) => compareFile.name === file.name);
           if (index > -1) {
             replaceableFilesMap.set(index, file);
+            replaceFileDeleteProtection = replaceFileDeleteProtection || (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false);
           }
         });
       }
@@ -306,7 +328,8 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
         if (replaceableFilesMap.size > 0) {
           this.dialogService.storeDialogRef();
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
-            multiple: this.luxMultiple
+            multiple: this.luxMultiple,
+            deleteProtection: replaceFileDeleteProtection
           });
           this.forceProgressIndeterminate = false;
 
@@ -351,7 +374,8 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
         } else if (files.length === 1 && this.luxSelected && this.luxSelected.length > 0) {
           this.dialogService.storeDialogRef();
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
-            multiple: this.luxMultiple
+            multiple: this.luxMultiple,
+            deleteProtection: this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false
           });
           this.forceProgressIndeterminate = false;
 
@@ -477,6 +501,12 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
 
   isArray(object: any): boolean {
     return object && Array.isArray(object);
+  }
+
+  hasOnlyDeleteProtectedFiles(): boolean {
+    return !!this.luxSelected &&
+          this.luxSelected.length > 0 &&
+          this.luxSelected.every((file) => (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(file) : false));
   }
 
   private resizeIconActionBar() {
