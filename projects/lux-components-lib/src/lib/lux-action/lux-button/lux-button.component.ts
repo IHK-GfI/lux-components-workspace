@@ -3,12 +3,13 @@ import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnI
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { Subject, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
+import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-progress/lux-progress.component';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-component-base.class';
-import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-progress/lux-progress.component';
 
 @Component({
   selector: 'lux-button',
@@ -19,6 +20,7 @@ import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-
 export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit, OnDestroy {
   elementRef = inject(ElementRef);
   componentsConfigService = inject(LuxComponentsConfigService);
+  tooltipDirective?: LuxTooltipDirective;
 
   private configSubscription!: Subscription;
 

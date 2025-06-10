@@ -1,6 +1,7 @@
 <example-base-structure exampleTitle="Tooltip" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/luxTooltip-v18">
-  <example-base-content [exampleCentered]="true">
+  <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col lux-gap-10">
     <div
+      tabindex="0"
       luxTooltip="{{ message }}"
       [luxTooltipDisabled]="disabled"
       [luxTooltipPosition]="position"
@@ -9,8 +10,86 @@
       class="lux-highlight-section"
       style="color: var(--lux-theme-primary-color)"
     >
-      Tooltip-Target (mouseover for tooltip)
+      Tooltip-Target
     </div>
+    <lux-button
+      luxLabel="Button (default)"
+      luxColor="primary"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-button>
+    <lux-button
+      luxLabel="Button (flat)"
+      luxColor="primary"
+      [luxFlat]="true"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-button>
+    <lux-button
+      luxLabel="Button (raised)"
+      luxColor="primary"
+      [luxRaised]="true"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-button>
+    <lux-button
+      luxLabel="Button (stroked)"
+      luxColor="primary"
+      [luxStroked]="true"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-button>
+    <lux-button
+      luxLabel="Button (rounded)"
+      luxColor="primary"
+      luxIconName="lux-save"
+      [luxRounded]="true"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-button>
+    <lux-button
+      luxLabel="Button (stroked)"
+      luxColor="primary"
+      luxIconName="lux-save"
+      [luxRounded]="true"
+      [luxStroked]="true"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-button>
+    <lux-link
+      luxLabel="Link"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-link>
+    <lux-link-plain
+      luxLabel="Link-Plain"
+      luxTooltip="{{ message }}"
+      [luxTooltipDisabled]="disabled"
+      [luxTooltipPosition]="position"
+      [luxTooltipHideDelay]="hideDelay"
+      [luxTooltipShowDelay]="showDelay"
+    ></lux-link-plain>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac

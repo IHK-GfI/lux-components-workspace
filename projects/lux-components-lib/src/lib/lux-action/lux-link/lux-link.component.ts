@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, ViewChild, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAriaRoleDirective } from '../../lux-directives/lux-aria/lux-aria-role.directive';
 import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-component-base.class';
@@ -18,6 +18,8 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
 
   @Input() luxHref = '';
   @Input() luxBlank? = false;
+
+  @ViewChild(LuxButtonComponent, { static: true }) luxButton!: LuxButtonComponent;
 
   auxClicked(event: Event) {
     if (event instanceof UIEvent && event.which === 2) {
