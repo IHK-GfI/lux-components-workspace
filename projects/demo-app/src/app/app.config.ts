@@ -2,9 +2,10 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
+import { LuxComponentsConfigModule, LuxComponentsConfigParameters, LuxSessionTimerService } from '@ihk-gfi/lux-components';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { MockLuxSessionTimerService } from './components-overview/session-timer-example/mock-session-timer-service';
 
 const myConfiguration: LuxComponentsConfigParameters = {
   generateLuxTagIds: environment.generateLuxTagIds,
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     importProvidersFrom([LuxComponentsConfigModule.forRoot(myConfiguration)]),
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    { provide: LuxSessionTimerService, useClass: MockLuxSessionTimerService }
   ]
 };

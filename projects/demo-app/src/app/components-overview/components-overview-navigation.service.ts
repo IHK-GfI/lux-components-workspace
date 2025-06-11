@@ -30,7 +30,8 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['popup', 'lux-programming-browser-window'],
     ['tenant-logo', 'lux-image-picture-landscape-1'],
     ['tour-hint', 'lux-programming-browser-window'],
-    ['breadcrumb', 'lux-interface-cursor-arrow-1']
+    ['breadcrumb', 'lux-interface-cursor-arrow-1'],
+    ['session-timer', 'lux-interface-time-reset']
   ]);
 
   private create(moduleName: string, label: string, news = false) {
@@ -102,7 +103,8 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('popup', 'Snackbar'),
     this.create('tenant-logo', 'Tenant-Logo'),
     this.create('tour-hint', 'Tour-Hint'),
-    this.create('breadcrumb', 'Breadcrumb')
+    this.create('breadcrumb', 'Breadcrumb'),
+    this.create('session-timer', 'Session-Timer')
   ];
 
   sortedComponentEntries: Map<string, any[]> = new Map<string, any[]>();
@@ -121,6 +123,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['markdown', false],
     ['pipes', false],
     ['popup', false],
+    ['session-timer', false],
     ['tenant-logo', false],
     ['tour-hint', false]
   ]);

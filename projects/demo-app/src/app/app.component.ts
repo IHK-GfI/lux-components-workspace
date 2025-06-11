@@ -37,7 +37,8 @@ import {
   LuxSnackbarService,
   LuxTenantLogoComponent,
   LuxThemeService,
-  LuxTooltipDirective
+  LuxTooltipDirective,
+  LuxSessionTimerComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
@@ -75,7 +76,8 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
     LuxAriaLabelDirective,
     LuxTooltipDirective,
     AsyncPipe,
-    HammerModule
+    HammerModule,
+    LuxSessionTimerComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

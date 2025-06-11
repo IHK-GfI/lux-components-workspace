@@ -1,0 +1,56 @@
+@switch (currentStep()) { @default {
+<lux-dialog-structure class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content class="lux-session-timer-dialog-info">
+    <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-time-sleep" luxIconSize="3x"></lux-icon>
+    <h2>Sind Sie noch da?</h2>
+    <p>
+      Bitte bestätigen Sie innerhalb von <strong>2 Minuten</strong> Ihre Anwesenheit. Danach beenden wir diese Sitzung. Sind Sie bei uns in
+      weiteren Anwendungen angemeldet, werden diese ebenfalls beendet. Nicht gespeicherte Angaben werden gelöscht. Dieses dient zum Schutz
+      Ihrer Daten.
+    </p>
+  </lux-dialog-content>
+  <lux-dialog-actions class="lux-session-timer-dialog-info-actions">
+    <lux-button
+      [luxStroked]="true"
+      luxLabel="Abmelden"
+      aria-label="Abmelden"
+      luxIconName="lux-interface-logout-circle"
+      (luxClicked)="logOutUser()"
+    ></lux-button>
+    <lux-button
+      [luxFlat]="true"
+      luxColor="primary"
+      luxLabel="Angemeldet bleiben"
+      aria-label="Angemeldet bleiben"
+      luxIconName="lux-interface-validation-check"
+      (luxClicked)="extendSession()"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>
+} @case ("wait") {
+<lux-dialog-structure class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content class="lux-session-timer-dialog-waiting">
+    <lux-progress luxType="Spinner" luxMode="indeterminate" luxSize="large"></lux-progress>
+    <h2>Auf Rückmeldung vom Server warten...</h2>
+  </lux-dialog-content>
+</lux-dialog-structure>
+} @case ("error") {
+<lux-dialog-structure class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content class="lux-session-timer-dialog-logout">
+    <lux-icon luxIconName="lux-interface-logout-circle" luxIconSize="large"></lux-icon>
+    <h2>Sie wurden automatisch abgemeldet!</h2>
+    <p>
+      Sie waren für mehr als 20 Minuten inaktiv und wurden deshalb automatisch abgemeldet. Nicht gespeicherte Informationen wurden aus
+      Sicherheitsgründen gelöscht. Das hilft, Ihre Daten zu schützen.
+    </p>
+  </lux-dialog-content>
+  <lux-dialog-actions>
+    <lux-button
+      luxLabel="Zum Login"
+      aria-label="Zum Login"
+      luxIconName="lux-interface-login-circle"
+      (luxClicked)="logOutUser()"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>
+} }

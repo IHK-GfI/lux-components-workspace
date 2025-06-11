@@ -1,0 +1,6 @@
+<lux-button
+  luxIconName="lux-interface-time-reset"
+  luxLabel="{{ luxSessionTimerService.timeRemaining$ | async | date : 'mm:ss' }} Minuten"
+  (luxClicked)="extendTimer()"
+  [luxLoading]="luxLoading"
+></lux-button>

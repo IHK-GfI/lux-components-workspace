@@ -1,0 +1,9 @@
+<example-base-structure exampleTitle="Session-Timer" exampleDocumentationHref="TODO">
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-button luxLabel="Open Dialog" [luxFlat]="true" luxColor="primary" (luxClicked)="openSessionDialog()"></lux-button>
+    <lux-input-ac luxLabel="Mit welcher Anzahl an Sekunden gestartet werden soll" [(luxValue)]="startingSeconds"></lux-input-ac>
+    <lux-button luxLabel="Zeit setzen" [luxFlat]="true" luxColor="primary" (luxClicked)="setTimer()"></lux-button>
+    <lux-toggle-ac luxLabel="Dialog bei 2 min nicht anzeigen" [(luxChecked)]="timerService.dontShowDialog"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Fail Dialog" [(luxChecked)]="failSessionExtension"></lux-toggle-ac>
+  </example-base-simple-options>
+</example-base-structure>
