@@ -5,6 +5,7 @@ import { LuxLinkPlainComponent } from '../../lux-action/lux-link-plain/lux-link-
 import { LuxLinkComponent } from '../../lux-action/lux-link/lux-link.component';
 import { LuxMenuComponent } from '../../lux-action/lux-menu/lux-menu.component';
 import { LuxAppHeaderAcActionNavItemComponent } from '../../lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-action-nav/lux-app-header-ac-action-nav-item/lux-app-header-ac-action-nav-item.component';
+import { LuxAppHeaderActionNavItemComponent } from '../../lux-layout/lux-app-header/lux-app-header-subcomponents/lux-app-header-action-nav/lux-app-header-action-nav-item/lux-app-header-action-nav-item.component';
 
 @Directive({
   selector: '[luxTooltip]',
@@ -20,7 +21,8 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
   luxButton = inject(LuxButtonComponent, { optional: true });
   luxLink = inject(LuxLinkComponent, { optional: true });
   luxLinkPlain = inject(LuxLinkPlainComponent, { optional: true });
-  luxActionNav = inject(LuxAppHeaderAcActionNavItemComponent, { optional: true });
+  luxActionNavAc = inject(LuxAppHeaderAcActionNavItemComponent, { optional: true });
+  luxActionNav = inject(LuxAppHeaderActionNavItemComponent, { optional: true });
   luxMenu = inject(LuxMenuComponent, { optional: true });
 
   @HostListener('longpress') _handleLongPress() {
@@ -48,6 +50,10 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
     }
     if (this.luxLinkPlain) {
       this.luxLinkPlain.tooltipDirective = this;
+    }
+    if (this.luxActionNavAc && this.luxActionNavAc.buttonComponent) {
+      
+      this.luxActionNavAc.buttonComponent.tooltipDirective = this;
     }
     if (this.luxActionNav && this.luxActionNav.buttonComponent) {
       
