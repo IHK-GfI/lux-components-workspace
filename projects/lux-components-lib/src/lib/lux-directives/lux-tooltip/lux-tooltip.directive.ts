@@ -1,14 +1,16 @@
-import { AfterViewInit, Directive, HostListener, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Directive, HostListener, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTooltip, TooltipPosition } from '@angular/material/tooltip';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxLinkPlainComponent } from '../../lux-action/lux-link-plain/lux-link-plain.component';
 import { LuxLinkComponent } from '../../lux-action/lux-link/lux-link.component';
+import { LuxMenuComponent } from '../../lux-action/lux-menu/lux-menu.component';
+import { LuxAppHeaderAcActionNavItemComponent } from '../../lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-action-nav/lux-app-header-ac-action-nav-item/lux-app-header-ac-action-nav-item.component';
 
 @Directive({
   selector: '[luxTooltip]',
   exportAs: 'luxTooltip'
 })
-export class LuxTooltipDirective extends MatTooltip implements OnInit, OnChanges, AfterViewInit {
+export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterViewInit {
   @Input() luxTooltip = '???';
   @Input() luxTooltipHideDelay = 0;
   @Input() luxTooltipShowDelay = 0;
@@ -18,6 +20,8 @@ export class LuxTooltipDirective extends MatTooltip implements OnInit, OnChanges
   luxButton = inject(LuxButtonComponent, { optional: true });
   luxLink = inject(LuxLinkComponent, { optional: true });
   luxLinkPlain = inject(LuxLinkPlainComponent, { optional: true });
+  luxActionNav = inject(LuxAppHeaderAcActionNavItemComponent, { optional: true });
+  luxMenu = inject(LuxMenuComponent, { optional: true });
 
   @HostListener('longpress') _handleLongPress() {
     super.show(this.luxTooltipShowDelay);
@@ -35,7 +39,7 @@ export class LuxTooltipDirective extends MatTooltip implements OnInit, OnChanges
     super.hide(delay || this.luxTooltipHideDelay);
   }
 
-  ngOnInit(): void {
+  override ngAfterViewInit(): void {
     if (this.luxButton) {
       this.luxButton.tooltipDirective = this;
     }
@@ -45,6 +49,15 @@ export class LuxTooltipDirective extends MatTooltip implements OnInit, OnChanges
     if (this.luxLinkPlain) {
       this.luxLinkPlain.tooltipDirective = this;
     }
+    if (this.luxActionNav && this.luxActionNav.buttonComponent) {
+      
+      this.luxActionNav.buttonComponent.tooltipDirective = this;
+    }
+    if (this.luxMenu && this.luxMenu.defaultTriggerComponent) {
+      this.luxMenu.defaultTriggerComponent.tooltipDirective = this;
+    }
+      
+    super.ngAfterViewInit();
   }
 
   ngOnChanges(_simpleChanges: SimpleChanges) {

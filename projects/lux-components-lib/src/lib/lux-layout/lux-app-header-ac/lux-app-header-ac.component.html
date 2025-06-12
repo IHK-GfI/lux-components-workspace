@@ -68,8 +68,6 @@
           (luxMenuOpened)="onMenuOpened()"
           luxClassName="lux-header-user-menu"
           luxTagId="app_header_user_menu"
-          luxTooltip="Benutzermenü"
-          [luxTooltipShowDelay]="1500"
         >
           <!-- Anzeige des Usernames falls dieser vorhanden und eingeloggt ist -->
           @if (luxUserName) {
@@ -100,6 +98,8 @@
               aria-haspopup="true"
               luxTagId="user-menu-trigger-ac"
               [ngClass]="{ 'menu-opened': menuOpened, 'user-menu-trigger-mobile': mobileView }"
+              luxTooltip="Benutzermenü"
+              [luxTooltipShowDelay]="1500"
               #customTrigger
               luxTagId="lux-user-menu-trigger-btn"
             >
