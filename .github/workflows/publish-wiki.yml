@@ -17,7 +17,7 @@ jobs:
 
       - name: Update Wiki
         run: |
-          cd..
+          cd ..
           ls -lR
           cp -r ./lux-components-workspace/projects/lux-components-wiki/* ./lux-components-wiki
           cd lux-components-wiki
