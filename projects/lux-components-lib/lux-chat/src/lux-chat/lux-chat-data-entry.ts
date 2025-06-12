@@ -2,7 +2,7 @@ import { LuxChatControlRef } from "./lux-chat-control-ref";
 
 export class LuxChatDataEntry {
 
-    public metadata: any;
+    public metadata: any = {};
 
     constructor(public chatControlRef: LuxChatControlRef, public user: string, public content: string, public time: Date){}
 
