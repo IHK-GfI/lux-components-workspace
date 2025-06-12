@@ -314,7 +314,7 @@ $fileUploadProgressSize: 8px;
 
       lux-button.lux-file-upload-view-item-button button:disabled {
         color: var(--lux-theme-dark-disabled-text);
-        background-color: var(--lux-theme-app-data-bg);
+        background-color: transparent;
       }
     }
   }
