@@ -8,6 +8,8 @@ export class LuxChatData implements LuxChatControlRef {
     private chatControlRef?: LuxChatControlRef;
     public data: LuxChatDataEntry[] = [];
 
+    public metadata: any;
+
     private chatDataUpdate: EventEmitter<LuxChatDataEntry> = new EventEmitter<LuxChatDataEntry>();
 
     constructor(public title: string, public created_at: Date){}
