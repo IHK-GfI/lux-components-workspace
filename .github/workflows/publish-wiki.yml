@@ -4,7 +4,7 @@ on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
 
 jobs:
   publish:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +14,6 @@ jobs:
         with:
           repository: IHK-GfI/lux-components-workspace.wiki
           token: ${{secrets.GITHUB}}
-          ref: main
 
       - name: Update Wiki
         run: |
@@ -26,4 +25,4 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Wiki aktualisiert"
-          git push
+          git status
