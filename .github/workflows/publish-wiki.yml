@@ -1,0 +1,29 @@
+name: publish - wiki
+
+on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Checkout Wiki
+        uses: actions/checkout@v4
+        with:
+          repository: IHK-GfI/lux-components-workspace.wiki
+          token: ${{secrets.GITHUB}}
+          ref: main
+
+      - name: Update Wiki
+        run: |
+          ls -lR
+          cp -r ./lux-components-workspace/projects/lux-components-wiki/* ./lux-components-wiki
+          cd lux-components-wiki
+          ls -lR
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Wiki aktualisiert"
+          git push
