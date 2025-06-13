@@ -1,8 +1,11 @@
 @mixin minified-button {
   lux-button {
-    cursor: pointer !important;
     display: flex;
     align-items: center;
+
+    button:not([disabled]) {
+      cursor: pointer !important;
+    }
 
     ::ng-deep button {
       padding: 0;

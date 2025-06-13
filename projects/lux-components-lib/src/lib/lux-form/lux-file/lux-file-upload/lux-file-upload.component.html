@@ -130,7 +130,7 @@
           [luxTagId]="uid + '-delete-button_' + i"
           [luxIconName]="luxDeleteIcon"
           class="lux-file-upload-view-item-button lux-file-upload-view-item-delete-button"
-          [luxDisabled]="luxDisabled"
+          [luxDisabled]="luxDeleteActionConfig.disabled || luxDisabled || (luxDeleteActionConfig.isDeletable ? !luxDeleteActionConfig.isDeletable(file) : false)"
           (luxClicked)="openDeleteDialog(i)"
         ></lux-button>
         }

@@ -11,7 +11,8 @@
     - [ILuxFileObject](#iluxfileobject)
     - [ILuxFileError](#iluxfileerror)
     - [LuxFileErrorCause](#luxfileerrorcause)
-    - [ILuxFilesActionConfig](#iluxfilesactionconfig)
+    - [ILuxFileActionConfig](#iluxfileactionconfig)
+    - [ILuxFileUploadDeleteActionConfig](#iluxfileuploaddeleteactionconfig)
   - [Beispiele](#beispiele)
     - [1. Simple](#1-simple)
     - [2. Mit Formular](#2-mit-formular)
@@ -103,7 +104,7 @@ Enum mit möglichen Fehlerquellen.
 | FileNotAccepted   | Fehler, wenn die Datei nicht den korrekten Dateityp hat (eingeschränkt durch luxAccept). |
 | MultipleForbidden | Fehler, der beim übergeben von mehreren Dateien auftritt, obwohl nur eine erlaubt ist.   |
 
-### ILuxFilesActionConfig
+### ILuxFileActionConfig
 
 Dieses Interface enthält die möglichen Einstellungen für die Action-Buttons der LuxFileComponents.
 
@@ -115,6 +116,14 @@ Dieses Interface enthält die möglichen Einstellungen für die Action-Buttons d
 | prio     | number                           | Über die Priorität kann die Anzeigereihenfolge beeinflusst werden.                            |
 | label    | string                           | Die Bezeichnung                                                                               |
 | onClick? | (file: ILuxFileObject[]) => void | Optionaler Callback, welcher bei der Durchführung der Aktion aufgerufen wird.                 |
+
+### ILuxFileUploadDeleteActionConfig
+
+Dieses Interface erweitert _ILuxFileActionConfig_.
+
+| Name         | Typ                               | Beschreibung                                                                |
+| ------------ | --------------------------------- | --------------------------------------------------------------------------- |
+| isDeletable? | (file: ILuxFileObject) => boolean | Optionaler Callback, der prüft, ob der Delete-Button aktiviert werden darf. |
 
 ## Beispiele
 

@@ -105,6 +105,11 @@
       [luxControlValidators]="headingValidator"
     ></lux-input-ac>
     <app-file-example-simple-options [fileExample]="this" class="lux-flex lux-flex-col lux-gap-4"></app-file-example-simple-options>
+    <lux-input-ac
+      luxLabel="Unlöschbare Dateien"
+      luxHint="Komma-separierte Liste von Dateinamen, die nicht gelöscht werden können."
+      [(luxValue)]="undeletableFileNames"
+    ></lux-input-ac>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <app-file-example-advanced-options [fileExample]="this" [showHeaderConfigProperties]="true"></app-file-example-advanced-options>

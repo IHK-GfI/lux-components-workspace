@@ -4,7 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import {
   ILuxFileActionBaseConfig,
   ILuxFileActionConfig,
-  ILuxFileListActionConfig,
+  ILuxFileListDeleteActionConfig,
   ILuxFileObject,
   LuxFormFileBase,
   LuxSnackbarService
@@ -48,10 +48,11 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
   capture = '';
   accept = '';
   maximumExtended = 6;
+  undeletableFileNames = 'example.png';
 
   uploadActionConfig: U = this.initUploadActionConfig();
 
-  deleteActionConfig: ILuxFileListActionConfig = {
+  deleteActionConfig: ILuxFileListDeleteActionConfig = {
     disabled: false,
     disabledHeader: false,
     hidden: false,
@@ -60,7 +61,10 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
     iconNameHeader: 'lux-interface-delete-bin-5',
     label: 'Löschen',
     labelHeader: 'Alle Dateien entfernen',
-    onClick: (file) => {
+    isDeletable: (file: ILuxFileObject) => {
+      return this.undeletableFileNames.includes(file.name) === false;
+    },
+    onClick: (file: ILuxFileObject) => {
       this.log(this.showOutputEvents, 'deleteActionConfig onClick', file);
       this.onDelete(file);
     }

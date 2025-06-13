@@ -85,10 +85,17 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
     this.fileComponents = this.fileUploads.toArray();
   }
 
-  toogleCustomActionConfig() {
+  toogleCustomHiddenActionConfig() {
     this.customActionConfigs[0] = {
       ...this.customActionConfigs[0],
       hidden: !this.customActionConfigs[0].hidden,
+    }
+  }
+
+  toogleCustomDisabeldActionConfig() {
+    this.customActionConfigs[0] = {
+      ...this.customActionConfigs[0],
+      disabled: !this.customActionConfigs[0].disabled,
     }
   }
 
@@ -104,10 +111,17 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
     }
   }
 
-  toogleDeleteConfig() {
+  toogleDeleteHiddenConfig() {
     this.deleteActionConfig = {
       ...this.deleteActionConfig,
       hidden: !this.deleteActionConfig.hidden,
+    }
+  }
+
+  toogleDeleteDisabledConfig() {
+    this.deleteActionConfig = {
+      ...this.deleteActionConfig,
+      disabled: !this.deleteActionConfig.disabled,
     }
   }
 
