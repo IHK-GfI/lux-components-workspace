@@ -76,6 +76,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   customTriggerEl?: HTMLElement;
 
   @ViewChild('defaultTrigger', { read: ElementRef }) defaultTriggerElRef?: ElementRef;
+  @ViewChild('defaultTrigger') defaultTriggerComponent?: LuxButtonComponent;
   @ViewChild('menuTrigger', { read: ElementRef }) menuTriggerElRef?: ElementRef;
   @ViewChild('menuExtendedContainer', { read: ElementRef, static: true }) menuExtendedContainer!: ElementRef;
   @ContentChildren(LuxMenuItemComponent) luxMenuItemComponents!: QueryList<LuxMenuItemComponent>;
@@ -95,6 +96,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
 
   _luxDisplayExtended = false;
   visibleMenuItems: LuxMenuItemComponent[] = [];
+  tooltipDirective?: LuxTooltipDirective;
 
   get luxDisplayExtended() {
     return this._luxDisplayExtended;

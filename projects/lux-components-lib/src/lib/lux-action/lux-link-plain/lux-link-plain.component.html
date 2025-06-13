@@ -1,6 +1,8 @@
 <div
   class="link-wrapper"
   tabindex="{{ luxDisabled ? -1 : 0 }}"
+  (focus)="tooltipDirective?.show()"
+  (blur)="tooltipDirective?.hide()"
   luxAriaRole="link"
   luxAriaLabel="{{ luxLabel }}"
   [attr.aria-disabled]="luxDisabled ? 'true' : null"

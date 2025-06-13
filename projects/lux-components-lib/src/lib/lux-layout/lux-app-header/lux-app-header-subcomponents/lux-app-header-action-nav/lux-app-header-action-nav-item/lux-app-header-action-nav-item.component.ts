@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { LuxButtonComponent } from '../../../../../lux-action/lux-button/lux-button.component';
 import { LuxThemePalette } from '../../../../../lux-util/lux-colors.enum';
 import { LuxAppHeaderActionNavItemCustomComponent } from './lux-app-header-action-nav-item-custom.component';
@@ -18,6 +18,7 @@ export class LuxAppHeaderActionNavItemComponent {
 
   @Output() luxClicked = new EventEmitter<Event>();
 
+  @ViewChild(LuxButtonComponent, { static: false }) buttonComponent?: LuxButtonComponent;
   @ContentChild(LuxAppHeaderActionNavItemCustomComponent) customComponent?: LuxAppHeaderActionNavItemCustomComponent;
 
   constructor() {}

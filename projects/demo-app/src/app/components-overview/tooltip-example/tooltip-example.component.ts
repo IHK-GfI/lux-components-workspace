@@ -1,6 +1,14 @@
 import { Component } from '@angular/core';
 import { TooltipPosition } from '@angular/material/tooltip';
-import { LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent, LuxTooltipDirective } from '@ihk-gfi/lux-components';
+import {
+  LuxButtonComponent,
+  LuxInputAcComponent,
+  LuxLinkComponent,
+  LuxLinkPlainComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent,
+  LuxTooltipDirective
+} from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -15,7 +23,10 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     LuxInputAcComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
-    ExampleBaseSimpleOptionsComponent
+    ExampleBaseSimpleOptionsComponent,
+    LuxButtonComponent,
+    LuxLinkComponent,
+    LuxLinkPlainComponent
   ]
 })
 export class TooltipExampleComponent {

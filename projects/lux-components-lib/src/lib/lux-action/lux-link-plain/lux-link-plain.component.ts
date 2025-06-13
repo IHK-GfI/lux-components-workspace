@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, inject } from
 import { Router } from '@angular/router';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxAriaRoleDirective } from '../../lux-directives/lux-aria/lux-aria-role.directive';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-component-base.class';
 
@@ -15,6 +16,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
 export class LuxLinkPlainComponent extends LuxActionComponentBaseClass implements OnInit {
   private router = inject(Router);
   cdr = inject(ChangeDetectorRef);
+  tooltipDirective?: LuxTooltipDirective;
 
   @HostBinding('class') classes = '';
   @Input() luxHref = '';
