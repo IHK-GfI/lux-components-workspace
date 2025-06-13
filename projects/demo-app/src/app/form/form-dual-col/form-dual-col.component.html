@@ -52,6 +52,7 @@
                 ></lux-input-ac>
                 <lux-button
                   luxIconName="lux-interface-delete-bin-5"
+                  luxLabel="Straße entfernen"
                   (luxClicked)="removeStreet(i)"
                   luxTagId="btnRemoveStreet"
                   [luxDisabled]="!myGroup.enabled"
@@ -65,6 +66,7 @@
               <div class="lux-grid lux-grid-cols-5 lux-gap-4">
                 <lux-button
                   luxIconName="lux-interface-add-1"
+                  luxLabel="Straße hinzufügen"
                   (luxClicked)="addStreet()"
                   [luxRounded]="true"
                   [luxDisabled]="!latestStreetGroupValid()"

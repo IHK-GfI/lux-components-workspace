@@ -78,6 +78,8 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 1. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
 
+1. Allen runden Buttons (_<lux-button [luxRounded]="true"..._) muss manuell ein aussagekräftiges Label (_luxLabel="xxx"_) gegeben werden, das als Aria-Label für die Barrierfreiheit verwendet werden kann.
+
 1. Abhängigkeiten aktualisieren:
 
     `npm install`

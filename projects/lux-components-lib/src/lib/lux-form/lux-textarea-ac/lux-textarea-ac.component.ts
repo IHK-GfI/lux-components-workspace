@@ -1,5 +1,6 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
@@ -26,6 +27,9 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
   ]
 })
 export class LuxTextareaAcComponent<T = string> extends LuxFormInputBaseClass<T> implements OnInit {
+
+  private liveAnnouncer = inject(LiveAnnouncer);
+
   @Input() luxMaxRows = -1;
   @Input() luxMinRows = 0;
   @Input() luxNoLabels = false;
@@ -86,6 +90,7 @@ export class LuxTextareaAcComponent<T = string> extends LuxFormInputBaseClass<T>
       } else {
         this.counterLabel = '0/' + this.luxMaxLength;
       }
+      this.liveAnnouncer.announce(this.counterLabel);
     } else {
       this.counterLabel = '';
     }

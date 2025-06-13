@@ -76,7 +76,7 @@
 </ng-template>
 <!-- die Menü-Leiste mit den Filterfunktionen ist in beiden Darstellungen gleich -->
 <ng-template #filterActionTemplate>
-  <lux-menu [luxDisplayExtended]="false" class="filter-menu">
+  <lux-menu luxAriaMenuTriggerLabel="Menü" i18n-luxAriaMenuTriggerLabel="@@luxc.menu.trigger.btn" [luxDisplayExtended]="false" class="filter-menu">
     <lux-menu-item
       [luxLabel]="luxButtonResetLabel"
       [luxAlwaysVisible]="false"
@@ -101,6 +101,7 @@
 
     <lux-menu-trigger>
       <lux-button
+        luxLabel="Menü" i18n-luxluxLabel="@@luxc.menu.trigger.btn"
         [luxRounded]="true"
         luxIconName="lux-interface-setting-menu-vertical"
         class="lux-filter-menu-trigger"

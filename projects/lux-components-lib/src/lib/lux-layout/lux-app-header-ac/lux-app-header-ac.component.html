@@ -19,7 +19,7 @@
         [luxImageHeight]="mobileView ? '24px' : '40px'"
         class="lux-brand-logo"
         [ngClass]="{ 'lux-brand-logo-mobile': mobileView }"
-        luxAlt="Lux-Brand-Logo"
+        [luxAlt]="luxAriaTitleImageLabel"
         [luxAriaLabel]="luxAriaTitleImageLabel"
         luxTagId="lux-brand-logo-button"
         (luxClicked)="onBrandLogoClicked($event)"
@@ -35,7 +35,7 @@
         [luxImageSrc]="luxAppLogoSrc"
         luxImageHeight="40px"
         class="lux-app-logo"
-        luxAlt="Lux-App-Logo"
+        [luxAlt]="luxAriaTitleIconLabel"
         [luxAriaLabel]="luxAriaTitleIconLabel"
         (luxClicked)="onAppLogoClicked($event)"
       ></lux-image>

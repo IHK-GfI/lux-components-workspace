@@ -1,5 +1,6 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -32,6 +33,8 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
 })
 export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> implements OnInit {
   private readonly symbolRegExp = /[,.]/;
+
+  private liveAnnouncer = inject(LiveAnnouncer);
 
   @Input() luxType = 'text';
   @Input() luxNumberAlignLeft = false;
@@ -121,6 +124,7 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
       } else {
         this.counterLabel = '0/' + this.luxMaxLength;
       }
+      this.liveAnnouncer.announce(this.counterLabel);
     } else {
       this.counterLabel = '';
     }
