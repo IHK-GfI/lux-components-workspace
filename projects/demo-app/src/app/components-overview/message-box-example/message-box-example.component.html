@@ -62,6 +62,7 @@
       </lux-select-ac>
       <lux-button
         luxIconName="lux-interface-add-1"
+        luxLabel="Message hinzufügen"
         luxColor="primary"
         (luxClicked)="add()"
         [luxRounded]="true"
@@ -79,7 +80,6 @@
         <lux-panel-header-title>
           <div class="lux-flex lux-flex-basis-full lux-justify-between lux-items-center lux-pt-2">
             <span>{{ message.text }}</span>
-            <lux-button luxLabel="ENTFERNEN" (luxClicked)="remove(i)" luxColor="warn" luxTagId="example-msg-remove-{{ i }}"></lux-button>
           </div>
         </lux-panel-header-title>
         <lux-panel-header-description> </lux-panel-header-description>
@@ -106,6 +106,7 @@
               [(luxSelected)]="message.color"
             >
             </lux-select-ac>
+            <lux-button luxLabel="Löschen" (luxClicked)="remove(i)" [luxStroked]="true" luxColor="warn" luxTagId="example-msg-remove-{{ i }}"></lux-button>
           </div>
         </lux-panel-content>
       </lux-panel>

@@ -75,7 +75,6 @@ export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
   @Input() luxCenteredView!: boolean;
   @Input() luxCenteredWidth!: string;
 
-  @Output() luxClicked = new EventEmitter<Event>();
   @Output() luxAppLogoClicked = new EventEmitter<Event>();
   @Output() luxBrandLogoClicked = new EventEmitter<Event>();
 

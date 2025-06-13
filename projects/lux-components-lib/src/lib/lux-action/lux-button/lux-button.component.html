@@ -89,7 +89,7 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-rounded-default': !luxColor }"
-  [attr.aria-label]="luxLabel ? luxLabel : luxIconName"
+  [attr.aria-label]="luxLabel ? luxLabel : ''"
 >
   @if(luxLoading && !luxDisabled) {
   <lux-progress
@@ -118,7 +118,7 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-stroked-default': !luxColor }"
-  [attr.aria-label]="luxLabel ? luxLabel : luxIconName"
+  [attr.aria-label]="luxLabel ? luxLabel : ''"
 >
   @if(luxLoading && !luxDisabled) {
   <lux-progress

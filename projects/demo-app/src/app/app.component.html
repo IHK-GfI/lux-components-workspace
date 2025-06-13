@@ -119,6 +119,7 @@
           <lux-menu
             luxMenuLabel="IHK"
             luxTooltip="IHK wechseln"
+            luxAriaMenuTriggerLabel="IHK wechseln"
             luxMenuIconName="lux-interface-arrows-button-down"
             [luxMenuTriggerIconShowRight]="true"
             [luxDisplayExtended]="false"
@@ -168,10 +169,9 @@
     luxAppIconName="dashboard_customize"
     [luxBrandLogoSrc]="tenantLogoConfig === undefined ? 'assets/svg/IHK_GfI.svg' : undefined"
     luxAppLogoSrc="assets/favicons/favicon.svg"
-    luxAriaTitleIconLabel="Appicon / Zur Startseite"
-    luxAriaTitleImageLabel="Brandlogo / Zur Homepage"
+    luxAriaTitleIconLabel="Appicon / Link auf die Startseite"
+    luxAriaTitleImageLabel="Brandlogo / Externer Link auf die IHK-GfI Homepage"
     [luxLocaleSupported]="['de', 'en']"
-    (luxClicked)="router.navigate(['/'])"
     (luxAppLogoClicked)="goToHome()"
     (luxBrandLogoClicked)="goToHomepage()"
   >
@@ -261,6 +261,7 @@
         <lux-app-header-ac-action-nav-item-custom>
           <lux-menu
             luxMenuLabel="IHK"
+            luxAriaMenuTriggerLabel="IHK wechseln"
             luxMenuIconName="lux-interface-arrows-button-down"
             [luxMenuTriggerIconShowRight]="true"
             [luxDisplayExtended]="false"
@@ -288,7 +289,7 @@
       <lux-app-header-ac-action-nav-item
         luxIconName="lux-interface-alert-alarm-bell-2"
         luxColor="primary"
-        luxAriaLabel="Actionbeispiel-Button"
+        luxLabel="Actionbeispiel-Button"
         luxTagId="action0"
         luxTooltip="Test für Action-Nav-Item"
         [luxTooltipShowDelay]="1000"
