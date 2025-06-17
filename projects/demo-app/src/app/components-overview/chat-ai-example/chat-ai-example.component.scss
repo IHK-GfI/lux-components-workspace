@@ -1,0 +1,16 @@
+.chat-ai-example {
+    height: calc(100vh - 254px);
+}
+
+.config-example-code-block {
+    border: 1px dotted lightgray;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    max-height: 70vh;
+    overflow: auto;
+}
+
+.example-sidebar-history-item {
+    cursor: pointer; 
+    padding-top: 8px;
+}

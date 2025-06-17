@@ -44,6 +44,8 @@ import { ComponentsOverviewNavigationService } from './components-overview/compo
 import { MockLuxLookupService } from './components-overview/lookup-examples/mock-lookup-service';
 import { TenantLogoExampleConfigData } from './components-overview/tenant-logo-example/tenant-logo-example-config/tenant-logo-example-config-data';
 import { TenantLogoExampleHeaderService } from './components-overview/tenant-logo-example/tenant-logo-example-header.service';
+import { LuxChatAiService } from '@ihk-gfi/lux-components/lux-chat-ai';
+import { MockLuxChatAiService } from './components-overview/chat-ai-example/mock-chat-ai.service';
 
 @Component({
   selector: 'app-root',
@@ -79,7 +81,10 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [{ provide: LuxLookupService, useClass: MockLuxLookupService }]
+  providers: [
+    { provide: LuxLookupService, useClass: MockLuxLookupService },
+    { provide: LuxChatAiService, useClass: MockLuxChatAiService }
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   router = inject(Router);

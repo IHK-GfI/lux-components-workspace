@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ContentChild, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 

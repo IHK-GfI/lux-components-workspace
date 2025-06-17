@@ -1,0 +1,106 @@
+<lux-chat [chatData]="chatData" [userName]="userName">
+    <lux-chat-header>
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 20px;">
+            <lux-icon (click)="doShowHistory()" style="cursor: pointer;" [luxIconName]="sidebarHistoryVisible ? 'lux-book-readme' : 'lux-hand-held'" [luxRounded]="true"></lux-icon>
+            <p>
+                <b>{{ chatData.title }}</b><br/>
+                Erstellt am: <b>{{ chatData.created_at | date:'dd.MM.yyyy, HH:mm:ss' }}</b>
+            </p>
+        </div>
+    </lux-chat-header>
+    <lux-chat-entry>
+        <lux-chat-entry-actions>
+            <ng-template let-item>
+                @if(!item.isUser && item.metadata?.usedContexts){
+                    <lux-button luxLabel="Quellen" (luxClicked)="doShowSources(item)"></lux-button>
+                }
+            </ng-template>
+        </lux-chat-entry-actions>
+
+        <lux-chat-entry-content>
+            <ng-template let-item>
+                <lux-markdown [luxSanitizeConfig]="sanitizeConfig" [luxData]="getChatContentWithLinks(item)" (click)="onChatContentReferenceClicked($event)"></lux-markdown>
+            </ng-template>
+        </lux-chat-entry-content>
+
+    </lux-chat-entry>
+
+    <lux-chat-input>
+        <div style="display: flex; flex-direction: row; gap: 8px;">
+            <lux-input-ac style="flex: 1 0 auto;" luxTagId="chatInput" luxAriaLabel="Chat Eingabe" [(luxValue)]="chatInput" luxAutocomplete="off" [luxNoTopLabel]="true" [luxNoBottomLabel]="true"
+            (keyup.enter)="onChatEntered($event)"></lux-input-ac>
+            <lux-button style="flex: 0 0 auto; margin: auto;" luxLabel="Senden" [luxStroked]="true" (luxClicked)="onChatEntered()"></lux-button>
+        </div>
+    </lux-chat-input>
+
+    <lux-chat-sidebar [side]="'left'" [(visible)]="sidebarHistoryVisible" [overlay]="true" title="Historie">
+        <lux-button luxLabel="Neuer Chat" [luxRaised]="true" (luxClicked)="onHistoryChatClicked(undefined)"></lux-button>
+
+        @if(!allChats){
+            <lux-progress [luxType]="'Spinner'" [luxMode]="'indeterminate'"></lux-progress>
+        }
+        @else {
+            @for(chat of allChats; track $index){
+                <lux-button [luxLabel]="chat.title" (luxClicked)="onHistoryChatClicked(chat)"></lux-button>
+            }
+        }
+    </lux-chat-sidebar>
+
+    <lux-chat-sidebar [side]="'right'" [(visible)]="sidebarSourcesVisible" [overlay]="true" title="Quellen">
+        <lux-tabs class="chat-ai-sidebar-references-tabs-scroll">
+            <lux-tab luxTitle="Genutzte Quellen" [luxCounter]="activeReferenceEntry?.metadata.usedContexts.length">
+                <ng-template>
+                    @if(activeReferenceEntry){
+                        @for(reference of activeReferenceEntry.metadata.usedContexts; track $index){
+                            <lux-panel [luxExpanded]="reference.reference_code === this.activeReferenceKey">
+                                <lux-panel-header-title>
+                                    {{reference.reference_code.replace('[','').replace(']','')}}
+                                </lux-panel-header-title>
+                                <lux-panel-header-description>
+                                  {{reference.title}}
+                                </lux-panel-header-description>
+                                <lux-panel-content>
+                                    <lux-link
+                                        [luxFlat]="true"
+                                        luxIconName="lux-interface-link"
+                                        [luxLabel]="reference.link_label"
+                                        [luxHref]="reference.link"
+                                        luxColor="primary"
+                                    ></lux-link>
+                                    <lux-markdown class="lux-hyphenate" [luxSanitizeConfig]="sanitizeConfig" luxData="{{this.cleanContent(reference.content)}}"></lux-markdown>
+                                </lux-panel-content>
+                            </lux-panel>
+                        }
+                    }
+                </ng-template>
+            </lux-tab>
+
+            <lux-tab luxTitle="Weitere Quellen" [luxCounter]="activeReferenceEntry?.metadata.unusedContexts.length">
+                <ng-template>
+                    @if(activeReferenceEntry){
+                        @for(reference of activeReferenceEntry.metadata.unusedContexts; track $index){
+                            <lux-panel [luxExpanded]="reference.reference_code === this.activeReferenceKey">
+                                <lux-panel-header-title>
+                                    {{reference.reference_code.replace('[','').replace(']','')}}
+                                </lux-panel-header-title>
+                                <lux-panel-header-description>
+                                  {{reference.title}}
+                                </lux-panel-header-description>
+                                <lux-panel-content>
+                                    <lux-link
+                                        [luxFlat]="true"
+                                        luxIconName="lux-interface-link"
+                                        [luxLabel]="reference.link_label"
+                                        [luxHref]="reference.link"
+                                        luxColor="primary"
+                                    ></lux-link>
+                                    <lux-markdown class="lux-hyphenate" [luxSanitizeConfig]="sanitizeConfig" luxData="{{this.cleanContent(reference.content)}}"></lux-markdown>
+                                </lux-panel-content>
+                            </lux-panel>
+                        }
+                    }
+                </ng-template>
+            </lux-tab>
+        </lux-tabs>
+    </lux-chat-sidebar>
+</lux-chat>

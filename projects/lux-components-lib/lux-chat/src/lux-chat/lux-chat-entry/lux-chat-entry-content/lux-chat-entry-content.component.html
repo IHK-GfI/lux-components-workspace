@@ -5,5 +5,5 @@
 </ng-template>
 
 <ng-template let-item #default>
-    <lux-markdown [luxSanitizeConfig]="sanitizeConfig" luxData="{{item.content}}"></lux-markdown>
+    <lux-markdown [luxSanitizeConfig]="sanitizeConfig" [luxData]="item.content"></lux-markdown>
 </ng-template>

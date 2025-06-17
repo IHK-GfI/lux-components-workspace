@@ -1,4 +1,4 @@
-import { Component, ContentChild, ContentChildren, ElementRef, Input, ViewChild, QueryList } from '@angular/core';
+import { Component, ContentChild, ContentChildren, ElementRef, Input, ViewChild, QueryList, AfterContentInit } from '@angular/core';
 import { LuxChatHeaderComponent } from './lux-chat-header/lux-chat-header.component';
 import { LuxChatInputComponent } from './lux-chat-input/lux-chat-input.component';
 import { LuxChatData } from './lux-chat-data';
@@ -24,7 +24,7 @@ import { LuxChatSidebarComponent, Side } from './lux-chat-sidebar/lux-chat-sideb
   templateUrl: './lux-chat.component.html',
   styleUrl: './lux-chat.component.scss'
 })
-export class LuxChatComponent implements LuxChatControlRef {
+export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
 
   public defaultChatHeaderDatePrefix = $localize`:@@luxc.chat.default.header.date.prefix:Erstellt`
   
