@@ -1,6 +1,6 @@
 # LUX-Link
 
-![Beispielbild LUX-Link](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link-v18-img.png)
+![Beispielbild LUX-Link](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img.png)
 
 - [LUX-Link](#lux-link)
   - [Overview / API](#overview--api)
@@ -33,7 +33,7 @@
 | luxRaised             | boolean         | Gibt an, ob der Button hervorgehoben wird.                                                                                                                                                       |
 | luxIconName           | string          | Ein LUX-Iconname.                                                                                                                                                                                |
 | luxIconShowRight      | boolean         | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                      |
-| luxTagId              | string          | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                    |
+| luxTagId              | string          | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                    |
 | luxDisabled           | boolean         | Gibt an, ob das Element deaktiviert ist.                                                                                                                                                         |
 | luxRounded            | boolean         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                             |
 | luxIconAlignWithLabel | boolean         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                         |
@@ -48,7 +48,7 @@
 
 ### 1. Normale Links
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img-01.png)
 
 Html
 
@@ -75,7 +75,7 @@ Html
 
 ### 2. Flat Links
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img-02.png)
 
 Html
 
@@ -109,7 +109,7 @@ Html
 
 ### 2. Links mit Icons
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img-03.png)
 
 Html
 
@@ -149,7 +149,7 @@ Html
 
 ### Konfigurationsoptionen
 
-Durch Nutzung der [LUX-Components-Config](config-v18) kann für diese Component bestimmt werden, dass der Text immer in Großbuchstaben ausgegeben wird.
+Durch Nutzung der [LUX-Components-Config](config-v19) kann für diese Component bestimmt werden, dass der Text immer in Großbuchstaben ausgegeben wird.
 Will man die LuxButtons als Ausnahmen für die Ausgabe in Großbuchstaben hinzufügen, muss der Selektor "lux-button" dem Config-Module übergeben werden.
 
 Standardmäßig werden die Texte der Buttons immer in Großbuchstaben angezeigt.

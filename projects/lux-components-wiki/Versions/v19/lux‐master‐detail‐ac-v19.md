@@ -1,6 +1,6 @@
 # LUX-Master-Detail
 
-![Beispielbild LUX-Master-Detail-Ac](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐master‐detail‐ac-v18-img.png)
+![Beispielbild LUX-Master-Detail-Ac](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐master‐detail‐ac-v19-img.png)
 
 - [LUX-Master-Detail](#lux-master-detail)
   - [Overview / API](#overview--api)
@@ -55,8 +55,8 @@ Erhält die Masterliste den Focus (mit dem "Tab"-Key) wird jetzt direkt das sele
 | luxMasterList          | []\<any>     | Enthält die aktuelle Master-Liste.                                                                                                                                                  |
 | luxMasterSpinnerDelay  | number       | Die Zeitverzögerung in ms bis der Spinner angezeigt wird.                                                                                                                           |
 | luxMasterIsLoading     | boolean      | Boolean-Flag der bestimmt, ob der Spinner angezeigt wird. Beim Setzen auf "true" wird die Verzögerung durch luxMasterSpinnerDelay berücksichtigt.                                   |
-| luxTagIdMaster         | string       | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                       |
-| luxTagIdDetail         | string       | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                       |
+| luxTagIdMaster         | string       | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                       |
+| luxTagIdDetail         | string       | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                       |
 | luxTitleLineBreak      | boolean      | Boolean-Flag der bestimmt, ob die Titel und Untertitel in der Masteransicht überschreiten der Breite mit "..." verkürzt oder mit Umbrüchen angezeigt werden.                        |
 
 ### @Output

@@ -1,6 +1,6 @@
 # Lux-Dialog
 
-![Beispielbild LUX-Dialog](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐dialog-v18-img.png)
+![Beispielbild LUX-Dialog](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐dialog-v19-img.png)
 
 - [Lux-Dialog](#lux-dialog)
   - [Overview / API](#overview--api)
@@ -141,7 +141,7 @@ Eigene Dialog-Component müssen diese Klasse via Dependency-Injection besitzen, 
 
 ### 1. Confirm Dialog mit Defaultbutton
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐dialog-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐dialog-v19-img-01.png)
 
 Ts
 
@@ -194,7 +194,7 @@ Html
 
 ### 2. Dialog mit eigener Komponente
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐dialog-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐dialog-v19-img-02.png)
 
 Ts - Aufrufer
 

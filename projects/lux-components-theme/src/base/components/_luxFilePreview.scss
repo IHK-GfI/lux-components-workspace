@@ -24,6 +24,11 @@ lux-file-preview-toolbar {
       background-color: rgba(gray, 0.5) !important;
     }
 
+    &.lux-file-preview-toolbar-close-button {
+      background-color: #ffffff;
+      border-radius: 4px;
+    }
+
     button.lux-icon-button {
       &:focus-visible {
         @include luxfocus.focus-bright-mixin;

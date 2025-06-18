@@ -1,6 +1,6 @@
 # LUX-Input
 
-![Beispielbild LUX-Input](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐input-v18-img.png)
+![Beispielbild LUX-Input](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img.png)
 
 - [LUX-Input](#lux-input)
   - [Overview / API](#overview--api)
@@ -31,7 +31,7 @@
 | luxNumberAlignLeft     | boolean                | Gibt an, ob Zahlen linksbündig dargestellt werden.                                                                                                                                                                                                                                                                                                                           |
 | luxValue               | \<T = string>          | Der Text-Wert des Input-Felds. Two-Way-Binding ebenfalls möglich, wenn das Input-Feld nicht innerhalb eines Reactive-Forms ist.                                                                                                                                                                                                                                              |
 | luxHideCounterLabel    | boolean                | Siehe Eigenschaft `luxMaxLength`.                                                                                                                                                                                                                                                                                                                                            |
-| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                |
+| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                |
 | luxPlaceholder         | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                                                       |
 | luxAutocomplete        | string                 | Steuert, ob der Browser den Inhalt cachen darf.                                                                                                                                                                                                                                                                                                                              |
 | luxRequired            | boolean                | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                                                    |
@@ -65,7 +65,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐input-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-01.png)
 
 Ts
 
@@ -77,6 +77,7 @@ Html
 
 ```html
 <lux-input-ac
+  luxAutofocus
   luxLabel="Vorname"
   [(luxValue)]="firstname"
   luxHint="Bitte geben Sie Ihren Vornamen ein"
@@ -85,12 +86,12 @@ Html
 
 ### 2. Mit Suffix und Präfix
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐input-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-02.png)
 
 Html
 
 ```html
-<lux-input-ac luxLabel="Vorname">
+<lux-input-ac luxLabel="Vorname" luxAutofocus>
   <lux-input-ac-prefix
     ><lux-icon [luxIconName]="'lux-cogs'"></lux-icon>&nbsp;</lux-input-ac-prefix
   >
@@ -102,7 +103,7 @@ Html
 
 ### 3. Mit Formular
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐input-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-03.png)
 
 Ts
 
@@ -134,6 +135,7 @@ Html
   <div formGroupName="user" class="lux-flex lux-flex-col lux-gap-4">
     <h3>Benutzer</h3>
     <lux-input-ac
+      luxAutofocus
       luxLabel="Vorname"
       luxControlBinding="firstname"
     ></lux-input-ac>
@@ -172,9 +174,9 @@ Html
 
 ### 4. Komplexe Validierung mit Pattern
 
-![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐input-v18-img-04-01.png)
+![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-04-01.png)
 
-![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐input-v18-img-04-02.png)
+![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-04-02.png)
 
 Dieses Beispiel zeigt, wie man Validatoren kombinieren kann,
 um komplexere Prüfungen umzusetzen. Zusätzlich wird über
@@ -209,6 +211,7 @@ Html - Mit Formular
 ```html
 <form [formGroup]="myGroup">
   <lux-input-ac
+    luxAutofocus
     luxLabel="Knr"
     luxControlBinding="knr"
     [luxErrorCallback]="errorCallback"
@@ -242,6 +245,7 @@ Html - Ohne Formular
 
 ```html
 <lux-input-ac
+  luxAutofocus
   luxLabel="Knr"
   luxName="knr"
   [(luxValue)]="knr"

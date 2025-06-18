@@ -1,5 +1,6 @@
 <lux-file-preview-toolbar>
   <lux-button
+    class="lux-file-preview-toolbar-download-button"
     [luxIconName]="downloadIconName"
     (luxClicked)="onDownload()"
     luxColor="accent"
@@ -8,6 +9,7 @@
     [luxAriaLabel]="downloadAriaLabel"
   ></lux-button>
   <lux-button
+    class="lux-file-preview-toolbar-close-button"
     [luxIconName]="closeIconName"
     (luxClicked)="onClose()"
     [luxRaised]="true"

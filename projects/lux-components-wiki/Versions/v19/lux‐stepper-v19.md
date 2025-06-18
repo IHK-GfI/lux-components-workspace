@@ -1,6 +1,6 @@
 # LUX-Stepper
 
-![Beispielbild LUX-Stepper](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper-v18-img.png)
+![Beispielbild LUX-Stepper](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img.png)
 
 - [LUX-Stepper](#lux-stepper)
   - [Overview / API](#overview--api)
@@ -121,7 +121,7 @@ Objekte können dieses Interface implementieren, um so die einzelnen Steuer-Butt
 
 ### 1. Horizontaler Stepper mit angepassten Buttons
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img-01.png)
 
 Ts
 
@@ -208,7 +208,7 @@ Html
 
 ### 2. Horizontaler Stepper mit Buttons im Footer
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img-02.png)
 
 Ts
 
@@ -320,7 +320,7 @@ Html
 
 ### 3. Vertikaler Stepper
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img-03.png)
 
 Ts
 
@@ -559,7 +559,7 @@ Beispiel:
 
 ### Konfigurationsoptionen
 
-Durch Nutzung der [LUX-Components-Config](config-v18) kann für die LuxStepComponent bestimmt werden, dass der Text in den LuxStepComponents immer in Großbuchstaben ausgegeben wird.
+Durch Nutzung der [LUX-Components-Config](config-v19) kann für die LuxStepComponent bestimmt werden, dass der Text in den LuxStepComponents immer in Großbuchstaben ausgegeben wird.
 Will man die LuxSteps als Ausnahmen für die Ausgabe in Großbuchstaben hinzufügen, muss der Selektor "lux-step" dem Config-Module übergeben werden.
 
 Standardmäßig werden die Texte der Steps immer in Großbuchstaben angezeigt.

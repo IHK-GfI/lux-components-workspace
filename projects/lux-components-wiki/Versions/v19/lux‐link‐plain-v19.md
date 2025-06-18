@@ -1,6 +1,6 @@
 # LUX-Link-Plain
 
-![Beispielbild LUX-Link-Plain](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link‐plain-v18-img.png)
+![Beispielbild LUX-Link-Plain](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img.png)
 
 - [LUX-Link-Plain](#lux-link-plain)
   - [Overview / API](#overview--api)
@@ -29,7 +29,7 @@
 | luxLabel         | string  | Bestimmt das Label, welches in dieser Component angezeigt werden soll.                                                                                                                           |
 | luxIconName      | string  | Ein LUX-Iconname.                                                                                                                                                                                |
 | luxIconShowRight | boolean | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                      |
-| luxTagId         | string  | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                    |
+| luxTagId         | string  | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                    |
 | luxDisabled      | boolean | Gibt an, ob das Element deaktiviert ist.                                                                                                                                                         |
 | luxCustomClass   | string  | Mit dieser Property kann ein individueller Klassename der Komponente mitgegeben werden.                                                                                                          |
 
@@ -43,7 +43,7 @@
 
 ### 1. Normale Links
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link‐plain-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img-01.png)
 
 Html
 
@@ -61,7 +61,7 @@ Html
 
 ### 2. Links mit Icons
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link‐plain-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img-02.png)
 
 Html
 
@@ -89,7 +89,7 @@ Html
 
 ### 3. Links mit Custom-Class
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐link‐plain-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img-03.png)
 
 Html
 

@@ -1,6 +1,6 @@
 # LUX-Select
 
-![Beispielbild LUX-Select](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐select-v18-img.png)
+![Beispielbild LUX-Select](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐select-v19-img.png)
 
 - [LUX-Select](#lux-select)
   - [Overview / API](#overview--api)
@@ -35,7 +35,7 @@
 | luxOptionLabelProp     | string                 | Gibt das Property an, aus dem das Label geholt wird (siehe Beispiel unten).                                                                                                                                                                                                                                                |
 | luxPickValue           | Function               | Callback-Funktion die ein einzelnes Objekt vom selben Typ wie die luxOptions entgegennimmt. Hier kann dann ausgesucht werden, welches Property von der Komponente als Rückgabewert genutzt werden soll. Das ist vor allem dann nützlich, wenn nicht das ganze Objekt für die weitere Verwendung genutzt werden soll.       |
 | luxCompareWith         | Function               | Hier kann eine Vergleichsfunktion angegeben werden, die die Component dann benutzt um Objekte zu vergleichen. Aufbau: (o1: any, o2: any) => boolean;                                                                                                                                                                       |
-| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
+| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
 | luxPlaceholder         | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                     |
 | luxAutocomplete        | string                 | Steuert, ob der Browser den Inhalt cachen darf.                                                                                                                                                                                                                                                                            |
 | luxRequired            | boolean                | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                  |
@@ -67,7 +67,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐select-v18-img-01-01.png)
+![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐select-v19-img-01-01.png)
 
 #### String-Array
 
@@ -128,7 +128,7 @@ Html
 
 #### Mit Multiselect
 
-![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐select-v18-img-01-02.png)
+![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐select-v19-img-01-02.png)
 
 Ts
 
@@ -154,7 +154,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐select-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐select-v19-img-02.png)
 
 Ts
 
@@ -185,7 +185,7 @@ Html
 
 ### 3. Mit pickValue-Fn
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐select-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐select-v19-img-03.png)
 
 Ts
 

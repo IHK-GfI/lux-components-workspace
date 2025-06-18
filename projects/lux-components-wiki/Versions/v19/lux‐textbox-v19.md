@@ -1,6 +1,6 @@
 # LUX-Textbox
 
-![Beispielbild LUX-Textbox](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textbox-v18-img.png)
+![Beispielbild LUX-Textbox](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img.png)
 
 - [LUX-Textbox](#lux-textbox)
   - [Overview / API](#overview--api)
@@ -42,7 +42,7 @@ Für Links empfehlen wir lux-link-plain zu verwenden.
 
 ### 1. Informationsbox mit einem Icon und einem Titel
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textbox-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-01.png)
 
 Html
 
@@ -61,7 +61,7 @@ Html
 
 ### 2. Textbox mit dem Thema "Success"
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textbox-v18-img-02.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-02.png)
 
 Html
 
@@ -80,7 +80,7 @@ Html
 
 ### 3. Textbox mit dem Thema "Alert"
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textbox-v18-img-03.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-03.png)
 
 Html
 
@@ -99,7 +99,7 @@ Html
 
 ### 4. Textbox mit dem Thema "Warning"
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textbox-v18-img-03.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-03.png)
 
 Html
 

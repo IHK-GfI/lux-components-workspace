@@ -1,6 +1,6 @@
 # LUX-Datepicker
 
-![Beispielbild LUX-Datepicker](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datepicker-v18-img.png)
+![Beispielbild LUX-Datepicker](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datepicker-v19-img.png)
 
 - [LUX-Datepicker](#lux-datepicker)
   - [Overview / API](#overview--api)
@@ -32,7 +32,7 @@
 | luxStartDate           | string (z.B. 01.01.2000)                          | Bestimmt das Startdatum für den Datepicker. Nimmt Date-Objects und Date-Strings (z.B. '01.01.2018') entgegen. Nimmt nur noch Strings als mögliche Werte entgegen.                                                                                                                                                          |
 | luxShowToggle          | boolean                                           | Bestimmt ob der Toggle-Button sichtbar ist oder nicht.                                                                                                                                                                                                                                                                     |
 | luxLocale              | string                                            | Entspricht der Sprachformatierung die für diesen Datepicker genommen werden soll.                                                                                                                                                                                                                                          |
-| luxTagId               | string                                            | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
+| luxTagId               | string                                            | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
 | luxCustomFilter        | LuxDateFilterFn                                   | Der optionale eigene Filter für den Datepicker.                                                                                                                                                                                                                                                                            |
 | luxMaxDate             | string (z.B. 01.01.2000)                          | Das maximale zulässige Datum für den Datepicker. Nimmt Date-Objects und Date-Strings (z.B. '01.01.2018') entgegen. Nimmt nur noch Strings als mögliche Werte entgegen.                                                                                                                                                     |
 | luxMinDate             | string (z.B. 01.01.2000)                          | Das minimal zulässige Datum für den Datepicker. Nimmt Date-Objects und Date-Strings (z.B. '01.01.2018') entgegen. Nimmt nur noch Strings als mögliche Werte entgegen.                                                                                                                                                      |
@@ -69,7 +69,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datepicker-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datepicker-v19-img-01.png)
 
 Ts
 
@@ -111,7 +111,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datepicker-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datepicker-v19-img-02.png)
 
 Ts
 
@@ -135,7 +135,7 @@ Html
 
 ### 3. Min- und Max-Date
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datepicker-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datepicker-v19-img-03.png)
 
 Ts
 
@@ -156,7 +156,7 @@ Html
 
 ### 4. Eigener Filter
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datepicker-v18-img-04.png)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datepicker-v19-img-04.png)
 
 Ts
 

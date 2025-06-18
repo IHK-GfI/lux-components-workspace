@@ -110,7 +110,7 @@ export class BeispielComponent implements OnInit, OnDestroy {
 ### LuxPaginatorIntl
 
 Die Lux-Implementierung von MatPaginatorIntl, also der Sprachkonfiguration für die Paginations.
-Die [lux-table](lux‐table-v18) und [lux-message-box](lux‐message‐box-v18) nutzen beide diese Konfiguration.
+Die [lux-table](lux‐table-v19) und [lux-message-box](lux‐message‐box-v19) nutzen beide diese Konfiguration.
 
 | Name              | Neuer Wert              |
 | ----------------- | ----------------------- |

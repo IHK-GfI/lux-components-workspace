@@ -85,7 +85,7 @@ Angular/Flex-Layout setzt alle Styles als inline-Styles um, diese haben dadurch 
 
 ### A: Den LuxMediaQueryObserverService nutzen
 
-(vgl. [luxMediaQueryObserverService](https://github.com/IHK-GfI/lux-components/wiki/util#luxmediaqueryobserverservice))
+(vgl. [luxMediaQueryObserverService](https://github.com/IHK-GfI/lux-components-workspace/wiki/util#luxmediaqueryobserverservice))
 
 Damit lassen sich "Booleans" erzeugen, mit denen man über ngClass entsprechend die Klassen für Responsives Design steuern kann
 

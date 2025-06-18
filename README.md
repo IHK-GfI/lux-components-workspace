@@ -39,11 +39,11 @@ Die Demo lokal starten:
 
 ## Dokumentation
 
-Eine ausführliche Dokumentation der _LUX-Components_ befindet sich [hier](https://github.com/IHK-GfI/lux-components/wiki).
+Eine ausführliche Dokumentation der _LUX-Components_ befindet sich [hier](https://github.com/IHK-GfI/lux-components-workspace/wiki).
 
 ## Aktualisierung
 
-Für jede Version ist im dazugehörigen Update Guide (siehe [Dokumentation](https://github.com/IHK-GfI/lux-components/wiki)) dokumentiert, wie eine Aktualisierung durchgeführt werden kann.
+Für jede Version ist im dazugehörigen Update Guide (siehe [Dokumentation](https://github.com/IHK-GfI/lux-components-workspace/wiki)) dokumentiert, wie eine Aktualisierung durchgeführt werden kann.
 
 ## Autoren
 

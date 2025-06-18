@@ -23,7 +23,7 @@
         <target>Zoom in</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/lux-file-preview/src/lux-file-preview-imgviewer/lux-file-preview-imgviewer.component.html</context>
-          <context context-type="linenumber">8,9</context>
+          <context context-type="linenumber">1,4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.imgviewer.zoomout.arialabel" datatype="html">
@@ -31,7 +31,7 @@
         <target>Zoom out</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/lux-file-preview/src/lux-file-preview-imgviewer/lux-file-preview-imgviewer.component.html</context>
-          <context context-type="linenumber">17,18</context>
+          <context context-type="linenumber">1,4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.notsupportedviewer.download.arialabel" datatype="html">
@@ -39,7 +39,7 @@
         <target>Download file</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/lux-file-preview/src/lux-file-preview-notsupportedviewer/lux-file-preview-notsupportedviewer.component.html</context>
-          <context context-type="linenumber">8,9</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.notsupportedviewer.close.arialabel" datatype="html">
@@ -47,7 +47,7 @@
         <target>Close file preview</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/lux-file-preview/src/lux-file-preview-notsupportedviewer/lux-file-preview-notsupportedviewer.component.html</context>
-          <context context-type="linenumber">16,17</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.notsupportedviewer.message" datatype="html">
@@ -55,7 +55,7 @@
         <target>This file format cannot be displayed in the preview.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/lux-file-preview/src/lux-file-preview-notsupportedviewer/lux-file-preview-notsupportedviewer.component.html</context>
-          <context context-type="linenumber">21,22</context>
+          <context context-type="linenumber">1,4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.notsupportedviewer.download.lbl" datatype="html">
@@ -71,7 +71,11 @@
         <target>Menu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-action/lux-menu/lux-menu.component.ts</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.html</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.message.btn.close.arialabel" datatype="html">
@@ -79,7 +83,7 @@
         <target>Close message</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-message-box/lux-message-box-subcomponents/lux-message.component.html</context>
-          <context context-type="linenumber">16,21</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.message.container.arialabel" datatype="html">
@@ -87,7 +91,7 @@
         <target>Messages</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-message-box/lux-message-box.component.html</context>
-          <context context-type="linenumber">4,5</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.message.announce.1_message" datatype="html">
@@ -127,11 +131,11 @@
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.table.multiselect.chk.arialabel" datatype="html">
-        <source>Reihe <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
-        <target>Row <x id="INTERPOLATION" equiv-text="{{ i }}"/></target>
+        <source>Reihe <x id="INTERPOLATION"/></source>
+        <target>Row <x id="INTERPOLATION"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.html</context>
-          <context context-type="linenumber">71,72</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.table.multiselect.all.chk.arialabel" datatype="html">
@@ -139,7 +143,7 @@
         <target>All entries</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.html</context>
-          <context context-type="linenumber">86,87</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.table.sort.descending" datatype="html">
@@ -175,11 +179,11 @@
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.errorpage.error_number" datatype="html">
-        <source>Fehlernummer: <x id="INTERPOLATION" equiv-text="{{ error.errorId }}"/></source>
-        <target> Error number: <x id="INTERPOLATION" equiv-text="{{ error.errorId }}"/> </target>
+        <source>Fehlernummer: <x id="INTERPOLATION"/></source>
+        <target> Error number: <x id="INTERPOLATION"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-error/lux-error-page/lux-error-page.component.html</context>
-          <context context-type="linenumber">9,10</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.errorpage.error_title" datatype="html">
@@ -187,31 +191,7 @@
         <target>Error message</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-error/lux-error-page/lux-error-page.component.html</context>
-          <context context-type="linenumber">12,13</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file-preview.filter-load-dialog.title" datatype="html">
-        <source>Filter</source>
-		    <target>Saved Filters</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-filter-load-dialog.component.html</context>
-          <context context-type="linenumber">2,3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file-preview.filter-load-dialog.load.lbl" datatype="html">
-        <source>Laden</source>
-        <target>Load</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-filter-load-dialog.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file-preview.filter-load-dialog.delete.lbl" datatype="html">
-        <source>Löschen</source>
-        <target>Delete</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-filter-load-dialog.component.html</context>
-          <context context-type="linenumber">18,19</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.filter-load-dialog.close.lbl" datatype="html">
@@ -219,15 +199,31 @@
         <target>Close</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-filter-load-dialog.component.html</context>
-          <context context-type="linenumber">32,33</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="luxc.file-preview.filter-save-dialog.title" datatype="html">
-        <source>Filter speichern</source>
-        <target>Store filters</target>
+      <trans-unit id="luxc.file-preview.filter-load-dialog.title" datatype="html">
+        <source>Filter</source>
+		    <target>Saved Filters</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-save-dialog/lux-filter-save-dialog.component.html</context>
-          <context context-type="linenumber">2,4</context>
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-filter-load-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file-preview.filter-load-dialog.load.lbl" datatype="html">
+        <source>Laden</source>
+        <target>Load</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-filter-load-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file-preview.filter-load-dialog.delete.lbl" datatype="html">
+        <source>Löschen</source>
+        <target>Delete</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-filter-load-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.filter-save-dialog.name.lbl" datatype="html">
@@ -235,7 +231,7 @@
         <target>Name</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-save-dialog/lux-filter-save-dialog.component.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.filter-save-dialog.save.lbl" datatype="html">
@@ -243,7 +239,7 @@
         <target>Save</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-save-dialog/lux-filter-save-dialog.component.html</context>
-          <context context-type="linenumber">19,20</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-preview.filter-save-dialog.cancel.lbl" datatype="html">
@@ -251,7 +247,15 @@
         <target>Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-save-dialog/lux-filter-save-dialog.component.html</context>
-          <context context-type="linenumber">27,28</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file-preview.filter-save-dialog.title" datatype="html">
+        <source>Filter speichern</source>
+        <target>Save Filter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-dialog/lux-filter-save-dialog/lux-filter-save-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.title" datatype="html">
@@ -331,11 +335,11 @@
         <target>remove</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-chips-ac/lux-chips-ac.component.html</context>
-          <context context-type="linenumber">44,45</context>
+          <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-chips-ac/lux-chips-ac.component.html</context>
-          <context context-type="linenumber">86,87</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.chips.input.placeholder.lbl" datatype="html">
@@ -351,7 +355,7 @@
         <target>previous month</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-datepicker-ac/lux-datepicker-ac-custom-header/lux-datepicker-ac-custom-header.component.html</context>
-          <context context-type="linenumber">7,8</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.datepicker.next.month.arialabel" datatype="html">
@@ -359,7 +363,7 @@
         <target>next month</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-datepicker-ac/lux-datepicker-ac-custom-header/lux-datepicker-ac-custom-header.component.html</context>
-          <context context-type="linenumber">16,17</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.datepicker.error_message.min" datatype="html">
@@ -403,7 +407,7 @@
         <target>Hours</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-datetimepicker-ac/lux-datetime-overlay-ac/lux-datetime-overlay-content-ac.component.html</context>
-          <context context-type="linenumber">21,23</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.datetimepicker.panel.minutes.arialabel" datatype="html">
@@ -411,7 +415,7 @@
         <target>Minutes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-datetimepicker-ac/lux-datetime-overlay-ac/lux-datetime-overlay-content-ac.component.html</context>
-          <context context-type="linenumber">39,40</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.datetimepicker.invalid.date" datatype="html">
@@ -419,7 +423,7 @@
         <target>Please enter a date</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-datetimepicker-ac/lux-datetime-overlay-ac/lux-datetime-overlay-content-ac.component.html</context>
-          <context context-type="linenumber">59,60</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.datetimepicker.invalid.time" datatype="html">
@@ -427,7 +431,7 @@
         <target>Please enter a time</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-datetimepicker-ac/lux-datetime-overlay-ac/lux-datetime-overlay-content-ac.component.html</context>
-          <context context-type="linenumber">61,64</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.datetimepicker.error_message.min" datatype="html">
@@ -531,11 +535,11 @@
         <target>Delete error message</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-list/lux-file-list.component.html</context>
-          <context context-type="linenumber">95,96</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component.html</context>
-          <context context-type="linenumber">55,56</context>
+          <context context-type="linenumber">2,4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file-list.upload.lbl" datatype="html">
@@ -579,23 +583,7 @@
         <target>A file should be selected</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-list/lux-file-list.component.ts</context>
-          <context context-type="linenumber">551</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file.delete.dialog.title" datatype="html">
-        <source> Wollen Sie die Datei wirklich löschen? </source>
-        <target>Do you really want to delete the file?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component.html</context>
-          <context context-type="linenumber">4,7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file.delete.dialog.content" datatype="html">
-        <source> Wenn Sie die Datei löschen, wird diese unwiderruflich gelöscht. </source>
-        <target>If you delete the file, it will be irretrievably deleted.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component.html</context>
-          <context context-type="linenumber">9,12</context>
+          <context context-type="linenumber">557</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.delete.dialog.cancel.lbl" datatype="html">
@@ -603,7 +591,7 @@
         <target>Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component.html</context>
-          <context context-type="linenumber">14,15</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.delete.dialog.delete.lbl" datatype="html">
@@ -611,15 +599,23 @@
         <target>Delete</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component.html</context>
-          <context context-type="linenumber">22,23</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="luxc.file.rename.dialog.title" datatype="html">
-        <source> Wollen Sie die Datei umbenennen? </source>
-        <target>Do you want to rename the file?</target>
+      <trans-unit id="luxc.file.delete.dialog.title" datatype="html">
+        <source> Wollen Sie die Datei wirklich löschen? </source>
+        <target>Do you really want to delete the file?</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
-          <context context-type="linenumber">4,7</context>
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.delete.dialog.content" datatype="html">
+        <source> Wenn Sie die Datei löschen, wird diese unwiderruflich gelöscht. </source>
+        <target>If you delete the file, it will be deleted permanently.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-delete-dialog/lux-file-delete-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.rename.input.lbl" datatype="html">
@@ -627,7 +623,7 @@
         <target>New file name</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
-          <context context-type="linenumber">9,10</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.rename.dialog.cancel.lbl" datatype="html">
@@ -635,7 +631,7 @@
         <target>Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
-          <context context-type="linenumber">21,22</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.rename.dialog.rename.lbl" datatype="html">
@@ -643,47 +639,15 @@
         <target>Rename</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
-          <context context-type="linenumber">29,30</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="luxc.file.replace.dialog.title.multiple" datatype="html">
-        <source> Wollen Sie fortfahren und die Dateien mit gleichen Namen ersetzen? </source>
-        <target>Do you want to continue and replace the files with the same names?</target>
+      <trans-unit id="luxc.file.rename.dialog.title" datatype="html">
+        <source> Wollen Sie die Datei umbenennen? </source>
+        <target>Do you want to rename the file?</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
-          <context context-type="linenumber">5,7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file.replace.dialog.title" datatype="html">
-        <source> Wollen Sie fortfahren und die Datei ersetzen? </source>
-        <target>Do you want to continue and replace the file?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
-          <context context-type="linenumber">9,12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file.replace.dialog.content.multiple" datatype="html">
-        <source> Wenn Sie Dateien mit gleichen Namen hochladen, werden diese ersetzt. </source>
-        <target>If you upload files with the same name, they will be replaced.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
-          <context context-type="linenumber">16,18</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file.replace.dialog.content" datatype="html">
-        <source> Wenn Sie eine neue Datei auswählen, wird die vorhandene Datei ersetzt. </source>
-        <target>If you select a new file, the existing file will be replaced.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
-          <context context-type="linenumber">20,22</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.file.replace.dialog.deleteprotection" datatype="html">
-        <source>Es soll eine Datei ersetzt werden, die weder erstetzt noch gelöscht werden darf!</source>
-        <target>A file is to be replaced that must not be replaced or deleted!</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
-          <context context-type="linenumber">24,28</context>
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-rename-dialog/lux-file-rename-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.replace.dialog.cancel.lbl" datatype="html">
@@ -691,22 +655,63 @@
         <target>Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
-          <context context-type="linenumber">30,31</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.replace.dialog.replace.lbl" datatype="html">
         <source>Ersetzen</source>
+        <target>Replace</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
-          <context context-type="linenumber">38,39</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.replace.dialog.title.multiple" datatype="html">
+        <source> Wollen Sie fortfahren und die Dateien mit gleichen Namen ersetzen? </source>
+        <target>Do you want to continue and replace the files with the same names?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.replace.dialog.title" datatype="html">
+        <source> Wollen Sie fortfahren und die Datei ersetzen? </source>
+        <target>Do you want to continue and replace the file?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.replace.dialog.content.multiple" datatype="html">
+        <source> Wenn Sie Dateien mit gleichen Namen hochladen, werden diese ersetzt. </source>
+        <target>If you upload files with the same name, they will be replaced.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.replace.dialog.content" datatype="html">
+        <source> Wenn Sie eine neue Datei auswählen, wird die vorhandene Datei ersetzt. </source>
+        <target>If you select a new file, the existing file will be replaced.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.file.replace.dialog.deleteprotection" datatype="html">
+        <source>Es soll eine Datei ersetzt werden, die weder erstetzt noch gelöscht werden darf!</source>
+        <target>A file is to be replaced that must not be replaced or deleted!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-subcomponents/lux-file-replace-dialog/lux-file-replace-dialog.component.html</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.upload.delete.btn.arialabel" datatype="html">
-        <source>Button zum Löschen der Datei <x id="INTERPOLATION" equiv-text="{{ file.name }}"/></source>
-        <target>Button to delete the file <x id="INTERPOLATION" equiv-text="{{ file.name }}"/></target>
+        <source>Button zum Löschen der Datei <x id="INTERPOLATION"/></source>
+        <target>Button to delete the file <x id="INTERPOLATION"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-upload/lux-file-upload.component.html</context>
-          <context context-type="linenumber">128,129</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.upload.label" datatype="html">
@@ -876,11 +881,11 @@
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.app-footer.version" datatype="html">
-        <source>Version <x id="INTERPOLATION" equiv-text="{{ luxVersion }}"/></source>
-        <target>Version <x id="INTERPOLATION" equiv-text="{{ luxVersion }}"/></target>
+        <source>Version <x id="INTERPOLATION"/></source>
+        <target>Version <x id="INTERPOLATION"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-footer/lux-app-footer.component.html</context>
-          <context context-type="linenumber">9,10</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.app-footer.ariarolefooter" datatype="html">
@@ -896,15 +901,15 @@
         <target>User menu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-nav-menu/lux-app-header-ac-nav-menu.component.html</context>
-          <context context-type="linenumber">40,41</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac.component.html</context>
-          <context context-type="linenumber">98,99</context>
+          <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header/lux-app-header.component.html</context>
-          <context context-type="linenumber">103,104</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.lang-select.aria.langmenu.btn" datatype="html">
@@ -912,11 +917,11 @@
         <target>Language menu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-lang-select-ac/lux-lang-select-ac.component.html</context>
-          <context context-type="linenumber">3,4</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-lang-select/lux-lang-select.component.html</context>
-          <context context-type="linenumber">4,5</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.app-header.lang.select.trigger" datatype="html">
@@ -924,7 +929,7 @@
         <target>Language settings</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-lang-select-ac/lux-lang-select-ac.component.html</context>
-          <context context-type="linenumber">24,25</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.app-header.aria.role_header.lbl" datatype="html">
@@ -1048,7 +1053,7 @@
         <target>Back to list</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-master-detail-ac/lux-master-detail-ac.component.html</context>
-          <context context-type="linenumber">115,118</context>
+          <context context-type="linenumber">2,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.master-detail.master.empty_label" datatype="html">
@@ -1252,7 +1257,11 @@
         <target>Dialog close</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component.html</context>
-          <context context-type="linenumber">17,19</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-tour-hint/lux-tour-hint-preset/lux-tour-hint-preset.component.html</context>
+          <context context-type="linenumber">1,3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.paginator.elements_on_page" datatype="html">
@@ -1372,7 +1381,7 @@
         <target> or </target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-util/lux-util.ts</context>
-          <context context-type="linenumber">402</context>
+          <context context-type="linenumber">395</context>
         </context-group>
       </trans-unit>
     </body>

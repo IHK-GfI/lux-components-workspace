@@ -1,6 +1,6 @@
 # LUX-Tenant-Logo
 
-![Beispielbild LUX-Tenant-Logo](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tenant‐logo-v18-img.png)
+![Beispielbild LUX-Tenant-Logo](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tenant‐logo-v19-img.png)
 
 - [LUX-Tenant-Logo](#lux-tenant-logo)
   - [Overview / API](#overview--api)
@@ -45,11 +45,11 @@ Diese Komponente soll wie eine Lookup Komponente benutzt werden, die eine Lookup
 
 #### Logos mit der App ausliefern
 
-Siehe [LUX-Components-Config](config-v18#logos-mit-der-app-ausliefern).
+Siehe [LUX-Components-Config](config-v19#logos-mit-der-app-ausliefern).
 
 #### Logos über ein CDN laden
 
-Siehe [LUX-Components-Config](config-v18#logos-über-ein-cdn-laden).
+Siehe [LUX-Components-Config](config-v19#logos-über-ein-cdn-laden).
 
 ## Beispiele
 
@@ -61,7 +61,7 @@ Es kann entweder das Attribut **luxBrandLogoSrc** der lux-app-header-ac Komponen
 
 Um die lux-tenant-logo Komponente zu verwenden, muss das Attribut **luxHideBrandLogo** auf **true** gesetzt werden, ansonsten wird weiterhin das Attribut luxBrandLogoSrc verwendet.
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tenant‐logo-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tenant‐logo-v19-img-01.png)
 
 Html
 
@@ -77,15 +77,15 @@ Html
 
 Lang:
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tenant‐logo-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tenant‐logo-v19-img-01.png)
 
 Unten:
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tenant‐logo-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tenant‐logo-v19-img-02.png)
 
 Ohne:
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tenant‐logo-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tenant‐logo-v19-img-03.png)
 
 Html
 

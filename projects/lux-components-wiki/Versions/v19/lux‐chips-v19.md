@@ -1,6 +1,6 @@
 # LUX-Chips
 
-![Beispielbild LUX-Chips](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐chips-v18-img.png)
+![Beispielbild LUX-Chips](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐chips-v19-img.png)
 
 - [LUX-Chips](#lux-chips)
   - [Overview / API](#overview--api)
@@ -121,7 +121,7 @@ Stellt einen einzelnen Chip dar.
 
 ### 1. Simple Chips
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐chips-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐chips-v19-img-01.png)
 
 Ts
 
@@ -153,7 +153,7 @@ Html
 
 ### 2. Chipgroup mit Eingabefeld
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐chips-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐chips-v19-img-02.png)
 
 Ts
 
@@ -199,7 +199,7 @@ Html
 
 ### 3. Chips mit Autocomplete
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐chips-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐chips-v19-img-03.png)
 
 Ts
 
@@ -229,7 +229,7 @@ Html
 
 ### 4. Chips im Formular
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐chips-v18-img-04.png)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐chips-v19-img-04.png)
 
 Ts
 

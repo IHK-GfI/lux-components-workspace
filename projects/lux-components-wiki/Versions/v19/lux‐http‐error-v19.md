@@ -1,6 +1,6 @@
 # LUX-Http-Error
 
-![Beispielbild LUX-Http-Error](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐http‐error-v18-img.png)
+![Beispielbild LUX-Http-Error](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐http‐error-v19-img.png)
 
 - [LUX-Http-Error](#lux-http-error)
   - [Overview / API](#overview--api)
@@ -18,7 +18,7 @@ Komponente die zur Darstellung von HTTP-Fehlern genutzt werden kann.
 Dafür muss der Tag lux-http-error in die eigene View eingebaut werden und der LuxHttpErrorInterceptor im AppModule eingetragen werden.
 Wahlweise ist es auch möglich, über den LuxHttpErrorInterceptor eigene Fehler zu pushen, welche dann von dem LuxHttpErrorComponent dargestellt werden.
 
-LuxHttpErrorComponent benutzt die [lux-message-box](lux‐message‐box-v18) zur Darstellung der Meldungen.
+LuxHttpErrorComponent benutzt die [lux-message-box](lux‐message‐box-v19) zur Darstellung der Meldungen.
 
 | Name     | Beschreibung   |
 | -------- | -------------- |
@@ -28,7 +28,7 @@ LuxHttpErrorComponent benutzt die [lux-message-box](lux‐message‐box-v18) zur
 
 ### 1. LuxHttpErrorInterceptors
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐http‐error-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐http‐error-v19-img-01.png)
 
 Ts
 
@@ -53,7 +53,7 @@ Html
 
 ### 2. Fehler pushen
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐http‐error-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐http‐error-v19-img-02.png)
 
 Ts
 

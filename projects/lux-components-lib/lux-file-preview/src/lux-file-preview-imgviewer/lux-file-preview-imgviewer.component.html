@@ -1,6 +1,7 @@
 <lux-file-preview-toolbar>
   @if (zoomActive) {
   <lux-button
+    class="lux-file-preview-toolbar-zoomin-button"
     luxIconName="lux-interface-edit-zoom-in"
     (luxClicked)="onZoomIn()"
     [luxRaised]="true"
@@ -10,6 +11,7 @@
   ></lux-button>
   } @if (zoomActive) {
   <lux-button
+    class="lux-file-preview-toolbar-zoomout-button"
     luxIconName="lux-interface-edit-zoom-out"
     (luxClicked)="onZoomOut()"
     [luxRaised]="true"
@@ -19,6 +21,7 @@
   ></lux-button>
   }
   <lux-button
+    class="lux-file-preview-toolbar-download-button"
     [luxIconName]="downloadIconName"
     (luxClicked)="onDownload()"
     luxColor="accent"
@@ -27,6 +30,7 @@
     [luxAriaLabel]="downloadAriaLabel"
   ></lux-button>
   <lux-button
+    class="lux-file-preview-toolbar-close-button"
     [luxIconName]="closeIconName"
     (luxClicked)="onClose()"
     [luxRaised]="true"

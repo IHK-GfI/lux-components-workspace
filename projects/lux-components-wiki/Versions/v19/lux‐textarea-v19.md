@@ -1,6 +1,6 @@
 # LUX-Textarea
 
-![Beispielbild LUX-Textarea](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textarea-v18-img.png)
+![Beispielbild LUX-Textarea](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textarea-v19-img.png)
 
 - [LUX-Textarea](#lux-textarea)
   - [Overview / API](#overview--api)
@@ -30,7 +30,7 @@
 | luxPlaceholder         | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                                                       |
 | luxAutocomplete        | string                 | Steuert, ob der Browser den Inhalt cachen darf.                                                                                                                                                                                                                                                                                                                              |
 | luxValue               | string                 | Der Text-Wert des Input-Felds. Two-Way-Binding ebenfalls möglich, wenn das Input-Feld nicht innerhalb eines Reactive-Forms ist.                                                                                                                                                                                                                                              |
-| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                |
+| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                |
 | luxPlaceholder         | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                                                       |
 | luxRequired            | boolean                | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                                                    |
 | luxControlBinding      | string                 | Das Controlbinding (z.B. firstname) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                                                                                                                                                 |
@@ -63,7 +63,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textarea-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textarea-v19-img-01.png)
 
 Ts
 
@@ -87,7 +87,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐textarea-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textarea-v19-img-02.png)
 
 Ts
 

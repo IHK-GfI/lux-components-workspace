@@ -11,7 +11,7 @@
 
 Jede LUX-Component (z.B. lux-input, lux-checkbox,...) kann über eine LUX-Tag-Id (Attribut `data-luxtagid`) verfügen.
 Die LUX-Tag-Ids sollen es den automatischen Tests ermöglichen, im Test die LUX-Components zuverlässig zu identifizieren.
-Über das Flag `generateLuxTagIds` in der Konfiguration (siehe [Config](config-v18#luxcomponentsconfigparameters))
+Über das Flag `generateLuxTagIds` in der Konfiguration (siehe [Config](config-v19#luxcomponentsconfigparameters))
 wird gesteuert, ob die LUX-Tag-Ids ausgegeben werden. Es kann sinnvoll sein, die LUX-Tag-Ids ausschließlich für
 Testumgebungen zu aktivieren.
 
@@ -27,7 +27,7 @@ wird eine Warnung in der Console ausgegeben. In diesen Fällen muss der Entwickl
 ### Generierte LUX-Tag-Id
 
 Auch die manuell gesetzten LUX-Tag-Ids (Attribut `data-luxtagid`) werden nur angezeigt,
-wenn das Flag `generateLuxTagIds` in der Konfiguration (siehe [Config](config-v18#luxcomponentsconfigparameters))
+wenn das Flag `generateLuxTagIds` in der Konfiguration (siehe [Config](config-v19#luxcomponentsconfigparameters))
 aktiviert ist.
 
 Html-Template:
@@ -55,7 +55,7 @@ HTML-Ausgabe:
 ### Manuell gesetzte LUX-Tag-Id für eine LUX-Component
 
 Auch die manuell gesetzten LUX-Tag-Ids (Attribut `data-luxtagid`) werden nur angezeigt,
-wenn das Flag `generateLuxTagIds` in der Konfiguration (siehe [Config](config-v18#luxcomponentsconfigparameters))
+wenn das Flag `generateLuxTagIds` in der Konfiguration (siehe [Config](config-v19#luxcomponentsconfigparameters))
 aktiviert ist.
 
 Html-Template

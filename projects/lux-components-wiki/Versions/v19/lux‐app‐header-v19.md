@@ -1,6 +1,6 @@
 # LUX-App-Header
 
-![Beispielbild LUX-App-Header](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐app‐header-v18-img.png)
+![Beispielbild LUX-App-Header](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img.png)
 
 - [LUX-App-Header](#lux-app-header)
   - [Overview / API](#overview--api)
@@ -163,7 +163,7 @@ Diese Component kann dazu genutzt werden, einen fixen Footer unterhalb der Menü
 ### LuxAppHeaderRightNavComponent
 
 Die LuxAppHeaderRightNavComponent ermöglicht es ein sogenanntes "Burger-Menu" auf der rechten Seite des Headers einzurichten.
-Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewünschte Anzahl an Menüeinträgen über LuxMenuItemComponents (siehe [lux-menu](lux‐menu-v18)) einsetzen.
+Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewünschte Anzahl an Menüeinträgen über LuxMenuItemComponents (siehe [lux-menu](lux‐menu-v19)) einsetzen.
 
 | Name     | Beschreibung             |
 | -------- | ------------------------ |
@@ -173,7 +173,7 @@ Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewü
 
 DieLuxAppHeaderActionNavComponent ermöglicht es zusätzliche Menu-Einträge in dem App-Header einzutragen.
 
-Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewünschte Anzahl an Menüeinträgen über LuxMenuItemComponents (siehe [lux-menu](lux‐menu-v18)) einsetzen.
+Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewünschte Anzahl an Menüeinträgen über LuxMenuItemComponents (siehe [lux-menu](lux‐menu-v19)) einsetzen.
 
 | Name     | Beschreibung              |
 | -------- | ------------------------- |
@@ -183,7 +183,7 @@ Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewü
 
 ### 1. Menü links und rechts
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐app‐header-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img-01.png)
 
 Html
 
@@ -247,7 +247,7 @@ Html
 
 ### 2. Actionmenü mit individueller Komponente (IHK-Selektor)
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐app‐header-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img-02.png)
 
 Html
 
@@ -319,7 +319,7 @@ Html
 
 ### 3. Erweiterbares Menü
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐app‐header-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img-03.png)
 
 Html
 

@@ -1,6 +1,6 @@
 # LUX-Stepper-Large
 
-![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper‐large-v18-img.png)
+![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper‐large-v19-img.png)
 
 - [LUX-Stepper-Large](#lux-stepper-large)
   - [Overview / API](#overview--api)
@@ -55,7 +55,7 @@ Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es e
 
 #### Desktop Ansicht
 
-![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper‐large-v18-img-01.png)
+![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper‐large-v19-img-01.png)
 
 1. Navigationsliste - Liste aller Schritte des Steppers
 2. Content-Bereich - der Inhaltsbereich des aktuellen Schritts
@@ -63,9 +63,9 @@ Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es e
 
 #### Mobile Ansicht
 
-![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper‐large-v18-img-mobile-01.png)
+![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper‐large-v19-img-mobile-01.png)
 
-![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper‐large-v18-img-mobile-02.png)
+![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper‐large-v19-img-mobile-02.png)
 
 1. Step-Header - Nummer des aktuellen Schritts und Icon-Button zum Öffnen der Navigationsliste
 2. Content-Bereich - der Inhaltsbereich des aktuellen Schritts
@@ -255,7 +255,7 @@ Es gibt die folgenden Konstanten für die Standardkonfigurationen:
 
 ### 1. Stepper mit einem Step als ausgelagerte Komponente
 
-![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐stepper‐large-v18-example.png)
+![Beispielbild LUX-Stepper-Large](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper‐large-v19-example.png)
 
 Ts: ExampleComponent
 

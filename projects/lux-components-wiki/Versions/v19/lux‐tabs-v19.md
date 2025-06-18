@@ -1,6 +1,6 @@
 # LUX-Tabs
 
-![Beispielbild LUX-Tabs](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tabs-v18-img.png)
+![Beispielbild LUX-Tabs](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img.png)
 
 - [LUX-Tabs](#lux-tabs)
   - [Overview / API](#overview--api)
@@ -32,7 +32,7 @@
 | --------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxActiveTab          | number  | Bestimmt den Starttab, der immer angezeigt werden soll. Wenn der Wert größer als die maximale Anzahl an Tabs ist wird der letzte Tab genommen. |
 | luxIconSize           | string  | Bestimmt die Größe der Icons innerhalb der Tab-Header, mögliche Werte analog zu denen der LuxIcons (1x,2x,3x,4x,5x).                           |
-| luxTagId              | string  | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                  |
+| luxTagId              | string  | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                  |
 | luxDisplayDivider     | boolean | Bestimmt, ob der Trennstrich angezeigt wird. Mit Version 1.7.8 wird er Standardwert auf true geändert.                                         |
 | luxLazyLoading        | boolean | Bestimmt, ob die Tabs ihre Inhaltskomponenten direkt laden oder erst wenn ein Tab ausgewählt wird.                                             |
 
@@ -69,8 +69,8 @@ Sie besitzt einen Header- und Content-Bereich und ist auch in der Lage, den Cont
 | luxCounterCap       | number                        | Property die bestimmt bis zu welcher Zahl der Counter angezeigt werden soll. Höhere Zahlen werden mithilfe eines "+"-Symbols dargestellt (z.B. counter = 100, counterCap = 99 ==> Ausgabe: 99+)                                           |
 | luxShowNotification | boolean                       | Property die bestimmt ob und wie das Notifizierungssymbol angezeigt wird. Wenn der Wert true ist, wird ein aktives Symbol angezeigt, bei false ein ausgegrautes und bei undefined wird gar kein Symbol angezeigt. Default-Wert: undefined |
 | luxDisabled         | boolean                       | Bestimmt ob der Tab deaktiviert ist oder nicht. Default-Wert: false                                                                                                                                                                       |
-| luxTagIdHeader      | string                        | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                             |
-| luxTagIdContent     | string                        | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                             |
+| luxTagIdHeader      | string                        | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                             |
+| luxTagIdContent     | string                        | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                             |
 
 ## Classes / Interfaces
 
@@ -78,7 +78,7 @@ Sie besitzt einen Header- und Content-Bereich und ist auch in der Lage, den Cont
 
 ### 1. Simple Tabs
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tabs-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-01.png)
 
 Html
 
@@ -107,7 +107,7 @@ Html
 
 ### 2. Tabs mit Zahl
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tabs-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-02.png)
 
 Html
 
@@ -148,7 +148,7 @@ Html
 
 ### 3. Tabs mit großen deaktivierten Icons
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tabs-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-03.png)
 
 Html
 
@@ -182,7 +182,7 @@ Html
 
 ### 4. Tab in eigene Komponente auslagern
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tabs-v18-img-04.png)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-04.png)
 
 Html - Tabs
 

@@ -2,7 +2,7 @@
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild LUX-File-List](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img.png)
+![Beispielbild LUX-File-List](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img.png)
 
 - [LUX-File-List](#lux-file-list)
   - [Overview / API](#overview--api)
@@ -44,7 +44,7 @@
 | luxUploadUrl            | string                    | Enthält die URL mit der Schnittstelle, die angesprochen werden soll um die Dateien hochzuladen. Wenn diese Property leer ist, wird kein automatischer Upload durchgeführt.                                                                                                                                                                                                                                                                                                                                                                                          |
 | luxUploadActionConfig   | ILuxFilesListActionConfig | Enthält die Konfiguration für alle Upload-Buttons der Component.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | luxDeleteActionConfig   | ILuxFileListActionConfig  | Enthält die Konfiguration für alle Delete-Buttons der Component.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| luxViewActionConfig     | ILuxFileActionConfig      | Enthält die Konfiguration für alle View-Buttons der Component. Die View-Buttons rufen die "base64Callback"-Methode des jeweiligen luxFileObjects auf, um den base64-Wert nachzuladen (wenn er nicht bereits vorhanden ist). Dadurch ist es möglich, Dateien dynamisch nachzuladen, wenn erforderlich. Es gibt auch eine Dateivorschau [lux-file-preview](lux‐file‐preview-v18).                                                                                                                                                                                     |
+| luxViewActionConfig     | ILuxFileActionConfig      | Enthält die Konfiguration für alle View-Buttons der Component. Die View-Buttons rufen die "base64Callback"-Methode des jeweiligen luxFileObjects auf, um den base64-Wert nachzuladen (wenn er nicht bereits vorhanden ist). Dadurch ist es möglich, Dateien dynamisch nachzuladen, wenn erforderlich. Es gibt auch eine Dateivorschau [lux-file-preview](lux‐file‐preview-v19).                                                                                                                                                                                     |
 | luxDownloadActionConfig | ILuxFileActionConfig      | Enthält die Konfiguration für alle Download-Buttons der Component.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | luxCustomActionConfigs  | ILuxFileActionConfig[]    | Enthält die Konfiguration für alle Custom-Buttons der Component.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | luxSelected             | LuxFileObject[] \| null   | Property, die die aktuell bekannten LuxFileObjects beinhaltet. Wenn nur ein einziges LuxFileObject gesetzt ist, ist dieses alleinstehend. Andernfalls ist es ein Array von LuxFileObjects. Durch den Event-Emitter "luxSelectedChange" ist ein Two-Way-Binding möglich.                                                                                                                                                                                                                                                                                             |
@@ -53,7 +53,7 @@
 | luxUploadReportProgress | boolean                   | Schaltet die Progressbar um, so dass beim Upload von Dateien vom Backend Feedback zurückgegeben werden kann, um so dem User den Fortschritt mitteilen zu können. Die Component liest dafür die Werte "loaded" und "total" aus dem HttpEvent der Post-Abfrage aus, um den Progress zu bestimmen. Wenn false, wird stattdessen eine Progressbar im "indetermined"-Zustand angezeigt.                                                                                                                                                                                  |
 | luxDnDActive            | boolean                   | Bestimmt ob Dateien via Drag-and-Drop (DnD) auf diese Component übertragen werden können.                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | luxHeading              | number (1..6)             | Bestimmt, welches Überschriften-Tag (h1...h6) für den luxTitle verwendet wird. <br><br> Die Darstellung einer LUX-Card ist fest definiert und sollte überall gleich aussehen. Das man die Überschriften (h1,...h6) ändern kann, zielt nicht auf die Darstellung ab, sondern auf die Struktur der App (Stichwort: Barrierefreiheit). Eine HTML-Seite muss in ihren Überschriften vollständig korrekt strukturiert sein und dafür kann es nötig werden, dass die LUX-Cards ein anderes Überschriftenlevel benötigen, da sonst z.B. Screenreader ein Problem bekommen. |
-| luxTagId                | string                    | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| luxTagId                | string                    | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | luxPlaceholder          | string                    | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | luxRequired             | boolean                   | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | luxControlBinding       | string                    | Das Controlbinding (z.B. firstname) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                                                                                                                                                                                                                                                                                                                                        |
@@ -144,9 +144,9 @@ Dieses Interface erweitert _ILuxFileListActionConfig_.
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-01-01.png)
+![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-01-01.png)
 
-![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-01-02.png)
+![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-01-02.png)
 
 Ts
 
@@ -197,7 +197,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-02.png)
 
 Ts
 
@@ -247,7 +247,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-03.png)
 
 Html
 
@@ -264,7 +264,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-04.gif)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-04.gif)
 
 Ts
 
@@ -337,7 +337,7 @@ Empty' : 'Empty' }}
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-05.png)
+![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-05.png)
 
 Ts
 
@@ -390,7 +390,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 06-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐list-v18-img-06.gif)
+![Beispielbild 06-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-06.gif)
 
 Html
 

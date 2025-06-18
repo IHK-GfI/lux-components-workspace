@@ -1,6 +1,6 @@
 # LUX-File-Upload
 
-![Beispielbild LUX-File-Upload](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐upload-v18-img.png)
+![Beispielbild LUX-File-Upload](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img.png)
 
 - [LUX-File-Upload](#lux-file-upload)
   - [Overview / API](#overview--api)
@@ -36,7 +36,7 @@
 | luxListOnly             | boolean                   | Gibt an, ob nur die Dateiliste ohne Uploadmöglichkeit angezeigt wird.                                                                                                                                                                                                                                                                                                           |
 | luxUploadActionConfig   | ILuxFilesListActionConfig | Enthält die Konfiguration für alle Upload-Buttons der Component.                                                                                                                                                                                                                                                                                                                |
 | luxDeleteActionConfig   | ILuxFileListActionConfig  | Enthält die Konfiguration für alle Delete-Buttons der Component.                                                                                                                                                                                                                                                                                                                |
-| luxViewActionConfig     | ILuxFileActionConfig      | Enthält die Konfiguration für alle View-Buttons der Component. Die View-Buttons rufen die "base64Callback"-Methode des jeweiligen luxFileObjects auf, um den base64-Wert nachzuladen (wenn er nicht bereits vorhanden ist). Dadurch ist es möglich, Dateien dynamisch nachzuladen, wenn erforderlich. Es gibt auch eine Dateivorschau [lux-file-preview](lux‐file‐preview-v18). |
+| luxViewActionConfig     | ILuxFileActionConfig      | Enthält die Konfiguration für alle View-Buttons der Component. Die View-Buttons rufen die "base64Callback"-Methode des jeweiligen luxFileObjects auf, um den base64-Wert nachzuladen (wenn er nicht bereits vorhanden ist). Dadurch ist es möglich, Dateien dynamisch nachzuladen, wenn erforderlich. Es gibt auch eine Dateivorschau [lux-file-preview](lux‐file‐preview-v19). |
 | luxDownloadActionConfig | ILuxFileActionConfig      | Enthält die Konfiguration für alle Download-Buttons der Component.                                                                                                                                                                                                                                                                                                              |
 | luxCustomActionConfigs  | ILuxFileActionConfig[]    | Enthält die Konfiguration für alle Custom-Buttons der Component.                                                                                                                                                                                                                                                                                                                |
 | luxHint                 | string                    | Enthält den Hinweistext unterhalb der FormComponent.                                                                                                                                                                                                                                                                                                                            |
@@ -55,7 +55,7 @@
 | luxReadonly             | boolean                   | Bestimmt ob sich das Feld im reinen Lese-Zustand befindet (ähnlich wie disabled, aber ohne die Auswirkungen auf Forms und andere visuelle Darstellung).                                                                                                                                                                                                                         |
 | luxErrorCallback        | LuxErrorCallbackFnType    | Callback-Funktion die aufgerufen wird nachdem die Validierung der Component stattgefunden hat. Hier kann dann entsprechend aus dem übergebenen Errors-Objekt ein Fehler ausgelesen und die passende Fehlermeldung zurückgegeben werden. Liefert der Callback `undefined` zurück, wird die Defaultfehlermeldung ausgegeben.                                                      |
 | luxControlValidators    | ValidatorFnType           | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen.                                                                                                                          |
-| luxTagId                | string                    | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                   |
+| luxTagId                | string                    | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                   |
 
 ### @Output
 
@@ -129,7 +129,7 @@ Dieses Interface erweitert _ILuxFileActionConfig_.
 
 ### 1. Simple
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐upload-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img-01.png)
 
 Ts
 
@@ -147,7 +147,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐upload-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img-02.png)
 
 Ts
 
@@ -173,7 +173,7 @@ Html
 
 ### 3. Mit Dateieinschränkungen
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐upload-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img-03.png)
 
 Ts
 

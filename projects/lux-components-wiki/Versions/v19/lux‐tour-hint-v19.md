@@ -1,6 +1,6 @@
 ﻿# Lux-Tour-Hint
 
-![Beispielbild LUX-Tour-Hint](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tour-hint-v18-img.png)
+![Beispielbild LUX-Tour-Hint](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tour-hint-v19-img.png)
 
 - [Lux-Tour-Hint](#lux-tour-hint)
   - [Overview / API](#overview--api)
@@ -77,7 +77,7 @@ Eigene Dialog-Component müssen diese Klasse via Dependency-Injection besitzen, 
 
 ### 1. Einfacher Hinweis, der sich auf ein Element bezieht
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tour-hint-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tour-hint-v19-img-01.png)
 
 Hier ist es wichtig, dass die 'targetId' in der Konfiguration mit der id des auszuwählenden Elementes übereinstimmt.
 
@@ -110,9 +110,9 @@ Html
 
 ### 2. Einfache Tour über mehrere Elemente
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tour-hint-v18-img-02.png)
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tour-hint-v18-img-03.png)
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tour-hint-v18-img-04.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tour-hint-v19-img-02.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tour-hint-v19-img-03.png)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tour-hint-v19-img-04.png)
 
 Ts
 
@@ -172,7 +172,7 @@ Html
 
 ### 3. Hinweis oder Tour ohne 'Nicht wieder anzeigen'
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐tour-hint-v18-img-05.png)
+![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tour-hint-v19-img-05.png)
 
 Hierfür kann bei dem Öffnen der Tour-Hint Komponente einfach ein 'false' als 2. Parameter mitgegeben werden:
 

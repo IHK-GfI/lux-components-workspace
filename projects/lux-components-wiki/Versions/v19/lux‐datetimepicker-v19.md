@@ -1,6 +1,6 @@
 # LUX-Datetimepicker
 
-![Beispielbild LUX-Datetimepicker](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datetimepicker-v18-img.png)
+![Beispielbild LUX-Datetimepicker](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datetimepicker-v19-img.png)
 
 - [LUX-Datetimepicker](#lux-datetimepicker)
   - [Overview / API](#overview--api)
@@ -33,7 +33,7 @@
 | luxOpened              | boolean                                           | Bestimmt, ob das Auswahlfenster ausgeklappt oder eingeklappt ist.                                                                                                                                                                                                                                                          |
 | luxShowToggle          | boolean                                           | Gibt an, ob der Toggle-Button sichtbar ist oder nicht.                                                                                                                                                                                                                                                                     |
 | luxCustomFilter        | LuxDateFilterFn                                   | Der optionale eigene Filter für den Datepicker.                                                                                                                                                                                                                                                                            |
-| luxTagId               | string                                            | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
+| luxTagId               | string                                            | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
 | luxPlaceholder         | string                                            | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                     |
 | luxAutocomplete        | string                                            | Steuert, ob der Browser den Inhalt cachen darf.                                                                                                                                                                                                                                                                            |
 | luxRequired            | boolean                                           | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                  |
@@ -65,7 +65,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datetimepicker-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datetimepicker-v19-img-01.png)
 
 Ts
 
@@ -92,7 +92,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datetimepicker-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datetimepicker-v19-img-02.png)
 
 Ts
 
@@ -126,7 +126,7 @@ Html
 
 ### 3. Min- und Max-Datum
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datetimepicker-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datetimepicker-v19-img-03.png)
 
 Ts
 
@@ -147,7 +147,7 @@ Html
 
 ### 4. Eigener Filter
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐datetimepicker-v18-img-04.png)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐datetimepicker-v19-img-04.png)
 
 Ts
 

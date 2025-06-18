@@ -1,6 +1,6 @@
 # LUX-Checkbox
 
-![Beispielbild LUX-Checkbox](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐checkbox-v18-img.png)
+![Beispielbild LUX-Checkbox](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img.png)
 
 - [LUX-Checkbox](#lux-checkbox)
   - [Overview / API](#overview--api)
@@ -24,7 +24,7 @@
 
 | Name                   | Typ                    | Beschreibung                                                                                                                                                                                                                                                                                                               |
 | ---------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
+| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
 | luxChecked             | boolean                | Beschreibt den Zustand der Component (true = checked, false = unchecked). Two-Way-Binding ebenfalls möglich, wenn die Component nicht innerhalb eines Formulars verwendet wird.                                                                                                                                            |
 | luxRequired            | boolean                | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                  |
 | luxControlBinding      | string                 | Das Controlbinding (z.B. firstname) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                                                                                               |
@@ -54,7 +54,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐checkbox-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img-01.png)
 
 Ts
 
@@ -78,7 +78,7 @@ Html
 
 ### 2. Mit Two-Way-Binding
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐checkbox-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img-02.png)
 
 Ts
 
@@ -94,7 +94,7 @@ Html
 
 ### 3. Mit Formular
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐checkbox-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img-03.png)
 
 Ts
 

@@ -1,6 +1,6 @@
 # LUX-List
 
-![Beispielbild LUX-List](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐list-v18-img.png)
+![Beispielbild LUX-List](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐list-v19-img.png)
 
 - [LUX-List](#lux-list)
   - [Overview / API](#overview--api)
@@ -79,7 +79,7 @@ Die LuxListItemComponent entspricht einem einzelnen Eintrag in der Liste.
 
 ### LuxListItemIconComponent
 
-Das LuxListItemIconComponent nimmt [lux-icon](lux‐icon-v18) und [lux-image](lux‐image-v18) entgegen und stellt diese rechts vom Titel dar.
+Das LuxListItemIconComponent nimmt [lux-icon](lux‐icon-v19) und [lux-image](lux‐image-v19) entgegen und stellt diese rechts vom Titel dar.
 
 #### Allgemein
 
@@ -91,8 +91,8 @@ Das LuxListItemIconComponent nimmt [lux-icon](lux‐icon-v18) und [lux-image](lu
 
 | Name                       | Typ      | Beschreibung                      |
 | -------------------------- | -------- | --------------------------------- |
-| [lux-icon](lux‐icon-v18)   | Selector | Siehe [lux-icon](lux‐icon-v18).   |
-| [lux-image](lux‐image-v18) | Selector | Siehe [lux-image](lux‐image-v18). |
+| [lux-icon](lux‐icon-v19)   | Selector | Siehe [lux-icon](lux‐icon-v19).   |
+| [lux-image](lux‐image-v19) | Selector | Siehe [lux-image](lux‐image-v19). |
 
 ### LuxListItemContentComponent
 
@@ -114,7 +114,7 @@ Diese Component umfasst den eigentlichen Inhalt des Listeneintrags.
 
 ### 1. Liste (gefüllt)
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐list-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐list-v19-img-01.png)
 
 Ts
 
@@ -155,7 +155,7 @@ Html
 
 ### 2. Liste (leer)
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐list-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐list-v19-img-02.png)
 
 Ts
 

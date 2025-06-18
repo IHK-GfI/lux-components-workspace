@@ -1,6 +1,6 @@
 # LUX-Lookup-Autocomplete
 
-![Beispielbild LUX-Lookup-Autocomplete](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐lookup‐autocomplete-v18-img.png)
+![Beispielbild LUX-Lookup-Autocomplete](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐autocomplete-v19-img.png)
 
 - [LUX-Lookup-Autocomplete](#lux-lookup-autocomplete)
   - [Overview / API](#overview--api)
@@ -43,7 +43,7 @@
 | luxCustomStyles           | Object                                                                                                                                               | Enthält optional ein Objekt, welches Styles für die Darstellung der einzelnen Schlüsseltabelleneinträgen enthält.                                                                                                                                                                                                                            |
 | luxCustomInvalidStyles    | Object                                                                                                                                               | Enthält optional ein Objekt, welches Styles für die Darstellung von invaliden Schlüsseltabelleneinträgen enthält. Voraussetzung dafür ist allerdings, das die Behandlung der ungültigen Einträge auf "anzeigen" gesetzt ist.                                                                                                                 |
 | luxValue                  | LuxLookupTableEntry, LuxLookupTableEntry[]                                                                                                           | Beinhaltet den aktuellen Wert der Komponente, es ist ein Two-Way-Binding möglich.                                                                                                                                                                                                                                                            |
-| luxTagId                  | string                                                                                                                                               | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                |
+| luxTagId                  | string                                                                                                                                               | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                |
 | luxPlaceholder            | string                                                                                                                                               | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                       |
 | luxRequired               | boolean                                                                                                                                              | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                    |
 | luxControlBinding         | string                                                                                                                                               | Das Controlbinding (z.B. firstname) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                                                                                                                 |
@@ -153,7 +153,7 @@ Definiert welche Optionen es gibt, um ungültige Einträge zu behandeln.
 
 ### 1. Simple Lookup-Autocomplete
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐lookup‐autocomplete-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐autocomplete-v19-img-01.png)
 
 Ts
 
@@ -200,7 +200,7 @@ Html
 
 ### 2. Custom Styling
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐lookup‐autocomplete-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐autocomplete-v19-img-02.png)
 
 Ts
 

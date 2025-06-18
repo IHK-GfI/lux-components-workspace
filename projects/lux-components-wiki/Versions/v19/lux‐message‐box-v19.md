@@ -1,6 +1,6 @@
 # LUX-Message-Box
 
-![Beispielbild LUX-Message-Box](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐message‐box-v18-img.png)
+![Beispielbild LUX-Message-Box](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐message‐box-v19-img.png)
 
 - [LUX-Message-Box](#lux-message-box)
   - [Overview / API](#overview--api)
@@ -104,7 +104,7 @@ Objekte dieses Interfaces werden beim Schließen einer angezeigten Nachricht als
 
 ## Beispiel
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐message‐box-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐message‐box-v19-img-01.png)
 
 Ts
 
@@ -149,4 +149,4 @@ Allgemein
 Diese Komponente zeigt eine navigierbare Reihe von Nachrichten an. Jede einzelne Nachricht besitzt einen Text und wahlweise ein Icon sowie eine Farbe (siehe LuxBackgroundColorsEnum).
 Es ist außerdem möglich mehrere Reihen von Nachrichten untereinander anzuzeigen.
 
-[lux-http-error](lux‐http‐error-v18) nutzt diese Komponente zur Darstellung von Fehlermeldungen.
+[lux-http-error](lux‐http‐error-v19) nutzt diese Komponente zur Darstellung von Fehlermeldungen.

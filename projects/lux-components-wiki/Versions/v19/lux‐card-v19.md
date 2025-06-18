@@ -1,6 +1,6 @@
 # LUX-Card
 
-![Beispielbild LUX-Card](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐card-v18-img.png)
+![Beispielbild LUX-Card](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img.png)
 
 - [LUX-Card](#lux-card)
   - [Overview / API](#overview--api)
@@ -38,7 +38,7 @@
 | luxSubTitle        | string        | Subtitel der Card                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | luxSubTitleTooltip | string        | Subtiteltooltip der Card                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | luxDisabled        | boolean       | Gibt an, ob die Card angeklickt werden kann.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| luxTagId           | string        | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| luxTagId           | string        | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | luxTitleLineBreak  | boolean       | Boolean-Flag der bestimmt, ob die Titel und Untertitel der LuxCards beim überschreiten der Breite mit "..." verkürzt oder mit Umbrüchen angezeigt werden.                                                                                                                                                                                                                                                                                                                                                                                                           |
 | luxExpanded        | boolean       | Bestimmt, ob die Card aktuell ausgeklappt ist oder nicht.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | luxUseTabIndex     | boolean       | Bestimmt, ob die Card einen Tabindex setzt, wenn die Card angeklickt werden kann. (siehe luxClicked)                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -112,7 +112,7 @@ Grundlegende Regeln zum Umgang mit Cards sind:
 
 ### 1. Simple Card
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐card-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-01.png)
 
 Ts
 
@@ -138,7 +138,7 @@ Html
 
 ### 2. Card mit Actions
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐card-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-02.png)
 
 Html
 
@@ -160,7 +160,7 @@ Html
 
 ### 3. Erweiterbare Card
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐card-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-03.png)
 
 Html
 
@@ -189,8 +189,8 @@ Html
 
 ### 4. Dynamische Actions
 
-![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐card-v18-img-04-01.png)
-![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐card-v18-img-04-02.png)
+![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-04-01.png)
+![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-04-02.png)
 
 Die Actions werden je nach Platz im Menü versteckt.
 
@@ -247,7 +247,7 @@ Html
 
 ### 5. Layout mit Cards
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐card-v18-img-05.png)
+![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-05.png)
 
 Html
 

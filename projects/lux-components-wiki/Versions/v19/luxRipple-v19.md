@@ -14,7 +14,7 @@
 | -------- | ------------------- |
 | selector | luxRipple           |
 
-Mithilfe der [LUX-Components-Config](config-v18) lassen sich globale Einstellungen für die LUX-Ripples der aktuellen Applikation festlegen.
+Mithilfe der [LUX-Components-Config](config-v19) lassen sich globale Einstellungen für die LUX-Ripples der aktuellen Applikation festlegen.
 
 ### @Input
 

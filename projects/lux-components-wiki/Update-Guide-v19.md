@@ -4,8 +4,6 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 - [Update Guide 19](#update-guide-19)
   - [Änderungen](#änderungen)
-    - [Technische Änderungen](#technische-änderungen)
-    - [Optische Änderungen](#optische-änderungen)
   - [Versionen](#versionen)
     - [Version 19.0.0](#version-1900)
       - [Allgemein](#allgemein)
@@ -19,13 +17,7 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 ## Änderungen
 
-### Technische Änderungen
-
-- Die Komponente LUX-File-List wurde als deprecated markiert. Bitte die Komponente LUX-File-Upload verwenden.
-
-### Optische Änderungen
-
-- ToDo
+**Wichtig!** Bitte alle Änderungen in der [CHANGELOG.md](https://github.com/IHK-GfI/lux-components-workspace/blob/main/projects/lux-components-lib/CHANGELOG.md) durchlesen.
 
 ## Versionen
 
@@ -39,8 +31,8 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 #### Vor dem Update
 
-1. **Den Abschnitt [Änderungen](#änderungen) lesen!**
-1. LUX-Components auf die letzte Version `18.x.x` (siehe [Version 18.x.x](update-guide-v18)) aktualisieren.
+1. **Wichtig!** Bitte alle Änderungen in der [CHANGELOG.md](https://github.com/IHK-GfI/lux-components-workspace/blob/main/projects/lux-components-lib/CHANGELOG.md) durchlesen.
+1. LUX-Components auf die letzte Version `18.x.x` (siehe [Version 18.x.x](update-guide-v19)) aktualisieren.
 1. Node auf 18, 20 oder 22 (empfohlen) aktualisieren (siehe auch [Ergänzung für JAST-Projekte](#ergänzung-für-jast-projekte)).<br>
 
 #### Update
@@ -74,7 +66,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
    `ng g @ihk-gfi/lux-components-update:update-standalone-imports`
 
-   Die Imports in den Testfällen (*.spec.ts) müssen manuell angepasst werden.
+   _**Wichtig! Falls es in den Testfällen (*.spec.ts) individuelle Components gibt, müssen diese manuell angepasst werden. Das Update-Skript kann dabei nicht unterstützen.**_
 
 1. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
 
@@ -100,7 +92,8 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 - Einen Smoketest (build, lint und test) ausführen:
 
   `npm run smoketest`
-- Es wird empfohlen die folgenen Schematics auszuführen:
+
+- Folgende optionale Schematics können ausgeführt werden:
   - `ng generate @angular/core:standalone-migration` (Umstellung auf die neuen Standalone-Components)
   - `ng generate @angular/core:inject-migration` (Umstellung auf die inject-Funktion, anstatt Konstruktor-Injektion)
   - `ng generate @angular/core:route-lazy-loading` (Umstellung der Route auf Lazy Loading)

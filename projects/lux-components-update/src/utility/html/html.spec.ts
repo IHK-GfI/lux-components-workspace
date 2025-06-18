@@ -264,7 +264,7 @@ const templateAdd001 = `
 <example-base-structure
   exampleTitle="Tabelle"
   exampleIconName="fas fa-table"
-  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90table"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90table"
 >
   <example-base-content>
     <div [ngStyle]="{ height: calculateProportions ? tableHeightPx + 'px' : 'unset' }" class="lux-table-example">

@@ -1,6 +1,6 @@
 # LUX-File-Input
 
-![Beispielbild LUX-File-Input](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐input-v18-img.png)
+![Beispielbild LUX-File-Input](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img.png)
 
 - [LUX-File-Input](#lux-file-input)
   - [Overview / API](#overview--api)
@@ -37,7 +37,7 @@
 | luxUploadUrl            | string                 | Enthält die URL mit der Schnittstelle, die angesprochen werden soll um die Dateien hochzuladen. Wenn diese Property leer ist, wird kein automatischer Upload durchgeführt.                                                                                                                                                                                                                 |
 | luxUploadActionConfig   | ILuxFileActionConfig   | Enthält die Konfiguration für alle Upload-Buttons der Component. Ab 1.7.17 gibt es für die die erweiterte Konfiguration ILuxFileListActionConfig.                                                                                                                                                                                                                                          |
 | luxDeleteActionConfig   | ILuxFileActionConfig   | Enthält die Konfiguration für alle Delete-Buttons der Component. Ab 1.7.17 gibt es für die die erweiterte Konfiguration ILuxFileListActionConfig.                                                                                                                                                                                                                                          |
-| luxViewActionConfig     | ILuxFileActionConfig   | Enthält die Konfiguration für alle View-Buttons der Component. Die View-Buttons rufen die "base64Callback"-Methode des jeweiligen luxFileObjects auf, um den base64-Wert nachzuladen (wenn er nicht bereits vorhanden ist). Dadurch ist es möglich, Dateien dynamisch nachzuladen, wenn erforderlich.  Ab 1.8.3  gibt es auch eine Dateivorschau [lux-file-preview](lux‐file‐preview-v18). |
+| luxViewActionConfig     | ILuxFileActionConfig   | Enthält die Konfiguration für alle View-Buttons der Component. Die View-Buttons rufen die "base64Callback"-Methode des jeweiligen luxFileObjects auf, um den base64-Wert nachzuladen (wenn er nicht bereits vorhanden ist). Dadurch ist es möglich, Dateien dynamisch nachzuladen, wenn erforderlich.  Ab 1.8.3  gibt es auch eine Dateivorschau [lux-file-preview](lux‐file‐preview-v19). |
 | luxDownloadActionConfig | ILuxFileActionConfig   | Enthält die Konfiguration für alle Download-Buttons der Component.                                                                                                                                                                                                                                                                                                                         |
 | luxCustomActionConfigs  | ILuxFileActionConfig[] | Enthält die Konfiguration für alle Custom-Buttons der Component.                                                                                                                                                                                                                                                                                                                           |
 | luxSelected             | LuxFileObject \| null  | Property, die die aktuell bekannten LuxFileObjects beinhaltet. Wenn nur ein einziges LuxFileObject gesetzt ist, ist dieses alleinstehend. Andernfalls ist es ein Array von LuxFileObjects. Durch den Event-Emitter "luxSelectedChange" ist ein Two-Way-Binding möglich.                                                                                                                    |
@@ -46,7 +46,7 @@
 | luxUploadReportProgress | boolean                | Schaltet die Progressbar um, so dass beim Upload von Dateien vom Backend Feedback zurückgegeben werden kann, um so dem User den Fortschritt mitteilen zu können. Die Component liest dafür die Werte "loaded" und "total" aus dem HttpEvent der Post-Abfrage aus, um den Progress zu bestimmen. Wenn false, wird stattdessen eine Progressbar im "indetermined"-Zustand angezeigt.         |
 | luxDnDActive            | boolean                | Bestimmt ob Dateien via Drag-and-Drop (DnD) auf diese Component übertragen werden können.                                                                                                                                                                                                                                                                                                  |
 | luxClearOnError         | boolean                | Gibt an, ob die aktuelle Datei entfernt wird, wenn bei der neu hochgeladenen Datei die Validierung fehlschlägt.                                                                                                                                                                                                                                                                            |
-| luxTagId                | string                 | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                              |
+| luxTagId                | string                 | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                              |
 | luxPlaceholder          | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                                                                     |
 | luxAutocomplete         | string                 | Steuert, ob der Browser den Inhalt cachen darf.                                                                                                                                                                                                                                                                                                                                            |
 | luxRequired             | boolean                | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                                                                  |
@@ -133,7 +133,7 @@ Dieses Interface enthält die möglichen Einstellungen für die Action-Buttons d
 
 ### 1. Simple
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐input-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-01.png)
 
 Ts
 
@@ -182,7 +182,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐input-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-02.png)
 
 Ts
 
@@ -230,7 +230,7 @@ Html
 
 ### 3. Mit Upload-URL
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐input-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-03.png)
 
 Html
 
@@ -245,7 +245,7 @@ Html
 
 ### 4. Mit Base64-Callback
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐input-v18-img-04.gif)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-04.gif)
 
 Ts
 
@@ -315,7 +315,7 @@ Html
 
 ### 5. Mit Download
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐input-v18-img-05.png)
+![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-05.png)
 
 Ts
 
@@ -366,7 +366,7 @@ Html
 
 ### 6. Mit Dateieinschränkungen
 
-![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐file‐input-v18-img-06.gif)
+![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-06.gif)
 
 Html
 

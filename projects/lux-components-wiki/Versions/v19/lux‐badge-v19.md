@@ -1,6 +1,6 @@
 # LUX-Badge
 
-![Beispielbild LUX-Badge](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐badge-v18-img.png)
+![Beispielbild LUX-Badge](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐badge-v19-img.png)
 
 - [LUX-Badge](#lux-badge)
   - [Overview / API](#overview--api)
@@ -29,11 +29,11 @@
 
 | Name                       | Typ | Beschreibung                |
 | -------------------------- | --- | --------------------------- |
-| [lux-label](lux‐label-v18) |     | Die Bezeichnung des Badges. |
+| [lux-label](lux‐label-v19) |     | Die Bezeichnung des Badges. |
 
 ## Beispiel
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐badge-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐badge-v19-img-01.png)
 
 Html
 

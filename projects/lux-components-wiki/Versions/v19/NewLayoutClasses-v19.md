@@ -31,7 +31,7 @@ Siehe auch [Tailwind-Dokumentation](https://tailwindcss.com/docs/flex)
 
 Für die Anpassung der Breakpoints wurden sass-mixins erstellt und die neuen Layoutklassen können durch einen entsprechenden Prefix ergänzt werden. Die Werte für die Breakpoints und Namensgebung entsprechenden den bisherigen Bezeichnung der Angular-Material-Components auf denen die Lux-Components basieren.
 
-Siehe dazu: [Austauschmöglichkeiten für Angular/Flex-Layout](Replace-FxLayout-v18.md).
+Siehe dazu: [Austauschmöglichkeiten für Angular/Flex-Layout](Replace-FxLayout-v19.md).
 
 ## 1. Display
 

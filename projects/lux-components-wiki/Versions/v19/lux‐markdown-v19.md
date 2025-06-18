@@ -1,6 +1,6 @@
 # LUX-Markdown
 
-![Beispielbild LUX-Markdown](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐markdown-v18-img.png)
+![Beispielbild LUX-Markdown](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐markdown-v19-img.png)
 
 - [LUX-Markdown](#lux-markdown)
   - [Overview / API](#overview--api)
@@ -26,7 +26,7 @@ werden.
 | Name              | Typ                                                 | Beschreibung                                                 |
 | ----------------- | --------------------------------------------------- | ------------------------------------------------------------ |
 | luxData           | string                                              | Daten im Markdown-Format                                     |
-| luxSanitizeConfig | [LuxSanitizeConfig](lux‐html-v18#LuxSanitizeConfig) | Über dieses Property kann das Sanitizing beeinflusst werden. |
+| luxSanitizeConfig | [LuxSanitizeConfig](lux‐html-v19#LuxSanitizeConfig) | Über dieses Property kann das Sanitizing beeinflusst werden. |
 | luxStyle          | string                                              | Über dieses Property können CSS-Styles gesetzt werden.       |
 | luxClass          | string                                              | Über dieses Property können CSS-Klassen gesetzt werden.      |
 
@@ -34,12 +34,12 @@ werden.
 
 | Name             | Typ                              | Beschreibung                                                                               |
 | ---------------- | -------------------------------- | ------------------------------------------------------------------------------------------ |
-| contentComponent | [LuxHtmlComponent](lux‐html-v18) | Die Markdown-Daten werden in HTML transformiert und über die LuxHtmlComponent dargestellt. |
+| contentComponent | [LuxHtmlComponent](lux‐html-v19) | Die Markdown-Daten werden in HTML transformiert und über die LuxHtmlComponent dargestellt. |
 | contentRef       | ElementRef                       | Die Markdown-Daten werden in HTML transformiert und über die LuxHtmlComponent dargestellt. |
 
 ## Beispiel
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐markdown-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐markdown-v19-img-01.png)
 
 Ts
 

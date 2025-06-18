@@ -1,6 +1,6 @@
 # LUX-autocomplete
 
-![Beispielbild LUX-Autocomplete](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐autocomplete-v18-img.png)
+![Beispielbild LUX-Autocomplete](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img.png)
 
 - [LUX-autocomplete](#lux-autocomplete)
   - [Overview / API](#overview--api)
@@ -30,7 +30,7 @@
 | luxPlaceholder             | string                                                      | Beinhaltet einen Platzhalter, der angezeigt wird solange kein Wert eingegeben wurde.                                                                                                                                                                                                                                                              |
 | luxSelectAllOnClick        | boolean                                                     | Bestimmt ob das Anklicken des Input-Felds den kompletten Text darin selektiert.                                                                                                                                                                                                                                                                   |
 | luxStrict                  | boolean                                                     | Bestimmt ob nur Elemente aus der Auswahlliste gültig sind oder ob eigene Eingaben ebenfalls als gültiger Wert genommen werden dürfen.                                                                                                                                                                                                             |
-| luxTagId                   | string                                                      | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                     |
+| luxTagId                   | string                                                      | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                     |
 | luxErrorMessageNotAnOption | string                                                      | Fehlermeldung, wenn der eingegebene Text keiner möglichen Option entspricht.                                                                                                                                                                                                                                                                      |
 | luxValue                   | \<V = any \| null>                                          | Two-Way-Binding ebenfalls möglich, wenn das Input-Feld nicht innerhalb eines Reactive-Forms ist.                                                                                                                                                                                                                                                  |
 | luxRequired                | boolean                                                     | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                         |
@@ -67,7 +67,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐autocomplete-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-01.png)
 
 Ts
 
@@ -96,7 +96,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐autocomplete-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-02.png)
 
 Ts
 
@@ -130,7 +130,7 @@ Html
 
 ### 3. Einfaches String-Array als Optionen
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐autocomplete-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-03.png)
 
 Ts
 

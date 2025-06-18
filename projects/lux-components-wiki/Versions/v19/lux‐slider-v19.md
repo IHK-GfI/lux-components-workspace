@@ -1,6 +1,6 @@
 # LUX-Slider
 
-![Beispielbild LUX-Slider](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐slider-v18-img.png)
+![Beispielbild LUX-Slider](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img.png)
 
 - [LUX-Slider](#lux-slider)
   - [Overview / API](#overview--api)
@@ -30,7 +30,7 @@
 | luxMax                 | number                 | Bestimmt den Maximal-Wert des Sliders und kann nicht kleiner/gleich 0 und kleiner/gleich luxMin sein.                                                                                                                                                                                                                                                                |
 | luxMin                 | number                 | Bestimmt den Minimal-Wert des Slider und kann nicht kleiner 0 und größer/gleich luxMax sein.                                                                                                                                                                                                                                                                         |
 | luxStep                | number                 | Bestimmt die Größe der Schritte die in diesem Slider gemacht werden können. Diese können nur kleiner/gleich luxMax - luxMin sein.                                                                                                                                                                                                                                    |
-| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v18#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                        |
+| luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                        |
 | luxPlaceholder         | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                                               |
 | luxRequired            | boolean                | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                                            |
 | luxControlBinding      | string                 | Das Controlbinding (z.B. firstname) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                                                                                                                                         |
@@ -64,7 +64,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐slider-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img-01.png)
 
 Ts
 
@@ -98,7 +98,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐slider-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img-02.png)
 
 Ts
 
@@ -140,7 +140,7 @@ Html
 
 ### 3. Mit DisplayWith-Function
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐slider-v18-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img-03.png)
 
 Ts
 

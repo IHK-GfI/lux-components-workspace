@@ -1,6 +1,6 @@
 # LUX-Image
 
-![Beispielbild LUX-Image](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐image-v18-img.png)
+![Beispielbild LUX-Image](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐image-v19-img.png)
 
 - [LUX-Image](#lux-image)
   - [Overview / API](#overview--api)
@@ -33,7 +33,7 @@
 
 ### 1. Pixel-Größen
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐image-v18-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐image-v19-img-01.png)
 
 Html
 
@@ -74,7 +74,7 @@ Html
 
 ### 2. Prozent-Größen
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components/Versions/v18/lux‐image-v18-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐image-v19-img-02.png)
 
 Html
 
