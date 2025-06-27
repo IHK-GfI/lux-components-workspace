@@ -1,0 +1,163 @@
+<div class="lux-flex lt-md:lux-flex-col lux-gap-4 main-container">
+  @if (mobileView) {
+  <div class="lux-flex lux-flex-basis-4/10">
+    <ng-container *ngTemplateOutlet="search"></ng-container>
+  </div>
+  }
+
+  <div
+    class="lux-flex lux-flex-col lux-gap-12 lux-flex-basis-6/10 gt-lg:lux-flex-basis-8/10 left-container"
+    luxInfiniteScroll
+    [luxScrollPercent]="75"
+    [luxImmediateCallback]="false"
+    (luxScrolled)="onScroll()"
+    #scrollContainer
+  >
+    <lux-card luxTitle="LUX-Icons" [luxHeading]="1" class="result-container">
+      <lux-card-content class="lux-flex lux-flex-col lux-gap-4 lux-flex-auto">
+        <div class="chip-container" class="lux-flex lux-flex-col lt-md:lux-display-none">
+          @if (chipLabels.length > 0) {
+          <lux-chips-ac [luxInputAllowed]="false" [luxHideBorder]="true">
+            @for (label of chipLabels; track label) { @if (label.length > 0) {
+            <lux-chip-ac (luxChipRemoved)="onChipRemoved($event)">
+              {{ label }}
+            </lux-chip-ac>
+            } }
+          </lux-chips-ac>
+          } @else {
+          <lux-chips-ac [luxInputAllowed]="false" [luxHideBorder]="true">
+            <lux-chip-ac [luxRemovable]="false">alle</lux-chip-ac>
+          </lux-chips-ac>
+          }
+          <div>Icons (gefiltert / gesamt): {{ filteredIcons.length + displayedIcons.length }} / {{ allIcons.length }}</div>
+        </div>
+        @if (displayedIcons.length > 0) {
+        <div class="lux-flex lux-flex-wrap lux-gap-8 icon-list">
+          @for (icon of displayedIcons; track icon.iconName) {
+          <div class="lux-flex">
+            <div
+              tabindex="0"
+              class="lux-flex lux-flex-col lux-col-gap-3 lux-items-center icon-container"
+              (click)="onIconClicked(icon)"
+              (keydown.enter)="onIconClicked(icon)"
+              [ngClass]="{ 'selected-item': icon === previewItem }"
+            >
+              <lux-icon [luxIconName]="icon.iconName.split('--')[0].toLocaleLowerCase()" class="lux-color-blue" luxIconSize="2x"></lux-icon>
+              <p class="icon-name">{{ icon.iconName.split('--')[0].toLocaleLowerCase() }}</p>
+            </div>
+          </div>
+          }
+        </div>
+        } @else {
+        <div class="lux-flex lux-flex-col lux-gap-3 lux-content-start lux-items-center">
+          <lux-icon luxIconName="lux-interface-block" luxIconSize="4x" class="lux-color-blue"></lux-icon>
+          <h3>Sorry, keine passenden Icons gefunden!</h3>
+        </div>
+        }
+      </lux-card-content>
+    </lux-card>
+  </div>
+
+  @if (!mobileView) {
+  <div class="lux-flex lux-flex-col lux-gap-4 lux-flex-basis-4/10 gt-lg:lux-flex-basis-2/10 right-container">
+    <lux-card luxTitle="Suche">
+      <lux-card-content>
+        <ng-container *ngTemplateOutlet="search"></ng-container>
+      </lux-card-content>
+    </lux-card>
+    @if (previewItem) {
+    <lux-card luxTitle="Vorschau" [luxSubTitle]="previewItem.iconName.split('--')[0].toLowerCase()">
+      <lux-card-content class="lux-flex lux-flex-col lux-gap-4">
+        <div class="icon-preview">
+          @if (previewItem && !isBgColor) {
+          <lux-icon luxIconName="{{ previewItem.iconName.split('--')[0].toLowerCase() }}" [luxIconSize]="iconSize" [class]="iconClass">
+          </lux-icon>
+          } @if (previewItem && isBgColor) {
+          <lux-icon
+            luxIconName="{{ previewItem.iconName.split('--')[0].toLowerCase() }}"
+            [luxIconSize]="iconSize"
+            [luxColor]="iconColor"
+          ></lux-icon>
+          } @if (!previewItem) {
+          <p>Für die Vorschau ein Icon anklicken.</p>
+          }
+        </div>
+        <lux-select-ac
+          luxLabel="Icongröße"
+          [(luxSelected)]="iconSize"
+          [luxOptions]="iconSizesOptions"
+          [luxNoBottomLabel]="true"
+        ></lux-select-ac>
+        <lux-select-ac
+          luxLabel="Farbwert"
+          [luxOptions]="iconColorOptions"
+          [luxSelected]="iconColorOptions[0]"
+          luxOptionLabelProp="label"
+          (luxSelectedChange)="onColorChanged($event)"
+          [luxNoBottomLabel]="true"
+        ></lux-select-ac>
+        <lux-radio-ac
+          luxTagId="Farbe"
+          luxAriaLabel="Farbe"
+          [luxNoLabels]="false"
+          [luxOptions]="fgBgOptions"
+          luxOptionLabelProp="label"
+          [luxSelected]="fgBgOptions[0]"
+          [luxOrientationVertical]="false"
+          (luxSelectedChange)="onBgChanged($event)"
+        ></lux-radio-ac>
+      </lux-card-content>
+    </lux-card>
+    } @if (previewItem) {
+    <lux-card luxTitle="Codesnippet">
+      <lux-card-info>
+        <lux-icon
+          luxIconName="lux-clone"
+          luxIconSize="1x"
+          class="lux-color-blue copy-icon"
+          luxTooltip="{{ copiedToClipboard ? 'Kopiert!' : 'In die Zwischenablage kopieren.' }}"
+          (click)="onCopyToClipboard()"
+        ></lux-icon>
+      </lux-card-info>
+      <lux-card-content>
+        <pre class="snippet">{{ codeSnippet }}</pre>
+      </lux-card-content>
+    </lux-card>
+    }
+  </div>
+  }
+</div>
+
+<ng-template #search>
+  <div class="lux-flex lux-flex-col lux-gap-2">
+    <lux-input-ac
+      luxAutofocus
+      luxTagId="Suchbegriff"
+      luxAriaLabel="Suchbegriff"
+      [luxNoTopLabel]="true"
+      luxPlaceholder="Suchbegriff eingeben"
+      [(luxValue)]="inputValue"
+      luxAutocomplete="off"
+      luxHint="Suchbegriffe auf Englisch eingeben. Z.B. arrow, desktop,..."
+    >
+      <lux-input-ac-prefix class="lux-mr-3" luxTagId="searchInput">
+        <lux-icon luxIconName="lux-interface-search"></lux-icon>
+      </lux-input-ac-prefix>
+      <lux-input-ac-suffix>
+        <lux-icon luxIconName="lux-interface-delete-circle" class="lux-reset-icon lux-color-blue" (click)="onResetInput()"></lux-icon>
+      </lux-input-ac-suffix>
+    </lux-input-ac>
+    <lux-radio-ac
+      [luxNoTopLabel]="true"
+      luxTagId="Suchbegriffverknüpfung"
+      luxAriaLabel="Suchbegriffverknüpfung"
+      luxOptionLabelProp="label"
+      luxHint="Suchbegriffverknüpfung"
+      luxGroupName="search-radios"
+      [luxOptions]="searchBindingOptions"
+      [(luxSelected)]="selectedSearchBinding"
+      [luxOrientationVertical]="false"
+      (luxSelectedChange)="onSearchBindingChanged()"
+    ></lux-radio-ac>
+  </div>
+</ng-template>

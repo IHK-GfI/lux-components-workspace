@@ -1,0 +1,91 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 8px;
+  max-width: 1200px;
+  box-sizing: border-box;
+}
+
+.panel-frame {
+  display: flex;
+  flex-direction: column;
+}
+
+lux-layout-form-row {
+  border: 1px dashed var(--lux-theme-accent-100);
+}
+
+.test-box {
+  ::ng-deep {
+    lux-checkbox-ac {
+      .lux-form-control-wrapper {
+        background-color: var(--lux-theme-accent-50) !important;
+        border: 1px dashed var(--lux-theme-accent-300);
+
+        .lux-form-control-label-authentic {
+          margin-left: 0;
+          margin-right: 0;
+          border-bottom: 1px dashed var(--lux-theme-accent-300);
+        }
+
+        .lux-form-control-misc-authentic {
+          margin-left: 0;
+          margin-right: 0;
+          border-top: 1px dashed var(--lux-theme-accent-300);
+        }
+      }
+    }
+
+    lux-divider {
+      margin-top: 2em;
+    }
+
+    h4 {
+      margin-block-start: 0.3em;
+      margin-block-end: 2em;
+    }
+  }
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 3em;
+
+  .grid-item-headline {
+    display: inline-block;
+    margin-bottom: 16px;
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 599px) {
+  .demo-grid {
+    padding: 0 1em;
+    grid-template-columns: 1fr;
+  }
+}
+
+.demo-hover-item ::ng-deep {
+  .lux-form-control-container-authentic {
+    border-color: var(--lux-theme-dark-primary-text);
+  }
+}
+
+.demo-active-item ::ng-deep {
+  .lux-form-control-label-authentic > * {
+    color: var(--lux-theme-primary-400);
+  }
+  .lux-form-control-container-authentic {
+    border-color: var(--lux-theme-primary-color);
+    box-shadow: 0 0 0 1px var(--lux-theme-primary-color) inset;
+  }
+}
+
+.demo-active-item.green ::ng-deep {
+  .lux-form-control-container-authentic {
+    border-color: #2e8533;
+    box-shadow: 0 0 0 2px #2e8533, 0 0 4px 2px #2e8533;
+  }
+}

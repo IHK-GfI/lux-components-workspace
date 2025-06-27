@@ -1,0 +1,203 @@
+<div class="container">
+  <lux-card luxTitle="Übersicht aller Form-Controls" luxSubTitle="Ausrichtung in einer LUX-Card">
+    <lux-card-content class="lux-flex lux-flex-col">
+      <lux-textbox luxTitle="Hinweis" luxColor="blue" class="lux-mt-3 lux-mb-5">
+        <p>
+          Dieses Beispiel dient für Testzwecke bei der Weiterentwicklung der LUX-Components. Zum Vergleich können die unterschiedlichen
+          States der Formcontrols ausgewählt werden.
+        </p>
+      </lux-textbox>
+
+      <div class="form-grid-container">
+        <lux-radio-ac
+          luxGroupName="radio1"
+          [luxOptions]="stateOptions"
+          [luxOrientationVertical]="false"
+          [luxNoBottomLabel]="true"
+          [(luxSelected)]="selectedState"
+          (luxSelectedChange)="switchStates()"
+          luxLabel="Status der Form-Controls"
+          ><ng-template let-option>
+            {{ option.label }}
+          </ng-template>
+        </lux-radio-ac>
+        <lux-checkbox-ac
+          luxLabel="Fehler-Status anzeigen"
+          [luxNoBottomLabel]="true"
+          (luxCheckedChange)="toggleErrors($event)"
+        ></lux-checkbox-ac>
+      </div>
+
+      <lux-divider [luxInset]="true"></lux-divider>
+
+      <div [formGroup]="form" class="form-grid-container lux-mt-5 lux-mb-5">
+        <lux-input-ac
+          luxLabel="Lux-Input-ac"
+          luxPlaceholder="Platzhalter"
+          [luxHint]="testHint"
+          luxControlBinding="input"
+          luxAutocomplete="off"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        ></lux-input-ac>
+        <lux-input-ac
+          luxType="number"
+          luxLabel="Lux-Input-ac mit Pre-/Suffix"
+          luxPlaceholder="0"
+          [luxHint]="testHint"
+          luxControlBinding="input"
+          luxAutocomplete="off"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        >
+          <lux-input-ac-prefix> EUR </lux-input-ac-prefix>
+          <lux-input-ac-suffix> .00 <lux-icon luxIconName="lux-money-currency-euro"></lux-icon></lux-input-ac-suffix>
+        </lux-input-ac>
+        <lux-autocomplete-ac
+          luxLabel="Lux-Autocomplete-ac"
+          luxPlaceholder="Platzhalter"
+          [luxHint]="testHint"
+          luxControlBinding="autocomplete"
+          luxOptionLabelProp="label"
+          [luxOptions]="options"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        ></lux-autocomplete-ac>
+        <lux-datepicker-ac
+          luxLabel="Lux-Datepicker-ac"
+          luxLocale="de-DE"
+          luxPlaceholder="Platzhalter"
+          luxControlBinding="datepicker"
+          [luxHint]="testHint"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        ></lux-datepicker-ac>
+        <lux-datetimepicker-ac
+          luxLabel="Lux-Datetimepicker-ac"
+          luxLocale="de-DE"
+          luxPlaceholder="Platzhalter"
+          luxControlBinding="datetimepicker"
+          [luxHint]="testHint"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        ></lux-datetimepicker-ac>
+        <lux-select-ac
+          luxLabel="Lux-Select-ac"
+          luxPlaceholder="Platzhalter"
+          [luxHint]="testHint"
+          luxControlBinding="select"
+          [luxSelected]="testOption"
+          luxOptionLabelProp="label"
+          [luxOptions]="options"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        ></lux-select-ac>
+        <lux-file-input-ac
+          luxLabel="Lux-File-Input-ac"
+          luxPlaceholder="Platzhalter"
+          [luxHint]="testHint"
+          luxControlBinding="file"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        ></lux-file-input-ac>
+        <lux-textarea-ac
+          luxLabel="Lux-Textarea-ac"
+          luxPlaceholder="Platzhalter"
+          [luxHint]="testHint"
+          luxControlBinding="textarea"
+          [luxMinRows]="1"
+          [luxMaxRows]="-1"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+          [luxMaxLength]="100"
+        ></lux-textarea-ac>
+        <lux-toggle-ac
+          luxLabel="Lux-Toggle-ac"
+          [luxChecked]="false"
+          luxHint="Hinweis"
+          luxControlBinding="toggle"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+          [luxNoTopLabel]="true"
+        ></lux-toggle-ac>
+        <lux-checkbox-ac
+          luxLabel="Lux-Checkbox-ac"
+          [luxChecked]="false"
+          luxHint="Hinweis"
+          luxControlBinding="checkbox"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+          [luxNoTopLabel]="true"
+        ></lux-checkbox-ac>
+        <lux-radio-ac
+          luxGroupName="radio1"
+          [luxOptions]="options"
+          [luxOrientationVertical]="true"
+          [luxSelected]="options[0]"
+          luxLabel="Lux-Radio-ac - vertikal"
+          luxHint="Hinweis"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+          luxControlBinding="radio"
+        >
+          <ng-template let-option>
+            {{ option.label }}
+          </ng-template>
+        </lux-radio-ac>
+        <lux-radio-ac
+          luxGroupName="radio3"
+          [luxOptions]="options2"
+          [luxOrientationVertical]="false"
+          [luxSelected]="options[0]"
+          luxLabel="Lux-Radio-ac - horizontal"
+          luxHint="Dieses ist eine Testkomponents! Normalerweise sollte eine Radio-Komponente höchstens 5 Optionen besitzen."
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+          luxControlBinding="radio"
+        >
+          <ng-template let-option>
+            {{ option.label }}
+          </ng-template>
+        </lux-radio-ac>
+        <lux-slider-ac
+          luxLabel="Lux-Slider-ac"
+          luxControlBinding="slider"
+          luxHint="testHint"
+          [luxDisabled]="disabledForm"
+          [luxReadonly]="readonly"
+        ></lux-slider-ac>
+        <lux-chips-ac
+          [luxInputAllowed]="true"
+          luxInputLabel="Lux-Chips-ac im Input-Element"
+          luxHint="Hinweis"
+          [luxAutocompleteOptions]="chipOptions"
+          [luxNewChipGroup]="groupAc"
+          [luxDisabled]="disabledForm"
+          class="grid-col-span-2"
+        >
+          <lux-chip-ac-group
+            [luxLabels]="chipItems"
+            luxColor="accent"
+            [luxRemovable]="true"
+            (luxChipAdded)="chipAdded($event)"
+            (luxChipRemoved)="chipRemoved($event)"
+            (luxChipClicked)="chipItemClicked($event)"
+            #groupAc
+          >
+          </lux-chip-ac-group>
+        </lux-chips-ac>
+        <lux-file-list
+          luxLabel="Lux-File-List"
+          luxHint="Hinweis"
+          luxControlBinding="file"
+          [luxDisabled]="disabled"
+          [luxReadonly]="readonly"
+        ></lux-file-list>
+      </div>
+    </lux-card-content>
+    <lux-card-actions>
+      <lux-button luxLabel="Button 1" [luxFlat]="true" luxIconName="lux-interface-user-single" luxColor="primary"></lux-button>
+      <lux-button luxLabel="Button 2" [luxStroked]="true" luxColor="primary"></lux-button>
+    </lux-card-actions>
+  </lux-card>
+</div>
