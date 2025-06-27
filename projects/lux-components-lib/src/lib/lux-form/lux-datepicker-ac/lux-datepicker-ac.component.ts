@@ -79,11 +79,11 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   private originalTouchUi = false;
   private mediaSubscription?: Subscription;
   private previousISO?: string;
-  protected min: Date | null = null;
-  protected max: Date | null = null;
-  protected start: Date | null = null;
-  protected focused = false;
-  protected _luxCustomFilter: LuxDateFilterAcFn = () => true;
+  min: Date | null = null;
+  max: Date | null = null;
+  start: Date | null = null;
+  focused = false;
+  _luxCustomFilter: LuxDateFilterAcFn = () => true;
 
   @Input() luxStartView: LuxStartAcView = 'month';
   @Input() luxTouchUi = false;
@@ -97,8 +97,8 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
 
-  @ViewChild(MatDatepicker) protected matDatepicker?: MatDatepicker<any>;
-  @ViewChild('datepickerInput', { read: ElementRef }) protected datepickerInput?: ElementRef;
+  @ViewChild(MatDatepicker) matDatepicker?: MatDatepicker<any>;
+  @ViewChild('datepickerInput', { read: ElementRef }) datepickerInput?: ElementRef;
 
   get luxCustomFilter() {
     return this._luxCustomFilter;
@@ -166,7 +166,7 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
    * @param value
    * @param errors
    */
-  protected override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
+  override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['matDatepickerMin']) {
       return $localize`:@@luxc.datepicker.error_message.min:Das Datum unterschreitet den Minimalwert`;
     } else if (errors['matDatepickerMax']) {
@@ -184,22 +184,22 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
     return undefined;
   }
 
-  protected onFocus(e: FocusEvent) {
+  onFocus(e: FocusEvent) {
     this.focused = true;
     this.luxFocus.emit(e);
   }
 
-  protected onFocusIn(e: FocusEvent) {
+  onFocusIn(e: FocusEvent) {
     this.focused = true;
     this.luxFocusIn.emit(e);
   }
 
-  protected onFocusOut(e: FocusEvent) {
+  onFocusOut(e: FocusEvent) {
     this.focused = false;
     this.luxFocusOut.emit(e);
   }
 
-  protected descripedBy() {
+  descripedBy() {
     if (this.errorMessage) {
       return this.uid + '-error';
     } else {
@@ -320,7 +320,7 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   }
 
   // für dem Customheader für das "Green"-Theme
-  protected getHeaderByTheme(): any {
+  getHeaderByTheme(): any {
     const customHeader = LuxDatepickerAcCustomHeaderComponent;
     return this.themeService.getTheme().name === 'green' ? customHeader : null;
   }

@@ -24,7 +24,7 @@ export abstract class LuxFormInputBaseClass<T = any> extends LuxFormComponentBas
     this.setValue(value);
   }
 
-  protected override notifyFormValueChanged(formValue: any) {
+  override notifyFormValueChanged(formValue: any) {
     // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden
     this.luxValueChange.emit(formValue);
   }
