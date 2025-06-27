@@ -1,0 +1,469 @@
+<example-base-structure
+  exampleTitle="Button"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90button-v18"
+>
+  <example-base-content>
+    <div>
+      <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
+        <h3 class="lux-highlight-section-label">Alle Button-Variationen</h3>
+        <div class="lux-flex lux-flex-wrap lux-gap-4">
+          <div class="lux-flex lux-flex-wrap lux-gap-4">
+            <div class="lux-flex lux-flex-col lux-gap-4" luxAutofocus luxAutofocusSelector="#lux-button-0 button">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                id="lux-button-{{ i }}"
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxRaised]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxFlat]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+          </div>
+          <div class="lux-flex lux-flex-wrap lux-gap-4">
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxStroked]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-hover{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+          </div>
+          <div class="lux-flex lux-gap-4 lux-min-width-48">
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="iconName ? '' : '??'"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxRounded]="true"
+                [luxDisabled]="disabled"
+                luxTagId="demo-button-focus{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="iconName ? '' : '??'"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxRounded]="true"
+                [luxStroked]="true"
+                [luxDisabled]="disabled"
+                luxTagId="demo-button-rounded-stroked{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lux-gradient-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
+        <h3 class="lux-highlight-section-label">Gradient</h3>
+        <div class="lux-flex lux-flex-wrap lux-gap-4">
+          <div class="lux-flex lux-flex-wrap lux-gap-4">
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxRaised]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxFlat]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+          </div>
+          <div class="lux-flex lux-flex-wrap lux-gap-4">
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxStroked]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-hover{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+          </div>
+          <div class="lux-flex lux-gap-4 lux-min-width-48">
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="iconName ? '' : '??'"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxRounded]="true"
+                [luxDisabled]="disabled"
+                luxTagId="demo-button-focus{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4 lux-min-width-48">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="iconName ? '' : '??'"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxRounded]="true"
+                [luxStroked]="true"
+                [luxDisabled]="disabled"
+                luxTagId="demo-button-rounded-stroked{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+              >
+              </lux-button>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
+        <h3 class="lux-highlight-section-label">Alle Loading Button-Variationen</h3>
+        <div class="lux-flex lux-flex-wrap lux-gap-4">
+          <div class="lux-flex lux-flex-wrap lux-gap-4">
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxRaised]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+                [luxLoading]="true"
+                [luxSpinnerMode]="spinnerMode"
+                [luxSpinnerValue]="spinnerValue"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxFlat]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+                [luxLoading]="true"
+                [luxSpinnerMode]="spinnerMode"
+                [luxSpinnerValue]="spinnerValue"
+              >
+              </lux-button>
+              }
+            </div>
+          </div>
+          <div class="lux-flex lux-flex-wrap lux-gap-4">
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxStroked]="true"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-default{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+                [luxLoading]="true"
+                [luxSpinnerMode]="spinnerMode"
+                [luxSpinnerValue]="spinnerValue"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+              <lux-button
+                [luxLabel]="label"
+                [luxColor]="color.value"
+                [luxIconName]="iconName"
+                [luxIconShowRight]="iconShowRight"
+                [luxDisabled]="disabled"
+                [luxButtonBadge]="buttonBadge"
+                [luxButtonBadgeColor]="buttonBadgeColor"
+                luxTagId="demo-button-hover{{ i }}"
+                (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+                [luxLoading]="true"
+                [luxSpinnerMode]="spinnerMode"
+                [luxSpinnerValue]="spinnerValue"
+              >
+              </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-gap-4 lux-min-width-48">
+              <div class="lux-flex lux-flex-col lux-gap-4">
+                @for (color of colors; track color; let i = $index) {
+                <lux-button
+                  [luxLabel]="iconName ? '' : '??'"
+                  [luxColor]="color.value"
+                  [luxIconName]="iconName"
+                  [luxIconShowRight]="iconShowRight"
+                  [luxRounded]="true"
+                  [luxDisabled]="disabled"
+                  luxTagId="demo-button-focus{{ i }}"
+                  (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                  (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+                  [luxLoading]="true"
+                  [luxSpinnerMode]="spinnerMode"
+                  [luxSpinnerValue]="spinnerValue"
+                >
+                </lux-button>
+                }
+              </div>
+              <div class="lux-flex lux-flex-col lux-gap-4 lux-min-width-48">
+                @for (color of colors; track color; let i = $index) {
+                <lux-button
+                  [luxLabel]="iconName ? '' : '??'"
+                  [luxColor]="color.value"
+                  [luxIconName]="iconName"
+                  [luxIconShowRight]="iconShowRight"
+                  [luxRounded]="true"
+                  [luxStroked]="true"
+                  [luxDisabled]="disabled"
+                  luxTagId="demo-button-rounded-stroked{{ i }}"
+                  (luxClicked)="log(showOutputEvents, 'Button clicked', $event)"
+                  (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+                  [luxLoading]="true"
+                  [luxSpinnerMode]="spinnerMode"
+                  [luxSpinnerValue]="spinnerValue"
+                >
+                </lux-button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3">
+        <h3 class="lux-highlight-section-label">Beispiel card für Loading-Button</h3>
+        <lux-card luxTitle="Einfaches Eingabe-Formular">
+          <lux-card-content>
+            <lux-input-ac luxLabel="Vorname" luxPlaceholder="Max" [(luxValue)]="spinnerExampleFirstname"></lux-input-ac>
+            <lux-input-ac luxLabel="Nachname" luxPlaceholder="Mustermann" [(luxValue)]="spinnerExampleLastname"></lux-input-ac>
+          </lux-card-content>
+          <lux-card-actions>
+            <lux-button
+              [luxStroked]="true"
+              luxColor="primary"
+              luxLabel="ABBRECHEN"
+              (luxClicked)="spinnerExampleClear($event)"
+              (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+            ></lux-button>
+            <lux-button
+              [luxFlat]="true"
+              luxColor="primary"
+              luxLabel="ABSCHICKEN"
+              luxIconName="lux-mail-send-email"
+              (luxClicked)="spinnerExampleUpdateLoading($event)"
+              [luxLoading]="spinnerExampleLoading"
+              (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
+            ></lux-button>
+          </lux-card-actions>
+        </lux-card>
+      </div>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-input-ac
+      [(luxValue)]="label"
+      luxName="button_luxLabel"
+      luxLabel="luxLabel"
+      luxHint="Bestimmt den Text, der in dem Button angezeigt wird."
+    ></lux-input-ac>
+    <lux-input-ac luxName="button_luxIconName" [(luxValue)]="iconName" luxLabel="luxIconName">
+      <lux-form-hint>
+        Diese Property definiert das Icon, welches in dem Button (linksbündig, wenn zusätzlich auch noch
+        <i>luxLabel</i> gesetzt ist).<br />
+        Für Font-Awesome-Icons mit 'fa|fas|fab|far|fal' präfixen, Material-Icons ohne Präfix
+      </lux-form-hint>
+    </lux-input-ac>
+    <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true"></lux-toggle-ac>
+    <lux-toggle-ac [(luxChecked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Button." [luxNoTopLabel]="true">
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Label Uppercase" [(luxChecked)]="allUpperCase" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Über den <i>LuxComponentsConfigService</i> kann für alle LuxButtons applikationsweit eine Uppercase-Darstellung forciert werden.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-input-ac
+      luxLabel="luxButtonBadge"
+      luxHint="Diese Prooerty setzt das Label für eine Badge innerhalb des Buttons"
+      luxAutocomplete="off"
+      [(luxValue)]="buttonBadge"
+    >
+    </lux-input-ac>
+    <lux-select-ac
+      [luxOptions]="badgeColors"
+      [luxSelected]="badgeColors[0]"
+      luxOptionLabelProp="label"
+      (luxSelectedChange)="onBadgeColorChanged($event)"
+      luxLabel="luxButtonBadgeColor"
+      luxHint="Property mit der die Farbe der Button-Badge bestimmt wird"
+    >
+    </lux-select-ac>
+    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+      <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
+    </lux-input-ac>
+    <lux-select-ac
+      [luxOptions]="spinnerModes"
+      [(luxSelected)]="spinnerMode"
+      luxLabel="luxMode"
+      luxHint="Die Property bestimmt ob der Spinner im Modus 'determinate' (= endlich) oder 'indeterminate' (= endlos) ist."
+    ></lux-select-ac>
+    @if (spinnerMode === 'determinate') {
+    <lux-input-ac
+      class="lux-flex-auto"
+      luxLabel="luxValue"
+      luxHint="Diese Property setzt den Wert in dem Spinner, vorausgesetzt es ist im Modus 'determinate'"
+      luxType="number"
+      [(luxValue)]="spinnerValue"
+      [luxNumberAlignLeft]="true"
+    >
+    </lux-input-ac>
+    <div class="lux-flex lux-flex-warp lux-gap-2">
+      <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+      <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+    </div>
+    }
+  </example-base-simple-options>
+</example-base-structure>
