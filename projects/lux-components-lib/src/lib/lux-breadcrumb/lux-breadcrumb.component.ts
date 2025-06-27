@@ -19,7 +19,7 @@ export class LuxBreadcrumbComponent implements OnDestroy {
   @Output() luxClicked = new EventEmitter<ILuxBreadcrumbEntry>();
 
   mobileView: boolean;
-  protected subscriptions: Subscription[] = [];
+  subscriptions: Subscription[] = [];
 
   constructor() {
     this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs' || this.mediaQueryService.activeMediaQuery === 'sd';
@@ -31,7 +31,7 @@ export class LuxBreadcrumbComponent implements OnDestroy {
     );
   }
 
-  protected clicked(item: ILuxBreadcrumbEntry) {
+  clicked(item: ILuxBreadcrumbEntry) {
     this.luxClicked.emit(item);
   }
 
@@ -41,7 +41,7 @@ export class LuxBreadcrumbComponent implements OnDestroy {
     });
   }
 
-  protected getIconSize(): string {
+  getIconSize(): string {
     if (this.mobileView) {
       return '18px';
     }

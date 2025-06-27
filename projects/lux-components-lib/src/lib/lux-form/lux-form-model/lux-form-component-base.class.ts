@@ -43,23 +43,23 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected _luxRequired = false;
   protected _luxControlValidators?: ValidatorFnType;
 
-  protected errorMessage: string | undefined = undefined;
+  errorMessage: string | undefined = undefined;
 
   protected controlContainer = inject(ControlContainer, { optional: true });
   protected cdr = inject(ChangeDetectorRef);
   protected logger = inject(LuxConsoleService);
   protected configService = inject(LuxComponentsConfigService);
 
-  protected inForm = false;
-  protected formGroup!: FormGroup;
-  protected formControl!: FormControl<T>;
+  inForm = false;
+  formGroup!: FormGroup;
+  formControl!: FormControl<T>;
 
-  protected uid = '';
+  uid = '';
 
-  @ContentChild(LuxFormLabelComponent) protected formLabelComponent?: LuxFormLabelComponent;
-  @ContentChild(LuxFormHintComponent) protected formHintComponent?: LuxFormHintComponent;
+  @ContentChild(LuxFormLabelComponent) formLabelComponent?: LuxFormLabelComponent;
+  @ContentChild(LuxFormHintComponent) formHintComponent?: LuxFormHintComponent;
 
-  @HostBinding('class.lux-form-control-readonly') protected cssReadonly = false;
+  @HostBinding('class.lux-form-control-readonly') cssReadonly = false;
 
   @Output() luxFocusIn = new EventEmitter<FocusEvent>();
   @Output() luxFocusOut = new EventEmitter<FocusEvent>();

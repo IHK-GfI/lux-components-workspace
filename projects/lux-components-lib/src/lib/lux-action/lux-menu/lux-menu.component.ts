@@ -74,15 +74,15 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   private menuItemSubscriptions: Subscription[] = [];
   private menuItemChangeSubscription!: Subscription;
 
-  protected hideToggle = false;
-  protected triggerButtonDivEl?: HTMLElement;
-  protected customTriggerEl?: HTMLElement;
+  hideToggle = false;
+  triggerButtonDivEl?: HTMLElement;
+  customTriggerEl?: HTMLElement;
 
-  @ViewChild('defaultTrigger', { read: ElementRef }) private defaultTriggerElRef?: ElementRef;
-  @ViewChild('menuTrigger', { read: ElementRef }) private menuTriggerElRef?: ElementRef;
-  @ViewChild('menuExtendedContainer', { read: ElementRef, static: true }) private menuExtendedContainer!: ElementRef;
-  @ContentChildren(LuxMenuItemComponent) protected luxMenuItemComponents!: QueryList<LuxMenuItemComponent>;
-  @ContentChild(LuxMenuTriggerComponent) protected luxMenuTriggerComponent?: LuxMenuTriggerComponent;
+  @ViewChild('defaultTrigger', { read: ElementRef }) defaultTriggerElRef?: ElementRef;
+  @ViewChild('menuTrigger', { read: ElementRef }) menuTriggerElRef?: ElementRef;
+  @ViewChild('menuExtendedContainer', { read: ElementRef, static: true }) menuExtendedContainer!: ElementRef;
+  @ContentChildren(LuxMenuItemComponent) luxMenuItemComponents!: QueryList<LuxMenuItemComponent>;
+  @ContentChild(LuxMenuTriggerComponent) luxMenuTriggerComponent?: LuxMenuTriggerComponent;
 
   @Output() luxMenuClosed = new EventEmitter<void>();
   @Output() luxMenuOpened = new EventEmitter<void>();
@@ -96,8 +96,8 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   @Input() luxToggleDisabled = false;
   @Input() luxAriaMenuTriggerLabel = $localize`:@@luxc.menu.trigger.btn:Menü`;
 
-  protected _luxDisplayExtended = false;
-  protected visibleMenuItems: LuxMenuItemComponent[] = [];
+  _luxDisplayExtended = false;
+  visibleMenuItems: LuxMenuItemComponent[] = [];
 
   get luxDisplayExtended() {
     return this._luxDisplayExtended;
@@ -114,7 +114,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   @Input() luxDisplayMenuLeft = true;
   @Input() luxMaximumExtended = 5;
 
-  @HostListener('window:resize') protected windowResize() {
+  @HostListener('window:resize') windowResize() {
     this.updateExtendedMenuItems();
   }
 
@@ -194,7 +194,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     this.customTriggerEl?.addEventListener('click', this.onTrigger.bind(this));
   }
 
-  protected onTrigger() {
+  onTrigger() {
     if (this.customTriggerEl && this.triggerButtonDivEl) {
       this.triggerButtonDivEl.click();
     }
@@ -233,7 +233,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
    * @param menuItem
    * @param event
    */
-  protected menuItemClicked(menuItem: LuxMenuItemComponent, event: Event) {
+  menuItemClicked(menuItem: LuxMenuItemComponent, event: Event) {
     menuItem.clicked(event);
   }
 
@@ -241,7 +241,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
    * Wird nach dem Schließen des Menus aufgerufen und emitted die Output-Property.
    * Setzt den Fokus auf den Default-Trigger (Custom-Trigger => eigene Verantwortung).
    */
-  protected onMenuClosed() {
+  onMenuClosed() {
     this.luxMenuClosed.emit();
     if (this.defaultTriggerElRef) {
       (this.defaultTriggerElRef.nativeElement.children.item(0) as any).focus();
@@ -251,7 +251,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   /**
    * Wird nach dem Öffnen des Menus aufgerufen und emitted die Output-Property.
    */
-  protected onMenuOpened() {
+  onMenuOpened() {
     this.luxMenuOpened.emit();
   }
 
@@ -261,7 +261,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
    * darf das Event nicht weiter gereicht werden.
    * @param event
    */
-  protected menuTriggerStopPropagation(event: Event) {
+  menuTriggerStopPropagation(event: Event) {
     LuxUtil.stopEventPropagation(event);
   }
 
@@ -269,7 +269,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
    * Berechnet anhand der verfügbaren Breite des Containers (CSS-Class: lux-menu-extended) und der maximalen Anzahl an
    * extended MenuItems die Anzahl an möglichen MenuItems, die außerhalb des eigentlichen Menus dargestellt werden können.
    */
-  protected updateExtendedMenuItems() {
+  updateExtendedMenuItems() {
     if (!this.luxDisplayExtended) {
       this.hideToggle = false;
       this.menuItems.forEach((menuItem: LuxMenuItemComponent) => {
@@ -381,7 +381,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     return metrics.width + offset;
   }
 
-  protected hasVisibleMenuItems(): boolean {
+  hasVisibleMenuItems(): boolean {
     let hasVisibleMenuItems = false;
 
     for (const element of this.menuItems) {
