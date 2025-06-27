@@ -1,0 +1,22 @@
+{
+  "extends": "../projects/lux-components-lib/tsconfig.lib.json",
+  "compilerOptions": {
+    "types": [
+      "node"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [
+    "../projects/demo/src/test.ts",
+    "../projects/demo/src/**/*.spec.ts"
+  ],
+  "include": [
+    "../projects/demo/**/*.stories.*",
+    "../projects/lux-components-lib/src/lib/**/*.stories.*",
+    "./preview.ts"
+  ],
+  "files": [
+    "./typings.d.ts"
+  ]
+}
