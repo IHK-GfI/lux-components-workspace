@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "../src/test.ts",
+    "../src/**/*.spec.ts",
+    "../projects/demo/**/*.stories.ts",
+    "../projects/lux-components-lib/**/*.stories.ts"
+  ],
+  "include": [
+    "../projects/demo/**/*",
+    "../projects/lux-components-lib/src/lib/**/*"
+  ],
+  "files": [
+    "./typings.d.ts"
+  ]
+}

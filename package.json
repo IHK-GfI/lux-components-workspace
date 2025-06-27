@@ -39,8 +39,8 @@
     "watch:theme": "npm run watch --workspace=projects/lux-components-theme",
     "xi18n:components": "ng extract-i18n demo-app --output-path projects/demo-app/src/locale && copyfiles --up 3 \"./projects/demo-app/src/locale/**\" ./projects/lux-components-lib",
     "prepare": "husky",
-    "compodoc:lux-components-lib": "compodoc -p projects/lux-components-lib/.storybook/tsconfig.doc.json -e json -d ./projects/lux-components-lib/.storybook --disableLifeCycleHooks --disableInternal --disablePrivate --disableProtected",
-    "storybook": "npm run compodoc:lux-components-lib && storybook dev -p 6006 --config-dir=projects/lux-components-lib/.storybook"
+    "storybook": "ng run lux-components-lib:storybook",
+    "build-storybook": "ng run lux-components-lib:build-storybook"
   },
   "workspaces": [
     "projects/*"
@@ -68,7 +68,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^1.16.1",
+    "@analogjs/storybook-angular": "^1.18.0",
     "@angular-devkit/build-angular": "^19.2.0",
     "@angular-devkit/core": "^19.2.0",
     "@angular-devkit/schematics": "^19.2.0",
@@ -76,13 +76,7 @@
     "@angular/cli": "^19.2.0",
     "@angular/compiler-cli": "^19.2.0",
     "@chiragrupani/karma-chromium-edge-launcher": "^1.2.6",
-    "@compodoc/compodoc": "^1.1.26",
-    "@storybook/angular": "^8.6.14",
-    "@storybook/builder-vite": "^8.6.14",
-    "@storybook/addon-a11y": "^8.6.14",
-    "@storybook/addon-docs": "^8.6.14",
-    "@storybook/addon-designs": "^8.2.0",
-    "@storybook/addon-controls": "^8.6.14",
+    "@storybook/addon-docs": "^9.0.10",
     "@types/dompurify": "~3.0.5",
     "@types/jasmine": "~5.1.7",
     "@types/uuid": "^10.0.0",
@@ -90,6 +84,7 @@
     "copyfiles": "^2.4.1",
     "del-cli": "^5.1.0",
     "eslint": "^9.21.0",
+    "eslint-plugin-storybook": "^9.0.10",
     "husky": "^9.1.7",
     "jasmine": "~5.4.0",
     "karma": "~6.4.4",
@@ -104,9 +99,9 @@
     "npm-watch": "^0.13.0",
     "replace": "^1.2.2",
     "sass": "1.77.6",
-    "storybook": "^8.6.14",
     "typescript": "~5.5.4",
     "typescript-eslint": "8.16.0",
+    "vite-tsconfig-paths": "^5.1.4",
     "wait-on": "^8.0.2"
   }
 }

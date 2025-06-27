@@ -38,6 +38,34 @@
             "lintFilePatterns": ["projects/lux-components-lib/**/*.ts", "projects/lux-components-lib/**/*.html"],
             "eslintConfig": "projects/lux-components-lib/eslint.config.js"
           }
+        },
+        "storybook": {
+          "builder": "@analogjs/storybook-angular:start-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "./projects/lux-components-lib"
+            ],
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@analogjs/storybook-angular:build-storybook",
+          "options": {
+            "configDir": ".storybook",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "./projects/lux-components-lib"
+            ],
+            "outputDir": "dist/storybook/"
+          }
         }
       }
     },
