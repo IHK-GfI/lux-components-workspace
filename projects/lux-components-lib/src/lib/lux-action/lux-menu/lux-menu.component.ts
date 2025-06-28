@@ -263,6 +263,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   menuTriggerStopPropagation(event: Event) {
     LuxUtil.stopEventPropagation(event);
   }
+
   /**
    * Berechnet anhand der verfügbaren Breite des Containers (CSS-Class: lux-menu-extended) und der maximalen Anzahl an
    * extended MenuItems die Anzahl an möglichen MenuItems, die außerhalb des eigentlichen Menus dargestellt werden können.
