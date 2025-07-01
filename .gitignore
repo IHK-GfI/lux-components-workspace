@@ -39,6 +39,7 @@ testem.log
 **/prebuilt-themes
 **/coverage
 projects/lux-components-update/src/**/*.js
+!projects/lux-components-update/src/**/files/**/*.js
 ToDos.md
 
 # System files

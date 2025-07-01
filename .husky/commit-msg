@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # regex to validate in commit msg
-commit_regex='(Issue #[0-9]+:|Initialer Import|Demo:|Build:|Release|Merge)'
+commit_regex='(Issue #[0-9]+:|Initialer Import|Demo:|Build:|Updater:|Release|Merge)'
 error_msg="Commit wird abgebrochen. Bitte die Commit-Nachricht anpassen. Gültige "
 
 if ! grep -iqE "$commit_regex" "$1"; then

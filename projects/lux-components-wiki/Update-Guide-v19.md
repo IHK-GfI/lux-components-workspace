@@ -88,6 +88,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 #### Nach dem Update
 
+- In der Datei _eslint.config.js_ sind Regeln für die Benennung von Componenten definiert. Der Standardpräfix lautet _app_. D.h. wenn man im Projekt einen individuellen Präfix verwendet, kann dieser in die _eslint.config.js_ übernommen werden. Es müssen nicht alle Komponenten umbenannt werden.
 - Falls es eigene Abhängigkeiten im Projekt gibt, die nicht über den LUX-Components-Updater aktualisiert wurden, sollten diese jetzt ebenfalls aktualisiert werden.
 - Einen Smoketest (build, lint und test) ausführen:
 
@@ -123,6 +124,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 - Falls eine neue Node-Version installiert wurde, muss diese auch in die zentralen Builds eingetragen werden.<br>
   D.h. in der _pipeline.yaml_ muss z.B. von _node:18-alpine_ auf _node:22-alpine_ umgestellt werden.
 - Bei der Umstellung auf eine neuere Node-Version sollte der Parameter _--no-optional_ aus der _pipeline.yaml_ entfernt werden.
+- Bitte die _CSP_-Abschnitte in den Dateien _application-xxx.yml_ im _UI-Service_ anpassen.
 
 #### Weiterführende Verweise bei Interesse oder Problemen
 
