@@ -1,21 +1,20 @@
 import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
-    ILuxFileActionConfig,
-    ILuxFileObject,
-    LuxAutofocusDirective,
-    LuxButtonComponent,
-    LuxFileInputAcComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxToggleAcComponent
+  ILuxFileActionConfig,
+  ILuxFileObject,
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxFileInputAcComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { map, take } from 'rxjs/operators';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
-import { ExampleFormDisableComponent } from '../../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
 import { FileExampleAdvancedOptionsComponent } from '../file-example-advanced-options/file-example-advanced-options.component';
 import { FileExampleSimpleOptionsComponent } from '../file-example-simple-options/file-example-simple-options.component';
@@ -37,7 +36,6 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     FileExampleSimpleOptionsComponent,
-    ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     FileExampleAdvancedOptionsComponent
   ]
