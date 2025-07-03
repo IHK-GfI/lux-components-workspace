@@ -1,0 +1,171 @@
+.lux-star-rating-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .lux-star-rating-stars {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    outline: none;
+
+    &:focus-visible {
+      outline: 2px solid var(--lux-color-primary);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  }
+
+  .lux-star-rating-star {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(var(--lux-color-primary-rgb), 0.1);
+      transform: scale(1.1);
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.6;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    lux-icon {
+      transition: color 0.2s ease;
+    }
+
+    &.lux-star-rating-star-filled lux-icon {
+      color: var(--lux-color-orange, #ff6b35);
+    }
+
+    &.lux-star-rating-star-empty lux-icon {
+      color: var(--lux-color-gray-300, #d1d5db);
+    }
+  }
+
+  .lux-star-rating-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .lux-star-rating-text {
+      font-size: 14px;
+      color: var(--lux-color-text-secondary, #6b7280);
+    }
+
+    .lux-star-rating-reset {
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba(var(--lux-color-danger-rgb), 0.1);
+      }
+
+      lux-icon {
+        color: var(--lux-color-text-secondary, #6b7280);
+      }
+
+      &:hover lux-icon {
+        color: var(--lux-color-danger, #dc2626);
+      }
+    }
+  }
+
+  // Size variants
+  &.lux-star-rating-large {
+    .lux-star-rating-stars {
+      gap: 6px;
+    }
+
+    .lux-star-rating-star {
+      padding: 6px;
+    }
+
+    .lux-star-rating-info .lux-star-rating-text {
+      font-size: 16px;
+    }
+  }
+
+  &.lux-star-rating-small {
+    .lux-star-rating-stars {
+      gap: 3px;
+    }
+
+    .lux-star-rating-star {
+      padding: 3px;
+    }
+
+    .lux-star-rating-info .lux-star-rating-text {
+      font-size: 12px;
+    }
+  }
+
+  // Readonly state
+  &.lux-star-rating-readonly {
+    .lux-star-rating-star {
+      cursor: default;
+
+      &:hover {
+        background-color: transparent;
+        transform: none;
+      }
+    }
+  }
+
+  // Disabled state
+  &.lux-star-rating-disabled {
+    opacity: 0.6;
+
+    .lux-star-rating-star {
+      cursor: not-allowed;
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .lux-star-rating-container {
+    .lux-star-rating-star.lux-star-rating-star-filled lux-icon {
+      color: #000;
+    }
+
+    .lux-star-rating-star.lux-star-rating-star-empty lux-icon {
+      color: #666;
+    }
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .lux-star-rating-container {
+    .lux-star-rating-star {
+      transition: none;
+
+      &:hover:not(:disabled) {
+        transform: none;
+      }
+    }
+
+    .lux-star-rating-star lux-icon {
+      transition: none;
+    }
+  }
+}
