@@ -114,7 +114,7 @@
           file.size > 1000 * 1024 ? (file.size / (1000 * 1024)).toFixed(1) + '&nbsp;MB' : Math.ceil(file.size / 1024) + '&nbsp;KB'
         }}</span>
         } @for (customConfig of luxCustomActionConfigs; track customConfig; let j = $index) { @if(!luxReadonly && !luxDisabled &&
-        !luxListOnly && !customConfig.hidden) {
+        !customConfig.hidden) {
         <lux-button
           class="lux-file-upload-view-item-button lux-file-upload-view-item-custom-button"
           [luxAriaLabel]="customConfig.label"
