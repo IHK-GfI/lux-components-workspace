@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/angular';
 import { LuxBreadcrumbComponent } from './lux-breadcrumb.component';
-import { moduleMetadata } from '@storybook/angular';
+import { Meta, moduleMetadata, StoryObj } from '@analogjs/storybook-angular';
 
 const meta: Meta<LuxBreadcrumbComponent> = {
   title: 'Lux Components/Navigation/LuxBreadcrumb',
@@ -8,11 +7,10 @@ const meta: Meta<LuxBreadcrumbComponent> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [LuxBreadcrumbComponent],
-    }),
+      imports: [LuxBreadcrumbComponent]
+    })
   ],
-  argTypes: {
-  },
+  argTypes: {}
 };
 
 export default meta;
@@ -23,16 +21,16 @@ export const Default: Story = {
     luxEntries: [
       {
         name: 'Home',
-        url: '#',
+        url: '#'
       },
       {
         name: 'Products',
-        url: '#',
+        url: '#'
       },
       {
         name: 'Details',
-        url: '#',
-      },
-    ],
-  },
+        url: '#'
+      }
+    ]
+  }
 };

@@ -65,8 +65,15 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i
       }
+    },
+    backgrounds: {
+      disable: true
+    },
+    toolbar: {
+      zoom: { hidden: true },
     }
   },
+
   globalTypes: {
     theme: {
       name: 'Lux-Theme',
@@ -74,9 +81,10 @@ const preview: Preview = {
       toolbar: {
         icon: 'mirror',
         items: ['Authentic', 'Green'],
-        showName: true
-      }
-    }
+        title: 'Lux-Theme',
+        showName: true,
+      },
+    },
   }
 };
 

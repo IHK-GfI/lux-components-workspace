@@ -48,7 +48,12 @@
               "-e",
               "json",
               "-d",
-              "./projects/lux-components-lib"
+              "./projects/lux-components-lib",
+              "--minimal",
+              "--disablePrivate",
+              "--disableInternal",
+              "--disableSourceCode",
+              "--disableLifeCycleHooks"
             ],
             "port": 6006
           }

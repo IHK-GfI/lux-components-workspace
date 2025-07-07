@@ -76,6 +76,7 @@
     "@angular/cli": "^19.2.0",
     "@angular/compiler-cli": "^19.2.0",
     "@chiragrupani/karma-chromium-edge-launcher": "^1.2.6",
+    "@storybook/addon-a11y": "^9.0.14",
     "@storybook/addon-docs": "^9.0.10",
     "@types/dompurify": "~3.0.5",
     "@types/jasmine": "~5.1.7",

@@ -1,13 +1,17 @@
-
 import type { Meta, StoryObj } from '@storybook/angular';
 import { LuxButtonComponent } from './lux-button.component';
 import { luxButtonBadgeColor, luxColor, luxIconName } from '../../../../.storybook/common-styles-args';
+import {
+  ButtonExampleComponent
+} from '../../../../../demo/components-overview/button-example/button-example.component';
+import { moduleMetadata } from '@analogjs/storybook-angular';
 
 const meta: Meta<LuxButtonComponent> = {
   title: 'Lux Components/Action/LuxButton',
   component: LuxButtonComponent,
   tags: ['autodocs'],
   argTypes: {
+
     ...luxButtonBadgeColor,
     ...luxIconName,
     ...luxColor
@@ -15,10 +19,15 @@ const meta: Meta<LuxButtonComponent> = {
   parameters: {
     design: {
       type: 'figma',
-      url: 'Link to Figma design',
+      url: 'Link to Figma design'
     }
-  }
-}
+  },
+  decorators: [
+    moduleMetadata({
+      imports: [ButtonExampleComponent]
+    })
+  ]
+};
 export default meta;
 type Story = StoryObj<LuxButtonComponent>;
 
@@ -26,29 +35,29 @@ export const IconButton: Story = {
   args: {
     luxLabel: 'Lux Button',
     luxRaised: true,
-    luxIconName: 'lux-interface-user-single',
+    luxIconName: 'lux-interface-user-single'
   }
-}
+};
 
 export const Raised: Story = {
   args: {
     luxLabel: 'Raised Button',
-    luxRaised: true,
-  },
+    luxRaised: true
+  }
 };
 
 export const Stroked: Story = {
   args: {
     luxLabel: 'Stroked Button',
-    luxStroked: true,
-  },
+    luxStroked: true
+  }
 };
 
 export const Flat: Story = {
   args: {
     luxLabel: 'Flat Button',
-    luxFlat: true,
-  },
+    luxFlat: true
+  }
 };
 
 
@@ -56,40 +65,40 @@ export const Primary: Story = {
   args: {
     luxRaised: true,
     luxLabel: 'Primary Button',
-    luxColor: 'primary',
-  },
+    luxColor: 'primary'
+  }
 };
 
 export const Accent: Story = {
   args: {
     luxRaised: true,
     luxLabel: 'Accent Button',
-    luxColor: 'accent',
-  },
+    luxColor: 'accent'
+  }
 };
 
 export const Warn: Story = {
   args: {
     luxRaised: true,
     luxLabel: 'Warn Button',
-    luxColor: 'warn',
-  },
+    luxColor: 'warn'
+  }
 };
 
 export const Disabled: Story = {
   args: {
     luxRaised: true,
     luxLabel: 'Disabled Button',
-    luxDisabled: true,
-  },
+    luxDisabled: true
+  }
 };
 
 export const Loading: Story = {
   args: {
     luxRaised: true,
     luxLabel: 'Loading Button',
-    luxLoading: true,
-  },
+    luxLoading: true
+  }
 };
 
 export const WithBadge: Story = {
@@ -97,8 +106,8 @@ export const WithBadge: Story = {
     luxRaised: true,
     luxLabel: 'Button with Badge',
     luxButtonBadge: 'New',
-    luxButtonBadgeColor: 'accent',
-  },
+    luxButtonBadgeColor: 'accent'
+  }
 };
 
 export const Rounded: Story =
@@ -106,8 +115,13 @@ export const Rounded: Story =
     args: {
       luxRounded: true,
       luxIconName: 'lux-interface-user-single',
-      luxColor: 'primary',
-    },
+      luxColor: 'primary'
+    }
   };
 
+export const Demo: Story = {
+  render: () => ({
+    template: `<app-button-example></app-button-example>`
+  })
+};
 
