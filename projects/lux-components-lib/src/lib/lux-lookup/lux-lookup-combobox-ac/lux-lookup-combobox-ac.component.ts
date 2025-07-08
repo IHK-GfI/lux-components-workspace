@@ -29,6 +29,12 @@ import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry'
   ]
 })
 export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLookupComponent<T> implements AfterViewInit, OnDestroy {
+  /**
+   * Wenn es weniger oder gleich viele selektierte Einträge sind, wird der höchste Index ermittelt und alle Optionen bis dahin geladen.
+   * Wenn es mehr sind, werden alle Optionen nachgeladen, um Performance-Probleme beim Ermitteln des höchsten Index zu vermeiden.
+   */
+  private static readonly SELECTED_ENTRIES_THRESHOLD = 5;
+
   @Input() luxMultiple = false;
   @Input() luxEntryBlockSize = 25;
   @Input() luxWithEmptyEntry = true;
@@ -42,6 +48,8 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   displayedEntries: LuxLookupTableEntry[] = [];
   invisibleEntries: LuxLookupTableEntry[] = [];
   subscription?: Subscription;
+  private panelScrollHandler?: EventListener;
+  private panelElement?: Element;
 
   constructor() {
     super();
@@ -49,10 +57,22 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     this.stateMatcher = new LuxLookupErrorStateMatcher(this);
   }
 
+  override notifyFormValueChanged(formValue: any): void {
+    super.notifyFormValueChanged(formValue);
+    this.ensureSelectedEntriesLoaded();
+  }
+
   ngAfterViewInit() {
     this.subscription = this.matSelect.openedChange.subscribe((open: boolean) => {
       if (open) {
-        this.registerPanelScrollEvent(this.matSelect.panel.nativeElement);
+        // Panel ist beim ersten Öffnen evtl. noch nicht initialisiert
+        setTimeout(() => {
+          if (this.matSelect.panel) {
+            this.registerPanelScrollEvent(this.matSelect.panel.nativeElement);
+          }
+        });
+      } else {
+        this.removePanelScrollEvent();
       }
     });
   }
@@ -61,6 +81,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     super.ngOnDestroy();
 
     this.subscription?.unsubscribe();
+    this.removePanelScrollEvent();
   }
 
   /**
@@ -82,6 +103,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     this.displayedEntries = [];
     this.invisibleEntries = [...entries];
     this.updateDisplayedEntries();
+    this.ensureSelectedEntriesLoaded();
   }
 
   /**
@@ -97,13 +119,22 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    * @param panelElement
    */
   private registerPanelScrollEvent(panelElement: Element) {
-    panelElement.addEventListener('scroll', (event) => this.loadOnScroll(event));
+    if (this.panelElement !== panelElement) {
+      this.removePanelScrollEvent();
+      this.panelElement = panelElement;
+      this.panelScrollHandler = (event: Event) => this.loadOnScroll(event);
+      this.panelElement.addEventListener('scroll', this.panelScrollHandler);
+    }
   }
 
-  /**
-   * Stößt das Nachladen von Elementen an, wenn ein bestimmter Scrollwert erreicht wurde.
-   * @param event - ScrollEvent
-   */
+  private removePanelScrollEvent() {
+    if (this.panelElement && this.panelScrollHandler) {
+      this.panelElement.removeEventListener('scroll', this.panelScrollHandler);
+      this.panelElement = undefined;
+      this.panelScrollHandler = undefined;
+    }
+  }
+
   private loadOnScroll(event: Event) {
     const position = event.target as any;
     if (position && (position.scrollTop + position.clientHeight) / position.scrollHeight > 85 / 100) {
@@ -112,13 +143,70 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   }
 
   /**
-   * Läd den nächsten Block Daten aus den Entries nach.
+   * Lädt den nächsten Block Daten aus den Entries nach.
    */
-  updateDisplayedEntries() {
+  updateDisplayedEntries(blockSize = this.luxEntryBlockSize) {
     if (this.invisibleEntries.length > 0) {
       const start = 0;
-      const end = Math.min(this.luxEntryBlockSize, this.invisibleEntries.length);
+      const end = Math.min(blockSize, this.invisibleEntries.length);
       this.displayedEntries.push(...this.invisibleEntries.splice(start, end));
+    }
+  }
+
+  /**
+   * Stellt sicher, dass die selektierten Einträge in displayedEntries geladen sind.
+   * Wenn nicht, werden sie nachgeladen.
+   */
+  ensureSelectedEntriesLoaded() {
+    if (Array.isArray(this.luxValue)) {
+      this.ensureMultipleSelectedEntriesLoaded();
+    } else {
+      this.ensureSingleSelectedEntryLoaded();
+    }
+  }
+
+  private ensureSingleSelectedEntryLoaded() {
+    if (this.luxValue && this.invisibleEntries.length > 0) {
+      // Prüfen, ob der selektierte Wert bereits in displayedEntries ist
+      const selectedFound = this.displayedEntries.some((entry) => this.compareByKey(entry, this.luxValue as LuxLookupTableEntry));
+
+      if (!selectedFound) {
+        // Finde den Index des selektierten Eintrags
+        const newIndex = this.invisibleEntries.findIndex((entry) => this.compareByKey(entry, this.luxValue as LuxLookupTableEntry));
+        if (newIndex >= 0) {
+          this.updateDisplayedEntries(newIndex + 1);
+        }
+      }
+    }
+  }
+
+  private ensureMultipleSelectedEntriesLoaded() {
+    const luxValueArray = this.luxValue as LuxLookupTableEntry[];
+    if (luxValueArray.length > 0 && this.invisibleEntries.length > 0) {
+      if (luxValueArray.length <= LuxLookupComboboxAcComponent.SELECTED_ENTRIES_THRESHOLD) {
+        // Prüfen, ob alle selektierten Werte bereits in displayedEntries sind
+        const allSelectedFound = luxValueArray.every((selectedEntry: LuxLookupTableEntry) =>
+          this.displayedEntries.some((entry) => this.compareByKey(entry, selectedEntry))
+        );
+
+        if (!allSelectedFound) {
+          // Finde die Indizes der selektierten Einträge
+          const newIndices = luxValueArray
+            .map((selectedEntry: LuxLookupTableEntry) =>
+              this.invisibleEntries.findIndex((entry) => this.compareByKey(entry, selectedEntry))
+            )
+            .filter((index) => index >= 0);
+
+          // Lade die neuen Einträge basierend auf den Indizes
+          if (newIndices.length > 0) {
+            const maxIndex = Math.max(...newIndices);
+            this.updateDisplayedEntries(maxIndex + 1);
+          }
+        }
+      } else {
+        // Bei zu vielen selektierten Einträgen alle auf einmal laden
+        this.updateDisplayedEntries(this.invisibleEntries.length);
+      }
     }
   }
 }
