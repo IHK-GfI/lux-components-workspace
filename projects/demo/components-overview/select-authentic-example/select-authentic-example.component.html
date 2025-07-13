@@ -1,0 +1,103 @@
+<example-base-structure
+  exampleTitle="Select-Authentic"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90select-v19"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Beispiel ohne Reactive-Form</h3>
+      <lux-select-ac
+        luxAutofocus
+        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        [luxOptions]="useSimpleArray ? optionsPrimitive : options"
+        [luxLabel]="label"
+        [luxHint]="hint"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required"
+        [luxReadonly]="readonly"
+        [luxDense]="denseFormat"
+        [luxPlaceholder]="placeholder"
+        [luxMultiple]="false"
+        [luxPickValue]="useValueFn ? pickValueFn : undefined"
+        [(luxSelected)]="value"
+        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
+        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn ? compareWithFn : defaultCompareWith"
+        [luxLabelLongFormat]="labelLongFormat"
+        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        (luxSelectedChange)="log(showOutputEvents, 'luxSelectedChange', $event)"
+        #defaultSelectComp
+      >
+        <ng-template let-item>via Template {{ item | json }}</ng-template>
+      </lux-select-ac>
+      <example-value [value]="value"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Beispiel mit Multiselect (ohne Reactive-Form)</h3>
+      <lux-select-ac
+        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        [luxOptions]="useSimpleArray ? optionsPrimitive : options"
+        [luxLabel]="label"
+        [luxHint]="hint"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required"
+        [luxReadonly]="readonly"
+        [luxDense]="denseFormat"
+        [luxPlaceholder]="placeholder"
+        [luxMultiple]="true"
+        [luxPickValue]="useValueFn ? pickValueFn : undefined"
+        [(luxSelected)]="multiselectValue"
+        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
+        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn ? compareWithFn : defaultCompareWith"
+        [luxLabelLongFormat]="labelLongFormat"
+        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        #multiselectComp
+      >
+        <ng-template let-item>via Template {{ item | json }}</ng-template>
+      </lux-select-ac>
+      <example-value [value]="multiselectValue"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3>Beispiel in Reactive-Form</h3>
+      <lux-select-ac
+        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        [luxOptions]="useSimpleArray ? optionsPrimitive : options"
+        [luxControlBinding]="controlBinding"
+        [luxLabel]="label"
+        [luxHint]="hint"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly"
+        [luxDense]="denseFormat"
+        [luxPlaceholder]="placeholder"
+        [luxMultiple]="false"
+        [luxPickValue]="useValueFn ? pickValueFn : undefined"
+        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
+        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn ? compareWithFn : defaultCompareWith"
+        [luxLabelLongFormat]="labelLongFormat"
+        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        (luxSelectedChange)="log(showOutputEvents, 'luxSelectedChange', $event)"
+        #reactiveSelectComp
+      >
+        <ng-template let-item>via Template {{ item | json }}</ng-template>
+      </lux-select-ac>
+      <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+  </example-base-simple-options>
+</example-base-structure>
+

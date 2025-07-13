@@ -1,7 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/angular';
-import { LuxDatepickerAcComponent } from './lux-datepicker-ac.component';
-import { moduleMetadata } from '@storybook/angular';
+import {
+  moduleMetadata,
+  type Meta,
+  type StoryObj,
+} from '@storybook/angular';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LuxDatepickerAcComponent } from './lux-datepicker-ac.component';
+import {
+  DatepickerAuthenticExampleComponent
+} from '../../../../../demo/components-overview/datepicker-authentic-example/datepicker-authentic-example.component';
 
 const meta: Meta<LuxDatepickerAcComponent> = {
   title: 'Lux Components/Form/LuxDatepickerAc',
@@ -9,7 +15,7 @@ const meta: Meta<LuxDatepickerAcComponent> = {
   tags: ['autodocs'],
   decorators: [
     moduleMetadata({
-      imports: [ReactiveFormsModule, LuxDatepickerAcComponent],
+      imports: [ReactiveFormsModule, LuxDatepickerAcComponent, DatepickerAuthenticExampleComponent],
     }),
   ],
 }
@@ -23,40 +29,13 @@ export const Default: Story = {
     luxPlaceholder: 'Datum',
   },
 };
-
-export const MinMaxDates: Story = {
-  args: {
-    ...Default.args,
-    luxMinDate: '10.02.2025',
-    luxMaxDate: '08.06.2025',
-    luxLabel: 'Datum auswählen',
-  },
-};
-
-export const StartViewYear: Story = {
-  args: {
-    ...Default.args,
-    luxStartView: 'year',
-    luxLabel: 'Startansicht Jahr',
-  },
-};
-
-export const DisabledDate: Story = {
-  args: {
-    ...Default.args,
-    luxCustomFilter: (date: Date | null): boolean => {
-      const day = (date || new Date()).getDay();
-      return day !== 0 && day !== 6;
+export const Demo: Story = {
+  render: () => ({
+    template: `<lux-datepicker-authentic-example></lux-datepicker-authentic-example>`,
+  }),
+  parameters: {
+    controls: {
+      disable: true,
     },
-    luxLabel: 'Wochenende deaktiviert',
   },
 };
-
-
-export const NoToggle: Story = {
-  args: {
-    ...Default.args,
-    luxShowToggle: false,
-    luxLabel: 'Kein Toggle',
-  },
-}
