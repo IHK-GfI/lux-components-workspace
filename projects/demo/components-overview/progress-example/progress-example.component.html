@@ -1,0 +1,84 @@
+<example-base-structure
+  exampleTitle="Progress"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90progress-v19"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col lux-gap-4">
+      <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
+        @for (color of colors; track color; let i = $index) {
+        <lux-progress
+          luxType="Progressbar"
+          luxTagId="pb-example-default{{ i }}"
+          [luxColor]="color"
+          [luxValue]="value"
+          [luxMode]="mode"
+          [luxSize]="size"
+        >
+        </lux-progress>
+        }
+      </div>
+      <div class="lux-hover-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3">
+        @for (color of colors; track color; let i = $index) {
+        <lux-progress
+          luxType="Progressbar"
+          luxAriaLabel="Custom Aria Label"
+          luxTagId="pb-example-hover{{ i }}"
+          [luxColor]="color"
+          [luxValue]="value"
+          [luxMode]="mode"
+          [luxSize]="size"
+        >
+        </lux-progress>
+        }
+      </div>
+      <div class="lux-selected-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3">
+        @for (color of colors; track color; let i = $index) {
+        <lux-progress
+          luxType="Progressbar"
+          luxTagId="pb-example-focus{{ i }}"
+          [luxColor]="color"
+          [luxValue]="value"
+          [luxMode]="mode"
+          [luxSize]="size"
+        >
+        </lux-progress>
+        }
+      </div>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-select-ac [luxOptions]="sizes" [(luxSelected)]="size" luxLabel="luxSize">
+      <lux-form-hint>
+        Diese Property legt die Größe der Component fest.<br />
+        Dabei sind die Eingaben 'small', 'medium' und 'large' erlaubt.
+      </lux-form-hint>
+    </lux-select-ac>
+    <lux-select-ac
+      [luxOptions]="modes"
+      [(luxSelected)]="mode"
+      luxLabel="luxMode"
+      luxHint="Die Property bestimmt ob die ProgressBar im Modus 'determinate' (= endlich) oder 'indeterminate' (= endlos) ist."
+    >
+    </lux-select-ac>
+    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+      <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
+    </lux-input-ac>
+    @if (mode === 'determinate') {
+    <div class="lux-flex lux-flex-col lux-gap-2">
+      <lux-input-ac
+        class="lux-flex-auto"
+        luxLabel="luxValue"
+        luxHint="Diese Property setzt den Wert in dem ProgressBar, vorausgesetzt es ist im Modus 'determinate'"
+        luxType="number"
+        [(luxValue)]="value"
+        [luxNumberAlignLeft]="true"
+      >
+      </lux-input-ac>
+      <div class="lux-flex lux-flex-warp lux-gap-2">
+        <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+        <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true"></lux-button>
+      </div>
+    </div>
+    }
+  </example-base-simple-options>
+</example-base-structure>

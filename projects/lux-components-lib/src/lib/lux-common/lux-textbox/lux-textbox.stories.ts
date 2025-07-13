@@ -1,38 +1,53 @@
-import type { Meta, StoryContext, StoryObj } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular';
 import { LuxTextboxComponent } from './lux-textbox.component';
-import { luxTextboxColor } from '../../../../.storybook/common-styles-args';
+import { moduleMetadata } from '@analogjs/storybook-angular';
+import { TextboxExampleComponent } from '../../../../../demo/components-overview/textbox-example/textbox-example.component';
+import { getAttributes } from '../../../../../../.storybook/storybook-utils';
+import { luxTextboxColor } from '../../../../../../.storybook/common-styles-args';
 
-const meta: Meta<LuxTextboxComponent> = {
-  title: 'Lux Components/Common/Textbox',
+type LuxTextboxComponentForStory = LuxTextboxComponent & { content: string };
+const meta: Meta<LuxTextboxComponentForStory> = {
+  title: 'Lux Components/Common/LuxTextbox',
   component: LuxTextboxComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [TextboxExampleComponent]
+    }),
+],
   tags: ['autodocs'],
   argTypes: {
-    ...luxTextboxColor
+    ...luxTextboxColor,
+    content: {
+      control: 'text',
+    },
   },
-  render: (args: LuxTextboxComponent) => ({
-    props: args,
-    template: `
+  render: (args ) => {
+    const { content, ...componentArgs } = args;
+    const attributes = getAttributes(componentArgs);
+    return {
+      props: args,
+      template: `
       <lux-textbox
-        [luxTitle]="luxTitle"
-        [luxIcon]="luxIcon"
-        [luxHeading]="luxHeading"
-        [luxColor]="luxColor"
+        ${attributes}
       >
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        {{ content }}
       </lux-textbox>
-    `
-  })
+    `,
+    };
+  },
 };
 
 export default meta;
-type Story = StoryObj<LuxTextboxComponent>;
+type Story = StoryObj<LuxTextboxComponentForStory>;
 
 export const Default: Story = {
   args: {
     luxTitle: 'Lies mich',
     luxIcon: 'lux-book-readme',
-    luxHeading: 1
-  }
+    luxHeading: 1,
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
 };
 
 export const Info: Story = {
@@ -40,8 +55,10 @@ export const Info: Story = {
     luxTitle: 'Information',
     luxIcon: 'lux-info',
     luxHeading: 1,
-    luxColor: 'blue'
-  }
+    luxColor: 'blue',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
 };
 
 export const Erfolg: Story = {
@@ -49,23 +66,38 @@ export const Erfolg: Story = {
     luxTitle: 'Erfolg',
     luxIcon: 'lux-interface-favorite-like-1',
     luxHeading: 1,
-    luxColor: 'green'
-  }
-
+    luxColor: 'green',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
 };
 export const Warnung: Story = {
   args: {
     luxTitle: 'Hinweis',
     luxIcon: 'lux-interface-alert-warning-triangle',
     luxHeading: 1,
-    luxColor: 'yellow'
-  }
+    luxColor: 'yellow',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
 };
 export const Fehler: Story = {
   args: {
     luxTitle: 'Fehler',
     luxIcon: 'lux-interface-alert-warning-triangle',
     luxHeading: 1,
-    luxColor: 'red'
-  }
+    luxColor: 'red',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  },
+};
+export const Demo: Story = {
+  render: () => ({
+    template: `<lux-textbox-example></lux-textbox-example>`,
+  }),
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
 };
