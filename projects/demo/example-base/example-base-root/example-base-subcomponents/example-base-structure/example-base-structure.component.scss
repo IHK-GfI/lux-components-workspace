@@ -1,0 +1,53 @@
+:host {
+  display: flex;
+  width: 100%;
+  > * {
+    max-width: 100%;
+  }
+}
+
+lux-card ::ng-deep > mat-card {
+  width: 100%;
+  margin: 0 !important;
+}
+
+lux-card ::ng-deep mat-card-content {
+  display: block !important;
+}
+
+lux-card ::ng-deep mat-card-content .lux-card-content {
+  box-sizing: border-box;
+}
+
+.example-base-container,
+.example-base-options {
+  min-width: 50%;
+  max-width: 50%;
+
+  ::ng-deep > .mat-mdc-card > .lux-card-content-container {
+    overflow-y: auto;
+  }
+}
+
+.example-base-options {
+  ::ng-deep {
+    lux-card-actions {
+      width: 100%;
+    }
+  }
+}
+.example-base-container-mobile,
+.example-base-options-mobile {
+  max-width: 100%;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+}
+
+::ng-deep {
+  .example-content-centered {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

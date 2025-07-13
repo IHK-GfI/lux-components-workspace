@@ -1,0 +1,46 @@
+<div
+  class="example-base-structure lux-flex lux-flex-col-lt-md"
+  [ngClass]="{ 'lux-flex-col': !desktopView, 'example-mobile': !desktopView }"
+>
+  @if (desktopView) {
+  <div
+    class="example-base-components-list lux-color-dark-divider lux-flex lux-flex-auto lux-flex-grow-0 lux-flex-col"
+    luxAriaRole="navigation"
+    luxAriaLabel="Komponentenbeispiele"
+    #exampleListElement
+  >
+    @for (moduleName of navigationService.currentModuleNames; track moduleName) {
+    <lux-panel luxCollapsedHeaderHeight="2.1875em" luxExpandedHeaderHeight="2.1875em" [luxExpanded]="true">
+      <lux-panel-header-title
+        ><span class="lux-color-primary-500">lux-{{ moduleName }}</span></lux-panel-header-title
+      >
+      <lux-panel-content>
+        @for (component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted; track component) {
+        <div
+          class="example-component-list-item lux-color-primary-500"
+          tabindex="0"
+          role="button"
+          [ngClass]="{
+            'example-component-list-item-selected':
+              navigationService.selectedComponent && navigationService.selectedComponent.label === component.label
+          }"
+          (click)="onComponentClick(component)"
+          (keydown.space)="onComponentClick(component)"
+          (keydown.enter)="onComponentClick(component)"
+        >
+          {{ component.label }}
+        </div>
+        }
+      </lux-panel-content>
+    </lux-panel>
+    }
+  </div>
+  }
+  <div class="example-base-content" [ngClass]="{ 'lux-flex-auto': !desktopView, 'lux-flex-shrink-0': !desktopView }" luxAriaRole="main">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<ng-template #simpleOptionsTemplate>
+  <ng-content select="example-base-simple-options"></ng-content>
+</ng-template>

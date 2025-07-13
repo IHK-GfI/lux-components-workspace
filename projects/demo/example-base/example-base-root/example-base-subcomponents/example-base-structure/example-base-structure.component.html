@@ -1,0 +1,67 @@
+<div
+  class="lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-full lux-justify-between"
+  [ngClass]="{ 'lux-flex-col': !isGtSm, 'lux-gap-3': !isGtSm }"
+>
+  <h1 class="lux-sr-only">Beispielseite für {{ exampleTitle }}</h1>
+  @if (contentComponent) {
+  <lux-card
+    [luxTitle]="exampleTitle"
+    class="example-base-container lux-flex lux-flex-auto"
+    [ngClass]="{
+      'lux-flex-grow-1': isGtSm,
+      'lux-flex-shrink-0': isGtSm,
+      'lux-flex-basis-1/2': isGtSm,
+      'lux-mr-4': isGtSm,
+      'example-base-container-mobile': !isGtSm
+    }"
+  >
+    <lux-card-content>
+      <ng-content select="example-base-content"></ng-content>
+    </lux-card-content>
+    <lux-card-actions>
+      <ng-content select="example-base-content-actions"></ng-content>
+    </lux-card-actions>
+  </lux-card>
+  } @if (simpleOptionsComponent || advancedOptionsComponent) {
+  <lux-card
+    luxTitle="Konfiguration"
+    class="example-base-options lux-flex lux-flex-auto"
+    [ngClass]="{
+      'lux-flex-grow-1': isGtSm,
+      'lux-flex-shrink-0': isGtSm,
+      'lux-flex-basis-1/2': isGtSm,
+      'lux-mr-2': isGtSm,
+      'example-base-options-mobile': !isGtSm
+    }"
+  >
+    <lux-card-content>
+      @if (simpleOptionsComponent && !advancedOptionsComponent) {
+      <ng-container *ngTemplateOutlet="simpleOptionsTemplate"></ng-container>
+      } @if (simpleOptionsComponent && advancedOptionsComponent) {
+      <lux-tabs [luxShowBorder]="true">
+        @if (simpleOptionsComponent) {
+        <lux-tab luxTitle="Allgemein" luxTagIdHeader="bsp-tab-allgemein" luxTagIdContent="bsp-tab-allgemein-content">
+          <ng-template>
+            <ng-container *ngTemplateOutlet="simpleOptionsTemplate"></ng-container>
+          </ng-template>
+        </lux-tab>
+        } @if (advancedOptionsComponent) {
+        <lux-tab luxTitle="Erweitert" luxTagIdHeader="bsp-tab-erweitert" luxTagIdContent="bsp-tab-erweitert-content">
+          <ng-template>
+            <ng-content select="example-base-advanced-options"></ng-content>
+          </ng-template>
+        </lux-tab>
+        }
+      </lux-tabs>
+      }
+    </lux-card-content>
+    <lux-card-actions class="lt-md:lux-flex lt-md:lux-justify-end">
+      <ng-content select="example-base-options-actions"></ng-content>
+    </lux-card-actions>
+  </lux-card>
+  }
+
+  <ng-template #simpleOptionsTemplate>
+    <ng-content select="example-base-simple-options"></ng-content>
+  </ng-template>
+</div>

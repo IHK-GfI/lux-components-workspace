@@ -1,9 +1,4 @@
 import { ArgTypes } from '@storybook/angular';
-import luxIcons from '../../../node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/icons/lux-icons.json';
-
-const iconNames = luxIcons.map(icon => {
-  return icon.iconName.split('--')[0];
-});
 
 export const luxButtonBadgeColor: ArgTypes<any> = {
   luxButtonBadgeColor: {
@@ -33,16 +28,9 @@ export const iconSize: ArgTypes<any> = {
   }
 };
 
-export const luxIconName: ArgTypes<any> = {
-  luxIconName: {
+export const luxBgBaseColor: ArgTypes<any> = {
+  luxColor: {
     control: 'select',
-    options: iconNames
-  }
-};
-
-export const luxMenuIconName: ArgTypes<any> = {
-  luxMenuIconName: {
-    control: 'select',
-    options: iconNames
+    options: ['red', 'green', 'purple', 'blue', 'gray', 'orange', undefined]
   }
 };
