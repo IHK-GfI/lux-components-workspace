@@ -2,13 +2,13 @@ import { JsonPipe } from '@angular/common';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
-    LuxAutofocusDirective,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxLookupComboboxAcComponent,
-    LuxLookupTableEntry,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxLookupComboboxAcComponent,
+  LuxLookupTableEntry,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -46,6 +46,16 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
   bLuxWithEmptyEntry = true;
   labelLongFormat = false;
   denseFormat = false;
+  value336 = {
+    key: '336',
+    kurzText: 'Eritrea',
+    langText1: 'Eritrea'
+  };
+  valuea504 = {
+    key: '504',
+    kurzText: 'Peru',
+    langText1: 'Peru'
+  };
 
   @ViewChildren(LuxLookupComboboxAcComponent) lookupComboboxCmp!: QueryList<LuxLookupComboboxAcComponent>;
 
@@ -57,5 +67,17 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
     this.lookupHandler.reloadData('normalcombobox');
     this.lookupHandler.reloadData('multicombobox');
     this.lookupHandler.reloadData('reactivecombobox');
+  }
+
+  on336And504Change(checked: boolean) {
+    if (checked) {
+      this.value = this.value336;
+      this.multiValue = [this.value336, this.valuea504];
+      this.form.get(this.controlBinding)?.setValue(this.value336);
+    } else {
+      this.value = null;
+      this.multiValue = [];
+      this.form.get(this.controlBinding)?.setValue(null);
+    }
   }
 }

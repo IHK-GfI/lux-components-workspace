@@ -4,7 +4,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, wait
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -343,6 +343,24 @@ describe('LuxLookupComboboxAcComponent', () => {
 
       discardPeriodicTasks();
     }));
+
+    it('Sollte solange Optionen nachladen bis der selektierte Eintrag geladen ist', () => {
+      const spy = spyOn(combobox, 'ensureSelectedEntriesLoaded').and.callThrough();
+
+      // Eintrag wählen, der initial nicht geladen ist
+      const selectedKey = '1115';
+      component.value = {
+        key: '1115',
+        kurzText: 'Färöer',
+        langText1: 'Färöer'
+      };
+
+      fixture.detectChanges();
+
+      expect(component.combobox.displayedEntries.some((e) => e.key === selectedKey)).toBeTrue();
+      expect(component.combobox.luxValue).toEqual(component.value);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
   });
 });
 
@@ -377,6 +395,7 @@ class LuxNoFormComponent {
   template: `
     <lux-lookup-combobox-ac
       luxTableNo="11"
+      [(luxValue)]="value"
       [luxEntryBlockSize]="8"
       luxLookupId="test"
       luxRenderProp="kurzText"
@@ -392,6 +411,9 @@ class LuxScrollComponent {
     knr: 101,
     fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
   });
+  value?: any;
+
+  @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
 
   myEntries: LuxLookupTableEntry[] = [];
 
