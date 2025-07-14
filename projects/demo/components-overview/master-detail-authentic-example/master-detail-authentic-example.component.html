@@ -1,0 +1,136 @@
+<h1 class="lux-sr-only">Beispiel für den Master-Detail</h1>
+<lux-master-detail-ac
+  class="custom-master"
+  [luxEmptyIconDetail]="configuration.emptyIconDetail"
+  [luxEmptyIconMaster]="configuration.emptyIconMaster"
+  [luxEmptyIconDetailSize]="configuration.emptyIconDetailSize"
+  [luxEmptyIconMasterSize]="configuration.emptyIconMasterSize"
+  [luxEmptyLabelDetail]="configuration.emptyLabelDetail"
+  [luxEmptyLabelMaster]="configuration.emptyLabelMaster"
+  [luxOpen]="configuration.opened"
+  [luxTitleLineBreak]="configuration.lineBreak"
+  [luxMasterIsLoading]="configuration.masterIsReloading"
+  [luxMasterList]="masterEntries"
+  luxMasterListLabel="Beispielliste für Master-Detail"
+  [luxSelectedDetail]="selectedDetail"
+  [luxCompareWith]="compareFn"
+  luxTagIdMaster="masterTagId"
+  luxTagIdDetail="detailTagId"
+  (luxScrolled)="onLoadListTest()"
+  (luxSelectedDetailChange)="loadDetail($event)"
+>
+  <lux-master-header-content-ac>
+    <lux-filter-form class="lux-flex-auto" [luxShowAsCard]="true" [luxShowChips]="false" [luxButtonFlat]="false">
+      <lux-select-ac
+        luxLabel="Fälligkeit"
+        [luxOptions]="options"
+        [luxSelected]="options[0]"
+        luxOptionLabelProp="label"
+        [luxDense]="true"
+        (luxSelectedChange)="changeFilter($event)"
+      >
+      </lux-select-ac>
+      <lux-filter-form-extended>
+        <p>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. A suscipit cumque explicabo debitis, sint culpa quia quis odio excepturi
+          asperiores.
+        </p>
+      </lux-filter-form-extended>
+    </lux-filter-form>
+  </lux-master-header-content-ac>
+
+  <lux-master-list-ac
+    luxTitleProp="title"
+    luxTitleTooltipProp="titleTooltip"
+    luxSubTitleProp="subtitle"
+    luxSubTitleTooltipProp="subtitleTooltip"
+  >
+    <!-- Zugriff auf jedes einzelne Master-Element über "master" -->
+    <ng-template #luxSimpleIcon let-master>
+      <lux-icon [luxIconName]="master.icon" luxIconSize="1x"></lux-icon>
+    </ng-template>
+    <ng-template #luxSimpleContent let-master>
+      {{ master.content }}
+      <p>
+        Fällig <b>{{ master.timestamp | luxRelativeTimestamp : 'TIMESTAMP NULL' }}</b>
+      </p>
+    </ng-template>
+  </lux-master-list-ac>
+  @if (showCustomDetailHeader) {
+  <lux-detail-header-ac class="custom-example-header">
+    <div class="example-header">
+      <h2>My Custom Detail Header!</h2>
+      <p>Hier ist Platz für individuellen Inhalt!</p>
+    </div>
+  </lux-detail-header-ac>
+  }
+  <lux-detail-view-ac>
+    <!-- Zugriff auf das aktuell selektierte Element über "detail" -->
+    <ng-template let-detail>
+      <lux-tabs [luxActiveTab]="0">
+        <lux-tab luxTitle="Konfiguration" luxIconName="lux-interface-setting-tool-box">
+          <ng-template>
+            <detail-example [masterDetailConfig]="configuration" [selectedDetail]="detail">
+              <lux-toggle-ac
+                [(luxChecked)]="showCustomDetailHeader"
+                luxLabel="Custom Detail-Header anzeigen"
+                [luxNoLabels]="true"
+              ></lux-toggle-ac>
+            </detail-example>
+          </ng-template>
+        </lux-tab>
+        <lux-tab luxTitle="Scroll-Example" luxIconName="lux-amount-down-asc" class="example-tab-content">
+          <ng-template>
+            <text-example [title]="detail.title"></text-example>
+          </ng-template>
+        </lux-tab>
+        <lux-tab luxTitle="Tabelle" luxIconName="lux-interface-table" class="example-tab-content">
+          <ng-template>
+            <detail-table-example [tableData]="detail.tableData"></detail-table-example>
+          </ng-template>
+        </lux-tab>
+        <lux-tab luxTitle="Deaktiviert" luxIconName="lux-interface-block" [luxDisabled]="true" class="example-tab-content">
+          <ng-template> </ng-template>
+        </lux-tab>
+      </lux-tabs>
+    </ng-template>
+  </lux-detail-view-ac>
+
+  <lux-master-footer-ac>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex lux-gap-2 lux-content-end lux-items-center">
+        <lux-button luxLabel="#1" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail = masterEntries[0]"> </lux-button>
+        <lux-button luxLabel="#5" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail = masterEntries[4]"> </lux-button>
+        <lux-menu luxMenuIconName="lux-interface-setting-menu-1" luxTagId="master_footer_menu">
+          <lux-menu-item
+            luxLabel="Liste umkehren"
+            luxIconName="lux-interface-arrows-turn-backward"
+            [luxDisabled]="masterEntries.length === 0"
+            (luxClicked)="reverseList()"
+          >
+          </lux-menu-item>
+          <lux-menu-item
+            luxLabel="Liste leeren"
+            luxIconName="lux-interface-delete-bin-5"
+            [luxDisabled]="masterEntries.length === 0"
+            (luxClicked)="clearList()"
+          >
+          </lux-menu-item>
+          <lux-menu-item luxLabel="Liste füllen" luxIconName="lux-interface-edit-layer-add-2" (luxClicked)="fillList()"> </lux-menu-item>
+          <lux-menu-item
+            luxLabel="Liste füllen (erste 10 Elemente)"
+            luxIconName="lux-interface-edit-layer-add-2"
+            (luxClicked)="fillListFirstTenItems()"
+          >
+          </lux-menu-item>
+          <lux-menu-item
+            luxLabel="Liste füllen (letzte 10 Elemente)"
+            luxIconName="lux-interface-edit-layer-add-2"
+            (luxClicked)="fillListLastTenItems()"
+          >
+          </lux-menu-item>
+        </lux-menu>
+      </div>
+    </div>
+  </lux-master-footer-ac>
+</lux-master-detail-ac>

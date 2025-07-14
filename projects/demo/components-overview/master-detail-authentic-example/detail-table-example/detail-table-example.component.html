@@ -1,0 +1,27 @@
+<lux-table [luxData]="tableData" [luxShowPagination]="true" [luxPageSize]="5" class="lux-width-3/4" style="margin: auto;">
+  <lux-table-column luxColumnDef="key">
+    <lux-table-column-header>
+      <ng-template>Key</ng-template>
+    </lux-table-column-header>
+    <lux-table-column-content>
+      <ng-template let-element>{{element.key}}</ng-template>
+    </lux-table-column-content>
+  </lux-table-column>
+  <lux-table-column luxColumnDef="value">
+    <lux-table-column-header>
+      <ng-template>Value</ng-template>
+    </lux-table-column-header>
+    <lux-table-column-content>
+      <ng-template let-element>{{element.value}}</ng-template>
+    </lux-table-column-content>
+  </lux-table-column>
+  <lux-table-column luxColumnDef="info">
+    <lux-table-column-header>
+      <ng-template>Info</ng-template>
+    </lux-table-column-header>
+    <lux-table-column-content>
+      <ng-template let-element>{{element.info}}</ng-template>
+    </lux-table-column-content>
+  </lux-table-column>
+</lux-table>
+

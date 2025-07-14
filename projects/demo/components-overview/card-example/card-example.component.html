@@ -1,0 +1,141 @@
+<example-base-structure exampleTitle="Card" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90card-v19">
+  <example-base-content class="lux-flex lux-flex-col lux-row-gap-8">
+    <lux-card
+      [luxTitle]="title"
+      [luxTitleTooltip]="titleTooltip"
+      [luxSubTitle]="subTitle"
+      [luxSubTitleTooltip]="subTitleTooltip"
+      [luxExpanded]="expanded"
+      [luxDisabled]="disabled"
+      [luxHeading]="heading"
+      [luxTitleLineBreak]="titleLineBreak"
+      (luxClicked)="onCardClicked()"
+      [luxExpandedLabelClose]="closeLabel"
+      [luxExpandedLabelOpen]="openLabel"
+      luxCustomTagId="my-card-id"
+      luxCustomTagIdSelector="mat-card"
+    >
+      @if (showIcon) {
+      <lux-icon luxIconName="lux-cogs"></lux-icon>
+      } @if (showInfo) {
+      <lux-card-info>
+        <lux-icon luxIconName="lux-interface-home-3"></lux-icon>
+      </lux-card-info>
+      } @if (!hideCardContent) {
+      <lux-card-content>
+        <h3>H3 - Lorem ipsum</h3>
+        <p>
+          Diese Karte enthält für Testzwecke alle möglichen Konfigurationen auf einmal. Auch wenn dieses technisch möglich ist, soll es
+          nicht zur Nachahmung annimieren. Bitte entscheidet euch, je nach Anwendungsfall, wie ihr eure Karte gestaltet. Weniger ist Besser!
+        </p>
+      </lux-card-content>
+      } @if (useExpandableContent) {
+      <lux-card-content-expanded>
+        <h4>H4 - Lorem ipsum</h4>
+        <p>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+          erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+        </p>
+        <h5>H5 - Lorem ipsum</h5>
+        <p>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+          erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+        </p>
+        <h6>H6 - Lorem ipsum</h6>
+        <p>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+          erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+        </p>
+      </lux-card-content-expanded>
+      } @if (showActions) {
+      <lux-card-actions>
+        <lux-button luxLabel="Button 1" [luxRaised]="true" luxIconName="lux-interface-user-single" luxColor="primary"></lux-button>
+        <lux-button luxLabel="Button 2" [luxRaised]="btn2Raised"></lux-button>
+      </lux-card-actions>
+      }
+    </lux-card>
+    <h3>Einfaches Anwendungsbeispiel</h3>
+    <lux-card luxTitle="Suche nach Identnummer">
+      <lux-card-content>
+        <lux-input-ac luxLabel="Identnummer" luxPlaceholder="ID123456"></lux-input-ac>
+      </lux-card-content>
+      <lux-card-actions>
+        <lux-button [luxStroked]="true" luxColor="primary" luxLabel="ZURÜCKSETZEN"></lux-button>
+        <lux-button [luxFlat]="true" luxColor="primary" luxLabel="SUCHEN"></lux-button>
+      </lux-card-actions>
+    </lux-card>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-input-ac luxLabel="luxTitle" [(luxValue)]="title"> </lux-input-ac>
+    <lux-input-ac luxLabel="luxTitleTooltip" [(luxValue)]="titleTooltip"> </lux-input-ac>
+    <lux-input-ac luxLabel="luxSubTitle" [(luxValue)]="subTitle"></lux-input-ac>
+    <lux-input-ac luxLabel="luxSubTitleTooltip" [(luxValue)]="subTitleTooltip"> </lux-input-ac>
+    <lux-input-ac
+      luxLabel="luxHeading"
+      luxHint="Gültige Werte sind 1-6 (verändert nur die Überschriftenstruktur, aber nicht die Darstellung (Barrierefreiheit)."
+      [(luxValue)]="heading"
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      [luxControlValidators]="headingValidator"
+    ></lux-input-ac>
+    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxDisabled]="showActions" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Über diese Property werden die Klick-Events der Card unterbunden.<br />
+        Diese Property greift nicht, wenn Card-Actions dargestellt werden.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxTitleLineBreak" [(luxChecked)]="titleLineBreak" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Dieser Flag aktiviert den Zeilenumbruch bei zu langen Titeln. <br />
+        Wenn 'false', wird der Titel mit '...' abgekürzt.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxRaised (Button 2)" [(luxChecked)]="btn2Raised" [luxNoLabels]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="lux-card-content ausblenden" [(luxChecked)]="hideCardContent" [luxNoLabels]="true"></lux-toggle-ac>
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="luxIcon anzeigen"
+      luxHint="Das linksbündige Icon für die Card darstellen."
+      [(luxChecked)]="showIcon"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="luxInfo anzeigen"
+      luxHint="Das rechtsbündige Info-Icon für die Card darstellen."
+      [(luxChecked)]="showInfo"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Card-Content ausblenden"
+      luxHint="Den Hauptinhalt der Card ausblenden."
+      [(luxChecked)]="hideCardContent"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Erweiterbaren Inhalt verwenden"
+      luxHint="Zusätzlichen Inhalt einblenden der bei Bedarf mehr Informationen bietet."
+      [(luxChecked)]="useExpandableContent"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="luxExpanded"
+      luxHint="Card standardmäßig ausgeklappt darstellen."
+      [(luxChecked)]="expanded"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-input-ac
+      luxLabel="luxExpandedLabelClose"
+      [(luxValue)]="closeLabel"
+      [luxDisabled]="!expanded"
+      [luxNoTopLabel]="true"
+    ></lux-input-ac>
+    <lux-input-ac
+      luxLabel="luxExpandedLabelOpen"
+      [(luxValue)]="openLabel"
+      [luxDisabled]="expanded"
+      [luxNoTopLabel]="true"
+    ></lux-input-ac>
+  </example-base-advanced-options>
+</example-base-structure>
+

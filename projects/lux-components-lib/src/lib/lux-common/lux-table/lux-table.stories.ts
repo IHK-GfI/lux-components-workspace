@@ -8,6 +8,10 @@ import { LuxTableColumnContentComponent } from './lux-table-subcomponents/lux-ta
 import {
   getAttributes,
 } from '../../../../../../.storybook/storybook-utils';
+import {
+  TableServerExampleComponent
+} from '../../../../../demo/components-overview/table-server-example/table-server-example.component';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 
 const meta: Meta<LuxTableComponent> = {
   title: 'Lux Components/Common/LuxTable',
@@ -103,5 +107,25 @@ export const Demo: Story = {
       disable: true,
     },
   },
-
 };
+
+export const DemoServer: Story = {
+  render: () => ({
+    template: `<app-table-server-example></app-table-server-example>`,
+  }),
+  decorators: [
+    moduleMetadata({
+      providers: [LuxTooltipDirective],
+      imports: [
+        TableExampleComponent,
+        TableServerExampleComponent,
+        LuxTooltipDirective
+      ],
+    }),
+  ],
+  parameters: {
+    controls: {
+      disable: true,
+    },
+  },
+}
