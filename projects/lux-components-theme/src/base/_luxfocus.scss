@@ -255,7 +255,7 @@ lux-datetimepicker-ac {
 
 /** ########## Select-AC ########## **/
 @mixin lux-option-highlight-mixin {
-  background-color: map-get(luxpalette.$lux-palette_primary, 300);
+  background-color: map.get(luxpalette.$lux-palette_primary, 300);
   color: #ffffff;
   .mat-pseudo-checkbox {
     color: #ffffff;

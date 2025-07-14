@@ -63,7 +63,7 @@ describe('LuxLinkComponent', () => {
 
   it('Sollte deaktiviert werden', fakeAsync(() => {
     // Vorbedingungen testen
-    let disabled = fixture.debugElement.query(By.css('button[ng-reflect-disabled="true"]'));
+    let disabled = fixture.debugElement.query(By.css('button[disabled="true"]'));
     expect(disabled).toBeNull();
 
     // Änderungen durchführen
@@ -71,7 +71,7 @@ describe('LuxLinkComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    disabled = fixture.debugElement.query(By.css('button[ng-reflect-disabled="true"]'));
+    disabled = fixture.debugElement.query(By.css('button[disabled="true"]'));
     expect(disabled).not.toBeNull();
   }));
 
@@ -163,15 +163,15 @@ describe('LuxLinkComponent', () => {
 
   it('Sollte die Farbe anpassen', fakeAsync(() => {
     // Vorbedingungen testen
-    let color = fixture.debugElement.query(By.css('button[ng-reflect-color=""]'));
-    expect(color).toBeNull();
+    let color = fixture.debugElement.query(By.css('button.mat-unthemed'));
+    expect(color).not.toBeNull();
 
     // Änderungen durchführen
     component.color = 'primary';
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    color = fixture.debugElement.query(By.css('button[ng-reflect-color="primary"]'));
+    color = fixture.debugElement.query(By.css('button.mat-primary'));
     expect(color).not.toBeNull();
 
     // Änderungen durchführen
@@ -179,7 +179,7 @@ describe('LuxLinkComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    color = fixture.debugElement.query(By.css('button[ng-reflect-color="warn"]'));
+    color = fixture.debugElement.query(By.css('button.mat-warn'));
     expect(color).not.toBeNull();
 
     // Änderungen durchführen
@@ -187,7 +187,7 @@ describe('LuxLinkComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    color = fixture.debugElement.query(By.css('button[ng-reflect-color="accent"]'));
+    color = fixture.debugElement.query(By.css('button.mat-accent'));
     expect(color).not.toBeNull();
   }));
 });

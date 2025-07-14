@@ -1,7 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { LuxAriaBase } from './lux-aria-base';
+import { LUX_ARIA_TAG_NAME, LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaDescribedby]' })
+@Directive({
+  selector: '[luxAriaDescribedby]',
+  providers: [{ provide: LUX_ARIA_TAG_NAME, useValue: 'aria-describedby' }]
+})
 export class LuxAriaDescribedbyDirective extends LuxAriaBase<string> {
   _luxAriaDescribedby?: string;
 
@@ -19,7 +22,7 @@ export class LuxAriaDescribedbyDirective extends LuxAriaBase<string> {
   }
 
   constructor() {
-    super('aria-describedby');
+    super();
 
     if (!this.luxAriaDescribedbySelector) {
       const tagName = this.elementRef.nativeElement.tagName.toLowerCase();

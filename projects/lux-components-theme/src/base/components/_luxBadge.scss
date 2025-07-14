@@ -27,18 +27,18 @@
     line-height: normal;
 
     &.lux-bg-color-red {
-        background-color: map-get(map-get(luxpalette.$lux-palettes-new, 'error'), 35);
+        background-color: map.get(map.get(luxpalette.$lux-palettes-new, 'error'), 35);
     }
 
     &.lux-bg-color-orange {
-      background-color: map-get(luxcommon.$colorsForDarkBg, 'yellow');
+      background-color: map.get(luxcommon.$colorsForDarkBg, 'yellow');
     }
 
     &.lux-font-color-green {
         color: #ffffff;
     }
     &.lux-bg-color-green {
-      background-color:  map-get(map-get(luxpalette.$lux-palettes-new, 'tertiary'), 30);
+      background-color:  map.get(map.get(luxpalette.$lux-palettes-new, 'tertiary'), 30);
     }
 
     &.lux-font-color-lightblue {

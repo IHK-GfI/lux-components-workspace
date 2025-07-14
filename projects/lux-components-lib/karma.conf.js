@@ -42,7 +42,7 @@ module.exports = function (config) {
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('karma-viewport'),
-      require('@angular-devkit/build-angular/plugins/karma')
+      
     ],
     files: [
       '../../dist/theme/prebuilt-themes/luxtheme-authentic.css',

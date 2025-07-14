@@ -1,7 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { LuxAriaBase } from './lux-aria-base';
+import { LUX_ARIA_TAG_NAME, LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaInvalid]' })
+@Directive({ 
+  selector: '[luxAriaInvalid]',
+  providers: [{ provide: LUX_ARIA_TAG_NAME, useValue: 'aria-invalid' }]
+})
 export class LuxAriaInvalidDirective extends LuxAriaBase<string> {
   _luxAriaInvalid?: string;
 
@@ -19,7 +22,7 @@ export class LuxAriaInvalidDirective extends LuxAriaBase<string> {
   }
 
   constructor() {
-    super('aria-invalid');
+    super();
   }
 
   getSelector(): string | undefined {

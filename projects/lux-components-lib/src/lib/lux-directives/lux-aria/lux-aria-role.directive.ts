@@ -1,7 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { LuxAriaBase } from './lux-aria-base';
+import { LUX_ARIA_TAG_NAME, LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaRole]' })
+@Directive({ 
+  selector: '[luxAriaRole]',
+  providers: [{ provide: LUX_ARIA_TAG_NAME, useValue: 'role' }]
+})
 export class LuxAriaRoleDirective extends LuxAriaBase<string> {
   _luxAriaRole?: string;
 
@@ -19,7 +22,7 @@ export class LuxAriaRoleDirective extends LuxAriaBase<string> {
   }
 
   constructor() {
-    super('role');
+    super();
   }
 
   getSelector(): string | undefined {

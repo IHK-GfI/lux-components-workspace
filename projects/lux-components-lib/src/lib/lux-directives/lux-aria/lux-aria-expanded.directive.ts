@@ -1,7 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { LuxAriaBase } from './lux-aria-base';
+import { LUX_ARIA_TAG_NAME, LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaExpanded]' })
+@Directive({
+  selector: '[luxAriaExpanded]',
+  providers: [{ provide: LUX_ARIA_TAG_NAME, useValue: 'aria-expanded' }]
+})
 export class LuxAriaExpandedDirective extends LuxAriaBase<boolean> {
   _luxAriaExpanded?: boolean;
 
@@ -19,7 +22,7 @@ export class LuxAriaExpandedDirective extends LuxAriaBase<boolean> {
   }
 
   constructor() {
-    super('aria-expanded');
+    super();
 
     if (!this.luxAriaExpandedSelector) {
       const tagName = this.elementRef.nativeElement.tagName.toLowerCase();

@@ -5,7 +5,7 @@
 @use "sass:map";
 
 .mat-mdc-card-outlined {
-  --mdc-outlined-card-container-shape: #{luxcommon.$app-border-radius};
+  --mat-card-outlined-container-shape: #{luxcommon.$app-border-radius};
 }
 
 lux-card {

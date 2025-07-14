@@ -253,6 +253,7 @@ describe('LuxListComponent', () => {
   selector: 'lux-mock-list',
   template: `
     <lux-list
+      luxLabel="Testliste"
       luxEmptyLabel="Empty-Label"
       luxEmptyIconName="lux-interface-delete-1"
       luxEmptyIconSize="5x"

@@ -2,8 +2,8 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { DOCUMENT } from '@angular/common';
-import { Component, ComponentRef, ElementRef, EventEmitter, inject, Input, NgZone, Output, ViewContainerRef } from '@angular/core';
+
+import { Component, ComponentRef, ElementRef, EventEmitter, inject, Input, NgZone, Output, ViewContainerRef, DOCUMENT } from '@angular/core';
 import { MAT_DATEPICKER_SCROLL_STRATEGY, MatDateSelectionModel } from '@angular/material/datepicker';
 import { MatFormField } from '@angular/material/form-field';
 import { merge, Subject } from 'rxjs';

@@ -1,7 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { LuxAriaBase } from './lux-aria-base';
+import { LUX_ARIA_TAG_NAME, LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaLabel]' })
+@Directive({ 
+  selector: '[luxAriaLabel]',
+  providers: [{ provide: LUX_ARIA_TAG_NAME, useValue: 'aria-label' }]
+})
 export class LuxAriaLabelDirective extends LuxAriaBase<string> {
   _luxAriaLabel?: string;
 
@@ -19,7 +22,7 @@ export class LuxAriaLabelDirective extends LuxAriaBase<string> {
   }
 
   constructor() {
-    super('aria-label');
+    super();
 
     if (!this.luxAriaLabelSelector) {
       const tagName = this.elementRef.nativeElement.tagName.toLowerCase();

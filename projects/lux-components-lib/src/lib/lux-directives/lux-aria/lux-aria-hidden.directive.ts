@@ -1,7 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { LuxAriaBase } from './lux-aria-base';
+import { LUX_ARIA_TAG_NAME, LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaHidden]' })
+@Directive({ 
+  selector: '[luxAriaHidden]',
+  providers: [{ provide: LUX_ARIA_TAG_NAME, useValue: 'aria-hidden' }]
+})
 export class LuxAriaHiddenDirective extends LuxAriaBase<boolean> {
   _luxAriaHidden?: boolean;
 
@@ -19,7 +22,7 @@ export class LuxAriaHiddenDirective extends LuxAriaBase<boolean> {
   }
 
   constructor() {
-    super('aria-hidden');
+    super();
   }
 
   getSelector(): string | undefined {

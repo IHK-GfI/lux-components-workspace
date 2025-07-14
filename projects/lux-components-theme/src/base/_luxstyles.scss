@@ -579,8 +579,8 @@ $notificationSizes: (18, 24, 30);
     .mat-badge-content {
       padding-top: 0;
       font-size: 0.5625rem;
-      width: #{nth($notificationSizes, 1)}px;
-      height: #{nth($notificationSizes, 1)}px;
+      width: #{list.nth($notificationSizes, 1)}px;
+      height: #{list.nth($notificationSizes, 1)}px;
     }
   }
 
@@ -588,8 +588,8 @@ $notificationSizes: (18, 24, 30);
     .mat-badge-content {
       padding-top: 0;
       font-size: 0.75rem;
-      width: #{nth($notificationSizes, 2)}px;
-      height: #{nth($notificationSizes, 2)}px;
+      width: #{list.nth($notificationSizes, 2)}px;
+      height: #{list.nth($notificationSizes, 2)}px;
     }
   }
 
@@ -597,8 +597,8 @@ $notificationSizes: (18, 24, 30);
     .mat-badge-content {
       padding-top: 0;
       font-size: 0.9375rem;
-      width: #{nth($notificationSizes, 3)}px;
-      height: #{nth($notificationSizes, 3)}px;
+      width: #{list.nth($notificationSizes, 3)}px;
+      height: #{list.nth($notificationSizes, 3)}px;
     }
   }
 

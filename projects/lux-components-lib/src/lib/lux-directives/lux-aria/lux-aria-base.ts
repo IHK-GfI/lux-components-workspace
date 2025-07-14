@@ -1,12 +1,13 @@
-import { AfterViewInit, Directive, ElementRef, inject, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, InjectionToken, Renderer2 } from '@angular/core';
+
+export const LUX_ARIA_TAG_NAME = new InjectionToken<string>('LUX_ARIA_TAG_NAME');
 
 @Directive()
 export abstract class LuxAriaBase<T> implements AfterViewInit {
   protected init = false;
   protected elementRef = inject(ElementRef);
   protected renderer = inject(Renderer2);
-
-  protected constructor(protected ariaTagName: string) {}
+  protected ariaTagName = inject(LUX_ARIA_TAG_NAME);
 
   ngAfterViewInit(): void {
     this.init = true;

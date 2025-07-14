@@ -9,6 +9,10 @@
     luxAriaLabel="Komponentenbeispiele"
     #exampleListElement
   >
+  <div class="lux-flex lux-justify-between lux-pb-4">
+    <lux-button luxLabel="Zurück" luxColor="primary" [luxStroked]="true" (luxClicked)="onPrev()"></lux-button>
+    <lux-button luxLabel="Weiter" luxColor="primary" [luxStroked]="true" (luxClicked)="onNext()"></lux-button>
+  </div>
     @for (moduleName of navigationService.currentModuleNames; track moduleName) {
     <lux-panel luxCollapsedHeaderHeight="2.1875em" luxExpandedHeaderHeight="2.1875em" [luxExpanded]="true">
       <lux-panel-header-title
