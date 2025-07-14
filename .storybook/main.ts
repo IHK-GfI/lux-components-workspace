@@ -9,7 +9,7 @@ const config: StorybookConfig = {
     '../projects/lux-components-lib/**/*.mdx',
     '../projects/lux-components-lib/**/*.stories.@(js|jsx|mjs|ts|tsx)'
   ],
-  addons: ['@storybook/addon-docs', '@storybook/addon-controls', '@storybook/addon-a11y', '@storybook/addon-designs'],
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
 
   'framework': {
     'name': '@analogjs/storybook-angular',

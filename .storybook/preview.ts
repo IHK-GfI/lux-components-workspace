@@ -38,11 +38,8 @@ class ThemeWrapperComponent {
   });
 
   constructor() {
-    this.themeService.setTheme(this.theme());
-    this.themeService.loadTheme();
     effect(() => {
       this.themeService.setTheme(this.theme());
-      this.themeService.loadTheme();
     });
   }
 }
@@ -60,6 +57,7 @@ const preview: Preview = {
     }))
   ],
   parameters: {
+    layout: 'centered',
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -71,7 +69,10 @@ const preview: Preview = {
     },
     toolbar: {
       zoom: { hidden: true },
-    }
+    },
+    docs: {
+      codePanel: true,
+    },
   },
 
   globalTypes: {
