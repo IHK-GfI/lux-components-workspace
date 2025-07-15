@@ -234,15 +234,11 @@ export function updateTsConfigSpecJson(options: Options): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     const filePath = (options.path ?? '') + '/src/tsconfig.spec.json';
 
-    const testPath = ['files'];
-    const testFn = (node: Node) => findStringInArray(node, 'test.ts');
-
     const i18nPath = ['compilerOptions', 'types'];
     const i18nValue = '@angular/localize';
 
     return chain([
       messageInfoRule(`tsconfig.spec.json wird angepasst...`),
-      deleteJsonArray(filePath, testPath, testFn),
       updateJsonArray(filePath, i18nPath, i18nValue),
       messageSuccessRule(`tsconfig.spec.json wurde angepasst.`)
     ]);
@@ -278,7 +274,8 @@ export function updateTestTs(options: Options): Rule {
         'I18N wird angepasst...',
         'I18N wurde angepasst.',
         filePath,
-        new ReplaceItem("import '@angular/localize/init';", '/// <reference types="@angular/localize" />')
+        new ReplaceItem("import '@angular/localize/init';", '/// <reference types="@angular/localize" />'),
+        new ReplaceItem('import "@angular/localize/init";', '/// <reference types="@angular/localize" />')
       ),
       messageSuccessRule(`test.ts wurde angepasst.`)
     ]);

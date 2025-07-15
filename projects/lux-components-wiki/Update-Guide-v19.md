@@ -5,6 +5,7 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 - [Update Guide 19](#update-guide-19)
   - [Änderungen](#änderungen)
   - [Versionen](#versionen)
+    - [Version 19.1.0](#version-1910)
     - [Version 19.0.0](#version-1900)
       - [Allgemein](#allgemein)
       - [Vor dem Update](#vor-dem-update)
@@ -22,6 +23,17 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+### Version 19.1.0
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-19.1.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
 
 ### Version 19.0.0
 
@@ -45,12 +57,16 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 1. In der Datei _angular.json_ alle Vorkommen von _ngx-build-plus:_ in _@angular-devkit/build-angular:_ ersetzen.
 
+   ![angular.json](Versions/v19/updater-angular-json.png)
+
 1. Angular auf 19 aktualisieren:
 
    `ng update @angular/core@19 @angular/cli@19 --allow-dirty --force`
 
    Die Rückfrage nach dem _use-application-builder_ bestätigen.
+   ![application-builder](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/updater-question-app-builder.png)
    Die Rückfrage nach dem _provide-initializer_ bestätigen.
+   ![initializer](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/updater-question-initializer.png)
 
    `ng update @angular/cdk@19 @angular/material@19 @angular-eslint/schematics@19 --allow-dirty --force`
 
@@ -104,6 +120,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 #### Troubleshooting
 
+- JAST-Projekte: Wenn die Fehlermeldung _java.lang.StackOverflowError_ im zentralen Build erscheint, könnte es daran liegen, dass das Skript _move-de-files.js_ die Dateien aus dem _de_-Ordner nicht in den Root-Ordner kopiert.
 - Wenn der Fehler `Can't find stylesheet to import` beim Importieren von SCSS-Dateien aus dem `node_module`-Ordner auftritt, bitte den folgenden Abschnitt in der _angular.json_ unterhalb von `"styles": ["src/styles.scss"],` hinzufügen:
 
   ```json

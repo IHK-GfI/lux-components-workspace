@@ -1,6 +1,8 @@
 # Changelog
 
 - [Changelog](#changelog)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -8,7 +10,14 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues)
+    - [Issues](#issues-1)
+
+## Version 19.1.0
+
+### Issues
+
+- Issue #14: lux-lookup-combobox: Selektierter Eintrag wird manchmal nicht angezeigt (#66)
+- Issue #63: lux-file-upload - Die Custom-Actions sollen auch in der Listenansicht angezeigt werden (#65)
 
 ## Version 19.0.0
 
