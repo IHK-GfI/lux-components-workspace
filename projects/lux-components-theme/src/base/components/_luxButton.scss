@@ -10,11 +10,20 @@
 /*
  * Styling for LUX-Button
  */
+.mat-mdc-icon-button.mat-mdc-button-disabled {
+  --mat-icon-button-disabled-icon-color: rgba(0, 0, 0, 0.38);
+  --mat-paginator-disabled-icon-color: rgba(0, 0, 0, 0.12);
+}
+
 lux-button button.lux-button {
   font-family: global.$app-font-family;
   font-size: luxcommon.$button-font-size;
   font-weight: 600;
   height: luxcommon.$button-height;
+
+  lux-icon .mat-icon {
+    min-height: auto;
+  }
 
   &.mat-mdc-fab {
     border-radius: 50%;

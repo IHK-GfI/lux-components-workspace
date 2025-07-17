@@ -214,10 +214,6 @@ lux-accordion {
       background: map.get(luxcommon.$componentBgColors, "gray");
     }
   }
-
-  &.mat-badge-disabled .mat-badge-content {
-    color: white;
-  }
 }
 
 /*

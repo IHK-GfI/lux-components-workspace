@@ -632,4 +632,9 @@ $notificationSizes: (18, 24, 30);
       background: map.get(luxcommon.$componentBgColors, "gray");
     }
   }
+
+  &.mat-badge-disabled .mat-badge-content {
+    color: white;
+    background-color: #b9b9b9;
+  }
 }
