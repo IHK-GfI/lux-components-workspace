@@ -122,6 +122,7 @@ export * from './lib/lux-form/lux-input-ac/lux-input-ac.component';
 export * from './lib/lux-form/lux-radio-ac/lux-radio-ac.component';
 export * from './lib/lux-form/lux-select-ac/lux-select-ac.component';
 export * from './lib/lux-form/lux-slider-ac/lux-slider-ac.component';
+export * from './lib/lux-form/lux-star-rating-ac/lux-star-rating-ac.component';
 export * from './lib/lux-form/lux-textarea-ac/lux-textarea-ac.component';
 export * from './lib/lux-form/lux-toggle-ac/lux-toggle-ac.component';
 

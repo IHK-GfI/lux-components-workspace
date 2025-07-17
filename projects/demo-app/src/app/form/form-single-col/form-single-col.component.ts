@@ -13,6 +13,7 @@ import {
     LuxInputAcSuffixComponent,
     LuxRadioAcComponent,
     LuxSelectAcComponent,
+    LuxStarRatingAcComponent,
     LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ICountry } from '../model/country.interface';
@@ -24,6 +25,7 @@ import { TableExampleDataProviderService } from '../table-example-data-provider.
 interface FormSingleDummyForm {
   user: FormGroup<FormSingleUserForm>;
   date: FormControl<string>;
+  rating: FormControl<number>;
   roles: FormControl<string>;
   eula: FormControl<boolean>;
 }
@@ -47,6 +49,7 @@ interface FormSingleUserForm {
     LuxCardContentComponent,
     LuxCardComponent,
     LuxToggleAcComponent,
+    LuxStarRatingAcComponent,
     LuxSelectAcComponent,
     LuxRadioAcComponent,
     LuxInputAcSuffixComponent,
@@ -91,6 +94,7 @@ export class FormSingleColComponent extends FormBase {
         deactivated: new FormControl<string>('deaktiviertes Element', { nonNullable: true })
       }),
       date: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
+      rating: new FormControl<number>(0, { nonNullable: true }),
       roles: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
       eula: new FormControl<boolean>(false, { validators: Validators.requiredTrue, nonNullable: true })
     });
