@@ -1,9 +1,10 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, importProvidersFrom, inject, TemplateRef, ViewChild } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigModule } from '../../lux-components-config/lux-components-config.module';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
@@ -356,6 +357,100 @@ describe('LuxDialogService', () => {
       expect(spy).toHaveBeenCalledTimes(1);
     }));
   });
+
+  describe('[Async Dialog Support]', () => {
+    it('Sollte mehrere DialogRef-Instanzen erstellen können', fakeAsync(() => {
+      // Vorbedingungen testen
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(0);
+
+      // Änderungen durchführen - ersten Dialog öffnen
+      const dialogRef1 = testComponent.dialogService.open({
+        title: 'Dialog 1',
+        content: 'Erste Dialog-Daten'
+      });
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen - ein Dialog sollte existieren
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(1);
+      expect((dialogRef1.data as any).title).toBe('Dialog 1');
+
+      // Änderungen durchführen - ersten Dialog schließen
+      dialogRef1.closeDialog(true);
+      waitForDialogClosure();
+
+      // Nachbedingungen prüfen - keine Dialoge mehr
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(0);
+
+      // Änderungen durchführen - zweiten Dialog öffnen
+      const dialogRef2 = testComponent.dialogService.open({
+        title: 'Dialog 2', 
+        content: 'Zweite Dialog-Daten'
+      });
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen - wieder ein Dialog
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(1);
+      expect((dialogRef2.data as any).title).toBe('Dialog 2');
+      expect((dialogRef2.data as any).content).toBe('Zweite Dialog-Daten');
+
+      // Wichtig: Die Dialog-Referenzen sollten unterschiedlich sein
+      expect(dialogRef1).not.toBe(dialogRef2);
+
+      // Änderungen durchführen - zweiten Dialog schließen
+      dialogRef2.closeDialog(true);
+      waitForDialogClosure();
+
+      // Nachbedingungen prüfen - keine Dialoge mehr
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(0);
+    }));
+
+    it('Sollte nach Timeout korrekt funktionieren', fakeAsync(() => {
+      // Vorbedingungen testen
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(0);
+
+      // Änderungen durchführen - Dialog A öffnen
+      const dialogA = testComponent.dialogService.open({
+        title: 'Dialog A',
+        content: 'Dialog A Inhalt'
+      });
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(1);
+
+      // Änderungen durchführen - Dialog A nach Timeout schließen
+      setTimeout(() => {
+        dialogA.closeDialog();
+      }, 100);
+      
+      tick(100);
+      waitForDialogClosure();
+
+      // Nachbedingungen prüfen
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(0);
+
+      // Änderungen durchführen - Dialog B öffnen
+      const dialogB = testComponent.dialogService.open({
+        title: 'Dialog B',
+        content: 'Dialog B Inhalt'
+      });
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(1);
+      expect((dialogB.data as any).title).toBe('Dialog B');
+
+      // Dialog B sollte eine andere Instanz sein als Dialog A
+      expect(dialogA).not.toBe(dialogB);
+
+      // Änderungen durchführen - Dialog B sollte problemlos schließbar sein
+      dialogB.closeDialog();
+      waitForDialogClosure();
+
+      // Nachbedingungen prüfen
+      expect(overlayHelper.selectAllFromOverlay('.lux-dialog')).toHaveSize(0);
+    }));
+  });
 });
 
 @Component({
@@ -391,7 +486,12 @@ class MockDialogComponent {
   imports: [LuxDialogStructureComponent, LuxDialogTitleComponent, LuxDialogContentComponent, LuxDialogActionsComponent, LuxButtonComponent]
 })
 class MockCustomDialogComponent {
-  dialogRef = inject<LuxDialogRef<void>>(LuxDialogRef);
+  private dialogData = inject<{luxDialogRef: LuxDialogRef<void>, originalData: any}>(MAT_DIALOG_DATA);
+  dialogRef: LuxDialogRef<void>;
+
+  constructor() {
+    this.dialogRef = this.dialogData.luxDialogRef;
+  }
 
   dialogClosed() {}
 }

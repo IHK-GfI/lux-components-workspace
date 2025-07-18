@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxTabIndexDirective } from '../../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { ILuxDialogPresetConfig } from '../lux-dialog-model/lux-dialog-preset-config.interface';
@@ -27,15 +28,17 @@ import { LuxDialogStructureComponent } from '../lux-dialog-structure/lux-dialog-
   ]
 })
 export class LuxDialogPresetComponent implements OnInit, AfterViewInit {
-  dialogRef = inject<LuxDialogRef<ILuxDialogPresetConfig>>(LuxDialogRef);
+  private dialogData = inject<{luxDialogRef: LuxDialogRef<ILuxDialogPresetConfig>, originalData: ILuxDialogPresetConfig}>(MAT_DIALOG_DATA);
 
   @ViewChild('confirmButton') confirmButton?: LuxButtonComponent;
   @ViewChild('declineButton') declineButton?: LuxButtonComponent;
 
+  dialogRef!: LuxDialogRef<ILuxDialogPresetConfig>;
   data?: ILuxDialogPresetConfig;
   defaultButton?: LuxButtonComponent;
 
   ngOnInit() {
+    this.dialogRef = this.dialogData.luxDialogRef;
     this.data = this.dialogRef.data;
   }
 

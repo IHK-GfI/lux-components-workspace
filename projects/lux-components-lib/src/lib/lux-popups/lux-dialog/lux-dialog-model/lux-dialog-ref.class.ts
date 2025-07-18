@@ -3,9 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Observable, ReplaySubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class LuxDialogRef<T = any> {
   _matDialogRef!: MatDialogRef<any>;
   _dialogConfirmed = new ReplaySubject<void>(1);
