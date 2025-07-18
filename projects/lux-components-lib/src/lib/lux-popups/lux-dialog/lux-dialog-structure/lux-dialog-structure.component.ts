@@ -1,6 +1,6 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
-import { MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialogActions, MatDialogContent, MatDialogTitle, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../../lux-util/lux-util';
@@ -16,10 +16,11 @@ import { LuxDialogRef } from '../lux-dialog-model/lux-dialog-ref.class';
   imports: [LuxAriaLabelDirective, LuxIconComponent, MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions]
 })
 export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
-  private luxDialogRef = inject<LuxDialogRef<any>>(LuxDialogRef);
+  private dialogData = inject<{luxDialogRef: LuxDialogRef<any>, originalData: any}>(MAT_DIALOG_DATA, { optional: true });
 
   @ViewChild('dialogBase', { read: ElementRef, static: true }) dialogBase!: ElementRef;
 
+  luxDialogRef?: LuxDialogRef<any>;
   disableClose!: boolean;
 
   private _iconName = '';
@@ -31,6 +32,7 @@ export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.luxDialogRef = this.dialogData?.luxDialogRef;
     this.disableClose = this.luxDialogRef?._matDialogRef?.disableClose ?? false;
   }
 
@@ -42,6 +44,6 @@ export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
   }
 
   onClose() {
-    this.luxDialogRef.closeDialog();
+    this.luxDialogRef?.closeDialog();
   }
 }
