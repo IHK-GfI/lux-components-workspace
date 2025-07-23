@@ -156,7 +156,7 @@ lux-chat-input {
 
 $sidebarContainerPadding: 16px;
 
-.chat-sidebar-container {
+.lux-chat-sidebar-container {
     overflow: hidden;
     min-width: 100px; 
     min-height: 100px; 
@@ -175,22 +175,26 @@ $sidebarContainerPadding: 16px;
     &.overlay {
         position: absolute;
         box-sizing: border-box;
-        z-index: 2;
+        z-index: 11;
 
         &.top {
             width: 100%;
+            max-height: 50%;
         }
 
         &.left {
             height: 100%;
+            max-width: 50%;
         }
 
         &.bottom {
             width: 100%;
+            max-height: 50%;
         }
 
         &.right {
             height: 100%;
+            max-width: 50%;
         }
     }
 
@@ -204,7 +208,7 @@ $sidebarContainerPadding: 16px;
             transform: translateY(0);
         }
 
-        .chat-sidebar-content {
+        .lux-chat-sidebar-content {
             flex-direction: row;
             
             width: calc(100% - ($sidebarContainerPadding * 2));
@@ -222,7 +226,7 @@ $sidebarContainerPadding: 16px;
             transform: translateX(0);
         }
 
-        .chat-sidebar-content {
+        .lux-chat-sidebar-content {
             flex-direction: column;
             
             height: calc(100% - ($sidebarContainerPadding * 2));
@@ -240,7 +244,7 @@ $sidebarContainerPadding: 16px;
             transform: translateY(0);
         }
         
-        .chat-sidebar-content {
+        .lux-chat-sidebar-content {
             flex-direction: row;
             
             width: calc(100% - ($sidebarContainerPadding * 2));
@@ -258,7 +262,7 @@ $sidebarContainerPadding: 16px;
             transform: translateX(0);
         }
         
-        .chat-sidebar-content {
+        .lux-chat-sidebar-content {
             flex-direction: column;
 
             height: calc(100% - ($sidebarContainerPadding * 2));
@@ -267,7 +271,7 @@ $sidebarContainerPadding: 16px;
     }
 }
 
-.chat-sidebar-header {
+.lux-chat-sidebar-header {
     flex: 0;
 
     display: flex;
@@ -283,14 +287,14 @@ $sidebarContainerPadding: 16px;
     }
 }
 
-.chat-sidebar-content {
+.lux-chat-sidebar-content {
     flex: 1 0 auto;
 
     display: flex;
     overflow: hidden; //TODO: Check if this doesn't hinder anything
 }
 
-.chat-sidebar-close-icon {
+.lux-chat-sidebar-close-icon {
     color: #036;
 
     ::ng-deep .mat-icon {

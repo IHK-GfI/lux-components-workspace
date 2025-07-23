@@ -1,7 +1,7 @@
 <ng-template #core>
     @if(visible){
         <div [ngClass]="{
-            'chat-sidebar-container': true,
+            'lux-chat-sidebar-container': true,
             'overlay': (overlay === true),
             'top': (side === 'top'),
             'left': (side === 'left'),
@@ -10,14 +10,14 @@
             'sidebar-show': sidebarShown
             }">
             
-            <div class="chat-sidebar-header">
-                <lux-icon (click)="onClosePressed()" class="chat-sidebar-close-icon" luxIconName="lux-interface-delete-1" [luxRounded]="true"></lux-icon>
+            <div class="lux-chat-sidebar-header">
+                <lux-icon (click)="onClosePressed()" class="lux-chat-sidebar-close-icon" luxIconName="lux-interface-delete-1" [luxRounded]="true"></lux-icon>
                 @if(title){
                     <h2>{{title}}</h2>
                 }
             </div>
 
-            <div class="chat-sidebar-content">
+            <div class="lux-chat-sidebar-content">
                 <ng-content></ng-content>
             </div>
 

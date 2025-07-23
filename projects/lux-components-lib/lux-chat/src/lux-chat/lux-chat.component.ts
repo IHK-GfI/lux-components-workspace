@@ -5,7 +5,6 @@ import { LuxChatData } from './lux-chat-data';
 import { CommonModule } from '@angular/common';
 import { LuxChatEntryComponent } from "./lux-chat-entry/lux-chat-entry.component";
 import { LuxChatControlRef } from './lux-chat-control-ref';
-import { ScrollController } from './lux-chat-scroll-controller';
 import { LuxAriaLabelDirective, LuxDividerComponent, LuxRelativeTimestampPipe, LuxTextareaAcComponent } from '@ihk-gfi/lux-components';
 import { LuxChatSidebarComponent, Side } from './lux-chat-sidebar/lux-chat-sidebar.component';
 
@@ -43,8 +42,8 @@ export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
   private _chatData?: LuxChatData;
 
   @Input()
-  public set chatData(chatData: LuxChatData){
-    chatData.initControl(this);
+  public set chatData(chatData: LuxChatData | undefined){
+    if(chatData) chatData.initControl(this);
     this._chatData = chatData;
   }
 
@@ -61,7 +60,6 @@ export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
 
   public chatInput = "";
   public chatAutoScroll = true;
-  private scrollController = new ScrollController();
   private lastScroll = 0;
 
   @ContentChildren(LuxChatSidebarComponent) private sidebars!: QueryList<LuxChatSidebarComponent>;
@@ -103,12 +101,7 @@ export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
     setTimeout(() =>{
       this.chatAutoScroll = true;
       const baseEl = this.chatBase.nativeElement;
-      // this.scrollController.scrollTo(baseEl, baseEl.scrollHeight, 100, 10, smoothScrolling, () => {
-      //   this.chatAutoScroll = true;
-      // });
-      // let scrollDist = baseEl.scrollHeight - (baseEl.clientHeight + baseEl.scrollTop);
-      // baseEl.style["scroll-behavior"] = "smooth";
-      // baseEl.scrollTop = baseEl.scrollHeight - baseEl.clientHeight;
+      
       baseEl.scrollTo({
         top: baseEl.scrollHeight - baseEl.clientHeight,
         left: 0
