@@ -26,10 +26,8 @@ export class LuxChatAiService {
         return this.http.get<LuxChatAiSummaryDto[]>(`${this.baseUrl}/chat/history`);
     }
 
-    public postChatMessageStream(content: string, chatId: string, userName: string): Observable<LuxChatAiMessageDto> {
-        console.log("### POST: ", content, chatId);
+    public postChatMessageStream(content: string, chatId: string): Observable<LuxChatAiMessageDto> {
         const body = JSON.stringify({ content });
-        // return this.http.post<LuxChatAiMessageDto>(`${this.baseUrl}/chat/${chatId}/message`, body);
 
         return new Observable<LuxChatAiMessageDto>(observer => {
             fetch(`${this.baseUrl}/chat/${chatId}/message`, {

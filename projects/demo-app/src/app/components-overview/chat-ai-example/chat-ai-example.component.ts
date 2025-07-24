@@ -37,7 +37,7 @@ export class ChatAiExampleComponent implements OnInit {
       this.router.navigate(["components-overview", "example", "chat-ai"]);
     }
     else {
-      this.router.navigate(["components-overview", "example", "chat-ai", chatId]);
+      window.history.replaceState({}, "", `components-overview/example/chat-ai/${chatId}`);
     }
   }
 

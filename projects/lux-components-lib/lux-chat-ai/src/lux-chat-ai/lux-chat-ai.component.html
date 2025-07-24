@@ -1,10 +1,10 @@
-<lux-chat [chatData]="chatData" [user]="userName">
+<lux-chat [chatData]="chatData" [user]="userName()">
     <lux-chat-header>
         <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 20px;">
             <lux-icon (click)="doShowHistory()" style="cursor: pointer;" [luxIconName]="sidebarHistoryVisible ? 'lux-book-readme' : 'lux-hand-held'" [luxRounded]="true"></lux-icon>
             <p>
-                <b>{{ chatData.title }}</b><br/>
-                Erstellt am: <b>{{ chatData.created_at | date:'dd.MM.yyyy, HH:mm:ss' }}</b>
+                <b>{{ chatData?.title }}</b><br/>
+                Erstellt am: <b>{{ chatData?.created_at | date:'dd.MM.yyyy, HH:mm:ss' }}</b>
             </p>
         </div>
     </lux-chat-header>
@@ -19,6 +19,10 @@
 
         <lux-chat-entry-content>
             <ng-template let-item>
+                @if(item.metadata.internal_messages && item.metadata.internal_messages.length > 0) {
+                    <lux-markdown luxData="{{getToolActivity(item.metadata.internal_messages, item.content)}}"></lux-markdown>
+                    <lux-divider [luxInset]="true"></lux-divider>
+                }
                 <lux-markdown [luxSanitizeConfig]="sanitizeConfig" [luxData]="getChatContentWithLinks(item)" (click)="onChatContentReferenceClicked($event)"></lux-markdown>
             </ng-template>
         </lux-chat-entry-content>
@@ -36,18 +40,44 @@
     <lux-chat-sidebar [side]="'left'" [(visible)]="sidebarHistoryVisible" [overlay]="true" title="Historie">
         <lux-button luxLabel="Neuer Chat" [luxRaised]="true" (luxClicked)="onHistoryChatClicked(undefined)"></lux-button>
 
+        
+
         @if(!allChats){
             <lux-progress [luxType]="'Spinner'" [luxMode]="'indeterminate'"></lux-progress>
         }
         @else {
-            @for(chat of allChats; track $index){
-                <lux-button [luxLabel]="chat.title" (luxClicked)="onHistoryChatClicked(chat)"></lux-button>
-            }
+            <lux-table [luxData]="allChats" luxNoDataText="Hier kannst du deinen Chat Verlauf sehen, wenn du dich eingeloggt hast und Chats erstellt hast."
+                [luxShowPagination]="true"
+                [luxPageSize]="10"
+                [luxPageSizeOptions]="[10, 20, 50]">
+                <lux-table-column luxColumnDef="title" [luxSortable]="true">
+                    <lux-table-column-header>
+                        <ng-template>Titel</ng-template>
+                    </lux-table-column-header>
+                    <lux-table-column-content>
+                        <ng-template let-element>
+                            {{element.title}}
+                        </ng-template>
+                    </lux-table-column-content>
+                </lux-table-column>
+
+                <lux-table-column luxColumnDef="action" [luxSortable]="false">
+                    <lux-table-column-header>
+                        <ng-template>Aktion</ng-template>
+                    </lux-table-column-header>
+                    <lux-table-column-content>
+                        <ng-template let-element>
+                            <lux-button luxIconName="lux-interface-arrows-right" (luxClicked)="onHistoryChatClicked(element)"></lux-button>
+                        </ng-template>
+                    </lux-table-column-content>
+                </lux-table-column>
+
+            </lux-table>
         }
     </lux-chat-sidebar>
 
     <lux-chat-sidebar [side]="'right'" [(visible)]="sidebarSourcesVisible" [overlay]="true" title="Quellen">
-        <lux-tabs class="chat-ai-sidebar-references-tabs-scroll">
+        <lux-tabs class="lux-chat-ai-sidebar-references">
             <lux-tab luxTitle="Genutzte Quellen" [luxCounter]="activeReferenceEntry?.metadata.usedContexts.length">
                 <ng-template>
                     @if(activeReferenceEntry){
@@ -60,13 +90,15 @@
                                   {{reference.title}}
                                 </lux-panel-header-description>
                                 <lux-panel-content>
-                                    <lux-link
-                                        [luxFlat]="true"
-                                        luxIconName="lux-interface-link"
-                                        [luxLabel]="reference.link_label"
-                                        [luxHref]="reference.link"
-                                        luxColor="primary"
-                                    ></lux-link>
+                                    @if(reference.link && reference.link_label){
+                                        <lux-link
+                                            [luxFlat]="true"
+                                            luxIconName="lux-interface-link"
+                                            [luxLabel]="reference.link_label"
+                                            [luxHref]="reference.link"
+                                            luxColor="primary"
+                                        ></lux-link>
+                                    }
                                     <lux-markdown class="lux-hyphenate" [luxSanitizeConfig]="sanitizeConfig" luxData="{{this.cleanContent(reference.content)}}"></lux-markdown>
                                 </lux-panel-content>
                             </lux-panel>
@@ -87,13 +119,15 @@
                                   {{reference.title}}
                                 </lux-panel-header-description>
                                 <lux-panel-content>
-                                    <lux-link
-                                        [luxFlat]="true"
-                                        luxIconName="lux-interface-link"
-                                        [luxLabel]="reference.link_label"
-                                        [luxHref]="reference.link"
-                                        luxColor="primary"
-                                    ></lux-link>
+                                    @if(reference.link && reference.link_label){
+                                        <lux-link
+                                            [luxFlat]="true"
+                                            luxIconName="lux-interface-link"
+                                            [luxLabel]="reference.link_label"
+                                            [luxHref]="reference.link"
+                                            luxColor="primary"
+                                        ></lux-link>
+                                    }
                                     <lux-markdown class="lux-hyphenate" [luxSanitizeConfig]="sanitizeConfig" luxData="{{this.cleanContent(reference.content)}}"></lux-markdown>
                                 </lux-panel-content>
                             </lux-panel>

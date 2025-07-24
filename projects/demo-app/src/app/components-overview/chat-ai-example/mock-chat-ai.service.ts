@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { LuxChatAiMessageDto, LuxChatAiService, LuxChatAiSummaryDto, LuxChatDto } from "@ihk-gfi/lux-components/lux-chat-ai";
-import { interval, Observable, of, throwError } from "rxjs";
-import { map, take } from 'rxjs/operators';
+import { Observable, of, throwError, timer } from "rxjs";
+import { concatMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockLuxChatAiService extends LuxChatAiService {
 
-  private assistantName = "Mock Chat-AI";
+  private assistantName = "Assistant";
   private chat1: LuxChatDto = {
     chat_id: "0",
     title: "Chat 1",
@@ -31,6 +31,14 @@ export class MockLuxChatAiService extends LuxChatAiService {
       contexts: [
         {context_id: "1", content: "Hier würde die Information, die der Bot zum beantworten der Frage genommen hat, stehen.", link: "https://www.google.de/", link_label: "Google Homepage", reference_code: "[OTR-23032885 (1)]", title: "Lorem Ipsum Titel"},
         {context_id: "2", content: "Ein zweiter Kontext, der aber nicht benutzt wird.", link: "https://www.youtube.de/", link_label: "Youtube", reference_code: "[OTR-23032885 (2)]", title: "Der 2. Anhang"}] },
+    { content: "Das ist ein Beispiel für interne Nachrichten, die ausgegeben werden um zu veranschaulichen was der Chatbot alles so bei dem Antworten macht. Dies soll zur Überprüfung und verbesserung der Nachvollziehbarkeit eines Chatbot Agenten beitragen.", 
+      contexts: [],
+      internal_messages: [
+        { name: "query_knowledgebase", type: "ai", additional_kwargs: {'tool_calls': [{'function': {name: 'query_knowledgebase'}}]}},
+        { name: "query_knowledgebase", type: "tool", additional_kwargs: {}},
+        { name: "writing_email", type: "ai", additional_kwargs: {'tool_calls': [{'function': {name: 'writing_email'}}]}},
+        { name: "writing_email", type: "tool", additional_kwargs: {}},
+      ] },
     { content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus nulla error voluptatem. Tempora, omnis sed amet beatae autem recusandae quasi aliquam non molestias, at inventore laudantium. Facere eveniet quisquam ut.", 
       contexts: [] },
     { content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis in unde ducimus, dignissimos ea error quisquam consectetur nihil ratione est, cupiditate eveniet, suscipit magni iure! Quas eum quo officia. Quae!", 
@@ -38,6 +46,7 @@ export class MockLuxChatAiService extends LuxChatAiService {
     { content: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eveniet libero laudantium magnam, similique quaerat itaque saepe molestiae impedit architecto consectetur aut nam dignissimos voluptas necessitatibus voluptatem maiores perferendis possimus fuga.", 
       contexts: [] },
   ];
+
   private chunk_size = 3;
   private interval_time = 30;
 
@@ -53,9 +62,10 @@ export class MockLuxChatAiService extends LuxChatAiService {
       chat_id: this.chat1.chat_id,
       message_id: "" + this.chat1.messages.length,
       content: "Frage mich etwas :D",
-      sender_name: this.assistantName,
+      sender_role: this.assistantName,
       created_at: new Date(),
-      contexts: []
+      contexts: [],
+      internal_messages: []
     });
 
     
@@ -63,18 +73,20 @@ export class MockLuxChatAiService extends LuxChatAiService {
       chat_id: this.chat2.chat_id,
       message_id: "" + this.chat2.messages.length,
       content: "Hallo, wie geht es Ihnen?",
-      sender_name: this.assistantName,
+      sender_role: this.assistantName,
       created_at: new Date(),
-      contexts: []
+      contexts: [],
+      internal_messages: []
     });
 
     this.chat2.messages.push({
       chat_id: this.chat2.chat_id,
       message_id: "" + this.chat2.messages.length,
       content: "Sie können mich zu allen Themen etwas fragen.",
-      sender_name: this.assistantName,
+      sender_role: this.assistantName,
       created_at: new Date(),
-      contexts: []
+      contexts: [],
+      internal_messages: []
     });
   }
 
@@ -84,16 +96,7 @@ export class MockLuxChatAiService extends LuxChatAiService {
         title: "Neuer leerer Chat (" + (this.chats.length - 1) + ")",
         created_at: new Date(),
         updated_at: new Date(),
-        messages: [
-          {
-            chat_id: "" + this.chats.length,
-            message_id: "0",
-            content: "Hallo, wie kann ich Ihnen weiterhelfen?",
-            sender_name: this.assistantName,
-            created_at: new Date(),
-            contexts: []
-          }
-        ]
+        messages: []
     };
 
     this.chats.push(data);
@@ -135,15 +138,16 @@ export class MockLuxChatAiService extends LuxChatAiService {
     return of(data);
   }
 
-  public override postChatMessageStream(query: string, chatId: string, userName: string): Observable<LuxChatAiMessageDto> {
+  public override postChatMessageStream(query: string, chatId: string): Observable<LuxChatAiMessageDto> {
     const theChat = this._getChatById(chatId);
     theChat.messages.push({
       chat_id: chatId,
       message_id: "" + theChat.messages.length,
       content: query,
       created_at: new Date(),
-      sender_name: userName,
-      contexts: []
+      sender_role: "Human",
+      contexts: [],
+      internal_messages: []
     });
 
     const messageId = theChat.messages.length;
@@ -152,6 +156,8 @@ export class MockLuxChatAiService extends LuxChatAiService {
     const answer = this.assistant_answers[index];
 
     const values: LuxChatAiMessageDto[] = [];
+
+
 
     const contexts = [];
     for(const ctx of answer.contexts){
@@ -171,11 +177,25 @@ export class MockLuxChatAiService extends LuxChatAiService {
       message_id: "" + messageId,
       content: answer.content,
       created_at: new Date(),
-      sender_name: this.assistantName,
-      contexts
+      sender_role: this.assistantName,
+      contexts,
+      internal_messages: []
     });
 
 
+    if(answer.internal_messages){
+      for(let i=0;i<answer.internal_messages.length;i++){
+        values.push({
+          chat_id: chatId,
+          message_id: "" + messageId,
+          content: "",
+          created_at: new Date(),
+          sender_role: this.assistantName,
+          contexts: [],
+          internal_messages: [...answer.internal_messages.slice(0, i + 1)]
+        });
+      }
+    }
 
     for(let i=0;i<answer.contexts.length;i++){
       values.push({
@@ -183,8 +203,9 @@ export class MockLuxChatAiService extends LuxChatAiService {
         message_id: "" + messageId,
         content: "",
         created_at: new Date(),
-        sender_name: this.assistantName,
-        contexts: [contexts[i]]
+        sender_role: this.assistantName,
+        contexts: [contexts[i]],
+        internal_messages: []
       });
     }
 
@@ -194,16 +215,28 @@ export class MockLuxChatAiService extends LuxChatAiService {
         message_id: "" + messageId,
         content: answer.content.substring(i, i+this.chunk_size),
         created_at: new Date(),
-        sender_name: this.assistantName,
-        contexts: []
+        sender_role: this.assistantName,
+        contexts: [],
+        internal_messages: []
       });
     }
+    
 
-    return interval(this.interval_time)
-      .pipe(
-        take(values.length),
-        map(i => values[i])
-      );
+    const valuesWithDelays = [];
+    for(const value of values){
+      valuesWithDelays.push({
+        data: value,
+        delay: (value.internal_messages && value.internal_messages.length > 0) ? 1000 : this.interval_time
+      })
+    }
+
+    return of(...valuesWithDelays).pipe(
+      concatMap(item =>
+        timer(item.delay).pipe(
+          concatMap(() => of(item.data))
+        )
+      )
+    );
   }
 
 
@@ -215,13 +248,10 @@ export class MockLuxChatAiService extends LuxChatAiService {
     ]
 
     const title = titles[Math.floor(Math.random() * titles.length)];
-    console.log("GENERATING TITLE: [" + title + "] ... ");
-
     const chat = this._getChatById(chatId);
+
     if(chat) chat.title = title;
-    return of(
-      title
-    );
+    return of(title);
   }
 
 }
