@@ -1,4 +1,4 @@
-import { Component, ContentChild, TemplateRef, ViewChild } from '@angular/core';
+import { Component, contentChild, TemplateRef, viewChild } from '@angular/core';
 import { LuxChatEntryHeaderComponent } from './lux-chat-entry-header/lux-chat-entry-header.component';
 import { LuxChatEntryContentComponent } from './lux-chat-entry-content/lux-chat-entry-content.component';
 import { LuxChatEntryFooterComponent } from './lux-chat-entry-footer/lux-chat-entry-footer.component';
@@ -23,12 +23,12 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 })
 export class LuxChatEntryComponent {
 
-  @ViewChild("core", { read: TemplateRef, static: true }) public templateRef!: TemplateRef<any>;
+  public templateRef = viewChild.required<TemplateRef<any>>("core");
 
-  @ContentChild(LuxChatEntryHeaderComponent) public chatEntryHeader?: LuxChatEntryHeaderComponent;
-  @ContentChild(LuxChatEntryContentComponent) public chatEntryContent?: LuxChatEntryContentComponent;
-  @ContentChild(LuxChatEntryFooterComponent) public chatEntryFooter?: LuxChatEntryFooterComponent;
-  @ContentChild(LuxChatEntryActionsComponent) public chatEntryActions?: LuxChatEntryActionsComponent;
+  public chatEntryHeader = contentChild(LuxChatEntryHeaderComponent);
+  public chatEntryContent = contentChild(LuxChatEntryContentComponent);
+  public chatEntryFooter = contentChild(LuxChatEntryFooterComponent);
+  public chatEntryActions = contentChild(LuxChatEntryActionsComponent);
 
   public checkShowDateSplit(item: LuxChatDataEntry): boolean {
     const chat = item.chatControlRef.chat;

@@ -1,19 +1,11 @@
 <ng-template #core>
-    @if(visible){
-        <div [ngClass]="{
-            'lux-chat-sidebar-container': true,
-            'overlay': (overlay === true),
-            'top': (side === 'top'),
-            'left': (side === 'left'),
-            'bottom': (side === 'bottom'),
-            'right': (side === 'right'),
-            'sidebar-show': sidebarShown
-            }">
+    @if(sidebarShow()){
+        <div [ngClass]="computedClasses()">
             
             <div class="lux-chat-sidebar-header">
                 <lux-icon (click)="onClosePressed()" class="lux-chat-sidebar-close-icon" luxIconName="lux-interface-delete-1" [luxRounded]="true"></lux-icon>
-                @if(title){
-                    <h2>{{title}}</h2>
+                @if(title()){
+                    <h2>{{title()}}</h2>
                 }
             </div>
 

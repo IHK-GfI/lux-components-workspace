@@ -1,7 +1,7 @@
 <ng-template let-item #core>
     <div class="lux-chat-entry-actions">
         <div class="lux-chat-entry-actions-container">
-            <ng-container *ngTemplateOutlet="actionsTemplateRef ?? null; context: { $implicit: item }"></ng-container>
+            <ng-container *ngTemplateOutlet="actionsTemplateRef() ?? null; context: { $implicit: item }"></ng-container>
         </div>
     </div>
 </ng-template>

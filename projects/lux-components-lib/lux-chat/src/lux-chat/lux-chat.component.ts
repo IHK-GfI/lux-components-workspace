@@ -1,4 +1,4 @@
-import { Component, ContentChild, ContentChildren, ElementRef, Input, ViewChild, QueryList, AfterContentInit } from '@angular/core';
+import { Component, ElementRef, contentChild, viewChild, input, effect, contentChildren, Injector, inject, untracked } from '@angular/core';
 import { LuxChatHeaderComponent } from './lux-chat-header/lux-chat-header.component';
 import { LuxChatInputComponent } from './lux-chat-input/lux-chat-input.component';
 import { LuxChatData } from './lux-chat-data';
@@ -7,6 +7,7 @@ import { LuxChatEntryComponent } from "./lux-chat-entry/lux-chat-entry.component
 import { LuxChatControlRef } from './lux-chat-control-ref';
 import { LuxAriaLabelDirective, LuxDividerComponent, LuxRelativeTimestampPipe, LuxTextareaAcComponent } from '@ihk-gfi/lux-components';
 import { LuxChatSidebarComponent, Side } from './lux-chat-sidebar/lux-chat-sidebar.component';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lux-chat',
@@ -23,58 +24,50 @@ import { LuxChatSidebarComponent, Side } from './lux-chat-sidebar/lux-chat-sideb
   templateUrl: './lux-chat.component.html',
   styleUrl: './lux-chat.component.scss'
 })
-export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
+export class LuxChatComponent implements LuxChatControlRef {
+
+  private injector = inject(Injector);
 
   public defaultChatHeaderDatePrefix = $localize`:@@luxc.chat.default.header.date.prefix:Erstellt`
-  
-  @ContentChild(LuxChatHeaderComponent)
-  public compChatHeader?: LuxChatHeaderComponent;
 
-  @ContentChild(LuxChatEntryComponent)
-  public compChatEntry?: LuxChatEntryComponent;
+  public compChatHeader = contentChild(LuxChatHeaderComponent);
+  public compChatEntry = contentChild(LuxChatEntryComponent);
+  public compChatInput = contentChild(LuxChatInputComponent);
+  private sidebars = contentChildren(LuxChatSidebarComponent);
 
-  @ContentChild(LuxChatInputComponent)
-  public compChatInput?: LuxChatInputComponent;
+  public chatBase = viewChild<ElementRef>("chatBase");
 
-  @ViewChild("chatBase", { read: ElementRef })
-  public chatBase!: ElementRef;
-
-  private _chatData?: LuxChatData;
-
-  @Input()
-  public set chatData(chatData: LuxChatData | undefined){
-    if(chatData) chatData.initControl(this);
-    this._chatData = chatData;
-  }
-
-  public get chatData(): LuxChatData | undefined {
-    return this._chatData;
-  }
-
-  @Input()
-  public userName = "User";
-
-  public get chat(): LuxChatData | undefined {
-    return this._chatData;
-  }
+  public chatData = input<LuxChatData>();
+  public user = input("User");
 
   public chatInput = "";
   public chatAutoScroll = true;
   private lastScroll = 0;
-
-  @ContentChildren(LuxChatSidebarComponent) private sidebars!: QueryList<LuxChatSidebarComponent>;
 
   public sidebars_top: LuxChatSidebarComponent[] = [];
   public sidebars_left: LuxChatSidebarComponent[] = [];
   public sidebars_bottom: LuxChatSidebarComponent[] = [];
   public sidebars_right: LuxChatSidebarComponent[] = [];
 
-  ngAfterContentInit(){
-    for(const sidebar of this.sidebars){
-      this.initSidebar(sidebar);
-    }
-    this.sidebars.changes.subscribe(c => {
-      this.initSidebar(c);
+  constructor(){
+    effect(() => {
+      this.chatData()?.initControl(this);
+    })
+
+    effect(() => {
+      for(const sidebar of this.sidebars()){
+        const _sidebar: any = sidebar;
+        if(_sidebar["initialized"]) {
+          continue;
+        }
+        else {
+          _sidebar["initialized"] = true;
+        }
+
+        untracked(() => {
+          this.initSidebar(sidebar);
+        });
+      }
     })
   }
 
@@ -82,9 +75,17 @@ export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
     //Prevent Enter key from being processed
     event.preventDefault();
 
-    this.chatData?.addChatEntry(this.userName, this.chatInput, new Date());
+    this.chatData()?.addChatEntry(this.userName, this.chatInput, new Date());
 
     this.chatInput = ""
+  }
+
+  public get userName(){
+    return this.user();
+  }
+
+  public get chat(): LuxChatData | undefined {
+    return this.chatData();
   }
 
   public scrollToBottom(smoothScrolling = true) {
@@ -100,7 +101,7 @@ export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
   private doScrollToBottom(smoothScrolling = true){
     setTimeout(() =>{
       this.chatAutoScroll = true;
-      const baseEl = this.chatBase.nativeElement;
+      const baseEl = this.chatBase()!.nativeElement;
       
       baseEl.scrollTo({
         top: baseEl.scrollHeight - baseEl.clientHeight,
@@ -110,9 +111,9 @@ export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
   }
 
   public onChatScroll(e: any) {
-    const scrollTop = this.chatBase.nativeElement.scrollTop;
-    const scrollHeight = this.chatBase.nativeElement.scrollHeight;
-    const elHeight = this.chatBase.nativeElement.clientHeight;
+    const scrollTop = this.chatBase()!.nativeElement.scrollTop;
+    const scrollHeight = this.chatBase()!.nativeElement.scrollHeight;
+    const elHeight = this.chatBase()!.nativeElement.clientHeight;
 
     if(scrollHeight <= elHeight) return;
 
@@ -131,11 +132,13 @@ export class LuxChatComponent implements LuxChatControlRef, AfterContentInit {
   }
 
   private initSidebar(sidebar: LuxChatSidebarComponent){
-    this.onSidebarSideChange(sidebar, sidebar.side);
-    sidebar.sideChange.subscribe(change => this.onSidebarSideChange(sidebar, change));
+    this.onSidebarSideChange(sidebar, sidebar.side());
+    toObservable(sidebar.side, {injector: this.injector}).subscribe(change => this.onSidebarSideChange(sidebar, change));
   }
 
   private onSidebarSideChange(sidebar: LuxChatSidebarComponent, side: Side){
+    console.log("side: ", side);
+
     const removeFunc = (arr: any[]) => {
       let i = 0;
       while (i < arr.length) {

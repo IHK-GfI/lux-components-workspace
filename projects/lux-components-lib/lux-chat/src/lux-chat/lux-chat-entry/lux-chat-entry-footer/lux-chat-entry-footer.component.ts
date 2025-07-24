@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ContentChild, TemplateRef, ViewChild } from '@angular/core';
+import { Component, contentChild, TemplateRef, viewChild } from '@angular/core';
 
 @Component({
   selector: 'lux-chat-entry-footer',
@@ -11,7 +11,7 @@ import { Component, ContentChild, TemplateRef, ViewChild } from '@angular/core';
 })
 export class LuxChatEntryFooterComponent {
 
-  @ViewChild("core", { read: TemplateRef, static: true }) public templateRef!: TemplateRef<any>;
-  @ContentChild(TemplateRef) footerTemplateRef?: TemplateRef<any>;
+  public templateRef = viewChild.required<TemplateRef<any>>("core");
+  public footerTemplateRef = contentChild(TemplateRef);
 
 }

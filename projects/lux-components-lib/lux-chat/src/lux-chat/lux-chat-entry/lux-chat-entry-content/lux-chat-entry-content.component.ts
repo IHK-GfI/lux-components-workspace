@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ContentChild, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, contentChild, TemplateRef, viewChild } from '@angular/core';
 import { LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 
@@ -14,8 +14,8 @@ import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 })
 export class LuxChatEntryContentComponent {
 
-  @ViewChild("core", { read: TemplateRef, static: true }) public templateRef!: TemplateRef<any>;
-  @ContentChild(TemplateRef) contentTemplateRef?: TemplateRef<any>;
+  public templateRef = viewChild.required<TemplateRef<any>>("core");
+  public contentTemplateRef = contentChild(TemplateRef);
 
   public sanitizeConfig: LuxSanitizeConfig = {
       forbiddenTags: ["code"],

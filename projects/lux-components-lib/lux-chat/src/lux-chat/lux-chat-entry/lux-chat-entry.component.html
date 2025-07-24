@@ -10,11 +10,11 @@
         'lux-chat-entry-container-right': item.isUser,
         'lux-chat-entry-container-left': !item.isUser,
     }">
-        <ng-template *ngTemplateOutlet="chatEntryHeader?.templateRef ?? defaultHeader.templateRef; context: { $implicit: item }"></ng-template>
+        <ng-template *ngTemplateOutlet="chatEntryHeader()?.templateRef() ?? defaultHeader.templateRef(); context: { $implicit: item }"></ng-template>
         <div class="lux-chat-entry-card">
-            <ng-template *ngTemplateOutlet="chatEntryActions?.templateRef ?? null; context: { $implicit: item }"></ng-template>
-            <ng-template *ngTemplateOutlet="chatEntryContent?.templateRef ?? defaultContent.templateRef; context: { $implicit: item }"></ng-template>
-            <ng-template *ngTemplateOutlet="chatEntryFooter?.templateRef ?? defaultFooter.templateRef; context: { $implicit: item }"></ng-template>
+            <ng-template *ngTemplateOutlet="chatEntryActions()?.templateRef() ?? null; context: { $implicit: item }"></ng-template>
+            <ng-template *ngTemplateOutlet="chatEntryContent()?.templateRef() ?? defaultContent.templateRef(); context: { $implicit: item }"></ng-template>
+            <ng-template *ngTemplateOutlet="chatEntryFooter()?.templateRef() ?? defaultFooter.templateRef(); context: { $implicit: item }"></ng-template>
         </div>
     </div>
 </ng-template>

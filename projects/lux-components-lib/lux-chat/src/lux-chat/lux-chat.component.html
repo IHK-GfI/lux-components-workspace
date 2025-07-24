@@ -2,25 +2,25 @@
     <div class="lux-chat-layout-vertical">
         <!-- Sidebars top -->
         @for(sidebar of sidebars_top; track $index){
-           <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+           <ng-container *ngTemplateOutlet="sidebar.templateRef()"></ng-container>
         }
 
         <div class="lux-chat-layout-horizontal">
             <!-- Sidebars left -->
             @for(sidebar of sidebars_left; track $index){
-               <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+               <ng-container *ngTemplateOutlet="sidebar.templateRef()"></ng-container>
             }
 
             <div class="lux-chat-layout-container">
-                @if (compChatHeader) {
+                @if (compChatHeader()) {
                     <ng-content select="lux-chat-header"></ng-content>
                 }
                 @else{
                     <lux-chat-header>
                         <p class="default-chat-header-title">
-                            <b>{{ chatData?.title }}</b><br/>
-                            @if(chatData){
-                                {{defaultChatHeaderDatePrefix}}: <b>{{ chatData!.created_at | luxRelativeTimestamp:undefined:undefined:-11:0 }}</b>
+                            <b>{{ chatData()?.title }}</b><br/>
+                            @if(chatData()){
+                                {{defaultChatHeaderDatePrefix}}: <b>{{ chatData()!.created_at | luxRelativeTimestamp:undefined:undefined:-11:0 }}</b>
                             }
                         </p>
                     </lux-chat-header>
@@ -29,12 +29,12 @@
                 <lux-divider [luxInset]="true"></lux-divider>
 
                 <div class="lux-chat-base" (scroll)="onChatScroll($event)" tabindex="0" #chatBase>
-                    @for (item of chatData?.data; track $index) {
-                        <ng-container *ngTemplateOutlet="compChatEntry?.templateRef ?? defaultEntry.templateRef; context: { $implicit: item }"></ng-container>
+                    @for (item of chatData()?.data; track $index) {
+                        <ng-container *ngTemplateOutlet="compChatEntry()?.templateRef() ?? defaultEntry.templateRef(); context: { $implicit: item }"></ng-container>
                     }
                 </div>
 
-                @if(compChatInput){
+                @if(compChatInput()){
                     <ng-content select="lux-chat-input"></ng-content>
                 }
                 @else {
@@ -48,13 +48,13 @@
 
             <!-- Sidebars right -->
             @for(sidebar of sidebars_right; track $index){
-                <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+                <ng-container *ngTemplateOutlet="sidebar.templateRef()"></ng-container>
             }
         </div>
 
         <!-- Sidebars bottom -->
         @for(sidebar of sidebars_bottom; track $index){
-            <ng-container *ngTemplateOutlet="sidebar.templateRef"></ng-container>
+            <ng-container *ngTemplateOutlet="sidebar.templateRef()"></ng-container>
         }
     </div>
 </div>

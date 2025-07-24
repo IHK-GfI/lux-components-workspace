@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ContentChild, TemplateRef, ViewChild } from '@angular/core';
+import { Component, contentChild, TemplateRef, viewChild } from '@angular/core';
 import { LuxChatDataEntry } from '../../lux-chat-data-entry';
 
 const HEADER_SHOW_TIME_OFFSET = 1000 * 60 * 10;
@@ -13,9 +13,9 @@ const HEADER_SHOW_TIME_OFFSET = 1000 * 60 * 10;
   styleUrl: './lux-chat-entry-header.component.scss'
 })
 export class LuxChatEntryHeaderComponent {
-  
-  @ViewChild("core", { read: TemplateRef, static: true }) public templateRef!: TemplateRef<any>;
-  @ContentChild(TemplateRef) headerTemplateRef?: TemplateRef<any>;
+
+  public templateRef = viewChild.required<TemplateRef<any>>("core");
+  public headerTemplateRef = contentChild(TemplateRef);
 
   checkShowHeader(item: LuxChatDataEntry): boolean {
     const chat = item.chatControlRef.chat;

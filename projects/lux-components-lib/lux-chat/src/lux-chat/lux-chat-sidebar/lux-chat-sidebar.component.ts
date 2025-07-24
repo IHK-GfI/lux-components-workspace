@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterContentInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, computed, effect, input, model, signal, TemplateRef, viewChild } from '@angular/core';
 import { LuxIconComponent } from '@ihk-gfi/lux-components';
 
 export type Side = "top" | "left" | "bottom" | "right";
@@ -15,65 +15,58 @@ export type Side = "top" | "left" | "bottom" | "right";
 })
 export class LuxChatSidebarComponent implements AfterContentInit {
     
-  @ViewChild("core", { read: TemplateRef, static: true }) public templateRef!: TemplateRef<any>;
+  public templateRef = viewChild.required<TemplateRef<any>>("core")
 
-  public _side: Side = 'left';
+  public side = model<Side>('left');
+  public computedClasses = computed(() => {
+    const classes = [];
+    classes.push("lux-chat-sidebar-container");
+    
+    if(this.overlay()) classes.push("overlay");
+
+    const theSide = this.side();
+    if(theSide){
+      classes.push(theSide);
+    }
+
+    if(this.sidebarSlideAnimationClass()) classes.push("sidebar-show");
+
+    return classes;
+  });
   
-  @Input()
-  public set side(side: Side){
-    this._side = side;
-    this.sideChange.emit(side);
+  public overlay = input(false);
+
+  public visible = model(false);
+  public sidebarShow = signal(false);
+  public sidebarSlideAnimationClass = signal(false);
+  public title = input("");
+
+  constructor(){
+    effect(() => {
+      if(this.visible()){
+        this.sidebarShow.set(true);
+        setTimeout(() => {
+          this.sidebarSlideAnimationClass.set(true);
+        });
+      }
+      else {
+        this.sidebarSlideAnimationClass.set(false);
+        setTimeout(() => {
+          this.sidebarShow.set(false);
+        }, 300);
+      }
+    });
   }
-
-  public get side(){
-    return this._side;
-  }
-
-  @Input()
-  public overlay = false;
-
-  private _visible = false;
-  public sidebarShown = false;
-
-  @Input()
-  public set visible(visible: boolean){
-    if(this._visible === visible) return;
-
-    if(visible){
-      this._visible = true;
-      setTimeout(() => {
-        this.sidebarShown = true;
-      })
-    }
-    else {
-      this.sidebarShown = false;
-      setTimeout(() => {
-        this._visible = false;
-      }, 400);
-    }
-  }
-
-  public get visible(): boolean {
-    return this._visible;
-  }
-
-  @Input()
-  public title = "";
-
-  public sideChange: EventEmitter<Side> = new EventEmitter<Side>();
-
-  @Output()
-  private visibleChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   ngAfterContentInit(){
-    if(this.side === undefined){
-      this.side = "left";
+    console.log(this.side())
+    if(this.side() === undefined){
+      this.side.set("left");
     }
   }
 
   onClosePressed(){
-    this.visible = false;
-    this.visibleChange.emit(false);
+    this.visible.set(false);
   }
 
 }

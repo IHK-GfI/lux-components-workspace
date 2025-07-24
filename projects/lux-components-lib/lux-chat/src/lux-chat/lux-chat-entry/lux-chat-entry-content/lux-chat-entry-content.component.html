@@ -1,6 +1,6 @@
 <ng-template let-item #core>
     <div class="lux-chat-entry-content">
-        <ng-container *ngTemplateOutlet="contentTemplateRef ?? default; context: { $implicit: item }"></ng-container>
+        <ng-container *ngTemplateOutlet="contentTemplateRef() ?? default; context: { $implicit: item }"></ng-container>
     </div>
 </ng-template>
 
