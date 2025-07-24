@@ -137,8 +137,6 @@ export class LuxChatComponent implements LuxChatControlRef {
   }
 
   private onSidebarSideChange(sidebar: LuxChatSidebarComponent, side: Side){
-    console.log("side: ", side);
-
     const removeFunc = (arr: any[]) => {
       let i = 0;
       while (i < arr.length) {

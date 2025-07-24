@@ -59,7 +59,6 @@ export class LuxChatSidebarComponent implements AfterContentInit {
   }
 
   ngAfterContentInit(){
-    console.log(this.side())
     if(this.side() === undefined){
       this.side.set("left");
     }
