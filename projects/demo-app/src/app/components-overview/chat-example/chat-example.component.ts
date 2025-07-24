@@ -174,7 +174,7 @@ export class ChatExampleComponent {
   }
 
   public generateAndShowCode(){
-    let content = "<lux-chat userName=\"" + this.userName + "\" [chatData]=\"chatData\">\n";
+    let content = "<lux-chat user=\"" + this.userName + "\" [chatData]=\"chatData\">\n";
 
     if(this.advancedHeaderTemplate.id != 0){
       content += this.cleanAndAddTabs(this.advancedHeaderTemplate.content, 1);
