@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LuxChatAiComponent } from './lux-chat-ai.component';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('LuxChatAiComponent', () => {
   let component: LuxChatAiComponent;
@@ -11,7 +11,7 @@ describe('LuxChatAiComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LuxChatAiComponent],
       providers:[
-        provideHttpClientTesting()
+        provideHttpClient()
       ]
     })
     .compileComponents();
