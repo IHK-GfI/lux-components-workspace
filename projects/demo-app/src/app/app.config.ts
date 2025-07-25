@@ -5,6 +5,8 @@ import { provideRouter } from '@angular/router';
 import { LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { MockLuxChatAiService } from './components-overview/chat-ai-example/mock-chat-ai.service';
+import { LuxChatAiService } from '@ihk-gfi/lux-components/lux-chat-ai';
 
 const myConfiguration: LuxComponentsConfigParameters = {
   generateLuxTagIds: environment.generateLuxTagIds,
@@ -21,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     importProvidersFrom([LuxComponentsConfigModule.forRoot(myConfiguration)]),
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    { provide: LuxChatAiService, useClass: MockLuxChatAiService }
   ]
 };
