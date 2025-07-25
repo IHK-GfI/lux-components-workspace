@@ -11,8 +11,6 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'button', loadComponent: () => import('./button-example/button-example.component').then(m => m.ButtonExampleComponent) },
       { path: 'card', loadComponent: () => import('./card-example/card-example.component').then(m => m.CardExampleComponent) },
       { path: 'chat', loadComponent: () => import('./chat-example/chat-example.component').then(m => m.ChatExampleComponent) },
-      { path: 'chat-ai', loadComponent: () => import('./chat-ai-example/chat-ai-example.component').then(m => m.ChatAiExampleComponent) },
-      { path: 'chat-ai/:chatId', loadComponent: () => import('./chat-ai-example/chat-ai-example.component').then(m => m.ChatAiExampleComponent) },
       { path: 'chips-ac', loadComponent: () => import('./chip-authentic-example/chip-authentic-example.component').then(m => m.ChipAuthenticExampleComponent) },
       { path: 'datepicker-ac', loadComponent: () => import('./datepicker-authentic-example/datepicker-authentic-example.component').then(m => m.DatepickerAuthenticExampleComponent) },
       { path: 'datetimepicker-ac', loadComponent: () => import('./datetimepicker-authentic-example/datetimepicker-authentic-example.component').then(m => m.DatetimepickerAuthenticExampleComponent) },

@@ -20,7 +20,7 @@
                         <p class="default-chat-header-title">
                             <b>{{ chatData()?.title }}</b><br/>
                             @if(chatData()){
-                                {{defaultChatHeaderDatePrefix}}: <b>{{ chatData()!.created_at | luxRelativeTimestamp:undefined:undefined:-11:0 }}</b>
+                                {{defaultChatHeaderDatePrefix}}: <b>{{ chatData()!.created_at | luxChatRelativeUntilTimestamp:undefined:undefined:-11:0 }}</b>
                             }
                         </p>
                     </lux-chat-header>

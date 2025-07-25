@@ -12,3 +12,4 @@ export * from './lux-chat/lux-chat-entry/lux-chat-entry-actions/lux-chat-entry-a
 export * from './lux-chat/lux-chat-sidebar/lux-chat-sidebar.component'
 export * from './lux-chat/lux-chat-data';
 export * from './lux-chat/lux-chat-data-entry';
+export * from './lux-chat/lux-chat-relative-until-timestamp.pipe';
