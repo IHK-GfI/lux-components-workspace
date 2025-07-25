@@ -5,9 +5,10 @@ import { LuxChatData } from './lux-chat-data';
 import { CommonModule } from '@angular/common';
 import { LuxChatEntryComponent } from "./lux-chat-entry/lux-chat-entry.component";
 import { LuxChatControlRef } from './lux-chat-control-ref';
-import { LuxAriaLabelDirective, LuxDividerComponent, LuxRelativeTimestampPipe, LuxTextareaAcComponent } from '@ihk-gfi/lux-components';
+import { LuxAriaLabelDirective, LuxDividerComponent, LuxTextareaAcComponent } from '@ihk-gfi/lux-components';
 import { LuxChatSidebarComponent, Side } from './lux-chat-sidebar/lux-chat-sidebar.component';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { LuxChatRelativeUntilTimestamp } from './lux-chat-relative-until-timestamp.pipe';
 
 @Component({
   selector: 'lux-chat',
@@ -18,8 +19,8 @@ import { toObservable } from '@angular/core/rxjs-interop';
     LuxChatInputComponent,
     LuxChatEntryComponent,
     LuxTextareaAcComponent,
-    LuxRelativeTimestampPipe,
-    LuxAriaLabelDirective
+    LuxAriaLabelDirective,
+    LuxChatRelativeUntilTimestamp
 ],
   templateUrl: './lux-chat.component.html',
   styleUrl: './lux-chat.component.scss'

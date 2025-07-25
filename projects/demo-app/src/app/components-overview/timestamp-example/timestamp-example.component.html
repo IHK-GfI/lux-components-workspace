@@ -13,7 +13,7 @@
       <div class="lux-flex gt-md:lux-gap-2 lt-lg:lux-flex-col">
         <div class="gt-md:lux-flex-basis-40">Pipe <i>luxRelativeTimestamp</i>:</div>
         <div>
-          <b> {{ now | luxRelativeTimestamp : defaultText : prefix : relativeUntilMin : relativeUntilMax }}&nbsp; </b>
+          <b> {{ now | luxRelativeTimestamp : defaultText : prefix}}&nbsp; </b>
         </div>
       </div>
     </div>
@@ -61,21 +61,5 @@
         Standardmäßig werden die Präfixe 'in' und 'vor' benutzt.
       </lux-form-hint>
     </lux-input-ac>
-
-    <h3>Relativ Until</h3>
-    <p>Gibt an ab wann von relativer Zeitangaber zu absoluter gewechselt werden soll.</p>
-
-    <lux-input-ac luxName="relative_until_min" luxAutocomplete="off" luxLabel="Relativ Until Min" [(luxValue)]="relativeUntilMin">
-      <lux-form-hint>
-        Dieser Paramerter gibt an, nach wie vielen Tagen in der Vergangenheit die Zeitangabe NICHT mehr relativ angegeben werden.
-      </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac luxName="relative_until_max" luxAutocomplete="off" luxLabel="Relativ Until Max" [(luxValue)]="relativeUntilMax">
-      <lux-form-hint>
-        Dieser Paramerter gibt an, nach wie vielen Tagen in der Zukunft die Zeitangabe NICHT mehr relativ angegeben werden.
-      </lux-form-hint>
-    </lux-input-ac>
-
-    <p><b>Beispiel: </b><br>Relativ Until Min: -2<br>Relativ Until Max: 2<br>Dadurch wird 2 Tage in der Vergangenheit und 2 Tage in der Zukunft nicht mehr relativ angezeigt, also statt vor/in 2 Tagen wird das absolute Datum gezeigt.</p>
   </example-base-simple-options>
 </example-base-structure>

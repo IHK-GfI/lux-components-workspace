@@ -71,7 +71,7 @@ export class ChatExampleComponent {
     {id: 3, label: "Titel und Anzahl Nachrichten", content: "<lux-chat-header>\n\t<p>\n\t\t<b>{{chatData.title}}</b><br>\n\t\t{{chatData.data.length}} Einträge.\n\t</p>\n</lux-chat-header>"},
     {id: 4, label: "Header mit Button zur Historie.", content: "<lux-chat-header>\n\t<div style=\"display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 20px;\">\n\t\t<lux-icon role=\"button\" (click)=\"doShowHistory()\" style=\"cursor: pointer;\" [luxIconName]=\"sidebarHistoryVisible ? 'lux-book-readme' : 'lux-hand-held'\" [luxRounded]=\"true\"></lux-icon>\n\t\t<p>\n\t\t\t<b>{{ chatData.title }}</b><br/>\n\t\t\tErstellt am: <b>{{ chatData.created_at | date:'dd.MM.yyyy, HH:mm:ss' }}</b>\n\t\t</p>\n\t</div>\n</lux-chat-header>"}
   ];
-  public advancedHeaderTemplate: {id: number, label: string, content: string} = this.advancedHeaderOptions[0];
+  public advancedHeaderTemplate: {id: number, label: string, content: string} = this.advancedHeaderOptions[4];
 
   public advancedEntryHeaderOptions = [
     {id: 0, label: "Default", content: "<lux-chat-entry-header>\n\t<ng-template let-item #default>\n\t\t@if(checkShowHeader(item)){\n\t\t\t<span *ngIf=\"!item.isUser\">{{item.user}}</span>\n\t\t\t<span>{{item.time | date:'HH:mm'}}</span>\n\t\t}\n\t</ng-template>\n</lux-chat-entry-header>"},

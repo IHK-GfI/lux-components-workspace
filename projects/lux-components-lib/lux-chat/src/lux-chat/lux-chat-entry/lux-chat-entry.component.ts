@@ -5,7 +5,7 @@ import { LuxChatEntryFooterComponent } from './lux-chat-entry-footer/lux-chat-en
 import { LuxChatEntryActionsComponent } from './lux-chat-entry-actions/lux-chat-entry-actions.component';
 import { LuxChatDataEntry } from '../lux-chat-data-entry';
 import { CommonModule } from '@angular/common';
-import { LuxRelativeTimestampPipe } from '@ihk-gfi/lux-components';
+import { LuxChatRelativeUntilTimestamp } from '../lux-chat-relative-until-timestamp.pipe';
 
 const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
@@ -16,7 +16,7 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     LuxChatEntryHeaderComponent,
     LuxChatEntryContentComponent,
     LuxChatEntryFooterComponent,
-    LuxRelativeTimestampPipe
+    LuxChatRelativeUntilTimestamp
   ],
   templateUrl: './lux-chat-entry.component.html',
   styleUrl: './lux-chat-entry.component.scss'

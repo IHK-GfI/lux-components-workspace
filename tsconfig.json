@@ -13,7 +13,6 @@
       "@ihk-gfi/lux-components/lux-html": ["./dist/lux-components-lib/lux-html"],
       "@ihk-gfi/lux-components/lux-markdown": ["./dist/lux-components-lib/lux-markdown"],
       "@ihk-gfi/lux-components/lux-chat": ["./dist/lux-components-lib/lux-chat"],
-      "@ihk-gfi/lux-components/lux-chat-ai": ["./dist/lux-components-lib/lux-chat-ai"],
     },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

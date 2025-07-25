@@ -1,7 +1,7 @@
 <ng-template let-item #core>
     @if(checkShowDateSplit(item)){
         <div class="lux-chat-entry-date-split">
-            {{item.time | luxRelativeTimestamp: undefined:undefined:-2:0}}
+            {{item.time | luxChatRelativeUntilTimestamp: undefined:undefined:-2:0}}
         </div>
     }
 
