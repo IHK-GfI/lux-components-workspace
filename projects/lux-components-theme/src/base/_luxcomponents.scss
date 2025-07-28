@@ -215,7 +215,7 @@ $fileUploadProgressSize: 8px;
     align-items: center;
     flex: 1 1 auto;
     gap: 12px;
-    
+
     border: 1px solid var(--lux-theme-warn-900);
     border-radius: 4px;
     color: map.get(luxpalette.$lux-palette-warn, 900) !important;

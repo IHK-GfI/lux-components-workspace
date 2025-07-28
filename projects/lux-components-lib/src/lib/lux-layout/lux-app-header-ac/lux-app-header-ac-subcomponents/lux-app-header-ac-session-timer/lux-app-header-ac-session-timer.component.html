@@ -1,0 +1,10 @@
+@if (luxSessionTimerService.showSessionTimer() && !mobileView) {
+<lux-button
+  luxTagId="lux-session-timer-button"
+  luxIconName="lux-interface-time-reset"
+  luxLabel="{{ luxSessionTimerService.timeRemaining$ | async | date : 'mm' }} Minuten"
+  (luxClicked)="extendTimer()"
+  [luxLoading]="luxLoading"
+  luxTooltip="Laufzeit verlängern?"
+></lux-button>
+}

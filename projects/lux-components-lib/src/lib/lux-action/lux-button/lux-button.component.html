@@ -92,7 +92,7 @@
   [attr.aria-label]="luxLabel ? luxLabel : ''"
 >
   @if(luxLoading && !luxDisabled) {
-  <lux-progress
+  <lux-progress inert
     luxType="Spinner"
     [luxMode]="luxSpinnerMode"
     [luxValue]="luxSpinnerValue"
@@ -121,7 +121,7 @@
   [attr.aria-label]="luxLabel ? luxLabel : ''"
 >
   @if(luxLoading && !luxDisabled) {
-  <lux-progress
+  <lux-progress inert
     luxType="Spinner"
     [luxMode]="luxSpinnerMode"
     [luxValue]="luxSpinnerValue"
@@ -137,7 +137,7 @@
 <ng-template #luxButtonContent>
   <div class="lux-button-content-container">
     @if (luxLoading && !luxIconShowRight && !luxDisabled) {
-    <lux-progress
+    <lux-progress inert
       luxType="Spinner"
       [luxMode]="luxSpinnerMode"
       [luxValue]="luxSpinnerValue"
@@ -165,7 +165,7 @@
     } @if (luxIconName && luxIconShowRight && !luxLoading) {
     <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="14px" class="lux-button-icon"></lux-icon>
     } @if (luxLoading && luxIconShowRight && !luxDisabled) {
-    <lux-progress
+    <lux-progress inert
       luxType="Spinner"
       [luxMode]="luxSpinnerMode"
       [luxValue]="luxSpinnerValue"
