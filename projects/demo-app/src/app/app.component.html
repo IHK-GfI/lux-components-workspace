@@ -298,7 +298,7 @@
     </lux-app-header-ac-action-nav>
   </lux-app-header-ac>
   }
-  <lux-app-content luxAriaRoleMainLabel="">
+  <lux-app-content luxAriaRoleMainLabel="" cdkScrollable>
     @if (this.luxAppFooter !== 'none' && ((fixedFooterService.fixedModeAsObservable | async) === false)) {
     <lux-app-footer luxVersion="19.1.0"></lux-app-footer>
     }
