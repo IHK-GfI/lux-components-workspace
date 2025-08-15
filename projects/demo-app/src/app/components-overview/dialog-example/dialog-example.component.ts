@@ -1,19 +1,19 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, OnDestroy, TemplateRef, ViewChild, inject } from '@angular/core';
 import {
-    ILuxDialogPresetConfig,
-    LuxAccordionComponent,
-    LuxButtonComponent,
-    LuxDialogDefaultButton,
-    LuxDialogService,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+  ILuxDialogPresetConfig,
+  LuxAccordionComponent,
+  LuxButtonComponent,
+  LuxDialogDefaultButton,
+  LuxDialogService,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -81,7 +81,7 @@ export class DialogExampleComponent implements OnDestroy {
   };
   pickValueFn = examplePickValueFn;
 
-  exampleData: object | null = null;
+  exampleData: { showOutputEvents: boolean } = { showOutputEvents: false };
   defaultButtonOptions: { label: string; value: LuxDialogDefaultButton }[] = [
     { label: 'unset', value: undefined },
     { label: 'confirm', value: 'confirm' },
@@ -157,7 +157,7 @@ export class DialogExampleComponent implements OnDestroy {
   }
 
   openDialogComponent() {
-    const dialogRef = this.dialogService.openComponent(DialogComponentExampleComponent, this.dialogConfig, this.exampleData);
+    const dialogRef = this.dialogService.openComponent(DialogComponentExampleComponent, this.dialogConfig, { showOutputEvents: this.showOutputEvents });
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {

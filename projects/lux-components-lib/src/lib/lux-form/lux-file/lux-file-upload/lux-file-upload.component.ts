@@ -248,7 +248,6 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
 
       if (this.luxMultiple) {
         if (replaceableFilesMap.size > 0) {
-          this.dialogService.storeDialogRef();
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
             multiple: this.luxMultiple,
             deleteProtection: replaceFileDeleteProtection
@@ -265,12 +264,6 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
 
           dialogRef.dialogClosed.subscribe(() => {
             this.fileUploadInput.nativeElement.value = '';
-
-            this.subscriptions.push(
-              dialogRef.dialogClosed.subscribe(() => {
-                this.dialogService.restoreDialogRef();
-              })
-            );
           });
         } else {
           this.updateFilesIntern(files, selectedFilesArray, replaceableFilesMap);
@@ -294,7 +287,6 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
             (error) => this.setFormControlErrors(error)
           );
         } else if (files.length === 1 && this.luxSelected && this.luxSelected.length > 0) {
-          this.dialogService.storeDialogRef();
           const dialogRef = this.dialogService.openComponent(LuxFileReplaceDialogComponent, this.dialogReplaceConfig, {
             multiple: this.luxMultiple,
             deleteProtection: this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false
@@ -318,12 +310,6 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
 
           dialogRef.dialogClosed.subscribe(() => {
             this.fileUploadInput.nativeElement.value = '';
-
-            this.subscriptions.push(
-              dialogRef.dialogClosed.subscribe(() => {
-                this.dialogService.restoreDialogRef();
-              })
-            );
           });
         }
       }
@@ -391,14 +377,7 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   }
 
   openDeleteDialog(index: number) {
-    this.dialogService.storeDialogRef();
     const dialogRef = this.dialogService.openComponent(LuxFileDeleteDialogComponent, this.dialogDeleteConfig);
-
-    this.subscriptions.push(
-      dialogRef.dialogClosed.subscribe(() => {
-        this.dialogService.restoreDialogRef();
-      })
-    );
 
     this.subscriptions.push(
       dialogRef.dialogConfirmed.subscribe(() => {
