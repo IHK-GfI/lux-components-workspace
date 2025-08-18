@@ -100,6 +100,16 @@ export function applyRuleIfFileExists(rule: Rule, path: string): Rule {
   };
 }
 
+export function applyRuleIfFileNotExists(rule: Rule, path: string): Rule {
+  return (tree: Tree, _context: SchematicContext) => {
+    if (!tree.exists(path)) {
+      return rule;
+    } else {
+      return tree;
+    }
+  };
+}
+
 export function applyRuleIf(minVersion: string, rule: Rule): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     let version = getPackageJsonDependency(tree, '@ihk-gfi/lux-components').version;

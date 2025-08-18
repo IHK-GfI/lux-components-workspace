@@ -6,6 +6,11 @@
       "factory": "./src/update-standalone-imports/index#updateStandAloneImports",
       "schema": "./src/update-standalone-imports/schema.json"
     },
+    "update-19.2.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 19.2.0",
+      "factory": "./src/updates/19.2.0/index#update190200",
+      "schema": "./src/updates/19.2.0/schema.json"
+    },
     "update-19.1.0": {
       "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 19.1.0",
       "factory": "./src/updates/19.1.0/index#update190100",
