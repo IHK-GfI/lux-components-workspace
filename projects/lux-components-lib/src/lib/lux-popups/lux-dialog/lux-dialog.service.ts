@@ -1,7 +1,6 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, Injector, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { DEFAULT_DIALOG_CONF, ILuxDialogConfig } from './lux-dialog-model/lux-dialog-config.interface';
 import { DEFAULT_DIALOG_PRESET_CONF, ILuxDialogPresetConfig } from './lux-dialog-model/lux-dialog-preset-config.interface';
 import { LuxDialogRef } from './lux-dialog-model/lux-dialog-ref.class';
@@ -11,13 +10,8 @@ import { LuxDialogPresetComponent } from './lux-dialog-preset/lux-dialog-preset.
   providedIn: 'root'
 })
 export class LuxDialogService {
+  private parentInjector = inject(Injector);
   private matDialog = inject(MatDialog);
-  private logger = inject(LuxConsoleService);
-  private luxDialogRef = inject<LuxDialogRef<any>>(LuxDialogRef);
-
-  private static readonly ALREADY_OPENED_ERROR: string = 'Aktuell ist bereits ein Dialog geöffnet';
-
-  private dialogOpened = false;
 
   /**
    * Öffnet einen Dialog basierend auf der übergebenen Component und den entsprechenden Daten.
@@ -26,22 +20,19 @@ export class LuxDialogService {
    * @param data
    */
   openComponent<T>(component: ComponentType<any>, config?: ILuxDialogConfig, data?: T): LuxDialogRef<T> {
-    this.handleOpen(component, config, data, DEFAULT_DIALOG_CONF);
-    return this.luxDialogRef;
+    return this.handleOpen(component, config, data, DEFAULT_DIALOG_CONF);
   }
 
   /**
-   *  Siehe LuxDialogRef.storeDialogRef
+   * @deprecated Wird nicht mehr benötigt, da die Dialogreferenz nicht mehr zwischengespeichert wird.
    */
   storeDialogRef() {
-    this.luxDialogRef.storeDialogRef();
   }
 
   /**
-   * Siehe LuxDialogRef.restoreDialogRef
+   * @deprecated Wird nicht mehr benötigt, da die Dialogreferenz nicht mehr zwischengespeichert wird.
    */
   restoreDialogRef() {
-    this.luxDialogRef.restoreDialogRef();
   }
 
   /**
@@ -50,8 +41,7 @@ export class LuxDialogService {
    */
   open<T>(config?: ILuxDialogPresetConfig): LuxDialogRef<T> {
     // Eine Dialog-Instanz erzeugen, als Data übergeben wir hier noch einmal die Config
-    this.handleOpen(LuxDialogPresetComponent, config, config, DEFAULT_DIALOG_PRESET_CONF);
-    return this.luxDialogRef;
+    return this.handleOpen(LuxDialogPresetComponent, config, config, DEFAULT_DIALOG_PRESET_CONF);
   }
 
   /**
@@ -67,8 +57,7 @@ export class LuxDialogService {
     config?: ILuxDialogConfig,
     data?: any,
     defaultConfig: ILuxDialogConfig | ILuxDialogPresetConfig = DEFAULT_DIALOG_CONF
-  ) {
-    if (!this.dialogOpened) {
+  ): LuxDialogRef<any> {
       // Wenn keine Config übergeben ist, die defaultConfig nehmen
       config = config ? config : defaultConfig;
 
@@ -95,8 +84,13 @@ export class LuxDialogService {
         activeElement.blur();
       }
 
+      // Neue LuxDialogRef-Instanz für diesen Dialog erstellen
+      const dialogRef = new LuxDialogRef();
+      const injector = Injector.create({parent: this.parentInjector, providers: [{provide: LuxDialogRef, useValue: dialogRef}]});
+
       // Dialog öffnen und Konfiguration übergeben
       const matDialogRef = this.matDialog.open(component, {
+        injector,
         width: config.width,
         height: config.height,
         autoFocus: false,
@@ -111,9 +105,9 @@ export class LuxDialogService {
         }
       });
 
-      this.luxDialogRef.init(matDialogRef, data);
-    } else {
-      this.logger.error(LuxDialogService.ALREADY_OPENED_ERROR);
-    }
+      dialogRef.init(matDialogRef, data);
+
+
+    return dialogRef;
   }
 }

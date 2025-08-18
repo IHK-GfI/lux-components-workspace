@@ -1,20 +1,22 @@
 import { Component, inject } from '@angular/core';
 import {
-    ILuxDialogPresetConfig,
-    LuxAriaLabelDirective,
-    LuxButtonComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxDialogActionsComponent,
-    LuxDialogContentComponent,
-    LuxDialogRef,
-    LuxDialogService,
-    LuxDialogStructureComponent,
-    LuxDialogTitleComponent,
-    LuxFileUploadComponent,
-    LuxTextareaAcComponent,
-    LuxToggleAcComponent
+  ILuxDialogPresetConfig,
+  LuxAriaLabelDirective,
+  LuxButtonComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxConsoleService,
+  LuxDialogActionsComponent,
+  LuxDialogContentComponent,
+  LuxDialogRef,
+  LuxDialogService,
+  LuxDialogStructureComponent,
+  LuxDialogTitleComponent,
+  LuxFileUploadComponent,
+  LuxTextareaAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { logResult } from '../../../example-base/example-base-util/example-base-helper';
 
 @Component({
   selector: 'app-dialog-component-example',
@@ -35,8 +37,10 @@ import {
   ]
 })
 export class DialogComponentExampleComponent {
-  luxDialogRef = inject<LuxDialogRef<void>>(LuxDialogRef);
+  luxDialogRef = inject<LuxDialogRef<{ showOutputEvents: boolean }>>(LuxDialogRef);
+  consoleLogger = inject(LuxConsoleService);
   private dialogService = inject(LuxDialogService);
+  log = logResult;
 
   dialogConfig: ILuxDialogPresetConfig = {
     title: 'Info',
@@ -53,18 +57,10 @@ export class DialogComponentExampleComponent {
   };
 
   openInfoDialog() {
-    // Die Referenz des aktuell angezeigten Dialogs wird gespeichert.
-    this.dialogService.storeDialogRef();
+    const dialogRef = this.dialogService.open({ ...this.dialogConfig, disableClose: this.luxDialogRef._matDialogRef.disableClose });
 
-    // Jetzt kann der Hilfedialog innerhalb des bereits geöffneten
-    // Dialogs angezeigt werden.
-    this.dialogConfig.disableClose = this.luxDialogRef._matDialogRef.disableClose;
-    const dialogRef = this.dialogService.open(this.dialogConfig);
-
-    dialogRef.dialogClosed.subscribe(() => {
-      // Nach dem Schließen des Hilfedialogs wird die Referenz
-      // des ursprünglichen Dialogs wiederhergestellt.
-      this.dialogService.restoreDialogRef();
+    dialogRef.dialogClosed.subscribe((result) => {
+      this.log(this.luxDialogRef.data.showOutputEvents, 'Hilfedialog dialogConfirmed', result);
     });
   }
 }
