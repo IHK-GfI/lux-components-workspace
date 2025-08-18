@@ -44,6 +44,7 @@ import { ComponentsOverviewNavigationService } from './components-overview/compo
 import { MockLuxLookupService } from './components-overview/lookup-examples/mock-lookup-service';
 import { TenantLogoExampleConfigData } from './components-overview/tenant-logo-example/tenant-logo-example-config/tenant-logo-example-config-data';
 import { TenantLogoExampleHeaderService } from './components-overview/tenant-logo-example/tenant-logo-example-header.service';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-root',
@@ -75,7 +76,8 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
     LuxAriaLabelDirective,
     LuxTooltipDirective,
     AsyncPipe,
-    HammerModule
+    HammerModule,
+    CdkScrollable
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

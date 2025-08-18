@@ -18,6 +18,7 @@
 
 - Issue #14: lux-lookup-combobox: Selektierter Eintrag wird manchmal nicht angezeigt (#66)
 - Issue #63: lux-file-upload - Die Custom-Actions sollen auch in der Listenansicht angezeigt werden (#65)
+- Issue #37: chips-ac: Auswahl reagiert nicht auf Scrollen auf der Main Page (#79)
 
 ## Version 19.0.0
 
