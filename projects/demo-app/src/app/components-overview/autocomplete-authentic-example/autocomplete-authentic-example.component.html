@@ -45,6 +45,14 @@
         } @if (showSuffix) {
         <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
         }
+        @if(useTemplatesForLabels) {
+          <ng-template let-option #labelTemplate>
+            <div class="lux-flex ">
+              <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
+              <div>via Template {{ option[renderProperty]}}</div>
+            </div>
+          </ng-template>
+        }
       </lux-autocomplete-ac>
       <example-value [value]="value"></example-value>
     </div>
@@ -84,6 +92,14 @@
         <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'"></lux-icon>&nbsp; </lux-input-ac-prefix>
         } @if (showSuffix) {
         <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
+        }
+         @if(useTemplatesForLabels) {
+          <ng-template let-option #labelTemplate>
+            <div class="lux-flex ">
+              <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
+              <div>via Template {{ option[renderProperty]}}</div>
+            </div>
+          </ng-template>
         }
       </lux-autocomplete-ac>
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
@@ -274,6 +290,9 @@
                   gesamte Eingabewert direkt selektiert wird."
       [luxNoTopLabel]="true"
     >
+    </lux-toggle-ac>
+    <lux-toggle-ac [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
+      <lux-form-hint> Die Labels können über in die Component eingereichte Template-Tags erstellt werden. </lux-form-hint>
     </lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"

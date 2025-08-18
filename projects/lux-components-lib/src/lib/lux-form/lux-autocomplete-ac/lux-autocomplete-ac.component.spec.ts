@@ -564,7 +564,7 @@ describe('LuxAutocompleteAcComponent', () => {
     });
   });
 
-  describe('luxCustomOptionTemplate testen', () => {
+  describe('labelTemplate testen', () => {
     let component: LuxAutoCompleteWithCustomOptionTemplateComponent;
     let fixture: ComponentFixture<LuxAutoCompleteWithCustomOptionTemplateComponent>;
     let overlayHelper: LuxOverlayHelper;
@@ -719,12 +719,11 @@ class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
   selector: 'lux-autocomplete-with-custom-option-template-component',
   template: `
     <lux-autocomplete-ac luxLabel="Autocomplete"
-                         [luxCustomOptionTemplate]="optionTemplate"
                          [luxOptions]="options"
                          [(luxValue)]="selected"
                          [luxStrict]="strict"> </lux-autocomplete-ac>
 
-    <ng-template #optionTemplate let-option>
+    <ng-template let-option #labelTemplate>
       <div>
         <span>{{ option }} - 123</span>
       </div>

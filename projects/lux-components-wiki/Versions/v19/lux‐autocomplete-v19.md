@@ -11,6 +11,7 @@
     - [1. Ohne Formular](#1-ohne-formular)
     - [2. Mit Formular](#2-mit-formular)
     - [3. Einfaches String-Array als Optionen](#3-einfaches-string-array-als-optionen)
+    - [4. Ohne Formular - Mit Label-Template](#4-ohne-formular---mit-label-template)
 
 ## Overview / API
 
@@ -160,4 +161,38 @@ Html
   >
   </lux-autocomplete-ac>
 </div>
+```
+
+### 4. Ohne Formular - Mit Label-Template
+
+![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-01.png)
+
+Ts
+
+```typescript
+options = [
+  { label: "Meine Aufgaben", value: "A" },
+  { label: "Gruppenaufgaben", value: "B" },
+  { label: "Zurückgestellte Aufgaben", value: "C" },
+  { label: "Vertretungsaufgaben", value: "D" },
+];
+selected: any;
+```
+
+Html
+
+```html
+<lux-autocomplete-ac
+  luxLabel="Mein Autocomplete"
+  luxPlaceholder="Mein Placeholder"
+  [luxOptions]="options"
+  [(luxValue)]="selected"
+>
+  <ng-template let-option #labelTemplate>
+    <div class="lux-flex">
+      <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
+      <div>{{ option.label}}</div>
+    </div>
+  </ng-template>
+</lux-autocomplete-ac>
 ```
