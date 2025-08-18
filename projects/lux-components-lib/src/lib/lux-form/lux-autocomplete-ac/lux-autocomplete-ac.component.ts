@@ -8,7 +8,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
+  Output, TemplateRef,
   ViewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -87,6 +87,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
   @Input() luxOptionBlockSize = 500;
+  @Input() luxCustomOptionTemplate?: TemplateRef<any>;
 
   @Output() luxValueChange = new EventEmitter<V | null>();
   @Output() luxOptionSelected = new EventEmitter<V | null>();
