@@ -42,17 +42,7 @@
           </lux-table-column-header>
           <lux-table-column-content>
             <ng-template let-element>
-              @if (!element.editable) {
               <span>{{ element.name }}</span>
-              } @if (element.editable) {
-              <lux-input-ac
-                luxAriaLabel="Name"
-                luxTagId="table.row.control.name"
-                class="lux-table-no-label"
-                [(luxValue)]="element.name"
-                [luxNoLabels]="true"
-              ></lux-input-ac>
-              }
             </ng-template>
           </lux-table-column-content>
           <lux-table-column-footer>
@@ -73,20 +63,7 @@
           </lux-table-column-header>
           <lux-table-column-content>
             <ng-template let-element>
-              @if (!element.editable) {
               <span>{{ element.symbol | lowercase }}</span>
-              }
-              <div class="lux-flex lux-flex-wrap">
-                @if (element.editable) {
-                <lux-input-ac
-                  luxAriaLabel="Symbol"
-                  luxTagId="table.row.control.symbol"
-                  class="lux-table-no-label"
-                  [(luxValue)]="element.symbol"
-                  [luxNoLabels]="true"
-                ></lux-input-ac>
-                }
-              </div>
             </ng-template>
           </lux-table-column-content>
           <lux-table-column-footer>
@@ -113,61 +90,10 @@
             <ng-template> Datum Footer </ng-template>
           </lux-table-column-footer>
         </lux-table-column>
-        } @if (multiSelect && multiSelectOnlyCheckboxClick) {
-        <lux-table-column luxColumnDef="Aktion" [luxSortable]="false">
-          <lux-table-column-header>
-            <ng-template>Aktion</ng-template>
-          </lux-table-column-header>
-          <lux-table-column-content>
-            <ng-template let-element>
-              @if (!element.editable) {
-              <lux-button
-                luxAriaLabel="Editieren"
-                luxTagId="table.row.action.edit"
-                class="lux-table-example"
-                luxColor="primary"
-                luxIconName="lux-interface-edit-write-2"
-                (luxClicked)="onEdit(element)"
-              ></lux-button>
-              } @if (element.editable) {
-              <lux-button
-                luxAriaLabel="Speichern"
-                luxTagId="table.row.action.save"
-                class="lux-table-example"
-                luxColor="primary"
-                luxIconName="lux-save"
-                (luxClicked)="onSave(element)"
-              ></lux-button>
-              } @if (element.editable) {
-              <lux-button
-                luxAriaLabel="Abbrechen"
-                luxTagId="table.row.action.cancel"
-                class="lux-table-example"
-                luxColor="primary"
-                luxIconName="lux-interface-arrows-round-left"
-                (luxClicked)="onCancel(element)"
-              ></lux-button>
-              }
-            </ng-template>
-          </lux-table-column-content>
-          <lux-table-column-footer>
-            <ng-template> Aktion Footer </ng-template>
-          </lux-table-column-footer>
-        </lux-table-column>
         }
       </lux-table>
     </div>
-    <lux-textbox luxColor="blue" luxIcon="lux-interface-favorite-like-1" luxTitle="Formcontrols in editierbaren Tabellen anpassen">
-      <p>
-        Die Lux-Form-Controls haben standardmäßig einen Label- und einen Hint/Error-Container. In editierbaren Tabellen werden diese jedoch
-        nicht benötigt. <br />
-        Für diesen Anwendungsfall kann ab Version 13.0.0 das Attribut <strong>luxNoLabels</strong> bei den Form-Controls genutzt werden.
-        Zusätzlich wird für Theme-Authentic das Padding innerhalb der Form-Controls automatisch verringert.
-      </p>
-      <div class="code-section">
-        <lux-markdown [luxData]="markdownData"></lux-markdown>
-      </div>
-    </lux-textbox>
+
     <h3 style="margin-bottom: 0">Test-Tabelle zum Prüfen der eingesetzten Schriftarten</h3>
     <p style="margin: 0">
       Innerhalb einer Tabelle soll nur eine Schriftart verwendet werden. Unabhängig von der Art der Formatierung des Tabellen-Eintrags. Die

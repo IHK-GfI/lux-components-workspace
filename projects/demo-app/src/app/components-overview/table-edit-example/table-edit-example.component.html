@@ -1,0 +1,25 @@
+<example-base-structure
+  exampleTitle="Editierbare Tabelle"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90table-v19"
+>
+  <example-base-content class="example-base-content">
+    <div class="lux-flex lux-flex-col">
+      <h3>Beispiel ohne Reactive-Form</h3>
+      <app-table-edit-without-form-example></app-table-edit-without-form-example>
+
+      <h3>Beispiel in Reactive-Form</h3>
+      <app-table-edit-with-form-example [validationEnabled]="validationEnabled()"></app-table-edit-with-form-example>
+    </div>
+  </example-base-content>
+  <example-base-simple-options>
+    <h3>Beispiel in Reactive-Form</h3>
+    <lux-toggle-ac
+      luxLabel="Validierung aktiv"
+      [luxNoTopLabel]="true"
+      [luxChecked]="validationEnabled()"
+      (luxCheckedChange)="validationEnabled.set($event)"
+      luxHint="Durch das Aktivieren der Validierung werden die Zeilenhöhen angepasst, damit eventuelle Fehlermeldungen dargestellt werden können."
+    ></lux-toggle-ac>
+  </example-base-simple-options>
+  <example-base-advanced-options><p>Aktuell gibt es keine Optionen.</p></example-base-advanced-options>
+</example-base-structure>

@@ -27,6 +27,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'spinner', loadComponent: () => import('./spinner-example/spinner-example.component').then(m => m.SpinnerExampleComponent) },
       { path: 'storage', loadComponent: () => import('./storage-example/storage-example.component').then(m => m.StorageExampleComponent) },
       { path: 'table', loadComponent: () => import('./table-example/table-example.component').then(m => m.TableExampleComponent) },
+      { path: 'table-edit', loadComponent: () => import('./table-edit-example/table-edit-example.component').then(m => m.TableEditExampleComponent) },
       { path: 'table-server', loadComponent: () => import('./table-server-example/table-server-example.component').then(m => m.TableServerExampleComponent) },
       { path: 'textarea-ac', loadComponent: () => import('./textarea-authentic-example/textarea-authentic-example.component').then(m => m.TextareaAuthenticExampleComponent) },
       { path: 'tooltip', loadComponent: () => import('./tooltip-example/tooltip-example.component').then(m => m.TooltipExampleComponent) },

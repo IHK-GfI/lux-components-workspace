@@ -131,7 +131,7 @@
           <!-- Hier entstehen die Zellen mit den Inhalten -->
           <td
             mat-cell
-            *matCellDef="let element"
+            *matCellDef="let element; let i = index"
             [ngStyle]="{
               width: luxColWidthsPercent && luxColWidthsPercent[i] ? luxColWidthsPercent[i] + '%' : 'unset'
             }"
@@ -142,7 +142,7 @@
               <ng-container *ngTemplateOutlet="tableColumn.header?.tempRef ?? null"></ng-container>
             </div>
             }
-            <ng-container *ngTemplateOutlet="tableColumn.content?.tempRef ?? null; context: { $implicit: element }"></ng-container>
+            <ng-container *ngTemplateOutlet="tableColumn.content?.tempRef ?? null; context: { $implicit: element, index: i }"></ng-container>
             @if (hasMovedColumnsMap.has(tableColumn.luxColumnDef)) {
             <div class="lux-mb-3"></div>
             }
@@ -153,7 +153,7 @@
               <ng-container *ngTemplateOutlet="movedTableColumn.header?.tempRef ?? null"></ng-container>
             </div>
             <div>
-              <ng-container *ngTemplateOutlet="movedTableColumn.content?.tempRef ?? null; context: { $implicit: element }"></ng-container>
+              <ng-container *ngTemplateOutlet="movedTableColumn.content?.tempRef ?? null; context: { $implicit: element, index: i }"></ng-container>
             </div>
             <div class="lux-mb-3"></div>
             } }
@@ -179,16 +179,16 @@
           class="lux-row {{ getCustomClassesForIndex(rowData) }}"
           [tabindex]="luxMultiSelectOnlyCheckboxClick ? '-1' : '0'"
           [ngClass]="{
-            'lux-row-selected': luxSelected.has(rowData),
+            'lux-row-selected': luxSelected.has(rowData) && luxMultiSelect,
             'lux-cursor':
               luxDoubleClicked.observed ||
               (luxSelectedChange.observed && !luxMultiSelectOnlyCheckboxClick) ||
               (luxSelectedAsArrayChange.observed && !luxMultiSelectOnlyCheckboxClick)
           }"
           (dblclick)="onDoubleClick($event, rowData)"
-          (click)="changeSelectedEntry(rowData)"
-          (keydown.space)="changeSelectedEntry(rowData)"
-          (keydown.enter)="changeSelectedEntry(rowData)"
+          (click)="onSingleClick($event, rowData, i)"
+          (keydown.space)="onSingleClick($event, rowData, i)"
+          (keydown.enter)="onSingleClick($event, rowData, i)"
         ></tr>
         <!-- Die Table-Row für den Footer dieser Tabelle -->
         <tr

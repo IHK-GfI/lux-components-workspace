@@ -1,9 +1,6 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
-  LuxAriaLabelDirective,
-  LuxButtonComponent,
-  LuxInputAcComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxTableColumnComponent,
@@ -11,10 +8,8 @@ import {
   LuxTableColumnFooterComponent,
   LuxTableColumnHeaderComponent,
   LuxTableComponent,
-  LuxTextboxComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
-import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -29,7 +24,6 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
   templateUrl: './table-example.component.html',
   styleUrls: ['./table-example.component.scss'],
   imports: [
-    LuxTextboxComponent,
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,
     LuxTableColumnComponent,
@@ -37,14 +31,10 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
     LuxTableComponent,
     LuxMenuComponent,
     LuxMenuItemComponent,
-    LuxButtonComponent,
-    LuxAriaLabelDirective,
     LuxTooltipDirective,
-    LuxInputAcComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     NgStyle,
-    LuxMarkdownComponent,
     ExampleBaseSimpleOptionsComponent,
     TableExampleSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
@@ -58,22 +48,6 @@ export class TableExampleComponent extends TableExampleBaseClass {
   @ViewChild('myTable') tableComponent!: LuxTableComponent;
 
   dataSource: any[] = [];
-  markdownData = `
-  Html
-
-  \`\`\`html
-  <lux-table-column-content>
-    ...
-      <lux-input-ac
-        ...
-        *ngIf="element.editable"
-        [luxNoLabels]="true"
-        ...
-      ></lux-input-ac>
-    ...
-  </lux-table-column-content>
-  \`\`\`
-  `;
 
   fontExample: { example1: string; example2: string; example3: string; example4: string; content: string }[] = [
     { example1: 'unformated', example2: 'span', example3: 'div', example4: 'p', content: 'Lorem ipsum' }
@@ -154,48 +128,6 @@ export class TableExampleComponent extends TableExampleBaseClass {
         }
       }
       this.dataSource = largeData;
-    }
-  }
-
-  onEdit(element: any) {
-    // Aktuelle Daten im Memento speichern, falls das Bearbeiten abgebrochen wird.
-    element.memento = JSON.parse(JSON.stringify(element));
-
-    // Das Element in den Editiermodus versetzen.
-    element.editable = true;
-
-    // Das Blättern deaktivieren und eine Begründung als Tooltip anzeigen.
-    this.pagerDisabled = true;
-    this.pagerTooltip = 'Es gibt noch ungespeicherte Änderungen!';
-  }
-
-  onSave(element: any) {
-    // Die aktuellen Werte wurden bereits beim Editieren in das Element geschrieben.
-    // Hier muss nur noch der alte Zustand gelöscht werden. Dieser wird nur beim
-    // Abbrechen (siehe onCancel) benötigt.
-    delete element.editable;
-    delete element.memento;
-
-    this.clearEditState();
-  }
-
-  onCancel(element: any) {
-    // Den Orginalzustand (siehe onEdit) wiederherstellen.
-    Object.assign(element, element.memento);
-    delete element.editable;
-    delete element.memento;
-
-    this.clearEditState();
-  }
-
-  private isMinOneElementEditable() {
-    return this.dataSource.find((element) => element.editable);
-  }
-
-  private clearEditState() {
-    if (!this.isMinOneElementEditable()) {
-      this.pagerDisabled = false;
-      this.pagerTooltip = '';
     }
   }
 }

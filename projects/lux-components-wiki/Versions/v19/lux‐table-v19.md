@@ -38,9 +38,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-table       |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-table    |
 
 ### @Input
 
@@ -66,15 +66,16 @@
 | luxPickValue                    | Function                              | Kann dazu benutzt werden, spezielle Werte aus jedem Objekt der Tabelle zu lesen und für den Vergleich für die Selektion zu nutzen. Standardmäßig wird das Objekt selbst wieder zurückgegeben.                                                                                                                                                                                                                   |
 | luxPagerDisabled                | boolean                               | Gibt an, ob der Pager deaktiviert ist.                                                                                                                                                                                                                                                                                                                                                                          |
 | luxPagerTooltip                 | string                                | Tooltipp                                                                                                                                                                                                                                                                                                                                                                                                        |
-| luxAlignTextTop                 | boolean                           | Alle Texte und Elemente werden oben ausgerichtet                                                                                                                                                                                                                                                                                                                                                                  |
+| luxAlignTextTop                 | boolean                               | Alle Texte und Elemente werden oben ausgerichtet                                                                                                                                                                                                                                                                                                                                                                |
 
 ### @Output
 
-| Name                     | Typ                                               | Beschreibung                                                                                                                                                                                         |
-| ------------------------ | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxSelectedChange        | EventEmitter \<Set\<T = any>>                     | Wird von Multiselect-Tabellen emittet und enthält ein Set mit allen selektierten Einträgen, die diese Tabelle aktuell besitzt.                                                                       |
-| luxSelectedAsArrayChange | EventEmitter \<\<T = any>[]>                      | Wird von Multiselect-Tabellen emittet und enthält ein Array mit allen selektierten Einträgen, die diese Tabelle aktuell besitzt.                                                                     |
-| luxDoubleClicked         | EventEmitter \<{ event: MouseEvent; rowItem: T }> | Wird emittet, wenn ein Doppelklick auf eine Tabellenzeile ausgeführt wird. Anmerkung: Dieser Emitter wird ausschließlich für normale Tabellen (d.h. `luxMultiSelect` muss `false` sein) unterstützt. |
+| Name                     | Typ                                                            | Beschreibung                                                                                                                                                                                                                             |
+| ------------------------ | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxSelectedChange        | EventEmitter \<Set\<T = any>>                                  | Wird von Multiselect-Tabellen emittet und enthält ein Set mit allen selektierten Einträgen, die diese Tabelle aktuell besitzt.                                                                                                           |
+| luxSelectedAsArrayChange | EventEmitter \<\<T = any>[]>                                   | Wird von Multiselect-Tabellen emittet und enthält ein Array mit allen selektierten Einträgen, die diese Tabelle aktuell besitzt.                                                                                                         |
+| luxSingleClicked         | EventEmitter \<{ event: Event; rowItem: T, rowIndex: number }> | Wird emittet, wenn ein einfacher Mausklick (oder Enter oder Leertaste) auf eine Tabellenzeile ausgeführt wird. Anmerkung: Dieser Emitter wird ausschließlich für normale Tabellen (d.h. `luxMultiSelect` muss `false` sein) unterstützt. |
+| luxDoubleClicked         | EventEmitter \<{ event: MouseEvent; rowItem: T }>              | Wird emittet, wenn ein Doppelklick auf eine Tabellenzeile ausgeführt wird. Anmerkung: Dieser Emitter wird ausschließlich für normale Tabellen (d.h. `luxMultiSelect` muss `false` sein) unterstützt.                                     |
 
 ### @ViewChild
 

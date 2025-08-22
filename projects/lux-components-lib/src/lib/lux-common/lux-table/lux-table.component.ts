@@ -15,6 +15,7 @@ import {
   QueryList,
   ViewChild
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginator, MatPaginatorDefaultOptions, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import {
@@ -161,6 +162,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
   @Output() luxSelectedChange = new EventEmitter<Set<T>>();
   @Output() luxSelectedAsArrayChange = new EventEmitter<T[]>();
+  @Output() luxSingleClicked = new EventEmitter<{ event: Event; rowItem: T, rowIndex: number }>();
   @Output() luxDoubleClicked = new EventEmitter<{ event: MouseEvent; rowItem: T }>();
 
   @ViewChild(MatPaginator, { static: true }) paginator?: MatPaginator;
@@ -454,6 +456,14 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    */
   trackFn(index: number, item: any) {
     return index;
+  }
+
+  onSingleClick(event: Event, rowItem: T, rowIndex: number) {
+    if (!this.luxMultiSelect) {
+      this.luxSingleClicked.emit({ event, rowItem, rowIndex });
+    }
+
+    this.changeSelectedEntry(rowItem);
   }
 
   onDoubleClick(event: MouseEvent, rowItem: T) {
@@ -893,7 +903,16 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
   private emitSelectedEvent() {
     const newData = Array.from(this.luxSelected);
-    const newDataString = JSON.stringify(newData);
+    
+    // Wenn das Array FormGroups enthält,
+    // wirft JSON.stringify einen Fehler, 
+    // da FormGroups nicht serialisierbar sind.
+    let newDataString: string;
+    if (newData && newData.length > 0 && newData[0] instanceof FormGroup) {
+      newDataString = JSON.stringify(newData.map((item) => (item as FormGroup).value));
+    } else {
+      newDataString = JSON.stringify(newData);
+    }
 
     if (this.lastSelectedEventData !== newDataString) {
       this.lastSelectedEventData = newDataString;

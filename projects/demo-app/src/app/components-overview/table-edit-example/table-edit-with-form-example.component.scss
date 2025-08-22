@@ -1,0 +1,30 @@
+$minHeightValidationInActive: 10px;
+$minHeightValidationActive: 58px;
+
+.valuefield-container {
+  padding-left: 9px;
+
+  &.validation-active {
+    min-height: $minHeightValidationActive;
+  }
+
+  &:not(.validation-active) {
+    min-height: $minHeightValidationInActive;
+  }
+}
+
+.formfield-container {
+  flex: 0 0 auto;
+
+  &.validation-active {
+    min-height: $minHeightValidationActive;
+  }
+
+  &:not(.validation-active) {
+    min-height: $minHeightValidationInActive;
+  }
+}
+
+.json-preview {
+  font-size: 0.7em;
+}
