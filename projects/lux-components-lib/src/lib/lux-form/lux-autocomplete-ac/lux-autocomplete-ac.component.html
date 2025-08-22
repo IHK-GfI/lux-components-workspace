@@ -50,7 +50,7 @@
     >
       @for (option of displayedOptions; track option) {
       <mat-option [value]="option">
-        <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: option }"></ng-container>
+        <ng-container *ngTemplateOutlet="labelTemplate || optionTemplate; context: { $implicit: option }"></ng-container>
       </mat-option>
       }
     </mat-autocomplete>

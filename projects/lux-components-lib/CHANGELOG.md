@@ -1,8 +1,10 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues-1)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -10,7 +12,14 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues-1)
+    - [Issues](#issues-2)
+
+## Version 19.2.0
+
+### Issues
+
+- Issue #37: chips-ac: Auswahl reagiert nicht auf Scrollen auf der Main Page (#79)
+- Issue #80: lux-autocomplete-ac - Benutzerdefinierte Options-Templates erlauben (#81)
 
 ## Version 19.1.0
 
@@ -18,7 +27,6 @@
 
 - Issue #14: lux-lookup-combobox: Selektierter Eintrag wird manchmal nicht angezeigt (#66)
 - Issue #63: lux-file-upload - Die Custom-Actions sollen auch in der Listenansicht angezeigt werden (#65)
-- Issue #37: chips-ac: Auswahl reagiert nicht auf Scrollen auf der Main Page (#79)
 
 ## Version 19.0.0
 

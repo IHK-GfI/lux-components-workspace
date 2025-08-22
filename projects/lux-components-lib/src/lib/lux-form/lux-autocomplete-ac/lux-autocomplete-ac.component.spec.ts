@@ -564,6 +564,37 @@ describe('LuxAutocompleteAcComponent', () => {
     });
   });
 
+  describe('labelTemplate testen', () => {
+    let component: LuxAutoCompleteWithCustomOptionTemplateComponent;
+    let fixture: ComponentFixture<LuxAutoCompleteWithCustomOptionTemplateComponent>;
+    let overlayHelper: LuxOverlayHelper;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(LuxAutoCompleteWithCustomOptionTemplateComponent);
+      component = fixture.componentInstance;
+      overlayHelper = new LuxOverlayHelper();
+      fixture.detectChanges();
+    });
+
+    it('sollte erstellt werden', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('sollte custom template einbetten', (done) => {
+      LuxTestHelper.typeInElementAsync('Meine Aufgaben', fixture, component.autocomplete.matInput.nativeElement, () => {
+        const options = overlayHelper.selectAllFromOverlay('mat-option') as NodeListOf<HTMLElement>;
+        expect(options.length).toBe(1);
+
+        const customOptionContainer = options[0].querySelector('span');
+
+        // prüfe custom template struktur
+        expect(customOptionContainer).toBeTruthy();
+        expect(customOptionContainer!.textContent?.indexOf('- 123')).toBeTruthy();
+        done();
+      });
+    });
+  });
+
   describe('luxPickValue testen', () => {
     let component: MockPickValueComponent;
     let fixture: ComponentFixture<MockPickValueComponent>;
@@ -676,6 +707,31 @@ class LuxAutoCompleteInFormWithStringValuesComponent {
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
+  selected = '';
+  strict = true;
+
+  options = ['Meine Aufgaben', 'Gruppenaufgaben', 'Zurückgestellte Aufgaben', 'Vertretungsaufgaben'];
+
+  @ViewChild(LuxAutocompleteAcComponent) autocomplete!: LuxAutocompleteAcComponent<string, string>;
+}
+
+@Component({
+  selector: 'lux-autocomplete-with-custom-option-template-component',
+  template: `
+    <lux-autocomplete-ac luxLabel="Autocomplete"
+                         [luxOptions]="options"
+                         [(luxValue)]="selected"
+                         [luxStrict]="strict"> </lux-autocomplete-ac>
+
+    <ng-template let-option #labelTemplate>
+      <div>
+        <span>{{ option }} - 123</span>
+      </div>
+    </ng-template>
+  `,
+  imports: [LuxAutocompleteAcComponent]
+})
+class LuxAutoCompleteWithCustomOptionTemplateComponent {
   selected = '';
   strict = true;
 

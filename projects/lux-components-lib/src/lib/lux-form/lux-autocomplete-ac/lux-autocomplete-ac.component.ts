@@ -9,6 +9,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -93,6 +94,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   @Output() luxBlur = new EventEmitter<FocusEvent>();
   @Output() luxFocus = new EventEmitter<FocusEvent>();
 
+  @ContentChild('labelTemplate', { read: TemplateRef }) labelTemplate?: TemplateRef<any>;
   @ContentChild(LuxInputAcPrefixComponent) inputPrefix?: LuxInputAcPrefixComponent;
   @ContentChild(LuxInputAcSuffixComponent) inputSuffix?: LuxInputAcSuffixComponent;
 

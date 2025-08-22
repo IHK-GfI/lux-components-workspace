@@ -1,26 +1,26 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
-    LuxAutocompleteAcComponent,
-    LuxAutofocusDirective,
-    LuxFormHintComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+  LuxAutocompleteAcComponent,
+  LuxAutofocusDirective,
+  LuxFormHintComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxInputAcPrefixComponent,
+  LuxInputAcSuffixComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import {
-    emptyErrorCallback,
-    exampleErrorCallback,
-    examplePickValueFn,
-    logResult,
-    setRequiredValidatorForFormControl
+  emptyErrorCallback,
+  exampleErrorCallback,
+  examplePickValueFn,
+  logResult,
+  setRequiredValidatorForFormControl
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
@@ -113,6 +113,7 @@ export class AutocompleteAuthenticExampleComponent {
   pickValueFn = examplePickValueFn;
   useFilterFn = false;
   luxPanelWidth: string | number = '';
+  useTemplatesForLabels = false;
 
   constructor() {
     this.form = new FormGroup<AutocompleteForm>({
