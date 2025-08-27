@@ -3,12 +3,14 @@ import {
   ContentChild,
   Directive,
   DoCheck,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
   inject
 } from '@angular/core';
 import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
@@ -18,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxUtil } from '../../lux-util/lux-util';
+import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxFormHintComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-hint.component';
 import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
 
@@ -59,6 +62,9 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   @ContentChild(LuxFormLabelComponent) formLabelComponent?: LuxFormLabelComponent;
   @ContentChild(LuxFormHintComponent) formHintComponent?: LuxFormHintComponent;
 
+  @ViewChild(LuxFormControlWrapperComponent) formControlWrapperComponent?: LuxFormControlWrapperComponent;
+  @ViewChild(LuxFormControlWrapperComponent, { read: ElementRef}) formControlWrapperComponentRef?: ElementRef;
+
   @HostBinding('class.lux-form-control-readonly') cssReadonly = false;
 
   @Output() luxFocusIn = new EventEmitter<FocusEvent>();
@@ -75,6 +81,22 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   @Input() luxErrorMessage?: string;
   @Input() luxErrorCallback: LuxErrorCallbackFnType = () => undefined;
   @Input() luxDense = false;
+
+  get luxFormControl(): FormControl<T> {
+    return this.formControl;
+  }
+
+  @Input() set luxFormControl(formControl: FormControl<T>) {
+    this.formControl = formControl;
+  }
+
+  get luxFormGroup(): FormGroup {
+    return this.formGroup;
+  }
+
+  @Input() set luxFormGroup(formGroup: FormGroup) {
+    this.formGroup = formGroup;
+  }
 
   get luxControlValidators(): ValidatorFnType {
     return this._luxControlValidators;
@@ -285,17 +307,23 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * handelt.
    */
   protected initFormControl() {
-    this.inForm = !!this.controlContainer && !!this.luxControlBinding;
+    this.inForm = (!!this.controlContainer || !!this.formGroup) && !!this.luxControlBinding;
 
     if (this.inForm && this.luxControlBinding) {
-      this.formGroup = this.controlContainer?.control as FormGroup;
-      this.formControl = this.formGroup.controls[this.luxControlBinding] as FormControl<T>;
+      if (!this.formGroup) {
+        this.formGroup = this.controlContainer?.control as FormGroup;
+      }
+      if (!this.formControl) {
+        this.formControl = this.formGroup.controls[this.luxControlBinding] as FormControl<T>;
+      }
       this.updateValidatorsInForm();
     } else {
-      this.formGroup = new FormGroup({
-        control: new FormControl()
-      });
-      this.formControl = this.formGroup.get(LuxFormComponentBase.DEFAULT_CTRL_NAME) as FormControl<T>;
+      if (!this.formGroup) {
+        this.formGroup = new FormGroup({
+          control: new FormControl()
+        });
+        this.formControl = this.formGroup.get(LuxFormComponentBase.DEFAULT_CTRL_NAME) as FormControl<T>;
+      }
       this.formControl.setValue(this._initialValue);
     }
 

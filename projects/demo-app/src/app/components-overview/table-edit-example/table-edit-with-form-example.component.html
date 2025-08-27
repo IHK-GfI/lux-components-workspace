@@ -1,0 +1,58 @@
+<p>Zum Bearbeiten einer Adresse klicken Sie auf die jeweilige Zeile.</p>
+<lux-button luxLabel="Hinzufügen" [luxStroked]="true" luxColor="primary" (luxClicked)="onAddRow($event)"></lux-button>
+<lux-table [luxData]="dataSource" [luxColWidthsPercent]="[70, 30]" (luxSingleClicked)="onStartEditMode($event)" (keydown.esc)="onEscape()">
+  <lux-table-column luxColumnDef="position">
+    <lux-table-column-header><ng-template>Straße</ng-template> </lux-table-column-header>
+    <lux-table-column-content
+      ><ng-template let-element let-index="index">
+        @if(editRow !== index) {
+        <div class="valuefield-container" [ngClass]="{ 'validation-active': validationEnabled() }">
+          <span>{{ element.get('streetName')?.value }}</span>
+        </div>
+        } @else {
+        <div class="formfield-container" [ngClass]="{ 'validation-active': validationEnabled() }">
+          <lux-input-ac
+            class="edit-formfield"
+            (document:click)="onStopEditMode($event, inputStreet, element)"
+            luxAriaLabel="Straße"
+            luxAriaLabelSelector="input"
+            [luxFormGroup]="element"
+            luxControlBinding="streetName"
+            [luxNoTopLabel]="true"
+            [luxNoLabels]="!validationEnabled()"
+            #inputStreet
+          ></lux-input-ac>
+        </div>
+        }</ng-template
+      ></lux-table-column-content
+    >
+  </lux-table-column>
+  <lux-table-column luxColumnDef="name">
+    <lux-table-column-header><ng-template>Nummer</ng-template></lux-table-column-header>
+    <lux-table-column-content
+      ><ng-template let-element let-index="index">
+        @if(editRow !== index) {
+        <div class="valuefield-container" [ngClass]="{ 'validation-active': validationEnabled() }">
+          <span>{{ element.get('nr')?.value }}</span>
+        </div>
+        } @else {
+        <div class="formfield-container" [ngClass]="{ 'validation-active': validationEnabled() }">
+          <lux-input-ac
+            (document:click)="onStopEditMode($event, inputNr, element)"
+            luxAriaLabel="Hausnummer"
+            luxAriaLabelSelector="input"
+            [luxFormGroup]="element"
+            luxControlBinding="nr"
+            [luxNoTopLabel]="true"
+            [luxNoLabels]="!validationEnabled()"
+            #inputNr
+          ></lux-input-ac>
+        </div>
+        }</ng-template
+      ></lux-table-column-content
+    >
+  </lux-table-column>
+</lux-table>
+
+<p>Formlar-JSON:</p>
+<pre class="json-preview">{{ myTableForm.value | json }}</pre>

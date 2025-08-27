@@ -1,0 +1,97 @@
+<p>Zum Bearbeiten einer Adresse klicken Sie auf den Edit-Button am Ende der jeweiligen Zeile.</p>
+<lux-table [luxData]="dataSource" [luxShowPagination]="true" [luxPageSize]="5" [luxPagerDisabled]="pagerDisabled" #myTable>
+  <lux-table-column luxColumnDef="name">
+    <lux-table-column-header>
+      <ng-template><span [luxTooltip]="'Tooltip Spalte \'Name\''">Name</span></ng-template>
+    </lux-table-column-header>
+    <lux-table-column-content>
+      <ng-template let-element>
+        @if (!element.editable) {
+        <span>{{ element.name }}</span>
+        } @if (element.editable) {
+        <lux-input-ac
+          luxAriaLabel="Name"
+          luxAriaLabelSelector="input"
+          luxTagId="table.row.control.name"
+          class="lux-table-no-label"
+          [(luxValue)]="element.name"
+          [luxNoLabels]="true"
+        ></lux-input-ac>
+        }
+      </ng-template>
+    </lux-table-column-content>
+    <lux-table-column-footer>
+      <ng-template> Name Footer </ng-template>
+    </lux-table-column-footer>
+  </lux-table-column>
+  <lux-table-column luxColumnDef="symbol">
+    <lux-table-column-header>
+      <ng-template>
+        <span [luxTooltip]="'Tooltip Spalte \'Symbol\''">Symbol</span>
+      </ng-template>
+    </lux-table-column-header>
+    <lux-table-column-content>
+      <ng-template let-element>
+        @if (!element.editable) {
+        <span>{{ element.symbol | lowercase }}</span>
+        }
+        <div class="lux-flex lux-flex-wrap">
+          @if (element.editable) {
+          <lux-input-ac
+            luxAriaLabel="Symbol"
+            luxAriaLabelSelector="input"
+            luxTagId="table.row.control.symbol"
+            class="lux-table-no-label"
+            [(luxValue)]="element.symbol"
+            [luxNoLabels]="true"
+          ></lux-input-ac>
+          }
+        </div>
+      </ng-template>
+    </lux-table-column-content>
+    <lux-table-column-footer>
+      <ng-template> Symbol Footer </ng-template>
+    </lux-table-column-footer>
+  </lux-table-column>
+  <lux-table-column luxColumnDef="Aktion" [luxSortable]="false">
+    <lux-table-column-header>
+      <ng-template>Aktion</ng-template>
+    </lux-table-column-header>
+    <lux-table-column-content>
+      <ng-template let-element>
+        <div class="button-container lux-flex lux-flex-column">
+          @if (!element.editable) {
+          <lux-button
+            luxAriaLabel="Editieren"
+            luxTagId="table.row.action.edit"
+            class="lux-table-example"
+            luxColor="primary"
+            luxIconName="lux-interface-edit-write-2"
+            (luxClicked)="onEdit(element)"
+          ></lux-button>
+          } @if (element.editable) {
+          <lux-button
+            luxAriaLabel="Speichern"
+            luxTagId="table.row.action.save"
+            class="lux-table-example"
+            luxColor="primary"
+            luxIconName="lux-save"
+            (luxClicked)="onSave(element)"
+          ></lux-button>
+          <lux-button
+            luxAriaLabel="Abbrechen"
+            luxTagId="table.row.action.cancel"
+            class="lux-table-example"
+            luxColor="primary"
+            luxIconName="lux-interface-arrows-round-left"
+            (luxClicked)="onCancel(element)"
+          ></lux-button>
+          }
+        </div>
+      </ng-template>
+    </lux-table-column-content>
+    <lux-table-column-footer>
+      <ng-template> Aktion Footer </ng-template>
+    </lux-table-column-footer>
+  </lux-table-column>
+</lux-table>

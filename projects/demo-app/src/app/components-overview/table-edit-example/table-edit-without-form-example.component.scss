@@ -1,0 +1,14 @@
+$buttonSize: 30px;
+
+.button-container ::ng-deep {
+  lux-button {
+    max-width: $buttonSize;
+    min-width: $buttonSize;
+
+    button {
+      max-width: $buttonSize;
+      min-width: $buttonSize;
+      padding: 0;
+    }
+  }
+}
