@@ -100,6 +100,15 @@
             <lux-toggle-ac luxLabel="EULA zugestimmt" luxControlBinding="eula" class="lux-col-span-full"></lux-toggle-ac>
 
             <lux-datepicker-ac luxControlBinding="date" luxLabel="Läuft ab am"></lux-datepicker-ac>
+            
+            <lux-star-rating-ac 
+              luxLabel="Bewertung" 
+              luxControlBinding="rating" 
+              [luxMaxStars]="5"
+              luxSize="large"
+              [luxShowResetButton]="true"
+              luxHint="Bewerten Sie unsere Anwendung mit 1-5 Sternen"
+            ></lux-star-rating-ac>
           </div>
         </form>
       </lux-card-content>

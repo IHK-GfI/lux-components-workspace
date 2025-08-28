@@ -1,0 +1,76 @@
+@if (formGroup) {
+<lux-form-control-wrapper
+  [luxFormComponent]="this"
+  [formGroup]="formGroup"
+  [luxNoLabels]="luxNoLabels"
+  [luxNoBottomLabel]="luxNoBottomLabel"
+  [luxNoTopLabel]="luxNoTopLabel"
+  luxTagId="luxStarRatingWrapper"
+>
+  <div class="lux-star-rating-container" 
+       [ngClass]="[
+         'lux-star-rating-' + luxSize,
+         luxReadonly ? 'lux-star-rating-readonly' : '',
+         luxDisabled ? 'lux-star-rating-disabled' : ''
+       ]">
+    <!-- Star rating buttons -->
+    <div 
+      class="lux-star-rating-stars"
+      role="group"
+      [attr.aria-label]="'Bewertung mit ' + luxMaxStars + ' Sternen'"
+      [attr.aria-describedby]="descripedBy()"
+      [attr.aria-required]="luxRequired"
+      [attr.aria-invalid]="formControl.invalid"
+      [id]="uid"
+      luxTagIdHandler
+      [luxTagId]="luxTagId"
+      (focusin)="onFocusIn($event)"
+      (focusout)="onFocusOut($event)"
+      (keydown)="onKeyDown($event)"
+      [attr.tabindex]="luxReadonly || luxDisabled ? -1 : 0"
+      (mouseleave)="onStarLeave()"
+    >
+      @for (star of stars; track star) {
+        <button
+          type="button"
+          class="lux-star-rating-star"
+          [class.lux-star-rating-star-filled]="isStarFilled(star)"
+          [class.lux-star-rating-star-empty]="!isStarFilled(star)"
+          [attr.aria-label]="star + (star === 1 ? ' Stern' : ' Sterne')"
+          [disabled]="luxReadonly || luxDisabled"
+          (click)="onStarClick(star)"
+          (mouseenter)="onStarHover(star)"
+          tabindex="-1"
+        >
+          <lux-icon
+            [luxIconName]="'lux-interface-favorite-star'"
+            [luxIconSize]="luxSize === 'large' ? '24px' : '16px'"
+          ></lux-icon>
+        </button>
+      }
+    </div>
+
+    <!-- Rating display and reset button -->
+    @if (luxValue > 0 || luxShowResetButton) {
+      <div class="lux-star-rating-info">
+        <span class="lux-star-rating-text" [attr.aria-live]="'polite'">
+          {{ currentRatingText }}
+        </span>
+        @if (luxShowResetButton && luxValue > 0 && !luxReadonly && !luxDisabled) {
+          <button
+            type="button"
+            class="lux-star-rating-reset"
+            aria-label="Bewertung zurücksetzen"
+            (click)="onReset()"
+          >
+            <lux-icon
+              luxIconName="lux-interface-delete-1"
+              [luxIconSize]="luxSize === 'large' ? '16px' : '14px'"
+            ></lux-icon>
+          </button>
+        }
+      </div>
+    }
+  </div>
+</lux-form-control-wrapper>
+}
