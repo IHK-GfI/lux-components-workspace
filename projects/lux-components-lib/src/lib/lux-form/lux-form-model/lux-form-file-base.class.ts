@@ -34,6 +34,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   @Input() luxContentsAsBlob = false;
   @Input() luxTagId?: string;
   @Input() luxMaxSizeMB = 10;
+  @Input() luxMaxFileCount = 100;
   @Input() luxCapture = '';
   @Input() luxUploadUrl = '';
   @Input() luxDnDActive = true;
@@ -477,6 +478,14 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   }
 
   /**
+   * Gibt die Message für Überschreitung der maximalen Dateianzahl zurück.
+   * @param file
+   */
+  protected getMaxFileCountMessage(): string {
+    return $localize`:@@luxc.form-file-base.error_message.max_file_count:Es dürfen maximal ${this.luxMaxFileCount} Dateien ausgewählt werden`;
+  }
+
+  /**
    * Gibt die Message für Fehler beim Auslesen einer Datei zurück.
    * @param file
    */
@@ -560,9 +569,11 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   protected override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors[LuxFileErrorCause.MaxSizeError]) {
       return this.getMaxSizeErrorMessage(errors[LuxFileErrorCause.MaxSizeError].file);
+    } else if (errors[LuxFileErrorCause.MaxFileCount]) {
+      return this.getMaxFileCountMessage();
     } else if (errors[LuxFileErrorCause.ReadingFileError]) {
       return this.getReadingFileErrorMessage(errors[LuxFileErrorCause.ReadingFileError].file);
-    } else if (errors[LuxFileErrorCause.UploadFileError]) {
+    }else if (errors[LuxFileErrorCause.UploadFileError]) {
       return this.getUploadFileErrorMessage(errors[LuxFileErrorCause.UploadFileError].file);
     } else if (errors[LuxFileErrorCause.FileNotAccepted]) {
       return this.getFileNotAcceptedMessage(errors[LuxFileErrorCause.FileNotAccepted].file);

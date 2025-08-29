@@ -227,6 +227,18 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
       return;
     }
 
+    // Begrenzung der maximalen Anzahl an Dateien
+    const currentCount = Array.isArray(this.luxSelected) ? this.luxSelected.length : this.luxSelected ? 1 : 0;
+  if (this.luxMaxFileCount !== undefined && this.luxMaxFileCount !== null && currentCount + files.length > this.luxMaxFileCount) {
+      this.setFormControlErrors({
+        cause: LuxFileErrorCause.MaxFileCount,
+        exception: this.getMaxFileCountMessage(),
+        file: undefined
+      });
+      this.forceProgressIndeterminate = false;
+      return;
+    }
+
     // Timeout, um Flackern durch Progress zu vermeiden
     setTimeout(() => {
       // Prüfen, ob die Dateien bereits vorhanden sind

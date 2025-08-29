@@ -1,10 +1,12 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import * as semver from 'semver';
 import { getPackageJsonDependency } from './dependencies';
+import { replaceRule } from './files';
 import { logInfo, logInfoWithDescriptor, logSuccess } from './logging';
+import { ReplaceItem } from './replace-item';
 
 /**
  * Konfig-Objekt für einige Util-Methoden.
@@ -152,5 +154,24 @@ export function finish(runNpmInstall: boolean, ...messages: string[]): Rule {
   return (tree: Tree, context: SchematicContext) => {
     runInstallAndLogToDos(context, messages, runNpmInstall);
     return tree;
+  };
+}
+
+export function updateMessages(options: any, deReplaceItems: ReplaceItem[], enReplaceItems: ReplaceItem[]): Rule {
+  return (_tree: Tree, _context: SchematicContext) => {
+    const deFilePath = (options.path ?? '') + '/src/locale/messages.xlf';
+    const enFilePath = (options.path ?? '') + '/src/locale/messages.en.xlf';
+
+    const resultChain: Rule[] = [];
+
+    deReplaceItems.forEach((item) => {
+      resultChain.push(replaceRule(options, `Messages (de) werden angepasst...`, `Messages (de) wurden angepasst.`, deFilePath, item));
+    });
+
+    enReplaceItems.forEach((item) => {
+      resultChain.push(replaceRule(options, `Messages (en) werden angepasst...`, `Messages (en) wurden angepasst.`, enFilePath, item));
+    });
+
+    return chain(resultChain);
   };
 }

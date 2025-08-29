@@ -45,6 +45,7 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
   readonly = false;
   required = false;
   maxSize = 5;
+  maxFileCount = 5;
   capture = '';
   accept = '';
   maximumExtended = 6;
