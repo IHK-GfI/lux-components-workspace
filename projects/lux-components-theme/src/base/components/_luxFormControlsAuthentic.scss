@@ -703,3 +703,7 @@ lux-slider-ac {
     pointer-events: none;
   }
 }
+
+mat-error.mat-mdc-form-field-bottom-align::before {
+  height: unset;
+}
