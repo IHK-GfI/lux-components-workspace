@@ -13,6 +13,7 @@ export function update190200(options: any, runNpmInstall = true): Rule {
       messageInfoRule(`Die LUX-Components werden auf die Version 19.2.0 aktualisiert...`),
       messageInfoRule(`Die Datei "package.json" wird angepasst...`),
       updateDep('@ihk-gfi/lux-components', '19.2.0', false),
+      updateDep('@ihk-gfi/lux-components-theme', '19.0.1', false),
       addCdkScrollable(options),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 19.2.0 aktualisiert.`),
       finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)

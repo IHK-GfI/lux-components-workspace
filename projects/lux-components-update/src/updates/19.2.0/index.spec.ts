@@ -67,6 +67,9 @@ describe('update190200', () => {
           expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.1.0');
           expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).toEqual('19.2.0');
 
+          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.0.0');
+          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.0.1');
+
           done();
         },
         (reason) => expect(reason).toBeUndefined()
