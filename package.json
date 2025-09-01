@@ -1,6 +1,6 @@
 {
   "name": "@ihk-gfi/lux-components-workspace",
-  "version": "19.1.0",
+  "version": "19.2.0",
   "license": "IHK-GfI Open-Source-Lizenz",
   "engines": {
     "node": ">=18.19.1 <23.0.0"
@@ -56,7 +56,7 @@
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
     "@ihk-gfi/lux-components-icons-and-fonts": "1.10.0",
-    "@ihk-gfi/lux-components-theme": "19.0.0",
+    "@ihk-gfi/lux-components-theme": "19.0.1",
     "dompurify": "~3.2.4",
     "marked": "15.0.7",
     "ngx-cookie-service": "^19.1.2",

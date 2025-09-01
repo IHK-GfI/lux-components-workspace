@@ -18,8 +18,11 @@
 
 ### Issues
 
+- Issue #9: LuxDialog asynchron nicht nutzbar (#82)
 - Issue #37: chips-ac: Auswahl reagiert nicht auf Scrollen auf der Main Page (#79)
-- Issue #80: lux-autocomplete-ac - Benutzerdefinierte Options-Templates erlauben (#81)
+- Issue #80: Lux-Autocomplete-ac um TemplateRef für Custom-Options erweitert (#81)
+- Issue #83: Editierbare Tabellen ermöglichen (#84)
+- Issue #86: Fehlermeldungen in editierbaren Tabellen verschoben (#87)
 
 ## Version 19.1.0
 
