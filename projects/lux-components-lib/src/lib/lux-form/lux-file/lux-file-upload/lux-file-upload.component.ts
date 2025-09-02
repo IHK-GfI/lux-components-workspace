@@ -4,7 +4,7 @@ import { MatError, MatHint } from '@angular/material/form-field';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
-import { LuxLinkPlainComponent } from "../../../lux-action/lux-link-plain/lux-link-plain.component";
+import { LuxLinkPlainComponent } from '../../../lux-action/lux-link-plain/lux-link-plain.component';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
 import { ILuxDialogConfig } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
@@ -38,7 +38,7 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
     LuxButtonComponent,
     LuxIconComponent,
     LuxLinkPlainComponent
-]
+  ]
 })
 export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements OnInit, AfterViewInit, OnDestroy {
   private dialogService = inject(LuxDialogService);
@@ -112,7 +112,7 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
     label: $localize`:@@luxc.form-file-base.delete.action.lbl:Löschen`,
     isDeletable: (_file: ILuxFileObject) => {
       return true;
-    },
+    }
   };
   _luxViewActionConfig: ILuxFileActionConfig = {
     disabled: false,
@@ -148,13 +148,13 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
 
   override ngOnInit(): void {
     if (!this.luxDeleteIcon) {
-      	if (this.theme === 'authentic') {
-          this.luxDeleteIcon = 'lux-interface-delete-1';
-        } else {
-          this.luxDeleteIcon = 'lux-interface-delete-bin-5';
-        }
+      if (this.theme === 'authentic') {
+        this.luxDeleteIcon = 'lux-interface-delete-1';
+      } else {
+        this.luxDeleteIcon = 'lux-interface-delete-bin-5';
+      }
     }
-    
+
     this.subscriptions.push(
       this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
         this.isMobile = query === 'xs' || query === 'sm';
@@ -223,18 +223,6 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
     this.announceFileProcess(files && files.length > 1);
 
     if (!files || files.length === 0) {
-      this.forceProgressIndeterminate = false;
-      return;
-    }
-
-    // Begrenzung der maximalen Anzahl an Dateien
-    const currentCount = Array.isArray(this.luxSelected) ? this.luxSelected.length : this.luxSelected ? 1 : 0;
-  if (this.luxMaxFileCount !== undefined && this.luxMaxFileCount !== null && currentCount + files.length > this.luxMaxFileCount) {
-      this.setFormControlErrors({
-        cause: LuxFileErrorCause.MaxFileCount,
-        exception: this.getMaxFileCountMessage(),
-        file: undefined
-      });
       this.forceProgressIndeterminate = false;
       return;
     }
@@ -329,6 +317,22 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   }
 
   private updateFilesIntern(files: FileList | File[], selectedFilesArray: any[], replaceableFilesMap: Map<number, File>) {
+    // Begrenzung der maximalen Anzahl an Dateien
+    const currentCount = Array.isArray(this.luxSelected) ? this.luxSelected.length : this.luxSelected ? 1 : 0;
+    if (
+      this.luxMaxFileCount !== undefined &&
+      this.luxMaxFileCount !== null &&
+      currentCount + files.length - replaceableFilesMap.size > this.luxMaxFileCount
+    ) {
+      this.setFormControlErrors({
+        cause: LuxFileErrorCause.MaxFileCount,
+        exception: this.getMaxFileCountMessage(),
+        file: undefined
+      });
+      this.forceProgressIndeterminate = false;
+      return;
+    }
+
     this.updateSelectedFiles(files).then(
       (newFiles: ILuxFileObject[]) => {
         const tempSelectedFiles = selectedFilesArray;
