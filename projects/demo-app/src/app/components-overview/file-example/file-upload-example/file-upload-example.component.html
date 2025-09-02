@@ -19,6 +19,7 @@
         [luxUploadUrl]="uploadUrl"
         [luxMultiple]="multiple"
         [luxMaxSizeMB]="maxSize"
+        [luxMaxFileCount]="maxFileCount"
         [luxUploadActionConfig]="uploadActionConfig"
         [luxViewActionConfig]="viewActionConfig"
         [luxDownloadActionConfig]="downloadActionConfig"
@@ -56,6 +57,7 @@
           [luxUploadUrl]="uploadUrl"
           [luxMultiple]="multiple"
           [luxMaxSizeMB]="maxSize"
+          [luxMaxFileCount]="maxFileCount"
           [luxUploadActionConfig]="uploadActionConfig"
           [luxViewActionConfig]="viewActionConfigForm"
           [luxDeleteActionConfig]="deleteActionConfig"
@@ -159,6 +161,13 @@
       luxType="number"
     >
       <lux-input-ac-suffix> MB</lux-input-ac-suffix>
+    </lux-input-ac>
+    <lux-input-ac
+      luxLabel="luxMaxFileCount"
+      luxHint="Diese Property legt die maximal erlaubte Anzahl an Dateien fest."
+      [(luxValue)]="maxFileCount"
+      luxType="number"
+    >
     </lux-input-ac>
     <lux-select-ac
       luxLabel="luxCapture"

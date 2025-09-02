@@ -69,6 +69,15 @@
 >
   <lux-input-ac-suffix>MB</lux-input-ac-suffix>
 </lux-input-ac>
+@if (isFileListExample) {
+<lux-input-ac
+  luxLabel="luxMaxFileCount"
+  luxHint="Diese Property legt die maximal erlaubte Anzahl an Dateien fest."
+  [(luxValue)]="fileExample.maxFileCount"
+  luxType="number"
+>
+</lux-input-ac>
+}
 <lux-select-ac
   luxLabel="luxCapture"
   luxHint="Diese Property stellt ein ob für Mobilgeräte die Front- oder Rück-Kamera und Mikrophone verwendet werden sollen."

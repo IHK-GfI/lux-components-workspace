@@ -1,5 +1,6 @@
 export enum LuxFileErrorCause {
   MaxSizeError = 'luxMaximumSize',
+  MaxFileCount = 'luxMaxFileCount',
   ReadingFileError = 'luxReadingFile',
   UploadFileError = 'luxUploadFile',
   FileNotAccepted = 'luxUnacceptedFile',

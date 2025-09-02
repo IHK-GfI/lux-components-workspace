@@ -800,6 +800,14 @@
           <context context-type="linenumber">474,476</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="luxc.form-file-base.error_message.max_file_count" datatype="html">
+        <source>Es dürfen maximal <x id="PH" equiv-text="this.luxMaxFileCount"/> Dateien ausgewählt werden</source>
+        <target>A maximum of <x id="PH" equiv-text="this.luxMaxFileCount"/> files may be selected</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
+          <context context-type="linenumber">485</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="luxc.form-file-base.error_message.read_error" datatype="html">
         <source>Beim Lesen der Datei &quot;<x id="PH" equiv-text="file.name"/>&quot; ist ein Fehler aufgetreten</source>
         <target>Could not read the file &quot;<x id="PH" equiv-text="file.name"/>&quot;</target>

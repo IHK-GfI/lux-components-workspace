@@ -110,7 +110,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     labelHeader: $localize`:@@luxc.file-list.delete_title.lbl:Alle Dateien entfernen`,
     isDeletable: (_file: ILuxFileObject) => {
       return true;
-    },
+    }
   };
   _luxViewActionConfig: ILuxFileActionConfig = {
     disabled: false,
@@ -278,7 +278,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
 
     this.notifyFormValueChanged();
     this.clearFormControlErrors();
-    
+
     if (deletedFiles) {
       deletedFiles.forEach((file) => {
         if (this.luxDeleteActionConfig.onClick) {
@@ -319,7 +319,9 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
           const index = selectedFilesArray.findIndex((compareFile: ILuxFileObject) => compareFile.name === file.name);
           if (index > -1) {
             replaceableFilesMap.set(index, file);
-            replaceFileDeleteProtection = replaceFileDeleteProtection || (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false);
+            replaceFileDeleteProtection =
+              replaceFileDeleteProtection ||
+              (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false);
           }
         });
       }
@@ -395,6 +397,22 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   }
 
   private updateFilesIntern(files: FileList | File[], selectedFilesArray: any[], replaceableFilesMap: Map<number, File>) {
+    // Begrenzung der maximalen Anzahl an Dateien
+    const currentCount = Array.isArray(this.luxSelected) ? this.luxSelected.length : this.luxSelected ? 1 : 0;
+    if (
+      this.luxMaxFileCount !== undefined &&
+      this.luxMaxFileCount !== null &&
+      currentCount + files.length - replaceableFilesMap.size > this.luxMaxFileCount
+    ) {
+      this.setFormControlErrors({
+        cause: LuxFileErrorCause.MaxFileCount,
+        exception: this.getMaxFileCountMessage(),
+        file: undefined
+      });
+      this.forceProgressIndeterminate = false;
+      return;
+    }
+
     this.updateSelectedFiles(files).then(
       (newFiles: ILuxFileObject[]) => {
         const tempSelectedFiles = selectedFilesArray;
@@ -490,9 +508,11 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   }
 
   hasOnlyDeleteProtectedFiles(): boolean {
-    return !!this.luxSelected &&
-          this.luxSelected.length > 0 &&
-          this.luxSelected.every((file) => (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(file) : false));
+    return (
+      !!this.luxSelected &&
+      this.luxSelected.length > 0 &&
+      this.luxSelected.every((file) => (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(file) : false))
+    );
   }
 
   private resizeIconActionBar() {

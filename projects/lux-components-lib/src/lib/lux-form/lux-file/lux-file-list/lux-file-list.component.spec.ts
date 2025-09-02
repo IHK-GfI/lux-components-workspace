@@ -361,6 +361,44 @@ describe('LuxFileListComponent', () => {
       flush();
     }));
 
+    it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', fakeAsync(() => {
+      // Vorbedingungen: Maximal 1 Datei erlaubt
+      fileComponent.luxMaxFileCount = 1;
+      fileComponent.luxMultiple = true;
+      fixture.detectChanges();
+
+      // Eine Datei hinzufügen
+      fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
+      flush();
+      LuxTestHelper.wait(fixture);
+      expect(fileComponent.luxSelected!.length).toBe(1);
+      expect(fileComponent.formControl.errors).toBeNull();
+
+      // Versucht eine zweite Datei hinzuzufügen -> Error
+      fileComponent.selectFiles([
+        LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')
+      ]);
+      flush();
+      LuxTestHelper.wait(fixture);
+      expect(fileComponent.formControl.errors).not.toBeNull();
+      expect(fileComponent.formControl.errors![LuxFileErrorCause.MaxFileCount]).toBeDefined();
+
+      // MaxFileCount dynamisch erhöhen
+      fileComponent.luxMaxFileCount = 2;
+      fixture.detectChanges();
+
+      // Fügt eine zweite Datei hinzu
+      fileComponent.selectFiles([
+        LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')
+      ]);
+      flush();
+      LuxTestHelper.wait(fixture);
+
+      // Jetzt sollten zwei Dateien erlaubt sein
+      expect(fileComponent.luxSelected!.length).toBe(2);
+      expect(fileComponent.formControl.errors).toBeNull();
+    }));
+
     it('Sollte die Drag-and-Drop Events aufrufen (eine Datei)', fakeAsync(() => {
       const spyDrag = spyOn(LuxFormFileBase.prototype, 'onDragOver').and.callThrough();
       const spyDrop = spyOn(LuxFormFileBase.prototype, 'onDrop').and.callThrough();
