@@ -162,7 +162,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
         this.ICON_PX = 30; // 22px Breite plus 8px Gap zwischen Icon - Label
         this.FONT_SIZE = 14; //im Theming wird die Fontsize der Buttons auf 14px gesetzt
         this.FONT_WEIGHT = 400;
-        this.FONT_FAMILY = '"Korb", "Source Sans Pro","Helvetica","Arial","sans-serif"';
+        this.FONT_FAMILY = '"Blogger Sans", "Source Sans Pro","Helvetica","Arial","sans-serif"';
         this.BADGE_SIZE = 48; //max-width der Button-Badge
         break;
 
@@ -172,7 +172,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
         this.ICON_PX = 22; // 14px Breite plus 8px Gap zwischen Icon - Label
         this.FONT_SIZE = 14;
         this.FONT_WEIGHT = 400;
-        this.FONT_FAMILY = '"Blogger Sans", "Source Sans Pro","Helvetica","Arial","sans-serif"';
+        this.FONT_FAMILY = '"Source Sans Pro","Helvetica","Arial","sans-serif"';
         this.BADGE_SIZE = 38;
         break;
 
@@ -182,7 +182,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
         this.ICON_PX = 22;
         this.FONT_SIZE = 14;
         this.FONT_WEIGHT = 400;
-        this.FONT_FAMILY = '"Blogger Sans", "Source Sans Pro","Helvetica","Arial","sans-serif"';
+        this.FONT_FAMILY = '"Source Sans Pro","Helvetica","Arial","sans-serif"';
         this.BADGE_SIZE = 38;
     }
   }
@@ -370,13 +370,16 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
       return 0;
     }
 
+    const letterSpacing = 1; // px
     const canvas = this.canvas;
     const context = canvas.getContext('2d')!;
     context.font = `${this.FONT_WEIGHT} ${this.FONT_SIZE}px ${this.FONT_FAMILY}`;
     const metrics = context.measureText(text);
-    // zusätzlich nutzen wir hier einen Standard-Offset von 20px, mit den angepassten Werten für die Themes, aktuell auf 0 gesetzt
+    // Letter-Spacing multipliziert mit der Anzahl der Zeichen
+    const letterSpacingWidth = letterSpacing * text.length;
+    // Offset kann weiterhin genutzt werden, falls nötig
     const offset = 0;
-    return metrics.width + offset;
+    return metrics.width + letterSpacingWidth + offset;
   }
 
   hasVisibleMenuItems(): boolean {
