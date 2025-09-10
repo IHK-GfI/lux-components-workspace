@@ -19,12 +19,36 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   ];
   tableCSS: ICustomCSSConfig[] = [
     {
-      class: 'demo-year-2017',
+      class: 'lux-text-highlight-primary',
+      check: (element) => element.date.getFullYear() === 2016
+    },
+    {
+      class: 'lux-text-highlight-primary-strong',
+      check: (element) => element.date.getFullYear() === 2016
+    },
+    {
+      class: 'lux-text-highlight-success',
       check: (element) => element.date.getFullYear() === 2017
     },
     {
-      class: 'demo-year-2018',
+      class: 'lux-text-highlight-success-strong',
+      check: (element) => element.date.getFullYear() === 2017
+    },
+    {
+      class: 'lux-text-highlight-alert',
       check: (element) => element.date.getFullYear() === 2018
+    },
+    {
+      class: 'lux-text-highlight-alert-strong',
+      check: (element) => element.date.getFullYear() === 2018
+    },
+    {
+      class: 'lux-text-highlight-error',
+      check: (element) => element.date.getFullYear() === 2019
+    },
+    {
+      class: 'lux-text-highlight-error-strong',
+      check: (element) => element.date.getFullYear() === 2019
     }
   ];
   filter = false;
