@@ -49,13 +49,15 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   @HostBinding('attr.aria-multiselectable') ariaMulti = 'true';
   @HostBinding('attr.aria-label') label = $localize`:@@luxc.list.arialabel:Liste`;
 
-  @HostListener('focus') onFocus() {
-    // Wenn die Liste den Focus erhält, soll direkt das selektierte Element (bzw. das erste Element) focussiert werden.
-    if (this.luxItems.length > 0) {
-      if (this.luxSelectedPosition >= 0) {
-        this.focus(this.luxSelectedPosition);
-      } else {
-        this.focus(0);
+  @HostListener('focus', ['$event']) onFocus(event: FocusEvent) {
+    if (event.relatedTarget === null || 'lux-list-item' !== this.getTagName(event)) {
+      // Wenn die Liste den Focus erhält, soll direkt das selektierte Element (bzw. das erste Element) focussiert werden.
+      if (this.luxItems.length > 0) {
+        if (this.luxSelectedPosition >= 0) {
+          this.focus(this.luxSelectedPosition);
+        } else {
+          this.focus(0);
+        }
       }
     }
   }
@@ -224,5 +226,15 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     const item = this.luxItems ? this.luxItems.find((listItem: LuxListItemComponent, index: number) => index === position) : null;
 
     return item ?? null;
+  }
+
+  private getTagName(event: FocusEvent) {
+    let tagName = '';
+
+    if (event.relatedTarget && event.relatedTarget instanceof HTMLElement && (event.relatedTarget as HTMLElement).tagName) {
+      tagName = (event.relatedTarget as HTMLElement).tagName.toLocaleLowerCase();
+    }
+
+    return tagName;
   }
 }
