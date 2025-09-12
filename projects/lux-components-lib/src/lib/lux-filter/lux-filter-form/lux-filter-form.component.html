@@ -28,6 +28,7 @@
 @if (luxShowAsCard) {
 <lux-card
   luxTitle="{{ luxTitle }}"
+  [(luxExpanded)]="luxFilterExpanded"
   [luxExpandedLabelOpen]="luxExpandedLabelOpen"
   [luxExpandedLabelClose]="luxExpandedLabelClose"
   class="lux-filter-card"
@@ -44,7 +45,9 @@
   <!-- Optional können bei der Darstellung in einer Card erweiterte Optionen als Expanded-Content der Card angezeigt werden -->
   @if (extendedOptions) {
   <lux-card-content-expanded luxTagId="luxFilterFormExtendedContent">
+    @if(luxFilterExpanded) {
     <ng-content select="lux-filter-form-extended"></ng-content>
+    }
   </lux-card-content-expanded>
   }
   <lux-card-actions>

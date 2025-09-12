@@ -127,7 +127,7 @@
       </div>
       <!-- Der expanded Card-Content ist nur sichtbar, wenn der Ausklapp-Button geklickt wurde. -->
       @if (luxExpanded && contentExpandedComponent) {
-      <div class="lux-card-content-expanded lux-mt-4">
+      <div class="lux-card-content-expanded lux-mt-4" [@expansionAnim]="{ value: getAnimState(), params: { duration: getAnimDuration() } }">
         <ng-content select="lux-card-content-expanded"></ng-content>
       </div>
       }

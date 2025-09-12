@@ -132,7 +132,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   @Input() luxTagIdMaster?: string;
   @Input() luxTagIdDetail?: string;
   @Input() luxTitleLineBreak = false;
-  @Input() luxMasterListLabel = $localize`:@@luxc.list.arialabel:Liste`
+  @Input() luxMasterListLabel = $localize`:@@luxc.list.arialabel:Liste`;
   @Input() luxMasterIsLoading = false;
   @Input() luxCompareWith = (o1: T, o2: T) => o1 === o2;
   @Input() luxDefaultDetailHeader = true;
@@ -292,7 +292,10 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
    * @param o1
    * @param o2
    */
-  compareObjects(o1: T | null, o2: T | null) {
+  compareObjects(o1: T | null, o2: T | null): boolean {
+    if (o1 === o2) {
+      return true;
+    }
     if (!o1 || !o2) {
       return false;
     }
