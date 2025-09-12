@@ -181,7 +181,7 @@ $listmargin: calc(luxcommon.$outline-width + 1px);
     }
     .lux-list-empty-icon,
     .lux-list-empty-icon-text {
-      color: rgb(158.1, 158.1, 158.1);
+    color: rgb(97, 97, 97);
       opacity: 1;
       margin-bottom: 8px;
     }
@@ -221,7 +221,7 @@ $listmargin: calc(luxcommon.$outline-width + 1px);
 
     .lux-detail-empty-icon,
     .lux-detail-empty-icon-text {
-      color: rgb(158.1, 158.1, 158.1);
+    color: rgb(97, 97, 97);
       opacity: 1;
     }
     &.lux-detail-ac-container-mobile {

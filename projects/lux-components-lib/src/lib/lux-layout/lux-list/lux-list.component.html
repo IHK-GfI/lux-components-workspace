@@ -7,7 +7,8 @@
 <div>
   <div
     class="lux-list-empty-container lux-flex lux-flex-col lux-place-content-center lux-items-center lux-p-2"
-    luxAriaLabelledby="{{ luxEmptyLabel }}"
+    role="option"
+    aria-selected="false"
   >
     <lux-icon
       class="lux-list-empty-icon lux-color-gray"
@@ -17,7 +18,7 @@
     >
     </lux-icon>
     <span class="lux-list-empty-icon-text">
-      <strong>{{ luxEmptyLabel }}</strong>
+      {{ luxEmptyLabel }}
     </span>
   </div>
 </div>
