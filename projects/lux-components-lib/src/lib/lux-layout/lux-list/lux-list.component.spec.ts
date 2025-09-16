@@ -39,13 +39,13 @@ describe('LuxListComponent', () => {
 
   it('Sollte Empty-Icon und Empty-Label anzeigen (leere Liste)', fakeAsync(() => {
     expect(fixture.debugElement.query(By.css('lux-icon.lux-list-empty-icon'))).not.toBeNull();
-    expect(fixture.debugElement.query(By.css('span.lux-list-empty-icon-text strong'))).not.toBeNull();
+    expect(fixture.debugElement.query(By.css('span.lux-list-empty-icon-text'))).not.toBeNull();
   }));
 
   it('Sollte LuxListItems anzeigen (gefüllte Liste)', fakeAsync(() => {
     // Vorbedingungen testen
     expect(fixture.debugElement.query(By.css('lux-icon.lux-list-empty-icon'))).not.toBeNull();
-    expect(fixture.debugElement.query(By.css('span.lux-list-empty-icon-text strong'))).not.toBeNull();
+    expect(fixture.debugElement.query(By.css('span.lux-list-empty-icon-text'))).not.toBeNull();
     expect(fixture.debugElement.queryAll(By.directive(LuxListItemComponent)).length).toBe(0);
 
     // Änderungen durchführen

@@ -6,7 +6,6 @@
 >
   <div
     class="lux-master-ac-container"
-    tabindex="1"
     luxTagIdHandler
     [luxTagId]="luxTagIdMaster"
     [luxCustomTagId]="luxTagIdMaster"
@@ -100,7 +99,6 @@
     }"
     [luxTagId]="luxTagIdDetail"
     [luxCustomTagId]="luxTagIdDetail"
-    tabindex="2"
   >
     <!-- Button für die Mobile Ansicht -->
     @if (!luxOpen && isMobile) {
@@ -156,7 +154,7 @@
       >
       </lux-icon>
       <span class="lux-detail-empty-icon-text">
-        <strong>{{ luxEmptyLabelDetail }}</strong>
+        {{ luxEmptyLabelDetail }}
       </span>
     </div>
   </div>
