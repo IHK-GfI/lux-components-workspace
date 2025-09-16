@@ -16,7 +16,7 @@
     - [1. Simple Tabs](#1-simple-tabs)
     - [2. Tabs mit Zahl](#2-tabs-mit-zahl)
     - [3. Tabs mit großen deaktivierten Icons](#3-tabs-mit-großen-deaktivierten-icons)
-    - [4. Tab in eigene Komponente auslagern](#4-tab-in-eigene-komponente-auslagern)
+    - [4. Tab in eigene Komponente (mit Lazy-Loading) auslagern](#4-tab-in-eigene-komponente-mit-lazy-loading-auslagern)
 
 ## Overview / API
 
@@ -180,7 +180,7 @@ Html
 </lux-tabs>
 ```
 
-### 4. Tab in eigene Komponente auslagern
+### 4. Tab in eigene Komponente (mit Lazy-Loading) auslagern
 
 ![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-04.png)
 
@@ -188,13 +188,13 @@ Html - Tabs
 
 ```html
 <lux-tabs>
-  <custom-tab></custom-tab>
-
   <lux-tab luxTitle="Lesezeichen" luxIconName="lux-interface-bookmark">
     <ng-template>
       <p>Lesezeichen</p>
     </ng-template>
   </lux-tab>
+
+  <custom-tab></custom-tab>
 
   <lux-tab
     luxTitle="Einstellungen"
@@ -211,6 +211,7 @@ Html - Custom Tab
 
 ```html
 <ng-template>
+  @if(isLoaded) {
   <p>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
     eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
@@ -222,6 +223,11 @@ Html - Custom Tab
     clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
     amet.
   </p>
+  } @else {
+  <div>
+    Daten werden geladen...
+  </div>
+  }
 </ng-template>
 ```
 
@@ -244,28 +250,37 @@ import {
   styleUrls: ["./custom-tab.component.scss"],
   providers: [{ provide: LuxTabComponent, useExisting: CustomTabComponent }],
 })
-export class CustomTabComponent
-  extends LuxTabComponent
-  implements OnInit, AfterViewInit
+export class CustomTabComponent extends LuxTabComponent implements OnInit, AfterViewInit
 {
   @ViewChild(TemplateRef) myContentTemplate!: TemplateRef<any>;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    public elementRef: ElementRef,
-  ) {
-    super();
-  }
+  isLoaded = false;
 
   ngOnInit() {
-    this.luxTitle = "Custom Tab";
-    this.luxIconName = "lux-interface-user-single";
+    // Angular (seit v17/v18) ruft die Lifecycle-Hooks (ngOnInit, ngAfterViewInit, etc.) für alle Komponenten auf,
+    // sobald sie instanziiert werden – auch wenn sie per *ngIf, *ngSwitch oder Lazy Loading noch nicht sichtbar sind.
+    // D.h. hier sollte kein Code stehen, der nur ausgeführt werden soll, wenn der Tab tatsächlich aktiviert bzw. angezeigt wird.
+    this.luxTitle = 'Beispiel 3';
+    this.luxTagIdHeader = 'tab-beispiel3-header';
+    this.luxTagIdContent = 'tab-beispiel3-content';
   }
 
   ngAfterViewInit() {
+    // Siehe Kommentar in ngOnInit()
+    this.contentTemplate = this.myContentTemplate;
+  }
+
+  override onTabActivated() {
+    if (!this.isLoaded) {
+      this.loadData();
+    }
+  }
+
+  private loadData() {
+    // Simuliere einen Backend-Aufruf
     setTimeout(() => {
-      this.contentTemplate = this.myContentTemplate;
-    });
+      this.isLoaded = true;
+    }, 5000);
   }
 }
 ```
