@@ -1,0 +1,10 @@
+.loading-dots-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 250px;
+
+  app-dots-loader {
+    min-height: 100px;
+  }
+}

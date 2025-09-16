@@ -28,7 +28,7 @@
     }
   </mat-tab-group>
 
-  @for (luxTab of luxTabs; track trackTab(i, luxTab); let i = $index) { @if (!luxLazyLoading) {
+  @for (luxTab of luxTabs; track i; let i = $index) { @if (!luxLazyLoading) {
   <section
     luxTagIdHandler
     [luxTagId]="luxTab.luxTagIdContent"

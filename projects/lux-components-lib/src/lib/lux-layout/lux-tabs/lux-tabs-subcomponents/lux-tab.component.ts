@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, ContentChild, Input, TemplateRef } from '@angular/core';
-import { LuxUtil } from '../../../lux-util/lux-util';
+import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'lux-tab',
   template: ''
 })
-export class LuxTabComponent implements AfterViewInit {
+export class LuxTabComponent {
   @Input() luxTitle = '';
   @Input() luxIconName?: string;
   @Input() luxCounter?: number;
@@ -23,7 +22,7 @@ export class LuxTabComponent implements AfterViewInit {
 
   constructor() {}
 
-  ngAfterViewInit() {
-    LuxUtil.assertNonNull('contentTemplate', this.contentTemplate);
+  onTabActivated() {
+    // Wird aufgerufen, wenn der Tab aktiviert wird (sichtbar wird).
   }
 }
