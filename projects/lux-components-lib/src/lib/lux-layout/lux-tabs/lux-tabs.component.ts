@@ -78,6 +78,7 @@ export class LuxTabsComponent implements OnInit, OnChanges, AfterViewInit, OnDes
         .subscribe((tabChange: MatTabChangeEvent) => {
           this.luxActiveTab = tabChange.index;
           this.luxActiveTabChanged.emit(tabChange);
+          this.callOnTabActivated();
         })
     );
 
@@ -105,6 +106,13 @@ export class LuxTabsComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   ngAfterViewInit() {
     this.rerenderTabs();
+    this.callOnTabActivated();
+  }
+
+  private callOnTabActivated() {
+    setTimeout(() => {
+      this.luxTabs.get(this.luxActiveTab)?.onTabActivated();
+    });
   }
 
   ngOnDestroy() {
@@ -131,7 +139,4 @@ export class LuxTabsComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
   }
 
-  trackTab(index: number, luxTab: LuxTabComponent) {
-    return index;
-  }
 }

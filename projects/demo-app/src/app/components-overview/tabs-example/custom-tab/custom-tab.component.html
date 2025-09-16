@@ -1,6 +1,8 @@
 <ng-template>
-  <h3>Ein einfaches Tab-Beispiel</h3>
-  <div>
+  @if(isLoaded) {
+  <h3>Custom-Tab</h3>
+  <p>Dieser Tab hat seine Daten erst geladen, als er aktiviert wurde.</p>
+  <p>
     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cumque iste dolorum neque fugiat modi ipsam eos dicta fuga aliquam,
     praesentium provident dignissimos, dolorem aliquid incidunt atque repellendus et? Minima repudiandae dolores, saepe maxime facilis nisi
     recusandae nesciunt voluptatibus, quod nemo rerum eos labore cum itaque fugit? Suscipit ipsum adipisci molestiae quae, tempora quisquam
@@ -13,5 +15,10 @@
     delectus. Quo corporis exercitationem, quia tenetur similique delectus. Optio ratione debitis non, expedita autem voluptatibus beatae
     suscipit nemo nisi quis culpa natus consectetur magnam ad nihil consequatur aut. Repellendus nulla non fuga iste. Eum debitis reiciendis
     recusandae iure reprehenderit ad.
+  </p>
+  } @else {
+  <div class="loading-dots-container">
+    <app-dots-loader></app-dots-loader>
   </div>
+  }
 </ng-template>
