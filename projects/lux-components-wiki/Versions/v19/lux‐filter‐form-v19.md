@@ -23,7 +23,9 @@ Filter (zugeklappt):
   - [Classes / Services](#classes--services)
     - [LuxFilter](#luxfilter)
     - [LuxFilterItem](#luxfilteritem)
-  - [Beispiel](#beispiel)
+  - [Beispiele](#beispiele)
+    - [1. Standard](#1-standard)
+    - [2. Mit Custom-Component - Filter in Subkomponente](#2-mit-custom-component---filter-in-subkomponente)
 
 ## Overview / API
 
@@ -125,7 +127,9 @@ Ein LuxFilterLoadDialogComponent zeigt die vorhandenen Filter an und bietet eine
 | hidden        | boolean                                         | Gibt an, ob das Filteritem ausgeblendet ist.                             |
 | renderFn      | (filter: LuxFilterItem\<T>, value: T) => string | Die Render-Funktion liefert die Bezeichnung für den Filterwert als Chip. |
 
-## Beispiel
+## Beispiele
+
+### 1. Standard
 
 ![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐filter‐form-v19-img-01-01.png)
 
@@ -348,4 +352,81 @@ Json
   ],
   "toggle": true
 }
+```
+
+### 2. Mit Custom-Component - Filter in Subkomponente
+
+Ts - Custom Component
+
+```typescript
+@Component({
+  selector: 'app-custom-filter-item',
+  imports: [LuxInputAcComponent, LuxFilterItemDirective, LuxToggleAcComponent],
+  templateUrl: './custom-filter-item.component.html',
+  host: { class: 'lux-grid lux-grid-cols-12 lt-md:lux-grid-cols-1 lux-gap-4 lux-mt-4 lux-items-center' }
+})
+export class CustomFilterItemComponent implements AfterViewInit {
+  filterDisabled = input<boolean>(true);
+  filterHidden = input<boolean>(false);
+
+  filterFormComponent = inject(LuxFilterFormComponent);
+
+  formElements = viewChildren(LuxFilterItemDirective);
+
+  ngAfterViewInit(): void {
+    this.filterFormComponent.registerFilterItems([...this.formElements()]);
+  }
+}
+```
+
+Html - Custom Component
+
+```html
+<lux-input-ac
+  class="lux-col-span-6 lt-md:lux-col-span-1"
+  luxLabel="Custom-Component"
+  luxName="customComponentInput"
+  luxAutocomplete="off"
+  luxControlBinding="customComponentInput"
+  [luxFilterDisabled]="filterDisabled()"
+  [luxFilterHidden]="filterHidden()"
+  luxFilterItem
+></lux-input-ac>
+<lux-toggle-ac
+  class="lux-col-span-6 lt-md:lux-col-span-1"
+  luxLabel="Custom-Component"
+  luxName="customComponentToggle"
+  luxAutocomplete="off"
+  luxControlBinding="customComponentToggle"
+  [luxFilterDisabled]="filterDisabled()"
+  [luxFilterHidden]="filterHidden()"
+  [luxNoLabels]="true"
+  luxFilterItem
+></lux-toggle-ac>
+```
+
+Html - Filter
+
+```html
+  <lux-filter-form ...>
+    ...
+    <div class="lux-grid lux-grid-cols-12 lt-md:lux-grid-cols-1 lux-gap-4 lux-mt-4">
+      <lux-input-ac
+      class="lux-col-span-6 lt-md:lux-col-span-1"
+      luxLabel="Input"
+      luxName="filter_input"
+      luxAutocomplete="off"
+      luxControlBinding="input"
+      [luxFilterDisabled]="inputDisabled"
+      [luxFilterHidden]="inputHidden"
+      luxFilterItem
+    ></lux-input-ac>
+      <app-custom-filter-item
+        class="lux-col-span-12 lt-md:lux-col-span-1"
+        [filterDisabled]="customDisabled"
+        [filterHidden]="customHidden">
+      </app-custom-filter-item>
+    </div>
+    ...
+  </lux-filter-form>
 ```

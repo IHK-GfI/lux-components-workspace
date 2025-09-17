@@ -87,7 +87,8 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     panelClass: []
   };
 
-  @ContentChildren(LuxFilterItemDirective, { descendants: true }) formElementes!: QueryList<LuxFilterItemDirective>;
+  formElementes: LuxFilterItemDirective[] = [];
+  @ContentChildren(LuxFilterItemDirective, { descendants: true }) formElementesQL!: QueryList<LuxFilterItemDirective>;
   @ContentChild(LuxFilterFormExtendedComponent) extendedOptions?: LuxFilterFormExtendedComponent;
 
   _luxFilterValues = {};
@@ -238,7 +239,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    this.updateContentFilterItems();
+    this.registerFilterItems(this.formElementesQL.toArray());
   }
 
   ngOnDestroy(): void {
@@ -402,12 +403,13 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  private updateContentFilterItems() {
+  registerFilterItems(filterItemDirectives: LuxFilterItemDirective[]) {
     // An dieser Codestelle ist setTimeout nötig, wenn die Inhalte über eine LUX-Layout-Form-Row gesetzt werden.
     // D.h. initial gibt es keine Filteritems, aber dann werden die Filteritems über ngAfterContentInit hinzugefügt.
     setTimeout(() => {
-      this.formElementes.forEach((item) => {
+      filterItemDirectives.forEach((item) => {
         this.filterForm.addControl(item.filterItem.binding, item.filterItem.component.formControl);
+        this.formElementes.push(item);
       });
 
       this.filterForm.patchValue(this.luxFilterValues);
