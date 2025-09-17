@@ -49,7 +49,7 @@
         <ng-container matColumnDef="multiSelect">
           <th class="lux-multiselect-th" mat-header-cell *matHeaderCellDef mat-sort-header="multiSelect">
             <div class="lux-flex lux-flex-col">
-              <span class="lux-selected-count">{{ luxSelected.size }} {{ !luxHttpDAO ? '/ ' + dataSource.totalElements : '' }}</span>
+              <span class="lux-selected-count">{{ luxSelected.size }} / {{ dataSource.totalElements }}</span>
             </div>
           </th>
           <td
@@ -77,8 +77,7 @@
             >
             </lux-checkbox-ac>
           </td>
-          <td class="lux-multiselect-tf" [ngClass]="{ 'lux-ignore-multiselect-tf': !!luxHttpDAO }" mat-footer-cell *matFooterCellDef>
-            @if (!luxHttpDAO) {
+          <td class="lux-multiselect-tf" mat-footer-cell *matFooterCellDef>
             <div class="lux-multiselect-toggle-all-wrapper lux-flex lux-flex-col lux-place-content-center">
               <lux-checkbox-ac
                 luxTagId="lux-table-multiselect-header"
@@ -94,7 +93,6 @@
               >
               </lux-checkbox-ac>
             </div>
-            }
           </td>
         </ng-container>
         }

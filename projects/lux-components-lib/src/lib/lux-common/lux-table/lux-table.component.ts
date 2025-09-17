@@ -511,7 +511,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * Voraussetzung dafür ist, das Multiselect aktiv ist und keine Http-Table vorliegt.
    */
   changeSelectedEntries() {
-    if (this.luxMultiSelect && !this.luxHttpDAO) {
+    if (this.luxMultiSelect) {
+      // Bei HTTP-Tabellen selektieren wir nur die aktuell geladenen (gefilterten) Elemente
+      // und nicht alle Elemente serverseitig.
       if (this.checkFilteredAllSelected()) {
         this.dataSource.filteredData.forEach((dataEntry: any) => {
           if (!this.isEntryDisabled(dataEntry)) {
