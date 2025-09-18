@@ -28,8 +28,9 @@
         [luxDisableShortcut]="disableShortcut"
         class="lux-ml-1 lux-mr-1 lux-mb-3 lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
       >
-        <div class="lux-mt-4 lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
+        <div class="lux-grid lux-grid-cols-12 lt-md:lux-grid-cols-1 lux-gap-4 lux-mt-4">
           <lux-lookup-autocomplete-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Lookup Autocomplete"
             luxLookupId="filter_lookup_autocomplete"
             luxControlBinding="autocompleteLookup"
@@ -41,6 +42,7 @@
             luxFilterItem
           ></lux-lookup-autocomplete-ac>
           <lux-lookup-combobox-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Lookup Combobox"
             luxLookupId="filter_lookup_combobox"
             luxControlBinding="comboboxLookup"
@@ -53,6 +55,7 @@
             luxFilterItem
           ></lux-lookup-combobox-ac>
           <lux-input-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Input"
             luxName="filter_input"
             luxAutocomplete="off"
@@ -64,6 +67,7 @@
           ></lux-input-ac>
           <lux-autocomplete-ac
             luxLabel="Autocomplete"
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             [luxOptions]="autoCompleteOptions"
             luxControlBinding="autocomplete"
             [luxFilterDisabled]="autoCompleteDisabled"
@@ -71,6 +75,7 @@
             luxFilterItem
           ></lux-autocomplete-ac>
           <lux-datepicker-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Datepicker"
             luxName="filter_datepicker"
             luxControlBinding="datepicker"
@@ -79,6 +84,7 @@
             luxFilterItem
           ></lux-datepicker-ac>
           <lux-datetimepicker-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Datetimepicker"
             luxName="filter_datetimepicker"
             luxControlBinding="datetimepicker"
@@ -87,6 +93,7 @@
             luxFilterItem
           ></lux-datetimepicker-ac>
           <lux-select-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Single-Select"
             luxControlBinding="singleSelect"
             luxOptionLabelProp="label"
@@ -100,6 +107,7 @@
             [luxNoBottomLabel]="true"
           ></lux-select-ac>
           <lux-select-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Multi-Select"
             luxControlBinding="multiSelect"
             luxOptionLabelProp="label"
@@ -113,6 +121,7 @@
             [luxNoBottomLabel]="true"
           ></lux-select-ac>
           <lux-toggle-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Toggle"
             luxControlBinding="toggle"
             [luxFilterRenderFn]="renderToggleFn"
@@ -120,9 +129,10 @@
             [luxFilterHidden]="toggleSelectHidden"
             luxFilterColor="warn"
             luxFilterItem
-            [luxNoTopLabel]="true"
+            [luxNoLabels]="true"
           ></lux-toggle-ac>
           <lux-radio-ac
+            class="lux-col-span-6 lt-md:lux-col-span-1"
             [luxNoTopLabel]="true"
             [luxOrientationVertical]="false"
             [luxOptions]="radioOptions"
@@ -130,11 +140,17 @@
             luxOptionLabelProp="label"
             [luxPickValue]="radioPickValueFn"
             luxFilterItem
+            [luxNoLabels]="true"
             luxFilterLabel="Radio"
             [luxFilterDisabled]="radioSelectDisabled"
             [luxFilterHidden]="radioSelectHidden"
           >
           </lux-radio-ac>
+          <app-custom-filter-item
+            class="lux-col-span-12 lt-md:lux-col-span-1"
+            [filterDisabled]="customDisabled"
+            [filterHidden]="customHidden"
+          ></app-custom-filter-item>
         </div>
       </lux-filter-form>
       <div class="lux-highlight-section column lux-ml-2 lux-mr-2">
@@ -422,6 +438,13 @@
       <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
         <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="radioSelectDisabled" [luxNoLabels]="true"></lux-toggle-ac>
         <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="radioSelectHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Custom-Component</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="customDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="customHidden" [luxNoLabels]="true"></lux-toggle-ac>
       </div>
     </div>
   </example-base-advanced-options>

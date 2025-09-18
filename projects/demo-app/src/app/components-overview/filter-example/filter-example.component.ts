@@ -1,33 +1,34 @@
 import { JsonPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import {
-    LuxAutocompleteAcComponent,
-    LuxButtonComponent,
-    LuxDatepickerAcComponent,
-    LuxDatetimepickerAcComponent,
-    LuxFieldValues,
-    LuxFilter,
-    LuxFilterFormComponent,
-    LuxFilterFormExtendedComponent,
-    LuxFilterItem,
-    LuxFilterItemDirective,
-    LuxInputAcComponent,
-    LuxLookupAutocompleteAcComponent,
-    LuxLookupComboboxAcComponent,
-    LuxLookupParameters,
-    LuxMediaQueryObserverService,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxTextareaAcComponent,
-    LuxThemePalette,
-    LuxToggleAcComponent,
-    LuxUtil
+  LuxAutocompleteAcComponent,
+  LuxButtonComponent,
+  LuxDatepickerAcComponent,
+  LuxDatetimepickerAcComponent,
+  LuxFieldValues,
+  LuxFilter,
+  LuxFilterFormComponent,
+  LuxFilterFormExtendedComponent,
+  LuxFilterItem,
+  LuxFilterItemDirective,
+  LuxInputAcComponent,
+  LuxLookupAutocompleteAcComponent,
+  LuxLookupComboboxAcComponent,
+  LuxLookupParameters,
+  LuxMediaQueryObserverService,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxTextareaAcComponent,
+  LuxThemePalette,
+  LuxToggleAcComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
+import { CustomFilterItemComponent } from "./custom-filter-item.component";
 
 @Component({
   selector: 'lux-filter-example',
@@ -52,8 +53,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    JsonPipe
-  ]
+    JsonPipe,
+    CustomFilterItemComponent
+]
 })
 export class FilterExampleComponent implements OnInit, OnDestroy {
   private mediaQuery = inject(LuxMediaQueryObserverService);
@@ -150,7 +152,9 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
           }
         ],
         toggle: true,
-        radio: 'b'
+        radio: 'b',
+        customComponentInput: 'ci',
+        customComponentToggle: true
       }
     }
   ];
@@ -158,6 +162,8 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
 
   mediaQuerySubscription: Subscription;
 
+  customDisabled = false;
+  customHidden = false;
   inputDisabled = false;
   inputHidden = false;
   autoCompleteDisabled = false;
