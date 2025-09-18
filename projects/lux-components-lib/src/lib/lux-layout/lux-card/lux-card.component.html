@@ -108,9 +108,12 @@
       </div>
     </div>
     <!--Ende Card-header-->
-    <mat-card-content class="lux-flex lux-flex-col" [ngClass]="{ 'lux-pt-4': contentComponent }">
+    <mat-card-content class="lux-flex lux-flex-col">
       <!-- Der normale Card-Content ist immer sichtbar. -->
-      <div class="lux-card-content lux-flex lux-flex-col lux-gap-3">
+      <div
+        class="lux-card-content lux-flex lux-flex-col lux-gap-3"
+        [ngClass]="{ 'lux-card-with-content-and-header': contentComponent && showHeader }"
+      >
         <ng-content select="lux-card-content"></ng-content>
         @if (showExpandedToggle) {
         <lux-button

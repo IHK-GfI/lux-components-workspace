@@ -118,6 +118,19 @@ export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
     return !!this.contentExpandedComponent;
   }
 
+  /**
+   * Header wird nur angezeigt, wenn wenigstens eines der Header-Elemente vorhanden ist
+   * (Icon, Title, Subtitle, Info-Komponente).
+   */
+  get showHeader() {
+    return (
+      this.showIcon ||
+      !!(this.luxTitle && this.luxTitle.length > 0) ||
+      !!(this.luxSubTitle && this.luxSubTitle.length > 0) ||
+      !!this.infoComponent
+    );
+  }
+
   changeContentExpansion(event: any) {
     LuxUtil.stopEventPropagation(event);
 

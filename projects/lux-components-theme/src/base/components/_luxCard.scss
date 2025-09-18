@@ -19,6 +19,27 @@ lux-card {
     }
   }
 
+  // Hier wird das Padding der LUX-Card gesetzt.
+  mat-card {
+    padding: 16px;
+
+    .mat-mdc-card-content {
+      padding: 0;
+
+      &:first-child {
+        padding: 0;
+      }
+
+      .lux-card-content {
+        padding: 0;
+
+        &.lux-card-with-content-and-header {
+          padding-top: 16px;
+        }
+      }
+    }
+  }
+
   // Umstylen der Mat-Card
   .mat-mdc-card.lux-card {
     border: 1px solid luxcommon.$app-border-color;
@@ -30,16 +51,9 @@ lux-card {
     &:not([class*="mat-elevation-z"]) {
       @include luxelevations.lux-elevation-z0;
     }
+
     .mat-mdc-card-content {
       font-size: 1rem;
-      padding: 0;
-
-      .lux-card-content {
-        padding: 16px 0 0 0;
-        &:empty {
-          padding: 0;
-        }
-      }
     }
   }
 
@@ -146,7 +160,6 @@ lux-card {
   // HOVER / FOCUS
 
   mat-card {
-    padding: 16px;
     &[class~="lux-cursor"]:hover {
       background-image: luxcommon.$app-gradient-reverse;
       background-color: #ffffff;
