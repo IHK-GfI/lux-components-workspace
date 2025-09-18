@@ -1,17 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { Validators } from '@angular/forms';
 import {
-    LuxButtonComponent,
-    LuxCardActionsComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxCardContentExpandedComponent,
-    LuxCardInfoComponent,
-    LuxFormHintComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxSnackbarService,
-    LuxToggleAcComponent
+  LuxButtonComponent,
+  LuxCardActionAlignType,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCardContentExpandedComponent,
+  LuxCardInfoComponent,
+  LuxFormHintComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxSelectAcComponent,
+  LuxSnackbarService,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -32,6 +34,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     LuxCardComponent,
     LuxToggleAcComponent,
     LuxInputAcComponent,
+    LuxSelectAcComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -62,6 +65,11 @@ export class CardExampleComponent {
   headingValidator = Validators.pattern('[1-6]');
   closeLabel = 'Weniger Inhalt Anzeigen';
   openLabel = 'Mehr Inhalt Anzeigen';
+  actionAlignOptions: { label: string; value: LuxCardActionAlignType }[] = [
+    { label: 'Rechts', value: 'right' },
+    { label: 'Links', value: 'left' }
+  ];
+  actionAlign: { label: string; value: LuxCardActionAlignType } = this.actionAlignOptions[0];
 
   onCardClicked() {
     console.log('Card clicked');

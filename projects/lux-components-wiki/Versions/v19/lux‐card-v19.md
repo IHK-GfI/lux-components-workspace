@@ -13,6 +13,7 @@
     - [LuxCardContentComponent](#luxcardcontentcomponent)
     - [LuxCardContentExpandedComponent](#luxcardcontentexpandedcomponent)
     - [LuxCardActionsComponent](#luxcardactionscomponent)
+    - [@Input](#input-1)
   - [Styleguide](#styleguide)
   - [Beispiele](#beispiele)
     - [1. Simple Card](#1-simple-card)
@@ -20,14 +21,15 @@
     - [3. Erweiterbare Card](#3-erweiterbare-card)
     - [4. Dynamische Actions](#4-dynamische-actions)
     - [5. Layout mit Cards](#5-layout-mit-cards)
+    - [6. Card mit linksbündigen Actions](#6-card-mit-linksbündigen-actions)
 
 ## Overview / API
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-card        |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-card     |
 
 ### @Input
 
@@ -98,6 +100,12 @@ Diese werden unterhalb der LuxCardContentComponent dargestellt.
 | -------- | ---------------- |
 | Selector | lux-card-actions |
 
+### @Input
+
+| Name     | Typ             | Beschreibung                                                       |
+| -------- | --------------- | ------------------------------------------------------------------ |
+| luxAlign | 'left', 'right' | Bestimmt, ob die Buttons links- oder rechtbündig anzegeigt werden. |
+
 ## Styleguide
 
 Grundlegende Regeln zum Umgang mit Cards sind:
@@ -147,7 +155,7 @@ Html
   <lux-card-content>
     <p>Lorem Ipsum Content</p>
   </lux-card-content>
-  <lux-card-actions>
+  <lux-card-actions luxAlign="left">
     <lux-link
       luxLabel="http://www.gfi.ihk.de"
       [luxFlat]="true"
@@ -341,4 +349,26 @@ Html
     </lux-card-actions>
   </lux-card>
 </div>
+```
+
+### 6. Card mit linksbündigen Actions
+
+![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-06.png)
+
+Html
+
+```html
+<lux-card luxTitle="Title" luxSubTitle="Subtitle">
+  <lux-card-content>
+    <p>Lorem Ipsum Content</p>
+  </lux-card-content>
+  <lux-card-actions luxAlign="left">
+    <lux-link
+      luxLabel="http://www.gfi.ihk.de"
+      [luxFlat]="true"
+      luxColor="accent"
+    ></lux-link>
+    <lux-button luxLabel="OK" [luxFlat]="true" luxColor="primary"></lux-button>
+  </lux-card-actions>
+</lux-card>
 ```

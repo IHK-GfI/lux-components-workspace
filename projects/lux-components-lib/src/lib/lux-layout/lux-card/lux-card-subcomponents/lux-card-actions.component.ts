@@ -1,9 +1,17 @@
-import { Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, input } from '@angular/core';
+
+export type LuxCardActionAlignType = 'left' | 'right';
 
 @Component({
   selector: 'lux-card-actions',
-  template: '<div class="lux-flex lux-justify-end lux-items-center lux-gap-3"><ng-content></ng-content></div>'
+  templateUrl: './lux-card-actions.component.html',
+  imports: [NgClass],
+  host: { class: 'lux-flex lux-flex-auto'}
 })
 export class LuxCardActionsComponent {
+
+  luxAlign = input<LuxCardActionAlignType>('right');
+
   constructor() {}
 }

@@ -48,7 +48,7 @@
         </p>
       </lux-card-content-expanded>
       } @if (showActions) {
-      <lux-card-actions>
+      <lux-card-actions [luxAlign]="actionAlign.value">
         <lux-button luxLabel="Button 1" [luxRaised]="true" luxIconName="lux-interface-user-single" luxColor="primary"></lux-button>
         <lux-button luxLabel="Button 2" [luxRaised]="btn2Raised"></lux-button>
       </lux-card-actions>
@@ -108,6 +108,16 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
+    <lux-select-ac
+      luxLabel="luxAlign (Buttonausrichtung)"
+      [luxOptions]="actionAlignOptions"
+      [(luxSelected)]="actionAlign"
+      [luxDisabled]="!showActions"
+    >
+      <ng-template let-option>
+        {{ option.label }}
+      </ng-template>
+    </lux-select-ac>
     <lux-toggle-ac luxLabel="luxCardInfo anzeigen" [(luxChecked)]="showInfo" [luxNoTopLabel]="true">
       <lux-form-hint> Die Component für die Darstellung von Zusatzinfos rechts vom Titel anzeigen. </lux-form-hint>
     </lux-toggle-ac>
