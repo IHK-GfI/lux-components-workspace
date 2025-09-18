@@ -770,6 +770,26 @@ describe('LuxTableComponent', () => {
 
       expect(component.selected.size).toEqual(0);
     }));
+
+    it('HTTP-DAO Multiselect: Select-All und Counter funktionieren', fakeAsync(() => {
+      // Vorbedingungen: Daten laden lassen
+      LuxTestHelper.wait(fixture);
+      let counter = document.querySelector('.lux-selected-count') as HTMLElement;
+      expect(counter.textContent?.trim()).toBe('0 / 2');
+
+      // Select-All via Footer Row
+      const footerRow = document.querySelector('.lux-footer-row') as HTMLElement;
+      footerRow.click();
+      LuxTestHelper.wait(fixture);
+      counter = document.querySelector('.lux-selected-count') as HTMLElement;
+      expect(counter.textContent?.trim()).toBe('2 / 2');
+
+      // Deselect all
+      footerRow.click();
+      LuxTestHelper.wait(fixture);
+      counter = document.querySelector('.lux-selected-count') as HTMLElement;
+      expect(counter.textContent?.trim()).toBe('0 / 2');
+    }));
   });
 
   describe('Multiselect', () => {
