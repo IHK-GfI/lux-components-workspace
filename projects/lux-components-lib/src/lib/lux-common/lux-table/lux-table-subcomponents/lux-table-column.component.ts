@@ -14,6 +14,7 @@ import { LuxTableColumnHeaderComponent } from './lux-table-column-header.compone
 export class LuxTableColumnComponent implements OnInit, OnChanges {
   change$: Subject<void> = new Subject<void>();
 
+  @Input() luxConfigLabel?: string;
   @Input() luxColumnDef!: string;
   @Input() luxSortable = false;
   @Input() luxSticky = false;

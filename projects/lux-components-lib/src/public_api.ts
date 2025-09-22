@@ -49,6 +49,7 @@ export { type ILuxMessage } from './lib/lux-common/lux-message-box/lux-message-b
 export * from './lib/lux-common/lux-message-box/lux-message-box-subcomponents/lux-message.component';
 export * from './lib/lux-common/lux-message-box/lux-message-box.component';
 export * from './lib/lux-common/lux-progress/lux-progress.component';
+export * from './lib/lux-common/lux-table/lux-table-column-visibility-store';
 export * from './lib/lux-common/lux-table/lux-table-custom-css-config.interface';
 export * from './lib/lux-common/lux-table/lux-table-data-source';
 export * from './lib/lux-common/lux-table/lux-table-http/lux-table-http-dao-structure.interface';

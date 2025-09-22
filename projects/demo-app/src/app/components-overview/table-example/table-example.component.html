@@ -11,6 +11,8 @@
         [luxColWidthsPercent]="columnWidthOption"
         [luxShowFilter]="filter"
         [luxFilterText]="filterText"
+        [luxShowColumnSelector]="showColumnSelector"
+        luxColumnStorageKey="lux-demo-table-example"
         [luxPageSize]="pageSize"
         [luxClasses]="cssClass"
         [luxPageSizeOptions]="pageSizeOption"
@@ -32,6 +34,7 @@
       >
         <lux-table-column
           luxColumnDef="name"
+          luxConfigLabel="Name"
           [luxSortable]="nameConfig.sortable"
           [luxSticky]="nameConfig.sticky"
           [luxResponsiveAt]="nameConfig.responsiveAt"
@@ -51,6 +54,7 @@
         </lux-table-column>
         <lux-table-column
           luxColumnDef="symbol"
+          luxConfigLabel="Symbol"
           [luxSortable]="symbolConfig.sortable"
           [luxSticky]="symbolConfig.sticky"
           [luxResponsiveAt]="symbolConfig.responsiveAt"
@@ -73,6 +77,7 @@
         @if (!multiSelect || !multiSelectOnlyCheckboxClick) {
         <lux-table-column
           luxColumnDef="date"
+          luxConfigLabel="Datum"
           [luxSortable]="dateConfig.sortable"
           [luxSticky]="dateConfig.sticky"
           [luxResponsiveAt]="dateConfig.responsiveAt"
@@ -149,6 +154,9 @@
     </lux-table>
   </example-base-content>
   <example-base-simple-options>
+    <lux-toggle-ac luxLabel="luxShowColumnSelector" [(luxChecked)]="showColumnSelector" [luxNoLabels]="true">
+      <lux-form-hint>Dieses Flag steuert, ob oberhalb der Tabelle ein Select zur Spaltenein-/ausblendung angezeigt wird.</lux-form-hint>
+    </lux-toggle-ac>
     <table-example-simple-options [tableExample]="this" class="lux-flex lux-flex-col lux-gap-4"></table-example-simple-options>
   </example-base-simple-options>
   <example-base-advanced-options>

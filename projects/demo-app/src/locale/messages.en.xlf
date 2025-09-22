@@ -130,6 +130,14 @@
           <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="luxc.table.column.selector.lbl" datatype="html">
+        <source>Spalten ausblenden</source>
+        <target>Hide columns</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="luxc.table.multiselect.chk.arialabel" datatype="html">
         <source>Reihe <x id="INTERPOLATION"/></source>
         <target>Row <x id="INTERPOLATION"/></target>
