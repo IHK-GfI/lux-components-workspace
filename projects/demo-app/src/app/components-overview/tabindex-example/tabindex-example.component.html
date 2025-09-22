@@ -15,7 +15,7 @@
         ></lux-autocomplete-ac>
         <lux-chips-ac
           [luxInputAllowed]="true"
-          luxInputLabel="Tabindex 5 (LuxChips)"
+          luxInputLabel="Tabindex {{ wrongTabIndex ? '5' : '' }} (LuxChips)"
           [luxTabIndex]="wrongTabIndex ? '5' : '0'"
           [luxNewChipGroup]="chipGroup"
         >
