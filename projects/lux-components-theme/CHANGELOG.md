@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 19.1.0
+
+### Issues
+
+- Issue #12: LuxTable: Spalten ein- und ausblenden (#103)
+- Issue #88: Stylingklassen für Texthighlight (#92)
+- Issue #94: Master-Detail ist nicht barrierefrei (#96)
+- Issue #99: Lux-Card: Unerwünschtes Padding und Ausrichtung der Action-Buttons
+
 ## Version 19.0.1
 
 ### Issues
