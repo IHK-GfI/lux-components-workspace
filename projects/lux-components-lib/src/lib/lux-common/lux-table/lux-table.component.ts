@@ -5,9 +5,11 @@ import {
   Component,
   ContentChildren,
   DoCheck,
+  effect,
   ElementRef,
   EventEmitter,
   inject,
+  input,
   Input,
   OnDestroy,
   OnInit,
@@ -43,19 +45,21 @@ import { LuxCheckboxAcComponent } from '../../lux-form/lux-checkbox-ac/lux-check
 import { LuxInputAcPrefixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
 import { LuxInputAcSuffixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
 import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
+import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxPaginatorIntl } from '../../lux-util/lux-paginator-intl';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxProgressComponent } from '../lux-progress/lux-progress.component';
+import { ILuxTableColumnVisibilityStore, LuxTableLocalColumnVisibilityStore } from './lux-table-column-visibility-store';
 import { ICustomCSSConfig } from './lux-table-custom-css-config.interface';
 import { LuxTableDataSource } from './lux-table-data-source';
 import { ILuxTableHttpDaoStructure } from './lux-table-http/lux-table-http-dao-structure.interface';
 import { ILuxTableHttpDao } from './lux-table-http/lux-table-http-dao.interface';
 import { LuxTableColumnComponent } from './lux-table-subcomponents/lux-table-column.component';
 
-export declare interface LuxTableDoubleClickEventType<T> {
+export interface LuxTableDoubleClickEventType<T> {
   event: MouseEvent;
   rowItem: T;
 }
@@ -77,6 +81,7 @@ const customPaginatorOptions: MatPaginatorDefaultOptions = {
     LuxInputAcComponent,
     LuxInputAcPrefixComponent,
     LuxInputAcSuffixComponent,
+    LuxSelectAcComponent,
     NgStyle,
     MatTable,
     MatSort,
@@ -144,7 +149,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   tableHeightCSSCalc?: string;
   init = true;
   lastSelectedEventData = JSON.stringify([]);
+  allColumnsForVisibility: { label: string; value: string }[] = [];
+  hiddenColumns: string[] = [];
+  columnVisibilityPickValueFN = (option: { label: string; value: string }) => option.value;
 
+  luxShowColumnSelector = input<boolean>(false);
+  @Input() luxColumnStorageKey?: string;
+  @Input() luxColumnVisibilityStore: ILuxTableColumnVisibilityStore = new LuxTableLocalColumnVisibilityStore();
   @Input() luxColWidthsPercent: number[] = [];
   @Input() luxFilterText = 'Filter';
   @Input() luxNoDataText = 'Keine Daten gefunden.';
@@ -162,8 +173,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
   @Output() luxSelectedChange = new EventEmitter<Set<T>>();
   @Output() luxSelectedAsArrayChange = new EventEmitter<T[]>();
-  @Output() luxSingleClicked = new EventEmitter<{ event: Event; rowItem: T, rowIndex: number }>();
+  @Output() luxSingleClicked = new EventEmitter<{ event: Event; rowItem: T; rowIndex: number }>();
   @Output() luxDoubleClicked = new EventEmitter<{ event: MouseEvent; rowItem: T }>();
+  @Output() luxHiddenColumnsChange = new EventEmitter<string[]>();
 
   @ViewChild(MatPaginator, { static: true }) paginator?: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort?: MatSort;
@@ -364,9 +376,19 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         this.updateColumnsByMediaQuery();
       }
     });
+
+    effect(() => {
+      // Die folgende Zeile ist wichtig, damit der Effekt nur ausgelöst wird,
+      // wenn sich luxShowColumnSelector ändert, andernfalls würde die Methode
+      // bei jeder Änderung innerhalb der Komponente reagieren.
+      const value = this.luxShowColumnSelector();
+
+      this.updateColumnsByMediaQuery();
+    });
   }
 
   ngOnInit() {
+    this.loadHiddenColumnsFromStorage();
     setTimeout(() => {
       if (this.luxHttpDAO) {
         this.loadHttpDAOData();
@@ -385,10 +407,12 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
       this.tableColumnsChangedSubscription = this.tableColumns.changes.subscribe(() => {
         this.updateColumnsByMediaQuery();
         this.updateColumnSubscriptions();
+        this.updateColumnVisibilityOptions();
       });
 
       // Für den Fall das sich Änderungen innerhalb der Spalten ergeben
       this.updateColumnSubscriptions();
+      this.updateColumnVisibilityOptions();
 
       // Nach dem Init sollten einmal die Spalten aktualisiert werden
       setTimeout(() => {
@@ -651,7 +675,15 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
       this._dataColumnDefs.push('multiSelect');
     }
 
-    this.tableColumns.forEach((column: LuxTableColumnComponent) => this._dataColumnDefs.push(column.luxColumnDef));
+    this.tableColumns.forEach((column: LuxTableColumnComponent) => {
+      if (this.luxShowColumnSelector()) {
+        if (!this.hiddenColumns.includes(column.luxColumnDef)) {
+          this._dataColumnDefs.push(column.luxColumnDef);
+        }
+      } else {
+        this._dataColumnDefs.push(column.luxColumnDef);
+      }
+    });
     this.movedTableColumns = [];
     this.hasMovedColumnsMap.clear();
     // Zuerst die auszublendenden Spalten durchgehen
@@ -905,9 +937,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
   private emitSelectedEvent() {
     const newData = Array.from(this.luxSelected);
-    
+
     // Wenn das Array FormGroups enthält,
-    // wirft JSON.stringify einen Fehler, 
+    // wirft JSON.stringify einen Fehler,
     // da FormGroups nicht serialisierbar sind.
     let newDataString: string;
     if (newData && newData.length > 0 && newData[0] instanceof FormGroup) {
@@ -938,5 +970,36 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
   clearSelected() {
     this.luxSelected.clear();
+  }
+
+  // =============================================================
+  // Column Visibility Handling
+  // =============================================================
+
+  onHiddenColumnsChange(newHiddenColumns: string[]) {
+    if (this.luxColumnStorageKey) {
+      this.luxColumnVisibilityStore.save(this.luxColumnStorageKey, [...newHiddenColumns]);
+    }
+
+    this.luxHiddenColumnsChange.emit([...newHiddenColumns]);
+    this.updateColumnsByMediaQuery();
+  }
+
+  private loadHiddenColumnsFromStorage() {
+    if (this.luxColumnStorageKey) {
+      const invisibleColumns = this.luxColumnVisibilityStore.load(this.luxColumnStorageKey);
+      if (Array.isArray(invisibleColumns) && invisibleColumns.length) {
+        this.hiddenColumns = invisibleColumns.filter((v) => typeof v === 'string');
+      }
+    }
+  }
+
+  private updateColumnVisibilityOptions() {
+    this.allColumnsForVisibility = this.tableColumns
+      ? this.tableColumns.map((c) => ({
+          label: c.luxConfigLabel ? c.luxConfigLabel : c.luxColumnDef,
+          value: c.luxColumnDef
+        }))
+      : [];
   }
 }

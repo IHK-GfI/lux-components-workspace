@@ -6,9 +6,10 @@
     }
   </div>
   <!-- Input-Feld für das Filtern der Datensätze dieser Tabelle -->
-  <div class="lux-table-filter lux-flex lux-gap-4" [ngClass]="{ 'lux-hide': !luxShowFilter }">
+  <div class="lux-table-filter lux-flex lux-flex-auto lux-gap-4" [ngClass]="{ 'lux-hide': !luxShowFilter && !luxShowColumnSelector() }">
     <lux-input-ac
-      class="lux-table-filter"
+      class="lux-table-filter-input lux-flex-auto"
+      [ngClass]="{ 'lux-hide': !luxShowFilter}"
       luxAutocomplete="off"
       [luxTagId]="luxFilterText"
       [luxLabel]="luxFilterText"
@@ -22,6 +23,24 @@
         <lux-icon luxIconName="lux-interface-delete-circle" class="lux-reset-icon lux-color-blue" (click)="filter.luxValue = ''"></lux-icon>
       </lux-input-ac-suffix>
     </lux-input-ac>
+    @if (luxShowColumnSelector()) {
+      <lux-select-ac
+        class="lux-table-column-selector lux-flex-auto"
+        [ngClass]="{ 'lux-hide': !luxShowColumnSelector() }"
+        luxTagId="tableColumnSelector"
+        luxLabel="Spalten ausblenden"
+        i18n-luxLabel="@@luxc.table.column.selector.lbl"
+        [(luxSelected)]="hiddenColumns"
+        [luxPickValue]="columnVisibilityPickValueFN"
+        [luxMultiple]="true"
+        [luxOptions]="allColumnsForVisibility"
+        (luxSelectedChange)="onHiddenColumnsChange($event)"
+      >
+      <ng-template let-option>
+        {{ option.label }}
+      </ng-template>
+      </lux-select-ac>
+    }
   </div>
   <!-- Die eigentliche Struktur der Tabelle -->
   <div
@@ -146,7 +165,7 @@
             }
             <!-- Hier werden die aufgrund von Responsive-Verhalten verschobenen Spalten innerhalb dieser Spalte dargestellt -->
             @for (movedTableColumn of movedTableColumns; track movedTableColumn) { @if (movedTableColumn.luxResponsiveBehaviour ===
-            tableColumn.luxColumnDef) {
+            tableColumn.luxColumnDef && (!luxShowColumnSelector() || !hiddenColumns.includes(movedTableColumn.luxColumnDef))) {
             <div class="lux-moved-header-title lux-label">
               <ng-container *ngTemplateOutlet="movedTableColumn.header?.tempRef ?? null"></ng-container>
             </div>

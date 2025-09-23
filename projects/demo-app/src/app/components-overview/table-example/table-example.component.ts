@@ -1,6 +1,7 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import {
+  LuxFormHintComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxTableColumnComponent,
@@ -8,6 +9,7 @@ import {
   LuxTableColumnFooterComponent,
   LuxTableColumnHeaderComponent,
   LuxTableComponent,
+  LuxToggleAcComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -29,9 +31,11 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
     LuxTableColumnComponent,
     LuxTableColumnFooterComponent,
     LuxTableComponent,
+    LuxToggleAcComponent,
     LuxMenuComponent,
     LuxMenuItemComponent,
     LuxTooltipDirective,
+    LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     NgStyle,
@@ -48,6 +52,7 @@ export class TableExampleComponent extends TableExampleBaseClass {
   @ViewChild('myTable') tableComponent!: LuxTableComponent;
 
   dataSource: any[] = [];
+  showColumnSelector = true;
 
   fontExample: { example1: string; example2: string; example3: string; example4: string; content: string }[] = [
     { example1: 'unformated', example2: 'span', example3: 'div', example4: 'p', content: 'Lorem ipsum' }

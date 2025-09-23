@@ -23,7 +23,7 @@
       - [ng-content](#ng-content-2)
   - [Beispiele](#beispiele)
     - [1. Simple Table](#1-simple-table)
-    - [2. Filter](#2-filter)
+    - [2. Filter und Spalten ausblenden](#2-filter-und-spalten-ausblenden)
     - [3. Pagination](#3-pagination)
     - [4. Sortable](#4-sortable)
     - [5. Filter, Pagination, Sortierung und angepassten Spaltenbreiten](#5-filter-pagination-sortierung-und-angepassten-spaltenbreiten)
@@ -67,6 +67,9 @@
 | luxPagerDisabled                | boolean                               | Gibt an, ob der Pager deaktiviert ist.                                                                                                                                                                                                                                                                                                                                                                          |
 | luxPagerTooltip                 | string                                | Tooltipp                                                                                                                                                                                                                                                                                                                                                                                                        |
 | luxAlignTextTop                 | boolean                               | Alle Texte und Elemente werden oben ausgerichtet                                                                                                                                                                                                                                                                                                                                                                |
+| luxShowColumnSelector           | boolean                               | Bestimmt, ob Spalten der Tabelle ausgeblendet werden können.                                                                                                                                                                                                                                                                                                                                          |
+| luxColumnStorageKey             | string                                | Der Schlüssel unter dem die ausgeblendeten Spalten gespeichert werden.                                                                                                                                                                                                                                                                                                                                          |
+| luxColumnVisibilityStore        | ILuxTableColumnVisibilityStore        | Wenn das Property nicht gefüllt wird, werden die ausgeblendeten Spalten im Browserspeicher (siehe _luxColumnStorageKey_) abgelegt. Wird eine individueller Store angegeben, wird dieser verwendet.                                                                                                                                                                                                              |
 
 ### @Output
 
@@ -76,6 +79,7 @@
 | luxSelectedAsArrayChange | EventEmitter \<\<T = any>[]>                                   | Wird von Multiselect-Tabellen emittet und enthält ein Array mit allen selektierten Einträgen, die diese Tabelle aktuell besitzt.                                                                                                         |
 | luxSingleClicked         | EventEmitter \<{ event: Event; rowItem: T, rowIndex: number }> | Wird emittet, wenn ein einfacher Mausklick (oder Enter oder Leertaste) auf eine Tabellenzeile ausgeführt wird. Anmerkung: Dieser Emitter wird ausschließlich für normale Tabellen (d.h. `luxMultiSelect` muss `false` sein) unterstützt. |
 | luxDoubleClicked         | EventEmitter \<{ event: MouseEvent; rowItem: T }>              | Wird emittet, wenn ein Doppelklick auf eine Tabellenzeile ausgeführt wird. Anmerkung: Dieser Emitter wird ausschließlich für normale Tabellen (d.h. `luxMultiSelect` muss `false` sein) unterstützt.                                     |
+| luxHiddenColumnsChange   | EventEmitter \<string[]>                                       | Wird emittet, wenn sich die ausgeblendeten Spalten ändern.                                                                                                                                                                               |
 
 ### @ViewChild
 
@@ -97,6 +101,7 @@
 
 | Name                   | Typ                        | Beschreibung                                                                                                                                                                                                                                                                                                                                          |
 | ---------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxConfigLabel         | string                     | Wird für das Select zum Ausblenden der Tabellenspalten verwendet.                                                                                                                                                                                                                                                                                     |
 | luxColumnDef           | string                     | Enthält den Namen des Attributs welches für die Zellen in dieser Spalte verwendet werden soll. Muss innerhalb des Typs der einzelnen luxData-Objekte vorhanden sein. Beispiel: Bei luxData-Objekten vom Typ user { id, vorname, name } wären die möglichen luxColumnDefs "id", "vorname" und "name".                                                  |
 | luxSortable            | boolean                    | Bestimmt ob diese Spalte auf- bzw. absteigend sortiert werden kann.                                                                                                                                                                                                                                                                                   |
 | luxSticky              | boolean                    | Bestimmt ob die Zellen dieser Spalte an der linken oder rechten Seite oder überhaupt nicht fixiert werden. Tritt im Zusammenspiel mit einer Tabelle mit festgelegten Breiten (siehe luxTableContainerWidth und luxTableWidth) in Kraft. Mögliche Werte: 'start', 'end', 'none'                                                                        |
@@ -210,7 +215,7 @@ Html
 </lux-table>
 ```
 
-### 2. Filter
+### 2. Filter und Spalten ausblenden
 
 ![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-02.png)
 
@@ -229,8 +234,12 @@ dataSource: {position: number, name: string, weight: number, symbol: string}[] =
 Html
 
 ```html
-<lux-table [luxData]="dataSource" [luxShowFilter]="true">
-  <lux-table-column luxColumnDef="position">
+<lux-table 
+  [luxData]="dataSource" 
+  [luxShowFilter]="true"
+  [luxShowColumnSelector]="true"
+  luxColumnStorageKey="lux-demo-table-example">
+  <lux-table-column luxColumnDef="position" luxConfigLabel="Position">
     <lux-table-column-header
       ><ng-template>ID</ng-template></lux-table-column-header
     >
@@ -240,7 +249,7 @@ Html
       ></lux-table-column-content
     >
   </lux-table-column>
-  <lux-table-column luxColumnDef="name">
+  <lux-table-column luxColumnDef="name" luxConfigLabel="Name">
     <lux-table-column-header
       ><ng-template>Name</ng-template></lux-table-column-header
     >
@@ -250,7 +259,7 @@ Html
       ></lux-table-column-content
     >
   </lux-table-column>
-  <lux-table-column luxColumnDef="weight">
+  <lux-table-column luxColumnDef="weight" luxConfigLabel="Gewicht">
     <lux-table-column-header
       ><ng-template>Gewicht</ng-template></lux-table-column-header
     >
@@ -260,7 +269,7 @@ Html
       ></lux-table-column-content
     >
   </lux-table-column>
-  <lux-table-column luxColumnDef="symbol">
+  <lux-table-column luxColumnDef="symbol" luxConfigLabel="Symbol">
     <lux-table-column-header
       ><ng-template>Symbol</ng-template></lux-table-column-header
     >

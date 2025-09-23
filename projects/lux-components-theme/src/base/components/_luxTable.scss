@@ -67,7 +67,12 @@ lux-table {
       padding-bottom: 1em;
     }
 
-    .lux-table-filter {
+    .lux-table-filter-input {
+      width: 100%;
+      max-width: 350px;
+    }
+
+    .lux-table-column-selector {
       width: 100%;
       max-width: 350px;
     }
@@ -219,7 +224,10 @@ lux-table {
     }
 
     @include luxbreakpoints.xs {
-      .lux-table-filter {
+      .lux-table-filter-input {
+        max-width: 100%;
+      }
+      .lux-table-column-selector {
         max-width: 100%;
       }
     }

@@ -52,6 +52,71 @@ describe('LuxTableComponent', () => {
       fixture.detectChanges();
     }));
 
+    it('Sollte Spalten per luxShowColumnSelector und hiddenColumns ausblenden', fakeAsync(() => {
+      // Vorbedingungen: Zwei Spalten sichtbar
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      LuxTestHelper.wait(fixture);
+      let cells = document.querySelectorAll('th:not(.mat-column-noData');
+      expect(cells.length).toBe(2);
+
+      // luxShowColumnSelector aktivieren und Spalte c2 ausblenden
+      component.showColumnSelector = true;
+      luxTableComponent.hiddenColumns = ['c2'];
+      luxTableComponent.luxMultiSelect = false;
+      LuxTestHelper.wait(fixture);
+
+      cells = document.querySelectorAll('th:not(.mat-column-noData');
+      expect(cells.length).toBe(1);
+    }));
+
+    it('Sollte ausgeblendete Spalten wieder einblenden', fakeAsync(() => {
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      LuxTestHelper.wait(fixture);
+
+      // Spalte c2 ausblenden
+      luxTableComponent.hiddenColumns = ['c2'];
+      luxTableComponent.luxMultiSelect = false;
+      component.showColumnSelector = true;
+      LuxTestHelper.wait(fixture);
+      let cells = document.querySelectorAll('th:not(.mat-column-noData)');
+      expect(cells.length).toBe(1);
+
+      // Spalte c2 wieder einblenden
+      luxTableComponent.hiddenColumns = [];
+      fixture.detectChanges();
+      LuxTestHelper.wait(fixture);
+      cells = document.querySelectorAll('th:not(.mat-column-noData)');
+      expect(cells.length).toBe(2);
+    }));
+
+    it('Sollte luxHiddenColumnsChange Event auslösen', fakeAsync(() => {
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      LuxTestHelper.wait(fixture);
+      const eventSpy = jasmine.createSpy('eventSpy');
+      luxTableComponent.luxHiddenColumnsChange.subscribe(eventSpy);
+      
+      // Spalte c2 ausblenden
+      component.showColumnSelector = true;
+      fixture.detectChanges();
+      luxTableComponent.onHiddenColumnsChange(['c2']);
+      LuxTestHelper.wait(fixture);
+      expect(eventSpy).toHaveBeenCalledWith(['c2']);
+      
+      // Spalte c2 wieder einblenden
+      luxTableComponent.onHiddenColumnsChange([]);
+      LuxTestHelper.wait(fixture);
+      expect(eventSpy).toHaveBeenCalledWith([]);
+    }));
+
     it('Sollte erstellt werden', () => {
       expect(component).toBeTruthy();
     });
@@ -1123,6 +1188,8 @@ describe('LuxTableComponent', () => {
   template: `
     <div [ngStyle]="{ height: containerHeight + 'px', width: containerWidth + 'px' }">
       <lux-table
+        [luxShowColumnSelector]="showColumnSelector"
+        luxColumnStorageKey="test-table"
         [luxData]="dataSource"
         [luxShowPagination]="showPagination"
         [luxColWidthsPercent]="colWidths"
@@ -1192,6 +1259,7 @@ class TableComponent {
   dataSource: TableItem[] = [];
 
   showPagination = false;
+  showColumnSelector = false;
   showFilter = false;
   colWidths?: number[];
   pageSize?: number;
@@ -1219,6 +1287,8 @@ class TableComponent {
   template: `
     <lux-table
       [luxHttpDAO]="httpDao"
+      [luxShowColumnSelector]="showColumnSelector"
+      luxColumnStorageKey="test-table"
       [luxShowPagination]="true"
       [luxShowFilter]="true"
       [luxPageSize]="5"
