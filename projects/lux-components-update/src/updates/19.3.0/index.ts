@@ -11,8 +11,9 @@ export function update190300(options: any, runNpmInstall = true): Rule {
       messageInfoRule(`Die LUX-Components werden auf die Version 19.3.0 aktualisiert...`),
       messageInfoRule(`Die Datei "package.json" wird angepasst...`),
       updateDep('@ihk-gfi/lux-components', '19.3.0', false),
-      updateDep('@ihk-gfi/lux-components-theme', '19.0.2', false),
+      updateDep('@ihk-gfi/lux-components-theme', '19.1.0', false),
       addMessageMaxFileCount(options),
+      addMessageHideColumns(options),
       messageSuccessRule(`Die LUX-Components wurden auf die Version 19.3.0 aktualisiert.`),
       finish(runNpmInstall, `${chalk.yellowBright('Fertig!')}`)
     ]);
@@ -46,6 +47,41 @@ function addMessageMaxFileCount(options: Options): Rule {
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
           <context context-type="linenumber">485</context>
+        </context-group>
+      </trans-unit>`
+        )
+      ]
+    );
+  };
+}
+
+function addMessageHideColumns(options: Options): Rule {
+  return (_tree: Tree, _context: SchematicContext) => {
+    const insertAfterId = `luxc.table.multiselect.chk.arialabel`;
+
+    return updateMessages(
+      options,
+      [
+        new AddTransUnitItem(
+          insertAfterId,
+          `<trans-unit id="luxc.table.column.selector.lbl" datatype="html">
+        <source>Spalten ausblenden</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.html</context>
+          <context context-type="linenumber">31,32</context>
+        </context-group>
+      </trans-unit>`
+        )
+      ],
+      [
+        new AddTransUnitItem(
+          insertAfterId,
+          `<trans-unit id="luxc.table.column.selector.lbl" datatype="html">
+        <source>Spalten ausblenden</source>
+        <target>Hide columns</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.html</context>
+          <context context-type="linenumber">31,32</context>
         </context-group>
       </trans-unit>`
         )

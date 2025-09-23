@@ -5,6 +5,7 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 - [Update Guide 19](#update-guide-19)
   - [Änderungen](#änderungen)
   - [Versionen](#versionen)
+    - [Version 19.3.0](#version-1930)
     - [Version 19.2.0](#version-1920)
     - [Version 19.1.0](#version-1910)
     - [Version 19.0.0](#version-1900)
@@ -24,6 +25,17 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+### Version 19.3.0
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-19.3.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
 
 ### Version 19.2.0
 

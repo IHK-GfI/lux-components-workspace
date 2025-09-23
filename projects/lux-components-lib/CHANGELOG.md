@@ -1,10 +1,12 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-1)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues-2)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -12,7 +14,23 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues-2)
+    - [Issues](#issues-3)
+
+## Version 19.3.0
+
+### Issues
+
+- Issue #4: Buttons im Lux App-Footer werden nicht korrekt in das 3-Punkt-Menü geschoben
+- Issue #10: Annimation für den Lux-Master-Detail-Ac wieder herstellen (#95)
+- Issue #11: lux-tabs: Custom-Tabs in Kombination mit Lazy-Loading funktioniert nicht (#97)
+- Issue #12: LuxTable: Spalten ein- und ausblenden (#103)
+- Issue #13: Scrollen über Master-Detail funktioniert nicht (#91)
+- Issue #61: LuxFilterForm: Eigene Components (#98)
+- Issue #69: Lux-Table: Unterschiedliche Anzahl-Anzeige bei Multiselect (mit/ohne HttpDao (#100)
+- Issue #85: file upload maxfilecount (#89)
+- Issue #88: Stylingklassen für Texthighlight (#92)
+- Issue #94: Master-Detail ist nicht barrierefrei (#96)
+- Issue #99: Lux-Card: Unerwünschtes Padding und Ausrichtung der Action-Buttons
 
 ## Version 19.2.0
 
