@@ -47,6 +47,8 @@
     [luxTooltip]="menuItem.luxMenuTooltip"
     [disabled]="menuItem.luxDisabled"
     luxTagIdHandler
+    [luxTagIdStartElement]="elementRef.nativeElement"
+    [luxTagIdTargetSelf]="true"
     [luxTagId]="menuItem.luxTagId"
     [ngClass]="menuItem.luxClass ?? ''"
     (click)="menuItemClicked(menuItem, $event)"
