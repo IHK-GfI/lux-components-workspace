@@ -7,7 +7,11 @@
       <lux-tile-ac
         luxAutofocus
         [luxLabel]="label"
+        [luxLabelTruncateAfterOneLine]="labelTruncateAfterOneLine"
+        [luxLabelTruncateAfterTwoLines]="labelTruncateAfterTwoLines"
         [luxSubTitle]="subTitle"
+        [luxSubTitleTruncateAfterOneLine]="subTitleTruncateAfterOneLine"
+        [luxSubTitleTruncateAfterTwoLines]="subTitleTruncateAfterTwoLines"
         [luxCounter]="counter"
         [luxNotificationColor]="badgeColor"
         [luxNotificationSize]="badgeSize"
@@ -39,7 +43,14 @@
       [(luxValue)]="label"
     >
     </lux-input-ac>
+    <lux-toggle-ac luxLabel="luxLabelTruncateAfterOneLine" [(luxChecked)]="labelTruncateAfterOneLine" [luxNoLabels]="true"> </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxLabelTruncateAfterTwoLines" [(luxChecked)]="labelTruncateAfterTwoLines" [luxNoLabels]="true">
+    </lux-toggle-ac>
     <lux-input-ac luxLabel="luxSubTitle" luxHint="Die Property bestimmt den Untertitel des Tiles." [(luxValue)]="subTitle"> </lux-input-ac>
+    <lux-toggle-ac luxLabel="luxSubTitleTruncateAfterOneLine" [(luxChecked)]="subTitleTruncateAfterOneLine" [luxNoLabels]="true">
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxSubTitleTruncateAfterTwoLines" [(luxChecked)]="subTitleTruncateAfterTwoLines" [luxNoLabels]="true">
+    </lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxIcon anzeigen" [(luxChecked)]="showIcon" [luxNoTopLabel]="true">
       <lux-form-hint>
         Ein LuxIconComponent in dem Tile anzeigen.<br />

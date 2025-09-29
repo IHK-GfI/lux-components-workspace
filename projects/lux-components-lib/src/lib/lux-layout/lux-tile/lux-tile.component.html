@@ -19,8 +19,16 @@
         <ng-content select="lux-image"></ng-content>
       </div>
 
-      <h2 class="lux-tile-label lux-flex lux-place-content-center lux-items-center" [attr.aria-label]="luxLabel">
-        <span>{{ luxLabel }}</span>
+      <h2 class="lux-tile-label lux-flex lux-place-content-center lux-items-center">
+        <span
+          [class.lux-crop]="luxLabelTruncateAfterOneLine"
+          [class.lux-crop-2-lines]="luxLabelTruncateAfterTwoLines"
+          luxTooltip="{{ luxLabel }}"
+          [luxTooltipShowDelay]="500"
+          [luxTooltipDisabled]="!luxLabelTruncateAfterOneLine && !luxLabelTruncateAfterTwoLines"
+          [attr.aria-label]="luxLabel"
+          >{{ luxLabel }}</span
+        >
       </h2>
     </div>
   </mat-card-content>

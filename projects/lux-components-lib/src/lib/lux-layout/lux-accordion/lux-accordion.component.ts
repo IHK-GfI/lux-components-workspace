@@ -30,6 +30,7 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
 
   _luxDisabled?: boolean;
   _luxHideToggle?: boolean;
+  _luxDynamicHeaderHeight?: boolean;
   _luxExpandedHeaderHeight?: string;
   _luxCollapsedHeaderHeight?: string;
   _luxTogglePosition?: LuxTogglePosition;
@@ -54,6 +55,17 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
     this._luxHideToggle = hideToggle;
 
     this.changed$.next('luxHideToggle');
+  }
+
+  @Input()
+  get luxDynamicHeaderHeight() {
+    return this._luxDynamicHeaderHeight;
+  }
+
+  set luxDynamicHeaderHeight(dynamicHeight: boolean | undefined) {
+    this._luxDynamicHeaderHeight = dynamicHeight;
+
+    this.changed$.next('luxDynamicHeaderHeight');
   }
 
   @Input()

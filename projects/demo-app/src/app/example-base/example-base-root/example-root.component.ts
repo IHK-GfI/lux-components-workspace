@@ -2,14 +2,15 @@ import { NgClass } from '@angular/common';
 import { Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import {
-    LuxAlphabeticallySortedPipe,
-    LuxAriaLabelDirective,
-    LuxAriaRoleDirective,
-    LuxMediaQueryObserverService,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxUtil
+  LuxAlphabeticallySortedPipe,
+  LuxAriaLabelDirective,
+  LuxAriaRoleDirective,
+  LuxButtonComponent,
+  LuxMediaQueryObserverService,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from '../../components-overview/components-overview-navigation.service';
@@ -25,6 +26,7 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
     LuxPanelComponent,
     LuxAriaRoleDirective,
     LuxAriaLabelDirective,
+    LuxButtonComponent,
     NgClass,
     RouterOutlet
   ]
@@ -61,6 +63,14 @@ export class ExampleRootComponent implements OnDestroy {
     }
 
     this.subscription.unsubscribe();
+  }
+
+  onPrev() {
+    this.navigationService.navigateToPrevComponent();
+  }
+
+  onNext() {
+    this.navigationService.navigateToNextComponent();
   }
 
   /**

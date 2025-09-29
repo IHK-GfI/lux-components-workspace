@@ -41,6 +41,7 @@ lux-tile-ac {
       width: 100%;
       grid-template-columns: 1fr auto;
       gap: 5px;
+      min-width: 0;
 
       mat-card-title.lux-tile-title {
         color: luxcommon.$dark-primary-text;
@@ -48,12 +49,14 @@ lux-tile-ac {
         line-height: 30px;
         font-size: 1.25rem;
         margin: 0;
+        min-width: 0;
       }
       mat-card-subtitle.mat-mdc-card-subtitle:not(:first-child) {
         color: luxcommon.$dark-secondary-text;
         font-size: 0.875rem;
         font-weight: normal;
         margin: 0px;
+        min-width: 0;
         grid-row-start: 2;
       }
     }

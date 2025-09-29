@@ -129,7 +129,7 @@ Komponente, welche einen einzelnen Eintrag in der seitlichen Navigation darstell
 | luxCloseOnClick | boolean | Bestimmt ob ein Klick auf diesen Eintrag das SideNav schließt oder nicht.                                                                         |
 | luxIconName     | string  | Enthält den Namen des Icons für diesen Eintrag (optional).                                                                                        |
 | luxExpandable   | boolean | Bestimmt, ob dieses Item ausklappbar ist.                                                                                                         |
-| luxExpanded     | boolean | Dieser Flag legt fest ob der Eintrag aktuell ausgeklappt ist.                                                                                     |
+| luxExpanded     | boolean | Dieses Flag legt fest ob der Eintrag aktuell ausgeklappt ist.                                                                                     |
 
 #### @Output
 

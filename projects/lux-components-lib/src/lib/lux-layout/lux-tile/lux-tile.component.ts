@@ -4,12 +4,13 @@ import { MatCard, MatCardContent } from '@angular/material/card';
 import { Subscription } from 'rxjs';
 import { LuxBadgeNotificationDirective } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 
 @Component({
   selector: 'lux-tile',
   templateUrl: './lux-tile.component.html',
-  imports: [MatCard, LuxTagIdDirective, NgClass, LuxBadgeNotificationDirective, MatCardContent]
+  imports: [MatCard, LuxTagIdDirective, NgClass, LuxBadgeNotificationDirective, MatCardContent, LuxTooltipDirective]
 })
 export class LuxTileComponent implements OnInit, OnDestroy {
   private queryService = inject(LuxMediaQueryObserverService);
@@ -18,6 +19,8 @@ export class LuxTileComponent implements OnInit, OnDestroy {
   private static _notificationReadClass = 'lux-notification-read';
 
   @Input() luxLabel?: string;
+  @Input() luxLabelTruncateAfterOneLine = false;
+  @Input() luxLabelTruncateAfterTwoLines = false;
   @Input() luxTagId?: string;
   @Input() luxShowNotification?: boolean;
   @Input() luxCounter?: number;
