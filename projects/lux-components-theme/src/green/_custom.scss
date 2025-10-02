@@ -16,6 +16,7 @@ $light-blue: #e3ebf5;
 $slightly-blue: #ccd7e6;
 $medium-blue: #b0c4d6;
 $dark-blue: #335c85;
+$dark-red: #ad000f;
 
 body {
   color: luxpalette.$lux-primary-color;
@@ -170,9 +171,37 @@ lux-button button.lux-button {
   &.mat-mdc-fab.mat-accent:not([disabled]) {
     color: map.get(luxpalette.$lux-palette-primary, 500);
     &.lux-stroked {
-      color: luxpalette.$lux-accent-color;
+      color: $dark-green;
     }
   }
+
+  &.mat-mdc-raised-button.mat-warn:not([disabled]),
+  &.mat-mdc-unelevated-button.mat-warn:not([disabled]) {
+    background-color: $dark-red;
+    color: #ffffff;
+  }
+
+  &.mat-mdc-button.mat-warn:not([disabled]),
+  &.mat-mdc-outlined-button.mat-warn:not([disabled]),
+  &.mat-mdc-raised-button.lux-stroked.mat-warn:not([disabled]),
+  &.mat-mdc-unelevated-button.lux-stroked.mat-warn:not([disabled]),
+  &.mat-mdc-fab.lux-stroked.mat-warn:not([disabled]) {
+    color: $dark-red;
+  }
+
+  &.mat-mdc-raised-button.mat-warn:not([disabled]):hover,
+  &.mat-mdc-unelevated-button.mat-warn:not([disabled]):hover,
+  &.mat-mdc-fab.mat-warn:not([disabled]):hover {
+    background-color: color.adjust($dark-red, $lightness: 5%) !important;
+  }
+
+  &.mat-mdc-button.mat-accent:not([disabled]),
+  &.mat-mdc-outlined-button.mat-accent:not([disabled]),
+  &.mat-mdc-raised-button.lux-stroked.mat-accent:not([disabled]),
+  &.mat-mdc-unelevated-button.lux-stroked.mat-accent:not([disabled]) {
+    color: $dark-green;
+  }
+
 
   &.lux-icon-button {
     border-radius: 18px;
@@ -610,7 +639,7 @@ lux-form-control-wrapper .lux-form-control-wrapper {
 
   &.lux-form-control-error-authentic:not(.lux-form-control-disabled-authentic) {
     .lux-form-control-label-authentic > * {
-      color: map.get(luxpalette.$lux-palette_warn, 500);
+      color: luxpalette.$lux-primary-color;
     }
     .lux-form-control-container-authentic:not(.lux-no-input-row) {
       border-color: luxpalette.$lux-warn-color;
@@ -737,6 +766,49 @@ lux-lookup-combobox-ac {
   }
 }
 
+.lux-select-panel-ac mat-option,
+.lux-select-panel-ac-multiple mat-option {
+  &.mat-mdc-option:hover:not(.mdc-list-item--disabled),
+  &.mat-mdc-option:focus-visible:not(.mdc-list-item--disabled),
+  &.mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled),
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background-color: luxcommon.$lux-hover-color;
+
+    .mdc-list-item__primary-text {
+      color: luxpalette.$lux-primary-color;
+    }
+
+    .mat-pseudo-checkbox-full {
+      background-color: luxcommon.$lux-hover-color;
+      border-color: luxpalette.$lux-primary-color;
+      &.mat-pseudo-checkbox-checked {
+        background-color: luxpalette.$lux-primary-color;
+        &::after {
+          color: #ffffff;
+        }
+      }
+    }
+
+    .mat-pseudo-checkbox-minimal {
+      &.mat-pseudo-checkbox-checked {
+        &::after {
+          color: luxpalette.$lux-primary-color;
+        }
+      }
+    }
+  }
+
+  &.mat-mdc-option:not(.mdc-list-item--disabled)  {
+    .mdc-list-item__primary-text {
+      color: luxpalette.$lux-primary-color;
+    }
+
+    .mat-pseudo-checkbox-full {
+      border-color: luxpalette.$lux-primary-color;
+    }
+  }
+}
+
 /*
  * Eineheitliche Elevation für die Components auf Cdk-Overlay-Pane
  * wird noch für "Green" benötigt
@@ -817,10 +889,36 @@ lux-dialog-structure {
     }
   }
 }
+
+lux-dialog-structure .lux-icon-close:hover mat-icon,
+lux-dialog-structure .lux-icon-close:hover mat-icon.mat-icon-no-color,
+lux-dialog-structure .lux-icon-close:hover lux-icon mat-icon {
+  color: luxpalette.$lux-primary-color;
+}
+
+/*
+* Theming für LUX-Autocomplete-ac
+*/
+.lux-autocomplete-panel-ac mat-option {
+  &.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled),
+  &.mat-mdc-option:hover:not(.mdc-list-item--disabled),
+  &.mat-mdc-option:focus-visible:not(.mdc-list-item--disabled),
+  &.mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled) {
+    background-color: luxcommon.$lux-hover-color;
+
+    .mdc-list-item__primary-text {
+      color: luxpalette.$lux-primary-color;
+    }
+  }
+
+  &.mat-mdc-option:not(.mdc-list-item--disabled) {
+    color: luxpalette.$lux-primary-color;
+  }
+}
+
 /*
 * Theming für LUX-Message-Box
 */
-
 lux-message-box {
   .lux-message-box-content {
     margin: var(--lux-theme-outline-width);
