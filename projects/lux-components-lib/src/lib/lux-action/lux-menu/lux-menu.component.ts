@@ -51,7 +51,7 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
 export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private themeService = inject(LuxThemeService);
-  private elementRef = inject(ElementRef);
+  protected elementRef = inject(ElementRef);
 
   // Diese Werte müssen angepasst werden, sollte das Styling dieser Component entsprechend geändert worden sein
   private readonly PADDING_PX: number;

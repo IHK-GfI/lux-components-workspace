@@ -17,6 +17,8 @@ export class LuxTagIdDirective implements AfterViewInit, OnDestroy {
   private configSubscription: Subscription;
 
   @Input() luxTagId?: string;
+  @Input() luxTagIdStartElement: Element | null = null;
+  @Input() luxTagIdTargetSelf = false;
 
   generateLuxTagIds = false;
 
@@ -28,11 +30,12 @@ export class LuxTagIdDirective implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (this.generateLuxTagIds) {
-      const luxComponent: Element | null = this.findLuxComponent(this.elementRef.nativeElement);
+      const luxComponent: Element | null = this.findLuxComponent(this.luxTagIdStartElement || this.elementRef.nativeElement);
 
       if (luxComponent) {
-        let newTagId = this.luxTagId ?? this.getLuxTagId(luxComponent);
+        const targetElement = this.luxTagIdTargetSelf ? this.elementRef.nativeElement : luxComponent;
 
+        let newTagId = this.luxTagId ?? this.getLuxTagId(luxComponent);
         if (newTagId) {
           newTagId = this.mergeTagIds(
             this.getLuxTagIdParent(luxComponent.parentElement, ''),
@@ -40,40 +43,40 @@ export class LuxTagIdDirective implements AfterViewInit, OnDestroy {
           );
           newTagId = newTagId.toLowerCase();
 
-          this.renderer.setAttribute(luxComponent, LuxTagIdDirective.luxTagIdAttrName, newTagId);
+          this.renderer.setAttribute(targetElement, LuxTagIdDirective.luxTagIdAttrName, newTagId);
         } else {
           newTagId = this.getLuxTagIdParent(luxComponent.parentElement, '');
           let usedLabel = false;
           if (luxComponent.getAttribute('luxLabel')) {
             newTagId = this.mergeTagIds(newTagId, luxComponent.getAttribute('luxLabel'));
             newTagId = newTagId.toLowerCase();
-            this.renderer.setAttribute(luxComponent, LuxTagIdDirective.luxTagIdAttrName, newTagId);
+            this.renderer.setAttribute(targetElement, LuxTagIdDirective.luxTagIdAttrName, newTagId);
 
             usedLabel = true;
           } else if (luxComponent.getAttribute('ng-reflect-lux-label')) {
             newTagId = this.mergeTagIds(newTagId, luxComponent.getAttribute('ng-reflect-lux-label'));
             newTagId = newTagId.toLowerCase();
-            this.renderer.setAttribute(luxComponent, LuxTagIdDirective.luxTagIdAttrName, newTagId);
+            this.renderer.setAttribute(targetElement, LuxTagIdDirective.luxTagIdAttrName, newTagId);
 
             usedLabel = true;
           } else if (luxComponent.getAttribute('ng-reflect-label')) {
             newTagId = this.mergeTagIds(newTagId, luxComponent.getAttribute('ng-reflect-label'));
             newTagId = newTagId.toLowerCase();
-            this.renderer.setAttribute(luxComponent, LuxTagIdDirective.luxTagIdAttrName, newTagId);
+            this.renderer.setAttribute(targetElement, LuxTagIdDirective.luxTagIdAttrName, newTagId);
 
             usedLabel = true;
           } else if (luxComponent.getElementsByClassName('lux-form-label')[0]) {
             const text = luxComponent.getElementsByClassName('lux-form-label')[0].textContent;
             newTagId = this.mergeTagIds(newTagId, text ? text.trim() : null);
             newTagId = newTagId.toLowerCase();
-            this.renderer.setAttribute(luxComponent, LuxTagIdDirective.luxTagIdAttrName, newTagId);
+            this.renderer.setAttribute(targetElement, LuxTagIdDirective.luxTagIdAttrName, newTagId);
 
             usedLabel = true;
           } else if (luxComponent.getElementsByClassName('lux-form-label-authentic')[0]) {
             const text = luxComponent.getElementsByClassName('lux-form-label-authentic')[0].textContent;
             newTagId = this.mergeTagIds(newTagId, text ? text.trim() : null);
             newTagId = newTagId.toLowerCase();
-            this.renderer.setAttribute(luxComponent, LuxTagIdDirective.luxTagIdAttrName, newTagId);
+            this.renderer.setAttribute(targetElement, LuxTagIdDirective.luxTagIdAttrName, newTagId);
 
             usedLabel = true;
           } else if (luxComponent.nodeName && luxComponent.nodeName.toLowerCase() === 'lux-button') {
@@ -81,7 +84,7 @@ export class LuxTagIdDirective implements AfterViewInit, OnDestroy {
             if (labelEl && labelEl.textContent && labelEl.textContent.trim()) {
               newTagId = this.mergeTagIds(newTagId, labelEl.textContent.trim());
               newTagId = newTagId.toLowerCase();
-              this.renderer.setAttribute(luxComponent, LuxTagIdDirective.luxTagIdAttrName, newTagId);
+              this.renderer.setAttribute(targetElement, LuxTagIdDirective.luxTagIdAttrName, newTagId);
 
               usedLabel = true;
             }
