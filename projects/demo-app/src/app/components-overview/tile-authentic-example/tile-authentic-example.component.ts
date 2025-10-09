@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import {
-    LuxAutofocusDirective,
-    LuxBadgeNotificationSize,
-    LuxFormHintComponent,
-    LuxIconComponent,
-    LuxImageComponent,
-    LuxInputAcComponent,
-    LuxLinkPlainComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxTileAcComponent,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxBadgeNotificationSize,
+  LuxFormHintComponent,
+  LuxIconComponent,
+  LuxImageComponent,
+  LuxInputAcComponent,
+  LuxLinkPlainComponent,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxTileAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -44,7 +44,11 @@ export class TileAuthenticExampleComponent {
   showOutputEvents = false;
 
   label = 'Wetter';
+  labelTruncateAfterOneLine = true;
+  labelTruncateAfterTwoLines = false;
   subTitle = 'Vorschau auf die kommende Woche';
+  subTitleTruncateAfterOneLine = false;
+  subTitleTruncateAfterTwoLines = true;
   log = logResult;
 
   badgeCap = 20;

@@ -8,7 +8,11 @@
   class="lux-panel"
   [class.lux-panel-mobile]="mobile"
 >
-  <mat-expansion-panel-header [expandedHeight]="luxExpandedHeaderHeight ?? '4em'" [collapsedHeight]="luxCollapsedHeaderHeight ?? '64px'">
+  <mat-expansion-panel-header
+    [class.lux-dynamic-height]="!!luxDynamicHeaderHeight"
+    [expandedHeight]="luxExpandedHeaderHeight ?? '4em'"
+    [collapsedHeight]="luxCollapsedHeaderHeight ?? '4em'"
+  >
     <ng-content select="lux-panel-header-title"></ng-content>
     <ng-content select="lux-panel-header-description"></ng-content>
   </mat-expansion-panel-header>

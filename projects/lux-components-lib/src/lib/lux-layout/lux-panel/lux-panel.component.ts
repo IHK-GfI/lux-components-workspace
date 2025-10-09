@@ -15,6 +15,12 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   protected parent = inject(LuxAccordionComponent, { optional: true, host: true, skipSelf: true });
   protected mediaQuery = inject(LuxMediaQueryObserverService);
 
+  _luxDynamicHeaderHeight?: boolean;
+
+  headerHeightCacheActive = false;
+  expandedHeaderHeightCache?: string;
+  collapsedHeaderHeightCache?: string;
+
   @Input() luxDisabled?: boolean;
   @Input() luxExpanded = false;
   @Input() luxHideToggle?: boolean;
@@ -22,6 +28,27 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() luxCollapsedHeaderHeight?: string;
   @Input() luxExpandedHeaderHeight?: string;
+  @Input() set luxDynamicHeaderHeight(value: boolean | undefined) {
+    this._luxDynamicHeaderHeight = value;
+
+    if (value) {
+      this.headerHeightCacheActive = true;
+      this.expandedHeaderHeightCache = this.luxExpandedHeaderHeight;
+      this.collapsedHeaderHeightCache = this.luxCollapsedHeaderHeight;
+
+      this.luxExpandedHeaderHeight = 'unset';
+      this.luxCollapsedHeaderHeight = 'unset';
+    } else {
+      if (this.headerHeightCacheActive) {
+        this.luxExpandedHeaderHeight = this.expandedHeaderHeightCache;
+        this.luxCollapsedHeaderHeight = this.collapsedHeaderHeightCache;
+      }
+    }
+  }
+
+  get luxDynamicHeaderHeight() {
+    return this._luxDynamicHeaderHeight;
+  }
 
   @Output() luxOpened = new EventEmitter<void>();
   @Output() luxClosed = new EventEmitter<void>();
@@ -56,6 +83,9 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.luxCollapsedHeaderHeight === undefined) {
         this.luxCollapsedHeaderHeight = this.parent.luxCollapsedHeaderHeight;
       }
+      if (this.luxDynamicHeaderHeight === undefined) {
+        this.luxDynamicHeaderHeight = this.parent.luxDynamicHeaderHeight;
+      }
       if (this.luxTogglePosition === undefined) {
         if (this.parent.luxTogglePosition === undefined) {
           this.luxTogglePosition = 'after';
@@ -73,6 +103,8 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
               this.luxHideToggle = this.parent.luxHideToggle;
             } else if (propertyName === 'luxDisabled') {
               this.luxDisabled = this.parent.luxDisabled;
+            } else if (propertyName === 'luxDynamicHeaderHeight') {
+              this.luxDynamicHeaderHeight = this.parent.luxDynamicHeaderHeight;
             } else if (propertyName === 'luxExpandedHeaderHeight') {
               this.luxExpandedHeaderHeight = this.parent.luxExpandedHeaderHeight;
             } else if (propertyName === 'luxCollapsedHeaderHeight') {

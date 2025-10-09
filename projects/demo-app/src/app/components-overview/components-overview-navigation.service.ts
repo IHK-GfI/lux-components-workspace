@@ -106,6 +106,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('breadcrumb', 'Breadcrumb')
   ];
 
+  sortedComponents: any[] = [];
   sortedComponentEntries: Map<string, any[]> = new Map<string, any[]>();
   currentModules: Map<string, boolean> = new Map<string, boolean>([
     ['action', false],
@@ -188,6 +189,18 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.currentModules.forEach((_expanded: boolean, moduleName: string) => this.currentModules.set(moduleName, false));
   }
 
+  navigateToPrevComponent() {
+    const currentComponent = this.selectedComponent;
+    const currentIndex = this.sortedComponents.findIndex((component: any) => component.label === currentComponent.label);
+    this.sortedComponents[(currentIndex > 0 ? currentIndex - 1 : this.sortedComponents.length - 1)].onclick();
+  }
+
+  navigateToNextComponent() {
+    const currentComponent = this.selectedComponent;
+    const currentIndex = this.sortedComponents.findIndex((component: any) => component.label === currentComponent.label);
+    this.sortedComponents[(currentIndex < this.sortedComponents.length - 1 ? currentIndex + 1 : 0)].onclick();
+  }
+
   sortComponentEntriesByModule() {
     this.currentModuleNames.forEach((moduleName: string) => {
       this.sortedComponentEntries.set(
@@ -198,6 +211,11 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
             (!component.themes || !!component.themes.find((theme: string) => theme === this.themeName))
         )
       );
+
+      const components = this.sortedComponentEntries.get(moduleName);
+      if (components) {
+        this.sortedComponents.push(...components);
+      }
     });
   }
 }

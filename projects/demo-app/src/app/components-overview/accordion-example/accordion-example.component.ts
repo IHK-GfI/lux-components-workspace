@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 import {
-    LuxAccordionColor,
-    LuxAccordionComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxModeType,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderDescriptionComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
-    LuxTogglePosition
+  LuxAccordionColor,
+  LuxAccordionComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxModeType,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderDescriptionComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent,
+  LuxTogglePosition
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -60,15 +60,19 @@ export class AccordionExampleComponent {
   expanded = true;
   expandedHeaderHeight = '4em';
   collapsedHeaderHeight = '4em';
+  dynamicHeaderHeight = false;
   expandedHeaderHeight1Panel = '4em';
   collapsedHeaderHeight1Panel = '4em';
+  dynamicHeaderHeight1Panel = false;
   expandedHeaderHeight2Panel = '4em';
   collapsedHeaderHeight2Panel = '4em';
+  dynamicHeaderHeight2Panel = false;
   _displayMode: LuxModeType = 'default';
   colorOptions = ['primary', 'accent', 'warn', 'neutral'];
   color: LuxAccordionColor = 'primary';
   togglePositions = ['after', 'before'];
   _togglePosition: LuxTogglePosition = 'after';
+  truncated = false;
 
   set displayMode(mode: LuxModeType) {
     // Der Multimode muss auf true gesetzt werden damit immer alle Panels aufgeklappt werden. Sonst wird nur das Custom Panel aufgeklappt wenn der Multimode vorher deaktiviert wurde.
@@ -94,10 +98,27 @@ export class AccordionExampleComponent {
     this.color = _color;
   }
 
-  panelConfigArr: { title: string; description: string }[] = [
-    { title: 'Panel #1 -  Hauptüberschrift im Panel', description: 'Optionale zusätzliche Beschreibung' },
+  panelConfigShortLabelArr: { title: string; description: string }[] = [
+    { title: 'Panel #1 - Hauptüberschrift im Panel', description: 'Optionale zusätzliche Beschreibung' },
     { title: 'Panel #2', description: 'Beschreibung Panel #2' }
   ];
+  panelConfigLongLabelArr: { title: string; description: string }[] = [
+    {
+      title:
+        'Panel #1 - Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus',
+      description:
+        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus'
+    },
+    {
+      title:
+        'Panel #2 - Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus',
+      description:
+        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus'
+    }
+  ];
+
+  panelConfigArr: { title: string; description: string }[] = this.panelConfigShortLabelArr;
+
   _multiMode = true;
 
   get multiMode() {
@@ -112,5 +133,24 @@ export class AccordionExampleComponent {
     }
   }
 
+  get isLongLabels() {
+    return this.panelConfigArr === this.panelConfigLongLabelArr;
+  }
+
   constructor() {}
+
+  onChangeLabels(longLabels: boolean) {
+    this.panelConfigArr = longLabels ? this.panelConfigLongLabelArr : this.panelConfigShortLabelArr;
+
+    if (longLabels) {
+      this.dynamicHeaderHeight = true;
+      this.dynamicHeaderHeight1Panel = true;
+      this.dynamicHeaderHeight2Panel = true;
+    }
+  }
+
+  onChangeDynamicHeaderHeight(value: boolean) {
+    this.dynamicHeaderHeight1Panel = value;
+    this.dynamicHeaderHeight2Panel = value;
+  }
 }

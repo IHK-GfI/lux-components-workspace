@@ -17,11 +17,35 @@
   [attr.aria-description]="luxSubTitle"
 >
   <div class="lux-tile-content">
-    <mat-card-title class="lux-tile-title">{{ luxLabel }}</mat-card-title>
+    <mat-card-title class="lux-tile-title">
+      <span
+        [class.lux-hyphenate]="!luxLabelTruncateAfterOneLine"
+        [style.display]="luxLabelTruncateAfterOneLine && !luxLabelTruncateAfterTwoLines ? 'block' : null"
+        [class.lux-crop]="luxLabelTruncateAfterOneLine"
+        [class.lux-crop-2-lines]="luxLabelTruncateAfterTwoLines"
+        luxTooltip="{{ luxLabel }}"
+        [luxTooltipShowDelay]="500"
+        [luxTooltipDisabled]="!luxLabelTruncateAfterOneLine && !luxLabelTruncateAfterTwoLines"
+        [attr.aria-label]="luxLabel"
+        >{{ luxLabel }}</span
+      >
+    </mat-card-title>
     <div class="lux-tile-icon-container">
       <ng-content select="lux-icon"></ng-content>
       <ng-content select="lux-image"></ng-content>
     </div>
-    <mat-card-subtitle class="lux-tile-subtitle">{{ luxSubTitle }}</mat-card-subtitle>
+    <mat-card-subtitle class="lux-tile-subtitle"
+      ><span
+        [class.lux-hyphenate]="!luxSubTitleTruncateAfterOneLine"
+        [style.display]="luxSubTitleTruncateAfterOneLine && !luxSubTitleTruncateAfterTwoLines ? 'block' : null"
+        [class.lux-crop]="luxSubTitleTruncateAfterOneLine"
+        [class.lux-crop-2-lines]="luxSubTitleTruncateAfterTwoLines"
+        luxTooltip="{{ luxSubTitle }}"
+        [luxTooltipShowDelay]="500"
+        [luxTooltipDisabled]="!luxSubTitleTruncateAfterOneLine && !luxSubTitleTruncateAfterTwoLines"
+        [attr.aria-label]="luxLabel"
+        >{{ luxSubTitle }}</span
+      ></mat-card-subtitle
+    >
   </div>
 </mat-card>

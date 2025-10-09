@@ -334,6 +334,18 @@ lux-card.lux-card-grow {
   text-overflow: ellipsis;
 }
 
+.lux-crop-2-lines {
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  text-overflow: ellipsis;
+}
+
 .lux-label {
   color: luxcommon.$dark-secondary-text;
   font-size: 0.75rem;

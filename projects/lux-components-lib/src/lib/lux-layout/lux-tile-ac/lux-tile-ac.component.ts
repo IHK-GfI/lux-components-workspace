@@ -7,18 +7,23 @@ import {
   LuxBadgeNotificationSize
 } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 
 @Component({
   selector: 'lux-tile-ac',
   templateUrl: './lux-tile-ac.component.html',
-  imports: [MatCard, LuxTagIdDirective, LuxBadgeNotificationDirective, MatCardTitle, MatCardSubtitle]
+  imports: [MatCard, LuxTagIdDirective, LuxBadgeNotificationDirective, MatCardTitle, MatCardSubtitle, LuxTooltipDirective]
 })
 export class LuxTileAcComponent implements OnInit, OnChanges, OnDestroy {
   private queryService = inject(LuxMediaQueryObserverService);
 
   @Input() luxLabel?: string;
+  @Input() luxLabelTruncateAfterOneLine = false;
+  @Input() luxLabelTruncateAfterTwoLines = false;
   @Input() luxSubTitle?: string;
+  @Input() luxSubTitleTruncateAfterOneLine = false;
+  @Input() luxSubTitleTruncateAfterTwoLines = false;
   @Input() luxTagId?: string;
 
   @Input() set luxShowNotification(value: boolean) {

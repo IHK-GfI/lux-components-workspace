@@ -18,19 +18,24 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-tile-ac     |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-tile-ac  |
 
 ### @Input
 
-| Name                | Typ     | Beschreibung                                                                                                                                                   |
-| ------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxLabel            | string  | Enthält das Label, welches unten links in dem Tile angezeigt wird.                                                                                             |
-| luxTagId            | string  | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                  |
-| luxCounter          | number  | Zeigt eine Zahl auf der rechten, oberen Seite des Tiles an.                                                                                                    |
-| luxCounterCap       | number  | Die Obergrenze für den luxCounter. Wenn der luxCounter größer als der luxCounterCap ist, wird der luxCounterCap mit einem zusätzlichen '+'-Symbol dargestellt. |
-| luxShowNotification | boolean | Bestimmt ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                             |
+| Name                             | Typ     | Beschreibung                                                                                                                                                   |
+| -------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxLabel                         | string  | Enthält das Label, welches oben im Tile angezeigt wird.                                                                                                        |
+| luxLabelTruncateAfterOneLine     | boolean | Gibt an, ob das _luxLabel_ nach der ersten Zeile abgeschnitten wird.                                                                                           |
+| luxLabelTruncateAfterTwoLine     | boolean | Gibt an, ob das _luxLabel_ nach der zweiten Zeile abgeschnitten wird.                                                                                          |
+| luxSubTitle                      | string  | Enthält den Untertitel, welches unten im Tile angezeigt wird.                                                                                                  |
+| luxSubTitleTruncateAfterOneLine  | boolean | Gibt an, ob das _luxLabel_ nach der ersten Zeile abgeschnitten wird.                                                                                           |
+| luxSubTitleTruncateAfterTwoLines | boolean | Gibt an, ob das _luxLabel_ nach der zweiten Zeile abgeschnitten wird.                                                                                          |
+| luxTagId                         | string  | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                  |
+| luxCounter                       | number  | Zeigt eine Zahl auf der rechten, oberen Seite des Tiles an.                                                                                                    |
+| luxCounterCap                    | number  | Die Obergrenze für den luxCounter. Wenn der luxCounter größer als der luxCounterCap ist, wird der luxCounterCap mit einem zusätzlichen '+'-Symbol dargestellt. |
+| luxShowNotification              | boolean | Bestimmt ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                             |
 
 ### @Output
 

@@ -17,6 +17,8 @@
         luxTagId="example-tile"
         (luxClicked)="log(showOutputEvents, 'Tile clicked', $event)"
         [luxShowShadow]="showShadow"
+        [luxLabelTruncateAfterOneLine]="truncateAfterOneLine"
+        [luxLabelTruncateAfterTwoLines]="truncateAfterTwoLines"
       >
         @if (showIcon) {
         <lux-icon luxIconName="lux-camera-video" luxIconSize="1x"></lux-icon>
@@ -40,6 +42,8 @@
       [(luxValue)]="label"
     >
     </lux-input-ac>
+    <lux-toggle-ac luxLabel="luxLabelTruncateAfterOneLine" [(luxChecked)]="truncateAfterOneLine" [luxNoLabels]="true"> </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxLabelTruncateAfterTwoLines" [(luxChecked)]="truncateAfterTwoLines" [luxNoLabels]="true"> </lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxIcon anzeigen" [(luxChecked)]="showIcon" [luxNoTopLabel]="true">
       <lux-form-hint>
         Ein LuxIconComponent in dem Tile anzeigen.<br />

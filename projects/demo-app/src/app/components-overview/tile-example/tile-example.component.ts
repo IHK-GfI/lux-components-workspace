@@ -1,13 +1,13 @@
 import { NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-    LuxAutofocusDirective,
-    LuxFormHintComponent,
-    LuxIconComponent,
-    LuxImageComponent,
-    LuxInputAcComponent,
-    LuxTileComponent,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxFormHintComponent,
+  LuxIconComponent,
+  LuxImageComponent,
+  LuxInputAcComponent,
+  LuxTileComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -42,6 +42,8 @@ export class TileExampleComponent {
   log = logResult;
   _showNotification = false;
   showShadow = true;
+  truncateAfterOneLine = false;
+  truncateAfterTwoLines = false;
 
   get showNotification() {
     return this._showNotification;
