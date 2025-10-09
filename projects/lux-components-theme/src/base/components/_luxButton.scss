@@ -234,16 +234,6 @@ lux-button {
     &.mat-mdc-outlined-button {
       &:hover {
         background-color: color.adjust(luxcommon.$lux-hover-color, $lightness: -10%);
-
-        &.mat-accent {
-          color: map.get(luxpalette.$lux-palette_accent, 900);
-        }
-
-        &.mat-warn {
-        }
-
-        &.mat-primary {
-        }
       }
     }
 
