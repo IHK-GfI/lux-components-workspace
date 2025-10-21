@@ -44,7 +44,7 @@ describe('LuxMenuComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    menuItems = fixture.debugElement.queryAll(By.css('lux-button'));
+    menuItems = fixture.debugElement.queryAll(By.css('lux-button.lux-menu-item'));
     expect(menuItems.length).toBe(3);
     expect(menuComponent.menuItems.length).toBe(3);
 
@@ -53,7 +53,7 @@ describe('LuxMenuComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    const extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item'));
+    const extendedMenuItems = fixture.debugElement.queryAll(By.css('lux-button.lux-menu-item'));
     expect(extendedMenuItems.length).toBe(3);
   }));
 
@@ -61,17 +61,23 @@ describe('LuxMenuComponent', () => {
     // Vorbedingungen testen
     component.generateItems(3);
     updateExtendedMenuItems();
+    expect(component.displayExtended).toBeTrue();
+
+    const menuDebugEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
+    const offsetWidthSpy = spyOnProperty(menuDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+    const triggerDebugEl = fixture.debugElement.query(By.css('div.lux-menu-trigger'));
+    spyOnProperty(triggerDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(190);
+    updateExtendedMenuItems();
 
     let extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
     expect(extendedMenuItems.length).toBe(3);
 
     // Änderungen durchführen
-    const extendedNode = fixture.debugElement.query(By.css('.lux-menu-extended')).nativeElement;
-    extendedNode.style.maxWidth = '200px';
+    offsetWidthSpy.and.returnValue(300);
     updateExtendedMenuItems();
 
     // Nachbedingungen prüfen
-    extendedMenuItems = fixture.debugElement.queryAll(By.css('lux-button.lux-menu-item:not([style*=none])'));
+    extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
     expect(extendedMenuItems.length).toBeGreaterThan(0);
     expect(extendedMenuItems.length).toBeLessThan(3);
   }));
@@ -105,6 +111,12 @@ describe('LuxMenuComponent', () => {
     component.generateItems(3);
     updateExtendedMenuItems();
 
+    const menuDebugEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
+    spyOnProperty(menuDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+    const triggerDebugEl = fixture.debugElement.query(By.css('div.lux-menu-trigger'));
+    spyOnProperty(triggerDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(200);
+    updateExtendedMenuItems();
+
     let extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
     expect(extendedMenuItems.length).toBe(3);
 
@@ -129,24 +141,22 @@ describe('LuxMenuComponent', () => {
     // Vorbedingungen testen
     component.generateItems(3);
     component.maximumExtended = 2;
+    component.displayMenuLeft = true;
     updateExtendedMenuItems();
 
-    let menuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not(.lux-display-none)'));
-    let menu = fixture.debugElement.query(By.css('.lux-menu-trigger'));
-
-    expect(menuItems[0].nativeElement.offsetLeft).toBeLessThan(menu.nativeElement.offsetLeft);
-    expect(menuItems[1].nativeElement.offsetLeft).toBeLessThan(menu.nativeElement.offsetLeft);
+    let menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
+    let children = menuExtendedEl.children;
+    
+    expect(children[0].nativeElement.classList).toContain('lux-menu-item');
 
     // Änderungen durchführen
     component.displayMenuLeft = false;
     updateExtendedMenuItems();
 
-    // Nachbedingungen prüfen
-    menuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not(.lux-display-none)'));
-    menu = fixture.debugElement.query(By.css('.lux-menu-trigger'));
-
-    expect(menuItems[0].nativeElement.offsetLeft).toBeGreaterThan(menu.nativeElement.offsetLeft);
-    expect(menuItems[1].nativeElement.offsetLeft).toBeGreaterThan(menu.nativeElement.offsetLeft);
+    menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
+    children = menuExtendedEl.children;
+    
+    expect(children[0].nativeElement.classList).toContain('lux-menu-trigger');
   }));
 
   it('Sollte Menu-Items deaktivieren', fakeAsync(() => {

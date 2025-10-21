@@ -87,7 +87,7 @@ lux-filter-form {
     }
     .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:active {
       background-color: transparent !important;
-      color: map-get(luxpalette.$lux-palette_primary, 700);
+      color: map.get(luxpalette.$lux-palette_primary, 700);
     }
   }
 

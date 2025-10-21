@@ -28,7 +28,8 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
     LuxAriaLabelDirective,
     LuxButtonComponent,
     NgClass,
-    RouterOutlet
+    RouterOutlet,
+    LuxButtonComponent
   ]
 })
 export class ExampleRootComponent implements OnDestroy {

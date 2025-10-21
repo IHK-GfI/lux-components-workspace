@@ -135,8 +135,8 @@ lux-file-progress {
 */
 $fileUploadProgressSize: 8px;
 .mat-mdc-progress-bar.lux-file-upload-drop-container-progress {
-  --mdc-linear-progress-active-indicator-height: #{$fileUploadProgressSize};
-  --mdc-linear-progress-track-height: #{$fileUploadProgressSize};
+  --mat-progress-bar-active-indicator-height: #{$fileUploadProgressSize};
+  --mat-progress-bar-track-height: #{$fileUploadProgressSize};
 }
 
 .lux-file-upload-container {
@@ -258,7 +258,7 @@ $fileUploadProgressSize: 8px;
     border-radius: 4px;
     padding-left: 2px;
     padding-right: 2px;
-    color: map-get(luxpalette.$lux-palette_warn, 900) !important;
+    color: map.get(luxpalette.$lux-palette_warn, 900) !important;
   }
 
   .lux-file-upload-hint-container {

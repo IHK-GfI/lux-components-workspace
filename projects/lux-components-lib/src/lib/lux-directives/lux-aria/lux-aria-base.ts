@@ -5,8 +5,7 @@ export abstract class LuxAriaBase<T> implements AfterViewInit {
   protected init = false;
   protected elementRef = inject(ElementRef);
   protected renderer = inject(Renderer2);
-
-  protected constructor(protected ariaTagName: string) {}
+  protected abstract ariaTagName: string;
 
   ngAfterViewInit(): void {
     this.init = true;

@@ -743,7 +743,7 @@ lux-datetimepicker-ac {
     }
 
     button:hover lux-icon.lux-datepicker-toggle-icon.lux-color-blue {
-      color: map-get(luxpalette.$lux-palette_primary, 300);
+      color: map.get(luxpalette.$lux-palette_primary, 300);
     }
   }
 }

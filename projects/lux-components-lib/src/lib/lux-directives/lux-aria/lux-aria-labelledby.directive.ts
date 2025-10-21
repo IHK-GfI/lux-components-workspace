@@ -1,8 +1,11 @@
 import { Directive, Input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaLabelledby]' })
+@Directive({
+  selector: '[luxAriaLabelledby]'
+})
 export class LuxAriaLabelledbyDirective extends LuxAriaBase<string> {
+  protected ariaTagName = 'aria-labelledby';
   _luxAriaLabelledby?: string;
 
   @Input() luxAriaLabelledbySelector?: string;
@@ -19,8 +22,7 @@ export class LuxAriaLabelledbyDirective extends LuxAriaBase<string> {
   }
 
   constructor() {
-    super('aria-labelledby');
-
+    super();
     if (!this.luxAriaLabelledbySelector) {
       const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
       if (tagName === 'lux-button') {

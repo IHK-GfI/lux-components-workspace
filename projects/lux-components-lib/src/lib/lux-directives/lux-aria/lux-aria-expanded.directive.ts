@@ -1,8 +1,11 @@
 import { Directive, Input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaExpanded]' })
+@Directive({
+  selector: '[luxAriaExpanded]'
+})
 export class LuxAriaExpandedDirective extends LuxAriaBase<boolean> {
+  protected ariaTagName = 'aria-expanded';
   _luxAriaExpanded?: boolean;
 
   @Input() luxAriaExpandedSelector?: string;
@@ -19,8 +22,7 @@ export class LuxAriaExpandedDirective extends LuxAriaBase<boolean> {
   }
 
   constructor() {
-    super('aria-expanded');
-
+    super();
     if (!this.luxAriaExpandedSelector) {
       const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
       if (tagName === 'lux-button') {

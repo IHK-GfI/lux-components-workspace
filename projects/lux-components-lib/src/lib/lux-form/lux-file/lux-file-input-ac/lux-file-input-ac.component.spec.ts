@@ -284,7 +284,7 @@ describe('LuxFileInputAcComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-file-visible-input')).nativeElement.value.trim()).toEqual('mockfile.txt');
 
       // Änderungen durchführen
-      fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove] button')).nativeElement.click();
+      fixture.debugElement.query(By.css('button[aria-label="Löschen"]')).nativeElement.click();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -308,7 +308,7 @@ describe('LuxFileInputAcComponent', () => {
       expect(fileComponent.luxSelected!.content).toEqual(undefined);
 
       // Änderungen durchführen
-      fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-view] button')).nativeElement.click();
+      fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.click();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -349,7 +349,7 @@ describe('LuxFileInputAcComponent', () => {
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove] button')).nativeElement.click();
+      fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.click();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -560,20 +560,20 @@ describe('LuxFileInputAcComponent', () => {
       describe('[uploadActionConfig]', () => {
         it('Sollte den Upload-Button verstecken', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-upload]'))).not.toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]'))).not.toBeNull();
 
           // Änderungen durchführen
           testComponent.uploadActionConfig.hidden = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-upload]'))).toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]'))).toBeNull();
         }));
 
         it('Sollte den Upload-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-upload] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]')).nativeElement.disabled
           ).toBe(false);
 
           // Änderungen durchführen
@@ -582,7 +582,7 @@ describe('LuxFileInputAcComponent', () => {
 
           // Nachbedingungen prüfen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-upload] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]')).nativeElement.disabled
           ).toBe(true);
         }));
 
@@ -609,20 +609,20 @@ describe('LuxFileInputAcComponent', () => {
       describe('[downloadActionConfig]', () => {
         it('Sollte den Download-Button verstecken', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-download]'))).not.toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]'))).not.toBeNull();
 
           // Änderungen durchführen
           testComponent.downloadActionConfig.hidden = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-download]'))).toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]'))).toBeNull();
         }));
 
         it('Sollte den Download-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-download] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled
           ).toBe(true);
 
           // Änderungen durchführen
@@ -632,7 +632,7 @@ describe('LuxFileInputAcComponent', () => {
 
           // Nachbedingungen prüfen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-download] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled
           ).toBe(false);
 
           // Änderungen durchführen
@@ -641,7 +641,7 @@ describe('LuxFileInputAcComponent', () => {
 
           // Nachbedingungen prüfen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-download] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled
           ).toBe(true);
         }));
 
@@ -659,7 +659,7 @@ describe('LuxFileInputAcComponent', () => {
           // Änderungen durchführen
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
-          fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-download] button')).nativeElement.click();
+          fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -673,20 +673,20 @@ describe('LuxFileInputAcComponent', () => {
       describe('[deleteActionConfig]', () => {
         it('Sollte den Delete-Button verstecken', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove]'))).not.toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]'))).not.toBeNull();
 
           // Änderungen durchführen
           testComponent.deleteActionConfig.hidden = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove]'))).toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]'))).toBeNull();
         }));
 
         it('Sollte den Delete-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled
           ).toBe(true);
 
           // Änderungen durchführen
@@ -696,7 +696,7 @@ describe('LuxFileInputAcComponent', () => {
 
           // Nachbedingungen prüfen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled
           ).toBe(false);
 
           // Änderungen durchführen
@@ -705,7 +705,7 @@ describe('LuxFileInputAcComponent', () => {
 
           // Nachbedingungen prüfen
           expect(
-            fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove] button')).nativeElement.disabled
+            fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled
           ).toBe(true);
         }));
 
@@ -720,7 +720,7 @@ describe('LuxFileInputAcComponent', () => {
           // Änderungen durchführen
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
-          fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-remove] button')).nativeElement.click();
+          fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -733,19 +733,19 @@ describe('LuxFileInputAcComponent', () => {
       describe('[viewActionConfig]', () => {
         it('Sollte den View-Button verstecken', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-view]'))).not.toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]'))).not.toBeNull();
 
           // Änderungen durchführen
           testComponent.viewActionConfig.hidden = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-view]'))).toBeNull();
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]'))).toBeNull();
         }));
 
         it('Sollte den View-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-view] button')).nativeElement.disabled).toBe(
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(
             true
           );
 
@@ -755,7 +755,7 @@ describe('LuxFileInputAcComponent', () => {
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-view] button')).nativeElement.disabled).toBe(
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(
             false
           );
 
@@ -764,7 +764,7 @@ describe('LuxFileInputAcComponent', () => {
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-view] button')).nativeElement.disabled).toBe(
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(
             true
           );
         }));
@@ -780,7 +780,7 @@ describe('LuxFileInputAcComponent', () => {
           // Änderungen durchführen
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
-          fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-view] button')).nativeElement.click();
+          fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -795,6 +795,7 @@ describe('LuxFileInputAcComponent', () => {
 });
 
 @Component({
+  selector: 'lux-file-component-test',
   template: `
     <lux-file-input-ac
       [luxLabel]="label"
@@ -872,6 +873,7 @@ class FileComponent {
 }
 
 @Component({
+  selector: 'lux-file-component-form-test',
   template: `
     <div [formGroup]="form">
       <lux-file-input-ac

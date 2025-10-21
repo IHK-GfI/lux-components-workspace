@@ -1,8 +1,11 @@
 import { Directive, Input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaHasPopup]' })
+@Directive({
+  selector: '[luxAriaHasPopup]'
+})
 export class LuxAriaHaspopupDirective extends LuxAriaBase<boolean> {
+  protected ariaTagName = 'aria-haspopup';
   _luxAriaHasPopup?: boolean | undefined;
 
   @Input() luxAriaHasPopupSelector?: string;
@@ -19,8 +22,7 @@ export class LuxAriaHaspopupDirective extends LuxAriaBase<boolean> {
   }
 
   constructor() {
-    super('aria-haspopup');
-
+    super();
     if (!this.luxAriaHasPopupSelector) {
       const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
       if (tagName === 'lux-button') {

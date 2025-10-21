@@ -1,5 +1,5 @@
 @use "../luxcommon";
 
 .mat-mdc-tooltip {
-  --mdc-plain-tooltip-container-shape: #{luxcommon.$app-border-radius};
+  --mat-tooltip-container-shape: #{luxcommon.$app-border-radius};
 }

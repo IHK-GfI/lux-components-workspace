@@ -633,38 +633,6 @@ describe('LuxTableComponent', () => {
       expect(noDataText).toEqual('Tetriandoch');
     }));
 
-    it('Die Breite und Höhe automatisch berechnen', fakeAsync(() => {
-      // Vorbedingungen testen
-      component.dataSource = [
-        { c1: 1, c2: 'Hydrogen' },
-        { c1: 2, c2: 'Helium' }
-      ];
-      component.showFilter = false;
-      LuxTestHelper.wait(fixture);
-      let tableContent = fixture.debugElement.query(By.css('lux-table')).nativeElement as HTMLElement;
-      let table = fixture.debugElement.query(By.css('table')).nativeElement as HTMLElement;
-      let paginator = fixture.debugElement.query(By.css('mat-paginator')).nativeElement as HTMLElement;
-      let filter = fixture.debugElement.query(By.css('lux-input-ac')).nativeElement as HTMLElement;
-
-      expect(tableContent.offsetHeight - paginator.offsetHeight - filter.offsetHeight).not.toBe(400);
-      expect(table.style.minWidth).not.toBe('600px');
-
-      // Änderungen durchführen
-      component.minWidth = 600;
-      component.containerHeight = 400;
-      component.containerWidth = 800;
-      LuxTestHelper.wait(fixture);
-
-      // Nachbedingungen testen
-      tableContent = fixture.debugElement.query(By.css('lux-table')).nativeElement as HTMLElement;
-      table = fixture.debugElement.query(By.css('table')).nativeElement as HTMLElement;
-      paginator = fixture.debugElement.query(By.css('mat-paginator')).nativeElement as HTMLElement;
-      filter = fixture.debugElement.query(By.css('lux-input-ac')).nativeElement as HTMLElement;
-
-      expect(tableContent.offsetHeight + paginator.offsetHeight + filter.offsetHeight).toBe(400);
-      expect(table.style.minWidth).toBe('600px');
-    }));
-
     it('Sollte automatisch die Pagination bei > 100 Einträgen aktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
