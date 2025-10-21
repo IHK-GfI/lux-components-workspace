@@ -78,7 +78,12 @@ describe('update190200', () => {
 
     it('Sollte eine Warnung ausgeben, wenn <lux-app-content> in app.component.html fehlt', (done) => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
-      appTree.overwrite(htmlPath, `<div cdkScrollable>Kein lux-app-content vorhanden</div>`);
+      const newContent = `<div cdkScrollable>Kein lux-app-content vorhanden</div>`;
+      if (appTree.exists(htmlPath)) {
+        appTree.overwrite(htmlPath, newContent);
+      } else {
+        appTree.create(htmlPath, newContent);
+      }
 
       const logWarnMock = spyOn(logging, 'logWarn');
 
@@ -93,7 +98,12 @@ describe('update190200', () => {
 
     it('Sollte zwei Warnung ausgeben, wenn <lux-app-content> und cdkScrollable in app.component.html fehlen', (done) => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
-      appTree.overwrite(htmlPath, `<div>Kein lux-app-content vorhanden</div>`);
+      const newContent = `<div>Kein lux-app-content vorhanden</div>`;
+      if (appTree.exists(htmlPath)) {
+        appTree.overwrite(htmlPath, newContent);
+      } else {
+        appTree.create(htmlPath, newContent);
+      }
 
       const logWarnMock = spyOn(logging, 'logWarn');
 
@@ -108,7 +118,27 @@ describe('update190200', () => {
 
     it('Sollte cdkScrollable zu <lux-app-content> in app.component.html ergänzen', (done) => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
-      appTree.overwrite(htmlPath, `<lux-app-content></lux-app-content>`);
+      const htmlNewContent = `<lux-app-content></lux-app-content>`;
+      if (appTree.exists(htmlPath)) {
+        appTree.overwrite(htmlPath, htmlNewContent);
+      } else {
+        appTree.create(htmlPath, htmlNewContent);
+      }
+
+      const tsPath = `${testOptions.path}/src/app/app.component.ts`;
+      const tsNewContent = `@Component({
+  selector: 'app-root',
+  imports: [
+  ],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
+})
+export class AppComponent {}`;
+      if (appTree.exists(tsPath)) {
+        appTree.overwrite(tsPath, tsNewContent);
+      } else {
+        appTree.create(tsPath, tsNewContent);
+      }
 
       callRule(update190200(testOptions), appTree, context).subscribe(
         (successTree) => {
@@ -122,7 +152,12 @@ describe('update190200', () => {
 
     it('Sollte nichts verändern wenn cdkScrollable bereits vorhanden ist', (done) => {
       const htmlPath = `${testOptions.path}/src/app/app.component.html`;
-      appTree.overwrite(htmlPath, `<lux-app-content cdkScrollable></lux-app-content>`);
+      const newContent = `<lux-app-content cdkScrollable></lux-app-content>`;
+      if (appTree.exists(htmlPath)) {
+        appTree.overwrite(htmlPath, newContent);
+      } else {
+        appTree.create(htmlPath, newContent);
+      }
 
       const replaceRuleMock = spyOn(files, 'replaceRule');
       const logWarnMock = spyOn(logging, 'logWarn');

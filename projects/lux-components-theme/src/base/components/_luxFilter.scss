@@ -66,6 +66,29 @@ lux-filter-form {
         @include luxelevations.lux-elevation-z0;
       }
     }
+    .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:hover {
+      background-color: transparent !important;
+      color: luxcommon.$lux-hover-color;
+    }
+    .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:focus-visible {
+      @include luxfocus.focus-dark-mixin-inline;
+      background-color: transparent !important;
+    }
+    .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:active {
+      background-color: transparent !important;
+      color: map.get(luxpalette.$lux-palette_primary, 700);
+    }
+  }
+
+  lux-accordion {
+    lux-panel-header-title {
+      width: 100%;
+      mat-panel-title.mat-expansion-panel-header-title {
+        align-items: center;
+        justify-content: space-between;
+        margin: 0px;
+      }
+    }
   }
 
   lux-card .lux-card-header .lux-card-title,

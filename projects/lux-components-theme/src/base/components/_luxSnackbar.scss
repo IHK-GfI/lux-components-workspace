@@ -58,19 +58,19 @@
       }
 
       .lux-snackbar-content .lux-bg-color-red {
-        color: map-get(map-get(luxpalette.$lux-palettes-new, 'error'), 80);
+        color: map.get(map.get(luxpalette.$lux-palettes-new, 'error'), 80);
       }
 
       .lux-snackbar-content .lux-bg-color-blue {
-        color: map-get(map-get(luxpalette.$lux-palettes-new, 'primary'), 80);
+        color: map.get(map.get(luxpalette.$lux-palettes-new, 'primary'), 80);
       }
 
       .lux-snackbar-content .lux-bg-color-green {
-        color: map-get(map-get(luxpalette.$lux-palettes-new, 'tertiary'), 80);
+        color: map.get(map.get(luxpalette.$lux-palettes-new, 'tertiary'), 80);
       }
 
       .lux-snackbar-content .lux-bg-color-orange {
-        color: map-get(luxcommon.$colorsForDarkBg, 'yellow');
+        color: map.get(luxcommon.$colorsForDarkBg, 'yellow');
       }
     }
   }

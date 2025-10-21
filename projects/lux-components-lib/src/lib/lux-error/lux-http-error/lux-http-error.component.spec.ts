@@ -28,8 +28,8 @@ describe('LuxHttpErrorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxMockHttpErrorComponent);
     component = fixture.componentInstance;
-    httpClient = TestBed.get(HttpClient);
-    httpController = TestBed.get(HttpTestingController);
+    httpClient = TestBed.inject(HttpClient);
+    httpController = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 

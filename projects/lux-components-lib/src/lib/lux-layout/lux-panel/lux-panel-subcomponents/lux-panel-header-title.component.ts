@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, input, viewChild } from '@angular/core';
 import { MatExpansionPanelTitle } from '@angular/material/expansion';
-import { LuxTooltipDirective } from '../../../lux-directives/lux-tooltip/lux-tooltip.directive';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'lux-panel-header-title',
@@ -8,12 +8,12 @@ import { LuxTooltipDirective } from '../../../lux-directives/lux-tooltip/lux-too
     [class.lux-crop]="luxTruncated()"
     [class.lux-hyphenate]="!luxTruncated()"
     [style.display]="luxTruncated() ? 'block' : null"
-    luxTooltip="{{ luxTruncatedTooltip() }}"
-    [luxTooltipShowDelay]="500"
-    [luxTooltipDisabled]="!luxTruncated()"
+    matTooltip="{{ luxTruncatedTooltip() }}"
+    [matTooltipShowDelay]="500"
+    [matTooltipDisabled]="!luxTruncated()"
     ><ng-content></ng-content
   ></mat-panel-title>`,
-  imports: [MatExpansionPanelTitle, LuxTooltipDirective]
+  imports: [MatExpansionPanelTitle, MatTooltip]
 })
 export class LuxPanelHeaderTitleComponent implements AfterViewInit {
   luxTruncated = input<boolean>(false);

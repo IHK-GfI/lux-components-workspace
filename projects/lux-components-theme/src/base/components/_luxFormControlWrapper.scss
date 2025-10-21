@@ -157,7 +157,7 @@ lux-form-control-wrapper {
       }
       .lux-form-control-misc-authentic {
         .lux-alert-icon {
-          color: map-get(luxpalette.$lux-palette_warn, 900);
+          color: map.get(luxpalette.$lux-palette_warn, 900);
           mat-icon.mat-icon {
             box-sizing: border-box;
           }
@@ -166,7 +166,7 @@ lux-form-control-wrapper {
           background-color: luxcommon.$form-error-msg-background;
           border-radius: 4px;
           padding-right: 2px;
-          color: map-get(luxpalette.$lux-palette_warn, 900) !important;
+          color: map.get(luxpalette.$lux-palette_warn, 900) !important;
           box-shadow:
             -18px 0px 0 0 luxcommon.$form-error-msg-background,
             -18px -1px 0 0 luxcommon.$form-error-msg-background,

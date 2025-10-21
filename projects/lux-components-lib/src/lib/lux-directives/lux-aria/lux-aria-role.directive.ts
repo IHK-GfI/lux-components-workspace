@@ -1,8 +1,11 @@
 import { Directive, Input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaRole]' })
+@Directive({
+  selector: '[luxAriaRole]'
+})
 export class LuxAriaRoleDirective extends LuxAriaBase<string> {
+  protected ariaTagName = 'role';
   _luxAriaRole?: string;
 
   @Input() luxAriaRoleSelector?: string;
@@ -16,10 +19,6 @@ export class LuxAriaRoleDirective extends LuxAriaBase<string> {
     this._luxAriaRole = role;
 
     this.renderAria();
-  }
-
-  constructor() {
-    super('role');
   }
 
   getSelector(): string | undefined {

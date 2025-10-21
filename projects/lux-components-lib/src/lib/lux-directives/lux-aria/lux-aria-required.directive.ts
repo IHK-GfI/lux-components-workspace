@@ -1,8 +1,11 @@
-import { Directive, ElementRef, Input, Renderer2, inject } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
-@Directive({ selector: '[luxAriaRequired]' })
+@Directive({ 
+  selector: '[luxAriaRequired]'
+})
 export class LuxAriaRequiredDirective extends LuxAriaBase<boolean> {
+  protected ariaTagName = 'aria-required';
   _luxAriaRequired?: boolean;
 
   @Input() luxAriaRequiredSelector?: string;
@@ -16,10 +19,6 @@ export class LuxAriaRequiredDirective extends LuxAriaBase<boolean> {
     this._luxAriaRequired = required;
 
     this.renderAria();
-  }
-
-  constructor() {
-    super('aria-required');
   }
 
   getSelector(): string | undefined {

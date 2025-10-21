@@ -26,7 +26,7 @@
   },
   "license": "IHK-GfI Open-Source-Lizenz",
   "peerDependencies": {
-    "@angular/material": "^19.0.0"
+    "@angular/material": "^20.0.0"
   },
   "watch": {
     "build-authentic": {

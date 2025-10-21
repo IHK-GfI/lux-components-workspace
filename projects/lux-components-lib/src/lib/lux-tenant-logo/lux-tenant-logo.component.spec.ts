@@ -11,7 +11,7 @@ describe('LuxTenantLogoComponent', () => {
   beforeEach(() => {
     mediaQuerySubject = new Subject<string>();
 
-    const mediaQueryService = TestBed.get(LuxMediaQueryObserverService);
+    const mediaQueryService = TestBed.inject(LuxMediaQueryObserverService);
     spyOn(mediaQueryService, 'getMediaQueryChangedAsObservable').and.returnValue(mediaQuerySubject);
   });
 

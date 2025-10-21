@@ -31,7 +31,7 @@ div.mat-mdc-autocomplete-panel.lux-autocomplete-panel-ac {
  * Theming for LUX-Select
  */
 .mat-mdc-select-panel {
-  --mat-full-pseudo-checkbox-selected-checkmark-color: #ffffff;
+  --mat-pseudo-checkbox-full-selected-checkmark-color: #ffffff;
 }
 
 div.mat-mdc-select-panel {
@@ -145,7 +145,7 @@ lux-lookup-combobox-ac {
 * Theming für Lux-Checkbox
 */
 html .mat-mdc-checkbox .mat-internal-form-field {
-  --mat-switch-label-text-size: 1rem;
+  --mat-slide-toggle-label-text-size: 1rem;
   --mat-checkbox-label-text-line-height: 1.5rem;
 }
 
@@ -247,7 +247,7 @@ lux-datetimepicker-ac {
 
   & .mat-calendar-header button:hover {
     background-color: #fff !important;
-    color: map-get(luxpalette.$lux-palette_primary, 300);
+    color: map.get(luxpalette.$lux-palette_primary, 300);
   }
 }
 
@@ -259,24 +259,24 @@ $toggleBorderWidth: 2;
 $toggleMarginLeft: $toggleBorderWidth + 1;
 
 html lux-toggle-ac .mat-mdc-slide-toggle {
-  --mat-switch-label-text-size: 1rem;
-  --mdc-switch-track-width: 50px;
-  --mdc-switch-track-height: 30px;
-  --mdc-switch-track-shape: 15px;
-  --mdc-switch-handle-width: 30px;
-  --mat-switch-track-outline-width: #{$toggleBorderWidth}px !important;
-  --mat-switch-track-outline-color: #{luxcommon.$dark-disabled-text} !important;
-  --mat-switch-selected-track-outline-width: #{$toggleBorderWidth}px !important;
-  --mat-switch-selected-track-outline-color: #{luxpalette.$lux-primary-color} !important;
-  --mat-switch-selected-handle-size: #{$toggleHandleSize}px;
-  --mat-switch-pressed-handle-size: #{$toggleHandleSize}px;
-  --mat-switch-with-icon-handle-size: #{$toggleHandleSize}px;
-  --mdc-switch-selected-icon-size: #{$toggleHandleSize}px;
-  --mdc-switch-selected-handle-size: #{$toggleHandleSize}px;
-  --mdc-switch-unselected-icon-size: #{$toggleHandleSize}px;
-  --mat-switch-unselected-handle-size: #{$toggleHandleSize}px;
-  --mdc-switch-selected-icon-color: #{luxpalette.$lux-primary-color};
-  --mdc-switch-state-layer-size: 40px;
+  --mat-slide-toggle-label-text-size: 1rem;
+  --mat-slide-toggle-track-width: 50px;
+  --mat-slide-toggle-track-height: 30px;
+  --mat-slide-toggle-track-shape: 15px;
+  --mat-slide-toggle-handle-width: 30px;
+  --mat-slide-toggle-track-outline-width: #{$toggleBorderWidth}px !important;
+  --mat-slide-toggle-track-outline-color: #{luxcommon.$dark-disabled-text} !important;
+  --mat-slide-toggle-selected-track-outline-width: #{$toggleBorderWidth}px !important;
+  --mat-slide-toggle-selected-track-outline-color: #{luxpalette.$lux-primary-color} !important;
+  --mat-slide-toggle-selected-handle-size: #{$toggleHandleSize}px;
+  --mat-slide-toggle-pressed-handle-size: #{$toggleHandleSize}px;
+  --mat-slide-toggle-with-icon-handle-size: #{$toggleHandleSize}px;
+  --mat-slide-toggle-selected-icon-size: #{$toggleHandleSize}px;
+  --mat-slide-toggle-selected-handle-size: #{$toggleHandleSize}px;
+  --mat-slide-toggle-unselected-icon-size: #{$toggleHandleSize}px;
+  --mat-slide-toggle-unselected-handle-size: #{$toggleHandleSize}px;
+  --mat-slide-toggle-selected-icon-color: #{luxpalette.$lux-primary-color};
+  --mat-slide-toggle-state-layer-size: 40px;
 
   .mat-internal-form-field {
     letter-spacing: normal;
@@ -296,7 +296,7 @@ lux-toggle-ac {
       &.mdc-switch--disabled {
         &.mdc-switch--checked {
           .mdc-switch__icons {
-            --mdc-switch-disabled-selected-icon-opacity: 1;
+            --mat-slide-toggle-disabled-selected-icon-opacity: 1;
             svg.mdc-switch__icon--on {
               fill: luxcommon.$dark-disabled-text;
               background: white;
@@ -307,8 +307,8 @@ lux-toggle-ac {
         &:not(.mdc-switch--checked) {
           .mdc-switch__track {
             opacity: 1;
-            --mat-switch-disabled-unselected-track-outline-color: #e0e0e0;
-            --mat-switch-disabled-unselected-track-outline-width: #{$toggleBorderWidth}px;
+            --mat-slide-toggle-disabled-unselected-track-outline-color: #e0e0e0;
+            --mat-slide-toggle-disabled-unselected-track-outline-width: #{$toggleBorderWidth}px;
             &::before {
               background: transparent;
             }
@@ -504,8 +504,8 @@ lux-textarea-ac text-area {
  */
 // $chipsBorderRadius: 20;
 lux-chips-ac {
-  --mdc-chip-container-shape-radius: 20px;
-  --mdc-chip-outline-width: 1px;
+  --mat-chip-container-shape-radius: 20px;
+  --mat-chip-outline-width: 1px;
 
   .mat-mdc-chip-remove .mat-icon {
     width: 1.125rem;
@@ -553,7 +553,7 @@ lux-chips-ac {
     }
 
     &.lux-chip-color-warn {
-      background-color: map-get(map-get(luxpalette.$lux-palettes-new, "error"), 40);
+      background-color: map.get(map.get(luxpalette.$lux-palettes-new, 'error'), 40);
 
       .mat-mdc-chip-action-label {
         color: white;
@@ -617,7 +617,7 @@ lux-chips-ac {
 
 @media (prefers-contrast: more) {
   .mat-mdc-standard-chip .mdc-evolution-chip__text-label {
-    --mdc-chip-label-text-weight: 600;
+    --mat-chip-label-text-weight: 600;
   }
 
   lux-chips-ac {

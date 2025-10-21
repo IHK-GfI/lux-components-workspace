@@ -476,7 +476,7 @@ describe('LuxFileListComponent', () => {
       const replaceButton = overlayHelper.selectAllFromOverlay('button')[1];
       expect(replaceButton).not.toBeNull();
       // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
-      expect(replaceButton.innerText).toContain('ERSETZEN');
+      expect(replaceButton.innerText.toLowerCase()).toContain('ersetzen');
 
       replaceButton.click();
       LuxTestHelper.wait(fixture);
@@ -534,7 +534,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.luxSelected![0].content).toEqual(undefined);
 
       // Änderungen durchführen
-      fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view] button'))[0].nativeElement.click();
+      fixture.debugElement.queryAll(By.css('button[aria-label="Anzeigen"]'))[0].nativeElement.click();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -561,7 +561,7 @@ describe('LuxFileListComponent', () => {
       const replaceButton = overlayHelper.selectAllFromOverlay('button')[1];
       expect(replaceButton).not.toBeNull();
       // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
-      expect(replaceButton.innerText).toContain('ERSETZEN');
+      expect(replaceButton.innerText.toLowerCase()).toContain('ersetzen');
 
       replaceButton.click();
       LuxTestHelper.wait(fixture);
@@ -583,7 +583,7 @@ describe('LuxFileListComponent', () => {
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      fixture.debugElement.query(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove] button')).nativeElement.click();
+      fixture.debugElement.query(By.css('button[aria-label="Löschen"]')).nativeElement.click();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -863,7 +863,7 @@ describe('LuxFileListComponent', () => {
           LuxTestHelper.wait(fixture);
 
           expect(fixture.debugElement.query(By.css('.lux-file-list-header-add'))).not.toBeNull();
-          expect(fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-upload]')).length).toBe(2);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="hochladen" i]')).length).toBe(3);
 
           // Änderungen durchführen
           testComponent.uploadActionConfig.hidden = true;
@@ -872,7 +872,7 @@ describe('LuxFileListComponent', () => {
 
           // Nachbedingungen prüfen
           expect(fixture.debugElement.query(By.css('.lux-file-list-header-add'))).toBeNull();
-          const debugElements = fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-upload]'));
+          const debugElements = fixture.debugElement.queryAll(By.css('button[aria-label*="hochladen" i]'));
           debugElements.forEach((debugElement) => {
             expect(debugElement.nativeElement.classList.toString()).toContain('lux-display-none');
           });
@@ -889,11 +889,11 @@ describe('LuxFileListComponent', () => {
 
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-add button')).nativeElement.disabled).toBe(false);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-upload] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[0].nativeElement
               .disabled
           ).toBe(false);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-upload] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[1].nativeElement
               .disabled
           ).toBe(false);
 
@@ -905,11 +905,11 @@ describe('LuxFileListComponent', () => {
           // Nachbedingungen prüfen
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-add button')).nativeElement.disabled).toBe(true);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-upload] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[0].nativeElement
               .disabled
           ).toBe(true);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-upload] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[1].nativeElement
               .disabled
           ).toBe(true);
         }));
@@ -937,7 +937,7 @@ describe('LuxFileListComponent', () => {
           const replaceButton = overlayHelper.selectAllFromOverlay('button')[1];
           expect(replaceButton).not.toBeNull();
           // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
-          expect(replaceButton.innerText).toContain('ERSETZEN');
+          expect(replaceButton.innerText.toLowerCase()).toContain('ersetzen');
 
           replaceButton.click();
           LuxTestHelper.wait(fixture);
@@ -973,7 +973,7 @@ describe('LuxFileListComponent', () => {
           const replaceButton = overlayHelper.selectAllFromOverlay('button')[0];
           expect(replaceButton).not.toBeNull();
           // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
-          expect(replaceButton.innerText).toContain('ABBRECHEN');
+          expect(replaceButton.innerText.toLowerCase()).toContain('abbrechen');
 
           replaceButton.click();
           LuxTestHelper.wait(fixture);
@@ -997,14 +997,14 @@ describe('LuxFileListComponent', () => {
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
 
-          expect(fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download]')).length).toBe(2);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Downloaden" i]')).length).toBe(2);
 
           // Änderungen durchführen
           testComponent.downloadActionConfig.hidden = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          const debugElements = fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download]'));
+          const debugElements = fixture.debugElement.queryAll(By.css('button[aria-label*="Downloaden" i]'));
           debugElements.forEach((debugElement) => {
             expect(debugElement.nativeElement.classList.toString()).toContain('lux-display-none');
           });
@@ -1020,11 +1020,11 @@ describe('LuxFileListComponent', () => {
           LuxTestHelper.wait(fixture);
 
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[0].nativeElement
               .disabled
           ).toBe(false);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[1].nativeElement
               .disabled
           ).toBe(false);
 
@@ -1034,11 +1034,11 @@ describe('LuxFileListComponent', () => {
 
           // Nachbedingungen prüfen
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[0].nativeElement
               .disabled
           ).toBe(true);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[1].nativeElement
               .disabled
           ).toBe(true);
         }));
@@ -1061,7 +1061,7 @@ describe('LuxFileListComponent', () => {
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
           fixture.debugElement
-            .queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download] button'))[0]
+            .queryAll(By.css('button[aria-label="Downloaden"]'))[0]
             .nativeElement.click();
           LuxTestHelper.wait(fixture);
 
@@ -1071,7 +1071,7 @@ describe('LuxFileListComponent', () => {
 
           // Änderungen durchführen
           fixture.debugElement
-            .queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-download] button'))[1]
+            .queryAll(By.css('button[aria-label="Downloaden"]'))[1]
             .nativeElement.click();
           LuxTestHelper.wait(fixture);
 
@@ -1094,7 +1094,7 @@ describe('LuxFileListComponent', () => {
           LuxTestHelper.wait(fixture);
 
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-clear'))).not.toBeNull();
-          expect(fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove]')).length).toBe(2);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]')).length).toBe(2);
 
           // Änderungen durchführen
           testComponent.deleteActionConfig.hidden = true;
@@ -1102,7 +1102,7 @@ describe('LuxFileListComponent', () => {
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          const debugElements = fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove]'));
+          const debugElements = fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'));
           debugElements.forEach((debugElement) => {
             expect(debugElement.nativeElement.classList.toString()).toContain('lux-display-none');
           });
@@ -1123,11 +1123,11 @@ describe('LuxFileListComponent', () => {
           // Nachbedingungen prüfen
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-clear button')).nativeElement.disabled).toBe(false);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement
               .disabled
           ).toBe(false);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[1].nativeElement
               .disabled
           ).toBe(false);
 
@@ -1139,11 +1139,11 @@ describe('LuxFileListComponent', () => {
           // Nachbedingungen prüfen
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-clear button')).nativeElement.disabled).toBe(true);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement
               .disabled
           ).toBe(true);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[1].nativeElement
               .disabled
           ).toBe(true);
         }));
@@ -1174,7 +1174,7 @@ describe('LuxFileListComponent', () => {
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
           fixture.debugElement
-            .queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove] button'))[0]
+            .queryAll(By.css('button[aria-label*="Löschen"]'))[0]
             .nativeElement.click();
           LuxTestHelper.wait(fixture);
 
@@ -1184,7 +1184,7 @@ describe('LuxFileListComponent', () => {
 
           // Änderungen durchführen
           fixture.debugElement
-            .queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-remove] button'))[0]
+            .queryAll(By.css('button[aria-label*="Löschen"]'))[0]
             .nativeElement.click();
           LuxTestHelper.wait(fixture);
 
@@ -1206,14 +1206,14 @@ describe('LuxFileListComponent', () => {
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
 
-          expect(fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view]')).length).toBe(2);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]')).length).toBe(2);
 
           // Änderungen durchführen
           testComponent.viewActionConfig.hidden = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          const debugElements = fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view]'));
+          const debugElements = fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'));
           debugElements.forEach((debugElement) => {
             expect(debugElement.nativeElement.classList.toString()).toContain('lux-display-none');
           });
@@ -1229,11 +1229,11 @@ describe('LuxFileListComponent', () => {
           LuxTestHelper.wait(fixture);
 
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[0].nativeElement
               .disabled
           ).toBe(false);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[1].nativeElement
               .disabled
           ).toBe(false);
 
@@ -1243,11 +1243,11 @@ describe('LuxFileListComponent', () => {
 
           // Nachbedingungen prüfen
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view] button'))[0].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[0].nativeElement
               .disabled
           ).toBe(true);
           expect(
-            fixture.debugElement.queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view] button'))[1].nativeElement
+            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[1].nativeElement
               .disabled
           ).toBe(true);
         }));
@@ -1267,7 +1267,7 @@ describe('LuxFileListComponent', () => {
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
           fixture.debugElement
-            .queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view] button'))[0]
+            .queryAll(By.css('button[aria-label*="Anzeigen"]'))[0]
             .nativeElement.click();
           LuxTestHelper.wait(fixture);
 
@@ -1277,7 +1277,7 @@ describe('LuxFileListComponent', () => {
 
           // Änderungen durchführen
           fixture.debugElement
-            .queryAll(By.css('lux-button[ng-reflect-lux-tag-id=lux-file-list-entry-view] button'))[1]
+            .queryAll(By.css('button[aria-label*="Anzeigen"]'))[1]
             .nativeElement.click();
           LuxTestHelper.wait(fixture);
 
