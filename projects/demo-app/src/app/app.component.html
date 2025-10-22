@@ -145,19 +145,21 @@
     </lux-app-header-action-nav>
     @if (luxMode === 'stand-alone') {
     <lux-app-header-right-nav>
-      <lux-menu-item luxLabel="Abmelden" luxIconName="lux-control-button-power-1" luxTagId="abmelden-menu-item"></lux-menu-item>
       <lux-menu-item
+        luxIconName="lux-interface-edit-brush-1"
         luxLabel="Theme - green"
         [luxDisabled]="themeName === 'green'"
         luxTagId="theme-green-menu-item-ac"
         (luxClicked)="onChangeTheme('green')"
       ></lux-menu-item>
       <lux-menu-item
+        luxIconName="lux-interface-edit-brush-1"
         luxLabel="Theme - authentic"
         [luxDisabled]="false"
         luxTagId="theme-authentic-menu-item-ac"
         (luxClicked)="onChangeTheme('authentic')"
       ></lux-menu-item>
+      <lux-menu-item luxLabel="Abmelden" luxIconName="lux-control-button-power-1" luxTagId="abmelden-menu-item"></lux-menu-item>
     </lux-app-header-right-nav>
     }
   </lux-app-header>
@@ -166,6 +168,7 @@
     luxAppTitle="LUX Components"
     luxAppTitleShort="Components"
     [luxUserName]="demoUserName"
+    [luxUserEmail]="demoUserEmail"
     luxAppIconName="dashboard_customize"
     [luxBrandLogoSrc]="tenantLogoConfig === undefined ? 'assets/svg/IHK_GfI.svg' : undefined"
     luxAppLogoSrc="assets/favicons/favicon.svg"
@@ -184,15 +187,32 @@
       (luxTenantLogoClicked)="onTenantLogoClicked()"
     ></lux-tenant-logo>
     } @if (luxMode === 'stand-alone') {
-    <lux-app-header-ac-user-menu luxTooltip="Usermenü">
-      <lux-menu-item [luxLabel]="demoLoginBtn" (luxClicked)="toggleLogin()" luxTagId="abmelden-menu-item"></lux-menu-item>
-      <lux-menu-item luxLabel="Theme - green" luxTagId="theme-green-menu-item-ac" (luxClicked)="onChangeTheme('green')"></lux-menu-item>
+    <lux-app-header-ac-user-menu luxTooltip="Usermenü" [luxUseSectionsAndHeaderPanel]="true">
+      <lux-divider #menuSection></lux-divider>
+      <lux-menu-section-title luxTitle="Theme" #menuSection></lux-menu-section-title>
       <lux-menu-item
-        luxLabel="Theme - authentic"
+        luxIconName="lux-interface-edit-brush-1"
+        luxLabel="green"
+        luxTagId="theme-green-menu-item-ac"
+        (luxClicked)="onChangeTheme('green')"
+        #menuSection
+      ></lux-menu-item>
+      <lux-menu-item
+        luxIconName="lux-interface-edit-brush-1"
+        luxLabel="authentic"
         [luxDisabled]="true"
         luxClass="lux-selected-item-ac"
         luxTagId="theme-authentic-menu-item-ac"
         (luxClicked)="onChangeTheme('authentic')"
+        #menuSection
+      ></lux-menu-item>
+      <lux-divider #menuSection></lux-divider>
+      <lux-menu-item
+        luxIconName="lux-interface-logout-circle"
+        [luxLabel]="demoLoginBtn"
+        (luxClicked)="toggleLogin()"
+        luxTagId="abmelden-menu-item"
+        #menuSection
       ></lux-menu-item>
     </lux-app-header-ac-user-menu>
     }

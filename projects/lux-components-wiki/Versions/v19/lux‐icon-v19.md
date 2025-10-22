@@ -30,9 +30,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung  |
-| -------- | ------------- |
-| selector | lux-icon      |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-icon     |
 
 ### @Input
 
@@ -72,10 +72,7 @@ Siehe [LUX-Components-Config](config-v19#icons-über-ein-cdn-laden).
 Html
 
 ```html
-<lux-icon
-  luxIconName="lux-interface-favorite-like-1"
-  class="lux-color-blue"
-></lux-icon>
+<lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-blue"></lux-icon>
 ```
 
 #### Default-Icon mit farbigen Hintergrund
@@ -85,10 +82,7 @@ Html
 Html
 
 ```html
-<lux-icon
-  luxIconName="lux-interface-favorite-like-1"
-  luxColor="blue"
-></lux-icon>
+<lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="blue"></lux-icon>
 ```
 
 ### 2. luxIconSize
@@ -117,50 +111,17 @@ Html
 
 ```html
 <div class="lux-flex lux-flex-wrap lux-gap-4">
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: red"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: green"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: purple"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: blue"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: gray"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: orange"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: brown"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: black"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: yellow"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: pink"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    style="color: lightblue"
-  ></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: red"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: green"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: purple"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: blue"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: gray"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: orange"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: brown"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: black"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: yellow"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: pink"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: lightblue"></lux-icon>
 </div>
 ```
 
@@ -172,50 +133,17 @@ Html
 
 ```html
 <div class="lux-flex lux-flex-wrap lux-gap-4">
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="red"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="green"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="purple"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="blue"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="gray"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="orange"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="brown"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="black"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="yellow"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="pink"
-  ></lux-icon>
-  <lux-icon
-    luxIconName="lux-interface-favorite-like-1"
-    luxColor="lightblue"
-  ></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="red"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="green"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="purple"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="blue"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="gray"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="orange"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="brown"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="black"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="yellow"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="pink"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="lightblue"></lux-icon>
 </div>
 ```
 
@@ -228,41 +156,11 @@ Html
 Html
 
 ```html
-<lux-icon
-  luxIconName="lux-interface-edit-write-2"
-  luxIconSize="1x"
-  [luxRounded]="true"
-  luxColor="blue"
->
-</lux-icon>
-<lux-icon
-  luxIconName="lux-interface-edit-write-2"
-  luxIconSize="2x"
-  [luxRounded]="true"
-  luxColor="blue"
->
-</lux-icon>
-<lux-icon
-  luxIconName="lux-interface-edit-write-2"
-  luxIconSize="3x"
-  [luxRounded]="true"
-  luxColor="blue"
->
-</lux-icon>
-<lux-icon
-  luxIconName="lux-interface-edit-write-2"
-  luxIconSize="4x"
-  [luxRounded]="true"
-  luxColor="blue"
->
-</lux-icon>
-<lux-icon
-  luxIconName="lux-interface-edit-write-2"
-  luxIconSize="5x"
-  [luxRounded]="true"
-  luxColor="blue"
->
-</lux-icon>
+<lux-icon luxIconName="lux-interface-edit-write-2" luxIconSize="1x" [luxRounded]="true" luxColor="blue"> </lux-icon>
+<lux-icon luxIconName="lux-interface-edit-write-2" luxIconSize="2x" [luxRounded]="true" luxColor="blue"> </lux-icon>
+<lux-icon luxIconName="lux-interface-edit-write-2" luxIconSize="3x" [luxRounded]="true" luxColor="blue"> </lux-icon>
+<lux-icon luxIconName="lux-interface-edit-write-2" luxIconSize="4x" [luxRounded]="true" luxColor="blue"> </lux-icon>
+<lux-icon luxIconName="lux-interface-edit-write-2" luxIconSize="5x" [luxRounded]="true" luxColor="blue"> </lux-icon>
 ```
 
 #### Mit individueller Größe und Padding
@@ -272,13 +170,7 @@ Html
 Html
 
 ```html
-<lux-icon
-  luxIconName="lux-food-burger"
-  luxIconSize="42px"
-  luxPadding="16px"
-  [luxRounded]="true"
-  luxColor="blue"
-></lux-icon>
+<lux-icon luxIconName="lux-food-burger" luxIconSize="42px" luxPadding="16px" [luxRounded]="true" luxColor="blue"></lux-icon>
 ```
 
 ### 5. Icon Padding
@@ -288,12 +180,7 @@ Html
 Html
 
 ```html
-<lux-icon
-  luxIconName="lux-food-burger"
-  luxIconSize="2x"
-  luxPadding="10px 20px"
-  luxColor="blue"
-></lux-icon>
+<lux-icon luxIconName="lux-food-burger" luxIconSize="2x" luxPadding="10px 20px" luxColor="blue"></lux-icon>
 ```
 
 ### 6. Icon Margin
@@ -303,16 +190,8 @@ Html
 Html
 
 ```html
-<div
-  style="border-radius: 4px; width: fit-content"
-  class="lux-bg-color-primary-50"
->
-  <lux-icon
-    luxIconName="lux-food-burger"
-    luxIconSize="42px"
-    luxMargin="10px"
-    class="lux-color-blue"
-  ></lux-icon>
+<div style="border-radius: 4px; width: fit-content" class="lux-bg-color-primary-50">
+  <lux-icon luxIconName="lux-food-burger" luxIconSize="42px" luxMargin="10px" class="lux-color-blue"></lux-icon>
 </div>
 ```
 
@@ -323,7 +202,7 @@ Es ist ausreichend, wenn das Custom-Icon einmal registriert wird, d.h. der Konst
 
 Bitte die LUX-Icons verwenden und ausschließlich in Ausnahmefällen individuelle Icons verwenden!
 
-Beispiel ohne CDN:
+Beispiel ohne CDN (heißt es wurde zentral kein CDN konfiguriert):
 
 ```typescript
   constructor(private iconService: LuxIconRegistryService) {

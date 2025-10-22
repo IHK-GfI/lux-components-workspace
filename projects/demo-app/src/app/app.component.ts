@@ -37,7 +37,10 @@ import {
   LuxSnackbarService,
   LuxTenantLogoComponent,
   LuxThemeService,
-  LuxTooltipDirective
+  LuxTooltipDirective,
+  LuxDividerComponent,
+  LuxMenuSectionTitleComponent,
+  LuxIconRegistryService
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
@@ -77,7 +80,9 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
     LuxTooltipDirective,
     AsyncPipe,
     HammerModule,
-    CdkScrollable
+    CdkScrollable,
+    LuxDividerComponent,
+    LuxMenuSectionTitleComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -95,6 +100,7 @@ export class AppComponent implements OnInit, OnDestroy {
   componentsOverviewService = inject(ComponentsOverviewNavigationService);
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
   fixedFooterService = inject(LuxAppFooterFixedService);
+  iconService = inject(LuxIconRegistryService);
 
   @ViewChild(LuxSideNavComponent) sideNavComp!: LuxSideNavComponent;
 
@@ -107,6 +113,7 @@ export class AppComponent implements OnInit, OnDestroy {
   window = window;
   jsonDataResult: any;
   demoUserName = 'Susanne Sonnenschein';
+  demoUserEmail = 'susanne.sonnenschein@example.com';
   demoLoginBtn = 'Abmelden';
   themeName: string;
   url = '/';
@@ -118,6 +125,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.themeName = this.themeService.getTheme().name;
     this.router.initialNavigation();
     this.appService.appEl = this.elementRef.nativeElement;
+    this.iconService.getSvgIconList().push({ iconName: 'lux-components', iconBasePath: '', iconPath: 'assets/favicons/favicon.svg' });
 
     this.mobileView = this.mediaQueryService.isHandset();
     this.subscriptions.push(
@@ -168,9 +176,11 @@ export class AppComponent implements OnInit, OnDestroy {
   toggleLogin() {
     if (this.demoUserName) {
       this.demoUserName = '';
+      this.demoUserEmail = '';
       this.demoLoginBtn = 'Anmelden';
     } else {
       this.demoUserName = 'Susanne Sonnenschein';
+      this.demoUserEmail = 'susanne.sonnenschein@example.com';
       this.demoLoginBtn = 'Abmelden';
     }
   }

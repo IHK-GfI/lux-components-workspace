@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, input, Input, Output } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 import { LuxActionComponentBaseClass } from '../../lux-action-model/lux-action-component-base.class';
 
@@ -12,6 +12,8 @@ export class LuxMenuItemComponent extends LuxActionComponentBaseClass {
   @Input() luxPrio = 0;
   @Input() luxButtonBadge?: string;
   @Input() luxButtonBadgeColor: LuxThemePalette = 'primary';
+  luxMenuItemSubtitle = input<string>('');
+  luxMenuItemSelected = input<boolean>(false);
 
   @Output() luxHiddenChange = new EventEmitter<boolean>();
   @Output() luxHideLabelIfExtendedChange = new EventEmitter<boolean>();

@@ -11,6 +11,8 @@ export * from './lib/lux-action/lux-link-plain/lux-link-plain.component';
 export * from './lib/lux-action/lux-link/lux-link.component';
 export { LuxMenuItemComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 export { LuxMenuTriggerComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
+export { LuxMenuPanelHeaderComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-panel-header.component';
+export { LuxMenuSectionTitleComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-section-title.component';
 export * from './lib/lux-action/lux-menu/lux-menu.component';
 
 /**
@@ -42,8 +44,8 @@ export * from './lib/lux-directives/lux-tooltip/lux-tooltip.directive';
 export * from './lib/lux-common/lux-badge/lux-badge.component';
 export * from './lib/lux-common/lux-label/lux-label.component';
 export {
-    type ILuxMessageChangeEvent,
-    type ILuxMessageCloseEvent
+  type ILuxMessageChangeEvent,
+  type ILuxMessageCloseEvent
 } from './lib/lux-common/lux-message-box/lux-message-box-model/lux-message-events.interface';
 export { type ILuxMessage } from './lib/lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 export * from './lib/lux-common/lux-message-box/lux-message-box-subcomponents/lux-message.component';
@@ -176,8 +178,8 @@ export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-lang-select/lux-lang-select.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-lang-select/lux-locale';
 export {
-    sideNavAnimation,
-    sideNavOverlayAnimation
+  sideNavAnimation,
+  sideNavOverlayAnimation
 } from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-model/lux-side-nav-animations';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-footer.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-header.component';
@@ -307,4 +309,3 @@ export * from './lib/lux-util/testing/lux-test-overlay-helper';
  */
 export * from './lib/lux-theme/lux-theme';
 export * from './lib/lux-theme/lux-theme.service';
-
