@@ -6,12 +6,14 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
+  inject,
   Input,
   OnDestroy,
   OnInit,
   Output,
   QueryList
 } from '@angular/core';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
@@ -21,9 +23,10 @@ import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.com
 @Component({
   selector: 'lux-list',
   templateUrl: './lux-list.component.html',
-  imports: [LuxAriaLabelledbyDirective, LuxIconComponent]
+  imports: [LuxAriaLabelledbyDirective, LuxIconComponent, TranslocoPipe]
 })
 export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
+  private tService = inject(TranslocoService);
   private _luxSelectedPosition = 0;
 
   private previousFocusedPosition?: number;
@@ -39,15 +42,15 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @Input() luxEmptyIconName = 'lux-interface-alert-information-circle';
   @Input() luxEmptyIconSize = '5x';
-  @Input() luxEmptyLabel = $localize`:@@luxc.list.empty_label:Keine Einträge vorhanden`;
+  @Input() luxEmptyLabel = '';
   @Input() set luxLabel(value: string) {
-    this.label = value || $localize`:@@luxc.list.arialabel:Liste`;
+    this.label = value || this.tService.translate('luxc.list.arialabel');
   }
 
   @HostBinding('attr.role') role = 'listbox';
   @HostBinding('attr.tabindex') tabindex = '0';
   @HostBinding('attr.aria-multiselectable') ariaMulti = 'true';
-  @HostBinding('attr.aria-label') label = $localize`:@@luxc.list.arialabel:Liste`;
+  @HostBinding('attr.aria-label') label = this.tService.translate('luxc.list.arialabel');
 
   @HostListener('focus', ['$event']) onFocus(event: FocusEvent) {
     if (event.relatedTarget === null || 'lux-list-item' !== this.getTagName(event)) {
@@ -87,7 +90,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const defaultLabel = $localize`:@@luxc.list.arialabel:Liste`;
+    const defaultLabel = this.tService.translate('luxc.list.arialabel');
     if (this.label === defaultLabel) {
       console.warn(
         'lux-list:\n' +

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxMenuComponent } from '../../../lux-action/lux-menu/lux-menu.component';
 import { LuxAriaDescribedbyDirective } from '../../../lux-directives/lux-aria/lux-aria-describedby.directive';
@@ -29,7 +30,8 @@ import { LuxFileProgressComponent } from '../lux-file-subcomponents/lux-file-pro
     LuxTagIdDirective,
     LuxAriaDescribedbyDirective,
     LuxMenuItemComponent,
-    LuxMenuComponent
+    LuxMenuComponent,
+    TranslocoPipe
   ]
 })
 export class LuxFileInputAcComponent extends LuxFormFileBase<ILuxFileObject | null> implements AfterViewInit {
@@ -50,25 +52,25 @@ export class LuxFileInputAcComponent extends LuxFormFileBase<ILuxFileObject | nu
     disabled: false,
     hidden: false,
     iconName: 'lux-programming-cloud-upload',
-    label: $localize`:@@luxc.form-file-base.upload.action.lbl:Hochladen`
+    label: ''
   };
   _luxDeleteActionConfig: ILuxFileActionConfig = {
     disabled: false,
     hidden: false,
     iconName: 'lux-interface-delete-bin-2',
-    label: $localize`:@@luxc.form-file-base.delete.action.lbl:Löschen`
+    label: ''
   };
   _luxViewActionConfig: ILuxFileActionConfig = {
     disabled: false,
     hidden: true,
     iconName: 'lux-interface-edit-view',
-    label: $localize`:@@luxc.form-file-base.view.action.lbl:Ansehen`
+    label: ''
   };
   _luxDownloadActionConfig: ILuxFileActionConfig = {
     disabled: false,
     hidden: true,
     iconName: 'lux-interface-download-button-2',
-    label: $localize`:@@luxc.form-file-base.download.action.lbl:Download`
+    label: ''
   };
 
   get luxUploadActionConfig(): ILuxFileActionConfig {
@@ -213,7 +215,7 @@ export class LuxFileInputAcComponent extends LuxFormFileBase<ILuxFileObject | nu
 
   protected override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['required']) {
-      return $localize`:@@luxc.file-input.error_message.required:Es muss eine Datei ausgewählt werden`;
+      return this.tService.translate('luxc.file-input.error_message.required');
     }
     return super.errorMessageModifier(value, errors);
   }

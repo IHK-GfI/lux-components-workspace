@@ -6,6 +6,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxCardActionsComponent } from './lux-card-subcomponents/lux-card-actions.component';
@@ -17,7 +18,7 @@ import { LuxCardComponent } from './lux-card.component';
 describe('LuxCardComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideNoopAnimations()]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideNoopAnimations(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 

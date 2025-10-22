@@ -209,16 +209,16 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
 
   override errorMessageModifier(_value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['matDatepickerMin']) {
-      return $localize`:@@luxc.datetimepicker.error_message.min:Das Datum unterschreitet den Minimalwert`;
+      return this.tService.translate('luxc.datetimepicker.error_message.min');
     } else if (errors['matDatepickerMax']) {
-      return $localize`:@@luxc.datetimepicker.error_message.max:Das Datum überschreitet den Maximalwert`;
+      return this.tService.translate('luxc.datetimepicker.error_message.max');
     } else if (errors['matDatepickerParse']) {
-      return $localize`:@@luxc.datetimepicker.error_message.invalid:Die Datum-/Uhrzeitkombination ist ungültig`;
+      return this.tService.translate('luxc.datetimepicker.error_message.invalid');
     } else if (errors['required']) {
       if (this.dateTimePickerInputEl && this.dateTimeInputValue) {
-        return $localize`:@@luxc.datetimepicker.error_message.invalid:Die Datum-/Uhrzeitkombination ist ungültig`;
+        return this.tService.translate('luxc.datetimepicker.error_message.invalid');
       } else {
-        return $localize`:@@luxc.datetimepicker.error_message.empty:Das Datum darf nicht leer sein`;
+        return this.tService.translate('luxc.datetimepicker.error_message.empty');
       }
     }
 

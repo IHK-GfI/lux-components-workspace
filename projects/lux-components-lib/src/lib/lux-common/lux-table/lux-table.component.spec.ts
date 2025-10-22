@@ -11,6 +11,7 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
@@ -34,6 +35,7 @@ describe('LuxTableComponent', () => {
         provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideLuxTranslocoTesting(),
         { provide: LuxMediaQueryObserverService, useClass: MockMediaObserverService },
         { provide: LuxConsoleService, useClass: MockConsoleService }
       ]

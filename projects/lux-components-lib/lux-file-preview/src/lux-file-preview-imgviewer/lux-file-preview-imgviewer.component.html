@@ -6,8 +6,7 @@
     (luxClicked)="onZoomIn()"
     [luxRaised]="true"
     luxTagId="file-preview-zoomin-btn"
-    luxAriaLabel="Hinein zoomen"
-    i18n-luxAriaLabel="@@luxc.file-preview.imgviewer.zoomin.arialabel"
+    luxAriaLabel="{{ 'luxc.file-preview.imgviewer.zoomin.arialabel' | transloco}}"
   ></lux-button>
   } @if (zoomActive) {
   <lux-button
@@ -16,8 +15,7 @@
     (luxClicked)="onZoomOut()"
     [luxRaised]="true"
     luxTagId="file-preview-zoomout-btn"
-    luxAriaLabel="Heraus zoomen"
-    i18n-luxAriaLabel="@@luxc.file-preview.imgviewer.zoomout.arialabel"
+    luxAriaLabel="{{ 'luxc.file-preview.imgviewer.zoomout.arialabel' | transloco}}"
   ></lux-button>
   }
   <lux-button
@@ -27,7 +25,7 @@
     luxColor="accent"
     [luxRaised]="true"
     [luxTagId]="downloadTagId"
-    [luxAriaLabel]="downloadAriaLabel"
+    luxAriaLabel="{{ 'luxc.file-preview.download.arialabel' | transloco}}"
   ></lux-button>
   <lux-button
     class="lux-file-preview-toolbar-close-button"
@@ -35,7 +33,7 @@
     (luxClicked)="onClose()"
     [luxRaised]="true"
     [luxTagId]="closeTagId"
-    [luxAriaLabel]="closeAriaLabel"
+    luxAriaLabel="{{ 'luxc.file-preview.close.arialabel' | transloco}}"
   ></lux-button>
 </lux-file-preview-toolbar>
 

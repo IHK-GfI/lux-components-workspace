@@ -1,7 +1,7 @@
 <div [class]="animDurationCSS" [ngClass]="['lux-progress-' + luxSize, luxType === 'Spinner' ? 'spinner-padding' : '']">
   @switch (luxType) { @case ('Progressbar') {
   <mat-progress-bar
-    [luxAriaLabel]="luxAriaLabel"
+    luxAriaLabel="{{ luxAriaLabel || ('luxc.progress.arialabel' | transloco) }}"
     luxTagIdHandler
     [luxTagId]="luxTagId"
     [luxCustomTagId]="luxTagId"
@@ -12,7 +12,7 @@
   </mat-progress-bar>
   } @case ('Spinner') {
   <mat-progress-spinner
-    [luxAriaLabel]="luxAriaLabel"
+    luxAriaLabel="{{ luxAriaLabel || ('luxc.progress.arialabel' | transloco) }}"
     luxTagIdHandler
     [luxTagId]="luxTagId"
     [luxCustomTagId]="luxTagId"

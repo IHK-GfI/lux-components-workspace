@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from './lux-button.component';
 
 describe('LuxButtonComponent', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideLuxTranslocoTesting()]
+    }).compileComponents();
+  });
+
   describe('Attribut "luxClicked"', () => {
     let fixture: ComponentFixture<MockButtonComponent>;
     let testComponent: MockButtonComponent;

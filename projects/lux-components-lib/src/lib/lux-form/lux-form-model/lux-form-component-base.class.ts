@@ -14,6 +14,7 @@ import {
   inject
 } from '@angular/core';
 import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
@@ -52,6 +53,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected cdr = inject(ChangeDetectorRef);
   protected logger = inject(LuxConsoleService);
   protected configService = inject(LuxComponentsConfigService);
+  protected tService = inject(TranslocoService);
 
   inForm = false;
   formGroup!: FormGroup;
@@ -216,7 +218,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
         return errorMsg;
       }
       // Last-but-not-least => versuchen einen Standardfehler auszulesen
-      errorMsg = LuxUtil.getErrorMessage(this.formControl as FormControl<T>);
+      errorMsg = LuxUtil.getErrorMessage(this.tService, this.formControl as FormControl<T>);
     }
 
     return errorMsg;

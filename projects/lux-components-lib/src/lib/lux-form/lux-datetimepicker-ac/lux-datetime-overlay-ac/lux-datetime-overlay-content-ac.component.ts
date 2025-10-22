@@ -2,7 +2,9 @@ import { ComponentType } from '@angular/cdk/portal';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { MatCalendar } from '@angular/material/datepicker';
 import { MatError } from '@angular/material/form-field';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
+import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
 import { LuxCardActionsComponent } from '../../../lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentComponent } from '../../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';
@@ -27,7 +29,9 @@ import { LuxDatetimeOverlayAcComponent } from './lux-datetime-overlay-ac.compone
     LuxDividerComponent,
     LuxCardActionsComponent,
     LuxButtonComponent,
-    LuxIconComponent
+    LuxIconComponent,
+    LuxAriaLabelDirective,
+    TranslocoPipe
   ]
 })
 export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewInit {

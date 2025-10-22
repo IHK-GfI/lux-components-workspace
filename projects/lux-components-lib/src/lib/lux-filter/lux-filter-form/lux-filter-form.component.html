@@ -9,7 +9,7 @@
     [luxHideToggle]="true"
   >
     <lux-panel-header-title class="lux-filter-panel-header">
-      {{ luxTitle }}
+      {{ luxTitle || ('luxc.filter.title' | transloco) }}
       @if (luxFilterExpanded && !luxHideMenu) {
       <ng-container *ngTemplateOutlet="filterActionTemplate"></ng-container>
       }
@@ -27,10 +27,10 @@
 <!-- Template für die Darstellung des Lux-Filter-Forms in einer Lux-Card -->
 @if (luxShowAsCard) {
 <lux-card
-  luxTitle="{{ luxTitle }}"
+  luxTitle="{{ luxTitle || ('luxc.filter.title' | transloco) }}"
   [(luxExpanded)]="luxFilterExpanded"
-  [luxExpandedLabelOpen]="luxExpandedLabelOpen"
-  [luxExpandedLabelClose]="luxExpandedLabelClose"
+  luxExpandedLabelOpen="{{ luxExpandedLabelOpen || ('luxc.filter.expandedLabel.open' | transloco) }}"
+  luxExpandedLabelClose="{{ luxExpandedLabelClose || ('luxc.filter.expandedLabel.close' | transloco) }}"
   class="lux-filter-card"
   luxTagId="luxFilterCard"
 >
@@ -66,7 +66,7 @@
 <!-- Filter-Button ist jetzt vom Menü getrennt -->
 <ng-template #filterButtonTemplate>
   <lux-button
-    [luxLabel]="luxButtonFilterLabel"
+    luxLabel="{{ luxButtonFilterLabel || ('luxc.filter.filter.btn' | transloco) }}"
     [luxColor]="luxButtonFilterColor"
     [luxStroked]="!luxButtonFlat"
     [luxFlat]="luxButtonFlat"
@@ -79,23 +79,23 @@
 </ng-template>
 <!-- die Menü-Leiste mit den Filterfunktionen ist in beiden Darstellungen gleich -->
 <ng-template #filterActionTemplate>
-  <lux-menu luxAriaMenuTriggerLabel="Menü" i18n-luxAriaMenuTriggerLabel="@@luxc.menu.trigger.btn" [luxDisplayExtended]="false" class="filter-menu">
+  <lux-menu luxAriaMenuTriggerLabel="{{ 'luxc.menu.trigger.btn' | transloco }}" [luxDisplayExtended]="false" class="filter-menu">
     <lux-menu-item
-      [luxLabel]="luxButtonResetLabel"
+      luxLabel="{{ luxButtonResetLabel || ('luxc.filter.reset.btn' | transloco) }}"
       [luxAlwaysVisible]="false"
       [luxColor]="luxButtonResetColor"
       (luxClicked)="onReset()"
     ></lux-menu-item>
     @if (hasSaveAction) {
     <lux-menu-item
-      [luxLabel]="luxButtonSaveLabel"
+      luxLabel="{{ luxButtonSaveLabel || ('luxc.filter.save.btn' | transloco) }}"
       [luxAlwaysVisible]="false"
       [luxColor]="luxButtonSaveColor"
       (luxClicked)="openSaveDialog()"
     ></lux-menu-item>
     } @if (hasLoadAction) {
     <lux-menu-item
-      [luxLabel]="luxButtonLoadLabel"
+      luxLabel="{{ luxButtonLoadLabel || ('luxc.filter.load.btn' | transloco) }}"
       [luxAlwaysVisible]="false"
       [luxColor]="luxButtonLoadColor"
       (luxClicked)="openLoadDialog()"
@@ -104,7 +104,7 @@
 
     <lux-menu-trigger>
       <lux-button
-        luxLabel="Menü" i18n-luxluxLabel="@@luxc.menu.trigger.btn"
+        luxLabel="{{ 'luxc.menu.trigger.btn' | transloco }}"
         [luxRounded]="true"
         luxIconName="lux-interface-setting-menu-vertical"
         class="lux-filter-menu-trigger"
@@ -118,7 +118,7 @@
 <!-- Chips mit den Filterfunktionen unterhalb des Filter-Formulars (optional) -->
 @if (this.filterItems.length === 0 && !luxFilterExpanded && luxShowChips && initComplete) {
 <div class="lux-label" [ngClass]="{ 'no-filter-active': !isMobile, 'no-filter-active-sm': isMobile }">
-  {{ luxDefaultFilterMessage }}
+  {{ luxDefaultFilterMessage || ('luxc.filter.defaultFilterMessage' | transloco) }}
 </div>
 } @if (this.filterItems.length > 0 && !luxFilterExpanded && luxShowChips && initComplete) {
 <lux-chips-ac luxAriaLabel="Filterchips" luxAriaLabelSelector="mat-chip-grid" [luxHideBorder]="luxHideChipsBorder" class="filter-item">

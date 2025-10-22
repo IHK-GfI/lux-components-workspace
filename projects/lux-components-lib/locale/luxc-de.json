@@ -1,0 +1,235 @@
+{
+  "luxc": {
+    "app-footer": {
+      "ariarolefooter": "Fußzeilenbereich / Buttonbereich",
+      "version": "Version {{version}}"
+    },
+    "app-header": {
+      "aria.appmenu.btn": "Anwendungsmenü / Navigation",
+      "aria.role_header.lbl": "Kopfbereich / Menübereich",
+      "aria.title.image.lbl": "Titelbild",
+      "aria.title.link.lbl": "",
+      "aria.title_icon.lbl": "Titelicon",
+      "aria.usermenu.btn": "Benutzermenü / Navigation",
+      "lang.select.trigger": "Spracheinstellungen",
+      "user.menu.trigger": "Benutzermenü"
+    },
+    "app_content": {
+      "ariarolemain": "Inhaltsbereich"
+    },
+    "autocomplete": {
+      "error_message.not_an_option": "Der eingegebene Wert ist nicht Teil der Auswahl."
+    },
+    "card": {
+      "expandedLabel.close": "Weniger",
+      "expandedLabel.open": "Mehr"
+    },
+    "chips": {
+      "input.placeholder.lbl": "eingeben oder auswählen",
+      "remove": "entfernen"
+    },
+    "datepicker": {
+      "error_message.empty": "Das Datum darf nicht leer sein",
+      "error_message.invalid": "Das Datum ist ungültig",
+      "error_message.max": "Das Datum überschreitet den Maximalwert",
+      "error_message.min": "Das Datum unterschreitet den Minimalwert",
+      "next.month.arialabel": "nächster Monat",
+      "prev.month.arialabel": "vorheriger Monat"
+    },
+    "datetimepicker": {
+      "error_message.empty": "Das Datum darf nicht leer sein",
+      "error_message.invalid": "Die Datum-/Uhrzeitkombination ist ungültig",
+      "error_message.max": "Das Datum überschreitet den Maximalwert",
+      "error_message.min": "Das Datum unterschreitet den Minimalwert",
+      "invalid.date": "Bitte wählen Sie ein Datum aus",
+      "invalid.time": "Bitte geben Sie eine Zeit ein",
+      "panel.hours.arialabel": "Stunden",
+      "panel.minutes.arialabel": "Minuten"
+    },
+    "dialog": {
+      "btn.close.arialabel": "Dialog schließen"
+    },
+    "dialog-preset": {
+      "cancel": "Ablehnen",
+      "ok": "Bestätigen"
+    },
+    "errorpage": {
+      "error_number": "Fehlernummer: {{errorId}}",
+      "error_title": "Fehlermeldung"
+    },
+    "file": {
+      "delete.dialog.cancel.lbl": "Abbrechen",
+      "delete.dialog.content": "Wenn Sie die Datei löschen, wird diese unwiderruflich gelöscht.",
+      "delete.dialog.delete.lbl": "Löschen",
+      "delete.dialog.title": "Wollen Sie die Datei wirklich löschen?",
+      "rename.dialog.cancel.lbl": "Abbrechen",
+      "rename.dialog.rename.lbl": "Umbenennen",
+      "rename.dialog.title": "Wollen Sie die Datei umbenennen?",
+      "rename.input.lbl": "Neuer Dateiname",
+      "replace.dialog.cancel.lbl": "Abbrechen",
+      "replace.dialog.content": "Wenn Sie eine neue Datei auswählen, wird die vorhandene Datei ersetzt.",
+      "replace.dialog.content.multiple": "Wenn Sie Dateien mit gleichen Namen hochladen, werden diese ersetzt.",
+      "replace.dialog.deleteprotection": "Es soll eine Datei ersetzt werden, die weder erstetzt noch gelöscht werden darf!",
+      "replace.dialog.replace.lbl": "Ersetzen",
+      "replace.dialog.title": "Wollen Sie fortfahren und die Datei ersetzen?",
+      "replace.dialog.title.multiple": "Wollen Sie fortfahren und die Dateien mit gleichen Namen ersetzen?",
+      "upload.delete.btn.arialabel": "Button zum Löschen der Datei {{fileName}}",
+      "upload.error_message.max_file_size": "Die Datei \"{{fileName}}\" überschreitet die maximal zulässige Dateigröße von {{maxSizeMB}} Megabytes.",
+      "upload.error_message.not_accepted": "Die Datei \"{{fileName}}\" entspricht keinem akzeptierten Dateityp. Es sind nur Dateien vom Typ {{acceptTypes}} erlaubt.",
+      "upload.error_message.only_one_file": "Es darf nur eine Datei hochgeladen werden.",
+      "upload.error_message.read_error": "Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.",
+      "upload.error_message.upload_error": "Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.",
+      "upload.file.type.concat": "oder",
+      "upload.label": "Zum Hochladen Datei hier ablegen oder ",
+      "upload.label.link": "Datei durchsuchen",
+      "upload.label.link.short": "Datei hochladen"
+    },
+    "file-input": {
+      "error_message.required": "Es muss eine Datei ausgewählt werden"
+    },
+    "file-list": {
+      "delete.lbl": "Löschen",
+      "delete_title.lbl": "Alle Dateien entfernen",
+      "error_message.required": "Es muss eine Datei ausgewählt werden",
+      "upload.lbl": "Hochladen",
+      "upload_title.lbl": "Neue Dateien hochladen"
+    },
+    "file-preview": {
+      "close.arialabel": "Dateivorschau schließen",
+      "download.arialabel": "Datei herunterladen",
+      "filter-load-dialog.close.lbl": "Schließen",
+      "filter-load-dialog.delete.lbl": "Löschen",
+      "filter-load-dialog.load.lbl": "Laden",
+      "filter-load-dialog.title": "Filter",
+      "filter-save-dialog.cancel.lbl": "Abbrechen",
+      "filter-save-dialog.name.lbl": "Name",
+      "filter-save-dialog.save.lbl": "Speichern",
+      "filter-save-dialog.title": "Filter speichern",
+      "imgviewer.zoomin.arialabel": "Hinein zoomen",
+      "imgviewer.zoomout.arialabel": "Heraus zoomen",
+      "notsupportedviewer.close.arialabel": "Dateivorschau schließen",
+      "notsupportedviewer.download.arialabel": "Datei herunterladen",
+      "notsupportedviewer.download.lbl": "Download...",
+      "notsupportedviewer.download.dialog.lbl": "Zur Ansicht Downloaden",
+      "notsupportedviewer.message": "Dieses Dateiformat kann in der Vorschau nicht angezeigt werden."
+    },
+    "filter": {
+      "defaultFilterMessage": "Es wird nach den Standardeinstellungen gefiltert.",
+      "expandedLabel.close": "Weniger Optionen",
+      "expandedLabel.open": "Mehr Optionen",
+      "filter.btn": "Filtern",
+      "load.btn": "Laden",
+      "reset.btn": "Zurücksetzen",
+      "save.btn": "Speichern",
+      "title": "Filter"
+    },
+    "form": {
+      "delete.error.button": "Fehlermeldung löschen"
+    },
+    "form-checkable-base": {
+      "error_message.required": "Das ist ein Pflichtfeld"
+    },
+    "form-file-base": {
+      "delete.action.lbl": "Löschen",
+      "delete.all_files.announce": "Alle Dateien werden entfernt.",
+      "delete.one_file.announce": "Die Datei {{fileName}} wird entfernt.",
+      "download.action.lbl": "Download",
+      "error_message.max_file_count": "Es dürfen maximal {{maxFileCount}} Dateien ausgewählt werden",
+      "error_message.max_file_size": "Die Datei \"{{fileName}}\" überschreitet mit {{fileSizeInMB}}MB die erlaubte Dateigröße von {{maxSizeMB}}MB",
+      "error_message.not_accepted": "Die Datei \"{{fileName}}\" hat einen nicht akzeptierten Dateityp",
+      "error_message.only_one_file": "Es darf nur eine Datei ausgewählt werden",
+      "error_message.read_error": "Beim Lesen der Datei \"{{fileName}}\" ist ein Fehler aufgetreten",
+      "error_message.upload.no_files": "Das Hochladen ist fehlgeschlagen",
+      "error_message.upload.with_file": "Das Hochladen der Datei ist fehlgeschlagen",
+      "error_message.upload.with_files": "Das Hochladen der Dateien ist fehlgeschlagen",
+      "upload.action.lbl": "Hochladen",
+      "upload.file.announce": "Bitte warten. Die Dateien werden verarbeitet.",
+      "upload.files.announce": "Bitte warten. Die Datei wird verarbeitet.",
+      "view.action.lbl": "Ansehen"
+    },
+    "lang-select": {
+      "aria.langmenu.btn": "Sprachmenü"
+    },
+    "list": {
+      "arialabel": "Liste",
+      "empty_label": "Keine Einträge vorhanden"
+    },
+    "lookup": {
+      "error_message.invalid": "Der ausgewählte Wert ist ungültig."
+    },
+    "lookup-autocomplete": {
+      "error_message.not_available": "Der eingegebene Eintrag ist nicht Teil der Schlüsseltabelle."
+    },
+    "master-detail": {
+      "back-to-master-label": "Zurück zur Liste",
+      "detail.empty_label": "Kein Element ausgewählt",
+      "header.close.btn": "Masterliste zuklappen",
+      "header.open.btn": "Masterliste aufklappen",
+      "master.empty_label": "Keine Einträge vorhanden"
+    },
+    "menu": {
+      "trigger.btn": "Menü"
+    },
+    "message": {
+      "announce.0_messages": "Es gibt keine Meldungen.",
+      "announce.1_message": "Es gibt eine Meldung.",
+      "announce.x_messages": "Es gibt {{count}} Meldungen.",
+      "btn.close.arialabel": "Meldung schließen",
+      "container.arialabel": "Meldungen"
+    },
+    "paginator": {
+      "0_until_length": "0 von {{length}}",
+      "elements_on_page": "Elemente pro Seite",
+      "first_page": "Erste Seite",
+      "last_page": "Letzte Seite",
+      "next_page": "Nächste Seite",
+      "page_part": "{{start}} - {{end}} von {{length}}",
+      "previous_page": "Vorherige Seite"
+    },
+    "progress": {
+      "arialabel": "Ladeanzeige"
+    },
+    "relative-timestamp": {
+      "ago": "vor",
+      "days": "Tagen",
+      "future": "{{prefix}} {{timeUnits}} {{timeDelta}}",
+      "in": "in",
+      "months": "Monaten",
+      "past": "{{prefix}} {{timeUnits}} {{timeDelta}}",
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "weeks": "Wochen",
+      "years": "Jahren",
+      "yesterday": "Gestern"
+    },
+    "side-nav": {
+      "ariarolenavigation": "Anwendungsmenü / Navigation"
+    },
+    "stepper": {
+      "back.btn": "Zurück",
+      "finish.btn": "Abschließen",
+      "next.btn": "Weiter"
+    },
+    "stepper-large": {
+      "error_message.steps_not_completed": "Die Angaben in Schritt {{i}} sind unvollständig oder fehlerhaft. Bitte korrigieren Sie erst Ihre Angaben in diesem Schritt."
+    },
+    "table": {
+      "column.selector.lbl": "Spalten ausblenden",
+      "multiselect.all.chk.arialabel": "Alle Einträge",
+      "multiselect.chk.arialabel": "Reihe {{i}}",
+      "sort.announce": "Spalte {{column}} {{direction}} sortiert",
+      "sort.ascending": "aufsteigend",
+      "sort.descending": "absteigend",
+      "sort.no_longer": "nicht mehr"
+    },
+    "util": {
+      "error_message.email": "Dies ist keine gültige E-Mailadresse",
+      "error_message.max": "Der Maximalwert ist {{max}}",
+      "error_message.maxlength": "Die Maximallänge ist {{maxlength}}",
+      "error_message.min": "Der Minimalwert ist {{min}}",
+      "error_message.minlength": "Die Mindestlänge ist {{minlength}}",
+      "error_message.pattern": "Entspricht nicht dem Muster \"{{pattern}}\"",
+      "error_message.required": "* Pflichtfeld"
+    }
+  }
+}

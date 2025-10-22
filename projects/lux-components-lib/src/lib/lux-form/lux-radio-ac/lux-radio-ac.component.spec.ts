@@ -9,6 +9,7 @@ import { MatError } from '@angular/material/form-field';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxUtil } from '../../lux-util/lux-util';
@@ -24,7 +25,8 @@ describe('LuxRadioAcComponent', () => {
         { provide: LuxMediaQueryObserverService, useClass: MockMediaObserver },
         provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
       ]
     }).compileComponents();
   }));

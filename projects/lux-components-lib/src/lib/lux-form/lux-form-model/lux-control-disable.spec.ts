@@ -13,6 +13,7 @@ import { LuxCheckboxAcComponent } from '../lux-checkbox-ac/lux-checkbox-ac.compo
 import { LuxDatepickerAcComponent } from '../lux-datepicker-ac/lux-datepicker-ac.component';
 
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxFileInputAcComponent } from '../lux-file/lux-file-input-ac/lux-file-input-ac.component';
 import { LuxFileListComponent } from '../lux-file/lux-file-list/lux-file-list.component';
 import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
@@ -28,7 +29,7 @@ describe('LuxControlDisable', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 

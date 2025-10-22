@@ -45,13 +45,13 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
   private queryService = inject(LuxMediaQueryObserverService);
 
   private readonly _DEFAULT_PREV_BTN_CONF: ILuxStepperButtonConfig = {
-    label: $localize`:@@luxc.stepper.back.btn:Zurück`
+    label:''
   };
   private readonly _DEFAULT_NEXT_BTN_CONF: ILuxStepperButtonConfig = {
-    label: $localize`:@@luxc.stepper.next.btn:Weiter`
+    label: ''
   };
   private readonly _DEFAULT_FIN_BTN_CONF: ILuxStepperButtonConfig = {
-    label: $localize`:@@luxc.stepper.finish.btn:Abschließen`,
+    label: '',
     color: 'primary'
   };
 

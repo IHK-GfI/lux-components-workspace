@@ -1,0 +1,28 @@
+{
+  "app": {
+    "menu": {
+      "components": "Komponenten",
+      "iconSearch": "Iconsuche",
+      "forms": "Formulare",
+      "baseline": "Baseline",
+      "configuration": "Konfiguration"
+    },
+    "footer": {
+      "link.dataProtection": "Datenschutz",
+      "link.impressum": "Impressum",
+      "link.licenseHint": "Lizenzhinweis"
+    }
+  },
+  "home": {
+    "tile.components.title": "Komponenten",
+    "tile.components.subtitle": "Alle Komponenten auf einem Blick",
+    "tile.iconSearch.title": "Iconsuche",
+    "tile.iconSearch.subtitle": "Das neue Iconset für die LUX-Components",
+    "tile.forms.title": "Formulare",
+    "tile.forms.subtitle": "Layoutbeispiele für Formulare",
+    "tile.baseline.title": "Baseline",
+    "tile.baseline.subtitle": "Vergleich der Form-Controls",
+    "tile.configuration.title": "Konfiguration",
+    "tile.configuration.subtitle": "Einstellungen ändern"
+  }
+}

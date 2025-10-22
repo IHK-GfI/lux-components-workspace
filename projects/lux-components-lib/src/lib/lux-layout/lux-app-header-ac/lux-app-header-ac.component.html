@@ -1,7 +1,7 @@
 <div
   class="lux-app-header-ac-container lux-flex lux-flex-col"
-  [luxAriaRole]="luxAriaRoleHeaderLabel ? 'banner' : undefined"
-  [luxAriaLabel]="luxAriaRoleHeaderLabel"
+  [luxAriaRole]="'banner'"
+  luxAriaLabel="{{ luxAriaRoleHeaderLabel || ('luxc.app-header.aria.role_header.lbl' | transloco) }}"
 >
   <!-- Top-Bar -->
   <div class="lux-app-header-top-bar-bg">
@@ -19,8 +19,8 @@
         [luxImageHeight]="mobileView ? '24px' : '40px'"
         class="lux-brand-logo"
         [ngClass]="{ 'lux-brand-logo-mobile': mobileView }"
-        [luxAlt]="luxAriaTitleImageLabel"
-        [luxAriaLabel]="luxAriaTitleImageLabel"
+        luxAlt="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
+        luxAriaLabel="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
         luxTagId="lux-brand-logo-button"
         (luxClicked)="onBrandLogoClicked($event)"
       ></lux-image>
@@ -35,15 +35,15 @@
         [luxImageSrc]="luxAppLogoSrc"
         luxImageHeight="40px"
         class="lux-app-logo"
-        [luxAlt]="luxAriaTitleIconLabel"
-        [luxAriaLabel]="luxAriaTitleIconLabel"
+        luxAlt="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
+        luxAriaLabel="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
         (luxClicked)="onAppLogoClicked($event)"
       ></lux-image>
       } @if (!luxAppLogoSrc && !mobileView) {
       <div class="lux-app-logo-empty"></div>
       }
       <!-- Action-Nav / Lang-Select / User-Menu -->
-      <div class="header-menu-container lux-flex lux-justify-end lux-items-center" [luxAriaLabel]="luxAriaUserMenuButtonLabel">
+      <div class="header-menu-container lux-flex lux-justify-end lux-items-center" luxAriaLabel="{{ luxAriaUserMenuButtonLabel || ('luxc.app-header.aria.usermenu.btn' | transloco) }}">
         @if (actionNav) {
         <div class="lux-action-nav-ac-container lux-flex lux-flex-shrink-0">
           @if (actionNav) {
@@ -93,12 +93,11 @@
               [luxIconName]="luxUserName ? 'lux-interface-user-check' : 'lux-interface-user-single'"
               luxColor="primary"
               class="user-menu-trigger-ac"
-              luxAriaLabel="Benutzermenü"
-              i18n-luxAriaLabel="@@luxc.app-header.user.menu.trigger"
+              luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
               aria-haspopup="true"
               luxTagId="user-menu-trigger-ac"
               [ngClass]="{ 'menu-opened': menuOpened, 'user-menu-trigger-mobile': mobileView }"
-              luxTooltip="Benutzermenü"
+              luxTooltip="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
               [luxTooltipShowDelay]="1500"
               #customTrigger
               luxTagId="lux-user-menu-trigger-btn"

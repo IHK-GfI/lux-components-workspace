@@ -2,6 +2,7 @@ import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
 import { MatProgressBar } from '@angular/material/progress-bar';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxLinkPlainComponent } from '../../../lux-action/lux-link-plain/lux-link-plain.component';
@@ -37,7 +38,8 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
     LuxAriaLabelDirective,
     LuxButtonComponent,
     LuxIconComponent,
-    LuxLinkPlainComponent
+    LuxLinkPlainComponent,
+    TranslocoPipe
   ]
 })
 export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements OnInit, AfterViewInit, OnDestroy {
@@ -47,15 +49,15 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
 
   @ViewChildren('fileEntry', { read: ElementRef }) fileEntries!: QueryList<ElementRef>;
 
-  @Input() override luxLabel = $localize`:@@luxc.file.upload.label:Zum Hochladen Datei hier ablegen oder `;
-  @Input() luxLabelLink = $localize`:@@luxc.file.upload.label.link:Datei durchsuchen`;
-  @Input() luxLabelLinkShort = $localize`:@@luxc.file.upload.label.link.short:Datei hochladen`;
+  @Input() override luxLabel = '';
+  @Input() luxLabelLink = '';
+  @Input() luxLabelLinkShort = '';
   @Input() luxMultiple = true;
   @Input() luxUploadIcon = 'lux-programming-cloud-upload';
   @Input() luxDeleteIcon = '';
   @Input() luxListOnly = false;
 
-  ariaLabelProgress = $localize`:@@luxc.progress.arialabel:Ladeanzeige`;
+  ariaLabelProgress = '';
   theme = this.themeService.getTheme().name;
 
   get luxUploadActionConfig(): ILuxFilesActionConfig {
@@ -102,14 +104,14 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
     disabled: false,
     hidden: false,
     iconName: 'lux-programming-cloud-upload',
-    label: $localize`:@@luxc.file-list.upload.lbl:Hochladen`
+    label: ''
   };
 
   _luxDeleteActionConfig: ILuxFileUploadDeleteActionConfig = {
     disabled: false,
     hidden: false,
     iconName: 'lux-interface-delete-bin-2',
-    label: $localize`:@@luxc.form-file-base.delete.action.lbl:Löschen`,
+    label: '',
     isDeletable: (_file: ILuxFileObject) => {
       return true;
     }
@@ -118,13 +120,13 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
     disabled: false,
     hidden: true,
     iconName: 'lux-interface-edit-view',
-    label: $localize`:@@luxc.form-file-base.view.action.lbl:Ansehen`
+    label: ''
   };
   _luxDownloadActionConfig: ILuxFileActionConfig = {
     disabled: false,
     hidden: true,
     iconName: 'lux-interface-download-button-2',
-    label: $localize`:@@luxc.form-file-base.download.action.lbl:Download`
+    label: ''
   };
 
   subscriptions: Subscription[] = [];
@@ -441,26 +443,28 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   }
 
   protected override getMaxSizeErrorMessage(file: File): string {
-    return $localize`:@@luxc.file.upload.error_message.max_file_size:Die Datei "${file.name}" überschreitet die maximal zulässige Dateigröße von ${this.luxMaxSizeMB} Megabytes.`;
+    return this.tService.translate(`luxc.file.upload.error_message.max_file_size`, {
+      fileName: file.name,
+      maxSizeMB: this.luxMaxSizeMB
+    });
   }
 
   protected override getFileNotAcceptedMessage(file: File): string {
-    return $localize`:@@luxc.file.upload.error_message.not_accepted:Die Datei "${
-      file.name
-    }" entspricht keinem akzeptierten Dateityp. Es sind nur Dateien vom Typ ${LuxUtil.getAcceptTypesAsMessagePart(
-      this.luxAccept
-    )} erlaubt.`;
+    return this.tService.translate(`luxc.file.upload.error_message.not_accepted`, {
+      fileName: file.name,
+      acceptTypes: LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.luxAccept)
+    });
   }
 
   protected override getMultipleForbiddenMessage(): string {
-    return $localize`:@@luxc.file.upload.error_message.only_one_file:Es darf nur eine Datei hochgeladen werden.`;
+    return this.tService.translate(`luxc.file.upload.error_message.only_one_file`);
   }
 
   protected override getReadingFileErrorMessage(file: File): string {
-    return $localize`:@@luxc.file.upload.error_message.read_error:Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.`;
+    return this.tService.translate(`luxc.file.upload.error_message.read_error`);
   }
 
   protected override getUploadFileErrorMessage(files: File[]): string {
-    return $localize`:@@luxc.file.upload.error_message.upload_error:Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.`;
+    return this.tService.translate(`luxc.file.upload.error_message.upload_error`);
   }
 }

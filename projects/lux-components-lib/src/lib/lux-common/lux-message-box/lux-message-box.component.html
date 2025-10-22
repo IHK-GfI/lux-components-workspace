@@ -1,8 +1,7 @@
 @if (luxMessages && luxMessages.length > 0) {
 <div
   @messageBoxVisibility
-  luxAriaLabel="Meldungen"
-  i18n-luxAriaLabel="@@luxc.message.container.arialabel"
+  luxAriaLabel="{{ 'luxc.message.container.arialabel' | transloco}}"
   class="lux-message-box-content"
   tabindex="0"
   #messagebox

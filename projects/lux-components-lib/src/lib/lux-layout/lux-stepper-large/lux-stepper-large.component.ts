@@ -12,6 +12,7 @@ import {
   QueryList,
   inject
 } from '@angular/core';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -33,13 +34,14 @@ import { LuxStepperLargeStepComponent } from './lux-stepper-large-subcomponents/
   selector: 'lux-stepper-large',
   templateUrl: './lux-stepper-large.component.html',
   styleUrls: ['./lux-stepper-large.component.scss'],
-  imports: [NgTemplateOutlet, LuxAriaLabelDirective, NgClass, LuxButtonComponent]
+  imports: [NgTemplateOutlet, LuxAriaLabelDirective, NgClass, LuxButtonComponent, TranslocoPipe]
 })
 export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDestroy {
   private mobileOverlayService = inject(LuxStepperLargeMobileOverlayService);
   private queryService = inject(LuxMediaQueryObserverService);
   private liveAnnouncer = inject(LiveAnnouncer);
   private snackbar = inject(LuxSnackbarService);
+  private tService = inject(TranslocoService);
 
   @ContentChildren(LuxStepperLargeStepComponent) steps!: QueryList<ILuxStepperLargeStep>;
 
@@ -241,7 +243,7 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
       for (let i = this.luxCurrentStepNumber; i < stepIndex; i++) {
         if (this.steps.get(i)!.luxCompleted === false) {
           this.snackbar.open(0, {
-            text: $localize`:@@luxc.stepper-large.error_message.steps_not_completed:Die Angaben in Schritt ${i + 1} sind unvollständig oder fehlerhaft. Bitte korrigieren Sie erst Ihre Angaben in diesem Schritt.`,
+            text: this.tService.translate(`luxc.stepper-large.error_message.steps_not_completed`, { i: i + 1 }),
             action: 'Ok',
             iconName: 'lux-interface-alert-warning-triangle',
             iconColor: 'orange'

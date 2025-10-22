@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxAutofocusDirective } from '../../../../lux-directives/lux-autofocus/lux-autofocus.directive';
 import { LuxDialogRef } from '../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-ref.class';
@@ -18,7 +19,8 @@ import { ILuxFileObject } from '../../lux-file-model/lux-file-object.interface';
     LuxDialogContentComponent,
     LuxDialogActionsComponent,
     LuxButtonComponent,
-    LuxAutofocusDirective
+    LuxAutofocusDirective,
+    TranslocoPipe
   ],
   templateUrl: './lux-file-rename-dialog.component.html',
   styleUrl: './lux-file-rename-dialog.component.scss'

@@ -5,6 +5,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestB
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxAppHeaderRightNavComponent } from '../../../lux-layout/lux-app-header/lux-app-header-subcomponents/lux-app-header-right-nav/lux-app-header-right-nav.component';
 import { LuxSideNavComponent } from '../../../lux-layout/lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav.component';
@@ -20,7 +21,7 @@ describe('LuxSnackbarComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockSnackbarModule],
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
     });
   });
 

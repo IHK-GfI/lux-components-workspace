@@ -1,18 +1,32 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { TranslocoService } from '@jsverse/transloco';
+import { Subscription } from 'rxjs';
 
 @Injectable()
-export class LuxPaginatorIntl extends MatPaginatorIntl {
+export class LuxPaginatorIntl extends MatPaginatorIntl implements OnDestroy {
+
+  private tService = inject(TranslocoService);
+  private langSub?: Subscription;
+
   constructor() {
     super();
-
-    // Original Properties überschreiben
-    this.itemsPerPageLabel = $localize`:@@luxc.paginator.elements_on_page:Elemente pro Seite`;
-    this.nextPageLabel = $localize`:@@luxc.paginator.next_page:Nächste Seite`;
-    this.previousPageLabel = $localize`:@@luxc.paginator.previous_page:Vorherige Seite`;
-    this.lastPageLabel = $localize`:@@luxc.paginator.last_page:Letzte Seite`;
-    this.firstPageLabel = $localize`:@@luxc.paginator.first_page:Erste Seite`;
+    this.updateLabels();
     this.getRangeLabel = this.customRangeLabel;
+
+    // Bei Sprachwechsel Labels aktualisieren
+    this.langSub = this.tService.langChanges$.subscribe(() => {
+      this.updateLabels();
+      this.changes.next();
+    });
+  }
+
+  private updateLabels() {
+    this.itemsPerPageLabel = this.tService.translate('luxc.paginator.elements_on_page');
+    this.nextPageLabel = this.tService.translate('luxc.paginator.next_page');
+    this.previousPageLabel = this.tService.translate('luxc.paginator.previous_page');
+    this.lastPageLabel = this.tService.translate('luxc.paginator.last_page');
+    this.firstPageLabel = this.tService.translate('luxc.paginator.first_page');
   }
 
   /**
@@ -23,12 +37,16 @@ export class LuxPaginatorIntl extends MatPaginatorIntl {
    */
   private customRangeLabel(page: number, pageSize: number, length: number) {
     if (length === 0 || pageSize === 0) {
-      return $localize`:@@luxc.paginator.0_until_length:0 von ${length}`;
+      return this.tService.translate('luxc.paginator.0_until_length', { length });
     }
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
     // If the start index exceeds the list length, do not try and fix the end index to the end.
     const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-    return $localize`:@@luxc.paginator.page_part:${startIndex + 1} - ${endIndex} von ${length}`;
+    return this.tService.translate('luxc.paginator.page_part', { start: startIndex + 1, end: endIndex, length });
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
   }
 }

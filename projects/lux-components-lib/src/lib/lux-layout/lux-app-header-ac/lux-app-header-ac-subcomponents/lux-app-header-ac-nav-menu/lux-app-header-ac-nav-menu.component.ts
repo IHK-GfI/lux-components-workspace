@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, ContentChildren, Input, OnDestroy, QueryList, inject } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxMenuItemComponent } from '../../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -12,7 +13,7 @@ import { LuxAppHeaderAcNavMenuItemComponent } from './lux-app-header-ac-nav-menu
 @Component({
   selector: 'lux-app-header-ac-nav-menu',
   templateUrl: './lux-app-header-ac-nav-menu.component.html',
-  imports: [NgClass, LuxAriaLabelDirective, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxButtonComponent, LuxMenuComponent]
+  imports: [NgClass, LuxAriaLabelDirective, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxButtonComponent, LuxMenuComponent, TranslocoPipe]
 })
 export class LuxAppHeaderAcNavMenuComponent implements OnDestroy {
   private queryService = inject(LuxMediaQueryObserverService);

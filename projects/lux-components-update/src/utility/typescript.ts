@@ -321,12 +321,20 @@ export function removeImport(tree: Tree, filePath: string, packageName: string, 
 }
 
 export function addComponentImport(tree: Tree, filePath: string, importName: string, logMessage = true) {
+  addComponent(tree, filePath, "imports", importName, logMessage);
+}
+
+export function addComponentProvider(tree: Tree, filePath: string, importName: string, logMessage = true) {
+  addComponent(tree, filePath, "providers", importName, logMessage);
+}
+
+export function addComponent(tree: Tree, filePath: string, property:string, importName: string, logMessage = true) {
   const content = (tree.read(filePath) as Buffer).toString();
   const fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
   const sourceFile = ts.createSourceFile(`${fileName}`, content, ts.ScriptTarget.Latest, true);
   const nodes = getSourceNodes(sourceFile);
 
-  const importIdentifierNode = nodes.find((n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === 'imports');
+  const importIdentifierNode = nodes.find((n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === property);
 
   if (importIdentifierNode) {
     const siblings = importIdentifierNode.parent.getChildren();
@@ -347,7 +355,7 @@ export function addComponentImport(tree: Tree, filePath: string, importName: str
 
                 tree.commitUpdate(updateRecorder);
                 if (logMessage) {
-                  logInfo(`import ${importName} hinzugefügt.`);
+                  logInfo(`${property} ${importName} hinzugefügt.`);
                 }
               }
             } else {
@@ -356,7 +364,7 @@ export function addComponentImport(tree: Tree, filePath: string, importName: str
 
               tree.commitUpdate(updateRecorder);
               if (logMessage) {
-                logInfo(`import ${importName} hinzugefügt.`);
+                logInfo(`${property} ${importName} hinzugefügt.`);
               }
             }
           }
@@ -369,11 +377,11 @@ export function addComponentImport(tree: Tree, filePath: string, importName: str
     if (selectIdentifierNode) {
       const lastNode = selectIdentifierNode.parent.getChildren()[selectIdentifierNode.parent.getChildren().length - 1];
       const updateRecorder = tree.beginUpdate(filePath);
-      updateRecorder.insertLeft(lastNode.end, `,\n  imports: [${importName}]`);
+      updateRecorder.insertLeft(lastNode.end, `,\n  ${property}: [${importName}]`);
 
       tree.commitUpdate(updateRecorder);
       if (logMessage) {
-        logInfo(`import ${importName} hinzugefügt.`);
+        logInfo(`${property} ${importName} hinzugefügt.`);
       }
     }
   }

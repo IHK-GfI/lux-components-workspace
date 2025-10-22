@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxCustomTagIdDirective } from '../../lux-directives/lux-tag-id/lux-custom-tag-id.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
@@ -15,7 +16,7 @@ export declare type LuxProgressSizeType = 'small' | 'medium' | 'large';
   selector: 'lux-progress',
   templateUrl: './lux-progress.component.html',
   styleUrls: ['./lux-progress.component.scss'],
-  imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner]
+  imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner, TranslocoPipe]
 })
 export class LuxProgressComponent {
   readonly DEFAULT_PROGRESS_COLOR: LuxProgressColor = 'blue';
@@ -28,7 +29,7 @@ export class LuxProgressComponent {
   typeCSS = '';
 
   @Input() luxValue = 0;
-  @Input() luxAriaLabel = $localize`:@@luxc.progress.arialabel:Ladeanzeige`;
+  @Input() luxAriaLabel = ''
   // Nur für ProgressBar
   @Input() luxSize: LuxProgressSizeType = 'medium';
   @Input() luxTagId?: string;

@@ -5,6 +5,7 @@ import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { By } from '@angular/platform-browser';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxProgressColor } from '../../lux-util/lux-colors.enum';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxProgressComponent, LuxProgressModeType, LuxProgressSizeType, LuxProgressType } from './lux-progress.component';
@@ -14,6 +15,10 @@ describe('LuxProgressComponent', () => {
   let fixture: ComponentFixture<LuxMockProgressBarComponent>;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideLuxTranslocoTesting()]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(LuxMockProgressBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
