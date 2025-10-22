@@ -41,6 +41,7 @@ Darunter befindet sich Zeile in der die Nav-Bar angezeigt wird.
 | luxAppTitle                | string   | Applikationstitel (z.B. LUX Components)                                                                                                                                                  |
 | luxAppTitleShort           | string   | Applikationstitel in kurz (wird für Mobilansichten verwendet)                                                                                                                            |
 | luxUserName                | string   | Benutzername (z.B. Max Mustermann)                                                                                                                                                       |
+| luxUserEmail               | string   | Email (z.B. max@mustermann.example.com)                                                                                                                                                  |
 | luxBrandLogoSrc            | string   | Relative Pfadangabe zur Logodatei z.B. "assets/logos/brandlogo.svg"                                                                                                                      |
 | luxHideBrandLogo           | boolean  | Flag zum Ausblenden des Brandlogos des Headers, default = false                                                                                                                          |
 | luxAppLogoSrc              | string   | Relative Pfadangabe zum Appicon, dieses Icon soll gleichzeitig als favicon verwendet werden z.B. "assets/favicons/favicon.svg"                                                           |
@@ -90,6 +91,12 @@ Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewü
 | Name     | Beschreibung                |
 | -------- | --------------------------- |
 | selector | lux-app-header-ac-user-menu |
+
+#### @Input
+
+| Name                         | Typ     | Beschreibung                                                                                                                                                                                                                                                   |
+| ---------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxUseSectionsAndHeaderPanel | boolean | Mit der Property wird bestimmt, ob der Benutzername und die Email oben im Menü angezeigt werden sollen, und ob luxDivider und luxMenuSectionTitle benutzt werden können. Damit alle Elemente angezeigt werden, muss an jedes ein #menuSection angefügt werden. |
 
 ### LuxAppHeaderAcNavMenu
 
@@ -184,18 +191,9 @@ Html
   (luxBrandLogoClicked)="goToHomepage()"
 >
   <lux-app-header-ac-user-menu luxTooltip="Usermenü">
-    <lux-menu-item
-      luxLabel="Anmelden"
-      luxTagId="user-menu-toggle-login"
-    ></lux-menu-item>
-    <lux-menu-item
-      luxLabel="Einstellungen"
-      luxTagId="user-menu-setting"
-    ></lux-menu-item>
-    <lux-menu-item
-      luxLabel="Profil bearbeiten"
-      luxTagId="user-menu-profil"
-    ></lux-menu-item>
+    <lux-menu-item luxLabel="Anmelden" luxTagId="user-menu-toggle-login"></lux-menu-item>
+    <lux-menu-item luxLabel="Einstellungen" luxTagId="user-menu-setting"></lux-menu-item>
+    <lux-menu-item luxLabel="Profil bearbeiten" luxTagId="user-menu-profil"></lux-menu-item>
   </lux-app-header-ac-user-menu>
 
   <lux-app-header-ac-nav-menu [luxNavMenuMaximumExtended]="4">
@@ -341,11 +339,9 @@ Ts
 
 ```typescript
 const myConfiguration: LuxComponentsConfigParameters = {
- 
   viewConfiguration: {
     centerdView: true,
-    centeredWidth: '1000px',
+    centeredWidth: '1000px'
   }
 };
-
 ```

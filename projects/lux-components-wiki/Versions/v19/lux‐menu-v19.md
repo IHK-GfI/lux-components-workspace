@@ -21,26 +21,28 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| Selector | lux-menu        |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| Selector | lux-menu     |
 
 ### @Input
 
-| Name                        | Typ                     | Beschreibung                                                                                                                                                                                                                    |
-| --------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxMenuIconName             | string                  | Ein Iconname (z.B. "lux-interface-user-single").                                                                                                                                                                                |
-| luxTagId                    | string                  | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                   |
-| luxDisplayMenuLeft          | boolean                 | Bestimmt ob das ausgeklappte Menu links bzw. rechts von der (optionalen) horizontalen Navigation dargestellt wird.                                                                                                              |
-| luxDisplayExtended          | boolean                 | Bestimmt ob nicht nur das normale Menu (ausklappbar über einen Button), sondern auch eine horizontale Navigation angeboten wird.                                                                                                |
-| luxMaximumExtended          | number                  | Bestimmt wie viele Elemente maximal in der horizontalen Navigation dargestellt werden können.                                                                                                                                   |
-| luxMenuItems                | LuxMenuItemComponents[] | Ein Array mit LuxMenuItemComponents, welche dann dargestellt werden. Entspricht einer alternativen Darstellungsweise, wenn über 2 Unterkomponenten hinweg Content-Projection stattfindet.                                       |
-| luxClassName                | string                  | Ermöglicht es, dem Menu eigene CSS-Klassen mitzugeben (nützlich, wenn man das Styling nachträglich anpassen möchte).                                                                                                            |
-| luxHidden                   | boolean                 | Gibt an, ob ein Menüitem ausgeblendet werden soll.                                                                                                                                                                              |
-| luxAriaMenuTriggerLabel     | string                  | Arialabel für den Menütriggerbutton.                                                                                                                                                                                            |
-| luxMenuLabel                | string                  | Label für den Menütriggerbutton. Tipp, man kann das Icon mit 'luxMenuIconName=""' ausblenden, damit nur das Label sichtbar ist.                                                                                                 |
-| luxMenuTriggerIconShowRight | boolean                 |                                                                                                                                                                                                                                 |
-| luxMenuItemFixWidth         | number                  | Über diese Property kann die Menüitembreite fix gesetzt werden. Normalerweise wird die Breite dynamisch berechnet, aber wenn z.B. das Menü ausschließlich aus einheitlichen Buttons besteht, kann man die Berechnung einsparen. |
+| Name                        | Typ                     | Beschreibung                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxMenuIconName             | string                  | Ein Iconname (z.B. "lux-interface-user-single").                                                                                                                                                                                                                                                                                                   |
+| luxTagId                    | string                  | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                      |
+| luxDisplayMenuLeft          | boolean                 | Bestimmt ob das ausgeklappte Menu links bzw. rechts von der (optionalen) horizontalen Navigation dargestellt wird.                                                                                                                                                                                                                                 |
+| luxDisplayExtended          | boolean                 | Bestimmt ob nicht nur das normale Menu (ausklappbar über einen Button), sondern auch eine horizontale Navigation angeboten wird.                                                                                                                                                                                                                   |
+| luxMaximumExtended          | number                  | Bestimmt wie viele Elemente maximal in der horizontalen Navigation dargestellt werden können.                                                                                                                                                                                                                                                      |
+| luxMenuItems                | LuxMenuItemComponents[] | Ein Array mit LuxMenuItemComponents, welche dann dargestellt werden. Entspricht einer alternativen Darstellungsweise, wenn über 2 Unterkomponenten hinweg Content-Projection stattfindet.                                                                                                                                                          |
+| luxClassName                | string                  | Ermöglicht es, dem Menu eigene CSS-Klassen mitzugeben (nützlich, wenn man das Styling nachträglich anpassen möchte).                                                                                                                                                                                                                               |
+| luxHidden                   | boolean                 | Gibt an, ob ein Menüitem ausgeblendet werden soll.                                                                                                                                                                                                                                                                                                 |
+| luxAriaMenuTriggerLabel     | string                  | Arialabel für den Menütriggerbutton.                                                                                                                                                                                                                                                                                                               |
+| luxMenuLabel                | string                  | Label für den Menütriggerbutton. Tipp, man kann das Icon mit 'luxMenuIconName=""' ausblenden, damit nur das Label sichtbar ist.                                                                                                                                                                                                                    |
+| luxMenuTriggerIconShowRight | boolean                 |                                                                                                                                                                                                                                                                                                                                                    |
+| luxMenuItemFixWidth         | number                  | Über diese Property kann die Menüitembreite fix gesetzt werden. Normalerweise wird die Breite dynamisch berechnet, aber wenn z.B. das Menü ausschließlich aus einheitlichen Buttons besteht, kann man die Berechnung einsparen.                                                                                                                    |
+| luxShowSections             | boolean                 | Diese Property gibt an ob in dem Menü LuxDivider und Überschriften angezeigt werden können. Dafür muss die Property luxDisplayExtended auf False gesetzt werden. Das Menü unterstützt nicht eine horizontale Navigation außerhalb des Panels. Damit die einzelnen Elemente angezeigt werden muss an jedes Element #menuSection hinzugefügt werden. |
+| luxMenuPanelLarge           | boolean                 | Über diese Property kann die Darstellung des Menü-Panels geändert werden. Dies funktioniert jedoch nur wenn luxShowSections auf true gesetzt wird. Die Icons werden größer angezeigt und die MenüItems können eine zweite Unterzeile haben. Damit die einzelnen Elemente angezeigt werden muss an jedes Element #menuSection hinzugefügt werden.   |
 
 ## Components
 
@@ -66,12 +68,43 @@
 | luxPrio                | number          | Über die Priorität kann die Anzeigereihenfolge beeinflusst werden.                                                                                                                               |
 | luxButtonBadge         | string          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten. |
 | luxButtonBadgeColor    | LuxThemePalette | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                             |
+| luxMenuItemSubtitle    | string          | Wenn im Menü die Properties luxMenuPanelLarge und luxShowSections auf true stehen, wird der Text in einer zweiten Zeile angezeigt.                                                               |
+| luxMenuItemSelected    | boolean         | Wenn im Menü die Property luxShowSections auf true steht, kann ein MenuItem als ausgewählt angezeigt werden.                                                                                     |
 
 #### @Output
 
 | Name       | Typ                   | Beschreibung                                                                                          |
 | ---------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
 | luxClicked | EventEmitter \<Event> | Event welches beim Klick auf den Button ausgelöst wird und einen Clicked-Event als Parameter enthält. |
+
+### LuxMenuPanelHeaderComponent
+
+Diese Komponente funktioniert nur im Zusammenhang mit luxShowSelections.
+
+| Name     | Beschreibung          |
+| -------- | --------------------- |
+| Selector | lux-menu-panel-header |
+
+#### @Input
+
+| Name        | Typ    | Beschreibung                                                                                                                                       |
+| ----------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxTitle    | string | Der Text der als Überschrift (z.B. der Benutzername) angezeigt werden soll. Das Element wird nur angezeigt wenn es im Menü an erster Stelle steht. |
+| luxSubtitle | string | Text der unter der Überschrift steht (z.B. Email des Users).                                                                                       |
+
+### LuxMenuSectionTitleComponent
+
+Diese Komponente funktioniert nur im Zusammenhang mit luxShowSelections.
+
+| Name     | Beschreibung           |
+| -------- | ---------------------- |
+| Selector | lux-menu-section-title |
+
+#### @Input
+
+| Name     | Typ    | Beschreibung                                        |
+| -------- | ------ | --------------------------------------------------- |
+| luxTitle | string | Der Text der als Überschrift angezeigt werden soll. |
 
 ## Beispiele
 
@@ -90,25 +123,10 @@ log(msg: string) {
 Html
 
 ```html
-<lux-menu
-  luxIconName="lux-interface-setting-menu-1"
-  [luxDisplayExtended]="false"
->
-  <lux-menu-item
-    luxLabel="Menu-Item 0"
-    luxIconName="lux-phone-book"
-    (luxClicked)="log('Item 0 click')"
-  ></lux-menu-item>
-  <lux-menu-item
-    luxLabel="Menu-Item 1"
-    luxIconName="lux-card"
-    (luxClicked)="log('Item 1 click')"
-  ></lux-menu-item>
-  <lux-menu-item
-    luxLabel="Menu-Item 2"
-    luxIconName="lux-mail-sign-at"
-    (luxClicked)="log('Item 2 click')"
-  ></lux-menu-item>
+<lux-menu luxIconName="lux-interface-setting-menu-1" [luxDisplayExtended]="false">
+  <lux-menu-item luxLabel="Menu-Item 0" luxIconName="lux-phone-book" (luxClicked)="log('Item 0 click')"></lux-menu-item>
+  <lux-menu-item luxLabel="Menu-Item 1" luxIconName="lux-card" (luxClicked)="log('Item 1 click')"></lux-menu-item>
+  <lux-menu-item luxLabel="Menu-Item 2" luxIconName="lux-mail-sign-at" (luxClicked)="log('Item 2 click')"></lux-menu-item>
 </lux-menu>
 ```
 
@@ -127,27 +145,10 @@ log(msg: string) {
 Html
 
 ```html
-<lux-menu
-  luxIconName="lux-interface-setting-menu-1"
-  [luxDisplayExtended]="true"
-  [luxDisplayMenuLeft]="true"
-  [luxMaximumExtended]="2"
->
-  <lux-menu-item
-    luxLabel="Menu-Item 0"
-    luxIconName="lux-phone-book"
-    (luxClicked)="log('Item 0 click')"
-  ></lux-menu-item>
-  <lux-menu-item
-    luxLabel="Menu-Item 1"
-    luxIconName="lux-card"
-    (luxClicked)="log('Item 1 click')"
-  ></lux-menu-item>
-  <lux-menu-item
-    luxLabel="Menu-Item 2"
-    luxIconName="lux-mail-sign-at"
-    (luxClicked)="log('Item 2 click')"
-  ></lux-menu-item>
+<lux-menu luxIconName="lux-interface-setting-menu-1" [luxDisplayExtended]="true" [luxDisplayMenuLeft]="true" [luxMaximumExtended]="2">
+  <lux-menu-item luxLabel="Menu-Item 0" luxIconName="lux-phone-book" (luxClicked)="log('Item 0 click')"></lux-menu-item>
+  <lux-menu-item luxLabel="Menu-Item 1" luxIconName="lux-card" (luxClicked)="log('Item 1 click')"></lux-menu-item>
+  <lux-menu-item luxLabel="Menu-Item 2" luxIconName="lux-mail-sign-at" (luxClicked)="log('Item 2 click')"></lux-menu-item>
 </lux-menu>
 ```
 
@@ -166,26 +167,86 @@ log(msg: string) {
 Html
 
 ```html
-<lux-menu
-  luxIconName="lux-interface-setting-menu-1"
-  [luxDisplayExtended]="true"
-  [luxDisplayMenuLeft]="false"
-  [luxMaximumExtended]="2"
->
+<lux-menu luxIconName="lux-interface-setting-menu-1" [luxDisplayExtended]="true" [luxDisplayMenuLeft]="false" [luxMaximumExtended]="2">
+  <lux-menu-item luxLabel="Menu-Item 0" luxIconName="lux-phone-book" (luxClicked)="log('Item 0 click')"></lux-menu-item>
+  <lux-menu-item luxLabel="Menu-Item 1" luxIconName="lux-card" (luxClicked)="log('Item 1 click')"></lux-menu-item>
+  <lux-menu-item luxLabel="Menu-Item 2" luxIconName="lux-mail-sign-at" (luxClicked)="log('Item 2 click')"></lux-menu-item>
+</lux-menu>
+```
+
+### 4. Das neue Menü mit Sectionen
+
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img-04.png)
+
+Ts
+
+```typescript
+log(msg: string) {
+    console.log(msg);
+}
+```
+
+Html
+
+```html
+<lux-menu luxIconName="lux-interface-setting-menu-1" [luxDisplayExtended]="false" [luxShowSections]="true">
+  <lux-menu-panel-header luxTitle="Benutzername Beispiel" luxSubtitle="Benutzername@Beispiel.de" #menuSection></lux-menu-panel-header>
+  <lux-divider #menuSection></lux-divider>
+  <lux-menu-item luxLabel="Menu-Item 0" luxIconName="lux-phone-book" (luxClicked)="logIt('Item 0 click')" #menuSection></lux-menu-item>
+  <lux-menu-item luxLabel="Menu-Item 1" luxIconName="lux-card" (luxClicked)="logIt('Item 1 click')" #menuSection></lux-menu-item>
+  <lux-divider #menuSection></lux-divider>
+  <lux-menu-section-title luxTitle="Beispiel Überschrift" #menuSection></lux-menu-section-title>
+  <lux-menu-item luxLabel="Menu-Item 2" luxIconName="lux-mail-sign-at" (luxClicked)="logIt('Item 2 click')" #menuSection></lux-menu-item>
+</lux-menu>
+```
+
+### 5. Das neue große Menü mit Sectionen
+
+![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img-04.png)
+
+Ts
+
+```typescript
+//Um Custom Icons aus einem CDN zu laden müssen diese einmal registriert werden (z.B. in der app.component.ts)
+iconService = inject(LuxIconRegistryService);
+
+constructor() {
+    this.iconService.getSvgIconList().push({ iconName: 'custom-icon-name', iconBasePath: '[my-domain].de', iconPath: 'assets/icons/favicon.svg' });
+  }
+
+log(msg: string) {
+    console.log(msg);
+}
+```
+
+Html
+
+```html
+<lux-menu luxIconName="lux-interface-setting-menu-1" [luxDisplayExtended]="false" [luxShowSections]="true" [luxMenuPanelLarge]="true">
+  <lux-menu-panel-header luxTitle="Benutzername Beispiel" luxSubtitle="Benutzername@Beispiel.de" #menuSection></lux-menu-panel-header>
+  <lux-divider #menuSection></lux-divider>
   <lux-menu-item
     luxLabel="Menu-Item 0"
     luxIconName="lux-phone-book"
-    (luxClicked)="log('Item 0 click')"
+    (luxClicked)="logIt('Item 0 click')"
+    luxMenuItemSubtitle="Item-Subtitle 0"
+    #menuSection
   ></lux-menu-item>
   <lux-menu-item
     luxLabel="Menu-Item 1"
     luxIconName="lux-card"
-    (luxClicked)="log('Item 1 click')"
+    (luxClicked)="logIt('Item 1 click')"
+    luxMenuItemSubtitle="Item-Subtitle 1"
+    #menuSection
   ></lux-menu-item>
+  <lux-divider #menuSection></lux-divider>
+  <lux-menu-section-title luxTitle="Beispiel Überschrift" #menuSection></lux-menu-section-title>
   <lux-menu-item
     luxLabel="Menu-Item 2"
-    luxIconName="lux-mail-sign-at"
-    (luxClicked)="log('Item 2 click')"
+    luxIconName="custom-icon-name"
+    (luxClicked)="logIt('Item 2 click')"
+    luxMenuItemSubtitle="Item-Subtitle 2"
+    #menuSection
   ></lux-menu-item>
 </lux-menu>
 ```

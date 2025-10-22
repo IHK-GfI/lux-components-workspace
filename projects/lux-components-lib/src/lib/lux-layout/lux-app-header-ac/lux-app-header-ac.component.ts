@@ -31,6 +31,9 @@ import { LuxAppHeaderAcUserMenuComponent } from './lux-app-header-ac-subcomponen
 import { LuxLangSelectAcComponent } from './lux-app-header-ac-subcomponents/lux-lang-select-ac/lux-lang-select-ac.component';
 
 import { LuxImageComponent } from '../../lux-icon/lux-image/lux-image.component';
+import { LuxMenuPanelHeaderComponent } from '../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-panel-header.component';
+import { LuxDividerComponent } from '../lux-divider/lux-divider.component';
+import { LuxMenuSectionTitleComponent } from '../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-section-title.component';
 
 @Component({
   selector: 'lux-app-header-ac',
@@ -47,7 +50,10 @@ import { LuxImageComponent } from '../../lux-icon/lux-image/lux-image.component'
     LuxMenuTriggerComponent,
     LuxButtonComponent,
     LuxMenuComponent,
-    LuxImageComponent
+    LuxImageComponent,
+    LuxMenuPanelHeaderComponent,
+    LuxDividerComponent,
+    LuxMenuSectionTitleComponent
   ]
 })
 export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
@@ -58,6 +64,7 @@ export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
   private configService = inject(LuxComponentsConfigService);
 
   @Input() luxUserName?: string;
+  @Input() luxUserEmail?: string;
   @Input() luxAppTitle?: string;
   @Input() luxAppTitleShort?: string;
   @Input() luxBrandLogoSrc?: string;
@@ -161,5 +168,17 @@ export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
 
   onBrandLogoClicked(event: any) {
     this.luxBrandLogoClicked.emit(event);
+  }
+
+  isItemDivider(menuItem: any): menuItem is LuxDividerComponent {
+    return menuItem instanceof LuxDividerComponent;
+  }
+
+  isItemMenuItem(menuItem: any): menuItem is LuxMenuItemComponent {
+    return menuItem instanceof LuxMenuItemComponent;
+  }
+
+  isSectionTitle(menuItem: any): menuItem is LuxMenuSectionTitleComponent {
+    return menuItem instanceof LuxMenuSectionTitleComponent;
   }
 }

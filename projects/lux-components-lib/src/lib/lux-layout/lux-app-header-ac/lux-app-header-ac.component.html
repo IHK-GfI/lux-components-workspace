@@ -59,7 +59,7 @@
         ></lux-lang-select-ac>
         }
         <!-- User-Menu -->
-        @if (userMenu) {
+        @if (userMenu && !userMenu.luxUseSectionsAndHeaderPanel()) {
         <lux-menu
           class="lux-user-menu lux-flex lux-flex-shrink-0"
           [ngClass]="{ 'lux-user-menu-mobile': mobileView }"
@@ -72,7 +72,7 @@
           <!-- Anzeige des Usernames falls dieser vorhanden und eingeloggt ist -->
           @if (luxUserName) {
           <lux-menu-item [luxLabel]="luxUserName" [luxDisabled]="true" luxClass="lux-user-name-label"></lux-menu-item>
-          } @for (menuItem of userMenu?.menuItemComponents; track menuItem) {
+          }@for (menuItem of userMenu?.menuItemComponents; track menuItem) {
           <lux-menu-item
             [luxLabel]="menuItem.luxLabel"
             [luxTagId]="menuItem.luxLabel"
@@ -84,9 +84,67 @@
             [luxRounded]="menuItem.luxRounded"
             [luxClass]="menuItem.luxClass"
             (luxClicked)="menuItem.luxClicked.emit($event)"
+            [luxHidden]="menuItem.luxHidden"
           >
           </lux-menu-item>
           }
+          <lux-menu-trigger>
+            <lux-button
+              [luxRounded]="true"
+              [luxIconName]="luxUserName ? 'lux-interface-user-check' : 'lux-interface-user-single'"
+              luxColor="primary"
+              class="user-menu-trigger-ac"
+              luxAriaLabel="Benutzermenü"
+              i18n-luxAriaLabel="@@luxc.app-header.user.menu.trigger"
+              aria-haspopup="true"
+              luxTagId="user-menu-trigger-ac"
+              [ngClass]="{ 'menu-opened': menuOpened, 'user-menu-trigger-mobile': mobileView }"
+              luxTooltip="Benutzermenü"
+              [luxTooltipShowDelay]="1500"
+              #customTrigger
+              luxTagId="lux-user-menu-trigger-btn"
+            >
+            </lux-button>
+          </lux-menu-trigger>
+        </lux-menu>
+        }
+        <!-- Das neue User-Menu mit Usernamen und Email im Header -->
+        @if (userMenu && userMenu.luxUseSectionsAndHeaderPanel()) {
+        <lux-menu
+          class="lux-user-menu lux-flex lux-flex-shrink-0"
+          [ngClass]="{ 'lux-user-menu-mobile': mobileView }"
+          [luxDisplayExtended]="false"
+          (luxMenuClosed)="onMenuClosed()"
+          (luxMenuOpened)="onMenuOpened()"
+          luxClassName="lux-header-user-menu"
+          luxTagId="app_header_user_menu"
+          [luxShowSections]="true"
+        >
+          <!-- Anzeige des Usernames falls dieser vorhanden und eingeloggt ist -->
+          @if (luxUserName) {
+          <lux-menu-panel-header [luxTitle]="luxUserName" [luxSubtitle]="luxUserEmail" #menuSection></lux-menu-panel-header>
+          } @for (menuItem of userMenu?.menuSectionComponents; track menuItem) { @if (isItemMenuItem(menuItem)){
+          <lux-menu-item
+            [luxLabel]="menuItem.luxLabel"
+            [luxTagId]="menuItem.luxLabel"
+            [luxIconName]="menuItem.luxIconName"
+            [luxAlwaysVisible]="menuItem.luxAlwaysVisible"
+            [luxDisabled]="menuItem.luxDisabled"
+            [luxRaised]="menuItem.luxRaised"
+            [luxColor]="menuItem.luxColor"
+            [luxRounded]="menuItem.luxRounded"
+            [luxClass]="menuItem.luxClass"
+            (luxClicked)="menuItem.luxClicked.emit($event)"
+            [luxHidden]="menuItem.luxHidden"
+            #menuSection
+          >
+          </lux-menu-item>
+          } @if(isSectionTitle(menuItem)){
+          <lux-menu-section-title [luxTitle]="menuItem.luxTitle()" #menuSection></lux-menu-section-title>
+          } @if (isItemDivider(menuItem)) {
+          <lux-divider #menuSection></lux-divider>
+          } }
+
           <lux-menu-trigger>
             <lux-button
               [luxRounded]="true"

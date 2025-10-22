@@ -36,7 +36,17 @@
 </div>
 
 <!-- Das eigentliche Material-Menu -->
-<mat-menu [classList]="'lux-menu-panel ' + luxClassName" (closed)="onMenuClosed()" #menu="matMenu">
+<mat-menu
+  [classList]="
+    'lux-menu-panel ' +
+    luxClassName +
+    (luxShowSections() ? ' lux-menu-section-panel' : '') +
+    (luxMenuPanelLarge() ? ' lux-menu-panel-large' : '')
+  "
+  (closed)="onMenuClosed()"
+  #menu="matMenu"
+>
+  @if (!luxShowSections()) {
   <!-- Alle darin angezeigten MenuItems (Vorausgesetzt diese sind nicht als extended gekennzeichnet) -->
   @for (menuItem of menuItems; track menuItem) { @if (!menuItem.extended && !menuItem.luxHidden) {
   <button
@@ -82,7 +92,113 @@
     </span>
     }
   </button>
-  } }
+  } }} @else { @for (menuItem of menuItemsNotExtended; let i = $index ; track menuItem) {
+  <!-- Anzeige des Usernamen im Panel Header -->
+  @if (isPanelHeader(menuItem) && i === 0) {
+  <span class="lux-menu-panelheader-username"
+    >{{ menuItem.luxTitle() }}
+    <span class="lux-menu-panelheader-username-subtitle">{{ menuItem.luxSubtitle() }}</span>
+  </span>
+  }
+  <!-- Überschrift für die Sektionen im Panel -->
+  @if(isSectionTitle(menuItem)) {
+  <span class="lux-menu-section-title">{{ menuItem.luxTitle() }}</span>
+  } @if(isItemMenuItem(menuItem) && !menuItem.luxHidden) {
+  <!-- Panel Large -->
+  @if(luxMenuPanelLarge()) {
+  <button
+    mat-menu-item
+    luxTagIdHandler
+    [disableRipple]="true"
+    class="lux-menu-item"
+    [class.with-badge]="menuItem.luxButtonBadge"
+    [luxTooltip]="menuItem.luxMenuTooltip"
+    [disabled]="menuItem.luxDisabled"
+    [luxTagId]="menuItem.luxTagId"
+    [ngClass]="(menuItem.luxClass ?? '') + (menuItem.luxMenuItemSelected() ? ' lux-menu-item-selected' : '')"
+    (click)="menuItemClicked(menuItem, $event)"
+  >
+    <span class="lux-menu-item-content">
+      @if (menuItem.luxIconName) {
+      <lux-icon
+        [luxIconName]="menuItem.luxIconName"
+        luxPadding="0"
+        [luxMargin]="menuItem.luxIconShowRight ? '0 0 0 1rem' : '0 1rem 0 0'"
+        luxIconSize="3rem"
+        class="lux-menu-item-icon"
+      ></lux-icon>
+      }
+      <span class="lux-button-label">
+        {{ menuItem.luxLabel }}
+        <br />
+        <span class="lux-button-label-subtitle">{{ menuItem.luxMenuItemSubtitle() }}</span>
+      </span>
+      @if (menuItem.luxButtonBadge) {
+      <span class="lux-button-badge-container lux-menu-item-badge-right">
+        @if (menuItem.luxButtonBadge && !menuItem.luxDisabled) {
+        <span
+          class="lux-button-badge lux-bg-color-primary-500 lux-m-2"
+          [ngClass]="{
+            'lux-bg-color-primary-500': menuItem.luxButtonBadgeColor === 'primary',
+            'lux-bg-color-warn-500': menuItem.luxButtonBadgeColor === 'warn',
+            'lux-bg-color-accent-500': menuItem.luxButtonBadgeColor === 'accent'
+          }"
+        >
+          {{ menuItem.luxButtonBadge }}
+        </span>
+        }
+      </span>
+      }
+    </span>
+  </button>
+  }
+  <!-- das neue Panel mit Gruppierung -->
+  @else {
+  <button
+    mat-menu-item
+    [disableRipple]="true"
+    class="lux-menu-item"
+    [class.with-badge]="menuItem.luxButtonBadge"
+    [luxTooltip]="menuItem.luxMenuTooltip"
+    [disabled]="menuItem.luxDisabled"
+    luxTagIdHandler
+    [luxTagId]="menuItem.luxTagId"
+    [ngClass]="(menuItem.luxClass ?? '') + (menuItem.luxMenuItemSelected() ? ' lux-menu-item-selected' : '')"
+    (click)="menuItemClicked(menuItem, $event)"
+  >
+    @if (menuItem.luxIconName) {
+    <lux-icon
+      [luxIconName]="menuItem.luxIconName"
+      luxPadding="0"
+      [luxMargin]="menuItem.luxIconShowRight ? '0 0 0 1rem' : '0 1rem 0 0'"
+      luxIconSize="1.25rem"
+      class="lux-menu-item-icon"
+    ></lux-icon>
+    }
+    <span class="lux-button-label">
+      {{ menuItem.luxLabel }}
+    </span>
+    @if (menuItem.luxButtonBadge) {
+    <span class="lux-button-badge-container lux-menu-item-badge-right">
+      @if (menuItem.luxButtonBadge && !menuItem.luxDisabled) {
+      <span
+        class="lux-button-badge lux-bg-color-primary-500 lux-m-2"
+        [ngClass]="{
+          'lux-bg-color-primary-500': menuItem.luxButtonBadgeColor === 'primary',
+          'lux-bg-color-warn-500': menuItem.luxButtonBadgeColor === 'warn',
+          'lux-bg-color-accent-500': menuItem.luxButtonBadgeColor === 'accent'
+        }"
+      >
+        {{ menuItem.luxButtonBadge }}
+      </span>
+      }
+    </span>
+    }</button
+  >} }
+  <!-- Trennstriche im Menu -->
+  @if (isItemDivider(menuItem)) {
+  <mat-divider [ngClass]="luxMenuPanelLarge() ? 'lux-menu-item-divider-large' : 'lux-menu-item-divider'"></mat-divider>
+  } } }
 </mat-menu>
 
 <!-- Der Trigger des Menus -->

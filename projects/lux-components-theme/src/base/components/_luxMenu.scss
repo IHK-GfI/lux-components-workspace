@@ -128,6 +128,111 @@ lux-menu {
   }
 }
 
+//Styling für das neue Panel mit Sektionen und das Large Panel
+.lux-menu-section-panel,
+.lux-menu-section-panel:not(.lux-menu-panel-large) {
+  min-width: 260px !important;
+  max-width: 100%;
+}
+
+.lux-menu-section-panel,
+.lux-menu-section-panel:has(.lux-menu-panel-large) {
+  min-width: 360px !important;
+  max-width: 100%;
+}
+
+.lux-menu-section-panel {
+  .lux-menu-item-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .lux-menu-item-icon {
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .lux-button-label {
+    text-align: left;
+    flex: 1 1 auto;
+    white-space: normal;
+  }
+
+  .lux-menu-item-badge-right {
+    min-width: 0px !important;
+    margin-left: auto;
+    align-self: center;
+    display: flex;
+  }
+
+  .lux-button-label-subtitle {
+    color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 40);
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.07px;
+  }
+
+  .lux-menu-panelheader-username {
+    display: flex;
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    align-self: stretch;
+    font-weight: 600;
+    font-size: 1rem;
+    font-style: normal;
+    line-height: 120%;
+  }
+  .lux-menu-panelheader-username-subtitle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    align-self: stretch;
+    font-weight: 400;
+
+    font-size: 0.75rem;
+    font-style: normal;
+    line-height: normal;
+  }
+  .lux-menu-section-title {
+    display: flex;
+    padding: 8px 16px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    align-self: stretch;
+
+    color: map-get(map-get(luxpalette.$lux-palettes-new, "neutral"), 40);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.08px;
+    line-height: 120%; /* 19.2px */
+  }
+  .lux-menu-item-divider {
+    padding: 4px;
+  }
+  .lux-menu-item-divider-large {
+    margin-right: 16px;
+    margin-left: 16px;
+  }
+
+  .lux-menu-item-selected {
+    background-color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 90) !important;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 10%;
+    text-underline-offset: 5%;
+    text-underline-position: from-font;
+  }
+  .lux-menu-item-badge-right {
+    text-align: end;
+  }
+}
+
 /** ########## Hover / Focus ########## **/
 // Class, welche das aufgeklappte Panel referenziert
 .lux-menu-panel {
