@@ -220,14 +220,29 @@ lux-menu {
     margin-left: 16px;
   }
 
-  .lux-menu-item-selected {
+  .lux-menu-item.lux-menu-item-selected {
     background-color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 90) !important;
-    text-decoration-line: underline;
-    text-decoration-style: solid;
-    text-decoration-thickness: 10%;
-    text-underline-offset: 5%;
-    text-underline-position: from-font;
   }
+
+  .lux-menu-item-selected {
+    background-color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 90);
+    &.lux-button-label {
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-thickness: 10%;
+      text-underline-offset: 5%;
+      text-underline-position: from-font;
+    }
+    &.lux-button-label-subtitle {
+      text-decoration-color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 40);
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-thickness: 12%;
+      text-underline-offset: 5%;
+      text-underline-position: from-font;
+    }
+  }
+
   .lux-menu-item-badge-right {
     text-align: end;
   }
@@ -250,7 +265,48 @@ lux-menu {
       &:hover {
         @include luxfocus.lux-hovered-mixin-inverted;
         & .mat-icon-no-color {
-          color: #fff;
+          color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 100);
+        }
+      }
+    }
+  }
+}
+
+/** ########## Hover / Focus ########## **/
+// Class, welche das gruppen und das große Panel referenziert
+.lux-menu-panel.lux-menu-section-panel {
+  .lux-menu-item {
+    &:not([disabled="true"]) {
+      &:focus-visible {
+        background-color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 100);
+        color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 20);
+        border-radius: 4px;
+        &:after {
+          width: 0px;
+          border: none;
+        }
+        & .lux-button-label-subtitle {
+          color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 40);
+        }
+        .mat-icon-no-color {
+          color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 20);
+        }
+      }
+
+      &:hover {
+        color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 100);
+        & .mat-icon-no-color {
+          color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 100);
+        }
+        & .lux-button-label-subtitle {
+          color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 95);
+        }
+        .lux-button-label.lux-menu-item-selected {
+          background-color: luxcommon.$lux-hover-color;
+        }
+        .lux-button-label-subtitle.lux-menu-item-selected {
+          background-color: luxcommon.$lux-hover-color;
+          text-decoration-color: map-get(map-get(luxpalette.$lux-palettes-new, "primary"), 100);
         }
       }
     }
