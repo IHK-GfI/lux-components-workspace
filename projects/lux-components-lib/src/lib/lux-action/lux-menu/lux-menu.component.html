@@ -115,7 +115,7 @@
     [luxTooltip]="menuItem.luxMenuTooltip"
     [disabled]="menuItem.luxDisabled"
     [luxTagId]="menuItem.luxTagId"
-    [ngClass]="(menuItem.luxClass ?? '') + (menuItem.luxMenuItemSelected() ? ' lux-menu-item-selected' : '')"
+    [ngClass]="(menuItem.luxClass ?? '') + (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : '')"
     (click)="menuItemClicked(menuItem, $event)"
   >
     <span class="lux-menu-item-content">
@@ -128,10 +128,17 @@
         class="lux-menu-item-icon"
       ></lux-icon>
       }
-      <span class="lux-button-label">
-        {{ menuItem.luxLabel }}
+      <span>
+        <span class="lux-button-label" [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : ''">
+          {{ menuItem.luxLabel }}
+        </span>
         <br />
-        <span class="lux-button-label-subtitle">{{ menuItem.luxMenuItemSubtitle() }}</span>
+        <span
+          class="lux-button-label-subtitle"
+          [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : ''"
+        >
+          {{ menuItem.luxMenuItemSubtitle() }}
+        </span>
       </span>
       @if (menuItem.luxButtonBadge) {
       <span class="lux-button-badge-container lux-menu-item-badge-right">
@@ -163,7 +170,7 @@
     [disabled]="menuItem.luxDisabled"
     luxTagIdHandler
     [luxTagId]="menuItem.luxTagId"
-    [ngClass]="(menuItem.luxClass ?? '') + (menuItem.luxMenuItemSelected() ? ' lux-menu-item-selected' : '')"
+    [ngClass]="(menuItem.luxClass ?? '') + (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : '')"
     (click)="menuItemClicked(menuItem, $event)"
   >
     @if (menuItem.luxIconName) {
@@ -175,7 +182,7 @@
       class="lux-menu-item-icon"
     ></lux-icon>
     }
-    <span class="lux-button-label">
+    <span class="lux-button-label" [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : ''">
       {{ menuItem.luxLabel }}
     </span>
     @if (menuItem.luxButtonBadge) {
