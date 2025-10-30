@@ -10,15 +10,17 @@
   >
     <lux-panel-header-title class="lux-filter-panel-header">
       {{ luxTitle }}
-      @if (luxFilterExpanded && !luxHideMenu) {
-      <ng-container *ngTemplateOutlet="filterActionTemplate"></ng-container>
-      }
     </lux-panel-header-title>
     <lux-panel-content class="lux-filter-panel-content">
       <ng-container *ngTemplateOutlet="filterFormTemplate"></ng-container>
     </lux-panel-content>
     <lux-panel-action class="lux-filter-panel-action">
-      <ng-container *ngTemplateOutlet="filterButtonTemplate"></ng-container>
+      <div class="lux-filter-action-wrapper lux-flex lux-items-center">
+        @if (!luxHideMenu) {
+          <ng-container *ngTemplateOutlet="filterActionTemplate"></ng-container>
+        }
+        <ng-container *ngTemplateOutlet="filterButtonTemplate"></ng-container>
+      </div>
     </lux-panel-action>
   </lux-panel>
 </lux-accordion>
@@ -34,11 +36,6 @@
   class="lux-filter-card"
   luxTagId="luxFilterCard"
 >
-  <lux-card-info>
-    @if (!luxHideMenu) {
-    <ng-container *ngTemplateOutlet="filterActionTemplate"></ng-container>
-    }
-  </lux-card-info>
   <lux-card-content>
     <ng-container *ngTemplateOutlet="filterFormTemplate"></ng-container>
   </lux-card-content>
@@ -51,7 +48,12 @@
   </lux-card-content-expanded>
   }
   <lux-card-actions>
-    <ng-container *ngTemplateOutlet="filterButtonTemplate"></ng-container>
+    <div class="lux-flex lux-items-center lux-filter-action-wrapper">
+      @if (!luxHideMenu) {
+        <ng-container *ngTemplateOutlet="filterActionTemplate"></ng-container>
+      }
+      <ng-container *ngTemplateOutlet="filterButtonTemplate"></ng-container>
+    </div>
   </lux-card-actions>
 </lux-card>
 }
@@ -79,7 +81,7 @@
 </ng-template>
 <!-- die Menü-Leiste mit den Filterfunktionen ist in beiden Darstellungen gleich -->
 <ng-template #filterActionTemplate>
-  <lux-menu luxAriaMenuTriggerLabel="Menü" i18n-luxAriaMenuTriggerLabel="@@luxc.menu.trigger.btn" [luxDisplayExtended]="false" class="filter-menu">
+  <lux-menu luxAriaMenuTriggerLabel="Filtereinstellungen" i18n-luxAriaMenuTriggerLabel="@@luxc.filter.trigger.btn" [luxDisplayExtended]="false" class="filter-menu">
     <lux-menu-item
       [luxLabel]="luxButtonResetLabel"
       [luxAlwaysVisible]="false"
@@ -104,9 +106,11 @@
 
     <lux-menu-trigger>
       <lux-button
-        luxLabel="Menü" i18n-luxluxLabel="@@luxc.menu.trigger.btn"
+        luxLabel="Filtereinstellungen" i18n-luxluxLabel="@@luxc.filter.trigger.btn"
         [luxRounded]="true"
-        luxIconName="lux-interface-setting-menu-vertical"
+        [luxStroked]="true"
+        luxColor="primary"
+        luxIconName="lux-interface-setting-cog"
         class="lux-filter-menu-trigger"
         luxTagId="filter-menu-trigger"
       >

@@ -71,11 +71,7 @@
         <target>Menu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-action/lux-menu/lux-menu.component.ts</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.message.btn.close.arialabel" datatype="html">
@@ -135,7 +131,7 @@
         <target>Hide columns</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.html</context>
-          <context context-type="linenumber">31,32</context>
+          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.table.multiselect.chk.arialabel" datatype="html">
@@ -159,7 +155,7 @@
         <target>descending</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.ts</context>
-          <context context-type="linenumber">609</context>
+          <context context-type="linenumber">645</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.table.sort.ascending" datatype="html">
@@ -167,7 +163,7 @@
         <target>ascending</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.ts</context>
-          <context context-type="linenumber">612</context>
+          <context context-type="linenumber">648</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.table.sort.no_longer" datatype="html">
@@ -175,7 +171,7 @@
         <target>no longer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.ts</context>
-          <context context-type="linenumber">615</context>
+          <context context-type="linenumber">651</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.table.sort.announce" datatype="html">
@@ -183,7 +179,7 @@
         <target>Column <x id="column" equiv-text="columnDef"/> now sorts <x id="direction" equiv-text="directionDescription"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-common/lux-table/lux-table.component.ts</context>
-          <context context-type="linenumber">620</context>
+          <context context-type="linenumber">656</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.errorpage.error_number" datatype="html">
@@ -266,12 +262,20 @@
           <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="luxc.filter.trigger.btn" datatype="html">
+        <source>Filtereinstellungen</source>
+        <target>Filter Settings</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="luxc.filter.title" datatype="html">
         <source>Filter</source>
         <target>Filter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.filter.btn" datatype="html">
@@ -279,7 +283,7 @@
         <target>Filter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">100</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.reset.btn" datatype="html">
@@ -287,7 +291,7 @@
         <target>Reset</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.save.btn" datatype="html">
@@ -295,7 +299,7 @@
         <target>Save</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.load.btn" datatype="html">
@@ -303,7 +307,7 @@
         <target>Load</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.defaultFilterMessage" datatype="html">
@@ -311,7 +315,7 @@
         <target>Default filter settings are used.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.expandedLabel.open" datatype="html">
@@ -319,7 +323,7 @@
         <target>More Options</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.filter.expandedLabel.close" datatype="html">
@@ -327,7 +331,7 @@
         <target>Less Options</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-filter/lux-filter-form/lux-filter-form.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.autocomplete.error_message.not_an_option" datatype="html">
@@ -335,7 +339,7 @@
         <target>The entered value is not a valid option.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component.ts</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.chips.remove" datatype="html">
@@ -591,7 +595,7 @@
         <target>A file should be selected</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-list/lux-file-list.component.ts</context>
-          <context context-type="linenumber">557</context>
+          <context context-type="linenumber">563</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.delete.dialog.cancel.lbl" datatype="html">
@@ -751,7 +755,7 @@
         <target>The file &quot;<x id="PH" equiv-text="file.name"/>&quot; exceeds the maximum file size of <x id="PH_1" equiv-text="this.luxMaxSizeMB"/> megabytes.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-upload/lux-file-upload.component.ts</context>
-          <context context-type="linenumber">449</context>
+          <context context-type="linenumber">444</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.upload.error_message.not_accepted" datatype="html">
@@ -761,7 +765,7 @@
         <target>The file &quot;<x id="PH" equiv-text="file.name"/>&quot;  does not match an accepted file type. Only <x id="PH_1" equiv-text="LuxUtil.getAcceptTypesAsMessagePart(this.luxAccept)"/> files are allowed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-upload/lux-file-upload.component.ts</context>
-          <context context-type="linenumber">453,457</context>
+          <context context-type="linenumber">448,452</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.upload.error_message.only_one_file" datatype="html">
@@ -769,7 +773,7 @@
         <target>Only one file may be uploaded.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-upload/lux-file-upload.component.ts</context>
-          <context context-type="linenumber">461</context>
+          <context context-type="linenumber">456</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.upload.error_message.read_error" datatype="html">
@@ -777,7 +781,7 @@
         <target>An error occurred while uploading the selected file. Please try again.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-upload/lux-file-upload.component.ts</context>
-          <context context-type="linenumber">465</context>
+          <context context-type="linenumber">460</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.file.upload.error_message.upload_error" datatype="html">
@@ -785,7 +789,7 @@
         <target>An error occurred while uploading the selected file. Please try again.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-file/lux-file-upload/lux-file-upload.component.ts</context>
-          <context context-type="linenumber">469</context>
+          <context context-type="linenumber">464</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-checkable-base.error_message.required" datatype="html">
@@ -805,7 +809,7 @@
             ).toFixed(2)"/>MB </target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">474,476</context>
+          <context context-type="linenumber">475,477</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.error_message.max_file_count" datatype="html">
@@ -821,7 +825,7 @@
         <target>Could not read the file &quot;<x id="PH" equiv-text="file.name"/>&quot;</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">484</context>
+          <context context-type="linenumber">493</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.error_message.upload.no_files" datatype="html">
@@ -829,7 +833,7 @@
         <target>The upload failed</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">493</context>
+          <context context-type="linenumber">502</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.error_message.upload.with_files" datatype="html">
@@ -837,7 +841,7 @@
         <target>Could not upload the file <x id="PH" equiv-text="files.length &gt; 1 ? &apos;ausgewählten Dateien&apos; : &apos;ausgewählten Datei&apos;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">495,497</context>
+          <context context-type="linenumber">504,506</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.error_message.not_accepted" datatype="html">
@@ -845,7 +849,7 @@
         <target>The file &quot;<x id="PH" equiv-text="file.name"/>&quot; has a not supported file type</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">505</context>
+          <context context-type="linenumber">514</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.error_message.only_one_file" datatype="html">
@@ -853,7 +857,7 @@
         <target>Only one file should be selected</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">512</context>
+          <context context-type="linenumber">521</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.upload.files.announce" datatype="html">
@@ -861,7 +865,7 @@
         <target>Please wait. The file is processed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">522</context>
+          <context context-type="linenumber">531</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.upload.file.announce" datatype="html">
@@ -869,7 +873,7 @@
         <target>Please wait. The files are processed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">527</context>
+          <context context-type="linenumber">536</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.delete.all_files.announce" datatype="html">
@@ -877,7 +881,7 @@
         <target>All files are removed</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">537</context>
+          <context context-type="linenumber">546</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.form-file-base.delete.one_file.announce" datatype="html">
@@ -885,7 +889,7 @@
         <target>The file <x id="PH" equiv-text="fileName"/> is removed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-form/lux-form-model/lux-form-file-base.class.ts</context>
-          <context context-type="linenumber">546</context>
+          <context context-type="linenumber">555</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.app_content.ariarolemain" datatype="html">
@@ -924,6 +928,10 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header/lux-app-header.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
@@ -953,7 +961,7 @@
         <target>Head / Menu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac.component.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header/lux-app-header.component.ts</context>
@@ -965,7 +973,7 @@
         <target>User menu / Navigation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac.component.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header/lux-app-header.component.ts</context>
@@ -977,7 +985,7 @@
         <target>Title icon</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header/lux-app-header.component.ts</context>
@@ -989,7 +997,7 @@
         <target>Title image</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac.component.ts</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header/lux-app-header.component.ts</context>
@@ -1057,7 +1065,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-list/lux-list.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-master-detail-ac/lux-master-detail-ac.component.ts</context>
