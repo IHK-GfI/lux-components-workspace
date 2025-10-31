@@ -1,13 +1,12 @@
 <lux-dialog-structure>
   <lux-dialog-title class="file-upload-dialog-title-container file-rename-dialog-title-container"
-    ><div class="file-upload-dialog-title file-rename-dialog-title" i18n="@@luxc.file.rename.dialog.title">
-      Wollen Sie die Datei umbenennen?
+    ><div class="file-upload-dialog-title file-rename-dialog-title">
+      {{ 'luxc.file.rename.dialog.title' | transloco }}
     </div></lux-dialog-title
   >
   <lux-dialog-content class="lux-flex lux-flex-col lux-m-2">
     <lux-input-ac
-      luxLabel="Neuer Dateiname"
-      i18n-luxLabel="@@luxc.file.rename.input.lbl"
+      luxLabel="{{ 'luxc.file.rename.input.lbl' | transloco }}"
       [luxValue]="luxDialogRef.data.name"
       [luxRequired]="true"
       (keydown.enter)="luxDialogRef.closeDialog(filename.luxValue)"
@@ -18,16 +17,14 @@
 
   <lux-dialog-actions class="lux-flex lux-flex-wrap">
     <lux-button
-      luxLabel="Abbrechen"
-      i18n-luxLabel="@@luxc.file.rename.dialog.cancel.lbl"
+      luxLabel="{{ 'luxc.file.rename.dialog.cancel.lbl' | transloco }}"
       luxColor="primary"
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog()"
       class="lux-mr-4"
     ></lux-button>
     <lux-button
-      luxLabel="Umbenennen"
-      i18n-luxLabel="@@luxc.file.rename.dialog.rename.lbl"
+      luxLabel="{{ 'luxc.file.rename.dialog.rename.lbl' | transloco }}"
       luxColor="primary"
       [luxFlat]="true"
       (luxClicked)="luxDialogRef.closeDialog(filename.luxValue)"

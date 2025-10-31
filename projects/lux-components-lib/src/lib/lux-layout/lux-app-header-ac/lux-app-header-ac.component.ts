@@ -30,6 +30,7 @@ import { LuxAppHeaderAcNavMenuComponent } from './lux-app-header-ac-subcomponent
 import { LuxAppHeaderAcUserMenuComponent } from './lux-app-header-ac-subcomponents/lux-app-header-ac-user-menu.component';
 import { LuxLangSelectAcComponent } from './lux-app-header-ac-subcomponents/lux-lang-select-ac/lux-lang-select-ac.component';
 
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxImageComponent } from '../../lux-icon/lux-image/lux-image.component';
 
 @Component({
@@ -47,7 +48,8 @@ import { LuxImageComponent } from '../../lux-icon/lux-image/lux-image.component'
     LuxMenuTriggerComponent,
     LuxButtonComponent,
     LuxMenuComponent,
-    LuxImageComponent
+    LuxImageComponent,
+    TranslocoPipe
   ]
 })
 export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
@@ -68,10 +70,10 @@ export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
   @Input() luxLocaleBaseHref = '';
   @Input() luxHideTopBar = false;
   @Input() luxHideNavBar = false;
-  @Input() luxAriaRoleHeaderLabel = $localize`:@@luxc.app-header.aria.role_header.lbl:Kopfbereich / Menübereich`;
-  @Input() luxAriaUserMenuButtonLabel = $localize`:@@luxc.app-header.aria.usermenu.btn:Benutzermenü / Navigation`;
-  @Input() luxAriaTitleIconLabel = $localize`:@@luxc.app-header.aria.title_icon.lbl:Titelicon`;
-  @Input() luxAriaTitleImageLabel = $localize`:@@luxc.app-header.aria.title.image.lbl:Titelbild`;
+  @Input() luxAriaRoleHeaderLabel = '';
+  @Input() luxAriaUserMenuButtonLabel = '';
+  @Input() luxAriaTitleIconLabel = '';
+  @Input() luxAriaTitleImageLabel = '';
   @Input() luxCenteredView!: boolean;
   @Input() luxCenteredWidth!: string;
 

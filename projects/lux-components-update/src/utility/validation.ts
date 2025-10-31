@@ -1,7 +1,7 @@
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as chalk from 'chalk';
 import * as semver from 'semver';
-import { getPackageJsonDependency } from './dependencies';
+import { getDep } from './dependencies';
 import { formattedSchematicsException, logInfo } from './logging';
 
 export function validateNodeVersion(_context: SchematicContext, minimumVersion: string) {
@@ -16,14 +16,8 @@ export function validateNodeVersion(_context: SchematicContext, minimumVersion: 
   logInfo(`Nodeversion ${process.versions.node} -> ok`);
 }
 
-/**
- * Prüft die Angular Version der aufrufenden Applikation und wirft eine SchematicsException, wenn
- * die Version nicht der erforderlichen entspricht.
- * @param tree
- * @param angularVersion
- */
 export function validateAngularVersion(tree: Tree, angularVersion: string) {
-  const currentVersion = getPackageJsonDependency(tree, '@angular/common').version.replace(/([\^~])/g, '');
+  const currentVersion = getDep(tree, '@angular/common').version.replace(/([\^~])/g, '');
   if (!semver.satisfies(currentVersion, angularVersion)) {
     logInfo(`Angularversion ${currentVersion} -> ${chalk.redBright('fail')}`);
     throw formattedSchematicsException(
@@ -36,7 +30,7 @@ export function validateAngularVersion(tree: Tree, angularVersion: string) {
 }
 
 export function validateLuxComponentsVersion(tree: Tree, versionRange: string) {
-  const version = getPackageJsonDependency(tree, '@ihk-gfi/lux-components').version.replace(/([\^~])/g, '');
+  const version = getDep(tree, '@ihk-gfi/lux-components').version.replace(/([\^~])/g, '');
   if (!semver.satisfies(version, versionRange)) {
     logInfo(`LUX-Componentsversion ${version} -> ${chalk.redBright('fail')}`);
     throw formattedSchematicsException(

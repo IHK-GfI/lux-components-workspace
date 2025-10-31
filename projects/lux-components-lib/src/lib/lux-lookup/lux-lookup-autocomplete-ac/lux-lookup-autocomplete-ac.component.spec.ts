@@ -8,6 +8,7 @@ import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { ValidatorFnType } from '../../lux-form/lux-form-model/lux-form-component-base.class';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
@@ -26,6 +27,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
+        provideLuxTranslocoTesting(),
         LuxLookupHandlerService,
         LuxConsoleService,
         { provide: LuxLookupService, useClass: MockLookupService }

@@ -22,6 +22,7 @@ import {
   inject
 } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { BehaviorSubject, ReplaySubject, Subscription, tap } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -74,7 +75,8 @@ import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-a
     LuxCardContentComponent,
     LuxButtonComponent,
     LuxIconComponent,
-    LuxPropertyFromObjectPipe
+    LuxPropertyFromObjectPipe,
+    TranslocoPipe
   ]
 })
 export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContentInit, AfterViewInit, DoCheck, OnDestroy {
@@ -123,16 +125,16 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   alignEmptyIndicators = true;
 
   @Input() luxEmptyIconMaster = 'lux-interface-alert-information-circle';
-  @Input() luxEmptyLabelMaster = $localize`:@@luxc.master-detail.master.empty_label:Keine Einträge vorhanden`;
+  @Input() luxEmptyLabelMaster = '';
   @Input() luxEmptyIconDetail = 'lux-interface-alert-information-circle';
-  @Input() luxEmptyLabelDetail = $localize`:@@luxc.master-detail.detail.empty_label:Kein Element ausgewählt`;
+  @Input() luxEmptyLabelDetail = '';
   @Input() luxEmptyIconMasterSize = '5x';
   @Input() luxEmptyIconDetailSize = '5x';
   @Input() luxMasterSpinnerDelay = 1000;
   @Input() luxTagIdMaster?: string;
   @Input() luxTagIdDetail?: string;
   @Input() luxTitleLineBreak = false;
-  @Input() luxMasterListLabel = $localize`:@@luxc.list.arialabel:Liste`;
+  @Input() luxMasterListLabel = '';
   @Input() luxMasterIsLoading = false;
   @Input() luxCompareWith = (o1: T, o2: T) => o1 === o2;
   @Input() luxDefaultDetailHeader = true;

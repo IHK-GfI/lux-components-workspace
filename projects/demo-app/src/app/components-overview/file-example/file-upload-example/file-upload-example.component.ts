@@ -15,6 +15,7 @@ import {
   LuxToggleAcComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
+import { TranslocoService } from '@jsverse/transloco';
 import { map, take } from 'rxjs/operators';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -45,6 +46,8 @@ import { FileExampleComponent } from '../file-example.component';
   ]
 })
 export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig> implements OnInit, AfterViewInit {
+  private tService = inject(TranslocoService);
+
   @ViewChildren(LuxFileUploadComponent) fileUploads!: QueryList<LuxFileUploadComponent>;
   @ViewChild('fileBaseWithoutComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithoutComponent!: LuxFileUploadComponent;
   @ViewChild('fileBaseWithComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithComponent!: LuxFileUploadComponent;
@@ -75,7 +78,7 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
     this.maxSize = 10;
     this.capture = 'environment';
     this.accept = '.pdf,.jpeg,.jpg,.png';
-    this.hint = `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.accept)} mit einer Größe bis zu ${
+    this.hint = `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept)} mit einer Größe bis zu ${
       this.maxSize
     } Megabytes hochladen.`;
     super.ngOnInit();

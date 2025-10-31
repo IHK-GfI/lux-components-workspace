@@ -52,8 +52,7 @@
       @if (luxDisplayClearErrorButton) {
       <lux-icon
         luxIconName="lux-interface-delete-1"
-        luxAriaLabel="Fehlermeldung löschen"
-        i18n-luxAriaLabel="@@luxc.form.delete.error.button"
+        luxAriaLabel="{{ 'luxc.form.delete.error.button' | transloco }}"
         class="lux-error-icon"
         [tabIndex]="0"
         (keydown.enter)="onCloseErrorMessage()"

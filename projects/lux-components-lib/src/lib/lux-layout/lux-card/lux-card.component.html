@@ -119,7 +119,7 @@
         <lux-button
           luxColor="primary"
           [luxIconName]="luxExpanded ? 'lux-interface-arrows-button-up' : 'lux-interface-arrows-button-down'"
-          [luxLabel]="luxExpanded ? luxExpandedLabelClose : luxExpandedLabelOpen"
+          [luxLabel]="luxExpanded ? (luxExpandedLabelClose || ('luxc.card.expandedLabel.close' | transloco)) : (luxExpandedLabelOpen || ('luxc.card.expandedLabel.open' | transloco))"
           [luxIconShowRight]="false"
           (luxClicked)="changeContentExpansion($event)"
           [luxThrottleTime]="250"

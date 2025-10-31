@@ -472,9 +472,11 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param file
    */
   protected getMaxSizeErrorMessage(file: File): string {
-    return $localize`:@@luxc.form-file-base.error_message.max_file_size:Die Datei "${file.name}" überschreitet mit ${+this.getFileSizeInMB(
-      file
-    ).toFixed(2)}MB die erlaubte Dateigröße von ${+this.luxMaxSizeMB.toFixed(2)}MB`;
+    return this.tService.translate('luxc.form-file-base.error_message.max_file_size', {
+      fileName: file.name,
+      fileSizeInMB: (+this.getFileSizeInMB(file).toFixed(2)).toString(),
+      maxSizeMB: (+this.luxMaxSizeMB.toFixed(2)).toString()
+    });
   }
 
   /**
@@ -482,7 +484,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param file
    */
   protected getMaxFileCountMessage(): string {
-    return $localize`:@@luxc.form-file-base.error_message.max_file_count:Es dürfen maximal ${this.luxMaxFileCount} Dateien ausgewählt werden`;
+    return this.tService.translate('luxc.form-file-base.error_message.max_file_count', { maxFileCount: this.luxMaxFileCount.toString() });
   }
 
   /**
@@ -490,7 +492,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param file
    */
   protected getReadingFileErrorMessage(file: File): string {
-    return $localize`:@@luxc.form-file-base.error_message.read_error:Beim Lesen der Datei "${file.name}" ist ein Fehler aufgetreten`;
+    return this.tService.translate('luxc.form-file-base.error_message.read_error', { fileName: file.name });
   }
 
   /**
@@ -499,11 +501,12 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    */
   protected getUploadFileErrorMessage(files: File[]): string {
     if (!files) {
-      return $localize`:@@luxc.form-file-base.error_message.upload.no_files:Das Hochladen ist fehlgeschlagen`;
+      return this.tService.translate('luxc.form-file-base.error_message.upload.no_files');
+    } else if (files.length === 1) {
+      return this.tService.translate('luxc.form-file-base.error_message.upload.with_file');
+    } else {
+      return this.tService.translate('luxc.form-file-base.error_message.upload.with_files');
     }
-    return $localize`:@@luxc.form-file-base.error_message.upload.with_files:Das Hochladen der ${
-      files.length > 1 ? 'ausgewählten Dateien' : 'ausgewählten Datei'
-    } ist fehlgeschlagen`;
   }
 
   /**
@@ -511,14 +514,14 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param file
    */
   protected getFileNotAcceptedMessage(file: File): string {
-    return $localize`:@@luxc.form-file-base.error_message.not_accepted:Die Datei "${file.name}" hat einen nicht akzeptierten Dateityp`;
+    return this.tService.translate('luxc.form-file-base.error_message.not_accepted', { fileName: file.name });
   }
 
   /**
    * Gibt die Message für falsche Dateitypen zurück.
    */
   protected getMultipleForbiddenMessage(): string {
-    return $localize`:@@luxc.form-file-base.error_message.only_one_file:Es darf nur eine Datei ausgewählt werden`;
+    return this.tService.translate('luxc.form-file-base.error_message.only_one_file');
   }
 
   /**
@@ -528,12 +531,12 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   protected announceFileProcess(multiple: boolean) {
     if (multiple) {
       this.liveAnnouncer.announce(
-        $localize`:@@luxc.form-file-base.upload.files.announce:Bitte warten. Die Datei wird verarbeitet.`,
+        this.tService.translate('luxc.form-file-base.upload.files.announce'),
         'assertive'
       );
     } else {
       this.liveAnnouncer.announce(
-        $localize`:@@luxc.form-file-base.upload.file.announce:Bitte warten. Die Dateien werden verarbeitet.`,
+        this.tService.translate('luxc.form-file-base.upload.file.announce'),
         'assertive'
       );
     }
@@ -543,7 +546,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * Meldet dem ScreenReader, dass alle Dateien entfernt werden sollen.
    */
   protected announceAllFilesRemove() {
-    this.liveAnnouncer.announce($localize`:@@luxc.form-file-base.delete.all_files.announce:Alle Dateien werden entfernt.`, 'assertive');
+    this.liveAnnouncer.announce(this.tService.translate('luxc.form-file-base.delete.all_files.announce'), 'assertive');
   }
 
   /**
@@ -552,7 +555,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    */
   protected announceFileRemove(fileName: string) {
     this.liveAnnouncer.announce(
-      $localize`:@@luxc.form-file-base.delete.one_file.announce:Die Datei ${fileName} wird entfernt.`,
+      this.tService.translate('luxc.form-file-base.delete.one_file.announce', { fileName }),
       'assertive'
     );
   }

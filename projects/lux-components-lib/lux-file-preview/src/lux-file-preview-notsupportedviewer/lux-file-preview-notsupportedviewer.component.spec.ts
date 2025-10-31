@@ -9,6 +9,7 @@ import { LuxFilePreviewService } from '../lux-file-preview.service';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxFilePreviewNotSupportedViewerComponent } from './lux-file-preview-notsupportedviewer.component';
 
 describe('LuxFilePreviewNotSupportedViewerComponent', () => {
@@ -31,6 +32,7 @@ describe('LuxFilePreviewNotSupportedViewerComponent', () => {
       providers: [
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideLuxTranslocoTesting(),
         LuxFilePreviewService,
         { provide: LuxFilePreviewRef, useClass: MockLuxFilePreviewRef },
         { provide: LUX_FILE_PREVIEW_DATA, useValue: previewData }

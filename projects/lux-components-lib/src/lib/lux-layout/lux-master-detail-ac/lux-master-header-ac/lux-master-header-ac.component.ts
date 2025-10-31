@@ -1,4 +1,5 @@
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, inject } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxAriaExpandedDirective } from '../../../lux-directives/lux-aria/lux-aria-expanded.directive';
@@ -12,6 +13,7 @@ import { LuxMediaQueryObserverService } from '../../../lux-util/lux-media-query-
 })
 export class LuxMasterHeaderAcComponent implements OnDestroy {
   private mediaObserver = inject(LuxMediaQueryObserverService);
+  private tService = inject(TranslocoService);
 
   iconName?: string = 'lux-interface-arrows-button-left';
   open?: boolean;
@@ -41,9 +43,9 @@ export class LuxMasterHeaderAcComponent implements OnDestroy {
 
   getAriaLabelForOpenCloseButton(iconName?: string): string {
     if (iconName === 'lux-interface-arrows-button-left') {
-      return $localize`:@@luxc.master-detail.header.close.btn:Masterliste zuklappen`;
+      return this.tService.translate('luxc.master-detail.header.close.btn');
     } else {
-      return $localize`:@@luxc.master-detail.header.open.btn:Masterliste aufklappen`;
+      return this.tService.translate('luxc.master-detail.header.open.btn');
     }
   }
 

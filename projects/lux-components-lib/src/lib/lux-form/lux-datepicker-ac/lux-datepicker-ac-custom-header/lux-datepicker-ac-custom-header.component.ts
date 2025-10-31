@@ -1,15 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, inject } from '@angular/core';
 import { DateAdapter, MAT_DATE_FORMATS, MatDateFormats } from '@angular/material/core';
 import { MatCalendar } from '@angular/material/datepicker';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
+import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
 
 @Component({
   selector: 'lux-datepicker-ac-custom-header',
   templateUrl: './lux-datepicker-ac-custom-header.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxButtonComponent]
+  imports: [LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxDatepickerAcCustomHeaderComponent<D> implements OnDestroy {
   private _calendar = inject<MatCalendar<D>>(MatCalendar);

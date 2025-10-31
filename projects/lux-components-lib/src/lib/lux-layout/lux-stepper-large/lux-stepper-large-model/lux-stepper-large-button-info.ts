@@ -1,21 +1,21 @@
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 
 export const LUX_STEPPER_LARGE_DEFAULT_PREV_BTN_CONF: LuxStepperLargeButtonInfo = {
-  label: $localize`:@@luxc.stepper.back.btn:Zurück`,
+  label: '',
   color: undefined,
   iconName: 'lux-interface-arrows-left',
   iconShowRight: false
 };
 
 export const LUX_STEPPER_LARGE_DEFAULT_NEXT_BTN_CONF: LuxStepperLargeButtonInfo = {
-  label: $localize`:@@luxc.stepper.next.btn:Weiter`,
+  label: '',
   color: 'primary',
   iconName: 'lux-interface-arrows-right',
   iconShowRight: true
 };
 
 export const LUX_STEPPER_LARGE_DEFAULT_FIN_BTN_CONF: LuxStepperLargeButtonInfo = {
-  label: $localize`:@@luxc.stepper.finish.btn:Abschließen`,
+  label: '',
   color: 'primary',
   iconName: undefined,
   iconShowRight: false

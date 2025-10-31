@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxAriaRoleDirective } from '../../lux-directives/lux-aria/lux-aria-role.directive';
@@ -11,7 +12,7 @@ import { LuxAppFooterFixedService } from '../lux-app-footer/lux-app-footer-fixed
   selector: 'lux-app-content',
   templateUrl: './lux-app-content.component.html',
   styleUrls: ['./lux-app-content.component.scss'],
-  imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, RouterOutlet]
+  imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, RouterOutlet, TranslocoPipe]
 })
 export class LuxAppContentComponent implements OnDestroy {
   private elementRef = inject(ElementRef);
@@ -19,7 +20,7 @@ export class LuxAppContentComponent implements OnDestroy {
   private footerService = inject(LuxAppFooterFixedService);
   themeService = inject(LuxThemeService);
 
-  @Input() luxAriaRoleMainLabel = $localize`:@@luxc.app_content.ariarolemain:Inhaltsbereich`;
+  @Input() luxAriaRoleMainLabel = '';
 
   @HostListener('window:resize') windowResize() {
     this.appService.onResize();

@@ -15,6 +15,7 @@ import {
   UP_ARROW
 } from '@angular/cdk/keycodes';
 import { FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { TranslocoService } from '@jsverse/transloco';
 import { LuxBgAllColor, LuxBgAllColors } from './lux-colors.enum';
 
 export class LuxUtil {
@@ -63,38 +64,39 @@ export class LuxUtil {
   /**
    * Gibt eine von verschiedenen vordefinierten Fehlernachrichten passend zu den
    * vorhandenen Fehlern der übergebenen FormControl zurück.
+   * @param tService Der TranslocoService.
    * @param formControl
    * @returns string
    */
-  public static getErrorMessage(formControl: FormControl<any>): string {
+  public static getErrorMessage(tService: TranslocoService, formControl: FormControl<any>): string {
     if (formControl) {
       if (formControl.hasError('required')) {
-        return $localize`:@@luxc.util.error_message.required:* Pflichtfeld`;
+        return tService.translate('luxc.util.error_message.required');
       }
 
       if (formControl.hasError('minlength')) {
-        return $localize`:@@luxc.util.error_message.minlength:Die Mindestlänge ist ${formControl.getError('minlength').requiredLength}`;
+        return tService.translate('luxc.util.error_message.minlength', { minlength: formControl.getError('minlength').requiredLength });
       }
 
       if (formControl.hasError('maxlength')) {
-        return $localize`:@@luxc.util.error_message.maxlength:Die Maximallänge ist ${formControl.getError('maxlength').requiredLength}`;
+        return tService.translate('luxc.util.error_message.maxlength', { maxlength: formControl.getError('maxlength').requiredLength });
       }
 
       if (formControl.hasError('email')) {
-        return $localize`:@@luxc.util.error_message.email:Dies ist keine gültige E-Mailadresse`;
+        return tService.translate('luxc.util.error_message.email');
       }
 
       if (formControl.hasError('min')) {
-        return $localize`:@@luxc.util.error_message.min:Der Minimalwert ist ${formControl.getError('min').min}`;
+        return tService.translate('luxc.util.error_message.min', { min: formControl.getError('min').min });
       }
 
       if (formControl.hasError('max')) {
-        return $localize`:@@luxc.util.error_message.max:Der Maximalwert ist ${formControl.getError('max').max}`;
+        return tService.translate('luxc.util.error_message.max', { max: formControl.getError('max').max });
       }
 
       if (formControl.hasError('pattern')) {
         const pattern = formControl.getError('pattern').requiredPattern;
-        return $localize`:@@luxc.util.error_message.pattern:Entspricht nicht dem Muster "${pattern.substring(1, pattern.length - 1)}"`;
+        return tService.translate('luxc.util.error_message.pattern', { pattern: pattern.substring(1, pattern.length - 1) });
       }
     }
     return '';
@@ -375,9 +377,10 @@ export class LuxUtil {
    * Beispiel: acceptTypes = .pdf,.txt,.png
    * de = PDF, TXT oder PNG
    * en = PDF, TXT or PNG
+   * @param tService Der TranslocoService.
    * @param acceptTypes Die akzeptierten Dateitypen (z.b. .pdf,.txt).
    */
-  public static getAcceptTypesAsMessagePart(acceptTypes: string): string {
+  public static getAcceptTypesAsMessagePart(tService: TranslocoService, acceptTypes: string): string {
     let message = '';
 
     if (acceptTypes) {
@@ -392,7 +395,7 @@ export class LuxUtil {
         message += typesArr[i].toUpperCase();
 
         if (i === typesArr.length - 2) {
-          message += $localize`:@@luxc.file.upload.file.type.concat: oder `;
+          message += tService.translate('luxc.file.upload.file.type.concat');
         } else if (typesArr.length > 1 && i < typesArr.length - 2) {
           message += ', ';
         }

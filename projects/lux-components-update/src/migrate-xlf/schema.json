@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "migrateXlfSchema",
+  "title": "Migriert die XLF Übersetzungsdateien in das neue Format.",
+  "type": "object",
+  "description": "Migriert die XLF Übersetzungsdateien in das neue Format.",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Der Projektname",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "namespace": {
+      "type": "boolean",
+      "description": "Deaktiviert die Namensräume in den generierten Dateien.",
+      "default": true
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Generiert mehr Logausgaben",
+      "default": false
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

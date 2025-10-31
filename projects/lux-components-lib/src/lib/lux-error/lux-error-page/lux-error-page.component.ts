@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxCardContentComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';
@@ -21,7 +22,8 @@ import { LuxErrorStoreService } from './lux-error-services/lux-error-store.servi
     LuxPanelComponent,
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
-    LuxIconComponent
+    LuxIconComponent,
+    TranslocoPipe
   ]
 })
 export class LuxErrorPageComponent {

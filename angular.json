@@ -29,7 +29,7 @@
           "options": {
             "tsConfig": "projects/lux-components-lib/tsconfig.spec.json",
             "karmaConfig": "projects/lux-components-lib/karma.conf.js",
-            "polyfills": ["zone.js", "zone.js/testing", "@angular/localize/init"]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         },
         "lint": {
@@ -51,15 +51,6 @@
       "root": "projects/demo-app",
       "sourceRoot": "projects/demo-app/src",
       "prefix": "app",
-      "i18n": {
-        "sourceLocale": {
-          "code": "de",
-          "baseHref": "/"
-        },
-        "locales": {
-          "en": "projects/demo-app/src/locale/messages.en.xlf"
-        }
-      },
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -67,10 +58,20 @@
             "outputPath": "dist/demo-app",
             "index": "projects/demo-app/src/index.html",
             "browser": "projects/demo-app/src/main.ts",
-            "polyfills": ["zone.js", "@angular/localize/init"],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/demo-app/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              {
+                "glob": "*.json",
+                "input": "node_modules/@ihk-gfi/lux-components/locale",
+                "output": "./assets/i18n"
+              },
+              {
+                "glob": "*.json",
+                "input": "projects/demo-app/src/locale",
+                "output": "./assets/i18n"
+              },
               {
                 "glob": "**/*",
                 "input": "projects/demo-app/public",
@@ -111,11 +112,6 @@
                   "with": "projects/demo-app/src/environments/environment.development.ts"
                 }
               ]
-            },
-            "en": {
-              "localize": ["en"],
-              "outputPath": "dist/demo-app/en",
-              "i18nMissingTranslation": "error"
             }
           },
           "defaultConfiguration": "production"
@@ -135,16 +131,23 @@
           },
           "defaultConfiguration": "development"
         },
-        "extract-i18n": {
-          "builder": "@angular/build:extract-i18n"
-        },
         "test": {
           "builder": "@angular/build:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing", "@angular/localize/init"],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/demo-app/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              {
+                "glob": "*.json",
+                "input": "node_modules/@ihk-gfi/lux-components/locale",
+                "output": "./assets/i18n"
+              },
+              {
+                "glob": "*.json",
+                "input": "projects/demo-app/src/locale",
+                "output": "./assets/i18n"
+              },
               {
                 "glob": "**/*",
                 "input": "projects/demo-app/public",

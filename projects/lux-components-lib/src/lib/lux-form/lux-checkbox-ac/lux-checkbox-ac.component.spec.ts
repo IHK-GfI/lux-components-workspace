@@ -5,6 +5,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angu
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
@@ -13,7 +14,7 @@ import { LuxCheckboxAcComponent } from './lux-checkbox-ac.component';
 describe('LuxCheckboxAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), LuxConsoleService]
+      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting(), LuxConsoleService]
     }).compileComponents();
   }));
 

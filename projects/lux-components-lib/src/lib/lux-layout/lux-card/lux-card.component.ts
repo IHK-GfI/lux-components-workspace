@@ -14,6 +14,7 @@ import {
   inject
 } from '@angular/core';
 import { MatCard, MatCardActions, MatCardContent } from '@angular/material/card';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-components-config-parameters.interface';
@@ -31,7 +32,7 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
   selector: 'lux-card',
   templateUrl: './lux-card.component.html',
   animations: [expansionAnim],
-  imports: [MatCard, LuxTagIdDirective, NgClass, MatCardContent, MatCardActions, LuxButtonComponent]
+  imports: [MatCard, LuxTagIdDirective, NgClass, MatCardContent, MatCardActions, LuxButtonComponent, TranslocoPipe]
 })
 export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
   private componentsConfigService = inject(LuxComponentsConfigService);
@@ -50,26 +51,8 @@ export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() luxExpanded = false;
   @Input() luxUseTabIndex = true;
   @Input() luxHeading = 2;
-
-  @Input() set luxExpandedLabelOpen(label: string) {
-    if (label) {
-      this._luxExpandedLabelOpen = label;
-    }
-  }
-  get luxExpandedLabelOpen() {
-    return this._luxExpandedLabelOpen;
-  }
-  @Input() set luxExpandedLabelClose(label: string) {
-    if (label) {
-      this._luxExpandedLabelClose = label;
-    }
-  }
-  get luxExpandedLabelClose() {
-    return this._luxExpandedLabelClose;
-  }
-
-  _luxExpandedLabelOpen = $localize`:@@luxc.card.expandedLabel.open:Mehr`;
-  _luxExpandedLabelClose = $localize`:@@luxc.card.expandedLabel.close:Weniger`;
+  @Input() luxExpandedLabelOpen = '';
+  @Input() luxExpandedLabelClose = '';
 
   @Output() luxExpandedChange = new EventEmitter<boolean>();
   @Output() luxAfterExpansion = new EventEmitter<void>();

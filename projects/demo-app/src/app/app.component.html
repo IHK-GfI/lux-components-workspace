@@ -29,7 +29,7 @@
       >
       </lux-side-nav-item>
       <lux-side-nav-item
-        luxLabel="Formulare"
+        luxLabel="{{ 'app.menu.forms' | transloco }}"
         luxIconName="lux-interface-file-text"
         (luxClicked)="goToForm()"
         luxTagId="form-side-nav-item"
@@ -37,7 +37,7 @@
       >
       </lux-side-nav-item>
       <lux-side-nav-item
-        luxLabel="Baseline"
+        luxLabel="{{ 'app.menu.baseline' | transloco }}"
         luxIconName="lux-interface-text-formatting-left-align"
         (luxClicked)="goToBaseline()"
         luxTagId="baseline-side-nav-item"
@@ -45,7 +45,7 @@
       >
       </lux-side-nav-item>
       <lux-side-nav-item
-        luxLabel="Konfiguration"
+        luxLabel="{{ 'app.menu.configuration' | transloco }}"
         luxIconName="lux-interface-setting-slider-horizontal"
         (luxClicked)="goToConfig()"
         luxTagId="config-side-nav-item"
@@ -53,7 +53,7 @@
       >
       </lux-side-nav-item>
       <lux-side-nav-item
-        luxLabel="Komponenten"
+        luxLabel="{{ 'app.menu.components' | transloco }}"
         luxIconName="lux-interface-setting-tool-box"
         (luxClicked)="goToComponents()"
         luxTagId="cmp-side-nav-item"
@@ -198,8 +198,8 @@
     }
     <lux-app-header-ac-nav-menu [luxNavMenuMaximumExtended]="5">
       <lux-app-header-ac-nav-menu-item
-        luxLabel="Komponenten"
-        luxAriaLabel="Komponenten Übersicht"
+        luxLabel="{{ 'app.menu.components' | transloco }}"
+        luxAriaLabel="Komponentenübersicht"
         luxTagId="navItem0"
         luxButtonBadge="{{ components }}"
         luxButtonBadgeColor="primary"
@@ -208,14 +208,14 @@
       >
       </lux-app-header-ac-nav-menu-item>
       <lux-app-header-ac-nav-menu-item
-        luxLabel="Iconsuche"
+        luxLabel="{{ 'app.menu.iconSearch' | transloco }}"
         luxAriaLabel="Lux-Icons suchen"
         luxTagId="navItem4"
         [luxSelected]="url.endsWith('icon-overview')"
         (luxClicked)="goToIconSearch()"
       ></lux-app-header-ac-nav-menu-item>
       <lux-app-header-ac-nav-menu-item
-        luxLabel="Formulare"
+        luxLabel="{{ 'app.menu.forms' | transloco }}"
         luxAriaLabel="Beispielformulare"
         luxTagId="navItem1"
         [luxSelected]="url.endsWith('form')"
@@ -223,7 +223,7 @@
       >
       </lux-app-header-ac-nav-menu-item>
       <lux-app-header-ac-nav-menu-item
-        luxLabel="Baseline"
+        luxLabel="{{ 'app.menu.baseline' | transloco }}"
         luxAriaLabel="Baseline Beispiele"
         luxTagId="navItem2"
         [luxSelected]="url.endsWith('baseline')"
@@ -231,7 +231,7 @@
       >
       </lux-app-header-ac-nav-menu-item>
       <lux-app-header-ac-nav-menu-item
-        luxLabel="Konfiguration"
+        luxLabel="{{ 'app.menu.configuration' | transloco }}"
         luxAriaLabel="Konfiguration einstellen"
         luxTagId="navItem3"
         [luxSelected]="url.endsWith('configuration')"

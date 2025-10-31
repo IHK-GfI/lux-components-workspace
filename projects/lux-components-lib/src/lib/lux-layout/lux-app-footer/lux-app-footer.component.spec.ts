@@ -5,6 +5,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, inject } from '@angular/core';
 import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxAppFooterButtonInfo } from './lux-app-footer-button-info';
 import { LuxAppFooterButtonService } from './lux-app-footer-button.service';
@@ -15,7 +16,7 @@ import { LuxAppFooterComponent } from './lux-app-footer.component';
 describe('LuxAppFooterComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 

@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
 import { LuxHttpErrorComponent } from './lux-http-error.component';
@@ -21,7 +22,7 @@ describe('LuxHttpErrorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
     }).compileComponents();
   }));
 

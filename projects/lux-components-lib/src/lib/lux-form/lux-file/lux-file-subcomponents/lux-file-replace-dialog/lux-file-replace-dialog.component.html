@@ -1,43 +1,41 @@
 <lux-dialog-structure>
   <lux-dialog-title class="file-upload-dialog-title-container file-replace-dialog-title-container">
     @if (luxDialogRef.data.multiple) {
-    <div class="file-upload-dialog-title file-replace-dialog-title" i18n="@@luxc.file.replace.dialog.title.multiple">
-      Wollen Sie fortfahren und die Dateien mit gleichen Namen ersetzen?
+    <div class="file-upload-dialog-title file-replace-dialog-title">
+      {{ 'luxc.file.replace.dialog.title.multiple' | transloco }}
     </div>
     } @if (!luxDialogRef.data.multiple) {
-    <div class="file-upload-dialog-title file-replace-dialog-title" i18n="@@luxc.file.replace.dialog.title">
-      Wollen Sie fortfahren und die Datei ersetzen?
+    <div class="file-upload-dialog-title file-replace-dialog-title">
+      {{ 'luxc.file.replace.dialog.title' | transloco }}
     </div>
     }
   </lux-dialog-title>
   <lux-dialog-content class="file-upload-dialog-content-container file-replace-dialog-content-container">
     @if (luxDialogRef.data.multiple && !luxDialogRef.data.deleteProtection) {
-    <p class="file-upload-dialog-content-text file-replace-dialog-content-text" i18n="@@luxc.file.replace.dialog.content.multiple">
-      Wenn Sie Dateien mit gleichen Namen hochladen, werden diese ersetzt.
+    <p class="file-upload-dialog-content-text file-replace-dialog-content-text">
+      {{ 'luxc.file.replace.dialog.content.multiple' | transloco }}
     </p>
     } @if (!luxDialogRef.data.multiple && !luxDialogRef.data.deleteProtection) {
-    <p class="file-upload-dialog-content-text file-replace-dialog-content-text" i18n="@@luxc.file.replace.dialog.content">
-      Wenn Sie eine neue Datei auswählen, wird die vorhandene Datei ersetzt.
+    <p class="file-upload-dialog-content-text file-replace-dialog-content-text">
+      {{ 'luxc.file.replace.dialog.content' | transloco }}
     </p>
     } @if (luxDialogRef.data.deleteProtection) {
-    <lux-textbox class="file-upload-dialog-content-delete-protection file-replace-dialog-content-delete-protection" luxColor="red" i18n="@@luxc.file.replace.dialog.deleteprotection"
-      >Es soll eine Datei ersetzt werden, die weder erstetzt noch gelöscht werden darf!</lux-textbox
+    <lux-textbox class="file-upload-dialog-content-delete-protection file-replace-dialog-content-delete-protection" luxColor="red"
+      >{{ 'luxc.file.replace.dialog.deleteprotection' | transloco }}</lux-textbox
     >
     }
   </lux-dialog-content>
   <lux-dialog-actions class="lux-flex lux-flex-wrap">
     <lux-button
-      luxLabel="Abbrechen"
-      i18n-luxLabel="@@luxc.file.replace.dialog.cancel.lbl"
+      luxLabel="{{ 'luxc.file.replace.dialog.cancel.lbl' | transloco }}"
       luxColor="primary"
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog(false)"
       class="lux-mr-4"
     ></lux-button>
     <lux-button
-      luxLabel="Ersetzen"
+      luxLabel="{{ 'luxc.file.replace.dialog.replace.lbl' | transloco }}"
       [luxDisabled]="luxDialogRef.data.deleteProtection"
-      i18n-luxLabel="@@luxc.file.replace.dialog.replace.lbl"
       luxColor="primary"
       [luxFlat]="true"
       (luxClicked)="luxDialogRef.closeDialog(true)"

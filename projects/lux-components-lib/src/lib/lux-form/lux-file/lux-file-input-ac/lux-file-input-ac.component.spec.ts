@@ -8,6 +8,7 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validator
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
+import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../../lux-util/lux-console.service';
 import { LuxStorageService } from '../../../lux-util/lux-storage.service';
 import { LuxTestHelper } from '../../../lux-util/testing/lux-test-helper';
@@ -25,6 +26,7 @@ describe('LuxFileInputAcComponent', () => {
         provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideLuxTranslocoTesting(),
         {
           provide: LuxStorageService,
           useClass: MockStorage
@@ -517,7 +519,7 @@ describe('LuxFileInputAcComponent', () => {
         expect(fileComponent.luxSelected).toBeNull();
         expect(fixture.debugElement.query(By.css('mat-error'))).not.toBeNull();
         expect(fixture.debugElement.query(By.css('mat-error')).nativeElement.textContent.trim()).toEqual(
-          'Das Hochladen der ausgewählten Datei ist fehlgeschlagen'
+          'Das Hochladen der Datei ist fehlgeschlagen'
         );
       }));
 

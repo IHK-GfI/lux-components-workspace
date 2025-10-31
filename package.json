@@ -3,7 +3,7 @@
   "version": "19.2.0",
   "license": "IHK-GfI Open-Source-Lizenz",
   "engines": {
-    "node": ">=18.19.1 <23.0.0"
+    "node": ">=20.19.0 <25.0.0"
   },
   "scripts": {
     "ng": "ng",
@@ -13,7 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "smoketest": "npm run pack:all && npm run test:all",
-    "pack:demo": "ng build demo-app --localize",
+    "pack:demo": "ng build demo-app",
     "pack:components": "ng build lux-components-lib",
     "pack:theme": "npm run pack --workspace=projects/lux-components-theme",
     "pack:updater": "npm run pack --workspace=projects/lux-components-update",
@@ -31,13 +31,12 @@
     "test:theme": "npm run smoketest --workspace=projects/lux-components-theme",
     "test:updater": "npm run smoketest --workspace=projects/lux-components-update",
     "util:check-demo-conditions": "node scripts/check-demo-conditions.js",
-    "util:move-de-files": "node scripts/move-de-files.js",
+    "util:move-files": "node scripts/move-files.js",
     "util:clean-all": "npm run util:delete-dist && del-cli --force .angular && del-cli --force package-lock.json && del-cli --force node_modules",
     "util:delete-dist": "del-cli --force dist/",
     "util:wait-and-start-demo": "wait-on dist/lux-components-lib/index.d.ts dist/theme/prebuilt-themes/luxtheme-authentic.css && npm run start",
     "watch:components": "npm run watch lux-components-lib",
     "watch:theme": "npm run watch --workspace=projects/lux-components-theme",
-    "xi18n:components": "ng extract-i18n demo-app --output-path projects/demo-app/src/locale && copyfiles --up 3 \"./projects/demo-app/src/locale/**\" ./projects/lux-components-lib",
     "prepare": "husky"
   },
   "workspaces": [
@@ -50,13 +49,13 @@
     "@angular/compiler": "^20.3.3",
     "@angular/core": "^20.3.3",
     "@angular/forms": "^20.3.3",
-    "@angular/localize": "^20.3.3",
     "@angular/material": "^20.0.3",
     "@angular/platform-browser": "^20.3.3",
     "@angular/platform-browser-dynamic": "^20.3.3",
     "@angular/router": "^20.3.3",
     "@ihk-gfi/lux-components-icons-and-fonts": "1.10.0",
     "@ihk-gfi/lux-components-theme": "19.0.0-rc.1",
+    "@jsverse/transloco": "^8.0.2",
     "dompurify": "~3.2.6",
     "marked": "15.0.12",
     "ngx-cookie-service": "^20.0.1",

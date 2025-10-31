@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxMenuItemComponent } from '../../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -19,11 +20,13 @@ import { LuxLocaleAc } from './lux-locale-ac';
     LuxMenuComponent,
     LuxMenuItemComponent,
     LuxMenuTriggerComponent,
-    LuxButtonComponent
+    LuxButtonComponent,
+    TranslocoPipe
   ]
 })
 export class LuxLangSelectAcComponent implements OnInit {
   private cookieService = inject(CookieService);
+  protected translocoService = inject(TranslocoService);
 
   @Input() luxLocaleSupported = ['de'];
   @Input() luxLocaleBaseHref = '';
@@ -36,15 +39,14 @@ export class LuxLangSelectAcComponent implements OnInit {
   cookieName = 'X-GFI-LANGUAGE';
   cookiePath = '/';
 
+  // Hinweis: Transloco ist aktuell (App-Konfiguration) nur für 'de' und 'en' konfiguriert.
+  // 'fr' ist hier vorerst ausgeblendet, um fehlende Übersetzungen nach Sprachwechsel zu vermeiden.
   allSupportedLocaleArr: LuxLocaleAc[] = [
     { code: 'de', label: 'Deutsch', labelSelected: 'DE', path: '' },
-    { code: 'en', label: 'English', labelSelected: 'EN', path: '/en' },
-    { code: 'fr', label: 'Français', labelSelected: 'FR', path: '/fr' }
+    { code: 'en', label: 'English', labelSelected: 'EN', path: '/en' }
   ];
 
   localeOptions: LuxLocaleAc[] = [];
-
-  selectedLocale = this.allSupportedLocaleArr[0];
 
   ngOnInit() {
     this.luxLocaleSupported.forEach((locale) => {
@@ -55,65 +57,35 @@ export class LuxLangSelectAcComponent implements OnInit {
     });
 
     let locale = this.cookieService.get(this.cookieName);
-    if (!locale || !this.allSupportedLocaleArr.find((item) => item.code === locale)) {
+    if (!locale || !this.localeOptions.find((item) => item.code === locale)) {
       locale = 'de';
     }
-    const newLocale = this.allSupportedLocaleArr.find((item) => item.code === locale);
+    const newLocale = this.localeOptions.find((item) => item.code === locale);
     if (newLocale) {
-      this.selectedLocale = newLocale;
+      // Sicherstellen, dass Übersetzungen nach Lazy-Nachladen vorhanden sind
+      this.translocoService
+        .load(newLocale.code)
+        .subscribe({
+          next: () => this.translocoService.setActiveLang(newLocale!.code),
+          error: () => this.translocoService.setActiveLang('de')
+        });
     }
   }
 
   onLocaleChanged(locale: LuxLocaleAc) {
-    this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
-    window.location.href = this.generateNewUrl(locale, window.location.href, window.location.origin);
-  }
-
-  generateNewUrl(locale: LuxLocaleAc, href: string, origin: string) {
-    const result = [origin];
-
-    let segments = href.replace(origin, '').split('/');
-
-    // Leereinträge entfernen
-    if (segments && segments.length > 1) {
-      segments = segments.filter((item) => item !== '');
-    }
-
-    // BaseHref-Segmente entfernen
-    if (this.luxLocaleBaseHref) {
-      const baseHrefSegments = this.luxLocaleBaseHref.split('/').filter((item) => item !== '');
-
-      //
-      let errorFound = false;
-      for (let i = 0; i < baseHrefSegments.length; i++) {
-        if (segments[i] !== baseHrefSegments[i]) {
-          errorFound = true;
-          console.error(`The url "${href}" starts not with the configured base href "${this.luxLocaleBaseHref}".`);
-          break;
+    // Vor Sprachwechsel: erst laden, dann aktivieren, damit Komponenten nicht kurz Keys anzeigen.
+    this.translocoService
+      .load(locale.code)
+      .subscribe({
+        next: () => {
+          this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
+          this.translocoService.setActiveLang(locale.code);
+        },
+        error: () => {
+          // Fallback: Cookie nicht setzen, bei Fehler auf Default zurück.
+          this.translocoService.setActiveLang('de');
         }
-      }
-
-      if (!errorFound) {
-        segments = segments.splice(baseHrefSegments.length);
-        result.push(...baseHrefSegments);
-      }
-    }
-
-    // Segment mit der alten Locale entfernen
-    if (segments[0] === this.selectedLocale.code) {
-      segments = segments.slice(1);
-    }
-
-    // Neues Segment der neuen Locale hinzufügen, außer bei "de".
-    // "de" wird auf Root abgebildet und benötigt kein Segment.
-    if (locale.code !== 'de') {
-      result.push(locale.code);
-    }
-
-    // Restlichen Segmente wieder hinzufügen.
-    result.push(...segments);
-
-    return result.join('/');
+      });
   }
 
   onMenuOpened() {

@@ -2,7 +2,7 @@
   <!-- Previous-Button -->
   @if (luxIndex > 0) {
   <lux-button
-    [luxLabel]="luxStepperConfig?.luxPreviousButtonConfig?.label"
+    luxLabel="{{ luxStepperConfig?.luxPreviousButtonConfig?.label || 'luxc.stepper.back.btn' | transloco }}"
     [luxColor]="luxStepperConfig?.luxPreviousButtonConfig?.color"
     [luxIconName]="luxStepperConfig?.luxPreviousButtonConfig?.iconName"
     (luxClicked)="luxPrevClick.emit()"
@@ -13,7 +13,7 @@
   <!-- Next-Button -->
   @if (luxIndex < (luxStepperConfig?.luxSteps?.length ?? 0) - 1) {
   <lux-button
-    [luxLabel]="luxStepperConfig?.luxNextButtonConfig?.label"
+    luxLabel="{{ luxStepperConfig?.luxNextButtonConfig?.label || 'luxc.stepper.next.btn' | transloco }}"
     [luxColor]="luxStepperConfig?.luxNextButtonConfig?.color"
     [luxIconName]="luxStepperConfig?.luxNextButtonConfig?.iconName"
     (luxClicked)="luxNextClick.emit()"
@@ -25,7 +25,7 @@
   <!-- Finish-Button -->
   @if (luxIndex === (luxStepperConfig?.luxSteps?.length ?? 0) - 1) {
   <lux-button
-    [luxLabel]="luxStepperConfig?.luxFinishButtonConfig?.label"
+    luxLabel="{{ luxStepperConfig?.luxFinishButtonConfig?.label || 'luxc.stepper.finish.btn' | transloco }}"
     [luxColor]="luxStepperConfig?.luxFinishButtonConfig?.color"
     [luxIconName]="luxStepperConfig?.luxFinishButtonConfig?.iconName"
     (luxClicked)="luxFinClick.emit()"

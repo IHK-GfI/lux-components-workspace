@@ -41,8 +41,7 @@
             class="lux-chip-icon"
             [ngClass]="{ 'lux-chip-icon-disabled': chip.luxDisabled }"
             matChipRemove
-            aria-label="entfernen"
-            i18n-aria-label="@@luxc.chips.remove"
+            aria-label="{{ 'luxc.chips.remove' | transloco }}"
             luxIconName="lux-interface-delete-circle"
             luxMargin="0 0 0 0.375rem"
             luxPadding="0"
@@ -83,8 +82,7 @@
             class="lux-chip-icon"
             [ngClass]="{ 'lux-chip-icon-disabled': chipGroup.luxDisabled }"
             matChipRemove
-            aria-label="entfernen"
-            i18n-aria-label="@@luxc.chips.remove"
+            aria-label="{{ 'luxc.chips.remove' | transloco }}"
             luxIconName="lux-interface-delete-circle"
             luxMargin="0 0 0 6px"
             luxPadding="0px"
@@ -102,7 +100,7 @@
       @if (luxInputAllowed) {
       <input
         [id]="uid"
-        [placeholder]="luxPlaceholder"
+        placeholder="{{ luxPlaceholder || ('luxc.chips.input.placeholder.lbl' | transloco) }}"
         [matChipInputFor]="chips"
         [matChipInputAddOnBlur]="true"
         [matAutocomplete]="auto"

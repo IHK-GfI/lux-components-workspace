@@ -12,6 +12,7 @@ import {
   inject
 } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -62,7 +63,8 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
     LuxMenuItemComponent,
     LuxMenuComponent,
     LuxButtonComponent,
-    LuxIconComponent
+    LuxIconComponent,
+    TranslocoPipe
   ]
 })
 export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements AfterViewInit, AfterViewChecked, OnDestroy {
@@ -96,8 +98,8 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     hiddenHeader: false,
     iconName: 'lux-programming-cloud-upload',
     iconNameHeader: 'lux-programming-cloud-upload',
-    label: $localize`:@@luxc.file-list.upload.lbl:Hochladen`,
-    labelHeader: $localize`:@@luxc.file-list.upload_title.lbl:Neue Dateien hochladen`
+    label: '',
+    labelHeader: ''
   };
   _luxDeleteActionConfig: ILuxFileListDeleteActionConfig = {
     disabled: false,
@@ -106,8 +108,8 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     hiddenHeader: false,
     iconName: 'lux-interface-delete-bin-5',
     iconNameHeader: 'lux-interface-delete-bin-5',
-    label: $localize`:@@luxc.file-list.delete.lbl:Löschen`,
-    labelHeader: $localize`:@@luxc.file-list.delete_title.lbl:Alle Dateien entfernen`,
+    label: '',
+    labelHeader: '',
     isDeletable: (_file: ILuxFileObject) => {
       return true;
     }
@@ -116,13 +118,13 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     disabled: false,
     hidden: true,
     iconName: 'lux-interface-edit-view',
-    label: $localize`:@@luxc.form-file-base.view.action.lbl:Ansehen`
+    label: ''
   };
   _luxDownloadActionConfig: ILuxFileActionConfig = {
     disabled: false,
     hidden: true,
     iconName: 'lux-interface-download-button-2',
-    label: $localize`:@@luxc.form-file-base.download.action.lbl:Download`
+    label: ''
   };
 
   get luxUploadActionConfig(): ILuxFilesListActionConfig {
@@ -560,7 +562,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
 
   protected override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['required']) {
-      return $localize`:@@luxc.file-list.error_message.required:Es muss eine Datei ausgewählt werden`;
+      return this.tService.translate('luxc.file-list.error_message.required');
     }
     return super.errorMessageModifier(value, errors);
   }

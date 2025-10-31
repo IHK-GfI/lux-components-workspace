@@ -18,6 +18,7 @@ import {
   inject
 } from '@angular/core';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
@@ -45,7 +46,8 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     MatMenuItem,
     LuxTagIdDirective,
     MatMenuTrigger,
-    LuxIconComponent
+    LuxIconComponent,
+    TranslocoPipe
   ]
 })
 export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy {
@@ -92,7 +94,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   @Input() luxClassName = '';
   @Input() luxTagId?: string;
   @Input() luxToggleDisabled = false;
-  @Input() luxAriaMenuTriggerLabel = $localize`:@@luxc.menu.trigger.btn:Menü`;
+  @Input() luxAriaMenuTriggerLabel = '';
 
   _luxDisplayExtended = false;
   visibleMenuItems: LuxMenuItemComponent[] = [];

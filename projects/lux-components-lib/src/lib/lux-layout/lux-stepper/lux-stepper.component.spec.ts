@@ -9,6 +9,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { ILuxStepperButtonConfig } from './lux-stepper-model/lux-stepper-button-config.interface';
@@ -24,7 +25,12 @@ describe('LuxStepperComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 

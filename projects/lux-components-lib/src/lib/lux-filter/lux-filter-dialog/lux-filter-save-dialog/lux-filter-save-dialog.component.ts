@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxValidationErrors } from '../../../lux-form/lux-form-model/lux-form-component-base.class';
 import { LuxInputAcComponent } from '../../../lux-form/lux-input-ac/lux-input-ac.component';
@@ -20,7 +21,8 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
     LuxDialogContentComponent,
     LuxDialogActionsComponent,
     LuxInputAcComponent,
-    LuxButtonComponent
+    LuxButtonComponent,
+    TranslocoPipe
   ]
 })
 export class LuxFilterSaveDialogComponent implements OnInit, AfterViewInit {

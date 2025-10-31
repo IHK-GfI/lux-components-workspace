@@ -8,6 +8,7 @@ import { LuxFormComponentBase, LuxValidationErrors, ValidatorFnType } from './lu
  */
 @Directive()
 export abstract class LuxFormCheckableBaseClass<T> extends LuxFormComponentBase<T> {
+
   @Output() luxCheckedChange = new EventEmitter<boolean>();
 
   @Input() luxTagId?: string;
@@ -32,7 +33,7 @@ export abstract class LuxFormCheckableBaseClass<T> extends LuxFormComponentBase<
 
   override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['required']) {
-      return $localize`:@@luxc.form-checkable-base.error_message.required:Das ist ein Pflichtfeld`;
+      return this.tService.translate(`luxc.form-checkable-base.error_message.required`);
     }
     return undefined;
   }

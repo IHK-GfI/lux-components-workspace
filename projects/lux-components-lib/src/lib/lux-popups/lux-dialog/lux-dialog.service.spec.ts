@@ -4,6 +4,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, importProvidersFrom, inject, TemplateRef, ViewChild } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigModule } from '../../lux-components-config/lux-components-config.module';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
@@ -40,7 +41,8 @@ describe('LuxDialogService', () => {
           })
         ]),
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
       ]
     }).compileComponents();
   }));

@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { ILuxMessageChangeEvent } from './lux-message-box-model/lux-message-events.interface';
 import { ILuxMessage } from './lux-message-box-model/lux-message.interface';
@@ -19,7 +20,7 @@ describe('LuxMessageBoxComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideNoopAnimations()]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideNoopAnimations(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 

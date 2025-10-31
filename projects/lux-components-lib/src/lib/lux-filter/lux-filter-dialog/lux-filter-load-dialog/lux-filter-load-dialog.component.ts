@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxCardActionsComponent } from '../../../lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentComponent } from '../../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';
@@ -22,7 +23,8 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
     LuxCardComponent,
     LuxCardContentComponent,
     LuxCardActionsComponent,
-    LuxButtonComponent
+    LuxButtonComponent,
+    TranslocoPipe
   ]
 })
 export class LuxFilterLoadDialogComponent implements OnInit {

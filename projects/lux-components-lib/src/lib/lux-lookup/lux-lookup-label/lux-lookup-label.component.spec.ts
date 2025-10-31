@@ -5,6 +5,7 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
 import { LuxLookupHandlerService } from '../lux-lookup-service/lux-lookup-handler.service';
@@ -18,6 +19,7 @@ describe('LuxLookupLabelComponent', () => {
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
+        provideLuxTranslocoTesting(),
         LuxLookupHandlerService,
         LuxConsoleService,
         { provide: LuxLookupService, useClass: MockLuxLookupLabelService }

@@ -3,7 +3,7 @@ import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import * as semver from 'semver';
-import { getPackageJsonDependency } from './dependencies';
+import { getDep } from './dependencies';
 import { replaceRule } from './files';
 import { logInfo, logInfoWithDescriptor, logSuccess } from './logging';
 import { ReplaceItem } from './replace-item';
@@ -114,7 +114,7 @@ export function applyRuleIfFileNotExists(rule: Rule, path: string): Rule {
 
 export function applyRuleIf(minVersion: string, rule: Rule): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    let version = getPackageJsonDependency(tree, '@ihk-gfi/lux-components').version;
+    let version = getDep(tree, '@ihk-gfi/lux-components').version;
 
     if (semver.satisfies(minVersion, version)) {
       return rule;
