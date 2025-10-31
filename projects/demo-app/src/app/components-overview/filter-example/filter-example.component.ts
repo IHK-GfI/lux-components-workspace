@@ -186,7 +186,7 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   radioSelectHidden = false;
 
   buttonColorOptions = ['default', 'primary', 'accent', 'warn'];
-  buttonFlat = false;
+  buttonFlat = true;
   buttonFilterColor: LuxThemePalette = 'primary';
   buttonDialogSave: LuxThemePalette = 'primary';
   buttonDialogLoad: LuxThemePalette = 'primary';

@@ -96,7 +96,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   @Input() luxTitle = $localize`:@@luxc.filter.title:Filter`;
   @Input() luxButtonRaised = false;
-  @Input() luxButtonFlat = false;
+  @Input() luxButtonFlat = true;
   @Input() luxButtonFilterLabel = $localize`:@@luxc.filter.filter.btn:Filtern`;
   @Input() luxButtonFilterColor: LuxThemePalette = 'primary';
   @Input() luxButtonResetLabel = $localize`:@@luxc.filter.reset.btn:Zurücksetzen`;
