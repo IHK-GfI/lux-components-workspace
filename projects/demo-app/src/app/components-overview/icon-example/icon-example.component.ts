@@ -40,7 +40,7 @@ export class IconExampleComponent {
   colors: LuxIconColor[] = LuxIconColors;
   iconSizes: string[] = ['1x', '2x', '3x', '4x', '5x', '55px', '121px', '1.7em'];
   iconName = 'lux-interface-favorite-like-1';
-  iconHint = 'Beispiele: app-box, app-ihk-gfi, lux-save,...';
+  iconHint = 'Beispiele: app-box, app-ihk-189, lux-save,...';
   iconSize = '2x';
   rounded = false;
   margin = '0';
@@ -48,7 +48,13 @@ export class IconExampleComponent {
   backgroundColor = '';
 
   constructor() {
-    this.iconService.getSvgIconList().push({ iconName: 'app-box', iconBasePath: '/', iconPath: '/assets/svg/box.svg' });
-    this.iconService.getSvgIconList().push({ iconName: 'app-ihk-gfi', iconBasePath: '/', iconPath: '/assets/svg/IHK_GfI.svg' });
+    this.registerIcon('app-box', '/', '/assets/svg/box.svg');
+    this.registerIcon('app-ihk-189', 'https://cdn.gfi.ihk.de/IHK-Logos/', '189_kurz.svg');
+  }
+
+  registerIcon(iconName: string, iconBasePath: string, iconPath: string) {
+    if (!this.iconService.getSvgIconList().some((item) => item.iconName === iconName)) {
+      this.iconService.getSvgIconList().push({ iconName, iconBasePath, iconPath });
+    }
   }
 }
