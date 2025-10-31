@@ -7,6 +7,7 @@ import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
 import { LuxDatepickerAcComponent } from '../../lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
 import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
@@ -21,7 +22,7 @@ describe('LuxFilterFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 

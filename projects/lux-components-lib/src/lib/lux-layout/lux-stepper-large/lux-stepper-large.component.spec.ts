@@ -3,6 +3,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LuxStepperLargeMobileOverlayService } from './lux-stepper-large-subcomponents/lux-stepper-large-mobile-overlay/lux-stepper-large-mobile-overlay.service';
 
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxStepperLargeComponent } from './lux-stepper-large.component';
 
 describe('LuxStepperLargeComponent', () => {
@@ -12,7 +13,7 @@ describe('LuxStepperLargeComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, LuxStepperLargeComponent],
-      providers: [LuxStepperLargeMobileOverlayService, LiveAnnouncer]
+      providers: [provideLuxTranslocoTesting(), LuxStepperLargeMobileOverlayService, LiveAnnouncer]
     }).compileComponents();
   }));
 

@@ -4,8 +4,7 @@
     [luxThrottleTime]="1"
     class="lux-datepicker-prev-month"
     (luxClicked)="previousClicked('month')"
-    luxAriaLabel="vorheriger Monat"
-    i18n-luxAriaLabel="@@luxc.datepicker.prev.month.arialabel"
+    luxAriaLabel="{{ 'luxc.datepicker.prev.month.arialabel' | transloco }}"
   ></lux-button>
   <lux-button luxLabel="{{ periodLabel }}" class="lux-datepicker-year" (luxClicked)="currentPeriodClicked()"> </lux-button>
   <lux-button
@@ -13,7 +12,6 @@
     [luxThrottleTime]="1"
     class="lux-datepicker-next-month"
     (luxClicked)="nextClicked('month')"
-    luxAriaLabel="nächster Monat"
-    i18n-luxAriaLabel="@@luxc.datepicker.next.month.arialabel"
+    luxAriaLabel="{{ 'luxc.datepicker.next.month.arialabel' | transloco }}"
   ></lux-button>
 </div>

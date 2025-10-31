@@ -7,11 +7,12 @@ import { LuxTourHintService } from './lux-tour-hint.service';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 
 describe('LuxTourHintService', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxTourHintService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [LuxTourHintService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
     }).compileComponents();
   }));
 

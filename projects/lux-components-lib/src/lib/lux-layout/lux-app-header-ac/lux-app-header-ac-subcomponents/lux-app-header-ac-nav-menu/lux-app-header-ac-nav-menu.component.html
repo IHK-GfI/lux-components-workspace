@@ -37,8 +37,7 @@
       luxColor="primary"
       class="nav-menu-trigger-ac"
       [ngClass]="{ 'lux-mobile': mobileView, 'menu-opened': navMenuOpened }"
-      luxAriaLabel="Benutzermenü"
-      i18n-luxAriaLabel="@@luxc.app-header.user.menu.trigger"
+      luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
       aria-haspopup="true"
       #customTrigger
       luxTagId="lux-nav-menu-trigger-ac"

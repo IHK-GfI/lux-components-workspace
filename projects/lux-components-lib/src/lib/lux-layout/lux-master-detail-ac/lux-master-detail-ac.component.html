@@ -37,12 +37,12 @@
       <lux-list
         class="lux-overflow-wrap-break-word"
         luxInfiniteScroll
-        [luxLabel]="luxMasterListLabel"
+        luxLabel="{{ luxMasterListLabel || ('luxc.list.arialabel' | transloco) }}"
         [luxScrollPercent]="85"
         [luxImmediateCallback]="true"
         [luxIsLoading]="luxMasterIsLoading"
         [luxEmptyIconSize]="luxEmptyIconMasterSize"
-        [luxEmptyLabel]="luxEmptyLabelMaster"
+        luxEmptyLabel="{{ luxEmptyLabelMaster || ('luxc.master-detail.master.empty_label' | transloco) }}"
         [luxEmptyIconName]="luxEmptyIconMaster"
         [luxSelectedPosition]="selectedPosition"
         (luxSelectedPositionChange)="onSelectedChange($event)"
@@ -110,7 +110,7 @@
         luxTagId="back-to-master-btn"
         (luxClicked)="onOpenMaster()"
       ></lux-button>
-      <span class="back-to-master-label" i18n="@@luxc.master-detail.back-to-master-label">Zurück zur Liste</span>
+      <span class="back-to-master-label">{{ 'luxc.master-detail.back-to-master-label' | transloco }}</span>
     </div>
     }
     <!-- Detail-Header -->
@@ -154,7 +154,7 @@
       >
       </lux-icon>
       <span class="lux-detail-empty-icon-text">
-        {{ luxEmptyLabelDetail }}
+        {{ luxEmptyLabelDetail || ('luxc.master-detail.detail.empty_label' | transloco) }}
       </span>
     </div>
   </div>

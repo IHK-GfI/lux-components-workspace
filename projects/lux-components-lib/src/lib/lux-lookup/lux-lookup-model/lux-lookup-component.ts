@@ -66,8 +66,9 @@ export const luxLookupCompareLangText2Fn: LuxLookupCompareFn = (a: LuxLookupTabl
 
 @Directive()
 export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> implements OnInit, OnDestroy {
+  
   LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige;
-
+  
   protected lookupService = inject(LuxLookupService);
   protected lookupHandler = inject(LuxLookupHandlerService);
 
@@ -209,7 +210,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    */
   override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['ungueltig']) {
-      return $localize`:@@luxc.lookup.error_message.invalid:Der ausgewählte Wert ist ungültig.`;
+      return this.tService.translate(`luxc.lookup.error_message.invalid`);
     }
     return undefined;
   }

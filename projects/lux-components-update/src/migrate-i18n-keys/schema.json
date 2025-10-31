@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "migrateI18nKeysSchema",
+  "title": "Migriert die I18N-Tags in den HTML-Dateien.",
+  "type": "object",
+  "description": "Migriert die I18N-Tags in den HTML-Dateien in das neue Format.",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Der Projektname",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Generiert mehr Logausgaben",
+      "default": false
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

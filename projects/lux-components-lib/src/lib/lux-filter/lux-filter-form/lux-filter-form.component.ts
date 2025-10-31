@@ -15,6 +15,7 @@ import {
   inject
 } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxMenuItemComponent } from '../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -73,7 +74,8 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
     NgClass,
     LuxChipsAcComponent,
     LuxAriaLabelDirective,
-    LuxChipAcComponent
+    LuxChipAcComponent,
+    TranslocoPipe
   ]
 })
 export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -94,23 +96,23 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   _luxFilterValues = {};
   _luxFilterExpanded = false;
 
-  @Input() luxTitle = $localize`:@@luxc.filter.title:Filter`;
+  @Input() luxTitle = '';
   @Input() luxButtonRaised = false;
-  @Input() luxButtonFlat = true;
-  @Input() luxButtonFilterLabel = $localize`:@@luxc.filter.filter.btn:Filtern`;
+  @Input() luxButtonFlat = false;
+  @Input() luxButtonFilterLabel = '';
   @Input() luxButtonFilterColor: LuxThemePalette = 'primary';
-  @Input() luxButtonResetLabel = $localize`:@@luxc.filter.reset.btn:Zurücksetzen`;
+  @Input() luxButtonResetLabel = '';
   @Input() luxButtonResetColor?: LuxThemePalette;
-  @Input() luxButtonSaveLabel = $localize`:@@luxc.filter.save.btn:Speichern`;
+  @Input() luxButtonSaveLabel = '';
   @Input() luxButtonSaveColor?: LuxThemePalette;
-  @Input() luxButtonLoadLabel = $localize`:@@luxc.filter.load.btn:Laden`;
+  @Input() luxButtonLoadLabel = '';
   @Input() luxButtonLoadColor?: LuxThemePalette;
   @Input() luxButtonDialogSave: LuxThemePalette = 'primary';
   @Input() luxButtonDialogLoad: LuxThemePalette = 'primary';
   @Input() luxButtonDialogDelete: LuxThemePalette = 'warn';
   @Input() luxButtonDialogCancel?: LuxThemePalette;
   @Input() luxButtonDialogClose?: LuxThemePalette;
-  @Input() luxDefaultFilterMessage = $localize`:@@luxc.filter.defaultFilterMessage:Es wird nach den Standardeinstellungen gefiltert.`;
+  @Input() luxDefaultFilterMessage = '';
   @Input() luxShowChips = true;
   @Input() luxHideChipsBorder = false;
   @Input() luxHideMenu = false;
@@ -125,7 +127,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   get luxExpandedLabelOpen() {
     return this._luxExpandedLabelOpen;
   }
-  _luxExpandedLabelOpen = $localize`:@@luxc.filter.expandedLabel.open:Mehr Optionen`;
+  _luxExpandedLabelOpen = '';
   @Input() set luxExpandedLabelClose(label: string) {
     if (label) {
       this._luxExpandedLabelClose = label;
@@ -134,7 +136,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   get luxExpandedLabelClose() {
     return this._luxExpandedLabelClose;
   }
-  _luxExpandedLabelClose = $localize`:@@luxc.filter.expandedLabel.close:Weniger Optionen`;
+  _luxExpandedLabelClose = '';
 
   @Input()
   get luxFilterExpanded() {

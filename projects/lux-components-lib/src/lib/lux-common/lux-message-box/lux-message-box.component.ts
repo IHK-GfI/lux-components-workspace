@@ -2,6 +2,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild, inject } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxPaginatorIntl } from '../../lux-util/lux-paginator-intl';
 import { visibilityTrigger } from './lux-message-box-model/lux-message-box.animations';
@@ -14,10 +15,11 @@ import { LuxMessageComponent } from './lux-message-box-subcomponents/lux-message
   templateUrl: './lux-message-box.component.html',
   animations: [visibilityTrigger],
   providers: [{ provide: MatPaginatorIntl, useClass: LuxPaginatorIntl }],
-  imports: [LuxAriaLabelDirective, LuxMessageComponent, NgClass, MatPaginator]
+  imports: [LuxAriaLabelDirective, LuxMessageComponent, NgClass, MatPaginator, TranslocoPipe]
 })
 export class LuxMessageBoxComponent {
   private liveAnnouncer = inject(LiveAnnouncer);
+  private tService = inject(TranslocoService);
 
   private _luxMessages: ILuxMessage[] = [];
   private _luxMaximumDisplayed = 1;
@@ -77,9 +79,9 @@ export class LuxMessageBoxComponent {
         } else {
           let messageText = '';
           if (messages.length === 1) {
-            messageText += $localize`:@@luxc.message.announce.1_message:Es gibt eine Meldung.`;
+            messageText += this.tService.translate('luxc.message.announce.1_message');
           } else {
-            messageText += $localize`:@@luxc.message.announce.x_messages:Es gibt ${messages.length}:messageCount: Meldungen.`;
+            messageText += this.tService.translate('luxc.message.announce.x_messages', { count: messages.length });
           }
           messages.forEach((message) => (messageText += message.text + '\n'));
           this.liveAnnouncer.announce(messageText);
@@ -91,7 +93,7 @@ export class LuxMessageBoxComponent {
         this.luxMessageBoxClosed.emit();
       }
       this._luxMessages = [];
-      this.liveAnnouncer.announce($localize`:@@luxc.message.announce.0_messages:Es gibt keine Meldungen.`);
+      this.liveAnnouncer.announce(this.tService.translate('luxc.message.announce.0_messages'));
     }
 
     this.luxMessagesChange.emit(this._luxMessages);

@@ -1,33 +1,49 @@
-import { Pipe, PipeTransform } from '@angular/core';
-
-export const day = $localize`:@@luxc.relative-timestamp.days:Tagen`;
-export const week = $localize`:@@luxc.relative-timestamp.weeks:Wochen`;
-export const month = $localize`:@@luxc.relative-timestamp.months:Monaten`;
-export const year = $localize`:@@luxc.relative-timestamp.years:Jahren`;
-export const today = $localize`:@@luxc.relative-timestamp.today:Heute`;
-export const yesterday = $localize`:@@luxc.relative-timestamp.yesterday:Gestern`;
-export const tomorrow = $localize`:@@luxc.relative-timestamp.tomorrow:Morgen`;
-export const prefixFuture = $localize`:@@luxc.relative-timestamp.in:in`;
-export const prefixPast = $localize`:@@luxc.relative-timestamp.ago:vor`;
+import { ChangeDetectorRef, inject, OnDestroy, Pipe, PipeTransform } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { Subscription } from 'rxjs';
 
 export const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 export const timeDeltas = [
-  { name: year, days: 672, dayUnit: 336 },
-  { name: month, days: 56, dayUnit: 28 },
-  { name: week, days: 14, dayUnit: 7 },
-  { name: day, days: 2, dayUnit: 1 }
+  { id: 'years', days: 672, dayUnit: 336 },
+  { id: 'months', days: 56, dayUnit: 28 },
+  { id: 'weeks', days: 14, dayUnit: 7 },
+  { id: 'days', days: 2, dayUnit: 1 }
 ];
 
 export const timeDeltasRelative = [
-  { name: tomorrow, days: 1 },
-  { name: yesterday, days: -1 },
-  { name: today, days: 0 }
+  { id: 'tomorrow', days: 1 },
+  { id: 'yesterday', days: -1 },
+  { id: 'today', days: 0 }
 ];
 
-@Pipe({ name: 'luxRelativeTimestamp' })
-export class LuxRelativeTimestampPipe implements PipeTransform {
+@Pipe({ name: 'luxRelativeTimestamp', pure: false })
+export class LuxRelativeTimestampPipe implements PipeTransform, OnDestroy {
+  private tService = inject(TranslocoService);
+  // ChangeDetectorRef is only available when Angular creates the pipe inside a view. For unit tests
+  // where we manually instantiate the pipe, we allow it to be optional to avoid NG0201.
+  private cdr = inject(ChangeDetectorRef, { optional: true });
+  private langSub?: Subscription;
+  private lastArgs?: { timestamp: number | null; defaultText: string; prefix?: string };
+  private lastResult = '';
+
+  constructor() {
+    // Bei Sprachwechsel erneute Berechnung forcieren
+    this.langSub = this.tService.langChanges$.subscribe(() => {
+      if (this.lastArgs) {
+        this.lastResult = this.compute(this.lastArgs.timestamp, this.lastArgs.defaultText, this.lastArgs.prefix);
+        this.cdr?.markForCheck();
+      }
+    });
+  }
+
   transform(timestamp: number | null, defaultText = '', prefix?: string): string {
+    this.lastArgs = { timestamp, defaultText, prefix };
+    this.lastResult = this.compute(timestamp, defaultText, prefix);
+    return this.lastResult;
+  }
+
+  private compute(timestamp: number | null, defaultText = '', prefix?: string): string {
     if (!timestamp) {
       return defaultText;
     }
@@ -42,17 +58,25 @@ export class LuxRelativeTimestampPipe implements PipeTransform {
       const tempDelta = delta < 0 ? delta * -1 : delta;
 
       if (tempDelta >= timeDelta.days) {
-        let timeUnits = timeDelta.name === day ? tempDelta : Math.floor(tempDelta / timeDelta.dayUnit);
+        let timeUnits = timeDelta.id === 'days' ? tempDelta : Math.floor(tempDelta / timeDelta.dayUnit);
         timeUnits *= timeUnits < 0 ? -1 : 1;
 
         if (!prefix) {
           if (delta < 0) {
-            timeName = $localize`:@@luxc.relative-timestamp.past:${prefixPast} ${timeUnits} ${timeDelta.name}`;
+            timeName = this.tService.translate('luxc.relative-timestamp.past', {
+              prefix: this.tService.translate('luxc.relative-timestamp.ago'),
+              timeUnits: timeUnits,
+              timeDelta: this.tService.translate('luxc.relative-timestamp.' + timeDelta.id)
+            });
           } else {
-            timeName = $localize`:@@luxc.relative-timestamp.future:${prefixFuture} ${timeUnits} ${timeDelta.name}`;
+            timeName = this.tService.translate('luxc.relative-timestamp.future', {
+              prefix: this.tService.translate('luxc.relative-timestamp.in'),
+              timeUnits: timeUnits,
+              timeDelta: this.tService.translate('luxc.relative-timestamp.' + timeDelta.id)
+            });
           }
         } else {
-          timeName = `${prefix} ${timeUnits} ${timeDelta.name}`;
+          timeName = `${prefix} ${timeUnits} ` + this.tService.translate('luxc.relative-timestamp.' + timeDelta.id);
         }
         break;
       }
@@ -61,7 +85,7 @@ export class LuxRelativeTimestampPipe implements PipeTransform {
     if (timeName === null) {
       for (const timeDelta of timeDeltasRelative) {
         if (delta === timeDelta.days) {
-          timeName = timeDelta.name;
+          timeName = this.tService.translate('luxc.relative-timestamp.' + timeDelta.id);
           break;
         }
       }
@@ -74,5 +98,9 @@ export class LuxRelativeTimestampPipe implements PipeTransform {
     const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
     return Math.floor((utc2 - utc1) / MS_PER_DAY);
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
   }
 }

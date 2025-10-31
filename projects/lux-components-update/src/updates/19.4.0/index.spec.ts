@@ -1,7 +1,7 @@
 import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { getPackageJsonDependency } from '../../utility/dependencies';
+import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
 import { fixEmptySchematicArray, update190400 } from './index';
@@ -62,11 +62,11 @@ describe('update190400', () => {
 
       callRule(update190400(testOptions), appTree, context).subscribe(
         (successTree) => {
-          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.2.0');
-          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).toEqual('19.4.0');
+          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.2.0');
+          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('19.4.0');
 
-          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.0.0');
-          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.2.0');
+          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.0.0');
+          expect(getDep(appTree, '@ihk-gfi/lux-components-theme').version).toEqual('19.2.0');
 
           done();
         },

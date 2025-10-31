@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { LuxMenuItemComponent } from '../../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxMenuComponent } from '../../../../lux-action/lux-menu/lux-menu.component';
@@ -7,10 +8,11 @@ import { LuxLocale } from './lux-locale';
 @Component({
   selector: 'lux-lang-select',
   templateUrl: './lux-lang-select.component.html',
-  imports: [LuxMenuComponent, LuxMenuItemComponent]
+  imports: [LuxMenuComponent, LuxMenuItemComponent, TranslocoPipe]
 })
 export class LuxLangSelectComponent implements OnInit {
   private cookieService = inject(CookieService);
+  protected translocoService = inject(TranslocoService);
 
   @Input() luxLocaleSupported = ['de'];
   @Input() luxLocaleBaseHref = '';
@@ -26,8 +28,6 @@ export class LuxLangSelectComponent implements OnInit {
 
   localeOptions: LuxLocale[] = [];
 
-  selectedLocale = this.allSupportedLocaleArr[0];
-
   ngOnInit() {
     this.luxLocaleSupported.forEach((locale) => {
       const foundLocale = this.allSupportedLocaleArr.find((item) => item.code === locale);
@@ -42,59 +42,13 @@ export class LuxLangSelectComponent implements OnInit {
     }
     const newLocale = this.allSupportedLocaleArr.find((item) => item.code === locale);
     if (newLocale) {
-      this.selectedLocale = newLocale;
+      this.translocoService.setActiveLang(locale);
     }
   }
 
   onLocaleChanged(locale: LuxLocale) {
     this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
-    window.location.href = this.generateNewUrl(locale, window.location.href, window.location.origin);
+    this.translocoService.setActiveLang(locale.code);
   }
 
-  generateNewUrl(locale: LuxLocale, href: string, origin: string) {
-    const result = [origin];
-
-    let segments = href.replace(origin, '').split('/');
-
-    // Leereinträge entfernen
-    if (segments && segments.length > 1) {
-      segments = segments.filter((item) => item !== '');
-    }
-
-    // BaseHref-Segmente entfernen
-    if (this.luxLocaleBaseHref) {
-      const baseHrefSegments = this.luxLocaleBaseHref.split('/').filter((item) => item !== '');
-
-      //
-      let errorFound = false;
-      for (let i = 0; i < baseHrefSegments.length; i++) {
-        if (segments[i] !== baseHrefSegments[i]) {
-          errorFound = true;
-          console.error(`The url "${href}" starts not with the configured base href "${this.luxLocaleBaseHref}".`);
-          break;
-        }
-      }
-
-      if (!errorFound) {
-        segments = segments.splice(baseHrefSegments.length);
-        result.push(...baseHrefSegments);
-      }
-    }
-
-    // Segment mit der alten Locale entfernen
-    if (segments[0] === this.selectedLocale.code) {
-      segments = segments.slice(1);
-    }
-
-    // Neues Segment der neuen Locale hinzufügen, außer bei "de".
-    // "de" wird auf Root abgebildet und benötigt kein Segment.
-    if (locale.code !== 'de') {
-      result.push(locale.code);
-    }
-
-    // Restlichen Segmente wieder hinzufügen.
-    result.push(...segments);
-
-    return result.join('/');
-  }
 }

@@ -36,6 +36,7 @@ import {
   MatRowDef,
   MatTable
 } from '@angular/material/table';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -105,13 +106,15 @@ const customPaginatorOptions: MatPaginatorDefaultOptions = {
     MatFooterRow,
     MatPaginator,
     LuxTooltipDirective,
-    LuxIconComponent
+    LuxIconComponent,
+    TranslocoPipe
   ]
 })
 export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoCheck, OnDestroy {
   private queryObserver = inject(LuxMediaQueryObserverService);
   private luxConsole = inject(LuxConsoleService);
   private liveAnnouncer = inject(LiveAnnouncer);
+  private tService = inject(TranslocoService);
 
   static AUTO_PAGINATION_START = 100; // 100 Elemente bis automatisch die Pagination aktiviert wird
 
@@ -642,18 +645,18 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
       let directionDescription;
       switch (sort.direction) {
         case 'desc':
-          directionDescription = $localize`:@@luxc.table.sort.descending:absteigend`;
+          directionDescription = this.tService.translate('luxc.table.sort.descending');
           break;
         case 'asc':
-          directionDescription = $localize`:@@luxc.table.sort.ascending:aufsteigend`;
+          directionDescription = this.tService.translate('luxc.table.sort.ascending');
           break;
         case '':
-          directionDescription = $localize`:@@luxc.table.sort.no_longer:nicht mehr`;
+          directionDescription = this.tService.translate('luxc.table.sort.no_longer');
           break;
       }
 
       this.liveAnnouncer.announce(
-        $localize`:@@luxc.table.sort.announce:Spalte ${columnDef}:column: sortiert nun ${directionDescription}:direction:`,
+        this.tService.translate(`luxc.table.sort.announce`, { column: columnDef, direction: directionDescription }),
         'assertive'
       );
     }

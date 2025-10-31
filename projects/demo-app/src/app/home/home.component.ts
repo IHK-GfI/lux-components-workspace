@@ -1,15 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAriaRoleDirective, LuxAutofocusDirective, LuxIconComponent, LuxTileAcComponent } from '@ihk-gfi/lux-components';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [LuxIconComponent, LuxTileAcComponent, LuxAriaRoleDirective, LuxAutofocusDirective]
+  imports: [LuxIconComponent, LuxTileAcComponent, LuxAriaRoleDirective, LuxAutofocusDirective, TranslocoModule]
 })
 export class HomeComponent {
   private router = inject(Router);
+  tService = inject(TranslocoService);
 
   goTo(target: string) {
     switch (target) {

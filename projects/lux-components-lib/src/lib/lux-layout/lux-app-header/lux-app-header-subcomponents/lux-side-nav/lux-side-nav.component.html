@@ -3,8 +3,8 @@
     class="lux-side-nav lux-side-nav-z-index"
     [@expandHide]="{ value: sideNavExpanded ? 'expanded' : 'void', params: { width: width + 'px' } }"
     (@expandHide.done)="updateSideNavAfterAnimationIsFinished()"
-    [luxAriaRole]="luxAriaRoleNavigationLabel ? 'navigation' : undefined"
-    [luxAriaLabel]="luxAriaRoleNavigationLabel"
+    luxAriaRole="navigation"
+    luxAriaLabel="{{ luxAriaRoleNavigationLabel || ('luxc.side-nav.ariarolenavigation' | transloco) }}"
     [ngStyle]="{ top: top, left: left, bottom: bottom }"
     #sideNav
   >

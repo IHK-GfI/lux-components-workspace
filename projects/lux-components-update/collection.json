@@ -36,6 +36,11 @@
       "factory": "./src/updates/19.0.0/index#update190000",
       "schema": "./src/updates/19.0.0/schema.json"
     },
+    "update-20.0.0": {
+      "description": "Aktualisiert das LUX-Componentsprojekt auf die Version 20.0.0",
+      "factory": "./src/updates/20.0.0/index#update200000",
+      "schema": "./src/updates/20.0.0/schema.json"
+    },
     "update-dependencies": {
       "description": "Aktualisiert die Abhängigkeiten im LUX-Componentsprojekt",
       "factory": "./src/update-dependencies/index#updateDependencies",
@@ -45,6 +50,16 @@
       "description": "Aktualisiert die englischen Übersetzungen im Projekt",
       "factory": "./src/update-en-messages/index#updateEnMessages",
       "schema": "./src/update-en-messages/schema.json"
+    },
+    "migrate-xlf": {
+      "description": "Migriert die XLF Übersetzungsdateien in das neue Format",
+      "factory": "./src/migrate-xlf/index#migrateXlf",
+      "schema": "./src/migrate-xlf/schema.json"
+    },
+    "migrate-i18n-keys": {
+      "description": "Migriert die I18N-Tags in den HTML-Dateien",
+      "factory": "./src/migrate-i18n-keys/index#migrateI18nKeys",
+      "schema": "./src/migrate-i18n-keys/schema.json"
     }
   }
 }

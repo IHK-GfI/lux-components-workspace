@@ -5,6 +5,7 @@ import {
   ContentChild,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -17,6 +18,7 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger }
 import { MatOption } from '@angular/material/core';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { TranslocoService } from '@jsverse/transloco';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
@@ -50,6 +52,8 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
   ]
 })
 export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormComponentBase<V> implements OnInit, OnDestroy, AfterViewInit {
+  tservice = inject(TranslocoService);
+  
   private selected$: ReplaySubject<any> = new ReplaySubject<any>(1);
   private subscriptions: Subscription[] = [];
   private valueChangeSubscription?: Subscription;
@@ -75,8 +79,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   @Input() luxPlaceholder = '';
   @Input() luxOptionLabelProp = 'label';
   @Input() luxLookupDelay = 500;
-  @Input()
-  luxErrorMessageNotAnOption = $localize`:@@luxc.autocomplete.error_message.not_an_option:Der eingegebene Wert ist nicht Teil der Auswahl.`;
+  @Input() luxErrorMessageNotAnOption = '';
   @Input() luxTagId?: string;
   @Input() luxSelectAllOnClick = true;
   @Input() luxStrict = true;
@@ -259,7 +262,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
    */
   override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['incorrect']) {
-      return this.luxErrorMessageNotAnOption;
+      return this.luxErrorMessageNotAnOption || this.tservice.translate('luxc.autocomplete.error_message.not_an_option');
     }
     return undefined;
   }

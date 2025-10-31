@@ -19,22 +19,23 @@ import {
   inject,
   input
 } from '@angular/core';
+import { MatDivider } from '@angular/material/divider';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
+import { LuxDividerComponent } from '../../lux-layout/lux-divider/lux-divider.component';
 import { LuxThemeService } from '../../lux-theme/lux-theme.service';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxButtonComponent } from '../lux-button/lux-button.component';
 import { LuxMenuItemComponent } from './lux-menu-subcomponents/lux-menu-item.component';
-import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigger.component';
-import { LuxDividerComponent } from '../../lux-layout/lux-divider/lux-divider.component';
-import { MatDivider } from '@angular/material/divider';
 import { LuxMenuPanelHeaderComponent } from './lux-menu-subcomponents/lux-menu-panel-header.component';
 import { LuxMenuSectionTitleComponent } from './lux-menu-subcomponents/lux-menu-section-title.component';
+import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigger.component';
 
 @Component({
   selector: 'lux-menu',
@@ -52,7 +53,8 @@ import { LuxMenuSectionTitleComponent } from './lux-menu-subcomponents/lux-menu-
     LuxTagIdDirective,
     MatMenuTrigger,
     LuxIconComponent,
-    MatDivider
+    MatDivider,
+    TranslocoPipe
   ]
 })
 export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy, OnInit {
@@ -108,7 +110,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   @Input() luxClassName = '';
   @Input() luxTagId?: string;
   @Input() luxToggleDisabled = false;
-  @Input() luxAriaMenuTriggerLabel = $localize`:@@luxc.menu.trigger.btn:Menü`;
+  @Input() luxAriaMenuTriggerLabel = '';
   luxShowSections = input<boolean>(false);
   luxMenuPanelLarge = input<boolean>(false);
 

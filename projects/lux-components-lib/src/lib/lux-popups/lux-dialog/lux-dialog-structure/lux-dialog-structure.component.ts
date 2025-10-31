@@ -1,6 +1,7 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../../lux-util/lux-util';
@@ -13,7 +14,7 @@ import { LuxDialogRef } from '../lux-dialog-model/lux-dialog-ref.class';
 @Component({
   selector: 'lux-dialog-structure',
   templateUrl: './lux-dialog-structure.component.html',
-  imports: [LuxAriaLabelDirective, LuxIconComponent, MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions]
+  imports: [LuxAriaLabelDirective, LuxIconComponent, MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, TranslocoPipe]
 })
 export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
   private luxDialogRef = inject<LuxDialogRef<any>>(LuxDialogRef);

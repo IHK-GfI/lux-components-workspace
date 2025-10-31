@@ -213,7 +213,7 @@
   <div
     [matMenuTriggerFor]="menu"
     role="button"
-    [luxAriaLabel]="luxAriaMenuTriggerLabel"
+    luxAriaLabel="{{ luxAriaMenuTriggerLabel || ('luxc.menu.trigger.btn' | transloco) }}"
     class="lux-menu-trigger lux-color-primary-500"
     [ngClass]="{ 'lux-display-none-important': hideToggle }"
     #menuTrigger
@@ -235,7 +235,7 @@
     luxTagId="lux-menu-default-trigger"
     [luxLabel]="luxMenuLabel"
     [luxIconName]="luxMenuIconName"
-    [luxAriaLabel]="luxAriaMenuTriggerLabel"
+    luxAriaLabel="{{ luxAriaMenuTriggerLabel || ('luxc.menu.trigger.btn' | transloco) }}"
     luxAriaLabelSelector="button"
     luxTabIndex="0"
     [luxApplyToChildren]="true"

@@ -182,7 +182,7 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     }
 
     if (errors['noResult']) {
-      return $localize`:@@luxc.lookup-autocomplete.error_message.not_available:Der eingegebene Eintrag ist nicht Teil der Schlüsseltabelle.`;
+      return this.tService.translate(`luxc.lookup-autocomplete.error_message.not_available`);
     }
     return undefined;
   }

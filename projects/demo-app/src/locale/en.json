@@ -1,0 +1,28 @@
+{
+  "app": {
+    "menu": {
+      "components": "Components",
+      "iconSearch": "Icon Search",
+      "forms": "Forms",
+      "baseline": "Baseline",
+      "configuration": "Settings"
+    },
+    "footer": {
+      "link.dataProtection": "Privacy Policy ",
+      "link.impressum": "Legal Notice",
+      "link.licenseHint": "License Notice"
+    }
+  },
+  "home": {
+    "tile.components.title": "Components",
+    "tile.components.subtitle": "All components at a glance",
+    "tile.iconSearch.title": "Icon Search",
+    "tile.iconSearch.subtitle": "The new icon set for LUX-Components",
+    "tile.forms.title": "Forms",
+    "tile.forms.subtitle": "Layout examples for forms",
+    "tile.baseline.title": "Baseline",
+    "tile.baseline.subtitle": "Comparison of form controls",
+    "tile.configuration.title": "Settings",
+    "tile.configuration.subtitle": "Change settings"
+  }
+}

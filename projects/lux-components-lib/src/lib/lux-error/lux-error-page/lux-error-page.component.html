@@ -6,10 +6,10 @@
     <lux-button luxColor="primary" [luxLabel]="errorConfig.homeRedirectText" (luxClicked)="clickHomeRedirect()" class="lux-flex-none">
     </lux-button>
     } @if (error) { @if (error.errorId) {
-    <p i18n="@@luxc.errorpage.error_number" class="lux-color-dark-secondary-text lux-flex-none">Fehlernummer: {{ error.errorId }}</p>
+    <p class="lux-color-dark-secondary-text lux-flex-none">{{ 'luxc.errorpage.error_number' | transloco:{ errorId: error.errorId } }}</p>
     } @if (error.errorMessage) {
     <lux-panel luxExpandedHeaderHeight="50px" luxCollapsedHeaderHeight="50px">
-      <lux-panel-header-title i18n="@@luxc.errorpage.error_title">Fehlermeldung</lux-panel-header-title>
+      <lux-panel-header-title>{{ 'luxc.errorpage.error_title' | transloco }}</lux-panel-header-title>
       <lux-panel-content>
         <p>{{ error.errorMessage }}</p>
       </lux-panel-content>

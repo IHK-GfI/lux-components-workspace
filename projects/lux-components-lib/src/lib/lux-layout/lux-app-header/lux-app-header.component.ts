@@ -14,6 +14,7 @@ import {
   inject
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxMenuItemComponent } from '../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -48,7 +49,8 @@ import { LuxSideNavComponent } from './lux-app-header-subcomponents/lux-side-nav
     LuxMenuTriggerComponent,
     LuxButtonComponent,
     LuxIconComponent,
-    LuxImageComponent
+    LuxImageComponent,
+    TranslocoPipe
   ]
 })
 export class LuxAppHeaderComponent implements OnInit, OnChanges, OnDestroy {
@@ -65,12 +67,12 @@ export class LuxAppHeaderComponent implements OnInit, OnChanges, OnDestroy {
   @Input() luxIconName?: string;
   @Input() luxImageSrc?: string;
   @Input() luxImageHeight = '55px';
-  @Input() luxAriaAppMenuButtonLabel = $localize`:@@luxc.app-header.aria.appmenu.btn:Anwendungsmenü / Navigation`;
-  @Input() luxAriaUserMenuButtonLabel = $localize`:@@luxc.app-header.aria.usermenu.btn:Benutzermenü / Navigation`;
-  @Input() luxAriaTitleIconLabel = $localize`:@@luxc.app-header.aria.title_icon.lbl:Titelicon`;
-  @Input() luxAriaTitleImageLabel = $localize`:@@luxc.app-header.aria.title.image.lbl:Titelbild`;
-  @Input() luxAriaTitleLinkLabel = $localize`:@@luxc.app-header.aria.title.link.lbl:`;
-  @Input() luxAriaRoleHeaderLabel = $localize`:@@luxc.app-header.aria.role_header.lbl:Kopfbereich / Menübereich`;
+  @Input() luxAriaAppMenuButtonLabel = '';
+  @Input() luxAriaUserMenuButtonLabel = '';
+  @Input() luxAriaTitleIconLabel = '';
+  @Input() luxAriaTitleImageLabel = '';
+  @Input() luxAriaTitleLinkLabel = '';
+  @Input() luxAriaRoleHeaderLabel = '';
 
   @Output() luxClicked = new EventEmitter<Event>();
 

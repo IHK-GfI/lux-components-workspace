@@ -1,3 +1,5 @@
+import { TestBed } from '@angular/core/testing';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxRelativeTimestampPipe } from './lux-relative-timestamp.pipe';
 
 const hour = 3600000;
@@ -7,18 +9,30 @@ const month = week * 4;
 const year = month * 12;
 
 describe('LuxRelativeTimestampPipe', () => {
+  function createPipe() {
+    return TestBed.runInInjectionContext(() => new LuxRelativeTimestampPipe());
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideLuxTranslocoTesting()
+      ]
+    }).compileComponents();
+  });
+
   it('create an instance', () => {
-    const pipe = new LuxRelativeTimestampPipe();
+    const pipe = createPipe();
     expect(pipe).toBeTruthy();
   });
 
   it('should show default text', () => {
-    const pipe = new LuxRelativeTimestampPipe();
+    const pipe = createPipe();
     expect(pipe.transform(null as any, 'Keine Zeit')).toEqual('Keine Zeit');
   });
 
   it('should show correct future times', () => {
-    const pipe = new LuxRelativeTimestampPipe();
+    const pipe = createPipe();
     const now = new Date();
 
     let timestamp = now.getTime() + hour;
@@ -64,7 +78,7 @@ describe('LuxRelativeTimestampPipe', () => {
   });
 
   it('should show correct past times', () => {
-    const pipe = new LuxRelativeTimestampPipe();
+    const pipe = createPipe();
     const now = new Date();
 
     let timestamp = now.getTime() - hour;
@@ -111,7 +125,7 @@ describe('LuxRelativeTimestampPipe', () => {
   });
 
   it('should show correct prefix', () => {
-    const pipe = new LuxRelativeTimestampPipe();
+    const pipe = createPipe();
     const now = new Date();
 
     let timestamp;

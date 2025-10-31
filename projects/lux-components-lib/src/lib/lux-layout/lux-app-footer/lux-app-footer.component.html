@@ -1,12 +1,12 @@
 <div
   class="lux-app-footer lux-p-3 lt-md:lux-p-2"
   [luxAriaRole]="luxAriaRoleFooterLabel ? 'contentinfo' : undefined"
-  [luxAriaLabel]="luxAriaRoleFooterLabel"
+  luxAriaLabel="{{ luxAriaRoleFooterLabel || ('luxc.app-footer.ariarolefooter' | transloco) }}"
   [ngClass]="{ 'lux-centered': luxCenteredView }"
   [ngStyle]="{ 'max-width': luxCenteredView ? luxCenteredWidth : '100%' }"
 >
   @if (luxVersion) {
-  <div class="version lt-lg:lux-display-none" i18n="@@luxc.app-footer.version">Version {{ luxVersion }}</div>
+  <div class="version lt-lg:lux-display-none">{{ 'luxc.app-footer.version' | transloco: { version: luxVersion } }}</div>
   } @if (linkInfos) {
   <div class="lux-app-footer-links">
     @for (linkItem of linkInfos; track linkItem) { @if (linkItem.alwaysVisible || desktopView) {

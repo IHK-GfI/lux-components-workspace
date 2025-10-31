@@ -13,6 +13,7 @@ import {
   ViewChild,
   inject
 } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxLinkComponent } from '../../../../lux-action/lux-link/lux-link.component';
 import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -28,7 +29,7 @@ import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-n
   selector: 'lux-side-nav',
   templateUrl: './lux-side-nav.component.html',
   animations: [sideNavAnimation, sideNavOverlayAnimation],
-  imports: [NgStyle, LuxAriaRoleDirective, LuxAriaLabelDirective, LuxDividerComponent, NgTemplateOutlet, LuxLinkComponent, LuxIconComponent]
+  imports: [NgStyle, LuxAriaRoleDirective, LuxAriaLabelDirective, LuxDividerComponent, NgTemplateOutlet, LuxLinkComponent, LuxIconComponent, TranslocoPipe]
 })
 export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   private appService = inject(LuxAppService);
@@ -36,7 +37,7 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   @Input() luxDashboardLink?: string;
   @Input() luxDashboardLinkTitle = 'LUX Dashboard';
   @Input() luxOpenLinkBlank?: boolean;
-  @Input() luxAriaRoleNavigationLabel = $localize`:@@luxc.side-nav.ariarolenavigation:Anwendungsmenü / Navigation`;
+  @Input() luxAriaRoleNavigationLabel = '';
 
   @Output() luxSideNavExpandedChange = new EventEmitter<boolean>();
 

@@ -1,7 +1,7 @@
 import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { getPackageJsonDependency } from '../../utility/dependencies';
+import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
 import { update190100 } from './index';
@@ -62,8 +62,8 @@ describe('update190100', () => {
 
       callRule(update190100(testOptions), appTree, context).subscribe(
         (successTree) => {
-          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.0.0');
-          expect(getPackageJsonDependency(appTree, '@ihk-gfi/lux-components').version).toEqual('19.1.0');
+          expect(getDep(appTree, '@ihk-gfi/lux-components').version).not.toEqual('19.0.0');
+          expect(getDep(appTree, '@ihk-gfi/lux-components').version).toEqual('19.1.0');
 
           done();
         },

@@ -1,7 +1,9 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
+import { provideLuxTranslocoTesting } from '../../../../../testing/transloco-test.provider';
 import { LuxLangSelectAcComponent } from './lux-lang-select-ac.component';
 
 describe('LuxLangSelectAcComponent', () => {
@@ -13,112 +15,24 @@ describe('LuxLangSelectAcComponent', () => {
       providers: [
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideLuxTranslocoTesting(),
         { provide: CookieService, useClass: MockCookieService }
       ]
     }).compileComponents();
   });
 
-  it('should create', () => {
+  it('should create', (done) => {
     fixture = TestBed.createComponent(LuxLangSelectAcComponent);
     component = fixture.componentInstance;
     component.luxLocaleSupported = ['de', 'en'];
-    expect(component).toBeTruthy();
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      const transloco = TestBed.inject(TranslocoService);
+      expect(component).toBeTruthy();
+      expect(['de', 'en']).toContain(transloco.getActiveLang());
+      done();
+    });
   });
-
-  it('should set default locale de (not set)', inject([CookieService], (cookieService: MockCookieService) => {
-    cookieService.locale = undefined;
-    fixture = TestBed.createComponent(LuxLangSelectAcComponent);
-    component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
-    fixture.detectChanges();
-    expect(component.selectedLocale).toEqual(component.allSupportedLocaleArr[0]);
-  }));
-
-  it('should set default locale de (unsupported locale)', inject([CookieService], (cookieService: MockCookieService) => {
-    cookieService.locale = 'no';
-    fixture = TestBed.createComponent(LuxLangSelectAcComponent);
-    component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
-    fixture.detectChanges();
-    expect(component.selectedLocale).toEqual(component.allSupportedLocaleArr[0]);
-  }));
-
-  it('should generate url (de - root)', inject([CookieService], (cookieService: MockCookieService) => {
-    fixture = TestBed.createComponent(LuxLangSelectAcComponent);
-    component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
-    fixture.detectChanges();
-    expect(component.selectedLocale).toEqual(component.allSupportedLocaleArr[0]);
-
-    const urlDeEn = component.generateNewUrl(component.allSupportedLocaleArr[0], 'http://localhost:4200', 'http://localhost:4200');
-    expect(urlDeEn).toEqual('http://localhost:4200/');
-  }));
-
-  it('should generate url (de -> en)', inject([CookieService], (cookieService: MockCookieService) => {
-    cookieService.locale = 'de';
-    fixture = TestBed.createComponent(LuxLangSelectAcComponent);
-    component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
-    fixture.detectChanges();
-    expect(component.selectedLocale).toEqual(component.allSupportedLocaleArr[0]);
-
-    const urlDeEn = component.generateNewUrl(
-      component.allSupportedLocaleArr[1],
-      'http://localhost:4200/information',
-      'http://localhost:4200'
-    );
-    expect(urlDeEn).toEqual('http://localhost:4200/en/information');
-  }));
-
-  it('should generate url (de -> en - with BaseHref)', inject([CookieService], (cookieService: MockCookieService) => {
-    cookieService.locale = 'de';
-    fixture = TestBed.createComponent(LuxLangSelectAcComponent);
-    component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
-    component.luxLocaleBaseHref = '/webcomponent/';
-    fixture.detectChanges();
-    expect(component.selectedLocale).toEqual(component.allSupportedLocaleArr[0]);
-
-    const urlDeEn = component.generateNewUrl(
-      component.allSupportedLocaleArr[1],
-      'http://localhost:4200/webcomponent/information',
-      'http://localhost:4200'
-    );
-    expect(urlDeEn).toEqual('http://localhost:4200/webcomponent/en/information');
-  }));
-
-  it('should generate url (en -> de)', inject([CookieService], (cookieService: MockCookieService) => {
-    cookieService.locale = 'en';
-    fixture = TestBed.createComponent(LuxLangSelectAcComponent);
-    component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
-    fixture.detectChanges();
-    expect(component.selectedLocale).toEqual(component.allSupportedLocaleArr[1]);
-
-    const urlEnDe = component.generateNewUrl(
-      component.allSupportedLocaleArr[0],
-      'http://localhost:4200/en/information',
-      'http://localhost:4200'
-    );
-    expect(urlEnDe).toEqual('http://localhost:4200/information');
-  }));
-
-  it('should generate url (en -> de - with BaseHref)', inject([CookieService], (cookieService: MockCookieService) => {
-    cookieService.locale = 'en';
-    fixture = TestBed.createComponent(LuxLangSelectAcComponent);
-    component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
-    component.luxLocaleBaseHref = '/webcomponent/test/';
-    fixture.detectChanges();
-    expect(component.selectedLocale).toEqual(component.allSupportedLocaleArr[1]);
-
-    const urlEnDe = component.generateNewUrl(
-      component.allSupportedLocaleArr[0],
-      'http://localhost:4200/webcomponent/test/en/information',
-      'http://localhost:4200'
-    );
-    expect(urlEnDe).toEqual('http://localhost:4200/webcomponent/test/information');
-  }));
 });
 
 class MockCookieService {

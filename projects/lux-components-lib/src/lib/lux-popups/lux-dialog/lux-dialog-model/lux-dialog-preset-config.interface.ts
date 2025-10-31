@@ -26,12 +26,12 @@ export const DEFAULT_DIALOG_PRESET_CONF: ILuxDialogPresetConfig = {
   disableClose: true,
   contentTemplate: undefined,
   confirmAction: {
-    label: $localize`:@@luxc.dialog-preset.ok:Bestätigen`,
+    label: '',
     flat: true,
     color: 'primary'
   },
   declineAction: {
-    label: $localize`:@@luxc.dialog-preset.cancel:Ablehnen`,
+    label: '',
     outlined: true,
     color: 'primary'
   },

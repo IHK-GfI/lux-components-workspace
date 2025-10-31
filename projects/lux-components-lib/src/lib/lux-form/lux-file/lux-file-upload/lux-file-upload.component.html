@@ -25,7 +25,7 @@
       class="lux-file-upload-drop-container-progress"
       color="primary"
       mode="indeterminate"
-      [luxAriaLabel]="ariaLabelProgress"
+      luxAriaLabel="{{ ariaLabelProgress || ('luxc.progress.arialabel' | transloco) }}"
     >
     </mat-progress-bar>
     } @if (!forceProgressIndeterminate) {
@@ -125,8 +125,7 @@
         ></lux-button>
         } } @if (!luxReadonly && !luxDisabled && !luxListOnly && !luxDeleteActionConfig.hidden) {
         <lux-button
-          luxAriaLabel="Button zum Löschen der Datei {{ file.name }}"
-          i18n-luxAriaLabel="@@luxc.file.upload.delete.btn.arialabel"
+          luxAriaLabel="{{ 'luxc.file.upload.delete.btn.arialabel' | transloco: { fileName: file.name } }}"
           [luxTagId]="uid + '-delete-button_' + i"
           [luxIconName]="luxDeleteIcon"
           class="lux-file-upload-view-item-button lux-file-upload-view-item-delete-button"
@@ -156,22 +155,22 @@
 
 <ng-template #desktopLabelTemplate>
   @if(theme === 'green') {
-  <span class="lux-file-upload-label-text">{{ luxLabel }}</span
-  ><a class="lux-file-upload-link">{{ luxLabelLink }}</a
+  <span class="lux-file-upload-label-text">{{ luxLabel || ('luxc.file.upload.label' | transloco) }}</span
+  ><a class="lux-file-upload-link">{{ luxLabelLink || ('luxc.file.upload.label.link' | transloco) }}</a
   >@if (luxRequired) {
   <span>&nbsp;*</span>
   } } @else {
-  <span class="lux-file-upload-label-text">{{ luxLabel }}</span
-  ><lux-link-plain class="lux-file-upload-link" [luxLabel]="luxLabelLink + (luxRequired ? '&nbsp;*' : '')" [luxDisabled]="luxDisabled"></lux-link-plain>
+  <span class="lux-file-upload-label-text">{{ luxLabel || ('luxc.file.upload.label' | transloco) }}</span
+  ><lux-link-plain class="lux-file-upload-link" [luxLabel]="(luxLabelLink || ('luxc.file.upload.label.link' | transloco)) + (luxRequired ? '&nbsp;*' : '')" [luxDisabled]="luxDisabled"></lux-link-plain>
   }
 </ng-template>
 
 <ng-template #mobileLabelTemplate>
   @if(theme === 'green') {
-  <a class="lux-file-upload-link">{{ luxLabelLinkShort }}</a
+  <a class="lux-file-upload-link">{{ luxLabelLinkShort || ('luxc.file.upload.label.link.short' | transloco) }}</a
   >@if (luxRequired) {
   <span>&nbsp;*</span>
   } } @else {
-  <lux-link-plain class="lux-file-upload-link" [luxLabel]="luxLabelLink + (luxRequired ? '&nbsp;*' : '')" [luxDisabled]="luxDisabled"></lux-link-plain>
+  <lux-link-plain class="lux-file-upload-link" [luxLabel]="(luxLabelLink || ('luxc.file.upload.label.link' | transloco)) + (luxRequired ? '&nbsp;*' : '')" [luxDisabled]="luxDisabled"></lux-link-plain>
   }
 </ng-template>

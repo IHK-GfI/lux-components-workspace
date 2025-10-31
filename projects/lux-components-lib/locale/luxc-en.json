@@ -1,0 +1,235 @@
+{
+  "luxc": {
+    "app-footer": {
+      "ariarolefooter": "Footer area / Button area",
+      "version": "Version {{version}}"
+    },
+    "app-header": {
+      "aria.appmenu.btn": "Menu / Navigation",
+      "aria.role_header.lbl": "Head / Menu",
+      "aria.title.image.lbl": "Title image",
+      "aria.title.link.lbl": "",
+      "aria.title_icon.lbl": "Title icon",
+      "aria.usermenu.btn": "User menu / Navigation",
+      "lang.select.trigger": "Language settings",
+      "user.menu.trigger": "User menu"
+    },
+    "app_content": {
+      "ariarolemain": "Main content"
+    },
+    "autocomplete": {
+      "error_message.not_an_option": "The entered value is not a valid option."
+    },
+    "card": {
+      "expandedLabel.close": "Hide",
+      "expandedLabel.open": "More"
+    },
+    "chips": {
+      "input.placeholder.lbl": "enter or select",
+      "remove": "remove"
+    },
+    "datepicker": {
+      "error_message.empty": "The date should not be empty",
+      "error_message.invalid": "Invalid date",
+      "error_message.max": "Above the maximum value",
+      "error_message.min": "Below the minimum value",
+      "next.month.arialabel": "next month",
+      "prev.month.arialabel": "previous month"
+    },
+    "datetimepicker": {
+      "error_message.empty": "The date should not be empty",
+      "error_message.invalid": "Invalid date or time",
+      "error_message.max": "Above the maximum value",
+      "error_message.min": "Below the minimum value",
+      "invalid.date": "Please enter a date",
+      "invalid.time": "Please enter a time",
+      "panel.hours.arialabel": "Hours",
+      "panel.minutes.arialabel": "Minutes"
+    },
+    "dialog": {
+      "btn.close.arialabel": "Dialog close"
+    },
+    "dialog-preset": {
+      "cancel": "Cancel",
+      "ok": "Ok"
+    },
+    "errorpage": {
+      "error_number": "Error number: {{errorId}}",
+      "error_title": "Error message"
+    },
+    "file": {
+      "delete.dialog.cancel.lbl": "Cancel",
+      "delete.dialog.content": "If you delete the file, it will be deleted permanently.",
+      "delete.dialog.delete.lbl": "Delete",
+      "delete.dialog.title": "Do you really want to delete the file?",
+      "rename.dialog.cancel.lbl": "Cancel",
+      "rename.dialog.rename.lbl": "Rename",
+      "rename.dialog.title": "Do you want to rename the file?",
+      "rename.input.lbl": "New file name",
+      "replace.dialog.cancel.lbl": "Cancel",
+      "replace.dialog.content": "If you select a new file, the existing file will be replaced.",
+      "replace.dialog.content.multiple": "If you upload files with the same name, they will be replaced.",
+      "replace.dialog.deleteprotection": "A file is to be replaced that must not be replaced or deleted!",
+      "replace.dialog.replace.lbl": "Replace",
+      "replace.dialog.title": "Do you want to continue and replace the file?",
+      "replace.dialog.title.multiple": "Do you want to continue and replace the files with the same names?",
+      "upload.delete.btn.arialabel": "Button to delete the file {{fileName}}",
+      "upload.error_message.max_file_size": "The file \"{{fileName}}\" exceeds the maximum file size of {{maxSizeMB}} megabytes.",
+      "upload.error_message.not_accepted": "The file \"{{fileName}}\" does not match an accepted file type. Only {{acceptTypes}} files are allowed.",
+      "upload.error_message.only_one_file": "Only one file may be uploaded.",
+      "upload.error_message.read_error": "An error occurred while uploading the selected file. Please try again.",
+      "upload.error_message.upload_error": "An error occurred while uploading the selected file. Please try again.",
+      "upload.file.type.concat": "or",
+      "upload.label": "Drop file here or ",
+      "upload.label.link": "browse file",
+      "upload.label.link.short": "Upload file"
+    },
+    "file-input": {
+      "error_message.required": "A file should be selected"
+    },
+    "file-list": {
+      "delete.lbl": "Delete",
+      "delete_title.lbl": "Delete all files",
+      "error_message.required": "A file should be selected",
+      "upload.lbl": "Upload",
+      "upload_title.lbl": "Upload new files"
+    },
+    "file-preview": {
+      "close.arialabel": "Close file preview",
+      "download.arialabel": "Download file",
+      "filter-load-dialog.close.lbl": "Close",
+      "filter-load-dialog.delete.lbl": "Delete",
+      "filter-load-dialog.load.lbl": "Load",
+      "filter-load-dialog.title": "Saved Filters",
+      "filter-save-dialog.cancel.lbl": "Cancel",
+      "filter-save-dialog.name.lbl": "Name",
+      "filter-save-dialog.save.lbl": "Save",
+      "filter-save-dialog.title": "Save Filter",
+      "imgviewer.zoomin.arialabel": "Zoom in",
+      "imgviewer.zoomout.arialabel": "Zoom out",
+      "notsupportedviewer.close.arialabel": "Close file preview",
+      "notsupportedviewer.download.arialabel": "Download file",
+      "notsupportedviewer.download.lbl": "Download...",
+      "notsupportedviewer.download.dialog.lbl": "Download for viewing",
+      "notsupportedviewer.message": "This file format cannot be displayed in the preview."
+    },
+    "filter": {
+      "defaultFilterMessage": "Default filter settings are used.",
+      "expandedLabel.close": "Less Options",
+      "expandedLabel.open": "More Options",
+      "filter.btn": "Filter",
+      "load.btn": "Load",
+      "reset.btn": "Reset",
+      "save.btn": "Save",
+      "title": "Filter"
+    },
+    "form": {
+      "delete.error.button": "Delete error message"
+    },
+    "form-checkable-base": {
+      "error_message.required": "Required"
+    },
+    "form-file-base": {
+      "delete.action.lbl": "Delete",
+      "delete.all_files.announce": "All files are removed",
+      "delete.one_file.announce": "The file {{fileName}} is removed.",
+      "download.action.lbl": "Download",
+      "error_message.max_file_count": "A maximum of {{maxFileCount}} files may be selected",
+      "error_message.max_file_size": "The file \"{{fileName}}\" exceeds the {{fileSizeInMB}}MB",
+      "error_message.not_accepted": "The file \"{{fileName}}\" has a not supported file type",
+      "error_message.only_one_file": "Only one file should be selected",
+      "error_message.read_error": "Could not read the file \"{{fileName}}\"",
+      "error_message.upload.no_files": "Could not upload",
+      "error_message.upload.with_file": "Could not upload the file",
+      "error_message.upload.with_files": "Could not upload the files",
+      "upload.action.lbl": "Upload",
+      "upload.file.announce": "Please wait. The files are processed.",
+      "upload.files.announce": "Please wait. The file is processed.",
+      "view.action.lbl": "Show"
+    },
+    "lang-select": {
+      "aria.langmenu.btn": "Language menu"
+    },
+    "list": {
+      "arialabel": "List",
+      "empty_label": "No entries available"
+    },
+    "lookup": {
+      "error_message.invalid": "The selected value is invalid."
+    },
+    "lookup-autocomplete": {
+      "error_message.not_available": "The entered Value is not part of the key table."
+    },
+    "master-detail": {
+      "back-to-master-label": "Back to list",
+      "detail.empty_label": "No element selected",
+      "header.close.btn": "Close list",
+      "header.open.btn": "Open list",
+      "master.empty_label": "No elements selected"
+    },
+    "menu": {
+      "trigger.btn": "Menu"
+    },
+    "message": {
+      "announce.0_messages": "There are no Messages.",
+      "announce.1_message": "There is one message.",
+      "announce.x_messages": "There are {{count}} messages.",
+      "btn.close.arialabel": "Close message",
+      "container.arialabel": "Messages"
+    },
+    "paginator": {
+      "0_until_length": "0 of {{length}}",
+      "elements_on_page": "Items per page",
+      "first_page": "First",
+      "last_page": "Last Page",
+      "next_page": "Next page",
+      "page_part": "{{start}} - {{end}} of {{length}}",
+      "previous_page": "Previous Page"
+    },
+    "progress": {
+      "arialabel": "Loading indicator"
+    },
+    "relative-timestamp": {
+      "ago": "ago",
+      "days": "days",
+      "future": "{{prefix}} {{timeUnits}} {{timeDelta}}",
+      "in": "in",
+      "months": "months",
+      "past": "{{timeUnits}} {{timeDelta}} {{prefix}}",
+      "today": "today",
+      "tomorrow": "tomorrow",
+      "weeks": "weeks",
+      "years": "years",
+      "yesterday": "yesterday"
+    },
+    "side-nav": {
+      "ariarolenavigation": "Menu / Navigation"
+    },
+    "stepper": {
+      "back.btn": "Back",
+      "finish.btn": "Finish",
+      "next.btn": "Next"
+    },
+    "stepper-large": {
+      "error_message.steps_not_completed": "The information in step {{i}} is incomplete or incorrect. Please correct your information in this step first."
+    },
+    "table": {
+      "column.selector.lbl": "Hide columns",
+      "multiselect.all.chk.arialabel": "All entries",
+      "multiselect.chk.arialabel": "Row {{i}}",
+      "sort.announce": "Column {{column}} sorted {{direction}}",
+      "sort.ascending": "ascending",
+      "sort.descending": "descending",
+      "sort.no_longer": "no longer"
+    },
+    "util": {
+      "error_message.email": "Invalid e-mail address",
+      "error_message.max": "The maximum value is {{max}}",
+      "error_message.maxlength": "The maximum length is {{maxlength}}",
+      "error_message.min": "The minimum value is {{min}}",
+      "error_message.minlength": "The minimum length is {{minlength}}",
+      "error_message.pattern": "Invalid pattern \"{{pattern}}\"",
+      "error_message.required": "* required"
+    }
+  }
+}

@@ -6,7 +6,7 @@
     luxColor="accent"
     [luxRaised]="true"
     [luxTagId]="downloadTagId"
-    [luxAriaLabel]="downloadAriaLabel"
+    luxAriaLabel="{{ 'luxc.file-preview.download.arialabel' | transloco}}"
   ></lux-button>
   <lux-button
     class="lux-file-preview-toolbar-close-button"
@@ -14,7 +14,7 @@
     (luxClicked)="onClose()"
     [luxRaised]="true"
     [luxTagId]="closeTagId"
-    [luxAriaLabel]="closeAriaLabel"
+    luxAriaLabel="{{ 'luxc.file-preview.close.arialabel' | transloco}}"
   ></lux-button>
 </lux-file-preview-toolbar>
 

@@ -18,9 +18,8 @@
           <lux-input-ac
             luxLabel=""
             class="lux-datetime-hour"
-            luxAriaLabel="Stunden"
+            luxAriaLabel="{{ 'luxc.datetimepicker.panel.hours.arialabel' | transloco }}"
             luxAriaLabelSelector="input"
-            i18n-luxAriaLabel="@@luxc.datetimepicker.panel.hours.arialabel"
             luxAutocomplete="off"
             [(luxValue)]="hours"
             (luxFocusIn)="selectHours()"
@@ -36,8 +35,7 @@
           <div style="text-align: center; flex: 1 1 15px; box-sizing: border-box; max-width: 15px; min-width: 15px">:</div>
           <lux-input-ac
             luxLabel=""
-            luxAriaLabel="Minuten"
-            i18n-luxAriaLabel="@@luxc.datetimepicker.panel.minutes.arialabel"
+            luxAriaLabel="{{ 'luxc.datetimepicker.panel.minutes.arialabel' | transloco }}"
             luxAriaLabelSelector="input"
             class="lux-datetime-minute"
             luxAutocomplete="off"
@@ -56,9 +54,9 @@
       </div>
       <div class="lux-datetime-error-message-container lux-pt-2">
         @if (!selected && touched) {
-        <mat-error i18n="@@luxc.datetimepicker.invalid.date">Bitte wählen Sie ein Datum aus</mat-error>
+        <mat-error>{{ 'luxc.datetimepicker.invalid.date' | transloco }}</mat-error>
         } @if ((!this.hours || !this.minutes) && selected && touched) {
-        <mat-error i18n="@@luxc.datetimepicker.invalid.time">Bitte geben Sie eine Zeit ein</mat-error>
+        <mat-error>{{ 'luxc.datetimepicker.invalid.time' | transloco }}</mat-error>
         }
       </div>
     </lux-card-content>

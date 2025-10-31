@@ -1,7 +1,6 @@
 <lux-menu
   class="lux-lang-select-menu-ac"
-  luxAriaMenuTriggerLabel="Sprachmenü"
-  i18n-luxAriaMenuTriggerLabel="@@luxc.lang-select.aria.langmenu.btn"
+  luxAriaMenuTriggerLabel="{{ 'luxc.lang-select.aria.langmenu.btn' | transloco }}"
   [luxDisplayExtended]="false"
   (luxMenuOpened)="onMenuOpened()"
   (luxMenuClosed)="onMenuClosed()"
@@ -10,8 +9,8 @@
   <lux-menu-item
     class="lux-lang-select-menu-item"
     [luxLabel]="item.label"
-    [luxClass]="item === selectedLocale ? 'lux-selected-item-ac' : ''"
-    [luxDisabled]="item === selectedLocale"
+    [luxClass]="item.code === translocoService.getActiveLang() ? 'lux-selected-item-ac' : ''"
+    [luxDisabled]="item.code === translocoService.getActiveLang()"
     (luxClicked)="onLocaleChanged(item)"
   ></lux-menu-item>
   }
@@ -21,13 +20,12 @@
       luxColor="primary"
       luxIconName="lux-programming-web"
       class="lang-select-trigger-ac"
-      luxAriaLabel="Spracheinstellungen"
-      i18n-luxAriaLabel="@@luxc.app-header.lang.select.trigger"
+      luxAriaLabel="{{ 'luxc.app-header.lang.select.trigger' | transloco }}"
       aria-haspopup="true"
       luxTagId="lang-select-trigger-btn"
       [ngClass]="{ 'menu-opened': menuOpened, 'lang-select-trigger-mobile': mobileView }"
       luxTagId="lang-select-trigger-btn"
-      luxTooltip="Sprache wechseln"
+      luxTooltip="{{ 'luxc.app-header.lang.select.trigger' | transloco }}"
       [luxTooltipShowDelay]="1500"
       #customTrigger
     ></lux-button>

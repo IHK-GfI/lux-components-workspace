@@ -1,7 +1,7 @@
 <div
   class="lux-app-content-container lux-theme-{{ themeName }}"
   [luxAriaRole]="luxAriaRoleMainLabel ? 'main' : undefined"
-  [luxAriaLabel]="luxAriaRoleMainLabel"
+  luxAriaLabel="{{ luxAriaRoleMainLabel || ('luxc.app_content.ariarolemain' | transloco) }}"
 >
   <router-outlet></router-outlet>
   <ng-content></ng-content>

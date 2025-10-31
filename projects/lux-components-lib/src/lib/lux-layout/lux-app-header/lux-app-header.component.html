@@ -1,4 +1,4 @@
-<div class="lux-app-header" [luxAriaRole]="luxAriaRoleHeaderLabel ? 'banner' : undefined" [luxAriaLabel]="luxAriaRoleHeaderLabel">
+<div class="lux-app-header" luxAriaRole="banner" luxAriaLabel="{{ luxAriaRoleHeaderLabel || ('luxc.app-header.aria.role_header.lbl' | transloco) }}">
   <!-- ausklappbares Side-Nav (linksbündig) -->
   <div class="lux-header-side-nav lux-flex lux-flex-grow-0 lux-flex-shrink-0 lux-flex-basis-auto">
     <div>
@@ -9,8 +9,8 @@
         (luxClicked)="sideNav.toggle()"
         luxIconName="lux-interface-setting-menu-1"
         luxTagId="lux-side-nav-trigger"
+        luxAriaLabel="{{ luxAriaAppMenuButtonLabel || ('luxc.app-header.aria.appmenu.btn' | transloco) }}"
         [luxAriaExpanded]="sideNav.sideNavExpanded"
-        [luxAriaLabel]="luxAriaAppMenuButtonLabel"
       ></lux-button>
       }
 
@@ -18,7 +18,7 @@
         @if (luxIconName && !sideNav && !mobileView) {
         <lux-icon
           style="padding: 6px 5px"
-          [luxAriaLabel]="luxAriaTitleIconLabel"
+          luxAriaLabel="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
           [luxIconName]="luxIconName"
           [ngClass]="{ 'lux-cursor': hasOnClickedListener, focused: hasOnClickedListener }"
           (click)="onClicked($event)"
@@ -30,7 +30,7 @@
         } @if (luxImageSrc && !sideNav && !mobileView) {
         <lux-image
           style="padding: 0 5px"
-          [luxAriaLabel]="luxAriaTitleImageLabel"
+          luxAriaLabel="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
           [luxImageSrc]="luxImageSrc"
           [luxImageHeight]="luxImageHeight"
           [luxImageWidth]="'auto'"
@@ -43,7 +43,7 @@
         ></lux-image>
         }<span
           class="lux-app-header-title-label"
-          [luxAriaLabel]="luxAriaTitleLinkLabel ? luxAriaTitleLinkLabel : luxAppTitle"
+          luxAriaLabel="{{ (luxAriaTitleLinkLabel || ('luxc.app-header.aria.title.link.lbl' | transloco)) ? (luxAriaTitleLinkLabel || ('luxc.app-header.aria.title.link.lbl' | transloco)) : luxAppTitle }}"
           (click)="onClicked($event)"
           (keydown.enter)="onClicked($event)"
           (keydown.space)="onClicked($event)"
@@ -73,7 +73,7 @@
   }
   <!-- User-Menu (rechtsbündig) -->
   @if (rightNav) {
-  <div [luxAriaLabel]="luxAriaUserMenuButtonLabel" class="lux-header-user lux-pr-2 lux-pl-2" [ngClass]="{ 'lux-show-border': !!actionNav }">
+  <div luxAriaLabel="{{ luxAriaUserMenuButtonLabel || ('luxc.app-header.aria.usermenu.btn' | transloco) }}" class="lux-header-user lux-pr-2 lux-pl-2" [ngClass]="{ 'lux-show-border': !!actionNav }">
     <lux-menu
       class="lux-header-menu"
       [ngClass]="{ 'lux-header-menu-mobile': mobileView }"
@@ -100,8 +100,7 @@
         <button
           mat-button
           class="lux-right-nav-trigger lux-flex lux-justify-end lux-items-center"
-          luxAriaLabel="Benutzermenü"
-          i18n-luxAriaLabel="@@luxc.app-header.user.menu.trigger"
+          luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
           aria-haspopup="true"
           #customTrigger
         >

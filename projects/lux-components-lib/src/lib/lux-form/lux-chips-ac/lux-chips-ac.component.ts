@@ -17,6 +17,7 @@ import {
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatChip, MatChipGrid, MatChipInput, MatChipRemove, MatChipRow } from '@angular/material/chips';
 import { MatOption } from '@angular/material/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
@@ -44,7 +45,8 @@ let luxChipControlUID = 0;
     MatChipInput,
     MatAutocompleteTrigger,
     MatAutocomplete,
-    MatOption
+    MatOption,
+    TranslocoPipe
   ]
 })
 export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
@@ -88,7 +90,7 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implemen
   @Input() luxNewChipGroup?: LuxChipAcGroupComponent;
   @Input() luxStrict = false;
   @Input() override luxLabelLongFormat = false;
-  @Input() luxPlaceholder = $localize`:@@luxc.chips.input.placeholder.lbl:eingeben oder auswählen`;
+  @Input() luxPlaceholder = '';
   @Input() luxOptionBlockSize = 500;
   @Input() luxHideBorder = false;
   @Input() luxInputLabelAlwaysVisible = false;

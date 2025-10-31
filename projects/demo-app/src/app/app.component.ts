@@ -1,5 +1,7 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HammerModule } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import {
@@ -25,11 +27,14 @@ import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
   LuxConsoleService,
+  LuxDividerComponent,
+  LuxIconRegistryService,
   LuxLinkPlainComponent,
   LuxLookupService,
   LuxMediaQueryObserverService,
   LuxMenuComponent,
   LuxMenuItemComponent,
+  LuxMenuSectionTitleComponent,
   LuxSideNavComponent,
   LuxSideNavFooterComponent,
   LuxSideNavHeaderComponent,
@@ -37,17 +42,14 @@ import {
   LuxSnackbarService,
   LuxTenantLogoComponent,
   LuxThemeService,
-  LuxTooltipDirective,
-  LuxDividerComponent,
-  LuxMenuSectionTitleComponent,
-  LuxIconRegistryService
+  LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
 import { MockLuxLookupService } from './components-overview/lookup-examples/mock-lookup-service';
 import { TenantLogoExampleConfigData } from './components-overview/tenant-logo-example/tenant-logo-example-config/tenant-logo-example-config-data';
 import { TenantLogoExampleHeaderService } from './components-overview/tenant-logo-example/tenant-logo-example-header.service';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-root',
@@ -82,7 +84,8 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
     HammerModule,
     CdkScrollable,
     LuxDividerComponent,
-    LuxMenuSectionTitleComponent
+    LuxMenuSectionTitleComponent,
+    TranslocoPipe
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -101,6 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
   fixedFooterService = inject(LuxAppFooterFixedService);
   iconService = inject(LuxIconRegistryService);
+  tService = inject(TranslocoService);
 
   @ViewChild(LuxSideNavComponent) sideNavComp!: LuxSideNavComponent;
 
@@ -147,14 +151,16 @@ export class AppComponent implements OnInit, OnDestroy {
         this.tenantLogoConfig = config;
       })
     );
+
+      this.tService.langChanges$
+        .pipe(takeUntilDestroyed())
+        .subscribe(() => {
+          this.updateFooterLinks();
+        });
   }
 
   ngOnInit() {
-    this.linkService.pushLinkInfos(
-      new LuxAppFooterLinkInfo('Datenschutz', 'datenschutz', true),
-      new LuxAppFooterLinkInfo('Impressum', 'impressum'),
-      new LuxAppFooterLinkInfo('Lizenzhinweis', 'license-hint')
-    );
+    this.updateFooterLinks();
   }
 
   ngOnDestroy() {
@@ -241,5 +247,13 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.tenantLogoConfig?.luxTenantLogoClicked) {
       this.tenantLogoConfig.luxTenantLogoClicked();
     }
+  }
+
+  private updateFooterLinks() {
+    this.linkService.linkInfos = [
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.dataProtection'), 'datenschutz', true),
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.impressum'), 'impressum'),
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.licenseHint'), 'license-hint')
+    ];
   }
 }

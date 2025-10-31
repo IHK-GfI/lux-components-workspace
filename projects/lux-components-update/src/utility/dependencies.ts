@@ -1,9 +1,7 @@
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
-import { applyEdits, findNodeAtLocation, modify } from 'jsonc-parser';
-import { deleteLineFromFile } from './files';
-import { jsonFormattingOptions, readJson, readJsonAsString } from './json';
-import { formattedSchematicsException, logInfo } from './logging';
+import { Rule, Tree } from '@angular-devkit/schematics';
+import { findNodeAtLocation } from 'jsonc-parser';
+import { readJson, updateJsonValue } from './json';
+import { formattedSchematicsException } from './logging';
 
 export enum NodeDependencyType {
   Default = 'dependencies',
@@ -23,7 +21,7 @@ export interface NodeDependency {
  * @param tree
  * @param name
  */
-export function hasPackageJsonDependency(tree: Tree, name: string): NodeDependency | undefined {
+export function hasDep(tree: Tree, name: string): NodeDependency | undefined {
   const packageJsonNode = readJson(tree, '/package.json');
   let dependency: NodeDependency | undefined = undefined;
 
@@ -46,7 +44,7 @@ export function hasPackageJsonDependency(tree: Tree, name: string): NodeDependen
  * @param tree
  * @param name
  */
-export function getPackageJsonDependency(tree: Tree, name: string): NodeDependency {
+export function getDep(tree: Tree, name: string): NodeDependency {
   const packageJsonNode = readJson(tree, '/package.json');
   let dependency: NodeDependency | null = null;
 
@@ -68,59 +66,18 @@ export function getPackageJsonDependency(tree: Tree, name: string): NodeDependen
   }
 }
 
-/**
- * Aktualisiert eine Dependency in der package.json bzw. fügt diese hinzu, falls sie noch nicht vorhanden ist.
- * @param tree
- * @param name
- * @param verion
- */
-export function updateDependency(tree: Tree, name: string, version: string): void {
-  updatePackageJsonDependency(tree, { type: NodeDependencyType.Default, name: name, version: version });
+export function updateDep(name: string, version: string, onlyUpdate: boolean): Rule {
+  return updateJsonValue('/package.json', [NodeDependencyType.Default, name], version, onlyUpdate);
 }
 
-/**
- * Aktualisiert eine Dependency in der package.json bzw. fügt diese hinzu, falls sie noch nicht vorhanden ist.
- * @param tree
- * @param name
- * @param verion
- */
-export function updateDependencyDev(tree: Tree, name: string, version: string): void {
-  updatePackageJsonDependency(tree, { type: NodeDependencyType.Dev, name: name, version: version });
+export function deleteDep(name: string): Rule {
+  return updateJsonValue('/package.json', [NodeDependencyType.Default, name], void 0, true);
 }
 
-/**
- * Aktualisiert eine Dependency in der package.json bzw. fügt diese hinzu, falls sie noch nicht vorhanden ist.
- * @param tree
- * @param dependency
- */
-export function updatePackageJsonDependency(tree: Tree, dependency: NodeDependency): void {
-  const packageJsonAsNode = readJson(tree, '/package.json');
-  let node = findNodeAtLocation(packageJsonAsNode, [dependency.type.toString(), dependency.name]);
-  if (node) {
-    if (node && node.value !== dependency.version) {
-      logInfo(`Dependency ` + chalk.yellowBright(`${dependency.name}`) + ` ${node.value} wird ersetzt durch ${dependency.version}.`);
-    }
-  } else {
-    logInfo(
-      `Dependency ` + chalk.yellowBright(`${dependency.name}`) + ` ${dependency.version} wird im Abschnitt ${dependency.type} hinzugefügt.`
-    );
-  }
-
-  if (!node || node.value !== dependency.version) {
-    const packageJonsAsString = readJsonAsString(tree, '/package.json');
-    const edits = modify(packageJonsAsString, [dependency.type.toString(), dependency.name], dependency.version, {
-      formattingOptions: jsonFormattingOptions
-    });
-
-    if (edits) {
-      tree.overwrite('/package.json', applyEdits(packageJonsAsString, edits));
-    }
-  }
+export function updateDevDep(name: string, version: string | null, onlyUpdate: boolean): Rule {
+  return updateJsonValue('/package.json', [NodeDependencyType.Dev, name], version, onlyUpdate);
 }
 
-export function deletePackageJsonDependency(tree: Tree, context: SchematicContext, dependency: NodeDependency) {
-  const changed = deleteLineFromFile(tree, context, '/package.json', dependency.name, false);
-  if (changed) {
-    logInfo(`Dependency ` + chalk.yellowBright(`${dependency.name}`) + ` wurde aus dem Abschnitt ${dependency.type} gelöscht.`);
-  }
+export function deleteDevDep(name: string): Rule {
+  return updateJsonValue('/package.json', [NodeDependencyType.Dev, name], void 0, true);
 }
