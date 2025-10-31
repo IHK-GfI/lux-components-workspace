@@ -45,12 +45,23 @@ lux-tile-ac {
 
       mat-card-title.lux-tile-title {
         color: luxcommon.$dark-primary-text;
-        font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
         line-height: 30px;
         font-size: 1.25rem;
         margin: 0;
         min-width: 0;
+
+        span {
+          font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
+        }
       }
+
+      mat-card-subtitle.lux-tile-subtitle {
+        span {
+          font-family: luxcommon.$app-font-family;
+          font-size: 0.9375rem;
+        }
+      }
+
       mat-card-subtitle.mat-mdc-card-subtitle:not(:first-child) {
         color: luxcommon.$dark-secondary-text;
         font-size: 0.875rem;
