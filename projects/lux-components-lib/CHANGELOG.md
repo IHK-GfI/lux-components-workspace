@@ -1,12 +1,14 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 19.3.0](#version-1930)
+  - [Version 19.4.0](#version-1940)
     - [Issues](#issues)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-1)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-2)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues-3)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -14,7 +16,20 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues-3)
+    - [Issues](#issues-4)
+
+## Version 19.4.0
+
+### Issues
+
+- Issue #67: lux-menu-panel neue Optionen einführen
+- Issue #93: Filter ist nicht barrierefrei (#120)
+- Issue #101: Kontraste im Green Theme (#107)
+- Issue #102: Text Overflow in Tiles und Panels (#106)
+- Issue #104: luxTagId wird für Menüitems im Overlay (lux-menu-item als Button) nicht gesetzt (#105)
+- Issue #113: Farbe der zweiten Zeile im großen Menü Panel korrigieren
+- Issue #116: Umstellung des Tenant-Icons bei Blueprint und Demo (#119)
+- Issue #117: LUX-Tile verwendet die noch Schriftart "Roboto" (#118)
 
 ## Version 19.3.0
 
