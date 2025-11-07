@@ -1,8 +1,8 @@
 @use "sass:color";
 @use "sass:map";
-@use "luxcommon";
-@use "luxpalette";
-@use "../base/luxSvgIcons" as luxicons;
+@use "../luxcommon";
+@use "../luxpalette";
+@use "luxSvgIcons" as luxicons;
 
 /*
   Dieses Partial-SCSS dient der Verwaltung der Styles für Fokus, Hover und Selected für die LUX-Components und

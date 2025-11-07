@@ -1,8 +1,8 @@
 @use "sass:map";
 @use "../luxpalette";
 @use "../luxcommon";
-@use "../luxelevations";
-@use "../luxfocus";
+@use "../base/luxelevations";
+@use "../base/luxfocus";
 @use "@angular/material" as mat;
 
 $dark-green: #2e8533;

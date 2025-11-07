@@ -1,9 +1,9 @@
+@use "sass:map";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxfocus";
-@use "../luxbreakpoints";
-@use "../luxelevations";
-@use "sass:map";
+@use "../base/luxfocus";
+@use "../base/luxbreakpoints";
+@use "../base/luxelevations";
 
 lux-message-box {
   display: block;

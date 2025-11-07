@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxfocus";
+@use "../base/luxfocus";
 
 .mat-mdc-menu-panel {
   --mat-menu-container-shape: #{luxcommon.$app-border-radius};

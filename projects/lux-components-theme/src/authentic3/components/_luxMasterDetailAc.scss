@@ -1,8 +1,8 @@
 @use "sass:map";
-@use "../luxfocus";
+@use "../base/luxfocus";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxelevations";
+@use "../base/luxelevations";
 
 // Die lux-list besitzt eine unsichtbare Border für die Anzeige des Focus-Indicators
 // damit dieser vollständig angzeigt werden kann, muss die Master-View ein passendes Padding anbieten

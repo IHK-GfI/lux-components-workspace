@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxfocus";
+@use "../base/luxfocus";
 
 lux-file-preview {
   .message-box {

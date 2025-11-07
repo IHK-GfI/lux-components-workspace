@@ -1,8 +1,8 @@
 @use "sass:map";
 @use "../luxpalette";
 @use "../luxcommon";
-@use "../luxfocus";
-@use "../luxbreakpoints";
+@use "../base/luxfocus";
+@use "../base/luxbreakpoints";
 
 lux-tabs {
   .mat-tab-nav-bar,

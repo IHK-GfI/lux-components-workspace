@@ -1,6 +1,6 @@
-@use "../luxbreakpoints";
-@use "../luxpalette";
 @use "sass:map";
+@use "../base/luxbreakpoints";
+@use "../luxpalette";
 
 lux-error-page {
   display: flex;

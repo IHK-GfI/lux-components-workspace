@@ -1,8 +1,8 @@
-@use "../luxfocus";
+@use "sass:map";
+@use "../base/luxfocus";
 @use "../luxpalette";
 @use "../luxcommon";
-@use "../luxbreakpoints";
-@use "sass:map";
+@use "../base/luxbreakpoints";
 
 lux-breadcrumb {
   padding: 8px; //Für Focusindicator

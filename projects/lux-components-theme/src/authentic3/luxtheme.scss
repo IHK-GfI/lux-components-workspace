@@ -1,114 +1,13 @@
 @use "sass:map";
-@use "luxpalette" as themePalette;
-@use "base/luxpalette" with (
-  // Farbpaletten
-  $lux-palette_primary: themePalette.$lux-palette_primary,
-  $lux-palette_accent: themePalette.$lux-palette_accent,
-  $lux-palette_warn: themePalette.$lux-palette_warn,
-  $lux-palette_neutral: themePalette.$lux-palette_neutral,
-  $lux-palette_secondary: themePalette.$lux-palette_secondary,
-  $lux-palettes: themePalette.$luxPalettes,
-
-  // Hauptfarben
-  $lux-primary-color: themePalette.$lux-primary-color,
-  $lux-accent-color: themePalette.$lux-accent-color,
-  $lux-warn-color: themePalette.$lux-warn-color
-);
+@use "luxpalette";
 @use "base/luxtheme";
-
-@use "luxcommon" as themeCommon;
-
-@use "base/luxcommon" with (
-  // Allgemein
-  $dark-primary-text: themeCommon.$dark-primary-text,
-  $dark-secondary-text: themeCommon.$dark-secondary-text,
-  $dark-disabled-text: themeCommon.$dark-disabled-text,
-  $dark-dividers: themeCommon.$dark-dividers,
-  $dark-focused: themeCommon.$dark-focused,
-
-  $light-primary-text: themeCommon.$light-primary-text,
-  $light-secondary-text: themeCommon.$light-secondary-text,
-  $light-disabled-text: themeCommon.$light-disabled-text,
-  $light-dividers: themeCommon.$light-dividers,
-  $light-focused: themeCommon.$light-focused,
-
-  // App
-  $app-header-bg: themeCommon.$app-header-bg,
-  $app-content-bg: themeCommon.$app-content-bg,
-  $app-footer-bg: themeCommon.$app-footer-bg,
-  $app-data-bg: themeCommon.$app-data-bg,
-  $app-gradient: themeCommon.$app-gradient,
-  $app-gradient-reverse: themeCommon.$app-gradient-reverse,
-  $app-border-color: themeCommon.$app-border-color,
-  $app-headline-font: themeCommon.$app-headline-font,
-  $app-font-family: themeCommon.$app-font-family,
-  $app-border-radius: themeCommon.$app-border-radius,
-
-  // Form
-  $form-border-color: themeCommon.$form-border-color,
-  $form-control-font-size: themeCommon.$form-control-font-size,
-  $form-control-buffer: themeCommon.$form-control-buffer,
-  $form-error-msg-background: themeCommon.$form-error-msg-background,
-
-  // Button
-  $button-height: themeCommon.$button-height,
-  $button-fav-height: themeCommon.$button-fav-height,
-  $button-font-size: themeCommon.$button-font-size,
-
-  // Fokus
-  $outline-width: themeCommon.$outline-width,
-  $outline-style: themeCommon.$outline-style,
-  $outline-color-bright: themeCommon.$outline-color-bright,
-  $outline-color-dark: themeCommon.$outline-color-dark,
-
-  // Hover
-  $lux-hover-color: themeCommon.$lux-hover-color,
-  $lux-hover-color-for-dark-background: themeCommon.$lux-hover-color-for-dark-background,
-
-  // Selektion
-  $lux-selected-border-color: themeCommon.$lux-selected-border-color,
-  $lux-selected-bg-color: themeCommon.$lux-selected-bg-color,
-
-  // Stepper (large)
-  $lux-stepper-large-backdrop-bg: themeCommon.$lux-stepper-large-backdrop-bg,
-  $lux-stepper-large-completed-fc: themeCommon.$lux-stepper-large-completed-fc,
-
-  $lux-stepper-large-nav-item-active-fc: themeCommon.$lux-stepper-large-nav-item-active-fc,
-  $lux-stepper-large-nav-item-active-bg: themeCommon.$lux-stepper-large-nav-item-active-bg,
-  $lux-stepper-large-nav-item-disabled-fg: themeCommon.$lux-stepper-large-nav-item-disabled-fg,
-  $lux-stepper-large-nav-item-disabled-bg: themeCommon.$lux-stepper-large-nav-item-disabled-bg,
-  $lux-stepper-large-nav-item-completed-fg: themeCommon.$lux-stepper-large-nav-item-completed-fg,
-  $lux-stepper-large-nav-item-completed-bg: themeCommon.$lux-stepper-large-nav-item-completed-bg,
-
-  // Overlay
-  $lux-overlay-backdrop-color: themeCommon.$lux-overlay-backdrop-color,
-
-  // Options in Panels (z.B. Select, AutoComplete und Menu)
-  $lux-panel-option-min-height: themeCommon.$lux-panel-option-min-height,
-  $lux-panel-option-padding: themeCommon.$lux-panel-option-padding,
-
-  // Hintergrundfarben (z.B. Badge oder Progress)
-  $componentBgColors: themeCommon.$componentBgColors,
-
-  // Vordergrundfarben (z.B. Badge)
-  $componentFontColors: themeCommon.$componentFontColors,
-
-  // Farben für einen dunklen Hintergrund (z.B. Snackbar).
-  $colorsForDarkBg: themeCommon.$colorsForDarkBg,
-
-  // Tile
-  $lux-tile-font-hover-color: themeCommon.$lux-tile-font-hover-color,
-  $lux-tile-icon-color: themeCommon.$lux-tile-icon-color,
-  $lux-tile-borderradius: themeCommon.$lux-tile-borderradius,
-  $lux-tile-bottom-line-color: themeCommon.$lux-tile-bottom-line-color
-);
+@use "luxcommon";
 @use "base/luxSvgIcons";
 @use "base/luxelevations";
 @use "base/luxfocus";
 @use "base/luxstyles";
 @use "base/luxbreakpoints";
 @use "base/luxlayout";
-@use "base/luxcomponents";
-
+@use "luxcomponents";
 @use "custom";
 @use "custombutton";

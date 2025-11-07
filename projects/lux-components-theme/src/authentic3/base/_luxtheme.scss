@@ -1,6 +1,6 @@
 @use "@angular/material" as mat;
 @use "sass:map";
-@use "luxpalette";
+@use "../luxpalette";
 
 $lux-theme: mat.define-theme(
   (

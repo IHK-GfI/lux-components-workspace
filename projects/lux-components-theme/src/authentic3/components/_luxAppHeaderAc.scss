@@ -1,10 +1,10 @@
 @use "sass:color";
 @use "sass:map";
-@use "../luxfocus";
+@use "../base/luxfocus";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxelevations";
-@use "../luxSvgIcons" as luxicons;
+@use "../base/luxelevations";
+@use "../base/luxSvgIcons" as luxicons;
 
 lux-app-header-ac {
   display: block;

@@ -1,9 +1,9 @@
 @use "sass:map";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxfocus";
-@use "../luxelevations";
-@use "../luxbreakpoints";
+@use "../base/luxfocus";
+@use "../base/luxelevations";
+@use "../base/luxbreakpoints";
 
 .cdk-overlay-pane.mat-mdc-dialog-panel .mat-mdc-dialog-container {
   border-radius: luxcommon.$app-border-radius;

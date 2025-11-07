@@ -1,8 +1,8 @@
+@use "sass:map";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxfocus";
-@use "../luxbreakpoints";
-@use "sass:map";
+@use "../base/luxfocus";
+@use "../base/luxbreakpoints";
 
 lux-table {
   display: flex;

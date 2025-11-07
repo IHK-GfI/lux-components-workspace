@@ -1,8 +1,8 @@
 @use "sass:map";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxfocus";
-@use "../luxelevations";
+@use "../base/luxfocus";
+@use "../base/luxelevations";
 
 lux-filter-form {
   lux-menu div.lux-menu-custom-trigger {

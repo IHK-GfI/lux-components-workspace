@@ -1,9 +1,9 @@
 @use "sass:map";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxelevations";
-@use "../luxfocus";
-@use "../../base/luxSvgIcons" as luxicons;
+@use "../base/luxelevations";
+@use "../base/luxfocus";
+@use "../base/luxSvgIcons" as luxicons;
 
 /*
  * Theming for LUX-Autocomplete

@@ -1,8 +1,8 @@
 @use "sass:map";
-@use "../luxfocus";
+@use "../base/luxfocus";
 @use "../luxcommon";
 @use "../luxpalette";
-@use "../luxelevations";
+@use "../base/luxelevations";
 
 lux-tile-ac {
   box-sizing: border-box;
