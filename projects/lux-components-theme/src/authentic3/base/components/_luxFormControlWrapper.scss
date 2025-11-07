@@ -1,0 +1,205 @@
+@use "sass:map";
+@use "../luxfocus";
+@use "../luxstyles";
+@use "../luxcommon";
+@use "../luxpalette";
+
+@mixin crop {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin form-label {
+  min-height: 1.2em;
+  font-size: 0.75em;
+  line-height: 1.2em;
+  color: luxcommon.$dark-secondary-text;
+}
+
+lux-form-control-wrapper {
+  width: 100%;
+
+  .lux-form-control-wrapper {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    font-size: luxcommon.$form-control-font-size;
+    color: luxcommon.$dark-primary-text;
+
+    .lux-form-control-label-authentic {
+      @include form-label;
+      color: map.get(luxpalette.$lux-palette_primary, 500);
+      margin: 0 calc(0.5em + 1px) 0.25em calc(0.5em + 1px);
+      > * {
+        @include crop;
+      }
+      &.lux-label-long-format {
+        > * {
+          white-space: normal;
+          text-overflow: unset;
+          word-wrap: break-word;
+        }
+      }
+    }
+
+    .lux-form-control-container-authentic {
+      flex: 1 1 auto;
+      box-sizing: border-box;
+      padding: 0.75em 0.5em;
+      font-size: luxcommon.$form-control-font-size;
+      color: luxcommon.$dark-primary-text;
+      background-color: #fff;
+      line-height: 1.5em;
+      border: 1px solid luxcommon.$form-border-color;
+      border-radius: 4px;
+      &.lux-no-input-row {
+        // lux-toggel-ac, lux-checkbox-ac, lux-slider-ac, lux-radio-ac werden auf der Baseline ausgerichtet
+        // haben aber nicht den Rahmen, den die Input-Elemente haben
+        background-color: transparent;
+        border: none;
+        padding: 0.75em 0em;
+      }
+    }
+
+    .lux-form-control-misc-authentic {
+      display: flex;
+      place-content: flex-start space-between;
+      align-items: flex-start;
+      box-sizing: border-box;
+      margin: 0.25em calc(0.5em + 1px) 0 calc(0.5em + 1px);
+      @include form-label;
+      word-wrap: break-word;
+
+      .lux-form-control-error-container {
+        display: flex;
+        box-sizing: border-box;
+      }
+      .lux-form-control-character-counter-authentic {
+        min-width: 40px;
+        margin-left: 2px;
+        color: luxcommon.$dark-secondary-text !important;
+        text-align: end;
+
+        &:only-child {
+          width: 100%;
+        }
+      }
+    }
+
+    // zusätzlicher Container für Elemente, die einen input-prefix/input-suffix haben
+    // aktuell: lux-autocomplete-ac und lux-input-ac
+    .lux-input-row-authentic {
+      display: flex;
+      flex-direction: row;
+      box-sizing: border-box;
+      place-content: center flex-start;
+      align-items: center;
+      font-size: luxcommon.$form-control-font-size;
+      min-height: 1.5em;
+
+      .lux-input-prefix-container,
+      .lux-input-suffix-container {
+        width: auto;
+        white-space: nowrap;
+        display: inline-block;
+        flex: 1 1 auto;
+        max-height: 1.5em;
+        align-items: center;
+
+        lux-input-ac-suffix,
+        lux-input-ac-prefix {
+          display: inline-flex;
+        }
+        lux-icon {
+          mat-icon.lux-icon {
+            box-sizing: border-box;
+            padding: 0px !important;
+          }
+        }
+      }
+    }
+
+    &.lux-dense-authentic {
+      margin: 0;
+      .lux-form-control-container-authentic {
+        padding: 0.375em 0.5em;
+        &.lux-no-input-row {
+          padding: 0.375em 0em;
+        }
+      }
+    }
+
+    // Definitionen der einzelnen States der Form-Controls
+    // HOVER
+    &:hover:not(.lux-form-control-disabled-authentic):not(.lux-focused-authentic):not(.lux-form-control-error-authentic):not(
+        .lux-form-control-readonly-authentic
+      ) {
+      .lux-form-control-container-authentic:not(.lux-no-input-row) {
+        border-color: luxcommon.$dark-primary-text;
+      }
+    }
+    // FOCUS
+    &.lux-focused-authentic:not(.lux-form-control-readonly-authentic) {
+      .lux-form-control-label-authentic > * {
+        color: map.get(luxpalette.$lux-palette_primary, 400);
+      }
+      .lux-form-control-container-authentic:not(.lux-no-input-row) {
+        border-color: map.get(luxpalette.$lux-palette_primary, 500);
+        box-shadow: 0 0 0 1px map.get(luxpalette.$lux-palette_primary, 500) inset;
+      }
+    }
+    // ERROR
+    &.lux-form-control-error-authentic:not(.lux-form-control-disabled-authentic) {
+      .lux-form-control-container-authentic:not(.lux-no-input-row) {
+        border-color: map.get(luxpalette.$lux-palette_warn, 500);
+        box-shadow: 0 0 0 1px map.get(luxpalette.$lux-palette_warn, 500) inset;
+      }
+      .lux-form-control-misc-authentic {
+        .lux-alert-icon {
+          color: map.get(luxpalette.$lux-palette_warn, 900);
+          mat-icon.mat-icon {
+            box-sizing: border-box;
+          }
+        }
+        .mat-mdc-form-field-error {
+          background-color: luxcommon.$form-error-msg-background;
+          border-radius: 4px;
+          padding-right: 2px;
+          color: map.get(luxpalette.$lux-palette_warn, 900) !important;
+          box-shadow:
+            -18px 0px 0 0 luxcommon.$form-error-msg-background,
+            -18px -1px 0 0 luxcommon.$form-error-msg-background,
+            0 -1px 0 0 luxcommon.$form-error-msg-background;
+        }
+      }
+    }
+    // Disabled
+    &.lux-form-control-disabled-authentic {
+      .lux-form-control-container-authentic,
+      .lux-form-control-label-authentic,
+      .lux-form-control-misc-authentic > * {
+        color: luxcommon.$dark-disabled-text;
+      }
+    }
+    // READONLY
+    &.lux-form-control-disabled-authentic {
+      pointer-events: none;
+    }
+  }
+
+  /* Change Autocomplete styles in Chrome*/
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    box-shadow: 0 0 0px 1000px var(--lux-theme-primary-50) inset;
+    -webkit-box-shadow: 0 0 0px 1000px var(--lux-theme-primary-50) inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}

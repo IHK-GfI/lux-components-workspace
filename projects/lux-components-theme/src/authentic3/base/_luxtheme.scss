@@ -1,0 +1,31 @@
+@use "@angular/material" as mat;
+@use "sass:map";
+@use "luxpalette";
+
+$lux-theme: mat.define-theme(
+  (
+    color: (
+      primary: luxpalette.$lux-palette_primary,
+      use-system-variables: true
+    ),
+    typography: (
+      plain-family: Source Sans Pro,
+      brand-family: Blogger Sans
+    ),
+    density: (
+      scale: 0
+    )
+  )
+);
+
+html {
+  @include mat.all-component-themes($lux-theme);
+  @include mat.system-level-colors($lux-theme);
+  @include mat.system-level-typography($lux-theme);
+}
+
+html {
+  --lux-theme-primary-color: #{map.get(luxpalette.$lux-palette_primary, 20)};
+  --lux-theme-accent-color: #{map.get(luxpalette.$lux-palette_secondary, 20)};
+  --lux-theme-warn-color: #{map.get(luxpalette.$lux-palette_warn, 20)};
+}

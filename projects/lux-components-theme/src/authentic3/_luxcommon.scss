@@ -1,0 +1,138 @@
+@use "sass:map";
+@use "luxpalette";
+
+$app-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+$app-headline-font: "Blogger Sans";
+
+body {
+  color: rgba(black, 0.87);
+  font-family: $app-font-family;
+}
+
+p,
+div {
+  font-family: $app-font-family;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $app-font-family;
+  color: rgba(black, 0.87);
+  font-weight: normal;
+}
+
+// Allgemein
+$dark-primary-text: rgba(black, 0.87);
+$dark-secondary-text: rgba(black, 0.6);
+$dark-disabled-text: rgba(black, 0.38);
+$dark-dividers: rgba(black, 0.12);
+$dark-focused: rgba(black, 0.12);
+
+$light-primary-text: white;
+$light-secondary-text: rgba(white, 0.74);
+$light-disabled-text: rgba(white, 0.38);
+$light-dividers: rgba(white, 0.2);
+$light-focused: rgba(white, 0.12);
+
+// App
+$app-header-bg: map.get(luxpalette.$lux-palette_primary, 50);
+$app-content-bg: #ffffff;
+$app-footer-bg: map.get(luxpalette.$lux-palette_primary, 50);
+$app-data-bg: #ffffff;
+$app-gradient: linear-gradient(90deg, #ffffff 0%, map.get(luxpalette.$lux-palette_primary, 98) 100%);
+$app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, map.get(luxpalette.$lux-palette_primary, 98) 100%);
+$app-border-color: rgba(black, 0.12);
+$app-border-radius: 4px;
+
+// Form
+$form-border-color: rgba(0, 0, 0, 0.38);
+$form-control-font-size: 1rem;
+$form-control-buffer: 4px;
+$form-error-msg-background: rgb(255, 228, 231); //lux-warn-50 mit opacity: 0.5
+
+// Button
+$button-height: 2.25rem;
+$button-font-size: 0.875rem;
+$button-fav-height: 2.25rem;
+
+// Fokus
+$outline-color-bright: #ffffff;
+$outline-color-dark: map.get(luxpalette.$lux-palette-primary, A200);
+$outline-width: 4px;
+$outline-style: solid;
+
+// Hover
+$lux-hover-color: map.get(luxpalette.$lux-palette-primary, 300);
+$lux-hover-color-for-dark-background: #335c85;
+
+// Selektion
+$lux-selected-border-color: luxpalette.$lux-primary-color;
+$lux-selected-bg-color: #f0f3f6;
+
+// Stepper (large)
+$lux-stepper-large-backdrop-bg: #636d76;
+$lux-stepper-large-completed-fc: #2e8533;
+
+$lux-stepper-large-nav-item-active-fc: #ffffff;
+$lux-stepper-large-nav-item-active-bg: #003366;
+$lux-stepper-large-nav-item-disabled-fg: #003366;
+$lux-stepper-large-nav-item-disabled-bg: #eff3f6;
+$lux-stepper-large-nav-item-completed-fg: #2e8533;
+$lux-stepper-large-nav-item-completed-bg: #ffffff;
+
+// Overlay
+$lux-overlay-backdrop-color: rgba(0, 0, 0, 0.12);
+
+// Options in Panels (z.B. Select, AutoComplete und Menu)
+$lux-panel-option-min-height: 24px;
+$lux-panel-option-padding: 12px 0;
+
+// Hintergrundfarben (z.B. Badge oder Progress)
+$componentBgColors: (
+  "red": map.get(luxpalette.$lux-palette_warn, 40),
+  "green": map.get(luxpalette.$lux-palette_accent, 70),
+  "purple": #715289,
+  "blue": map.get(luxpalette.$lux-palette_primary, 20),
+  "gray": map.get(luxpalette.$lux-palette_neutral, 40),
+  "orange":  #fc791f,
+  "black":  map.get(luxpalette.$lux-palette_neutral, 10),
+  "white": #ffffff,
+  "yellow": #fbd12c,
+  "pink":  #fc6b85,
+  "lightblue": #4fa8e8
+);
+
+// Vordergrundfarben (z.B. Badge)
+$componentFontColors: (
+  "red": #ffffff,
+  "green": map.get(luxpalette.$lux-palette_neutral, 10),
+  "purple": #ffffff,
+  "blue": #ffffff,
+  "gray": #ffffff,
+  "orange": map.get(luxpalette.$lux-palette_neutral, 10),
+  "black": #ffffff,
+  "white": map.get(luxpalette.$lux-palette_neutral, 10),
+  "yellow": map.get(luxpalette.$lux-palette_neutral, 10),
+  "pink": map.get(luxpalette.$lux-palette_neutral, 10),
+  "lightblue": map.get(luxpalette.$lux-palette_neutral, 10)
+);
+
+// Farben für einen dunklen Hintergrund (z.B. Snackbar).
+$colorsForDarkBg: (
+  "red": #f17474,
+  "green": #53b12b,
+  "blue": map.get(luxpalette.$lux-palette_primary, 80),
+  "orange": #ec9c1b,
+  "yellow": #fbd12c,
+  "white": #ffffff
+);
+
+// Tile
+$lux-tile-font-hover-color: #2e8533;
+$lux-tile-icon-color: #56bd66;
+$lux-tile-borderradius: 24px;
+$lux-tile-bottom-line-color: #56bd66;

@@ -1,0 +1,151 @@
+@use "@angular/material" as mat;
+@use "../luxcommon";
+@use "../luxfocus";
+
+// ooooooooooooo           oooo
+// 8'   888   `8           `888
+//      888       .ooooo.   888  oooo   .ooooo.  ooo. .oo.    .oooo.o
+//      888      d88' `88b  888 .8P'   d88' `88b `888P"Y88b  d88(  "8
+//      888      888   888  888888.    888ooo888  888   888  `"Y88b.
+//      888      888   888  888 `88b.  888    .o  888   888  o.  )88b
+//     o888o     `Y8bod8P' o888o o888o `Y8bod8P' o888o o888o 8""888P'
+
+html {
+  @include mat.card-overrides(
+    (
+      outlined-container-color: luxcommon.$app-data-bg,
+      outlined-container-shape: luxcommon.$app-border-radius,
+      title-text-size: 1.5rem,
+      subtitle-text-size: 1rem
+    )
+  );
+}
+
+//   .oooooo.                            .
+//  d8P'  `Y8b                         .o8
+// 888          oooo  oooo   .oooo.o .o888oo  .ooooo.  ooo. .oo.  .oo.
+// 888          `888  `888  d88(  "8   888   d88' `88b `888P"Y88bP"Y88b
+// 888           888   888  `"Y88b.    888   888   888  888   888   888
+// `88b    ooo   888   888  o.  )88b   888 . 888   888  888   888   888
+//  `Y8bood8P'   `V88V"V8P' 8""888P'   "888" `Y8bod8P' o888o o888o o888o
+
+$var16px: 16px;
+
+.lux-card-host {
+  // Falls die lux-card in einem lux-grid verwendet wird und alle Cards einer Reihe dieselbe Höhe erhalten sollen
+  // müssen mat-card und mat-card-content entsprechend angepasst werden.
+  // Diese Anforderung stammt aus dem Verhalten der ehemaligen Lux-Layout-Card-Row.
+  &.lux-flex {
+    .lux-card,
+    .lux-card-content {
+      flex: 1 1 auto;
+    }
+  }
+
+  .lux-card {
+    width: 100%;
+
+    .lux-card-header {
+      padding: $var16px $var16px 0;
+
+      .mat-mdc-card-header-text {
+        // Damit der Titel und Subtitle nicht umbrechen und stattdessen abgeschnitten werden, wenn der Text zu lang ist.
+        // Ohne die min-width würde ein langer Text dazu führen, dass der Header breiter als die Card wird.
+        min-width: 0;
+      }
+
+      // Hier wird die Reihenfolge der Elemente im Header der lux-card festgelegt.
+      // Dies ist notwendig, damit das Icon links, der Titel in der Mitte und die Info-Komponente rechts angezeigt werden.
+      > * {
+        order: 10;
+      }
+
+      .lux-card-icon-container {
+        order: 5;
+      }
+
+      .lux-card-info-container {
+        order: 15;
+
+        // Damit die Info-Komponente immer rechtsbündig im Card-Header ist, auch wenn der Titel oder Subtitle kurz sind.
+        margin-left: auto;
+      }
+
+      .lux-card-title {
+        // Die Styles der Überschriften innerhalb der lux-card zurücksetzen, damit die Styles der Card übernommen werden.
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          color: unset;
+          font-size: unset;
+          font-weight: unset;
+          font-family: unset;
+          padding: unset;
+          margin: unset;
+        }
+      }
+    }
+
+    .lux-card-content {
+      display: flex;
+      flex-direction: column;
+      padding: 0 $var16px;
+      overflow: auto;
+
+      .lux-card-content-container {
+        display: flex;
+        flex-direction: column;
+
+        // Abstand zwischen dem Inhalt und dem Expanded-Bereich der Card.
+        gap: 0.75rem;
+      }
+
+      // Wenn es einen Header und Content gibt, soll oben im Content ein Padding gesetzt werden.
+      .lux-card-with-content-and-header {
+        padding-top: $var16px;
+      }
+
+      &.lux-card-no-actions {
+        // Wenn es keine Aktionen gibt, soll unten im Content ein Padding gesetzt werden.
+        padding-bottom: $var16px;
+      }
+    }
+
+    // Die Material Card hat nur ein Padding von 8px, dies wird hier auf $padding gesetzt,
+    // damit es mit den anderen Paddings innerhalb der Card (wie z.B. Header und Content) übereinstimmt.
+    .lux-card-actions {
+      padding: $var16px;
+    }
+  }
+}
+
+// oooooooooooo           oooo                                  88 ooooo   ooooo
+// `888'     `8           `888                                 .8' `888'   `888'
+//  888          .ooooo.   888  oooo  oooo  oooo   .oooo.o    .8'   888     888   .ooooo.  oooo    ooo  .ooooo.  oooo d8b
+//  888oooo8    d88' `88b  888 .8P'   `888  `888  d88(  "8   .8'    888ooooo888  d88' `88b  `88.  .8'  d88' `88b `888""8P
+//  888    "    888   888  888888.     888   888  `"Y88b.   .8'     888     888  888   888   `88..8'   888ooo888  888
+//  888         888   888  888 `88b.   888   888  o.  )88b .8'      888     888  888   888    `888'    888    .o  888
+// o888o        `Y8bod8P' o888o o888o  `V88V"V8P' 8""888P' 88      o888o   o888o `Y8bod8P'     `8'     `Y8bod8P' d888b
+
+.lux-card-host {
+  .lux-card {
+    &[class~="lux-cursor"]:hover {
+      background-image: luxcommon.$app-gradient-reverse;
+      background-color: #ffffff;
+      border-color: luxcommon.$dark-primary-text;
+
+      .lux-card-content-expanded {
+        background-image: luxcommon.$app-gradient-reverse;
+        background-color: #ffffff;
+        border-color: luxcommon.$dark-primary-text;
+      }
+    }
+
+    &[class~="lux-cursor"]:focus-visible {
+      @include luxfocus.focus-dark-mixin-inline;
+    }
+  }
+}

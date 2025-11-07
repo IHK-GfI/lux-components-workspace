@@ -7,7 +7,7 @@
   "tabWidth": 2,
   "semi": true,
   "bracketSpacing": true,
-  "bracketSameLine": false,
+  "bracketSameLine": true,
   "overrides": [
     {
       "files": "*.scss",

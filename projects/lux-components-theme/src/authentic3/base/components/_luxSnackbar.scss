@@ -1,0 +1,77 @@
+@use "sass:map";
+@use "../luxpalette";
+@use "../luxcommon";
+@use "../luxelevations";
+
+.cdk-overlay-container {
+  .mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+    min-width: unset;
+    border-radius: 4px;
+  }
+
+  .mat-mdc-snack-bar-container.lux-snackbar {
+    @include luxelevations.lux-elevation-z6();
+
+    position: relative;
+    margin: 0 !important;
+
+    // Die Snackbar wird durch die App umpositioniert, bevor sie sichtbar geschaltet wird.
+    // Würde man die Snackbar nicht verstecken, würde sie von der initialen Position zur neuen
+    // springen.
+    visibility: hidden;
+
+    .lux-snackbar-content {
+      font-size: 0.875rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+
+    @each $colorName, $colorNameHex in luxcommon.$colorsForDarkBg {
+      .lux-snackbar-content .lux-bg-color-#{"" + $colorName + ""} {
+        color: $colorNameHex;
+        background-color: transparent;
+      }
+    }
+
+    mat-icon.mat-icon.lux-icon {
+      width: 2em;
+      height: 2em;
+    }
+  }
+
+  .mat-snack-bar-handset snack-bar-container.mat-snack-bar-container.lux-snackbar {
+    left: 8px;
+    width: auto !important;
+    margin-right: 10px !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .cdk-overlay-container {
+    .mat-mdc-snack-bar-container.lux-snackbar {
+      .lux-snackbar-content {
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+      }
+
+      .lux-snackbar-content .lux-bg-color-red {
+        color: map.get(luxpalette.$lux-palette_warn, 80);
+      }
+
+      .lux-snackbar-content .lux-bg-color-blue {
+        color: map.get(luxpalette.$lux-palette_primary, 80);
+      }
+
+      .lux-snackbar-content .lux-bg-color-green {
+        color: map.get(luxpalette.$lux-palette_accent, 80);
+      }
+
+      .lux-snackbar-content .lux-bg-color-orange {
+        color: map.get(luxcommon.$colorsForDarkBg, 'yellow');
+      }
+    }
+  }
+}

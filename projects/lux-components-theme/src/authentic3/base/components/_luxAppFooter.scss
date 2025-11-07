@@ -1,0 +1,47 @@
+@use "sass:map";
+@use "../luxcommon";
+@use "../luxpalette";
+
+lux-app-footer {
+  display: flex;
+  flex: 0 0 auto;
+  height: 60px;
+  min-height: 60px;
+  max-height: 60px;
+  background-color: luxcommon.$app-footer-bg;
+  border-bottom: 6px solid map.get(luxpalette.$lux-palette_primary, 600);
+
+  .lux-app-footer {
+    overflow: hidden;
+    display: flex;
+    height: 100%;
+    min-height: 100%;
+    min-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    &.lux-centered {
+      margin: 0 auto;
+      min-width: unset;
+    }
+  }
+
+  .version,
+  .lux-app-footer-links {
+    display: flex;
+    flex: 0 0 auto;
+    place-content: center flex-start;
+    align-items: center;
+  }
+  .version {
+    padding: 0 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .lux-app-footer-buttons {
+    display: flex;
+    flex: 1 1 auto;
+    place-content: center flex-end;
+    align-items: center;
+    min-width: 0;
+  }
+}

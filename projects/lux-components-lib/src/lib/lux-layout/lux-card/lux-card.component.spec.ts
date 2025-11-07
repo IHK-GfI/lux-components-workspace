@@ -264,24 +264,24 @@ describe('LuxCardComponent', () => {
       // Vorbedingungen testen
       component.title = 'Hallo';
       LuxTestHelper.wait(fixture);
-      expect(fixture.debugElement.query(By.css('.lux-card-title.lux-display-none'))).toBeNull();
-      expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('Hallo');
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('Hallo');
 
       // Änderungen durchführen
       component.title = undefined;
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(fixture.debugElement.query(By.css('.lux-card-title.lux-display-none'))).not.toBeNull();
-      expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('');
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('');
     }));
 
     it('Sollte lux-card-title nicht ausblenden, wenn luxTitle undefined aber lux-card-info gesetzt ist', fakeAsync(() => {
       // Vorbedingungen testen
       component.title = 'Hallo';
       LuxTestHelper.wait(fixture);
-      expect(fixture.debugElement.query(By.css('.lux-card-title.lux-display-none'))).toBeNull();
-      expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('Hallo');
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('Hallo');
 
       // Änderungen durchführen
       component.testShowInfo = true;
@@ -289,8 +289,8 @@ describe('LuxCardComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(fixture.debugElement.query(By.css('.lux-card-title.lux-display-none'))).toBeNull();
-      expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('');
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('');
     }));
 
     it('Sollte lux-card-subtitle ausblenden, wenn luxSubTitle undefined', fakeAsync(() => {

@@ -13,7 +13,7 @@ import {
   QueryList,
   inject
 } from '@angular/core';
-import { MatCard, MatCardActions, MatCardContent } from '@angular/material/card';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -26,13 +26,27 @@ import { expansionAnim } from './lux-card-model/lux-card-animations';
 import { LuxCardActionsComponent } from './lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from './lux-card-subcomponents/lux-card-content-expanded.component';
 import { LuxCardContentComponent } from './lux-card-subcomponents/lux-card-content.component';
+import { LuxCardHeadingComponent } from './lux-card-subcomponents/lux-card-heading.component';
 import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.component';
 
 @Component({
   selector: 'lux-card',
   templateUrl: './lux-card.component.html',
   animations: [expansionAnim],
-  imports: [MatCard, LuxTagIdDirective, NgClass, MatCardContent, MatCardActions, LuxButtonComponent, TranslocoPipe]
+  imports: [
+    MatCard,
+    LuxTagIdDirective,
+    NgClass,
+    MatCardContent,
+    MatCardActions,
+    LuxButtonComponent,
+    TranslocoPipe,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    LuxCardHeadingComponent
+  ],
+  host: { class: 'lux-card-host' }
 })
 export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
   private componentsConfigService = inject(LuxComponentsConfigService);

@@ -1,0 +1,714 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:string";
+@use "luxcommon";
+@use "luxpalette";
+@use "luxbreakpoints";
+
+$sizes: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, A100, A200, A400, A700;
+$paletten: luxpalette.$lux-palette_primary, luxpalette.$lux-palette_accent, luxpalette.$lux-palette_warn;
+$paletteNamen: primary, accent, warn;
+
+:root {
+  @for $i from 1 through 3 {
+    @each $size in $sizes {
+      --lux-theme-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}: #{map.get(list.nth($paletten, $i), $size)};
+      --lux-theme-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast: #{map.get(
+          list.nth($paletten, $i),
+          contrast,
+          $size
+        )};
+    }
+  }
+
+  // Allgemein
+  --lux-theme-dark-primary-text: #{luxcommon.$dark-primary-text};
+  --lux-theme-dark-secondary-text: #{luxcommon.$dark-secondary-text};
+  --lux-theme-dark-disabled-text: #{luxcommon.$dark-disabled-text};
+  --lux-theme-dark-dividers: #{luxcommon.$dark-dividers};
+  --lux-theme-dark-focused: #{luxcommon.$dark-focused};
+
+  --lux-theme-light-primary-text: #{luxcommon.$light-primary-text};
+  --lux-theme-light-secondary-text: #{luxcommon.$light-secondary-text};
+  --lux-theme-light-disabled-text: #{luxcommon.$light-disabled-text};
+  --lux-theme-light-dividers: #{luxcommon.$light-dividers};
+  --lux-theme-light-focused: #{luxcommon.$light-focused};
+
+  // App
+  --lux-theme-app-header-bg: #{luxcommon.$app-header-bg};
+  --lux-theme-app-content-bg: #{luxcommon.$app-content-bg};
+  --lux-theme-app-footer-bg: #{luxcommon.$app-footer-bg};
+  --lux-theme-app-data-bg: #{luxcommon.$app-data-bg};
+  --lux-theme-app-gradient: #{luxcommon.$app-gradient};
+  --lux-theme-app-gradient-reverse: #{luxcommon.$app-gradient-reverse};
+  --lux-theme-app-border-color: #{app-border-color};
+
+  // Form
+  --lux-theme-form-border-color: #{luxcommon.$form-border-color};
+  --lux-theme-form-control-font-size: #{luxcommon.$form-control-font-size};
+  --lux-theme-form-control-buffer: #{luxcommon.$form-control-buffer};
+  --lux-theme-form-error-msg-background: #{luxcommon.$form-error-msg-background};
+
+  // Button
+  --lux-theme-button-font-size: #{luxcommon.$button-font-size};
+  --lux-theme-button-height: #{luxcommon.$button-height};
+  --lux-theme-button-fav-height: #{luxcommon.$button-fav-height};
+
+  // Fokus
+  --lux-theme-outline-width: #{luxcommon.$outline-width};
+  --lux-theme-outline-style: #{luxcommon.$outline-style};
+  --lux-theme-outline-color-bright: #{luxcommon.$outline-color-bright};
+  --lux-theme-outline-color-dark: #{luxcommon.$outline-color-dark};
+
+  // Hover
+  --lux-theme-hover-color: #{luxcommon.$lux-hover-color};
+  --lux-theme-hover-color-for-dark-background: #{luxcommon.$lux-hover-color-for-dark-background};
+
+  // Selektion
+  --lux-theme-selected-border-color: #{luxcommon.$lux-selected-border-color};
+  --lux-theme-selected-bg-color: #{luxcommon.$lux-selected-bg-color};
+
+  // Hauptfarben
+  --lux-theme-primary-color: #{map.get(luxpalette.$lux-palette_primary, 500)};
+  --lux-theme-accent-color: #{map.get(luxpalette.$lux-palette_accent, 500)};
+  --lux-theme-warn-color: #{map.get(luxpalette.$lux-palette_warn, 500)};
+
+  // Hintergrundfarben (z.B. Badge oder Progress)
+  @each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+    --lux-theme-component-bg-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  @each $colorName, $colorNameHex in luxcommon.$colorsForDarkBg {
+    --lux-theme-component-bg-dark-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  @each $colorName, $colorNameHex in luxcommon.$componentFontColors {
+    --lux-theme-component-font-color-#{''+$colorName+''}: #{$colorNameHex};
+  }
+}
+
+html,
+body,
+.lux-app-container {
+  height: 100%;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-block-start: 1.2em;
+  margin-block-end: 0.8rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-block-start: 1.2em;
+  margin-block-end: 0.8rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-block-start: 1.2em;
+  margin-block-end: 0.8rem;
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-block-start: 1.2em;
+  margin-block-end: 0.8rem;
+}
+
+h5 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-block-start: 2em;
+  margin-block-end: 0.8rem;
+}
+
+h6 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-block-start: 2em;
+  margin-block-end: 0.8rem;
+}
+
+.lux-app-header-bg {
+  background-color: luxcommon.$app-header-bg;
+}
+
+.lux-app-content-bg {
+  background-color: luxcommon.$app-content-bg;
+}
+
+.lux-app-footer-bg {
+  background-color: luxcommon.$app-footer-bg;
+}
+
+.lux-app-data-bg {
+  background-color: luxcommon.$app-data-bg;
+}
+
+.lux-selected-bg {
+  background-color: luxcommon.$lux-selected-bg-color;
+}
+
+.lux-hover-bg {
+  background-color: luxcommon.$lux-hover-color;
+}
+
+.lux-hover-dark-bg {
+  background-color: luxcommon.$lux-hover-color-for-dark-background;
+}
+
+.lux-gradient-bg {
+  background-color: #fff; //Fallback
+  background-image: luxcommon.$app-gradient;
+}
+
+.lux-color-dark-divider {
+  color: luxcommon.$dark-dividers;
+}
+
+.lux-color-light-divider {
+  color: luxcommon.$light-dividers;
+}
+
+.lux-outline-color-light {
+  color: luxcommon.$outline-color-bright;
+}
+
+.lux-outline-color-dark {
+  color: luxcommon.$outline-color-dark;
+}
+
+.lux-outline-width {
+  outline-width: luxcommon.$outline-width;
+}
+
+.lux-outline-style {
+  outline-style: luxcommon.$outline-style;
+}
+
+.lux-outline-light {
+  color: luxcommon.$outline-color-bright;
+  outline-width: luxcommon.$outline-width;
+  outline-style: luxcommon.$outline-style;
+}
+
+.lux-outline-dark {
+  color: luxcommon.$outline-color-dark;
+  outline-width: luxcommon.$outline-width;
+  outline-style: luxcommon.$outline-style;
+}
+
+.lux-highlight-section {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  margin: 16px 0;
+  padding: 16px 16px;
+  border: 1px solid luxcommon.$dark-dividers;
+  display: flex;
+  word-break: break-word;
+
+  &.column {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &.row {
+    flex-direction: row;
+    gap: 16px;
+  }
+}
+
+.lux-highlight-section-label {
+  margin-top: 0;
+  margin-left: 0;
+}
+
+.lux-simple-form {
+  margin: 4px 0;
+  display: flex;
+
+  &.column {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &.row {
+    flex-direction: row;
+    gap: 16px;
+  }
+}
+
+.lux-app-container {
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 100%;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+.mat-mdc-dialog-container {
+  background-color: luxcommon.$app-content-bg !important;
+}
+
+// für Demo
+lux-card.lux-card-grow {
+  display: flex;
+  flex: 1 1 auto;
+  width: 400px;
+  min-width: 0;
+
+  mat-card {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+// Demo
+
+.lux-container {
+  margin: 0 auto;
+  padding: 8px;
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+
+  @include luxbreakpoints.xs {
+    max-width: 590px;
+  }
+
+  @include luxbreakpoints.sm {
+    max-width: 910px;
+  }
+
+  @include luxbreakpoints.md {
+    max-width: 1200px;
+  }
+}
+
+.lux-container-full {
+  margin: 0 8px;
+  padding: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  @include luxbreakpoints.xs {
+    margin: 0 4px;
+  }
+}
+
+.lux-crop {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lux-crop-2-lines {
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  text-overflow: ellipsis;
+}
+
+.lux-label {
+  color: luxcommon.$dark-secondary-text;
+  font-size: 0.75rem;
+}
+
+.lux-hint {
+  color: luxcommon.$dark-secondary-text;
+  font-size: 0.75rem;
+}
+
+.lux-sr-only {
+  // sr=screen-reader vgl. https://webaim.org/techniques/css/invisiblecontent/
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.lux-border-box {
+  box-sizing: border-box;
+}
+
+.lux-content-box {
+  box-sizing: content-box;
+}
+
+.lux-nowrap {
+  white-space: nowrap;
+}
+
+.lux-cursor {
+  cursor: pointer;
+}
+
+.lux-block-pointer-events {
+  pointer-events: none;
+}
+
+.lux-vertical-align-baseline {
+  vertical-align: baseline !important;
+}
+
+.lux-black-semi-transparent {
+  color: luxcommon.$dark-primary-text;
+}
+
+.lux-semi-transparent {
+  opacity: 0.6;
+}
+
+.lux-overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.lux-overflow-y-auto {
+  overflow-y: auto;
+}
+
+.lux-overflow-wrap-break-word {
+  overflow-wrap: break-word;
+}
+
+.lux-bold {
+  font-weight: bold !important;
+}
+
+.lux-uppercase {
+  text-transform: uppercase !important;
+}
+
+.lux-lowercase {
+  text-transform: lowercase !important;
+}
+
+.lux-hyphenate {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: normal;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+  overflow-x: auto;
+}
+
+.lux-reset-icon {
+  display: inline-block;
+
+  &:hover {
+    border-radius: 50%;
+    color: luxcommon.$lux-hover-color;
+    cursor: pointer;
+  }
+}
+
+/* <MARGINS / PADDINGS> */
+
+/*
+  Erstellt die Layout-Gaps (Margin-Abstände für Children von fxLayouts).
+  Um weitere Steps hinzufuegen die Variable gapSteps um die entsprechenden Werte ergaenzen.
+ */
+$gapSteps: 10, 20, 30;
+
+@each $gapStep in $gapSteps {
+  .lux-flex-layout-gap-#{$gapStep}[style*="row"] > *:not(:last-child) {
+    margin-right: #{$gapStep}px;
+  }
+  .lux-flex-layout-gap-#{$gapStep}[style*="column"] > *:not(:last-child) {
+    margin-bottom: #{$gapStep}px;
+  }
+}
+
+/*
+  Erstellt die Z-Indizes.
+  Um weitere Z-Indizes anzulegen, die Variable zindexSteps um die entsprechenden Werte ergaenzen.
+ */
+$zindexSteps: 100, 500, 1000;
+
+@each $zindexStep in $zindexSteps {
+  .lux-z-index-#{$zindexStep} {
+    z-index: #{$zindexStep};
+  }
+}
+
+/*
+  Für die Darstellung von uppercase-Labels wenn die Configuration das erlaubt.
+ */
+.lux-uppercase > lux-button,
+lux-button.lux-uppercase {
+  .lux-button-label {
+    text-transform: uppercase;
+  }
+}
+
+@each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+  .lux-color-#{"" + $colorName + ""} {
+    color: $colorNameHex;
+  }
+}
+
+@each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+  .lux-bg-color-#{"" + $colorName + ""} {
+    background: $colorNameHex;
+  }
+}
+
+@each $colorName, $colorNameHex in luxcommon.$componentFontColors {
+  .lux-font-color-#{"" + $colorName + ""} {
+    color: $colorNameHex;
+  }
+}
+
+.lux-color-dark-primary-text {
+  color: luxcommon.$dark-primary-text;
+}
+
+.lux-color-dark-secondary-text {
+  color: luxcommon.$dark-secondary-text;
+}
+
+.lux-color-dark-disabled-text {
+  color: luxcommon.$dark-disabled-text;
+}
+
+.lux-color-dark-focused {
+  color: luxcommon.$dark-focused;
+}
+
+.lux-color-light-primary-text {
+  color: luxcommon.$light-primary-text;
+}
+
+.lux-color-light-secondary-text {
+  color: luxcommon.$light-secondary-text;
+}
+
+.lux-color-light-disabled-text {
+  color: luxcommon.$light-disabled-text;
+}
+
+.lux-color-light-focused {
+  color: luxcommon.$light-focused;
+}
+
+@each $size in $sizes {
+  @for $i from 1 through 3 {
+    .lux-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
+      color: map.get(list.nth($paletten, $i), $size);
+    }
+
+    .lux-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
+      color: map.get(list.nth($paletten, $i), contrast, $size);
+    }
+
+    .lux-bg-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
+      background-color: map.get(list.nth($paletten, $i), $size);
+    }
+
+    .lux-bg-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
+      background-color: map.get(list.nth($paletten, $i), contrast, $size);
+    }
+
+    .lux-border-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
+      border-color: map.get(list.nth($paletten, $i), $size);
+    }
+
+    .lux-border-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
+      border-color: map.get(list.nth($paletten, $i), contrast, $size);
+    }
+
+    .lux-outline-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
+      outline-color: map.get(list.nth($paletten, $i), $size);
+    }
+
+    .lux-outline-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
+      outline-color: map.get(list.nth($paletten, $i), contrast, $size);
+    }
+
+    .lux-text-decoration-#{list.nth($paletteNamen, $i)}-color-#{string.to-lower-case("" + $size)} {
+      text-decoration-color: map.get(list.nth($paletten, $i), $size);
+    }
+
+    .lux-text-decoration-#{list.nth($paletteNamen, $i)}-color-#{string.to-lower-case("" + $size)}-contrast {
+      text-decoration-color: map.get(list.nth($paletten, $i), contrast, $size);
+    }
+
+    .lux-column-rule-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
+      column-rule-color: map.get(list.nth($paletten, $i), $size);
+    }
+
+    .lux-column-rule-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
+      column-rule-color: map.get(list.nth($paletten, $i), contrast, $size);
+    }
+  }
+}
+
+$notificationSizes: (18, 24, 30);
+
+.lux-badge-notification {
+  &.mat-badge-small {
+    .mat-badge-content {
+      padding-top: 0;
+      font-size: 0.5625rem;
+      width: #{list.nth($notificationSizes, 1)}px;
+      height: #{list.nth($notificationSizes, 1)}px;
+    }
+  }
+
+  &.mat-badge-medium {
+    .mat-badge-content {
+      padding-top: 0;
+      font-size: 0.75rem;
+      width: #{list.nth($notificationSizes, 2)}px;
+      height: #{list.nth($notificationSizes, 2)}px;
+    }
+  }
+
+  &.mat-badge-large {
+    .mat-badge-content {
+      padding-top: 0;
+      font-size: 0.9375rem;
+      width: #{list.nth($notificationSizes, 3)}px;
+      height: #{list.nth($notificationSizes, 3)}px;
+    }
+  }
+
+  &.mat-badge .mat-badge-content {
+    border-radius: 50px;
+    border: 2px solid #ffffff;
+  }
+
+  &.mat-badge.lux-badge-no-border .mat-badge-content {
+    border: 2px solid transparent;
+  }
+
+  &.mat-badge:not(.mat-badge-disabled).mat-badge-primary .mat-badge-content {
+    color: #ffffff;
+    background-color: #003366;
+  }
+
+  &.mat-badge:not(.mat-badge-disabled).mat-badge-accent .mat-badge-content {
+    color: #1c1b1b;
+    background-color: #56bd66;
+  }
+
+  &.mat-badge:not(.mat-badge-disabled).mat-badge-warn .mat-badge-content {
+    color: #ffffff;
+    background-color: #c00013;
+  }
+
+  &.lux-badge-color-default {
+    &.mat-badge:not(.mat-badge-disabled) .mat-badge-content {
+      color: white;
+      background: map.get(luxcommon.$componentBgColors, "gray");
+    }
+  }
+
+  &.mat-badge-disabled .mat-badge-content {
+    color: white;
+    background-color: #b9b9b9;
+  }
+}
+
+.lux-text-highlight-primary,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-primary,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-primary {
+  color: #003366;
+  background-color: #d5e3ff;
+
+  @media (prefers-contrast: more) {
+    color: #1c1b1b;
+    background-color: #89ace7;
+  }
+}
+
+.lux-text-highlight-primary-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-primary-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-primary-strong {
+  color: #1c1b1b;
+  background-color: #89ace7;
+}
+
+.lux-text-highlight-success,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-success,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-success {
+  color: #00531d;
+  background-color: #c6ffc5;
+
+  @media (prefers-contrast: more) {
+    color: #1c1b1b;
+    background-color: #56bd66;
+  }
+}
+
+.lux-text-highlight-success-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-success-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-success-strong {
+  color: #1c1b1b;
+  background-color: #56bd66;
+}
+
+.lux-text-highlight-alert,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-alert,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-alert {
+  color: #1c1b1b;
+  background-color: #fdedab;
+
+  @media (prefers-contrast: more) {
+    color: #1c1b1b;
+    background-color: #fbd12c;
+  }
+}
+
+.lux-text-highlight-alert-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-alert-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-alert-strong {
+  color: #1c1b1b;
+  background-color: #fbd12c;
+}
+
+.lux-text-highlight-error,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-error,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-error {
+  color: #93000c;
+  background-color: #ffdad6;
+
+  @media (prefers-contrast: more) {
+    color: #1c1b1b;
+    background-color: #ff897e;
+  }
+}
+
+.lux-text-highlight-error-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-error-strong,
+lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-error-strong {
+  color: #1c1b1b;
+  background-color: #ff897e;
+}

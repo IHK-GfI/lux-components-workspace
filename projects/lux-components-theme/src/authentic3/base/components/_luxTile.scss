@@ -1,0 +1,198 @@
+@use "sass:map";
+@use "../luxpalette";
+@use "../luxcommon";
+@use "../luxelevations";
+@use "../luxfocus";
+@use "@angular/material" as mat;
+
+$dark-green: #2e8533;
+
+// Diese Komponenten wird nur noch für das Green-Theme gepflegt
+lux-tile {
+  position: relative;
+  display: flex;
+
+  .lux-notification-new {
+    background-color: map.get(luxpalette.$lux-palette_accent, 500);
+  }
+
+  mat-card[class~="lux-cursor"] {
+    &.mat-mdc-card {
+      border-radius: luxcommon.$lux-tile-borderradius;
+      overflow: hidden !important;
+      padding: 24px;
+    }
+
+    .mat-mdc-card-content {
+      padding-top: 0px !important;
+    }
+
+    &.mat-mdc-card.lux-tile-mobile {
+      padding: 14px;
+    }
+
+    &.mat-mdc-card::before {
+      content: "";
+      position: absolute;
+      display: block;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background-color: luxcommon.$lux-tile-bottom-line-color;
+      transition: 0.2s ease;
+    }
+
+    &.lux-badge-notification.mat-badge-after.mat-badge-above.mat-badge-medium.mat-badge-overlap {
+      .mat-badge-content {
+        right: 2px;
+        top: 5px;
+        padding-top: 0px;
+        line-height: 20px;
+      }
+    }
+  }
+
+  .mat-mdc-card:not([class*="mat-elevation-z"]) {
+    @include luxelevations.lux-elevation-z0;
+  }
+
+  .lux-tile-shadow:not([class*="mat-elevation-z"]) {
+    @include luxelevations.lux-elevation-z2;
+  }
+
+  h2 {
+    margin: 4px 0 0 0;
+    color: map.get(luxpalette.$lux-palette_primary, 500);
+  }
+
+  .lux-tile-mobile-view {
+    flex: 0 0 180px;
+    max-width: 180px !important;
+    min-width: 180px !important;
+    min-height: 134px !important;
+
+    h2 > * {
+      font-size: 1.25rem;
+      word-wrap: break-word;
+      max-width: 100%;
+      margin: 4px 0px;
+      font-family: luxcommon.$app-headline-font;
+    }
+  }
+
+  .lux-tile-desktop-view {
+    flex: 0 0 260px;
+    max-width: 260px !important;
+    min-width: 260px !important;
+    min-height: 175px !important;
+
+    h2 > * {
+      font-size: 1.5rem;
+      word-wrap: break-word;
+      max-width: 100%;
+      margin: 12px 0px;
+      font-family: luxcommon.$app-headline-font;
+    }
+  }
+
+  .lux-tile-content-container {
+    height: 100%;
+    min-height: 100%;
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .lux-tile-icon {
+    color: luxcommon.$lux-tile-icon-color;
+    margin-top: 6px;
+    lux-icon {
+      mat-icon {
+        width: 72px !important;
+        height: 72px !important;
+        padding: 0px;
+      }
+    }
+    lux-image {
+      height: 100px;
+    }
+  }
+
+  .lux-tile-mobile {
+    lux-icon mat-icon {
+      width: 50px !important;
+      height: 50px !important;
+    }
+  }
+
+  .lux-tile-notification-icon {
+    margin-top: -4px;
+    border: 1px solid black;
+    height: 12px;
+    width: 12px;
+    border-radius: 9px;
+  }
+
+  .lux-tile-notification-icon {
+    position: absolute;
+
+    right: 2px;
+    top: 6px;
+
+    &.lux-counter-visible {
+      top: 0;
+      right: -8px;
+      z-index: 1;
+
+      &.lux-tile-notification-mobile {
+        top: 1px;
+        right: -4px;
+      }
+    }
+
+    &.lux-tile-notification-mobile {
+      top: 4px;
+      right: 0;
+    }
+  }
+
+  .lux-tile-label {
+    margin: 0;
+    display: flex;
+    flex-shrink: 1;
+    flex-grow: 0;
+    min-height: 40px;
+    text-align: center;
+    text-decoration-line: underline;
+  }
+
+  .lux-notification-read {
+    visibility: hidden;
+  }
+
+  .lux-tile-small-font ::ng-deep .mat-badge-content {
+    top: -4px !important;
+    right: -4px !important;
+  }
+
+  /** ########## Focus / Hover ########## **/
+
+  mat-card[class~="lux-cursor"] {
+    &.mat-mdc-card:focus-visible {
+      @include luxfocus.lux-focus-mixin-green;
+    }
+
+    &:hover {
+      background-image: none !important;
+      background-color: white !important;
+
+      h2 {
+        color: luxcommon.$lux-tile-font-hover-color;
+      }
+    }
+
+    &.mat-mdc-card:hover::before {
+      height: 14px;
+    }
+  }
+}

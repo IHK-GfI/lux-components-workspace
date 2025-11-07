@@ -1,5 +1,5 @@
 <div class="lux-app-container">
-  @if (this.luxAppHeader !== 'none' && themeName !== 'authentic') {
+  @if (this.luxAppHeader !== 'none' && themeName === 'green') {
   <lux-app-header
     luxAppTitle="LUX Components"
     luxAppTitleShort="Components"
@@ -149,6 +149,7 @@
       <lux-menu-item
         luxLabel="Theme - green"
         [luxDisabled]="themeName === 'green'"
+        luxClass="lux-selected-item-ac"
         luxTagId="theme-green-menu-item-ac"
         (luxClicked)="onChangeTheme('green')"
       ></lux-menu-item>
@@ -158,10 +159,16 @@
         luxTagId="theme-authentic-menu-item-ac"
         (luxClicked)="onChangeTheme('authentic')"
       ></lux-menu-item>
+      <lux-menu-item
+        luxLabel="Theme - authentic3"
+        [luxDisabled]="false"
+        luxTagId="theme-authentic3-menu-item-ac"
+        (luxClicked)="onChangeTheme('authentic3')"
+      ></lux-menu-item>
     </lux-app-header-right-nav>
     }
   </lux-app-header>
-  } @if (this.luxAppHeader !== 'none' && themeName === 'authentic') {
+  } @if (this.luxAppHeader !== 'none' && themeName !== 'green') {
   <lux-app-header-ac
     luxAppTitle="LUX Components"
     luxAppTitleShort="Components"
@@ -186,13 +193,24 @@
     } @if (luxMode === 'stand-alone') {
     <lux-app-header-ac-user-menu luxTooltip="Usermenü">
       <lux-menu-item [luxLabel]="demoLoginBtn" (luxClicked)="toggleLogin()" luxTagId="abmelden-menu-item"></lux-menu-item>
-      <lux-menu-item luxLabel="Theme - green" luxTagId="theme-green-menu-item-ac" (luxClicked)="onChangeTheme('green')"></lux-menu-item>
+      <lux-menu-item
+        luxLabel="Theme - green"
+        luxTagId="theme-green-menu-item-ac"
+        (luxClicked)="onChangeTheme('green')"
+      ></lux-menu-item>
       <lux-menu-item
         luxLabel="Theme - authentic"
-        [luxDisabled]="true"
-        luxClass="lux-selected-item-ac"
+        [luxDisabled]="themeName === 'authentic'"
+        [luxClass]="themeName === 'authentic' ? 'lux-selected-item-ac' : ''"
         luxTagId="theme-authentic-menu-item-ac"
         (luxClicked)="onChangeTheme('authentic')"
+      ></lux-menu-item>
+      <lux-menu-item
+        luxLabel="Theme - authentic3"
+        [luxDisabled]="themeName === 'authentic3'"
+        [luxClass]="themeName === 'authentic3' ? 'lux-selected-item-ac' : ''"
+        luxTagId="theme-authentic3-menu-item-ac"
+        (luxClicked)="onChangeTheme('authentic3')"
       ></lux-menu-item>
     </lux-app-header-ac-user-menu>
     }

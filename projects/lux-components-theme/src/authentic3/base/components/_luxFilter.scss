@@ -1,0 +1,148 @@
+@use "sass:map";
+@use "../luxcommon";
+@use "../luxpalette";
+@use "../luxfocus";
+@use "../luxelevations";
+
+lux-filter-form {
+  lux-menu div.lux-menu-custom-trigger {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .no-filter-active {
+    padding: 8px 25px;
+  }
+
+  .no-filter-active-sm {
+    padding: 8px 12px;
+  }
+
+  // Filter-Chips anpassen
+  mat-chip-row.mat-mdc-standard-chip {
+    height: 24px;
+
+    span.mat-mdc-chip-action {
+      padding-left: 6px !important;
+    }
+
+    lux-icon {
+      margin: 0 !important;
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+  }
+
+  .filter-item {
+    .mat-standard-chip {
+      min-height: 24px;
+
+      &.mat-chip-with-trailing-icon {
+        padding-right: 4px;
+      }
+    }
+
+    div.lux-form-control-label-authentic {
+      min-height: 0 !important;
+    }
+  }
+
+  .filterPanel .mat-action-row {
+    padding: 0 !important;
+    border: none;
+  }
+
+  .filterPanel {
+    mat-expansion-panel-header.mat-expansion-panel-header {
+      padding-right: 6px;
+    }
+  }
+
+  lux-menu {
+    &.filter-menu {
+      .lux-menu-extended {
+        padding: 0 !important;
+      }
+
+      .lux-filter-menu-trigger button.lux-button-rounded {
+        height: 36px;
+        width: 36px;
+        min-width: 36px;
+        max-width: 36px;
+        background-color: transparent;
+        color: map.get(luxpalette.$lux-palette_primary, 500);
+        padding: 0px !important;
+        margin: 0px 4px !important;
+
+        @include luxelevations.lux-elevation-z0;
+      }
+    }
+    .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:hover {
+      background-color: transparent !important;
+      color: luxcommon.$lux-hover-color;
+    }
+    .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:focus-visible {
+      @include luxfocus.focus-dark-mixin-inline;
+      background-color: transparent !important;
+    }
+    .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:active {
+      background-color: transparent !important;
+      color: map.get(luxpalette.$lux-palette_primary, 700);
+    }
+  }
+
+  lux-accordion {
+    lux-panel-header-title {
+      width: 100%;
+      mat-panel-title.mat-expansion-panel-header-title {
+        align-items: center;
+        justify-content: space-between;
+        margin: 0px;
+      }
+    }
+  }
+
+  lux-card .lux-card-header .lux-card-title,
+  lux-card .lux-card-header .lux-card-subtitle {
+    height: 36px;
+    line-height: 1.5em;
+  }
+}
+
+lux-filter-save-dialog,
+lux-filter-load-dialog {
+  lux-dialog-actions.lux-filter-dialog-action {
+    display: flex;
+    flex: 1 1 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    gap: 12px;
+    place-content: center end;
+    align-items: center;
+  }
+}
+
+lux-filter-save-dialog {
+  .lux-filter-save-dialog-form-container {
+    height: 95px;
+  }
+}
+
+lux-filter-load-dialog {
+  .filter-content {
+    button,
+    button.lux-button.mat-mdc-button,
+    button.lux-button.mat-mdc-raised-button {
+      height: 25px;
+      line-height: 25px;
+    }
+
+    mat-card {
+      padding: 4px;
+    }
+
+    mat-card-content {
+      padding: 0;
+    }
+  }
+}
