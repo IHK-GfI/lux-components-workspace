@@ -1,0 +1,59 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+
+lux-button.lux-flat {
+  // ooooooooooooo           oooo
+  // 8'   888   `8           `888
+  //      888       .ooooo.   888  oooo   .ooooo.  ooo. .oo.    .oooo.o
+  //      888      d88' `88b  888 .8P'   d88' `88b `888P"Y88b  d88(  "8
+  //      888      888   888  888888.    888ooo888  888   888  `"Y88b.
+  //      888      888   888  888 `88b.  888    .o  888   888  o.  )88b
+  //     o888o     `Y8bod8P' o888o o888o `Y8bod8P' o888o o888o 8""888P'
+
+  @include mat.button-overrides(
+    (
+      filled-label-text-weight: 600,
+      filled-container-shape: 4px,
+      filled-horizontal-padding: 16px,
+      filled-container-height: 36px,
+      filled-label-text-color: #000000,
+      filled-container-color: #ffffff,
+      filled-focus-state-layer-opacity: 0.1,
+      filled-hover-state-layer-opacity: 0.1
+    )
+  );
+
+  .mat-primary {
+    @include mat.button-overrides(
+      (
+        filled-label-text-color: #ffffff,
+        filled-container-color: #003366,
+        filled-focus-state-layer-opacity: 0.1,
+        filled-hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  .mat-accent {
+    @include mat.button-overrides(
+      (
+        filled-label-text-color: #000000,
+        filled-container-color: #56bd66,
+        filled-focus-state-layer-opacity: 0.1,
+        filled-hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.button-overrides(
+      (
+        filled-label-text-color: #ffffff,
+        filled-container-color: #c00013,
+        filled-focus-state-layer-opacity: 0.1,
+        filled-hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+}

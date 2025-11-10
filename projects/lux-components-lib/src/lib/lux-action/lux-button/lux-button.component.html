@@ -1,6 +1,7 @@
 @if (luxRaised && !luxRounded && !luxFlat && !luxStroked) {
 <button
-  mat-raised-button
+  matButton="elevated"
+  class="lux-button lux-button-raised"
   (focus)="tooltipDirective?.show()"
   (blur)="tooltipDirective?.hide()"
   [disableRipple]="true"
@@ -13,13 +14,13 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-button-spinner': luxLoading }"
-  [attr.aria-label]="luxLabel ? luxLabel : ''"
->
+  [attr.aria-label]="luxLabel ? luxLabel : ''">
   <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
 </button>
-} @if (!luxRaised && !luxRounded && luxFlat && !luxStroked) {
+} @else if (!luxRaised && !luxRounded && luxFlat && !!luxColor && !luxStroked) {
 <button
-  mat-flat-button
+  matButton="filled"
+  class="lux-button lux-button-flat"
   (focus)="tooltipDirective?.show()"
   (blur)="tooltipDirective?.hide()"
   [disableRipple]="true"
@@ -32,13 +33,13 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   [ngClass]="{ 'lux-icon-button': !!luxIconName }"
-  [attr.aria-label]="luxLabel ? luxLabel : ''"
->
+  [attr.aria-label]="luxLabel ? luxLabel : ''">
   <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
 </button>
-} @if (!luxRaised && !luxRounded && !luxFlat && luxStroked) {
+} @else if (!luxRaised && !luxRounded && !luxFlat && luxStroked) {
 <button
-  mat-stroked-button
+  matButton="outlined"
+  class="lux-button lux-button-stroked"
   (focus)="tooltipDirective?.show()"
   (blur)="tooltipDirective?.hide()"
   [disableRipple]="true"
@@ -51,30 +52,10 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   [ngClass]="{ 'lux-icon-button': !!luxIconName }"
-  [attr.aria-label]="luxLabel ? luxLabel : ''"
->
+  [attr.aria-label]="luxLabel ? luxLabel : ''">
   <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
 </button>
-} @if (!luxRaised && !luxRounded && !luxFlat && !luxStroked) {
-<button
-  mat-button
-  (focus)="tooltipDirective?.show()"
-  (blur)="tooltipDirective?.hide()"
-  [disableRipple]="true"
-  [color]="luxColor"
-  (click)="clicked($event)"
-  (auxclick)="auxClicked($event)"
-  [disabled]="luxDisabled"
-  [type]="luxType"
-  class="lux-button"
-  luxTagIdHandler
-  [luxTagId]="luxTagId"
-  [ngClass]="{ 'lux-icon-button': !!luxIconName }"
-  [attr.aria-label]="luxLabel ? luxLabel : ''"
->
-  <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
-</button>
-} @if (luxRounded && !luxStroked) {
+} @else if (luxRounded && !luxStroked) {
 <button
   mat-fab
   (focus)="tooltipDirective?.show()"
@@ -89,21 +70,19 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-rounded-default': !luxColor }"
-  [attr.aria-label]="luxLabel ? luxLabel : ''"
->
+  [attr.aria-label]="luxLabel ? luxLabel : ''">
   @if(luxLoading && !luxDisabled) {
   <lux-progress
     luxType="Spinner"
     [luxMode]="luxSpinnerMode"
     [luxValue]="luxSpinnerValue"
     luxAnimationDuration="slow"
-    class="lux-button-spinner"
-  ></lux-progress>
+    class="lux-button-spinner"></lux-progress>
   } @if ((!luxLoading) || (luxLoading && luxDisabled)) {
   <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="1.125rem" class="lux-button-icon-round"></lux-icon>
   }
 </button>
-} @if (luxRounded && luxStroked) {
+} @else if (luxRounded && luxStroked) {
 <button
   mat-fab
   (focus)="tooltipDirective?.show()"
@@ -118,19 +97,36 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-stroked-default': !luxColor }"
-  [attr.aria-label]="luxLabel ? luxLabel : ''"
->
+  [attr.aria-label]="luxLabel ? luxLabel : ''">
   @if(luxLoading && !luxDisabled) {
   <lux-progress
     luxType="Spinner"
     [luxMode]="luxSpinnerMode"
     [luxValue]="luxSpinnerValue"
     luxAnimationDuration="slow"
-    class="lux-button-spinner"
-  ></lux-progress>
+    class="lux-button-spinner"></lux-progress>
   } @if ((!luxLoading) || (luxLoading && luxDisabled)) {
   <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="1.125rem" class="lux-button-icon-round"></lux-icon>
   }
+</button>
+}@else {
+<button
+  matButton
+  class="lux-button lux-button-default"
+  (focus)="tooltipDirective?.show()"
+  (blur)="tooltipDirective?.hide()"
+  [disableRipple]="true"
+  [color]="luxColor"
+  (click)="clicked($event)"
+  (auxclick)="auxClicked($event)"
+  [disabled]="luxDisabled"
+  [type]="luxType"
+  class="lux-button"
+  luxTagIdHandler
+  [luxTagId]="luxTagId"
+  [ngClass]="{ 'lux-icon-button': !!luxIconName }"
+  [attr.aria-label]="luxLabel ? luxLabel : ''">
+  <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
 </button>
 }
 
@@ -142,8 +138,7 @@
       [luxMode]="luxSpinnerMode"
       [luxValue]="luxSpinnerValue"
       luxAnimationDuration="slow"
-      class="lux-button-spinner"
-    ></lux-progress>
+      class="lux-button-spinner"></lux-progress>
     } @if (luxIconName && !luxIconShowRight && !luxLoading) {
     <lux-icon [luxIconName]="luxIconName" luxPadding="0px" luxMargin="0px" luxIconSize="14px" class="lux-button-icon"></lux-icon>
     } @if (luxLabel) {
@@ -154,12 +149,11 @@
     <span
       class="lux-button-badge lux-bg-color-primary-500"
       [ngClass]="{
-        'lux-bg-color-primary-500': luxButtonBadgeColor === 'primary',
-        'lux-bg-color-warn-500': luxButtonBadgeColor === 'warn',
-        'lux-bg-color-accent-500': luxButtonBadgeColor === 'accent',
+        'lux-button-badge-primary': luxButtonBadgeColor === 'primary',
+        'lux-button-badge-warn': luxButtonBadgeColor === 'warn',
+        'lux-button-badge-accent': luxButtonBadgeColor === 'accent',
         'lux-mr-3': !!luxIconName && luxIconShowRight
-      }"
-    >
+      }">
       {{ luxButtonBadge }}
     </span>
     } @if (luxIconName && luxIconShowRight && !luxLoading) {
@@ -170,8 +164,7 @@
       [luxMode]="luxSpinnerMode"
       [luxValue]="luxSpinnerValue"
       luxAnimationDuration="slow"
-      class="lux-button-spinner"
-    ></lux-progress>
+      class="lux-button-spinner"></lux-progress>
     }
   </div>
 </ng-template>

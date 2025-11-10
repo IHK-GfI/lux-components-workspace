@@ -1,0 +1,69 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+
+lux-button.lux-rounded:not(.lux-stroked) {
+  // ooooooooooooo           oooo
+  // 8'   888   `8           `888
+  //      888       .ooooo.   888  oooo   .ooooo.  ooo. .oo.    .oooo.o
+  //      888      d88' `88b  888 .8P'   d88' `88b `888P"Y88b  d88(  "8
+  //      888      888   888  888888.    888ooo888  888   888  `"Y88b.
+  //      888      888   888  888 `88b.  888    .o  888   888  o.  )88b
+  //     o888o     `Y8bod8P' o888o o888o `Y8bod8P' o888o o888o 8""888P'
+
+  @include mat.fab-overrides(
+    (
+      container-shape: 50%,
+      container-elevation-shadow: none,
+      hover-container-elevation-shadow: none,
+      focus-container-elevation-shadow: none,
+      pressed-container-elevation-shadow: none,
+      foreground-color: #1c1b1b,
+      container-color: transparent,
+      touch-target-size: 2.25rem
+    )
+  );
+
+  .mat-primary {
+    @include mat.fab-overrides(
+      (
+        foreground-color: #ffffff,
+        container-color: #003366,
+        hover-state-layer-opacity: 0.9
+      )
+    );
+  }
+
+  .mat-accent {
+    @include mat.fab-overrides(
+      (
+        foreground-color: #1c1b1b,
+        container-color: #56bd66,
+        hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.fab-overrides(
+      (
+        foreground-color: #ffffff,
+        container-color: #c00013,
+        hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  //   .oooooo.                            .
+  //  d8P'  `Y8b                         .o8
+  // 888          oooo  oooo   .oooo.o .o888oo  .ooooo.  ooo. .oo.  .oo.
+  // 888          `888  `888  d88(  "8   888   d88' `88b `888P"Y88bP"Y88b
+  // 888           888   888  `"Y88b.    888   888   888  888   888   888
+  // `88b    ooo   888   888  o.  )88b   888 . 888   888  888   888   888
+  //  `Y8bood8P'   `V88V"V8P' 8""888P'   "888" `Y8bod8P' o888o o888o o888o
+
+  .mat-mdc-fab-base {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}

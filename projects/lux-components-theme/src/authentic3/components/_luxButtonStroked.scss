@@ -1,0 +1,51 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+
+lux-button.lux-stroked {
+  // ooooooooooooo           oooo
+  // 8'   888   `8           `888
+  //      888       .ooooo.   888  oooo   .ooooo.  ooo. .oo.    .oooo.o
+  //      888      d88' `88b  888 .8P'   d88' `88b `888P"Y88b  d88(  "8
+  //      888      888   888  888888.    888ooo888  888   888  `"Y88b.
+  //      888      888   888  888 `88b.  888    .o  888   888  o.  )88b
+  //     o888o     `Y8bod8P' o888o o888o `Y8bod8P' o888o o888o 8""888P'
+
+  @include mat.button-overrides(
+    (
+      outlined-label-text-weight: 600,
+      outlined-container-shape: 4px,
+      outlined-horizontal-padding: 16px,
+      outlined-container-height: 36px,
+      outlined-label-text-color: #1c1b1b,
+      outlined-outline-color: #1c1b1b
+    )
+  );
+
+  .mat-primary {
+    @include mat.button-overrides(
+      (
+        outlined-label-text-color: #003366,
+        outlined-outline-color: #003366
+      )
+    );
+  }
+
+  .mat-accent {
+    @include mat.button-overrides(
+      (
+        outlined-label-text-color: #00531d,
+        outlined-outline-color: #00531d
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.button-overrides(
+      (
+        outlined-label-text-color: #c00013,
+        outlined-outline-color: #c00013
+      )
+    );
+  }
+}
