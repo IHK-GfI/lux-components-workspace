@@ -3,16 +3,25 @@
   [ngClass]="{ 'lux-flex-col': !desktopView, 'example-mobile': !desktopView }"
 >
   @if (desktopView) {
+  <a id="overview-navigation" class="lux-sr-only">Seitennavigation</a>
   <div
     class="example-base-components-list lux-color-dark-divider lux-flex lux-flex-auto lux-flex-grow-0 lux-flex-col"
     luxAriaRole="navigation"
     luxAriaLabel="Komponentenbeispiele"
     #exampleListElement
   >
-  <div class="lux-flex lux-justify-between lux-pb-4">
-    <lux-button luxLabel="Zurück" luxColor="primary" [luxStroked]="true" (luxClicked)="onPrev()"></lux-button>
-    <lux-button luxLabel="Weiter" luxColor="primary" [luxStroked]="true" (luxClicked)="onNext()"></lux-button>
-  </div>
+    <div class="lux-flex lux-justify-between lux-items-center lux-pb-4">
+      <lux-button luxLabel="Zurück" luxColor="primary" [luxStroked]="true" (luxClicked)="onPrev()"></lux-button>
+      <lux-link-plain
+        class="sr-only"
+        luxHref="#main-content"
+        luxLabel="Zum Inhalt"
+        luxAriaLabel="Zum Inhalt der Seite springen"
+        luxAriaLabelSelector="div.link-wrapper"
+        (luxClicked)="goToElement($event, 'main-content')"
+      ></lux-link-plain>
+      <lux-button luxLabel="Weiter" luxColor="primary" [luxStroked]="true" (luxClicked)="onNext()"></lux-button>
+    </div>
     @for (moduleName of navigationService.currentModuleNames; track moduleName) {
     <lux-panel luxCollapsedHeaderHeight="2.1875em" luxExpandedHeaderHeight="2.1875em" [luxExpanded]="true">
       <lux-panel-header-title
@@ -38,9 +47,21 @@
       </lux-panel-content>
     </lux-panel>
     }
+    <lux-link-plain
+      class="sr-only"
+      luxHref="#overview-navigation"
+      luxLabel="Nach oben"
+      luxAriaLabel="Zum Start der Seitennavigation springen"
+      luxAriaLabelSelector="div.link-wrapper"
+      (luxClicked)="goToElement($event, 'overview-navigation')"
+    ></lux-link-plain>
   </div>
   }
-  <div class="example-base-content" [ngClass]="{ 'lux-flex-auto': !desktopView, 'lux-flex-shrink-0': !desktopView }" luxAriaRole="main">
+  <div
+    class="example-base-content"
+    [ngClass]="{ 'lux-flex-auto': !desktopView, 'lux-flex-shrink-0': !desktopView }"
+    luxAriaRole="main"
+>
     <router-outlet></router-outlet>
   </div>
 </div>

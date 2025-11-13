@@ -66,3 +66,20 @@
     }
   }
 }
+
+lux-link-plain.sr-only ::ng-deep div.link-wrapper
+{
+position:absolute;
+left:-10000px;
+top:auto;
+width:1px;
+height:1px;
+overflow:hidden;
+}
+
+lux-link-plain.sr-only ::ng-deep div.link-wrapper:focus
+{
+position:static;
+width:auto;
+height:auto;
+}

@@ -6,6 +6,12 @@
   }
 }
 
+#main-content {
+  &:focus-visible {
+      outline: var(--lux-theme-outline-width) var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark);
+    }
+}
+
 lux-card ::ng-deep > mat-card {
   width: 100%;
   margin: 0 !important;
@@ -21,8 +27,8 @@ lux-card ::ng-deep mat-card-content .lux-card-content {
 
 .example-base-container,
 .example-base-options {
-  min-width: 50%;
-  max-width: 50%;
+  min-width: calc(50% - 8px);
+  max-width: calc(50% - 8px);
 
   ::ng-deep > .mat-mdc-card > .lux-card-content-container {
     overflow-y: auto;

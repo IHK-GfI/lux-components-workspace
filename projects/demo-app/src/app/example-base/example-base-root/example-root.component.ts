@@ -1,17 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import {
-  LuxAlphabeticallySortedPipe,
-  LuxAriaLabelDirective,
-  LuxAriaRoleDirective,
-  LuxButtonComponent,
-  LuxMediaQueryObserverService,
-  LuxPanelComponent,
-  LuxPanelContentComponent,
-  LuxPanelHeaderTitleComponent,
-  LuxUtil
-} from '@ihk-gfi/lux-components';
+import { LuxAlphabeticallySortedPipe, LuxAriaLabelDirective, LuxAriaRoleDirective, LuxButtonComponent, LuxLinkPlainComponent, LuxMediaQueryObserverService, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent, LuxUtil } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from '../../components-overview/components-overview-navigation.service';
 
@@ -28,8 +18,9 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
     LuxAriaLabelDirective,
     LuxButtonComponent,
     NgClass,
-    RouterOutlet
-  ]
+    RouterOutlet,
+    LuxLinkPlainComponent
+]
 })
 export class ExampleRootComponent implements OnDestroy {
   private router = inject(Router);
@@ -79,5 +70,19 @@ export class ExampleRootComponent implements OnDestroy {
    */
   onComponentClick(component: any) {
     component.onclick();
+  }
+
+  goToElement(event: Event | null, elementId: string) {
+    event?.preventDefault();
+    const element = document.getElementById(elementId);
+    if (element) {
+      // Sicherstellen, dass das Element fokussierbar ist
+      if (!element.hasAttribute('tabindex')) {
+        element.setAttribute('tabindex', '-1');
+      }
+      element.focus();
+    } else {
+      console.warn(`Skip link target not found: #${elementId}`);
+    }
   }
 }
