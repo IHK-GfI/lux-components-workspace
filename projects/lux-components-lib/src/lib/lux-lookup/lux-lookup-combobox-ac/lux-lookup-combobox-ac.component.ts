@@ -165,6 +165,30 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     }
   }
 
+  /**
+   * Wrapper-Klick: Fokus setzen und Panel öffnen (falls erlaubt).
+   * Vermeidet komplexe Template-Ausdrücke, verbessert Lesbarkeit.
+   */
+  onWrapperClick() {
+    if (this.luxDisabled || this.luxReadonly) {
+      return;
+    }
+
+    // Fokus setzen über das zugrunde liegende MatSelect
+    try {
+      this.matSelect?.focus();
+    } catch {
+      // Ignorieren falls nicht möglich
+    }
+
+    // Panel nur öffnen, wenn noch nicht offen
+    if (this.matSelect && !this.matSelect.panelOpen) {
+      if (!this.matSelect!.panelOpen) {
+        this.matSelect!.open();
+      }
+    }
+  }
+
   private ensureSingleSelectedEntryLoaded() {
     if (this.luxValue && this.invisibleEntries.length > 0) {
       // Prüfen, ob der selektierte Wert bereits in displayedEntries ist
