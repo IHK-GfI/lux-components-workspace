@@ -1,0 +1,206 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../base/luxfocus";
+@use "../luxcommon";
+@use "../luxpalette";
+
+$fileUploadProgressSize: 8px;
+
+lux-file-upload {
+  // Ladebalken in der Drop-Zone
+  .lux-file-upload-drop-container-progress {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-height: #{$fileUploadProgressSize},
+        track-height: #{$fileUploadProgressSize}
+      )
+    );
+  }
+
+  // Allgemeine Styles
+  .lux-file-upload-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    .lux-file-upload-view-container {
+      margin-left: luxcommon.$outline-width;
+      margin-right: luxcommon.$outline-width;
+    }
+
+    .lux-file-upload-drop-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      flex: 1 1 auto;
+
+      border: 1px solid var(--lux-theme-primary-500);
+      border-radius: 4px;
+      color: var(--lux-theme-primary-500);
+
+      .lux-file-upload-drop-label-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1 1 auto;
+        gap: 12px;
+        
+        padding: 24px 48px;
+      }
+
+      .lux-file-upload-drop-container-no-progress {
+        height: $fileUploadProgressSize;
+      }
+
+      &.lux-file-upload-drop-container-disabled {
+        color: var(--lux-theme-dark-disabled-text);
+        background-color: var(--lux-theme-app-data-bg);
+        border: 1px solid var(--lux-theme-dark-disabled-text);
+
+        .lux-file-upload-link {
+          cursor: default;
+          text-decoration: none;
+        }
+      }
+
+      &.lux-file-upload-drag-active {
+        background-color: var(--lux-theme-selected-bg-color);
+      }
+
+      .lux-file-upload-icon {
+        display: flex;
+        flex: 0 0 auto;
+      }
+
+      .lux-file-upload-label-container {
+        display: flex;
+        flex: 1 1 auto;
+      }
+
+      .lux-file-upload-link {
+        cursor: pointer;
+        text-decoration: underline;
+        white-space: nowrap;
+      }
+    }
+
+    .lux-file-upload-error-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex: 1 1 auto;
+      gap: 12px;
+
+      border: 1px solid var(--lux-theme-warn-900);
+      border-radius: luxcommon.$app-border-radius;
+      color: map.get(luxpalette.$lux-palette-warn, 900) !important;
+      background-color: luxcommon.$form-error-msg-background;
+      padding: 18px 15px 15px 26px;
+      margin-left: luxcommon.$outline-width;
+      margin-right: luxcommon.$outline-width;
+
+      .lux-file-upload-error-icon {
+        display: flex;
+        flex: 0 0 30px;
+      }
+
+      .lux-file-upload-error-message {
+        display: flex;
+        flex: 1 1 auto;
+      }
+
+      .lux-file-upload-error-button {
+        display: flex;
+        align-items: center;
+
+        button {
+          padding: 0;
+          margin: 0;
+        }
+      }
+    }
+
+    .lux-file-upload-error-container-no-button {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      width: fit-content;
+
+      margin: 2px 5px;
+      font-size: 0.75rem;
+      background-color: luxcommon.$form-error-msg-background;
+      border-radius: 4px;
+      padding-left: 2px;
+      padding-right: 2px;
+      color: map.get(luxpalette.$lux-palette_warn, 900) !important;
+    }
+
+    .lux-file-upload-hint-container {
+      margin-top: 4px;
+      padding-left: luxcommon.$outline-width;
+      padding-right: luxcommon.$outline-width;
+    }
+
+    .lux-file-upload-no-hint-container {
+      min-height: 0;
+    }
+
+    .lux-file-upload-view-item-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex: 1 1 auto;
+      gap: 12px;
+      color: var(--lux-theme-primary-500);
+
+      &.lux-file-upload-view-item-disabled {
+        color: var(--lux-theme-dark-disabled-text);
+        background-color: var(--lux-theme-app-data-bg);
+      }
+
+      .lux-file-upload-view-item {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex: 1 1 auto;
+        gap: 12px;
+
+        .lux-file-upload-label-text {
+          hyphens: auto;
+          word-break: break-all;
+        }
+
+        .lux-file-upload-view-item-label-container {
+          display: flex;
+          flex: 1 1 auto;
+        }
+
+        lux-button.lux-file-upload-view-item-button {
+          display: flex;
+          align-items: center;
+
+          button {
+            padding: 0;
+            margin: 0;
+          }
+        }
+
+        lux-button.lux-file-upload-view-item-button button:disabled {
+          color: var(--lux-theme-dark-disabled-text);
+          background-color: transparent;
+        }
+      }
+    }
+
+    /* Die eigentliche File-Inputs und den Download-Anchor blenden wir aus */
+    .lux-file-upload-input {
+      display: none;
+    }
+  }
+}

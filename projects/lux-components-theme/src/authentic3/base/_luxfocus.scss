@@ -152,86 +152,6 @@ lux-icon.lux-error-icon:focus-visible {
   @include focus-dark-mixin;
 }
 
-/** ########## Datepicker ########## **/
-lux-datepicker-ac,
-lux-datetimepicker-ac {
-  mat-datepicker-toggle {
-    button:focus-visible {
-      @include focus-dark-mixin;
-      outline-offset: 2px;
-      border-radius: 2px;
-    }
-
-    button:hover {
-      lux-icon.lux-datepicker-toggle-icon.lux-color-blue {
-        color: luxcommon.$lux-hover-color;
-      }
-    }
-    .mat-mdc-button-persistent-ripple::before {
-      display: none;
-    }
-  }
-}
-
-// Class, welche das aufgeklappte Panel referenziert
-.lux-datepicker-panel {
-  .mat-calendar-header {
-    button {
-      &:focus-visible {
-        @include focus-dark-mixin;
-      }
-
-      &:hover {
-        @include lux-hovered-mixin;
-      }
-    }
-  }
-
-  .mat-calendar-content {
-    td.mat-calendar-body-cell {
-      &:hover > div {
-        @include lux-hovered-mixin;
-        border-radius: 999px;
-        color: luxcommon.$dark-primary-text;
-      }
-
-      &.mat-calendar-body-active .mat-calendar-body-cell-content {
-        @include focus-dark-mixin;
-      }
-    }
-  }
-}
-
-/** ########## Datetimepicker ########## **/
-// Class, welche das aufgeklappte Panel referenziert
-.lux-datetimepicker-overlay {
-  .mat-calendar-header {
-    button {
-      &:focus-visible {
-        @include focus-dark-mixin;
-      }
-
-      &:hover {
-        @include lux-hovered-mixin;
-      }
-    }
-  }
-
-  .mat-calendar-content {
-    td.mat-calendar-body-cell {
-      &:hover > div {
-        @include lux-hovered-mixin;
-        border-radius: 999px;
-        color: luxcommon.$dark-primary-text;
-      }
-
-      &.mat-calendar-body-active .mat-calendar-body-cell-content {
-        @include focus-dark-mixin;
-      }
-    }
-  }
-}
-
 /** ########## Select-AC ########## **/
 @mixin lux-option-highlight-mixin {
   background-color: map.get(luxpalette.$lux-palette_primary, 300);
@@ -304,22 +224,6 @@ lux-panel {
     &:focus-visible {
       //background-color: white !important;
       @include focus-dark-mixin-inline;
-    }
-  }
-}
-
-/** ########## File-List ########## **/
-lux-file-list {
-  .lux-file-list {
-    &:focus-visible {
-      @include focus-dark-mixin;
-      border-radius: 4px;
-    }
-
-    .lux-file-list-entry {
-      &:focus-visible {
-        @include focus-dark-mixin;
-      }
     }
   }
 }

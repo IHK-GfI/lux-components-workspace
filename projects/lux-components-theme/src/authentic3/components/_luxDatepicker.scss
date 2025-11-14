@@ -1,0 +1,24 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+
+// Panel
+mat-datepicker-content {
+  @include mat.datepicker-overrides(
+    (
+      calendar-container-background-color: luxcommon.$app-content-bg,
+      calendar-container-shape: luxcommon.$app-border-radius,
+      calendar-container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
+    )
+  );
+}
+
+// Formcontrol
+lux-datepicker-ac {
+  @include mat.datepicker-overrides(());
+
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}

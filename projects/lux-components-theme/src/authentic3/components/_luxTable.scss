@@ -219,10 +219,6 @@ lux-table {
       height: 0;
     }
 
-    lux-checkbox-ac .mat-mdc-checkbox-inner-container {
-      margin: 0px;
-    }
-
     @include luxbreakpoints.xs {
       .lux-table-filter-input {
         max-width: 100%;

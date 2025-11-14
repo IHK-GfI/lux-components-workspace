@@ -6,6 +6,12 @@
 @use "../base/luxSvgIcons" as luxicons;
 
 @use "luxAutocomplete";
+@use "luxCheckbox";
+@use "luxDatepicker";
+@use "luxDatetimepicker";
+@use "luxFileinput";
+@use "luxFileList";
+@use "luxFileUpload";
 
 /*
  * Theming for LUX-Select
@@ -92,116 +98,6 @@ lux-lookup-combobox-ac {
     &[aria-disabled="false"] .mat-mdc-select-arrow {
       background-color: luxpalette.$lux-primary-color;
     }
-  }
-}
-
-/*
-* Theming für Lux-Checkbox
-*/
-html .mat-mdc-checkbox .mat-internal-form-field {
-  --mat-slide-toggle-label-text-size: 1rem;
-  --mat-checkbox-label-text-line-height: 1.5rem;
-}
-
-lux-checkbox-ac {
-  input:focus ~ .mdc-checkbox__background,
-  input:hover ~ .mdc-checkbox__background,
-  .mat-mdc-checkbox-touch-target:hover ~ .mdc-checkbox__background {
-    border-color: luxcommon.$dark-secondary-text !important;
-  }
-
-  input:focus-visible ~ .mdc-checkbox__background {
-    border-color: luxcommon.$dark-secondary-text !important;
-    @include luxfocus.focus-dark-mixin;
-  }
-
-  .mdc-checkbox {
-    padding: 0;
-    //Bei mehrzeiligen Labels soll die Checkbox oben und nicht zentriert angezeigt werden.
-    //Deswegen wird hier das Margin-top: auto überschrieben.
-    align-self: flex-start;
-    margin-top: 0.2em;
-    flex: 0 0 1.125rem;
-    width: 1.125rem;
-    height: 1.125rem;
-
-    .mdc-checkbox__background {
-      top: 0;
-      left: 0;
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    .mat-mdc-checkbox-touch-target {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
-  }
-
-  label {
-    font-family: luxcommon.$app-font-family;
-    font-size: luxcommon.$form-control-font-size;
-    color: luxcommon.$dark-primary-text;
-    letter-spacing: normal;
-    cursor: pointer;
-  }
-
-  .mat-mdc-checkbox-ripple,
-  .mdc-checkbox__ripple {
-    display: none;
-  }
-
-  & .mat-mdc-checkbox-disabled {
-    .mdc-checkbox {
-      color: #ffffff;
-    }
-  }
-
-  &.lux-form-control-readonly {
-    pointer-events: none;
-  }
-}
-
-lux-datepicker-ac,
-lux-datetimepicker-ac {
-  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
-    display: block;
-  }
-  mat-datepicker-toggle {
-    height: 24px;
-    width: 24px;
-
-    .mdc-icon-button.mat-mdc-icon-button.mat-mdc-button-base {
-      height: 24px;
-      width: 24px;
-      padding: 0;
-
-      lux-icon.lux-datepicker-toggle-icon,
-      mat-icon.mat-icon {
-        height: 24px;
-        width: 24px;
-        padding: 0px !important;
-      }
-
-      &[disabled="true"] {
-        svg {
-          color: luxcommon.$dark-disabled-text;
-        }
-      }
-    }
-  }
-}
-.cdk-overlay-pane .mat-datepicker-content,
-.lux-datetimepicker-overlay .mat-mdc-card.lux-card {
-  --mat-datepicker-calendar-container-shape: #{luxcommon.$app-border-radius};
-
-  border: 2px solid luxpalette.$lux-primary-color;
-  box-shadow: none !important;
-  margin: 13px -9px 0;
-
-  & .mat-calendar-header button:hover {
-    background-color: #fff !important;
-    color: map.get(luxpalette.$lux-palette_primary, 300);
   }
 }
 

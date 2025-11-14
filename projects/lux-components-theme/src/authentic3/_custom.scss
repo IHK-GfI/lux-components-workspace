@@ -6,23 +6,6 @@
 @use "luxpalette";
 @use "base/luxSvgIcons" as luxicons;
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: rgba(black, 0.87);
-  font-family: luxcommon.$app-headline-font, luxcommon.$app-font-family;
-}
-
-div,
-span,
-p,
-label {
-  font-family: luxcommon.$app-font-family;
-}
-
 // Hintergrundfarbe
 lux-app-content {
   background-color: #fff; //Fallback

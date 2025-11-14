@@ -1,0 +1,44 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../base/luxfocus";
+@use "../luxcommon";
+@use "../luxpalette";
+
+lux-file-list {
+  .lux-file-list {
+    // Dateieinträge
+    .lux-file-list-entries {
+      .lux-file-list-entry {
+        .lux-file-list-entry-label:not(.lux-file-list-entry-label-disabled) {
+          color: luxcommon.$dark-secondary-text;
+        }
+      }
+    }
+
+    // Deaktiviert
+    &.lux-file-list-disabled {
+      mat-card-title *,
+      mat-card-content,
+      .lux-file-icon,
+      span {
+        color: luxcommon.$dark-disabled-text;
+        text-decoration-color: luxcommon.$dark-disabled-text;
+      }
+    }
+  }
+
+  // Fokus
+  .lux-file-list {
+    &:focus-visible {
+      @include luxfocus.focus-dark-mixin;
+      border-radius: luxcommon.$app-border-radius;
+    }
+
+    .lux-file-list-entry {
+      &:focus-visible {
+        @include luxfocus.focus-dark-mixin;
+        border-radius: luxcommon.$app-border-radius;
+      }
+    }
+  }
+}

@@ -3,13 +3,24 @@
 @use "../luxcommon";
 
 .lux-autocomplete-panel-ac {
-  @include mat.autocomplete-overrides((
-    background-color: luxcommon.$app-data-bg,
-    container-shape: luxcommon.$app-border-radius
-  ));
+  // ooooooooooooo           oooo
+  // 8'   888   `8           `888
+  //      888       .ooooo.   888  oooo   .ooooo.  ooo. .oo.    .oooo.o
+  //      888      d88' `88b  888 .8P'   d88' `88b `888P"Y88b  d88(  "8
+  //      888      888   888  888888.    888ooo888  888   888  `"Y88b.
+  //      888      888   888  888 `88b.  888    .o  888   888  o.  )88b
+  //     o888o     `Y8bod8P' o888o o888o `Y8bod8P' o888o o888o 8""888P'
 
-   @include mat.core-overrides((
-    option-label-text-color: luxcommon.$dark-primary-text,
-  ));
+  @include mat.autocomplete-overrides(
+    (
+      background-color: luxcommon.$app-data-bg,
+      container-shape: luxcommon.$app-border-radius
+    )
+  );
+
+  @include mat.core-overrides(
+    (
+      option-label-text-color: luxcommon.$dark-primary-text
+    )
+  );
 }
-

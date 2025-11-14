@@ -16,7 +16,7 @@ export class LuxIconComponent {
 
   private _luxIconSize: string | undefined = '';
   private _luxIconName = '';
-  private _luxPadding = '0.25rem';
+  private _luxPadding = '';
   private _backgroundCSSClass = '';
   private _fontCSSClass = 'blue';
 

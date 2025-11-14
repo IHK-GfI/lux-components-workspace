@@ -1,0 +1,12 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+
+lux-datetimepicker-ac {
+  @include mat.datepicker-overrides(());
+
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}

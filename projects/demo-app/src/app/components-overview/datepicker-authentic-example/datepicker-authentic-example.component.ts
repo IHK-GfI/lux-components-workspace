@@ -1,24 +1,26 @@
-import { ChangeDetectorRef, Component, inject, LOCALE_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
-    LuxAutofocusDirective,
-    LuxDateFilterAcFn,
-    LuxDatepickerAcComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxStartAcView,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxDateFilterAcFn,
+  LuxDatepickerAcComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxSelectAcComponent,
+  LuxStartAcView,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { TranslocoService } from '@jsverse/transloco';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import {
-    emptyErrorCallback,
-    exampleErrorCallback,
-    logResult,
-    setRequiredValidatorForFormControl
+  emptyErrorCallback,
+  exampleErrorCallback,
+  logResult,
+  setRequiredValidatorForFormControl
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
@@ -49,7 +51,7 @@ interface DatepickerDummyForm {
   ]
 })
 export class DatepickerAuthenticExampleComponent {
-  private matDateLocale = inject(LOCALE_ID);
+  private tService = inject(TranslocoService);
   private cdr = inject(ChangeDetectorRef);
 
   useCustomFilter = false;
@@ -89,22 +91,21 @@ export class DatepickerAuthenticExampleComponent {
   customFilter?: LuxDateFilterAcFn;
 
   constructor() {
-    const matDateLocale = this.matDateLocale;
-
-    this.locale = matDateLocale === 'en' ? 'en-US' : matDateLocale;
-    switch (matDateLocale) {
-      case 'de':
-        this.locale = 'de-De';
-        break;
-      case 'en':
-        this.locale = 'en-US';
-        break;
-      case 'fr':
-        this.locale = 'fr-FR';
-        break;
-      default:
-        this.locale = matDateLocale;
-    }
+    this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
+      switch (lang) {
+        case 'de':
+          this.locale = 'de-DE';
+          break;
+        case 'en':
+          this.locale = 'en-US';
+          break;
+        case 'fr':
+          this.locale = 'fr-FR';
+          break;
+        default:
+          this.locale = lang;
+      }
+    });
 
     this.form = new FormGroup<DatepickerDummyForm>({
       datepickerExample: new FormControl<string | null>(new Date(2020, 5, 28, 14, 15) as any) // Das FormControl wandelt das Date-Objekt in einen String um -> ['2021-09-07T23:00:00.000Z']
