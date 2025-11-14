@@ -268,6 +268,15 @@ lux-datetimepicker-ac {
   }
 }
 
+lux-select-ac,
+lux-lookup-combobox-ac {
+ @media (prefers-contrast: more) {
+    .mat-mdc-select:focus {
+      @include focus-dark-mixin;
+    }
+  }
+}
+
 .lux-select-panel-ac,
 .lux-select-panel-ac-multiple {
   mat-option {
