@@ -469,4 +469,28 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
       this.handleErrors();
     }
   }
+
+  /**
+   * Wrapper-Klick: Fokus setzen und Panel öffnen (falls erlaubt).
+   * Vermeidet komplexe Template-Ausdrücke, verbessert Lesbarkeit.
+   */
+  onWrapperClick() {
+    if (this.luxDisabled || this.luxReadonly) {
+      return;
+    }
+
+    // Fokus auf Input
+    try {
+      this.matInput?.nativeElement?.focus();
+    } catch {
+      // Ignorieren
+    }
+    
+    // Panel nur öffnen, wenn noch nicht offen
+    if (this.matAutoComplete && !this.matAutoComplete.panelOpen) {
+      if (!this.matAutoComplete.panelOpen) {
+        this.matAutoComplete.openPanel();
+      }
+    }
+  }
 }

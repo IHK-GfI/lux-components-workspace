@@ -1,5 +1,6 @@
 @if (formGroup) {
 <lux-form-control-wrapper
+  (click)="!luxDisabled && !luxReadonly ? visibleInput.focus() : null"
   [luxFormComponent]="this"
   [luxNoLabels]="luxNoLabels"
   [luxNoBottomLabel]="luxNoBottomLabel"
