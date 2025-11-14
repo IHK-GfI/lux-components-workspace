@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, inject } from '@angular/core';
+import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { LuxAppFooterFixedService } from '../lux-app-footer/lux-app-footer-fixed
   styleUrls: ['./lux-app-content.component.scss'],
   imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, RouterOutlet, TranslocoPipe]
 })
-export class LuxAppContentComponent implements OnDestroy {
+export class LuxAppContentComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private appService = inject(LuxAppService);
   private footerService = inject(LuxAppFooterFixedService);
@@ -29,6 +29,9 @@ export class LuxAppContentComponent implements OnDestroy {
   @HostBinding('class.lux-app-footer-no-fixed') get getNoStickModeClass() {
     return !this.fixedMode;
   }
+
+  @HostBinding('attr.role') role?: string;
+  @HostBinding('attr.aria-label') label?: string;
 
   fixedMode: boolean;
   themeName: string;
@@ -50,6 +53,13 @@ export class LuxAppContentComponent implements OnDestroy {
         this.themeName = theme.name;
       })
     );
+  }
+
+  ngOnInit(): void {
+    if (this.luxAriaRoleMainLabel) {
+      this.role = 'main';
+      this.label = this.luxAriaRoleMainLabel;
+    }
   }
 
   ngOnDestroy(): void {

@@ -23,27 +23,6 @@ label {
   font-family: luxcommon.$app-font-family;
 }
 
-// Optionen werden im Cdk-Overlay dargestellt und hängen nicht unter der Component selbst.
-// eigentlich nur für select-panel nötig
-.lux-autocomplete-panel-ac,
-.lux-select-panel-ac,
-.lux-select-panel-ac-multiple {
-  .mat-mdc-option {
-    &.invalid {
-      color: luxpalette.$lux-warn-color;
-      font-weight: 300;
-
-      .mat-pseudo-checkbox {
-        color: luxcommon.$dark-disabled-text;
-      }
-
-      .mdc-list-item__primary-text {
-        opacity: 0.6;
-      }
-    }
-  }
-}
-
 // Hintergrundfarbe
 lux-app-content {
   background-color: #fff; //Fallback

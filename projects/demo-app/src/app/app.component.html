@@ -316,7 +316,7 @@
     </lux-app-header-ac-action-nav>
   </lux-app-header-ac>
   }
-  <lux-app-content luxAriaRoleMainLabel="" cdkScrollable>
+  <lux-app-content luxAriaRoleMainLabel="{{ 'luxc.app_content.ariarolemain' | transloco }}" cdkScrollable>
     @if (this.luxAppFooter !== 'none' && ((fixedFooterService.fixedModeAsObservable | async) === false)) {
     <lux-app-footer luxVersion="20.0.0"></lux-app-footer>
     }

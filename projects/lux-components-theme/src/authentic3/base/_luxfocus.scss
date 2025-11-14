@@ -232,26 +232,6 @@ lux-datetimepicker-ac {
   }
 }
 
-/** ########## Autocomplete-AC ########## **/
-.lux-autocomplete-panel-ac {
-  mat-option {
-    &.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled),
-    &.mat-mdc-option:hover:not(.mdc-list-item--disabled),
-    &.mat-mdc-option:focus-visible:not(.mdc-list-item--disabled),
-    &.mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled) {
-      background-color: luxcommon.$lux-hover-color;
-
-      .mdc-list-item__primary-text {
-        color: #ffffff;
-      }
-    }
-
-    &.mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled) {
-      @include focus-dark-mixin-inline;
-    }
-  }
-}
-
 /** ########## Select-AC ########## **/
 @mixin lux-option-highlight-mixin {
   background-color: map.get(luxpalette.$lux-palette_primary, 300);

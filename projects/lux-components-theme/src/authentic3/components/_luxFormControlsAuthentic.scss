@@ -5,26 +5,7 @@
 @use "../base/luxfocus";
 @use "../base/luxSvgIcons" as luxicons;
 
-/*
- * Theming for LUX-Autocomplete
- */
-div.mat-mdc-autocomplete-panel.lux-autocomplete-panel-ac {
-  padding-top: 0;
-  padding-bottom: 0;
-
-  mat-option {
-    .mat-pseudo-checkbox {
-      display: none;
-    }
-  }
-
-  .mat-mdc-option {
-    .mdc-list-item__primary-text {
-      min-height: #{luxcommon.$lux-panel-option-min-height};
-      padding: #{luxcommon.$lux-panel-option-padding};
-    }
-  }
-}
+@use "luxAutocomplete";
 
 /*
  * Theming for LUX-Select
@@ -111,26 +92,6 @@ lux-lookup-combobox-ac {
     &[aria-disabled="false"] .mat-mdc-select-arrow {
       background-color: luxpalette.$lux-primary-color;
     }
-  }
-}
-
-// Checkbox wird im Cdk-Overlay dargestellt und hängt nicht unter der Component selbst.
-.lux-select-panel-ac .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full,
-.lux-select-panel-ac-multiple .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full {
-  background-color: luxpalette.$lux-primary-color;
-}
-
-.cdk-overlay-pane {
-  .mat-option {
-    font-family: luxcommon.$app-font-family;
-  }
-  .mat-mdc-autocomplete-panel.lux-autocomplete-panel-ac,
-  .mat-mdc-autocomplete-panel.lux-autocomplete-panel-dense-ac,
-  .mat-mdc-select-panel.lux-select-panel-ac,
-  .mat-mdc-select-panel.lux-select-panel-ac-multiple {
-    border: 2px solid luxpalette.$lux-primary-color;
-    border-radius: luxcommon.$app-border-radius !important;
-    box-shadow: none !important;
   }
 }
 

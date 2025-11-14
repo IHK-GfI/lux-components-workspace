@@ -112,11 +112,11 @@ lux-app-header-ac {
     }
   }
   .lux-app-header-nav-bar-bg {
-    background-color: map.get(luxpalette.$lux-palette-primary, 50);
+    background-color: var(--mat-sys-secondary);
   }
 
   .lux-app-header-nav-bar {
-    background-color: map.get(luxpalette.$lux-palette-primary, 50);
+    background-color: var(--mat-sys-secondary);
     padding: 4px 24px;
     min-height: 44px;
     box-sizing: border-box;

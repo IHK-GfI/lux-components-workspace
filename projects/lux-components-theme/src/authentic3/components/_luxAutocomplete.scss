@@ -1,0 +1,15 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+
+.lux-autocomplete-panel-ac {
+  @include mat.autocomplete-overrides((
+    background-color: luxcommon.$app-data-bg,
+    container-shape: luxcommon.$app-border-radius
+  ));
+
+   @include mat.core-overrides((
+    option-label-text-color: luxcommon.$dark-primary-text,
+  ));
+}
+
