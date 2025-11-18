@@ -5,7 +5,6 @@ import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar'
 import { Observable, Subject } from 'rxjs';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
 import { LuxSnackbarColor, LuxSnackbarColors } from '../../../lux-util/lux-colors.enum';
-import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxSnackbarConfig } from '../lux-snackbar-config';
 
 @Component({
@@ -19,20 +18,12 @@ export class LuxSnackbarComponent implements OnInit {
 
   private action$: Subject<void> = new Subject<void>();
 
-  textFontColor = '';
-  actionFontColor = '';
-  iconFontColor = '';
-
   ngOnInit() {
     Object.keys(this.config).forEach((key: string) => {
       if ((this.config as any)[key]) {
         (this.config as any)[key] = (this.config as any)[key].trim();
       }
     });
-    // stupid-cast, um den string weiterzugeben, da die fn daraus den enum-wert herleiten kann
-    this.textFontColor = LuxUtil.getColorsByBgColorsEnum(this.checkColorInEnum(this.config.textColor)).backgroundCSSClass;
-    this.actionFontColor = LuxUtil.getColorsByBgColorsEnum(this.checkColorInEnum(this.config.actionColor)).backgroundCSSClass;
-    this.iconFontColor = LuxUtil.getColorsByBgColorsEnum(this.checkColorInEnum(this.config.iconColor)).backgroundCSSClass;
   }
 
   onAction(): Observable<void> {
