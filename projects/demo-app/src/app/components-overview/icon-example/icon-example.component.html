@@ -67,7 +67,7 @@
         Die Größen sind relative 'em'-Werte.
       </lux-form-hint>
     </lux-select-ac>
-    <lux-checkbox-ac [(luxChecked)]="rounded" luxLabel="luxRounded" [luxNoTopLabel]="true">
+    <lux-checkbox-ac [(luxChecked)]="rounded" (luxCheckedChange)="padding = $event ?  '' : '0.25rem'" luxLabel="luxRounded" [luxNoTopLabel]="true">
       <lux-form-hint>
         Diese Property aktiviert eine abgerundete Darstellung des Icons<br />
         Ist nur in Kombination mit einer 'luxColor' sichtbar.
