@@ -97,27 +97,6 @@ lux-form-control-wrapper {
       align-items: center;
       font-size: luxcommon.$form-control-font-size;
       min-height: 1.5em;
-
-      .lux-input-prefix-container,
-      .lux-input-suffix-container {
-        width: auto;
-        white-space: nowrap;
-        display: inline-block;
-        flex: 1 1 auto;
-        max-height: 1.5em;
-        align-items: center;
-
-        lux-input-ac-suffix,
-        lux-input-ac-prefix {
-          display: inline-flex;
-        }
-        lux-icon {
-          mat-icon.lux-icon {
-            box-sizing: border-box;
-            padding: 0px !important;
-          }
-        }
-      }
     }
 
     &.lux-dense-authentic {

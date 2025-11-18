@@ -32,7 +32,8 @@
     />
     <mat-autocomplete
       #auto="matAutocomplete"
-      [class]="!luxDense ? 'lux-autocomplete-panel-ac' : 'lux-autocomplete-panel-dense-ac'"
+      class="lux-autocomplete-panel-ac"
+      [class.lux-dense]="luxDense"
       [displayWith]="displayFn.bind(this)"
       [disableRipple]="true"
       (optionSelected)="selected($event)"

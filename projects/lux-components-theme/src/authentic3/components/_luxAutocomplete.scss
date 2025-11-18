@@ -3,18 +3,11 @@
 @use "../luxcommon";
 
 .lux-autocomplete-panel-ac {
-  // ooooooooooooo           oooo
-  // 8'   888   `8           `888
-  //      888       .ooooo.   888  oooo   .ooooo.  ooo. .oo.    .oooo.o
-  //      888      d88' `88b  888 .8P'   d88' `88b `888P"Y88b  d88(  "8
-  //      888      888   888  888888.    888ooo888  888   888  `"Y88b.
-  //      888      888   888  888 `88b.  888    .o  888   888  o.  )88b
-  //     o888o     `Y8bod8P' o888o o888o `Y8bod8P' o888o o888o 8""888P'
-
   @include mat.autocomplete-overrides(
     (
       background-color: luxcommon.$app-data-bg,
-      container-shape: luxcommon.$app-border-radius
+      container-shape: luxcommon.$app-border-radius,
+      container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )
   );
 
@@ -23,4 +16,17 @@
       option-label-text-color: luxcommon.$dark-primary-text
     )
   );
+}
+
+lux-autocomplete-ac {
+  // Theming des Prefix- und Suffix-Containers
+  .lux-input-prefix-container,
+  .lux-input-suffix-container {
+    width: auto;
+    white-space: nowrap;
+    display: inline-block;
+    flex: 1 1 auto;
+    max-height: 1.5em;
+    align-items: center;
+  }
 }

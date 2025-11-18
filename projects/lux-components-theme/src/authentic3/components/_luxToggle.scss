@@ -1,0 +1,24 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+@use "../luxpalette";
+
+lux-toggle-ac {
+  @include mat.slide-toggle-overrides(());
+
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic.lux-no-input-row {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
+  // Readonly state
+  &.lux-form-control-readonly {
+    button {
+      pointer-events: none;
+
+      .mdc-switch__handle {
+        pointer-events: none;
+      }
+    }
+  }
+}

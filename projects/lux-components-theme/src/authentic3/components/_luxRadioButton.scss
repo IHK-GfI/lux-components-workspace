@@ -1,0 +1,34 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../luxcommon";
+@use "../base/luxfocus";
+
+lux-radio-ac {
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic.lux-no-input-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .mat-mdc-radio-group {
+    display: flex;
+    box-sizing: border-box;
+    place-content: stretch flex-start;
+    align-items: stretch;
+
+    &.lux-horizontal {
+      gap: 0.75em;
+      flex-direction: row;
+      flex-flow: wrap;
+      max-height: 100%;
+    }
+    &.lux-vertical {
+      gap: 0;
+      flex-direction: column;
+      max-width: 100%;
+    }
+  }
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+  }
+}

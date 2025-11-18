@@ -142,7 +142,7 @@ $custom-blue: map.get(map.get($luxPalettes, "primary"), 20);
 $on-custom-blue: #ffffff;
 
 $custom-green: map.get(map.get($luxPalettes, "tertiary"), 70);
-$on-custom-green: #ffffff;
+$on-custom-green: map.get(map.get($luxPalettes, "neutral"), 10);;
 
 $custom-red: map.get(map.get($luxPalettes, "error"), 50);
 $on-custom-red: #ffffff;

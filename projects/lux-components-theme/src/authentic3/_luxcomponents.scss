@@ -8,7 +8,7 @@
 @use "components/luxTile.scss";
 @use "components/luxCard.scss";
 @use "components/luxFormControlWrapper.scss";
-@use "components/luxFormControlsAuthentic.scss";
+@use "components/luxFormControls.scss";
 @use "components/luxMasterDetailAc.scss";
 @use "components/luxCheckboxContainerAc.scss";
 @use "components/luxTextbox.scss";
@@ -72,31 +72,8 @@ lux-file-progress {
   }
 }
 
-/*
- * Theming for LUX-Lookup-Components
- */
-lux-lookup-combobox-ac {
-  mat-select {
-    &[aria-disabled="true"] .mat-select-arrow {
-      border-width: 7px;
-      margin: 0;
-      color: luxcommon.$dark-disabled-text;
-    }
-
-    &[aria-disabled="false"] .mat-select-arrow {
-      border-width: 7px;
-      margin: 0;
-      color: map.get(luxpalette.$lux-palette_primary, 500);
-    }
-  }
-}
-
 .spinner-padding {
   padding: 6px;
-}
-
-lux-input-ac-suffix div.spinner-padding {
-  padding: 0 0 0 6px;
 }
 
 /*

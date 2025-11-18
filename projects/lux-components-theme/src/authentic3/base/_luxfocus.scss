@@ -113,32 +113,6 @@ $dark-green: #2e8533;
   outline: 0 !important;
 }
 
-/** ########## Chips ########## **/
-lux-chips-ac {
-  mat-chip-row.cdk-focused:not(.cdk-mouse-focused):not(.cdk-program-focused) {
-    @include focus-dark-mixin;
-  }
-
-  .mat-mdc-chip-focus-overlay {
-    transition: none;
-  }
-
-  lux-icon:focus-visible mat-icon {
-    @include focus-dark-mixin;
-    border-radius: 15px;
-  }
-
-  .mat-mdc-chip-set-stacked {
-    .mat-mdc-chip {
-      width: auto !important;
-    }
-
-    .lux-chip-container {
-      width: 100%;
-    }
-  }
-}
-
 /** ########## Form-Control ########## **/
 .lux-form-control-wrapper {
   &.lux-focused-authentic .cdk-keyboard-focused {
@@ -150,65 +124,6 @@ lux-chips-ac {
 
 lux-icon.lux-error-icon:focus-visible {
   @include focus-dark-mixin;
-}
-
-/** ########## Select-AC ########## **/
-@mixin lux-option-highlight-mixin {
-  background-color: map.get(luxpalette.$lux-palette_primary, 300);
-  color: #ffffff;
-  .mat-pseudo-checkbox {
-    color: #ffffff;
-  }
-  .mat-pseudo-checkbox-checked {
-    background-color: #ffffff;
-  }
-  .mat-pseudo-checkbox-checked::after {
-    border-color: map.get(luxpalette.$lux-palette_primary, 500) !important;
-  }
-}
-
-.lux-select-panel-ac,
-.lux-select-panel-ac-multiple {
-  mat-option {
-    &.mat-mdc-option-multiple:hover:not(.mdc-list-item--disabled),
-    &.mat-mdc-option-multiple:focus-visible:not(.mdc-list-item--disabled),
-    &.mat-mdc-option-multiple.mat-mdc-option-active:not(.mdc-list-item--disabled) {
-      background-color: luxcommon.$lux-hover-color;
-
-      .mat-pseudo-checkbox-full {
-        background-color: luxcommon.$lux-hover-color;
-        border-color: #ffffff;
-
-        &.mat-pseudo-checkbox-checked {
-          background-color: #ffffff;
-          &::after {
-            color: luxcommon.$lux-hover-color;
-          }
-        }
-      }
-
-      .mdc-list-item__primary-text {
-        color: #ffffff;
-      }
-    }
-
-    &.mat-mdc-option-multiple.mat-mdc-option-active:not(.mdc-list-item--disabled) {
-      background-color: luxcommon.$lux-hover-color;
-      @include focus-dark-mixin-inline;
-    }
-
-    &.mat-mdc-option:hover:not(.mdc-list-item--disabled),
-    &.mat-mdc-option:focus-visible:not(.mdc-list-item--disabled),
-    &.mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled) {
-      .mdc-list-item__primary-text {
-        color: #ffffff;
-      }
-    }
-
-    &.mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled) {
-      @include focus-dark-mixin-inline;
-    }
-  }
 }
 
 /** ########## Html ########## **/

@@ -3,14 +3,6 @@
 @use "../luxcommon";
 
 lux-button.lux-stroked {
-  // ooooooooooooo           oooo
-  // 8'   888   `8           `888
-  //      888       .ooooo.   888  oooo   .ooooo.  ooo. .oo.    .oooo.o
-  //      888      d88' `88b  888 .8P'   d88' `88b `888P"Y88b  d88(  "8
-  //      888      888   888  888888.    888ooo888  888   888  `"Y88b.
-  //      888      888   888  888 `88b.  888    .o  888   888  o.  )88b
-  //     o888o     `Y8bod8P' o888o o888o `Y8bod8P' o888o o888o 8""888P'
-
   @include mat.button-overrides(
     (
       outlined-label-text-weight: 600,
