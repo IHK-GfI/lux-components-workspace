@@ -1,0 +1,17 @@
+@use "sass:map";
+@use "../luxVariables";
+@use "../luxpalette";
+
+lux-file-progress {
+  .lux-file-overlay {
+    background: luxVariables.$dark-focused;
+
+    mat-spinner,
+    mat-spinner svg {
+      circle {
+        stroke: map.get(luxpalette.$lux-palette_primary, 500);
+        background: map.get(luxpalette.$lux-palette_primary, 500);
+      }
+    }
+  }
+}

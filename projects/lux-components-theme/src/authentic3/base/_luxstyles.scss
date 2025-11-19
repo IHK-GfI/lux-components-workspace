@@ -1,7 +1,7 @@
 @use "sass:list";
 @use "sass:map";
 @use "sass:string";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 @use "luxbreakpoints";
 
@@ -22,51 +22,51 @@ $paletteNamen: primary, accent, warn;
   }
 
   // Allgemein
-  --lux-theme-dark-primary-text: #{luxcommon.$dark-primary-text};
-  --lux-theme-dark-secondary-text: #{luxcommon.$dark-secondary-text};
-  --lux-theme-dark-disabled-text: #{luxcommon.$dark-disabled-text};
-  --lux-theme-dark-dividers: #{luxcommon.$dark-dividers};
-  --lux-theme-dark-focused: #{luxcommon.$dark-focused};
+  --lux-theme-dark-primary-text: #{luxVariables.$dark-primary-text};
+  --lux-theme-dark-secondary-text: #{luxVariables.$dark-secondary-text};
+  --lux-theme-dark-disabled-text: #{luxVariables.$dark-disabled-text};
+  --lux-theme-dark-dividers: #{luxVariables.$dark-dividers};
+  --lux-theme-dark-focused: #{luxVariables.$dark-focused};
 
-  --lux-theme-light-primary-text: #{luxcommon.$light-primary-text};
-  --lux-theme-light-secondary-text: #{luxcommon.$light-secondary-text};
-  --lux-theme-light-disabled-text: #{luxcommon.$light-disabled-text};
-  --lux-theme-light-dividers: #{luxcommon.$light-dividers};
-  --lux-theme-light-focused: #{luxcommon.$light-focused};
+  --lux-theme-light-primary-text: #{luxVariables.$light-primary-text};
+  --lux-theme-light-secondary-text: #{luxVariables.$light-secondary-text};
+  --lux-theme-light-disabled-text: #{luxVariables.$light-disabled-text};
+  --lux-theme-light-dividers: #{luxVariables.$light-dividers};
+  --lux-theme-light-focused: #{luxVariables.$light-focused};
 
   // App
-  --lux-theme-app-header-bg: #{luxcommon.$app-header-bg};
-  --lux-theme-app-content-bg: #{luxcommon.$app-content-bg};
-  --lux-theme-app-footer-bg: #{luxcommon.$app-footer-bg};
-  --lux-theme-app-data-bg: #{luxcommon.$app-data-bg};
-  --lux-theme-app-gradient: #{luxcommon.$app-gradient};
-  --lux-theme-app-gradient-reverse: #{luxcommon.$app-gradient-reverse};
+  --lux-theme-app-header-bg: #{luxVariables.$app-header-bg};
+  --lux-theme-app-content-bg: #{luxVariables.$app-content-bg};
+  --lux-theme-app-footer-bg: #{luxVariables.$app-footer-bg};
+  --lux-theme-app-data-bg: #{luxVariables.$app-data-bg};
+  --lux-theme-app-gradient: #{luxVariables.$app-gradient};
+  --lux-theme-app-gradient-reverse: #{luxVariables.$app-gradient-reverse};
   --lux-theme-app-border-color: #{app-border-color};
 
   // Form
-  --lux-theme-form-border-color: #{luxcommon.$form-border-color};
-  --lux-theme-form-control-font-size: #{luxcommon.$form-control-font-size};
-  --lux-theme-form-control-buffer: #{luxcommon.$form-control-buffer};
-  --lux-theme-form-error-msg-background: #{luxcommon.$form-error-msg-background};
+  --lux-theme-form-border-color: #{luxVariables.$form-border-color};
+  --lux-theme-form-control-font-size: #{luxVariables.$form-control-font-size};
+  --lux-theme-form-control-buffer: #{luxVariables.$form-control-buffer};
+  --lux-theme-form-error-msg-background: #{luxVariables.$form-error-msg-background};
 
   // Button
-  --lux-theme-button-font-size: #{luxcommon.$button-font-size};
-  --lux-theme-button-height: #{luxcommon.$button-height};
-  --lux-theme-button-fav-height: #{luxcommon.$button-fav-height};
+  --lux-theme-button-font-size: #{luxVariables.$button-font-size};
+  --lux-theme-button-height: #{luxVariables.$button-height};
+  --lux-theme-button-fav-height: #{luxVariables.$button-fav-height};
 
   // Fokus
-  --lux-theme-outline-width: #{luxcommon.$outline-width};
-  --lux-theme-outline-style: #{luxcommon.$outline-style};
-  --lux-theme-outline-color-bright: #{luxcommon.$outline-color-bright};
-  --lux-theme-outline-color-dark: #{luxcommon.$outline-color-dark};
+  --lux-theme-outline-width: #{luxVariables.$outline-width};
+  --lux-theme-outline-style: #{luxVariables.$outline-style};
+  --lux-theme-outline-color-bright: #{luxVariables.$outline-color-bright};
+  --lux-theme-outline-color-dark: #{luxVariables.$outline-color-dark};
 
   // Hover
-  --lux-theme-hover-color: #{luxcommon.$lux-hover-color};
-  --lux-theme-hover-color-for-dark-background: #{luxcommon.$lux-hover-color-for-dark-background};
+  --lux-theme-hover-color: #{luxVariables.$lux-hover-color};
+  --lux-theme-hover-color-for-dark-background: #{luxVariables.$lux-hover-color-for-dark-background};
 
   // Selektion
-  --lux-theme-selected-border-color: #{luxcommon.$lux-selected-border-color};
-  --lux-theme-selected-bg-color: #{luxcommon.$lux-selected-bg-color};
+  --lux-theme-selected-border-color: #{luxVariables.$lux-selected-border-color};
+  --lux-theme-selected-bg-color: #{luxVariables.$lux-selected-bg-color};
 
   // Hauptfarben
   --lux-theme-primary-color: #{map.get(luxpalette.$lux-palette_primary, 500)};
@@ -74,23 +74,17 @@ $paletteNamen: primary, accent, warn;
   --lux-theme-warn-color: #{map.get(luxpalette.$lux-palette_warn, 500)};
 
   // Hintergrundfarben (z.B. Badge oder Progress)
-  @each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+  @each $colorName, $colorNameHex in luxVariables.$componentBgColors {
     --lux-theme-component-bg-#{''+$colorName+''}: #{$colorNameHex};
   }
 
-  @each $colorName, $colorNameHex in luxcommon.$colorsForDarkBg {
+  @each $colorName, $colorNameHex in luxVariables.$colorsForDarkBg {
     --lux-theme-component-bg-dark-#{''+$colorName+''}: #{$colorNameHex};
   }
 
-  @each $colorName, $colorNameHex in luxcommon.$componentFontColors {
+  @each $colorName, $colorNameHex in luxVariables.$componentFontColors {
     --lux-theme-component-font-color-#{''+$colorName+''}: #{$colorNameHex};
   }
-}
-
-html,
-body,
-.lux-app-container {
-  height: 100%;
 }
 
 h1 {
@@ -136,72 +130,72 @@ h6 {
 }
 
 .lux-app-header-bg {
-  background-color: luxcommon.$app-header-bg;
+  background-color: luxVariables.$app-header-bg;
 }
 
 .lux-app-content-bg {
-  background-color: luxcommon.$app-content-bg;
+  background-color: luxVariables.$app-content-bg;
 }
 
 .lux-app-footer-bg {
-  background-color: luxcommon.$app-footer-bg;
+  background-color: luxVariables.$app-footer-bg;
 }
 
 .lux-app-data-bg {
-  background-color: luxcommon.$app-data-bg;
+  background-color: luxVariables.$app-data-bg;
 }
 
 .lux-selected-bg {
-  background-color: luxcommon.$lux-selected-bg-color;
+  background-color: luxVariables.$lux-selected-bg-color;
 }
 
 .lux-hover-bg {
-  background-color: luxcommon.$lux-hover-color;
+  background-color: luxVariables.$lux-hover-color;
 }
 
 .lux-hover-dark-bg {
-  background-color: luxcommon.$lux-hover-color-for-dark-background;
+  background-color: luxVariables.$lux-hover-color-for-dark-background;
 }
 
 .lux-gradient-bg {
   background-color: #fff; //Fallback
-  background-image: luxcommon.$app-gradient;
+  background-image: luxVariables.$app-gradient;
 }
 
 .lux-color-dark-divider {
-  color: luxcommon.$dark-dividers;
+  color: luxVariables.$dark-dividers;
 }
 
 .lux-color-light-divider {
-  color: luxcommon.$light-dividers;
+  color: luxVariables.$light-dividers;
 }
 
 .lux-outline-color-light {
-  color: luxcommon.$outline-color-bright;
+  color: luxVariables.$outline-color-bright;
 }
 
 .lux-outline-color-dark {
-  color: luxcommon.$outline-color-dark;
+  color: luxVariables.$outline-color-dark;
 }
 
 .lux-outline-width {
-  outline-width: luxcommon.$outline-width;
+  outline-width: luxVariables.$outline-width;
 }
 
 .lux-outline-style {
-  outline-style: luxcommon.$outline-style;
+  outline-style: luxVariables.$outline-style;
 }
 
 .lux-outline-light {
-  color: luxcommon.$outline-color-bright;
-  outline-width: luxcommon.$outline-width;
-  outline-style: luxcommon.$outline-style;
+  color: luxVariables.$outline-color-bright;
+  outline-width: luxVariables.$outline-width;
+  outline-style: luxVariables.$outline-style;
 }
 
 .lux-outline-dark {
-  color: luxcommon.$outline-color-dark;
-  outline-width: luxcommon.$outline-width;
-  outline-style: luxcommon.$outline-style;
+  color: luxVariables.$outline-color-dark;
+  outline-width: luxVariables.$outline-width;
+  outline-style: luxVariables.$outline-style;
 }
 
 .lux-highlight-section {
@@ -210,7 +204,7 @@ h6 {
   border-radius: 4px;
   margin: 16px 0;
   padding: 16px 16px;
-  border: 1px solid luxcommon.$dark-dividers;
+  border: 1px solid luxVariables.$dark-dividers;
   display: flex;
   word-break: break-word;
 
@@ -245,6 +239,12 @@ h6 {
   }
 }
 
+html,
+body,
+.lux-app-container {
+  height: 100%;
+}
+
 .lux-app-container {
   flex-direction: column;
   box-sizing: border-box;
@@ -257,7 +257,7 @@ body {
 }
 
 .mat-mdc-dialog-container {
-  background-color: luxcommon.$app-content-bg !important;
+  background-color: luxVariables.$app-content-bg !important;
 }
 
 // für Demo
@@ -280,40 +280,6 @@ lux-card.lux-card-grow {
   }
 }
 
-// Demo
-
-.lux-container {
-  margin: 0 auto;
-  padding: 8px;
-  width: 100%;
-  max-width: 1400px;
-  box-sizing: border-box;
-
-  @include luxbreakpoints.xs {
-    max-width: 590px;
-  }
-
-  @include luxbreakpoints.sm {
-    max-width: 910px;
-  }
-
-  @include luxbreakpoints.md {
-    max-width: 1200px;
-  }
-}
-
-.lux-container-full {
-  margin: 0 8px;
-  padding: 8px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-
-  @include luxbreakpoints.xs {
-    margin: 0 4px;
-  }
-}
-
 .lux-crop {
   overflow: hidden;
   white-space: nowrap;
@@ -333,12 +299,12 @@ lux-card.lux-card-grow {
 }
 
 .lux-label {
-  color: luxcommon.$dark-secondary-text;
+  color: luxVariables.$dark-secondary-text;
   font-size: 0.75rem;
 }
 
 .lux-hint {
-  color: luxcommon.$dark-secondary-text;
+  color: luxVariables.$dark-secondary-text;
   font-size: 0.75rem;
 }
 
@@ -377,7 +343,7 @@ lux-card.lux-card-grow {
 }
 
 .lux-black-semi-transparent {
-  color: luxcommon.$dark-primary-text;
+  color: luxVariables.$dark-primary-text;
 }
 
 .lux-semi-transparent {
@@ -424,7 +390,7 @@ lux-card.lux-card-grow {
 
   &:hover {
     border-radius: 50%;
-    color: luxcommon.$lux-hover-color;
+    color: luxVariables.$lux-hover-color;
     cursor: pointer;
   }
 }
@@ -468,54 +434,54 @@ lux-button.lux-uppercase {
   }
 }
 
-@each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
   .lux-color-#{"" + $colorName + ""} {
     color: $colorNameHex;
   }
 }
 
-@each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
   .lux-bg-color-#{"" + $colorName + ""} {
     background: $colorNameHex;
   }
 }
 
-@each $colorName, $colorNameHex in luxcommon.$componentFontColors {
+@each $colorName, $colorNameHex in luxVariables.$componentFontColors {
   .lux-font-color-#{"" + $colorName + ""} {
     color: $colorNameHex;
   }
 }
 
 .lux-color-dark-primary-text {
-  color: luxcommon.$dark-primary-text;
+  color: luxVariables.$dark-primary-text;
 }
 
 .lux-color-dark-secondary-text {
-  color: luxcommon.$dark-secondary-text;
+  color: luxVariables.$dark-secondary-text;
 }
 
 .lux-color-dark-disabled-text {
-  color: luxcommon.$dark-disabled-text;
+  color: luxVariables.$dark-disabled-text;
 }
 
 .lux-color-dark-focused {
-  color: luxcommon.$dark-focused;
+  color: luxVariables.$dark-focused;
 }
 
 .lux-color-light-primary-text {
-  color: luxcommon.$light-primary-text;
+  color: luxVariables.$light-primary-text;
 }
 
 .lux-color-light-secondary-text {
-  color: luxcommon.$light-secondary-text;
+  color: luxVariables.$light-secondary-text;
 }
 
 .lux-color-light-disabled-text {
-  color: luxcommon.$light-disabled-text;
+  color: luxVariables.$light-disabled-text;
 }
 
 .lux-color-light-focused {
-  color: luxcommon.$light-focused;
+  color: luxVariables.$light-focused;
 }
 
 @each $size in $sizes {
@@ -627,7 +593,7 @@ $notificationSizes: (18, 24, 30);
   &.lux-badge-color-default {
     &.mat-badge:not(.mat-badge-disabled) .mat-badge-content {
       color: white;
-      background: map.get(luxcommon.$componentBgColors, "gray");
+      background: map.get(luxVariables.$componentBgColors, "gray");
     }
   }
 

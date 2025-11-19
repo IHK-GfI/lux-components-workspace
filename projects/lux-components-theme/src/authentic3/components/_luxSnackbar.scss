@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../luxpalette";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../base/luxelevations";
 
 .lux-snackbar {
@@ -12,7 +12,7 @@
     )
   );
 
-  @each $colorName, $colorNameHex in luxcommon.$colorsForDarkBg {
+  @each $colorName, $colorNameHex in luxVariables.$colorsForDarkBg {
     &.lux-snackbar-color-text-#{"" + $colorName + ""} .lux-snackbar-text {
       color: $colorNameHex;
       background-color: transparent;

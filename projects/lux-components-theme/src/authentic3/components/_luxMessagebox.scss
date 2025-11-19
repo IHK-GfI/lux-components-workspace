@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxfocus";
 @use "../base/luxbreakpoints";
@@ -147,7 +147,7 @@ lux-message-box {
       background-color: map.get(luxpalette.$lux-palette_neutral, 10);
     }
     .lux-bg-color-orange {
-      background-color: map.get(luxcommon.$colorsForDarkBg, 'yellow');
+      background-color: map.get(luxVariables.$colorsForDarkBg, 'yellow');
     }
     .lux-bg-color-purple {
       background-color: map.get(luxpalette.$lux-palette_neutral, 10);

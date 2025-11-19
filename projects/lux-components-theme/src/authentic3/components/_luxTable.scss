@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxfocus";
 @use "../base/luxbreakpoints";
@@ -15,11 +15,11 @@ lux-table {
   }
 
   table.mat-mdc-table {
-    font-family: luxcommon.$app-font-family;
+    font-family: luxVariables.$app-font-family;
   }
 
   .lux-row-selected {
-    background-color: luxcommon.$lux-selected-bg-color;
+    background-color: luxVariables.$lux-selected-bg-color;
   }
 
   .lux-table {
@@ -61,9 +61,9 @@ lux-table {
 
     td.mat-mdc-footer-cell {
       border: none;
-      border-top: 1px solid luxcommon.$app-border-color;
+      border-top: 1px solid luxVariables.$app-border-color;
       font-size: 0.9375rem;
-      color: luxcommon.$dark-primary-text;
+      color: luxVariables.$dark-primary-text;
       padding-bottom: 1em;
     }
 
@@ -85,7 +85,7 @@ lux-table {
       border-radius: 4px;
 
       &:not(.lux-hide-borders) {
-        border: 1px solid luxcommon.$app-border-color;
+        border: 1px solid luxVariables.$app-border-color;
       }
 
       table {
@@ -125,7 +125,7 @@ lux-table {
 
       thead th {
         font-size: 1rem;
-        color: luxcommon.$dark-primary-text;
+        color: luxVariables.$dark-primary-text;
         font-weight: 700;
       }
 
@@ -247,7 +247,7 @@ lux-table {
   }
 
   .lux-row-selected:focus-visible {
-    background-color: luxcommon.$lux-hover-color !important;
+    background-color: luxVariables.$lux-hover-color !important;
     outline: none;
   }
 

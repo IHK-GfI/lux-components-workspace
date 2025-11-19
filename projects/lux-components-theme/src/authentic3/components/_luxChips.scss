@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../luxpalette";
-@use "../luxcommon";
+@use "../luxVariables";
 
 lux-chips-ac {
   @include mat.chips-overrides(
@@ -91,7 +91,7 @@ lux-chips-ac {
   // Disabled: Placeholder
   .lux-chips-autocomplete-input:disabled {
     &::placeholder {
-      color: luxcommon.$dark-disabled-text;
+      color: luxVariables.$dark-disabled-text;
     }
   }
 

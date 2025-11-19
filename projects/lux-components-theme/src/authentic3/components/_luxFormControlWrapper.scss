@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "../base/luxfocus";
 @use "../base/luxstyles";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 
 @mixin crop {
@@ -14,7 +14,7 @@
   min-height: 1.2em;
   font-size: 0.75em;
   line-height: 1.2em;
-  color: luxcommon.$dark-secondary-text;
+  color: luxVariables.$dark-secondary-text;
 }
 
 lux-form-control-wrapper {
@@ -24,8 +24,8 @@ lux-form-control-wrapper {
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
-    font-size: luxcommon.$form-control-font-size;
-    color: luxcommon.$dark-primary-text;
+    font-size: luxVariables.$form-control-font-size;
+    color: luxVariables.$dark-primary-text;
 
     .lux-form-control-label-authentic {
       @include form-label;
@@ -47,11 +47,11 @@ lux-form-control-wrapper {
       flex: 1 1 auto;
       box-sizing: border-box;
       padding: 0.75em 0.5em;
-      font-size: luxcommon.$form-control-font-size;
-      color: luxcommon.$dark-primary-text;
+      font-size: luxVariables.$form-control-font-size;
+      color: luxVariables.$dark-primary-text;
       background-color: #fff;
       line-height: 1.5em;
-      border: 1px solid luxcommon.$form-border-color;
+      border: 1px solid luxVariables.$form-border-color;
       border-radius: 4px;
       &.lux-no-input-row {
         // lux-toggel-ac, lux-checkbox-ac, lux-slider-ac, lux-radio-ac werden auf der Baseline ausgerichtet
@@ -78,7 +78,7 @@ lux-form-control-wrapper {
       .lux-form-control-character-counter-authentic {
         min-width: 40px;
         margin-left: 2px;
-        color: luxcommon.$dark-secondary-text !important;
+        color: luxVariables.$dark-secondary-text !important;
         text-align: end;
 
         &:only-child {
@@ -95,7 +95,7 @@ lux-form-control-wrapper {
       box-sizing: border-box;
       place-content: center flex-start;
       align-items: center;
-      font-size: luxcommon.$form-control-font-size;
+      font-size: luxVariables.$form-control-font-size;
       min-height: 1.5em;
     }
 
@@ -115,7 +115,7 @@ lux-form-control-wrapper {
         .lux-form-control-readonly-authentic
       ) {
       .lux-form-control-container-authentic:not(.lux-no-input-row) {
-        border-color: luxcommon.$dark-primary-text;
+        border-color: luxVariables.$dark-primary-text;
       }
     }
     // FOCUS
@@ -142,14 +142,14 @@ lux-form-control-wrapper {
           }
         }
         .mat-mdc-form-field-error {
-          background-color: luxcommon.$form-error-msg-background;
+          background-color: luxVariables.$form-error-msg-background;
           border-radius: 4px;
           padding-right: 2px;
           color: map.get(luxpalette.$lux-palette_warn, 900) !important;
           box-shadow:
-            -18px 0px 0 0 luxcommon.$form-error-msg-background,
-            -18px -1px 0 0 luxcommon.$form-error-msg-background,
-            0 -1px 0 0 luxcommon.$form-error-msg-background;
+            -18px 0px 0 0 luxVariables.$form-error-msg-background,
+            -18px -1px 0 0 luxVariables.$form-error-msg-background,
+            0 -1px 0 0 luxVariables.$form-error-msg-background;
         }
       }
     }
@@ -158,7 +158,7 @@ lux-form-control-wrapper {
       .lux-form-control-container-authentic,
       .lux-form-control-label-authentic,
       .lux-form-control-misc-authentic > * {
-        color: luxcommon.$dark-disabled-text;
+        color: luxVariables.$dark-disabled-text;
       }
     }
     // READONLY

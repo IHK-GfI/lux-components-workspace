@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxcommon";
+@use "../luxVariables";
 
 // Muss der Wrapper sein, da Input-Elemente auch in anderen Komponenten (z.B. lux-autocomplete) genutzt werden
 lux-form-control-wrapper {
@@ -16,7 +16,7 @@ lux-form-control-wrapper {
     max-width: 100%;
     vertical-align: bottom;
     text-align: inherit;
-    font-size: luxcommon.$form-control-font-size;
+    font-size: luxVariables.$form-control-font-size;
   }
 }
 

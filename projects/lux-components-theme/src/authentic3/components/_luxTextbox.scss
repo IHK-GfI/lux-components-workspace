@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "../base/luxfocus";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 
 $textbox_yellow: rgba(244, 203, 37, 1);
@@ -41,7 +41,7 @@ lux-textbox {
     }
 
     .lux-textbox-content {
-      color: luxcommon.$dark-primary-text;
+      color: luxVariables.$dark-primary-text;
       grid-column-start: 2;
       font-size: 1rem;
       p {

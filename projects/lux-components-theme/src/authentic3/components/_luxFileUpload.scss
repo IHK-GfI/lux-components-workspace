@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../base/luxfocus";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 
 $fileUploadProgressSize: 8px;
@@ -24,8 +24,8 @@ lux-file-upload {
     flex: 1 1 auto;
 
     .lux-file-upload-view-container {
-      margin-left: luxcommon.$outline-width;
-      margin-right: luxcommon.$outline-width;
+      margin-left: luxVariables.$outline-width;
+      margin-right: luxVariables.$outline-width;
     }
 
     .lux-file-upload-drop-container {
@@ -95,12 +95,12 @@ lux-file-upload {
       gap: 12px;
 
       border: 1px solid var(--lux-theme-warn-900);
-      border-radius: luxcommon.$app-border-radius;
+      border-radius: luxVariables.$app-border-radius;
       color: map.get(luxpalette.$lux-palette-warn, 900) !important;
-      background-color: luxcommon.$form-error-msg-background;
+      background-color: luxVariables.$form-error-msg-background;
       padding: 18px 15px 15px 26px;
-      margin-left: luxcommon.$outline-width;
-      margin-right: luxcommon.$outline-width;
+      margin-left: luxVariables.$outline-width;
+      margin-right: luxVariables.$outline-width;
 
       .lux-file-upload-error-icon {
         display: flex;
@@ -132,7 +132,7 @@ lux-file-upload {
 
       margin: 2px 5px;
       font-size: 0.75rem;
-      background-color: luxcommon.$form-error-msg-background;
+      background-color: luxVariables.$form-error-msg-background;
       border-radius: 4px;
       padding-left: 2px;
       padding-right: 2px;
@@ -141,8 +141,8 @@ lux-file-upload {
 
     .lux-file-upload-hint-container {
       margin-top: 4px;
-      padding-left: luxcommon.$outline-width;
-      padding-right: luxcommon.$outline-width;
+      padding-left: luxVariables.$outline-width;
+      padding-right: luxVariables.$outline-width;
     }
 
     .lux-file-upload-no-hint-container {

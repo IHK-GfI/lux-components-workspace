@@ -1,0 +1,6 @@
+@use "../luxVariables";
+
+lux-app-content {
+  background-color: luxVariables.$app-content-bg; //Fallback
+  background-image: luxVariables.$app-gradient;
+}

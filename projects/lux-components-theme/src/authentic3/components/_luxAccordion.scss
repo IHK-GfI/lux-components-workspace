@@ -1,0 +1,27 @@
+@use "../base/luxelevations";
+@use "../luxVariables";
+
+mat-expansion-panel.mat-expansion-panel:not([class*="mat-elevation-z"]) {
+  @include luxelevations.lux-elevation-z2;
+  .mat-expansion-panel-header,
+  .mat-expansion-panel-body {
+    font-size: 1rem;
+  }
+}
+
+.mat-expansion-panel-header.lux-dynamic-height {
+  min-height: unset;
+  height: unset;
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+.mat-expansion-panel {
+  --mat-expansion-container-shape: #{luxVariables.$app-border-radius};
+  --mat-expansion-container-shape: #{luxVariables.$app-border-radius};
+}
+
+//Von Material wird ein Margin gesetzt wenn der Indicator links ist und das Panel disabled wird. Damit wird das Margin überschrieben und der Header des Panels wird nicht verschoben.
+mat-expansion-panel-header.mat-expansion-toggle-indicator-before .mat-content.mat-content-hide-toggle {
+  margin: 0;
+}

@@ -39,7 +39,7 @@
   @include mat.elevation(4);
 }
 @mixin lux-elevation-z6 {
-@include mat.elevation(6);
+  @include mat.elevation(6);
 }
 @mixin lux-elevation-z16 {
   @include mat.elevation(16);

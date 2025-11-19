@@ -1,6 +1,6 @@
 @use "sass:color";
 @use "sass:map";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 @use "luxSvgIcons" as luxicons;
 
@@ -10,8 +10,8 @@
 */
 
 // Fokus
-$outline-dark: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$outline-color-dark !important;
-$outline-bright: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$outline-color-bright !important;
+$outline-dark: luxVariables.$outline-width luxVariables.$outline-style luxVariables.$outline-color-dark !important;
+$outline-bright: luxVariables.$outline-width luxVariables.$outline-style luxVariables.$outline-color-bright !important;
 
 @mixin focus-dark-mixin {
   outline: $outline-dark;
@@ -21,7 +21,7 @@ $outline-bright: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$ou
   // der Focus um Elemente in Panels wird mit negativen Margin nach in das Element verlegt
   // damit wird er nicht mehr am Rand abgeschnitten oder verdeckt
   outline: $outline-dark;
-  outline-offset: -(luxcommon.$outline-width);
+  outline-offset: -(luxVariables.$outline-width);
 }
 
 @mixin focus-bright-mixin {
@@ -29,8 +29,8 @@ $outline-bright: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$ou
 }
 
 @mixin lux-button-focus {
-  $width: calc(#{luxcommon.$outline-width} - 1px);
-  outline: $width luxcommon.$outline-style luxcommon.$outline-color-dark !important;
+  $width: calc(#{luxVariables.$outline-width} - 1px);
+  outline: $width luxVariables.$outline-style luxVariables.$outline-color-dark !important;
   outline-offset: 1px;
 }
 
@@ -41,7 +41,7 @@ $outline-bright: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$ou
 }
 
 @mixin lux-selected-mixin {
-  background-color: luxcommon.$lux-selected-bg-color !important;
+  background-color: luxVariables.$lux-selected-bg-color !important;
   position: relative;
   border-radius: 4px;
 
@@ -52,13 +52,13 @@ $outline-bright: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$ou
     top: 0;
     bottom: 0;
     position: absolute;
-    border-left: 4px solid luxcommon.$lux-selected-border-color;
+    border-left: 4px solid luxVariables.$lux-selected-border-color;
     border-radius: 4px 0 0 4px;
   }
 }
 
 @mixin lux-selected-mixin-ac {
-  background: luxcommon.$app-gradient;
+  background: luxVariables.$app-gradient;
   background-color: #fff;
   border: 1px solid map.get(luxpalette.$lux-palette-primary, 500);
   box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
@@ -66,7 +66,7 @@ $outline-bright: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$ou
   border-radius: 4px;
 }
 @mixin lux-selected-mixin-reverse-ac {
-  background: luxcommon.$app-gradient-reverse;
+  background: luxVariables.$app-gradient-reverse;
   background-color: #fff;
   border: 1px solid map.get(luxpalette.$lux-palette-primary, 500);
   box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
@@ -84,18 +84,18 @@ $outline-bright: luxcommon.$outline-width luxcommon.$outline-style luxcommon.$ou
     bottom: 0;
     right: 0;
     position: absolute;
-    border-bottom: 4px solid luxcommon.$lux-selected-border-color;
+    border-bottom: 4px solid luxVariables.$lux-selected-border-color;
   }
 }
 
 @mixin lux-hovered-mixin {
-  background-color: luxcommon.$lux-hover-color !important;
+  background-color: luxVariables.$lux-hover-color !important;
   border-radius: 4px;
 }
 
 @mixin lux-hovered-mixin-inverted {
   color: #fff;
-  background-color: luxcommon.$lux-hover-color;
+  background-color: luxVariables.$lux-hover-color;
 }
 
 /** ########## Green ########## **/
@@ -218,8 +218,8 @@ lux-stepper-large {
 
 /** ########## File-Upload ########## **/
 .lux-file-upload-drop-container {
-  margin-left: luxcommon.$outline-width;
-  margin-right: luxcommon.$outline-width;
+  margin-left: luxVariables.$outline-width;
+  margin-right: luxVariables.$outline-width;
 
   &:focus-visible {
     outline: $outline-dark;

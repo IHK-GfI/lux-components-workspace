@@ -1,0 +1,43 @@
+@use "sass:map";
+@use "../base/luxelevations";
+@use "../luxVariables";
+@use "../luxpalette";
+
+lux-side-nav {
+  .lux-side-nav {
+    background: luxVariables.$app-data-bg;
+    @include luxelevations.lux-elevation-z16();
+
+    .lux-side-nav-header {
+      border-bottom: 1px solid luxVariables.$dark-dividers;
+    }
+
+    .lux-side-nav-footer {
+      border-top: 1px solid luxVariables.$dark-dividers;
+    }
+
+    .lux-side-nav-content {
+      .lux-side-nav-item {
+        .lux-side-nav-item-icon {
+          color: map.get(luxpalette.$lux-palette_primary, 500);
+
+          &.lux-side-nav-disabled {
+            color: luxVariables.$dark-disabled-text;
+          }
+        }
+
+        .lux-side-nav-item-expansion-icon {
+          color: map.get(luxpalette.$lux-palette_primary, 500);
+
+          &.lux-side-nav-disabled {
+            color: luxVariables.$dark-disabled-text;
+          }
+        }
+      }
+    }
+  }
+}
+
+.lux-side-nav-overlay {
+  background-color: luxVariables.$dark-focused;
+}

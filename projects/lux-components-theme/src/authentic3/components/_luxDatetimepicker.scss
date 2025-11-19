@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxcommon";
+@use "../luxVariables";
 
 lux-datetimepicker-ac {
   @include mat.datepicker-overrides(());

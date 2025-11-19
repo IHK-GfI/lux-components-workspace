@@ -1,12 +1,12 @@
-@use "../luxcommon";
+@use "../luxVariables";
 
-@each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
   .mat-mdc-progress-spinner.lux-color-#{"" + $colorName + ""} .mdc-circular-progress__determinate-circle {
     stroke: $colorNameHex;
   }
 }
 
-@each $colorName, $colorNameHex in luxcommon.$componentBgColors {
+@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
   .mat-mdc-progress-spinner.lux-color-#{"" + $colorName + ""} .mdc-circular-progress__indeterminate-circle-graphic {
     stroke: $colorNameHex;
   }

@@ -1,19 +1,19 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxcommon";
+@use "../luxVariables";
 
 .lux-autocomplete-panel-ac {
   @include mat.autocomplete-overrides(
     (
-      background-color: luxcommon.$app-data-bg,
-      container-shape: luxcommon.$app-border-radius,
+      background-color: luxVariables.$app-data-bg,
+      container-shape: luxVariables.$app-border-radius,
       container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )
   );
 
   @include mat.core-overrides(
     (
-      option-label-text-color: luxcommon.$dark-primary-text
+      option-label-text-color: luxVariables.$dark-primary-text
     )
   );
 }

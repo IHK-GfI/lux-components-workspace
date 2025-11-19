@@ -1,155 +1,9 @@
 @use "sass:map";
+@use "../base/luxelevations";
+@use "../luxVariables";
+@use "../luxpalette";
+@use "../base/luxSvgIcons" as luxicons;
 
-@use "components/luxAppFooter";
-@use "components/luxAppHeader";
-@use "components/luxAppHeaderAc";
-@use "components/luxBadge";
-@use "components/luxBreadcrumb";
-@use "components/luxButton";
-@use "components/luxCard";
-@use "components/luxCheckboxContainerAc";
-@use "components/luxDialog";
-@use "components/luxDivider";
-@use "components/luxErrorPage";
-@use "components/luxFilePreview";
-@use "components/luxFilter";
-@use "components/luxFormControlWrapper";
-@use "components/luxFormControls";
-@use "components/luxIcon";
-@use "components/luxLinkPlain";
-@use "components/luxList";
-@use "components/luxMasterDetailAc";
-@use "components/luxMenu";
-@use "components/luxMessagebox";
-@use "components/luxProgressBar";
-@use "components/luxProgressSpinner";
-@use "components/luxSnackbar";
-@use "components/luxStepper";
-@use "components/luxTable";
-@use "components/luxTabs";
-@use "components/luxTextbox";
-@use "components/luxTile";
-@use "components/luxTileAc";
-@use "components/luxToolTip";
-@use "components/luxTourHint";
-
-@use "luxcommon";
-@use "luxpalette";
-@use "base/luxelevations";
-@use "base/luxSvgIcons" as luxicons;
-
-/*
- * Theming for LUX-App-Content
- */
-lux-app-content {
-  background-color: luxcommon.$app-content-bg;
-}
-
-/*
- * Theming for LUX-File-Progress
- */
-lux-file-progress {
-  .lux-file-overlay {
-    background: luxcommon.$dark-focused;
-
-    mat-spinner,
-    mat-spinner svg {
-      circle {
-        stroke: map.get(luxpalette.$lux-palette_primary, 500);
-        background: map.get(luxpalette.$lux-palette_primary, 500);
-      }
-    }
-  }
-}
-
-.spinner-padding {
-  padding: 6px;
-}
-
-/*
- * Theming for LUX-Side-Nav
- */
-lux-side-nav {
-  .lux-side-nav {
-    background: luxcommon.$app-data-bg;
-    @include luxelevations.lux-elevation-z16();
-
-    .lux-side-nav-header {
-      border-bottom: 1px solid luxcommon.$dark-dividers;
-    }
-
-    .lux-side-nav-footer {
-      border-top: 1px solid luxcommon.$dark-dividers;
-    }
-
-    .lux-side-nav-content {
-      .lux-side-nav-item {
-        .lux-side-nav-item-icon {
-          color: map.get(luxpalette.$lux-palette_primary, 500);
-
-          &.lux-side-nav-disabled {
-            color: luxcommon.$dark-disabled-text;
-          }
-        }
-
-        .lux-side-nav-item-expansion-icon {
-          color: map.get(luxpalette.$lux-palette_primary, 500);
-
-          &.lux-side-nav-disabled {
-            color: luxcommon.$dark-disabled-text;
-          }
-        }
-      }
-    }
-  }
-}
-
-.lux-side-nav-overlay {
-  background-color: luxcommon.$dark-focused;
-}
-
-/*
- * Theming for LUX-Accordion
- */
-mat-expansion-panel.mat-expansion-panel:not([class*="mat-elevation-z"]) {
-  @include luxelevations.lux-elevation-z2;
-  .mat-expansion-panel-header,
-  .mat-expansion-panel-body {
-    font-size: 1rem;
-  }
-}
-
-.mat-expansion-panel-header.lux-dynamic-height {
-  min-height: unset;
-  height: unset;
-  padding-top: 11px;
-  padding-bottom: 11px;
-}
-
-.mat-expansion-panel {
-  --mat-expansion-container-shape: #{luxcommon.$app-border-radius};
-  --mat-expansion-container-shape: #{luxcommon.$app-border-radius};
-}
-
-//Von Material wird ein Margin gesetzt wenn der Indicator links ist und das Panel disabled wird. Damit wird das Margin überschrieben und der Header des Panels wird nicht verschoben.
-mat-expansion-panel-header.mat-expansion-toggle-indicator-before .mat-content.mat-content-hide-toggle {
-  margin: 0;
-}
-
-/*
- * Theming for LUX-Errorpage
- */
-lux-error-page {
-  lux-card:not(.lux-error-page-desktop) {
-    .mat-mdc-card:not([class*="mat-elevation-z"]) {
-      @include luxelevations.lux-elevation-z0;
-    }
-  }
-}
-
-/*
-* Theming für Lux-Stepper-Large
-*/
 lux-stepper-large {
   display: flex;
   flex-direction: row;
@@ -200,8 +54,8 @@ lux-stepper-large {
 
   &.lux-active:not(.lux-disabled) {
     .lux-stepper-large-nav-item-number-container {
-      color: luxcommon.$lux-stepper-large-nav-item-active-fc;
-      background-color: luxcommon.$lux-stepper-large-nav-item-active-bg;
+      color: luxVariables.$lux-stepper-large-nav-item-active-fc;
+      background-color: luxVariables.$lux-stepper-large-nav-item-active-bg;
     }
 
     .lux-stepper-large-nav-item-label {
@@ -216,8 +70,8 @@ lux-stepper-large {
 
     &.lux-completed:not(.lux-active) {
       .lux-stepper-large-nav-item-number-container {
-        color: luxcommon.$lux-stepper-large-nav-item-completed-fg;
-        background-color: luxcommon.$lux-stepper-large-nav-item-completed-bg;
+        color: luxVariables.$lux-stepper-large-nav-item-completed-fg;
+        background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
       }
 
       a {
@@ -246,8 +100,8 @@ lux-stepper-large {
 
     &:not(.lux-completed):not(.lux-active) {
       .lux-stepper-large-nav-item-number-container {
-        color: luxcommon.$lux-stepper-large-nav-item-completed-fg;
-        background-color: luxcommon.$lux-stepper-large-nav-item-completed-bg;
+        color: luxVariables.$lux-stepper-large-nav-item-completed-fg;
+        background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
       }
 
       a::after {
@@ -257,7 +111,7 @@ lux-stepper-large {
         width: 16px;
         height: 16px;
         margin: 3px 10px 0px;
-        background-color: luxcommon.$lux-stepper-large-nav-item-active-bg;
+        background-color: luxVariables.$lux-stepper-large-nav-item-active-bg;
         -webkit-mask: url(luxicons.$warn-triangle);
         -webkit-mask-repeat: no-repeat;
         -webkit-mask-position: center;
@@ -274,8 +128,8 @@ lux-stepper-large {
     color: #003366;
 
     .lux-stepper-large-nav-item-number-container {
-      color: luxcommon.$lux-stepper-large-nav-item-disabled-fg;
-      background-color: luxcommon.$lux-stepper-large-nav-item-disabled-bg;
+      color: luxVariables.$lux-stepper-large-nav-item-disabled-fg;
+      background-color: luxVariables.$lux-stepper-large-nav-item-disabled-bg;
     }
   }
 
@@ -283,12 +137,12 @@ lux-stepper-large {
     opacity: 0.6;
 
     .lux-stepper-large-nav-item-number-container {
-      color: luxcommon.$lux-stepper-large-nav-item-disabled-fg;
-      background-color: luxcommon.$lux-stepper-large-nav-item-disabled-bg;
+      color: luxVariables.$lux-stepper-large-nav-item-disabled-fg;
+      background-color: luxVariables.$lux-stepper-large-nav-item-disabled-bg;
     }
 
     .lux-stepper-large-nav-item-label {
-      color: luxcommon.$lux-stepper-large-nav-item-disabled-fg;
+      color: luxVariables.$lux-stepper-large-nav-item-disabled-fg;
     }
   }
 
@@ -318,7 +172,7 @@ lux-stepper-large {
     }
 
     .lux-stepper-large-nav-item-complete {
-      color: luxcommon.$lux-stepper-large-completed-fc;
+      color: luxVariables.$lux-stepper-large-completed-fc;
       font-size: 1.4375rem;
       height: 1.4375em;
       width: 1.4375em;
@@ -402,7 +256,7 @@ lux-stepper-large {
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
   &.lux-stepper-large-mobile-overlay-backdrop {
     opacity: 0.6;
-    background-color: luxcommon.$lux-stepper-large-backdrop-bg;
+    background-color: luxVariables.$lux-stepper-large-backdrop-bg;
   }
 }
 
@@ -414,7 +268,7 @@ lux-stepper-large {
   max-height: calc(100% - 0px);
 
   padding: 0;
-  background: luxcommon.$app-data-bg;
+  background: luxVariables.$app-data-bg;
 }
 
 .lux-stepper-large-mobile-nav-close-button-container {
@@ -492,7 +346,7 @@ lux-stepper-large {
     }
 
     .lux-stepper-large-mobile-nav-item-complete {
-      color: luxcommon.$lux-stepper-large-completed-fc;
+      color: luxVariables.$lux-stepper-large-completed-fc;
       font-size: 1.125rem;
     }
   }

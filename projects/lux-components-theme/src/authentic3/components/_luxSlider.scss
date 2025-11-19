@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxcommon";
+@use "../luxVariables";
 
 lux-slider-ac {
   @include mat.slider-overrides(

@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxfocus";
 @use "../base/luxelevations";
@@ -79,7 +79,7 @@ lux-filter-form {
     }
     .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:hover {
       background-color: transparent !important;
-      color: luxcommon.$lux-hover-color;
+      color: luxVariables.$lux-hover-color;
     }
     .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:focus-visible {
       @include luxfocus.focus-dark-mixin-inline;

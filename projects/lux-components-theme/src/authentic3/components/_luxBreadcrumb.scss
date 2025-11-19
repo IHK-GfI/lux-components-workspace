@@ -1,7 +1,7 @@
 @use "sass:map";
 @use "../base/luxfocus";
 @use "../luxpalette";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../base/luxbreakpoints";
 
 lux-breadcrumb {
@@ -34,7 +34,7 @@ lux-breadcrumb {
 
   .lux-breadcrumb-item {
     display: inline-flex;
-    font-family: luxcommon.$app-font-family;
+    font-family: luxVariables.$app-font-family;
     font-size: 1.125rem;
     font-weight: 500;
     text-decoration: underline;
@@ -53,7 +53,7 @@ lux-breadcrumb {
     }
 
     :hover {
-      color: luxcommon.$lux-hover-color;
+      color: luxVariables.$lux-hover-color;
       text-decoration: underline;
       cursor: pointer;
     }
@@ -75,7 +75,7 @@ lux-breadcrumb {
   }
 
   .lux-breadcrumb-current-item {
-    font-family: luxcommon.$app-font-family;
+    font-family: luxVariables.$app-font-family;
     font-size: 1.125rem;
     font-weight: 500;
     color: var(--lux-theme-primary-color);

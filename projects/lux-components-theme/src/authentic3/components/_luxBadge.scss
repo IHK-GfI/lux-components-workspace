@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 
 .lux-badge {
@@ -31,7 +31,7 @@
     }
 
     &.lux-bg-color-orange {
-      background-color: map.get(luxcommon.$colorsForDarkBg, 'yellow');
+      background-color: map.get(luxVariables.$colorsForDarkBg, 'yellow');
     }
 
     &.lux-font-color-green {

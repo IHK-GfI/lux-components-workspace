@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "../base/luxfocus";
-@use "../luxcommon";
+@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxelevations";
 
@@ -17,7 +17,7 @@ lux-list {
 
   .lux-list-empty-icon,
   .lux-list-empty-icon-text {
-    color: map.get(luxcommon.$componentBgColors, "gray");
+    color: map.get(luxVariables.$componentBgColors, "gray");
     padding: 0 8px;
   }
   .mat-mdc-card:not([class*="mat-elevation-z"]) {
@@ -86,7 +86,7 @@ lux-list {
 
           &:hover {
             border: 1px solid luxpalette.$lux-primary-color;
-            background: luxcommon.$app-gradient-reverse;
+            background: luxVariables.$app-gradient-reverse;
             background-color: #fff !important;
           }
         }
