@@ -1,0 +1,11 @@
+@use "@angular/material" as mat;
+@use "../luxcommon";
+
+lux-divider {
+  @include mat.divider-overrides(
+    (
+      color: luxcommon.$dark-dividers,
+      width: 1px
+    )
+  );
+}
