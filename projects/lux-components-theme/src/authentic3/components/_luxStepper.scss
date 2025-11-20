@@ -98,7 +98,7 @@ lux-stepper {
   // not selected und/oder nicht bearbeitete steps: background-color: #fff; color: primary; border: 1px solid $app-border-color;
   .lux-ignore-mat-step-icons {
     mat-step-header {
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
 
       // Die standard Icons ausblenden
       .mat-step-icon,
@@ -133,12 +133,12 @@ lux-stepper {
         .lux-stepper-normal-icon {
           mat-icon {
             color: luxVariables.$app-data-bg;
-            background-color: luxpalette.$lux-primary-color;
+            background-color: var(--lux-theme-primary-color);
           }
         }
 
         lux-step-header {
-          color: luxpalette.$lux-primary-color;
+          color: var(--lux-theme-primary-color);
         }
       }
 
@@ -156,23 +156,23 @@ lux-stepper {
 
   // luxUseCustomIcons=false
   mat-step-header.mat-step-header {
-    color: luxpalette.$lux-primary-color;
+    color: var(--lux-theme-primary-color);
     &[aria-selected="true"] {
       .mat-step-icon,
       .mat-step-icon-selected {
         color: luxVariables.$app-data-bg;
-        background-color: luxpalette.$lux-primary-color;
+        background-color: var(--lux-theme-primary-color);
       }
       lux-step-header {
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
       }
     }
 
     &[aria-selected="false"] {
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
       .mat-step-icon,
       .mat-step-label {
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
         background-color: transparent;
       }
       .mat-step-icon {
@@ -181,7 +181,7 @@ lux-stepper {
 
       .mat-step-icon-state-edit {
         color: luxVariables.$app-data-bg;
-        background-color: luxpalette.$lux-primary-color;
+        background-color: var(--lux-theme-primary-color);
       }
     }
   }
@@ -278,11 +278,11 @@ lux-stepper {
       div.mat-step-icon.mat-step-icon-state-number,
       div.mat-step-icon.mat-step-icon-state-edit {
         background-color: #fff;
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
         border: 1px solid luxVariables.$app-border-color;
       }
       div.mat-step-label lux-step-header {
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
       }
     }
   }
@@ -301,11 +301,11 @@ lux-stepper {
       div.mat-step-icon.mat-step-icon-state-number,
       div.mat-step-icon.mat-step-icon-state-edit {
         background-color: #fff;
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
         border: 1px solid luxVariables.$app-border-color;
       }
       div.mat-step-label lux-step-header {
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
       }
     }
   }
@@ -315,7 +315,7 @@ lux-stepper {
       .lux-stepper-edited-icon,
       .lux-stepper-normal-icon {
         mat-icon {
-          color: luxpalette.$lux-primary-color;
+          color: var(--lux-theme-primary-color);
           background-color: #fff;
           border: 1px solid luxVariables.$app-border-color;
         }
@@ -326,7 +326,7 @@ lux-stepper {
       .lux-stepper-normal-icon {
         mat-icon {
           color: #fff;
-          background-color: luxpalette.$lux-primary-color;
+          background-color: var(--lux-theme-primary-color);
           border: 1px solid luxVariables.$app-border-color;
         }
       }

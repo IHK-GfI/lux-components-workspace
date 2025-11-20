@@ -1,4 +1,8 @@
 lux-icon {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+
   &.lux-icon-rounded {
     mat-icon.lux-icon {
       border-radius: 50%;
@@ -15,6 +19,19 @@ lux-icon {
       &.lux-icon-rounded-4em,
       &.lux-icon-rounded-5em {
         padding: 1rem;
+      }
+    }
+  }
+
+  &.lux-error-icon {
+    font-size: 0.75rem;
+
+    mat-icon.lux-icon {
+      padding: 0 !important;
+      color: var(--lux-theme-warn-50);
+
+      &:hover {
+        cursor: pointer;
       }
     }
   }

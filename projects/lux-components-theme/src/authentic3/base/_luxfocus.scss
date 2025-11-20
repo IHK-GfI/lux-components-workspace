@@ -4,32 +4,23 @@
 @use "../luxpalette";
 @use "luxSvgIcons" as luxicons;
 
-/*
-  Dieses Partial-SCSS dient der Verwaltung der Styles für Fokus, Hover und Selected für die LUX-Components und
-  die ihnen zugrunde liegenden Material Components.
-*/
-
-// Fokus
-$outline-dark: luxVariables.$outline-width luxVariables.$outline-style luxVariables.$outline-color-dark !important;
-$outline-bright: luxVariables.$outline-width luxVariables.$outline-style luxVariables.$outline-color-bright !important;
-
 @mixin focus-dark-mixin {
-  outline: $outline-dark;
+  outline: var(--lux-theme-outline-dark);
 }
 
 @mixin focus-dark-mixin-inline {
   // der Focus um Elemente in Panels wird mit negativen Margin nach in das Element verlegt
   // damit wird er nicht mehr am Rand abgeschnitten oder verdeckt
-  outline: $outline-dark;
-  outline-offset: -(luxVariables.$outline-width);
+  outline: var(--lux-theme-outline-dark);
+  outline-offset: calc(var(--lux-theme-outline-width) * -1);
 }
 
 @mixin focus-bright-mixin {
-  outline: $outline-bright;
+  outline: var(--lux-theme-outline-bright);
 }
 
 @mixin lux-button-focus {
-  $width: calc(#{luxVariables.$outline-width} - 1px);
+  $width: calc(var(--lux-theme-outline-width) - 1px);
   outline: $width luxVariables.$outline-style luxVariables.$outline-color-dark !important;
   outline-offset: 1px;
 }
@@ -41,7 +32,7 @@ $outline-bright: luxVariables.$outline-width luxVariables.$outline-style luxVari
 }
 
 @mixin lux-selected-mixin {
-  background-color: luxVariables.$lux-selected-bg-color !important;
+  background-color: var(--lux-theme-selected-bg-color) !important;
   position: relative;
   border-radius: 4px;
 
@@ -60,7 +51,7 @@ $outline-bright: luxVariables.$outline-width luxVariables.$outline-style luxVari
 @mixin lux-selected-mixin-ac {
   background: luxVariables.$app-gradient;
   background-color: #fff;
-  border: 1px solid map.get(luxpalette.$lux-palette-primary, 500);
+  border: 1px solid var(--lux-theme-primary-20);
   box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
   position: relative;
   border-radius: 4px;
@@ -68,7 +59,7 @@ $outline-bright: luxVariables.$outline-width luxVariables.$outline-style luxVari
 @mixin lux-selected-mixin-reverse-ac {
   background: luxVariables.$app-gradient-reverse;
   background-color: #fff;
-  border: 1px solid map.get(luxpalette.$lux-palette-primary, 500);
+  border: 1px solid var(--lux-theme-primary-20);
   box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
   position: relative;
   border-radius: 4px;
@@ -107,121 +98,6 @@ $outline-bright: luxVariables.$outline-width luxVariables.$outline-style luxVari
 $dark-green: #2e8533;
 
 @mixin lux-focus-mixin-green {
-  box-shadow:
-    0 0 0 2px $dark-green,
-    0 0 8px 2px $dark-green !important;
+  box-shadow: 0 0 0 2px $dark-green, 0 0 8px 2px $dark-green !important;
   outline: 0 !important;
-}
-
-/** ########## Form-Control ########## **/
-.lux-form-control-wrapper {
-  &.lux-focused-authentic .cdk-keyboard-focused {
-    .mdc-switch__track {
-      @include focus-dark-mixin;
-    }
-  }
-}
-
-lux-icon.lux-error-icon:focus-visible {
-  @include focus-dark-mixin;
-}
-
-/** ########## Html ########## **/
-lux-html {
-  & a[href]:focus-visible {
-    @include focus-dark-mixin;
-  }
-}
-
-/** ########## Panel ########## **/
-lux-panel {
-  mat-expansion-panel-header:not([aria-disabled="true"]) {
-    &:focus-visible {
-      //background-color: white !important;
-      @include focus-dark-mixin-inline;
-    }
-  }
-}
-
-/** ########## Example-Root ########## **/
-example-root {
-  .example-base-components-list {
-    mat-expansion-panel-header,
-    .example-component-list-item {
-      @include lux-selectable-mixin;
-
-      &.example-component-list-item-selected {
-        @include lux-selected-mixin;
-      }
-
-      &:focus-visible {
-        @include focus-dark-mixin-inline;
-      }
-
-      &:hover {
-        @include lux-hovered-mixin;
-      }
-    }
-  }
-}
-
-/** ########## Stepper large ########## **/
-lux-stepper-large {
-  .lux-stepper-large-nav-item {
-    // Links allgemein
-    a {
-      &:focus-visible {
-        outline: none;
-      }
-
-      &.lux-focused {
-        outline: $outline-dark;
-      }
-    }
-
-    // Link ausgewählt
-    &.lux-active {
-      .lux-stepper-large-nav-item-label-container {
-        a.lux-stepper-large-nav-item-label-link {
-          cursor: text;
-          &:hover {
-            color: luxpalette.$lux_primary-color;
-          }
-        }
-      }
-    }
-
-    // Links nicht ausgewählt
-    &:not(.lux-active) {
-      &:not(.lux-completed) {
-        .lux-stepper-large-nav-item-label-container {
-          a.lux-stepper-large-nav-item-label-link {
-            &:hover {
-              color: #2e8533;
-            }
-          }
-        }
-      }
-
-      &.lux-completed {
-        .lux-stepper-large-nav-item-label-container {
-          a.lux-stepper-large-nav-item-label-link {
-            &:hover {
-              color: #56bd66;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-/** ########## File-Upload ########## **/
-.lux-file-upload-drop-container {
-  margin-left: luxVariables.$outline-width;
-  margin-right: luxVariables.$outline-width;
-
-  &:focus-visible {
-    outline: $outline-dark;
-  }
 }

@@ -40,17 +40,13 @@ lux-app-header-ac {
     @include luxelevations.lux-elevation-z0;
 
     lux-icon {
-      color: luxpalette.$lux-primary-color !important;
+      color: var(--lux-theme-primary-color) !important;
       box-sizing: border-box;
     }
 
     &:focus-visible:not(:hover) {
-      // color: #ffffff !important;
       background-color: transparent !important;
 
-      lux-icon {
-        // color: #ffffff !important;
-      }
       @include luxfocus.focus-dark-mixin;
     }
 
@@ -112,11 +108,11 @@ lux-app-header-ac {
     }
   }
   .lux-app-header-nav-bar-bg {
-    background-color: var(--mat-sys-secondary);
+    background-color: var(--lux-theme-app-header-bg);
   }
 
   .lux-app-header-nav-bar {
-    background-color: var(--mat-sys-secondary);
+    background-color: var(--lux-theme-app-header-bg);
     padding: 4px 24px;
     min-height: 44px;
     box-sizing: border-box;
@@ -162,7 +158,7 @@ lux-app-header-ac {
 
     &.lux-selected-item-ac {
       font-weight: 600;
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
       & .lux-button-label {
         padding-right: 24px;
         &::after {
@@ -173,7 +169,7 @@ lux-app-header-ac {
           right: 0;
           top: 14px;
           margin: 0 10px 0 4px;
-          background-color: luxpalette.$lux-primary-color;
+          background-color: var(--lux-theme-primary-color);
           -webkit-mask: url(luxicons.$checkmark);
           -webkit-mask-repeat: no-repeat;
           -webkit-mask-position: center;
@@ -187,7 +183,7 @@ lux-app-header-ac {
     }
 
     &:not([disabled="true"]):hover {
-      background-color: map.get(luxpalette.$lux-palette_primary, 300) !important;
+      background-color: var(--lux-theme-primary-40) !important;
       color: #ffffff;
       .mat-icon-no-color {
         color: #ffffff;
@@ -198,7 +194,7 @@ lux-app-header-ac {
     }
 
     &:not([disabled="true"]):focus-visible {
-      background-color: map.get(luxpalette.$lux-palette_primary, 300);
+      background-color: var(--lux-theme-primary-40);
       color: #ffffff;
       .mat-icon-no-color {
         color: #ffffff;

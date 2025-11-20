@@ -9,8 +9,8 @@ lux-file-progress {
     mat-spinner,
     mat-spinner svg {
       circle {
-        stroke: map.get(luxpalette.$lux-palette_primary, 500);
-        background: map.get(luxpalette.$lux-palette_primary, 500);
+        stroke: var(--lux-theme-primary-20);
+        background: var(--lux-theme-primary-20);
       }
     }
   }

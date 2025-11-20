@@ -70,7 +70,7 @@ lux-filter-form {
         min-width: 36px;
         max-width: 36px;
         background-color: transparent;
-        color: map.get(luxpalette.$lux-palette_primary, 500);
+        color: var(--lux-theme-primary-20);
         padding: 0px !important;
         margin: 0px 4px !important;
 
@@ -87,7 +87,7 @@ lux-filter-form {
     }
     .lux-filter-menu-trigger button:not([disabled]).mat-fab.lux-button-rounded:active {
       background-color: transparent !important;
-      color: map.get(luxpalette.$lux-palette_primary, 700);
+      color: var(--lux-theme-primary-10);
     }
   }
 

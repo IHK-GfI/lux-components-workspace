@@ -79,7 +79,7 @@ $listmargin: calc(luxVariables.$outline-width + 1px);
       button.lux-button.lux-button-rounded {
         @include luxelevations.lux-elevation-z0;
         border: 1px solid luxVariables.$app-border-color;
-        color: map.get(luxpalette.$lux-palette-primary, 500);
+        color: var(--lux-theme-primary-20);
         background-color: #fff !important;
       }
 
@@ -95,7 +95,7 @@ $listmargin: calc(luxVariables.$outline-width + 1px);
         border-radius: 50%;
       }
       &:active:not([disabled]) {
-        color: map.get(luxpalette.$lux-palette-primary, 700);
+        color: var(--lux-theme-primary-10);
         background-color: #fff !important;
       }
     }
@@ -229,7 +229,7 @@ $listmargin: calc(luxVariables.$outline-width + 1px);
       background-color: unset;
       .lux-detail-header-ac {
         mat-card.mat-mdc-card.lux-card {
-          border: 2px solid luxpalette.$lux-primary-color;
+          border: 2px solid var(--lux-theme-primary-color);
         }
       }
       .back-to-master-button-container {
@@ -247,7 +247,7 @@ $listmargin: calc(luxVariables.$outline-width + 1px);
           button.lux-button.lux-button-rounded {
             @include luxelevations.lux-elevation-z0;
             border: 1px solid luxVariables.$app-border-color;
-            color: map.get(luxpalette.$lux-palette-primary, 500);
+            color: var(--lux-theme-primary-20);
           }
           .lux-button-icon-round.lux-lx-icon.lux-no-size {
             // optische Anpassung für das "Chevron"-Icon, damit es zentriert im Button sitzt
@@ -257,7 +257,7 @@ $listmargin: calc(luxVariables.$outline-width + 1px);
         }
         .back-to-master-label {
           font-size: 1rem;
-          color: map.get(luxpalette.$lux-palette-primary, 500);
+          color: var(--lux-theme-primary-20);
         }
       }
       .lux-detail-view-container {

@@ -5,7 +5,7 @@ lux-checkbox-container-ac {
     min-height: 1.2em;
     font-size: 0.75rem;
     line-height: 1.2em;
-    color: luxpalette.$lux-primary-color;
+    color: var(--lux-theme-primary-color);
     margin: 0 calc(0.5em + 1px) 0.25em calc(0.5em + 1px);
   }
 

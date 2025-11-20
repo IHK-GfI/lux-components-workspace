@@ -165,8 +165,8 @@ $_rest: (
 );
 
 $lux-palette_primary: map.merge(map.get($luxPalettes, primary), $_rest);
-$lux-palette_accent: map.merge(map.get($luxPalettes, secondary), $_rest);
-$lux-palette_warn: map.merge(map.get($luxPalettes, tertiary), $_rest);
+$lux-palette_accent: map.merge(map.get($luxPalettes, tertiary), $_rest);
+$lux-palette_warn: map.merge(map.get($luxPalettes, error), $_rest);
 $lux-palette_secondary: map.merge(map.get($luxPalettes, secondary), $_rest);
 $lux-palette_neutral: map.merge(map.get($luxPalettes, neutral), $_rest);
 

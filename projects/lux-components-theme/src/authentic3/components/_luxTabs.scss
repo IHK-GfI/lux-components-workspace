@@ -27,7 +27,7 @@ lux-tabs {
     min-height: unset !important;
     height: unset !important;
     &:not(.mat-tab-disabled) .mdc-tab__text-label {
-      color: map.get(luxpalette.$lux-palette_primary, 500);
+      color: var(--lux-theme-primary-20);
       opacity: 1;
     }
   }
@@ -215,7 +215,7 @@ mat-card lux-tabs {
   }
 
   .mdc-tab-indicator__content {
-    background-color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+    background-color: var(--lux-theme-primary-20) !important;
     height: 4px;
     border-radius: luxVariables.$app-border-radius;
   }

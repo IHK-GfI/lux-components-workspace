@@ -85,7 +85,7 @@ lux-list {
           @include luxfocus.lux-selectable-mixin;
 
           &:hover {
-            border: 1px solid luxpalette.$lux-primary-color;
+            border: 1px solid var(--lux-theme-primary-color);
             background: luxVariables.$app-gradient-reverse;
             background-color: #fff !important;
           }

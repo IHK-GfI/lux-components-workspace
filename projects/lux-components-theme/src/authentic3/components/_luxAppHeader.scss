@@ -42,10 +42,10 @@ lux-app-header {
     @include luxelevations.lux-elevation-z6();
 
     .lux-show-border {
-      border-left: 1px solid luxpalette.$lux-primary-color;
+      border-left: 1px solid var(--lux-theme-primary-color);
     }
     .lux-header-title {
-      color: map.get(luxpalette.$lux-palette-primary, 500);
+      color: var(--lux-theme-primary-20);
       .lux-app-header-title-label {
         margin-left: 5px;
         padding: 10px 5px;
@@ -106,7 +106,7 @@ lux-app-header {
           }
 
           &:not(.mat-accent):not(.mat-warn):not(.mat-primary):not([disabled]) {
-            color: map.get(luxpalette.$lux-palette-primary, 500);
+            color: var(--lux-theme-primary-20);
           }
 
           &:not(.mat-accent):not(.mat-warn):not(.mat-primary):disabled {
@@ -114,15 +114,15 @@ lux-app-header {
           }
 
           &.mat-accent:not([disabled]) {
-            color: map.get(luxpalette.$lux-palette_accent, A100);
+            color: var(--lux-theme-accent-95);
           }
 
           &.mat-warn:not([disabled]) {
-            color: map.get(luxpalette.$lux-palette_warn, A100);
+            color: var(--lux-theme-warn-80);
           }
 
           &.mat-primary:not([disabled]) {
-            color: map.get(luxpalette.$lux-palette_primary, A100);
+            color: var(--lux-theme-primary-80);
           }
 
           &.lux-button-rounded {
@@ -137,7 +137,7 @@ lux-app-header {
     }
 
     button:not(.mat-primary):not(.mat-warn):not(.mat-accent):not(.lux-button-rounded) {
-      color: map.get(luxpalette.$lux-palette-primary, 500);
+      color: var(--lux-theme-primary-20);
     }
 
     // Anpassungen am rechten Menu ("User-Menu")
@@ -211,7 +211,7 @@ lux-app-header {
 
     .lux-side-nav-header,
     .lux-side-nav-footer {
-      color: map.get(luxpalette.$lux-palette_primary, A400);
+      color: var(--lux-theme-primary-30);
     }
 
     .lux-side-nav-header {
@@ -231,7 +231,7 @@ lux-app-header {
       lux-button,
       .lux-menu-item,
       .lux-action-nav-menu lux-button {
-        color: map.get(luxpalette.$lux-palette_primary, 500);
+        color: var(--lux-theme-primary-20);
         font-weight: 600;
       }
 
@@ -312,7 +312,7 @@ $sideNavZIndex: 11000;
   display: flex;
   flex: 0 0 auto;
   .lux-menu-item {
-    color: map.get(luxpalette.$lux-palette_primary, 500);
+    color: var(--lux-theme-primary-20);
   }
 }
 
@@ -339,7 +339,7 @@ lux-app-header {
 
     &:hover {
       @include luxfocus.lux-hovered-mixin-green;
-      color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+      color: var(--lux-theme-primary-20) !important;
     }
   }
 
@@ -350,11 +350,11 @@ lux-app-header {
 
     &:hover {
       background-color: luxVariables.$lux-hover-color !important;
-      color: map.get(luxpalette.$lux-palette_primary, 500);
+      color: var(--lux-theme-primary-20);
     }
     &:hover lux-icon {
       background-color: luxVariables.$lux-hover-color;
-      color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+      color: var(--lux-theme-primary-20) !important;
     }
   }
 
@@ -362,34 +362,34 @@ lux-app-header {
     &:focus {
       @include luxfocus.focus-dark-mixin;
     }
-    color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+    color: var(--lux-theme-primary-20) !important;
 
     &.mat-accent lux-icon {
-      color: map.get(luxpalette.$lux-palette_accent, 500) !important;
+      color: var(--lux-theme-accent-70) !important;
     }
 
     &.mat-warn lux-icon {
-      color: map.get(luxpalette.$lux-palette_warn, 500) !important;
+      color: var(--lux-theme-warn-50) !important;
     }
 
     &.mat-primary lux-icon {
-      color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+      color: var(--lux-theme-primary-20) !important;
     }
 
     &:hover {
-      color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+      color: var(--lux-theme-primary-20) !important;
       background-color: luxVariables.$lux-hover-color !important;
 
       &.mat-accent lux-icon {
-        color: map.get(luxpalette.$lux-palette_accent, 500) !important;
+        color: var(--lux-theme-accent-70) !important;
       }
 
       &.mat-warn lux-icon {
-        color: map.get(luxpalette.$lux-palette_warn, 500) !important;
+        color: var(--lux-theme-warn-50) !important;
       }
 
       &.mat-primary lux-icon {
-        color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+        color: var(--lux-theme-primary-20) !important;
       }
     }
   }
@@ -412,7 +412,7 @@ lux-app-header {
 
       & lux-icon,
       .lux-header-username {
-        color: map.get(luxpalette.$lux-palette_primary, 500) !important;
+        color: var(--lux-theme-primary-20) !important;
       }
     }
   }
@@ -444,7 +444,7 @@ lux-side-nav {
 
     &.lux-selected-item-ac {
       font-weight: 600;
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
       & .lux-button-label {
         padding-right: 24px;
         &::after {
@@ -455,7 +455,7 @@ lux-side-nav {
           right: 0;
           top: 14px;
           margin: 0 10px 0 4px;
-          background-color: luxpalette.$lux-primary-color;
+          background-color: var(--lux-theme-primary-color);
           -webkit-mask: url(luxicons.$checkmark);
           -webkit-mask-repeat: no-repeat;
           -webkit-mask-position: center;
@@ -469,7 +469,7 @@ lux-side-nav {
     }
 
     &:not([disabled="true"]):hover {
-      background-color: map.get(luxpalette.$lux-palette_primary, 300) !important;
+      background-color: var(--lux-theme-primary-40) !important;
       color: #ffffff;
       .mat-icon-no-color {
         color: #ffffff;
@@ -480,7 +480,7 @@ lux-side-nav {
     }
 
     &:not([disabled="true"]):focus-visible {
-      background-color: map.get(luxpalette.$lux-palette_primary, 300);
+      background-color: var(--lux-theme-primary-40);
       color: #ffffff;
       .mat-icon-no-color {
         color: #ffffff;

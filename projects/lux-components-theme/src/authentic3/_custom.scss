@@ -30,7 +30,7 @@ lux-accordion {
   }
 
   .mat-expansion-panel-header .mat-expansion-indicator::after {
-    color: map.get(luxpalette.$lux-palette-primary, 500);
+    color: var(--lux-theme-primary-20);
   }
 
   .mat-expansion-panel-header .mat-expansion-indicator {
@@ -48,7 +48,7 @@ lux-accordion {
       padding: 0px;
       border: none;
       transform: rotate(0deg);
-      background-color: luxpalette.$lux-primary-color;
+      background-color: var(--lux-theme-primary-color);
       -webkit-mask: url(luxicons.$arrow-button-down);
       -webkit-mask-repeat: no-repeat;
       -webkit-mask-position: center;
@@ -60,7 +60,7 @@ lux-accordion {
     }
 
     &:hover::after {
-      background-color: map.get(luxpalette.$lux-palette-primary, 300);
+      background-color: var(--lux-theme-primary-40);
     }
   }
 
@@ -91,10 +91,10 @@ lux-accordion {
   .mat-accordion.lux-primary {
     mat-expansion-panel-header.mat-expansion-panel-header,
     mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
-      background-color: map.get(luxpalette.$lux-palette-primary, 100);
+      background-color: var(--lux-theme-primary-80);
       @include mat.expansion-overrides(
         (
-          header-hover-state-layer-color: map.get(luxpalette.$lux-palette-primary, 100)
+          header-hover-state-layer-color: var(--lux-theme-primary-80)
         )
       );
     }
@@ -103,10 +103,10 @@ lux-accordion {
   .mat-accordion.lux-accent {
     mat-expansion-panel-header.mat-expansion-panel-header,
     mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
-      background-color: map.get(luxpalette.$lux-palette-accent, 100);
+      background-color: var(--lux-theme-accent-95);
       @include mat.expansion-overrides(
         (
-          header-hover-state-layer-color: map.get(luxpalette.$lux-palette-accent, 100)
+          header-hover-state-layer-color: var(--lux-theme-accent-95)
         )
       );
     }
@@ -115,10 +115,10 @@ lux-accordion {
   .mat-accordion.lux-warn {
     mat-expansion-panel-header.mat-expansion-panel-header,
     mat-expansion-panel-header.mat-expansion-panel-header.mat-expanded {
-      background-color: map.get(luxpalette.$lux-palette-warn, 50);
+      background-color: var(--lux-theme-warn-90);
       @include mat.expansion-overrides(
         (
-          header-hover-state-layer-color: map.get(luxpalette.$lux-palette-warn, 50)
+          header-hover-state-layer-color: var(--lux-theme-warn-90)
         )
       );
     }
@@ -172,96 +172,6 @@ lux-accordion {
 }
 
 /*
- * Theming for Side-Nav im Demo
- */
-example-root {
-  .example-base-components-list {
-    mat-expansion-panel-header {
-      font-weight: 600;
-      font-size: 1rem;
-
-      .mat-expansion-indicator {
-        position: relative;
-        transform-origin: center;
-        width: 1rem;
-        height: 1rem;
-
-        &::after {
-          content: "";
-          position: absolute;
-          width: 1rem;
-          height: 1rem;
-          margin: 0px;
-          padding: 0px;
-          border: none;
-          transform: rotate(0deg);
-          background-color: luxpalette.$lux-primary-color;
-          -webkit-mask: url(luxicons.$arrow-button-down);
-          -webkit-mask-repeat: no-repeat;
-          -webkit-mask-position: center;
-          -webkit-mask-size: cover;
-          mask: url(luxicons.$arrow-button-down);
-          mask-repeat: no-repeat;
-          mask-position: center;
-          mask-size: cover;
-        }
-      }
-
-      &:hover {
-        background-color: #fff !important;
-      }
-    }
-
-    .example-component-list-item {
-      line-height: normal;
-
-      &.example-component-list-item-selected {
-        text-shadow: 0 0 0.65px #003366, 0 0 0.65px #003366;
-        line-height: normal;
-        color: luxpalette.$lux-primary-color;
-        border: none;
-        background-color: #fff !important;
-
-        &::after {
-          content: "";
-          position: absolute;
-          width: 1rem;
-          height: 1rem;
-          right: auto;
-          left: auto;
-          top: auto;
-          bottom: auto;
-          margin: 0.125em 0.3em;
-          background-color: luxpalette.$lux-primary-color;
-          -webkit-mask: url(luxicons.$checkmark);
-          -webkit-mask-repeat: no-repeat;
-          -webkit-mask-position: center;
-          -webkit-mask-size: cover;
-          mask: url(luxicons.$checkmark);
-          mask-repeat: no-repeat;
-          mask-position: center;
-          mask-size: cover;
-          border: none;
-        }
-      }
-
-      &:hover,
-      &:focus-visible,
-      &.example-component-list-item-selected:hover,
-      &.example-component-list-item-selected:focus-visible {
-        color: #fff;
-        background-color: luxVariables.$lux-hover-color !important;
-        border-radius: 0;
-
-        &::after {
-          background-color: #fff;
-        }
-      }
-    }
-  }
-}
-
-/*
 * Theming für Stepper-Large
 */
 lux-stepper-large {
@@ -291,7 +201,7 @@ lux-stepper-large {
 
     .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link,
     .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link:hover {
-      color: luxpalette.$lux_primary-color;
+      color: var(--lux-theme-primary-color);
     }
 
     &.lux-active:not(.lux-disabled) {
@@ -335,7 +245,7 @@ lux-stepper-large {
 
       &:not(.lux-completed):not(.lux-active) {
         .lux-stepper-large-nav-item-number-container {
-          color: luxpalette.$lux_primary-color;
+          color: var(--lux-theme-primary-color);
           background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
           border: 1px solid luxVariables.$app-border-color;
         }
@@ -351,7 +261,7 @@ lux-stepper-large {
       color: #003366;
 
       .lux-stepper-large-nav-item-number-container {
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
         background-color: #fff;
         border: 1px solid luxVariables.$app-border-color;
       }
@@ -423,7 +333,7 @@ lux-stepper-large {
 
     &:not(.lux-completed):not(.lux-active) {
       .lux-stepper-large-mobile-nav-item-number-container {
-        color: luxpalette.$lux-primary-color;
+        color: var(--lux-theme-primary-color);
         background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
         border: 1px solid luxVariables.$app-border-color;
       }
@@ -435,7 +345,7 @@ lux-stepper-large {
     color: #003366;
 
     .lux-stepper-large-mobile-nav-item-number-container {
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
       background-color: #fff;
       border: 1px solid luxVariables.$app-border-color;
     }
@@ -463,7 +373,7 @@ lux-stepper-large {
 
 lux-file-upload {
   .lux-file-upload-view-item-button button.lux-button.mat-mdc-button {
-    color: luxpalette.$lux-primary-color;
+    color: var(--lux-theme-primary-color);
 
     mat-icon {
       width: 1.125rem !important;
@@ -529,7 +439,7 @@ lux-file-upload {
     }
 
     .lux-file-upload-label-text lux-link-plain .link-wrapper .lux-link-plain-text {
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
       text-decoration: underline;
     }
 

@@ -12,7 +12,7 @@ lux-textbox {
     grid-template-columns: 1.5em 1fr;
     gap: 1.5em;
     row-gap: 1em;
-    border: 1px solid map.get(luxpalette.$lux-palette-primary, 500);
+    border: 1px solid var(--lux-theme-primary-20);
     border-radius: 4px;
     padding: 1.5em;
 
@@ -34,7 +34,7 @@ lux-textbox {
       height: 24px;
       justify-self: start;
       align-self: start;
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
       mat-icon.mat-icon.lux-icon {
         padding: 0 !important;
       }
@@ -64,20 +64,20 @@ lux-textbox {
     }
 
     &.lux-blue {
-      background: linear-gradient(90deg, map.get(luxpalette.$lux-palette-primary, 50), #ffffff);
+      background: linear-gradient(90deg, var(--lux-theme-primary-90), #ffffff);
     }
     &.lux-green {
-      background: linear-gradient(90deg, map.get(luxpalette.$lux-palette-accent, 50), #ffffff);
-      border-color: luxpalette.$lux-accent-color;
+      background: linear-gradient(90deg, var(--lux-theme-accent-98), #ffffff);
+      border-color: var(--lux-theme-accent-color);
       lux-icon.lux-textbox-icon {
-        color: luxpalette.$lux-accent-color;
+        color: var(--lux-theme-accent-color);
       }
     }
     &.lux-red {
-      background: linear-gradient(90deg, map.get(luxpalette.$lux-palette-warn, 50), #ffffff);
-      border-color: luxpalette.$lux-warn-color;
+      background: linear-gradient(90deg, var(--lux-theme-warn-90), #ffffff);
+      border-color: var(--lux-theme-warn-color);
       lux-icon.lux-textbox-icon {
-        color: luxpalette.$lux-warn-color;
+        color: var(--lux-theme-warn-color);
       }
     }
     &.lux-yellow {

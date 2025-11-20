@@ -29,11 +29,11 @@ lux-message-box {
 
       &.lux-bg-color-white {
         // da im Theme authentic der Schatten entfernt wurde, muss eine Weiße Messagebox eine Border erhalten.
-        border: 1px solid luxpalette.$lux-primary-color;
+        border: 1px solid var(--lux-theme-primary-color);
         box-sizing: border-box;
 
         & lux-button button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
-          color: luxpalette.$lux-primary-color;
+          color: var(--lux-theme-primary-color);
         }
       }
 
@@ -93,7 +93,7 @@ lux-message-box {
       & lux-button button.lux-button.mat-mdc-fab:not([disabled]).lux-fab-rounded-default {
         &:hover {
           color: #ffffff !important;
-          background-color: luxpalette.$lux-primary-color !important;
+          background-color: var(--lux-theme-primary-color) !important;
         }
 
         &:focus-visible {
@@ -135,22 +135,22 @@ lux-message-box {
     }
     
     .lux-bg-color-red {
-      background-color: map.get(luxpalette.$lux-palette_warn, 35);
+      background-color: var(--lux-theme-warn-35);
     }
     .lux-font-color-green {
       color: #ffffff;
     }
     .lux-bg-color-green {
-      background-color: map.get(luxpalette.$lux-palette_accent, 30);
+      background-color: var(--lux-theme-accent-30);
     }
     .lux-bg-color-gray {
-      background-color: map.get(luxpalette.$lux-palette_neutral, 10);
+      background-color: var(--lux-theme-neutral-10);
     }
     .lux-bg-color-orange {
       background-color: map.get(luxVariables.$colorsForDarkBg, 'yellow');
     }
     .lux-bg-color-purple {
-      background-color: map.get(luxpalette.$lux-palette_neutral, 10);
+      background-color: var(--lux-theme-neutral-10);
     }
   }
 }

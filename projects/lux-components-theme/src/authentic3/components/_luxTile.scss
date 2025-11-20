@@ -11,12 +11,12 @@ lux-tile {
   display: flex;
 
   .lux-notification-new {
-    background-color: map.get(luxpalette.$lux-palette_accent, 500);
+    background-color: var(--lux-theme-accent-70);
   }
 
   mat-card[class~="lux-cursor"] {
     &.mat-mdc-card {
-      border-radius: 24px;
+      border-radius: luxVariables.$lux-tile-borderradius;
       overflow: hidden !important;
       padding: 24px;
     }
@@ -37,7 +37,7 @@ lux-tile {
       left: 0;
       right: 0;
       height: 8px;
-      background-color: #56bd66;
+      background-color: luxVariables.$lux-tile-bottom-line-color;
       transition: 0.2s ease;
     }
 
@@ -61,7 +61,7 @@ lux-tile {
 
   h2 {
     margin: 4px 0 0 0;
-    color: map.get(luxpalette.$lux-palette_primary, 500);
+    color: var(--lux-theme-primary-20);
   }
 
   .lux-tile-mobile-view {
@@ -102,7 +102,7 @@ lux-tile {
   }
 
   .lux-tile-icon {
-    color: #56bd66;
+    color: luxVariables.$lux-tile-icon-color;
     margin-top: 6px;
     lux-icon {
       mat-icon {
@@ -185,7 +185,7 @@ lux-tile {
       background-color: white !important;
 
       h2 {
-        color: #2e8533;
+        color: luxVariables.$lux-tile-font-hover-color;
       }
     }
 

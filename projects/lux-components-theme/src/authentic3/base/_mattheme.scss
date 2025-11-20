@@ -18,7 +18,7 @@ $lux-theme: mat.define-theme(
   )
 );
 
-html {
+:root {
   @include mat.all-component-themes($lux-theme);
   @include mat.system-level-colors($lux-theme);
   @include mat.system-level-typography($lux-theme);
@@ -43,10 +43,11 @@ html {
 }
 
 // prettier-ignore
+:root {
 @include mat.theme-overrides(
   (
     "primary": map.get(map.get(luxpalette.$luxPalettes, "primary"), 20),                   //bg-farbe primary-button
-    "on-primary": #ffffff,                                                    //text-farbe primary-button
+    "on-primary": #ffffff,                                                               //text-farbe primary-button
     "primary-container": map.get(map.get(luxpalette.$luxPalettes, "primary"), 90),         //für app-header und app-footer
     "on-primary-container": map.get(map.get(luxpalette.$luxPalettes, "primary"), 20),
     "secondary": map.get(map.get(luxpalette.$luxPalettes, "primary"), 90),                 //bg-farbe secondary-button
@@ -75,6 +76,7 @@ html {
     "surface-container-highest": map.get(map.get(luxpalette.$luxPalettes, "primary"), 95)
   )
 );
+}
 
 @mixin high-contrast-overrides($theme-type) {
   @include mat.theme-overrides(

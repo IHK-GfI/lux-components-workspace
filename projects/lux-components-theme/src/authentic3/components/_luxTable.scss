@@ -19,7 +19,7 @@ lux-table {
   }
 
   .lux-row-selected {
-    background-color: luxVariables.$lux-selected-bg-color;
+    background-color: var(--lux-theme-selected-bg-color);
   }
 
   .lux-table {

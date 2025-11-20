@@ -29,7 +29,7 @@ lux-form-control-wrapper {
 
     .lux-form-control-label-authentic {
       @include form-label;
-      color: map.get(luxpalette.$lux-palette_primary, 500);
+      color: var(--lux-theme-primary-20);
       margin: 0 calc(0.5em + 1px) 0.25em calc(0.5em + 1px);
       > * {
         @include crop;
@@ -121,22 +121,22 @@ lux-form-control-wrapper {
     // FOCUS
     &.lux-focused-authentic:not(.lux-form-control-readonly-authentic) {
       .lux-form-control-label-authentic > * {
-        color: map.get(luxpalette.$lux-palette_primary, 400);
+        color: var(--lux-theme-primary-30);
       }
       .lux-form-control-container-authentic:not(.lux-no-input-row) {
-        border-color: map.get(luxpalette.$lux-palette_primary, 500);
-        box-shadow: 0 0 0 1px map.get(luxpalette.$lux-palette_primary, 500) inset;
+        border-color: var(--lux-theme-primary-20);
+        box-shadow: 0 0 0 1px var(--lux-theme-primary-20) inset;
       }
     }
     // ERROR
     &.lux-form-control-error-authentic:not(.lux-form-control-disabled-authentic) {
       .lux-form-control-container-authentic:not(.lux-no-input-row) {
-        border-color: map.get(luxpalette.$lux-palette_warn, 500);
-        box-shadow: 0 0 0 1px map.get(luxpalette.$lux-palette_warn, 500) inset;
+        border-color: var(--lux-theme-warn-50);
+        box-shadow: 0 0 0 1px var(--lux-theme-warn-50) inset;
       }
       .lux-form-control-misc-authentic {
         .lux-alert-icon {
-          color: map.get(luxpalette.$lux-palette_warn, 900);
+          color: var(--lux-theme-warn-25);
           mat-icon.mat-icon {
             box-sizing: border-box;
           }
@@ -145,7 +145,7 @@ lux-form-control-wrapper {
           background-color: luxVariables.$form-error-msg-background;
           border-radius: 4px;
           padding-right: 2px;
-          color: map.get(luxpalette.$lux-palette_warn, 900) !important;
+          color: var(--lux-theme-warn-25) !important;
           box-shadow:
             -18px 0px 0 0 luxVariables.$form-error-msg-background,
             -18px -1px 0 0 luxVariables.$form-error-msg-background,

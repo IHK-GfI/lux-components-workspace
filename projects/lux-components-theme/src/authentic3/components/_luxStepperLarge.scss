@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "../base/luxelevations";
+@use "../base/luxfocus";
 @use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxSvgIcons" as luxicons;
@@ -355,5 +356,53 @@ lux-stepper-large {
     width: 18px;
     height: 18px;
     margin-top: 4px;
+  }
+
+  .lux-stepper-large-nav-item {
+    // Links allgemein
+    a {
+      &:focus-visible {
+        outline: none;
+      }
+
+      &.lux-focused {
+        outline: var(--lux-theme-outline-dark);
+      }
+    }
+
+    // Link ausgewählt
+    &.lux-active {
+      .lux-stepper-large-nav-item-label-container {
+        a.lux-stepper-large-nav-item-label-link {
+          cursor: text;
+          &:hover {
+            color: var(--lux-theme-primary-color);
+          }
+        }
+      }
+    }
+
+    // Links nicht ausgewählt
+    &:not(.lux-active) {
+      &:not(.lux-completed) {
+        .lux-stepper-large-nav-item-label-container {
+          a.lux-stepper-large-nav-item-label-link {
+            &:hover {
+              color: #2e8533;
+            }
+          }
+        }
+      }
+
+      &.lux-completed {
+        .lux-stepper-large-nav-item-label-container {
+          a.lux-stepper-large-nav-item-label-link {
+            &:hover {
+              color: #56bd66;
+            }
+          }
+        }
+      }
+    }
   }
 }

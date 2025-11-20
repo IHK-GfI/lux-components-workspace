@@ -5,86 +5,9 @@
 @use "../luxpalette";
 @use "luxbreakpoints";
 
-$sizes: 0, 10, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;
-$paletten: luxpalette.$lux-palette_primary, luxpalette.$lux-palette_accent, luxpalette.$lux-palette_warn;
-$paletteNamen: primary, accent, warn;
-
-:root {
-  @for $i from 1 through 3 {
-    @each $size in $sizes {
-      --lux-theme-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}: #{map.get(list.nth($paletten, $i), $size)};
-      --lux-theme-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast: #{map.get(
-          list.nth($paletten, $i),
-          contrast,
-          $size
-        )};
-    }
-  }
-
-  // Allgemein
-  --lux-theme-dark-primary-text: #{luxVariables.$dark-primary-text};
-  --lux-theme-dark-secondary-text: #{luxVariables.$dark-secondary-text};
-  --lux-theme-dark-disabled-text: #{luxVariables.$dark-disabled-text};
-  --lux-theme-dark-dividers: #{luxVariables.$dark-dividers};
-  --lux-theme-dark-focused: #{luxVariables.$dark-focused};
-
-  --lux-theme-light-primary-text: #{luxVariables.$light-primary-text};
-  --lux-theme-light-secondary-text: #{luxVariables.$light-secondary-text};
-  --lux-theme-light-disabled-text: #{luxVariables.$light-disabled-text};
-  --lux-theme-light-dividers: #{luxVariables.$light-dividers};
-  --lux-theme-light-focused: #{luxVariables.$light-focused};
-
-  // App
-  --lux-theme-app-header-bg: #{luxVariables.$app-header-bg};
-  --lux-theme-app-content-bg: #{luxVariables.$app-content-bg};
-  --lux-theme-app-footer-bg: #{luxVariables.$app-footer-bg};
-  --lux-theme-app-data-bg: #{luxVariables.$app-data-bg};
-  --lux-theme-app-gradient: #{luxVariables.$app-gradient};
-  --lux-theme-app-gradient-reverse: #{luxVariables.$app-gradient-reverse};
-  --lux-theme-app-border-color: #{app-border-color};
-
-  // Form
-  --lux-theme-form-border-color: #{luxVariables.$form-border-color};
-  --lux-theme-form-control-font-size: #{luxVariables.$form-control-font-size};
-  --lux-theme-form-control-buffer: #{luxVariables.$form-control-buffer};
-  --lux-theme-form-error-msg-background: #{luxVariables.$form-error-msg-background};
-
-  // Button
-  --lux-theme-button-font-size: #{luxVariables.$button-font-size};
-  --lux-theme-button-height: #{luxVariables.$button-height};
-  --lux-theme-button-fav-height: #{luxVariables.$button-fav-height};
-
-  // Fokus
-  --lux-theme-outline-width: #{luxVariables.$outline-width};
-  --lux-theme-outline-style: #{luxVariables.$outline-style};
-  --lux-theme-outline-color-bright: #{luxVariables.$outline-color-bright};
-  --lux-theme-outline-color-dark: #{luxVariables.$outline-color-dark};
-
-  // Hover
-  --lux-theme-hover-color: #{luxVariables.$lux-hover-color};
-  --lux-theme-hover-color-for-dark-background: #{luxVariables.$lux-hover-color-for-dark-background};
-
-  // Selektion
-  --lux-theme-selected-border-color: #{luxVariables.$lux-selected-border-color};
-  --lux-theme-selected-bg-color: #{luxVariables.$lux-selected-bg-color};
-
-  // Hauptfarben
-  --lux-theme-primary-color: #{map.get(luxpalette.$lux-palette_primary, 500)};
-  --lux-theme-accent-color: #{map.get(luxpalette.$lux-palette_accent, 500)};
-  --lux-theme-warn-color: #{map.get(luxpalette.$lux-palette_warn, 500)};
-
-  // Hintergrundfarben (z.B. Badge oder Progress)
-  @each $colorName, $colorNameHex in luxVariables.$componentBgColors {
-    --lux-theme-component-bg-#{''+$colorName+''}: #{$colorNameHex};
-  }
-
-  @each $colorName, $colorNameHex in luxVariables.$colorsForDarkBg {
-    --lux-theme-component-bg-dark-#{''+$colorName+''}: #{$colorNameHex};
-  }
-
-  @each $colorName, $colorNameHex in luxVariables.$componentFontColors {
-    --lux-theme-component-font-color-#{''+$colorName+''}: #{$colorNameHex};
-  }
+body {
+  color: var(--lux-theme-dark-primary-text);
+  font-family: var(--lux-theme-app-font-family);
 }
 
 h1 {
@@ -146,7 +69,7 @@ h6 {
 }
 
 .lux-selected-bg {
-  background-color: luxVariables.$lux-selected-bg-color;
+  background-color: var(--lux-theme-selected-bg-color);
 }
 
 .lux-hover-bg {
@@ -484,57 +407,39 @@ lux-button.lux-uppercase {
   color: luxVariables.$light-focused;
 }
 
-@each $size in $sizes {
-  @for $i from 1 through 3 {
-    .lux-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
-      color: map.get(list.nth($paletten, $i), $size);
+@mixin lux-theme-palette-classes($paletteName, $paletteMap, $sizes) {
+  @each $size in $sizes {
+    .lux-color-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)} {
+      color: map.get($paletteMap, $size);
     }
 
-    .lux-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
-      color: map.get(list.nth($paletten, $i), contrast, $size);
+    .lux-bg-color-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)} {
+      background-color: map.get($paletteMap, $size);
     }
 
-    .lux-bg-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
-      background-color: map.get(list.nth($paletten, $i), $size);
+    .lux-border-color-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)} {
+      border-color: map.get($paletteMap, $size);
     }
 
-    .lux-bg-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
-      background-color: map.get(list.nth($paletten, $i), contrast, $size);
+    .lux-outline-color-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)} {
+      outline-color: map.get($paletteMap, $size);
     }
 
-    .lux-border-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
-      border-color: map.get(list.nth($paletten, $i), $size);
+    .lux-text-decoration-#{string.to-lower-case($paletteName)}-color-#{string.to-lower-case("" + $size)} {
+      text-decoration-color: map.get($paletteMap, $size);
     }
 
-    .lux-border-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
-      border-color: map.get(list.nth($paletten, $i), contrast, $size);
-    }
-
-    .lux-outline-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
-      outline-color: map.get(list.nth($paletten, $i), $size);
-    }
-
-    .lux-outline-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
-      outline-color: map.get(list.nth($paletten, $i), contrast, $size);
-    }
-
-    .lux-text-decoration-#{list.nth($paletteNamen, $i)}-color-#{string.to-lower-case("" + $size)} {
-      text-decoration-color: map.get(list.nth($paletten, $i), $size);
-    }
-
-    .lux-text-decoration-#{list.nth($paletteNamen, $i)}-color-#{string.to-lower-case("" + $size)}-contrast {
-      text-decoration-color: map.get(list.nth($paletten, $i), contrast, $size);
-    }
-
-    .lux-column-rule-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)} {
-      column-rule-color: map.get(list.nth($paletten, $i), $size);
-    }
-
-    .lux-column-rule-color-#{list.nth($paletteNamen, $i)}-#{string.to-lower-case("" + $size)}-contrast {
-      column-rule-color: map.get(list.nth($paletten, $i), contrast, $size);
+    .lux-column-rule-color-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)} {
+      column-rule-color: map.get($paletteMap, $size);
     }
   }
 }
+
+// CSS-Klassen für die Farbpaletten
+@include lux-theme-palette-classes("primary", luxpalette.$lux-palette_primary, luxVariables.$sizes);
+@include lux-theme-palette-classes("accent", luxpalette.$lux-palette_accent, luxVariables.$sizes);
+@include lux-theme-palette-classes("neutral", luxpalette.$lux-palette_neutral, luxVariables.$sizes);
+@include lux-theme-palette-classes("warn", luxpalette.$lux-palette_warn, luxVariables.$sizes);
 
 $notificationSizes: (18, 24, 30);
 

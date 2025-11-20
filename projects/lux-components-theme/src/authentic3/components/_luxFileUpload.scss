@@ -35,9 +35,9 @@ lux-file-upload {
       align-items: center;
       flex: 1 1 auto;
 
-      border: 1px solid var(--lux-theme-primary-500);
+      border: 1px solid var(--lux-theme-primary-20);
       border-radius: 4px;
-      color: var(--lux-theme-primary-500);
+      color: var(--lux-theme-primary-20);
 
       .lux-file-upload-drop-label-container {
         display: flex;
@@ -46,7 +46,7 @@ lux-file-upload {
         align-items: center;
         flex: 1 1 auto;
         gap: 12px;
-        
+
         padding: 24px 48px;
       }
 
@@ -96,7 +96,7 @@ lux-file-upload {
 
       border: 1px solid var(--lux-theme-warn-900);
       border-radius: luxVariables.$app-border-radius;
-      color: map.get(luxpalette.$lux-palette-warn, 900) !important;
+      color: var(--lux-theme-warn-20) !important;
       background-color: luxVariables.$form-error-msg-background;
       padding: 18px 15px 15px 26px;
       margin-left: luxVariables.$outline-width;
@@ -136,7 +136,7 @@ lux-file-upload {
       border-radius: 4px;
       padding-left: 2px;
       padding-right: 2px;
-      color: map.get(luxpalette.$lux-palette_warn, 900) !important;
+      color: var(--lux-theme-warn-25) !important;
     }
 
     .lux-file-upload-hint-container {
@@ -156,7 +156,7 @@ lux-file-upload {
       align-items: center;
       flex: 1 1 auto;
       gap: 12px;
-      color: var(--lux-theme-primary-500);
+      color: var(--lux-theme-primary-20);
 
       &.lux-file-upload-view-item-disabled {
         color: var(--lux-theme-dark-disabled-text);
@@ -201,6 +201,15 @@ lux-file-upload {
     /* Die eigentliche File-Inputs und den Download-Anchor blenden wir aus */
     .lux-file-upload-input {
       display: none;
+    }
+  }
+
+  .lux-file-upload-drop-container {
+    margin-left: luxVariables.$outline-width;
+    margin-right: luxVariables.$outline-width;
+
+    &:focus-visible {
+      outline: var(--lux-theme-outline-dark);
     }
   }
 }

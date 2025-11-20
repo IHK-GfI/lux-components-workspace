@@ -1,5 +1,6 @@
 @use "../base/luxelevations";
 @use "../luxVariables";
+@use "../base/luxfocus";
 
 mat-expansion-panel.mat-expansion-panel:not([class*="mat-elevation-z"]) {
   @include luxelevations.lux-elevation-z2;
@@ -24,4 +25,13 @@ mat-expansion-panel.mat-expansion-panel:not([class*="mat-elevation-z"]) {
 //Von Material wird ein Margin gesetzt wenn der Indicator links ist und das Panel disabled wird. Damit wird das Margin überschrieben und der Header des Panels wird nicht verschoben.
 mat-expansion-panel-header.mat-expansion-toggle-indicator-before .mat-content.mat-content-hide-toggle {
   margin: 0;
+}
+
+// Panel
+lux-panel {
+  mat-expansion-panel-header:not([aria-disabled="true"]) {
+    &:focus-visible {
+      @include luxfocus.focus-dark-mixin-inline;
+    }
+  }
 }

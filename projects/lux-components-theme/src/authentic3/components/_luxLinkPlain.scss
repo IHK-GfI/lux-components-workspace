@@ -38,11 +38,11 @@ lux-link-plain {
   }
 
   &.default-style {
-    color: map.get(luxpalette.$lux-palette-primary, A700);
+    color: var(--lux-theme-link-plain-color);
     font-family: inherit;
     lux-icon {
       mat-icon {
-        color: map.get(luxpalette.$lux-palette-primary, A700);
+        color: var(--lux-theme-link-plain-color);
       }
     }
   }
@@ -60,12 +60,12 @@ lux-link-plain {
   }
 
   &:hover:not(.lux-disabled) {
-    color: map.get(luxpalette.$lux-palette-primary, 300);
+    color: var(--lux-theme-link-plain-hover-color);
     text-decoration: underline;
     cursor: pointer;
     lux-icon {
       mat-icon {
-        color: map.get(luxpalette.$lux-palette-primary, 300);
+        color: var(--lux-theme-link-plain-hover-color);
       }
     }
   }

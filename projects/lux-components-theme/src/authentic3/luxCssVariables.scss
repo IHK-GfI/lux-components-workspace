@@ -1,0 +1,123 @@
+@use "sass:map";
+@use "sass:list";
+@use "sass:string";
+@use "luxpalette";
+@use "luxVariables";
+
+@mixin lux-theme-palette-vars($paletteName, $paletteMap, $sizes) {
+  @each $size in $sizes {
+    --lux-theme-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)}: #{map.get($paletteMap, $size)};
+  }
+}
+
+:root {
+  // Farbpaletten
+  @include lux-theme-palette-vars("primary", luxpalette.$lux-palette_primary, luxVariables.$sizes);
+  @include lux-theme-palette-vars("accent", luxpalette.$lux-palette_accent, luxVariables.$sizes);
+  @include lux-theme-palette-vars("neutral", luxpalette.$lux-palette_neutral, luxVariables.$sizes);
+  @include lux-theme-palette-vars("warn", luxpalette.$lux-palette_warn, luxVariables.$sizes);
+
+  // Allgemein
+  --lux-theme-app-font-family: #{luxVariables.$app-font-family};
+  --lux-theme-dark-primary-text: #{luxVariables.$dark-primary-text};
+  --lux-theme-dark-secondary-text: #{luxVariables.$dark-secondary-text};
+  --lux-theme-dark-disabled-text: #{luxVariables.$dark-disabled-text};
+  --lux-theme-dark-dividers: #{luxVariables.$dark-dividers};
+  --lux-theme-dark-focused: #{luxVariables.$dark-focused};
+
+  --lux-theme-light-primary-text: #{luxVariables.$light-primary-text};
+  --lux-theme-light-secondary-text: #{luxVariables.$light-secondary-text};
+  --lux-theme-light-disabled-text: #{luxVariables.$light-disabled-text};
+  --lux-theme-light-dividers: #{luxVariables.$light-dividers};
+  --lux-theme-light-focused: #{luxVariables.$light-focused};
+
+  // App
+  --lux-theme-app-header-bg: #{luxVariables.$app-header-bg};
+  --lux-theme-app-content-bg: #{luxVariables.$app-content-bg};
+  --lux-theme-app-footer-bg: #{luxVariables.$app-footer-bg};
+  --lux-theme-app-data-bg: #{luxVariables.$app-data-bg};
+  --lux-theme-app-gradient: #{luxVariables.$app-gradient};
+  --lux-theme-app-gradient-reverse: #{luxVariables.$app-gradient-reverse};
+  --lux-theme-app-border-color: #{luxVariables.$app-border-color};
+  --lux-theme-app-border-radius: #{luxVariables.$app-border-radius};
+
+  // Form
+  --lux-theme-form-border-color: #{luxVariables.$form-border-color};
+  --lux-theme-form-control-font-size: #{luxVariables.$form-control-font-size};
+  --lux-theme-form-control-buffer: #{luxVariables.$form-control-buffer};
+  --lux-theme-form-error-msg-background: #{luxVariables.$form-error-msg-background};
+
+  // Button
+  --lux-theme-button-font-size: #{luxVariables.$button-font-size};
+  --lux-theme-button-height: #{luxVariables.$button-height};
+  --lux-theme-button-fav-height: #{luxVariables.$button-fav-height};
+
+  // Fokus
+  --lux-theme-outline-dark: #{luxVariables.$outline-width} #{luxVariables.$outline-style} #{luxVariables.$outline-color-dark} !important;
+  --lux-theme-outline-bright: #{luxVariables.$outline-width} #{luxVariables.$outline-style} #{luxVariables.$outline-color-bright} !important;
+  --lux-theme-outline-width: #{luxVariables.$outline-width};
+  --lux-theme-outline-style: #{luxVariables.$outline-style};
+  --lux-theme-outline-color-bright: #{luxVariables.$outline-color-bright};
+  --lux-theme-outline-color-dark: #{luxVariables.$outline-color-dark};
+
+  // Hover
+  --lux-theme-hover-color: #{luxVariables.$lux-hover-color};
+  --lux-theme-on-hover-color: #{luxVariables.$lux-on-hover-color};
+  --lux-theme-hover-color-for-dark-background: #{luxVariables.$lux-hover-color-for-dark-background};
+
+  // Selektion
+  --lux-theme-selected-border-color: #{luxVariables.$lux-selected-border-color};
+  --lux-theme-selected-bg-color: #{luxVariables.$lux-selected-bg-color};
+  --lux-theme-on-selected-color: #{luxVariables.$lux-on-selected-color};
+
+  // Hauptfarben
+  --lux-theme-primary-color: #{map.get(luxpalette.$lux-palette_primary, 20)};
+  --lux-theme-accent-color: #{map.get(luxpalette.$lux-palette_accent, 70)};
+  --lux-theme-warn-color: #{map.get(luxpalette.$lux-palette_warn, 50)};
+
+  // Hintergrundfarben (z.B. Badge oder Progress)
+  @each $colorName, $colorNameHex in luxVariables.$componentBgColors {
+    --lux-theme-component-bg-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  @each $colorName, $colorNameHex in luxVariables.$colorsForDarkBg {
+    --lux-theme-component-bg-dark-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  @each $colorName, $colorNameHex in luxVariables.$componentFontColors {
+    --lux-theme-component-font-color-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  // Hauptfarben
+  --lux-theme-primary-color: #{luxpalette.$lux-primary-color};
+  --lux-theme-accent-color: #{luxpalette.$lux-accent-color};
+  --lux-theme-warn-color: #{luxpalette.$lux-warn-color};
+
+  // Sonderfarben
+  --lux-theme-custom-purple: #{luxpalette.$custom-purple};
+  --lux-theme-on-custom-purple: #{luxpalette.$on-custom-purple};
+  --lux-theme-custom-pink: #{luxpalette.$custom-pink};
+  --lux-theme-on-custom-pink: #{luxpalette.$on-custom-pink};
+  --lux-theme-custom-yellow: #{luxpalette.$custom-yellow};
+  --lux-theme-on-custom-yellow: #{luxpalette.$on-custom-yellow};
+  --lux-theme-custom-brown: #{luxpalette.$custom-brown};
+  --lux-theme-on-custom-brown: #{luxpalette.$on-custom-brown};
+  --lux-theme-custom-orange: #{luxpalette.$custom-orange};
+  --lux-theme-on-custom-orange: #{luxpalette.$on-custom-orange};
+  --lux-theme-custom-lightblue: #{luxpalette.$custom-lightblue};
+  --lux-theme-on-custom-lightblue: #{luxpalette.$on-custom-lightblue};
+  --lux-theme-custom-blue: #{luxpalette.$custom-blue};
+  --lux-theme-on-custom-blue: #{luxpalette.$on-custom-blue};
+  --lux-theme-custom-green: #{luxpalette.$custom-green};
+  --lux-theme-on-custom-green: #{luxpalette.$on-custom-green};
+  --lux-theme-custom-red: #{luxpalette.$custom-red};
+  --lux-theme-on-custom-red: #{luxpalette.$on-custom-red};
+  --lux-theme-custom-grey: #{luxpalette.$custom-grey};
+  --lux-theme-on-custom-grey: #{luxpalette.$on-custom-grey};
+  --lux-theme-custom-black: #{luxpalette.$custom-black};
+  --lux-theme-custom-white: #{luxpalette.$custom-white};
+
+  // LUX-Link-Plain
+  --lux-theme-link-plain-color: #007cb1;
+  --lux-theme-link-plain-hover-color: #4d7094;
+}

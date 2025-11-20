@@ -58,13 +58,13 @@ lux-menu {
 .lux-menu-trigger-default {
   button.mat-mdc-button {
     white-space: nowrap;
-    color: map.get(luxpalette.$lux-palette_primary, 500);
+    color: var(--lux-theme-primary-20);
   }
 }
 
 /* Menu-Overlay-Panel anpassen */
 .lux-menu-panel {
-  border: 2px solid luxpalette.$lux-primary-color;
+  border: 2px solid var(--lux-theme-primary-color);
   box-shadow: none !important;
 
   .mat-mdc-menu-item:not([disabled]).cdk-program-focused {
@@ -83,14 +83,14 @@ lux-menu {
   .lux-menu-item {
     font-size: 1rem;
     display: block;
-    color: luxpalette.$lux-primary-color;
+    color: var(--lux-theme-primary-color);
     margin-top: luxVariables.$outline-width;
     margin-bottom: luxVariables.$outline-width;
     hyphens: auto;
     word-break: break-all;
 
     .mat-icon-no-color {
-      color: luxpalette.$lux-primary-color;
+      color: var(--lux-theme-primary-color);
     }
 
     .lux-button-label {

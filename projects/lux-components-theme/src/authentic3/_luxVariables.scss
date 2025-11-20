@@ -1,22 +1,12 @@
 @use "sass:map";
 @use "luxpalette";
 
+$paletten: luxpalette.$lux-palette_primary, luxpalette.$lux-palette_accent, luxpalette.$lux-palette_warn, luxpalette.$lux-palette_neutral;
+$paletteNamen: primary, secondary, tertiary, neutral, neutral-variant, error;
+$sizes: 0, 10, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;
+
 $app-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
 $app-headline-font: "Blogger Sans";
-
-body {
-  color: rgba(black, 0.87);
-  font-family: $app-font-family;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: normal;
-}
 
 // Allgemein
 $dark-primary-text: rgba(black, 0.87);
@@ -32,9 +22,9 @@ $light-dividers: rgba(white, 0.2);
 $light-focused: rgba(white, 0.12);
 
 // App
-$app-header-bg: map.get(luxpalette.$lux-palette_primary, 50);
+$app-header-bg: map.get(luxpalette.$lux-palette_primary, 90);
 $app-content-bg: #ffffff;
-$app-footer-bg: map.get(luxpalette.$lux-palette_primary, 50);
+$app-footer-bg: map.get(luxpalette.$lux-palette_primary, 90);
 $app-data-bg: #ffffff;
 $app-gradient: linear-gradient(90deg, #ffffff 0%, map.get(luxpalette.$lux-palette_primary, 98) 100%);
 $app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, map.get(luxpalette.$lux-palette_primary, 98) 100%);
@@ -59,12 +49,14 @@ $outline-width: 4px;
 $outline-style: solid;
 
 // Hover
-$lux-hover-color: map.get(luxpalette.$lux-palette-primary, 40);
+$lux-hover-color: var(--mat-option-hover-state-layer-color);
+$lux-on-hover-color: var(--mat-option-label-text-color);
 $lux-hover-color-for-dark-background: #335c85;
 
 // Selektion
 $lux-selected-border-color: luxpalette.$lux-primary-color;
-$lux-selected-bg-color: #f0f3f6;
+$lux-selected-bg-color: var(--mat-option-selected-state-layer-color);
+$lux-on-selected-color: #f0f3f6;
 
 // Stepper (large)
 $lux-stepper-large-backdrop-bg: #636d76;
@@ -76,6 +68,12 @@ $lux-stepper-large-nav-item-disabled-fg: #003366;
 $lux-stepper-large-nav-item-disabled-bg: #eff3f6;
 $lux-stepper-large-nav-item-completed-fg: #2e8533;
 $lux-stepper-large-nav-item-completed-bg: #ffffff;
+
+// Tile
+$lux-tile-font-hover-color: #2e8533;
+$lux-tile-icon-color: #56bd66;
+$lux-tile-borderradius: 24px;
+$lux-tile-bottom-line-color: #56bd66;
 
 // Overlay
 $lux-overlay-backdrop-color: rgba(0, 0, 0, 0.12);

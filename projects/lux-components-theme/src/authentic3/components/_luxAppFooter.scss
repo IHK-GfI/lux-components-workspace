@@ -9,7 +9,7 @@ lux-app-footer {
   min-height: 60px;
   max-height: 60px;
   background-color: var(--mat-sys-secondary);
-  border-bottom: 6px solid map.get(luxpalette.$lux-palette_primary, 600);
+  border-bottom: 6px solid var(--lux-theme-primary-20);
 
   .lux-app-footer {
     overflow: hidden;

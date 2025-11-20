@@ -19,7 +19,7 @@ lux-side-nav {
     .lux-side-nav-content {
       .lux-side-nav-item {
         .lux-side-nav-item-icon {
-          color: map.get(luxpalette.$lux-palette_primary, 500);
+          color: var(--lux-theme-primary-20);
 
           &.lux-side-nav-disabled {
             color: luxVariables.$dark-disabled-text;
@@ -27,7 +27,7 @@ lux-side-nav {
         }
 
         .lux-side-nav-item-expansion-icon {
-          color: map.get(luxpalette.$lux-palette_primary, 500);
+          color: var(--lux-theme-primary-20);
 
           &.lux-side-nav-disabled {
             color: luxVariables.$dark-disabled-text;
