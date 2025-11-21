@@ -1,6 +1,5 @@
 @use "sass:color";
 @use "sass:map";
-@use "../luxVariables";
 @use "../luxpalette";
 @use "luxSvgIcons" as luxicons;
 
@@ -21,7 +20,7 @@
 
 @mixin lux-button-focus {
   $width: calc(var(--lux-theme-outline-width) - 1px);
-  outline: $width luxVariables.$outline-style luxVariables.$outline-color-dark !important;
+  outline: $width var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark) !important;
   outline-offset: 1px;
 }
 
@@ -43,13 +42,13 @@
     top: 0;
     bottom: 0;
     position: absolute;
-    border-left: 4px solid luxVariables.$lux-selected-border-color;
+    border-left: 4px solid var(--lux-theme-selected-border-color);
     border-radius: 4px 0 0 4px;
   }
 }
 
 @mixin lux-selected-mixin-ac {
-  background: luxVariables.$app-gradient;
+  background: var(--lux-theme-app-gradient);
   background-color: #fff;
   border: 1px solid var(--lux-theme-primary-20);
   box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
@@ -57,7 +56,7 @@
   border-radius: 4px;
 }
 @mixin lux-selected-mixin-reverse-ac {
-  background: luxVariables.$app-gradient-reverse;
+  background: var(--lux-theme-app-gradient-reverse);
   background-color: #fff;
   border: 1px solid var(--lux-theme-primary-20);
   box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
@@ -75,18 +74,18 @@
     bottom: 0;
     right: 0;
     position: absolute;
-    border-bottom: 4px solid luxVariables.$lux-selected-border-color;
+    border-bottom: 4px solid var(--lux-theme-selected-border-color);
   }
 }
 
 @mixin lux-hovered-mixin {
-  background-color: luxVariables.$lux-hover-color !important;
+  background-color: var(--lux-theme-hover-color) !important;
   border-radius: 4px;
 }
 
 @mixin lux-hovered-mixin-inverted {
   color: #fff;
-  background-color: luxVariables.$lux-hover-color;
+  background-color: var(--lux-theme-hover-color);
 }
 
 /** ########## Green ########## **/

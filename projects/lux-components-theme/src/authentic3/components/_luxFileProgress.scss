@@ -1,10 +1,9 @@
 @use "sass:map";
-@use "../luxVariables";
 @use "../luxpalette";
 
 lux-file-progress {
   .lux-file-overlay {
-    background: luxVariables.$dark-focused;
+    background: var(--lux-theme-dark-focused);
 
     mat-spinner,
     mat-spinner svg {

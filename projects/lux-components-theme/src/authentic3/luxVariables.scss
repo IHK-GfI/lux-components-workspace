@@ -1,0 +1,182 @@
+@use "sass:map";
+@use "sass:list";
+@use "sass:string";
+@use "luxpalette";
+
+@mixin lux-theme-palette-vars($paletteName, $paletteMap, $sizes) {
+  @each $size in $sizes {
+    --lux-theme-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)}: #{map.get($paletteMap, $size)};
+  }
+}
+
+// Hintergrundfarben (z.B. Badge oder Progress)
+$componentBgColors: (
+  "red": map.get(luxpalette.$lux-palette_warn, 40),
+  "green": map.get(luxpalette.$lux-palette_accent, 70),
+  "purple": #715289,
+  "blue": map.get(luxpalette.$lux-palette_primary, 20),
+  "gray": map.get(luxpalette.$lux-palette_neutral, 40),
+  "orange": #fc791f,
+  "black": map.get(luxpalette.$lux-palette_neutral, 10),
+  "white": #ffffff,
+  "yellow": #fbd12c,
+  "pink": #fc6b85,
+  "lightblue": #4fa8e8
+);
+
+// Vordergrundfarben (z.B. Badge)
+$componentFontColors: (
+  "red": #ffffff,
+  "green": map.get(luxpalette.$lux-palette_neutral, 10),
+  "purple": #ffffff,
+  "blue": #ffffff,
+  "gray": #ffffff,
+  "orange": map.get(luxpalette.$lux-palette_neutral, 10),
+  "black": #ffffff,
+  "white": map.get(luxpalette.$lux-palette_neutral, 10),
+  "yellow": map.get(luxpalette.$lux-palette_neutral, 10),
+  "pink": map.get(luxpalette.$lux-palette_neutral, 10),
+  "lightblue": map.get(luxpalette.$lux-palette_neutral, 10)
+);
+
+// Farben für einen dunklen Hintergrund (z.B. Snackbar).
+$colorsForDarkBg: (
+  "red": #f17474,
+  "green": #53b12b,
+  "blue": map.get(luxpalette.$lux-palette_primary, 80),
+  "orange": #ec9c1b,
+  "yellow": #fbd12c,
+  "white": #ffffff
+);
+
+:root {
+  // Farbpaletten
+  @include lux-theme-palette-vars("primary", luxpalette.$lux-palette_primary, luxpalette.$sizes);
+  @include lux-theme-palette-vars("accent", luxpalette.$lux-palette_accent, luxpalette.$sizes);
+  @include lux-theme-palette-vars("neutral", luxpalette.$lux-palette_neutral, luxpalette.$sizes);
+  @include lux-theme-palette-vars("warn", luxpalette.$lux-palette_warn, luxpalette.$sizes);
+
+  // Allgemein
+  --lux-theme-app-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+  --lux-theme-app-headline-font: "Blogger Sans";
+
+  --lux-theme-dark-primary-text: rgba(0, 0, 0, 0.87);
+  --lux-theme-dark-secondary-text: rgba(0, 0, 0, 0.6);
+  --lux-theme-dark-disabled-text: rgba(0, 0, 0, 0.38);
+  --lux-theme-dark-dividers: rgba(0, 0, 0, 0.12);
+  --lux-theme-dark-focused: rgba(0, 0, 0, 0.12);
+
+  --lux-theme-light-primary-text: white;
+  --lux-theme-light-secondary-text: rgba(255, 255, 255, 0.74);
+  --lux-theme-light-disabled-text: rgba(255, 255, 255, 0.38);
+  --lux-theme-light-dividers: rgba(255, 255, 255, 0.2);
+  --lux-theme-light-focused: rgba(255, 255, 255, 0.12);
+
+  // App
+  --lux-theme-app-header-bg: map-get(luxpalette.$lux-palette_primary, 90);
+  --lux-theme-app-content-bg: #ffffff;
+  --lux-theme-app-footer-bg: map-get(luxpalette.$lux-palette_primary, 90);
+  --lux-theme-app-data-bg: #ffffff;
+  --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, map-get(luxpalette.$lux-palette_primary, 98) 100%);
+  --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, map-get(luxpalette.$lux-palette_primary, 98) 100%);
+  --lux-theme-app-border-color: rgba(0, 0, 0, 0.12);
+  --lux-theme-app-border-radius: 4px;
+
+  // Form
+  --lux-theme-form-border-color: rgba(0, 0, 0, 0.38);
+  --lux-theme-form-control-font-size: 1rem;
+  --lux-theme-form-control-buffer: 4px;
+  --lux-theme-form-error-msg-background: rgb(255, 228, 231);
+
+  // Fokus
+  --lux-theme-outline-dark: 4px solid #0098da !important;
+  --lux-theme-outline-bright: 4px solid #ffffff !important;
+  --lux-theme-outline-width: 4px;
+  --lux-theme-outline-style: solid;
+  --lux-theme-outline-color-bright: #ffffff;
+  --lux-theme-outline-color-dark: #0098da;
+
+  // Hover
+  --lux-theme-hover-color: var(--mat-option-hover-state-layer-color);
+  --lux-theme-on-hover-color: var(--mat-option-label-text-color);
+  --lux-theme-hover-color-for-dark-background: #335c85;
+
+  // Selektion
+  --lux-theme-selected-border-color: luxpalette.$lux-primary-color;
+  --lux-theme-selected-bg-color: var(--mat-option-selected-state-layer-color);
+  --lux-theme-on-selected-color: #f0f3f6;
+
+  // Hauptfarben
+  --lux-theme-primary-color: #{map.get(luxpalette.$lux-palette_primary, 20)};
+  --lux-theme-accent-color: #{map.get(luxpalette.$lux-palette_accent, 70)};
+  --lux-theme-warn-color: #{map.get(luxpalette.$lux-palette_warn, 50)};
+
+  // Hintergrundfarben (z.B. Badge oder Progress)
+  @each $colorName, $colorNameHex in $componentBgColors {
+    --lux-theme-component-bg-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  @each $colorName, $colorNameHex in $colorsForDarkBg {
+    --lux-theme-component-bg-dark-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  @each $colorName, $colorNameHex in $componentFontColors {
+    --lux-theme-component-font-color-#{''+$colorName+''}: #{$colorNameHex};
+  }
+
+  // Hauptfarben
+  --lux-theme-primary-color: #{luxpalette.$lux-primary-color};
+  --lux-theme-accent-color: #{luxpalette.$lux-accent-color};
+  --lux-theme-warn-color: #{luxpalette.$lux-warn-color};
+
+  // Sonderfarben
+  --lux-theme-custom-purple: #{luxpalette.$custom-purple};
+  --lux-theme-on-custom-purple: #{luxpalette.$on-custom-purple};
+  --lux-theme-custom-pink: #{luxpalette.$custom-pink};
+  --lux-theme-on-custom-pink: #{luxpalette.$on-custom-pink};
+  --lux-theme-custom-yellow: #{luxpalette.$custom-yellow};
+  --lux-theme-on-custom-yellow: #{luxpalette.$on-custom-yellow};
+  --lux-theme-custom-brown: #{luxpalette.$custom-brown};
+  --lux-theme-on-custom-brown: #{luxpalette.$on-custom-brown};
+  --lux-theme-custom-orange: #{luxpalette.$custom-orange};
+  --lux-theme-on-custom-orange: #{luxpalette.$on-custom-orange};
+  --lux-theme-custom-lightblue: #{luxpalette.$custom-lightblue};
+  --lux-theme-on-custom-lightblue: #{luxpalette.$on-custom-lightblue};
+  --lux-theme-custom-blue: #{luxpalette.$custom-blue};
+  --lux-theme-on-custom-blue: #{luxpalette.$on-custom-blue};
+  --lux-theme-custom-green: #{luxpalette.$custom-green};
+  --lux-theme-on-custom-green: #{luxpalette.$on-custom-green};
+  --lux-theme-custom-red: #{luxpalette.$custom-red};
+  --lux-theme-on-custom-red: #{luxpalette.$on-custom-red};
+  --lux-theme-custom-grey: #{luxpalette.$custom-grey};
+  --lux-theme-on-custom-grey: #{luxpalette.$on-custom-grey};
+  --lux-theme-custom-black: #{luxpalette.$custom-black};
+  --lux-theme-custom-white: #{luxpalette.$custom-white};
+
+  // LUX-Link-Plain
+  --lux-theme-link-plain-color: #007cb1;
+  --lux-theme-link-plain-hover-color: #4d7094;
+
+  // LUX-Stepper-Large
+  --lux-theme-stepper-large-backdrop-bg: #636d76;
+  --lux-theme-stepper-large-completed-fc: #2e8533;
+  --lux-theme-stepper-large-nav-item-active-fc: #ffffff;
+  --lux-theme-stepper-large-nav-item-active-bg: #003366;
+  --lux-theme-stepper-large-nav-item-disabled-fg: #003366;
+  --lux-theme-stepper-large-nav-item-disabled-bg: #eff3f6;
+  --lux-theme-stepper-large-nav-item-completed-fg: #2e8533;
+  --lux-theme-stepper-large-nav-item-completed-bg: #ffffff;
+
+  // LUX-Tile
+  --lux-theme-tile-font-hover-color: #2e8533;
+  --lux-theme-tile-icon-color: #56bd66;
+  --lux-theme-tile-borderradius: 24px;
+  --lux-theme-tile-bottom-line-color: #56bd66;
+
+  // LUX-Tourhint
+  --lux-theme-tour-hint-overlay-backdrop-color: rgba(0, 0, 0, 0.12);
+
+  // Options in Panels (z.B. Select, AutoComplete und Menu)
+  --lux-theme-panel-option-min-height: 24px;
+  --lux-theme-panel-option-padding: 12px 0;
+}

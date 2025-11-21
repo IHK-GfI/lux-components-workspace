@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../base/luxfocus";
-@use "../luxVariables";
 @use "../luxpalette";
 
 $fileUploadProgressSize: 8px;
@@ -24,8 +23,8 @@ lux-file-upload {
     flex: 1 1 auto;
 
     .lux-file-upload-view-container {
-      margin-left: luxVariables.$outline-width;
-      margin-right: luxVariables.$outline-width;
+      margin-left: var(--lux-theme-outline-width);
+      margin-right: var(--lux-theme-outline-width);
     }
 
     .lux-file-upload-drop-container {
@@ -94,13 +93,13 @@ lux-file-upload {
       flex: 1 1 auto;
       gap: 12px;
 
-      border: 1px solid var(--lux-theme-warn-900);
-      border-radius: luxVariables.$app-border-radius;
+      border: 1px solid var(--lux-theme-warn-20);
+      border-radius: var(--lux-theme-app-border-radius);
       color: var(--lux-theme-warn-20) !important;
-      background-color: luxVariables.$form-error-msg-background;
+      background-color: var(--lux-theme-form-error-msg-background);
       padding: 18px 15px 15px 26px;
-      margin-left: luxVariables.$outline-width;
-      margin-right: luxVariables.$outline-width;
+      margin-left: var(--lux-theme-outline-width);
+      margin-right: var(--lux-theme-outline-width);
 
       .lux-file-upload-error-icon {
         display: flex;
@@ -132,7 +131,7 @@ lux-file-upload {
 
       margin: 2px 5px;
       font-size: 0.75rem;
-      background-color: luxVariables.$form-error-msg-background;
+      background-color: var(--lux-theme-form-error-msg-background);
       border-radius: 4px;
       padding-left: 2px;
       padding-right: 2px;
@@ -141,8 +140,8 @@ lux-file-upload {
 
     .lux-file-upload-hint-container {
       margin-top: 4px;
-      padding-left: luxVariables.$outline-width;
-      padding-right: luxVariables.$outline-width;
+      padding-left: var(--lux-theme-outline-width);
+      padding-right: var(--lux-theme-outline-width);
     }
 
     .lux-file-upload-no-hint-container {
@@ -205,8 +204,8 @@ lux-file-upload {
   }
 
   .lux-file-upload-drop-container {
-    margin-left: luxVariables.$outline-width;
-    margin-right: luxVariables.$outline-width;
+    margin-left: var(--lux-theme-outline-width);
+    margin-right: var(--lux-theme-outline-width);
 
     &:focus-visible {
       outline: var(--lux-theme-outline-dark);

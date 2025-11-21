@@ -1,6 +1,5 @@
 @use "sass:map";
 @use "../base/luxfocus";
-@use "../luxVariables";
 @use "../luxpalette";
 
 lux-link-plain {
@@ -49,12 +48,12 @@ lux-link-plain {
 
   &.lux-disabled,
   .link-wrapper.lux-disabled {
-    color: luxVariables.$dark-disabled-text;
+    color: var(--lux-theme-dark-disabled-text);
     cursor: text;
     text-decoration: none;
     lux-icon {
       mat-icon {
-        color: luxVariables.$dark-disabled-text;
+        color: var(--lux-theme-dark-disabled-text);
       }
     }
   }

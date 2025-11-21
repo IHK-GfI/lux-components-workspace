@@ -1,6 +1,5 @@
 @use "sass:map";
 @use "../luxpalette";
-@use "../luxVariables";
 @use "../base/luxfocus";
 
 /*
@@ -22,7 +21,7 @@ lux-stepper {
     margin: 8px 8px 0 8px;
   }
   mat-step-header {
-    margin: luxVariables.$outline-width;
+    margin: var(--lux-theme-outline-width);
 
     // Anpassungen an standard Step-Aussehen, die Stepper Icons/Zahlen sollen größer sein, als bei Material
     .mat-step-icon,
@@ -38,7 +37,7 @@ lux-stepper {
       display: flex;
       align-items: center;
       position: relative;
-      font-size: luxVariables.$form-control-font-size;
+      font-size: var(--lux-theme-form-control-font-size);
       font-weight: normal;
     }
   }
@@ -132,7 +131,7 @@ lux-stepper {
         .lux-stepper-edited-icon,
         .lux-stepper-normal-icon {
           mat-icon {
-            color: luxVariables.$app-data-bg;
+            color: var(--lux-theme-app-data-bg);
             background-color: var(--lux-theme-primary-color);
           }
         }
@@ -146,8 +145,8 @@ lux-stepper {
         .lux-stepper-edited-icon,
         .lux-stepper-normal-icon {
           mat-icon {
-            color: luxVariables.$app-data-bg;
-            background-color: luxVariables.$dark-secondary-text;
+            color: var(--lux-theme-app-data-bg);
+            background-color: var(--lux-theme-dark-secondary-text);
           }
         }
       }
@@ -160,7 +159,7 @@ lux-stepper {
     &[aria-selected="true"] {
       .mat-step-icon,
       .mat-step-icon-selected {
-        color: luxVariables.$app-data-bg;
+        color: var(--lux-theme-app-data-bg);
         background-color: var(--lux-theme-primary-color);
       }
       lux-step-header {
@@ -176,11 +175,11 @@ lux-stepper {
         background-color: transparent;
       }
       .mat-step-icon {
-        border: 1px solid luxVariables.$app-border-color;
+        border: 1px solid var(--lux-theme-app-border-color);
       }
 
       .mat-step-icon-state-edit {
-        color: luxVariables.$app-data-bg;
+        color: var(--lux-theme-app-data-bg);
         background-color: var(--lux-theme-primary-color);
       }
     }
@@ -244,7 +243,7 @@ lux-stepper {
   // HOVER / FOCUS / SELECTED
 
   mat-step-header {
-    --mat-stepper-header-hover-state-layer-shape: #{luxVariables.$app-border-radius};
+    --mat-stepper-header-hover-state-layer-shape: var(--lux-theme-app-border-radius);
     &:hover {
       background-color: transparent !important;
       border-radius: 0;
@@ -252,12 +251,12 @@ lux-stepper {
       &[aria-selected="true"] {
         div.mat-step-icon.mat-step-icon-state-number,
         div.mat-step-icon.mat-step-icon-state-edit {
-          background-color: luxVariables.$lux-hover-color;
+          background-color: var(--lux-theme-hover-color);
           color: #fff;
-          border-color: luxVariables.$lux-hover-color;
+          border-color: var(--lux-theme-hover-color);
         }
         div.mat-step-label lux-step-header {
-          color: luxVariables.$lux-hover-color;
+          color: var(--lux-theme-hover-color);
         }
       }
     }
@@ -279,7 +278,7 @@ lux-stepper {
       div.mat-step-icon.mat-step-icon-state-edit {
         background-color: #fff;
         color: var(--lux-theme-primary-color);
-        border: 1px solid luxVariables.$app-border-color;
+        border: 1px solid var(--lux-theme-app-border-color);
       }
       div.mat-step-label lux-step-header {
         color: var(--lux-theme-primary-color);
@@ -302,7 +301,7 @@ lux-stepper {
       div.mat-step-icon.mat-step-icon-state-edit {
         background-color: #fff;
         color: var(--lux-theme-primary-color);
-        border: 1px solid luxVariables.$app-border-color;
+        border: 1px solid var(--lux-theme-app-border-color);
       }
       div.mat-step-label lux-step-header {
         color: var(--lux-theme-primary-color);
@@ -317,7 +316,7 @@ lux-stepper {
         mat-icon {
           color: var(--lux-theme-primary-color);
           background-color: #fff;
-          border: 1px solid luxVariables.$app-border-color;
+          border: 1px solid var(--lux-theme-app-border-color);
         }
       }
     }
@@ -327,7 +326,7 @@ lux-stepper {
         mat-icon {
           color: #fff;
           background-color: var(--lux-theme-primary-color);
-          border: 1px solid luxVariables.$app-border-color;
+          border: 1px solid var(--lux-theme-app-border-color);
         }
       }
     }
@@ -339,14 +338,14 @@ lux-stepper {
         .lux-stepper-edited-icon,
         .lux-stepper-normal-icon {
           mat-icon {
-            background-color: luxVariables.$lux-hover-color;
+            background-color: var(--lux-theme-hover-color);
             color: #fff;
-            border-color: luxVariables.$lux-hover-color;
+            border-color: var(--lux-theme-hover-color);
           }
         }
       }
       div.mat-step-label lux-step-header {
-        color: luxVariables.$lux-hover-color;
+        color: var(--lux-theme-hover-color);
       }
     }
   }

@@ -1,19 +1,18 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxVariables";
 
 .lux-select-panel-ac,
 .lux-select-panel-ac-multiple {
   @include mat.select-overrides(
     (
-      panel-background-color: luxVariables.$app-data-bg,
+      panel-background-color: var(--lux-theme-app-data-bg),
       container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )
   );
 
   @include mat.core-overrides(
     (
-      option-label-text-color: luxVariables.$dark-primary-text
+      option-label-text-color: var(--lux-theme-dark-primary-text)
     )
   );
 }
@@ -27,7 +26,7 @@ lux-select-ac {
   // nur greifen würde, wenn das mat-select-Element in einem mat-form-field verwendet wird.
   [aria-disabled="true"] {
     .mat-mdc-select-arrow {
-      color: luxVariables.$dark-disabled-text;
+      color: var(--lux-theme-dark-disabled-text);
     }
   }
 }

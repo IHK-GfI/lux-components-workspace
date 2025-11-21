@@ -1,14 +1,13 @@
 @use "sass:map";
-@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxfocus";
 
 .mat-mdc-menu-panel {
-  --mat-menu-container-shape: #{luxVariables.$app-border-radius};
+  --mat-menu-container-shape: var(--lux-theme-app-border-radius);
 
   .mat-mdc-menu-item-text {
-    min-height: #{luxVariables.$lux-panel-option-min-height};
-    padding: #{luxVariables.$lux-panel-option-padding};
+    min-height: var(--lux-theme-panel-option-min-height);
+    padding: var(--lux-theme-panel-option-padding);
   }
 }
 
@@ -41,7 +40,7 @@ lux-menu {
       white-space: nowrap;
       font-weight: 400;
       letter-spacing: 1px;
-      font-family: luxVariables.$app-font-family;
+      font-family: var(--lux-theme-app-font-family);
     }
   }
 }
@@ -84,8 +83,8 @@ lux-menu {
     font-size: 1rem;
     display: block;
     color: var(--lux-theme-primary-color);
-    margin-top: luxVariables.$outline-width;
-    margin-bottom: luxVariables.$outline-width;
+    margin-top: var(--lux-theme-outline-width);
+    margin-bottom: var(--lux-theme-outline-width);
     hyphens: auto;
     word-break: break-all;
 

@@ -1,5 +1,4 @@
 @use "sass:map";
-@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxelevations";
 @use "../base/luxfocus";
@@ -37,7 +36,7 @@ lux-app-header {
     z-index: 10000;
     overflow: hidden;
     white-space: nowrap;
-    background-color: luxVariables.$app-header-bg;
+    background-color: var(--lux-theme-app-header-bg);
     box-sizing: border-box;
     @include luxelevations.lux-elevation-z6();
 
@@ -110,7 +109,7 @@ lux-app-header {
           }
 
           &:not(.mat-accent):not(.mat-warn):not(.mat-primary):disabled {
-            color: luxVariables.$dark-disabled-text;
+            color: var(--lux-theme-dark-disabled-text);
           }
 
           &.mat-accent:not([disabled]) {
@@ -199,7 +198,7 @@ lux-app-header {
     }
 
     .lux-side-nav-trigger-active {
-      background-color: luxVariables.$dark-focused;
+      background-color: var(--lux-theme-dark-focused);
     }
   }
 
@@ -349,11 +348,11 @@ lux-app-header {
     }
 
     &:hover {
-      background-color: luxVariables.$lux-hover-color !important;
+      background-color: var(--lux-theme-hover-color) !important;
       color: var(--lux-theme-primary-20);
     }
     &:hover lux-icon {
-      background-color: luxVariables.$lux-hover-color;
+      background-color: var(--lux-theme-hover-color);
       color: var(--lux-theme-primary-20) !important;
     }
   }
@@ -378,7 +377,7 @@ lux-app-header {
 
     &:hover {
       color: var(--lux-theme-primary-20) !important;
-      background-color: luxVariables.$lux-hover-color !important;
+      background-color: var(--lux-theme-hover-color) !important;
 
       &.mat-accent lux-icon {
         color: var(--lux-theme-accent-70) !important;

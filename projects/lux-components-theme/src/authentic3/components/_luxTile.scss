@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../luxpalette";
-@use "../luxVariables";
 @use "../base/luxelevations";
 @use "../base/luxfocus";
 
@@ -16,7 +15,7 @@ lux-tile {
 
   mat-card[class~="lux-cursor"] {
     &.mat-mdc-card {
-      border-radius: luxVariables.$lux-tile-borderradius;
+      border-radius: var(--lux-theme-tile-borderradius);
       overflow: hidden !important;
       padding: 24px;
     }
@@ -37,7 +36,7 @@ lux-tile {
       left: 0;
       right: 0;
       height: 8px;
-      background-color: luxVariables.$lux-tile-bottom-line-color;
+      background-color: var(--lux-theme-tile-bottom-line-color);
       transition: 0.2s ease;
     }
 
@@ -75,7 +74,7 @@ lux-tile {
       word-wrap: break-word;
       max-width: 100%;
       margin: 4px 0px;
-      font-family: luxVariables.$app-headline-font;
+      font-family: var(--lux-theme-app-headline-font);
     }
   }
 
@@ -90,7 +89,7 @@ lux-tile {
       word-wrap: break-word;
       max-width: 100%;
       margin: 12px 0px;
-      font-family: luxVariables.$app-headline-font;
+      font-family: var(--lux-theme-app-headline-font);
     }
   }
 
@@ -102,7 +101,7 @@ lux-tile {
   }
 
   .lux-tile-icon {
-    color: luxVariables.$lux-tile-icon-color;
+    color: var(--lux-theme-tile-icon-color);
     margin-top: 6px;
     lux-icon {
       mat-icon {
@@ -185,7 +184,7 @@ lux-tile {
       background-color: white !important;
 
       h2 {
-        color: luxVariables.$lux-tile-font-hover-color;
+        color: var(--lux-theme-tile-font-hover-color);
       }
     }
 

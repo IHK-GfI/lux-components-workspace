@@ -1,10 +1,9 @@
 @use "@angular/material" as mat;
-@use "../luxVariables";
 
 lux-divider {
   @include mat.divider-overrides(
     (
-      color: luxVariables.$dark-dividers,
+      color: var(--lux-theme-dark-dividers),
       width: 1px
     )
   );

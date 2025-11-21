@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../luxpalette";
-@use "../luxVariables";
 
 lux-chips-ac {
   @include mat.chips-overrides(
@@ -26,33 +25,33 @@ lux-chips-ac {
 
   // Primär-Farbvariante
   .lux-chip-color-primary {
-    --mat-chip-elevated-container-color: #{var(--lux-theme-custom-blue)};
+    --mat-chip-elevated-container-color: var(--lux-theme-custom-blue);
     @include mat.chips-overrides(
       (
-        label-text-color: #{var(--lux-theme-on-custom-blue)},
-        with-trailing-icon-trailing-icon-color: #{var(--lux-theme-on-custom-blue)}
+        label-text-color: var(--lux-theme-on-custom-blue),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-on-custom-blue)
       )
     );
   }
 
   // Akzent-Farbvariante
   .lux-chip-color-accent {
-    --mat-chip-elevated-container-color: #{var(--lux-theme-custom-green)};
+    --mat-chip-elevated-container-color: var(--lux-theme-custom-green);
     @include mat.chips-overrides(
       (
-        label-text-color: #{var(--lux-theme-on-custom-green)},
-        with-trailing-icon-trailing-icon-color: #{var(--lux-theme-on-custom-green)}
+        label-text-color: var(--lux-theme-on-custom-green),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-on-custom-green)
       )
     );
   }
 
   // Warn-Farbvariante
   .lux-chip-color-warn {
-    --mat-chip-elevated-container-color: #{var(--lux-theme-custom-red)};
+    --mat-chip-elevated-container-color: var(--lux-theme-custom-red);
     @include mat.chips-overrides(
       (
-        label-text-color: #{var(--lux-theme-on-custom-red)},
-        with-trailing-icon-trailing-icon-color: #{var(--lux-theme-on-custom-red)}
+        label-text-color: var(--lux-theme-on-custom-red),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-on-custom-red)
       )
     );
   }
@@ -91,7 +90,7 @@ lux-chips-ac {
   // Disabled: Placeholder
   .lux-chips-autocomplete-input:disabled {
     &::placeholder {
-      color: luxVariables.$dark-disabled-text;
+      color: var(--lux-theme-dark-disabled-text);
     }
   }
 
@@ -103,11 +102,11 @@ lux-chips-ac {
 
   // Fokus
   mat-chip-row.cdk-focused:not(.cdk-mouse-focused):not(.cdk-program-focused) {
-    --mat-chip-elevated-container-color: #{var(--lux-theme-on-custom-blue)};
+    --mat-chip-elevated-container-color: var(--lux-theme-on-custom-blue);
     @include mat.chips-overrides(
       (
-        label-text-color: #{var(--lux-theme-custom-blue)},
-        with-trailing-icon-trailing-icon-color: #{var(--lux-theme-custom-blue)}
+        label-text-color: var(--lux-theme-custom-blue),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-custom-blue)
       )
     );
   }

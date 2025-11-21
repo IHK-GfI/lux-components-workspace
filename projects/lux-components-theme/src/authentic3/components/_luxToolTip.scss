@@ -1,5 +1,3 @@
-@use "../luxVariables";
-
 .mat-mdc-tooltip {
-  --mat-tooltip-container-shape: #{luxVariables.$app-border-radius};
+  --mat-tooltip-container-shape: var(--lux-theme-app-border-radius);
 }

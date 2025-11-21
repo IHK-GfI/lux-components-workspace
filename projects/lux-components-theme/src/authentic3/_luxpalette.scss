@@ -169,7 +169,12 @@ $lux-palette_accent: map.merge(map.get($luxPalettes, tertiary), $_rest);
 $lux-palette_warn: map.merge(map.get($luxPalettes, error), $_rest);
 $lux-palette_secondary: map.merge(map.get($luxPalettes, secondary), $_rest);
 $lux-palette_neutral: map.merge(map.get($luxPalettes, neutral), $_rest);
+$lux-palette_neutral_variant: map.merge(map.get($luxPalettes, neutral-variant), $_rest);
 
 $lux-primary-color: map.get(map.get($luxPalettes, "primary"), 20);
 $lux-accent-color: map.get(map.get($luxPalettes, "secondary"), 20);
 $lux-warn-color: map.get(map.get($luxPalettes, "error"), 20);
+
+$paletten: $lux-palette_primary, $lux-palette_accent, $lux-palette_warn, $lux-palette_secondary, $lux-palette_neutral, $lux-palette_neutral_variant;
+$paletteNamen: primary, secondary, tertiary, neutral, neutral-variant, error;
+$sizes: 0, 10, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;

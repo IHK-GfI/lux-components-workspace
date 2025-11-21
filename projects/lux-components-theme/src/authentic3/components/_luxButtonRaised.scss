@@ -1,6 +1,5 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxVariables";
 
 lux-button.lux-raised {
   @include mat.button-overrides(

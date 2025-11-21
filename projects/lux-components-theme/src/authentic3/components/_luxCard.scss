@@ -1,5 +1,4 @@
 @use "@angular/material" as mat;
-@use "../luxVariables";
 @use "../base/luxfocus";
 
 $var16px: 16px;
@@ -7,13 +6,13 @@ $var16px: 16px;
 lux-card {
   @include mat.card-overrides(
     (
-      outlined-container-color: luxVariables.$app-data-bg,
-      outlined-container-shape: luxVariables.$app-border-radius,
+      outlined-container-color: var(--lux-theme-app-data-bg),
+      outlined-container-shape: var(--lux-theme-app-border-radius),
       title-text-size: 1.5rem,
       title-text-weight: 500,
       subtitle-text-size: 1rem,
       subtitle-text-weight: 500,
-      subtitle-text-color: luxVariables.$dark-secondary-text
+      subtitle-text-color: var(--lux-theme-dark-secondary-text)
     )
   );
 
@@ -117,14 +116,14 @@ lux-card {
 
   .lux-card {
     &[class~="lux-cursor"]:hover {
-      background-image: luxVariables.$app-gradient-reverse;
+      background-image: var(--lux-theme-app-gradient-reverse);
       background-color: #ffffff;
-      border-color: luxVariables.$dark-primary-text;
+      border-color: var(--lux-theme-dark-primary-text);
 
       .lux-card-content-expanded {
-        background-image: luxVariables.$app-gradient-reverse;
+        background-image: var(--lux-theme-app-gradient-reverse);
         background-color: #ffffff;
-        border-color: luxVariables.$dark-primary-text;
+        border-color: var(--lux-theme-dark-primary-text);
       }
     }
 

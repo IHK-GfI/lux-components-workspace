@@ -1,12 +1,11 @@
 @use "sass:map";
-@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxfocus";
 @use "../base/luxelevations";
 @use "../base/luxbreakpoints";
 
 .cdk-overlay-pane.mat-mdc-dialog-panel .mat-mdc-dialog-container {
-  border-radius: luxVariables.$app-border-radius;
+  border-radius: var(--lux-theme-app-border-radius);
 }
 
 lux-dialog-preset {
@@ -33,13 +32,13 @@ lux-dialog-structure {
       display: flex;
       padding-left: 0;
       padding-right: 0;
-      color: luxVariables.$dark-primary-text;
-      font-family: luxVariables.$app-headline-font, luxVariables.$app-font-family;
+      color: var(--lux-theme-dark-primary-text);
+      font-family: var(--lux-theme-app-headline-font), var(--lux-theme-app-font-family);
     }
 
     .mat-mdc-dialog-container {
       @include luxelevations.lux-elevation-z24;
-      border: 1px solid luxVariables.$dark-disabled-text;
+      border: 1px solid var(--lux-theme-dark-disabled-text);
     }
 
     // der Mat-Dialog-Content hat negativen Margin und einen passenden Padding (wieso auch immer)
@@ -48,9 +47,9 @@ lux-dialog-structure {
       margin: 0;
       padding: 0;
       max-height: 100%;
-      font-family: luxVariables.$app-font-family;
+      font-family: var(--lux-theme-app-font-family);
       letter-spacing: normal;
-      color: luxVariables.$dark-primary-text;
+      color: var(--lux-theme-dark-primary-text);
     }
 
     // Leichten Abstand zum Content setzen
@@ -96,7 +95,7 @@ lux-dialog-structure {
       background-color: #fff !important;
 
       mat-icon.mat-icon-no-color {
-        color: luxVariables.$lux-hover-color;
+        color: var(--lux-theme-hover-color);
       }
 
       cursor: pointer;

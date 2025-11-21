@@ -72,7 +72,7 @@ lux-accordion {
 
     .mat-expansion-panel-header-title,
     .mat-expansion-panel-header-description {
-      font-family: luxVariables.$app-headline-font, luxVariables.$app-font-family;
+      font-family: var(--lux-theme-app-headline-font), var(--lux-theme-app-font-family);
     }
 
     .mat-expansion-panel-header-title {
@@ -80,7 +80,7 @@ lux-accordion {
     }
 
     &[aria-disabled="false"] .mat-expansion-panel-header-description {
-      color: luxVariables.$dark-primary-text;
+      color: var(--lux-theme-dark-primary-text);
     }
 
     &[aria-disabled="true"] {
@@ -138,7 +138,7 @@ lux-accordion {
 
   @include mat.expansion-overrides(
     (
-      header-disabled-state-text-color: luxVariables.$dark-disabled-text
+      header-disabled-state-text-color: var(--lux-theme-dark-disabled-text)
     )
   );
 
@@ -155,7 +155,7 @@ lux-accordion {
 .lux-badge-notification {
 
   &.mat-badge .mat-badge-content {
-    font-family: luxVariables.$app-headline-font, luxVariables.$app-font-family;
+    font-family: var(--lux-theme-app-headline-font), var(--lux-theme-app-font-family);
     border: 1px solid #fff;
   }
 
@@ -179,9 +179,9 @@ lux-stepper-large {
 
   .lux-stepper-large-nav-container,
   .lux-stepper-large-content-container {
-    border: 1px solid luxVariables.$app-border-color;
+    border: 1px solid var(--lux-theme-app-border-color);
     border-radius: 4px;
-    background-color: luxVariables.$app-content-bg;
+    background-color: var(--lux-theme-app-content-bg);
   }
 
   //Desktop-View
@@ -211,9 +211,9 @@ lux-stepper-large {
       }
 
       .lux-stepper-large-nav-item-number-container {
-        color: luxVariables.$lux-stepper-large-nav-item-active-fc;
-        background-color: luxVariables.$lux-stepper-large-nav-item-active-bg;
-        border: 1px solid luxVariables.$lux-stepper-large-nav-item-active-bg;
+        color: var(--lux-theme-stepper-large-nav-item-active-fc);
+        background-color: var(--lux-theme-stepper-large-nav-item-active-bg);
+        border: 1px solid var(--lux-theme-stepper-large-nav-item-active-bg);
       }
 
       .lux-stepper-large-nav-item-label {
@@ -229,7 +229,7 @@ lux-stepper-large {
 
       &.lux-completed:not(.lux-active) {
         .lux-stepper-large-nav-item-number-container {
-          border: 1px solid luxVariables.$app-border-color;
+          border: 1px solid var(--lux-theme-app-border-color);
         }
 
         a {
@@ -246,12 +246,12 @@ lux-stepper-large {
       &:not(.lux-completed):not(.lux-active) {
         .lux-stepper-large-nav-item-number-container {
           color: var(--lux-theme-primary-color);
-          background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
-          border: 1px solid luxVariables.$app-border-color;
+          background-color: var(--lux-theme-stepper-large-nav-item-completed-bg);
+          border: 1px solid var(--lux-theme-app-border-color);
         }
 
         .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link:hover {
-          color: luxVariables.$lux-hover-color;
+          color: var(--lux-theme-hover-color);
         }
       }
     }
@@ -263,19 +263,19 @@ lux-stepper-large {
       .lux-stepper-large-nav-item-number-container {
         color: var(--lux-theme-primary-color);
         background-color: #fff;
-        border: 1px solid luxVariables.$app-border-color;
+        border: 1px solid var(--lux-theme-app-border-color);
       }
     }
 
     &.lux-disabled {
       .lux-stepper-large-nav-item-number-container {
-        color: luxVariables.$dark-disabled-text;
+        color: var(--lux-theme-dark-disabled-text);
         background-color: #fff;
-        border: 1px solid luxVariables.$app-border-color;
+        border: 1px solid var(--lux-theme-app-border-color);
       }
 
       .lux-stepper-large-nav-item-label {
-        color: luxVariables.$dark-disabled-text;
+        color: var(--lux-theme-dark-disabled-text);
       }
     }
   }
@@ -284,7 +284,7 @@ lux-stepper-large {
 //Stepper-Large Mobile-View
 .lux-stepper-large-mobile-nav-header {
   div {
-    font-family: luxVariables.$app-headline-font, luxVariables.$app-font-family;
+    font-family: var(--lux-theme-app-headline-font), var(--lux-theme-app-font-family);
   }
 }
 
@@ -306,8 +306,8 @@ lux-stepper-large {
     }
 
     .lux-stepper-large-mobile-nav-item-number-container {
-      color: luxVariables.$lux-stepper-large-nav-item-active-fc;
-      background-color: luxVariables.$lux-stepper-large-nav-item-active-bg;
+      color: var(--lux-theme-stepper-large-nav-item-active-fc);
+      background-color: var(--lux-theme-stepper-large-nav-item-active-bg);
     }
 
     .lux-stepper-large-nav-item-label {
@@ -323,7 +323,7 @@ lux-stepper-large {
 
     &.lux-completed:not(.lux-active) {
       .lux-stepper-large-mobile-nav-item-number-container {
-        border: 1px solid luxVariables.$app-border-color;
+        border: 1px solid var(--lux-theme-app-border-color);
       }
 
       a {
@@ -334,8 +334,8 @@ lux-stepper-large {
     &:not(.lux-completed):not(.lux-active) {
       .lux-stepper-large-mobile-nav-item-number-container {
         color: var(--lux-theme-primary-color);
-        background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
-        border: 1px solid luxVariables.$app-border-color;
+        background-color: var(--lux-theme-stepper-large-nav-item-completed-bg);
+        border: 1px solid var(--lux-theme-app-border-color);
       }
     }
   }
@@ -347,25 +347,25 @@ lux-stepper-large {
     .lux-stepper-large-mobile-nav-item-number-container {
       color: var(--lux-theme-primary-color);
       background-color: #fff;
-      border: 1px solid luxVariables.$app-border-color;
+      border: 1px solid var(--lux-theme-app-border-color);
     }
   }
 
   &.lux-disabled {
     .lux-stepper-large-nav-item-number-container {
-      color: luxVariables.$dark-disabled-text;
+      color: var(--lux-theme-dark-disabled-text);
       background-color: #fff;
-      border: 1px solid luxVariables.$app-border-color;
+      border: 1px solid var(--lux-theme-app-border-color);
     }
 
     .lux-stepper-large-mobile-nav-item-label {
-      color: luxVariables.$dark-disabled-text;
+      color: var(--lux-theme-dark-disabled-text);
     }
   }
 
   .lux-stepper-large-mobile-nav-item-label-container {
     .lux-stepper-large-mobile-nav-item-complete {
-      color: luxVariables.$lux-stepper-large-completed-fc;
+      color: var(--lux-theme-stepper-large-completed-fc);
       font-size: 1.125rem;
     }
   }
@@ -381,14 +381,14 @@ lux-file-upload {
     }
 
     &:hover {
-      color: luxVariables.$lux-hover-color;
+      color: var(--lux-theme-hover-color);
     }
   }
 
   .lux-file-upload-container {
     .lux-file-upload-drop-container {
       &:not(.lux-file-upload-drag-active):not(.lux-file-upload-drop-container-disabled) {
-        background-image: luxVariables.$app-gradient;
+        background-image: var(--lux-theme-app-gradient);
       }
 
       .lux-file-upload-drop-label-container {

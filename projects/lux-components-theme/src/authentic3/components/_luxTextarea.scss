@@ -1,6 +1,5 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxVariables";
 
 lux-textarea-ac {
   textarea {
@@ -15,6 +14,6 @@ lux-textarea-ac {
     max-width: 100%;
     vertical-align: bottom;
     text-align: inherit;
-    font-size: luxVariables.$form-control-font-size;
+    font-size: var(--lux-theme-form-control-font-size);
   }
 }

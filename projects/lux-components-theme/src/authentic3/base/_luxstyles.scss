@@ -53,19 +53,19 @@ h6 {
 }
 
 .lux-app-header-bg {
-  background-color: luxVariables.$app-header-bg;
+  background-color: var(--lux-theme-app-header-bg);
 }
 
 .lux-app-content-bg {
-  background-color: luxVariables.$app-content-bg;
+  background-color: var(--lux-theme-app-content-bg);
 }
 
 .lux-app-footer-bg {
-  background-color: luxVariables.$app-footer-bg;
+  background-color: var(--lux-theme-app-footer-bg);
 }
 
 .lux-app-data-bg {
-  background-color: luxVariables.$app-data-bg;
+  background-color: var(--lux-theme-app-data-bg);
 }
 
 .lux-selected-bg {
@@ -73,52 +73,52 @@ h6 {
 }
 
 .lux-hover-bg {
-  background-color: luxVariables.$lux-hover-color;
+  background-color: var(--lux-theme-hover-color);
 }
 
 .lux-hover-dark-bg {
-  background-color: luxVariables.$lux-hover-color-for-dark-background;
+  background-color: var(--lux-theme-hover-color)-for-dark-background;
 }
 
 .lux-gradient-bg {
   background-color: #fff; //Fallback
-  background-image: luxVariables.$app-gradient;
+  background-image: var(--lux-theme-app-gradient);
 }
 
 .lux-color-dark-divider {
-  color: luxVariables.$dark-dividers;
+  color: var(--lux-theme-dark-dividers);
 }
 
 .lux-color-light-divider {
-  color: luxVariables.$light-dividers;
+  color: var(--lux-theme-light-dividers);
 }
 
 .lux-outline-color-light {
-  color: luxVariables.$outline-color-bright;
+  color: var(--lux-theme-outline-color-bright);
 }
 
 .lux-outline-color-dark {
-  color: luxVariables.$outline-color-dark;
+  color: var(--lux-theme-outline-color-dark);
 }
 
 .lux-outline-width {
-  outline-width: luxVariables.$outline-width;
+  outline-width: var(--lux-theme-outline-width);
 }
 
 .lux-outline-style {
-  outline-style: luxVariables.$outline-style;
+  outline-style: var(--lux-theme-outline-style);
 }
 
 .lux-outline-light {
-  color: luxVariables.$outline-color-bright;
-  outline-width: luxVariables.$outline-width;
-  outline-style: luxVariables.$outline-style;
+  color: var(--lux-theme-outline-color-bright);
+  outline-width: var(--lux-theme-outline-width);
+  outline-style: var(--lux-theme-outline-style);
 }
 
 .lux-outline-dark {
-  color: luxVariables.$outline-color-dark;
-  outline-width: luxVariables.$outline-width;
-  outline-style: luxVariables.$outline-style;
+  color: var(--lux-theme-outline-color-dark);
+  outline-width: var(--lux-theme-outline-width);
+  outline-style: var(--lux-theme-outline-style);
 }
 
 .lux-highlight-section {
@@ -127,7 +127,7 @@ h6 {
   border-radius: 4px;
   margin: 16px 0;
   padding: 16px 16px;
-  border: 1px solid luxVariables.$dark-dividers;
+  border: 1px solid var(--lux-theme-dark-dividers);
   display: flex;
   word-break: break-word;
 
@@ -180,7 +180,7 @@ body {
 }
 
 .mat-mdc-dialog-container {
-  background-color: luxVariables.$app-content-bg !important;
+  background-color: var(--lux-theme-app-content-bg) !important;
 }
 
 // für Demo
@@ -222,12 +222,12 @@ lux-card.lux-card-grow {
 }
 
 .lux-label {
-  color: luxVariables.$dark-secondary-text;
+  color: var(--lux-theme-dark-secondary-text);
   font-size: 0.75rem;
 }
 
 .lux-hint {
-  color: luxVariables.$dark-secondary-text;
+  color: var(--lux-theme-dark-secondary-text);
   font-size: 0.75rem;
 }
 
@@ -266,7 +266,7 @@ lux-card.lux-card-grow {
 }
 
 .lux-black-semi-transparent {
-  color: luxVariables.$dark-primary-text;
+  color: var(--lux-theme-dark-primary-text);
 }
 
 .lux-semi-transparent {
@@ -313,7 +313,7 @@ lux-card.lux-card-grow {
 
   &:hover {
     border-radius: 50%;
-    color: luxVariables.$lux-hover-color;
+    color: var(--lux-theme-hover-color);
     cursor: pointer;
   }
 }
@@ -376,35 +376,35 @@ lux-button.lux-uppercase {
 }
 
 .lux-color-dark-primary-text {
-  color: luxVariables.$dark-primary-text;
+  color: var(--lux-theme-dark-primary-text);
 }
 
 .lux-color-dark-secondary-text {
-  color: luxVariables.$dark-secondary-text;
+  color: var(--lux-theme-dark-secondary-text);
 }
 
 .lux-color-dark-disabled-text {
-  color: luxVariables.$dark-disabled-text;
+  color: var(--lux-theme-dark-disabled-text);
 }
 
 .lux-color-dark-focused {
-  color: luxVariables.$dark-focused;
+  color: var(--lux-theme-dark-focused);
 }
 
 .lux-color-light-primary-text {
-  color: luxVariables.$light-primary-text;
+  color: var(--lux-theme-light-primary-text);
 }
 
 .lux-color-light-secondary-text {
-  color: luxVariables.$light-secondary-text;
+  color: var(--lux-theme-light-secondary-text);
 }
 
 .lux-color-light-disabled-text {
-  color: luxVariables.$light-disabled-text;
+  color: var(--lux-theme-light-disabled-text);
 }
 
 .lux-color-light-focused {
-  color: luxVariables.$light-focused;
+  color: var(--lux-theme-light-focused);
 }
 
 @mixin lux-theme-palette-classes($paletteName, $paletteMap, $sizes) {
@@ -436,10 +436,10 @@ lux-button.lux-uppercase {
 }
 
 // CSS-Klassen für die Farbpaletten
-@include lux-theme-palette-classes("primary", luxpalette.$lux-palette_primary, luxVariables.$sizes);
-@include lux-theme-palette-classes("accent", luxpalette.$lux-palette_accent, luxVariables.$sizes);
-@include lux-theme-palette-classes("neutral", luxpalette.$lux-palette_neutral, luxVariables.$sizes);
-@include lux-theme-palette-classes("warn", luxpalette.$lux-palette_warn, luxVariables.$sizes);
+@include lux-theme-palette-classes("primary", luxpalette.$lux-palette_primary, luxpalette.$sizes);
+@include lux-theme-palette-classes("accent", luxpalette.$lux-palette_accent, luxpalette.$sizes);
+@include lux-theme-palette-classes("neutral", luxpalette.$lux-palette_neutral, luxpalette.$sizes);
+@include lux-theme-palette-classes("warn", luxpalette.$lux-palette_warn, luxpalette.$sizes);
 
 $notificationSizes: (18, 24, 30);
 

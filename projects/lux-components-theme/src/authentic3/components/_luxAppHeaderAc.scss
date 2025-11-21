@@ -2,7 +2,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../base/luxfocus";
-@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxelevations";
 @use "../base/luxSvgIcons" as luxicons;
@@ -83,7 +82,7 @@ lux-app-header-ac {
     padding: 8px 24px;
     min-height: 60px;
     font-size: 1rem;
-    color: luxVariables.$dark-primary-text;
+    color: var(--lux-theme-dark-primary-text);
     background-color: #fff;
     box-sizing: border-box;
     display: grid;
@@ -122,10 +121,10 @@ lux-app-header-ac {
     }
 
     .lux-app-title {
-      color: luxVariables.$dark-primary-text;
+      color: var(--lux-theme-dark-primary-text);
       font-size: 1.5rem;
       font-weight: 400;
-      font-family: luxVariables.$app-headline-font, luxVariables.$app-font-family;
+      font-family: var(--lux-theme-app-headline-font), var(--lux-theme-app-font-family);
 
       &.lux-mobile {
         font-size: 1.25rem;

@@ -1,6 +1,5 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxVariables";
 
 $tileBoxShadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 
@@ -10,7 +9,7 @@ lux-tile-ac {
       title-text-size: 20px,
       title-text-weight: 500,
       subtitle-text-size: 15px,
-      elevated-container-shape: luxVariables.$app-border-radius,
+      elevated-container-shape: var(--lux-theme-app-border-radius),
       elevated-container-elevation: #{"0 0 0 1px rgba(0, 0, 0, .12), #{$tileBoxShadow}"}
     )
   );
@@ -19,7 +18,7 @@ lux-tile-ac {
     display: flex;
     height: 100%;
     min-width: 150px;
-    background-image: luxVariables.$app-gradient;
+    background-image: var(--lux-theme-app-gradient);
   }
 
   .mat-mdc-card-header-text {
@@ -50,7 +49,7 @@ lux-tile-ac {
     outline: none;
     @include mat.card-overrides(
       (
-        elevated-container-elevation: #{"0 0 0 #{luxVariables.$outline-width} #{luxVariables.$outline-color-dark}, #{$tileBoxShadow}"}
+        elevated-container-elevation: #{"0 0 0 var(--lux-theme-outline-width) var(--lux-theme-outline-color-dark), #{$tileBoxShadow}"}
       )
     );
   }

@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "../base/luxelevations";
 @use "../base/luxfocus";
-@use "../luxVariables";
 @use "../luxpalette";
 @use "../base/luxSvgIcons" as luxicons;
 
@@ -55,8 +54,8 @@ lux-stepper-large {
 
   &.lux-active:not(.lux-disabled) {
     .lux-stepper-large-nav-item-number-container {
-      color: luxVariables.$lux-stepper-large-nav-item-active-fc;
-      background-color: luxVariables.$lux-stepper-large-nav-item-active-bg;
+      color: var(--lux-theme-stepper-large-nav-item-active-fc);
+      background-color: var(--lux-theme-stepper-large-nav-item-active-bg);
     }
 
     .lux-stepper-large-nav-item-label {
@@ -71,8 +70,8 @@ lux-stepper-large {
 
     &.lux-completed:not(.lux-active) {
       .lux-stepper-large-nav-item-number-container {
-        color: luxVariables.$lux-stepper-large-nav-item-completed-fg;
-        background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
+        color: var(--lux-theme-stepper-large-nav-item-completed-fg);
+        background-color: var(--lux-theme-stepper-large-nav-item-completed-bg);
       }
 
       a {
@@ -101,8 +100,8 @@ lux-stepper-large {
 
     &:not(.lux-completed):not(.lux-active) {
       .lux-stepper-large-nav-item-number-container {
-        color: luxVariables.$lux-stepper-large-nav-item-completed-fg;
-        background-color: luxVariables.$lux-stepper-large-nav-item-completed-bg;
+        color: var(--lux-theme-stepper-large-nav-item-completed-fg);
+        background-color: var(--lux-theme-stepper-large-nav-item-completed-bg);
       }
 
       a::after {
@@ -112,7 +111,7 @@ lux-stepper-large {
         width: 16px;
         height: 16px;
         margin: 3px 10px 0px;
-        background-color: luxVariables.$lux-stepper-large-nav-item-active-bg;
+        background-color: var(--lux-theme-stepper-large-nav-item-active-bg);
         -webkit-mask: url(luxicons.$warn-triangle);
         -webkit-mask-repeat: no-repeat;
         -webkit-mask-position: center;
@@ -129,8 +128,8 @@ lux-stepper-large {
     color: #003366;
 
     .lux-stepper-large-nav-item-number-container {
-      color: luxVariables.$lux-stepper-large-nav-item-disabled-fg;
-      background-color: luxVariables.$lux-stepper-large-nav-item-disabled-bg;
+      color: var(--lux-theme-stepper-large-nav-item-disabled-fg);
+      background-color: var(--lux-theme-stepper-large-nav-item-disabled-bg);
     }
   }
 
@@ -138,12 +137,12 @@ lux-stepper-large {
     opacity: 0.6;
 
     .lux-stepper-large-nav-item-number-container {
-      color: luxVariables.$lux-stepper-large-nav-item-disabled-fg;
-      background-color: luxVariables.$lux-stepper-large-nav-item-disabled-bg;
+      color: var(--lux-theme-stepper-large-nav-item-disabled-fg);
+      background-color: var(--lux-theme-stepper-large-nav-item-disabled-bg);
     }
 
     .lux-stepper-large-nav-item-label {
-      color: luxVariables.$lux-stepper-large-nav-item-disabled-fg;
+      color: var(--lux-theme-stepper-large-nav-item-disabled-fg);
     }
   }
 
@@ -173,7 +172,7 @@ lux-stepper-large {
     }
 
     .lux-stepper-large-nav-item-complete {
-      color: luxVariables.$lux-stepper-large-completed-fc;
+      color: var(--lux-theme-stepper-large-completed-fc);
       font-size: 1.4375rem;
       height: 1.4375em;
       width: 1.4375em;
@@ -257,7 +256,7 @@ lux-stepper-large {
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
   &.lux-stepper-large-mobile-overlay-backdrop {
     opacity: 0.6;
-    background-color: luxVariables.$lux-stepper-large-backdrop-bg;
+    background-color: var(--lux-theme-stepper-large-backdrop-bg);
   }
 }
 
@@ -269,7 +268,7 @@ lux-stepper-large {
   max-height: calc(100% - 0px);
 
   padding: 0;
-  background: luxVariables.$app-data-bg;
+  background: var(--lux-theme-app-data-bg);
 }
 
 .lux-stepper-large-mobile-nav-close-button-container {
@@ -347,7 +346,7 @@ lux-stepper-large {
     }
 
     .lux-stepper-large-mobile-nav-item-complete {
-      color: luxVariables.$lux-stepper-large-completed-fc;
+      color: var(--lux-theme-stepper-large-completed-fc);
       font-size: 1.125rem;
     }
   }

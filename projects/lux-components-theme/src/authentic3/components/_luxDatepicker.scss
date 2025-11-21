@@ -1,13 +1,12 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxVariables";
 
 // Panel
 mat-datepicker-content {
   @include mat.datepicker-overrides(
     (
-      calendar-container-background-color: luxVariables.$app-content-bg,
-      calendar-container-shape: luxVariables.$app-border-radius,
+      calendar-container-background-color: var(--lux-theme-app-content-bg),
+      calendar-container-shape: var(--lux-theme-app-border-radius),
       calendar-container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )
   );

@@ -80,7 +80,6 @@ $checkmark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width=
     display: flex;
     flex: 0 0 calc(100% - 302px);
 
-    // Nur ab einer Media-Query großer "sm" die Breite anpassen
     @media (min-width: 600px) {
       max-width: calc(100% - 302px);
     }

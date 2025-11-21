@@ -1,6 +1,5 @@
 @use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxVariables";
 
 lux-lookup-combobox-ac {
   &.lux-form-control-readonly {
@@ -11,7 +10,7 @@ lux-lookup-combobox-ac {
   // nur greifen würde, wenn das mat-select-Element in einem mat-form-field verwendet wird.
   [aria-disabled="true"] {
     .mat-mdc-select-arrow {
-      color: luxVariables.$dark-disabled-text;
+      color: var(--lux-theme-dark-disabled-text);
     }
   }
 }

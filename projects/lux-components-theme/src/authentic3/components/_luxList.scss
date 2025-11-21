@@ -86,7 +86,7 @@ lux-list {
 
           &:hover {
             border: 1px solid var(--lux-theme-primary-color);
-            background: luxVariables.$app-gradient-reverse;
+            background: var(--lux-theme-app-gradient-reverse);
             background-color: #fff !important;
           }
         }
