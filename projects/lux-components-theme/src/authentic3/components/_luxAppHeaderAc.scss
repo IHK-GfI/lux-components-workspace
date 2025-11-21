@@ -1,5 +1,6 @@
 @use "sass:color";
 @use "sass:map";
+@use "@angular/material" as mat;
 @use "../base/luxfocus";
 @use "../luxVariables";
 @use "../luxpalette";
@@ -21,9 +22,15 @@ lux-app-header-ac {
     }
   }
 
-  lux-button button.lux-button.mat-mdc-button:not([disabled]) {
-    &:hover {
-      background-color: #D5E3FF !important;
+  lux-button.lux-rounded:not(.lux-stroked):not([disabled]) {
+    .mat-primary {
+      @include mat.fab-overrides(
+        (
+          foreground-color: var(--mat-sys-primary),
+          container-color: var(--mat-sys-on-primary),
+          hover-state-layer-opacity: 0.1
+        )
+      );
     }
   }
 
@@ -32,7 +39,6 @@ lux-app-header-ac {
     width: 2.25rem;
     padding-left: 0px !important;
     padding-right: 0px !important;
-    background-color: transparent !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,33 +46,23 @@ lux-app-header-ac {
     @include luxelevations.lux-elevation-z0;
 
     lux-icon {
-      color: var(--lux-theme-primary-color) !important;
+      color: var(--lux-theme-primary-color);
       box-sizing: border-box;
     }
 
     &:focus-visible:not(:hover) {
-      background-color: transparent !important;
+      background-color: transparent;
 
       @include luxfocus.focus-dark-mixin;
-    }
-
-    &:active {
-      color: #ffffff !important;
-
-      lux-icon {
-        color: #ffffff !important;
-      }
     }
   }
 
   lux-button button[disabled].lux-button.mat-mdc-fab.mat-primary:not(.lux-stroked) {
-    background-color: transparent !important;
+    background-color: transparent;
   }
-
 
   lux-button {
     button.lux-button.lux-button-rounded {
-      
     }
   }
 
@@ -183,7 +179,7 @@ lux-app-header-ac {
     }
 
     &:not([disabled="true"]):hover {
-      background-color: var(--lux-theme-primary-40) !important;
+      background-color: var(--lux-theme-primary-40);
       color: #ffffff;
       .mat-icon-no-color {
         color: #ffffff;

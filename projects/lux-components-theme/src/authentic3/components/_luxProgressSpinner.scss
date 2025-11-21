@@ -1,13 +1,94 @@
-@use "../luxVariables";
+@use "@angular/material" as mat;
 
-@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
-  .mat-mdc-progress-spinner.lux-color-#{"" + $colorName + ""} .mdc-circular-progress__determinate-circle {
-    stroke: $colorNameHex;
-  }
+@mixin lux-progress-spinner-size($size) {
+  // Bug: https://github.com/angular/components/issues/32097
+  // width und height können entfernt werden, wenn der Bug behoben ist
+  width: $size !important;
+  height: $size !important;
+
+  @include mat.progress-spinner-overrides(
+    (
+      size: $size,
+      active-indicator-width: $size
+    )
+  );
 }
 
-@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
-  .mat-mdc-progress-spinner.lux-color-#{"" + $colorName + ""} .mdc-circular-progress__indeterminate-circle-graphic {
-    stroke: $colorNameHex;
+lux-progress {
+  // Farben
+  .lux-color-red {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-red)
+      )
+    );
+  }
+  .lux-color-green {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-green)
+      )
+    );
+  }
+  .lux-color-purple {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-purple)
+      )
+    );
+  }
+  .lux-color-blue {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-blue)
+      )
+    );
+  }
+  .lux-color-gray {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-grey)
+      )
+    );
+  }
+  .lux-color-orange {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-orange)
+      )
+    );
+  }
+  .lux-color-yellow {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-yellow)
+      )
+    );
+  }
+
+  .lux-color-pink {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-pink)
+      )
+    );
+  }
+  .lux-color-lightblue {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-lightblue)
+      )
+    );
+  }
+
+  // Größen
+  .lux-progress-small mat-progress-spinner {
+    @include lux-progress-spinner-size(24px);
+  }
+  .lux-progress-medium mat-progress-spinner {
+    @include lux-progress-spinner-size(48px);
+  }
+  .lux-progress-large mat-progress-spinner {
+    @include lux-progress-spinner-size(96px);
   }
 }

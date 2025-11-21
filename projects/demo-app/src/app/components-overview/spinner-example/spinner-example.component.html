@@ -4,7 +4,6 @@
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
     <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
-      <h3 class="lux-highlight-section-label">Default</h3>
       <div class="lux-flex lux-flex-wrap lux-gap-3">
         @for (color of colors; track color; let i = $index) {
         <lux-progress
@@ -20,7 +19,6 @@
       </div>
     </div>
     <div class="lux-hover-bg lux-highlight-section lux-flex lux-flex-col lux-gap-4">
-      <h3 class="lux-highlight-section-label lux-color-light-primary-text">Hover</h3>
       <div class="lux-flex lux-flex-wrap lux-gap-3">
         @for (color of colors; track color; let i = $index) {
         <lux-progress
@@ -37,7 +35,6 @@
       </div>
     </div>
     <div class="lux-selected-bg lux-highlight-section lux-flex lux-flex-col lux-gap-4">
-      <h3 class="lux-highlight-section-label">Focus</h3>
       <div class="lux-flex lux-flex-wrap lux-gap-3">
         @for (color of colors; track color; let i = $index) {
         <lux-progress
