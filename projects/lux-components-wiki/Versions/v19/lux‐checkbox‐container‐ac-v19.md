@@ -14,7 +14,10 @@
 
 ### Allgemein
 
-Diese Komponente bietet einen einfachen Layout-Container um mehrer Checkboxen analog zu einer Radio-Group anzuordnen. Er ist für die Verwendung der lux-checkbox-ac konzipiert. Diese wird automatisch in der komprimierten Darstelllung angezeigt und enthält daher keinen Hinweis/Fehler-Container mehr! Die Container können in einem Raster mit weiteren Ac-Form-Controls im luxDense-Format ausgerichtet werden.
+Diese Komponente bietet einen einfachen Layout-Container um mehrer Checkboxen analog zu einer Radio-Group anzuordnen.
+Er ist für die Verwendung der lux-checkbox-ac konzipiert.
+Diese wird automatisch in der komprimierten Darstelllung angezeigt _**und enthält daher keinen Hinweis/Fehler-Container mehr!**_
+Die Container können in einem Raster mit weiteren Ac-Form-Controls im luxDense-Format ausgerichtet werden.
 
 | Name     | Beschreibung              |
 | -------- | ------------------------- |
