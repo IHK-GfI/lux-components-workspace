@@ -73,12 +73,12 @@ $colorsForDarkBg: (
   --lux-theme-light-focused: rgba(255, 255, 255, 0.12);
 
   // App
-  --lux-theme-app-header-bg: map-get(luxpalette.$lux-palette_primary, 90);
+  --lux-theme-app-header-bg: #{map.get(luxpalette.$lux-palette_primary, 90)};
   --lux-theme-app-content-bg: #ffffff;
-  --lux-theme-app-footer-bg: map-get(luxpalette.$lux-palette_primary, 90);
+  --lux-theme-app-footer-bg: #{map.get(luxpalette.$lux-palette_primary, 90)};
   --lux-theme-app-data-bg: #ffffff;
-  --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, map-get(luxpalette.$lux-palette_primary, 98) 100%);
-  --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, map-get(luxpalette.$lux-palette_primary, 98) 100%);
+  --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, #{map.get(luxpalette.$lux-palette_primary, 98)} 100%);
+  --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, #{map.get(luxpalette.$lux-palette_primary, 98)} 100%);
   --lux-theme-app-border-color: rgba(0, 0, 0, 0.12);
   --lux-theme-app-border-radius: 4px;
 
@@ -102,7 +102,7 @@ $colorsForDarkBg: (
   --lux-theme-hover-color-for-dark-background: #335c85;
 
   // Selektion
-  --lux-theme-selected-border-color: luxpalette.$lux-primary-color;
+  --lux-theme-selected-border-color: #{luxpalette.$lux-primary-color};
   --lux-theme-selected-bg-color: var(--mat-option-selected-state-layer-color);
   --lux-theme-on-selected-color: #f0f3f6;
 
@@ -153,6 +153,16 @@ $colorsForDarkBg: (
   --lux-theme-custom-black: #{luxpalette.$custom-black};
   --lux-theme-custom-white: #{luxpalette.$custom-white};
 
+  // Accordion
+  --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
+  --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-color-primary: var(--lux-theme-primary-80);
+  --lux-theme-accordion-header-color-on-primary: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-color-accent: var(--lux-theme-accent-95);
+  --lux-theme-accordion-header-color-on-accent: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-color-warn: var(--lux-theme-warn-90);
+  --lux-theme-accordion-header-color-on-warn: var(--lux-theme-dark-primary-text);
+  
   // LUX-Link-Plain
   --lux-theme-link-plain-color: #007cb1;
   --lux-theme-link-plain-hover-color: #4d7094;

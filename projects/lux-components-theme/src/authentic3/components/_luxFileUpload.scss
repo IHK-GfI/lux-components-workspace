@@ -25,6 +25,13 @@ lux-file-upload {
     .lux-file-upload-view-container {
       margin-left: var(--lux-theme-outline-width);
       margin-right: var(--lux-theme-outline-width);
+
+      &:not(.lux-empty) {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--lux-theme-app-border-color);
+      }
     }
 
     .lux-file-upload-drop-container {
@@ -38,6 +45,10 @@ lux-file-upload {
       border-radius: 4px;
       color: var(--lux-theme-primary-20);
 
+      &:not(.lux-file-upload-drag-active):not(.lux-file-upload-drop-container-disabled) {
+        background-image: var(--lux-theme-app-gradient);
+      }
+
       .lux-file-upload-drop-label-container {
         display: flex;
         flex-direction: row;
@@ -46,7 +57,7 @@ lux-file-upload {
         flex: 1 1 auto;
         gap: 12px;
 
-        padding: 24px 48px;
+        padding: 16px 48px 12px 48px;
       }
 
       .lux-file-upload-drop-container-no-progress {
@@ -98,6 +109,8 @@ lux-file-upload {
       color: var(--lux-theme-warn-20) !important;
       background-color: var(--lux-theme-form-error-msg-background);
       padding: 18px 15px 15px 26px;
+      margin-top: 16px;
+      margin-bottom: 0;
       margin-left: var(--lux-theme-outline-width);
       margin-right: var(--lux-theme-outline-width);
 
@@ -116,8 +129,16 @@ lux-file-upload {
         align-items: center;
 
         button {
+          border-radius: 8px;
+          min-width: 24px;
+          min-height: 24px;
           padding: 0;
           margin: 0;
+
+          .lux-button-icon .lux-icon {
+            width: 1.125rem !important;
+            height: 1.125rem !important;
+          }
         }
       }
     }
@@ -156,6 +177,18 @@ lux-file-upload {
       flex: 1 1 auto;
       gap: 12px;
       color: var(--lux-theme-primary-20);
+      background-color: var(--lux-theme-app-data-bg);
+      padding: 11px 15px 11px 26px;
+      border-radius: 4px;
+      border-bottom: 1px solid var(--lux-theme-app-border-color);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      margin: 0;
+
+      &:last-child {
+        border: none;
+        border-radius: 4px;
+      }
 
       &.lux-file-upload-view-item-disabled {
         color: var(--lux-theme-dark-disabled-text);
@@ -170,9 +203,23 @@ lux-file-upload {
         flex: 1 1 auto;
         gap: 12px;
 
+        .lux-file-upload-view-item-icon {
+          display: flex;
+          flex: 0 0 20px;
+        }
+
+        .lux-file-upload-label-file-size {
+          margin-right: 20px;
+        }
+
         .lux-file-upload-label-text {
           hyphens: auto;
           word-break: break-all;
+
+          lux-link-plain .link-wrapper .lux-link-plain-text {
+            color: var(--lux-theme-primary-color);
+            text-decoration: underline;
+          }
         }
 
         .lux-file-upload-view-item-label-container {
@@ -184,15 +231,24 @@ lux-file-upload {
           display: flex;
           align-items: center;
 
+          mat-icon {
+            width: 1.125rem !important;
+            height: 1.125rem !important;
+          }
+
           button {
             padding: 0;
             margin: 0;
+            color: var(--lux-theme-primary-color);
+            border-radius: 8px;
+            min-width: 24px;
+            min-height: 24px;
           }
-        }
 
-        lux-button.lux-file-upload-view-item-button button:disabled {
-          color: var(--lux-theme-dark-disabled-text);
-          background-color: transparent;
+          button:disabled {
+            color: var(--lux-theme-dark-disabled-text);
+            background-color: transparent;
+          }
         }
       }
     }

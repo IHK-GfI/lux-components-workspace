@@ -1,8 +1,3 @@
-@use "sass:color";
-@use "sass:map";
-@use "../luxpalette";
-@use "luxSvgIcons" as luxicons;
-
 @mixin focus-dark-mixin {
   outline: var(--lux-theme-outline-dark);
 }
