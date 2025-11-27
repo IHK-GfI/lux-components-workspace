@@ -6,27 +6,6 @@
 @use "luxpalette";
 @use "base/luxSvgIcons" as luxicons;
 
-/**
-* Theming für lux-Badge-notification
-*/
-.lux-badge-notification {
-  &.mat-badge .mat-badge-content {
-    font-family: var(--lux-theme-app-headline-font), var(--lux-theme-app-font-family);
-    border: 1px solid #fff;
-  }
-
-  &.mat-badge.lux-badge-no-border .mat-badge-content {
-    border: 1px solid transparent;
-  }
-
-  &.lux-badge-color-default {
-    &.mat-badge:not(.mat-badge-disabled) .mat-badge-content {
-      color: white;
-      background: map.get(luxVariables.$componentBgColors, "gray");
-    }
-  }
-}
-
 /*
 * Theming für Stepper-Large
 */

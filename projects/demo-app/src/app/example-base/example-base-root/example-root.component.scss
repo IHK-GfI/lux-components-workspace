@@ -40,30 +40,14 @@ $checkmark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width=
     min-width: 253px;
     padding: 16px 8px;
 
-    lux-panel {
-      padding: 0 0 16px 0;
+    ::ng-deep {
+      lux-panel {
+        padding-bottom: 12px;
+      }
 
-      ::ng-deep {
-        mat-expansion-panel {
-          box-shadow: unset;
-        }
-
-        mat-expansion-panel-header {
-          font-size: 1rem;
-        }
-
-        mat-expansion-panel-header,
-        .mat-expansion-panel-body {
-          padding: 0 0.75em;
-        }
-
-        .mat-expansion-panel-body {
-          padding: 0;
-        }
-
-        lux-panel-content {
-          display: block;
-        }
+      .mat-expansion-panel-header,
+      .mat-expansion-panel-body {
+        padding: 0 0.75em;
       }
     }
 
