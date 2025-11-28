@@ -1,4 +1,5 @@
 @use "sass:map";
+@use "@angular/material" as mat;
 @use "../luxpalette";
 @use "../base/luxfocus";
 
@@ -6,6 +7,13 @@
  * Theming for LUX-Stepper bisheriges styling
  */
 lux-stepper {
+  @include mat.stepper-overrides(
+    (
+      header-hover-state-layer-shape: var(--lux-theme-app-border-radius),
+      header-focus-state-layer-shape: var(--lux-theme-app-border-radius)
+    )
+  );
+
   position: relative;
   display: block;
 
@@ -52,10 +60,6 @@ lux-stepper {
   // falls eine lux-card als erste component im step-content ist, die margins von ihr entfernen
   lux-step-content > lux-card > mat-card {
     margin: 0 !important;
-  }
-  .mat-stepper-horizontal,
-  .mat-stepper-vertical {
-    background-color: transparent;
   }
 
   .mat-horizontal-content-container {
@@ -243,110 +247,9 @@ lux-stepper {
   // HOVER / FOCUS / SELECTED
 
   mat-step-header {
-    --mat-stepper-header-hover-state-layer-shape: var(--lux-theme-app-border-radius);
-    &:hover {
-      background-color: transparent !important;
-      border-radius: 0;
-      &[aria-selected="false"],
-      &[aria-selected="true"] {
-        div.mat-step-icon.mat-step-icon-state-number,
-        div.mat-step-icon.mat-step-icon-state-edit {
-          background-color: var(--lux-theme-hover-color);
-          color: #fff;
-          border-color: var(--lux-theme-hover-color);
-        }
-        div.mat-step-label lux-step-header {
-          color: var(--lux-theme-hover-color);
-        }
-      }
-    }
-  }
-
-  mat-step-header[tabindex="0"]:focus-visible {
-    background-color: transparent !important;
-    @include luxfocus.focus-dark-mixin;
-    border-radius: 4px;
-  }
-
-  lux-stepper-vertical mat-step-header {
-    &[aria-selected="true"] {
-      @include luxfocus.lux-selected-mixin-reverse-ac;
-    }
-
-    &[aria-selected="false"] {
-      div.mat-step-icon.mat-step-icon-state-number,
-      div.mat-step-icon.mat-step-icon-state-edit {
-        background-color: #fff;
-        color: var(--lux-theme-primary-color);
-        border: 1px solid var(--lux-theme-app-border-color);
-      }
-      div.mat-step-label lux-step-header {
-        color: var(--lux-theme-primary-color);
-      }
-    }
-  }
-
-  lux-stepper-horizontal mat-step-sheader {
-    &[aria-selected="true"] {
-      div.mat-step-label.mat-step-label-active.mat-step-label-selected lux-step-header {
-        font-weight: 500;
-      }
-      &:after {
-        border-bottom: none;
-      }
-    }
-
-    &[aria-selected="false"] {
-      div.mat-step-icon.mat-step-icon-state-number,
-      div.mat-step-icon.mat-step-icon-state-edit {
-        background-color: #fff;
-        color: var(--lux-theme-primary-color);
-        border: 1px solid var(--lux-theme-app-border-color);
-      }
-      div.mat-step-label lux-step-header {
-        color: var(--lux-theme-primary-color);
-      }
-    }
-  }
-
-  .lux-ignore-mat-step-icons mat-step-header {
-    &[aria-selected="false"] {
-      .lux-stepper-edited-icon,
-      .lux-stepper-normal-icon {
-        mat-icon {
-          color: var(--lux-theme-primary-color);
-          background-color: #fff;
-          border: 1px solid var(--lux-theme-app-border-color);
-        }
-      }
-    }
-    &[aria-selected="true"] {
-      .lux-stepper-edited-icon,
-      .lux-stepper-normal-icon {
-        mat-icon {
-          color: #fff;
-          background-color: var(--lux-theme-primary-color);
-          border: 1px solid var(--lux-theme-app-border-color);
-        }
-      }
-    }
-    &:hover {
-      background-color: transparent !important;
-      border-radius: 0;
-      &[aria-selected="false"],
-      &[aria-selected="true"] {
-        .lux-stepper-edited-icon,
-        .lux-stepper-normal-icon {
-          mat-icon {
-            background-color: var(--lux-theme-hover-color);
-            color: #fff;
-            border-color: var(--lux-theme-hover-color);
-          }
-        }
-      }
-      div.mat-step-label lux-step-header {
-        color: var(--lux-theme-hover-color);
-      }
+    &[tabindex="0"]:focus-visible {
+      @include luxfocus.focus-dark-mixin;
+      border-radius: var(--lux-theme-app-border-radius);
     }
   }
 }
