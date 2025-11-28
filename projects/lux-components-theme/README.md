@@ -246,8 +246,8 @@ lux-card.highlight ::ng-deep .mat-mdc-card {
 
 Html-Datei:
 
-```
-<div class="lux-color-accent-500-contrast lux-bg-color-accent-500">Lorem ipsum</div>
+```html
+<div class="lux-color-accent-50 lux-bg-color-accent-30">Lorem ipsum</div>
 ```
 
 # Lizenzhinweis - Icons
