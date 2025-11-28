@@ -1,6 +1,3 @@
-@use "sass:map";
-@use "@angular/material" as mat;
-
 // Muss der Wrapper sein, da Input-Elemente auch in anderen Komponenten (z.B. lux-autocomplete) genutzt werden
 lux-form-control-wrapper {
   input {

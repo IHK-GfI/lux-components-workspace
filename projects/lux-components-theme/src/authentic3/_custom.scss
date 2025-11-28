@@ -1,38 +1,11 @@
-@use "sass:map";
-@use "base/luxelevations";
-@use "base/luxfocus";
-@use "@angular/material" as mat;
-@use "luxVariables";
-@use "luxpalette";
-@use "base/luxSvgIcons" as luxicons;
-
 /*
 * Theming für Stepper-Large
 */
 lux-stepper-large {
-  background-color: transparent;
-
-  .lux-stepper-large-nav-container,
-  .lux-stepper-large-content-container {
-    border: 1px solid var(--lux-theme-app-border-color);
-    border-radius: 4px;
-    background-color: var(--lux-theme-app-content-bg);
-  }
+  
 
   //Desktop-View
   .lux-stepper-large-nav-item {
-    font-size: 1rem;
-    font-weight: 400;
-
-    .lux-stepper-large-nav-item-number-container {
-      border-radius: 50%;
-      font-weight: 600;
-      max-width: 2.25rem;
-      max-height: 2.25rem;
-      box-sizing: border-box;
-      padding: 6px 9px;
-      background-color: #fff;
-    }
 
     .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link,
     .lux-stepper-large-nav-item-label-container a.lux-stepper-large-nav-item-label-link:hover {
@@ -181,7 +154,7 @@ lux-stepper-large {
 
     .lux-stepper-large-mobile-nav-item-number-container {
       color: var(--lux-theme-primary-color);
-      background-color: #fff;
+      background-color: var(--lux-theme-app-content-bg);
       border: 1px solid var(--lux-theme-app-border-color);
     }
   }
@@ -189,7 +162,7 @@ lux-stepper-large {
   &.lux-disabled {
     .lux-stepper-large-nav-item-number-container {
       color: var(--lux-theme-dark-disabled-text);
-      background-color: #fff;
+      background-color: var(--lux-theme-app-content-bg);
       border: 1px solid var(--lux-theme-app-border-color);
     }
 

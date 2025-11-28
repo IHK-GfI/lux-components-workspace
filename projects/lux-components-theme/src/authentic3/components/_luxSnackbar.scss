@@ -1,8 +1,5 @@
-@use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxpalette";
 @use "../luxVariables";
-@use "../base/luxelevations";
 
 .lux-snackbar {
   @include mat.snack-bar-overrides(

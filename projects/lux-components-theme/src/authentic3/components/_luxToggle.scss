@@ -1,6 +1,4 @@
-@use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxpalette";
 
 lux-toggle-ac {
   @include mat.slide-toggle-overrides(());

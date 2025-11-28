@@ -1,8 +1,5 @@
-@use "sass:map";
-@use "../luxpalette";
 @use "../base/luxelevations";
 @use "../base/luxfocus";
-@use "../base/luxSvgIcons" as luxicons;
 
 button.lux-menu-item.lux-user-name-label {
   opacity: 1;
