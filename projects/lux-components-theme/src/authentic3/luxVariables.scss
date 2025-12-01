@@ -172,10 +172,12 @@ $colorsForDarkBg: (
   --lux-theme-stepper-large-completed-fc: #2e8533;
   --lux-theme-stepper-large-nav-item-active-fc: #ffffff;
   --lux-theme-stepper-large-nav-item-active-bg: #003366;
-  --lux-theme-stepper-large-nav-item-disabled-fg: #003366;
-  --lux-theme-stepper-large-nav-item-disabled-bg: #eff3f6;
+  --lux-theme-stepper-large-nav-item-disabled-fg: var(--lux-theme-dark-disabled-text);
+  --lux-theme-stepper-large-nav-item-disabled-bg: #ffffff;
   --lux-theme-stepper-large-nav-item-completed-fg: #2e8533;
   --lux-theme-stepper-large-nav-item-completed-bg: #ffffff;
+  --lux-theme-stepper-large-nav-item-not-touched-fg: #003366;
+  --lux-theme-stepper-large-nav-item-not-touched-bg: #ffffff;
 
   // LUX-Tile
   --lux-theme-tile-font-hover-color: #2e8533;

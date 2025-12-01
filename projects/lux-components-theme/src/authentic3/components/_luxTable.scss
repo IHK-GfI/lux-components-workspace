@@ -1,7 +1,18 @@
+@use "@angular/material" as mat;
 @use "../base/luxfocus";
 @use "../base/luxbreakpoints";
 
 lux-table {
+  @include mat.table-overrides(
+    (
+      header-headline-color: var(--lux-theme-dark-primary-text),
+      header-headline-size: 1rem,
+      header-headline-weight: 700,
+      footer-supporting-text-size: 0.9375rem,
+      header-container-height: auto
+    )
+  );
+
   display: flex;
   height: 100%;
 
@@ -9,10 +20,6 @@ lux-table {
   td.mat-mdc-cell:first-of-type,
   td.mat-mdc-footer-cell:first-of-type {
     padding-left: 24px;
-  }
-
-  table.mat-mdc-table {
-    font-family: var(--lux-theme-app-font-family);
   }
 
   .lux-row-selected {
@@ -31,7 +38,6 @@ lux-table {
       box-sizing: border-box;
     }
 
-    th,
     .lux-table-header-no-data th {
       vertical-align: middle;
       height: 30px;
@@ -46,10 +52,6 @@ lux-table {
       padding-top: 1em;
     }
 
-    tr.mat-mdc-header-row {
-      height: auto;
-    }
-
     th.mat-mdc-header-cell,
     td.mat-mdc-cell {
       border: none;
@@ -59,7 +61,6 @@ lux-table {
     td.mat-mdc-footer-cell {
       border: none;
       border-top: 1px solid var(--lux-theme-app-border-color);
-      font-size: 0.9375rem;
       color: var(--lux-theme-dark-primary-text);
       padding-bottom: 1em;
     }
@@ -120,12 +121,6 @@ lux-table {
         }
       }
 
-      thead th {
-        font-size: 1rem;
-        color: var(--lux-theme-dark-primary-text);
-        font-weight: 700;
-      }
-
       .mat-mdc-row:nth-child(odd) {
         background-color: #f0f3f6;
       }
@@ -145,15 +140,6 @@ lux-table {
 
       th.lux-table-column-header-empty {
         display: none;
-      }
-    }
-
-    .mat-mdc-paginator,
-    .mat-mdc-paginator-page-size .mat-mdc-select-trigger {
-      font-size: 0.75rem;
-
-      .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-        background-color: #ffffff;
       }
     }
 
@@ -224,11 +210,6 @@ lux-table {
         max-width: 100%;
       }
     }
-  }
-
-  .lux-form-control-readonly-authentic {
-    // damit die Events der eigentliche Checkbox nicht zusätzlich gezählt werden
-    pointer-events: none;
   }
 
   .lux-element-align-top {

@@ -57,9 +57,17 @@ lux-stepper-large {
   line-height: 1.5;
 
   &.lux-active:not(.lux-disabled) {
+    a {
+      cursor: text;
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+
     .lux-stepper-large-nav-item-number-container {
       color: var(--lux-theme-stepper-large-nav-item-active-fc);
       background-color: var(--lux-theme-stepper-large-nav-item-active-bg);
+      border: 1px solid var(--lux-theme-stepper-large-nav-item-active-bg);
     }
 
     .lux-stepper-large-nav-item-label {
@@ -67,18 +75,21 @@ lux-stepper-large {
     }
   }
 
-  &.lux-touched:not(.lux-disabled) {
+  &.lux-touched:not(.lux-disabled, .lux-active) {
     a {
       text-decoration: underline;
+      font-weight: 600;
     }
 
     &.lux-completed:not(.lux-active) {
       .lux-stepper-large-nav-item-number-container {
         color: var(--lux-theme-stepper-large-nav-item-completed-fg);
         background-color: var(--lux-theme-stepper-large-nav-item-completed-bg);
+        border: 1px solid var(--lux-theme-app-border-color);
       }
 
       a {
+        font-weight: 600;
         color: #2e8533;
         position: relative;
       }
@@ -87,9 +98,9 @@ lux-stepper-large {
         content: "";
         position: absolute;
         display: inline-block;
-        width: 23px;
-        height: 23px;
-        margin: 5px 10px 0px;
+        width: 16px;
+        height: 16px;
+        margin: 2px 10px 0px;
         background-color: #2e8533;
         -webkit-mask: url(luxicons.$checkmark);
         -webkit-mask-repeat: no-repeat;
@@ -104,8 +115,9 @@ lux-stepper-large {
 
     &:not(.lux-completed):not(.lux-active) {
       .lux-stepper-large-nav-item-number-container {
-        color: var(--lux-theme-stepper-large-nav-item-completed-fg);
+        color: var(--lux-theme-primary-color);
         background-color: var(--lux-theme-stepper-large-nav-item-completed-bg);
+        border: 1px solid var(--lux-theme-app-border-color);
       }
 
       a::after {
@@ -129,11 +141,13 @@ lux-stepper-large {
   }
 
   &:not(.lux-touched) {
+    opacity: 1;
     color: #003366;
 
     .lux-stepper-large-nav-item-number-container {
-      color: var(--lux-theme-stepper-large-nav-item-disabled-fg);
-      background-color: var(--lux-theme-stepper-large-nav-item-disabled-bg);
+      color: var(--lux-theme-stepper-large-nav-item-not-touched-fg);
+      background-color: var(--lux-theme-stepper-large-nav-item-not-touched-bg);
+      border: 1px solid var(--lux-theme-app-border-color);
     }
   }
 
@@ -143,6 +157,7 @@ lux-stepper-large {
     .lux-stepper-large-nav-item-number-container {
       color: var(--lux-theme-stepper-large-nav-item-disabled-fg);
       background-color: var(--lux-theme-stepper-large-nav-item-disabled-bg);
+      border: 1px solid var(--lux-theme-app-border-color);
     }
 
     .lux-stepper-large-nav-item-label {
@@ -173,6 +188,7 @@ lux-stepper-large {
 
     .lux-stepper-large-nav-item-label-link {
       cursor: pointer;
+      color: var(--lux-theme-primary-color);
     }
 
     .lux-stepper-large-nav-item-label {
@@ -191,12 +207,19 @@ lux-stepper-large {
   display: flex;
   flex-direction: column;
 
-  // Kein Abstand der Überschrift nach oben, wenn sie das erste Element im Inhalt ist
+  // Kein Abstand der Überschrift nach oben, wenn sie das erste Element im Inhalt ist.
+  // Mobil und Desktop
+  & > h1:first-child,
   & a#luxstepperlargecontentanchor + h1,
+  & > h2:first-child,
   & a#luxstepperlargecontentanchor + h2,
+  & > h3:first-child,
   & a#luxstepperlargecontentanchor + h3,
+  & > h4:first-child,
   & a#luxstepperlargecontentanchor + h4,
+  & > h5:first-child,
   & a#luxstepperlargecontentanchor + h5,
+  & > h6:first-child,
   & a#luxstepperlargecontentanchor + h6 {
     margin-top: 0;
   }
@@ -209,8 +232,6 @@ lux-stepper-large {
 
   overflow-y: auto;
   padding: 12px;
-
-  
 }
 
 .lux-stepper-large-mobile-container {
@@ -305,8 +326,7 @@ lux-stepper-large {
   padding: 0 30px 24px 30px;
 
   div {
-    // TODO: Theme 3
-    // font-family: Korb, global.$app-font-family;
+    font-family: var(--lux-theme-app-headline-font), var(--lux-theme-app-font-family);
     font-size: 1.75rem;
   }
 }
@@ -316,17 +336,21 @@ lux-stepper-large {
   flex-direction: column;
   gap: 12px;
   overflow: auto;
-
   padding: 0 30px 30px 30px;
 }
 
-.lux-stepper-large-mobile-nav-item {
+.lux-stepper-large-mobile-nav-item.lux-stepper-large-nav-item {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
 
+  font-weight: 400;
   font-size: 1.125rem;
+  line-height: unset;
+
+  .lux-stepper-large-mobile-nav-item-number-container {
+  }
 
   &.lux-completed .lux-stepper-large-mobile-nav-item-number-container {
   }
@@ -345,7 +369,8 @@ lux-stepper-large {
     max-height: 30px;
     margin: 0 10px 0 0;
     padding: 1px 6px 2px 5px;
-    border-radius: 12px;
+    border-radius: 50%;
+    font-weight: 400;
 
     .lux-stepper-large-mobile-nav-item-number {
     }
@@ -360,14 +385,6 @@ lux-stepper-large {
     .lux-stepper-large-mobile-nav-item-label-link {
       cursor: pointer;
     }
-
-    .lux-stepper-large-mobile-nav-item-label {
-    }
-
-    .lux-stepper-large-mobile-nav-item-complete {
-      color: var(--lux-theme-stepper-large-completed-fc);
-      font-size: 1.125rem;
-    }
   }
 
   &.lux-stepper-large-nav-item.lux-touched:not(.lux-disabled).lux-completed:not(.lux-active) a::after {
@@ -376,51 +393,39 @@ lux-stepper-large {
     margin-top: 4px;
   }
 
-  .lux-stepper-large-nav-item {
-    // Links allgemein
+  // Links allgemein
+  a {
+    &:focus-visible {
+      outline: none;
+    }
+
+    &.lux-focused {
+      outline: var(--lux-theme-outline-dark);
+    }
+  }
+
+  &.lux-active:not(.lux-disabled) {
     a {
-      &:focus-visible {
-        outline: none;
-      }
+      font-weight: 400;
+      text-decoration-thickness: 1px;
+    }
+  }
 
-      &.lux-focused {
-        outline: var(--lux-theme-outline-dark);
-      }
+  &.lux-touched:not(.lux-disabled, .lux-active) {
+    a {
+      font-weight: 400;
     }
 
-    // Link ausgewählt
-    &.lux-active {
-      .lux-stepper-large-nav-item-label-container {
-        a.lux-stepper-large-nav-item-label-link {
-          cursor: text;
-          &:hover {
-            color: var(--lux-theme-primary-color);
-          }
-        }
+    &.lux-completed:not(.lux-active) {
+      a {
+        font-weight: 400;
       }
     }
+  }
 
-    // Links nicht ausgewählt
-    &:not(.lux-active) {
-      &:not(.lux-completed) {
-        .lux-stepper-large-nav-item-label-container {
-          a.lux-stepper-large-nav-item-label-link {
-            &:hover {
-              color: #2e8533;
-            }
-          }
-        }
-      }
-
-      &.lux-completed {
-        .lux-stepper-large-nav-item-label-container {
-          a.lux-stepper-large-nav-item-label-link {
-            &:hover {
-              color: #56bd66;
-            }
-          }
-        }
-      }
+  &.lux-completed:not(.lux-active) {
+    a {
+      font-weight: 400;
     }
   }
 }

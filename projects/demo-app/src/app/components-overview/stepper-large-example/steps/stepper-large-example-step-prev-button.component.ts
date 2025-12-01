@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    LuxInputAcComponent,
-    LuxStepperLargeClickEvent,
-    LuxStepperLargeStepComponent,
-    LuxThemePalette,
-    LuxToggleAcComponent,
-    LuxUtil,
-    LuxVetoState
+  LuxInputAcComponent,
+  LuxStepperLargeClickEvent,
+  LuxStepperLargeStepComponent,
+  LuxThemePalette,
+  LuxToggleAcComponent,
+  LuxUtil,
+  LuxVetoState
 } from '@ihk-gfi/lux-components';
+import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';
@@ -29,6 +30,7 @@ interface StepperLargePrevButtonDummyForm {
 })
 export class StepperLargeExampleStepPrevButtonComponent extends LuxStepperLargeStepComponent implements OnInit, OnDestroy {
   dataService = inject(StepperLargeExampleDataService);
+  tService = inject(TranslocoService);
 
   form: FormGroup<StepperLargePrevButtonDummyForm>;
   showErrorMessage = false;
@@ -39,7 +41,7 @@ export class StepperLargeExampleStepPrevButtonComponent extends LuxStepperLargeS
     super();
 
     this.form = new FormGroup<StepperLargePrevButtonDummyForm>({
-      label: new FormControl<string>(this.dataService.prevButtonConfig.label ?? '', { validators: Validators.required, nonNullable: true }),
+      label: new FormControl<string>(this.dataService.prevButtonConfig.label ? this.dataService.prevButtonConfig.label : 'Zurück', { validators: Validators.required, nonNullable: true }),
       iconName: new FormControl<string | undefined>(this.dataService.prevButtonConfig.iconName, { nonNullable: true }),
       color: new FormControl<LuxThemePalette | undefined>(this.dataService.prevButtonConfig.color, { nonNullable: true }),
       iconShowRight: new FormControl<boolean | undefined>(this.dataService.prevButtonConfig.iconShowRight, { nonNullable: true }),

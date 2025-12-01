@@ -1,18 +1,20 @@
 @use "sass:map";
+@use "@angular/material" as mat;
 @use "../luxVariables";
 @use "../base/luxfocus";
 @use "../base/luxbreakpoints";
 
 lux-tabs {
-  .mat-tab-nav-bar,
-  .mat-tab-header {
-    border-color: var(--lux-theme-app-border-color);
-    font-size: 1rem;
-  }
-
-  .mat-mdc-tab-label-container {
-    border: none;
-  }
+  @include mat.tabs-overrides(
+    (
+      active-label-text-color: var(--lux-theme-primary-20),
+      active-focus-label-text-color: var(--lux-theme-primary-20),
+      active-hover-label-text-color: var(--lux-theme-primary-20),
+      active-indicator-height: 4px,
+      divider-height: 1px,
+      divider-color: var(--lux-theme-app-border-color)
+    )
+  );
 
   .mdc-tab {
     padding-left: 0;
@@ -25,14 +27,10 @@ lux-tabs {
     letter-spacing: normal;
     min-height: unset !important;
     height: unset !important;
-    &:not(.mat-tab-disabled) .mdc-tab__text-label {
-      color: var(--lux-theme-primary-20);
-      opacity: 1;
-    }
   }
 
-  mat-tab-group.lux-tabs-show-divider mat-tab-header {
-    border-bottom: 1px solid var(--lux-theme-app-border-color);
+  .lux-tab-title-container {
+    justify-content: center;
   }
 
   .lux-tab-title {
@@ -58,13 +56,7 @@ lux-tabs {
   }
 
   .lux-tabs-notification-icon {
-    border: 2px solid #ffffff;
-  }
-
-  .lux-locked {
-    pointer-events: none;
-    background: red;
-    color: red;
+    border: 2px solid var(--lux-theme-app-content-bg);
   }
 
   .lux-tabs-show-border {
@@ -88,10 +80,6 @@ lux-tabs {
     @include luxbreakpoints.xs {
       padding-left: 30px;
       padding-right: 30px;
-    }
-
-    mat-chip {
-      background: white !important;
     }
   }
 
@@ -187,35 +175,5 @@ lux-tabs {
         right: 0;
       }
     }
-  }
-}
-
-/** ########## HOVER / FOCUS ########## **/
-lux-tabs,
-mat-card lux-tabs {
-  mat-tab-group div[role="tab"]:not(.mat-mdc-tab-disabled) {
-    &:focus-visible {
-      @include luxfocus.focus-dark-mixin-inline;
-      border-radius: var(--lux-theme-app-border-radius);
-    }
-
-    &:hover {
-      background-color: transparent;
-
-      &:not(.mdc-tab--active) .lux-tab-title,
-      &:not(.mdc-tab--active) lux-icon {
-        color: var(--lux-theme-hover-color);
-      }
-    }
-
-    &:hover .mdc-tab__ripple::before {
-      background-color: transparent;
-    }
-  }
-
-  .mdc-tab-indicator__content {
-    background-color: var(--lux-theme-primary-20) !important;
-    height: 4px;
-    border-radius: var(--lux-theme-app-border-radius);
   }
 }
