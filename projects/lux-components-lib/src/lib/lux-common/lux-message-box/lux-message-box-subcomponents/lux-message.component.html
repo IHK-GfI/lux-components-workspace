@@ -1,5 +1,5 @@
 @if (luxMessage) {
-<div class="lux-message-container {{ backgroundCSSClass }} {{ fontCSSClass }}" luxAriaRole="listitem">
+<div class="lux-message-container" [ngClass]="['lux-messagebox-' + luxMessage.color, 'lux-messagebox-on-' + luxMessage.color]" luxAriaRole="listitem">
   @if (luxMessage.iconName) {
   <lux-icon [luxIconName]="luxMessage.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon"></lux-icon>
   } @if (!luxMessage.iconName) {

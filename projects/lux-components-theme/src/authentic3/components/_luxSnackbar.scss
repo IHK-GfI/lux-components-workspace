@@ -1,6 +1,20 @@
 @use "@angular/material" as mat;
 @use "../luxVariables";
 
+@mixin lux-snackbar-color-mixin($prefix) {
+  @each $colorName in luxVariables.$componentColorNames {
+    &.lux-snackbar-color-text-#{$colorName} .lux-snackbar-text {
+      color: var(#{$prefix}-#{$colorName});
+    }
+    &.lux-snackbar-color-icon-#{$colorName} .lux-snackbar-icon {
+      color: var(#{$prefix}-#{$colorName});
+    }
+    &.lux-snackbar-color-action-#{$colorName} .lux-snackbar-action {
+      color: var(#{$prefix}-#{$colorName});
+    }
+  }
+}
+
 .lux-snackbar {
   @include mat.snack-bar-overrides(
     (
@@ -9,20 +23,15 @@
     )
   );
 
-  @each $colorName, $colorNameHex in luxVariables.$colorsForDarkBg {
-    &.lux-snackbar-color-text-#{"" + $colorName + ""} .lux-snackbar-text {
-      color: $colorNameHex;
-      background-color: transparent;
-    }
+  .lux-snackbar-text,
+  .lux-snackbar-icon,
+  .lux-snackbar-action {
+    background-color: transparent;
+  }
 
-    &.lux-snackbar-color-icon-#{"" + $colorName + ""} .lux-snackbar-icon {
-      color: $colorNameHex;
-      background-color: transparent;
-    }
+  @include lux-snackbar-color-mixin("--lux-theme-snackbar");
 
-    &.lux-snackbar-color-action-#{"" + $colorName + ""} .lux-snackbar-action {
-      color: $colorNameHex;
-      background-color: transparent;
-    }
+  @media (prefers-contrast: more) {
+    @include lux-snackbar-color-mixin("--lux-theme-snackbar-contrast");
   }
 }

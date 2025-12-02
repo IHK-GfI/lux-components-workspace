@@ -1,8 +1,7 @@
 import { NgClass, NgStyle } from '@angular/common';
 import { Component, EventEmitter, HostBinding, Input, Output, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { LuxIconColor, LuxIconColors } from '../../lux-util/lux-colors.enum';
-import { LuxUtil } from '../../lux-util/lux-util';
+import { LuxIconColor } from '../../lux-util/lux-colors.enum';
 import { LuxIconRegistryService } from './lux-icon-registry.service';
 
 @Component({
@@ -24,6 +23,8 @@ export class LuxIconComponent {
 
   @HostBinding('style.margin') styleMargin = '0';
   @HostBinding('class.lux-icon-rounded') _luxRounded = false;
+
+  @Input() luxColor?: LuxIconColor;
 
   @Input() set luxRounded(rounded: boolean) {
     this._luxRounded = rounded;
@@ -77,26 +78,6 @@ export class LuxIconComponent {
       this.registerIcon(iconNameValue);
     } else {
       this._luxIconName = '';
-    }
-  }
-
-  get backgroundCSSClass() {
-    return this._backgroundCSSClass;
-  }
-
-  public get fontCSSClass() {
-    return this._fontCSSClass;
-  }
-
-  @Input()
-  set luxColor(color: LuxIconColor) {
-    if (LuxIconColors.find((entry) => entry === color)) {
-      const result = LuxUtil.getColorsByBgColorsEnum(color);
-      this._backgroundCSSClass = result.backgroundCSSClass;
-      this._fontCSSClass = result.fontCSSClass;
-    } else {
-      this._backgroundCSSClass = '';
-      this._fontCSSClass = '';
     }
   }
 

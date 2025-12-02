@@ -1,7 +1,22 @@
+@use "../luxVariables";
+
+@mixin lux-icon-color-mixin($prefix) {
+  @each $colorName in luxVariables.$componentColorNames {
+    .lux-icon-#{$colorName} {
+      background-color: var(#{$prefix}-#{$colorName});
+    }
+    .lux-icon-on-#{$colorName} {
+      color: var(#{$prefix}-on-#{$colorName});
+    }
+  }
+}
+
 lux-icon {
   position: relative;
   display: inline-flex;
   width: fit-content;
+
+  @include lux-icon-color-mixin("--lux-theme-icon");
 
   &.lux-icon-rounded {
     mat-icon.lux-icon {
@@ -34,5 +49,9 @@ lux-icon {
         cursor: pointer;
       }
     }
+  }
+
+  @media (prefers-contrast: more) {
+    @include lux-icon-color-mixin("--lux-theme-icon-contrast");
   }
 }

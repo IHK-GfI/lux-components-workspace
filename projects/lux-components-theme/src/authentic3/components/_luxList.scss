@@ -1,6 +1,4 @@
-@use "sass:map";
 @use "../base/luxfocus";
-@use "../luxVariables";
 @use "../base/luxelevations";
 
 /*
@@ -16,7 +14,7 @@ lux-list {
 
   .lux-list-empty-icon,
   .lux-list-empty-icon-text {
-    color: map.get(luxVariables.$componentBgColors, "gray");
+    color: var(--lux-theme-custom-on-gray);
     padding: 0 8px;
   }
   .mat-mdc-card:not([class*="mat-elevation-z"]) {

@@ -9,45 +9,8 @@
   }
 }
 
-// Hintergrundfarben (z.B. Badge oder Progress)
-$componentBgColors: (
-  "red": map.get(luxpalette.$lux-palette_warn, 40),
-  "green": map.get(luxpalette.$lux-palette_accent, 70),
-  "purple": #715289,
-  "blue": map.get(luxpalette.$lux-palette_primary, 20),
-  "gray": map.get(luxpalette.$lux-palette_neutral, 40),
-  "orange": #fc791f,
-  "black": map.get(luxpalette.$lux-palette_neutral, 10),
-  "white": #ffffff,
-  "yellow": #fbd12c,
-  "pink": #fc6b85,
-  "lightblue": #4fa8e8
-);
-
-// Vordergrundfarben (z.B. Badge)
-$componentFontColors: (
-  "red": #ffffff,
-  "green": map.get(luxpalette.$lux-palette_neutral, 10),
-  "purple": #ffffff,
-  "blue": #ffffff,
-  "gray": #ffffff,
-  "orange": map.get(luxpalette.$lux-palette_neutral, 10),
-  "black": #ffffff,
-  "white": map.get(luxpalette.$lux-palette_neutral, 10),
-  "yellow": map.get(luxpalette.$lux-palette_neutral, 10),
-  "pink": map.get(luxpalette.$lux-palette_neutral, 10),
-  "lightblue": map.get(luxpalette.$lux-palette_neutral, 10)
-);
-
-// Farben für einen dunklen Hintergrund (z.B. Snackbar).
-$colorsForDarkBg: (
-  "red": #f17474,
-  "green": #53b12b,
-  "blue": map.get(luxpalette.$lux-palette_primary, 80),
-  "orange": #ec9c1b,
-  "yellow": #fbd12c,
-  "white": #ffffff
-);
+// Custom-Farbnamen (z.B. Badge oder Progress)
+$componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "black", "white", "yellow", "pink", "lightblue");
 
 :root {
   // Farbpaletten
@@ -71,6 +34,67 @@ $colorsForDarkBg: (
   --lux-theme-light-disabled-text: rgba(255, 255, 255, 0.38);
   --lux-theme-light-dividers: rgba(255, 255, 255, 0.2);
   --lux-theme-light-focused: rgba(255, 255, 255, 0.12);
+
+  // Hauptfarben
+  --lux-theme-primary-color: #{luxpalette.$lux-primary-color};
+  --lux-theme-accent-color: #{luxpalette.$lux-accent-color};
+  --lux-theme-warn-color: #{luxpalette.$lux-warn-color};
+
+  // Sonderfarben
+  --lux-theme-custom-purple: #715289;
+  --lux-theme-custom-on-purple: #ffffff;
+  --lux-theme-custom-pink: #fc6b85;
+  --lux-theme-custom-on-pink: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-custom-yellow: #fbd12c;
+  --lux-theme-custom-on-yellow: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-custom-orange: #fc791f;
+  --lux-theme-custom-on-orange: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-custom-lightblue: #4fa8e8;
+  --lux-theme-custom-on-lightblue: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-custom-blue: #{map.get(luxpalette.$lux-palette_primary, 20)};
+  --lux-theme-custom-on-blue: #ffffff;
+  --lux-theme-custom-green: #{map.get(luxpalette.$lux-palette_accent, 70)};
+  --lux-theme-custom-on-green: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-custom-red: #{map.get(luxpalette.$lux-palette_warn, 40)};
+  --lux-theme-custom-on-red: #ffffff;
+  --lux-theme-custom-gray: #{map.get(luxpalette.$lux-palette_neutral, 40)};
+  --lux-theme-custom-on-gray: #ffffff;
+  --lux-theme-custom-black: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-custom-on-black: #ffffff;
+  --lux-theme-custom-white: #ffffff;
+  --lux-theme-custom-on-white: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+
+  --lux-theme-contrast-custom-purple: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-purple: #ffffff;
+  --lux-theme-contrast-custom-pink: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-pink: #ffffff;
+  --lux-theme-contrast-custom-yellow: #fbd12c;
+  --lux-theme-contrast-custom-on-yellow: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-orange: #fbd12c;
+  --lux-theme-contrast-custom-on-orange: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-lightblue: #{map.get(luxpalette.$lux-palette_primary, 20)};
+  --lux-theme-contrast-custom-on-lightblue: #ffffff;
+  --lux-theme-contrast-custom-blue: #{map.get(luxpalette.$lux-palette_primary, 20)};
+  --lux-theme-contrast-custom-on-blue: #ffffff;
+  --lux-theme-contrast-custom-green: #{map.get(luxpalette.$lux-palette_accent, 30)};
+  --lux-theme-contrast-custom-on-green: #ffffff;
+  --lux-theme-contrast-custom-red: #{map.get(luxpalette.$lux-palette_warn, 35)};
+  --lux-theme-contrast-custom-on-red: #ffffff;
+  --lux-theme-contrast-custom-gray: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-gray: #ffffff;
+  --lux-theme-contrast-custom-black: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-black: #ffffff;
+  --lux-theme-contrast-custom-white: #ffffff;
+  --lux-theme-contrast-custom-on-white: #{map.get(luxpalette.$lux-palette_neutral, 10)};
+
+  // Hintergrundfarben (z.B. Badge oder Progress)
+  @each $colorName in $componentColorNames {
+    --lux-theme-component-bg-#{""+$colorName+""}: var(--lux-theme-custom-#{$colorName});
+  }
+
+  @each $colorName in $componentColorNames {
+    --lux-theme-component-font-color-#{''+$colorName+''}: var(--lux-theme-custom-on-#{$colorName});
+  }
 
   // App
   --lux-theme-app-header-bg: #{map.get(luxpalette.$lux-palette_primary, 90)};
@@ -106,52 +130,20 @@ $colorsForDarkBg: (
   --lux-theme-selected-bg-color: var(--mat-option-selected-state-layer-color);
   --lux-theme-on-selected-color: #f0f3f6;
 
-  // Hauptfarben
-  --lux-theme-primary-color: #{map.get(luxpalette.$lux-palette_primary, 20)};
-  --lux-theme-accent-color: #{map.get(luxpalette.$lux-palette_accent, 70)};
-  --lux-theme-warn-color: #{map.get(luxpalette.$lux-palette_warn, 50)};
+  // Snackbar
+  --lux-theme-snackbar-red: #f17474;
+  --lux-theme-snackbar-green: #53b12b;
+  --lux-theme-snackbar-blue: #{map.get(luxpalette.$lux-palette_primary, 80)};
+  --lux-theme-snackbar-orange: #ec9c1b;
+  --lux-theme-snackbar-yellow: #fbd12c;
+  --lux-theme-snackbar-white: #ffffff;
 
-  // Hintergrundfarben (z.B. Badge oder Progress)
-  @each $colorName, $colorNameHex in $componentBgColors {
-    --lux-theme-component-bg-#{''+$colorName+''}: #{$colorNameHex};
-  }
-
-  @each $colorName, $colorNameHex in $colorsForDarkBg {
-    --lux-theme-component-bg-dark-#{''+$colorName+''}: #{$colorNameHex};
-  }
-
-  @each $colorName, $colorNameHex in $componentFontColors {
-    --lux-theme-component-font-color-#{''+$colorName+''}: #{$colorNameHex};
-  }
-
-  // Hauptfarben
-  --lux-theme-primary-color: #{luxpalette.$lux-primary-color};
-  --lux-theme-accent-color: #{luxpalette.$lux-accent-color};
-  --lux-theme-warn-color: #{luxpalette.$lux-warn-color};
-
-  // Sonderfarben
-  --lux-theme-custom-purple: #{luxpalette.$custom-purple};
-  --lux-theme-on-custom-purple: #{luxpalette.$on-custom-purple};
-  --lux-theme-custom-pink: #{luxpalette.$custom-pink};
-  --lux-theme-on-custom-pink: #{luxpalette.$on-custom-pink};
-  --lux-theme-custom-yellow: #{luxpalette.$custom-yellow};
-  --lux-theme-on-custom-yellow: #{luxpalette.$on-custom-yellow};
-  --lux-theme-custom-brown: #{luxpalette.$custom-brown};
-  --lux-theme-on-custom-brown: #{luxpalette.$on-custom-brown};
-  --lux-theme-custom-orange: #{luxpalette.$custom-orange};
-  --lux-theme-on-custom-orange: #{luxpalette.$on-custom-orange};
-  --lux-theme-custom-lightblue: #{luxpalette.$custom-lightblue};
-  --lux-theme-on-custom-lightblue: #{luxpalette.$on-custom-lightblue};
-  --lux-theme-custom-blue: #{luxpalette.$custom-blue};
-  --lux-theme-on-custom-blue: #{luxpalette.$on-custom-blue};
-  --lux-theme-custom-green: #{luxpalette.$custom-green};
-  --lux-theme-on-custom-green: #{luxpalette.$on-custom-green};
-  --lux-theme-custom-red: #{luxpalette.$custom-red};
-  --lux-theme-on-custom-red: #{luxpalette.$on-custom-red};
-  --lux-theme-custom-grey: #{luxpalette.$custom-grey};
-  --lux-theme-on-custom-grey: #{luxpalette.$on-custom-grey};
-  --lux-theme-custom-black: #{luxpalette.$custom-black};
-  --lux-theme-custom-white: #{luxpalette.$custom-white};
+  --lux-theme-snackbar-contrast-red: #{map.get(luxpalette.$lux-palette_warn, 80)};
+  --lux-theme-snackbar-contrast-green: #{map.get(luxpalette.$lux-palette_accent, 80)};
+  --lux-theme-snackbar-contrast-blue: #{map.get(luxpalette.$lux-palette_primary, 80)};
+  --lux-theme-snackbar-contrast-orange: #fbd12c;
+  --lux-theme-snackbar-contrast-yellow: #fbd12c;
+  --lux-theme-snackbar-contrast-white: #ffffff;
 
   // Accordion
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
@@ -162,10 +154,137 @@ $colorsForDarkBg: (
   --lux-theme-accordion-header-color-on-accent: var(--lux-theme-dark-primary-text);
   --lux-theme-accordion-header-color-warn: var(--lux-theme-warn-90);
   --lux-theme-accordion-header-color-on-warn: var(--lux-theme-dark-primary-text);
-  
+
+  // LUX-Badge
+  --lux-theme-badge-red: var(--lux-theme-custom-red);
+  --lux-theme-badge-on-red: var(--lux-theme-custom-on-red);
+  --lux-theme-badge-green: var(--lux-theme-custom-green);
+  --lux-theme-badge-on-green: var(--lux-theme-custom-on-green);
+  --lux-theme-badge-purple: var(--lux-theme-custom-purple);
+  --lux-theme-badge-on-purple: var(--lux-theme-custom-on-purple);
+  --lux-theme-badge-blue: var(--lux-theme-custom-blue);
+  --lux-theme-badge-on-blue: var(--lux-theme-custom-on-blue);
+  --lux-theme-badge-gray: var(--lux-theme-custom-gray);
+  --lux-theme-badge-on-gray: var(--lux-theme-custom-on-gray);
+  --lux-theme-badge-orange: var(--lux-theme-custom-orange);
+  --lux-theme-badge-on-orange: var(--lux-theme-custom-on-orange);
+  --lux-theme-badge-black: var(--lux-theme-custom-black);
+  --lux-theme-badge-on-black: var(--lux-theme-custom-on-black);
+  --lux-theme-badge-white: var(--lux-theme-custom-white);
+  --lux-theme-badge-on-white: var(--lux-theme-custom-on-white);
+  --lux-theme-badge-yellow: var(--lux-theme-custom-yellow);
+  --lux-theme-badge-on-yellow: var(--lux-theme-custom-on-yellow);
+  --lux-theme-badge-pink: var(--lux-theme-custom-pink);
+  --lux-theme-badge-on-pink: var(--lux-theme-custom-on-pink);
+  --lux-theme-badge-lightblue: var(--lux-theme-custom-lightblue);
+  --lux-theme-badge-on-lightblue: var(--lux-theme-custom-on-lightblue);
+
+  --lux-theme-badge-contrast-red: var(--lux-theme-contrast-custom-red);
+  --lux-theme-badge-contrast-on-red: var(--lux-theme-contrast-custom-on-red);
+  --lux-theme-badge-contrast-green: var(--lux-theme-contrast-custom-green);
+  --lux-theme-badge-contrast-on-green: var(--lux-theme-contrast-custom-on-green);
+  --lux-theme-badge-contrast-purple: var(--lux-theme-contrast-custom-purple);
+  --lux-theme-badge-contrast-on-purple: var(--lux-theme-contrast-custom-on-purple);
+  --lux-theme-badge-contrast-blue: var(--lux-theme-contrast-custom-blue);
+  --lux-theme-badge-contrast-on-blue: var(--lux-theme-contrast-custom-on-blue);
+  --lux-theme-badge-contrast-gray: var(--lux-theme-contrast-custom-gray);
+  --lux-theme-badge-contrast-on-gray: var(--lux-theme-contrast-custom-on-gray);
+  --lux-theme-badge-contrast-orange: var(--lux-theme-contrast-custom-orange);
+  --lux-theme-badge-contrast-on-orange: var(--lux-theme-contrast-custom-on-orange);
+  --lux-theme-badge-contrast-yellow: var(--lux-theme-contrast-custom-yellow);
+  --lux-theme-badge-contrast-on-yellow: var(--lux-theme-contrast-custom-on-yellow);
+  --lux-theme-badge-contrast-pink: var(--lux-theme-contrast-custom-pink);
+  --lux-theme-badge-contrast-on-pink: var(--lux-theme-contrast-custom-on-pink);
+  --lux-theme-badge-contrast-lightblue: var(--lux-theme-contrast-custom-lightblue);
+  --lux-theme-badge-contrast-on-lightblue: var(--lux-theme-contrast-custom-on-lightblue);
+
+  // LUX-Icon
+  --lux-theme-icon-red: var(--lux-theme-custom-red);
+  --lux-theme-icon-on-red: var(--lux-theme-custom-on-red);
+  --lux-theme-icon-green: var(--lux-theme-custom-green);
+  --lux-theme-icon-on-green: var(--lux-theme-custom-on-green);
+  --lux-theme-icon-purple: var(--lux-theme-custom-purple);
+  --lux-theme-icon-on-purple: var(--lux-theme-custom-on-purple);
+  --lux-theme-icon-blue: var(--lux-theme-custom-blue);
+  --lux-theme-icon-on-blue: var(--lux-theme-custom-on-blue);
+  --lux-theme-icon-gray: var(--lux-theme-custom-gray);
+  --lux-theme-icon-on-gray: var(--lux-theme-custom-on-gray);
+  --lux-theme-icon-orange: var(--lux-theme-custom-orange);
+  --lux-theme-icon-on-orange: var(--lux-theme-custom-on-orange);
+  --lux-theme-icon-black: var(--lux-theme-custom-black);
+  --lux-theme-icon-on-black: var(--lux-theme-custom-on-black);
+  --lux-theme-icon-yellow: var(--lux-theme-custom-yellow);
+  --lux-theme-icon-on-yellow: var(--lux-theme-custom-on-yellow);
+  --lux-theme-icon-pink: var(--lux-theme-custom-pink);
+  --lux-theme-icon-on-pink: var(--lux-theme-custom-on-pink);
+  --lux-theme-icon-lightblue: var(--lux-theme-custom-lightblue);
+  --lux-theme-icon-on-lightblue: var(--lux-theme-custom-on-lightblue);
+
+  --lux-theme-icon-contrast-red: var(--lux-theme-contrast-custom-red);
+  --lux-theme-icon-contrast-on-red: var(--lux-theme-contrast-custom-on-red);
+  --lux-theme-icon-contrast-green: var(--lux-theme-contrast-custom-green);
+  --lux-theme-icon-contrast-on-green: var(--lux-theme-contrast-custom-on-green);
+  --lux-theme-icon-contrast-purple: var(--lux-theme-contrast-custom-purple);
+  --lux-theme-icon-contrast-on-purple: var(--lux-theme-contrast-custom-on-purple);
+  --lux-theme-icon-contrast-blue: var(--lux-theme-contrast-custom-blue);
+  --lux-theme-icon-contrast-on-blue: var(--lux-theme-contrast-custom-on-blue);
+  --lux-theme-icon-contrast-gray: var(--lux-theme-contrast-custom-gray);
+  --lux-theme-icon-contrast-on-gray: var(--lux-theme-contrast-custom-on-gray);
+  --lux-theme-icon-contrast-orange: var(--lux-theme-contrast-custom-orange);
+  --lux-theme-icon-contrast-on-orange: var(--lux-theme-contrast-custom-on-orange);
+  --lux-theme-icon-contrast-yellow: var(--lux-theme-contrast-custom-yellow);
+  --lux-theme-icon-contrast-on-yellow: var(--lux-theme-contrast-custom-on-yellow);
+  --lux-theme-icon-contrast-pink: var(--lux-theme-contrast-custom-pink);
+  --lux-theme-icon-contrast-on-pink: var(--lux-theme-contrast-custom-on-pink);
+  --lux-theme-icon-contrast-lightblue: var(--lux-theme-contrast-custom-lightblue);
+  --lux-theme-icon-contrast-on-lightblue: var(--lux-theme-contrast-custom-on-lightblue);
+
   // LUX-Link-Plain
   --lux-theme-link-plain-color: #007cb1;
   --lux-theme-link-plain-hover-color: #4d7094;
+
+  // LUX-Messagebox
+  --lux-theme-messagebox-red: var(--lux-theme-custom-red);
+  --lux-theme-messagebox-on-red: var(--lux-theme-custom-on-red);
+  --lux-theme-messagebox-green: var(--lux-theme-custom-green);
+  --lux-theme-messagebox-on-green: var(--lux-theme-custom-on-green);
+  --lux-theme-messagebox-purple: var(--lux-theme-custom-purple);
+  --lux-theme-messagebox-on-purple: var(--lux-theme-custom-on-purple);
+  --lux-theme-messagebox-blue: var(--lux-theme-custom-blue);
+  --lux-theme-messagebox-on-blue: var(--lux-theme-custom-on-blue);
+  --lux-theme-messagebox-gray: var(--lux-theme-custom-gray);
+  --lux-theme-messagebox-on-gray: var(--lux-theme-custom-on-gray);
+  --lux-theme-messagebox-orange: var(--lux-theme-custom-orange);
+  --lux-theme-messagebox-on-orange: var(--lux-theme-custom-on-orange);
+  --lux-theme-messagebox-white: var(--lux-theme-custom-white);
+  --lux-theme-messagebox-on-white: var(--lux-theme-custom-on-white);
+  --lux-theme-messagebox-yellow: var(--lux-theme-custom-yellow);
+  --lux-theme-messagebox-on-yellow: var(--lux-theme-custom-on-yellow);
+  --lux-theme-messagebox-pink: var(--lux-theme-custom-pink);
+  --lux-theme-messagebox-on-pink: var(--lux-theme-custom-on-pink);
+  --lux-theme-messagebox-lightblue: var(--lux-theme-custom-lightblue);
+  --lux-theme-messagebox-on-lightblue: var(--lux-theme-custom-on-lightblue);
+
+  --lux-theme-messagebox-contrast-red: var(--lux-theme-contrast-custom-red);
+  --lux-theme-messagebox-contrast-on-red: var(--lux-theme-contrast-custom-on-red);
+  --lux-theme-messagebox-contrast-green: var(--lux-theme-contrast-custom-green);
+  --lux-theme-messagebox-contrast-on-green: var(--lux-theme-contrast-custom-on-green);
+  --lux-theme-messagebox-contrast-purple: var(--lux-theme-contrast-custom-purple);
+  --lux-theme-messagebox-contrast-on-purple: var(--lux-theme-contrast-custom-on-purple);
+  --lux-theme-messagebox-contrast-blue: var(--lux-theme-contrast-custom-blue);
+  --lux-theme-messagebox-contrast-on-blue: var(--lux-theme-contrast-custom-on-blue);
+  --lux-theme-messagebox-contrast-gray: var(--lux-theme-contrast-custom-gray);
+  --lux-theme-messagebox-contrast-on-gray: var(--lux-theme-contrast-custom-on-gray);
+  --lux-theme-messagebox-contrast-orange: var(--lux-theme-contrast-custom-orange);
+  --lux-theme-messagebox-contrast-on-orange: var(--lux-theme-contrast-custom-on-orange);
+  --lux-theme-messagebox-contrast-white: var(--lux-theme-contrast-custom-white);
+  --lux-theme-messagebox-contrast-on-white: var(--lux-theme-contrast-custom-on-white);
+  --lux-theme-messagebox-contrast-yellow: var(--lux-theme-contrast-custom-yellow);
+  --lux-theme-messagebox-contrast-on-yellow: var(--lux-theme-contrast-custom-on-yellow);
+  --lux-theme-messagebox-contrast-pink: var(--lux-theme-contrast-custom-pink);
+  --lux-theme-messagebox-contrast-on-pink: var(--lux-theme-contrast-custom-on-pink);
+  --lux-theme-messagebox-contrast-lightblue: var(--lux-theme-contrast-custom-lightblue);
+  --lux-theme-messagebox-contrast-on-lightblue: var(--lux-theme-contrast-custom-on-lightblue);
 
   // LUX-Stepper-Large
   --lux-theme-stepper-large-backdrop-bg: #636d76;

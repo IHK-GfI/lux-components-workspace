@@ -47,7 +47,7 @@ lux-progress {
   .lux-color-gray {
     @include mat.progress-spinner-overrides(
       (
-        active-indicator-color: var(--lux-theme-custom-grey)
+        active-indicator-color: var(--lux-theme-custom-gray)
       )
     );
   }

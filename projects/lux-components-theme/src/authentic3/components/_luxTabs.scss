@@ -1,6 +1,4 @@
-@use "sass:map";
 @use "@angular/material" as mat;
-@use "../luxVariables";
 @use "../base/luxfocus";
 @use "../base/luxbreakpoints";
 
@@ -52,7 +50,7 @@ lux-tabs {
   }
 
   .lux-notification-new {
-    background-color: map.get(luxVariables.$componentBgColors, "green");
+    background-color: var(--lux-theme-custom-green);
   }
 
   .lux-tabs-notification-icon {

@@ -357,21 +357,21 @@ lux-button.lux-uppercase {
   }
 }
 
-@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
+@each $colorName in luxVariables.$componentColorNames {
   .lux-color-#{"" + $colorName + ""} {
-    color: $colorNameHex;
+    color: var(--lux-theme-custom-#{$colorName});
   }
 }
 
-@each $colorName, $colorNameHex in luxVariables.$componentBgColors {
+@each $colorName in luxVariables.$componentColorNames {
   .lux-bg-color-#{"" + $colorName + ""} {
-    background: $colorNameHex;
+    background-color: var(--lux-theme-custom-#{$colorName});
   }
 }
 
-@each $colorName, $colorNameHex in luxVariables.$componentFontColors {
+@each $colorName in luxVariables.$componentColorNames {
   .lux-font-color-#{"" + $colorName + ""} {
-    color: $colorNameHex;
+    color: var(--lux-theme-custom-on-#{$colorName});
   }
 }
 

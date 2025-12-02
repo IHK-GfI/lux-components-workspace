@@ -2,7 +2,7 @@
 <mat-icon
   [svgIcon]="luxIconName"
   [ngStyle]="{ padding: luxPadding, width: luxIconSize, height: luxIconSize }"
-  [ngClass]="[backgroundCSSClass, fontCSSClass, luxRounded ? 'lux-icon-rounded-' + luxIconSize : '']"
+  [ngClass]="['lux-icon-' + luxColor, 'lux-icon-on-' + luxColor, luxRounded ? 'lux-icon-rounded-' + luxIconSize : '']"
   class="lux-icon"
 ></mat-icon>
 }

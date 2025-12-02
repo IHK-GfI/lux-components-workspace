@@ -3,10 +3,23 @@
 @use "../base/luxfocus";
 @use "../base/luxelevations";
 
+@mixin lux-message-color-mixin($prefix) {
+  @each $colorName in luxVariables.$componentColorNames {
+    .lux-messagebox-#{$colorName} {
+      background-color: var(#{$prefix}-#{$colorName});
+    }
+    .lux-messagebox-on-#{$colorName} {
+      color: var(#{$prefix}-on-#{$colorName});
+    }
+  }
+}
+
 lux-message-box {
   display: block;
   overflow: hidden;
   border-radius: 4px;
+
+  @include lux-message-color-mixin("--lux-theme-messagebox");
 
   &.mat-elevation-z4 {
     @include luxelevations.lux-elevation-z0();
@@ -25,7 +38,7 @@ lux-message-box {
       padding: var(--lux-theme-outline-width) 24px;
       border-radius: 4px;
 
-      &.lux-bg-color-white {
+      &.lux-messagebox-white {
         // da im Theme authentic der Schatten entfernt wurde, muss eine Weiße Messagebox eine Border erhalten.
         border: 1px solid var(--lux-theme-primary-color);
         box-sizing: border-box;
@@ -125,30 +138,13 @@ lux-message-box {
 
 @media (prefers-contrast: more) {
   lux-message-box {
+    @include lux-message-color-mixin("--lux-theme-messagebox-contrast");
+
     .lux-message-container {
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    }
-    
-    .lux-bg-color-red {
-      background-color: var(--lux-theme-warn-35);
-    }
-    .lux-font-color-green {
-      color: #ffffff;
-    }
-    .lux-bg-color-green {
-      background-color: var(--lux-theme-accent-30);
-    }
-    .lux-bg-color-gray {
-      background-color: var(--lux-theme-neutral-10);
-    }
-    .lux-bg-color-orange {
-      background-color: map.get(luxVariables.$colorsForDarkBg, 'yellow');
-    }
-    .lux-bg-color-purple {
-      background-color: var(--lux-theme-neutral-10);
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
     }
   }
 }
