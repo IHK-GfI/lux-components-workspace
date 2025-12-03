@@ -1,7 +1,9 @@
 @use "@angular/material" as mat;
 
 lux-toggle-ac {
-  @include mat.slide-toggle-overrides(());
+  @include mat.slide-toggle-overrides((
+    disabled-label-text-color: var(--lux-theme-dark-disabled-text)
+  ));
 
   lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic.lux-no-input-row {
     padding-top: 9px;

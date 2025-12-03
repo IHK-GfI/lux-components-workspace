@@ -36,7 +36,5 @@
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-
-    @include lux-badge-color-mixin("--lux-theme-badge-contrast");
   }
 }

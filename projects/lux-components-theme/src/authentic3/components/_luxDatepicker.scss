@@ -19,4 +19,8 @@ lux-datepicker-ac {
     padding-top: 4px;
     padding-bottom: 4px;
   }
+
+  button:not(:disabled) .lux-datepicker-toggle-icon {
+    color: var(--lux-theme-datepicker-icon-color);
+  }
 }

@@ -8,6 +8,7 @@ lux-tile-ac {
       title-text-size: 20px,
       title-text-weight: 500,
       subtitle-text-size: 15px,
+      subtitle-text-color: var(--lux-theme-dark-secondary-text),
       elevated-container-shape: var(--lux-theme-app-border-radius),
       elevated-container-elevation: #{"0 0 0 1px rgba(0, 0, 0, .12), #{$tileBoxShadow}"}
     )

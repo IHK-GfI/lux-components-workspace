@@ -30,8 +30,4 @@
   }
 
   @include lux-snackbar-color-mixin("--lux-theme-snackbar");
-
-  @media (prefers-contrast: more) {
-    @include lux-snackbar-color-mixin("--lux-theme-snackbar-contrast");
-  }
 }

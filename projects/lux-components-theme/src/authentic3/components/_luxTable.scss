@@ -13,6 +13,15 @@ lux-table {
     )
   );
 
+  // Paginator - Select für Seitenanzahl
+  .lux-table-paginator {
+    @include mat.form-field-overrides(
+      (
+        filled-container-color: transparent
+      )
+    );
+  }
+
   display: flex;
   height: 100%;
 

@@ -11,6 +11,7 @@ body {
 }
 
 h1 {
+  font-family: var(--lux-theme-app-headline-font);
   font-size: 2rem;
   font-weight: 500;
   margin-block-start: 1.2em;
@@ -18,6 +19,7 @@ h1 {
 }
 
 h2 {
+  font-family: var(--lux-theme-app-headline-font);
   font-size: 1.5rem;
   font-weight: 500;
   margin-block-start: 1.2em;
@@ -25,6 +27,7 @@ h2 {
 }
 
 h3 {
+  font-family: var(--lux-theme-app-headline-font);
   font-size: 1.25rem;
   font-weight: 500;
   margin-block-start: 1.2em;
@@ -32,6 +35,7 @@ h3 {
 }
 
 h4 {
+  font-family: var(--lux-theme-app-headline-font);
   font-size: 1rem;
   font-weight: 500;
   margin-block-start: 1.2em;
@@ -39,6 +43,7 @@ h4 {
 }
 
 h5 {
+  font-family: var(--lux-theme-app-headline-font);
   font-size: 0.875rem;
   font-weight: 700;
   margin-block-start: 2em;
@@ -46,6 +51,7 @@ h5 {
 }
 
 h6 {
+  font-family: var(--lux-theme-app-headline-font);
   font-size: 0.75rem;
   font-weight: 700;
   margin-block-start: 2em;

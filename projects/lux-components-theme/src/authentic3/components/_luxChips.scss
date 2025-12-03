@@ -60,7 +60,7 @@ lux-chips-ac {
   }
 
   // Border ausblenden
-  .lux-hide-input-border .lux-form-control-container-authentic {
+  lux-form-control-wrapper.lux-hide-input-border .lux-form-control-container-authentic {
     border: none;
     padding: 0;
     box-shadow: none !important; // den Focus-indicator für das Inputausblenden

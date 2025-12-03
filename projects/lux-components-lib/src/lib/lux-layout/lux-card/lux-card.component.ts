@@ -45,7 +45,10 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
     MatCardTitle,
     MatCardSubtitle,
     LuxCardHeadingComponent
-  ]
+  ],
+  host: {
+    class: 'lux-flex'
+  }
 })
 export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
   private componentsConfigService = inject(LuxComponentsConfigService);

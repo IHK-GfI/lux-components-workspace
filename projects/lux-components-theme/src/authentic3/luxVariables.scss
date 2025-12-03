@@ -97,9 +97,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   }
 
   // App
-  --lux-theme-app-header-bg: #{map.get(luxpalette.$lux-palette_primary, 90)};
+  --lux-theme-app-header-bg: #e0e7ed;
   --lux-theme-app-content-bg: #ffffff;
-  --lux-theme-app-footer-bg: #{map.get(luxpalette.$lux-palette_primary, 90)};
+  --lux-theme-app-footer-bg: #e0e7ed;
+  --lux-theme-app-footer-border-color: #{map.get(luxpalette.$lux-palette_primary, 20)};
   --lux-theme-app-data-bg: #ffffff;
   --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, #{map.get(luxpalette.$lux-palette_primary, 98)} 100%);
   --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, #{map.get(luxpalette.$lux-palette_primary, 98)} 100%);
@@ -138,13 +139,6 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-snackbar-yellow: #fbd12c;
   --lux-theme-snackbar-white: #ffffff;
 
-  --lux-theme-snackbar-contrast-red: #{map.get(luxpalette.$lux-palette_warn, 80)};
-  --lux-theme-snackbar-contrast-green: #{map.get(luxpalette.$lux-palette_accent, 80)};
-  --lux-theme-snackbar-contrast-blue: #{map.get(luxpalette.$lux-palette_primary, 80)};
-  --lux-theme-snackbar-contrast-orange: #fbd12c;
-  --lux-theme-snackbar-contrast-yellow: #fbd12c;
-  --lux-theme-snackbar-contrast-white: #ffffff;
-
   // Accordion
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
@@ -179,24 +173,11 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-lightblue: var(--lux-theme-custom-lightblue);
   --lux-theme-badge-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
-  --lux-theme-badge-contrast-red: var(--lux-theme-contrast-custom-red);
-  --lux-theme-badge-contrast-on-red: var(--lux-theme-contrast-custom-on-red);
-  --lux-theme-badge-contrast-green: var(--lux-theme-contrast-custom-green);
-  --lux-theme-badge-contrast-on-green: var(--lux-theme-contrast-custom-on-green);
-  --lux-theme-badge-contrast-purple: var(--lux-theme-contrast-custom-purple);
-  --lux-theme-badge-contrast-on-purple: var(--lux-theme-contrast-custom-on-purple);
-  --lux-theme-badge-contrast-blue: var(--lux-theme-contrast-custom-blue);
-  --lux-theme-badge-contrast-on-blue: var(--lux-theme-contrast-custom-on-blue);
-  --lux-theme-badge-contrast-gray: var(--lux-theme-contrast-custom-gray);
-  --lux-theme-badge-contrast-on-gray: var(--lux-theme-contrast-custom-on-gray);
-  --lux-theme-badge-contrast-orange: var(--lux-theme-contrast-custom-orange);
-  --lux-theme-badge-contrast-on-orange: var(--lux-theme-contrast-custom-on-orange);
-  --lux-theme-badge-contrast-yellow: var(--lux-theme-contrast-custom-yellow);
-  --lux-theme-badge-contrast-on-yellow: var(--lux-theme-contrast-custom-on-yellow);
-  --lux-theme-badge-contrast-pink: var(--lux-theme-contrast-custom-pink);
-  --lux-theme-badge-contrast-on-pink: var(--lux-theme-contrast-custom-on-pink);
-  --lux-theme-badge-contrast-lightblue: var(--lux-theme-contrast-custom-lightblue);
-  --lux-theme-badge-contrast-on-lightblue: var(--lux-theme-contrast-custom-on-lightblue);
+  // LUX-Card
+  --lux-theme-card-padding: 20px;
+
+  // LUX-Datepicker
+  --lux-theme-datepicker-icon-color: #{map.get(luxpalette.$lux-palette_primary, 20)};
 
   // LUX-Icon
   --lux-theme-icon-red: var(--lux-theme-custom-red);
@@ -219,25 +200,6 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-icon-on-pink: var(--lux-theme-custom-on-pink);
   --lux-theme-icon-lightblue: var(--lux-theme-custom-lightblue);
   --lux-theme-icon-on-lightblue: var(--lux-theme-custom-on-lightblue);
-
-  --lux-theme-icon-contrast-red: var(--lux-theme-contrast-custom-red);
-  --lux-theme-icon-contrast-on-red: var(--lux-theme-contrast-custom-on-red);
-  --lux-theme-icon-contrast-green: var(--lux-theme-contrast-custom-green);
-  --lux-theme-icon-contrast-on-green: var(--lux-theme-contrast-custom-on-green);
-  --lux-theme-icon-contrast-purple: var(--lux-theme-contrast-custom-purple);
-  --lux-theme-icon-contrast-on-purple: var(--lux-theme-contrast-custom-on-purple);
-  --lux-theme-icon-contrast-blue: var(--lux-theme-contrast-custom-blue);
-  --lux-theme-icon-contrast-on-blue: var(--lux-theme-contrast-custom-on-blue);
-  --lux-theme-icon-contrast-gray: var(--lux-theme-contrast-custom-gray);
-  --lux-theme-icon-contrast-on-gray: var(--lux-theme-contrast-custom-on-gray);
-  --lux-theme-icon-contrast-orange: var(--lux-theme-contrast-custom-orange);
-  --lux-theme-icon-contrast-on-orange: var(--lux-theme-contrast-custom-on-orange);
-  --lux-theme-icon-contrast-yellow: var(--lux-theme-contrast-custom-yellow);
-  --lux-theme-icon-contrast-on-yellow: var(--lux-theme-contrast-custom-on-yellow);
-  --lux-theme-icon-contrast-pink: var(--lux-theme-contrast-custom-pink);
-  --lux-theme-icon-contrast-on-pink: var(--lux-theme-contrast-custom-on-pink);
-  --lux-theme-icon-contrast-lightblue: var(--lux-theme-contrast-custom-lightblue);
-  --lux-theme-icon-contrast-on-lightblue: var(--lux-theme-contrast-custom-on-lightblue);
 
   // LUX-Link-Plain
   --lux-theme-link-plain-color: #007cb1;
@@ -265,27 +227,6 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-messagebox-lightblue: var(--lux-theme-custom-lightblue);
   --lux-theme-messagebox-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
-  --lux-theme-messagebox-contrast-red: var(--lux-theme-contrast-custom-red);
-  --lux-theme-messagebox-contrast-on-red: var(--lux-theme-contrast-custom-on-red);
-  --lux-theme-messagebox-contrast-green: var(--lux-theme-contrast-custom-green);
-  --lux-theme-messagebox-contrast-on-green: var(--lux-theme-contrast-custom-on-green);
-  --lux-theme-messagebox-contrast-purple: var(--lux-theme-contrast-custom-purple);
-  --lux-theme-messagebox-contrast-on-purple: var(--lux-theme-contrast-custom-on-purple);
-  --lux-theme-messagebox-contrast-blue: var(--lux-theme-contrast-custom-blue);
-  --lux-theme-messagebox-contrast-on-blue: var(--lux-theme-contrast-custom-on-blue);
-  --lux-theme-messagebox-contrast-gray: var(--lux-theme-contrast-custom-gray);
-  --lux-theme-messagebox-contrast-on-gray: var(--lux-theme-contrast-custom-on-gray);
-  --lux-theme-messagebox-contrast-orange: var(--lux-theme-contrast-custom-orange);
-  --lux-theme-messagebox-contrast-on-orange: var(--lux-theme-contrast-custom-on-orange);
-  --lux-theme-messagebox-contrast-white: var(--lux-theme-contrast-custom-white);
-  --lux-theme-messagebox-contrast-on-white: var(--lux-theme-contrast-custom-on-white);
-  --lux-theme-messagebox-contrast-yellow: var(--lux-theme-contrast-custom-yellow);
-  --lux-theme-messagebox-contrast-on-yellow: var(--lux-theme-contrast-custom-on-yellow);
-  --lux-theme-messagebox-contrast-pink: var(--lux-theme-contrast-custom-pink);
-  --lux-theme-messagebox-contrast-on-pink: var(--lux-theme-contrast-custom-on-pink);
-  --lux-theme-messagebox-contrast-lightblue: var(--lux-theme-contrast-custom-lightblue);
-  --lux-theme-messagebox-contrast-on-lightblue: var(--lux-theme-contrast-custom-on-lightblue);
-
   // LUX-Stepper-Large
   --lux-theme-stepper-large-backdrop-bg: #636d76;
   --lux-theme-stepper-large-completed-fc: #2e8533;
@@ -297,6 +238,32 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-stepper-large-nav-item-completed-bg: #ffffff;
   --lux-theme-stepper-large-nav-item-not-touched-fg: #003366;
   --lux-theme-stepper-large-nav-item-not-touched-bg: #ffffff;
+
+  // LUX-Textbox
+  --lux-theme-textbox-default-color: #ffffff;
+  --lux-theme-textbox-default-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-default-border-color: var(--lux-theme-primary-20);
+  --lux-theme-textbox-default-icon-color: var(--lux-theme-dark-primary-text);
+
+  --lux-theme-textbox-blue-color: linear-gradient(90deg, #e0e7ed, #ffffff);
+  --lux-theme-textbox-blue-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-blue-border-color: var(--lux-theme-primary-20);
+  --lux-theme-textbox-blue-icon-color: var(--lux-theme-primary-20);
+
+  --lux-theme-textbox-green-color: linear-gradient(90deg, #ebf7ed, #ffffff);
+  --lux-theme-textbox-green-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-green-border-color: #56bd66;
+  --lux-theme-textbox-green-icon-color: #56bd66;
+
+  --lux-theme-textbox-red-color: linear-gradient(90deg, #ffcacf, #ffffff);
+  --lux-theme-textbox-red-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-red-border-color: #ec2125;
+  --lux-theme-textbox-red-icon-color: #ec2125;
+
+  --lux-theme-textbox-yellow-color: linear-gradient(90deg, #fdf8e1, #ffffff);
+  --lux-theme-textbox-yellow-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-yellow-border-color: #f4cb25;
+  --lux-theme-textbox-yellow-icon-color: #f4cb25;
 
   // LUX-Tile
   --lux-theme-tile-font-hover-color: #2e8533;

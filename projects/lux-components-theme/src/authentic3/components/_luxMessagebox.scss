@@ -138,8 +138,6 @@ lux-message-box {
 
 @media (prefers-contrast: more) {
   lux-message-box {
-    @include lux-message-color-mixin("--lux-theme-messagebox-contrast");
-
     .lux-message-container {
       font-size: 1rem;
       font-style: normal;

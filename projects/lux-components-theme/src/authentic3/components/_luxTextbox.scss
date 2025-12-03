@@ -1,5 +1,15 @@
-$textbox_yellow: rgba(244, 203, 37, 1);
-$textbox_yellow_light: rgba(253, 248, 225, 1);
+@mixin lux-textbox($color) {
+  color: var(--lux-theme-textbox-#{$color}-on-color);
+  background: var(--lux-theme-textbox-#{$color}-color);
+  border: 1px solid var(--lux-theme-textbox-#{$color}-border-color);
+  lux-icon.lux-textbox-icon {
+    color: var(--lux-theme-textbox-#{$color}-icon-color);
+  }
+
+  .lux-textbox-content {
+    color: var(--lux-theme-textbox-#{$color}-on-color);
+  }
+}
 
 lux-textbox {
   .lux-textbox-container {
@@ -7,11 +17,8 @@ lux-textbox {
     grid-template-columns: 1.5em 1fr;
     gap: 1.5em;
     row-gap: 1em;
-    border: 1px solid var(--lux-theme-primary-20);
     border-radius: 4px;
     padding: 1.5em;
-
-    background-color: #ffffff;
 
     h1.lux-textbox-title,
     h2.lux-textbox-title,
@@ -29,14 +36,13 @@ lux-textbox {
       height: 24px;
       justify-self: start;
       align-self: start;
-      color: var(--lux-theme-primary-color);
       mat-icon.mat-icon.lux-icon {
         padding: 0 !important;
       }
     }
 
     .lux-textbox-content {
-      color: var(--lux-theme-dark-primary-text);
+      color: var(--lux-theme-textbox-default-on-color);
       grid-column-start: 2;
       font-size: 1rem;
       p {
@@ -58,29 +64,20 @@ lux-textbox {
       }
     }
 
+    &.lux-default {
+      @include lux-textbox(default);
+    }
     &.lux-blue {
-      background: linear-gradient(90deg, var(--lux-theme-primary-90), #ffffff);
+      @include lux-textbox(blue);
     }
     &.lux-green {
-      background: linear-gradient(90deg, var(--lux-theme-accent-98), #ffffff);
-      border-color: var(--lux-theme-accent-color);
-      lux-icon.lux-textbox-icon {
-        color: var(--lux-theme-accent-color);
-      }
+      @include lux-textbox(green);
     }
     &.lux-red {
-      background: linear-gradient(90deg, var(--lux-theme-warn-90), #ffffff);
-      border-color: var(--lux-theme-warn-color);
-      lux-icon.lux-textbox-icon {
-        color: var(--lux-theme-warn-color);
-      }
+      @include lux-textbox(red);
     }
     &.lux-yellow {
-      background: linear-gradient(90deg, $textbox_yellow_light, #ffffff);
-      border-color: $textbox_yellow;
-      lux-icon.lux-textbox-icon {
-        color: $textbox_yellow;
-      }
+      @include lux-textbox(yellow);
     }
   }
 }

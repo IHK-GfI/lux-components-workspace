@@ -46,7 +46,10 @@ lux-menu {
 .lux-menu-trigger-default {
   button.mat-mdc-button {
     white-space: nowrap;
-    color: var(--lux-theme-primary-20);
+
+    &:not(:disabled) {
+      color: var(--lux-theme-primary-20);
+    }
   }
 }
 

@@ -4,3 +4,21 @@
 $basepath: 'https://cdn.gfi.ihk.de/lux-components/icons-and-fonts/v1.10.0/';
 
 @include luxfonts.web-fonts($basepath);
+
+.lux-container {
+  margin: 0 auto;
+  padding: 8px;
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+
+  & > h1:first-child,
+  & > h2:first-child,
+  & > h3:first-child,
+  & > h4:first-child,
+  & > h5:first-child,
+  & > h6:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
