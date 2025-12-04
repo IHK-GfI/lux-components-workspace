@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -77,7 +76,6 @@ export class DatepickerAuthenticExampleComponent {
   showToggle = true;
   opened = false;
   startDate: string | null = null;
-  locale = 'de-DE';
   minDate: string | null = null;
   maxDate: string | null = null;
   startView: LuxStartAcView = 'month';
@@ -91,22 +89,6 @@ export class DatepickerAuthenticExampleComponent {
   customFilter?: LuxDateFilterAcFn;
 
   constructor() {
-    this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
-      switch (lang) {
-        case 'de':
-          this.locale = 'de-DE';
-          break;
-        case 'en':
-          this.locale = 'en-US';
-          break;
-        case 'fr':
-          this.locale = 'fr-FR';
-          break;
-        default:
-          this.locale = lang;
-      }
-    });
-
     this.form = new FormGroup<DatepickerDummyForm>({
       datepickerExample: new FormControl<string | null>(new Date(2020, 5, 28, 14, 15) as any) // Das FormControl wandelt das Date-Objekt in einen String um -> ['2021-09-07T23:00:00.000Z']
     });

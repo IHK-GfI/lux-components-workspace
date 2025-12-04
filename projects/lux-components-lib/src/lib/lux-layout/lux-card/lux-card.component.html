@@ -22,7 +22,7 @@
         [luxClass]="{
           'lux-hyphenate': luxTitleLineBreak,
           'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': (!luxTitle || luxTitle.length === 0) && !infoComponent
+          'lux-display-none-important': (!luxTitle || luxTitle.length === 0) && !infoComponent
         }"></lux-card-heading>
     </mat-card-title>
     <mat-card-subtitle
@@ -31,7 +31,7 @@
       [ngClass]="{
         'lux-hyphenate': luxTitleLineBreak,
         'lux-crop': !luxTitleLineBreak,
-        'lux-display-none': !luxSubTitle || luxSubTitle.length === 0
+        'lux-display-none-important': !luxSubTitle || luxSubTitle.length === 0
       }">
       {{ luxSubTitle }}
     </mat-card-subtitle>

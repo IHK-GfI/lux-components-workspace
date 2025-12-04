@@ -31,7 +31,6 @@
 | luxOpened              | boolean                                           | Bestimmt ob das Auswahlfenster ausgeklappt oder eingeklappt ist.                                                                                                                                                                                                                                                           |
 | luxStartDate           | string (z.B. 01.01.2000)                          | Bestimmt das Startdatum für den Datepicker. Nimmt Date-Objects und Date-Strings (z.B. '01.01.2018') entgegen. Nimmt nur noch Strings als mögliche Werte entgegen.                                                                                                                                                          |
 | luxShowToggle          | boolean                                           | Bestimmt ob der Toggle-Button sichtbar ist oder nicht.                                                                                                                                                                                                                                                                     |
-| luxLocale              | string                                            | Entspricht der Sprachformatierung die für diesen Datepicker genommen werden soll.                                                                                                                                                                                                                                          |
 | luxTagId               | string                                            | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                              |
 | luxCustomFilter        | LuxDateFilterFn                                   | Der optionale eigene Filter für den Datepicker.                                                                                                                                                                                                                                                                            |
 | luxMaxDate             | string (z.B. 01.01.2000)                          | Das maximale zulässige Datum für den Datepicker. Nimmt Date-Objects und Date-Strings (z.B. '01.01.2018') entgegen. Nimmt nur noch Strings als mögliche Werte entgegen.                                                                                                                                                     |
@@ -83,27 +82,16 @@ Html
 <lux-datepicker-ac
   luxLabel="Datepicker"
   [luxTouchUi]="true"
-  luxPlaceholder="DE"
-  [(luxValue)]="value"
-></lux-datepicker-ac>
-<lux-datepicker-ac
-  luxLabel="Datepicker"
-  [luxTouchUi]="true"
-  luxLocale="jp-JP"
-  luxPlaceholder="JP"
   [(luxValue)]="value"
 ></lux-datepicker-ac>
 <lux-datepicker-ac
   luxLabel="Datepicker"
   [luxTouchUi]="false"
-  luxLocale="en-US"
-  luxPlaceholder="US"
   [(luxValue)]="value"
 ></lux-datepicker-ac>
 <lux-datepicker-ac
   luxLabel="Datepicker"
   [luxDisabled]="true"
-  luxLocale="en-US"
   luxPlaceholder="Disabled"
   [(luxValue)]="value"
 ></lux-datepicker-ac>

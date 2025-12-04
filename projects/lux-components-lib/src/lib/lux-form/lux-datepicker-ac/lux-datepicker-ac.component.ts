@@ -1,5 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle, MatDatepickerToggleIcon } from '@angular/material/datepicker';
@@ -73,7 +74,6 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   @Input() luxOpened = false;
   @Input() luxStartDate: string | null = null;
   @Input() luxShowToggle = true;
-  @Input() luxLocale = 'de-DE';
   @Input() luxMaxDate: string | null = null;
   @Input() luxMinDate: string | null = null;
   @Input() luxNoLabels = false;
@@ -82,6 +82,8 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
 
   @ViewChild(MatDatepicker) matDatepicker?: MatDatepicker<any>;
   @ViewChild('datepickerInput', { read: ElementRef }) datepickerInput?: ElementRef;
+
+  luxLocale = signal<string>('de-DE');
 
   get luxCustomFilter() {
     return this._luxCustomFilter;
@@ -100,11 +102,40 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
     this.setValue(value);
   }
 
+  get dateInputValue() {
+    return this.datepickerInput?.nativeElement.value;
+  }
+
+  set dateInputValue(newValue: string) {
+    this.datepickerInput!.nativeElement.value = newValue;
+  }
+
   constructor() {
     super();
     // den Standard-Wert für Autocomplete für Datepicker ausschalten
     this.luxAutocomplete = 'off';
-    this.dateAdapter.setLocale(this.luxLocale);
+
+    this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
+      switch (lang) {
+        case 'de':
+          this.luxLocale.set('de-DE');
+          break;
+        case 'en':
+          this.luxLocale.set('en-US');
+          break;
+        case 'fr':
+          this.luxLocale.set('fr-FR');
+          break;
+        default:
+          this.luxLocale.set(lang);
+      }
+      this.dateAdapter.setLocale(this.luxLocale());
+
+      // Input-Feld neu formatieren
+      if (this.formControl && this.datepickerInput) {
+        this.dateInputValue = this.formatDateTime(this.formControl.value);
+      }
+    });
   }
 
   ngOnChanges(simpleChanges: SimpleChanges) {
@@ -306,5 +337,9 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   getHeaderByTheme(): any {
     const customHeader = LuxDatepickerAcCustomHeaderComponent;
     return this.themeService.getTheme().name === 'green' ? customHeader : null;
+  }
+
+  private formatDateTime(date: any) {
+    return this.dateAdapter.format(date, APP_DATE_FORMATS_AC.display.dateInput);
   }
 }
