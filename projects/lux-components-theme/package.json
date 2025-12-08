@@ -4,10 +4,9 @@
   "description": "",
   "private": false,
   "scripts": {
-    "build-authentic3": "del-cli --force ./../../dist/theme/*authentic3*.* && sass --style=compressed --load-path=../../node_modules src/authentic3/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic3-min.css && sass --load-path=../../node_modules src/authentic3/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic3.css",
-    "build-authentic": "del-cli --force ./../../dist/theme/*authentic*.* && sass --style=compressed --load-path=../../node_modules src/authentic/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic-min.css && sass --load-path=../../node_modules src/authentic/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic.css",
-    "build-green": "del-cli --force ./../../dist/theme/*green*.* && sass --style=compressed --load-path=../../node_modules src/green/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-green-min.css && sass --load-path=../../node_modules src/green/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-green.css",
-    "build": "node ./scripts/check-font-size.js && npm run clean && npm run build-authentic3 && npm run build-authentic && npm run build-green",
+    "build-authentic": "del-cli --force ./../../dist/theme/*authentic*.* && sass --style=compressed --load-path=../../node_modules src/theme-authentic/lux-authentic.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic-min.css && sass --load-path=../../node_modules src/theme-authentic/lux-authentic.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic.css",
+    "build-green": "del-cli --force ./../../dist/theme/*green*.* && sass --style=compressed --load-path=../../node_modules src/theme-green/lux-green.scss:./../../dist/theme/prebuilt-themes/luxtheme-green-min.css && sass --load-path=../../node_modules src/theme-green/lux-green.scss:./../../dist/theme/prebuilt-themes/luxtheme-green.css",
+    "build": "node ./scripts/check-font-size.js && npm run clean && npm run build-authentic && npm run build-green",
     "clean": "del-cli --force ./../../dist/theme/*.* && del-cli --force ../../dist/theme/",
     "pack-copy-base-files": "copyfiles -f package.json README.md ../../LICENSE ./../../dist/theme",
     "pack-copy-src-dirs": "copyfiles \"./src/**\" ./../../dist/theme",
@@ -23,26 +22,21 @@
     "@angular/material": "^20.0.0"
   },
   "watch": {
-    "build-authentic3": {
-      "patterns": [
-        "src/authentic3"
-      ],
-      "extensions": "scss"
-    },
     "build-authentic": {
       "patterns": [
-        "src/authentic"
+        "src/theme-authentic"
       ],
       "extensions": "scss"
     },
     "build-green": {
       "patterns": [
-        "src/green"
+        "src/theme-green"
       ],
       "extensions": "scss"
     },
     "build": {
       "patterns": [
+        "src/base-templates",
         "src/base",
         "src/public"
       ],

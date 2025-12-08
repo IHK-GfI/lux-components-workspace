@@ -1,0 +1,266 @@
+@use "../common/luxelevations";
+
+// Die lux-list besitzt eine unsichtbare Border für die Anzeige des Focus-Indicators
+// damit dieser vollständig angzeigt werden kann, muss die Master-View ein passendes Padding anbieten
+// damit der Master-Header/Master-Footer mit der Liste ausgerichtet werden, müssen sie ebenfalls mit dem
+// passenden Padding/Margin versehen werden.
+// Das Margin berechnet sich aus der Breite der Outline + 1px Abstand zu den Listitems.
+$listmargin: calc(var(--lux-theme-outline-width) + 1px);
+
+.lux-master-detail-ac {
+  // Hauptcontainer für die Komponente
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow-y: hidden;
+  z-index: 10;
+
+  &.lux-master-detail-ac-mobile {
+    gap: 0px;
+  }
+
+  // Hauptcontainer für den gesamten Master, steuert die Breite für die unterschiedlichen Bildschirmauflösungen
+  .lux-master-ac-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    max-height: 100%;
+    width: 30%;
+    max-width: 500px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+
+    &.lux-master-ac-container-medium {
+      // die Breite berechnet sich aus 50% minus die Hälft der gap zwischen Master- und Detail-Container
+      min-width: calc(50% - 15px);
+      max-width: calc(50% - 15px);
+    }
+    &.lux-master-closed {
+      border: 1px solid var(--lux-theme-app-border-color);
+      border-left-style: none;
+      border-radius: 0 4px 4px 0;
+      padding: 0;
+      width: 25px;
+      min-width: 25px;
+      max-width: 25px;
+      background-color: #fff;
+    }
+    &.lux-master-ac-container-mobile {
+      width: 100%;
+      max-width: unset;
+      border: none;
+      background-color: unset;
+    }
+  }
+
+  //Container für den Master-Header
+  .lux-master-header-container-ac {
+    z-index: 100;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    lux-button.master-ac-toggle {
+      position: absolute;
+      right: -18px;
+      top: 17px;
+      z-index: 1000;
+
+      button.lux-button.lux-button-rounded {
+        @include luxelevations.lux-elevation-z0;
+        border: 1px solid var(--lux-theme-app-border-color);
+        color: var(--lux-theme-primary-20);
+        background-color: #fff !important;
+      }
+
+      .lux-button-icon-round.lux-lx-icon.lux-no-size {
+        // optische Anpassung für das "Chevron"-Icon, damit es zentriert im Button sitzt
+        // // Anpassung erforderlich, falls das Icon ausgetauscht wird
+        padding-bottom: 4px;
+      }
+    }
+    button.lux-button.lux-button-rounded {
+      &:hover:not([disabled]) {
+        color: var(--lux-theme-hover-color);
+        border-radius: 50%;
+      }
+      &:active:not([disabled]) {
+        color: var(--lux-theme-primary-10);
+        background-color: #fff !important;
+      }
+    }
+    .lux-menu-extended {
+      padding: 0px;
+    }
+    mat-card-title,
+    h2 {
+      font-size: 1rem;
+    }
+    mat-card-subtitle.mat-mdc-card-subtitle {
+      font-size: 0.875rem;
+    }
+    .lux-master-header-content-container-ac {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+  }
+
+  lux-filter-form .lux-filter-card,
+  .detail-header-container .lux-detail-header-ac,
+  .lux-master-view-ac lux-list-item {
+    mat-card.mat-mdc-card {
+      padding: 12px;
+    }
+    mat-card-title,
+    h2 {
+      font-size: 1rem;
+    }
+    mat-card-subtitle.mat-mdc-card-subtitle {
+      font-size: 0.875rem;
+    }
+  }
+
+  .lux-empty-master-header {
+    div.lux-master-header-container-ac {
+      border: 1px solid var(--lux-theme-app-border-color);
+      border-radius: 4px;
+      background-color: #fff;
+      height: 72px;
+      lux-button.master-ac-toggle {
+        top: 18px;
+      }
+    }
+  }
+
+  .lux-master-view-ac {
+    height: 100%;
+    overflow-y: hidden;
+    z-index: 100;
+
+    lux-list {
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    lux-list-item {
+      /**
+      * Die List-Items basieren auf einer Card, für die Masterliste werden hier die Schriftgrößen und der White-Space verkleinert
+      */
+
+      mat-card.mat-mdc-card {
+        margin: 0px;
+
+        lux-list-item-content :last-child {
+          margin-bottom: 0px;
+          padding-bottom: 0px;
+        }
+
+        lux-icon.lux-lx-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    lux-list-item,
+    lux-list-item-content {
+      display: block;
+    }
+    .lux-list-empty-container {
+      margin: 20px auto;
+    }
+    .lux-list-empty-icon,
+    .lux-list-empty-icon-text {
+    color: rgb(97, 97, 97);
+      opacity: 1;
+      margin-bottom: 8px;
+    }
+  }
+
+  lux-master-footer-ac {
+    padding: 10px 12px 10px 16px;
+    z-index: 100;
+    border: 1px solid var(--lux-theme-app-border-color);
+    border-radius: 4px;
+    background-color: #fff;
+    .lux-menu-extended {
+      padding: 4px;
+    }
+  }
+
+  .lux-detail-ac-container {
+    position: relative;
+    border: 1px solid var(--lux-theme-app-border-color);
+    border-radius: 4px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 20px;
+    max-height: 100%;
+
+    &.lux-empty-detail {
+      width: 100%;
+    }
+
+    .lux-detail-header-ac {
+      mat-card.mat-mdc-card.lux-card {
+        border: none;
+      }
+    }
+
+    .lux-detail-empty-icon,
+    .lux-detail-empty-icon-text {
+    color: rgb(97, 97, 97);
+      opacity: 1;
+    }
+    &.lux-detail-ac-container-mobile {
+      border: none;
+      background-color: unset;
+      .lux-detail-header-ac {
+        mat-card.mat-mdc-card.lux-card {
+          border: 2px solid var(--lux-theme-primary-color);
+        }
+      }
+      .back-to-master-button-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px;
+
+        &:hover {
+          color: var(--lux-theme-hover-color);
+          cursor: pointer;
+        }
+
+        lux-button.back-to-master-button {
+          button.lux-button.lux-button-rounded {
+            @include luxelevations.lux-elevation-z0;
+            border: 1px solid var(--lux-theme-app-border-color);
+            color: var(--lux-theme-primary-20);
+          }
+          .lux-button-icon-round.lux-lx-icon.lux-no-size {
+            // optische Anpassung für das "Chevron"-Icon, damit es zentriert im Button sitzt
+            // Anpassung erforderlich, falls das Icon ausgetauscht wird
+            padding-bottom: 2px;
+          }
+        }
+        .back-to-master-label {
+          font-size: 1rem;
+          color: var(--lux-theme-primary-20);
+        }
+      }
+      .lux-detail-view-container {
+        border: 1px solid var(--lux-theme-app-border-color);
+        border-radius: 4px;
+        background-color: #fff;
+      }
+    }
+  }
+}

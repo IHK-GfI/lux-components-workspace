@@ -1,0 +1,34 @@
+@use "@angular/material" as mat;
+
+$componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yellow", "pink", "lightblue", "white");
+
+@mixin lux-snackbar-color-mixin($prefix) {
+  @each $colorName in $componentColorNames {
+    &.lux-snackbar-color-text-#{$colorName} .lux-snackbar-text {
+      color: var(#{$prefix}-#{$colorName});
+    }
+    &.lux-snackbar-color-icon-#{$colorName} .lux-snackbar-icon {
+      color: var(#{$prefix}-#{$colorName});
+    }
+    &.lux-snackbar-color-action-#{$colorName} .lux-snackbar-action {
+      color: var(#{$prefix}-#{$colorName});
+    }
+  }
+}
+
+.lux-snackbar {
+  @include mat.snack-bar-overrides(
+    (
+      supporting-text-size: 1rem,
+      supporting-text-weight: 600
+    )
+  );
+
+  .lux-snackbar-text,
+  .lux-snackbar-icon,
+  .lux-snackbar-action {
+    background-color: transparent;
+  }
+
+  @include lux-snackbar-color-mixin("--lux-theme-snackbar");
+}

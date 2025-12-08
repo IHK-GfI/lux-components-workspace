@@ -1,0 +1,58 @@
+@use "@angular/material" as mat;
+
+lux-button.lux-rounded:not(.lux-stroked) {
+  @include mat.fab-overrides(
+    (
+      extended-container-height: 50px,
+      extended-label-text-size: var(--lux-theme-button-rounded-text-size),
+      container-shape: var(--lux-theme-button-rounded-container-shape),
+      container-elevation-shadow: none,
+      hover-container-elevation-shadow: none,
+      focus-container-elevation-shadow: none,
+      pressed-container-elevation-shadow: none,
+      foreground-color: #1c1b1b,
+      container-color: transparent,
+      touch-target-size: var(--lux-theme-button-rounded-container-height)
+    )
+  );
+
+  .mat-primary {
+    @include mat.fab-overrides(
+      (
+        foreground-color: #ffffff,
+        container-color: #003366,
+        hover-state-layer-opacity: 0.9
+      )
+    );
+  }
+
+  .mat-accent {
+    @include mat.fab-overrides(
+      (
+        foreground-color: #1c1b1b,
+        container-color: #56bd66,
+        hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.fab-overrides(
+      (
+        foreground-color: #ffffff,
+        container-color: #c00013,
+        hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  .mat-mdc-fab-base {
+    width: var(--lux-theme-button-rounded-container-height);
+    height: var(--lux-theme-button-rounded-container-height);
+  }
+
+  .lux-icon {
+    width: var(--lux-theme-button-rounded-text-size) !important;
+    height: var(--lux-theme-button-rounded-text-size) !important;
+  }
+}

@@ -1,0 +1,131 @@
+@use "@angular/material" as mat;
+@use "../common/luxfocus";
+
+$margin-right-icon: 20px;
+
+lux-card {
+  @include mat.card-overrides(
+    (
+      outlined-container-color: var(--lux-theme-app-data-bg),
+      outlined-container-shape: var(--lux-theme-app-border-radius),
+      title-text-size: 1.5rem,
+      title-text-weight: 500,
+      subtitle-text-size: 1rem,
+      subtitle-text-weight: 500,
+      subtitle-text-color: var(--lux-theme-dark-secondary-text)
+    )
+  );
+
+  // Falls die lux-card in einem lux-grid verwendet wird und alle Cards einer Reihe dieselbe Höhe erhalten sollen
+  // müssen mat-card und mat-card-content entsprechend angepasst werden.
+  // Diese Anforderung stammt aus dem Verhalten der ehemaligen Lux-Layout-Card-Row.
+  &.lux-flex {
+    .lux-card,
+    .lux-card-content {
+      flex: 1 1 auto;
+    }
+  }
+
+  .lux-card {
+    width: 100%;
+
+    .lux-card-header {
+      padding: var(--lux-theme-card-padding) var(--lux-theme-card-padding) 0;
+
+      .mat-mdc-card-header-text {
+        // Damit der Titel und Subtitle nicht umbrechen und stattdessen abgeschnitten werden, wenn der Text zu lang ist.
+        // Ohne die min-width würde ein langer Text dazu führen, dass der Header breiter als die Card wird.
+        min-width: 0;
+      }
+
+      // Hier wird die Reihenfolge der Elemente im Header der lux-card festgelegt.
+      // Dies ist notwendig, damit das Icon links, der Titel in der Mitte und die Info-Komponente rechts angezeigt werden.
+      > * {
+        order: 10;
+      }
+
+      .lux-card-icon-container {
+        margin-right: 10px;
+        order: 5;
+      }
+
+      .lux-card-info-container {
+        order: 15;
+
+        // Damit die Info-Komponente immer rechtsbündig im Card-Header ist, auch wenn der Titel oder Subtitle kurz sind.
+        margin-left: auto;
+      }
+
+      .lux-card-title {
+        margin-right: $margin-right-icon;
+        // Die Styles der Überschriften innerhalb der lux-card zurücksetzen, damit die Styles der Card übernommen werden.
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          color: unset;
+          font-size: unset;
+          font-weight: unset;
+          font-family: unset;
+          padding: unset;
+          margin: unset;
+        }
+      }
+    }
+
+    .lux-card-subtitle {
+      margin-right: $margin-right-icon;
+    }
+
+    .lux-card-content {
+      display: flex;
+      flex-direction: column;
+      padding: 0 var(--lux-theme-card-padding);
+      overflow-y: hidden;
+
+      .lux-card-content-container {
+        display: flex;
+        flex-direction: column;
+
+        // Abstand zwischen dem Inhalt und dem Expanded-Bereich der Card.
+        gap: 0.75rem;
+      }
+
+      // Wenn es einen Header und Content gibt, soll oben im Content ein Padding gesetzt werden.
+      .lux-card-with-content-and-header {
+        padding-top: var(--lux-theme-card-padding);
+      }
+
+      &.lux-card-no-actions {
+        // Wenn es keine Aktionen gibt, soll unten im Content ein Padding gesetzt werden.
+        padding-bottom: var(--lux-theme-card-padding);
+      }
+    }
+
+    // Die Material Card hat nur ein Padding von 8px, dies wird hier auf $padding gesetzt,
+    // damit es mit den anderen Paddings innerhalb der Card (wie z.B. Header und Content) übereinstimmt.
+    .lux-card-actions {
+      padding: var(--lux-theme-card-padding);
+    }
+  }
+
+  .lux-card {
+    &[class~="lux-cursor"]:hover {
+      background-image: var(--lux-theme-app-gradient-reverse);
+      background-color: #ffffff;
+      border-color: var(--lux-theme-dark-primary-text);
+
+      .lux-card-content-expanded {
+        background-image: var(--lux-theme-app-gradient-reverse);
+        background-color: #ffffff;
+        border-color: var(--lux-theme-dark-primary-text);
+      }
+    }
+
+    &[class~="lux-cursor"]:focus-visible {
+      @include luxfocus.focus-dark-mixin-inline;
+    }
+  }
+}

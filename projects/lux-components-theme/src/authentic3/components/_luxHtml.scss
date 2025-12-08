@@ -1,8 +1,0 @@
-@use "../base/luxfocus";
-
-lux-html {
-  & a[href]:focus-visible {
-    @include luxfocus.focus-dark-mixin;
-    border-radius: var(--lux-theme-app-border-radius);
-  }
-}

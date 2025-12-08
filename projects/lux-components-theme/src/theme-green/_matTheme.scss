@@ -1,0 +1,134 @@
+@use "@angular/material" as mat;
+@use "sass:map";
+@use "palettes";
+
+$lux-theme: mat.define-theme(
+  (
+    color: (
+      primary: palettes.$lux-palette_primary,
+      use-system-variables: true
+    ),
+    typography: (
+      plain-family: Source Sans Pro,
+      brand-family: Blogger Sans
+    ),
+    density: (
+      scale: 0
+    )
+  )
+);
+
+:root {
+  @include mat.all-component-themes($lux-theme);
+  @include mat.system-level-colors($lux-theme);
+  @include mat.system-level-typography($lux-theme);
+
+  --lux-theme-primary-color: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-accent-color: #{map.get(palettes.$lux-palette_secondary, 20)};
+  --lux-theme-warn-color: #{map.get(palettes.$lux-palette_warn, 20)};
+}
+
+@function _high-contrast-value($light, $dark, $theme-type) {
+  @if ($theme-type == light) {
+    @return $light;
+  }
+  @if ($theme-type == dark) {
+    @return $dark;
+  }
+  @if ($theme-type == color-scheme) {
+    @return light-dark(#{$light}, #{$dark});
+  }
+
+  @error "Unknown theme-type #{$theme-type}. Expected light, dark, or color-scheme";
+}
+
+// prettier-ignore
+:root {
+@include mat.theme-overrides(
+  (
+    "primary": map.get(map.get(palettes.$luxPalettes, "primary"), 20),                   //bg-farbe primary-button
+    "on-primary": #ffffff,                                                               //text-farbe primary-button
+    "primary-container": map.get(map.get(palettes.$luxPalettes, "primary"), 90),         //für app-header und app-footer
+    "on-primary-container": map.get(map.get(palettes.$luxPalettes, "primary"), 20),
+    "secondary": map.get(map.get(palettes.$luxPalettes, "primary"), 90),                 //bg-farbe secondary-button
+    "on-secondary": map.get(map.get(palettes.$luxPalettes, "primary"), 10),              //text-farbe secondary-button
+    "secondary-container": map.get(map.get(palettes.$luxPalettes, "primary"), 40),       //hover-color, bg-hover-color für menu-items
+    "on-secondary-container": map.get(map.get(palettes.$luxPalettes, "primary"), 100),   // text-farbe für gehoverte menu-items
+    "tertiary": map.get(map.get(palettes.$luxPalettes, "tertiary"), 70),                 //bg-farbe für tertiary-button /früher accent
+    "on-tertiary": map.get(map.get(palettes.$luxPalettes, "tertiary"), 100),             //text-farbe für tertiary-button
+    "tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 95),       //farbe für accordion
+    "on-tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 30),
+    "error": map.get(map.get(palettes.$luxPalettes, "error"), 50),                       // bg-farbe für error-button
+    "on-error": map.get(map.get(palettes.$luxPalettes, "error"), 100),
+    "error-container": map.get(map.get(palettes.$luxPalettes, "error"), 90),             //bg-farbe für Error-Message unter input, accordion-farbe
+    "on-error-container": map.get(map.get(palettes.$luxPalettes, "error"), 30),          //text-farbe für Error-Message unter input
+    "background": map.get(map.get(palettes.$luxPalettes, "primary"), 98),                //fallback-farbe für den app-gradient
+    "on-background": map.get(map.get(palettes.$luxPalettes, "neutral"), 10),             // primary-text-color
+    "surface": map.get(map.get(palettes.$luxPalettes, "primary"), 100),                  //bg-farbe für input, cards, menu-panels
+    "on-surface": map.get(map.get(palettes.$luxPalettes, "neutral"), 10),                // primary-text-color
+    "surface-variant": map.get(map.get(palettes.$luxPalettes, "primary"), 98),
+    "on-surface-variant": map.get(map.get(palettes.$luxPalettes, "neutral"), 40),        //secondary-text-color
+    "outline": map.get(map.get(palettes.$luxPalettes, "neutral"), 60),                   //form-border-color und secondary-text-color
+    "outline-variant": map.get(map.get(palettes.$luxPalettes, "neutral"), 90),           //app-border-color
+    "surface-container-lowest": map.get(map.get(palettes.$luxPalettes, "primary"), 100), //alternative farben für elemente, bisher noch nicht definiert
+    "surface-container": map.get(map.get(palettes.$luxPalettes, "primary"), 99),
+    "surface-container-high": map.get(map.get(palettes.$luxPalettes, "primary"), 98),    //bg-farbe für accordion
+    "surface-container-highest": map.get(map.get(palettes.$luxPalettes, "primary"), 95)
+  )
+);
+}
+
+@mixin high-contrast-overrides($theme-type) {
+  @include mat.theme-overrides(
+    (
+      primary: _high-contrast-value(#001e40, #eaf0ff, $theme-type),
+      on-primary: _high-contrast-value(#ffffff, #000000, $theme-type),
+      primary-container: _high-contrast-value(#003366, #a1c4ff, $theme-type),
+      on-primary-container: _high-contrast-value(#ebf0ff, #000b1f, $theme-type),
+      inverse-primary: _high-contrast-value(#a7c8ff, #21487c, $theme-type),
+      primary-fixed: _high-contrast-value(#224a7d, #d5e3ff, $theme-type),
+      primary-fixed-dim: _high-contrast-value(#003265, #a7c8ff, $theme-type),
+      on-primary-fixed: _high-contrast-value(#ffffff, #000000, $theme-type),
+      on-primary-fixed-variant: _high-contrast-value(#ffffff, #001129, $theme-type),
+      secondary: _high-contrast-value(#202c41, #eaf0ff, $theme-type),
+      on-secondary: _high-contrast-value(#ffffff, #000000, $theme-type),
+      secondary-container: _high-contrast-value(#3d4a5f, #b6c3dd, $theme-type),
+      on-secondary-container: _high-contrast-value(#ffffff, #000b1e, $theme-type),
+      secondary-fixed: _high-contrast-value(#3d4a5f, #d6e3fe, $theme-type),
+      secondary-fixed-dim: _high-contrast-value(#263348, #bac7e1, $theme-type),
+      on-secondary-fixed: _high-contrast-value(#ffffff, #000000, $theme-type),
+      on-secondary-fixed-variant: _high-contrast-value(#ffffff, #041124, $theme-type),
+      tertiary: _high-contrast-value(#002408, #c3ffc2, $theme-type),
+      on-tertiary: _high-contrast-value(#ffffff, #000000, $theme-type),
+      tertiary-container: _high-contrast-value(#003c13, #71d87e, $theme-type),
+      on-tertiary-container: _high-contrast-value(#c3ffc2, #000f02, $theme-type),
+      tertiary-fixed: _high-contrast-value(#00551e, #90f99b, $theme-type),
+      tertiary-fixed-dim: _high-contrast-value(#003c12, #75dc81, $theme-type),
+      on-tertiary-fixed: _high-contrast-value(#ffffff, #000000, $theme-type),
+      on-tertiary-fixed-variant: _high-contrast-value(#ffffff, #001604, $theme-type),
+      background: _high-contrast-value(#faf9f9, #121414, $theme-type),
+      on-background: _high-contrast-value(#1a1c1c, #e3e2e2, $theme-type),
+      surface: _high-contrast-value(#faf9f9, #121414, $theme-type),
+      surface-dim: _high-contrast-value(#b9b9b8, #121414, $theme-type),
+      surface-bright: _high-contrast-value(#faf9f9, #4f5050, $theme-type),
+      surface-container-lowest: _high-contrast-value(#ffffff, #000000, $theme-type),
+      surface-container: _high-contrast-value(#e3e2e2, #2f3131, $theme-type),
+      surface-container-high: _high-contrast-value(#d5d4d4, #3a3c3c, $theme-type),
+      surface-container-highest: _high-contrast-value(#c7c6c6, #464747, $theme-type),
+      on-surface: _high-contrast-value(#000000, #ffffff, $theme-type),
+      shadow: _high-contrast-value(#000000, #000000, $theme-type),
+      scrim: _high-contrast-value(#000000, #000000, $theme-type),
+      surface-tint: _high-contrast-value(#3a5f94, #a7c8ff, $theme-type),
+      inverse-surface: _high-contrast-value(#2f3131, #e3e2e2, $theme-type),
+      inverse-on-surface: _high-contrast-value(#ffffff, #000000, $theme-type),
+      outline: _high-contrast-value(#282c34, #edf0fa, $theme-type),
+      outline-variant: _high-contrast-value(#454952, #bfc2cd, $theme-type),
+      error: _high-contrast-value(#600004, #ffece9, $theme-type),
+      on-error: _high-contrast-value(#ffffff, #000000, $theme-type),
+      error-container: _high-contrast-value(#98000a, #ffaea4, $theme-type),
+      on-error-container: _high-contrast-value(#ffffff, #220001, $theme-type),
+      surface-variant: _high-contrast-value(#dfe2ed, #43474f, $theme-type),
+      on-surface-variant: _high-contrast-value(#000000, #ffffff, $theme-type)
+    )
+  );
+}

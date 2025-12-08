@@ -16,7 +16,6 @@ export class LuxThemeService {
 
   constructor() {
     this.themes = [
-      { name: 'authentic3', styleUrl: 'assets/themes/luxtheme-authentic3-min.css' },
       { name: 'authentic', styleUrl: 'assets/themes/luxtheme-authentic-min.css' },
       { name: 'green', styleUrl: 'assets/themes/luxtheme-green-min.css' }
     ];

@@ -1,0 +1,52 @@
+@use "@angular/material" as mat;
+
+lux-button.lux-flat {
+  @include mat.button-overrides(
+    (
+      filled-label-text-tracking: var(--lux-theme-button-flat-text-tracking),
+      filled-label-text-font: var(--lux-theme-button-flat-font),
+      filled-label-text-size: var(--lux-theme-button-flat-text-size),
+      filled-label-text-weight: var(--lux-theme-button-flat-text-weight),
+      filled-container-shape: var(--lux-theme-button-flat-container-shape),
+      filled-horizontal-padding: 16px,
+      filled-container-height: var(--lux-theme-button-flat-container-height),
+      filled-label-text-color: #000000,
+      filled-container-color: #ffffff,
+      filled-focus-state-layer-opacity: 0.1,
+      filled-hover-state-layer-opacity: 0.1
+    )
+  );
+
+  .mat-primary {
+    @include mat.button-overrides(
+      (
+        filled-label-text-color: #ffffff,
+        filled-container-color: #003366,
+        filled-focus-state-layer-opacity: 0.1,
+        filled-hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  .mat-accent {
+    @include mat.button-overrides(
+      (
+        filled-label-text-color: #000000,
+        filled-container-color: #56bd66,
+        filled-focus-state-layer-opacity: 0.1,
+        filled-hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.button-overrides(
+      (
+        filled-label-text-color: #ffffff,
+        filled-container-color: #c00013,
+        filled-focus-state-layer-opacity: 0.1,
+        filled-hover-state-layer-opacity: 0.1
+      )
+    );
+  }
+}

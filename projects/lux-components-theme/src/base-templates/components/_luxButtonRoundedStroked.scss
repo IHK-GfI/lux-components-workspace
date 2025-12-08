@@ -1,0 +1,75 @@
+@use "@angular/material" as mat;
+
+lux-button.lux-rounded.lux-stroked {
+  @include mat.fab-overrides(
+    (
+      container-shape: var(--lux-theme-button-rounded-stroked-container-shape),
+      container-elevation-shadow: none,
+      hover-container-elevation-shadow: none,
+      focus-container-elevation-shadow: none,
+      pressed-container-elevation-shadow: none,
+      foreground-color: #1c1b1b,
+      container-color: transparent,
+      touch-target-size: var(--lux-theme-button-rounded-stroked-container-height)
+    )
+  );
+
+  .lux-stroked {
+    &.mat-primary {
+      @include mat.fab-overrides(
+        (
+          foreground-color: #003366,
+          container-color: transparent,
+          hover-state-layer-opacity: 0.1
+        )
+      );
+    }
+
+    &.mat-accent {
+      @include mat.fab-overrides(
+        (
+          foreground-color: #00531d,
+          container-color: transparent,
+          hover-state-layer-opacity: 0.1
+        )
+      );
+    }
+
+    &.mat-warn {
+      @include mat.fab-overrides(
+        (
+          foreground-color: #c00013,
+          container-color: transparent,
+          hover-state-layer-opacity: 0.1
+        )
+      );
+    }
+  }
+
+  .mat-mdc-fab-base {
+    width: var(--lux-theme-button-rounded-stroked-container-height);
+    height: var(--lux-theme-button-rounded-stroked-container-height);
+  }
+
+  .lux-icon {
+    width: var(--lux-theme-button-rounded-stroked-text-size) !important;
+    height: var(--lux-theme-button-rounded-stroked-text-size) !important;
+  }
+
+  .lux-stroked:not(:disabled) {
+    border: 1px solid;
+    border-color: #1c1b1b;
+
+    &.mat-primary {
+      border-color: #003366;
+    }
+
+    &.mat-accent {
+      border-color: #00531d;
+    }
+
+    &.mat-warn {
+      border-color: #c00013;
+    }
+  }
+}

@@ -159,12 +159,6 @@
         luxTagId="theme-authentic-menu-item-ac"
         (luxClicked)="onChangeTheme('authentic')"
       ></lux-menu-item>
-      <lux-menu-item
-        luxLabel="Theme - authentic3"
-        [luxDisabled]="false"
-        luxTagId="theme-authentic3-menu-item-ac"
-        (luxClicked)="onChangeTheme('authentic3')"
-      ></lux-menu-item>
     </lux-app-header-right-nav>
     }
   </lux-app-header>
@@ -204,13 +198,6 @@
         [luxClass]="themeName === 'authentic' ? 'lux-selected-item-ac' : ''"
         luxTagId="theme-authentic-menu-item-ac"
         (luxClicked)="onChangeTheme('authentic')"
-      ></lux-menu-item>
-      <lux-menu-item
-        luxLabel="Theme - authentic3"
-        [luxDisabled]="themeName === 'authentic3'"
-        [luxClass]="themeName === 'authentic3' ? 'lux-selected-item-ac' : ''"
-        luxTagId="theme-authentic3-menu-item-ac"
-        (luxClicked)="onChangeTheme('authentic3')"
       ></lux-menu-item>
     </lux-app-header-ac-user-menu>
     }

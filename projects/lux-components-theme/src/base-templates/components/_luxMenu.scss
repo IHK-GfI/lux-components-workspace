@@ -1,0 +1,125 @@
+@use "@angular/material" as mat;
+@use "../common/luxSvgIcons" as luxicons;
+
+lux-menu {
+  display: block;
+  width: 100%;
+
+  .lux-menu-extended,
+  .lux-menu-trigger {
+    > lux-button {
+      button {
+        padding-left: 8px;
+        padding-right: 8px;
+        min-width: 36px;
+      }
+    }
+  }
+}
+
+// Container für die Buttons und den Trigger ausserhalb des Menu-Panels
+.lux-menu-extended {
+  overflow: hidden;
+  min-width: 0;
+  padding: 4px 0;
+  position: relative;
+
+  > lux-button {
+    margin-right: 8px;
+    &.lux-menu-item .lux-button-label {
+      white-space: nowrap;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+// Container für den Menu-Trigger-button
+.lux-menu-trigger {
+  display: flex;
+  flex: 0 0 auto;
+  margin: 0 4px;
+  align-self: center;
+  box-sizing: border-box;
+}
+
+.lux-menu-trigger-default {
+  button.mat-mdc-button {
+    white-space: nowrap;
+
+    &:not(:disabled) {
+      color: var(--lux-theme-primary-20);
+    }
+  }
+}
+
+/* Menu-Overlay-Panel anpassen */
+.lux-menu-panel {
+  @include mat.menu-overrides(
+    (
+      container-shape: var(--lux-theme-app-border-radius),
+      container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
+    )
+  );
+
+  .lux-selected-item-ac {
+    font-weight: 600;
+    color: var(--lux-theme-primary-color);
+    .lux-button-label {
+      padding-right: 24px;
+      &::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: 0;
+        top: 14px;
+        margin: 0 10px 0 4px;
+        background-color: var(--lux-theme-primary-color);
+        -webkit-mask: url(luxicons.$checkmark);
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        -webkit-mask-size: cover;
+        mask: url(luxicons.$checkmark);
+        mask-repeat: no-repeat;
+        mask-position: center;
+        mask-size: cover;
+      }
+    }
+  }
+
+  .mat-mdc-menu-item-text {
+    display: flex;
+  }
+
+  .lux-button-badge-container {
+    min-width: 38px;
+    vertical-align: middle;
+    align-self: center;
+  }
+
+  .lux-button-badge {
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 0.6875rem;
+    line-height: normal;
+    max-height: 16px;
+    min-width: 15px;
+    max-width: 38px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+    letter-spacing: 1.25px;
+  }
+
+  .lux-menu-item-icon {
+    align-self: center;
+    vertical-align: middle;
+    mat-icon {
+      margin: 0;
+    }
+  }
+}
