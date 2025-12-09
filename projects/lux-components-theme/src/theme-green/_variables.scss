@@ -107,7 +107,15 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-border-radius: 4px;
 
   // Form
+  --lux-theme-form-border-width: 1px;
+  --lux-theme-form-min-height: 40px;
+  --lux-theme-form-dense-border-width: 1px;
+  --lux-theme-form-dense-min-height: 34px;
   --lux-theme-form-border-color: rgba(0, 0, 0, 0.42);
+  --lux-theme-form-focus-border-color: var(--lux-theme-primary-20);
+  --lux-theme-form-focus-box-shadow: 0 0 0 2px #2e8533, 0 0 4px 2px #2e8533;
+  --lux-theme-form-error-border-color: var(--lux-theme-warn-50);
+  --lux-theme-form-error-box-shadow: 0 0 0 2px var(--lux-theme-warn-50), 0 0 4px 2px var(--lux-theme-warn-50);
   --lux-theme-form-control-font-size: 1rem;
   --lux-theme-form-control-buffer: 6px;
   --lux-theme-form-error-msg-background: rgb(255, 228, 231);
@@ -271,7 +279,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-stepper-large-nav-item-font-size: 1.375rem;
   --lux-theme-stepper-large-nav-item-font-weight: 400;
   --lux-theme-stepper-large-nav-item-line-height: 2.0625rem;
-  --lux-theme-stepper-large-nav-item-completed-font-size:  1.375rem;
+  --lux-theme-stepper-large-nav-item-completed-font-size: 1.375rem;
   --lux-theme-stepper-large-nav-item-completed-font-weight: 400;
   --lux-theme-stepper-large-nav-item-completed-line-height: 2.0625rem;
   --lux-theme-stepper-large-nav-item-number-container-background-color: #eff3f6;

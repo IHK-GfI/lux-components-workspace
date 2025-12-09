@@ -1,3 +1,5 @@
+@use "@angular/material" as mat;
+
 @mixin crop {
   overflow: hidden;
   white-space: nowrap;
@@ -9,6 +11,47 @@
   font-size: 0.75em;
   line-height: 1.2em;
   color: var(--lux-theme-dark-secondary-text);
+}
+
+@mixin lux-form-control-min-height($min-height) {
+  input,
+  mat-select,
+  .lux-file-container {
+    min-height: calc(#{$min-height} - (2 * var(--lux-theme-form-border-width)));
+  }
+
+  // Sonderbehandlung für Textarea-Tags
+  // Textareas setzen die height und min-height als inline-Style (z.B. style="height: 50px; min-height: 50px;")
+  // Aus diesem Grund muss das !important genutzt werden, um die Höhe für die Klasse .lux-dense-authentic zu überschreiben
+  textarea {
+    min-height: calc(#{$min-height} - (2 * var(--lux-theme-form-border-width))) !important;
+    height: calc(#{$min-height} - (2 * var(--lux-theme-form-border-width))) !important;
+  }
+
+  .lux-toggle,
+  .lux-checkbox,
+  .lux-radio,
+  .lux-slider-ac,
+  .mdc-slider__thumb {
+    min-height: #{$min-height};
+    height: #{$min-height};
+  }
+
+  .lux-slider-ac {
+    height: #{$min-height};
+  }
+
+  .lux-toggle,
+  .lux-checkbox,
+  .lux-radio,
+  mat-select,
+  textarea {
+    align-content: center;
+  }
+
+  .mdc-slider__value-indicator-container {
+    bottom: calc((#{$min-height} / 2) + var(--mat-slider-value-indicator-height));
+  }
 }
 
 lux-form-control-wrapper {
@@ -40,20 +83,13 @@ lux-form-control-wrapper {
     .lux-form-control-container-authentic {
       flex: 1 1 auto;
       box-sizing: border-box;
-      padding: 0.75em 0.5em;
+      padding: 0 0.5rem;
       font-size: var(--lux-theme-form-control-font-size);
       color: var(--lux-theme-dark-primary-text);
       background-color: #fff;
-      line-height: 1.5em;
-      border: 1px solid var(--lux-theme-form-border-color);
+      // line-height: 1.5em;
+      border: var(--lux-theme-form-border-width) solid var(--lux-theme-form-border-color);
       border-radius: 4px;
-      &.lux-no-input-row {
-        // lux-toggel-ac, lux-checkbox-ac, lux-slider-ac, lux-radio-ac werden auf der Baseline ausgerichtet
-        // haben aber nicht den Rahmen, den die Input-Elemente haben
-        background-color: transparent;
-        border: none;
-        padding: 0.75em 0em;
-      }
     }
 
     .lux-form-control-misc-authentic {
@@ -61,7 +97,7 @@ lux-form-control-wrapper {
       place-content: flex-start space-between;
       align-items: flex-start;
       box-sizing: border-box;
-      margin: 0.25em calc(0.5em + 1px) 0 calc(0.5em + 1px);
+      margin: 0.25em calc(0rem + 1px) 0 calc(0rem + 1px);
       @include form-label;
       word-wrap: break-word;
 
@@ -81,6 +117,39 @@ lux-form-control-wrapper {
       }
     }
 
+    // Anpassungen der min-height der verschiedenen Form-Controls
+
+    &.lux-dense-authentic {
+      @include mat.checkbox-overrides(
+        (
+          touch-target-size: var(--lux-theme-form-dense-min-height),
+          state-layer-size: var(--lux-theme-form-dense-min-height)
+        )
+      );
+
+      @include mat.radio-overrides(
+        (
+          touch-target-size: var(--lux-theme-form-dense-min-height),
+          state-layer-size: var(--lux-theme-form-dense-min-height)
+        )
+      );
+
+      @include mat.icon-button-overrides(
+        (
+          touch-target-size: calc(var(--lux-theme-form-dense-min-height) - ( 2 * var(--lux-theme-form-border-width))),
+          state-layer-size: calc(var(--lux-theme-form-dense-min-height) - ( 2 * var(--lux-theme-form-border-width))),
+        )
+      );
+
+      .lux-form-control-container-authentic {
+        @include lux-form-control-min-height(var(--lux-theme-form-dense-min-height));
+      }
+    }
+
+    .lux-form-control-container-authentic {
+      @include lux-form-control-min-height(var(--lux-theme-form-min-height));
+    }
+
     // zusätzlicher Container für Elemente, die einen input-prefix/input-suffix haben
     // aktuell: lux-autocomplete-ac und lux-input-ac
     .lux-input-row-authentic {
@@ -90,15 +159,32 @@ lux-form-control-wrapper {
       place-content: center flex-start;
       align-items: center;
       font-size: var(--lux-theme-form-control-font-size);
-      min-height: 1.5em;
+      // min-height: 1.5rem;
+      // max-height: 1.5rem;
+      padding: 0;
+    }
+
+    .lux-no-input-row {
+      // lux-toggel-ac, lux-checkbox-ac, lux-slider-ac, lux-radio-ac werden auf der Baseline ausgerichtet
+      // haben aber nicht den Rahmen, den die Input-Elemente haben
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      // display: grid;
+      // padding: 0;
+      // align-content: center;
     }
 
     &.lux-dense-authentic {
+      .lux-form-control-container-authentic {
+        // min-height: 50px;
+        // max-height: 50px;
+      }
       margin: 0;
       .lux-form-control-container-authentic {
-        padding: 0.375em 0.5em;
+        // padding: 0.375em 0.5em;
         &.lux-no-input-row {
-          padding: 0.375em 0em;
+          // padding: 0.375em 0em;
         }
       }
     }
@@ -118,15 +204,15 @@ lux-form-control-wrapper {
         color: var(--lux-theme-primary-30);
       }
       .lux-form-control-container-authentic:not(.lux-no-input-row) {
-        border-color: var(--lux-theme-primary-20);
-        box-shadow: 0 0 0 1px var(--lux-theme-primary-20) inset;
+        border-color: var(--lux-theme-form-focus-border-color);
+        box-shadow: var(--lux-theme-form-focus-box-shadow);
       }
     }
     // ERROR
     &.lux-form-control-error-authentic:not(.lux-form-control-disabled-authentic) {
       .lux-form-control-container-authentic:not(.lux-no-input-row) {
-        border-color: var(--lux-theme-warn-50);
-        box-shadow: 0 0 0 1px var(--lux-theme-warn-50) inset;
+        border-color: var(--lux-theme-form-error-border-color);
+        box-shadow: var(--lux-theme-form-error-box-shadow);
       }
       .lux-form-control-misc-authentic {
         .lux-alert-icon {
@@ -140,9 +226,7 @@ lux-form-control-wrapper {
           border-radius: 4px;
           padding-right: 2px;
           color: var(--lux-theme-warn-25) !important;
-          box-shadow:
-            -18px 0px 0 0 var(--lux-theme-form-error-msg-background),
-            -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
+          box-shadow: -18px 0px 0 0 var(--lux-theme-form-error-msg-background), -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
             0 -1px 0 0 var(--lux-theme-form-error-msg-background);
         }
       }
