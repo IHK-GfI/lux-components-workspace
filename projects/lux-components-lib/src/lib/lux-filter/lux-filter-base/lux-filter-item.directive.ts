@@ -36,7 +36,7 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
   filterItem!: LuxFilterItem<any>;
 
   @Input() luxFilterLabel = '';
-  @Input() luxFilterColor: LuxThemePalette = undefined;
+  @Input() luxFilterColor: LuxThemePalette = 'primary';
   @Input() luxFilterDefaultValues = [...LuxFilterItem.DEFAULT_VALUES];
   @Input() luxFilterRenderFn?: LuxFilterRenderFnType;
   @Input() luxFilterHidden = false;

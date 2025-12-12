@@ -11,7 +11,7 @@ lux-menu {
       button {
         padding-left: 8px;
         padding-right: 8px;
-        min-width: 36px;
+        min-width: 30px;
       }
     }
   }
@@ -25,6 +25,14 @@ lux-menu {
   position: relative;
 
   > lux-button {
+    @include mat.button-overrides(
+      (
+        text-container-shape: var(--lux-theme-menu-button-text-container-shape),
+        text-label-text-size: var(--lux-theme-menu-item-font-size),
+        text-container-height: 30px
+      )
+    );
+
     margin-right: 8px;
     &.lux-menu-item .lux-button-label {
       white-space: nowrap;

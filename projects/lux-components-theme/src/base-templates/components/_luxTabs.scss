@@ -5,10 +5,15 @@
 lux-tabs {
   @include mat.tabs-overrides(
     (
+      label-text-font: var(--lux-theme-tabs-text-font),
+      label-text-size: var(--lux-theme-tabs-label-text-size),
+      label-text-weight: var(--lux-theme-tabs-label-text-weight),
       active-label-text-color: var(--lux-theme-primary-20),
       active-focus-label-text-color: var(--lux-theme-primary-20),
       active-hover-label-text-color: var(--lux-theme-primary-20),
       active-indicator-height: 4px,
+      inactive-label-text-color: var(--lux-theme-primary-20),
+      inactive-hover-label-text-color: var(--lux-theme-primary-20),
       divider-height: 1px,
       divider-color: var(--lux-theme-app-border-color)
     )
@@ -20,8 +25,6 @@ lux-tabs {
   }
 
   mat-tab-group div[role="tab"] {
-    font-size: 0.875rem;
-    font-weight: 600;
     letter-spacing: normal;
     min-height: unset !important;
     height: unset !important;

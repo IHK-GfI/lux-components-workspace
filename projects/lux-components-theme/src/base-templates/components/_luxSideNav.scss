@@ -3,6 +3,14 @@
 @use "../common/luxfocus";
 
 lux-side-nav {
+  lux-button {
+    @include mat.button-overrides(
+      (
+        text-label-text-color: var(--lux-theme-side-nav-button-color)
+      )
+    );
+  }
+
   .lux-side-nav {
     background: var(--lux-theme-app-data-bg);
     @include luxelevations.lux-elevation-z16();

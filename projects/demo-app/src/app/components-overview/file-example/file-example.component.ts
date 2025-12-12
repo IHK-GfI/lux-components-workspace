@@ -24,7 +24,7 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
   protected snackbar = inject(LuxSnackbarService);
   protected filePreviewService = inject(LuxFilePreviewService);
 
-  showOutputEvents = true;
+  showOutputEvents = false;
   realBackends: any[] = [];
   mockBackend = false;
   log = logResult;

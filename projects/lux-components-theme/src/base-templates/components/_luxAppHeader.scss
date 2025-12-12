@@ -3,7 +3,8 @@
 @use "../common/luxfocus";
 
 @mixin lux-hovered-mixin-green {
-  background-color: #e3ebf5 !important;
+  background-color: var(--lux-theme-hover-color) !important;
+  color: (--lux-theme-on-hover-color) !important;
   border-radius: 4px;
 }
 
@@ -334,7 +335,7 @@ lux-app-header {
 
     &:hover {
       @include lux-hovered-mixin-green;
-      color: var(--lux-theme-primary-20) !important;
+      // color: var(--lux-theme-primary-20) !important;
     }
   }
 
@@ -346,10 +347,6 @@ lux-app-header {
     &:hover {
       background-color: var(--lux-theme-hover-color) !important;
       color: var(--lux-theme-primary-20);
-    }
-    &:hover lux-icon {
-      background-color: var(--lux-theme-hover-color);
-      color: var(--lux-theme-primary-20) !important;
     }
   }
 

@@ -35,7 +35,7 @@ $checkmark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width=
 
   .example-base-components-list {
     overflow-y: auto;
-    border-right: 1px solid;
+    border-right: 1px solid var(--lux-theme-light-dividers);
     min-width: 253px;
     min-width: 253px;
     padding: 16px 8px;

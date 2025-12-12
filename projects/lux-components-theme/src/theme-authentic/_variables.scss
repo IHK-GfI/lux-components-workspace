@@ -109,8 +109,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Form
   --lux-theme-form-border-width: 1px;
   --lux-theme-form-min-height: 50px;
-  --lux-theme-form-dense-border-width: 1px;
   --lux-theme-form-dense-min-height: 38px;
+  --lux-theme-form-control-label-margin: 0 0.5rem 0.25rem 0.5rem;
+  --lux-theme-form-control-error-margin: 0.25rem calc(0.5rem + 1px) 0 calc(0.5rem + 3px);
   --lux-theme-form-border-color: rgba(0, 0, 0, 0.38);
   --lux-theme-form-focus-border-color: var(--lux-theme-primary-20);
   --lux-theme-form-focus-box-shadow: 0 0 0 1px var(--lux-theme-primary-20) inset;
@@ -180,6 +181,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-lightblue: var(--lux-theme-custom-lightblue);
   --lux-theme-badge-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
+  // LUX-Breadcrumb
+  --lux-theme-breadcrumb-hover-color: var(--lux-theme-link-plain-hover-color);
+
   // LUX-Button
   --lux-theme-button-text-container-shape: 4px;
   --lux-theme-button-flat-container-shape: 4px;
@@ -223,6 +227,21 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // LUX-Datepicker
   --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
 
+  // LUX-File-Upload
+  --lux-theme-file-upload-padding: 16px 48px 12px 48px;
+  --lux-theme-file-upload-background-image: var(--lux-theme-app-gradient);
+  --lux-theme-file-upload-item-container-border: 1px solid var(--lux-theme-app-border-color);
+  --lux-theme-file-upload-item-disabled-container-border: 1px solid rgba(0, 0, 0, 0.12);
+  --lux-theme-file-upload-item-background-color: var(--lux-theme-app-data-bg);
+  --lux-theme-file-upload-item-margin: 0;
+  --lux-theme-file-upload-item-padding: 11px 15px 11px 26px;
+  --lux-theme-file-upload-item-border: none;
+  --lux-theme-file-upload-item-border-bottom: 1px solid var(--lux-theme-app-border-color);
+  --lux-theme-file-upload-item-border-bottom-left-radius: 0;
+  --lux-theme-file-upload-item-border-bottom-right-radius: 0;
+  --lux-theme-file-upload-item-disabled-border: none;
+  --lux-theme-file-upload-item-disabled-border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
   // LUX-Icon
   --lux-theme-icon-red: var(--lux-theme-custom-red);
   --lux-theme-icon-on-red: var(--lux-theme-custom-on-red);
@@ -252,6 +271,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Lookup
   --lux-theme-lookup-invalid-option-text-color: var(--lux-theme-warn-50);
   --lux-theme-lookup-invalid-option-font-weight: 300;
+
+  // LUX-Menu
+  --lux-theme-menu-item-font-size: 0.875rem;
+  --lux-theme-menu-button-text-container-shape: 4px;
 
   // LUX-Messagebox
   --lux-theme-messagebox-red: var(--lux-theme-custom-red);
@@ -300,6 +323,14 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-stepper-large-nav-item-completed-bg: #ffffff;
   --lux-theme-stepper-large-nav-item-not-touched-fg: #003366;
   --lux-theme-stepper-large-nav-item-not-touched-bg: #ffffff;
+
+  // LUX-Side-Nav
+  --lux-theme-side-nav-button-color: var(--lux-theme-dark-primary-text);
+
+  // LUX-Tabs
+  --lux-theme-tabs-text-font: var(--lux-theme-app-font-family);
+  --lux-theme-tabs-label-text-size: 0.875rem;
+  --lux-theme-tabs-label-text-weight: 600;
 
   // LUX-Textbox
   --lux-theme-textbox-default-color: #ffffff;

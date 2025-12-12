@@ -59,6 +59,10 @@ lux-chips-ac {
     min-height: unset;
   }
 
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
+    padding: 12px 8px;
+  }
+
   // Border ausblenden
   lux-form-control-wrapper.lux-hide-input-border .lux-form-control-container-authentic {
     border: none;

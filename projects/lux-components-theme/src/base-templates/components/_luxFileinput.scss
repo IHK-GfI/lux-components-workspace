@@ -1,1 +1,27 @@
-// Aktuell keine Änderungen notwendig
+@use "@angular/material" as mat;
+
+:root {
+  --lux-theme-file-input-button-size: 14px;
+  --lux-theme-file-input-button-padding: 2px;
+}
+
+lux-file-input-ac {
+  lux-menu {
+    .lux-menu-extended {
+      > lux-button {
+        @include mat.button-overrides(
+          (
+            text-label-text-size: var(--lux-theme-file-input-button-size),
+            text-with-icon-horizontal-padding: var(--lux-theme-file-input-button-padding),
+            text-touch-target-size: 30px
+          )
+        );
+
+        .lux-icon {
+          width: var(--lux-theme-file-input-button-size);
+          height: var(--lux-theme-file-input-button-size);
+        }
+      }
+    }
+  }
+}

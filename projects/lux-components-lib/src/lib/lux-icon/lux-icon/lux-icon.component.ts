@@ -62,8 +62,6 @@ export class LuxIconComponent {
       this._luxIconSize = size + 'em';
     } else if (this.luxIconSize) {
       this._luxIconSize = iconSizeValue;
-    } else {
-      this._luxIconSize = '1.5rem'; //default-Size für mat-icon
     }
   }
 

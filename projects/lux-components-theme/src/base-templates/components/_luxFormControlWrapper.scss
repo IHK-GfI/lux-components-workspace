@@ -67,7 +67,7 @@ lux-form-control-wrapper {
     .lux-form-control-label-authentic {
       @include form-label;
       color: var(--lux-theme-primary-20);
-      margin: 0 calc(0.5em + 1px) 0.25em calc(0.5em + 1px);
+      margin: var(--lux-theme-form-control-label-margin);
       > * {
         @include crop;
       }
@@ -87,7 +87,6 @@ lux-form-control-wrapper {
       font-size: var(--lux-theme-form-control-font-size);
       color: var(--lux-theme-dark-primary-text);
       background-color: #fff;
-      // line-height: 1.5em;
       border: var(--lux-theme-form-border-width) solid var(--lux-theme-form-border-color);
       border-radius: 4px;
     }
@@ -97,7 +96,7 @@ lux-form-control-wrapper {
       place-content: flex-start space-between;
       align-items: flex-start;
       box-sizing: border-box;
-      margin: 0.25em calc(0rem + 1px) 0 calc(0rem + 1px);
+      margin: var(--lux-theme-form-control-error-margin);
       @include form-label;
       word-wrap: break-word;
 
@@ -117,9 +116,12 @@ lux-form-control-wrapper {
       }
     }
 
-    // Anpassungen der min-height der verschiedenen Form-Controls
-
+    // DENSE Modus
     &.lux-dense-authentic {
+      .lux-form-control-container-authentic {
+        @include lux-form-control-min-height(var(--lux-theme-form-dense-min-height));
+      }
+
       @include mat.checkbox-overrides(
         (
           touch-target-size: var(--lux-theme-form-dense-min-height),
@@ -136,14 +138,10 @@ lux-form-control-wrapper {
 
       @include mat.icon-button-overrides(
         (
-          touch-target-size: calc(var(--lux-theme-form-dense-min-height) - ( 2 * var(--lux-theme-form-border-width))),
-          state-layer-size: calc(var(--lux-theme-form-dense-min-height) - ( 2 * var(--lux-theme-form-border-width))),
+          touch-target-size: calc(var(--lux-theme-form-dense-min-height) - (2 * var(--lux-theme-form-border-width))),
+          state-layer-size: calc(var(--lux-theme-form-dense-min-height) - (2 * var(--lux-theme-form-border-width)))
         )
       );
-
-      .lux-form-control-container-authentic {
-        @include lux-form-control-min-height(var(--lux-theme-form-dense-min-height));
-      }
     }
 
     .lux-form-control-container-authentic {
@@ -159,8 +157,6 @@ lux-form-control-wrapper {
       place-content: center flex-start;
       align-items: center;
       font-size: var(--lux-theme-form-control-font-size);
-      // min-height: 1.5rem;
-      // max-height: 1.5rem;
       padding: 0;
     }
 
@@ -170,23 +166,6 @@ lux-form-control-wrapper {
       background-color: transparent;
       border: none;
       padding: 0;
-      // display: grid;
-      // padding: 0;
-      // align-content: center;
-    }
-
-    &.lux-dense-authentic {
-      .lux-form-control-container-authentic {
-        // min-height: 50px;
-        // max-height: 50px;
-      }
-      margin: 0;
-      .lux-form-control-container-authentic {
-        // padding: 0.375em 0.5em;
-        &.lux-no-input-row {
-          // padding: 0.375em 0em;
-        }
-      }
     }
 
     // Definitionen der einzelnen States der Form-Controls

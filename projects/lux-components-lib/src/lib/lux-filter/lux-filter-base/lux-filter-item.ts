@@ -9,7 +9,7 @@ export class LuxFilterItem<T = any> {
   component: LuxFormComponentBase<T>;
   defaultValues: any[] = [...LuxFilterItem.DEFAULT_VALUES];
   value: T = this.defaultValues[0];
-  color: LuxThemePalette = undefined;
+  color: LuxThemePalette = 'primary';
   disabled = false;
   hidden = false;
   multiValueIndex = -1;

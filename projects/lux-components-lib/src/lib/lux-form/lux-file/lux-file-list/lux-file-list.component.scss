@@ -10,13 +10,6 @@
     font-size: 12px;
   }
 
-  lux-menu ::ng-deep {
-    lux-icon.lux-button-icon mat-icon.lux-icon {
-      height: 16px;
-      width: 16px;
-    }
-  }
-
   ::ng-deep .lux-card-header {
     button.lux-icon-button mat-icon.lux-icon {
       height: 22px !important;

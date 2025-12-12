@@ -11,7 +11,6 @@
 lux-button {
   @include mat.button-overrides(
     (
-      text-hover-state-layer-opacity: 0,
       text-label-text-font: var(--lux-theme-button-text-font),
       text-label-text-size: var(--lux-theme-button-text-text-size),
       text-label-text-weight: var(--lux-theme-button-text-text-weight),
@@ -28,8 +27,8 @@ lux-button {
   );
 
   .lux-icon {
-    width: var(--lux-theme-button-text-text-size) !important;
-    height: var(--lux-theme-button-text-text-size) !important;
+    width: var(--lux-theme-button-text-text-size);
+    height: var(--lux-theme-button-text-text-size);
   }
 
   .mat-primary {
