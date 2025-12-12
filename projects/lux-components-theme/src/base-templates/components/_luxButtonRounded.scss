@@ -52,7 +52,7 @@ lux-button.lux-rounded:not(.lux-stroked) {
   }
 
   .lux-icon {
-    width: var(--lux-theme-button-rounded-text-size) !important;
-    height: var(--lux-theme-button-rounded-text-size) !important;
+    width: var(--lux-theme-button-rounded-text-size);
+    height: var(--lux-theme-button-rounded-text-size);
   }
 }

@@ -222,6 +222,13 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-stroked-text-tracking: normal;
 
   // LUX-Card
+  --lux-theme-card-title-text-size: 1.5rem;
+  --lux-theme-card-title-text-weight: 500;
+  --lux-theme-card-subtitle-text-size: 1rem;
+  --lux-theme-card-subtitle-text-weight: 500;
+  --lux-theme-card-subtitle-text-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-card-shape: var(--lux-theme-app-border-radius);
+  --lux-theme-card-background-color: var(--lux-theme-app-data-bg);
   --lux-theme-card-padding: 20px;
 
   // LUX-Datepicker

@@ -52,8 +52,8 @@ lux-button.lux-rounded.lux-stroked {
   }
 
   .lux-icon {
-    width: var(--lux-theme-button-rounded-stroked-text-size) !important;
-    height: var(--lux-theme-button-rounded-stroked-text-size) !important;
+    width: var(--lux-theme-button-rounded-stroked-text-size);
+    height: var(--lux-theme-button-rounded-stroked-text-size);
   }
 
   .lux-stroked:not(:disabled) {

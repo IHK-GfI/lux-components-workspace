@@ -6,13 +6,13 @@ $margin-right-icon: 20px;
 lux-card {
   @include mat.card-overrides(
     (
-      outlined-container-color: var(--lux-theme-app-data-bg),
-      outlined-container-shape: var(--lux-theme-app-border-radius),
-      title-text-size: 1.5rem,
-      title-text-weight: 500,
-      subtitle-text-size: 1rem,
-      subtitle-text-weight: 500,
-      subtitle-text-color: var(--lux-theme-dark-secondary-text)
+      outlined-container-color: var(--lux-theme-card-background-color),
+      outlined-container-shape: var(--lux-theme-card-shape),
+      title-text-size: var(--lux-theme-card-title-text-size),
+      title-text-weight: var(--lux-theme-card-title-text-weight),
+      subtitle-text-size: var(--lux-theme-card-subtitle-text-size),
+      subtitle-text-weight: var(--lux-theme-card-subtitle-text-weight),
+      subtitle-text-color: var(--lux-theme-card-subtitle-text-color)
     )
   );
 
