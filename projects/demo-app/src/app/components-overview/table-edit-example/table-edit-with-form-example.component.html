@@ -12,6 +12,7 @@
         } @else {
         <div class="formfield-container" [ngClass]="{ 'validation-active': validationEnabled() }">
           <lux-input-ac
+            [luxDense]="true"
             class="edit-formfield"
             (document:click)="onStopEditMode($event, inputStreet, element)"
             luxAriaLabel="Straße"
@@ -38,6 +39,7 @@
         } @else {
         <div class="formfield-container" [ngClass]="{ 'validation-active': validationEnabled() }">
           <lux-input-ac
+            [luxDense]="true"
             (document:click)="onStopEditMode($event, inputNr, element)"
             luxAriaLabel="Hausnummer"
             luxAriaLabelSelector="input"

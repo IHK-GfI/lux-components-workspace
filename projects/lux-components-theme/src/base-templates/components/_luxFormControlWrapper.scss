@@ -20,37 +20,47 @@
     min-height: calc(#{$min-height} - (2 * var(--lux-theme-form-border-width)));
   }
 
-  // Sonderbehandlung für Textarea-Tags
-  // Textareas setzen die height und min-height als inline-Style (z.B. style="height: 50px; min-height: 50px;")
-  // Aus diesem Grund muss das !important genutzt werden, um die Höhe für die Klasse .lux-dense-authentic zu überschreiben
-  textarea {
-    min-height: calc(#{$min-height} - (2 * var(--lux-theme-form-border-width))) !important;
-    height: calc(#{$min-height} - (2 * var(--lux-theme-form-border-width))) !important;
-  }
-
   .lux-toggle,
   .lux-checkbox,
   .lux-radio,
   .lux-slider-ac,
   .mdc-slider__thumb {
     min-height: #{$min-height};
-    height: #{$min-height};
   }
 
   .lux-slider-ac {
-    height: #{$min-height};
+    min-height: #{$min-height};
   }
 
   .lux-toggle,
   .lux-checkbox,
   .lux-radio,
-  mat-select,
-  textarea {
+  mat-select {
     align-content: center;
   }
 
   .mdc-slider__value-indicator-container {
     bottom: calc((#{$min-height} / 2) + var(--mat-slider-value-indicator-height));
+  }
+}
+
+// Spezielle Anpassungen für Textarea
+// Textarea kann über luxMaxRows und luxMinRows in der Höhe variieren,
+// aus diesem Grund wird hier kein min-height für die .lux-form-control-container-authentic gesetzt,
+// sondern nur das Padding angepasst.
+lux-textarea-ac lux-form-control-wrapper .lux-form-control-wrapper {
+  .lux-form-control-container-authentic {
+    padding-top: var(--lux-theme-form-control-textarea-padding);
+    padding-bottom: var(--lux-theme-form-control-textarea-padding);
+    min-height: var(--lux-theme-form-min-height);
+  }
+
+  &.lux-dense-authentic {
+    .lux-form-control-container-authentic {
+      padding-top: var(--lux-theme-form-control-textarea-dense-padding);
+      padding-bottom: var(--lux-theme-form-control-textarea-dense-padding);
+      min-height: var(--lux-theme-form-dense-min-height);
+    }
   }
 }
 

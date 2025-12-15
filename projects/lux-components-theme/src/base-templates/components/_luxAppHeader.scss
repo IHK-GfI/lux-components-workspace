@@ -5,7 +5,7 @@
 @mixin lux-hovered-mixin-green {
   background-color: var(--lux-theme-hover-color) !important;
   color: (--lux-theme-on-hover-color) !important;
-  border-radius: 4px;
+  border-radius: var(--lux-theme-app-header-item-border-radius);
 }
 
 button.lux-menu-item.lux-user-name-label {
@@ -331,11 +331,12 @@ lux-app-header {
   .lux-app-header-title-label {
     &:focus {
       @include luxfocus.focus-dark-mixin;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
     }
 
     &:hover {
       @include lux-hovered-mixin-green;
-      // color: var(--lux-theme-primary-20) !important;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
     }
   }
 
@@ -397,10 +398,12 @@ lux-app-header {
   lux-menu-trigger button.lux-right-nav-trigger {
     &:focus {
       @include luxfocus.focus-dark-mixin;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
     }
 
     &:hover {
       @include lux-hovered-mixin-green;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
 
       & lux-icon,
       .lux-header-username {

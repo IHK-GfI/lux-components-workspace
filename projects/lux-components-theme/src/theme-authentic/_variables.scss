@@ -96,6 +96,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   }
 
   // App
+  --lux-theme-app-header-item-border-radius: 4px;
   --lux-theme-app-header-bg: #e0e7ed;
   --lux-theme-app-content-bg: #ffffff;
   --lux-theme-app-footer-bg: #e0e7ed;
@@ -110,6 +111,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-border-width: 1px;
   --lux-theme-form-min-height: 50px;
   --lux-theme-form-dense-min-height: 38px;
+  --lux-theme-form-control-textarea-padding: 14px;
+  --lux-theme-form-control-textarea-dense-padding: 8px;
   --lux-theme-form-control-label-margin: 0 0.5rem 0.25rem 0.5rem;
   --lux-theme-form-control-error-margin: 0.25rem calc(0.5rem + 1px) 0 calc(0.5rem + 3px);
   --lux-theme-form-border-color: rgba(0, 0, 0, 0.38);
