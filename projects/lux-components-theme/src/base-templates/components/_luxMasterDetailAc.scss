@@ -114,9 +114,6 @@ $listmargin: calc(var(--lux-theme-outline-width) + 1px);
   lux-filter-form .lux-filter-card,
   .detail-header-container .lux-detail-header-ac,
   .lux-master-view-ac lux-list-item {
-    mat-card.mat-mdc-card {
-      padding: 12px;
-    }
     mat-card-title,
     h2 {
       font-size: 1rem;
