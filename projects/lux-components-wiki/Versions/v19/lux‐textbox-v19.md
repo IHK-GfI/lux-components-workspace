@@ -61,7 +61,7 @@ Html
 
 ### 2. Textbox mit dem Thema "Success"
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-02.png)
 
 Html
 
@@ -80,7 +80,7 @@ Html
 
 ### 3. Textbox mit dem Thema "Alert"
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-03.png)
 
 Html
 
@@ -99,7 +99,7 @@ Html
 
 ### 4. Textbox mit dem Thema "Warning"
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-03.png)
+![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textbox-v19-img-04.png)
 
 Html
 
