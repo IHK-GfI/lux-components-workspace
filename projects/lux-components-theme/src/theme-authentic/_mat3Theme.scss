@@ -58,7 +58,7 @@ $lux-theme: mat.define-theme(
     "on-tertiary": map.get(map.get(palettes.$luxPalettes, "tertiary"), 100),             //text-farbe für tertiary-button
     "tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 95),       //farbe für accordion
     "on-tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 30),
-    "error": map.get(map.get(palettes.$luxPalettes, "error"), 50),                       // bg-farbe für error-button
+    "error": map.get(map.get(palettes.$luxPalettes, "error"), 40),                       // bg-farbe für error-button
     "on-error": map.get(map.get(palettes.$luxPalettes, "error"), 100),
     "error-container": map.get(map.get(palettes.$luxPalettes, "error"), 90),             //bg-farbe für Error-Message unter input, accordion-farbe
     "on-error-container": map.get(map.get(palettes.$luxPalettes, "error"), 30),          //text-farbe für Error-Message unter input
@@ -71,11 +71,19 @@ $lux-theme: mat.define-theme(
     "outline": map.get(map.get(palettes.$luxPalettes, "neutral"), 60),                   //form-border-color und secondary-text-color
     "outline-variant": map.get(map.get(palettes.$luxPalettes, "neutral"), 90),           //app-border-color
     "surface-container-lowest": map.get(map.get(palettes.$luxPalettes, "primary"), 100), //alternative farben für elemente, bisher noch nicht definiert
-    "surface-container": map.get(map.get(palettes.$luxPalettes, "primary"), 99),
-    "surface-container-high": map.get(map.get(palettes.$luxPalettes, "primary"), 98),    //bg-farbe für accordion
-    "surface-container-highest": map.get(map.get(palettes.$luxPalettes, "primary"), 95)
+    "surface-container-low": map.get(map.get(palettes.$luxPalettes, "primary"), 99),
+    "surface-container": map.get(map.get(palettes.$luxPalettes, "primary"), 98),
+    "surface-container-high": map.get(map.get(palettes.$luxPalettes, "primary"), 95),    //bg-farbe für accordion
+    "surface-container-highest": map.get(map.get(palettes.$luxPalettes, "primary"), 90)
   )
 );
+@include mat.core-overrides(
+    (
+      option-label-text-color: var(--lux-theme-dark-primary-text),
+      option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent),
+      option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent)
+    )
+  );
 }
 
 @mixin high-contrast-overrides($theme-type) {

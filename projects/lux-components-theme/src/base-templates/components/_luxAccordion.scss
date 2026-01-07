@@ -13,7 +13,7 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-primary),
           header-description-color: var(--lux-theme-accordion-header-color-on-primary),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-primary),
-          header-hover-state-layer-color: var(--lux-theme-accordion-header-color-primary)
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-primary) 75%, transparent)
         )
       );
     }
@@ -28,7 +28,7 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-accent),
           header-description-color: var(--lux-theme-accordion-header-color-on-accent),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-accent),
-          header-hover-state-layer-color: var(--lux-theme-accordion-header-color-accent)
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-accent) 75%, transparent)
         )
       );
     }
@@ -43,7 +43,7 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-warn),
           header-description-color: var(--lux-theme-accordion-header-color-on-warn),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-warn),
-          header-hover-state-layer-color: var(--lux-theme-accordion-header-color-warn)
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-warn) 75%, transparent)
         )
       );
     }
@@ -58,7 +58,7 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-neutral),
           header-description-color: var(--lux-theme-accordion-header-color-on-neutral),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-neutral),
-          header-hover-state-layer-color: var(--lux-theme-accordion-header-color-neutral)
+          header-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent)
         )
       );
     }
@@ -77,6 +77,7 @@ lux-panel {
       header-description-color: var(--lux-theme-accordion-header-color-on-neutral),
       header-indicator-color: var(--lux-theme-accordion-header-color-on-neutral),
       header-disabled-state-text-color: var(--lux-theme-dark-disabled-text),
+      header-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent),
       container-shape: var(--lux-theme-app-border-radius),
       container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )

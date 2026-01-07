@@ -59,6 +59,7 @@ lux-link-plain {
   &:hover:not(.lux-disabled) {
     color: var(--lux-theme-link-plain-hover-color);
     text-decoration: underline;
+    background-color: var(--lux-theme-link-plain-hover-background-color);
     cursor: pointer;
     lux-icon {
       mat-icon {

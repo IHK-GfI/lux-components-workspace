@@ -131,7 +131,7 @@ lux-table {
       }
 
       .mat-mdc-row:nth-child(odd) {
-        background-color: #f0f3f6;
+        background-color: var(--mat-sys-surface-container-high);
       }
 
       .mat-mdc-row:nth-child(even) {

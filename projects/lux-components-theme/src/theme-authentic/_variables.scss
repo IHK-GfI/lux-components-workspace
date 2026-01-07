@@ -1,6 +1,7 @@
 @use "sass:map";
 @use "sass:string";
 @use "palettes";
+@use "@angular/material" as mat;
 
 @mixin lux-theme-palette-vars($paletteName, $paletteMap, $sizes) {
   @each $size in $sizes {
@@ -22,11 +23,11 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
   --lux-theme-app-headline-font: "Blogger Sans";
 
-  --lux-theme-dark-primary-text: rgba(0, 0, 0, 0.87);
-  --lux-theme-dark-secondary-text: rgba(0, 0, 0, 0.6);
-  --lux-theme-dark-disabled-text: rgba(0, 0, 0, 0.38);
-  --lux-theme-dark-dividers: rgba(0, 0, 0, 0.12);
-  --lux-theme-dark-focused: rgba(0, 0, 0, 0.12);
+  --lux-theme-dark-primary-text: var(--mat-sys-on-surface);
+  --lux-theme-dark-secondary-text: var(--mat-sys-on-surface-variant);
+  --lux-theme-dark-disabled-text: var(mat-sys-outline);
+  --lux-theme-dark-dividers: var(--mat-sys-outline-variant);
+  --lux-theme-dark-focused: rgba(0, 0, 0, 0.12); // TODO: wofür?
 
   --lux-theme-light-primary-text: white;
   --lux-theme-light-secondary-text: rgba(255, 255, 255, 0.74);
@@ -97,13 +98,13 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   // App
   --lux-theme-app-header-item-border-radius: 4px;
-  --lux-theme-app-header-bg: #e0e7ed;
+  --lux-theme-app-header-bg: var(--mat-sys-surface-container-highest);
   --lux-theme-app-content-bg: #ffffff;
-  --lux-theme-app-footer-bg: #e0e7ed;
-  --lux-theme-app-footer-border-color: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-app-footer-bg: var(--mat-sys-surface-container-highest);
+  --lux-theme-app-footer-border-color: var(--mat-sys-primary);
   --lux-theme-app-data-bg: #ffffff;
-  --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, #{map.get(palettes.$lux-palette_primary, 98)} 100%);
-  --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, #{map.get(palettes.$lux-palette_primary, 98)} 100%);
+  --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
+  --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
   --lux-theme-app-border-color: rgba(0, 0, 0, 0.12);
   --lux-theme-app-border-radius: 4px;
 
@@ -115,22 +116,22 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-control-textarea-dense-padding: 8px;
   --lux-theme-form-control-label-margin: 0 0.5rem 0.25rem 0.5rem;
   --lux-theme-form-control-error-margin: 0.25rem calc(0.5rem + 1px) 0 calc(0.5rem + 3px);
-  --lux-theme-form-border-color: rgba(0, 0, 0, 0.38);
+  --lux-theme-form-border-color: var(--mat-sys-outline);
   --lux-theme-form-focus-border-color: var(--lux-theme-primary-20);
   --lux-theme-form-focus-box-shadow: 0 0 0 1px var(--lux-theme-primary-20) inset;
-  --lux-theme-form-error-border-color: var(--lux-theme-warn-50);
-  --lux-theme-form-error-box-shadow: 0 0 0 1px var(--lux-theme-warn-50) inset;
+  --lux-theme-form-error-border-color: var(--mat-sys-error);
+  --lux-theme-form-error-box-shadow: 0 0 0 1px var(--mat-sys-error) inset;
   --lux-theme-form-control-font-size: 1rem;
   --lux-theme-form-control-buffer: 4px;
-  --lux-theme-form-error-msg-background: rgb(255, 228, 231);
+  --lux-theme-form-error-msg-background: var(--mat-sys-error-container);
 
   // Fokus
-  --lux-theme-outline-dark: 4px solid #0098da !important;
+  --lux-theme-outline-dark: 4px solid var(--lux-theme-custom-lightblue) !important;
   --lux-theme-outline-bright: 4px solid #ffffff !important;
   --lux-theme-outline-width: 4px;
   --lux-theme-outline-style: solid;
   --lux-theme-outline-color-bright: #ffffff;
-  --lux-theme-outline-color-dark: #0098da;
+  --lux-theme-outline-color-dark: var(--lux-theme-custom-lightblue);
 
   // Hover
   --lux-theme-hover-color: var(--mat-option-hover-state-layer-color);
@@ -153,11 +154,11 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Accordion
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
-  --lux-theme-accordion-header-color-primary: #b3c2d1;
+  --lux-theme-accordion-header-color-primary: var(--mat-sys-surface-container-high);
   --lux-theme-accordion-header-color-on-primary: var(--lux-theme-dark-primary-text);
-  --lux-theme-accordion-header-color-accent: #ccebd1;
+  --lux-theme-accordion-header-color-accent: var(--lux-theme-accent-98);
   --lux-theme-accordion-header-color-on-accent: var(--lux-theme-dark-primary-text);
-  --lux-theme-accordion-header-color-warn: #ffcacf;
+  --lux-theme-accordion-header-color-warn: var(--mat-sys-error-container);
   --lux-theme-accordion-header-color-on-warn: var(--lux-theme-dark-primary-text);
 
   // LUX-Badge
@@ -275,8 +276,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-icon-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
   // LUX-Link-Plain
-  --lux-theme-link-plain-color: #007cb1;
-  --lux-theme-link-plain-hover-color: #4d7094;
+  --lux-theme-link-plain-color: var(--lux-theme-primary-40);
+  --lux-theme-link-plain-hover-color: var(--mat-sys-on-primary-container);
+  --lux-theme-link-plain-hover-background-color: var(--mat-sys-primary-container);
 
   // Lookup
   --lux-theme-lookup-invalid-option-text-color: var(--lux-theme-warn-50);
@@ -348,25 +350,25 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-textbox-default-border-color: var(--lux-theme-primary-20);
   --lux-theme-textbox-default-icon-color: var(--lux-theme-dark-primary-text);
 
-  --lux-theme-textbox-blue-color: linear-gradient(90deg, #e0e7ed, #ffffff);
+  --lux-theme-textbox-blue-color: linear-gradient(90deg, var(--mat-sys-primary-container), #ffffff);
   --lux-theme-textbox-blue-on-color: var(--lux-theme-dark-primary-text);
   --lux-theme-textbox-blue-border-color: var(--lux-theme-primary-20);
   --lux-theme-textbox-blue-icon-color: var(--lux-theme-primary-20);
 
-  --lux-theme-textbox-green-color: linear-gradient(90deg, #ebf7ed, #ffffff);
+  --lux-theme-textbox-green-color: linear-gradient(90deg, var(--mat-sys-tertiary-container), #ffffff);
   --lux-theme-textbox-green-on-color: var(--lux-theme-dark-primary-text);
-  --lux-theme-textbox-green-border-color: #56bd66;
-  --lux-theme-textbox-green-icon-color: #56bd66;
+  --lux-theme-textbox-green-border-color: var(--mat-sys-tertiary);
+  --lux-theme-textbox-green-icon-color: var(--mat-sys-tertiary);
 
-  --lux-theme-textbox-red-color: linear-gradient(90deg, #ffcacf, #ffffff);
+  --lux-theme-textbox-red-color: linear-gradient(90deg, var(--mat-sys-error-container), #ffffff);
   --lux-theme-textbox-red-on-color: var(--lux-theme-dark-primary-text);
-  --lux-theme-textbox-red-border-color: #ec2125;
-  --lux-theme-textbox-red-icon-color: #ec2125;
+  --lux-theme-textbox-red-border-color: var(--mat-sys-error);
+  --lux-theme-textbox-red-icon-color: var(--mat-sys-error);
 
-  --lux-theme-textbox-yellow-color: linear-gradient(90deg, #fdf8e1, #ffffff);
-  --lux-theme-textbox-yellow-on-color: var(--lux-theme-dark-primary-text);
-  --lux-theme-textbox-yellow-border-color: #f4cb25;
-  --lux-theme-textbox-yellow-icon-color: #f4cb25;
+  --lux-theme-textbox-yellow-color: linear-gradient(90deg, color-mix(in srgb, var(--lux-theme-custom-yellow) 30%, #ffffff), #ffffff);
+  --lux-theme-textbox-yellow-on-color: var(--lux-theme-on-custom-yellow);
+  --lux-theme-textbox-yellow-border-color: var(--lux-theme-custom-yellow);
+  --lux-theme-textbox-yellow-icon-color: var(--lux-theme-custom-yellow);
 
   // LUX-Tile
   --lux-theme-tile-font-hover-color: #2e8533;
@@ -380,4 +382,5 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Options in Panels (z.B. Select, AutoComplete und Menu)
   --lux-theme-panel-option-min-height: 24px;
   --lux-theme-panel-option-padding: 12px 0;
+  --lux-theme-panel-bg-color: var(--mat-sys-surface-container);
 }
