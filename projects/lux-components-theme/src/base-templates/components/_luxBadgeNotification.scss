@@ -36,7 +36,7 @@
   &.mat-badge-warn {
     @include mat.badge-overrides(
       (
-        background-color: var(--lux-theme-warn-35)
+        background-color: var(--mat-sys-error)
       )
     );
   }

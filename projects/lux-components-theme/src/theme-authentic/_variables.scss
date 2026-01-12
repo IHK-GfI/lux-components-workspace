@@ -1,7 +1,6 @@
 @use "sass:map";
 @use "sass:string";
 @use "palettes";
-@use "@angular/material" as mat;
 
 @mixin lux-theme-palette-vars($paletteName, $paletteMap, $sizes) {
   @each $size in $sizes {
@@ -189,6 +188,48 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-breadcrumb-hover-color: var(--lux-theme-link-plain-hover-color);
 
   // LUX-Button
+  --lux-theme-button-text-default-text-color: #000000;
+  --lux-theme-button-text-primary-text-color: #003366;
+  --lux-theme-button-text-accent-text-color: #00531d;
+  --lux-theme-button-text-warn-text-color: var(--mat-sys-error);
+
+  --lux-theme-button-flat-default-text-color: #000000;
+  --lux-theme-button-flat-default-container-color: #ffffff;
+  --lux-theme-button-flat-primary-text-color: #ffffff;
+  --lux-theme-button-flat-primary-container-color: #003366;
+  --lux-theme-button-flat-accent-text-color: #000000;
+  --lux-theme-button-flat-accent-container-color: #56bd66;
+  --lux-theme-button-flat-warn-text-color: #ffffff;
+  --lux-theme-button-flat-warn-container-color: var(--mat-sys-error);
+
+  --lux-theme-button-raised-default-text-color: #000000;
+  --lux-theme-button-raised-default-container-color: #ffffff;
+  --lux-theme-button-raised-primary-text-color: #ffffff;
+  --lux-theme-button-raised-primary-container-color: #003366;
+  --lux-theme-button-raised-accent-text-color: #000000;
+  --lux-theme-button-raised-accent-container-color: #56bd66;
+  --lux-theme-button-raised-warn-text-color: #ffffff;
+  --lux-theme-button-raised-warn-container-color: var(--mat-sys-error);
+
+  --lux-theme-button-stroked-default-text-color: #000000;
+  --lux-theme-button-stroked-primary-text-color: #003366;
+  --lux-theme-button-stroked-accent-text-color: #00531d;
+  --lux-theme-button-stroked-warn-text-color: var(--mat-sys-error);
+
+  --lux-theme-button-rounded-stroked-default-text-color: #000000;
+  --lux-theme-button-rounded-stroked-primary-text-color: #003366;
+  --lux-theme-button-rounded-stroked-accent-text-color: #00531d;
+  --lux-theme-button-rounded-stroked-warn-text-color: var(--mat-sys-error);
+
+  --lux-theme-button-rounded-default-text-color: #000000;
+  --lux-theme-button-rounded-default-container-color: #ffffff;
+  --lux-theme-button-rounded-primary-text-color: #ffffff;
+  --lux-theme-button-rounded-primary-container-color: #003366;
+  --lux-theme-button-rounded-accent-text-color: #000000;
+  --lux-theme-button-rounded-accent-container-color: #56bd66;
+  --lux-theme-button-rounded-warn-text-color: #ffffff;
+  --lux-theme-button-rounded-warn-container-color: var(--mat-sys-error);
+
   --lux-theme-button-text-container-shape: 4px;
   --lux-theme-button-flat-container-shape: 4px;
   --lux-theme-button-raised-container-shape: 4px;
@@ -287,6 +328,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // LUX-Menu
   --lux-theme-menu-item-font-size: 0.875rem;
   --lux-theme-menu-button-text-container-shape: 4px;
+  --lux-theme-menu-container-height: 36px;
 
   // LUX-Messagebox
   --lux-theme-messagebox-red: var(--lux-theme-custom-red);
@@ -383,4 +425,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-panel-option-min-height: 24px;
   --lux-theme-panel-option-padding: 12px 0;
   --lux-theme-panel-bg-color: var(--mat-sys-surface-container);
+  --lux-theme-panel-option-label-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-panel-option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
+  --lux-theme-panel-option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
 }

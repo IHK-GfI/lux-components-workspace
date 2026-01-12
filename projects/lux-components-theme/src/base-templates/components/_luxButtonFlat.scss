@@ -10,8 +10,8 @@ lux-button.lux-flat {
       filled-container-shape: var(--lux-theme-button-flat-container-shape),
       filled-horizontal-padding: 16px,
       filled-container-height: var(--lux-theme-button-flat-container-height),
-      filled-label-text-color: #000000,
-      filled-container-color: #ffffff,
+      filled-label-text-color: var(--lux-theme-button-flat-default-text-color),
+      filled-container-color: var(--lux-theme-button-flat-default-container-color),
       filled-focus-state-layer-opacity: 0.1,
       filled-hover-state-layer-opacity: 0.1
     )
@@ -20,8 +20,8 @@ lux-button.lux-flat {
   .mat-primary {
     @include mat.button-overrides(
       (
-        filled-label-text-color: #ffffff,
-        filled-container-color: #003366,
+        filled-label-text-color: var(--lux-theme-button-flat-primary-text-color),
+        filled-container-color: var(--lux-theme-button-flat-primary-container-color),
         filled-focus-state-layer-opacity: 0.1,
         filled-hover-state-layer-opacity: 0.1
       )
@@ -31,8 +31,8 @@ lux-button.lux-flat {
   .mat-accent {
     @include mat.button-overrides(
       (
-        filled-label-text-color: #000000,
-        filled-container-color: #56bd66,
+        filled-label-text-color: var(--lux-theme-button-flat-accent-text-color),
+        filled-container-color: var(--lux-theme-button-flat-accent-container-color),
         filled-focus-state-layer-opacity: 0.1,
         filled-hover-state-layer-opacity: 0.1
       )
@@ -42,8 +42,8 @@ lux-button.lux-flat {
   .mat-warn {
     @include mat.button-overrides(
       (
-        filled-label-text-color: #ffffff,
-        filled-container-color: #c00013,
+        filled-label-text-color: var(--lux-theme-button-flat-warn-text-color),
+        filled-container-color: var(--lux-theme-button-flat-warn-container-color),
         filled-focus-state-layer-opacity: 0.1,
         filled-hover-state-layer-opacity: 0.1
       )

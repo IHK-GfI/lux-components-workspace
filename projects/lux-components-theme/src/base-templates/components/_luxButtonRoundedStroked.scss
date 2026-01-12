@@ -8,7 +8,7 @@ lux-button.lux-rounded.lux-stroked {
       hover-container-elevation-shadow: none,
       focus-container-elevation-shadow: none,
       pressed-container-elevation-shadow: none,
-      foreground-color: #1c1b1b,
+      foreground-color: var(--lux-theme-button-rounded-stroked-default-text-color),
       container-color: transparent,
       touch-target-size: var(--lux-theme-button-rounded-stroked-container-height)
     )
@@ -18,7 +18,7 @@ lux-button.lux-rounded.lux-stroked {
     &.mat-primary {
       @include mat.fab-overrides(
         (
-          foreground-color: #003366,
+          foreground-color: var(--lux-theme-button-rounded-stroked-primary-text-color),
           container-color: transparent,
           hover-state-layer-opacity: 0.1
         )
@@ -28,7 +28,7 @@ lux-button.lux-rounded.lux-stroked {
     &.mat-accent {
       @include mat.fab-overrides(
         (
-          foreground-color: #00531d,
+          foreground-color: var(--lux-theme-button-rounded-stroked-accent-text-color),
           container-color: transparent,
           hover-state-layer-opacity: 0.1
         )
@@ -38,7 +38,7 @@ lux-button.lux-rounded.lux-stroked {
     &.mat-warn {
       @include mat.fab-overrides(
         (
-          foreground-color: #c00013,
+          foreground-color: var(--lux-theme-button-rounded-stroked-warn-text-color),
           container-color: transparent,
           hover-state-layer-opacity: 0.1
         )
@@ -58,18 +58,18 @@ lux-button.lux-rounded.lux-stroked {
 
   .lux-stroked:not(:disabled) {
     border: 1px solid;
-    border-color: #1c1b1b;
+    border-color: var(--lux-theme-button-rounded-stroked-default-text-color);
 
     &.mat-primary {
-      border-color: #003366;
+      border-color: var(--lux-theme-button-rounded-stroked-primary-text-color);
     }
 
     &.mat-accent {
-      border-color: #00531d;
+      border-color: var(--lux-theme-button-rounded-stroked-accent-text-color);
     }
 
     &.mat-warn {
-      border-color: #c00013;
+      border-color: var(--lux-theme-button-rounded-stroked-warn-text-color);
     }
   }
 }

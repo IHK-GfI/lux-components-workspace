@@ -1,7 +1,7 @@
 @use "palettes";
+@use "mat3Theme";
 @use "variables";
 @use "variablesPreferContrast";
-@use "mat3Theme";
 
 @use "../base-templates/common/luxSvgIcons";
 @use "../base-templates/common/luxelevations";
@@ -24,6 +24,7 @@
 @use "../base-templates/components/luxCheckbox";
 @use "../base-templates/components/luxCheckboxContainerAc";
 @use "../base-templates/components/luxChips";
+@use "../base-templates/components/luxCore";
 @use "../base-templates/components/luxDatepicker";
 @use "../base-templates/components/luxDatetimepicker";
 @use "../base-templates/components/luxDialog";

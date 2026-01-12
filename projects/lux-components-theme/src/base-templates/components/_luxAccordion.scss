@@ -13,7 +13,8 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-primary),
           header-description-color: var(--lux-theme-accordion-header-color-on-primary),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-primary),
-          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-primary) 75%, transparent)
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-primary) 75%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
         )
       );
     }

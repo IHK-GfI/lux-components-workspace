@@ -17,7 +17,7 @@ lux-button {
       text-container-shape: var(--lux-theme-button-text-container-shape),
       text-horizontal-padding: 16px,
       text-container-height: var(--lux-theme-button-text-container-height),
-      text-label-text-color: #1c1b1b,
+      text-label-text-color: var(--lux-theme-button-text-default-text-color),
       filled-label-text-tracking: 0.078125rem,
       outlined-label-text-tracking: 0.078125rem,
       protected-label-text-tracking: 0.078125rem,
@@ -34,7 +34,7 @@ lux-button {
   .mat-primary {
     @include mat.button-overrides(
       (
-        text-label-text-color: #003366
+        text-label-text-color: var(--lux-theme-button-text-primary-text-color)
       )
     );
   }
@@ -42,7 +42,7 @@ lux-button {
   .mat-accent {
     @include mat.button-overrides(
       (
-        text-label-text-color: #00531d
+        text-label-text-color: var(--lux-theme-button-text-accent-text-color)
       )
     );
   }
@@ -50,7 +50,7 @@ lux-button {
   .mat-warn {
     @include mat.button-overrides(
       (
-        text-label-text-color: #c00013
+        text-label-text-color: var(--lux-theme-button-text-warn-text-color)
       )
     );
   }

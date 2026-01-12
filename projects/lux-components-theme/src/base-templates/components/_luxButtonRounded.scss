@@ -10,7 +10,7 @@ lux-button.lux-rounded:not(.lux-stroked) {
       hover-container-elevation-shadow: none,
       focus-container-elevation-shadow: none,
       pressed-container-elevation-shadow: none,
-      foreground-color: #1c1b1b,
+      foreground-color: var(--lux-theme-button-rounded-default-text-color),
       container-color: transparent,
       touch-target-size: var(--lux-theme-button-rounded-container-height)
     )
@@ -19,8 +19,8 @@ lux-button.lux-rounded:not(.lux-stroked) {
   .mat-primary {
     @include mat.fab-overrides(
       (
-        foreground-color: #ffffff,
-        container-color: #003366,
+        foreground-color: var(--lux-theme-button-rounded-primary-text-color),
+        container-color: var(--lux-theme-button-rounded-primary-container-color),
         hover-state-layer-opacity: 0.9
       )
     );
@@ -29,8 +29,8 @@ lux-button.lux-rounded:not(.lux-stroked) {
   .mat-accent {
     @include mat.fab-overrides(
       (
-        foreground-color: #1c1b1b,
-        container-color: #56bd66,
+        foreground-color: var(--lux-theme-button-rounded-accent-text-color),
+        container-color: var(--lux-theme-button-rounded-accent-container-color),
         hover-state-layer-opacity: 0.1
       )
     );
@@ -39,8 +39,8 @@ lux-button.lux-rounded:not(.lux-stroked) {
   .mat-warn {
     @include mat.fab-overrides(
       (
-        foreground-color: #ffffff,
-        container-color: #c00013,
+        foreground-color: var(--lux-theme-button-rounded-warn-text-color),
+        container-color: var(--lux-theme-button-rounded-warn-container-color),
         hover-state-layer-opacity: 0.1
       )
     );

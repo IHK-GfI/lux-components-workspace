@@ -8,12 +8,6 @@
       container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )
   );
-
-  @include mat.core-overrides(
-    (
-      option-label-text-color: var(--lux-theme-dark-primary-text)
-    )
-  );
 }
 
 lux-autocomplete-ac {

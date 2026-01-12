@@ -77,13 +77,6 @@ $lux-theme: mat.define-theme(
     "surface-container-highest": map.get(map.get(palettes.$luxPalettes, "primary"), 90)
   )
 );
-@include mat.core-overrides(
-    (
-      option-label-text-color: var(--lux-theme-dark-primary-text),
-      option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent),
-      option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent)
-    )
-  );
 }
 
 @mixin high-contrast-overrides($theme-type) {

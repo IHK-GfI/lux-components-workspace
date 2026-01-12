@@ -29,7 +29,7 @@ lux-menu {
       (
         text-container-shape: var(--lux-theme-menu-button-text-container-shape),
         text-label-text-size: var(--lux-theme-menu-item-font-size),
-        text-container-height: 30px
+        text-container-height: var(--lux-theme-menu-container-height)
       )
     );
 

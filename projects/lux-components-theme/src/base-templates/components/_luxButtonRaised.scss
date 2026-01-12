@@ -10,8 +10,8 @@ lux-button.lux-raised {
       protected-container-shape: var(--lux-theme-button-raised-container-shape),
       protected-horizontal-padding: 16px,
       protected-container-height: var(--lux-theme-button-raised-container-height),
-      protected-label-text-color: #000000,
-      protected-container-color: #ffffff,
+      protected-label-text-color: var(--lux-theme-button-raised-default-text-color),
+      protected-container-color: var(--lux-theme-button-raised-default-container-color),
       protected-focus-state-layer-opacity: 0.1,
       protected-hover-state-layer-opacity: 0.1
     )
@@ -20,8 +20,8 @@ lux-button.lux-raised {
   .mat-primary {
     @include mat.button-overrides(
       (
-        protected-label-text-color: #ffffff,
-        protected-container-color: #003366,
+        protected-label-text-color: var(--lux-theme-button-raised-primary-text-color),
+        protected-container-color: var(--lux-theme-button-raised-primary-container-color),
         protected-focus-state-layer-opacity: 0.9,
         protected-hover-state-layer-opacity: 0.9
       )
@@ -31,8 +31,8 @@ lux-button.lux-raised {
   .mat-accent {
     @include mat.button-overrides(
       (
-        protected-label-text-color: #000000,
-        protected-container-color: #56bd66,
+        protected-label-text-color: var(--lux-theme-button-raised-accent-text-color),
+        protected-container-color: var(--lux-theme-button-raised-accent-container-color),
         protected-focus-state-layer-opacity: 0.1,
         protected-hover-state-layer-opacity: 0.1
       )
@@ -42,8 +42,8 @@ lux-button.lux-raised {
   .mat-warn {
     @include mat.button-overrides(
       (
-        protected-label-text-color: #ffffff,
-        protected-container-color: #c00013,
+        protected-label-text-color: var(--lux-theme-button-raised-warn-text-color),
+        protected-container-color: var(--lux-theme-button-raised-warn-container-color),
         protected-focus-state-layer-opacity: 0.1,
         protected-hover-state-layer-opacity: 0.1
       )

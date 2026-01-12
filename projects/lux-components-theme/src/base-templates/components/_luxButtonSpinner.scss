@@ -7,7 +7,7 @@ lux-button {
     mat-progress-spinner {
       @include mat.progress-spinner-overrides(
         (
-          active-indicator-color: #1c1b1b
+          active-indicator-color: var(--lux-theme-button-flat-default-text-color)
         )
       );
     }
@@ -16,7 +16,7 @@ lux-button {
       mat-progress-spinner {
         @include mat.progress-spinner-overrides(
           (
-            active-indicator-color: #ffffff
+            active-indicator-color: var(--lux-theme-button-flat-primary-text-color)
           )
         );
       }
@@ -25,7 +25,7 @@ lux-button {
       mat-progress-spinner {
         @include mat.progress-spinner-overrides(
           (
-            active-indicator-color: #000000
+            active-indicator-color: var(--lux-theme-button-flat-accent-text-color)
           )
         );
       }
@@ -34,7 +34,7 @@ lux-button {
       mat-progress-spinner {
         @include mat.progress-spinner-overrides(
           (
-            active-indicator-color: #ffffff
+            active-indicator-color: var(--lux-theme-button-flat-warn-text-color)
           )
         );
       }
@@ -44,7 +44,7 @@ lux-button {
   mat-progress-spinner {
     @include mat.progress-spinner-overrides(
       (
-        active-indicator-color: #1c1b1b
+        active-indicator-color: var(--lux-theme-button-text-default-text-color)
       )
     );
   }
@@ -53,7 +53,7 @@ lux-button {
     mat-progress-spinner {
       @include mat.progress-spinner-overrides(
         (
-          active-indicator-color: #003366
+          active-indicator-color: var(--lux-theme-button-text-primary-text-color)
         )
       );
     }
@@ -62,7 +62,7 @@ lux-button {
     mat-progress-spinner {
       @include mat.progress-spinner-overrides(
         (
-          active-indicator-color: #00531d
+          active-indicator-color: var(--lux-theme-button-text-accent-text-color)
         )
       );
     }
@@ -71,7 +71,7 @@ lux-button {
     mat-progress-spinner {
       @include mat.progress-spinner-overrides(
         (
-          active-indicator-color: #c00013
+          active-indicator-color: var(--lux-theme-button-text-warn-text-color)
         )
       );
     }

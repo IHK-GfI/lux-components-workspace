@@ -10,16 +10,16 @@ lux-button.lux-stroked {
       outlined-container-shape: var(--lux-theme-button-stroked-container-shape),
       outlined-horizontal-padding: 16px,
       outlined-container-height: var(--lux-theme-button-stroked-container-height),
-      outlined-label-text-color: #1c1b1b,
-      outlined-outline-color: #1c1b1b
+      outlined-label-text-color: var(--lux-theme-button-stroked-primary-text-color),
+      outlined-outline-color: var(--lux-theme-button-stroked-primary-text-color)
     )
   );
 
   .mat-primary {
     @include mat.button-overrides(
       (
-        outlined-label-text-color: #003366,
-        outlined-outline-color: #003366
+        outlined-label-text-color: var(--lux-theme-button-stroked-primary-text-color),
+        outlined-outline-color: var(--lux-theme-button-stroked-primary-text-color)
       )
     );
   }
@@ -27,8 +27,8 @@ lux-button.lux-stroked {
   .mat-accent {
     @include mat.button-overrides(
       (
-        outlined-label-text-color: #00531d,
-        outlined-outline-color: #00531d
+        outlined-label-text-color: var(--lux-theme-button-stroked-accent-text-color),
+        outlined-outline-color: var(--lux-theme-button-stroked-accent-text-color)
       )
     );
   }
@@ -36,8 +36,8 @@ lux-button.lux-stroked {
   .mat-warn {
     @include mat.button-overrides(
       (
-        outlined-label-text-color: #c00013,
-        outlined-outline-color: #c00013
+        outlined-label-text-color: var(--lux-theme-button-stroked-warn-text-color),
+        outlined-outline-color: var(--lux-theme-button-stroked-warn-text-color)
       )
     );
   }
