@@ -82,18 +82,18 @@ lux-button {
     box-sizing: border-box;
 
     &.lux-button-badge-primary {
-      color: #ffffff;
-      background-color: #003366;
+      color: var(--lux-theme-button-flat-primary-text-color);
+      background-color: var(--lux-theme-button-flat-primary-container-color);
     }
 
     &.lux-button-badge-accent {
-      color: #000000;
-      background-color: #56bd66;
+      color: var(--lux-theme-button-flat-accent-text-color);
+      background-color: var(--lux-theme-button-flat-accent-container-color);
     }
 
     &.lux-button-badge-warn {
-      color: #ffffff;
-      background-color: #c00013;
+      color: var(--lux-theme-button-flat-warn-text-color);
+      background-color: var(--lux-theme-button-flat-warn-container-color);
     }
   }
 

@@ -1,10 +1,7 @@
 @use "@angular/material" as mat;
 
 lux-checkbox-ac {
-  @include mat.checkbox-overrides(());
-
-  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic.lux-no-input-row {
-    // padding-top: 5px;
-    // padding-bottom: 5px;
-  }
+  @include mat.checkbox-overrides((
+    label-text-size: 1rem
+  ));
 }

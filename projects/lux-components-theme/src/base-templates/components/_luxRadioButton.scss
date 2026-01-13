@@ -1,4 +1,12 @@
+@use "@angular/material" as mat;
+
 lux-radio-ac {
+  @include mat.radio-overrides(
+    (
+      label-text-size: 1rem
+    )
+  );
+
   .mat-mdc-radio-group {
     display: flex;
     box-sizing: border-box;
@@ -6,7 +14,7 @@ lux-radio-ac {
     align-items: stretch;
 
     &.lux-horizontal {
-      gap: 0.75em;
+      column-gap: 0.75em;
       flex-direction: row;
       flex-flow: wrap;
       max-height: 100%;

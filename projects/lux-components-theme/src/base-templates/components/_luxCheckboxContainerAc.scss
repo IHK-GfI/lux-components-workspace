@@ -29,5 +29,9 @@ lux-checkbox-container-ac {
         padding: 0;
       }
     }
+
+    .lux-form-control-wrapper .lux-form-control-container-authentic .lux-checkbox {
+      min-height: unset;    
+    }
   }
 }
