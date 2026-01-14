@@ -23,6 +23,13 @@ lux-file-list {
     }
   }
 
+  div.lux-card-actions-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: var(--mat-sys-on-error-container);
+  }
+
   // Fokus
   .lux-file-list {
     &:focus-visible {

@@ -133,6 +133,7 @@ lux-file-upload {
           margin: 0;
 
           .lux-button-icon .lux-icon {
+            color: var(--lux-theme-warn-20);
             width: 1.125rem !important;
             height: 1.125rem !important;
           }
@@ -153,7 +154,7 @@ lux-file-upload {
       border-radius: 4px;
       padding-left: 2px;
       padding-right: 2px;
-      color: var(--lux-theme-warn-25) !important;
+      color: var(--mat-sys-on-error-container) !important;
     }
 
     .lux-file-upload-hint-container {

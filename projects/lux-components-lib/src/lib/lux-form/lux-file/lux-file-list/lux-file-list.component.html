@@ -83,7 +83,7 @@
   </lux-card-content>
   @if (errorMessage && formControl?.touched && !forceProgressIndeterminate) {
   <lux-card-actions class="lux-file-actions lux-error">
-    <lux-icon class="lux-color-red lux-alert-icon" luxIconName="lux-interface-alert-warning-triangle" luxIconSize="1.125rem"></lux-icon>
+    <lux-icon class="lux-color-red lux-alert-icon" luxIconName="lux-interface-alert-warning-triangle" luxIconSize="0.75rem"></lux-icon>
     <mat-error [id]="uid + '-misc'" class="">
       {{ errorMessage }}
     </mat-error>

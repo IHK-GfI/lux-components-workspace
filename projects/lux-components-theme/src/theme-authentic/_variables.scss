@@ -279,6 +279,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // LUX-Datepicker
   --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
 
+  // LUX-Dialog
+  --lux-theme-dialog-close-button-hover-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-dialog-close-button-hover-background-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
+
   // LUX-File-Upload
   --lux-theme-file-upload-padding: 16px 48px 12px 48px;
   --lux-theme-file-upload-background-image: var(--lux-theme-app-gradient);

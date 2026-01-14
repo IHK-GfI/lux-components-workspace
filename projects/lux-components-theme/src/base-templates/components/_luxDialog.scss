@@ -1,6 +1,7 @@
 @use "../common/luxfocus";
 @use "../common/luxelevations";
 @use "../common/luxbreakpoints";
+@use "@angular/material" as mat;
 
 .cdk-overlay-pane.mat-mdc-dialog-panel .mat-mdc-dialog-container {
   border-radius: var(--lux-theme-app-border-radius);
@@ -18,6 +19,11 @@ lux-dialog-action {
 }
 
 lux-dialog-structure {
+
+  @include mat.dialog-overrides((
+    supporting-text-size: 1rem
+  ));
+
   display: flex;
   min-height: 100%;
 
@@ -58,8 +64,11 @@ lux-dialog-structure {
 
     .lux-icon-close {
       margin: -15px -15px 0 0;
-      width: 24px;
-      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      min-height: 24px;
       font-size: 1rem;
     }
   }
@@ -90,10 +99,10 @@ lux-dialog-structure {
   // x-Button oben rechts im Dialog-Fenster
   .lux-icon-close {
     &:hover {
-      background-color: #fff !important;
+      background-color: var(--lux-theme-dialog-close-button-hover-background-color);
 
       mat-icon.mat-icon-no-color {
-        color: var(--lux-theme-hover-color);
+        color: var(--lux-theme-dialog-close-button-hover-color);
       }
 
       cursor: pointer;

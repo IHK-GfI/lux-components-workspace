@@ -137,12 +137,17 @@ lux-tour-hint-preset {
       position: absolute;
       top: 8px;
       right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      min-height: 24px;
 
       &:hover {
-        background-color: #fff !important;
+        background-color: var(--lux-theme-dialog-close-button-hover-background-color);
 
         mat-icon.mat-icon-no-color {
-          color: var(--lux-theme-hover-color);
+          color: var(--lux-theme-dialog-close-button-hover-color);
         }
 
         cursor: pointer;
