@@ -32,3 +32,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yell
 
   @include lux-snackbar-color-mixin("--lux-theme-snackbar");
 }
+
+.cdk-overlay-container .mat-mdc-snack-bar-container.lux-snackbar {
+  // Die Snackbar wird durch die App umpositioniert, bevor sie sichtbar geschaltet wird.
+  // Würde man die Snackbar nicht verstecken, würde sie von der initialen Position zur neuen
+  // springen.
+  visibility: hidden;
+}
