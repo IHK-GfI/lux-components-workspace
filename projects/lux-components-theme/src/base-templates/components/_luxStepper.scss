@@ -8,7 +8,11 @@ lux-stepper {
   @include mat.stepper-overrides(
     (
       header-hover-state-layer-shape: var(--lux-theme-app-border-radius),
-      header-focus-state-layer-shape: var(--lux-theme-app-border-radius)
+      header-focus-state-layer-shape: var(--lux-theme-app-border-radius),
+      line-color: var(--lux-theme-app-border-color),
+      header-label-text-size: 1rem,
+      header-selected-state-label-text-size: 1rem,
+      header-error-state-label-text-size: 1rem,
     )
   );
 
