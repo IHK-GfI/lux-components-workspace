@@ -1,7 +1,7 @@
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
+import { LuxFieldValues, LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
 import { LuxLookupHandlerService } from '../lux-lookup-service/lux-lookup-handler.service';
 import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
@@ -10,18 +10,20 @@ import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
   selector: 'lux-lookup-label',
   templateUrl: './lux-lookup-label.component.html'
 })
-export class LuxLookupLabelComponent implements OnInit, OnDestroy {
+export class LuxLookupLabelComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   lookupService: LuxLookupService;
   lookupHandler: LuxLookupHandlerService;
   logger: LuxConsoleService;
   lookupParameters?: LuxLookupParameters;
   entry?: LuxLookupTableEntry;
-  subscriptions: Subscription[] = [];
 
   init = false;
   _luxLookupKnr!: number;
   _luxTableKey!: string;
   _luxTableNo!: string;
+  _luxFields?: LuxFieldValues[];
 
   @Input() luxLookupId!: string;
   @Input() luxLookupUrl = '/lookup/';
@@ -72,6 +74,21 @@ export class LuxLookupLabelComponent implements OnInit, OnDestroy {
     }
   }
 
+  @Input()
+  get luxFields(): LuxFieldValues[] | undefined {
+    return this._luxFields;
+  }
+
+  set luxFields(fields: LuxFieldValues[] | undefined) {
+    const changed = fields !== this._luxFields;
+
+    this._luxFields = fields;
+
+    if (this.init && changed) {
+      this.fetchLookupData();
+    }
+  }
+
   constructor() {
     const lookupService = inject(LuxLookupService);
     const lookupHandler = inject(LuxLookupHandlerService);
@@ -108,34 +125,26 @@ export class LuxLookupLabelComponent implements OnInit, OnDestroy {
       throw Error(`Observable "${this.luxLookupId}" not found."`);
     }
 
-    this.subscriptions.push(
-      lookupElementObs.subscribe(() => {
-        this.fetchLookupData();
-      })
-    );
+    lookupElementObs.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.fetchLookupData();
+    });
 
     this.init = true;
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   protected fetchLookupData() {
     if (this.isReadyToFetch()) {
       const keys: string[] = [this.luxTableKey];
 
-      this.lookupParameters = new LuxLookupParameters({ knr: this.luxLookupKnr, keys });
+      this.lookupParameters = new LuxLookupParameters({ knr: this.luxLookupKnr, keys, fields: this.luxFields });
 
-      this.subscriptions.push(
-        this.lookupService
-          .getLookupTable(this.luxTableNo, this.lookupParameters, this.luxLookupUrl)
-          .subscribe((entries: LuxLookupTableEntry[]) => {
-            if (typeof entries !== 'undefined' && entries.length === 1) {
-              this.entry = entries[0];
-            }
-          })
-      );
+      this.lookupService
+        .getLookupTable(this.luxTableNo, this.lookupParameters, this.luxLookupUrl)
+        .subscribe((entries: LuxLookupTableEntry[]) => {
+          if (typeof entries !== 'undefined' && entries.length === 1) {
+            this.entry = entries[0];
+          }
+        });
     }
   }
 

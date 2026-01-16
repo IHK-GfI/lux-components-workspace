@@ -12,76 +12,191 @@ import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 import { LuxLookupLabelComponent } from './lux-lookup-label.component';
 
 describe('LuxLookupLabelComponent', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-        provideNoopAnimations(),
-        LuxLookupHandlerService,
-        LuxConsoleService,
-        { provide: LuxLookupService, useClass: MockLuxLookupLabelService }
-      ]
-    }).compileComponents();
-  }));
+  describe('LuxLookupLabelComponent', () => {
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+          provideNoopAnimations(),
+          LuxLookupHandlerService,
+          LuxConsoleService,
+          { provide: LuxLookupService, useClass: MockLuxLookupLabelService }
+        ]
+      }).compileComponents();
+    }));
 
-  describe('Außerhalb einer Form', () => {
-    let fixture: ComponentFixture<LuxNoFormComponent>;
-    let lookupLabel: LuxLookupLabelComponent;
+    describe('Außerhalb einer Form', () => {
+      let fixture: ComponentFixture<LuxNoFormComponent>;
+      let lookupLabel: LuxLookupLabelComponent;
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(LuxNoFormComponent);
-      lookupLabel = fixture.debugElement.query(By.directive(LuxLookupLabelComponent)).componentInstance;
-      fixture.detectChanges();
+      beforeEach(() => {
+        fixture = TestBed.createComponent(LuxNoFormComponent);
+        lookupLabel = fixture.debugElement.query(By.directive(LuxLookupLabelComponent)).componentInstance;
+        fixture.detectChanges();
+      });
+
+      it('Sollte den Kurztext des Schlüssels anzeigen', fakeAsync(() => {
+        const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
+
+        expect(myComponent).toBeDefined();
+        expect(myComponent.nativeElement.innerHTML).toEqual('Jungholz (ausl. Adresse)');
+        (TestBed.inject(LuxLookupService) as MockLuxLookupLabelService).changeTableValue();
+        TestBed.inject(LuxLookupHandlerService).reloadData('meineId');
+
+        fixture.detectChanges();
+
+        expect(myComponent.nativeElement.innerHTML).toEqual('Altholz (inl. Adresse)');
+      }));
     });
 
-    it('Sollte den Kurztext des Schlüssels anzeigen', fakeAsync(() => {
-      const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
+    describe('Aktualisierungen', () => {
+      let fixture: ComponentFixture<LuxTable500212Component>;
+      let component: LuxTable500212Component;
+      let lookupLabel: LuxLookupLabelComponent;
 
-      expect(myComponent).toBeDefined();
-      expect(myComponent.nativeElement.innerHTML).toEqual('Jungholz (ausl. Adresse)');
-      (TestBed.inject(LuxLookupService) as MockLuxLookupLabelService).changeTableValue();
-      TestBed.inject(LuxLookupHandlerService).reloadData('meineId');
+      beforeEach(() => {
+        fixture = TestBed.createComponent(LuxTable500212Component);
+        component = fixture.componentInstance;
+        lookupLabel = fixture.debugElement.query(By.directive(LuxLookupLabelComponent)).componentInstance;
+        fixture.detectChanges();
+      });
 
-      fixture.detectChanges();
+      it('Sollte den korrekten Wert des TableKeys laden (tableKey changed)', fakeAsync(() => {
+        const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
 
-      expect(myComponent.nativeElement.innerHTML).toEqual('Altholz (inl. Adresse)');
-    }));
+        expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/110');
+
+        component.tableKey = '111';
+        fixture.detectChanges();
+
+        expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/111');
+      }));
+
+      it('Sollte den korrekten Wert des TableKeys laden (tableNo changed)', fakeAsync(() => {
+        const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
+
+        expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/110');
+
+        component.tableNo = '500213';
+        fixture.detectChanges();
+
+        expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 213/110');
+      }));
+    });
   });
 
-  describe('Aktualisierungen', () => {
-    let fixture: ComponentFixture<LuxTable500212Component>;
-    let component: LuxTable500212Component;
-    let lookupLabel: LuxLookupLabelComponent;
+  describe('Parameter-Check', () => {
+    let service: LuxLookupService;
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(LuxTable500212Component);
-      component = fixture.componentInstance;
-      lookupLabel = fixture.debugElement.query(By.directive(LuxLookupLabelComponent)).componentInstance;
-      fixture.detectChanges();
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting(),
+          provideNoopAnimations(),
+          LuxLookupHandlerService,
+          LuxConsoleService
+        ]
+      }).compileComponents();
+
+      service = TestBed.inject(LuxLookupService);
+    }));
+
+    it('Sollte die Standard-Parameter korrekt verarbeiten', () => {
+      const params = {
+        knr: 142,
+        raw: false,
+        keys: ['0001', '0002'],
+        fields: ['kurz', 'lang1']
+      } as LuxLookupParameters;
+
+      const httpParams = service.generateParameters(params);
+
+      expect(httpParams.getAll('keys')).toEqual(['0001', '0002']);
+      expect(httpParams.getAll('fields')).toEqual(['kurz', 'lang1']);
+      expect(httpParams.get('knr')).toBe('142');
+      expect(httpParams.get('raw')).toBe('false');
     });
 
-    it('Sollte den korrekten Wert des TableKeys laden (tableKey changed)', fakeAsync(() => {
-      const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
+    it('Sollte alle Standard-Parameter korrekt verarbeiten', () => {
+      const keys: string[] = ['0001', '0002'];
 
-      expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/110');
+      const params = new LuxLookupParameters({ knr: 142, keys });
 
-      component.tableKey = '111';
-      fixture.detectChanges();
+      const httpParams = service.generateParameters(params);
 
-      expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/111');
-    }));
+      expect(httpParams.getAll('keys')).toEqual(['0001', '0002']);
+      expect(httpParams.getAll('fields')).toEqual(['kurz', 'lang1', 'lang2', 'gueltig_bis', 'gueltig_von', 'ableitungsfelder']);
+      expect(httpParams.get('knr')).toBe('142');
+      expect(httpParams.get('raw')).toBe('false');
+    });
 
-    it('Sollte den korrekten Wert des TableKeys laden (tableNo changed)', fakeAsync(() => {
-      const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
+    it("Sollte den Wert 'ableitungsfelder' korrekt verarbeiten", () => {
+      const params = {
+        knr: 142,
+        raw: false,
+        keys: ['0001', '0002'],
+        fields: ['kurz', 'lang1', 'ableitungsfelder']
+      } as LuxLookupParameters;
 
-      expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/110');
+      const httpParams = service.generateParameters(params);
 
-      component.tableNo = '500213';
-      fixture.detectChanges();
+      expect(httpParams.getAll('keys')).toEqual(['0001', '0002']);
+      expect(httpParams.getAll('fields')).toEqual(['kurz', 'lang1', 'ableitungsfelder']);
+      expect(httpParams.get('knr')).toBe('142');
+      expect(httpParams.get('raw')).toBe('false');
+    });
 
-      expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 213/110');
-    }));
+    for (let index = 1; index <= 6; index++) {
+      it(`Sollte den Wert 'ableitungsText${index}' auf den Wert 'ableitungsfelder' mappen`, () => {
+        const params = {
+          knr: 142,
+          raw: false,
+          keys: ['0001', '0002'],
+          fields: ['kurz', 'lang1', `ableitungsText${index}`]
+        } as LuxLookupParameters;
+
+        const httpParams = service.generateParameters(params);
+
+        expect(httpParams.getAll('keys')).toEqual(['0001', '0002']);
+        expect(httpParams.getAll('fields')).toEqual(['kurz', 'lang1', 'ableitungsfelder']);
+        expect(httpParams.get('knr')).toBe('142');
+        expect(httpParams.get('raw')).toBe('false');
+      });
+    }
+
+    it(`Sollte mehrere Ableitungsfelder auf den Wert 'ableitungsfelder' mappen`, () => {
+      const params = {
+        knr: 142,
+        raw: false,
+        keys: ['0001', '0002'],
+        fields: ['kurz', 'lang1', `ableitungsText1`, `ableitungsText3`, `ableitungsText5`]
+      } as LuxLookupParameters;
+
+      const httpParams = service.generateParameters(params);
+
+      expect(httpParams.getAll('keys')).toEqual(['0001', '0002']);
+      expect(httpParams.getAll('fields')).toEqual(['kurz', 'lang1', 'ableitungsfelder']);
+      expect(httpParams.get('knr')).toBe('142');
+      expect(httpParams.get('raw')).toBe('false');
+    });
+
+    it(`Sollte ohne Abeleitungsfelder korrekt verarbeitet werden`, () => {
+      const params = {
+        knr: 142,
+        raw: false,
+        keys: ['0001'],
+        fields: ['kurz']
+      } as LuxLookupParameters;
+
+      const httpParams = service.generateParameters(params);
+
+      expect(httpParams.getAll('keys')).toEqual(['0001']);
+      expect(httpParams.getAll('fields')).toEqual(['kurz']);
+      expect(httpParams.get('knr')).toBe('142');
+      expect(httpParams.get('raw')).toBe('false');
+    });
   });
 });
 
