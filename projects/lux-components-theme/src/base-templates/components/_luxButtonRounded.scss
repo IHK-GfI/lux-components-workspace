@@ -21,9 +21,17 @@ lux-button.lux-rounded:not(.lux-stroked) {
       (
         foreground-color: var(--lux-theme-button-rounded-primary-text-color),
         container-color: var(--lux-theme-button-rounded-primary-container-color),
-        hover-state-layer-opacity: 0.9
+        hover-state-layer-opacity: 0
       )
     );
+
+    &:hover {
+      @include mat.fab-overrides(
+        (
+          container-color: color-mix(in srgb, var(--lux-theme-button-rounded-primary-container-color) 90%, transparent)
+        )
+      );
+    }
   }
 
   .mat-accent {
@@ -31,9 +39,17 @@ lux-button.lux-rounded:not(.lux-stroked) {
       (
         foreground-color: var(--lux-theme-button-rounded-accent-text-color),
         container-color: var(--lux-theme-button-rounded-accent-container-color),
-        hover-state-layer-opacity: 0.1
+        hover-state-layer-opacity: 0
       )
     );
+
+    &:hover {
+      @include mat.fab-overrides(
+        (
+          container-color: color-mix(in srgb, var(--lux-theme-button-rounded-accent-container-color) 90%, transparent)
+        )
+      );
+    }
   }
 
   .mat-warn {
@@ -41,9 +57,17 @@ lux-button.lux-rounded:not(.lux-stroked) {
       (
         foreground-color: var(--lux-theme-button-rounded-warn-text-color),
         container-color: var(--lux-theme-button-rounded-warn-container-color),
-        hover-state-layer-opacity: 0.1
+        hover-state-layer-opacity: 0
       )
     );
+
+    &:hover {
+      @include mat.fab-overrides(
+        (
+          container-color: color-mix(in srgb, var(--lux-theme-button-rounded-warn-container-color) 90%, transparent)
+        )
+      );
+    }
   }
 
   .mat-mdc-fab-base {

@@ -52,7 +52,6 @@ lux-message-box {
       & lux-button {
         button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
           color: inherit !important;
-          background-color: transparent !important;
           @include luxelevations.lux-elevation-z0();
         }
 
@@ -91,27 +90,10 @@ lux-message-box {
       @include luxfocus.focus-dark-mixin;
     }
 
-    .mat-mdc-fab.mat-unthemed,
-    .mat-mdc-mini-fab.mat-unthemed {
-      background-color: transparent !important;
-    }
-
     & .lux-message-container.lux-bg-color-white {
       & .lux-message-text:focus-visible {
         @include luxfocus.focus-dark-mixin;
         border-radius: 4px;
-      }
-
-      & lux-button button.lux-button.mat-mdc-fab:not([disabled]).lux-fab-rounded-default {
-        &:hover {
-          color: #ffffff !important;
-          background-color: var(--lux-theme-primary-color) !important;
-        }
-
-        &:focus-visible {
-          @include luxfocus.focus-dark-mixin;
-          background-color: transparent !important;
-        }
       }
     }
 
@@ -119,19 +101,6 @@ lux-message-box {
       & .lux-message-text:focus-visible {
         @include luxfocus.focus-bright-mixin;
         border-radius: 4px;
-      }
-
-      & lux-button button.lux-button.mat-mdc-fab:not([disabled]).lux-fab-rounded-default {
-        &:hover {
-          color: white !important;
-          background-color: rgba(1, 1, 1, 0.2) !important;
-        }
-
-        &:focus-visible {
-          @include luxfocus.focus-bright-mixin;
-          color: white !important;
-          background-color: transparent !important;
-        }
       }
     }
   }
