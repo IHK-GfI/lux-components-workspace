@@ -18,15 +18,16 @@
 
 ### @Input
 
-| Name             | Typ      | Beschreibung                                                                                                                                                                      |
-| ---------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| lux-lookup-label | Selector | Selector                                                                                                                                                                          |
-| luxLookupKnr     | number   | Eine 3-stellige Kammernummer (z.B. 101)                                                                                                                                           |
-| luxLookupUrl     | string   | Eine Url für den Lookup-Service.                                                                                                                                                  |
-| luxLookupId      | string   | Enthält die ID, die diese Lookup-Komponente kennzeichnet. Wichtig: Muss definiert sein, da der LuxLookupHandler das Laden der Daten hierüber anstößt.                             |
-| luxTableNo       | string   | Bestimmt die Schlüsseltabelle, aus welcher die Daten geladen werden sollen. Kann einfach als Number-Wert übergeben werden (z.B: 500211)                                           |
-| luxTableKey      | string   | Bestimmt den Key des Schlüsseltabelleneintrags, dessen Bezeichnung im Label gezeigt werden soll.                                                                                  |
-| luxBezeichnung   | string   | Bestimmt, ob die Lang- oder Kurzbezeichnung des Schlüsseltabelleneintrags gezeigt werden soll. 'kurz': Kurzbezeichung 'lang': Langbezeichnung (beiden Zeilen der Langbezeichnung) |
+| Name             | Typ              | Beschreibung                                                                                                                                                                      |
+| ---------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lux-lookup-label | Selector         | Selector                                                                                                                                                                          |
+| luxLookupKnr     | number           | Eine 3-stellige Kammernummer (z.B. 101)                                                                                                                                           |
+| luxLookupUrl     | string           | Eine Url für den Lookup-Service.                                                                                                                                                  |
+| luxLookupId      | string           | Enthält die ID, die diese Lookup-Komponente kennzeichnet. Wichtig: Muss definiert sein, da der LuxLookupHandler das Laden der Daten hierüber anstößt.                             |
+| luxTableNo       | string           | Bestimmt die Schlüsseltabelle, aus welcher die Daten geladen werden sollen. Kann einfach als Number-Wert übergeben werden (z.B: 500211)                                           |
+| luxTableKey      | string           | Bestimmt den Key des Schlüsseltabelleneintrags, dessen Bezeichnung im Label gezeigt werden soll.                                                                                  |
+| luxFields        | LuxFieldValues[] | Enthält die Felder, die in den Resultaten angezeigt werden sollen. Mögliche Werte sind in dem entsprechenden Enum (siehe _LuxLookupParameters_) zu finden.                        |
+| luxBezeichnung   | string           | Bestimmt, ob die Lang- oder Kurzbezeichnung des Schlüsseltabelleneintrags gezeigt werden soll. 'kurz': Kurzbezeichung 'lang': Langbezeichnung (beiden Zeilen der Langbezeichnung) |
 
 ## Beispiel
 

@@ -27,7 +27,7 @@ export class LuxLookupService {
    * @param parameters
    * @returns HttpParams
    */
-  private generateParameters(parameters: LuxLookupParameters): HttpParams {
+  generateParameters(parameters: LuxLookupParameters): HttpParams {
     let httpParameters = new HttpParams();
     httpParameters = httpParameters.append('knr', '' + parameters.knr);
     httpParameters = httpParameters.append('raw', '' + parameters.raw);
@@ -39,9 +39,22 @@ export class LuxLookupService {
     }
 
     if (parameters.fields && parameters.fields.length > 0) {
-      parameters.fields.forEach((field: string) => {
-        httpParameters = httpParameters.append('fields', field);
-      });
+      // Entferne alle ableitungsText-Felder
+      const fields = parameters.fields.filter((field) => !field.startsWith('ableitungsText'));
+
+      if (fields.length > 0) {
+        // Fuege alle nicht-ableitungsText-Felder als Http-Parameter hinzu
+        fields.forEach((field: string) => {
+          httpParameters = httpParameters.append('fields', field);
+        });
+      }
+
+      // Falls es ableitungsText-Felder gibt, fuege das spezifische Feld 'ableitungsfelder' hinzu.
+      // Der Lookup-Service erwartet dieses spezielle Feld, um alle Ableitungsfelder zu liefern.
+      // Aktuell ist es unmöglich, einzelne ableitungsText-Felder anzufordern.
+      if (parameters.fields.length !== fields.length) {
+        httpParameters = httpParameters.append('fields', 'ableitungsfelder');
+      }
     }
 
     return httpParameters;
