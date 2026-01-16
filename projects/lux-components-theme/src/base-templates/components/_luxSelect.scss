@@ -11,6 +11,13 @@
 }
 
 lux-select-ac {
+
+  @include mat.select-overrides(
+    (
+      enabled-arrow-color: var(--lux-theme-primary-color)
+    )
+  );
+
   &.lux-form-control-readonly {
     pointer-events: none;
   }

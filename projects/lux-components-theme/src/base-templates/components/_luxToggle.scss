@@ -2,13 +2,9 @@
 
 lux-toggle-ac {
   @include mat.slide-toggle-overrides((
+    label-text-size: 1rem,
     disabled-label-text-color: var(--lux-theme-dark-disabled-text)
   ));
-
-  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic.lux-no-input-row {
-    // padding-top: 9px;
-    // padding-bottom: 9px;
-  }
 
   // Readonly state
   &.lux-form-control-readonly {
