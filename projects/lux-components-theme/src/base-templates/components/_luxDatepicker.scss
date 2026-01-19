@@ -4,9 +4,9 @@
 mat-datepicker-content {
   @include mat.datepicker-overrides(
     (
-      calendar-container-background-color: var(--lux-theme-app-content-bg),
+      calendar-container-background-color: var(--lux-theme-panel-bg-color),
       calendar-container-shape: var(--lux-theme-app-border-radius),
-      calendar-container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
+      calendar-container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant)),
     )
   );
 }
@@ -14,11 +14,6 @@ mat-datepicker-content {
 // Formcontrol
 lux-datepicker-ac {
   @include mat.datepicker-overrides(());
-
-  // lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
-  //   padding-top: 4px;
-  //   padding-bottom: 4px;
-  // }
 
   button:not(:disabled) .lux-datepicker-toggle-icon {
     color: var(--lux-theme-datepicker-icon-color);
