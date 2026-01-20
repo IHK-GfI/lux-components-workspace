@@ -29,7 +29,8 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-accent),
           header-description-color: var(--lux-theme-accordion-header-color-on-accent),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-accent),
-          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-accent) 75%, transparent)
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-accent) 75%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
         )
       );
     }
@@ -44,13 +45,14 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-warn),
           header-description-color: var(--lux-theme-accordion-header-color-on-warn),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-warn),
-          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-warn) 75%, transparent)
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-warn) 75%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
         )
       );
     }
   }
 
-  .mat-accordion.lux-neutral {
+  .lux-neutral {
     .lux-expansion-panel-header,
     .lux-expansion-panel-header.mat-expanded {
       background-color: var(--lux-theme-accordion-header-color-neutral);
@@ -59,7 +61,8 @@ lux-accordion {
           header-text-color: var(--lux-theme-accordion-header-color-on-neutral),
           header-description-color: var(--lux-theme-accordion-header-color-on-neutral),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-neutral),
-          header-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent)
+          header-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
         )
       );
     }
