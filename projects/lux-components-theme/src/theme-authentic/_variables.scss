@@ -54,7 +54,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-custom-on-blue: #ffffff;
   --lux-theme-custom-green: #{map.get(palettes.$lux-palette_accent, 70)};
   --lux-theme-custom-on-green: #{map.get(palettes.$lux-palette_neutral, 10)};
-  --lux-theme-custom-red: #{map.get(palettes.$lux-palette_warn, 40)};
+  --lux-theme-custom-red: #ad000f;
   --lux-theme-custom-on-red: #ffffff;
   --lux-theme-custom-gray: #{map.get(palettes.$lux-palette_neutral, 40)};
   --lux-theme-custom-on-gray: #ffffff;
@@ -104,8 +104,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-data-bg: #ffffff;
   --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
   --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
-  --lux-theme-app-border-color: rgba(0, 0, 0, 0.12);
-  --lux-theme-app-border-radius: 4px;
+  --lux-theme-app-border-color: rgba(0, 51, 102, .2);
+  --lux-theme-app-border-radius: 14px;
 
   // Form
   --lux-theme-form-border-width: 1px;
