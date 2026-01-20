@@ -3,7 +3,7 @@
 lux-radio-ac {
   @include mat.radio-overrides(
     (
-      label-text-size: 1rem
+      label-text-size: var(--lux-theme-form-control-font-size)
     )
   );
 

@@ -2,6 +2,6 @@
 
 lux-checkbox-ac {
   @include mat.checkbox-overrides((
-    label-text-size: 1rem
+    label-text-size: var(--lux-theme-form-control-font-size),
   ));
 }

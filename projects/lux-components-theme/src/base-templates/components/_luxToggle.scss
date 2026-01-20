@@ -2,7 +2,7 @@
 
 lux-toggle-ac {
   @include mat.slide-toggle-overrides((
-    label-text-size: 1rem,
+    label-text-size: var(--lux-theme-form-control-font-size),
     disabled-label-text-color: var(--lux-theme-dark-disabled-text)
   ));
 
