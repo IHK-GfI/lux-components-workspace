@@ -244,8 +244,8 @@ lux-form-control-wrapper {
   select:-webkit-autofill,
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus {
-    box-shadow: 0 0 0px 1000px var(--lux-theme-primary-50) inset;
-    -webkit-box-shadow: 0 0 0px 1000px var(--lux-theme-primary-50) inset;
+    box-shadow: 0 0 1000px 0 var(--lux-theme-form-autofill-background-color) inset;
+    -webkit-box-shadow: 0 0 1000px 0 var(--lux-theme-form-autofill-background-color) inset;
     transition: background-color 5000s ease-in-out 0s;
   }
 }

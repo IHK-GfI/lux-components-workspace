@@ -43,7 +43,7 @@ lux-icon {
 
     mat-icon.lux-icon {
       padding: 0 !important;
-      color: var(--lux-theme-warn-50);
+      color: var(--mat-sys-on-error-container);
 
       &:hover {
         cursor: pointer;

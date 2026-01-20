@@ -17,7 +17,8 @@
         <div class="lux-flex lux-place-content-center lux-items-center">
           <lux-input-ac
             luxLabel=""
-            class="lux-datetime-hour"
+            class="lux-datetime-hour lux-max-width-12"
+            [luxDense]="true"
             luxAriaLabel="{{ 'luxc.datetimepicker.panel.hours.arialabel' | transloco }}"
             luxAriaLabelSelector="input"
             luxAutocomplete="off"
@@ -37,7 +38,8 @@
             luxLabel=""
             luxAriaLabel="{{ 'luxc.datetimepicker.panel.minutes.arialabel' | transloco }}"
             luxAriaLabelSelector="input"
-            class="lux-datetime-minute"
+            class="lux-datetime-minute lux-max-width-12"
+            [luxDense]="true"
             luxAutocomplete="off"
             [(luxValue)]="minutes"
             (luxFocusIn)="selectMinutes()"
