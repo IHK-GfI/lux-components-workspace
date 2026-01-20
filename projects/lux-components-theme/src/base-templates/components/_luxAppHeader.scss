@@ -49,7 +49,7 @@ lux-app-header {
     white-space: nowrap;
     background-color: var(--lux-theme-app-header-bg);
     box-sizing: border-box;
-    @include luxelevations.lux-elevation-z6();
+    border-bottom: 1px solid rgba(0, 51, 102, .2);
 
     .lux-show-border {
       border-left: 1px solid var(--lux-theme-primary-color);
@@ -102,6 +102,9 @@ lux-app-header {
 
       &.lux-lang-select-menu {
         flex: 0 0 auto;
+        button {
+          min-width: 50px;
+        }
       }
 
       lux-button {
@@ -354,6 +357,7 @@ lux-app-header {
   & .lux-header-action button:not([disabled]) {
     &:focus {
       @include luxfocus.focus-dark-mixin;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
     }
     color: var(--lux-theme-primary-20) !important;
 
