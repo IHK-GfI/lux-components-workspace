@@ -14,7 +14,8 @@ lux-select-ac {
 
   @include mat.select-overrides(
     (
-      enabled-arrow-color: var(--lux-theme-primary-color)
+      enabled-arrow-color: var(--lux-theme-primary-color),
+      trigger-text-size: var(--lux-theme-form-control-font-size),
     )
   );
 
