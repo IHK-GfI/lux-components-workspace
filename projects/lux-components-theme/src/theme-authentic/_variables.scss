@@ -104,8 +104,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-data-bg: #ffffff;
   --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
   --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
-  --lux-theme-app-border-color: rgba(0, 51, 102, .2);
-  --lux-theme-app-border-radius: 14px;
+  --lux-theme-app-border-color: rgba(0, 0, 0, 0.12);
+  --lux-theme-app-border-radius: 4px;
 
   // Form
   --lux-theme-form-border-width: 1px;
@@ -274,6 +274,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-card-subtitle-text-size: 1rem;
   --lux-theme-card-subtitle-text-weight: 500;
   --lux-theme-card-subtitle-text-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-card-outline-color: rgba(0,0,0,.12);
   --lux-theme-card-shape: var(--lux-theme-app-border-radius);
   --lux-theme-card-background-color: var(--lux-theme-app-data-bg);
   --lux-theme-card-padding: 20px;
