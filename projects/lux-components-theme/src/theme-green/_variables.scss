@@ -198,7 +198,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-flat-default-container-color: #ffffff;
   --lux-theme-button-flat-primary-text-color: #ffffff;
   --lux-theme-button-flat-primary-container-color: #003366;
-  --lux-theme-button-flat-accent-text-color: #000000;
+  --lux-theme-button-flat-accent-text-color: var(--lux-theme-primary-color);
   --lux-theme-button-flat-accent-container-color: #56bd66;
   --lux-theme-button-flat-warn-text-color: #ffffff;
   --lux-theme-button-flat-warn-container-color: var(--mat-sys-error);
@@ -207,14 +207,14 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-raised-default-container-color: #ffffff;
   --lux-theme-button-raised-primary-text-color: #ffffff;
   --lux-theme-button-raised-primary-container-color: #003366;
-  --lux-theme-button-raised-accent-text-color: #000000;
+  --lux-theme-button-raised-accent-text-color: var(--lux-theme-primary-color);
   --lux-theme-button-raised-accent-container-color: #56bd66;
   --lux-theme-button-raised-warn-text-color: #ffffff;
   --lux-theme-button-raised-warn-container-color: var(--mat-sys-error);
 
   --lux-theme-button-stroked-default-text-color: #000000;
   --lux-theme-button-stroked-primary-text-color: #003366;
-  --lux-theme-button-stroked-accent-text-color: #00531d;
+  --lux-theme-button-stroked-accent-text-color: var(--lux-theme-primary-color);
   --lux-theme-button-stroked-warn-text-color: var(--mat-sys-error);
 
   --lux-theme-button-rounded-stroked-default-text-color: #000000;
@@ -226,7 +226,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-rounded-default-container-color: #ffffff;
   --lux-theme-button-rounded-primary-text-color: #ffffff;
   --lux-theme-button-rounded-primary-container-color: #003366;
-  --lux-theme-button-rounded-accent-text-color: #000000;
+  --lux-theme-button-rounded-accent-text-color: var(--lux-theme-primary-color);
   --lux-theme-button-rounded-accent-container-color: #56bd66;
   --lux-theme-button-rounded-warn-text-color: #ffffff;
   --lux-theme-button-rounded-warn-container-color: var(--mat-sys-error);
@@ -235,8 +235,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-flat-container-shape: 18px;
   --lux-theme-button-raised-container-shape: 18px;
   --lux-theme-button-stroked-container-shape: 18px;
-  --lux-theme-button-rounded-container-shape: 16px;
-  --lux-theme-button-rounded-stroked-container-shape: 16px;
+  --lux-theme-button-rounded-container-shape: 18px;
+  --lux-theme-button-rounded-stroked-container-shape: 18px;
 
   --lux-theme-button-text-container-height: 2.8125rem;
   --lux-theme-button-flat-container-height: 2.8125rem;
