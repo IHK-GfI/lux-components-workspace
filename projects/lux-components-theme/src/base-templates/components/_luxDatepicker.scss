@@ -1,14 +1,40 @@
 @use "@angular/material" as mat;
 
-// Panel
-mat-datepicker-content {
-  @include mat.datepicker-overrides(
+:root {
+   @include mat.datepicker-overrides(
     (
+      calendar-date-focus-state-background-color: var(--lux-theme-datepicker-panel-date-hover-background-color),
+      calendar-date-selected-state-text-color: var(--lux-theme-datepicker-panel-date-selected-color),
       calendar-container-background-color: var(--lux-theme-panel-bg-color),
-      calendar-container-shape: var(--lux-theme-app-border-radius),
+      calendar-container-shape: var(--lux-theme-datepicker-panel-shape),
       calendar-container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant)),
+      calendar-date-hover-state-background-color: var(--lux-theme-datepicker-panel-date-hover-background-color),
+      calendar-date-text-color: var(--lux-theme-datepicker-panel-text-color),
+      calendar-header-text-color: var(--lux-theme-datepicker-panel-text-color),
+      calendar-period-button-text-color: var(--lux-theme-datepicker-panel-text-color),
+      calendar-date-selected-state-background-color: var(--lux-theme-datepicker-panel-date-selected-background-color),
+      calendar-header-text-size: var(--lux-theme-datepicker-panel-font-size),
+      calendar-text-size: var(--lux-theme-datepicker-panel-font-size),
+      calendar-body-label-text-size: var(--lux-theme-datepicker-panel-font-size),
+      calendar-period-button-text-size: var(--lux-theme-datepicker-panel-font-size)
+
     )
   );
+}
+
+// Panel
+mat-calendar {
+  .mat-calendar-body-cell-content {
+    border-radius: var(--lux-theme-datepicker-panel-date-border-radius);
+
+    &:not(.mat-calendar-body-selected) {
+      background-color: var(--lux-theme-datepicker-panel-date-background-color);
+    }
+  }
+
+  .mat-calendar-body-label {
+    visibility: hidden;
+  }
 }
 
 // Formcontrol
@@ -17,5 +43,22 @@ lux-datepicker-ac {
 
   button:not(:disabled) .lux-datepicker-toggle-icon {
     color: var(--lux-theme-datepicker-icon-color);
+  }
+}
+
+.lux-datepicker-custom-header-component {
+  display: grid;
+  grid-template-columns: 70px auto 70px;
+  justify-items: anchor-center;
+  padding: 4px 0 4px 0;
+  color: var(--lux-theme-datepicker-panel-text-color);
+
+  lux-button.lux-datepicker-button {
+    @include mat.button-overrides(
+      (
+        text-label-text-color: var(--lux-theme-datepicker-panel-text-color),
+        text-label-text-size: var(--lux-theme-datepicker-panel-font-size)
+      )
+    );
   }
 }

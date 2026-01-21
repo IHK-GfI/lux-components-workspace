@@ -3,6 +3,12 @@
 
 // Accordion
 lux-accordion {
+  @include mat.expansion-overrides(
+    (
+      container-text-color: var(--lux-theme-dark-primary-text)
+    )
+  );
+
   .lux-primary {
     .lux-expansion-panel-header,
     .lux-expansion-panel-header.mat-expanded {
@@ -89,7 +95,14 @@ lux-panel {
 
   .lux-expansion-panel-header,
   .lux-expansion-panel-header.mat-expanded,
-  .lux-expansion-panel-header.mat-expanded.mat-expanded:focus {
+  .lux-expansion-panel-header.mat-expanded:focus {
+    &[aria-disabled="true"] {
+      background-color: var(--lux-theme-app-content-bg);
+    }
+  }
+
+  .lux-expansion-panel-header.mat-expanded,
+  .lux-expansion-panel-header.mat-expanded:focus {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 

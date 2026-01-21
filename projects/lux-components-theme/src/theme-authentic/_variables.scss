@@ -274,13 +274,21 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-card-subtitle-text-size: 1rem;
   --lux-theme-card-subtitle-text-weight: 500;
   --lux-theme-card-subtitle-text-color: var(--lux-theme-dark-secondary-text);
-  --lux-theme-card-outline-color: rgba(0,0,0,.12);
+  --lux-theme-card-outline-color: rgba(0, 0, 0, 0.12);
   --lux-theme-card-shape: var(--lux-theme-app-border-radius);
   --lux-theme-card-background-color: var(--lux-theme-app-data-bg);
   --lux-theme-card-padding: 20px;
 
   // LUX-Datepicker
   --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-datepicker-panel-shape: var(--lux-theme-app-border-radius);
+  --lux-theme-datepicker-panel-text-color: #003366;
+  --lux-theme-datepicker-panel-font-size: 1rem;
+  --lux-theme-datepicker-panel-date-border-radius: 50%;
+  --lux-theme-datepicker-panel-date-background-color: var(--lux-theme-panel-bg-color);
+  --lux-theme-datepicker-panel-date-selected-color: #e3ebf5;
+  --lux-theme-datepicker-panel-date-selected-background-color: #003366;
+  --lux-theme-datepicker-panel-date-hover-background-color: rgba(0, 51, 102, 0.3);
 
   // LUX-Dialog
   --lux-theme-dialog-close-button-hover-color: var(--lux-theme-dark-primary-text);
@@ -325,6 +333,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   // LUX-Link-Plain
   --lux-theme-link-plain-color: var(--lux-theme-primary-40);
+  --lux-theme-link-plain-icon-color: var(--lux-theme-primary-40);
+  --lux-theme-link-plain-text-decoration: inherit;
+  --lux-theme-link-plain-background-color: transparent;
   --lux-theme-link-plain-hover-color: var(--mat-sys-on-primary-container);
   --lux-theme-link-plain-hover-background-color: var(--mat-sys-primary-container);
 
@@ -388,10 +399,14 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // LUX-Side-Nav
   --lux-theme-side-nav-button-color: var(--lux-theme-dark-primary-text);
 
+  // LUX-Table
+  --lux-theme-tabble-alternate-row-bg-color: var(--mat-sys-surface-container-high);
+
   // LUX-Tabs
   --lux-theme-tabs-text-font: var(--lux-theme-app-font-family);
   --lux-theme-tabs-label-text-size: 0.875rem;
   --lux-theme-tabs-label-text-weight: 600;
+  --lux-theme-tabs-border-radius: var(--lux-theme-card-shape);
 
   // LUX-Textbox
   --lux-theme-textbox-default-color: #ffffff;
@@ -432,6 +447,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-panel-option-min-height: 24px;
   --lux-theme-panel-option-padding: 12px 0;
   --lux-theme-panel-bg-color: var(--mat-sys-surface-container);
+  --lux-theme-panel-option-label-text-size: 1rem;
   --lux-theme-panel-option-label-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-panel-option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
   --lux-theme-panel-option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);

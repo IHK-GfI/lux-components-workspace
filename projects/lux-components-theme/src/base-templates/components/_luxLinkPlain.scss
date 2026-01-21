@@ -3,6 +3,7 @@
 lux-link-plain {
   display: inline-flex;
   align-items: baseline;
+  background-color: var(--lux-theme-link-plain-background-color);
   .link-wrapper {
     display: flex;
     gap: 0.25em;
@@ -12,7 +13,7 @@ lux-link-plain {
       font-family: inherit;
       font-size: inherit;
       font-weight: inherit;
-      text-decoration: inherit;
+      text-decoration: var(--lux-theme-link-plain-text-decoration);
       color: inherit;
       display: flex;
     }
@@ -20,6 +21,7 @@ lux-link-plain {
     lux-icon {
       font-size: inherit;
       display: flex;
+      color: var(--lux-theme-link-plain-icon-color);
       mat-icon.mat-icon.lux-icon {
         padding: 0px !important;
         width: 0.8em;
@@ -39,13 +41,12 @@ lux-link-plain {
     font-family: inherit;
     lux-icon {
       mat-icon {
-        color: var(--lux-theme-link-plain-color);
+        color: var(--lux-theme-link-plain-icon-color);
       }
     }
   }
 
-  &.lux-disabled,
-  .link-wrapper.lux-disabled {
+  &.lux-disabled {
     color: var(--lux-theme-dark-disabled-text);
     cursor: text;
     text-decoration: none;

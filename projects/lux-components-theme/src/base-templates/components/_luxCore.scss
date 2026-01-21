@@ -3,6 +3,7 @@
 :root {
   @include mat.core-overrides(
     (
+      option-label-text-size: var(--lux-theme-panel-option-label-text-size),
       option-label-text-color: var(--lux-theme-panel-option-label-text-color),
       option-hover-state-layer-color: var(--lux-theme-panel-option-hover-state-layer-color),
       option-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)

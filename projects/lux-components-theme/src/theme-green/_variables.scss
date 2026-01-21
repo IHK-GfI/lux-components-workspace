@@ -25,7 +25,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-dark-primary-text: #003366;
   --lux-theme-dark-secondary-text: #335c85;
   --lux-theme-dark-disabled-text: #636d76;
-  --lux-theme-dark-dividers: rgba(0, 51, 102, .2);
+  --lux-theme-dark-dividers: rgba(0, 51, 102, 0.2);
   --lux-theme-dark-focused: rgba(0, 0, 0, 0.12);
 
   --lux-theme-light-primary-text: white;
@@ -37,6 +37,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Hauptfarben
   --lux-theme-primary-color: #{palettes.$lux-primary-color};
   --lux-theme-accent-color: #{palettes.$lux-accent-color};
+  --lux-theme-accent-secondary-color: #247929;
   --lux-theme-warn-color: #{palettes.$lux-warn-color};
 
   // Sonderfarben
@@ -104,12 +105,12 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-data-bg: #ffffff;
   --lux-theme-app-gradient: none;
   --lux-theme-app-gradient-reverse: none;
-  --lux-theme-app-border-color: rgba(0, 51, 102, .2);
+  --lux-theme-app-border-color: rgba(0, 51, 102, 0.2);
   --lux-theme-app-border-radius: 14px;
 
   // Form
   --lux-theme-form-border-width: 1px;
-  --lux-theme-form-min-height: 40px;
+  --lux-theme-form-min-height: 44px;
   --lux-theme-form-dense-min-height: 34px;
   --lux-theme-form-control-textarea-padding: 8px;
   --lux-theme-form-control-textarea-dense-padding: 6px;
@@ -117,7 +118,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-control-error-margin: 0.25rem 0 0 0;
   --lux-theme-form-border-color: rgba(0, 0, 0, 0.42);
   --lux-theme-form-focus-border-color: var(--lux-theme-primary-20);
-  --lux-theme-form-focus-box-shadow: 0 0 0 2px #247929, 0 0 4px 2px #247929;
+  --lux-theme-form-focus-box-shadow: 0 0 0 2px var(--lux-theme-accent-secondary-color), 0 0 4px 2px var(--lux-theme-accent-secondary-color);
   --lux-theme-form-error-border-color: var(--lux-theme-warn-50);
   --lux-theme-form-error-box-shadow: 0 0 0 2px var(--lux-theme-warn-50), 0 0 4px 2px var(--lux-theme-warn-50);
   --lux-theme-form-control-font-size: 1.125rem;
@@ -126,12 +127,12 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-autofill-background-color: #e6e9ee;
 
   // Fokus
-  --lux-theme-outline-dark: 4px solid #247929 !important;
+  --lux-theme-outline-dark: 4px solid var(--lux-theme-accent-secondary-color) !important;
   --lux-theme-outline-bright: 4px solid #ffffff !important;
   --lux-theme-outline-width: 4px;
   --lux-theme-outline-style: solid;
   --lux-theme-outline-color-bright: #ffffff;
-  --lux-theme-outline-color-dark: #247929;
+  --lux-theme-outline-color-dark: var(--lux-theme-accent-secondary-color);
 
   // Hover
   --lux-theme-hover-color: var(--mat-option-hover-state-layer-color);
@@ -139,7 +140,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-hover-color-for-dark-background: #335c85;
 
   // Selektion
-  --lux-theme-selected-border-color: #247929;
+  --lux-theme-selected-border-color: var(--lux-theme-accent-secondary-color);
   --lux-theme-selected-bg-color: #e3ebf5;
   --lux-theme-on-selected-color: var(--lux-theme-dark-primary-text);
 
@@ -186,7 +187,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
   // LUX-Breadcrumb
-  --lux-theme-breadcrumb-hover-color: #247929;
+  --lux-theme-breadcrumb-hover-color: var(--lux-theme-accent-secondary-color);
 
   // LUX-Button
   --lux-theme-button-text-default-text-color: #000000;
@@ -274,13 +275,21 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-card-subtitle-text-size: 1rem;
   --lux-theme-card-subtitle-text-weight: 500;
   --lux-theme-card-subtitle-text-color: var(--lux-theme-dark-secondary-text);
-  --lux-theme-card-outline-color: rgba(0, 51, 102, .2);
+  --lux-theme-card-outline-color: rgba(0, 51, 102, 0.2);
   --lux-theme-card-shape: 16px;
   --lux-theme-card-background-color: var(--lux-theme-app-data-bg);
   --lux-theme-card-padding: 20px;
 
   // LUX-Datepicker
   --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-datepicker-panel-shape: var(--lux-theme-app-border-radius);
+  --lux-theme-datepicker-panel-text-color: #003366;
+  --lux-theme-datepicker-panel-font-size: 1.125rem;
+  --lux-theme-datepicker-panel-date-border-radius: 0;
+  --lux-theme-datepicker-panel-date-background-color: #e3ebf5;
+  --lux-theme-datepicker-panel-date-selected-color: #e3ebf5;
+  --lux-theme-datepicker-panel-date-selected-background-color: #003366;
+  --lux-theme-datepicker-panel-date-hover-background-color: rgba(0, 51, 102, 0.3);
 
   // LUX-Dialog
   --lux-theme-dialog-close-button-hover-color: var(--lux-theme-dark-primary-text);
@@ -324,9 +333,12 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-icon-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
   // LUX-Link-Plain
-  --lux-theme-link-plain-color: #007cb1;
-  --lux-theme-link-plain-hover-color: #4d7094;
-  --lux-theme-link-plain-hover-background-color: var(--mat-sys-primary-container);
+  --lux-theme-link-plain-color: var(--lux-theme-primary-color);
+  --lux-theme-link-plain-icon-color: var(--lux-theme-accent-secondary-color);
+  --lux-theme-link-plain-text-decoration: underline;
+  --lux-theme-link-plain-background-color: #e4f1e4;
+  --lux-theme-link-plain-hover-color: var(--lux-theme-accent-secondary-color);
+  --lux-theme-link-plain-hover-background-color: #e4f1e4;
 
   // Lookup
   --lux-theme-lookup-invalid-option-text-color: var(--lux-theme-warn-50);
@@ -375,23 +387,27 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-stepper-large-nav-item-completed-icon-height: 1.4375rem;
   --lux-theme-stepper-large-nav-item-completed-icon-margin: 4px 10px 0px;
   --lux-theme-stepper-large-backdrop-bg: #636d76;
-  --lux-theme-stepper-large-completed-fc: #247929;
+  --lux-theme-stepper-large-completed-fc: var(--lux-theme-accent-secondary-color);
   --lux-theme-stepper-large-nav-item-active-fc: #ffffff;
   --lux-theme-stepper-large-nav-item-active-bg: #003366;
   --lux-theme-stepper-large-nav-item-disabled-fg: #003366;
   --lux-theme-stepper-large-nav-item-disabled-bg: #eff3f6;
   --lux-theme-stepper-large-nav-item-completed-fg: #ffffff;
-  --lux-theme-stepper-large-nav-item-completed-bg: #247929;
+  --lux-theme-stepper-large-nav-item-completed-bg: var(--lux-theme-accent-secondary-color);
   --lux-theme-stepper-large-nav-item-not-touched-fg: #003366;
   --lux-theme-stepper-large-nav-item-not-touched-bg: #eff3f6;
 
   // LUX-Side-Nav
   --lux-theme-side-nav-button-color: var(--lux-theme-dark-primary-text);
 
+  // LUX-Table
+  --lux-theme-tabble-alternate-row-bg-color: #e3ebf5;
+
   // LUX-Tabs
   --lux-theme-tabs-text-font: var(--lux-theme-app-headline-font);
-  --lux-theme-tabs-label-text-size: 1.375rem;
-  --lux-theme-tabs-label-text-weight: 700;
+  --lux-theme-tabs-label-text-size: 1.125rem;
+  --lux-theme-tabs-label-text-weight: 600;
+  --lux-theme-tabs-border-radius: var(--lux-theme-card-shape);
 
   // LUX-Textbox
   --lux-theme-textbox-default-color: #ffffff;
@@ -420,7 +436,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-textbox-yellow-icon-color: #f4cb25;
 
   // LUX-Tile
-  --lux-theme-tile-font-hover-color: #247929;
+  --lux-theme-tile-font-hover-color: var(--lux-theme-accent-secondary-color);
   --lux-theme-tile-icon-color: #56bd66;
   --lux-theme-tile-borderradius: 24px;
   --lux-theme-tile-bottom-line-color: #56bd66;
@@ -432,6 +448,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-panel-option-min-height: 24px;
   --lux-theme-panel-option-padding: 12px 0;
   --lux-theme-panel-bg-color: #ffffff;
+  --lux-theme-panel-option-label-text-size: 1.125rem;
   --lux-theme-panel-option-label-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-panel-option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
   --lux-theme-panel-option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
