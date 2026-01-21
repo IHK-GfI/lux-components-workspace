@@ -20,6 +20,12 @@ lux-tabs {
     )
   );
 
+  mat-tab-group:not(.lux-tabs-show-divider) {
+    @include mat.tabs-overrides((
+      divider-height: 0,
+    ));
+  }
+
   .mdc-tab {
     padding-left: 0;
     padding-right: 0;
