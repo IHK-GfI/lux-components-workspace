@@ -3,7 +3,7 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90progress-v19"
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
-    <div class="lux-app-data-bg lux-flex lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
+    <div class="lux-app-data-bg lux-flex lux-flex-wrap lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
       @for (color of colors; track color; let i = $index) {
       <lux-progress
         luxType="Spinner"
