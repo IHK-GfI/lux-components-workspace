@@ -84,7 +84,7 @@
   @if (errorMessage && formControl?.touched && !forceProgressIndeterminate) {
   <lux-card-actions class="lux-file-actions lux-error">
     <lux-icon class="lux-alert-icon" luxIconName="lux-interface-alert-warning-triangle" luxIconSize="0.75rem"></lux-icon>
-    <mat-error [id]="uid + '-misc'" class="">
+    <mat-error [id]="uid + '-misc'" class="lux-file-list-error-message">
       {{ errorMessage }}
     </mat-error>
     @if (displayClearErrorButton) {
