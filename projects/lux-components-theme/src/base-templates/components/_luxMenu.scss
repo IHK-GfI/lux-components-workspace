@@ -67,7 +67,7 @@ lux-menu {
     (
       container-shape: var(--lux-theme-app-border-radius),
       container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant)),
-      container-color: var(--mat-sys-surface-container),
+      container-color: var(--lux-theme-panel-bg-color),
       item-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent),
       item-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent)
     )

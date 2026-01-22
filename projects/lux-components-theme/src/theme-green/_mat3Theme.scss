@@ -58,7 +58,7 @@ $lux-theme: mat.define-theme(
     "on-tertiary": map.get(map.get(palettes.$luxPalettes, "tertiary"), 100),             //text-farbe für tertiary-button
     "tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 95),       //farbe für accordion
     "on-tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 30),
-    "error": map.get(map.get(palettes.$luxPalettes, "error"), 50),                       // bg-farbe für error-button
+    "error": #ad000f,                       // bg-farbe für error-button
     "on-error": map.get(map.get(palettes.$luxPalettes, "error"), 100),
     "error-container": map.get(map.get(palettes.$luxPalettes, "error"), 90),             //bg-farbe für Error-Message unter input, accordion-farbe
     "on-error-container": map.get(map.get(palettes.$luxPalettes, "error"), 30),          //text-farbe für Error-Message unter input

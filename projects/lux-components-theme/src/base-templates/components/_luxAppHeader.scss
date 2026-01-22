@@ -376,6 +376,7 @@ lux-app-header {
     &:hover {
       color: var(--lux-theme-primary-20) !important;
       background-color: var(--lux-theme-hover-color) !important;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
 
       &.mat-accent lux-icon {
         color: var(--lux-theme-accent-70) !important;
