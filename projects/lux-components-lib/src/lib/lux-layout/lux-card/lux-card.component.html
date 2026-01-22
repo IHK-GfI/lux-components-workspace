@@ -43,7 +43,7 @@
   </mat-card-header>
 
   <mat-card-content class="lux-card-content" [class.lux-card-no-actions]="!showButtons">
-    <div class="lux-card-content-container lux-overflow-y-hidden" [class.lux-card-with-content-and-header]="contentComponent && showHeader">
+    <div class="lux-card-content-container" [class.lux-card-with-content-and-header]="contentComponent && showHeader">
       <ng-content select="lux-card-content"></ng-content>
       @if (showExpandedToggle) {
       <lux-button

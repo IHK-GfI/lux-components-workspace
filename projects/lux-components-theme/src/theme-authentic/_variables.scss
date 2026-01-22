@@ -123,7 +123,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-control-font-size: 1rem;
   --lux-theme-form-control-buffer: 4px;
   --lux-theme-form-error-msg-background: var(--mat-sys-error-container);
-  --lux-theme-form-autofill-background-color: #e6e9ee;
+  --lux-theme-form-autofill-background-color: var(--mat-sys-surface-container-high);
 
   // Fokus
   --lux-theme-outline-dark: 4px solid var(--lux-theme-custom-lightblue) !important;
