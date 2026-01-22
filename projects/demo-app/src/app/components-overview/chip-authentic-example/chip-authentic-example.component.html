@@ -12,6 +12,7 @@
         [luxStrict]="strict"
         [luxDisabled]="disabled"
         [luxInputAllowed]="inputAllowed"
+        [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
         [luxInputLabel]="inputLabel"
         [luxPlaceholder]="placeholder"
         [luxOrientation]="chipOrientation"
@@ -45,6 +46,7 @@
         [luxStrict]="strict"
         [luxDisabled]="disabled"
         [luxInputAllowed]="inputAllowed"
+        [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
         [luxInputLabel]="inputLabel"
         [luxPlaceholder]="placeholder"
         [luxOrientation]="chipOrientation"
@@ -77,6 +79,7 @@
           [luxStrict]="strict"
           [luxDisabled]="disabled"
           [luxInputAllowed]="inputAllowed"
+          [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
           [luxInputLabel]="inputLabel"
           [luxPlaceholder]="placeholder"
           [luxOrientation]="chipOrientation"
@@ -117,7 +120,14 @@
       luxHint="Über diese Property kann das Label für das Eingabefeld dieser Component gesetzt werden."
     >
     </lux-input-ac>
-
+    <lux-toggle-ac
+      luxLabel="luxInputLabelAlwaysVisible"
+      [luxDisabled]="inputAllowed"
+      luxHint="Zeigt das Label auch dann an, wenn kein Eingabefeld angezeigt wird."
+      [(luxChecked)]="inputLabelAlwaysVisible"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
     <lux-input-ac
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
