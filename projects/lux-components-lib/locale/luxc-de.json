@@ -79,7 +79,7 @@
       "upload.error_message.only_one_file": "Es darf nur eine Datei hochgeladen werden.",
       "upload.error_message.read_error": "Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.",
       "upload.error_message.upload_error": "Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.",
-      "upload.file.type.concat": "oder",
+      "upload.file.type.concat": " oder ",
       "upload.label": "Zum Hochladen Datei hier ablegen oder ",
       "upload.label.link": "Datei durchsuchen",
       "upload.label.link.short": "Datei hochladen"

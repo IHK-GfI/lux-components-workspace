@@ -16,7 +16,6 @@ import {
 } from '@angular/cdk/keycodes';
 import { FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
-import { LuxBgAllColor, LuxBgAllColors } from './lux-colors.enum';
 
 export class LuxUtil {
   public static readonly ISO_8601_FULL = new RegExp('^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$', 'i');
@@ -190,18 +189,6 @@ export class LuxUtil {
         console.log('Die Funktion "event.stopPropagation()" wird nicht unterstützt.');
       }
     }
-  }
-
-  public static getColorsByBgColorsEnum(color: LuxBgAllColor | undefined): { backgroundCSSClass: string; fontCSSClass: string } {
-    const result = { backgroundCSSClass: 'lux-bg-color-blue', fontCSSClass: 'lux-font-color-white' };
-
-    const found = LuxBgAllColors.find((entry) => entry === color);
-    if (found) {
-      result.backgroundCSSClass = 'lux-bg-color-' + color;
-      result.fontCSSClass = 'lux-font-color-' + color;
-    }
-
-    return result;
   }
 
   public static isNumber(toCheck: any): boolean {

@@ -10,13 +10,6 @@
     font-size: 12px;
   }
 
-  lux-menu ::ng-deep {
-    lux-icon.lux-button-icon mat-icon.lux-icon {
-      height: 16px;
-      width: 16px;
-    }
-  }
-
   ::ng-deep .lux-card-header {
     button.lux-icon-button mat-icon.lux-icon {
       height: 22px !important;
@@ -134,8 +127,8 @@
   }
 
   .lux-error {
-    color: var(--lux-theme-warn-900);
-    background-color: rgb(255, 228, 231);
+    color: var(--mat-sys-on-error-container);
+    background-color: var(--mat-sys-error-container);
     border-radius: 2px;
   }
 }

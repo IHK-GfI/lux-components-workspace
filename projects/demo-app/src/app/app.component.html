@@ -1,5 +1,5 @@
 <div class="lux-app-container">
-  @if (this.luxAppHeader !== 'none' && themeName !== 'authentic') {
+  @if (this.luxAppHeader !== 'none' && themeName === 'green') {
   <lux-app-header
     luxAppTitle="LUX Components"
     luxAppTitleShort="Components"
@@ -149,6 +149,7 @@
         luxIconName="lux-interface-edit-brush-1"
         luxLabel="Theme - green"
         [luxDisabled]="themeName === 'green'"
+        luxClass="lux-selected-item-ac"
         luxTagId="theme-green-menu-item-ac"
         (luxClicked)="onChangeTheme('green')"
       ></lux-menu-item>
@@ -163,7 +164,7 @@
     </lux-app-header-right-nav>
     }
   </lux-app-header>
-  } @if (this.luxAppHeader !== 'none' && themeName === 'authentic') {
+  } @if (this.luxAppHeader !== 'none' && themeName !== 'green') {
   <lux-app-header-ac
     luxAppTitle="LUX Components"
     luxAppTitleShort="Components"
@@ -318,7 +319,7 @@
     </lux-app-header-ac-action-nav>
   </lux-app-header-ac>
   }
-  <lux-app-content luxAriaRoleMainLabel="" cdkScrollable>
+  <lux-app-content luxAriaRoleMainLabel="{{ 'luxc.app_content.ariarolemain' | transloco }}" cdkScrollable>
     @if (this.luxAppFooter !== 'none' && ((fixedFooterService.fixedModeAsObservable | async) === false)) {
     <lux-app-footer luxVersion="20.0.0"></lux-app-footer>
     }

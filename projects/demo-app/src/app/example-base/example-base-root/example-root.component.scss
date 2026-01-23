@@ -1,3 +1,27 @@
+$checkmark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='none' stroke='%23036' stroke-linecap='round' stroke-linejoin='round' d='M0.5,8.55 L3.23,12.06 C3.4166359,12.3024927 3.70402432,12.4461869 4.01,12.4500671 C4.31092451,12.4534817 4.59741556,12.3212551 4.79,12.09 L13.5,1.55'/%3E%3C/svg%3E";
+
+@mixin lux-checkmark-icon($bg-color) {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  right: auto;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  margin: 0.25em 0.3em;
+  background-color: $bg-color;
+  -webkit-mask: url($checkmark);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: cover;
+  mask: url($checkmark);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: cover;
+  border: none;
+}
+
 :host {
   display: flex;
   flex: 1 1 auto;
@@ -11,35 +35,19 @@
 
   .example-base-components-list {
     overflow-y: auto;
-    border-right: 1px solid;
+    border-right: 1px solid var(--lux-theme-light-dividers);
     min-width: 253px;
     min-width: 253px;
     padding: 16px 8px;
 
-    lux-panel {
-      padding: 0 0 16px 0;
+    ::ng-deep {
+      lux-panel {
+        padding-bottom: 12px;
+      }
 
-      ::ng-deep {
-        mat-expansion-panel {
-          box-shadow: unset;
-        }
-
-        mat-expansion-panel-header {
-          font-size: 1rem;
-        }
-
-        mat-expansion-panel-header,
-        .mat-expansion-panel-body {
-          padding: 0 0.75em;
-        }
-
-        .mat-expansion-panel-body {
-          padding: 0;
-        }
-
-        lux-panel-content {
-          display: block;
-        }
+      .mat-expansion-panel-header,
+      .mat-expansion-panel-body {
+        padding: 0 0.75em;
       }
     }
 
@@ -56,7 +64,6 @@
     display: flex;
     flex: 0 0 calc(100% - 302px);
 
-    // Nur ab einer Media-Query großer "sm" die Breite anpassen
     @media (min-width: 600px) {
       max-width: calc(100% - 302px);
     }
@@ -67,19 +74,57 @@
   }
 }
 
-lux-link-plain.sr-only ::ng-deep div.link-wrapper
-{
-position:absolute;
-left:-10000px;
-top:auto;
-width:1px;
-height:1px;
-overflow:hidden;
+lux-link-plain.sr-only ::ng-deep div.link-wrapper {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
-lux-link-plain.sr-only ::ng-deep div.link-wrapper:focus
-{
-position:static;
-width:auto;
-height:auto;
+lux-link-plain.sr-only ::ng-deep div.link-wrapper:focus {
+  position: static;
+  width: auto;
+  height: auto;
+}
+
+// Hover, Fokus und Selektion der Listeneinträge
+::ng-deep {
+  .example-base-components-list {
+    mat-expansion-panel-header,
+    .example-component-list-item {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+
+      &.example-component-list-item-selected {
+        position: relative;
+        border-radius: 4px;
+        color: var(--lux-theme-on-selected-color);
+        background-color: var(--lux-theme-selected-bg-color);
+
+        &::after {
+          @include lux-checkmark-icon(var(--lux-theme-on-selected-color));
+        }
+      }
+
+      &.example-component-list-item-selected:hover {
+        &::after {
+          @include lux-checkmark-icon(var(--mat-sys-on-surface));
+        }
+      }
+
+      &:focus-visible {
+        outline: var(--lux-theme-outline-dark);
+        outline-offset: calc(-1 * var(--lux-theme-outline-width));
+      }
+
+      &:hover {
+        color: var(--lux-theme-on-hover-color);
+        background-color: var(--lux-theme-hover-color);
+        border-radius: var(--lux-theme-app-border-radius);
+      }
+    }
+  }
 }

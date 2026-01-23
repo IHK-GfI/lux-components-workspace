@@ -1,0 +1,123 @@
+@use "@angular/material" as mat;
+
+lux-chips-ac {
+  @include mat.chips-overrides(
+    (
+      container-shape-radius: 20px,
+      outline-color: transparent,
+      hover-state-layer-opacity: 0,
+      trailing-action-hover-state-layer-opacity: 0,
+      outline-width: 1px
+    )
+  );
+
+  // Default-Farbvariante
+  .lux-chip-color-default {
+    @include mat.chips-overrides(
+      (
+        outline-color: var(--mat-chip-label-text-color, var(--mat-sys-on-surface-variant)),
+        outline-width: 1px
+      )
+    );
+  }
+
+  // Primär-Farbvariante
+  .lux-chip-color-primary {
+    --mat-chip-elevated-container-color: var(--lux-theme-custom-blue);
+    @include mat.chips-overrides(
+      (
+        label-text-color: var(--lux-theme-custom-on-blue),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-custom-on-blue)
+      )
+    );
+  }
+
+  // Akzent-Farbvariante
+  .lux-chip-color-accent {
+    --mat-chip-elevated-container-color: var(--lux-theme-custom-green);
+    @include mat.chips-overrides(
+      (
+        label-text-color: var(--lux-theme-custom-on-green),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-custom-on-green)
+      )
+    );
+  }
+
+  // Warn-Farbvariante
+  .lux-chip-color-warn {
+    --mat-chip-elevated-container-color: var(--lux-theme-custom-red);
+    @include mat.chips-overrides(
+      (
+        label-text-color: var(--lux-theme-custom-on-red),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-custom-on-red)
+      )
+    );
+  }
+
+  // Lösch-Icon mittig ausrichten
+  .mat-mdc-chip-remove .mat-icon {
+    min-height: unset;
+  }
+
+  lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
+    padding: 12px 8px;
+  }
+
+  // Border ausblenden
+  lux-form-control-wrapper.lux-hide-input-border .lux-form-control-container-authentic {
+    border: none;
+    padding: 0;
+    box-shadow: none !important; // den Focus-indicator für das Inputausblenden
+  }
+
+  // Pfeil-Icon
+  .lux-select-arrow {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+
+    // Spiegeln für nach oben zeigenden Pfeil
+    &.lux-rotate {
+      transform: rotate(180deg);
+    }
+  }
+
+  // Vertikale Chips
+  .lux-vertical .mdc-evolution-chip-set__chips {
+    flex-direction: column;
+  }
+
+  // Disabled: Placeholder
+  .lux-chips-autocomplete-input:disabled {
+    &::placeholder {
+      color: var(--lux-theme-dark-disabled-text);
+    }
+  }
+
+  // Disabled: Icon
+  .lux-chips-autocomplete-icon.lux-disabled {
+    color: var(--lux-theme-dark-disabled-text);
+    cursor: default;
+  }
+
+  // Fokus
+  mat-chip-row.cdk-focused:not(.cdk-mouse-focused):not(.cdk-program-focused) {
+    --mat-chip-elevated-container-color: var(--lux-theme-custom-on-blue);
+    @include mat.chips-overrides(
+      (
+        label-text-color: var(--lux-theme-custom-blue),
+        with-trailing-icon-trailing-icon-color: var(--lux-theme-custom-blue)
+      )
+    );
+  }
+}
+
+.lux-chips-ac-autocomplete-panel.mat-mdc-autocomplete-panel,
+.lux-chips-ac-autocomplete-panel-dense.mat-mdc-autocomplete-panel {
+  margin-top: -26px;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-radius: 4px;
+}

@@ -1,0 +1,17 @@
+@use "@angular/material" as mat;
+
+.lux-datetimepicker-overlay lux-card {
+  @include mat.card-overrides(
+    (
+      outlined-container-color: var(--lux-theme-panel-bg-color)
+    )
+  );
+}
+
+lux-datetimepicker-ac {
+  @include mat.datepicker-overrides(());
+
+  button:not(:disabled) .lux-datetimepicker-toggle-icon {
+    color: var(--lux-theme-datepicker-icon-color);
+  }
+}

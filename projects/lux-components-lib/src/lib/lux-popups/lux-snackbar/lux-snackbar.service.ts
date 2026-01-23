@@ -80,12 +80,26 @@ export class LuxSnackbarService implements OnDestroy {
    * @param config
    */
   public open(duration: number, config?: LuxSnackbarConfig) {
+    const panelClassArr = ['lux-snackbar'];
+
+    if (config && config.textColor) {
+      panelClassArr.push('lux-snackbar-color-text-' + config.textColor);
+    }
+
+    if (config && config.actionColor) {
+      panelClassArr.push('lux-snackbar-color-action-' + config.actionColor);
+    }
+
+    if (config && config.iconColor) {
+      panelClassArr.push('lux-snackbar-color-icon-' + config.iconColor);
+    }
+
     const snackbarRef = this.snackBar.openFromComponent(LuxSnackbarComponent, {
       duration,
       data: config,
       verticalPosition: LuxSnackbarService.VERTICAL_POSITION,
       horizontalPosition: LuxSnackbarService.HORIZONTAL_POSITION,
-      panelClass: 'lux-snackbar'
+      panelClass: panelClassArr
     });
 
     this.afterOpenedSubscription = snackbarRef.afterOpened().subscribe(() => {

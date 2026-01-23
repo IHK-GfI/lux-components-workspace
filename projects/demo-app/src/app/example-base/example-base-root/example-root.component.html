@@ -14,7 +14,6 @@
       <lux-button luxLabel="Zurück" luxColor="primary" [luxStroked]="true" (luxClicked)="onPrev()"></lux-button>
       <lux-link-plain
         class="sr-only"
-        luxHref="#main-content"
         luxLabel="Zum Inhalt"
         luxAriaLabel="Zum Inhalt der Seite springen"
         luxAriaLabelSelector="div.link-wrapper"
@@ -25,12 +24,12 @@
     @for (moduleName of navigationService.currentModuleNames; track moduleName) {
     <lux-panel luxCollapsedHeaderHeight="2.1875em" luxExpandedHeaderHeight="2.1875em" [luxExpanded]="true">
       <lux-panel-header-title
-        ><span class="lux-color-primary-500">lux-{{ moduleName }}</span></lux-panel-header-title
+        ><span class="lux-color-primary-20">lux-{{ moduleName }}</span></lux-panel-header-title
       >
       <lux-panel-content>
         @for (component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted; track component) {
         <div
-          class="example-component-list-item lux-color-primary-500"
+          class="example-component-list-item lux-color-primary-20"
           tabindex="0"
           role="button"
           [ngClass]="{
@@ -49,7 +48,6 @@
     }
     <lux-link-plain
       class="sr-only"
-      luxHref="#overview-navigation"
       luxLabel="Nach oben"
       luxAriaLabel="Zum Start der Seitennavigation springen"
       luxAriaLabelSelector="div.link-wrapper"
@@ -57,11 +55,7 @@
     ></lux-link-plain>
   </div>
   }
-  <div
-    class="example-base-content"
-    [ngClass]="{ 'lux-flex-auto': !desktopView, 'lux-flex-shrink-0': !desktopView }"
-    luxAriaRole="main"
->
+  <div class="example-base-content" [ngClass]="{ 'lux-flex-auto': !desktopView, 'lux-flex-shrink-0': !desktopView }">
     <router-outlet></router-outlet>
   </div>
 </div>

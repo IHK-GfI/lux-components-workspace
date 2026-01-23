@@ -1,0 +1,32 @@
+@use "@angular/material" as mat;
+
+lux-radio-ac {
+  @include mat.radio-overrides(
+    (
+      label-text-size: var(--lux-theme-form-control-font-size)
+    )
+  );
+
+  .mat-mdc-radio-group {
+    display: flex;
+    box-sizing: border-box;
+    place-content: stretch flex-start;
+    align-items: stretch;
+
+    &.lux-horizontal {
+      column-gap: 0.75em;
+      flex-direction: row;
+      flex-flow: wrap;
+      max-height: 100%;
+    }
+    &.lux-vertical {
+      gap: 0;
+      flex-direction: column;
+      max-width: 100%;
+    }
+  }
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+  }
+}

@@ -25,13 +25,6 @@ lux-form-control-wrapper {
         justify-content: end;
         overflow: unset;
         gap: 2px;
-
-        lux-button {
-          button {
-            width: 30px;
-            min-width: 30px !important;
-          }
-        }
       }
     }
   }

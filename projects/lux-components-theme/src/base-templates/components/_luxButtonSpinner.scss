@@ -1,0 +1,89 @@
+@use "@angular/material" as mat;
+
+lux-button {
+  &.lux-raised,
+  &.lux-flat,
+  &.lux-rounded:not(.lux-stroked) {
+    mat-progress-spinner {
+      @include mat.progress-spinner-overrides(
+        (
+          active-indicator-color: var(--lux-theme-button-flat-default-text-color)
+        )
+      );
+    }
+
+    .mat-primary {
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides(
+          (
+            active-indicator-color: var(--lux-theme-button-flat-primary-text-color)
+          )
+        );
+      }
+    }
+    .mat-accent {
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides(
+          (
+            active-indicator-color: var(--lux-theme-button-flat-accent-text-color)
+          )
+        );
+      }
+    }
+    .mat-warn {
+      mat-progress-spinner {
+        @include mat.progress-spinner-overrides(
+          (
+            active-indicator-color: var(--lux-theme-button-flat-warn-text-color)
+          )
+        );
+      }
+    }
+  }
+
+  mat-progress-spinner {
+    @include mat.progress-spinner-overrides(
+      (
+        active-indicator-color: var(--lux-theme-button-text-default-text-color)
+      )
+    );
+  }
+
+  .mat-primary {
+    mat-progress-spinner {
+      @include mat.progress-spinner-overrides(
+        (
+          active-indicator-color: var(--lux-theme-button-text-primary-text-color)
+        )
+      );
+    }
+  }
+  .mat-accent {
+    mat-progress-spinner {
+      @include mat.progress-spinner-overrides(
+        (
+          active-indicator-color: var(--lux-theme-button-text-accent-text-color)
+        )
+      );
+    }
+  }
+  .mat-warn {
+    mat-progress-spinner {
+      @include mat.progress-spinner-overrides(
+        (
+          active-indicator-color: var(--lux-theme-button-text-warn-text-color)
+        )
+      );
+    }
+  }
+
+  .lux-button-spinner {
+    mat-progress-spinner {
+      width: 0.875rem !important;
+      height: 0.875rem !important;
+    }
+    .spinner-padding {
+      padding: 0;
+    }
+  }
+}

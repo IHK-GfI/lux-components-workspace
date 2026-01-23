@@ -1,0 +1,83 @@
+@mixin lux-textbox($color) {
+  color: var(--lux-theme-textbox-#{$color}-on-color);
+  background: var(--lux-theme-textbox-#{$color}-color);
+  border: 1px solid var(--lux-theme-textbox-#{$color}-border-color);
+  lux-icon.lux-textbox-icon {
+    color: var(--lux-theme-textbox-#{$color}-icon-color);
+  }
+
+  .lux-textbox-content {
+    color: var(--lux-theme-textbox-#{$color}-on-color);
+  }
+}
+
+lux-textbox {
+  .lux-textbox-container {
+    display: grid;
+    grid-template-columns: 1.5em 1fr;
+    gap: 1.5em;
+    row-gap: 1em;
+    border-radius: 4px;
+    padding: 1.5em;
+
+    h1.lux-textbox-title,
+    h2.lux-textbox-title,
+    h3.lux-textbox-title,
+    h4.lux-textbox-title,
+    h5.lux-textbox-title,
+    h6.lux-textbox-title {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .lux-textbox-icon {
+      width: 24px;
+      height: 24px;
+      justify-self: start;
+      align-self: start;
+      mat-icon.mat-icon.lux-icon {
+        padding: 0 !important;
+      }
+    }
+
+    .lux-textbox-content {
+      color: var(--lux-theme-textbox-default-on-color);
+      grid-column-start: 2;
+      font-size: 1rem;
+      p {
+        padding: 0;
+        margin: 0;
+      }
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    &.lux-no-icon {
+      grid-template-columns: 1fr;
+
+      .lux-text-box-title,
+      .lux-textbox-content {
+        grid-column: 1 / -1;
+      }
+    }
+
+    &.lux-default {
+      @include lux-textbox(default);
+    }
+    &.lux-blue {
+      @include lux-textbox(blue);
+    }
+    &.lux-green {
+      @include lux-textbox(green);
+    }
+    &.lux-red {
+      @include lux-textbox(red);
+    }
+    &.lux-yellow {
+      @include lux-textbox(yellow);
+    }
+  }
+}

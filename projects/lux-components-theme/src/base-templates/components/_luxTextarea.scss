@@ -1,0 +1,16 @@
+lux-textarea-ac {
+  textarea {
+    font: inherit;
+    color: currentColor;
+    background: transparent;
+    border: none;
+    outline: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    vertical-align: bottom;
+    text-align: inherit;
+    font-size: var(--lux-theme-form-control-font-size);
+  }
+}

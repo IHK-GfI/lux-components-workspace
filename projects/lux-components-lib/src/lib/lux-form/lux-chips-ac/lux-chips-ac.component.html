@@ -7,10 +7,7 @@
     [ngClass]="{ 'lux-hide-input-border': luxHideBorder && !luxInputAllowed }"
   >
     <mat-chip-grid
-      [ngClass]="[
-        luxOrientation.toLocaleLowerCase() === 'vertical' ? 'mat-mdc-chip-set-stacked' : 'mat-mdc-chip-list-horizontal',
-        luxOrientation === 'horizontal' && luxInputAllowed ? 'lux-chips-list-offset' : 'lux-chips-list'
-      ]"
+      [ngClass]="[luxOrientation.toLocaleLowerCase() === 'vertical' ? 'lux-vertical' : 'lux-horizontal']"
       [disabled]="luxDisabled"
       [attr.aria-labelledby]="uid + '-label'"
       role="grid"
@@ -111,19 +108,24 @@
         (keyup)="inputChanged(input.value)"
         (click)="onAutocompleteClick()"
         type="text"
-        class="lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
+        class="lux-chips-autocomplete-input lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
         #input
       />
-      <lux-icon
-        luxIconName="lux-interface-arrows-button-down"
-        luxIconSize="1.5rem"
-        [ngClass]="{ 'lux-disabled': luxDisabled }"
-        class="lux-color-blue lux-chips-autocomplete-icon"
+      @if (displayedOptions.length > 0) {
+      <svg
+        class="lux-select-arrow"
+        [class.lux-rotate]="matAutocompleteTrigger?.panelOpen"
+        focusable="false"
+        viewBox="0 0 24 24"
         aria-hidden="true"
         (click)="onArrowIcon()"
-      ></lux-icon>
+      >
+        <path d="M7 10l5 5 5-5z"></path>
+      </svg>
+      }
       <mat-autocomplete
-        [class]="!luxDense ? 'lux-chips-ac-autocomplete-panel' : 'lux-chips-ac-autocomplete-panel-dense'"
+        class="lux-autocomplete-panel-ac lux-chips-ac-autocomplete-panel"
+        [class.lux-chips-ac-autocomplete-panel-dense]="luxDense"
         [disableRipple]="true"
         (optionSelected)="autoCompleteAdd(input, $event.option.value)"
         (opened)="onAutoCompleteOpened()"

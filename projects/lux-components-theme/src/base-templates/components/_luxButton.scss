@@ -1,0 +1,105 @@
+@use "@angular/material" as mat;
+@use "../common/luxfocus";
+
+@use "luxButtonStroked";
+@use "luxButtonRaised";
+@use "luxButtonFlat";
+@use "luxButtonRounded";
+@use "luxButtonRoundedStroked";
+@use "luxButtonSpinner";
+
+lux-button {
+  @include mat.button-overrides(
+    (
+      text-label-text-font: var(--lux-theme-button-text-font),
+      text-label-text-size: var(--lux-theme-button-text-text-size),
+      text-label-text-weight: var(--lux-theme-button-text-text-weight),
+      text-container-shape: var(--lux-theme-button-text-container-shape),
+      text-horizontal-padding: 16px,
+      text-container-height: var(--lux-theme-button-text-container-height),
+      text-label-text-color: var(--lux-theme-button-text-default-text-color),
+      filled-label-text-tracking: 0.078125rem,
+      outlined-label-text-tracking: 0.078125rem,
+      protected-label-text-tracking: 0.078125rem,
+      text-label-text-tracking: var(--lux-theme-button-text-text-tracking),
+      tonal-label-text-tracking: 0.078125rem
+    )
+  );
+
+  .lux-icon {
+    width: var(--lux-theme-button-text-text-size);
+    height: var(--lux-theme-button-text-text-size);
+  }
+
+  .mat-primary {
+    @include mat.button-overrides(
+      (
+        text-label-text-color: var(--lux-theme-button-text-primary-text-color)
+      )
+    );
+  }
+
+  .mat-accent {
+    @include mat.button-overrides(
+      (
+        text-label-text-color: var(--lux-theme-button-text-accent-text-color)
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.button-overrides(
+      (
+        text-label-text-color: var(--lux-theme-button-text-warn-text-color)
+      )
+    );
+  }
+
+  .lux-button-content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  lux-icon,
+  .lux-icon {
+    display: flex;
+  }
+
+  .lux-button-badge {
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 0.6875rem;
+    line-height: normal;
+    max-width: 38px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+
+    &.lux-button-badge-primary {
+      color: var(--lux-theme-button-flat-primary-text-color);
+      background-color: var(--lux-theme-button-flat-primary-container-color);
+    }
+
+    &.lux-button-badge-accent {
+      color: var(--lux-theme-button-flat-accent-text-color);
+      background-color: var(--lux-theme-button-flat-accent-container-color);
+    }
+
+    &.lux-button-badge-warn {
+      color: var(--lux-theme-button-flat-warn-text-color);
+      background-color: var(--lux-theme-button-flat-warn-container-color);
+    }
+  }
+
+  button:not([disabled]) {
+    &:focus-visible {
+      @include luxfocus.lux-button-focus;
+    }
+  }
+}

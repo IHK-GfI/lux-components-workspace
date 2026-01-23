@@ -1,0 +1,135 @@
+@use "../common/luxfocus";
+@use "@angular/material" as mat;
+
+// Accordion
+lux-accordion {
+  @include mat.expansion-overrides(
+    (
+      container-text-color: var(--lux-theme-dark-primary-text)
+    )
+  );
+
+  .lux-primary {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.mat-expanded {
+      background-color: var(--lux-theme-accordion-header-color-primary);
+
+      @include mat.expansion-overrides(
+        (
+          header-text-color: var(--lux-theme-accordion-header-color-on-primary),
+          header-description-color: var(--lux-theme-accordion-header-color-on-primary),
+          header-indicator-color: var(--lux-theme-accordion-header-color-on-primary),
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-primary) 75%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
+        )
+      );
+    }
+  }
+
+  .lux-accent {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.mat-expanded {
+      background-color: var(--lux-theme-accordion-header-color-accent);
+      @include mat.expansion-overrides(
+        (
+          header-text-color: var(--lux-theme-accordion-header-color-on-accent),
+          header-description-color: var(--lux-theme-accordion-header-color-on-accent),
+          header-indicator-color: var(--lux-theme-accordion-header-color-on-accent),
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-accent) 75%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
+        )
+      );
+    }
+  }
+
+  .lux-warn {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.mat-expanded {
+      background-color: var(--lux-theme-accordion-header-color-warn);
+      @include mat.expansion-overrides(
+        (
+          header-text-color: var(--lux-theme-accordion-header-color-on-warn),
+          header-description-color: var(--lux-theme-accordion-header-color-on-warn),
+          header-indicator-color: var(--lux-theme-accordion-header-color-on-warn),
+          header-hover-state-layer-color: color-mix(in srgb, var(--lux-theme-accordion-header-color-warn) 75%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
+        )
+      );
+    }
+  }
+
+  .lux-neutral {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.mat-expanded {
+      background-color: var(--lux-theme-accordion-header-color-neutral);
+      @include mat.expansion-overrides(
+        (
+          header-text-color: var(--lux-theme-accordion-header-color-on-neutral),
+          header-description-color: var(--lux-theme-accordion-header-color-on-neutral),
+          header-indicator-color: var(--lux-theme-accordion-header-color-on-neutral),
+          header-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent),
+          header-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
+        )
+      );
+    }
+  }
+}
+
+// Panel
+lux-panel {
+  @include mat.expansion-overrides(
+    (
+      header-text-tracking: normal,
+      header-text-line-height: normal,
+      header-text-weight: 500,
+      header-text-font: var(--lux-theme-app-headline-font),
+      header-text-color: var(--lux-theme-accordion-header-color-on-neutral),
+      header-description-color: var(--lux-theme-accordion-header-color-on-neutral),
+      header-indicator-color: var(--lux-theme-accordion-header-color-on-neutral),
+      header-disabled-state-text-color: var(--lux-theme-dark-disabled-text),
+      header-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent),
+      container-shape: var(--lux-theme-app-border-radius),
+      container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
+    )
+  );
+
+  .lux-expansion-panel-header,
+  .lux-expansion-panel-header.mat-expanded,
+  .lux-expansion-panel-header.mat-expanded:focus {
+    &[aria-disabled="true"] {
+      background-color: var(--lux-theme-app-content-bg);
+    }
+  }
+
+  .lux-expansion-panel-header.mat-expanded,
+  .lux-expansion-panel-header.mat-expanded:focus {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &[aria-disabled="true"] {
+      background-color: var(--lux-theme-app-content-bg);
+    }
+  }
+
+  .lux-dynamic-height {
+    min-height: unset;
+    height: unset;
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  .mat-expansion-panel-header .mat-content {
+    flex-direction: column; //damit sind Title und Description untereinander
+
+    .mat-expansion-panel-header-description {
+      margin-top: 4px;
+      font-weight: 400;
+    }
+  }
+
+  .lux-expansion-panel-header:not([aria-disabled="true"]) {
+    &:focus-visible {
+      @include luxfocus.focus-dark-mixin-inline;
+    }
+  }
+}

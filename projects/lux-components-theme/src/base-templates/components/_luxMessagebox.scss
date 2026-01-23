@@ -1,0 +1,118 @@
+@use "sass:map";
+@use "../common/luxfocus";
+@use "../common/luxelevations";
+
+$componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yellow", "pink", "lightblue", "white");
+
+@mixin lux-message-color-mixin($prefix) {
+  @each $colorName in $componentColorNames {
+    .lux-messagebox-#{$colorName} {
+      background-color: var(#{$prefix}-#{$colorName});
+    }
+    .lux-messagebox-on-#{$colorName} {
+      color: var(#{$prefix}-on-#{$colorName});
+    }
+  }
+}
+
+lux-message-box {
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+
+  @include lux-message-color-mixin("--lux-theme-messagebox");
+
+  &.mat-elevation-z4 {
+    @include luxelevations.lux-elevation-z0();
+  }
+
+  & .lux-message-box-content {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    & .lux-message-container {
+      display: grid;
+      grid-template-columns: 52px 1fr 36px;
+      align-items: center;
+
+      padding: var(--lux-theme-outline-width) 24px;
+      border-radius: 4px;
+
+      &.lux-messagebox-white {
+        // da im Theme authentic der Schatten entfernt wurde, muss eine Weiße Messagebox eine Border erhalten.
+        border: 1px solid var(--lux-theme-primary-color);
+        box-sizing: border-box;
+
+        & lux-button button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
+          color: var(--lux-theme-primary-color);
+        }
+      }
+
+      & lux-button {
+        button.lux-button.mat-mdc-fab.lux-fab-rounded-default:not([class*="mat-elevation-z"]) {
+          color: inherit !important;
+          @include luxelevations.lux-elevation-z0();
+        }
+
+        .mat-mdc-button-ripple {
+          display: none;
+        }
+      }
+
+      & lux-icon:not(.lux-button-icon, .lux-button-icon-round) {
+        display: contents;
+
+        mat-icon.lux-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+    lux-message:not(:last-child) {
+      .lux-message-container {
+        margin-bottom: 1px;
+      }
+    }
+  }
+
+  mat-paginator {
+    & .mat-paginator-container {
+      padding: 0 20px !important;
+    }
+  }
+}
+
+/** ########## Hover / Focus  ########## **/
+lux-message-box {
+  & div.lux-message-box-content {
+    &:focus-visible {
+      @include luxfocus.focus-dark-mixin;
+    }
+
+    & .lux-message-container.lux-bg-color-white {
+      & .lux-message-text:focus-visible {
+        @include luxfocus.focus-dark-mixin;
+        border-radius: 4px;
+      }
+    }
+
+    & .lux-message-container:not(.lux-bg-color-white) {
+      & .lux-message-text:focus-visible {
+        @include luxfocus.focus-bright-mixin;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+@media (prefers-contrast: more) {
+  lux-message-box {
+    .lux-message-container {
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+    }
+  }
+}

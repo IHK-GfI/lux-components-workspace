@@ -4,38 +4,11 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
+      <div class="lux-app-data-bg lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
         @for (color of colors; track color; let i = $index) {
         <lux-progress
           luxType="Progressbar"
           luxTagId="pb-example-default{{ i }}"
-          [luxColor]="color"
-          [luxValue]="value"
-          [luxMode]="mode"
-          [luxSize]="size"
-        >
-        </lux-progress>
-        }
-      </div>
-      <div class="lux-hover-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3">
-        @for (color of colors; track color; let i = $index) {
-        <lux-progress
-          luxType="Progressbar"
-          luxAriaLabel="Custom Aria Label"
-          luxTagId="pb-example-hover{{ i }}"
-          [luxColor]="color"
-          [luxValue]="value"
-          [luxMode]="mode"
-          [luxSize]="size"
-        >
-        </lux-progress>
-        }
-      </div>
-      <div class="lux-selected-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3">
-        @for (color of colors; track color; let i = $index) {
-        <lux-progress
-          luxType="Progressbar"
-          luxTagId="pb-example-focus{{ i }}"
           [luxColor]="color"
           [luxValue]="value"
           [luxMode]="mode"

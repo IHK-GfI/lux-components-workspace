@@ -15,7 +15,6 @@ export declare type LuxProgressSizeType = 'small' | 'medium' | 'large';
 @Component({
   selector: 'lux-progress',
   templateUrl: './lux-progress.component.html',
-  styleUrls: ['./lux-progress.component.scss'],
   imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner, TranslocoPipe]
 })
 export class LuxProgressComponent {

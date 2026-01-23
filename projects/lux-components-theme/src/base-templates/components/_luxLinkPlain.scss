@@ -1,0 +1,71 @@
+@use "../common/luxfocus";
+
+lux-link-plain {
+  display: inline-flex;
+  align-items: baseline;
+  background-color: var(--lux-theme-link-plain-background-color);
+  .link-wrapper {
+    display: flex;
+    gap: 0.25em;
+    align-items: baseline;
+    font-family: inherit;
+    .lux-link-plain-text {
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      text-decoration: var(--lux-theme-link-plain-text-decoration);
+      color: inherit;
+      display: flex;
+    }
+
+    lux-icon {
+      font-size: inherit;
+      display: flex;
+      color: var(--lux-theme-link-plain-icon-color);
+      mat-icon.mat-icon.lux-icon {
+        padding: 0px !important;
+        width: 0.8em;
+        height: 0.8em;
+        overflow: visible;
+      }
+    }
+
+    &:focus-visible:not(.lux-disabled) {
+      @include luxfocus.focus-dark-mixin;
+      border-radius: 2px;
+    }
+  }
+
+  &.default-style {
+    color: var(--lux-theme-link-plain-color);
+    font-family: inherit;
+    lux-icon {
+      mat-icon {
+        color: var(--lux-theme-link-plain-icon-color);
+      }
+    }
+  }
+
+  &.lux-disabled {
+    color: var(--lux-theme-dark-disabled-text);
+    cursor: text;
+    text-decoration: none;
+    lux-icon {
+      mat-icon {
+        color: var(--lux-theme-dark-disabled-text);
+      }
+    }
+  }
+
+  &:hover:not(.lux-disabled) {
+    color: var(--lux-theme-link-plain-hover-color);
+    text-decoration: underline;
+    background-color: var(--lux-theme-link-plain-hover-background-color);
+    cursor: pointer;
+    lux-icon {
+      mat-icon {
+        color: var(--lux-theme-link-plain-hover-color);
+      }
+    }
+  }
+}

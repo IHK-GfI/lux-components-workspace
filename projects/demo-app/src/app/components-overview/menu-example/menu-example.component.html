@@ -310,6 +310,12 @@
             [(luxValue)]="item.buttonBadge"
           >
           </lux-input-ac>
+          <lux-select-ac
+            luxLabel="luxButtonBadgeColor"
+            luxHint="Die Property ermöglicht die Einstellung der Badgefarbe für diesen Eintrag."
+            [(luxSelected)]="item.buttonBadgeColor"
+            [luxOptions]="['primary', 'warn', 'accent']"
+          ></lux-select-ac>
         </lux-panel-content>
       </lux-panel>
       }

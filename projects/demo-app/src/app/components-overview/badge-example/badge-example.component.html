@@ -2,7 +2,7 @@
   exampleTitle="Badge"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90badge-v19"
 >
-  <example-base-content class="lux-flex lux-flex-col lux-gap-4">
+  <example-base-content class="lux-flex lux-flex-col lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
     @for (color of colors; track color) {
     <lux-badge [luxIconName]="iconName" [luxColor]="color" [luxUppercase]="uppercase">
       <lux-label luxId="bsp-badge-label">

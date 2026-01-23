@@ -43,7 +43,8 @@
     }
     <mat-autocomplete
       #auto="matAutocomplete"
-      [class]="!luxDense ? 'lux-autocomplete-panel-ac' : 'lux-autocomplete-panel-dense-ac'"
+      class="lux-autocomplete-panel-ac"
+      [class.lux-dense]="luxDense"
       [panelWidth]="luxPanelWidth"
       [disableRipple]="true"
       [displayWith]="displayFn.bind(this)"

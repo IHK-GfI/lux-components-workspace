@@ -12,19 +12,6 @@
     }
 }
 
-lux-card ::ng-deep > mat-card {
-  width: 100%;
-  margin: 0 !important;
-}
-
-lux-card ::ng-deep mat-card-content {
-  display: block !important;
-}
-
-lux-card ::ng-deep mat-card-content .lux-card-content {
-  box-sizing: border-box;
-}
-
 .example-base-container,
 .example-base-options {
   min-width: calc(50% - 8px);

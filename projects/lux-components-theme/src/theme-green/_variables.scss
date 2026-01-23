@@ -1,0 +1,459 @@
+@use "sass:map";
+@use "sass:string";
+@use "palettes";
+
+@mixin lux-theme-palette-vars($paletteName, $paletteMap, $sizes) {
+  @each $size in $sizes {
+    --lux-theme-#{string.to-lower-case($paletteName)}-#{string.to-lower-case("" + $size)}: #{map.get($paletteMap, $size)};
+  }
+}
+
+// Custom-Farbnamen (z.B. Badge oder Progress)
+$componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "black", "white", "yellow", "pink", "lightblue");
+
+:root {
+  // Farbpaletten
+  @include lux-theme-palette-vars("primary", palettes.$lux-palette_primary, palettes.$sizes);
+  @include lux-theme-palette-vars("accent", palettes.$lux-palette_accent, palettes.$sizes);
+  @include lux-theme-palette-vars("neutral", palettes.$lux-palette_neutral, palettes.$sizes);
+  @include lux-theme-palette-vars("warn", palettes.$lux-palette_warn, palettes.$sizes);
+
+  // Allgemein
+  --lux-theme-app-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+  --lux-theme-app-headline-font: Korb, var(--lux-theme-app-font-family);
+
+  --lux-theme-dark-primary-text: #003366;
+  --lux-theme-dark-secondary-text: #335c85;
+  --lux-theme-dark-disabled-text: #636d76;
+  --lux-theme-dark-dividers: rgba(0, 51, 102, 0.2);
+  --lux-theme-dark-focused: rgba(0, 0, 0, 0.12);
+
+  --lux-theme-light-primary-text: white;
+  --lux-theme-light-secondary-text: rgba(255, 255, 255, 0.7);
+  --lux-theme-light-disabled-text: rgba(255, 255, 255, 0.5);
+  --lux-theme-light-dividers: #e3ebf5;
+  --lux-theme-light-focused: rgba(255, 255, 255, 0.12);
+
+  // Hauptfarben
+  --lux-theme-primary-color: #{palettes.$lux-primary-color};
+  --lux-theme-accent-color: #{palettes.$lux-accent-color};
+  --lux-theme-accent-secondary-color: #247929;
+  --lux-theme-warn-color: #{palettes.$lux-warn-color};
+
+  // Sonderfarben
+  --lux-theme-custom-purple: #715289;
+  --lux-theme-custom-on-purple: #ffffff;
+  --lux-theme-custom-pink: #fc6b85;
+  --lux-theme-custom-on-pink: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-custom-yellow: #fbd12c;
+  --lux-theme-custom-on-yellow: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-custom-orange: #fc791f;
+  --lux-theme-custom-on-orange: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-custom-lightblue: #4fa8e8;
+  --lux-theme-custom-on-lightblue: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-custom-blue: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-custom-on-blue: #ffffff;
+  --lux-theme-custom-green: #{map.get(palettes.$lux-palette_accent, 70)};
+  --lux-theme-custom-on-green: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-custom-red: #ad000f;
+  --lux-theme-custom-on-red: #ffffff;
+  --lux-theme-custom-gray: #{map.get(palettes.$lux-palette_neutral, 40)};
+  --lux-theme-custom-on-gray: #ffffff;
+  --lux-theme-custom-black: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-custom-on-black: #ffffff;
+  --lux-theme-custom-white: #ffffff;
+  --lux-theme-custom-on-white: #{map.get(palettes.$lux-palette_neutral, 10)};
+
+  --lux-theme-contrast-custom-purple: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-purple: #ffffff;
+  --lux-theme-contrast-custom-pink: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-pink: #ffffff;
+  --lux-theme-contrast-custom-yellow: #fbd12c;
+  --lux-theme-contrast-custom-on-yellow: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-orange: #fbd12c;
+  --lux-theme-contrast-custom-on-orange: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-lightblue: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-contrast-custom-on-lightblue: #ffffff;
+  --lux-theme-contrast-custom-blue: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-contrast-custom-on-blue: #ffffff;
+  --lux-theme-contrast-custom-green: #{map.get(palettes.$lux-palette_accent, 30)};
+  --lux-theme-contrast-custom-on-green: #ffffff;
+  --lux-theme-contrast-custom-red: #{map.get(palettes.$lux-palette_warn, 35)};
+  --lux-theme-contrast-custom-on-red: #ffffff;
+  --lux-theme-contrast-custom-gray: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-gray: #ffffff;
+  --lux-theme-contrast-custom-black: #{map.get(palettes.$lux-palette_neutral, 10)};
+  --lux-theme-contrast-custom-on-black: #ffffff;
+  --lux-theme-contrast-custom-white: #ffffff;
+  --lux-theme-contrast-custom-on-white: #{map.get(palettes.$lux-palette_neutral, 10)};
+
+  // Hintergrundfarben (z.B. Badge oder Progress)
+  @each $colorName in $componentColorNames {
+    --lux-theme-component-bg-#{""+$colorName+""}: var(--lux-theme-custom-#{$colorName});
+  }
+
+  @each $colorName in $componentColorNames {
+    --lux-theme-component-font-color-#{''+$colorName+''}: var(--lux-theme-custom-on-#{$colorName});
+  }
+
+  // App
+  --lux-theme-app-header-item-border-radius: 18px;
+  --lux-theme-app-header-bg: #ffffff;
+  --lux-theme-app-content-bg: #ffffff;
+  --lux-theme-app-footer-bg: #e3ebf5;
+  --lux-theme-app-footer-border-color: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-app-data-bg: #ffffff;
+  --lux-theme-app-gradient: none;
+  --lux-theme-app-gradient-reverse: none;
+  --lux-theme-app-border-color: rgba(0, 51, 102, 0.2);
+  --lux-theme-app-border-radius: 14px;
+
+  // Form
+  --lux-theme-form-border-width: 1px;
+  --lux-theme-form-min-height: 44px;
+  --lux-theme-form-dense-min-height: 34px;
+  --lux-theme-form-control-textarea-padding: 8px;
+  --lux-theme-form-control-textarea-dense-padding: 6px;
+  --lux-theme-form-control-label-margin: 0 0 0.25rem 0;
+  --lux-theme-form-control-error-margin: 0.25rem 0 0 0;
+  --lux-theme-form-border-color: rgba(0, 0, 0, 0.42);
+  --lux-theme-form-focus-border-color: var(--lux-theme-primary-20);
+  --lux-theme-form-focus-box-shadow: 0 0 0 2px var(--lux-theme-accent-secondary-color), 0 0 4px 2px var(--lux-theme-accent-secondary-color);
+  --lux-theme-form-error-border-color: var(--lux-theme-warn-50);
+  --lux-theme-form-error-box-shadow: 0 0 0 2px var(--lux-theme-warn-50), 0 0 4px 2px var(--lux-theme-warn-50);
+  --lux-theme-form-control-font-size: 1.125rem;
+  --lux-theme-form-control-buffer: 6px;
+  --lux-theme-form-error-msg-background: rgb(255, 228, 231);
+  --lux-theme-form-autofill-background-color: #e6e9ee;
+
+  // Fokus
+  --lux-theme-outline-dark: 4px solid var(--lux-theme-accent-secondary-color) !important;
+  --lux-theme-outline-bright: 4px solid #ffffff !important;
+  --lux-theme-outline-width: 4px;
+  --lux-theme-outline-style: solid;
+  --lux-theme-outline-color-bright: #ffffff;
+  --lux-theme-outline-color-dark: var(--lux-theme-accent-secondary-color);
+
+  // Hover
+  --lux-theme-hover-color: var(--mat-option-hover-state-layer-color);
+  --lux-theme-on-hover-color: var(--mat-option-label-text-color);
+  --lux-theme-hover-color-for-dark-background: #335c85;
+
+  // Selektion
+  --lux-theme-selected-border-color: var(--lux-theme-accent-secondary-color);
+  --lux-theme-selected-bg-color: #e3ebf5;
+  --lux-theme-on-selected-color: var(--lux-theme-dark-primary-text);
+
+  // Snackbar
+  --lux-theme-snackbar-red: #f17474;
+  --lux-theme-snackbar-green: #53b12b;
+  --lux-theme-snackbar-blue: #{map.get(palettes.$lux-palette_primary, 80)};
+  --lux-theme-snackbar-orange: #ec9c1b;
+  --lux-theme-snackbar-yellow: #fbd12c;
+  --lux-theme-snackbar-white: #ffffff;
+
+  // Accordion
+  --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
+  --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-color-primary: var(--lux-theme-app-content-bg);
+  --lux-theme-accordion-header-color-on-primary: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-color-accent: #ccebd1;
+  --lux-theme-accordion-header-color-on-accent: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-color-warn: #ffcacf;
+  --lux-theme-accordion-header-color-on-warn: var(--lux-theme-dark-primary-text);
+
+  // LUX-Badge
+  --lux-theme-badge-red: var(--lux-theme-custom-red);
+  --lux-theme-badge-on-red: var(--lux-theme-custom-on-red);
+  --lux-theme-badge-green: var(--lux-theme-custom-green);
+  --lux-theme-badge-on-green: var(--lux-theme-custom-on-green);
+  --lux-theme-badge-purple: var(--lux-theme-custom-purple);
+  --lux-theme-badge-on-purple: var(--lux-theme-custom-on-purple);
+  --lux-theme-badge-blue: var(--lux-theme-custom-blue);
+  --lux-theme-badge-on-blue: var(--lux-theme-custom-on-blue);
+  --lux-theme-badge-gray: var(--lux-theme-custom-gray);
+  --lux-theme-badge-on-gray: var(--lux-theme-custom-on-gray);
+  --lux-theme-badge-orange: var(--lux-theme-custom-orange);
+  --lux-theme-badge-on-orange: var(--lux-theme-custom-on-orange);
+  --lux-theme-badge-black: var(--lux-theme-custom-black);
+  --lux-theme-badge-on-black: var(--lux-theme-custom-on-black);
+  --lux-theme-badge-white: var(--lux-theme-custom-white);
+  --lux-theme-badge-on-white: var(--lux-theme-custom-on-white);
+  --lux-theme-badge-yellow: var(--lux-theme-custom-yellow);
+  --lux-theme-badge-on-yellow: var(--lux-theme-custom-on-yellow);
+  --lux-theme-badge-pink: var(--lux-theme-custom-pink);
+  --lux-theme-badge-on-pink: var(--lux-theme-custom-on-pink);
+  --lux-theme-badge-lightblue: var(--lux-theme-custom-lightblue);
+  --lux-theme-badge-on-lightblue: var(--lux-theme-custom-on-lightblue);
+
+  // LUX-Breadcrumb
+  --lux-theme-breadcrumb-hover-color: var(--lux-theme-accent-secondary-color);
+
+  // LUX-Button
+  --lux-theme-button-text-default-text-color: #000000;
+  --lux-theme-button-text-primary-text-color: #003366;
+  --lux-theme-button-text-accent-text-color: #00531d;
+  --lux-theme-button-text-warn-text-color: var(--mat-sys-error);
+
+  --lux-theme-button-flat-default-text-color: #000000;
+  --lux-theme-button-flat-default-container-color: #ffffff;
+  --lux-theme-button-flat-primary-text-color: #ffffff;
+  --lux-theme-button-flat-primary-container-color: #003366;
+  --lux-theme-button-flat-accent-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-flat-accent-container-color: #56bd66;
+  --lux-theme-button-flat-warn-text-color: #ffffff;
+  --lux-theme-button-flat-warn-container-color: var(--mat-sys-error);
+
+  --lux-theme-button-raised-default-text-color: #000000;
+  --lux-theme-button-raised-default-container-color: #ffffff;
+  --lux-theme-button-raised-primary-text-color: #ffffff;
+  --lux-theme-button-raised-primary-container-color: #003366;
+  --lux-theme-button-raised-accent-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-raised-accent-container-color: #56bd66;
+  --lux-theme-button-raised-warn-text-color: #ffffff;
+  --lux-theme-button-raised-warn-container-color: var(--mat-sys-error);
+
+  --lux-theme-button-stroked-default-text-color: #000000;
+  --lux-theme-button-stroked-primary-text-color: #003366;
+  --lux-theme-button-stroked-accent-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-stroked-warn-text-color: var(--mat-sys-error);
+
+  --lux-theme-button-rounded-stroked-default-text-color: #000000;
+  --lux-theme-button-rounded-stroked-primary-text-color: #003366;
+  --lux-theme-button-rounded-stroked-accent-text-color: #00531d;
+  --lux-theme-button-rounded-stroked-warn-text-color: var(--mat-sys-error);
+
+  --lux-theme-button-rounded-default-text-color: #000000;
+  --lux-theme-button-rounded-default-container-color: #ffffff;
+  --lux-theme-button-rounded-primary-text-color: #ffffff;
+  --lux-theme-button-rounded-primary-container-color: #003366;
+  --lux-theme-button-rounded-accent-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-rounded-accent-container-color: #56bd66;
+  --lux-theme-button-rounded-warn-text-color: #ffffff;
+  --lux-theme-button-rounded-warn-container-color: var(--mat-sys-error);
+
+  --lux-theme-button-text-container-shape: 18px;
+  --lux-theme-button-flat-container-shape: 18px;
+  --lux-theme-button-raised-container-shape: 18px;
+  --lux-theme-button-stroked-container-shape: 18px;
+  --lux-theme-button-rounded-container-shape: 18px;
+  --lux-theme-button-rounded-stroked-container-shape: 18px;
+
+  --lux-theme-button-text-container-height: 2.8125rem;
+  --lux-theme-button-flat-container-height: 2.8125rem;
+  --lux-theme-button-raised-container-height: 2.8125rem;
+  --lux-theme-button-stroked-container-height: 2.8125rem;
+  --lux-theme-button-rounded-container-height: 2.8125rem;
+  --lux-theme-button-rounded-stroked-container-height: 2.8125rem;
+
+  --lux-theme-button-text-text-size: 1.375rem;
+  --lux-theme-button-flat-text-size: 1.375rem;
+  --lux-theme-button-raised-text-size: 1.375rem;
+  --lux-theme-button-stroked-text-size: 1.375rem;
+  --lux-theme-button-rounded-text-size: 1.125rem;
+  --lux-theme-button-rounded-stroked-text-size: 1.125rem;
+
+  --lux-theme-button-text-text-weight: 400;
+  --lux-theme-button-flat-text-weight: 400;
+  --lux-theme-button-raised-text-weight: 400;
+  --lux-theme-button-stroked-text-weight: 400;
+
+  --lux-theme-button-text-font: "Blogger Sans";
+  --lux-theme-button-flat-font: "Blogger Sans";
+  --lux-theme-button-raised-font: "Blogger Sans";
+  --lux-theme-button-stroked-font: "Blogger Sans";
+
+  --lux-theme-button-text-text-tracking: normal;
+  --lux-theme-button-flat-text-tracking: normal;
+  --lux-theme-button-raised-text-tracking: normal;
+  --lux-theme-button-stroked-text-tracking: normal;
+
+  // LUX-Card
+  --lux-theme-card-title-line-height: 2rem;
+  --lux-theme-card-title-text-size: 1.5rem;
+  --lux-theme-card-title-text-weight: 500;
+  --lux-theme-card-subtitle-text-size: 1rem;
+  --lux-theme-card-subtitle-text-weight: 500;
+  --lux-theme-card-subtitle-text-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-card-outline-color: rgba(0, 51, 102, 0.2);
+  --lux-theme-card-shape: 16px;
+  --lux-theme-card-background-color: var(--lux-theme-app-data-bg);
+  --lux-theme-card-padding: 20px;
+
+  // LUX-Datepicker
+  --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
+  --lux-theme-datepicker-panel-shape: var(--lux-theme-app-border-radius);
+  --lux-theme-datepicker-panel-text-color: #003366;
+  --lux-theme-datepicker-panel-font-size: 1.125rem;
+  --lux-theme-datepicker-panel-date-border-radius: 0;
+  --lux-theme-datepicker-panel-date-background-color: #e3ebf5;
+  --lux-theme-datepicker-panel-date-selected-color: #e3ebf5;
+  --lux-theme-datepicker-panel-date-selected-background-color: #003366;
+  --lux-theme-datepicker-panel-date-hover-background-color: rgba(0, 51, 102, 0.3);
+
+  // LUX-Dialog
+  --lux-theme-dialog-close-button-hover-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-dialog-close-button-hover-background-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
+
+  // LUX-File-Upload
+  --lux-theme-file-upload-padding: 24px 48px;
+  --lux-theme-file-upload-background-image: none;
+  --lux-theme-file-upload-item-container-border: none;
+  --lux-theme-file-upload-item-disabled-container-border: none;
+  --lux-theme-file-upload-item-background-color: #e3ebf5;
+  --lux-theme-file-upload-item-margin: 0 0 12px 0;
+  --lux-theme-file-upload-item-padding: 18px 15px 18px 26px;
+  --lux-theme-file-upload-item-border: 1px solid #56bd66;
+  --lux-theme-file-upload-item-border-bottom: 1px solid #56bd66;
+  --lux-theme-file-upload-item-border-bottom-left-radius: var(--lux-theme-app-border-radius);
+  --lux-theme-file-upload-item-border-bottom-right-radius: var(--lux-theme-app-border-radius);
+  --lux-theme-file-upload-item-disabled-border: 1px solid var(--lux-theme-dark-disabled-text);
+  --lux-theme-file-upload-item-disabled-border-bottom: 1px solid var(--lux-theme-dark-disabled-text);
+
+  // LUX-Icon
+  --lux-theme-icon-red: var(--lux-theme-custom-red);
+  --lux-theme-icon-on-red: var(--lux-theme-custom-on-red);
+  --lux-theme-icon-green: var(--lux-theme-custom-green);
+  --lux-theme-icon-on-green: var(--lux-theme-custom-on-green);
+  --lux-theme-icon-purple: var(--lux-theme-custom-purple);
+  --lux-theme-icon-on-purple: var(--lux-theme-custom-on-purple);
+  --lux-theme-icon-blue: var(--lux-theme-custom-blue);
+  --lux-theme-icon-on-blue: var(--lux-theme-custom-on-blue);
+  --lux-theme-icon-gray: var(--lux-theme-custom-gray);
+  --lux-theme-icon-on-gray: var(--lux-theme-custom-on-gray);
+  --lux-theme-icon-orange: var(--lux-theme-custom-orange);
+  --lux-theme-icon-on-orange: var(--lux-theme-custom-on-orange);
+  --lux-theme-icon-black: var(--lux-theme-custom-black);
+  --lux-theme-icon-on-black: var(--lux-theme-custom-on-black);
+  --lux-theme-icon-yellow: var(--lux-theme-custom-yellow);
+  --lux-theme-icon-on-yellow: var(--lux-theme-custom-on-yellow);
+  --lux-theme-icon-pink: var(--lux-theme-custom-pink);
+  --lux-theme-icon-on-pink: var(--lux-theme-custom-on-pink);
+  --lux-theme-icon-lightblue: var(--lux-theme-custom-lightblue);
+  --lux-theme-icon-on-lightblue: var(--lux-theme-custom-on-lightblue);
+
+  // LUX-Link-Plain
+  --lux-theme-link-plain-color: var(--lux-theme-primary-color);
+  --lux-theme-link-plain-icon-color: var(--lux-theme-accent-secondary-color);
+  --lux-theme-link-plain-text-decoration: underline;
+  --lux-theme-link-plain-background-color: #e4f1e4;
+  --lux-theme-link-plain-hover-color: var(--lux-theme-accent-secondary-color);
+  --lux-theme-link-plain-hover-background-color: #e4f1e4;
+
+  // Lookup
+  --lux-theme-lookup-invalid-option-text-color: var(--lux-theme-warn-50);
+  --lux-theme-lookup-invalid-option-font-weight: 300;
+
+  // LUX-Menu
+  --lux-theme-menu-item-font-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-menu-item-font-size: 1rem;
+  --lux-theme-menu-button-item-font-size: 0.875rem;
+  --lux-theme-menu-button-text-container-shape: 4px;
+  --lux-theme-menu-container-height: 36px;
+  --lux-theme-menu-panel-option-min-height: 24px;
+  --lux-theme-menu-panel-option-padding: 12px 0;
+
+  // LUX-Messagebox
+  --lux-theme-messagebox-red: var(--lux-theme-custom-red);
+  --lux-theme-messagebox-on-red: var(--lux-theme-custom-on-red);
+  --lux-theme-messagebox-green: var(--lux-theme-custom-green);
+  --lux-theme-messagebox-on-green: var(--lux-theme-custom-on-green);
+  --lux-theme-messagebox-purple: var(--lux-theme-custom-purple);
+  --lux-theme-messagebox-on-purple: var(--lux-theme-custom-on-purple);
+  --lux-theme-messagebox-blue: var(--lux-theme-custom-blue);
+  --lux-theme-messagebox-on-blue: var(--lux-theme-custom-on-blue);
+  --lux-theme-messagebox-gray: var(--lux-theme-custom-gray);
+  --lux-theme-messagebox-on-gray: var(--lux-theme-custom-on-gray);
+  --lux-theme-messagebox-orange: var(--lux-theme-custom-orange);
+  --lux-theme-messagebox-on-orange: var(--lux-theme-custom-on-orange);
+  --lux-theme-messagebox-white: var(--lux-theme-custom-white);
+  --lux-theme-messagebox-on-white: var(--lux-theme-custom-on-white);
+  --lux-theme-messagebox-yellow: var(--lux-theme-custom-yellow);
+  --lux-theme-messagebox-on-yellow: var(--lux-theme-custom-on-yellow);
+  --lux-theme-messagebox-pink: var(--lux-theme-custom-pink);
+  --lux-theme-messagebox-on-pink: var(--lux-theme-custom-on-pink);
+  --lux-theme-messagebox-lightblue: var(--lux-theme-custom-lightblue);
+  --lux-theme-messagebox-on-lightblue: var(--lux-theme-custom-on-lightblue);
+
+  // LUX-Stepper-Large
+  --lux-theme-stepper-large-nav-item-font-size: 1.375rem;
+  --lux-theme-stepper-large-nav-item-font-weight: 400;
+  --lux-theme-stepper-large-nav-item-line-height: 2.0625rem;
+  --lux-theme-stepper-large-nav-item-completed-font-size: 1.375rem;
+  --lux-theme-stepper-large-nav-item-completed-font-weight: 400;
+  --lux-theme-stepper-large-nav-item-completed-line-height: 2.0625rem;
+  --lux-theme-stepper-large-nav-item-number-container-background-color: #eff3f6;
+  --lux-theme-stepper-large-nav-item-number-container-width: 2.8125rem;
+  --lux-theme-stepper-large-nav-item-number-container-height: 2.8125rem;
+  --lux-theme-stepper-large-nav-item-number-container-padding: 6px 11px;
+  --lux-theme-stepper-large-nav-item-number-container-radius: 1.125rem;
+  --lux-theme-stepper-large-nav-item-completed-icon-width: 1.4375rem;
+  --lux-theme-stepper-large-nav-item-completed-icon-height: 1.4375rem;
+  --lux-theme-stepper-large-nav-item-completed-icon-margin: 4px 10px 0px;
+  --lux-theme-stepper-large-backdrop-bg: #636d76;
+  --lux-theme-stepper-large-completed-fc: var(--lux-theme-accent-secondary-color);
+  --lux-theme-stepper-large-nav-item-active-fc: #ffffff;
+  --lux-theme-stepper-large-nav-item-active-bg: #003366;
+  --lux-theme-stepper-large-nav-item-disabled-fg: #003366;
+  --lux-theme-stepper-large-nav-item-disabled-bg: #eff3f6;
+  --lux-theme-stepper-large-nav-item-completed-fg: #ffffff;
+  --lux-theme-stepper-large-nav-item-completed-bg: var(--lux-theme-accent-secondary-color);
+  --lux-theme-stepper-large-nav-item-not-touched-fg: #003366;
+  --lux-theme-stepper-large-nav-item-not-touched-bg: #eff3f6;
+
+  // LUX-Side-Nav
+  --lux-theme-side-nav-button-color: var(--lux-theme-dark-primary-text);
+
+  // LUX-Table
+  --lux-theme-tabble-alternate-row-bg-color: #e3ebf5;
+
+  // LUX-Tabs
+  --lux-theme-tabs-text-font: var(--lux-theme-app-headline-font);
+  --lux-theme-tabs-label-text-size: 1.125rem;
+  --lux-theme-tabs-label-text-weight: 600;
+  --lux-theme-tabs-border-radius: var(--lux-theme-card-shape);
+
+  // LUX-Textbox
+  --lux-theme-textbox-default-color: #ffffff;
+  --lux-theme-textbox-default-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-default-border-color: var(--lux-theme-primary-20);
+  --lux-theme-textbox-default-icon-color: var(--lux-theme-dark-primary-text);
+
+  --lux-theme-textbox-blue-color: linear-gradient(90deg, #e0e7ed, #ffffff);
+  --lux-theme-textbox-blue-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-blue-border-color: var(--lux-theme-primary-20);
+  --lux-theme-textbox-blue-icon-color: var(--lux-theme-primary-20);
+
+  --lux-theme-textbox-green-color: linear-gradient(90deg, #ebf7ed, #ffffff);
+  --lux-theme-textbox-green-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-green-border-color: #56bd66;
+  --lux-theme-textbox-green-icon-color: #56bd66;
+
+  --lux-theme-textbox-red-color: linear-gradient(90deg, #ffcacf, #ffffff);
+  --lux-theme-textbox-red-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-red-border-color: #ec2125;
+  --lux-theme-textbox-red-icon-color: #ec2125;
+
+  --lux-theme-textbox-yellow-color: linear-gradient(90deg, #fdf8e1, #ffffff);
+  --lux-theme-textbox-yellow-on-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-textbox-yellow-border-color: #f4cb25;
+  --lux-theme-textbox-yellow-icon-color: #f4cb25;
+
+  // LUX-Tile
+  --lux-theme-tile-font-hover-color: var(--lux-theme-accent-secondary-color);
+  --lux-theme-tile-icon-color: #56bd66;
+  --lux-theme-tile-borderradius: 24px;
+  --lux-theme-tile-bottom-line-color: #56bd66;
+
+  // LUX-Tourhint
+  --lux-theme-tour-hint-overlay-backdrop-color: rgba(0, 0, 0, 0.12);
+
+  // Options in Panels (z.B. Select, AutoComplete und Menu)
+  --lux-theme-panel-option-min-height: 24px;
+  --lux-theme-panel-option-padding: 12px 0;
+  --lux-theme-panel-bg-color: #ffffff;
+  --lux-theme-panel-option-label-text-size: 1.125rem;
+  --lux-theme-panel-option-label-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-panel-option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
+  --lux-theme-panel-option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
+}

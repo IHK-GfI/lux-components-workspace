@@ -1,0 +1,76 @@
+@use "@angular/material" as mat;
+
+lux-button.lux-raised {
+  @include mat.button-overrides(
+    (
+      protected-label-text-tracking: var(--lux-theme-button-raised-text-tracking),
+      protected-label-text-font: var(--lux-theme-button-raised-font),
+      protected-label-text-size: var(--lux-theme-button-raised-text-size),
+      protected-label-text-weight: var(--lux-theme-button-raised-text-weight),
+      protected-container-shape: var(--lux-theme-button-raised-container-shape),
+      protected-horizontal-padding: 16px,
+      protected-container-height: var(--lux-theme-button-raised-container-height),
+      protected-label-text-color: var(--lux-theme-button-raised-default-text-color),
+      protected-container-color: var(--lux-theme-button-raised-default-container-color),
+      protected-focus-state-layer-opacity: 0.1,
+      protected-hover-state-layer-opacity: 0.1
+    )
+  );
+
+  .mat-primary {
+    @include mat.button-overrides(
+      (
+        protected-label-text-color: var(--lux-theme-button-raised-primary-text-color),
+        protected-container-color: var(--lux-theme-button-raised-primary-container-color),
+        protected-focus-state-layer-opacity: 0,
+        protected-hover-state-layer-opacity: 0
+      )
+    );
+
+    &:hover, &:focus {
+      @include mat.button-overrides(
+        (
+          protected-container-color: color-mix(in srgb, var(--lux-theme-button-raised-primary-container-color) 90%, transparent)
+        )
+      );
+    }
+  }
+
+  .mat-accent {
+    @include mat.button-overrides(
+      (
+        protected-label-text-color: var(--lux-theme-button-raised-accent-text-color),
+        protected-container-color: var(--lux-theme-button-raised-accent-container-color),
+        protected-focus-state-layer-opacity: 0,
+        protected-hover-state-layer-opacity: 0
+      )
+    );
+
+    &:hover, &:focus {
+      @include mat.button-overrides(
+        (
+          protected-container-color: color-mix(in srgb, var(--lux-theme-button-raised-accent-container-color) 90%, transparent)
+        )
+      );
+    }
+  }
+
+  .mat-warn {
+    @include mat.button-overrides(
+      (
+        protected-label-text-color: var(--lux-theme-button-raised-warn-text-color),
+        protected-container-color: var(--lux-theme-button-raised-warn-container-color),
+        protected-focus-state-layer-opacity: 0,
+        protected-hover-state-layer-opacity: 0
+      )
+    );
+
+    &:hover, &:focus {
+      @include mat.button-overrides(
+        (
+          protected-container-color: color-mix(in srgb, var(--lux-theme-button-raised-warn-container-color) 90%, transparent)
+        )
+      );
+    }
+  }
+}

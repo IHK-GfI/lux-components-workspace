@@ -76,8 +76,7 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
 
   radioOptions: any[] = [
     { label: 'A', value: 'a' },
-    { label: 'B', value: 'b' },
-    { label: 'C', value: 'c' }
+    { label: 'B', value: 'b' }
   ];
 
   singleSelectOptions: any[] = [

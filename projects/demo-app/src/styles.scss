@@ -1,6 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
-@use '@ihk-gfi/lux-components-theme/src/base/luxfonts' as luxfonts;
+@use "@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts" as luxfonts;
 
-$basepath: 'https://cdn.gfi.ihk.de/lux-components/icons-and-fonts/v1.10.0/';
+$basepath: "https://cdn.gfi.ihk.de/lux-components/icons-and-fonts/v1.10.0/";
 
 @include luxfonts.web-fonts($basepath);
+
+.lux-container {
+  margin: 0 auto;
+  padding: 8px;
+  width: 100%;
+  max-width: 1400px;
+  box-sizing: border-box;
+
+  & > h1:first-child,
+  & > h2:first-child,
+  & > h3:first-child,
+  & > h4:first-child,
+  & > h5:first-child,
+  & > h6:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+.lux-theme-authentic {
+  lux-button.round-btn {
+    --lux-theme-button-rounded-container-height: calc(var(--lux-theme-form-min-height) * 0.8);
+    --lux-theme-button-rounded-text-size: calc(var(--lux-theme-form-min-height) * 0.4);
+
+    padding-top: 1.3rem;
+    align-self: flex-start;
+  }
+}
+
+.lux-theme-green {
+  lux-button.round-btn {
+    --lux-theme-button-rounded-container-height: var(--lux-theme-form-min-height);
+    --lux-theme-button-rounded-text-size: calc(var(--lux-theme-form-min-height) * 0.5);
+
+    padding-top: 1.1rem;
+    align-self: flex-start;
+  }
+}

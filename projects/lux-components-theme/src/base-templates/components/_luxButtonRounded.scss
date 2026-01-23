@@ -1,0 +1,82 @@
+@use "@angular/material" as mat;
+
+lux-button.lux-rounded:not(.lux-stroked) {
+  @include mat.fab-overrides(
+    (
+      extended-container-height: 50px,
+      extended-label-text-size: var(--lux-theme-button-rounded-text-size),
+      container-shape: var(--lux-theme-button-rounded-container-shape),
+      container-elevation-shadow: none,
+      hover-container-elevation-shadow: none,
+      focus-container-elevation-shadow: none,
+      pressed-container-elevation-shadow: none,
+      foreground-color: var(--lux-theme-button-rounded-default-text-color),
+      container-color: transparent,
+      touch-target-size: var(--lux-theme-button-rounded-container-height)
+    )
+  );
+
+  .mat-primary {
+    @include mat.fab-overrides(
+      (
+        foreground-color: var(--lux-theme-button-rounded-primary-text-color),
+        container-color: var(--lux-theme-button-rounded-primary-container-color),
+        hover-state-layer-opacity: 0
+      )
+    );
+
+    &:hover {
+      @include mat.fab-overrides(
+        (
+          container-color: color-mix(in srgb, var(--lux-theme-button-rounded-primary-container-color) 90%, transparent)
+        )
+      );
+    }
+  }
+
+  .mat-accent {
+    @include mat.fab-overrides(
+      (
+        foreground-color: var(--lux-theme-button-rounded-accent-text-color),
+        container-color: var(--lux-theme-button-rounded-accent-container-color),
+        hover-state-layer-opacity: 0
+      )
+    );
+
+    &:hover {
+      @include mat.fab-overrides(
+        (
+          container-color: color-mix(in srgb, var(--lux-theme-button-rounded-accent-container-color) 90%, transparent)
+        )
+      );
+    }
+  }
+
+  .mat-warn {
+    @include mat.fab-overrides(
+      (
+        foreground-color: var(--lux-theme-button-rounded-warn-text-color),
+        container-color: var(--lux-theme-button-rounded-warn-container-color),
+        hover-state-layer-opacity: 0
+      )
+    );
+
+    &:hover {
+      @include mat.fab-overrides(
+        (
+          container-color: color-mix(in srgb, var(--lux-theme-button-rounded-warn-container-color) 90%, transparent)
+        )
+      );
+    }
+  }
+
+  .mat-mdc-fab-base {
+    width: var(--lux-theme-button-rounded-container-height);
+    height: var(--lux-theme-button-rounded-container-height);
+  }
+
+  .lux-icon {
+    width: var(--lux-theme-button-rounded-text-size);
+    height: var(--lux-theme-button-rounded-text-size);
+  }
+}

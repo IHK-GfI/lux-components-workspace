@@ -79,7 +79,7 @@
       "upload.error_message.only_one_file": "Only one file may be uploaded.",
       "upload.error_message.read_error": "An error occurred while uploading the selected file. Please try again.",
       "upload.error_message.upload_error": "An error occurred while uploading the selected file. Please try again.",
-      "upload.file.type.concat": "or",
+      "upload.file.type.concat": " or ",
       "upload.label": "Drop file here or ",
       "upload.label.link": "browse file",
       "upload.label.link.short": "Upload file"

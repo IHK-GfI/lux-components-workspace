@@ -1,0 +1,24 @@
+@use "@angular/material" as mat;
+
+.lux-autocomplete-panel-ac {
+  @include mat.autocomplete-overrides(
+    (
+      background-color: var(--lux-theme-panel-bg-color),
+      container-shape: var(--lux-theme-app-border-radius),
+      container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
+    )
+  );
+}
+
+lux-autocomplete-ac {
+  // Theming des Prefix- und Suffix-Containers
+  .lux-input-prefix-container,
+  .lux-input-suffix-container {
+    width: auto;
+    white-space: nowrap;
+    display: inline-block;
+    flex: 1 1 auto;
+    max-height: 1.5em;
+    align-items: center;
+  }
+}

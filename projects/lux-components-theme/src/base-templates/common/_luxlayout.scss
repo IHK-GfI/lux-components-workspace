@@ -1,0 +1,830 @@
+@use "sass:list";
+@use "luxbreakpoints" as luxbp;
+
+// display flex,....
+$display-values: block, flex, grid, inline-flex, inline-block, inline-grid, none;
+@each $val in $display-values {
+  .lux-#{$val} {
+    display: $val;
+  }
+}
+
+.lux-display-none {
+  display: none;
+}
+
+.lux-display-none-important {
+  display: none !important;
+}
+
+.lux-hidden {
+  visibility: hidden;
+}
+
+.lux-hidden-important {
+  visibility: hidden !important;
+}
+
+// Margin / Padding
+/*
+  Berechnet das Quadrat einer Zahl und gibt das Ergebnis mit
+  einer Einheit (z.B. px) zurueck.
+*/
+@function pow($number, $exponent, $unit) {
+  $value: 0;
+
+  @if $exponent > 0 {
+    $value: 1;
+    @for $i from 1 through $exponent {
+      $value: ($value * $number);
+    }
+  }
+
+  @return $value + $unit;
+}
+
+/*
+  Zum Anpassen der Schritte einfach pxStep erhoehen oder fuer Weitere CSS-Klassen
+  steps um zusaetzliche Eintraege ergaenzen (z.B. 1,2,4, etc.).
+
+  Generiert fuer Padding: lux-p[t,b,l,r]-xx
+  Generiert fuer Margin: lux-m[t,b,l,r]-xx
+ */
+$directions: "t", "b", "l", "r";
+$directionsLong: "top", "bottom", "left", "right";
+$pxStep: 2;
+$steps: 0, 1, 2, 3, 4, 5, 6;
+
+@for $i from 1 through list.length($directions) {
+  @each $step in $steps {
+    .lux-m-#{$step} {
+      margin: pow($pxStep, $step, px);
+    }
+    .lux-m#{list.nth($directions, $i)}-#{$step} {
+      margin-#{list.nth($directionsLong, $i)}: pow($pxStep, $step, px);
+    }
+    .lux-p-#{$step} {
+      padding: pow($pxStep, $step, px);
+    }
+    .lux-p#{list.nth($directions, $i)}-#{$step} {
+      padding-#{list.nth($directionsLong, $i)}: pow($pxStep, $step, px);
+    }
+  }
+}
+
+// Flex - Basis
+// die Zahl geteilt durch 4 ergibt den rem-Wert also lux-flex-basis-4 entspricht 1rem
+// bei den Brüchen wird der enstprechende %-Wert gesetzt
+$basis: (
+  "0": 0px,
+  "1": 0.25rem,
+  "2": 0.5rem,
+  "3": 0.75rem,
+  "4": 1rem,
+  "5": 1.25rem,
+  "6": 1.5rem,
+  "7": 1.75rem,
+  "8": 2rem,
+  "9": 2.25rem,
+  "10": 2.5rem,
+  "11": 2.75rem,
+  "12": 3rem,
+  "16": 4rem,
+  "20": 5rem,
+  "24": 6rem,
+  "28": 7rem,
+  "32": 8rem,
+  "36": 9rem,
+  "40": 10rem,
+  "44": 11rem,
+  "48": 12rem,
+  "52": 13rem,
+  "56": 14rem,
+  "60": 15rem,
+  "64": 16rem,
+  "72": 18rem,
+  "80": 20rem,
+  "96": 24rem,
+  "auto": auto,
+  "1/2": 50%,
+  "1/3": 33.333333%,
+  "2/3": 66.666667%,
+  "1/4": 25%,
+  "2/4": 50%,
+  "3/4": 75%,
+  "1/10": 10%,
+  "2/10": 20%,
+  "3/10": 30%,
+  "4/10": 40%,
+  "5/10": 50%,
+  "6/10": 60%,
+  "7/10": 70%,
+  "8/10": 80%,
+  "9/10": 90%,
+  "full": 100%
+);
+@each $key, $val in $basis {
+  [class~="lux-flex-basis-#{$key}"] {
+    flex-basis: #{$val};
+  }
+  [class~="lux-width-#{$key}"] {
+    width: #{$val};
+  }
+  [class~="lux-max-width-#{$key}"] {
+    max-width: #{$val};
+  }
+  [class~="lux-min-width-#{$key}"] {
+    min-width: #{$val};
+  }
+  [class~="lux-height-#{$key}"] {
+    height: #{$val};
+  }
+  [class~="lux-max-height-#{$key}"] {
+    max-height: #{$val};
+  }
+  [class~="lux-min-height-#{$key}"] {
+    min-height: #{$val};
+  }
+}
+
+// Flex - Direction
+$flex-directions: (
+  "row": row,
+  "row-reverse": row-reverse,
+  "col": column,
+  "col-revers": column-reverse
+);
+@each $key, $val in $flex-directions {
+  .lux-flex-#{$key} {
+    flex-direction: $val;
+  }
+}
+
+// Flex - Wrap
+$flex-wrap-values: nowrap, wrap, wrap-reverse;
+@each $value in $flex-wrap-values {
+  .lux-flex-#{$value} {
+    flex-wrap: $value;
+  }
+}
+
+// Flex
+$flex-values: (
+  "1": 1 1 0%,
+  "auto": 1 1 auto,
+  "initial": 0 1 auto,
+  "none": none
+);
+
+@each $key, $val in $flex-values {
+  .lux-flex-#{$key} {
+    flex: #{$val};
+  }
+}
+
+// Flex Grow / Shrink
+$steps: 0, 1, 2, 3, 4, 5;
+@each $step in $steps {
+  .lux-flex-grow-#{$step} {
+    flex-grow: $step;
+  }
+  .lux-flex-shrink-#{$step} {
+    flex-shrink: $step;
+  }
+}
+
+// Flex - Order
+$order-steps: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;
+@each $order in $order-steps {
+  .lux-flex-order-#{$order} {
+    order: $order;
+  }
+}
+
+// Justify Content, Positioning flex and grid-items along containers main-axis
+$justify-values: (
+  "normal": normal,
+  "start": flex-start,
+  "end": flex-end,
+  "center": center,
+  "between": space-between,
+  "around": space-around,
+  "evenly": space-evenly,
+  "stretch": stretch
+);
+@each $key, $val in $justify-values {
+  .lux-justify-#{$key} {
+    justify-content: $val;
+  }
+}
+
+// Justify items, controlling how grid items are aligned along their inline axis
+// Klasse für den container
+$justify-items-values: (
+  "start": start,
+  "end": end,
+  "center": center,
+  "stretch": stretch
+);
+@each $key, $val in $justify-items-values {
+  .lux-justify-items-#{$key} {
+    justify-items: $val;
+  }
+}
+
+// Justify self, controlling how an individual grid item is aligne along its inline axis
+// Klasse für das item
+$justify-self-values: (
+  "auto": auto,
+  "start": start,
+  "end": end,
+  "center": center,
+  "stretch": stretch
+);
+@each $key, $val in $justify-items-values {
+  .lux-justify-self-#{$key} {
+    justify-self: $val;
+  }
+}
+
+// Align - Content, controlling how rows are positioned in multi-row flex and grid containers
+$content-values: (
+  "normal": normal,
+  "start": flex-start,
+  "end": flex-end,
+  "center": center,
+  "between": space-between,
+  "around": space-around,
+  "evenly": space-evenly,
+  "stretch": stretch,
+  "baseline": baseline
+);
+@each $key, $val in $content-values {
+  .lux-content-#{$key} {
+    align-content: $val;
+  }
+}
+
+// Align - Items, controlling how flex and grid items are positioned along a container cross
+$align-items-values: (
+  "start": flex-start,
+  "end": flex-end,
+  "center": center,
+  "stretch": stretch,
+  "baseline": baseline
+);
+@each $key, $val in $align-items-values {
+  .lux-items-#{$key} {
+    align-items: $val;
+  }
+}
+
+// Align - Self, controlling how an individual flex or grid item is positioned along its container#s cross axis
+$align-self-values: (
+  "auto": auto,
+  "start": flex-start,
+  "end": flex-end,
+  "center": center,
+  "stretch": stretch,
+  "baseline": baseline
+);
+@each $key, $val in $align-self-values {
+  .lux-align-self-#{$key} {
+    align-self: $val;
+  }
+}
+
+// Place - Content
+$place-content-values: (
+  "center": center,
+  "start": flex-start,
+  "end": flex-end,
+  "between": space-between,
+  "around": space-around,
+  "evenly": space-evenly,
+  "baseline": baseline,
+  "stretch": stretch
+);
+@each $key, $val in $place-content-values {
+  .lux-place-content-#{$key} {
+    place-content: $val;
+  }
+}
+
+// Place - Items
+$place-items-values: (
+  "center": center,
+  "start": start,
+  "end": end,
+  "baseline": baseline,
+  "stretch": stretch
+);
+@each $key, $val in $place-items-values {
+  .lux-place-items-#{$key} {
+    place-items: $val;
+  }
+}
+
+// Place - Self
+$place-self-values: (
+  "center": center,
+  "start": start,
+  "end": end,
+  "auto": auto,
+  "stretch": stretch
+);
+@each $key, $val in $place-items-values {
+  .lux-place-self-#{$key} {
+    place-self: $val;
+  }
+}
+
+// Gutters between grid und flexbox-items
+// die Zahl geteilt durch 4 ergibt den rem-Wert also lux-flex-basis-4 entspricht 1rem
+$grid-gaps: (
+  "0": 0px,
+  "1": 0.25rem,
+  "2": 0.5rem,
+  "3": 0.75rem,
+  "4": 1rem,
+  "5": 1.25rem,
+  "6": 1.5rem,
+  "7": 1.75rem,
+  "8": 2rem,
+  "9": 2.25rem,
+  "10": 2.5rem,
+  "11": 2.75rem,
+  "12": 3rem,
+  "16": 4rem,
+  "20": 5rem,
+  "24": 6rem,
+  "28": 7rem,
+  "32": 8rem,
+  "36": 9rem,
+  "40": 10rem,
+  "44": 11rem,
+  "48": 12rem,
+  "52": 13rem,
+  "56": 14rem,
+  "60": 15rem,
+  "64": 16rem,
+  "72": 18rem,
+  "80": 20rem,
+  "96": 24rem
+);
+@each $key, $val in $grid-gaps {
+  .lux-gap-#{$key} {
+    gap: $val;
+  }
+  .lux-row-gap-#{$key} {
+    row-gap: $val;
+  }
+  .lux-col-gap-#{$key} {
+    column-gap: $val;
+  }
+}
+
+// Grid
+$col-steps: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
+@each $col in $col-steps {
+  .lux-grid-cols-#{$col} {
+    grid-template-columns: repeat($col, minmax(0, 1fr));
+  }
+  .lux-col-span-#{$col} {
+    grid-column: span #{$col} / span #{$col};
+  }
+  .lux-col-start-#{$col} {
+    grid-column-start: $col;
+  }
+  .lux-col-end-#{$col} {
+    grid-column-end: $col;
+  }
+}
+.lux-grid-cols-none {
+  grid-template-columns: none;
+}
+.lux-col-auto {
+  grid-column: auto;
+}
+.lux-col-start-13 {
+  grid-column-start: 13;
+}
+.lux-col-end-13 {
+  grid-column-end: 13;
+}
+.lux-col-span-full {
+  grid-column: 1/ -1;
+}
+.lux-col-start-auto {
+  grid-column-start: auto;
+}
+.lux-col-end-auto {
+  grid-column-end: auto;
+}
+
+$row-steps: 1, 2, 3, 4, 5, 6;
+@each $row in $row-steps {
+  .lux-grid-rows-#{$row} {
+    grid-template-rows: repeat($row, minmax(0, 1fr));
+  }
+  .lux-row-span-#{$row} {
+    grid-row: span #{$row} / span #{$row};
+  }
+  .lux-row-start-#{$row} {
+    grid-row-start: $row;
+  }
+  .lux-row-end-#{$row} {
+    grid-row-end: $row;
+  }
+}
+.lux-grid-rows-none {
+  grid-template-rows: none;
+}
+.lux-row-span-full {
+  grid-row: 1/ -1;
+}
+.lux-row-start-auto {
+  grid-row-start: auto;
+}
+.lux-row-end-auto {
+  grid-row-end: auto;
+}
+.lux-row-start-7 {
+  grid-row-start: 7;
+}
+.lux-row-end-7 {
+  grid-row-end: 7;
+}
+.lux-grid-flow-row {
+  grid-auto-flow: row;
+}
+.lux-grid-flow-col {
+  grid-auto-flow: column;
+}
+.lux-grid-flow-dense {
+  grid-auto-flow: dense;
+}
+.lux-grid-flow-row-dense {
+  grid-auto-flow: row dense;
+}
+.lux-grid-flow-col-dense {
+  grid-auto-flow: column dense;
+}
+.lux-auto-cols-auto {
+  grid-auto-columns: auto;
+}
+.lux-auto-cols-min {
+  grid-auto-columns: min-content;
+}
+.lux-auto-cols-max {
+  grid-auto-columns: max-content;
+}
+.lux-auto-cols-fr {
+  grid-auto-columns: minmax(0, 1fr);
+}
+.lux-auto-rows-auto {
+  grid-auto-rows: auto;
+}
+.lux-auto-rows-min {
+  grid-auto-rows: min-content;
+}
+.lux-auto-rows-max {
+  grid-auto-rows: max-content;
+}
+.lux-auto-rows-fr {
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+//// Responsivität ////
+
+@mixin makeresponsive($bp) {
+  // Margin / Padding
+  @for $i from 1 through list.length($directions) {
+    @each $step in $steps {
+      .#{$bp}\:lux-m-#{$step} {
+        margin: pow($pxStep, $step, px);
+      }
+      .#{$bp}\:lux-m#{list.nth($directions, $i)}-#{$step} {
+        margin-#{list.nth($directionsLong, $i)}: pow($pxStep, $step, px);
+      }
+      .#{$bp}\:lux-p-#{$step} {
+        padding: pow($pxStep, $step, px);
+      }
+      .#{$bp}\:lux-p#{list.nth($directions, $i)}-#{$step} {
+        padding-#{list.nth($directionsLong, $i)}: pow($pxStep, $step, px);
+      }
+    }
+  }
+
+  // Display
+  @each $val in $display-values {
+    .#{$bp}\:lux-#{$val} {
+      display: $val;
+    }
+  }
+
+  .#{$bp}\:lux-display-none {
+    display: none;
+  }
+
+  .#{$bp}\:lux-display-none-important {
+    display: none !important;
+  }
+
+  .#{$bp}\:lux-hidden {
+    visibility: hidden;
+  }
+
+  .#{$bp}\:lux-hidden-important {
+    visibility: hidden !important;
+  }
+
+  @each $key, $val in $basis {
+    [class~="#{$bp}:lux-flex-basis-#{$key}"] {
+      flex-basis: #{$val};
+    }
+    [class~="#{$bp}:lux-width-#{$key}"] {
+      width: #{$val};
+    }
+    [class~="#{$bp}:lux-max-width-#{$key}"] {
+      max-width: #{$val};
+    }
+    [class~="#{$bp}:lux-min-width-#{$key}"] {
+      min-width: #{$val};
+    }
+    [class~="#{$bp}:lux-height-#{$key}"] {
+      height: #{$val};
+    }
+    [class~="#{$bp}:lux-max-height-#{$key}"] {
+      max-height: #{$val};
+    }
+    [class~="#{$bp}:lux-min-height-#{$key}"] {
+      min-height: #{$val};
+    }
+  }
+
+  // Flex - Direction
+  @each $key, $val in $flex-directions {
+    .#{$bp}\:lux-flex-#{$key} {
+      flex-direction: $val;
+    }
+  }
+
+  // Flex - Wrap
+  @each $value in $flex-wrap-values {
+    .#{$bp}\:lux-flex-#{$value} {
+      flex-wrap: $value;
+    }
+  }
+
+  // Flex
+  @each $key, $val in $flex-values {
+    .#{$bp}\:lux-flex-#{$key} {
+      flex: #{$val};
+    }
+  }
+
+  // Flex Grow / Shrink
+  @each $step in $steps {
+    .#{$bp}\:lux-flex-grow-#{$step} {
+      flex-grow: $step;
+    }
+    .#{$bp}\:lux-flex-shrink-#{$step} {
+      flex-shrink: $step;
+    }
+  }
+
+  @each $order in $order-steps {
+    .#{$bp}\:lux-flex-order-#{$order} {
+      order: $order;
+    }
+  }
+
+  // Justify Content
+  @each $key, $val in $justify-values {
+    .#{$bp}\:lux-justify-#{$key} {
+      justify-content: $val;
+    }
+  }
+
+  // Justify items
+  @each $key, $val in $justify-items-values {
+    .#{$bp}\:lux-justify-items-#{$key} {
+      justify-items: $val;
+    }
+  }
+
+  // Justify self
+  @each $key, $val in $justify-items-values {
+    .#{$bp}\:lux-justify-self-#{$key} {
+      justify-self: $val;
+    }
+  }
+
+  // Align - Content
+  @each $key, $val in $content-values {
+    .#{$bp}\:lux-content-#{$key} {
+      align-content: $val;
+    }
+  }
+
+  // Align - Items
+  @each $key, $val in $align-items-values {
+    .#{$bp}\:lux-items-#{$key} {
+      align-items: $val;
+    }
+  }
+
+  // Align - Self
+  @each $key, $val in $align-self-values {
+    .#{$bp}\:lux-align-self-#{$key} {
+      align-self: $val;
+    }
+  }
+
+  // Place - Content
+  @each $key, $val in $place-content-values {
+    .#{$bp}\:lux-place-content-#{$key} {
+      place-content: $val;
+    }
+  }
+
+  // Place - Items
+  @each $key, $val in $place-items-values {
+    .#{$bp}\:lux-place-items-#{$key} {
+      place-items: $val;
+    }
+  }
+
+  // Place - Self
+  @each $key, $val in $place-items-values {
+    .#{$bp}\:lux-place-self-#{$key} {
+      place-self: $val;
+    }
+  }
+
+  //  Gutters between grid und flexbox-items
+  @each $key, $val in $grid-gaps {
+    .#{$bp}\:lux-gap-#{$key} {
+      gap: $val;
+    }
+    .#{$bp}\:lux-row-gap-#{$key} {
+      row-gap: $val;
+    }
+    .#{$bp}\:lux-col-gap-#{$key} {
+      column-gap: $val;
+    }
+  }
+
+  // Grid
+  @each $col in $col-steps {
+    .#{$bp}\:lux-grid-cols-#{$col} {
+      grid-template-columns: repeat($col, minmax(0, 1fr));
+    }
+    .#{$bp}\:lux-col-span-#{$col} {
+      grid-column: span #{$col} / span #{$col};
+    }
+    .#{$bp}\:lux-col-start-#{$col} {
+      grid-column-start: $col;
+    }
+    .#{$bp}\:lux-col-end-#{$col} {
+      grid-column-end: $col;
+    }
+  }
+  .#{$bp}\:lux-grid-cols-none {
+    grid-template-columns: none;
+  }
+  .#{$bp}\:lux-col-auto {
+    grid-column: auto;
+  }
+  .#{$bp}\:lux-col-start-13 {
+    grid-column-start: 13;
+  }
+  .#{$bp}\:lux-col-end-13 {
+    grid-column-end: 13;
+  }
+  .#{$bp}\:lux-col-span-full {
+    grid-column: 1/ -1;
+  }
+  .#{$bp}\:lux-col-start-auto {
+    grid-column-start: auto;
+  }
+  .#{$bp}\:lux-col-end-auto {
+    grid-column-end: auto;
+  }
+
+  @each $row in $row-steps {
+    .#{$bp}\:lux-grid-rows-#{$row} {
+      grid-template-rows: repeat($row, minmax(0, 1fr));
+    }
+    .#{$bp}\:lux-row-span-#{$row} {
+      grid-row: span #{$row} / span #{$row};
+    }
+    .#{$bp}\:lux-row-start-#{$row} {
+      grid-row-start: $row;
+    }
+    .#{$bp}\:lux-row-end-#{$row} {
+      grid-row-end: $row;
+    }
+  }
+  .#{$bp}\:lux-grid-rows-none {
+    grid-template-rows: none;
+  }
+  .#{$bp}\:lux-row-span-full {
+    grid-row: 1/ -1;
+  }
+  .#{$bp}\:lux-row-start-auto {
+    grid-row-start: auto;
+  }
+  .#{$bp}\:lux-row-end-auto {
+    grid-row-end: auto;
+  }
+  .#{$bp}\:lux-row-start-7 {
+    grid-row-start: 7;
+  }
+  .#{$bp}\:lux-row-end-7 {
+    grid-row-end: 7;
+  }
+  .#{$bp}\:lux-grid-flow-row {
+    grid-auto-flow: row;
+  }
+  .#{$bp}\:lux-grid-flow-col {
+    grid-auto-flow: column;
+  }
+  .#{$bp}\:lux-grid-flow-dense {
+    grid-auto-flow: dense;
+  }
+  .#{$bp}\:lux-grid-flow-row-dense {
+    grid-auto-flow: row dense;
+  }
+  .#{$bp}\:lux-grid-flow-col-dense {
+    grid-auto-flow: column dense;
+  }
+  .#{$bp}\:lux-auto-cols-auto {
+    grid-auto-columns: auto;
+  }
+  .#{$bp}\:lux-auto-cols-min {
+    grid-auto-columns: min-content;
+  }
+  .#{$bp}\:lux-auto-cols-max {
+    grid-auto-columns: max-content;
+  }
+  .#{$bp}\:lux-auto-cols-fr {
+    grid-auto-columns: minmax(0, 1fr);
+  }
+  .#{$bp}\:lux-auto-rows-auto {
+    grid-auto-rows: auto;
+  }
+  .#{$bp}\:lux-auto-rows-min {
+    grid-auto-rows: min-content;
+  }
+  .#{$bp}\:lux-auto-rows-max {
+    grid-auto-rows: max-content;
+  }
+  .#{$bp}\:lux-auto-rows-fr {
+    grid-auto-rows: minmax(0, 1fr);
+  }
+}
+
+@include luxbp.xs {
+  @include makeresponsive("xs");
+}
+@include luxbp.sm {
+  @include makeresponsive("sm");
+}
+@include luxbp.md {
+  @include makeresponsive("md");
+}
+@include luxbp.lg {
+  @include makeresponsive("lg");
+}
+@include luxbp.xl {
+  @include makeresponsive("xl");
+}
+@include luxbp.gt-xs {
+  @include makeresponsive("gt-xs");
+}
+@include luxbp.gt-sm {
+  @include makeresponsive("gt-sm");
+}
+@include luxbp.gt-md {
+  @include makeresponsive("gt-md");
+}
+@include luxbp.gt-lg {
+  @include makeresponsive("gt-lg");
+}
+@include luxbp.gt-xl {
+  @include makeresponsive("gt-xl");
+}
+@include luxbp.lt-sm {
+  @include makeresponsive("lt-sm");
+}
+@include luxbp.lt-md {
+  @include makeresponsive("lt-md");
+}
+@include luxbp.lt-lg {
+  @include makeresponsive("lt-lg");
+}
+@include luxbp.lt-xl {
+  @include makeresponsive("lt-xl");
+}
