@@ -199,7 +199,6 @@ Das liegt daran, dass die Templates in Angular immer nur auf Methoden und Attrib
 | showValidationErrors(formGroup: FormGroup): void                                                                 | Iteriert durch alle Controls der FormGroup und markiert diese als "touched", so dass evtl. aufgetretene Validierungsfehler direkt ersichtlich sind. Nützlich um schnell alle Fehler in einem Formular anzuzeigen.               |
 | goTo(id: string): void                                                                                           | Diese Methode scollt zu dem HTML-Element mit der übergebenen Id.                                                                                                                                                                |
 | stopEventPropagation(event: any): void                                                                           | Diese Methode nimmt ein Event entgegen und verhindert, dass das Event weiter verarbeitet wird. Z.B. ein Klick auf einen Button im Accordionheader sollte nicht zusätzlich das Accordion auf-/zuklappen.                         |
-| getColorsByBgColorsEnum(color: LuxBgAllColor \| undefined): { backgroundCSSClass: string, fontCSSClass: string } | Gibt anhand der übergebenen BackgroundColor ein Objekt mit einem CSS-String für die Font- und Background-Color wieder. Der String enthält den Namen der passenden CSS-Klasse, der Farbwert kommt dann aus der \_luxstyles.scss. |
 
 #### Fehlertexte
 

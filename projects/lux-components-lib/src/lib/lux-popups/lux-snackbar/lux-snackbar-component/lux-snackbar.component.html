@@ -1,14 +1,14 @@
 <div class="lux-gap-5 lux-flex lux-justify-start lux-items-center lux-snackbar-content">
   <div class="lux-snackbar-icon lux-flex lux-flex-none lux-border-box">
-    <lux-icon [ngClass]="iconFontColor" [luxIconName]="config.iconName" [luxIconSize]="config.iconSize"> </lux-icon>
+    <lux-icon [luxIconName]="config.iconName" [luxIconSize]="config.iconSize"> </lux-icon>
   </div>
-  <div [ngClass]="textFontColor" class="lux-hyphenate lux-flex lux-flex-auto lux-borderbox">
+  <div class="lux-snackbar-text lux-hyphenate lux-flex lux-flex-auto lux-borderbox">
     {{ config.text }}
   </div>
 
   @if (config.action) {
   <div class="lux-flex lux-flex-none lux-border-box">
-    <button class="snackbar-action" [ngClass]="actionFontColor" mat-button [disableRipple]="true" (click)="actionClick()">
+    <button class="lux-snackbar-action" mat-button [disableRipple]="true" (click)="actionClick()">
       {{ config.action }}
     </button>
   </div>

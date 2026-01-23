@@ -1,0 +1,103 @@
+@use "@angular/material" as mat;
+
+lux-progress {
+  // Farben
+  @include mat.progress-bar-overrides(
+    (
+      track-color: #bcc8d5
+    )
+  );
+
+  .lux-color-red {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-red)
+      )
+    );
+  }
+  .lux-color-green {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-green)
+      )
+    );
+  }
+  .lux-color-purple {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-purple)
+      )
+    );
+  }
+  .lux-color-blue {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-blue)
+      )
+    );
+  }
+  .lux-color-gray {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-gray)
+      )
+    );
+  }
+  .lux-color-orange {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-orange)
+      )
+    );
+  }
+  .lux-color-yellow {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-yellow)
+      )
+    );
+  }
+
+  .lux-color-pink {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-pink)
+      )
+    );
+  }
+  .lux-color-lightblue {
+    @include mat.progress-bar-overrides(
+      (
+        active-indicator-color: var(--lux-theme-custom-lightblue)
+      )
+    );
+  }
+
+  // Höhe
+  .lux-progress-small {
+    @include mat.progress-bar-overrides(
+      (
+        track-height: 6px,
+        active-indicator-height: 6px
+      )
+    );
+  }
+
+  .lux-progress-medium {
+    @include mat.progress-bar-overrides(
+      (
+        track-height: 12px,
+        active-indicator-height: 12px
+      )
+    );
+  }
+
+  .lux-progress-large {
+    @include mat.progress-bar-overrides(
+      (
+        track-height: 24px,
+        active-indicator-height: 24px
+      )
+    );
+  }
+}

@@ -5,6 +5,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, wait
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { TranslocoService } from '@jsverse/transloco';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -299,7 +300,8 @@ describe('LuxDatepickerAcComponent', () => {
 
     it('LuxValue mit TWB und Locale de-DE', fakeAsync(() => {
       // Vorbedingungen testen
-      testComponent.locale = 'de-DE';
+      const translocoService = TestBed.inject<any>(TranslocoService);
+      translocoService.setActiveLang('de-DE');
       expect(testComponent.value).toBeFalsy();
 
       // Änderungen durchführen
@@ -315,7 +317,8 @@ describe('LuxDatepickerAcComponent', () => {
 
     it('LuxValue mit TWB und Locale en-US', fakeAsync(() => {
       // Vorbedingungen testen
-      testComponent.locale = 'en-US';
+      const translocoService = TestBed.inject<any>(TranslocoService);
+      translocoService.setActiveLang('en-US');
       expect(testComponent.value).toBeFalsy();
 
       // Änderungen durchführen
@@ -331,7 +334,8 @@ describe('LuxDatepickerAcComponent', () => {
 
     it('LuxValue mit TWB und Locale en-GB', fakeAsync(() => {
       // Vorbedingungen testen
-      testComponent.locale = 'en-GB';
+      const translocoService = TestBed.inject<any>(TranslocoService);
+      translocoService.setActiveLang('en-GB');
       expect(testComponent.value).toBeFalsy();
 
       // Änderungen durchführen
@@ -724,7 +728,6 @@ describe('LuxDatepickerAcComponent', () => {
       [luxDisabled]="disabled"
       [luxReadonly]="readonly"
       [luxRequired]="required"
-      [luxLocale]="locale"
       [luxMinDate]="minDate"
       [luxMaxDate]="maxDate"
       [luxCustomFilter]="customFilter"
@@ -744,7 +747,6 @@ class LuxNoFormAttributeTestComponent {
   disabled?: boolean;
   readonly = false;
   required = false;
-  locale?: string;
   minDate?: string;
   maxDate?: string;
   startDate?: string;

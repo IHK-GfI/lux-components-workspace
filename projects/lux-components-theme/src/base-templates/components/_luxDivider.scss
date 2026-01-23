@@ -1,0 +1,10 @@
+@use "@angular/material" as mat;
+
+lux-divider {
+  @include mat.divider-overrides(
+    (
+      color: var(--lux-theme-dark-dividers),
+      width: 1px
+    )
+  );
+}

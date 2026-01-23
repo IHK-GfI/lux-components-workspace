@@ -1,0 +1,93 @@
+@use "@angular/material" as mat;
+@use "../common/luxelevations";
+@use "../common/luxfocus";
+
+lux-side-nav {
+  lux-button {
+    @include mat.button-overrides(
+      (
+        text-label-text-color: var(--lux-theme-side-nav-button-color)
+      )
+    );
+  }
+
+  .lux-side-nav {
+    background: var(--lux-theme-app-data-bg);
+    @include luxelevations.lux-elevation-z16();
+
+    .lux-side-nav-header {
+      border-bottom: 1px solid var(--lux-theme-dark-dividers);
+    }
+
+    .lux-side-nav-footer {
+      border-top: 1px solid var(--lux-theme-dark-dividers);
+    }
+
+    .lux-side-nav-content {
+      .lux-side-nav-item {
+        padding-right: 4px;
+
+        .lux-side-nav-item-icon {
+          // color: var(--lux-theme-primary-20);
+
+          &.lux-side-nav-disabled {
+            color: var(--lux-theme-dark-disabled-text);
+          }
+        }
+
+        .lux-side-nav-item-expansion-icon {
+          // color: var(--lux-theme-primary-20);
+
+          &.lux-side-nav-disabled {
+            color: var(--lux-theme-dark-disabled-text);
+          }
+        }
+      }
+    }
+  }
+}
+
+.lux-side-nav-overlay {
+  background-color: var(--lux-theme-dark-focused);
+}
+
+lux-side-nav {
+  .lux-side-nav-item {
+    &.lux-side-nav-item-selected {
+      @include luxfocus.lux-selected-mixin;
+      color: var(--lux-theme-on-selected-color);
+      lux-button {
+        @include mat.button-overrides(
+          (
+            text-label-text-color: var(--lux-theme-on-selected-color)
+          )
+        );
+      }
+    }
+
+    &:focus:not(.lux-side-nav-disabled) {
+      @include luxfocus.focus-dark-mixin;
+    }
+
+    &:focus-within:not(.lux-side-nav-disabled) {
+      @include luxfocus.focus-dark-mixin;
+
+      button {
+        outline: var(--lux-theme-outline-width) var(--lux-theme-outline-style) transparent !important;
+      }
+    }
+
+    &:hover:not(.lux-side-nav-disabled) {
+      @include luxfocus.lux-hovered-mixin;
+      border-radius: 0;
+      color: var(--lux-theme-on-hover-color);
+      lux-button {
+        @include mat.button-overrides(
+          (
+            text-label-text-color: var(--lux-theme-on-hover-color)
+          )
+        );
+      }
+    }
+  }
+}

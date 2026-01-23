@@ -188,6 +188,7 @@ export { expansionAnim } from './lib/lux-layout/lux-card/lux-card-model/lux-card
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-content-expanded.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';
+export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-heading.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-info.component';
 export * from './lib/lux-layout/lux-card/lux-card.component';
 export * from './lib/lux-layout/lux-checkbox-container-ac/lux-checkbox-container-ac.component';

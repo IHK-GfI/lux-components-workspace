@@ -7,137 +7,69 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   class="lux-card"
-  [ngClass]="{ 'lux-cursor': !showButtons && hasCardAction && !luxDisabled }"
->
-  <div class="lux-overflow-y-hidden lux-card-content-container lux-flex lux-flex-col">
-    <div class="lux-card-header">
-      @if (showIcon) {
-      <div class="lux-card-icon-container">
-        <ng-content select="lux-icon"></ng-content>
-      </div>
-      } @switch (luxHeading) { @case (1) {
-      <h1
-        class="lux-card-title"
-        [ngClass]="{
-          'lux-hyphenate': luxTitleLineBreak,
-          'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': (!luxTitle || luxTitle.length === 0) && !infoComponent
-        }"
-        title="{{ luxTitleTooltip ? luxTitleTooltip : luxTitleLineBreak ? '' : luxTitle }}"
-      >
-        {{ luxTitle }}
-      </h1>
-      } @default {
-      <h2
-        class="lux-card-title"
-        [ngClass]="{
-          'lux-hyphenate': luxTitleLineBreak,
-          'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': (!luxTitle || luxTitle.length === 0) && !infoComponent
-        }"
-        title="{{ luxTitleTooltip ? luxTitleTooltip : luxTitleLineBreak ? '' : luxTitle }}"
-      >
-        {{ luxTitle }}
-      </h2>
-      } @case (3) {
-      <h3
-        class="lux-card-title"
-        [ngClass]="{
-          'lux-hyphenate': luxTitleLineBreak,
-          'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': (!luxTitle || luxTitle.length === 0) && !infoComponent
-        }"
-        title="{{ luxTitleTooltip ? luxTitleTooltip : luxTitleLineBreak ? '' : luxTitle }}"
-      >
-        {{ luxTitle }}
-      </h3>
-      } @case (4) {
-      <h4
-        class="lux-card-title"
-        [ngClass]="{
-          'lux-hyphenate': luxTitleLineBreak,
-          'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': (!luxTitle || luxTitle.length === 0) && !infoComponent
-        }"
-        title="{{ luxTitleTooltip ? luxTitleTooltip : luxTitleLineBreak ? '' : luxTitle }}"
-      >
-        {{ luxTitle }}
-      </h4>
-      } @case (5) {
-      <h5
-        class="lux-card-title"
-        [ngClass]="{
-          'lux-hyphenate': luxTitleLineBreak,
-          'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': (!luxTitle || luxTitle.length === 0) && !infoComponent
-        }"
-        title="{{ luxTitleTooltip ? luxTitleTooltip : luxTitleLineBreak ? '' : luxTitle }}"
-      >
-        {{ luxTitle }}
-      </h5>
-      } @case (6) {
-      <h6
-        class="lux-card-title"
-        [ngClass]="{
-          'lux-hyphenate': luxTitleLineBreak,
-          'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': (!luxTitle || luxTitle.length === 0) && !infoComponent
-        }"
-        title="{{ luxTitleTooltip ? luxTitleTooltip : luxTitleLineBreak ? '' : luxTitle }}"
-      >
-        {{ luxTitle }}
-      </h6>
-      } } @if (infoComponent) {
-      <div
-        class="lux-card-info-container lux-justify-self-end"
-        [ngClass]="{ 'lux-title': luxTitle || showIcon, 'lux-subtitle': luxSubTitle }"
-      >
-        <ng-content select="lux-card-info"></ng-content>
-      </div>
-      }
-      <div
-        title="{{ luxSubTitleTooltip ? luxSubTitleTooltip : luxTitleLineBreak ? '' : luxSubTitle }}"
-        class="lux-card-subtitle"
-        [ngClass]="{
-          'lux-hyphenate': luxTitleLineBreak,
-          'lux-crop': !luxTitleLineBreak,
-          'lux-display-none': !luxSubTitle || luxSubTitle.length === 0
-        }"
-      >
-        {{ luxSubTitle }}
-      </div>
+  [class.lux-cursor]="!showButtons && hasCardAction && !luxDisabled">
+  <mat-card-header class="lux-card-header">
+    @if (showIcon) {
+    <div class="lux-card-icon-container">
+      <ng-content select="lux-icon"></ng-content>
     </div>
-    <!--Ende Card-header-->
-    <mat-card-content class="lux-flex lux-flex-col">
-      <!-- Der normale Card-Content ist immer sichtbar. -->
-      <div
-        class="lux-card-content lux-flex lux-flex-col lux-gap-3"
-        [ngClass]="{ 'lux-card-with-content-and-header': contentComponent && showHeader }"
-      >
-        <ng-content select="lux-card-content"></ng-content>
-        @if (showExpandedToggle) {
-        <lux-button
-          luxColor="primary"
-          [luxIconName]="luxExpanded ? 'lux-interface-arrows-button-up' : 'lux-interface-arrows-button-down'"
-          [luxLabel]="luxExpanded ? (luxExpandedLabelClose || ('luxc.card.expandedLabel.close' | transloco)) : (luxExpandedLabelOpen || ('luxc.card.expandedLabel.open' | transloco))"
-          [luxIconShowRight]="false"
-          (luxClicked)="changeContentExpansion($event)"
-          [luxThrottleTime]="250"
-          luxTagId="expandedButton"
-          class="lux-expanded-button"
-        ></lux-button>
-        }
-      </div>
-      <!-- Der expanded Card-Content ist nur sichtbar, wenn der Ausklapp-Button geklickt wurde. -->
-      @if (luxExpanded && contentExpandedComponent) {
-      <div class="lux-card-content-expanded lux-mt-4" [@expansionAnim]="{ value: getAnimState(), params: { duration: getAnimDuration() } }">
-        <ng-content select="lux-card-content-expanded"></ng-content>
-      </div>
-      }
-    </mat-card-content>
+    }
+    <mat-card-title class="lux-card-title">
+      <lux-card-heading
+        [luxLevel]="luxHeading"
+        [luxText]="luxTitle"
+        [luxTitle]="luxTitleTooltip ? luxTitleTooltip : luxTitleLineBreak ? '' : luxTitle"
+        [luxClass]="{
+          'lux-hyphenate': luxTitleLineBreak,
+          'lux-crop': !luxTitleLineBreak,
+          'lux-display-none-important': (!luxTitle || luxTitle.length === 0) && !infoComponent
+        }"></lux-card-heading>
+    </mat-card-title>
+    <mat-card-subtitle
+      title="{{ luxSubTitleTooltip ? luxSubTitleTooltip : luxTitleLineBreak ? '' : luxSubTitle }}"
+      class="lux-card-subtitle"
+      [ngClass]="{
+        'lux-hyphenate': luxTitleLineBreak,
+        'lux-crop': !luxTitleLineBreak,
+        'lux-display-none-important': !luxSubTitle || luxSubTitle.length === 0
+      }">
+      {{ luxSubTitle }}
+    </mat-card-subtitle>
+    @if (infoComponent) {
+    <div class="lux-card-info-container" [class.lux-title]="luxTitle || showIcon" [class.lux-subtitle]="luxSubTitle">
+      <ng-content select="lux-card-info"></ng-content>
+    </div>
+    }
+  </mat-card-header>
 
-    <mat-card-actions class="lux-card-actions lux-mt-4" [ngClass]="{ 'lux-display-none-important': !showButtons }" #luxActionButtons>
-      <ng-content select="lux-card-actions"></ng-content>
-    </mat-card-actions>
-  </div>
+  <mat-card-content class="lux-card-content" [class.lux-card-no-actions]="!showButtons">
+    <div class="lux-card-content-container" [class.lux-card-with-content-and-header]="contentComponent && showHeader">
+      <ng-content select="lux-card-content"></ng-content>
+      @if (showExpandedToggle) {
+      <lux-button
+        luxColor="primary"
+        [luxIconName]="luxExpanded ? 'lux-interface-arrows-button-up' : 'lux-interface-arrows-button-down'"
+        [luxLabel]="
+          luxExpanded
+            ? luxExpandedLabelClose || ('luxc.card.expandedLabel.close' | transloco)
+            : luxExpandedLabelOpen || ('luxc.card.expandedLabel.open' | transloco)
+        "
+        [luxIconShowRight]="false"
+        (luxClicked)="changeContentExpansion($event)"
+        [luxThrottleTime]="250"
+        luxTagId="expandedButton"
+        class="lux-expanded-button"></lux-button>
+      }
+    </div>
+
+    @if (luxExpanded && contentExpandedComponent) {
+    <div class="lux-card-content-expanded lux-mt-4" [@expansionAnim]="{ value: getAnimState(), params: { duration: getAnimDuration() } }">
+      <ng-content select="lux-card-content-expanded"></ng-content>
+    </div>
+    }
+  </mat-card-content>
+
+  <mat-card-actions class="lux-card-actions" [ngClass]="{ 'lux-display-none-important': !showButtons }" #luxActionButtons>
+    <ng-content select="lux-card-actions"></ng-content>
+  </mat-card-actions>
 </mat-card>

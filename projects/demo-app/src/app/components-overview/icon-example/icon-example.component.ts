@@ -43,7 +43,7 @@ export class IconExampleComponent {
   iconHint = 'Beispiele: app-box, app-ihk-gfi, lux-save,...';
   iconSize = '2x';
   rounded = false;
-  margin = '0';
+  margin = '';
   padding = '4px';
   backgroundColor = '';
 

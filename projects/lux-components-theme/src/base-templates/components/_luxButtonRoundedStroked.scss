@@ -1,0 +1,75 @@
+@use "@angular/material" as mat;
+
+lux-button.lux-rounded.lux-stroked {
+  @include mat.fab-overrides(
+    (
+      container-shape: var(--lux-theme-button-rounded-stroked-container-shape),
+      container-elevation-shadow: none,
+      hover-container-elevation-shadow: none,
+      focus-container-elevation-shadow: none,
+      pressed-container-elevation-shadow: none,
+      foreground-color: var(--lux-theme-button-rounded-stroked-default-text-color),
+      container-color: transparent,
+      touch-target-size: var(--lux-theme-button-rounded-stroked-container-height)
+    )
+  );
+
+  .lux-stroked {
+    &.mat-primary {
+      @include mat.fab-overrides(
+        (
+          foreground-color: var(--lux-theme-button-rounded-stroked-primary-text-color),
+          container-color: transparent,
+          hover-state-layer-opacity: 0.1
+        )
+      );
+    }
+
+    &.mat-accent {
+      @include mat.fab-overrides(
+        (
+          foreground-color: var(--lux-theme-button-rounded-stroked-accent-text-color),
+          container-color: transparent,
+          hover-state-layer-opacity: 0.1
+        )
+      );
+    }
+
+    &.mat-warn {
+      @include mat.fab-overrides(
+        (
+          foreground-color: var(--lux-theme-button-rounded-stroked-warn-text-color),
+          container-color: transparent,
+          hover-state-layer-opacity: 0.1
+        )
+      );
+    }
+  }
+
+  .mat-mdc-fab-base {
+    width: var(--lux-theme-button-rounded-stroked-container-height);
+    height: var(--lux-theme-button-rounded-stroked-container-height);
+  }
+
+  .lux-icon {
+    width: var(--lux-theme-button-rounded-stroked-text-size);
+    height: var(--lux-theme-button-rounded-stroked-text-size);
+  }
+
+  .lux-stroked:not(:disabled) {
+    border: 1px solid;
+    border-color: var(--lux-theme-button-rounded-stroked-default-text-color);
+
+    &.mat-primary {
+      border-color: var(--lux-theme-button-rounded-stroked-primary-text-color);
+    }
+
+    &.mat-accent {
+      border-color: var(--lux-theme-button-rounded-stroked-accent-text-color);
+    }
+
+    &.mat-warn {
+      border-color: var(--lux-theme-button-rounded-stroked-warn-text-color);
+    }
+  }
+}

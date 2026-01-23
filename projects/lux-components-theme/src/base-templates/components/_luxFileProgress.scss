@@ -1,0 +1,13 @@
+lux-file-progress {
+  .lux-file-overlay {
+    background: var(--lux-theme-dark-focused);
+
+    mat-spinner,
+    mat-spinner svg {
+      circle {
+        stroke: var(--lux-theme-primary-20);
+        background: var(--lux-theme-primary-20);
+      }
+    }
+  }
+}

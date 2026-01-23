@@ -1,0 +1,419 @@
+@use "@angular/material" as mat;
+@use "../common/luxelevations";
+@use "../common/luxfocus";
+
+@mixin lux-hovered-mixin-green {
+  background-color: var(--lux-theme-hover-color) !important;
+  color: (--lux-theme-on-hover-color) !important;
+  border-radius: var(--lux-theme-app-header-item-border-radius);
+}
+
+button.lux-menu-item.lux-user-name-label {
+  opacity: 1;
+  color: #003366;
+  background-color: var(--mat-sys-surface-container);
+  .mat-mdc-menu-item-text {
+    font-weight: 600;
+  }
+}
+
+lux-app-header {
+  @include mat.button-overrides(
+    (
+      text-hover-state-layer-opacity: 0,
+      text-focus-state-layer-opacity: 0
+    )
+  );
+
+  flex: 0 0 auto;
+  max-height: 65px;
+  height: 65px;
+  max-width: 100%;
+  display: block;
+  z-index: 999;
+  span {
+    font-size: 1rem;
+  }
+  lux-icon {
+    line-height: 1;
+  }
+  .lux-app-header {
+    padding: 8px;
+    display: flex;
+    flex: 1 1 100%;
+    place-content: center flex-start;
+    align-items: center;
+    max-width: 100%;
+    z-index: 10000;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: var(--lux-theme-app-header-bg);
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 51, 102, .2);
+
+    .lux-show-border {
+      border-left: 1px solid var(--lux-theme-primary-color);
+    }
+    .lux-header-title {
+      color: var(--lux-theme-primary-20);
+      .lux-app-header-title-label {
+        margin-left: 5px;
+        padding: 10px 5px;
+        display: flex;
+        flex: 1 1 auto;
+      }
+    }
+    // Anpassungen am mittleren Menu ("Action-Menu")
+
+    div.lux-header-action {
+      display: flex;
+      flex: 1 1 auto;
+      place-content: center flex-end;
+      align-items: center;
+      min-width: 0;
+
+      .lux-app-header-action-nav {
+        display: flex;
+        place-content: center flex-start;
+        align-items: center;
+        gap: 4px;
+
+        lux-app-header-action-nav-item {
+          lux-button.lux-action-nav-item-button {
+            button {
+              padding: 0;
+              min-width: 45px;
+              max-height: 45px !important;
+              min-height: 45px !important;
+            }
+
+            &.lux-button-with-label button {
+              padding: 0 4px;
+              max-height: 45px !important;
+              min-height: 45px !important;
+
+              lux-icon.lux-button-icon {
+                display: inline-block;
+              }
+            }
+          }
+        }
+      }
+
+      &.lux-lang-select-menu {
+        flex: 0 0 auto;
+        button {
+          min-width: 50px;
+        }
+      }
+
+      lux-button {
+        button {
+          padding-top: 0;
+          padding-bottom: 0;
+          margin: 2px;
+          font-weight: normal !important;
+
+          .lux-button-label {
+            font-weight: normal !important;
+          }
+
+          &:not(.mat-accent):not(.mat-warn):not(.mat-primary):not([disabled]) {
+            color: var(--lux-theme-primary-20);
+          }
+
+          &:not(.mat-accent):not(.mat-warn):not(.mat-primary):disabled {
+            color: var(--lux-theme-dark-disabled-text);
+          }
+
+          &.mat-accent:not([disabled]) {
+            color: var(--lux-theme-accent-95);
+          }
+
+          &.mat-warn:not([disabled]) {
+            color: var(--lux-theme-warn-80);
+          }
+
+          &.mat-primary:not([disabled]) {
+            color: var(--lux-theme-primary-80);
+          }
+
+          &.lux-button-rounded {
+            width: 36px !important;
+            height: 36px !important;
+            justify-content: center;
+            display: inline-flex;
+            @include luxelevations.lux-elevation-z0;
+          }
+        }
+      }
+    }
+
+    button:not(.mat-primary):not(.mat-warn):not(.mat-accent):not(.lux-button-rounded) {
+      color: var(--lux-theme-primary-20);
+    }
+
+    // Anpassungen am rechten Menu ("User-Menu")
+    .lux-header-user {
+      display: flex;
+      flex: 0 0 auto;
+      place-content: center end;
+      align-items: center;
+
+      > div:first-child {
+        margin-right: 3px;
+      }
+
+      .lux-header-user-short {
+        margin-right: 5px;
+        > span {
+          display: flex !important;
+          justify-content: center;
+          width: 25px;
+          border: 1px solid;
+          border-radius: 50%;
+          padding: 0 4px;
+          color: var(--mdc-theme-on-primary);
+          background-color: var(--mdc-theme-primary);
+        }
+      }
+      .lux-menu-extended {
+        padding: 0;
+        overflow: visible;
+      }
+    }
+  }
+
+  .lux-header-side-nav {
+    div:first-child {
+      display: flex;
+      place-content: center flex-start;
+      align-items: center;
+    }
+
+    .lux-side-nav-trigger,
+    .lux-master-toggle {
+      min-width: 45px;
+      width: 45px;
+      max-width: 45px;
+
+      button {
+        min-width: 45px;
+        width: 45px;
+        max-width: 45px;
+        padding: 0;
+      }
+    }
+
+    .lux-right-nav-trigger {
+      cursor: pointer;
+      padding-right: 8px;
+      padding-left: 8px;
+    }
+
+    .lux-side-nav-trigger-active {
+      background-color: var(--lux-theme-dark-focused);
+    }
+  }
+
+  $offset-size: 40px;
+  $offset: 8px;
+
+  .lux-side-nav {
+    position: fixed;
+
+    .lux-side-nav-header,
+    .lux-side-nav-footer {
+      color: var(--lux-theme-primary-30);
+    }
+
+    .lux-side-nav-header {
+      padding: $offset;
+      position: relative;
+    }
+
+    .lux-side-nav-content {
+      overflow-y: auto;
+      min-height: 100px;
+      min-width: 300px;
+
+      .lux-side-nav-dashboard-link {
+        margin-top: 8px;
+      }
+
+      lux-button,
+      .lux-menu-item,
+      .lux-action-nav-menu lux-button {
+        color: var(--lux-theme-primary-20);
+        font-weight: 600;
+      }
+
+      lux-button button {
+        margin: 0 0 0 8px;
+        padding: 0 0 1px 0;
+        width: 100%;
+
+        .lux-button-content-container {
+          justify-content: left;
+        }
+      }
+
+      .lux-side-nav-item {
+        height: 40px;
+        min-height: 40px;
+        margin: 4px 8px;
+
+        cursor: pointer;
+        &.lux-side-nav-disabled {
+          cursor: default;
+        }
+
+        .lux-side-nav-item-icon {
+          flex: 1 1 $offset-size;
+          max-width: $offset-size;
+          min-width: $offset-size;
+          box-sizing: border-box;
+          mat-icon {
+            box-sizing: border-box;
+          }
+        }
+      }
+
+      .lux-side-nav-sub-item {
+        margin-left: $offset-size - $offset;
+      }
+
+      .lux-side-nav-sub-item-last-child {
+        padding-bottom: 24px;
+      }
+    }
+
+    .lux-side-nav-footer {
+      padding: $offset;
+      position: relative;
+    }
+  }
+}
+$sideNavZIndex: 11000;
+.lux-side-nav-overlay {
+  position: fixed;
+  opacity: 0;
+}
+
+.lux-side-nav-z-index {
+  z-index: $sideNavZIndex;
+}
+
+.lux-side-nav-overlay-z-index {
+  z-index: $sideNavZIndex - 1;
+}
+
+// Menü wird im Cdk-Overlay dargestellt und hängt nicht unter dem LUX-APP-HEADER selbst.
+.lux-right-nav-menu {
+  display: flex;
+  flex: 0 0 auto;
+  .lux-menu-item {
+    color: var(--lux-theme-primary-20);
+  }
+}
+
+// Anpassungen für die Mobile Ansicht
+.lux-header-menu-mobile {
+  .lux-menu-trigger {
+    padding: 0 4px;
+    margin: 0;
+
+    button {
+      padding: 0 6px;
+    }
+  }
+}
+
+/** ########## Focus / Hover / Disabled ######## **/
+lux-app-header {
+  .lux-app-header-title-label {
+    &:focus {
+      @include luxfocus.focus-dark-mixin;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
+    }
+
+    &:hover {
+      @include lux-hovered-mixin-green;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
+    }
+  }
+
+  & .lux-side-nav-trigger button:not([disabled]) {
+    &:focus {
+      @include luxfocus.focus-dark-mixin;
+    }
+
+    &:hover {
+      background-color: var(--lux-theme-hover-color) !important;
+      color: var(--lux-theme-primary-20);
+    }
+  }
+
+  & .lux-header-action button:not([disabled]) {
+    &:focus {
+      @include luxfocus.focus-dark-mixin;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
+    }
+    color: var(--lux-theme-primary-20) !important;
+
+    &.mat-accent lux-icon {
+      color: var(--lux-theme-accent-70) !important;
+    }
+
+    &.mat-warn lux-icon {
+      color: var(--lux-theme-warn-50) !important;
+    }
+
+    &.mat-primary lux-icon {
+      color: var(--lux-theme-primary-20) !important;
+    }
+
+    &:hover {
+      color: var(--lux-theme-primary-20) !important;
+      background-color: var(--lux-theme-hover-color) !important;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
+
+      &.mat-accent lux-icon {
+        color: var(--lux-theme-accent-70) !important;
+      }
+
+      &.mat-warn lux-icon {
+        color: var(--lux-theme-warn-50) !important;
+      }
+
+      &.mat-primary lux-icon {
+        color: var(--lux-theme-primary-20) !important;
+      }
+    }
+  }
+
+  & lux-image:focus {
+    @include luxfocus.focus-dark-mixin;
+  }
+
+  & lux-icon:focus {
+    @include luxfocus.focus-dark-mixin;
+  }
+
+  lux-menu-trigger button.lux-right-nav-trigger {
+    &:focus {
+      @include luxfocus.focus-dark-mixin;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
+    }
+
+    &:hover {
+      @include lux-hovered-mixin-green;
+      border-radius: var(--lux-theme-app-header-item-border-radius);
+
+      & lux-icon,
+      .lux-header-username {
+        color: var(--lux-theme-primary-20) !important;
+      }
+    }
+  }
+}

@@ -1,6 +1,10 @@
 .container {
   margin: 2em auto;
   padding: 1em 2em;
+  &:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+  }
   max-width: 1150px;
   border: 1px solid rgba(black, 0.12);
   border-radius: 4px;

@@ -1,0 +1,17 @@
+@use "@angular/material" as mat;
+
+lux-slider-ac {
+  @include mat.slider-overrides(
+    (
+      value-indicator-width: 20px,
+      value-indicator-height: 20px,
+      active-track-color: var(--lux-theme-primary-20),
+      inactive-track-color: var(--lux-theme-primary-50)
+    )
+  );
+
+  // lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic.lux-no-input-row {
+  //   padding-top: 2px;
+  //   padding-bottom: 0;
+  // }
+}

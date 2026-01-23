@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    LuxInputAcComponent,
-    LuxStepperLargeClickEvent,
-    LuxStepperLargeStepComponent,
-    LuxThemePalette,
-    LuxToggleAcComponent,
-    LuxUtil,
-    LuxVetoState
+  LuxInputAcComponent,
+  LuxStepperLargeClickEvent,
+  LuxStepperLargeStepComponent,
+  LuxThemePalette,
+  LuxToggleAcComponent,
+  LuxUtil,
+  LuxVetoState
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
@@ -39,7 +39,7 @@ export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeSt
     super();
 
     this.form = new FormGroup<StepperLargeFinButtonDummyForm>({
-      label: new FormControl<string>(this.dataService.finButtonConfig.label ?? '', { validators: Validators.required, nonNullable: true }),
+      label: new FormControl<string>(this.dataService.finButtonConfig.label ? this.dataService.finButtonConfig.label : 'Abschließen', { validators: Validators.required, nonNullable: true }),
       iconName: new FormControl<string | undefined>(this.dataService.finButtonConfig.iconName, { nonNullable: true }),
       color: new FormControl<LuxThemePalette | undefined>(this.dataService.finButtonConfig.color, { nonNullable: true }),
       iconShowRight: new FormControl<boolean | undefined>(this.dataService.finButtonConfig.iconShowRight, { nonNullable: true }),

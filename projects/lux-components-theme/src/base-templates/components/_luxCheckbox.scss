@@ -1,0 +1,7 @@
+@use "@angular/material" as mat;
+
+lux-checkbox-ac {
+  @include mat.checkbox-overrides((
+    label-text-size: var(--lux-theme-form-control-font-size),
+  ));
+}

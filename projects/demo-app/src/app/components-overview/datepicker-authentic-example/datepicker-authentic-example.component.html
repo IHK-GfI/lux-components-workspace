@@ -11,7 +11,6 @@
         [luxOpened]="opened"
         [luxStartDate]="startDate"
         [luxCustomFilter]="customFilter"
-        [luxLocale]="locale"
         [luxMinDate]="minDate"
         [luxMaxDate]="maxDate"
         [luxStartView]="startView"
@@ -44,7 +43,6 @@
         [luxOpened]="opened"
         [luxStartDate]="startDate"
         [luxCustomFilter]="customFilter"
-        [luxLocale]="locale"
         [luxMinDate]="minDate"
         [luxMaxDate]="maxDate"
         [luxStartView]="startView"
@@ -148,12 +146,6 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    <lux-input-ac luxName="datepicker_luxLocale" luxLabel="luxLocale" luxPlaceholder="de-DE" [(luxValue)]="locale">
-      <lux-form-hint>
-        Diese Property legt die Sprachregion und damit die Formatierung der Datumseingabe fest.<br />
-        Andere Beispiele: jp-JP, en-US, etc.
-      </lux-form-hint>
-    </lux-input-ac>
     <lux-select-ac
       luxLabel="luxStartView"
       luxHint="Die Property legt fest, welche Ansicht die Datumsauswahl initial besitzt."

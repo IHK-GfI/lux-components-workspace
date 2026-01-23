@@ -1,15 +1,14 @@
 import { NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-    LuxAriaLabelDirective,
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxProgressColors,
-    LuxProgressComponent,
-    LuxProgressModeType,
-    LuxProgressSizeType,
-    LuxSelectAcComponent
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxProgressColors,
+  LuxProgressComponent,
+  LuxProgressModeType,
+  LuxProgressSizeType,
+  LuxSelectAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -21,7 +20,6 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   imports: [
     LuxProgressComponent,
     LuxButtonComponent,
-    LuxAriaLabelDirective,
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,

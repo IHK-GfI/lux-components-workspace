@@ -3,54 +3,18 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90progress-v19"
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
-    <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
-      <h3 class="lux-highlight-section-label">Default</h3>
-      <div class="lux-flex lux-flex-wrap lux-gap-3">
-        @for (color of colors; track color; let i = $index) {
-        <lux-progress
-          luxType="Spinner"
-          luxTagId="sp-example-default{{ i }}"
-          [luxColor]="color"
-          [luxValue]="value"
-          [luxMode]="mode"
-          [luxSize]="size"
-        >
-        </lux-progress>
-        }
-      </div>
-    </div>
-    <div class="lux-hover-bg lux-highlight-section lux-flex lux-flex-col lux-gap-4">
-      <h3 class="lux-highlight-section-label lux-color-light-primary-text">Hover</h3>
-      <div class="lux-flex lux-flex-wrap lux-gap-3">
-        @for (color of colors; track color; let i = $index) {
-        <lux-progress
-          luxType="Spinner"
-          luxAriaLabel="Custom Aria Label"
-          luxTagId="sp-example-hover{{ i }}"
-          [luxColor]="color"
-          [luxValue]="value"
-          [luxMode]="mode"
-          [luxSize]="size"
-        >
-        </lux-progress>
-        }
-      </div>
-    </div>
-    <div class="lux-selected-bg lux-highlight-section lux-flex lux-flex-col lux-gap-4">
-      <h3 class="lux-highlight-section-label">Focus</h3>
-      <div class="lux-flex lux-flex-wrap lux-gap-3">
-        @for (color of colors; track color; let i = $index) {
-        <lux-progress
-          luxType="Spinner"
-          luxTagId="sp-example-focus{{ i }}"
-          [luxColor]="color"
-          [luxValue]="value"
-          [luxMode]="mode"
-          [luxSize]="size"
-        >
-        </lux-progress>
-        }
-      </div>
+    <div class="lux-app-data-bg lux-flex lux-flex-wrap lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
+      @for (color of colors; track color; let i = $index) {
+      <lux-progress
+        luxType="Spinner"
+        luxTagId="sp-example-default{{ i }}"
+        [luxColor]="color"
+        [luxValue]="value"
+        [luxMode]="mode"
+        [luxSize]="size"
+      >
+      </lux-progress>
+      }
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

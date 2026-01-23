@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   LuxBadgeColors,
@@ -22,8 +23,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     ExampleBaseSimpleOptionsComponent,
     LuxFormHintComponent,
     LuxInputAcComponent,
-    LuxToggleAcComponent
-  ]
+    LuxToggleAcComponent,
+    NgStyle
+]
 })
 export class BadgeExampleComponent {
   colors = LuxBadgeColors;

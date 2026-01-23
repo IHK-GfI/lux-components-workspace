@@ -1,15 +1,6 @@
 ::ng-deep {
-  
-  .example-base-content {
-    max-width: calc(100% - 302px);
-  }
-
-  .example-mobile .example-base-content {
-    max-width: 100%;
-  }
-
   .lux-theme-authentic {
-    .example-base-structure{
+    .example-base-structure {
       max-height: calc(100vh - 178px);
     }
 
@@ -27,17 +18,8 @@
       max-height: calc(100vh - 165px);
     }
   }
-} 
 
-detail-example ::ng-deep lux-card mat-card.mat-mdc-card {
-  border: none;
+  detail-example ::ng-deep lux-card mat-card.mat-mdc-card {
+    border: none;
+  }
 }
-
-.example-header, .example-tab-content {
-  padding: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-

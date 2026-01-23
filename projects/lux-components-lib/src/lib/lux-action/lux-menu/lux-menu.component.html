@@ -69,11 +69,11 @@
     <span class="lux-button-badge-container">
       @if (menuItem.luxButtonBadge && !menuItem.luxDisabled) {
       <span
-        class="lux-button-badge lux-bg-color-primary-500 lux-m-2"
+        class="lux-button-badge lux-bg-color-primary-20 lux-m-2"
         [ngClass]="{
-          'lux-bg-color-primary-500': menuItem.luxButtonBadgeColor === 'primary',
-          'lux-bg-color-warn-500': menuItem.luxButtonBadgeColor === 'warn',
-          'lux-bg-color-accent-500': menuItem.luxButtonBadgeColor === 'accent'
+          'lux-bg-color-primary-20': menuItem.luxButtonBadgeColor === 'primary',
+          'lux-bg-color-warn-50': menuItem.luxButtonBadgeColor === 'warn',
+          'lux-bg-color-accent-70': menuItem.luxButtonBadgeColor === 'accent'
         }"
       >
         {{ menuItem.luxButtonBadge }}
@@ -91,7 +91,7 @@
     [matMenuTriggerFor]="menu"
     role="button"
     luxAriaLabel="{{ luxAriaMenuTriggerLabel || ('luxc.menu.trigger.btn' | transloco) }}"
-    class="lux-menu-trigger lux-color-primary-500"
+    class="lux-menu-trigger lux-color-primary-20"
     [ngClass]="{ 'lux-display-none-important': hideToggle }"
     #menuTrigger
     (menuOpened)="onMenuOpened()"

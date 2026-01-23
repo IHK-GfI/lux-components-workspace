@@ -1,5 +1,18 @@
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+  inject,
+  signal
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateFilterFn, MatDatepickerToggle, MatDatepickerToggleIcon } from '@angular/material/datepicker';
@@ -66,6 +79,8 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
   @Input() luxNoLabels = false;
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
+  
+  luxLocale = signal<string>('de-DE');
 
   dateTimeValidator: ValidatorFn = (): ValidationErrors | null => {
     let result = null;
@@ -112,6 +127,28 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     super();
 
     this.luxAutocomplete = 'off';
+
+    this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
+      switch (lang) {
+        case 'de':
+          this.luxLocale.set('de-DE');
+          break;
+        case 'en':
+          this.luxLocale.set('en-US');
+          break;
+        case 'fr':
+          this.luxLocale.set('fr-FR');
+          break;
+        default:
+          this.luxLocale.set(lang);
+      }
+      this.dateTimeAdapter.setLocale(this.luxLocale());
+      
+      // Input-Feld neu formatieren
+      if (this.formControl && this.dateTimePickerInputEl) {
+        this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
+      }
+    });
   }
 
   // Code des Interfaces "MatDatepickerControl" - Start

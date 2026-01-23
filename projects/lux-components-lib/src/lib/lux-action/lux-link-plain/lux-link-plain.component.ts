@@ -11,6 +11,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   selector: 'lux-link-plain',
   templateUrl: './lux-link-plain.component.html',
   styleUrls: ['./lux-link-plain.component.scss'],
+  host: { '[class.lux-disabled]': 'luxDisabled' },
   imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, NgClass, LuxIconComponent]
 })
 export class LuxLinkPlainComponent extends LuxActionComponentBaseClass implements OnInit {

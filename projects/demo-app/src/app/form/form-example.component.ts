@@ -2,13 +2,12 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject } from '
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-    LuxAppFooterButtonInfo,
-    LuxAppFooterButtonService,
-    LuxAriaRoleDirective,
-    LuxSnackbarService,
-    LuxTabComponent,
-    LuxTabsComponent,
-    LuxUtil
+  LuxAppFooterButtonInfo,
+  LuxAppFooterButtonService,
+  LuxSnackbarService,
+  LuxTabComponent,
+  LuxTabsComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { FormCommonComponent } from './form-common/form-common.component';
 import { FormDualColComponent } from './form-dual-col/form-dual-col.component';
@@ -25,7 +24,6 @@ import { WebFontDemoComponent } from './web-font-demo/web-font-demo.component';
   imports: [
     LuxTabsComponent,
     LuxTabComponent,
-    LuxAriaRoleDirective,
     FormCommonComponent,
     FormSingleColComponent,
     FormDualColComponent,

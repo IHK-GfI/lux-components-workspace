@@ -1,0 +1,84 @@
+@mixin focus-dark-mixin {
+  outline: var(--lux-theme-outline-dark);
+}
+
+@mixin focus-dark-mixin-inline {
+  // der Focus um Elemente in Panels wird mit negativen Margin nach in das Element verlegt
+  // damit wird er nicht mehr am Rand abgeschnitten oder verdeckt
+  outline: var(--lux-theme-outline-dark);
+  outline-offset: calc(var(--lux-theme-outline-width) * -1);
+}
+
+@mixin focus-bright-mixin {
+  outline: var(--lux-theme-outline-bright);
+}
+
+@mixin lux-button-focus {
+  $width: calc(var(--lux-theme-outline-width) - 1px);
+  outline: $width var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark) !important;
+  outline-offset: 1px;
+}
+
+@mixin lux-selectable-mixin {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@mixin lux-selected-mixin {
+  background-color: var(--lux-theme-selected-bg-color) !important;
+  position: relative;
+  border-radius: 4px;
+
+  &:after {
+    content: "";
+    left: 0;
+    width: 6px;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    border-left: 4px solid var(--lux-theme-selected-border-color);
+    border-radius: 4px 0 0 4px;
+  }
+}
+
+@mixin lux-selected-mixin-ac {
+  background: var(--lux-theme-app-gradient);
+  background-color: #fff;
+  border: 1px solid var(--lux-theme-primary-20);
+  box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
+  position: relative;
+  border-radius: 4px;
+}
+@mixin lux-selected-mixin-reverse-ac {
+  background: var(--lux-theme-app-gradient-reverse);
+  background-color: #fff;
+  border: 1px solid var(--lux-theme-primary-20);
+  box-shadow: 0 0 0 1px var(--lux-theme-primary-500) inset;
+  position: relative;
+  border-radius: 4px;
+}
+
+@mixin lux-selected-bottom-mixin {
+  position: relative;
+
+  &:after {
+    content: "";
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    border-bottom: 4px solid var(--lux-theme-selected-border-color);
+  }
+}
+
+@mixin lux-hovered-mixin {
+  background-color: var(--lux-theme-hover-color) !important;
+  border-radius: 4px;
+}
+
+@mixin lux-hovered-mixin-inverted {
+  color: #fff;
+  background-color: var(--lux-theme-hover-color);
+}

@@ -3,6 +3,7 @@
   tabindex="0"
   [ngClass]="{
     'lux-no-icon': !luxIcon,
+    'lux-default': luxColor !== 'red' && luxColor !== 'yellow' && luxColor !== 'green' && luxColor !== 'blue',
     'lux-red': luxColor === 'red',
     'lux-yellow': luxColor === 'yellow',
     'lux-green': luxColor === 'green',

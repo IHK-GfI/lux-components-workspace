@@ -1,5 +1,5 @@
 <mat-card
-  appearance="outlined"
+  appearance="raised"
   (click)="clicked()"
   (keydown.enter)="clicked()"
   (keydown.space)="clicked()"
@@ -16,7 +16,7 @@
   [attr.aria-label]="luxLabel"
   [attr.aria-description]="luxSubTitle"
 >
-  <div class="lux-tile-content">
+  <mat-card-header class="lux-tile-header">
     <mat-card-title class="lux-tile-title">
       <span
         [class.lux-hyphenate]="!luxLabelTruncateAfterOneLine"
@@ -47,5 +47,5 @@
         >{{ luxSubTitle }}</span
       ></mat-card-subtitle
     >
-  </div>
+  </mat-card-header>
 </mat-card>

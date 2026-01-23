@@ -1,0 +1,30 @@
+// Muss der Wrapper sein, da Input-Elemente auch in anderen Komponenten (z.B. lux-autocomplete) genutzt werden
+lux-form-control-wrapper {
+  input {
+    font: inherit;
+    color: currentColor;
+    background: transparent;
+    border: none;
+    outline: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    vertical-align: bottom;
+    text-align: inherit;
+    font-size: var(--lux-theme-form-control-font-size);
+  }
+}
+
+lux-input-ac {
+  // Theming des Prefix- und Suffix-Containers
+  .lux-input-prefix-container,
+  .lux-input-suffix-container {
+    width: auto;
+    white-space: nowrap;
+    display: inline-block;
+    flex: 1 1 auto;
+    max-height: 1.5em;
+    align-items: center;
+  }
+}

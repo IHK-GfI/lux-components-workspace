@@ -1,12 +1,10 @@
 import { getLocaleFirstDayOfWeek } from '@angular/common';
-import { Injectable, LOCALE_ID, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { NativeDateAdapter } from '@angular/material/core';
 import { LuxUtil } from '../../lux-util/lux-util';
 
 @Injectable()
 export class LuxDateTimePickerAcAdapter extends NativeDateAdapter {
-  private matDateLocale = inject(LOCALE_ID);
-
   // dd.MM.yyyy
   private readonly dotRegExp = new RegExp(/\d{1,2}\.\d{1,2}\.\d{4},\W*\d{1,2}:\d{1,2}/);
   // MM/dd/yyyy
@@ -79,7 +77,7 @@ export class LuxDateTimePickerAcAdapter extends NativeDateAdapter {
   override getFirstDayOfWeek(): number {
     let startDay;
     try {
-      startDay = getLocaleFirstDayOfWeek(this.matDateLocale);
+      startDay = getLocaleFirstDayOfWeek(this.locale);
     } catch (e) {
       startDay = super.getFirstDayOfWeek();
     }

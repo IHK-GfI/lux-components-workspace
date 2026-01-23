@@ -1,0 +1,51 @@
+@use "@angular/material" as mat;
+
+.lux-badge-notification {
+  @include mat.badge-overrides(
+    (
+      background-color: #605e5e,
+      disabled-state-background-color: #b9b9b9,
+      small-size-container-size: 18px,
+      container-size: 24px,
+      large-size-container-size: 30px,
+      small-size-text-size: 0.5625rem,
+      text-size: 0.75rem,
+      large-size-text-size: 0.9375rem,
+      small-size-container-padding: 5px 0 0 0,
+      container-padding: 3px 0 0 0,
+      large-size-container-padding: 6px 0 0 0
+    )
+  );
+
+  &.mat-badge-primary {
+    @include mat.badge-overrides(
+      (
+        background-color: var(--lux-theme-primary-color)
+      )
+    );
+  }
+
+  &.mat-badge-accent {
+    @include mat.badge-overrides(
+      (
+        background-color: var(--lux-theme-accent-70)
+      )
+    );
+  }
+
+  &.mat-badge-warn {
+    @include mat.badge-overrides(
+      (
+        background-color: var(--mat-sys-error)
+      )
+    );
+  }
+
+  &.mat-badge .mat-badge-content {
+    border: 1px solid var(--lux-theme-app-data-bg);
+  }
+
+  &.mat-badge.lux-badge-no-border .mat-badge-content {
+    border: 1px solid transparent;
+  }
+}

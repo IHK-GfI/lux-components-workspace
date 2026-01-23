@@ -10,6 +10,7 @@
         <span>{{ element.name }}</span>
         } @if (element.editable) {
         <lux-input-ac
+          [luxDense]="true"
           luxAriaLabel="Name"
           luxAriaLabelSelector="input"
           luxTagId="table.row.control.name"
@@ -38,6 +39,7 @@
         <div class="lux-flex lux-flex-wrap">
           @if (element.editable) {
           <lux-input-ac
+            [luxDense]="true"
             luxAriaLabel="Symbol"
             luxAriaLabelSelector="input"
             luxTagId="table.row.control.symbol"

@@ -15,7 +15,13 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   selector: 'lux-button',
   templateUrl: './lux-button.component.html',
   styleUrls: ['./lux-button.component.scss'],
-  imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, LuxIconComponent, LuxProgressComponent]
+  imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, LuxIconComponent, LuxProgressComponent],
+  host: {
+    '[class.lux-flat]': 'luxFlat',
+    '[class.lux-raised]': 'luxRaised',
+    '[class.lux-rounded]': 'luxRounded',
+    '[class.lux-stroked]': 'luxStroked'
+  }
 })
 export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit, OnDestroy {
   elementRef = inject(ElementRef);

@@ -1,0 +1,251 @@
+@use "@angular/material" as mat;
+
+@mixin crop {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin form-label {
+  min-height: 1.2em;
+  font-size: 0.75em;
+  line-height: 1.2em;
+  color: var(--lux-theme-dark-secondary-text);
+}
+
+@mixin lux-form-control-min-height($min-height) {
+  input,
+  mat-select,
+  .lux-file-container {
+    min-height: calc(#{$min-height} - (2 * var(--lux-theme-form-border-width)));
+  }
+
+  .lux-toggle,
+  .lux-checkbox,
+  .lux-radio,
+  .lux-slider-ac,
+  .mdc-slider__thumb {
+    min-height: #{$min-height};
+  }
+
+  .lux-slider-ac {
+    min-height: #{$min-height};
+  }
+
+  .lux-toggle,
+  .lux-checkbox,
+  .lux-radio,
+  mat-select {
+    align-content: center;
+  }
+
+  .mdc-slider__value-indicator-container {
+    bottom: calc((#{$min-height} / 2) + var(--mat-slider-value-indicator-height));
+  }
+}
+
+// Spezielle Anpassungen für Textarea
+// Textarea kann über luxMaxRows und luxMinRows in der Höhe variieren,
+// aus diesem Grund wird hier kein min-height für die .lux-form-control-container-authentic gesetzt,
+// sondern nur das Padding angepasst.
+lux-textarea-ac lux-form-control-wrapper .lux-form-control-wrapper {
+  .lux-form-control-container-authentic {
+    padding-top: var(--lux-theme-form-control-textarea-padding);
+    padding-bottom: var(--lux-theme-form-control-textarea-padding);
+    min-height: var(--lux-theme-form-min-height);
+  }
+
+  &.lux-dense-authentic {
+    .lux-form-control-container-authentic {
+      padding-top: var(--lux-theme-form-control-textarea-dense-padding);
+      padding-bottom: var(--lux-theme-form-control-textarea-dense-padding);
+      min-height: var(--lux-theme-form-dense-min-height);
+    }
+  }
+}
+
+lux-form-control-wrapper {
+  width: 100%;
+
+  .lux-form-control-wrapper {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    font-size: var(--lux-theme-form-control-font-size);
+    color: var(--lux-theme-dark-primary-text);
+
+    .lux-form-control-label-authentic {
+      @include form-label;
+      color: var(--lux-theme-primary-20);
+      margin: var(--lux-theme-form-control-label-margin);
+      > * {
+        @include crop;
+      }
+      &.lux-label-long-format {
+        > * {
+          white-space: normal;
+          text-overflow: unset;
+          word-wrap: break-word;
+        }
+      }
+    }
+
+    .lux-form-control-container-authentic {
+      flex: 1 1 auto;
+      box-sizing: border-box;
+      padding: 0 0.5rem;
+      font-size: var(--lux-theme-form-control-font-size);
+      color: var(--lux-theme-dark-primary-text);
+      background-color: #fff;
+      border: var(--lux-theme-form-border-width) solid var(--lux-theme-form-border-color);
+      border-radius: 4px;
+    }
+
+    .lux-form-control-misc-authentic {
+      display: flex;
+      place-content: flex-start space-between;
+      align-items: flex-start;
+      box-sizing: border-box;
+      margin: var(--lux-theme-form-control-error-margin);
+      @include form-label;
+      word-wrap: break-word;
+
+      .lux-form-control-error-container {
+        display: flex;
+        box-sizing: border-box;
+      }
+      .lux-form-control-character-counter-authentic {
+        min-width: 40px;
+        margin-left: 2px;
+        color: var(--lux-theme-dark-secondary-text) !important;
+        text-align: end;
+
+        &:only-child {
+          width: 100%;
+        }
+      }
+    }
+
+    // DENSE Modus
+    &.lux-dense-authentic {
+      .lux-form-control-container-authentic {
+        @include lux-form-control-min-height(var(--lux-theme-form-dense-min-height));
+      }
+
+      @include mat.checkbox-overrides(
+        (
+          touch-target-size: var(--lux-theme-form-dense-min-height),
+          state-layer-size: var(--lux-theme-form-dense-min-height)
+        )
+      );
+
+      @include mat.radio-overrides(
+        (
+          touch-target-size: var(--lux-theme-form-dense-min-height),
+          state-layer-size: var(--lux-theme-form-dense-min-height)
+        )
+      );
+
+      @include mat.icon-button-overrides(
+        (
+          touch-target-size: calc(var(--lux-theme-form-dense-min-height) - (2 * var(--lux-theme-form-border-width))),
+          state-layer-size: calc(var(--lux-theme-form-dense-min-height) - (2 * var(--lux-theme-form-border-width)))
+        )
+      );
+    }
+
+    .lux-form-control-container-authentic {
+      @include lux-form-control-min-height(var(--lux-theme-form-min-height));
+    }
+
+    // zusätzlicher Container für Elemente, die einen input-prefix/input-suffix haben
+    // aktuell: lux-autocomplete-ac und lux-input-ac
+    .lux-input-row-authentic {
+      display: flex;
+      flex-direction: row;
+      box-sizing: border-box;
+      place-content: center flex-start;
+      align-items: center;
+      font-size: var(--lux-theme-form-control-font-size);
+      padding: 0;
+    }
+
+    .lux-no-input-row {
+      // lux-toggel-ac, lux-checkbox-ac, lux-slider-ac, lux-radio-ac werden auf der Baseline ausgerichtet
+      // haben aber nicht den Rahmen, den die Input-Elemente haben
+      background-color: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    // Definitionen der einzelnen States der Form-Controls
+    // HOVER
+    &:hover:not(.lux-form-control-disabled-authentic):not(.lux-focused-authentic):not(.lux-form-control-error-authentic):not(
+        .lux-form-control-readonly-authentic
+      ) {
+      .lux-form-control-container-authentic:not(.lux-no-input-row) {
+        border-color: var(--lux-theme-dark-primary-text);
+      }
+    }
+    // FOCUS
+    &.lux-focused-authentic:not(.lux-form-control-readonly-authentic) {
+      .lux-form-control-label-authentic > * {
+        color: var(--lux-theme-primary-30);
+      }
+      .lux-form-control-container-authentic:not(.lux-no-input-row) {
+        border-color: var(--lux-theme-form-focus-border-color);
+        box-shadow: var(--lux-theme-form-focus-box-shadow);
+      }
+    }
+    // ERROR
+    &.lux-form-control-error-authentic:not(.lux-form-control-disabled-authentic) {
+      .lux-form-control-container-authentic:not(.lux-no-input-row) {
+        border-color: var(--lux-theme-form-error-border-color);
+        box-shadow: var(--lux-theme-form-error-box-shadow);
+      }
+      .lux-form-control-misc-authentic {
+        .lux-alert-icon {
+          color: var(--mat-sys-on-error-container);
+          mat-icon.mat-icon {
+            box-sizing: border-box;
+          }
+        }
+        .mat-mdc-form-field-error {
+          background-color: var(--lux-theme-form-error-msg-background);
+          border-radius: 4px;
+          padding-right: 2px;
+          color: var(--mat-sys-on-error-container) !important;
+          box-shadow: -18px 0px 0 0 var(--lux-theme-form-error-msg-background), -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
+            0 -1px 0 0 var(--lux-theme-form-error-msg-background);
+        }
+      }
+    }
+    // Disabled
+    &.lux-form-control-disabled-authentic {
+      .lux-form-control-container-authentic,
+      .lux-form-control-label-authentic,
+      .lux-form-control-misc-authentic > * {
+        color: var(--lux-theme-dark-disabled-text);
+      }
+    }
+    // READONLY
+    &.lux-form-control-disabled-authentic {
+      pointer-events: none;
+    }
+  }
+
+  /* Change Autocomplete styles in Chrome*/
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    box-shadow: 0 0 1000px 0 var(--lux-theme-form-autofill-background-color) inset;
+    -webkit-box-shadow: 0 0 1000px 0 var(--lux-theme-form-autofill-background-color) inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}

@@ -1,0 +1,33 @@
+@use "@angular/material" as mat;
+
+.lux-select-panel-ac,
+.lux-select-panel-ac-multiple {
+  @include mat.select-overrides(
+    (
+      panel-background-color: var(--lux-theme-panel-bg-color),
+      container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
+    )
+  );
+}
+
+lux-select-ac {
+
+  @include mat.select-overrides(
+    (
+      enabled-arrow-color: var(--lux-theme-primary-color),
+      trigger-text-size: var(--lux-theme-form-control-font-size),
+    )
+  );
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+  }
+
+  // Hier kann nicht der Token "disabled-arrow-color" verwendet werden, da dieser
+  // nur greifen würde, wenn das mat-select-Element in einem mat-form-field verwendet wird.
+  [aria-disabled="true"] {
+    .mat-mdc-select-arrow {
+      color: var(--lux-theme-dark-disabled-text);
+    }
+  }
+}
