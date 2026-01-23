@@ -26,31 +26,32 @@
 
 ### Allgemein
 
-| Name     | Beschreibung  |
-| -------- | ------------- |
-| selector | lux-chips-ac  |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-chips-ac |
 
 Ober-Komponente der LuxChips. Kann einzelne LuxChip- oder auch die LuxChipGroup-Komponenten enthalten.
 
 ### @Input
 
-| Name                   | Typ                   | Beschreibung                                                                                                                                                                                                                                           |
-| ---------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| luxOrientation         | LuxChipsOrientation   | Definiert die Ausrichtung der Chips. Mögliche Werte: 'horizontal' \| 'vertical'                                                                                                                                                                        |
-| luxInputAllowed        | boolean               | Boolean-Flag der definiert ob das Input-Feld für das dynamische Hinzufügen von Chips verfügbar sein soll.                                                                                                                                              |
-| luxInputLabel          | string                | Der Text der über dem Input-Feld angezeigt wird.                                                                                                                                                                                                       |
-| luxDisabled            | boolean               | Boolean-Flag der definiert ob diese LuxChips-Komponente und alle darunterliegenden LuxChipGroups und LuxChips deaktiviert sein sollen. Deaktiviert ebenfalls das Input-Feld, wenn auf true gesetzt.                                                    |
-| luxNewChipGroup        | LuxChipGroupComponent | Die LuxChipGroup der dynamisch neue LuxChips hinzugefügt werden, wenn eine Eingabe in dem Input-Feld gemacht wird. Wenn nicht gesetzt wird stattdessen das @Output-Event luxChipAdded ausgelöst, damit der Aufrufer selbst reagieren kann.             |
-| luxAutocompleteOptions | string[]              | Optionales Array, welches dann - vorausgesetzt luxInputAllowed hat den Wert true - in einem Autocomplete-Feld unterhalb des Inputs dargestellt wird.                                                                                                   |
-| luxPlaceholder         | string                | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                 |
-| luxLabelLongFormat     | boolean               | Bestimmt, ob das Label mehrzeilig sein kann. Nutzung nur in Spalten empfohlen, da die Höhe des Formcontrols variieren kann. Dadurch kann die Ausrichtung an der Baseline nicht mehr gewährleistet werden.                                              |
-| luxOptionBlockSize     | number                | Lädt die Optionen in der eingestellten Blockgröße nach, wenn gescrollt wird.                                                                                                                                                                           |
-| luxStrict              | boolean               | Gibt an, ob nur Chips ausgewählt werden dürfen, die Teil der Optionen sind (siehe `luxAutocompleteOptions`). Doppelte Einträge sind ebenfalls nicht erlaubt.                                                                                           |
-| luxControlBinding      | string                | Das Controlbinding (z.B. countries) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                           |
-| luxControlValidators   | ValidatorFnType       | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen. |
-| luxRequired            | boolean               | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                              |
-| luxDense               | boolean               | Property um die Höhe der Komponente zu verringern. Diese Eigenschaft ist für den Einsatz in großen Formularen gedacht und soll nicht standardmäßig in einer Anwendung genutzt werden.                                                                  |
-| luxHideBorder          | boolean               | Mit dieser Property kann die Border um das Inputelement ausgeblendet werden, falls luxInputAllowed auf false gesetzt ist.                                                                                                                              |
+| Name                       | Typ                   | Beschreibung                                                                                                                                                                                                                                           |
+| -------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| luxOrientation             | LuxChipsOrientation   | Definiert die Ausrichtung der Chips. Mögliche Werte: 'horizontal' \| 'vertical'                                                                                                                                                                        |
+| luxInputAllowed            | boolean               | Boolean-Flag der definiert ob das Input-Feld für das dynamische Hinzufügen von Chips verfügbar sein soll.                                                                                                                                              |
+| luxInputLabelAlwaysVisible | boolean               | Blendet das Label auch dann ein, wenn `luxInputAllowed` auf false gesetzt ist.                                                                                                                                                                         |
+| luxInputLabel              | string                | Der Text der über dem Input-Feld angezeigt wird.                                                                                                                                                                                                       |
+| luxDisabled                | boolean               | Boolean-Flag der definiert ob diese LuxChips-Komponente und alle darunterliegenden LuxChipGroups und LuxChips deaktiviert sein sollen. Deaktiviert ebenfalls das Input-Feld, wenn auf true gesetzt.                                                    |
+| luxNewChipGroup            | LuxChipGroupComponent | Die LuxChipGroup der dynamisch neue LuxChips hinzugefügt werden, wenn eine Eingabe in dem Input-Feld gemacht wird. Wenn nicht gesetzt wird stattdessen das @Output-Event luxChipAdded ausgelöst, damit der Aufrufer selbst reagieren kann.             |
+| luxAutocompleteOptions     | string[]              | Optionales Array, welches dann - vorausgesetzt luxInputAllowed hat den Wert true - in einem Autocomplete-Feld unterhalb des Inputs dargestellt wird.                                                                                                   |
+| luxPlaceholder             | string                | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                 |
+| luxLabelLongFormat         | boolean               | Bestimmt, ob das Label mehrzeilig sein kann. Nutzung nur in Spalten empfohlen, da die Höhe des Formcontrols variieren kann. Dadurch kann die Ausrichtung an der Baseline nicht mehr gewährleistet werden.                                              |
+| luxOptionBlockSize         | number                | Lädt die Optionen in der eingestellten Blockgröße nach, wenn gescrollt wird.                                                                                                                                                                           |
+| luxStrict                  | boolean               | Gibt an, ob nur Chips ausgewählt werden dürfen, die Teil der Optionen sind (siehe `luxAutocompleteOptions`). Doppelte Einträge sind ebenfalls nicht erlaubt.                                                                                           |
+| luxControlBinding          | string                | Das Controlbinding (z.B. countries) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                           |
+| luxControlValidators       | ValidatorFnType       | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen. |
+| luxRequired                | boolean               | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                              |
+| luxDense                   | boolean               | Property um die Höhe der Komponente zu verringern. Diese Eigenschaft ist für den Einsatz in großen Formularen gedacht und soll nicht standardmäßig in einer Anwendung genutzt werden.                                                                  |
+| luxHideBorder              | boolean               | Mit dieser Property kann die Border um das Inputelement ausgeblendet werden, falls luxInputAllowed auf false gesetzt ist.                                                                                                                              |
 
 ### @Output
 
@@ -86,11 +87,11 @@ Um den Inhalt eines einzelnen Chips zu definieren, erwartet die LuxChipGroup ein
 
 #### @Output
 
-| Name            | Typ                              | Beschreibung                                                                                                                  |
-| --------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| luxChipClicked  | EventEmitter \<number>           | Output-Event welches ausgelöst wird, wenn ein LuxChip angeklickt wird. Gibt das entsprechende Chip als Übergabeparameter mit. |
-| luxChipAdded    | EventEmitter \<string>           | Output-Event welches ausgelöst wird, wenn ein LuxChip hinzugefügt wird.                                                       |
-| luxChipRemoved  | EventEmitter \<number>           | Output-Event welches ausgelöst wird, wenn ein LuxChip entfernt wird.                                                          |
+| Name           | Typ                    | Beschreibung                                                                                                                  |
+| -------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| luxChipClicked | EventEmitter \<number> | Output-Event welches ausgelöst wird, wenn ein LuxChip angeklickt wird. Gibt das entsprechende Chip als Übergabeparameter mit. |
+| luxChipAdded   | EventEmitter \<string> | Output-Event welches ausgelöst wird, wenn ein LuxChip hinzugefügt wird.                                                       |
+| luxChipRemoved | EventEmitter \<number> | Output-Event welches ausgelöst wird, wenn ein LuxChip entfernt wird.                                                          |
 
 ### LuxChipComponent
 
@@ -112,10 +113,10 @@ Stellt einen einzelnen Chip dar.
 
 #### @Output
 
-| Name            | Typ                              | Beschreibung                                                                                                                         |
-| --------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| luxChipRemoved  | EventEmitter \<number>           | Output-Event welches ausgelöst wird, wenn auf das "x"-Symbol geklickt wird. Gibt den entsprechenden Index als Übergabeparameter mit. |
-| luxChipClicked  | EventEmitter \<number>           | Output-Event welches ausgelöst wird, wenn ein LuxChip angeklickt wird. Gibt den entsprechenden Index als Übergabeparameter mit.      |
+| Name           | Typ                    | Beschreibung                                                                                                                         |
+| -------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| luxChipRemoved | EventEmitter \<number> | Output-Event welches ausgelöst wird, wenn auf das "x"-Symbol geklickt wird. Gibt den entsprechenden Index als Übergabeparameter mit. |
+| luxChipClicked | EventEmitter \<number> | Output-Event welches ausgelöst wird, wenn ein LuxChip angeklickt wird. Gibt den entsprechenden Index als Übergabeparameter mit.      |
 
 ## Beispiele
 

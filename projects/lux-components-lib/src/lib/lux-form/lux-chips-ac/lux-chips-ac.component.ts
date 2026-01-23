@@ -91,6 +91,7 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implemen
   @Input() luxPlaceholder = $localize`:@@luxc.chips.input.placeholder.lbl:eingeben oder auswählen`;
   @Input() luxOptionBlockSize = 500;
   @Input() luxHideBorder = false;
+  @Input() luxInputLabelAlwaysVisible = false;
 
   @Output() luxChipAdded = new EventEmitter<string>();
 

@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    LuxAccordionComponent,
-    LuxAutofocusDirective,
-    LuxChipAcComponent,
-    LuxChipAcGroupComponent,
-    LuxChipsAcComponent,
-    LuxChipsAcOrientation,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxThemePalette,
-    LuxToggleAcComponent
+  LuxAccordionComponent,
+  LuxAutofocusDirective,
+  LuxChipAcComponent,
+  LuxChipAcGroupComponent,
+  LuxChipsAcComponent,
+  LuxChipsAcOrientation,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxSelectAcComponent,
+  LuxThemePalette,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -79,6 +79,7 @@ export class ChipAuthenticExampleComponent {
   labelLongFormat = false;
   denseFormat = false;
   hideBorder = false;
+  inputLabelAlwaysVisible = false;
 
   constructor() {
     this.form = new FormGroup({

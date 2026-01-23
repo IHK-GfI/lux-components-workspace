@@ -61,6 +61,36 @@ describe('LuxChipComponent-Authentic', () => {
       flush();
     }));
 
+    it('Sollte das Label ausblenden, wenn kein Input erlaubt ist', fakeAsync(() => {
+      testComponent.inputAllowed = false;
+      testComponent.inputLabelAlwaysVisible = false;
+      LuxTestHelper.wait(fixture);
+
+      const labelElement = fixture.debugElement.query(By.css('.lux-form-label-authentic'));
+      expect(labelElement).toBeNull();
+    }));
+
+    it('Sollte das Label anzeigen, wenn luxInputLabelAlwaysVisible aktiv ist', fakeAsync(() => {
+      testComponent.inputAllowed = false;
+      testComponent.inputLabelAlwaysVisible = true;
+      LuxTestHelper.wait(fixture);
+
+      const labelElement = fixture.debugElement.query(By.css('.lux-form-label-authentic'));
+      expect(labelElement).not.toBeNull();
+      expect(labelElement!.nativeElement.textContent).toContain('Neu');
+    }));
+
+
+    it('Sollte das Label anzeigen, wenn luxInputAllowed aktiv ist', fakeAsync(() => {
+      testComponent.inputAllowed = true;
+      testComponent.inputLabelAlwaysVisible = false;
+      LuxTestHelper.wait(fixture);
+
+      const labelElement = fixture.debugElement.query(By.css('.lux-form-label-authentic'));
+      expect(labelElement).not.toBeNull();
+      expect(labelElement!.nativeElement.textContent).toContain('Neu');
+    }));
+
     it('Sollte alle Chips deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
@@ -685,6 +715,7 @@ class LuxFormRequiredValueComponent {
     <lux-chips-ac
       [luxDisabled]="disabled"
       [luxInputAllowed]="inputAllowed"
+      [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
       [luxInputLabel]="inputLabel"
       [luxOrientation]="chipOrientation"
       [luxNewChipGroup]="chipGroup"
@@ -692,15 +723,15 @@ class LuxFormRequiredValueComponent {
       [luxAutocompleteOptions]="autocompleteOptions"
     >
       @for (chip of chips; track chip.label; let i = $index) {
-      <lux-chip-ac
-        [luxDisabled]="chip.disabled"
-        [luxColor]="chip.color"
-        [luxRemovable]="chip.removable"
-        (luxChipClicked)="chipClicked($event)"
-        (luxChipRemoved)="chipRemoved($event)"
-      >
-        {{ chip.label }}
-      </lux-chip-ac>
+        <lux-chip-ac
+          [luxDisabled]="chip.disabled"
+          [luxColor]="chip.color"
+          [luxRemovable]="chip.removable"
+          (luxChipClicked)="chipClicked($event)"
+          (luxChipRemoved)="chipRemoved($event)"
+        >
+          {{ chip.label }}
+        </lux-chip-ac>
       }
       <lux-chip-ac-group
         [luxRemovable]="groupRemovable"
@@ -719,6 +750,7 @@ class LuxFormRequiredValueComponent {
 class ChipsComponent {
   disabled = false;
   inputAllowed = false;
+  inputLabelAlwaysVisible = false;
   inputLabel = 'Neu';
   chipOrientation: LuxChipsAcOrientation = 'horizontal';
   autocomplete = false;

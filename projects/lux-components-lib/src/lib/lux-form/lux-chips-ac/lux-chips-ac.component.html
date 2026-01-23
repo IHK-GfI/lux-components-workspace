@@ -1,7 +1,7 @@
 <div class="lux-chips" #chipsContainerDiv>
   <lux-form-control-wrapper
     [luxFormComponent]="this"
-    [luxIgnoreDefaultLabel]="!luxInputAllowed"
+    [luxIgnoreDefaultLabel]="!luxInputAllowed && !luxInputLabelAlwaysVisible"
     [luxLabelLongFormat]="luxLabelLongFormat"
     luxTagId="luxChipsWrapper"
     [ngClass]="{ 'lux-hide-input-border': luxHideBorder && !luxInputAllowed }"
