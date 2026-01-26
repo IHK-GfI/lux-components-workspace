@@ -1,0 +1,75 @@
+<example-base-structure exampleTitle="Popup" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxPopup">
+  <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col lux-gap-10">
+    <p>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+      erat, sed diam
+      <span
+        class="lux-text-highlight-alert"
+        tabindex="0"
+        [luxPopupTriggerFor]="infoPopup.popup"
+        [luxPopupPosition]="position"
+        [luxPopupShowDelay]="showDelay"
+        [luxPopupHideDelay]="hideDelay"
+        [luxPopupDisabled]="disabled"
+      >
+        voluptua </span
+      >. At vero eos et accusam et justo duo dolores et ea rebum.
+    </p>
+
+    <lux-button
+      luxLabel="Button (Non-Persistent)"
+      [luxStroked]="true"
+      luxColor="primary"
+      [luxPopupTriggerFor]="infoPopup.popup"
+      [luxPopupPosition]="position"
+      [luxPopupShowDelay]="showDelay"
+      [luxPopupHideDelay]="hideDelay"
+      [luxPopupDisabled]="disabled"
+    ></lux-button>
+
+    <app-popup-example-info-popup
+      #infoPopup="popupExampleInfoPopup"
+      [title]="title"
+      [text]="text"
+      [minWidth]="minWidth"
+      [maxWidth]="maxWidth"
+    ></app-popup-example-info-popup>
+
+    <lux-button
+      luxAriaLabel="Info"
+      luxIconName="lux-info"
+      luxColor="primary"
+      [luxStroked]="false"
+      [luxRounded]="true"
+      [luxPopupTriggerFor]="actionPopup"
+      [luxPopupPosition]="position"
+      [luxPopupDisabled]="disabled"
+    ></lux-button>
+
+    <lux-popup
+      #actionPopup
+      [luxTitle]="title"
+      [luxPersistent]="true"
+      [luxMinWidth]="minWidth"
+      [luxMaxWidth]="maxWidth"
+      (luxClosed)="onClosed($event)"
+    >
+      <p>{{ text }}</p>
+      <ng-template luxPopupActions>
+        <lux-button luxLabel="Verstanden" luxColor="primary" (luxClicked)="onAction(actionPopup, 'Verstanden')"></lux-button>
+        <lux-link luxLabel="Mehr erfahren" (luxClicked)="onAction(actionPopup, 'Mehr erfahren')"></lux-link>
+      </ng-template>
+    </lux-popup>
+  </example-base-content>
+
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-2">
+    <lux-input-ac luxLabel="Titel" [(luxValue)]="title"></lux-input-ac>
+    <lux-textarea-ac luxLabel="Text" rows="3" [(luxValue)]="text"></lux-textarea-ac>
+    <lux-select-ac luxLabel="Position" [(luxSelected)]="position" [luxOptions]="positionOptions"></lux-select-ac>
+    <lux-input-ac luxType="number" luxLabel="Show-Delay (ms)" [luxNumberAlignLeft]="true" [(luxValue)]="showDelay"></lux-input-ac>
+    <lux-input-ac luxType="number" luxLabel="Hide-Delay (ms)" [luxNumberAlignLeft]="true" [(luxValue)]="hideDelay"></lux-input-ac>
+    <lux-input-ac luxType="number" luxLabel="Minimale Breite (px)" [luxNumberAlignLeft]="true" [(luxValue)]="minWidth"></lux-input-ac>
+    <lux-input-ac luxType="number" luxLabel="Maximale Breite (px)" [luxNumberAlignLeft]="true" [(luxValue)]="maxWidth"></lux-input-ac>
+    <lux-toggle-ac luxLabel="Trigger deaktivieren" [(luxChecked)]="disabled" [luxNoTopLabel]="true"></lux-toggle-ac>
+  </example-base-simple-options>
+</example-base-structure>
