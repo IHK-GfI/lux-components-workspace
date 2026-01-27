@@ -75,7 +75,7 @@ export class AutocompleteAuthenticExampleComponent {
     { label: 'Vertretungsaufgaben 2', short: 'VA2', value: 'D2' }
   ];
   stringOptions = this.options.map((o) => o.label);
-  stringOptions2 = this.options2.map((o) => o.label);
+  stringOptions2 = ['Nur eine Option'];
 
   renderProperties: RenderPropertyItem[] = [
     { label: 'Bezeichnung (normal)', value: 'label' },
