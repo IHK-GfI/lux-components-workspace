@@ -1,0 +1,19 @@
+@if (luxSessionTimerService.showSessionTimer() && !mobileView) { @if (luxSessionTimerService.showSeconds()) {
+<lux-button
+  luxTagId="lux-session-timer-button"
+  luxIconName="lux-interface-time-reset"
+  luxLabel="{{ luxSessionTimerService.formattedSeconds() }} Sekunden"
+  (luxClicked)="extendTimer()"
+  [luxLoading]="luxLoading"
+  luxTooltip="Laufzeit verlängern?"
+></lux-button>
+} @else {
+<lux-button
+  luxTagId="lux-session-timer-button"
+  luxIconName="lux-interface-time-reset"
+  luxLabel="{{ luxSessionTimerService.formattedMinutes() }} Minuten"
+  (luxClicked)="extendTimer()"
+  [luxLoading]="luxLoading"
+  luxTooltip="Laufzeit verlängern?"
+></lux-button>
+} }

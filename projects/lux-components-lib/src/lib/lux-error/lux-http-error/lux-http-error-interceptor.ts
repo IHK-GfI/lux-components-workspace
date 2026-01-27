@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { LuxUtil } from '../../lux-util/lux-util';
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +17,15 @@ export class LuxHttpErrorInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const isAssetRequest = req.url.includes('/assets/');
     return next.handle(req).pipe(
       tap({
         next: () => {
-          if (!isAssetRequest) {
+          if (!LuxUtil.checkIfRequestIsAssetRequest(req)) {
             LuxHttpErrorInterceptor.dataStream.next([]);
           }
         },
         error: (errorResponse) => {
-          if (!isAssetRequest && errorResponse instanceof HttpErrorResponse && errorResponse.status === 400) {
+          if (!LuxUtil.checkIfRequestIsAssetRequest(req) && errorResponse instanceof HttpErrorResponse && errorResponse.status === 400) {
             LuxHttpErrorInterceptor.dataStream.next(LuxHttpErrorInterceptor.extractErrors(errorResponse.error));
           }
         }

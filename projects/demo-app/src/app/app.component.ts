@@ -40,7 +40,8 @@ import {
   LuxTooltipDirective,
   LuxDividerComponent,
   LuxMenuSectionTitleComponent,
-  LuxIconRegistryService
+  LuxIconRegistryService,
+  LuxAppHeaderAcSessionTimerComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
@@ -82,7 +83,8 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
     HammerModule,
     CdkScrollable,
     LuxDividerComponent,
-    LuxMenuSectionTitleComponent
+    LuxMenuSectionTitleComponent,
+    LuxAppHeaderAcSessionTimerComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -241,5 +243,13 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.tenantLogoConfig?.luxTenantLogoClicked) {
       this.tenantLogoConfig.luxTenantLogoClicked();
     }
+  }
+
+  loginUser() {
+    this.router.navigate(['/']);
+  }
+
+  logoutUser() {
+    this.router.navigate(['/']);
   }
 }

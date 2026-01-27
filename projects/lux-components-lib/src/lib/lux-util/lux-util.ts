@@ -16,6 +16,7 @@ import {
 } from '@angular/cdk/keycodes';
 import { FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { LuxBgAllColor, LuxBgAllColors } from './lux-colors.enum';
+import { HttpRequest } from '@angular/common/http';
 
 export class LuxUtil {
   public static readonly ISO_8601_FULL = new RegExp('^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$', 'i');
@@ -400,5 +401,14 @@ export class LuxUtil {
     }
 
     return message;
+  }
+
+  /**
+   * Diese Methode prüft, ob es sich um einen Asset-Request handelt. Dies ist der Fall wenn in der URL "/assets/" vorkommt.
+   * @param request
+   */
+
+  public static checkIfRequestIsAssetRequest(request: HttpRequest<any>): boolean {
+    return request.url.includes('/assets/');
   }
 }

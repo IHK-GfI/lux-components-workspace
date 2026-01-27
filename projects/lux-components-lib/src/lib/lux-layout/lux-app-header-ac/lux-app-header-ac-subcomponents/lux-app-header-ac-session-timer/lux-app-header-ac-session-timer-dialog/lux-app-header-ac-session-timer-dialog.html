@@ -1,0 +1,64 @@
+@switch (currentStep()) { @default {
+<lux-dialog-structure luxTagId="lux-session-timer-dialog-default" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content luxTagId="lux-session-timer-dialog-content-default" class="lux-session-timer-dialog-info">
+    <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-time-sleep" luxIconSize="3x"></lux-icon>
+    <h2 i18n="@@luxc.session-timer.dialog.info.title">Sind Sie noch da?</h2>
+    <p i18n="@@luxc.session-timer.dialog.info.message">
+      Bitte bestätigen Sie innerhalb von <strong>2 Minuten</strong> Ihre Anwesenheit. Danach beenden wir diese Sitzung. Sind Sie bei uns in
+      weiteren Anwendungen angemeldet, werden diese ebenfalls beendet. Nicht gespeicherte Angaben werden gelöscht. Dieses dient zum Schutz
+      Ihrer Daten.
+    </p>
+  </lux-dialog-content>
+  <lux-dialog-actions luxTagId="lux-session-timer-dialog-actions-default" class="lux-session-timer-dialog-info-actions">
+    <lux-button
+      luxTagId="lux-session-timer-button-logout"
+      [luxStroked]="true"
+      luxLabel="Abmelden"
+      luxAriaLabel="Abmelden"
+      i18n-luxAriaLabel="@@luxc.session-timer.dialog.logout"
+      luxIconName="lux-interface-logout-circle"
+      (luxClicked)="logoutUser()"
+    ></lux-button>
+    <lux-button
+      luxTagId="lux-session-timer-button-extend-session"
+      [luxFlat]="true"
+      luxColor="primary"
+      luxLabel="Angemeldet bleiben"
+      luxAriaLabel="Angemeldet bleiben"
+      i18n-luxAriaLabel="@@luxc.session-timer.dialog.extendSession"
+      luxIconName="lux-interface-validation-check"
+      (luxClicked)="extendSession()"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>
+} @case ("wait") {
+<lux-dialog-structure luxTagId="lux-session-timer-dialog-wait" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content luxTagId="lux-session-timer-dialog-content-wait" class="lux-session-timer-dialog-waiting">
+    <lux-progress luxType="Spinner" luxMode="indeterminate" luxSize="large"></lux-progress>
+    <h2 i18n="@@luxc.session-timer.dialog.wait.title">Auf Rückmeldung vom Server warten...</h2>
+  </lux-dialog-content>
+</lux-dialog-structure>
+} @case ("logout") {
+<lux-dialog-structure luxTagId="lux-session-timer-dialog-logout" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content luxTagId="lux-session-timer-dialog-content-logout" class="lux-session-timer-dialog-logout">
+    <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-logout-circle" luxIconSize="3x"></lux-icon>
+    <h2 i18n="@@luxc.session-timer.dialog.logout.title">Sie wurden automatisch abgemeldet!</h2>
+    <p i18n="@@luxc.session-timer.dialog.error.message">
+      Sie waren für mehr als 20 Minuten inaktiv und wurden deshalb automatisch abgemeldet. Nicht gespeicherte Informationen wurden aus
+      Sicherheitsgründen gelöscht. Das hilft, Ihre Daten zu schützen.
+    </p>
+  </lux-dialog-content>
+  <lux-dialog-actions luxTagId="lux-session-timer-dialog-actions-logout">
+    <lux-button
+      luxTagId="lux-session-timer-button-back-to-login"
+      [luxFlat]="true"
+      luxLabel="Zum Login"
+      luxAriaLabel="Zum Login"
+      i18n-luxAriaLabel="@@luxc.session-timer.dialog.backToLogin"
+      luxIconName="lux-interface-login-circle"
+      luxColor="primary"
+      (luxClicked)="backToLogin()"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>
+} }

@@ -122,6 +122,14 @@
           [luxNoLabels]="true"
         ></lux-toggle-ac>
       </lux-checkbox-container-ac>
+
+      <h3>Session-Timer</h3>
+      <lux-input-ac
+        luxLabel="Url des Session-Timers"
+        [(luxValue)]="currentConfig.sessionTimerConfig!.url"
+        (luxValueChange)="updateConfig()"
+        [luxNoBottomLabel]="true"
+      ></lux-input-ac>
     </lux-card-content>
   </lux-card>
 </div>

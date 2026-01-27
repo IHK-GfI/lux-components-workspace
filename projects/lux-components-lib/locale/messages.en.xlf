@@ -1408,6 +1408,70 @@
           <context context-type="linenumber">395</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.wait.title" datatype="html">
+        <source>Auf Rückmeldung vom Server warten...</source>
+        <target>Waiting for server response...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.backToLogin" datatype="html">
+        <source>Zum Login</source>
+        <target>Back to login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.logout.title" datatype="html">
+        <source>Sie wurden automatisch abgemeldet!</source>
+        <target>You have been logged out automatically!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.error.message" datatype="html">
+        <source> Sie waren für mehr als 20 Minuten inaktiv und wurden deshalb automatisch abgemeldet. Nicht gespeicherte Informationen wurden aus Sicherheitsgründen gelöscht. Das hilft, Ihre Daten zu schützen. </source>
+        <target> You were inactive for more than 20 minutes and have been logged out automatically. Unsaved information has been deleted for security reasons. This helps to protect your data. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.logout" datatype="html">
+        <source>Abmelden</source>
+        <target>Logout</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.extendSession" datatype="html">
+        <source>Angemeldet bleiben</source>
+        <target>Stay logged in</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.info.title" datatype="html">
+        <source>Sind Sie noch da?</source>
+        <target>Are you still there?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.session-timer.dialog.info.message" datatype="html">
+        <source> Bitte bestätigen Sie innerhalb von <x id="START_TAG_STRONG" ctype="x-strong"/>2 Minuten<x id="CLOSE_TAG_STRONG" ctype="x-strong"/> Ihre Anwesenheit. Danach beenden wir diese Sitzung. Sind Sie bei uns in weiteren Anwendungen angemeldet, werden diese ebenfalls beendet. Nicht gespeicherte Angaben werden gelöscht. Dieses dient zum Schutz Ihrer Daten. </source>
+        <target> Please confirm your presence within <x id="START_TAG_STRONG" ctype="x-strong"/>2 minutes<x id="CLOSE_TAG_STRONG" ctype="x-strong"/>. After that, we will end this session. If you are logged in to other applications, these will also be terminated. Unsaved information will be deleted. This is to protect your data. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog.component.html</context>
+          <context context-type="linenumber">1,3</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

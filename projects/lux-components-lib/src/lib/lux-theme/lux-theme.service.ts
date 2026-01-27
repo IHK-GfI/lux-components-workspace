@@ -74,6 +74,7 @@ export class LuxThemeService {
       const link = document.createElement('link') as HTMLLinkElement;
       link.rel = 'stylesheet';
       link.href = stylesUrl;
+      link.type = 'text/css';
       link.onerror = reject;
       link.onload = () => resolve(link);
       parent.appendChild(link);

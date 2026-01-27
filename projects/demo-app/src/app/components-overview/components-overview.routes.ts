@@ -65,7 +65,8 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'textbox', loadComponent: () => import('./textbox-example/textbox-example.component').then(m => m.TextboxExampleComponent) },
       { path: 'tenant-logo', loadComponent: () => import('./tenant-logo-example/tenant-logo-example.component').then(m => m.TenantLogoExampleComponent) },
       { path: 'tour-hint', loadComponent: () => import('./tour-hint-example/tour-hint-example.component').then(m => m.TourHintExampleComponent) },
-      { path: 'breadcrumb', loadComponent: () => import('./breadcrumb-example/breadcrumb-example.component').then(m => m.BreadcrumbExampleComponent) }
+      { path: 'breadcrumb', loadComponent: () => import('./breadcrumb-example/breadcrumb-example.component').then(m => m.BreadcrumbExampleComponent) },
+      { path: 'session-timer', loadComponent: () => import('./session-timer-example/session-timer-example.component').then(m => m.SessionTimerExampleComponent) }
     ]
   }
 ];

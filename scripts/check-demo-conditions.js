@@ -23,7 +23,7 @@ if (!fs.existsSync(pathLib)) {
 //Prüfen ob relative Imports in der Demo sind
 const glob = require("glob");
 
-const files = glob.sync("./projects/demo-app/src/app/components-overview/**/*.ts");
+const files = glob.sync("./projects/demo-app/src/app /**/*.ts");
 
 files.forEach((file) => {
   const content = fs.readFileSync(file, "utf8");

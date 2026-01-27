@@ -1,0 +1,16 @@
+<example-base-structure exampleTitle="Session-Timer" exampleDocumentationHref="TODO">
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    Bei einer verbleibenden Session-Zeit von 2 minuten wird ein Dialog geöffnet, mit dem die Session verlängert oder beendet werden kann.
+    Mit dem Button kann der Dialog manuell geöffnet werden.
+    <lux-button
+      luxLabel="Dialog öffnen"
+      [luxFlat]="true"
+      luxColor="primary"
+      (luxClicked)="timerService.openDialog()"
+      luxHint="test"
+    ></lux-button>
+    <div class="lux-mt-3"></div>
+    <lux-input-ac luxLabel="Startzeit der Session in Sekunden" [(luxValue)]="startingSeconds"></lux-input-ac>
+    <lux-button luxLabel="Zeit setzen" [luxFlat]="true" luxColor="primary" (luxClicked)="setTimer()"></lux-button>
+  </example-base-simple-options>
+</example-base-structure>
