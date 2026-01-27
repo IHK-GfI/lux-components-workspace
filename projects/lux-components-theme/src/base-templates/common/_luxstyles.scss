@@ -56,6 +56,24 @@ h6 {
   margin-block-end: 0.8rem;
 }
 
+a {
+  background-color: var(--lux-theme-link-plain-background-color);
+  color: var(--lux-theme-link-plain-color);
+  text-decoration: underline;
+
+  &:hover {
+    background-color: var(--lux-theme-link-plain-hover-background-color);
+    color: var(--lux-theme-link-plain-hover-color);
+    cursor: pointer;
+  }
+
+  &:disabled {
+    color: var(--lux-theme-dark-disabled-text);
+    cursor: text;
+    text-decoration: none;
+  }
+}
+
 .lux-app-header-bg {
   background-color: var(--lux-theme-app-header-bg);
 }
