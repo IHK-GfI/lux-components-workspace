@@ -1,0 +1,54 @@
+.lux-popup-panel {
+  background-color: var(--lux-theme-panel-bg-color);
+  border: 1px solid var(--lux-theme-app-border-color);
+  border-radius: var(--lux-theme-app-border-radius);
+}
+
+.lux-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: var(--lux-theme-popup-panel-padding);
+  border-radius: var(--lux-theme-app-border-radius);
+  animation: lux-popup-fade-in var(--lux-theme-popup-fade-in-duration) ease-out;
+}
+
+.lux-popup__title {
+  font-family: var(--lux-theme-app-headline-font, var(--lux-theme-app-font-family));
+  font-size: var(--lux-theme-popup-title-font-size);
+  font-weight: var(--lux-theme-popup-title-font-weight);
+  line-height: var(--lux-theme-popup-title-line-height);
+  margin: 0;
+}
+
+.lux-popup__body {
+  font-size: var(--lux-theme-popup-font-size);
+  font-weight: var(--lux-theme-popup-font-weight);
+  line-height: var(--lux-theme-popup-line-height);
+}
+
+.lux-popup__actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes lux-popup-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// Focus-Styling für Popup
+
+.lux-popup {
+  &:focus-visible {
+    outline: var(--lux-theme-outline-width) var(--lux-theme-outline-style) var(--lux-theme-outline-color-dark);
+  }
+}

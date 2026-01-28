@@ -374,6 +374,16 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-messagebox-lightblue: var(--lux-theme-custom-lightblue);
   --lux-theme-messagebox-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
+  // LUX-Popup
+  --lux-theme-popup-fade-in-duration: 125ms;
+  --lux-theme-popup-panel-padding: 16px;
+  --lux-theme-popup-title-font-size: 1rem;
+  --lux-theme-popup-title-line-height: normal;
+  --lux-theme-popup-title-font-weight: 500;
+  --lux-theme-popup-font-size: 0.875rem;
+  --lux-theme-popup-line-height: normal;
+  --lux-theme-popup-font-weight: 400;
+
   // LUX-Stepper-Large
   --lux-theme-stepper-large-nav-item-font-size: 1rem;
   --lux-theme-stepper-large-nav-item-font-weight: 600;

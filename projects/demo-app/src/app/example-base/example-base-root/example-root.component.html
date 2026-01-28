@@ -32,6 +32,10 @@
           class="example-component-list-item lux-color-primary-20"
           tabindex="0"
           role="button"
+          [luxBadgeNotification]="component.news ? 'neu' : ''"
+          luxBadgeColor="accent"
+          luxBadgePosition="above before"
+          luxBadgeNotification
           [ngClass]="{
             'example-component-list-item-selected':
               navigationService.selectedComponent && navigationService.selectedComponent.label === component.label
