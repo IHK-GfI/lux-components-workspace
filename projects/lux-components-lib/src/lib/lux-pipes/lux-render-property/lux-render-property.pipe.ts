@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'luxRenderProperty' })
+@Pipe({ name: 'luxRenderProperty', pure: false })
 export class LuxRenderPropertyPipe implements PipeTransform {
   transform(value: any, renderPropertyName: string): string {
     if (!renderPropertyName) {
