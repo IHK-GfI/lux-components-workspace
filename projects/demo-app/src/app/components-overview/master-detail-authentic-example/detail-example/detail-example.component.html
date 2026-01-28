@@ -3,6 +3,20 @@
     <div class="lux-flex lux-flex-col">
       <div class="lux-grid lux-grid-cols-2 lt-lg:lux-grid-cols-1 lux-gap-8">
         <lux-input-ac
+          luxName="master-detail_titleDetail"
+          luxLabel="Title"
+          [luxNoBottomLabel]="true"
+          [(luxValue)]="selectedDetail.title"
+        >
+        </lux-input-ac>
+        <lux-input-ac
+          luxName="master-detail_subtitleDetail"
+          luxLabel="Subtitle"
+          [luxNoBottomLabel]="true"
+          [(luxValue)]="selectedDetail.subtitle"
+        >
+        </lux-input-ac>
+        <lux-input-ac
           luxName="master-detail_luxEmptyLabelDetail"
           luxLabel="luxEmptyLabelDetail"
           luxHint="Diese Property bestimmt das Label welches angezeigt wird, wenn kein Detail selektiert ist."

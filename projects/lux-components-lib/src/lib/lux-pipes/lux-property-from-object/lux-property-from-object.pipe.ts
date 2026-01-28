@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { LuxUtil } from '../../lux-util/lux-util';
 
-@Pipe({ name: 'luxPropertyFromObject' })
+@Pipe({ name: 'luxPropertyFromObject', pure: false })
 export class LuxPropertyFromObjectPipe implements PipeTransform {
   /**
    * Ruft die Funktion aus Util auf, um ein Property aus einem Objekt (auch mit Unterpfaden) auszulesen.
