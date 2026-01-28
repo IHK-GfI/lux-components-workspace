@@ -49,7 +49,7 @@
       [displayWith]="displayFn.bind(this)"
       (optionSelected)="selected($event)"
     >
-      @for (option of displayedOptions; track option) {
+      @for (option of displayedOptions; track trackOption($index, option)) {
       <mat-option [value]="option">
         <ng-container *ngTemplateOutlet="labelTemplate || optionTemplate; context: { $implicit: option }"></ng-container>
       </mat-option>

@@ -674,6 +674,30 @@ describe('LuxAutocompleteAcComponent', () => {
       discardPeriodicTasks();
     }));
   });
+
+  describe('Single option focus handling', () => {
+    let fixture: ComponentFixture<LuxAutoCompleteSingleOptionComponent>;
+    let component: LuxAutoCompleteSingleOptionComponent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxAutoCompleteSingleOptionComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      tick(component.autocomplete.luxLookupDelay);
+    }));
+
+    it('should not auto-select the only option on focusout', fakeAsync(() => {
+      expect(component.formGroup.get('aufgaben')!.value).toBeNull();
+
+      LuxTestHelper.dispatchFakeEvent(component.autocomplete.matInput.nativeElement, 'focus', true);
+      LuxTestHelper.dispatchFakeEvent(component.autocomplete.matInput.nativeElement, 'focusout', true);
+      LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
+
+      expect(component.formGroup.get('aufgaben')!.value).toBeNull();
+      expect(component.autocomplete.luxValue).toBeNull();
+      discardPeriodicTasks();
+    }));
+  });
 });
 
 @Component({
@@ -718,10 +742,7 @@ class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
 @Component({
   selector: 'lux-autocomplete-with-custom-option-template-component',
   template: `
-    <lux-autocomplete-ac luxLabel="Autocomplete"
-                         [luxOptions]="options"
-                         [(luxValue)]="selected"
-                         [luxStrict]="strict"> </lux-autocomplete-ac>
+    <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict"> </lux-autocomplete-ac>
 
     <ng-template let-option #labelTemplate>
       <div>
@@ -916,6 +937,25 @@ class LuxAutoCompleteNotAnOptionComponent {
   }
 
   onSave() {}
+}
+
+@Component({
+  selector: 'lux-autocomplete-single-option-component',
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"></lux-autocomplete-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
+})
+class LuxAutoCompleteSingleOptionComponent {
+  options: TestOption[] = [{ label: 'Einzige Aufgabe', value: 'ONLY' }];
+
+  @ViewChild(LuxAutocompleteAcComponent) autocomplete!: LuxAutocompleteAcComponent<TestOption, TestOption>;
+
+  formGroup = new FormGroup({
+    aufgaben: new FormControl<TestOption | null>(null)
+  });
 }
 
 /**

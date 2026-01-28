@@ -456,7 +456,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     if (this.luxStrict) {
       const filterResult = this.filter(this.matInput.nativeElement.value);
 
-      if (filterResult.length === 1) {
+      if (filterResult.length === 1 && this.luxOptions.length > 1) {
         let selected;
         if (this.luxStrict && !!this.luxPickValue) {
           selected = this.luxPickValue(filterResult[0]);
@@ -485,12 +485,38 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     } catch {
       // Ignorieren
     }
-    
+
     // Panel nur öffnen, wenn noch nicht offen
     if (this.matAutoComplete && !this.matAutoComplete.panelOpen) {
       if (!this.matAutoComplete.panelOpen) {
         this.matAutoComplete.openPanel();
       }
     }
+  }
+
+  /**
+   * Durch diese track-Funktion wird der folgendfe Fehler vermieden:
+   * NG0955: The provided track expression resulted in duplicated keys for a given collection.
+   * 
+   * @param index
+   * @param option
+   * @returns
+   */
+  trackOption(index: number, option: O): unknown {
+    if (option === null || option === undefined) {
+      return index;
+    }
+
+    if (option instanceof Object) {
+      if (this.luxPickValue) {
+        const pickValue = this.luxPickValue(option);
+        if (pickValue !== undefined && pickValue !== null) {
+          return pickValue;
+        }
+      }
+      return option;
+    }
+
+    return `${option}-${index}`;
   }
 }
