@@ -99,6 +99,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('lookup', 'Lookup-Label'),
     this.create('markdown', 'Markdown'),
     this.create('pipes', 'Timestamp'),
+    this.create('popup', 'Popup', true),
     this.create('popup', 'Dialog'),
     this.create('popup', 'Snackbar'),
     this.create('tenant-logo', 'Tenant-Logo'),

@@ -1,0 +1,32 @@
+<ng-template #popupTemplate>
+  <div
+    class="lux-popup"
+    [class.lux-popup--persistent]="luxPersistent()"
+    [class.lux-popup--transient]="!luxPersistent()"
+    (keydown)="handlePopupKeydown($event)"
+    [attr.id]="popupId"
+    [attr.role]="role"
+    [attr.tabindex]="luxPersistent() ? 0 : -1"
+    [attr.aria-label]="luxAriaLabel() ?? luxTitle() ?? null"
+    [attr.aria-live]="luxPersistent() ? null : 'polite'"
+    [attr.aria-modal]="luxPersistent() ? 'false' : null"
+    [style.min-width.px]="minWidthPx"
+    [style.max-width.px]="maxWidthPx"
+  >
+    @if (luxTitle()) {
+      <div class="lux-popup__title">
+        {{ luxTitle() }}
+      </div>
+    }
+
+    <div class="lux-popup__body">
+      <ng-content></ng-content>
+    </div>
+
+    @if (actions) {
+      <div class="lux-popup__actions">
+        <ng-template [ngTemplateOutlet]="actions.templateRef"></ng-template>
+      </div>
+    }
+  </div>
+</ng-template>
