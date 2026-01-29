@@ -3,6 +3,9 @@
   "version": "19.3.0",
   "description": "",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build-authentic": "del-cli --force ./../../dist/theme/*authentic*.* && sass --style=compressed --load-path=../../node_modules src/authentic/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic-min.css && sass --load-path=../../node_modules src/authentic/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-authentic.css",
     "build-green": "del-cli --force ./../../dist/theme/*green*.* && sass --style=compressed --load-path=../../node_modules src/green/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-green-min.css && sass --load-path=../../node_modules src/green/luxtheme.scss:./../../dist/theme/prebuilt-themes/luxtheme-green.css",

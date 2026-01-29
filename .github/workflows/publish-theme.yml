@@ -37,25 +37,5 @@ jobs:
           npm run pack:theme
           cd dist/theme
           ls -lR
-          npm publish --access public --provenance
-
-  publish-gpr:
-    if: github.ref == 'refs/heads/main'
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 22
-          registry-url: https://npm.pkg.github.com/
-          scope: '@ihk-gfi'
-      - name: Publish Github
-        run: |
-          npm install
-          npm run pack:theme
-          cd dist/theme
-          ls -lR
-          npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB}}
+          npm whoami
+          npm publish
