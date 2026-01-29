@@ -1,14 +1,22 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-1)
-  - [Version 19.0.1](#version-1901)
+  - [Version 19.1.0](#version-1910)
     - [Issues](#issues-2)
-  - [Version 19.0.0](#version-1900)
+  - [Version 19.0.1](#version-1901)
     - [Issues](#issues-3)
+  - [Version 19.0.0](#version-1900)
+    - [Issues](#issues-4)
+
+## Version 19.3.0
+
+### Issues
+
+- Issue #110: Bei hohem Kontrast fehlt das Öffnen-Icon des LUX-Selects (#123)
 
 ## Version 19.2.0
 
