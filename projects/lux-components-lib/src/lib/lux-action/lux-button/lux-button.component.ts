@@ -35,6 +35,8 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
 
   private auxClickSubject = new Subject<MouseEvent>();
   private auxClickSubscription!: Subscription;
+  private clickNotAllowedSubject = new Subject<MouseEvent>();
+  private clickNotAllowedSubscription!: Subscription;
 
   @Input() luxType: 'button' | 'reset' | 'submit' = 'button';
   @Input() luxThrottleTime!: number;
@@ -43,8 +45,10 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   @Input() luxSpinnerMode: LuxProgressModeType = 'indeterminate';
   @Input() luxSpinnerValue = 70;
   @Input() luxLoading = false;
+  @Input() luxDisabledAria = false;
 
   @Output() luxAuxClicked = new EventEmitter<Event>();
+  @Output() luxClickNotAllowed = new EventEmitter<Event>();
 
   @HostBinding('class.lux-uppercase') labelUppercase!: boolean;
 
@@ -78,19 +82,34 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
     this.clickSubscription = this.clickSubject.pipe(throttleTime(this.luxThrottleTime)).subscribe((e) => this.luxClicked.emit(e));
 
     this.auxClickSubscription = this.auxClickSubject.pipe(throttleTime(this.luxThrottleTime)).subscribe((e) => this.luxAuxClicked.emit(e));
+
+    this.clickNotAllowedSubscription = this.clickNotAllowedSubject
+      .pipe(throttleTime(this.luxThrottleTime))
+      .subscribe((e) => this.luxClickNotAllowed.emit(e));
   }
 
   ngOnDestroy() {
     this.configSubscription?.unsubscribe();
     this.clickSubscription?.unsubscribe();
     this.auxClickSubscription?.unsubscribe();
+    this.clickNotAllowedSubscription?.unsubscribe();
   }
 
   clicked(event: MouseEvent) {
+    if (this.shouldHandleNotAllowedClick()) {
+      this.emitClickNotAllowed(event);
+      return;
+    }
+
     this.clickSubject.next(event);
   }
 
   auxClicked(event: MouseEvent) {
+    if (this.shouldHandleNotAllowedClick()) {
+      this.emitClickNotAllowed(event);
+      return;
+    }
+
     this.auxClickSubject.next(event);
   }
 
@@ -109,5 +128,15 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
     }
 
     this.labelUppercase = this.componentsConfigService.isLabelUppercaseForSelector(selector);
+  }
+
+  private shouldHandleNotAllowedClick(): boolean {
+    return !!this.luxDisabledAria && !this.luxDisabled;
+  }
+
+  private emitClickNotAllowed(event: MouseEvent) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.clickNotAllowedSubject.next(event);
   }
 }
