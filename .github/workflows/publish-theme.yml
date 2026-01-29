@@ -2,6 +2,10 @@ name: publish - theme
 
 on: workflow_dispatch # Ermöglicht das manuelle Starten des Workflows
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     if: github.ref == 'refs/heads/main'
@@ -33,9 +37,7 @@ jobs:
           npm run pack:theme
           cd dist/theme
           ls -lR
-          npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM}}
+          npm publish --access public --provenance
 
   publish-gpr:
     if: github.ref == 'refs/heads/main'
