@@ -153,6 +153,46 @@ describe('LuxButtonComponent', () => {
     }));
   });
 
+  describe('Attribut "luxDisabledAria"', () => {
+    let fixture: ComponentFixture<MockButtonComponent>;
+    let testComponent: MockButtonComponent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(MockButtonComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('setzt aria-disabled nur bei Aktivierung', fakeAsync(() => {
+      fixture.componentInstance.disabledAria = false;
+      fixture.detectChanges();
+
+      let buttonEl = fixture.debugElement.query(By.css('button'));
+      expect(buttonEl.nativeElement.getAttribute('aria-disabled')).toBeNull();
+
+      fixture.componentInstance.disabledAria = true;
+      fixture.detectChanges();
+
+      buttonEl = fixture.debugElement.query(By.css('button'));
+      expect(buttonEl.nativeElement.getAttribute('aria-disabled')).toBe('true');
+    }));
+
+    it('emittiert luxClickNotAllowed und kein luxClicked', fakeAsync(() => {
+      const onClickSpy = spyOn(fixture.componentInstance, 'onClick');
+      const onClickNotAllowedSpy = spyOn(fixture.componentInstance, 'onClickNotAllowed');
+      fixture.componentInstance.disabledAria = true;
+      fixture.detectChanges();
+
+      const buttonEl = fixture.debugElement.query(By.css('button'));
+      buttonEl.nativeElement.click();
+      fixture.detectChanges();
+
+      expect(onClickSpy).not.toHaveBeenCalled();
+      expect(onClickNotAllowedSpy).toHaveBeenCalled();
+      discardPeriodicTasks();
+    }));
+  });
+
   describe('Attribut "luxLabel"', () => {
     let fixture: ComponentFixture<MockButtonLabelComponent>;
     let testComponent: MockButtonLabelComponent;
@@ -364,7 +404,9 @@ class Checker {
     <lux-button
       luxLabel="Lorem ipsum 4711"
       [luxDisabled]="disabled"
+      [luxDisabledAria]="disabledAria"
       (luxClicked)="onClick()"
+      (luxClickNotAllowed)="onClickNotAllowed()"
       [luxRounded]="round"
       [luxRaised]="raised"
       [luxFlat]="flat"
@@ -375,12 +417,14 @@ class Checker {
 })
 class MockButtonComponent {
   disabled = false;
+  disabledAria = false;
   round = false;
   raised = false;
   flat = false;
   outlined = false;
 
   onClick() {}
+  onClickNotAllowed() {}
 }
 
 @Component({
