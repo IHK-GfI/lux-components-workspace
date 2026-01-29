@@ -22,9 +22,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung |
-| -------- | ------------ |
-| selector | lux-button   |
+| Name     | Beschreibung    |
+| -------- | --------------- |
+| selector | lux-button      |
 
 ### @Input
 
@@ -38,7 +38,7 @@
 | luxIconName           | string                          | Ein LUX-Iconname.                                                                                                                                                                                         |
 | luxIconShowRight      | boolean                         | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                               |
 | luxTagId              | string                          | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                             |
-| luxDisabled           | boolean                         | Gibt an, ob das Element deaktiviert ist. Alternativ _luxDisabledAria_ verwenden.                                                                                                                          |
+| luxDisabled           | boolean                         | Gibt an, ob das Element deaktiviert ist.                                                                                                                                                                  |
 | luxRounded            | boolean                         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                                      |
 | luxIconAlignWithLabel | boolean                         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                                  |
 | luxThrottleTime       | number                          | Verhindert, dass ein Button mehrfach hinter einander ausgelöst wird. Über diese Property kann mann den Standardwert aus der [Config - buttonConfiguration](config-v19#buttonConfiguration) überschreiben. |
