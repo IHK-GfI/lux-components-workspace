@@ -5,6 +5,7 @@
     (
       background-color: #605e5e,
       disabled-state-background-color: #b9b9b9,
+      text-weight: 600,
       small-size-container-size: 18px,
       container-size: 24px,
       large-size-container-size: 30px,
@@ -28,7 +29,8 @@
   &.mat-badge-accent {
     @include mat.badge-overrides(
       (
-        background-color: var(--lux-theme-accent-70)
+        background-color: var(--lux-theme-accent-70),
+        text-color: var(--lux-theme-dark-primary-text)
       )
     );
   }
