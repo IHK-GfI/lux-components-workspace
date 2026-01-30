@@ -20,6 +20,10 @@
     "watch": "npm-watch"
   },
   "author": "Thomas Dickhut",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IHK-GfI/lux-components-workspace"
+  },
   "license": "IHK-GfI Open-Source-Lizenz",
   "peerDependencies": {
     "@angular/material": "^19.0.0"
