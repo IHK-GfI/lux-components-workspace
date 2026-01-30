@@ -1,7 +1,11 @@
 {
   "name": "@ihk-gfi/lux-components-update",
-  "version": "19.4.1",
+  "version": "19.5.0",
   "description": "Schematics für die Aktualisierung von LUX-Applikationen",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json",
     "clean": "del-cli --force ../../dist/updater/",
@@ -17,6 +21,10 @@
     "lux-components",
     "jast"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IHK-GfI/lux-components-workspace"
+  },
   "workspaces": [
     "./projects/*",
     "./dist/*"

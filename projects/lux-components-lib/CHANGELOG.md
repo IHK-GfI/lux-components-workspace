@@ -1,14 +1,16 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 19.4.0](#version-1940)
+  - [Version 19.5.0](#version-1950)
     - [Issues](#issues)
-  - [Version 19.3.0](#version-1930)
+  - [Version 19.4.0](#version-1940)
     - [Issues](#issues-1)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-2)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-3)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues-4)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -16,7 +18,17 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues-4)
+    - [Issues](#issues-5)
+
+## Version 19.5.0
+
+### Issues
+
+- Issue #110: Bei hohem Kontrast fehlt das Öffnen-Icon des LUX-Selects (#123)
+- Issue #112: Klick auf Input- oder Textarea-Padding führt zu unerwartetem Verhalten (#124)
+- Issue #130: LUX-Lookup-Komponenten an den Lookup-Service 2.x anpassen (#131)
+- Issue #132: Erweiterung von lux-chips-ac um keepInputLabel (#135)
+- Issue #138: Automatische Auswahl der einzigen Option in Autocomplete deaktivierbar machen (#139)
 
 ## Version 19.4.0
 

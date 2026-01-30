@@ -1,6 +1,14 @@
 {
   "name": "@ihk-gfi/lux-components",
-  "version": "19.4.0",
+  "version": "19.5.0",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IHK-GfI/lux-components-workspace"
+  },
   "license": "IHK-GfI Open-Source-Lizenz",
   "peerDependencies": {
     "@angular/common": "^19.0.0",
