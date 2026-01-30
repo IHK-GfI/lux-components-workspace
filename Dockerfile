@@ -19,7 +19,7 @@ RUN npm pkg delete scripts.prepare && \
     ls -a && \
     cd ..
 
-FROM nginx:stable-alpine3.20-slim
+FROM nginx:stable-alpine3.23-slim
 LABEL MAINTAINER thomas.dickhut@gfi.ihk.de
 EXPOSE 8080
 
