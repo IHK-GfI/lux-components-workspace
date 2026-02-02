@@ -6,7 +6,7 @@ import { getDep } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
 import { UtilConfig } from '../../utility/util';
 
-describe('update200000', () => {
+describe('update210000', () => {
   let appTree: UnitTestTree;
   let runner: SchematicTestRunner;
   let context: SchematicContext;
@@ -25,7 +25,7 @@ describe('update200000', () => {
     appTree = await runner.runExternalSchematic(collection, 'workspace', workspaceOptions);
     appTree = await runner.runExternalSchematic(collection, 'application', appOptions, appTree);
 
-    context = runner.engine.createContext(runner.engine.createSchematic('update-20.0.0', runner.engine.createCollection(collectionPath)));
+    context = runner.engine.createContext(runner.engine.createSchematic('update-21.0.0', runner.engine.createCollection(collectionPath)));
 
     UtilConfig.defaultWaitMS = 0;
 
@@ -41,10 +41,10 @@ describe('update200000', () => {
       callRule(updatePackageJson(testOptions), appTree, context).subscribe({
         next: (successTree: Tree) => {
           expect(getDep(successTree, '@ihk-gfi/lux-components').version).not.toEqual('19.4.0');
-          expect(getDep(successTree, '@ihk-gfi/lux-components').version).toEqual('20.0.0');
+          expect(getDep(successTree, '@ihk-gfi/lux-components').version).toEqual('21.0.0');
 
           expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).not.toEqual('19.2.0');
-          expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).toEqual('20.0.0');
+          expect(getDep(successTree, '@ihk-gfi/lux-components-theme').version).toEqual('21.0.0');
 
           done();
         },

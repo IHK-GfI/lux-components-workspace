@@ -465,34 +465,34 @@ lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-hig
 .lux-text-highlight-success-strong,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-success-strong,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-success-strong {
-  color: var(--mat-sys-on-tertiary);
-  background-color: var(--mat-sys-tertiary);
+  color: #1c1b1b;
+  background-color: #56bd66;
 }
 
 .lux-text-highlight-alert,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-alert,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-alert {
-  color: var(--lux-theme-on-custom-yellow);
+  color: #1c1b1b;
   background-color: #fdedab;
 
   @media (prefers-contrast: more) {
-    color: var(--lux-theme-on-custom-yellow);
-    background-color: var(--lux-theme-on-custom-yellow);
+    color: var(--lux-theme-custom-on-yellow);
+    background-color: var(--lux-theme-custom-yellow);
   }
 }
 
 .lux-text-highlight-alert-strong,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-alert-strong,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-alert-strong {
-  color: var(--lux-theme-on-custom-yellow);
-  background-color: var(--lux-theme-on-custom-yellow);
+  color: var(--lux-theme-custom-on-yellow);
+  background-color: var(--lux-theme-custom-yellow);
 }
 
 .lux-text-highlight-error,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(even).lux-text-highlight-error,
 lux-table .lux-table .lux-table-content .mat-mdc-row:nth-child(odd).lux-text-highlight-error {
-  color: var(--mat-sys-error-container);
-  background-color: var(--mat-sys-on-error-container);
+  color: #93000c;
+  background-color: #ffdad6;
 
   @media (prefers-contrast: more) {
     color: var(--lux-theme-dark-primary-text);
