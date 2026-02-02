@@ -13,7 +13,6 @@ import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.prov
 import { ValidatorFnType } from '../../lux-form/lux-form-model/lux-form-component-base.class';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
-import { LuxOverlayHelper } from '../../lux-util/testing/lux-test-overlay-helper';
 import { LuxLookupCompareFn, luxLookupCompareKeyFn, luxLookupCompareKurzTextFn } from '../lux-lookup-model/lux-lookup-component';
 import { LuxFieldValues, LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
@@ -40,14 +39,12 @@ describe('LuxLookupComboboxAcComponent', () => {
     let fixture: ComponentFixture<LuxNoFormComponent>;
     let component: LuxNoFormComponent;
     let combobox: LuxLookupComboboxAcComponent;
-    let overlayHelper: LuxOverlayHelper;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(LuxNoFormComponent);
       component = fixture.componentInstance;
       combobox = fixture.debugElement.query(By.directive(LuxLookupComboboxAcComponent)).componentInstance;
       fixture.detectChanges();
-      overlayHelper = new LuxOverlayHelper();
     });
 
     it('isUngueltig sollte korrekt funktionieren', () => {
@@ -244,7 +241,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
       expect(options?.length).toEqual(6);
       expect(options[1].querySelector('span')?.innerText).toEqual('Afghanistan');
       expect(options[2].querySelector('span')?.innerText).toEqual('Bellux');
@@ -266,7 +263,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
       expect(options?.length).toEqual(6);
       expect(options[1].querySelector('span')?.innerText).toEqual('Afghanistan');
       expect(options[2].querySelector('span')?.innerText).toEqual('Ägypten');
@@ -288,7 +285,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
       expect(options?.length).toEqual(6);
       expect(options[1].querySelector('span')?.innerText).toEqual('Afghanistan');
       expect(options[2].querySelector('span')?.innerText).toEqual('Bellux');
@@ -304,14 +301,12 @@ describe('LuxLookupComboboxAcComponent', () => {
     let fixture: ComponentFixture<LuxScrollComponent>;
     let component: LuxScrollComponent;
     let combobox: LuxLookupComboboxAcComponent;
-    let overlayHelper: LuxOverlayHelper;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(LuxScrollComponent);
       component = fixture.componentInstance;
       combobox = fixture.debugElement.query(By.directive(LuxLookupComboboxAcComponent)).componentInstance;
       fixture.detectChanges();
-      overlayHelper = new LuxOverlayHelper();
     });
 
     it('Sollte die Optionen nachladen', fakeAsync(() => {
@@ -324,7 +319,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
       expect(options?.length).toEqual(9); // 8 + Leereintrag
       expect(component.myEntries.length).toBe(mockResultTest.length);
       expect(combobox.entries.length).toEqual(mockResultTest.length);

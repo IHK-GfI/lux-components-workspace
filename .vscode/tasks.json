@@ -153,7 +153,7 @@
     {
       "label": "updater -> update schematics",
       "type": "shell",
-      "command": "npx copyfiles --verbose --up 2 dist/updater/src/**/*js node_modules/@ihk-gfi/lux-components-update",
+      "command": "node projects/lux-components-update/scripts/copy-js-files.js",
       "presentation": {
         "focus": false,
         "panel": "shared",

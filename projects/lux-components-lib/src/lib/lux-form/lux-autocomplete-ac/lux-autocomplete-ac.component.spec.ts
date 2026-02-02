@@ -9,7 +9,6 @@ import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.prov
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
-import { LuxOverlayHelper } from '../../lux-util/testing/lux-test-overlay-helper';
 import { LuxAutocompleteAcComponent } from './lux-autocomplete-ac.component';
 
 interface TestOption {
@@ -28,12 +27,10 @@ describe('LuxAutocompleteAcComponent', () => {
     describe('FormGroup (not required)"', () => {
       let fixture: ComponentFixture<LuxAutoCompleteInFormAttributeComponent>;
       let component: LuxAutoCompleteInFormAttributeComponent;
-      let overlayHelper: LuxOverlayHelper;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(LuxAutoCompleteInFormAttributeComponent);
         fixture.detectChanges();
-        overlayHelper = new LuxOverlayHelper();
         component = fixture.componentInstance;
         tick(fixture.componentInstance.autocomplete.luxLookupDelay);
       }));
@@ -83,7 +80,7 @@ describe('LuxAutocompleteAcComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete.matInput.nativeElement, 'meine');
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
-        const options = overlayHelper.selectAllFromOverlay('mat-option');
+        const options = fixture.nativeElement.querySelectorAll('mat-option');
         options[0].click();
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
@@ -105,7 +102,7 @@ describe('LuxAutocompleteAcComponent', () => {
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
         // Nachbedingungen testen
-        let options = overlayHelper.selectAllFromOverlay('mat-option');
+        let options = fixture.nativeElement.querySelectorAll('mat-option');
         expect(options.length).toEqual(4);
         // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
         expect(options[1].innerText).toContain('Gruppenaufgaben');
@@ -122,7 +119,7 @@ describe('LuxAutocompleteAcComponent', () => {
         // Nachbedingungen testen
         LuxTestHelper.typeInElement(component.autocomplete.matInput.nativeElement, 'Au');
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
-        options = overlayHelper.selectAllFromOverlay('mat-option');
+        options = fixture.nativeElement.querySelectorAll('mat-option');
         expect(options.length).toEqual(3);
         // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
         expect(options[1].innerText).toContain('Gruppenaufgaben 2');
@@ -142,12 +139,10 @@ describe('LuxAutocompleteAcComponent', () => {
     describe('String-Werte', () => {
       let fixture: ComponentFixture<LuxAutoCompleteInFormWithStringValuesComponent>;
       let component: LuxAutoCompleteInFormWithStringValuesComponent;
-      let overlayHelper: LuxOverlayHelper;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(LuxAutoCompleteInFormWithStringValuesComponent);
         fixture.detectChanges();
-        overlayHelper = new LuxOverlayHelper();
         component = fixture.componentInstance;
         tick(fixture.componentInstance.autocomplete.luxLookupDelay);
       }));
@@ -180,7 +175,7 @@ describe('LuxAutocompleteAcComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete.matInput.nativeElement, 'meine');
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
-        const options = overlayHelper.selectAllFromOverlay('mat-option');
+        const options = fixture.nativeElement.querySelectorAll('mat-option');
         options[0].click();
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
@@ -195,12 +190,10 @@ describe('LuxAutocompleteAcComponent', () => {
     describe('Should not click the save button while invalid', () => {
       let fixture: ComponentFixture<LuxAutoCompleteNotAnOptionComponent>;
       let component: LuxAutoCompleteNotAnOptionComponent;
-      let overlayHelper: LuxOverlayHelper;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(LuxAutoCompleteNotAnOptionComponent);
         fixture.detectChanges();
-        overlayHelper = new LuxOverlayHelper();
         component = fixture.componentInstance;
         tick(fixture.componentInstance.autocomplete.luxLookupDelay);
       }));
@@ -237,12 +230,10 @@ describe('LuxAutocompleteAcComponent', () => {
     describe('Attribut "luxValue" mit Two-Way-Binding', () => {
       let fixture: ComponentFixture<LuxValueAttributeComponent>;
       let component: LuxValueAttributeComponent;
-      let overlayHelper: LuxOverlayHelper;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(LuxValueAttributeComponent);
         fixture.detectChanges();
-        overlayHelper = new LuxOverlayHelper();
         component = fixture.componentInstance;
         tick(fixture.componentInstance.autocomplete.luxLookupDelay);
       }));
@@ -322,7 +313,7 @@ describe('LuxAutocompleteAcComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete.matInput.nativeElement, 'meine');
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
-        const options = overlayHelper.selectAllFromOverlay('mat-option');
+        const options = fixture.nativeElement.querySelectorAll('mat-option');
         options[0].click();
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
@@ -337,12 +328,10 @@ describe('LuxAutocompleteAcComponent', () => {
     describe('Two-Way-Binding mit String-Werten', () => {
       let fixture: ComponentFixture<LuxAutoCompleteTwoWayBindingWithStringValuesComponent>;
       let component: LuxAutoCompleteTwoWayBindingWithStringValuesComponent;
-      let overlayHelper: LuxOverlayHelper;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(LuxAutoCompleteTwoWayBindingWithStringValuesComponent);
         fixture.detectChanges();
-        overlayHelper = new LuxOverlayHelper();
         component = fixture.componentInstance;
         tick(fixture.componentInstance.autocomplete.luxLookupDelay);
       }));
@@ -385,7 +374,7 @@ describe('LuxAutocompleteAcComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete.matInput.nativeElement, 'meine');
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
-        const options = overlayHelper.selectAllFromOverlay('mat-option');
+        const options = fixture.nativeElement.querySelectorAll('mat-option');
         options[0].click();
         LuxTestHelper.wait(fixture, component.autocomplete.luxLookupDelay);
 
@@ -400,12 +389,10 @@ describe('LuxAutocompleteAcComponent', () => {
     describe('Attribut "luxOptionSelected"', () => {
       let fixture: ComponentFixture<LuxOptionSelectedComponent>;
       let component: LuxOptionSelectedComponent;
-      let overlayHelper: LuxOverlayHelper;
 
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(LuxOptionSelectedComponent);
         component = fixture.componentInstance;
-        overlayHelper = new LuxOverlayHelper();
         fixture.detectChanges();
         tick(fixture.componentInstance.autocomplete.luxLookupDelay);
       }));
@@ -499,12 +486,10 @@ describe('LuxAutocompleteAcComponent', () => {
   describe('Autovervollständigung testen', () => {
     let component: MockAutocompleteComponent;
     let fixture: ComponentFixture<MockAutocompleteComponent>;
-    let overlayHelper: LuxOverlayHelper;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MockAutocompleteComponent);
       component = fixture.componentInstance;
-      overlayHelper = new LuxOverlayHelper();
       fixture.detectChanges();
     });
 
@@ -520,10 +505,8 @@ describe('LuxAutocompleteAcComponent', () => {
 
         fixture.detectChanges();
 
-        const options = overlayHelper.selectAllFromOverlay('mat-option');
-        const optionsOverlay = overlayHelper.selectOneFromOverlay('.mat-mdc-autocomplete-panel');
+        const options = fixture.nativeElement.querySelectorAll('mat-option');
 
-        expect(optionsOverlay).toBeTruthy();
         expect(options.length).toBeGreaterThan(0);
         done();
       });
@@ -531,7 +514,7 @@ describe('LuxAutocompleteAcComponent', () => {
 
     it('sollte keine Ergebnisse haben wenn ein invalider Wert eingetippt wird', (done) => {
       LuxTestHelper.typeInElementAsync('xxx', fixture, component.autocomplete.matInput.nativeElement, () => {
-        const options = overlayHelper.selectAllFromOverlay('mat-option') as NodeListOf<HTMLElement>;
+        const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toBe(0);
         done();
       });
@@ -546,7 +529,7 @@ describe('LuxAutocompleteAcComponent', () => {
 
     it('sollte die richtige Anzahl an Ergebnissen haben wenn ein valider Wert eingetippt wird', (done) => {
       LuxTestHelper.typeInElementAsync('Meine Aufgaben', fixture, component.autocomplete.matInput.nativeElement, () => {
-        const options = overlayHelper.selectAllFromOverlay('mat-option') as NodeListOf<HTMLElement>;
+        const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toBe(1);
         options[0].click();
         done();
@@ -568,12 +551,10 @@ describe('LuxAutocompleteAcComponent', () => {
   describe('labelTemplate testen', () => {
     let component: LuxAutoCompleteWithCustomOptionTemplateComponent;
     let fixture: ComponentFixture<LuxAutoCompleteWithCustomOptionTemplateComponent>;
-    let overlayHelper: LuxOverlayHelper;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(LuxAutoCompleteWithCustomOptionTemplateComponent);
       component = fixture.componentInstance;
-      overlayHelper = new LuxOverlayHelper();
       fixture.detectChanges();
     });
 
@@ -583,7 +564,7 @@ describe('LuxAutocompleteAcComponent', () => {
 
     it('sollte custom template einbetten', (done) => {
       LuxTestHelper.typeInElementAsync('Meine Aufgaben', fixture, component.autocomplete.matInput.nativeElement, () => {
-        const options = overlayHelper.selectAllFromOverlay('mat-option') as NodeListOf<HTMLElement>;
+        const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toBe(1);
 
         const customOptionContainer = options[0].querySelector('span');
@@ -599,12 +580,10 @@ describe('LuxAutocompleteAcComponent', () => {
   describe('luxPickValue testen', () => {
     let component: MockPickValueComponent;
     let fixture: ComponentFixture<MockPickValueComponent>;
-    let overlayHelper: LuxOverlayHelper;
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MockPickValueComponent);
       component = fixture.componentInstance;
-      overlayHelper = new LuxOverlayHelper();
       fixture.detectChanges();
     });
 
@@ -639,13 +618,11 @@ describe('LuxAutocompleteAcComponent', () => {
     let fixture: ComponentFixture<LuxScrollComponent>;
     let component: LuxScrollComponent;
     let autocomplete: LuxAutocompleteAcComponent;
-    let overlayHelper: LuxOverlayHelper;
 
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(LuxScrollComponent);
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxAutocompleteAcComponent)).componentInstance;
-      overlayHelper = new LuxOverlayHelper();
       fixture.detectChanges();
       tick(autocomplete.luxLookupDelay);
     }));
@@ -654,7 +631,7 @@ describe('LuxAutocompleteAcComponent', () => {
       LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'Lorem');
       LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay);
 
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
       expect(options?.length).toEqual(8);
       expect(autocomplete.luxOptions.length).toEqual(10);
       expect(autocomplete.displayedOptions.length).toEqual(8);

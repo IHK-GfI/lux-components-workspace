@@ -81,18 +81,8 @@ $listmargin: calc(var(--lux-theme-outline-width) + 1px);
 
       .lux-button-icon-round.lux-lx-icon.lux-no-size {
         // optische Anpassung für das "Chevron"-Icon, damit es zentriert im Button sitzt
-        // // Anpassung erforderlich, falls das Icon ausgetauscht wird
+        // Anpassung erforderlich, falls das Icon ausgetauscht wird
         padding-bottom: 4px;
-      }
-    }
-    button.lux-button.lux-button-rounded {
-      &:hover:not([disabled]) {
-        color: var(--lux-theme-hover-color);
-        border-radius: 50%;
-      }
-      &:active:not([disabled]) {
-        color: var(--lux-theme-primary-10);
-        background-color: #fff !important;
       }
     }
     .lux-menu-extended {
@@ -174,7 +164,7 @@ $listmargin: calc(var(--lux-theme-outline-width) + 1px);
     }
     .lux-list-empty-icon,
     .lux-list-empty-icon-text {
-    color: rgb(97, 97, 97);
+      color: rgb(97, 97, 97);
       opacity: 1;
       margin-bottom: 8px;
     }
@@ -214,7 +204,7 @@ $listmargin: calc(var(--lux-theme-outline-width) + 1px);
 
     .lux-detail-empty-icon,
     .lux-detail-empty-icon-text {
-    color: rgb(97, 97, 97);
+      color: rgb(97, 97, 97);
       opacity: 1;
     }
     &.lux-detail-ac-container-mobile {
