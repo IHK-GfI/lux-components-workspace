@@ -1,25 +1,28 @@
-import { NgStyle } from '@angular/common';
+import { NgStyle, NgTemplateOutlet } from '@angular/common';
 import { Component, OnDestroy, inject } from '@angular/core';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
   LuxInputAcComponent,
   LuxProgressModeType,
   LuxSelectAcComponent,
+  LuxTextboxComponent,
   LuxThemePalette,
-  LuxToggleAcComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCardActionsComponent
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
+
+type ErrorBoxType = 'default' | 'gradient' | 'loading';
 
 @Component({
   selector: 'app-button-example',
@@ -37,7 +40,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseSimpleOptionsComponent,
     LuxCardComponent,
     LuxCardContentComponent,
-    LuxCardActionsComponent
+    LuxCardActionsComponent,
+    LuxTextboxComponent,
+    NgTemplateOutlet
   ]
 })
 export class ButtonExampleComponent implements OnDestroy {
@@ -64,6 +69,7 @@ export class ButtonExampleComponent implements OnDestroy {
   iconName = 'lux-interface-delete-1';
   iconShowRight = false;
   disabled = false;
+  disabledAria = false;
   backgroundColor = '';
   buttonBadge = '';
   buttonBadgeColor: LuxThemePalette = 'primary';
@@ -74,6 +80,9 @@ export class ButtonExampleComponent implements OnDestroy {
   spinnerExampleLoading = false;
   spinnerExampleFirstname = '';
   spinnerExampleLastname = '';
+  errorBoxDefault = false;
+  errorBoxGradient = false;
+  errorBoxLoading = false;
 
   get allUpperCase() {
     return this.config.labelConfiguration!.allUppercase;
@@ -132,5 +141,37 @@ export class ButtonExampleComponent implements OnDestroy {
     this.spinnerExampleLastname = '';
     this.spinnerExampleLoading = false;
     this.log(this.showOutputEvents, 'Button clicked', event);
+  }
+
+  onButtonClick(box: ErrorBoxType, aux: boolean, event: Event) {
+    this.log(this.showOutputEvents, `${aux ? 'Aux-' : ''}Button clicked`, event);
+    this.resetBoxVisibility();
+    this.updateBoxVisibility(box, false);
+  }
+
+  onClickNotAllowed(box: ErrorBoxType, event: Event) {
+    this.log(this.showOutputEvents, 'Click not allowed button clicked', event);
+    this.resetBoxVisibility();
+    this.updateBoxVisibility(box, true);
+  }
+
+  private updateBoxVisibility(box: ErrorBoxType, visible: boolean) {
+    switch (box) {
+      case 'default':
+        this.errorBoxDefault = visible;
+        break;
+      case 'gradient':
+        this.errorBoxGradient = visible;
+        break;
+      case 'loading':
+        this.errorBoxLoading = visible;
+        break;
+    }
+  }
+
+  private resetBoxVisibility() {
+    this.errorBoxDefault = false;
+    this.errorBoxGradient = false;
+    this.errorBoxLoading = false;
   }
 }
