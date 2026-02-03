@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-button.lux-rounded:not(.lux-stroked) {
+lux-button.lux-rounded:not(.lux-stroked),
+lux-link.lux-rounded:not(.lux-stroked) {
   @include mat.fab-overrides(
     (
       extended-container-height: 50px,

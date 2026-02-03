@@ -191,7 +191,7 @@ describe('LuxAppFooterComponent', () => {
       const fixture = TestBed.createComponent(MockAppFooterLinkOrderComponent);
       LuxTestHelper.wait(fixture);
 
-      const footerLinks = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
+      const footerLinks = fixture.debugElement.queryAll(By.css('a span.lux-button-label'));
       expect(footerLinks).toBeDefined();
       expect(footerLinks.length).toEqual(3);
       expect(footerLinks[0].nativeElement.innerText).toEqual('Link 1');

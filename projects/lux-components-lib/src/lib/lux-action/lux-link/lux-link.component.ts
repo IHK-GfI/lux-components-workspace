@@ -1,25 +1,47 @@
-import { ChangeDetectorRef, Component, Input, ViewChild, inject } from '@angular/core';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectorRef, Component, ElementRef, Input, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButton, MatFabButton } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { LuxAriaRoleDirective } from '../../lux-directives/lux-aria/lux-aria-role.directive';
+import { LuxIconComponent } from '../../../lib/lux-icon/lux-icon/lux-icon.component';
+import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
+import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-component-base.class';
-import { LuxButtonComponent } from '../lux-button/lux-button.component';
 
 @Component({
   selector: 'lux-link',
   templateUrl: './lux-link.component.html',
   styleUrls: ['./lux-link.component.scss'],
-  imports: [LuxButtonComponent, LuxAriaRoleDirective]
+  imports: [NgClass, LuxTagIdDirective, LuxIconComponent, NgTemplateOutlet, MatButton, MatFabButton],
+  host: {
+    '[class.lux-uppercase]': 'labelUppercase',
+    '[class.lux-flat]': 'luxFlat',
+    '[class.lux-raised]': 'luxRaised',
+    '[class.lux-rounded]': 'luxRounded',
+    '[class.lux-stroked]': 'luxStroked'
+  }
 })
 export class LuxLinkComponent extends LuxActionComponentBaseClass {
   private router = inject(Router);
   cdr = inject(ChangeDetectorRef);
+  elementRef = inject(ElementRef);
+  componentsConfigService = inject(LuxComponentsConfigService);
+  tooltipDirective?: LuxTooltipDirective;
+  labelUppercase!: boolean;
 
   public readonly iconSize: string = '2x';
 
   @Input() luxHref = '';
   @Input() luxBlank? = false;
 
-  @ViewChild(LuxButtonComponent, { static: true }) luxButton!: LuxButtonComponent;
+  constructor() {
+    super();
+
+    this.componentsConfigService.config.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.detectParent();
+    });
+  }
 
   auxClicked(event: Event) {
     if (event instanceof UIEvent && event.which === 2) {
@@ -55,5 +77,20 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
     }
 
     return result;
+  }
+
+  private detectParent() {
+    const className = this.elementRef.nativeElement.className;
+
+    let selector;
+    if (className.indexOf('lux-side-nav-item-button') > -1) {
+      selector = 'lux-side-nav-item';
+    } else if (className.indexOf('lux-menu-item') > -1) {
+      selector = 'lux-menu-item';
+    } else {
+      selector = 'lux-link';
+    }
+
+    this.labelUppercase = this.componentsConfigService.isLabelUppercaseForSelector(selector);
   }
 }

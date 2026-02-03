@@ -328,7 +328,7 @@ describe('LuxAppHeaderComponent', () => {
 
     it('Sollte den Dashboard-Link darstellen und öffnen', fakeAsync(() => {
       // Vorbedingungen testen
-      const spy = spyOn(window, 'open');
+      const spy = spyOn(window, 'open').and.callFake(() => null);
 
       fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
       LuxTestHelper.wait(fixture);
@@ -346,7 +346,8 @@ describe('LuxAppHeaderComponent', () => {
       ).toEqual('Dashboard');
 
       // Änderungen durchführen
-      fixture.debugElement.query(By.css('.lux-side-nav-content lux-link button')).nativeElement.click();
+      const link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
+      link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -358,7 +359,7 @@ describe('LuxAppHeaderComponent', () => {
 
     it('Sollte den Dashboard-Link in einem neuen Tab öffnen', fakeAsync(() => {
       // Vorbedingungen testen
-      const spy = spyOn(window, 'open');
+      const spy = spyOn(window, 'open').and.callFake(() => null);
 
       testComponent.dashboardTitle = 'Dashboard';
       testComponent.dashboardLink = 'https:///www.ihk-gfi.de';
@@ -369,7 +370,8 @@ describe('LuxAppHeaderComponent', () => {
         fixture.debugElement.query(By.css('.lux-side-nav-content lux-link .lux-button-label')).nativeElement.textContent.trim()
       ).toEqual('Dashboard');
 
-      fixture.debugElement.query(By.css('.lux-side-nav-content lux-link button')).nativeElement.click();
+      let link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
+      link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
       LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
       expect(spy).toHaveBeenCalledTimes(1);
@@ -380,7 +382,8 @@ describe('LuxAppHeaderComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      fixture.debugElement.query(By.css('.lux-side-nav-content lux-link button')).nativeElement.click();
+      link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
+      link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
       LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(2);
@@ -402,7 +405,8 @@ describe('LuxAppHeaderComponent', () => {
         fixture.debugElement.query(By.css('.lux-side-nav-content lux-link .lux-button-label')).nativeElement.textContent.trim()
       ).toEqual('Dashboard');
 
-      fixture.debugElement.query(By.css('.lux-side-nav-content lux-link button')).nativeElement.click();
+      const link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
+      link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
       LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(1);

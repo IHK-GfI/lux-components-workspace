@@ -46,7 +46,7 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
       this.luxButton.tooltipDirective = this;
     }
     if (this.luxLink) {
-      this.luxLink.luxButton.tooltipDirective = this;
+      this.luxLink.tooltipDirective = this;
     }
     if (this.luxLinkPlain) {
       this.luxLinkPlain.tooltipDirective = this;
