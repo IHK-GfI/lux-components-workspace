@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-button.lux-flat {
+lux-button.lux-flat,
+lux-link.lux-flat {
   @include mat.button-overrides(
     (
       filled-label-text-tracking: var(--lux-theme-button-flat-text-tracking),

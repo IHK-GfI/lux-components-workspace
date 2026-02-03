@@ -63,7 +63,7 @@ describe('LuxLinkComponent', () => {
 
   it('Sollte deaktiviert werden', fakeAsync(() => {
     // Vorbedingungen testen
-    let disabled = fixture.debugElement.query(By.css('button[disabled="true"]'));
+    let disabled = fixture.debugElement.query(By.css('a[disabled="true"]'));
     expect(disabled).toBeNull();
 
     // Änderungen durchführen
@@ -71,7 +71,7 @@ describe('LuxLinkComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    disabled = fixture.debugElement.query(By.css('button[disabled="true"]'));
+    disabled = fixture.debugElement.query(By.css('a[disabled="true"]'));
     expect(disabled).not.toBeNull();
   }));
 
@@ -98,8 +98,8 @@ describe('LuxLinkComponent', () => {
     component.href = '/mock-route';
     LuxTestHelper.wait(fixture);
 
-    const link = fixture.debugElement.query(By.css('button'));
-    link.nativeElement.click();
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('click', { preventDefault: () => {} });
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -118,8 +118,8 @@ describe('LuxLinkComponent', () => {
     component.href = 'http://mock-route';
     LuxTestHelper.wait(fixture);
 
-    const link = fixture.debugElement.query(By.css('button'));
-    link.nativeElement.click();
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('click', { preventDefault: () => {} });
     LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
     // Nachbedingungen prüfen
@@ -130,7 +130,7 @@ describe('LuxLinkComponent', () => {
     component.href = 'https://mock-route';
     LuxTestHelper.wait(fixture);
 
-    link.nativeElement.click();
+    link.triggerEventHandler('click', { preventDefault: () => {} });
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -142,7 +142,7 @@ describe('LuxLinkComponent', () => {
 
   it('Sollte den (externen) href in einem neuen Tab aufrufen', fakeAsync(() => {
     // Vorbedingungen testen
-    const spy = spyOn(window, 'open');
+    const spy = spyOn(window, 'open').and.callFake(() => null);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
@@ -150,8 +150,8 @@ describe('LuxLinkComponent', () => {
     component.href = 'http://mock-route';
     LuxTestHelper.wait(fixture);
 
-    const link = fixture.debugElement.query(By.css('button'));
-    link.nativeElement.click();
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -163,7 +163,7 @@ describe('LuxLinkComponent', () => {
 
   it('Sollte die Farbe anpassen', fakeAsync(() => {
     // Vorbedingungen testen
-    let color = fixture.debugElement.query(By.css('button.mat-unthemed'));
+    let color = fixture.debugElement.query(By.css('a.mat-unthemed'));
     expect(color).not.toBeNull();
 
     // Änderungen durchführen
@@ -171,7 +171,7 @@ describe('LuxLinkComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    color = fixture.debugElement.query(By.css('button.mat-primary'));
+    color = fixture.debugElement.query(By.css('a.mat-primary'));
     expect(color).not.toBeNull();
 
     // Änderungen durchführen
@@ -179,7 +179,7 @@ describe('LuxLinkComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    color = fixture.debugElement.query(By.css('button.mat-warn'));
+    color = fixture.debugElement.query(By.css('a.mat-warn'));
     expect(color).not.toBeNull();
 
     // Änderungen durchführen
@@ -187,7 +187,7 @@ describe('LuxLinkComponent', () => {
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
-    color = fixture.debugElement.query(By.css('button.mat-accent'));
+    color = fixture.debugElement.query(By.css('a.mat-accent'));
     expect(color).not.toBeNull();
   }));
 });

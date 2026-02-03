@@ -1,21 +1,119 @@
-<example-base-structure exampleTitle="Link" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90link-v19">
+<example-base-structure
+  exampleTitle="Link"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90link-v19"
+>
   <example-base-content [exampleCentered]="true">
-    <lux-link
-      luxAutofocus
-      [luxLabel]="label"
-      [luxColor]="color"
-      [luxIconName]="iconName"
-      [luxIconShowRight]="iconShowRight"
-      [luxFlat]="flat"
-      [luxRaised]="raised"
-      [luxRounded]="round"
-      [luxDisabled]="disabled"
-      luxTagId="demo-link"
-      [luxHref]="href"
-      [luxBlank]="blank"
-      (luxClicked)="click($event)"
-    >
-    </lux-link>
+    <div class="lux-flex lux-flex-wrap lux-gap-4">
+      <div class="lux-flex lux-flex-wrap lux-gap-4">
+        <div class="lux-flex lux-flex-col lux-gap-4" luxAutofocus luxAutofocusSelector="#lux-button-0 button">
+          @for (color of colors; track color; let i = $index) {
+            <lux-link
+              id="lux-button-{{ i }}"
+              [luxLabel]="label"
+              [luxColor]="color.value"
+              [luxIconName]="iconName"
+              [luxIconShowRight]="iconShowRight"
+              [luxRaised]="true"
+              [luxDisabled]="disabled"
+              luxTagId="demo-link-default{{ i }}"
+              [luxHref]="href"
+              [luxBlank]="blank"
+              (luxClicked)="click($event)"
+            >
+            </lux-link>
+          }
+        </div>
+        <div class="lux-flex lux-flex-col lux-gap-4">
+          @for (color of colors; track color; let i = $index) {
+            <lux-link
+              [luxLabel]="label"
+              [luxColor]="color.value"
+              [luxIconName]="iconName"
+              [luxIconShowRight]="iconShowRight"
+              [luxFlat]="true"
+              [luxDisabled]="disabled"
+              luxTagId="demo-link-default{{ i }}"
+              [luxHref]="href"
+              [luxBlank]="blank"
+              (luxClicked)="click($event)"
+            >
+            </lux-link>
+          }
+        </div>
+      </div>
+      <div class="lux-flex lux-flex-wrap lux-gap-4">
+        <div class="lux-flex lux-flex-col lux-gap-4">
+          @for (color of colors; track color; let i = $index) {
+            <lux-link
+              [luxLabel]="label"
+              [luxColor]="color.value"
+              [luxIconName]="iconName"
+              [luxIconShowRight]="iconShowRight"
+              [luxStroked]="true"
+              [luxDisabled]="disabled"
+              luxTagId="demo-link-default{{ i }}"
+              [luxHref]="href"
+              [luxBlank]="blank"
+              (luxClicked)="click($event)"
+            >
+            </lux-link>
+          }
+        </div>
+        <div class="lux-flex lux-flex-col lux-gap-4">
+          @for (color of colors; track color; let i = $index) {
+            <lux-link
+              [luxLabel]="label"
+              [luxColor]="color.value"
+              [luxIconName]="iconName"
+              [luxIconShowRight]="iconShowRight"
+              [luxDisabled]="disabled"
+              luxTagId="demo-link-hover{{ i }}"
+              [luxHref]="href"
+              [luxBlank]="blank"
+              (luxClicked)="click($event)"
+            >
+            </lux-link>
+          }
+        </div>
+      </div>
+      <div class="lux-flex lux-gap-4 lux-min-width-48">
+        <div class="lux-flex lux-flex-col lux-gap-4">
+          @for (color of colors; track color; let i = $index) {
+            <lux-link
+              [luxLabel]="label"
+              [luxColor]="color.value"
+              [luxIconName]="iconName"
+              [luxIconShowRight]="iconShowRight"
+              [luxRounded]="true"
+              [luxDisabled]="disabled"
+              luxTagId="demo-button-focus{{ i }}"
+              [luxHref]="href"
+              [luxBlank]="blank"
+              (luxClicked)="click($event)"
+            >
+            </lux-link>
+          }
+        </div>
+        <div class="lux-flex lux-flex-col lux-gap-4">
+          @for (color of colors; track color; let i = $index) {
+            <lux-link
+              [luxLabel]="label"
+              [luxColor]="color.value"
+              [luxIconName]="iconName"
+              [luxIconShowRight]="iconShowRight"
+              [luxRounded]="true"
+              [luxStroked]="true"
+              [luxDisabled]="disabled"
+              luxTagId="demo-button-rounded-stroked{{ i }}"
+              [luxHref]="href"
+              [luxBlank]="blank"
+              (luxClicked)="click($event)"
+            >
+            </lux-link>
+          }
+        </div>
+      </div>
+    </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac
@@ -43,44 +141,11 @@
       <lux-form-hint>
         Diese Property definiert das Icon, welches in dem Button (linksbündig, wenn zusätzlich auch noch
         <i>luxLabel</i> gesetzt ist).<br />
-        Für Font-Awesome-Icons mit 'fa|fas|fab|far|fal' präfixen, Material-Icons ohne Präfix
       </lux-form-hint>
     </lux-input-ac>
     <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true"></lux-toggle-ac>
-    <lux-select-ac [(luxSelected)]="color" [luxOptions]="colors" luxLabel="luxColor" [luxPickValue]="pickValue" luxOptionLabelProp="label">
-      <lux-form-hint>
-        Bestimmt die Farbe des Buttons.<br />
-        Die möglichen Werte sind 'primary', 'warn', 'accent', 'default' / undefined.
-      </lux-form-hint>
-    </lux-select-ac>
-    <lux-toggle-ac
-      [(luxChecked)]="flat"
-      (luxCheckedChange)="onFlat($event)"
-      luxLabel="luxFlat"
-      luxHint="Über diese Property kann der Link flach und ohne Schatten dargestellt werden."
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
-    <lux-toggle-ac
-      [(luxChecked)]="raised"
-      (luxCheckedChange)="onRaised($event)"
-      luxLabel="luxRaised"
-      luxHint="Über diese Property kann der Link hervorgehoben dargestellt werden."
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
-    <lux-toggle-ac
-      [(luxChecked)]="round"
-      (luxCheckedChange)="onRounded($event)"
-      luxLabel="luxRounded"
-      luxHint="Diese Property aktiviert eine runde Darstellung des Links."
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
     <lux-toggle-ac [(luxChecked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Link." [luxNoTopLabel]="true">
     </lux-toggle-ac>
-  </example-base-simple-options>
-  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac
       luxLabel="Label Uppercase"
       [(luxChecked)]="config.labelConfiguration!.allUppercase"
@@ -91,5 +156,5 @@
         Über den <i>LuxComponentsConfigService</i> kann für alle LuxLinks applikationsweit eine Uppercase-Darstellung forciert werden.
       </lux-form-hint>
     </lux-toggle-ac>
-  </example-base-advanced-options>
+  </example-base-simple-options>
 </example-base-structure>

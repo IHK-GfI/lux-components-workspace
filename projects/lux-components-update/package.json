@@ -5,8 +5,8 @@
   "scripts": {
     "build": "npm run clean && tsc -p tsconfig.json",
     "clean": "del-cli --force ../../dist/updater/",
-    "pack-copy-base-files": "copyfiles -f collection.json package.json README.md ../../LICENSE ./../../dist/updater",
-    "pack-copy-template-dirs": "copyfiles \"./src/**/files/**\" ./../../dist/updater",
+    "pack-copy-base-files": "node ./scripts/copy-base-files.js",
+    "pack-copy-template-dirs": "node ./scripts/copy-template-dirs.js",
     "pack": "npm run build && npm run pack-copy-base-files && npm run pack-copy-template-dirs",
     "security": "npm audit --registry=https://registry.npmjs.org --audit-level high",
     "smoketest": "npm run test && npm run pack",
@@ -27,7 +27,7 @@
     "chalk": "^4.1.2",
     "cheerio": "1.0.0-rc.12",
     "htmlparser2": "^9.1.0",
-    "jsdom": "^25.0.0",
+    "jsdom": "^28.0.0",
     "jsonc-parser": "^3.2.1",
     "semver": "^7.6.0"
   },

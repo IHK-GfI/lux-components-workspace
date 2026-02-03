@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-button.lux-stroked {
+lux-button.lux-stroked,
+lux-link.lux-stroked {
   @include mat.button-overrides(
     (
       outlined-label-text-tracking: var(--lux-theme-button-stroked-text-tracking),

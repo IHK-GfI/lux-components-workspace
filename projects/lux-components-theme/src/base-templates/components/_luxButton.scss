@@ -8,7 +8,8 @@
 @use "luxButtonRoundedStroked";
 @use "luxButtonSpinner";
 
-lux-button {
+lux-button,
+lux-link {
   @include mat.button-overrides(
     (
       text-label-text-font: var(--lux-theme-button-text-font),
@@ -97,7 +98,8 @@ lux-button {
     }
   }
 
-  button:not([disabled]) {
+  button:not([disabled]),
+  a:not([disabled]) {
     &:focus-visible {
       @include luxfocus.lux-button-focus;
     }
