@@ -1,10 +1,12 @@
-<div
+<a
   class="link-wrapper"
+  [href]="luxDisabled ? null : luxHref"
+  [target]="luxBlank ? '_blank' : '_self'"
   tabindex="{{ luxDisabled ? -1 : 0 }}"
   (focus)="tooltipDirective?.show()"
   (blur)="tooltipDirective?.hide()"
-  luxAriaRole="link"
   luxAriaLabel="{{ luxLabel }}"
+  [attr.disabled]="luxDisabled ? true : null"
   [attr.aria-disabled]="luxDisabled ? 'true' : null"
   [ngClass]="[luxDisabled ? 'lux-disabled' : '']"
   (click)="!luxDisabled ? redirectToHref($event) : null"
@@ -20,4 +22,4 @@
   @if (luxIconShowRight && luxIconName) {
   <lux-icon [luxIconName]="luxIconName"></lux-icon>
   }
-</div>
+</a>

@@ -85,7 +85,7 @@ describe('LuxLinkPlainComponent', () => {
     LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
-    link.nativeElement.click();
+    link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -97,7 +97,7 @@ describe('LuxLinkPlainComponent', () => {
 
   it('Sollte den (externen) href aufrufen', fakeAsync(() => {
     // Vorbedingungen prüfen
-    const spy = spyOn(window, 'open');
+    const spy = spyOn(window, 'open').and.callFake(() => null);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen  [mit HTTP]
@@ -105,7 +105,7 @@ describe('LuxLinkPlainComponent', () => {
     LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
-    link.nativeElement.click();
+    link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
     LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
     // Nachbedingungen prüfen
@@ -116,7 +116,7 @@ describe('LuxLinkPlainComponent', () => {
     component.href = 'https://mock-route';
     LuxTestHelper.wait(fixture);
 
-    link.nativeElement.click();
+    link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -128,7 +128,7 @@ describe('LuxLinkPlainComponent', () => {
 
   it('Sollte den (externen) href in einem neuen Tab aufrufen', fakeAsync(() => {
     // Vorbedingungen prüfen
-    const spy = spyOn(window, 'open');
+    const spy = spyOn(window, 'open').and.callFake(() => null);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
@@ -136,8 +136,8 @@ describe('LuxLinkPlainComponent', () => {
     component.href = 'http://mock-route';
     LuxTestHelper.wait(fixture);
 
-    const link = fixture.debugElement.query(By.css('.link-wrapper'));
-    link.nativeElement.click();
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen

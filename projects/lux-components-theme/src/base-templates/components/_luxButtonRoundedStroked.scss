@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-button.lux-rounded.lux-stroked {
+lux-button.lux-rounded.lux-stroked,
+lux-link.lux-rounded.lux-stroked {
   @include mat.fab-overrides(
     (
       container-shape: var(--lux-theme-button-rounded-stroked-container-shape),
@@ -56,7 +57,7 @@ lux-button.lux-rounded.lux-stroked {
     height: var(--lux-theme-button-rounded-stroked-text-size);
   }
 
-  .lux-stroked:not(:disabled) {
+  .lux-stroked:not(:disabled):not([aria-disabled="true"]) {
     border: 1px solid;
     border-color: var(--lux-theme-button-rounded-stroked-default-text-color);
 

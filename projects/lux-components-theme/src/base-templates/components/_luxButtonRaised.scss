@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-button.lux-raised {
+lux-button.lux-raised,
+lux-link.lux-raised {
   @include mat.button-overrides(
     (
       protected-label-text-tracking: var(--lux-theme-button-raised-text-tracking),
@@ -27,7 +28,8 @@ lux-button.lux-raised {
       )
     );
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       @include mat.button-overrides(
         (
           protected-container-color: color-mix(in srgb, var(--lux-theme-button-raised-primary-container-color) 90%, transparent)
@@ -46,7 +48,8 @@ lux-button.lux-raised {
       )
     );
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       @include mat.button-overrides(
         (
           protected-container-color: color-mix(in srgb, var(--lux-theme-button-raised-accent-container-color) 90%, transparent)
@@ -65,7 +68,8 @@ lux-button.lux-raised {
       )
     );
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       @include mat.button-overrides(
         (
           protected-container-color: color-mix(in srgb, var(--lux-theme-button-raised-warn-container-color) 90%, transparent)
