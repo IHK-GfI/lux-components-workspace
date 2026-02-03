@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-button {
+lux-button,
+lux-link {
   &.lux-raised,
   &.lux-flat,
   &.lux-rounded:not(.lux-stroked) {

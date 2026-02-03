@@ -1,18 +1,15 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import {
-    LuxAutofocusDirective,
-    LuxComponentsConfigParameters,
-    LuxComponentsConfigService,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxLinkComponent,
-    LuxSelectAcComponent,
-    LuxThemePalette,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxComponentsConfigParameters,
+  LuxComponentsConfigService,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxLinkComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
-import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
@@ -23,14 +20,12 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   imports: [
     LuxLinkComponent,
     LuxToggleAcComponent,
-    LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
-    ExampleBaseSimpleOptionsComponent,
-    ExampleBaseAdvancedOptionsComponent
+    ExampleBaseSimpleOptionsComponent
   ]
 })
 export class LinkExampleComponent implements OnDestroy {
@@ -45,13 +40,9 @@ export class LinkExampleComponent implements OnDestroy {
   ];
   config: LuxComponentsConfigParameters;
   log = logResult;
-  label = 'LOGIN';
-  color: LuxThemePalette = 'primary';
+  label = 'Login';
   iconName = 'lux-interface-login-circle';
   iconShowRight = false;
-  flat = true;
-  raised = false;
-  round = false;
   disabled = false;
   blank = true;
   href = 'https://www.ihk-gfi.de/';
@@ -85,38 +76,5 @@ export class LinkExampleComponent implements OnDestroy {
 
   click(event: Event) {
     this.log(this.showOutputEvents, 'luxClicked', event);
-  }
-
-  onFlat(toggle: boolean) {
-    if (!this.modeChangeRunning) {
-      this.modeChangeRunning = true;
-      if (toggle) {
-        this.raised = false;
-        this.round = false;
-      }
-      this.modeChangeRunning = false;
-    }
-  }
-
-  onRaised(toggle: boolean) {
-    if (!this.modeChangeRunning) {
-      this.modeChangeRunning = true;
-      if (toggle) {
-        this.flat = false;
-        this.round = false;
-      }
-      this.modeChangeRunning = false;
-    }
-  }
-
-  onRounded(toggle: boolean) {
-    if (!this.modeChangeRunning) {
-      this.modeChangeRunning = true;
-      if (toggle) {
-        this.flat = false;
-        this.raised = false;
-      }
-      this.modeChangeRunning = false;
-    }
   }
 }
