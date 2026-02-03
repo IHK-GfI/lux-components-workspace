@@ -1,5 +1,8 @@
 <ng-template>
   <div class="lux-app-header-action-nav lux-mr-3 lt-md:lux-mr-2 lux-flex lux-justify-start lux-items-center lux-gap-3">
+    @if(sessionTimerComponent) {
+    <lux-app-header-ac-session-timer></lux-app-header-ac-session-timer>
+    }
     <ng-content select="lux-app-header-ac-action-nav-item"></ng-content>
   </div>
 </ng-template>

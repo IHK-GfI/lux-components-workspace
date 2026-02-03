@@ -81,6 +81,7 @@
   >
     @if (luxLoading && !luxDisabled) {
       <lux-progress
+        inert
         luxType="Spinner"
         luxSize="small"
         [luxMode]="luxSpinnerMode"
@@ -113,6 +114,7 @@
   >
     @if (luxLoading && !luxDisabled) {
       <lux-progress
+        inert
         luxType="Spinner"
         luxSize="small"
         [luxMode]="luxSpinnerMode"
@@ -152,6 +154,7 @@
   <div class="lux-button-content-container">
     @if (luxLoading && !luxIconShowRight && !luxDisabled) {
       <lux-progress
+        inert
         luxType="Spinner"
         luxSize="small"
         [luxMode]="luxSpinnerMode"
@@ -186,6 +189,7 @@
     }
     @if (luxLoading && luxIconShowRight && !luxDisabled) {
       <lux-progress
+        inert
         luxType="Spinner"
         luxSize="small"
         [luxMode]="luxSpinnerMode"
