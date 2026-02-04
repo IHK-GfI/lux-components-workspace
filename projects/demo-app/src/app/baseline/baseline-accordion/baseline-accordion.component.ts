@@ -1,21 +1,20 @@
-import { NgClass } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-    LuxAccordionComponent,
-    LuxAutocompleteAcComponent,
-    LuxCheckboxAcComponent,
-    LuxInputAcComponent,
-    LuxLinkPlainComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderDescriptionComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxTextareaAcComponent,
-    LuxTextboxComponent,
-    LuxThemeService
+  LuxAccordionComponent,
+  LuxAutocompleteAcComponent,
+  LuxCheckboxAcComponent,
+  LuxInputAcComponent,
+  LuxLinkPlainComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderDescriptionComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxSelectAcComponent,
+  LuxTextareaAcComponent,
+  LuxTextboxComponent,
+  LuxThemeService
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 
@@ -61,7 +60,6 @@ interface DummyStateForm {
     LuxPanelComponent,
     LuxInputAcComponent,
     ReactiveFormsModule,
-    NgClass,
     LuxAutocompleteAcComponent,
     LuxCheckboxAcComponent,
     LuxInputAcComponent,
