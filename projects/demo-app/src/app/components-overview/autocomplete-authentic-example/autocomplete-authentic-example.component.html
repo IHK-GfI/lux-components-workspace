@@ -46,7 +46,7 @@
         <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
         }
         @if(useTemplatesForLabels) {
-          <ng-template let-option #labelTemplate>
+          <ng-template let-option>
             <div class="lux-flex ">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
               <div>via Template {{ option[renderProperty]}}</div>
@@ -94,7 +94,7 @@
         <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
         }
          @if(useTemplatesForLabels) {
-          <ng-template let-option #labelTemplate>
+          <ng-template let-option>
             <div class="lux-flex ">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
               <div>via Template {{ option[renderProperty]}}</div>

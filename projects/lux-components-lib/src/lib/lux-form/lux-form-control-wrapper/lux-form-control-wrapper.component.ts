@@ -74,7 +74,7 @@ export class LuxFormControlWrapperComponent {
    * Gibt wieder, ob der Fehler für diese FormComponent dargestellt werden soll.
    */
   shouldDisplayError() {
-    return this.luxFormComponent.errorMessage && this.luxFormComponent.formControl.touched;
+    return this.luxFormComponent.errorMessage && this.luxFormComponent.formControl.touched && !this.luxFormComponent.luxReadonly;
   }
 
   shouldDisplayMisc() {

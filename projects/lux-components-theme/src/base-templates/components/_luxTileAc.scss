@@ -14,6 +14,10 @@ lux-tile-ac {
     )
   );
 
+  .mat-mdc-card-header {
+    padding: 16px;
+  }
+
   .lux-tile-ac {
     display: flex;
     height: 100%;
