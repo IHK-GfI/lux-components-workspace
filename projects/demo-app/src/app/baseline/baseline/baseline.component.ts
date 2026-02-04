@@ -69,6 +69,7 @@ export class BaselineComponent {
   @HostBinding('class.show-frames') showFrames = false;
   showAsColumn = false;
   disabled = false;
+  readonly = false;
   denseFormat = false;
   form: FormGroup<DummyForm>;
 

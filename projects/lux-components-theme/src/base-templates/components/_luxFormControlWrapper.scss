@@ -64,6 +64,30 @@ lux-textarea-ac lux-form-control-wrapper .lux-form-control-wrapper {
   }
 }
 
+// Readonly-Styles für verschiedene Form-Controls (Autocomplete, Input, Select, etc.)
+// Setzt Text- und Hintergrundfarbe für den Readonly-Zustand und passt die Farbe des Select-Arrows an.
+// Gilt nur, wenn das Control nicht disabled, aber readonly ist (lux-form-control-readonly-authentic).
+lux-autocomplete-ac,
+lux-lookup-autocomplete-ac,
+lux-input-ac,
+lux-select-ac,
+lux-lookup-combobox-ac,
+lux-datepicker-ac,
+lux-datetimepicker-ac,
+lux-file-input-ac,
+lux-textarea-ac {
+  lux-form-control-wrapper .lux-form-control-wrapper:not(.lux-form-control-disabled-authentic).lux-form-control-readonly-authentic {
+    .lux-form-control-container-authentic {
+      color: var(--lux-theme-form-readonly-color);
+      background-color: var(--lux-theme-form-readonly-bg-color);
+
+      .mat-mdc-select-arrow {
+        color: var(--lux-theme-dark-disabled-text);
+      }
+    }
+  }
+}
+
 lux-form-control-wrapper {
   width: 100%;
 
@@ -180,15 +204,13 @@ lux-form-control-wrapper {
 
     // Definitionen der einzelnen States der Form-Controls
     // HOVER
-    &:hover:not(.lux-form-control-disabled-authentic):not(.lux-focused-authentic):not(.lux-form-control-error-authentic):not(
-        .lux-form-control-readonly-authentic
-      ) {
+    &:hover:not(.lux-form-control-disabled-authentic):not(.lux-focused-authentic):not(.lux-form-control-error-authentic) {
       .lux-form-control-container-authentic:not(.lux-no-input-row) {
         border-color: var(--lux-theme-dark-primary-text);
       }
     }
     // FOCUS
-    &.lux-focused-authentic:not(.lux-form-control-readonly-authentic) {
+    &.lux-focused-authentic {
       .lux-form-control-label-authentic > * {
         color: var(--lux-theme-primary-30);
       }
@@ -215,7 +237,9 @@ lux-form-control-wrapper {
           border-radius: 4px;
           padding-right: 2px;
           color: var(--mat-sys-on-error-container) !important;
-          box-shadow: -18px 0px 0 0 var(--lux-theme-form-error-msg-background), -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
+          box-shadow:
+            -18px 0px 0 0 var(--lux-theme-form-error-msg-background),
+            -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
             0 -1px 0 0 var(--lux-theme-form-error-msg-background);
         }
       }
