@@ -125,6 +125,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-control-buffer: 6px;
   --lux-theme-form-error-msg-background: rgb(255, 228, 231);
   --lux-theme-form-autofill-background-color: #e6e9ee;
+  --lux-theme-form-readonly-color: var(--lux-theme-primary-color);
+  --lux-theme-form-readonly-bg-color: #EFF3F6;
 
   // Fokus
   --lux-theme-outline-dark: 4px solid var(--lux-theme-accent-secondary-color) !important;
