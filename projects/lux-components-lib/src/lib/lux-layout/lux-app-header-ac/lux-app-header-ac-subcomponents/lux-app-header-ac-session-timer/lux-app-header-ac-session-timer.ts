@@ -5,17 +5,21 @@ import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-t
 import { LuxTooltipDirective } from '../../../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxMediaQueryObserverService } from '../../../../lux-util/lux-media-query-observer.service';
 import { Subscription } from 'rxjs';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoService } from '@jsverse/transloco';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-aria-label.directive';
 
 @Component({
   selector: 'lux-app-header-ac-session-timer',
-  imports: [LuxButtonComponent, LuxTooltipDirective, TranslocoPipe],
+  imports: [LuxButtonComponent, LuxTooltipDirective, LuxAriaLabelDirective],
   templateUrl: './lux-app-header-ac-session-timer.html'
 })
 export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
   luxDialogService = inject(LuxDialogService);
   luxSessionTimerService = inject(LuxAppHeaderAcSessionTimerService);
   private mediaQueryService = inject(LuxMediaQueryObserverService);
+  tService = inject(TranslocoService);
+  private liveAnnouncer = inject(LiveAnnouncer);
   luxLoading = false;
 
   mobileView: boolean;
@@ -60,5 +64,19 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
         this.luxSessionTimerService.openLogoutDialog();
       }
     });
+  }
+
+  getTimerLabel(): string {
+    if (this.luxSessionTimerService.showHours()) {
+      return `${this.tService.translate('luxc.app-header.session-timer.timer.button.lbl.hours')}`;
+    } else if (this.luxSessionTimerService.showSeconds()) {
+      return `${this.luxSessionTimerService.formattedSeconds()} ${this.tService.translate('luxc.app-header.session-timer.timer.button.lbl.seconds')}`;
+    } else {
+      return `${this.luxSessionTimerService.formattedMinutes()} ${this.tService.translate('luxc.app-header.session-timer.timer.button.lbl.minutes')}`;
+    }
+  }
+
+  announceSessionTimer(): void {
+    this.liveAnnouncer.announce(`${this.tService.translate('luxc.app-header.session-timer.timer.button.announcer')}`);
   }
 }

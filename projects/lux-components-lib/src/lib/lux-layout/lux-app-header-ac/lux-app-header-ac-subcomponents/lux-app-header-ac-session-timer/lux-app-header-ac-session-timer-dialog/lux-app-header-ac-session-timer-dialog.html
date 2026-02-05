@@ -3,7 +3,11 @@
   <lux-dialog-content luxTagId="lux-session-timer-dialog-content-default" class="lux-session-timer-dialog-info">
     <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-time-sleep" luxIconSize="3x"></lux-icon>
     <h2>{{ 'luxc.app-header.session-timer.dialog.info.title' | transloco }}</h2>
-    <p [innerHTML]="'luxc.app-header.session-timer.dialog.info.message' | transloco"></p>
+    <p>
+      {{ 'luxc.app-header.session-timer.dialog.info.message.part1' | transloco }}
+      <strong>{{ 'luxc.app-header.session-timer.dialog.info.message.part2' | transloco }}</strong>
+      {{ 'luxc.app-header.session-timer.dialog.info.message.part3' | transloco }}
+    </p>
   </lux-dialog-content>
   <lux-dialog-actions luxTagId="lux-session-timer-dialog-actions-default" class="lux-session-timer-dialog-info-actions">
     <lux-button

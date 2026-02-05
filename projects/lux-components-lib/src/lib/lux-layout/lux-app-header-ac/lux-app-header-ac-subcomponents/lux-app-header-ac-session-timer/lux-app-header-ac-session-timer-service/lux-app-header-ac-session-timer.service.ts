@@ -4,7 +4,7 @@ import { LuxDialogService } from '../../../../../lux-popups/lux-dialog/lux-dialo
 import { LuxAppHeaderAcSessionTimerDialogComponent } from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
 import { ILuxDialogConfig } from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { map, switchMap, takeWhile, timer } from 'rxjs';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { LuxComponentsConfigService } from '../../../../../lux-components-config/lux-components-config.service';
 import { Router } from '@angular/router';
 
@@ -49,11 +49,15 @@ export class LuxAppHeaderAcSessionTimerService {
   });
 
   showSessionTimer: Signal<boolean> = computed(() => {
-    return this.timeRemaining() > 0 && this.timeRemaining() / 1000 < 3600;
+    return this.timeRemaining() > 0;
   });
 
   showSeconds: Signal<boolean> = computed(() => {
     return this.timeRemaining() > 0 && this.timeRemaining() / 1000 < 60;
+  });
+
+  showHours: Signal<boolean> = computed(() => {
+    return this.timeRemaining() / 1000 >= 3600;
   });
 
   dialogConfig: ILuxDialogConfig = {
@@ -63,18 +67,18 @@ export class LuxAppHeaderAcSessionTimerService {
 
   constructor() {
     // Dialog-Status zurücksetzen wenn sich startingSeconds ändert
-    toObservable(this.startingSeconds).subscribe(() => {
-      this.dialogWasClosed = false;
-    });
+    toObservable(this.startingSeconds)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.dialogWasClosed = false;
+      });
 
-    const timerDialogSub = this.timeRemaining$.subscribe((remainingMs: number) => {
+    const timerSub = this.timeRemaining$.pipe(takeUntilDestroyed()).subscribe((remainingMs: number) => {
       // Dialog öffnen wenn: Zeit < 120s, Dialog ist nicht offen, Timer wird angezeigt UND Dialog wurde noch nicht geschlossen
       if (remainingMs / 1000 < 120 && !this.dialogIsOpen && this.showSessionTimer() && !this.dialogWasClosed) {
         this.openDialog();
       }
-    });
 
-    const timerLogoutSub = this.timeRemaining$.subscribe((remainingMs: number) => {
       // 1 Sekunde vor Ablauf damit der Dialog nicht geöffnet wird wenn keine Zeit gesetzt wurde
       if (remainingMs / 1000 == 1) {
         if (this.currentDialogRef) {
@@ -99,28 +103,10 @@ export class LuxAppHeaderAcSessionTimerService {
   }
 
   openDialog() {
-    // Workaround: https://github.com/IHK-GfI/lux-components-workspace/issues/3
-    // Blocked aria-hidden on an element because its descendant retained focus.
-    // The focus must not be hidden from assistive technology users.
-    // Avoid using aria-hidden on a focused element or its ancestor.
-    // Consider using the inert attribute instead, which will also prevent focus.
-    // For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
-    // Element with focus: ...
-    // Ancestor with aria-hidden: <app-root>
-    //
-    //Musste hier nochmal extra implimentiert werden, da der Fehler sonst wieder auftritt.
-    const activeElement = document.activeElement as HTMLElement;
-    if (activeElement) {
-      activeElement.blur();
-    }
-
     this.dialogIsOpen = true;
     this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig);
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
-      if (activeElement) {
-        activeElement.focus();
-      }
       this.dialogIsOpen = false;
       this.dialogWasClosed = result !== 'confirmed';
     });
@@ -142,11 +128,16 @@ export class LuxAppHeaderAcSessionTimerService {
   }
 
   logoutUser() {
-    this.startingSeconds.set(0);
+    this.resetTimer(0);
     this.luxLogoutEvent.emit();
   }
 
   backToLogin() {
     this.luxLoginEvent.emit();
+  }
+
+  resetTimer(seconds: number) {
+    this.startingSeconds.set(0);
+    this.startingSeconds.set(seconds);
   }
 }

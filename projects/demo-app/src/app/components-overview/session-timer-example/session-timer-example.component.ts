@@ -10,16 +10,18 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
 })
 export class SessionTimerExampleComponent {
   timerService = inject(LuxAppHeaderAcSessionTimerService);
-  startingSeconds = this.timerService.startingSeconds();
+  startingSeconds = 1800;
 
   setTimer() {
-    this.timerService.startingSeconds.set(this.startingSeconds + 1);
-    this.timerService.startingSeconds.set(this.startingSeconds);
+    this.timerService.resetTimer(this.startingSeconds);
   }
 
   constructor() {
     this.timerService.luxLogoutEvent.subscribe(() => {
       console.log('Logout Event wurde vom LuxAppHeaderAcSessionTimerService ausgelöst');
+    });
+    this.timerService.luxLoginEvent.subscribe(() => {
+      console.log('Login Event wurde vom LuxAppHeaderAcSessionTimerService ausgelöst');
     });
   }
 }

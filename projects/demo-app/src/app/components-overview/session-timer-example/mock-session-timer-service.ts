@@ -7,7 +7,7 @@ import { HttpResponse } from '@angular/common/http';
 export class MockAppHeaderAcLuxSessionTimerService extends LuxAppHeaderAcSessionTimerService {
   constructor() {
     super();
-    this.startingSeconds.set(1800);
+    this.resetTimer(1800);
   }
 
   override extendSessionTimer(): Observable<HttpResponse<any>> {
@@ -16,9 +16,7 @@ export class MockAppHeaderAcLuxSessionTimerService extends LuxAppHeaderAcSession
     return new Observable((observer) => {
       observer.next(new HttpResponse({ status: 200, body: { message: 'Session extended' } }));
       setTimeout(() => {
-        const seconds = this.startingSeconds();
-        this.startingSeconds.set(seconds + 1);
-        this.startingSeconds.set(seconds);
+        this.resetTimer(this.startingSeconds());
         observer.complete();
         console.log('MockAppHeaderAcLuxSessionTimerService: Session wurde erfolgreich verlängert');
       }, 5000);

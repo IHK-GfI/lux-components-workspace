@@ -38,7 +38,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
   it('sollte den Session Timer anzeigen, wenn eine start Zeit gesetzt wurde', fakeAsync(() => {
     expect(fixture.debugElement.query(By.css('lux-button'))).toBeNull();
 
-    timerService.startingSeconds.set(180);
+    timerService.resetTimer(180);
     tick(100);
     fixture.detectChanges();
 
@@ -48,22 +48,9 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     expect(timerButton).toBeTruthy();
   }));
 
-  it('sollte den Session Timer nicht anzeigen, wenn eine start Zeit von über 60 min gesetzt wurde', fakeAsync(() => {
-    expect(fixture.debugElement.query(By.css('lux-button'))).toBeNull();
-
-    timerService.startingSeconds.set(3601);
-    tick(100);
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const timerButton = compiled.querySelector('lux-button');
-
-    expect(timerButton).toBeFalsy();
-  }));
-
   it('sollte einen Dialog öffnen, wenn eine start Zeit von unter 2 min gesetzt wurde', fakeAsync(() => {
     spyOn(timerService, 'openDialog');
-    timerService.startingSeconds.set(119);
+    timerService.resetTimer(119);
     tick(100);
     fixture.detectChanges();
 
@@ -77,7 +64,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     });
 
     // Dialog öffnet sich wenn Zeit gesetzt wird
-    timerService.startingSeconds.set(110);
+    timerService.resetTimer(110);
     tick(100);
     fixture.detectChanges();
     expect(dialogOpenCount).toBe(1);
@@ -92,7 +79,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     expect(dialogOpenCount).toBe(0);
 
     // Dialog sollte jetzt wieder geöffnet werden wenn eine andere anzahl an Sekunden erneut gesetzt wird
-    timerService.startingSeconds.set(113);
+    timerService.resetTimer(113);
     tick(100);
     fixture.detectChanges();
     expect(dialogOpenCount).toBe(1);

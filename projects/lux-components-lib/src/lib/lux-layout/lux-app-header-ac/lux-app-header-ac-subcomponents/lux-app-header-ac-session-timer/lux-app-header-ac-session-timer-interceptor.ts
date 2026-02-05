@@ -28,9 +28,7 @@ export class LuxAppHeaderAcSessionTimerInterceptor implements HttpInterceptor {
           );
           const sessionTime = Number(sessionTimeHeader);
           if (!Number.isNaN(sessionTime)) {
-            // Workaround: wenn der Wert von dem Signal sich nicht ändert wird die Change Detection nicht getriggert
-            this.luxSessionTimerService.startingSeconds.set(sessionTime + 1);
-            this.luxSessionTimerService.startingSeconds.set(sessionTime);
+            this.luxSessionTimerService.resetTimer(sessionTime);
           }
         }
       })
