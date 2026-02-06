@@ -39,7 +39,8 @@ import {
   LuxSnackbarService,
   LuxTenantLogoComponent,
   LuxThemeService,
-  LuxTooltipDirective
+  LuxTooltipDirective,
+  LuxAppHeaderAcSessionTimerComponent
 } from '@ihk-gfi/lux-components';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -80,7 +81,8 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
     AsyncPipe,
     HammerModule,
     CdkScrollable,
-    TranslocoPipe
+    TranslocoPipe,
+    LuxAppHeaderAcSessionTimerComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -144,11 +146,9 @@ export class AppComponent implements OnInit, OnDestroy {
       })
     );
 
-      this.tService.langChanges$
-        .pipe(takeUntilDestroyed())
-        .subscribe(() => {
-          this.updateFooterLinks();
-        });
+    this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.updateFooterLinks();
+    });
   }
 
   ngOnInit() {
@@ -245,5 +245,14 @@ export class AppComponent implements OnInit, OnDestroy {
       new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.impressum'), 'impressum'),
       new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.licenseHint'), 'license-hint')
     ];
+  }
+
+  loginUser() {
+    console.log('Session Timer: Login User');
+    this.router.navigate(['/']);
+  }
+
+  logoutUser() {
+    console.log('Session Timer: Logout User');
   }
 }
