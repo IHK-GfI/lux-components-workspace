@@ -24,7 +24,8 @@ export class MasterDetailExampleDataService {
         content:
           ' Lorem ipsum dolor sit amet, consetetur\n' +
           ' sadipscing elitr, sed diam nonumy eirmod tempor inviduntutlaboreetdolore magna aliquyam erat,\n' +
-          ' sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.'
+          ' sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.',
+        urgent: i === 1 || i % 5 === 4
       });
     }
 
