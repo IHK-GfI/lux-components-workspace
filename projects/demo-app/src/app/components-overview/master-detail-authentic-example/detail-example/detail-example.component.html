@@ -2,12 +2,16 @@
   <lux-card-content>
     <div class="lux-flex lux-flex-col">
       <div class="lux-grid lux-grid-cols-2 lt-lg:lux-grid-cols-1 lux-gap-8">
-        <lux-input-ac
-          luxName="master-detail_titleDetail"
-          luxLabel="Title"
-          [luxNoBottomLabel]="true"
-          [(luxValue)]="selectedDetail.title"
-        >
+        <div class="lux-flex lux-items-center">
+          <lux-toggle-ac
+            luxLabel="luxCustomHeader anzeigen"
+            [(luxChecked)]="masterDetailConfig!.showCustomCardHeader"
+            [luxNoLabels]="true"
+          >
+          </lux-toggle-ac>
+          <app-new-marker></app-new-marker>
+        </div>
+        <lux-input-ac luxName="master-detail_titleDetail" luxLabel="Title" [luxNoBottomLabel]="true" [(luxValue)]="selectedDetail.title">
         </lux-input-ac>
         <lux-input-ac
           luxName="master-detail_subtitleDetail"

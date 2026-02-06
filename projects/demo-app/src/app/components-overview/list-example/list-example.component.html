@@ -1,4 +1,7 @@
-<example-base-structure exampleTitle="List" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90list-v19">
+<example-base-structure
+  exampleTitle="List"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90list-v19"
+>
   <example-base-content>
     <lux-list
       class="custom-list"
@@ -12,23 +15,35 @@
       (luxSelectedPositionChange)="log(showOutputEvents, 'luxSelectedPositionChange', $event)"
     >
       @for (item of items; track item; let i = $index) {
-      <lux-list-item
-        [luxTitle]="item.title"
-        [luxSubTitle]="item.subTitle"
-        [luxTitleLineBreak]="item.lineBreak"
-        [luxSelected]="item.selected"
-        (luxClicked)="click($event)"
-      >
-        <lux-list-item-icon>
-          <lux-icon [luxIconName]="item.iconName" class="{{ 'lux-color-' + colors[i % colors.length] }}"></lux-icon>
-        </lux-list-item-icon>
-        <lux-list-item-content>
-          Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui
-          officia deserunt mollit anim id est laborum.
-        </lux-list-item-content>
-      </lux-list-item>
+        <lux-list-item
+          [luxTitle]="item.title"
+          [luxSubTitle]="item.subTitle"
+          [luxTitleLineBreak]="item.lineBreak"
+          [luxSelected]="item.selected"
+          (luxClicked)="click($event)"
+        >
+          @if (showCustomHeader) {
+            <lux-list-item-custom-header>
+              <div class="custom-header">
+                <lux-icon luxIconName="lux-interface-arrows-button-right-duoble"></lux-icon>
+                <div class="custom-header-content">
+                  <div>{{ item.title }} (Custom-Header)</div>
+                  <div>{{ item.subTitle }}</div>
+                </div>
+                <lux-icon luxIconName="lux-interface-arrows-button-left-double"></lux-icon>
+              </div>
+            </lux-list-item-custom-header>
+          }
+          <lux-list-item-icon>
+            <lux-icon [luxIconName]="item.iconName" class="{{ 'lux-color-' + colors[i % colors.length] }}"></lux-icon>
+          </lux-list-item-icon>
+          <lux-list-item-content>
+            Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad
+            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in
+            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui
+            officia deserunt mollit anim id est laborum.
+          </lux-list-item-content>
+        </lux-list-item>
       }
     </lux-list>
   </example-base-content>
@@ -39,6 +54,15 @@
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     ></lux-toggle-ac>
+    <div class="lux-flex lux-items-center">
+      <lux-toggle-ac
+        luxLabel="luxListItemCustomHeader anzeigen"
+        [(luxChecked)]="showCustomHeader"
+        [luxNoLabels]="true"
+      >
+      </lux-toggle-ac>
+      <app-new-marker></app-new-marker>
+    </div>
     <lux-input-ac
       [(luxValue)]="emptyLabel"
       luxName="list_luxEmptyLabel"
@@ -70,53 +94,53 @@
     </lux-input-ac>
   </example-base-simple-options>
   @if (items.length > 0) {
-  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-accordion [luxMulti]="false" [luxMode]="'flat'">
-      @for (item of items; track item) {
-      <lux-panel>
-        <lux-panel-header-title>
-          {{ item.title }}
-        </lux-panel-header-title>
-        <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 column lux-mt-4">
-          <lux-input-ac
-            [(luxValue)]="item.title"
-            luxName="list_luxTitle"
-            luxLabel="luxTitle"
-            luxHint="Diese Property bestimmt den Titel des Items."
-          >
-          </lux-input-ac>
-          <lux-input-ac
-            [(luxValue)]="item.subTitle"
-            luxName="list_luxSubTitle"
-            luxLabel="luxSubTitle"
-            luxHint="Diese Property bestimmt den Untertitel (grau) des Items."
-          >
-          </lux-input-ac>
-          <lux-input-ac luxName="list_luxIconName" [(luxValue)]="item.iconName" luxLabel="luxIconName">
-            <lux-form-hint>
-              Der Name des Icons für dieses Item.<br />
-              Das Icon wird über Content-Projection eingebunden, die restlichen Properties hierfür entfallen der Einfachheit halber für das
-              Beispiel.
-            </lux-form-hint>
-          </lux-input-ac>
-          <lux-toggle-ac
-            luxLabel="luxTitleLineBreak"
-            luxHint="Dieses Flag bestimmt ob die Titel-Zeilen umgebrochen oder mit '...' abgekürzt werden."
-            [(luxChecked)]="item.lineBreak"
-            [luxNoTopLabel]="true"
-          >
-          </lux-toggle-ac>
-          <lux-toggle-ac luxLabel="luxSelected" [(luxChecked)]="item.selected" [luxNoTopLabel]="true">
-            <lux-form-hint>
-              Mithilfe dieses Flags kann das Item hervorgehoben dargestellt werden.<br />
-              In diesem Beispiel sorgt ein Klick auf ein Item dafür, dass dieses dann als selektiert gekennzeichnet wird.
-            </lux-form-hint>
-          </lux-toggle-ac>
-        </lux-panel-content>
-      </lux-panel>
-      }
-    </lux-accordion>
-  </example-base-advanced-options>
+    <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+      <lux-accordion [luxMulti]="false" [luxMode]="'flat'">
+        @for (item of items; track item) {
+          <lux-panel>
+            <lux-panel-header-title>
+              {{ item.title }}
+            </lux-panel-header-title>
+            <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 column lux-mt-4">
+              <lux-input-ac
+                [(luxValue)]="item.title"
+                luxName="list_luxTitle"
+                luxLabel="luxTitle"
+                luxHint="Diese Property bestimmt den Titel des Items."
+              >
+              </lux-input-ac>
+              <lux-input-ac
+                [(luxValue)]="item.subTitle"
+                luxName="list_luxSubTitle"
+                luxLabel="luxSubTitle"
+                luxHint="Diese Property bestimmt den Untertitel (grau) des Items."
+              >
+              </lux-input-ac>
+              <lux-input-ac luxName="list_luxIconName" [(luxValue)]="item.iconName" luxLabel="luxIconName">
+                <lux-form-hint>
+                  Der Name des Icons für dieses Item.<br />
+                  Das Icon wird über Content-Projection eingebunden, die restlichen Properties hierfür entfallen der Einfachheit halber für
+                  das Beispiel.
+                </lux-form-hint>
+              </lux-input-ac>
+              <lux-toggle-ac
+                luxLabel="luxTitleLineBreak"
+                luxHint="Dieses Flag bestimmt ob die Titel-Zeilen umgebrochen oder mit '...' abgekürzt werden."
+                [(luxChecked)]="item.lineBreak"
+                [luxNoTopLabel]="true"
+              >
+              </lux-toggle-ac>
+              <lux-toggle-ac luxLabel="luxSelected" [(luxChecked)]="item.selected" [luxNoTopLabel]="true">
+                <lux-form-hint>
+                  Mithilfe dieses Flags kann das Item hervorgehoben dargestellt werden.<br />
+                  In diesem Beispiel sorgt ein Klick auf ein Item dafür, dass dieses dann als selektiert gekennzeichnet wird.
+                </lux-form-hint>
+              </lux-toggle-ac>
+            </lux-panel-content>
+          </lux-panel>
+        }
+      </lux-accordion>
+    </example-base-advanced-options>
   }
   <example-base-options-actions>
     <div class="lux-simple-form row">

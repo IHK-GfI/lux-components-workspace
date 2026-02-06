@@ -3,3 +3,10 @@
     padding: 0;
   }
 }
+
+.custom-header {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: space-around;
+}
+

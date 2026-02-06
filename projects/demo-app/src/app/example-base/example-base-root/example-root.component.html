@@ -3,46 +3,46 @@
   [ngClass]="{ 'lux-flex-col': !desktopView, 'example-mobile': !desktopView }"
 >
   @if (desktopView) {
-  <div
-    class="example-base-components-list lux-color-dark-divider lux-flex lux-flex-auto lux-flex-grow-0 lux-flex-col"
-    luxAriaRole="navigation"
-    luxAriaLabel="Komponentenbeispiele"
-    #exampleListElement
-  >
-  <div class="lux-flex lux-justify-between lux-pb-4">
-    <lux-button luxLabel="Zurück" luxColor="primary" [luxStroked]="true" (luxClicked)="onPrev()"></lux-button>
-    <lux-button luxLabel="Weiter" luxColor="primary" [luxStroked]="true" (luxClicked)="onNext()"></lux-button>
-  </div>
-    @for (moduleName of navigationService.currentModuleNames; track moduleName) {
-    <lux-panel luxCollapsedHeaderHeight="2.1875em" luxExpandedHeaderHeight="2.1875em" [luxExpanded]="true">
-      <lux-panel-header-title
-        ><span class="lux-color-primary-20">lux-{{ moduleName }}</span></lux-panel-header-title
-      >
-      <lux-panel-content>
-        @for (component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted; track component) {
-        <div
-          class="example-component-list-item lux-color-primary-20"
-          tabindex="0"
-          role="button"
-          [luxBadgeNotification]="component.news ? 'neu' : ''"
-          luxBadgeColor="accent"
-          luxBadgePosition="above before"
-          luxBadgeNotification
-          [ngClass]="{
-            'example-component-list-item-selected':
-              navigationService.selectedComponent && navigationService.selectedComponent.label === component.label
-          }"
-          (click)="onComponentClick(component)"
-          (keydown.space)="onComponentClick(component)"
-          (keydown.enter)="onComponentClick(component)"
-        >
-          {{ component.label }}
-        </div>
-        }
-      </lux-panel-content>
-    </lux-panel>
-    }
-  </div>
+    <div
+      class="example-base-components-list lux-color-dark-divider lux-flex lux-flex-auto lux-flex-grow-0 lux-flex-col"
+      luxAriaRole="navigation"
+      luxAriaLabel="Komponentenbeispiele"
+      #exampleListElement
+    >
+      <div class="lux-flex lux-justify-between lux-pb-4">
+        <lux-button luxLabel="Zurück" luxColor="primary" [luxStroked]="true" (luxClicked)="onPrev()"></lux-button>
+        <lux-button luxLabel="Weiter" luxColor="primary" [luxStroked]="true" (luxClicked)="onNext()"></lux-button>
+      </div>
+      @for (moduleName of navigationService.currentModuleNames; track moduleName) {
+        <lux-panel luxCollapsedHeaderHeight="2.1875em" luxExpandedHeaderHeight="2.1875em" [luxExpanded]="true">
+          <lux-panel-header-title
+            ><span class="lux-color-primary-20">lux-{{ moduleName }}</span></lux-panel-header-title
+          >
+          <lux-panel-content>
+            @for (component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted; track component) {
+              <div class="lux-flex lux-items-center lux-gap-2 example-component-list-item lux-color-primary-20" [ngClass]="{
+                    'example-component-list-item-selected':
+                      navigationService.selectedComponent && navigationService.selectedComponent.label === component.label
+                  }">
+                <div
+                  class="example-component-list-item-label"
+                  tabindex="0"
+                  role="button"
+                  (click)="onComponentClick(component)"
+                  (keydown.space)="onComponentClick(component)"
+                  (keydown.enter)="onComponentClick(component)"
+                >
+                  {{ component.label }}
+                </div>
+                @if (component.news) {
+                  <app-new-marker class="example-component-list-item-new-marker"></app-new-marker>
+                }
+              </div>
+            }
+          </lux-panel-content>
+        </lux-panel>
+      }
+    </div>
   }
   <div class="example-base-content" [ngClass]="{ 'lux-flex-auto': !desktopView, 'lux-flex-shrink-0': !desktopView }">
     <router-outlet></router-outlet>

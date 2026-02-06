@@ -1,8 +1,19 @@
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { LuxAlphabeticallySortedPipe, LuxAriaLabelDirective, LuxAriaRoleDirective, LuxBadgeNotificationDirective, LuxButtonComponent, LuxMediaQueryObserverService, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent, LuxUtil } from '@ihk-gfi/lux-components';
+import {
+  LuxAlphabeticallySortedPipe,
+  LuxAriaLabelDirective,
+  LuxAriaRoleDirective,
+  LuxButtonComponent,
+  LuxMediaQueryObserverService,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxUtil
+} from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
+import { NewMarkerComponent } from '../../base/new-marker/new-marker.component';
 import { ComponentsOverviewNavigationService } from '../../components-overview/components-overview-navigation.service';
 
 @Component({
@@ -20,8 +31,8 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
     NgClass,
     RouterOutlet,
     LuxButtonComponent,
-    LuxBadgeNotificationDirective
-]
+    NewMarkerComponent
+  ]
 })
 export class ExampleRootComponent implements OnDestroy {
   private router = inject(Router);

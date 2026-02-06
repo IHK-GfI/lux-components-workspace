@@ -23,3 +23,40 @@
     border: none;
   }
 }
+
+.custom-header-example {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  align-items: stretch;
+  padding: 0;
+  margin-bottom: -10px;
+
+  .title {
+    display: flex;
+    align-items: center;
+
+    &.urgent {
+      min-height: 40px;
+      padding: 0 8px;
+      color: var(--lux-theme-custom-on-lightblue);
+      background-color: var(--lux-theme-custom-lightblue);
+      border-radius: var(--lux-theme-app-border-radius);
+    }
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    color: var(--lux-theme-dark-secondary-text);
+    margin-top: 4px;
+
+    &.urgent {
+      padding: 0 8px;
+    }
+  }
+}
+
+.example-header {
+  padding: 0 20px;
+}
+

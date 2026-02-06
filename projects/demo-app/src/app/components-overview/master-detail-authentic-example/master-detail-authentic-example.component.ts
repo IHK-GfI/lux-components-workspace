@@ -1,27 +1,7 @@
+import { NgTemplateOutlet } from "@angular/common";
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-    LuxAppFooterButtonInfo,
-    LuxAppFooterButtonService,
-    LuxButtonComponent,
-    LuxConsoleService,
-    LuxDetailHeaderAcComponent,
-    LuxDetailViewAcComponent,
-    LuxFilterFormComponent,
-    LuxFilterFormExtendedComponent,
-    LuxIconComponent,
-    LuxMasterDetailAcComponent,
-    LuxMasterFooterAcComponent,
-    LuxMasterHeaderContentAcComponent,
-    LuxMasterListAcComponent,
-    LuxMenuComponent,
-    LuxMenuItemComponent,
-    LuxRelativeTimestampPipe,
-    LuxSelectAcComponent,
-    LuxTabComponent,
-    LuxTabsComponent,
-    LuxToggleAcComponent
-} from '@ihk-gfi/lux-components';
+import { LuxAppFooterButtonInfo, LuxAppFooterButtonService, LuxBadgeComponent, LuxButtonComponent, LuxConsoleService, LuxDetailHeaderAcComponent, LuxDetailViewAcComponent, LuxFilterFormComponent, LuxFilterFormExtendedComponent, LuxIconComponent, LuxLabelComponent, LuxMasterDetailAcComponent, LuxMasterFooterAcComponent, LuxMasterHeaderContentAcComponent, LuxMasterListAcComponent, LuxMenuComponent, LuxMenuItemComponent, LuxRelativeTimestampPipe, LuxSelectAcComponent, LuxTabComponent, LuxTabsComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { of } from 'rxjs';
 import { delay, take, tap } from 'rxjs/operators';
 import { DetailExampleComponent } from './detail-example/detail-example.component';
@@ -52,8 +32,11 @@ import { TextExampleComponent } from './text-example/text-example.component';
     LuxToggleAcComponent,
     LuxSelectAcComponent,
     DetailExampleComponent,
-    TextExampleComponent
-  ]
+    TextExampleComponent,
+    LuxBadgeComponent,
+    LuxLabelComponent,
+    NgTemplateOutlet
+]
 })
 export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy {
   private dataService = inject(MasterDetailExampleDataService);
@@ -88,6 +71,7 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
     masterIsReloading: boolean;
     ignoreScrollLoading: boolean;
     alignEmptyElements: boolean;
+    showCustomCardHeader: boolean;
   } = {
     emptyIconDetail: 'lux-interface-delete-1',
     emptyIconMaster: 'lux-interface-delete-1',
@@ -99,7 +83,8 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
     lineBreak: false,
     masterIsReloading: false,
     ignoreScrollLoading: false,
-    alignEmptyElements: true
+    alignEmptyElements: true,
+    showCustomCardHeader: true
   };
 
   // toggleMasterFocus des infinite scroll
