@@ -1,10 +1,10 @@
-import { Component, inject, OnInit, output } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxDialogService } from '../../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
 import { LuxTooltipDirective } from '../../../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxMediaQueryObserverService } from '../../../../lux-util/lux-media-query-observer.service';
-import { Subscription } from 'rxjs';
 import { TranslocoService } from '@jsverse/transloco';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -20,10 +20,10 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
   private mediaQueryService = inject(LuxMediaQueryObserverService);
   tService = inject(TranslocoService);
   private liveAnnouncer = inject(LiveAnnouncer);
+  private destroyRef = inject(DestroyRef);
   luxLoading = false;
 
   mobileView: boolean;
-  subscription: Subscription;
 
   luxLogoutEvent = output<void>();
   luxLoginEvent = output<void>();
@@ -31,17 +31,20 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
   constructor() {
     this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs';
 
-    this.subscription = this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe((query: string) => {
-      this.mobileView = query === 'xs';
-    });
+    this.mediaQueryService
+      .getMediaQueryChangedAsObservable()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((query: string) => {
+        this.mobileView = query === 'xs';
+      });
   }
 
   ngOnInit(): void {
-    this.luxSessionTimerService.luxLoginEvent.subscribe(() => {
+    this.luxSessionTimerService.luxLoginEvent.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.luxLoginEvent.emit();
     });
 
-    this.luxSessionTimerService.luxLogoutEvent.subscribe(() => {
+    this.luxSessionTimerService.luxLogoutEvent.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.luxLogoutEvent.emit();
     });
   }
@@ -59,7 +62,8 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
       complete: () => {
         this.luxLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('LuxAppHeaderAcSessionTimerComponent: Error while extending session timer: ', err);
         this.luxLoading = false;
         this.luxSessionTimerService.openLogoutDialog();
       }
