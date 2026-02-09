@@ -8,10 +8,9 @@
     "build-green": "del-cli --force ./../../dist/theme/*green*.* && sass --style=compressed --load-path=../../node_modules src/theme-green/lux-green.scss:./../../dist/theme/prebuilt-themes/luxtheme-green-min.css && sass --load-path=../../node_modules src/theme-green/lux-green.scss:./../../dist/theme/prebuilt-themes/luxtheme-green.css",
     "build": "node ./scripts/check-font-size.js && npm run clean && npm run build-authentic && npm run build-green",
     "clean": "del-cli --force ./../../dist/theme/*.* && del-cli --force ../../dist/theme/",
-    "pack-copy-base-files": "copyfiles -f package.json README.md ../../LICENSE ./../../dist/theme",
-    "pack-copy-src-dirs": "copyfiles \"./src/**\" ./../../dist/theme",
-    "pack-copy-prebuilt-themes": "copyfiles \"./../../dist/theme/**\" ./../../dist/theme",
-    "pack": "npm run build && npm run pack-copy-base-files && npm run pack-copy-src-dirs && npm run pack-copy-prebuilt-themes",
+    "pack-copy-base-files": "node ./scripts/copy-base-files.js",
+    "pack-copy-src-dirs": "node ./scripts/copy-src-dirs.js",
+    "pack": "npm run build && npm run pack-copy-base-files && npm run pack-copy-src-dirs",
     "smoketest": "npm run test && npm run pack",
     "test": "npm run build",
     "watch": "npm-watch"
@@ -19,7 +18,7 @@
   "author": "Thomas Dickhut",
   "license": "IHK-GfI Open-Source-Lizenz",
   "peerDependencies": {
-    "@angular/material": "^20.0.0"
+    "@angular/material": "^21.0.0"
   },
   "watch": {
     "build-authentic": {

@@ -22,7 +22,7 @@ export const updateMinVersion = '19.4.0';
 export const updateNodeMinVersion = '22.0.0';
 export const addOrUpdate = false;
 
-export function update200000(options: Options): Rule {
+export function update210000(options: Options): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     return chain([check(options), applyRuleIf(updateMinVersion, updateProject(options)), finish(false, `${chalk.greenBright('Fertig!')}`)]);
   };
@@ -50,11 +50,11 @@ function check(_options: Options): Rule {
   };
 }
 
-export function updatePackageJson(options: Options): Rule {
+export function updatePackageJson(_options: Options): Rule {
   return chain([
     messageInfoRule(`Abhängigkeiten in der Datei "package.json" werden aktualisiert...`),
-    updateDep('@ihk-gfi/lux-components', '20.0.0', addOrUpdate),
-    updateDep('@ihk-gfi/lux-components-theme', '20.0.0', addOrUpdate),
+    updateDep('@ihk-gfi/lux-components', '21.0.0', addOrUpdate),
+    updateDep('@ihk-gfi/lux-components-theme', '21.0.0', addOrUpdate),
     updateDep('@ihk-gfi/lux-components-icons-and-fonts', '1.10.0', addOrUpdate),
     messageSuccessRule(`Abhängigkeiten in der Datei "package.json" wurden aktualisiert.`)
   ]);

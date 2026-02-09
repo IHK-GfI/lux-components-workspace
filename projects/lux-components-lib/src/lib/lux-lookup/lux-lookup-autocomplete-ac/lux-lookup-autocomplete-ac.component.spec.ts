@@ -12,7 +12,6 @@ import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.prov
 import { ValidatorFnType } from '../../lux-form/lux-form-model/lux-form-component-base.class';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
-import { LuxOverlayHelper } from '../../lux-util/testing/lux-test-overlay-helper';
 import { LuxLookupCompareFn, luxLookupCompareKeyFn, luxLookupCompareKurzTextFn } from '../lux-lookup-model/lux-lookup-component';
 import { LuxFieldValues, LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
@@ -39,14 +38,12 @@ describe('LuxLookupAutocompleteAcComponent', () => {
     let fixture: ComponentFixture<LuxNoFormComponent>;
     let component: LuxNoFormComponent;
     let autocomplete: LuxLookupAutocompleteAcComponent;
-    let overlayHelper: LuxOverlayHelper;
 
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(LuxNoFormComponent);
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxLookupAutocompleteAcComponent)).componentInstance;
       fixture.detectChanges();
-      overlayHelper = new LuxOverlayHelper();
       tick(autocomplete.luxDebounceTime);
     }));
 
@@ -80,7 +77,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
 
       // Nachbedingungen testen
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option')
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');
@@ -104,7 +101,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
 
       // Nachbedingungen testen
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');
@@ -128,7 +125,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
 
       // Nachbedingungen testen
-      const options = overlayHelper.selectAllFromOverlay('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');

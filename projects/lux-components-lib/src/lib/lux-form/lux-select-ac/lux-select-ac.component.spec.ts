@@ -1,12 +1,10 @@
 import { Directionality } from '@angular/cdk/bidi';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { Platform } from '@angular/cdk/platform';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { JsonPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -39,27 +37,11 @@ describe('LuxSelectAcComponent', () => {
     }).compileComponents();
   }));
 
-  let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let dir: { value: 'ltr' | 'rtl' };
-  let platform: Platform;
   const scrolledSubject = new Subject();
 
-  const configureMatSelectTestingModule = () => {
-    inject([OverlayContainer, Platform], (oc: OverlayContainer, p: Platform) => {
-      overlayContainer = oc;
-      overlayContainerElement = oc.getContainerElement();
-      platform = p;
-    })();
-  };
-
-  afterEach(() => {
-    overlayContainer.ngOnDestroy();
-  });
-
   describe('innerhalb eines Formulars', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectInsideFormComponent>;
     let testComponent: SelectInsideFormComponent;
     let trigger: HTMLElement;
@@ -83,7 +65,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       expect(options[0].classList).toContain('mdc-list-item--selected');
     }));
 
@@ -97,7 +79,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelectorAll('mat-option')[1] as HTMLElement).click();
+      (fixture.nativeElement.querySelectorAll('mat-option')[1] as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -144,8 +126,6 @@ describe('LuxSelectAcComponent', () => {
   });
 
   describe('außerhalb eines Formulars', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectOutsideFormComponent>;
     let testComponent: SelectOutsideFormComponent;
     let select: HTMLElement;
@@ -171,7 +151,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       expect(options[3].classList).toContain('mdc-list-item--selected');
     }));
 
@@ -182,7 +162,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (fixture.nativeElement.querySelector('mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -352,8 +332,6 @@ describe('LuxSelectAcComponent', () => {
   });
 
   describe('Custom Compare', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectCustomCompareComponent>;
     let testComponent: SelectCustomCompareComponent;
     let select: HTMLElement;
@@ -378,15 +356,13 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       expect(options[3].classList).toContain('mdc-list-item--selected');
       discardPeriodicTasks();
     }));
   });
 
   describe('mit simplem Daten-Array', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectStringArrayComponent>;
     let testComponent: SelectStringArrayComponent;
     let select: HTMLElement;
@@ -413,7 +389,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       expect(options[3].classList).toContain('mdc-list-item--selected');
     }));
 
@@ -424,7 +400,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      (fixture.nativeElement.querySelector('mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -472,7 +448,7 @@ describe('LuxSelectAcComponent', () => {
 
       clickTrigger();
 
-      const options = overlayContainerElement.querySelectorAll('mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
+      const options = fixture.nativeElement.querySelectorAll('mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
 
       expect(options.length).toBe(testComponent.options.length);
       expect(options.item(0).innerText.trim()).toEqual('');
@@ -521,8 +497,6 @@ describe('LuxSelectAcComponent', () => {
   });
 
   describe('mit einer gesetzten Value-Hook (ohne Formular)', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectValueHookComponent>;
     let testComponent: SelectValueHookComponent;
     let select: HTMLElement;
@@ -580,8 +554,6 @@ describe('LuxSelectAcComponent', () => {
   });
 
   describe('mit einer gesetzten Value-Hook (in einem Formular)', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectValueHookFormComponent>;
     let testComponent: SelectValueHookFormComponent;
     let select: HTMLElement;
@@ -616,8 +588,6 @@ describe('LuxSelectAcComponent', () => {
   });
 
   describe('als Multiselect', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectMultipleComponent>;
     let testComponent: SelectMultipleComponent;
     let select: HTMLElement;
@@ -640,7 +610,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = overlayContainerElement.querySelectorAll('mat-option');
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
       (options[0] as HTMLElement).click();
       fixture.detectChanges();
       flush();
@@ -732,8 +702,6 @@ describe('LuxSelectAcComponent', () => {
   });
 
   describe('Darstellung über Ng-Template', () => {
-    beforeEach(waitForAsync(() => configureMatSelectTestingModule()));
-
     let fixture: ComponentFixture<SelectWithTemplateComponent>;
     let testComponent: SelectWithTemplateComponent;
     let select: HTMLElement;
@@ -749,7 +717,7 @@ describe('LuxSelectAcComponent', () => {
 
     it('Sollte die Options richtig darstellen', fakeAsync(() => {
       // Vorbedingungen testen
-      let optionTexts = overlayContainerElement.querySelectorAll('.mdc-list-item__primary-text');
+      let optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(0);
 
       // Änderungen durchführen
@@ -758,7 +726,7 @@ describe('LuxSelectAcComponent', () => {
       flush();
 
       // Nachbedingungen prüfen
-      optionTexts = overlayContainerElement.querySelectorAll('.mdc-list-item__primary-text');
+      optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(4);
       expect(optionTexts[0].textContent!.trim()).toEqual('Option: A');
       expect(optionTexts[1].textContent!.trim()).toEqual('Option: B');
@@ -768,7 +736,7 @@ describe('LuxSelectAcComponent', () => {
 
     it('Sollte ngTemplate luxOptionLabelProp vorziehen', fakeAsync(() => {
       // Vorbedingungen testen
-      let optionTexts = overlayContainerElement.querySelectorAll('.mdc-list-item__primary-text');
+      let optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(0);
 
       // Änderungen durchführen
@@ -780,7 +748,7 @@ describe('LuxSelectAcComponent', () => {
       flush();
 
       // Nachbedingungen prüfen
-      optionTexts = overlayContainerElement.querySelectorAll('.mdc-list-item__primary-text');
+      optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(4);
       expect(optionTexts[0].textContent!.trim()).toEqual('Option: A');
       expect(optionTexts[1].textContent!.trim()).toEqual('Option: B');

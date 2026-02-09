@@ -4,4 +4,8 @@ lux-checkbox-ac {
   @include mat.checkbox-overrides((
     label-text-size: var(--lux-theme-form-control-font-size),
   ));
+
+  &.lux-form-control-readonly {
+    pointer-events: none;
+  }
 }
