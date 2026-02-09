@@ -65,7 +65,7 @@ export class HtmlManipulator {
     const elements = dom.window.document.querySelectorAll(selector);
 
     let counter = 0;
-    elements.forEach((el) => {
+    elements.forEach((el: Element) => {
       const location = dom.nodeLocation(el);
       const startIndex = location?.startOffset ?? -1;
       const endIndex = location?.endOffset ?? -1;
