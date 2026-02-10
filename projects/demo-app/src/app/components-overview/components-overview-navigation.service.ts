@@ -30,7 +30,8 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['popup', 'lux-programming-browser-window'],
     ['tenant-logo', 'lux-image-picture-landscape-1'],
     ['tour-hint', 'lux-programming-browser-window'],
-    ['breadcrumb', 'lux-interface-cursor-arrow-1']
+    ['breadcrumb', 'lux-interface-cursor-arrow-1'],
+    ['session-timer', 'lux-interface-time-reset']
   ]);
 
   private create(moduleName: string, label: string, news = false) {
@@ -104,7 +105,8 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('popup', 'Snackbar'),
     this.create('tenant-logo', 'Tenant-Logo'),
     this.create('tour-hint', 'Tour-Hint'),
-    this.create('breadcrumb', 'Breadcrumb')
+    this.create('breadcrumb', 'Breadcrumb'),
+    this.create('session-timer', 'Session-Timer', true)
   ];
 
   sortedComponents: any[] = [];
@@ -124,6 +126,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['markdown', false],
     ['pipes', false],
     ['popup', false],
+    ['session-timer', false],
     ['tenant-logo', false],
     ['tour-hint', false]
   ]);
@@ -193,13 +196,13 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
   navigateToPrevComponent() {
     const currentComponent = this.selectedComponent;
     const currentIndex = this.sortedComponents.findIndex((component: any) => component.label === currentComponent.label);
-    this.sortedComponents[(currentIndex > 0 ? currentIndex - 1 : this.sortedComponents.length - 1)].onclick();
+    this.sortedComponents[currentIndex > 0 ? currentIndex - 1 : this.sortedComponents.length - 1].onclick();
   }
 
   navigateToNextComponent() {
     const currentComponent = this.selectedComponent;
     const currentIndex = this.sortedComponents.findIndex((component: any) => component.label === currentComponent.label);
-    this.sortedComponents[(currentIndex < this.sortedComponents.length - 1 ? currentIndex + 1 : 0)].onclick();
+    this.sortedComponents[currentIndex < this.sortedComponents.length - 1 ? currentIndex + 1 : 0].onclick();
   }
 
   sortComponentEntriesByModule() {

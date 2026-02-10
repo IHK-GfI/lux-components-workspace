@@ -1,0 +1,58 @@
+@switch (currentStep()) { @default {
+<lux-dialog-structure luxTagId="lux-session-timer-dialog-default" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content luxTagId="lux-session-timer-dialog-content-default" class="lux-session-timer-dialog-info">
+    <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-time-sleep" luxIconSize="3x"></lux-icon>
+    <h2>{{ 'luxc.app-header.session-timer.dialog.info.title' | transloco }}</h2>
+    <p>
+      {{ 'luxc.app-header.session-timer.dialog.info.message.part1' | transloco }}
+      <strong>{{ 'luxc.app-header.session-timer.dialog.info.message.part2' | transloco }}</strong>
+      {{ 'luxc.app-header.session-timer.dialog.info.message.part3' | transloco }}
+    </p>
+  </lux-dialog-content>
+  <lux-dialog-actions luxTagId="lux-session-timer-dialog-actions-default" class="lux-session-timer-dialog-info-actions">
+    <lux-button
+      luxTagId="lux-session-timer-button-logout"
+      [luxStroked]="true"
+      luxLabel="{{ 'luxc.app-header.session-timer.dialog.logout.btn' | transloco }}"
+      luxAriaLabel="{{ 'luxc.app-header.session-timer.dialog.logout.btn' | transloco }}"
+      luxIconName="lux-interface-logout-circle"
+      (luxClicked)="logoutUser()"
+    ></lux-button>
+    <lux-button
+      luxTagId="lux-session-timer-button-extend-session"
+      [luxFlat]="true"
+      luxColor="primary"
+      luxLabel="{{ 'luxc.app-header.session-timer.dialog.extendSession.btn' | transloco }}"
+      luxAriaLabel="{{ 'luxc.app-header.session-timer.dialog.extendSession.btn' | transloco }}"
+      luxIconName="lux-interface-validation-check"
+      (luxClicked)="extendSession()"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>
+} @case ("wait") {
+<lux-dialog-structure luxTagId="lux-session-timer-dialog-wait" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content luxTagId="lux-session-timer-dialog-content-wait" class="lux-session-timer-dialog-waiting">
+    <lux-progress luxType="Spinner" luxMode="indeterminate" luxSize="large"></lux-progress>
+    <h2>{{ 'luxc.app-header.session-timer.dialog.wait.title' | transloco }}</h2>
+  </lux-dialog-content>
+</lux-dialog-structure>
+} @case ("logout") {
+<lux-dialog-structure luxTagId="lux-session-timer-dialog-logout" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
+  <lux-dialog-content luxTagId="lux-session-timer-dialog-content-logout" class="lux-session-timer-dialog-logout">
+    <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-logout-circle" luxIconSize="3x"></lux-icon>
+    <h2>{{ 'luxc.app-header.session-timer.dialog.logout.title' | transloco }}</h2>
+    <p>{{ 'luxc.app-header.session-timer.dialog.error.message' | transloco }}</p>
+  </lux-dialog-content>
+  <lux-dialog-actions luxTagId="lux-session-timer-dialog-actions-logout" class="lux-session-timer-dialog-logout-actions">
+    <lux-button
+      luxTagId="lux-session-timer-button-back-to-login"
+      [luxFlat]="true"
+      luxLabel="{{ 'luxc.app-header.session-timer.dialog.backToLogin.btn' | transloco }}"
+      luxAriaLabel="{{ 'luxc.app-header.session-timer.dialog.backToLogin.btn' | transloco }}"
+      luxIconName="lux-interface-login-circle"
+      luxColor="primary"
+      (luxClicked)="backToLogin()"
+    ></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>
+} }
