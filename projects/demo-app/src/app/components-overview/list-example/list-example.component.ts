@@ -1,21 +1,6 @@
 import { Component } from '@angular/core';
-import {
-    LuxAccordionComponent,
-    LuxBadgeColors,
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxListComponent,
-    LuxListItemComponent,
-    LuxListItemContentComponent,
-    LuxListItemIconComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
-} from '@ihk-gfi/lux-components';
+import { LuxAccordionComponent, LuxBadgeColors, LuxButtonComponent, LuxFormHintComponent, LuxIconComponent, LuxInputAcComponent, LuxListComponent, LuxListItemComponent, LuxListItemContentComponent, LuxListItemCustomHeaderComponent, LuxListItemIconComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { NewMarkerComponent } from "../../base/new-marker/new-marker.component";
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -46,10 +31,13 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    ExampleBaseOptionsActionsComponent
-  ]
+    ExampleBaseOptionsActionsComponent,
+    LuxListItemCustomHeaderComponent,
+    NewMarkerComponent
+]
 })
 export class ListExampleComponent {
+  showCustomHeader = false;
   showOutputEvents = false;
   log = logResult;
   items: any[] = [];

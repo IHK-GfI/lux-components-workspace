@@ -190,12 +190,14 @@ export { expansionAnim } from './lib/lux-layout/lux-card/lux-card-model/lux-card
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-content-expanded.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';
+export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-custom-header.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-heading.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-info.component';
 export * from './lib/lux-layout/lux-card/lux-card.component';
 export * from './lib/lux-layout/lux-checkbox-container-ac/lux-checkbox-container-ac.component';
 export * from './lib/lux-layout/lux-divider/lux-divider.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-content.component';
+export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-custom-header.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-icon.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item.component';
 export * from './lib/lux-layout/lux-list/lux-list.component';

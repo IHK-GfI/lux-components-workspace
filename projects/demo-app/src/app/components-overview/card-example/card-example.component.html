@@ -1,4 +1,7 @@
-<example-base-structure exampleTitle="Card" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90card-v19">
+<example-base-structure
+  exampleTitle="Card"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90card-v19"
+>
   <example-base-content class="lux-flex lux-flex-col lux-row-gap-8">
     <lux-card
       [luxTitle]="title"
@@ -15,43 +18,54 @@
       luxCustomTagId="my-card-id"
       luxCustomTagIdSelector="mat-card"
     >
+      @if (showCustomHeader) {
+        <lux-card-custom-header class="custom-header">
+          <div class="lux-width-24"><lux-image luxAlt="Beispielbild" luxImageSrc="assets/svg/box.svg"></lux-image></div>
+        </lux-card-custom-header>
+      }
+
       @if (showIcon) {
-      <lux-icon luxIconName="lux-cogs"></lux-icon>
-      } @if (showInfo) {
-      <lux-card-info>
-        <lux-icon luxIconName="lux-interface-home-3"></lux-icon>
-      </lux-card-info>
-      } @if (!hideCardContent) {
-      <lux-card-content>
-        <h3>H3 - Lorem ipsum</h3>
-        <p>
-          Diese Karte enthält für Testzwecke alle möglichen Konfigurationen auf einmal. Auch wenn dieses technisch möglich ist, soll es
-          nicht zur Nachahmung annimieren. Bitte entscheidet euch, je nach Anwendungsfall, wie ihr eure Karte gestaltet. Weniger ist Besser!
-        </p>
-      </lux-card-content>
-      } @if (useExpandableContent) {
-      <lux-card-content-expanded>
-        <h4>H4 - Lorem ipsum</h4>
-        <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-          erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-        </p>
-        <h5>H5 - Lorem ipsum</h5>
-        <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-          erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-        </p>
-        <h6>H6 - Lorem ipsum</h6>
-        <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-          erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-        </p>
-      </lux-card-content-expanded>
-      } @if (showActions) {
-      <lux-card-actions [luxAlign]="actionAlign.value">
-        <lux-button luxLabel="Button 1" [luxRaised]="true" luxIconName="lux-interface-user-single" luxColor="primary"></lux-button>
-        <lux-button luxLabel="Button 2" [luxRaised]="btn2Raised"></lux-button>
-      </lux-card-actions>
+        <lux-icon luxIconName="lux-cogs"></lux-icon>
+      }
+      @if (showInfo) {
+        <lux-card-info>
+          <lux-icon luxIconName="lux-interface-home-3"></lux-icon>
+        </lux-card-info>
+      }
+      @if (!hideCardContent) {
+        <lux-card-content>
+          <h3>H3 - Lorem ipsum</h3>
+          <p>
+            Diese Karte enthält für Testzwecke alle möglichen Konfigurationen auf einmal. Auch wenn dieses technisch möglich ist, soll es
+            nicht zur Nachahmung annimieren. Bitte entscheidet euch, je nach Anwendungsfall, wie ihr eure Karte gestaltet. Weniger ist
+            Besser!
+          </p>
+        </lux-card-content>
+      }
+      @if (useExpandableContent) {
+        <lux-card-content-expanded>
+          <h4>H4 - Lorem ipsum</h4>
+          <p>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+            aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+          </p>
+          <h5>H5 - Lorem ipsum</h5>
+          <p>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+            aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+          </p>
+          <h6>H6 - Lorem ipsum</h6>
+          <p>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+            aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+          </p>
+        </lux-card-content-expanded>
+      }
+      @if (showActions) {
+        <lux-card-actions [luxAlign]="actionAlign.value">
+          <lux-button luxLabel="Button 1" [luxRaised]="true" luxIconName="lux-interface-user-single" luxColor="primary"></lux-button>
+          <lux-button luxLabel="Button 2" [luxRaised]="btn2Raised"></lux-button>
+        </lux-card-actions>
       }
     </lux-card>
     <h3>Einfaches Anwendungsbeispiel</h3>
@@ -94,6 +108,10 @@
     <lux-toggle-ac luxLabel="lux-card-content ausblenden" [(luxChecked)]="hideCardContent" [luxNoLabels]="true"></lux-toggle-ac>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <div class="lux-flex lux-items-center">
+      <lux-toggle-ac luxLabel="luxCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true"> </lux-toggle-ac>
+      <app-new-marker></app-new-marker>
+    </div>
     <lux-toggle-ac
       luxLabel="luxIcon anzeigen"
       luxHint="Das linksbündige Icon für die Card darstellen."

@@ -46,23 +46,38 @@
     luxSubTitleTooltipProp="subtitleTooltip"
   >
     <!-- Zugriff auf jedes einzelne Master-Element über "master" -->
+    @if (configuration.showCustomCardHeader) {
+      <ng-template #luxSimpleCustomHeader let-master>
+        @if (master.urgent) {
+          <div class="custom-header-example urgent">
+            <div class="title urgent">{{ master.title }} <ng-container *ngTemplateOutlet="urgent"></ng-container></div>
+            <div class="subtitle urgent">{{ master.subtitle }}</div>
+          </div>
+        } @else {
+          <div class="custom-header-example">
+            <div class="title">{{ master.title }}</div>
+            <div class="subtitle">{{ master.subtitle }}</div>
+          </div>
+        }
+      </ng-template>
+    }
     <ng-template #luxSimpleIcon let-master>
       <lux-icon [luxIconName]="master.icon" luxIconSize="1x"></lux-icon>
     </ng-template>
     <ng-template #luxSimpleContent let-master>
       {{ master.content }}
       <p>
-        Fällig <b>{{ master.timestamp | luxRelativeTimestamp : 'TIMESTAMP NULL' }}</b>
+        Fällig <b>{{ master.timestamp | luxRelativeTimestamp: 'TIMESTAMP NULL' }}</b>
       </p>
     </ng-template>
   </lux-master-list-ac>
   @if (showCustomDetailHeader) {
-  <lux-detail-header-ac class="custom-example-header">
-    <div class="example-header">
-      <h2>My Custom Detail Header!</h2>
-      <p>Hier ist Platz für individuellen Inhalt!</p>
-    </div>
-  </lux-detail-header-ac>
+    <lux-detail-header-ac class="custom-example-header">
+      <div class="example-header">
+        <h2>My Custom Detail Header!</h2>
+        <p>Hier ist Platz für individuellen Inhalt!</p>
+      </div>
+    </lux-detail-header-ac>
   }
   <lux-detail-view-ac>
     <!-- Zugriff auf das aktuell selektierte Element über "detail" -->
@@ -129,3 +144,7 @@
     </div>
   </lux-master-footer-ac>
 </lux-master-detail-ac>
+
+<ng-template #urgent>
+  <lux-badge class="lux-ml-3" luxColor="red" [luxUppercase]="false"><lux-label luxId="urgent">dringend</lux-label></lux-badge>
+</ng-template>

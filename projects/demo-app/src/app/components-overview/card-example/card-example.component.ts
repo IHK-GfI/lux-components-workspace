@@ -1,20 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Validators } from '@angular/forms';
-import {
-  LuxButtonComponent,
-  LuxCardActionAlignType,
-  LuxCardActionsComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxCardContentExpandedComponent,
-  LuxCardInfoComponent,
-  LuxFormHintComponent,
-  LuxIconComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxSnackbarService,
-  LuxToggleAcComponent
-} from '@ihk-gfi/lux-components';
+import { LuxButtonComponent, LuxCardActionAlignType, LuxCardActionsComponent, LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent, LuxCardCustomHeaderComponent, LuxCardInfoComponent, LuxFormHintComponent, LuxIconComponent, LuxImageComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxSnackbarService, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { NewMarkerComponent } from "../../base/new-marker/new-marker.component";
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -39,12 +26,16 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
-    ExampleBaseAdvancedOptionsComponent
-  ]
+    ExampleBaseAdvancedOptionsComponent,
+    LuxCardCustomHeaderComponent,
+    NewMarkerComponent,
+    LuxImageComponent
+]
 })
 export class CardExampleComponent {
   private snackbar = inject(LuxSnackbarService);
 
+  showCustomHeader = false;
   showActions = true;
   showIcon = true;
   showInfo = true;

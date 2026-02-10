@@ -74,7 +74,7 @@ $checkmark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width=
   }
 }
 
-lux-link-plain.sr-only ::ng-deep div.link-wrapper {
+lux-link-plain.sr-only ::ng-deep .link-wrapper {
   position: absolute;
   left: -10000px;
   top: auto;
@@ -83,7 +83,7 @@ lux-link-plain.sr-only ::ng-deep div.link-wrapper {
   overflow: hidden;
 }
 
-lux-link-plain.sr-only ::ng-deep div.link-wrapper:focus {
+lux-link-plain.sr-only ::ng-deep .link-wrapper:focus {
   position: static;
   width: auto;
   height: auto;
@@ -97,22 +97,28 @@ lux-link-plain.sr-only ::ng-deep div.link-wrapper:focus {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       &.example-component-list-item-selected {
-        position: relative;
         border-radius: 4px;
         color: var(--lux-theme-on-selected-color);
         background-color: var(--lux-theme-selected-bg-color);
 
-        &::after {
+        .example-component-list-item-label::after {
           @include lux-checkmark-icon(var(--lux-theme-on-selected-color));
         }
       }
 
       &.example-component-list-item-selected:hover {
-        &::after {
+        .example-component-list-item-label::after {
           @include lux-checkmark-icon(var(--mat-sys-on-surface));
         }
+      }
+
+      .example-component-list-item-new-marker {
+        padding-left: 16px;
       }
 
       &:focus-visible {

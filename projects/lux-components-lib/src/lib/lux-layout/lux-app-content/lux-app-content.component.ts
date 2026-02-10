@@ -1,9 +1,6 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
-import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
-import { LuxAriaRoleDirective } from '../../lux-directives/lux-aria/lux-aria-role.directive';
 import { LuxThemeService } from '../../lux-theme/lux-theme.service';
 import { LuxAppService } from '../../lux-util/lux-app.service';
 import { LuxAppFooterFixedService } from '../lux-app-footer/lux-app-footer-fixed.service';
@@ -12,7 +9,7 @@ import { LuxAppFooterFixedService } from '../lux-app-footer/lux-app-footer-fixed
   selector: 'lux-app-content',
   templateUrl: './lux-app-content.component.html',
   styleUrls: ['./lux-app-content.component.scss'],
-  imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, RouterOutlet, TranslocoPipe]
+  imports: [RouterOutlet]
 })
 export class LuxAppContentComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);

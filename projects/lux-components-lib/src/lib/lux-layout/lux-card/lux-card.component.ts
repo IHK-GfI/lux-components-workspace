@@ -26,6 +26,7 @@ import { expansionAnim } from './lux-card-model/lux-card-animations';
 import { LuxCardActionsComponent } from './lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from './lux-card-subcomponents/lux-card-content-expanded.component';
 import { LuxCardContentComponent } from './lux-card-subcomponents/lux-card-content.component';
+import { LuxCardCustomHeaderComponent } from './lux-card-subcomponents/lux-card-custom-header.component';
 import { LuxCardHeadingComponent } from './lux-card-subcomponents/lux-card-heading.component';
 import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.component';
 
@@ -79,6 +80,7 @@ export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ContentChild(LuxCardInfoComponent) infoComponent?: LuxCardInfoComponent;
   @ContentChild(LuxCardContentExpandedComponent) contentExpandedComponent?: LuxCardContentExpandedComponent;
   @ContentChild(LuxCardContentComponent) contentComponent?: LuxCardContentComponent;
+  @ContentChild(LuxCardCustomHeaderComponent) customHeaderComponent?: LuxCardCustomHeaderComponent;
 
   hasCardAction?: boolean;
   animationDisabled = true;
