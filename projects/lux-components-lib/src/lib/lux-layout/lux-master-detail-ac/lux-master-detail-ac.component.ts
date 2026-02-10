@@ -34,8 +34,10 @@ import { LuxPropertyFromObjectPipe } from '../../lux-pipes/lux-property-from-obj
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxCardContentComponent } from '../lux-card/lux-card-subcomponents/lux-card-content.component';
+import { LuxCardCustomHeaderComponent } from "../lux-card/lux-card-subcomponents/lux-card-custom-header.component";
 import { LuxCardComponent } from '../lux-card/lux-card.component';
 import { LuxListItemContentComponent } from '../lux-list/lux-list-subcomponents/lux-list-item-content.component';
+import { LuxListItemCustomHeaderComponent } from "../lux-list/lux-list-subcomponents/lux-list-item-custom-header.component";
 import { LuxListItemIconComponent } from '../lux-list/lux-list-subcomponents/lux-list-item-icon.component';
 import { LuxListItemComponent } from '../lux-list/lux-list-subcomponents/lux-list-item.component';
 import { LuxListComponent } from '../lux-list/lux-list.component';
@@ -76,8 +78,10 @@ import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-a
     LuxButtonComponent,
     LuxIconComponent,
     LuxPropertyFromObjectPipe,
-    TranslocoPipe
-  ]
+    TranslocoPipe,
+    LuxCardCustomHeaderComponent,
+    LuxListItemCustomHeaderComponent
+]
 })
 export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContentInit, AfterViewInit, DoCheck, OnDestroy {
   private cdr = inject(ChangeDetectorRef);

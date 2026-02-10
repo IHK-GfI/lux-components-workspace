@@ -1,16 +1,14 @@
-import { NgClass } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 import { Observable, Subject } from 'rxjs';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
-import { LuxSnackbarColor, LuxSnackbarColors } from '../../../lux-util/lux-colors.enum';
 import { LuxSnackbarConfig } from '../lux-snackbar-config';
 
 @Component({
   selector: 'lux-snackbar',
   templateUrl: './lux-snackbar.component.html',
-  imports: [LuxIconComponent, NgClass, MatButton]
+  imports: [LuxIconComponent, MatButton]
 })
 export class LuxSnackbarComponent implements OnInit {
   config = inject<LuxSnackbarConfig>(MAT_SNACK_BAR_DATA);
@@ -33,15 +31,5 @@ export class LuxSnackbarComponent implements OnInit {
   actionClick() {
     this.snackbarRef.dismiss();
     this.action$.next();
-  }
-
-  /**
-   * Prüft, ob die übergebene Farbe Teil des Enums ist.
-   * Wenn nicht, wird standardmäßig "gray" zurückgegeben.
-   * @param colorToCheck
-   */
-  private checkColorInEnum(colorToCheck: string | undefined): LuxSnackbarColor {
-    const found = LuxSnackbarColors.find((entry) => entry === colorToCheck);
-    return found ?? 'white';
   }
 }

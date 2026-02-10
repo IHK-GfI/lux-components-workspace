@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
-import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.component';
@@ -23,7 +22,7 @@ import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.com
 @Component({
   selector: 'lux-list',
   templateUrl: './lux-list.component.html',
-  imports: [LuxAriaLabelledbyDirective, LuxIconComponent, TranslocoPipe]
+  imports: [LuxIconComponent, TranslocoPipe]
 })
 export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   private tService = inject(TranslocoService);

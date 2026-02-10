@@ -9,6 +9,11 @@
   [luxUseTabIndex]="false"
   (luxClicked)="clicked($event)"
 >
+  @if (customHeaderComponent) {
+    <lux-card-custom-header>
+      <ng-content select="lux-list-item-custom-header"></ng-content>
+    </lux-card-custom-header>
+  }
   <lux-card-info>
     <ng-content select="lux-list-item-icon"></ng-content>
   </lux-card-info>

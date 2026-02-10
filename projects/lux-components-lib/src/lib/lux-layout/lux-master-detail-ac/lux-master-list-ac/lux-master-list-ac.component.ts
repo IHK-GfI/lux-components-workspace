@@ -12,6 +12,7 @@ export class LuxMasterListAcComponent {
 
   @ContentChild('luxSimpleContent') contentTempRef?: TemplateRef<any>;
   @ContentChild('luxSimpleIcon') iconTempRef?: TemplateRef<any>;
+  @ContentChild('luxSimpleCustomHeader') customHeaderTempRef?: TemplateRef<any>;
 
   constructor() {}
 }

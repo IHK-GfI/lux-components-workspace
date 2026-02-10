@@ -28,7 +28,7 @@
       }"
     >
       @if (luxOpen) {
-      <ng-content select="lux-master-header-content-ac"></ng-content>
+        <ng-content select="lux-master-header-content-ac"></ng-content>
       }
     </lux-master-header-ac>
 
@@ -49,20 +49,27 @@
         (luxScrolled)="onInfiniteScrollingLoad()"
       >
         @for (masterElement of luxMasterList; track masterElement) {
-        <lux-list-item
-          [luxTitleLineBreak]="luxTitleLineBreak"
-          luxTitle="{{ masterElement | luxPropertyFromObject : masterSimple?.luxTitleProp ?? '' }}"
-          luxTitleTooltip="{{ masterElement | luxPropertyFromObject : masterSimple?.luxTitleTooltipProp ?? '' }}"
-          luxSubTitle="{{ masterElement | luxPropertyFromObject : masterSimple?.luxSubTitleProp ?? '' }}"
-          luxSubTitleTooltip="{{ masterElement | luxPropertyFromObject : masterSimple?.luxSubTitleTooltipProp ?? '' }}"
-        >
-          <lux-list-item-icon>
-            <ng-container *ngTemplateOutlet="masterSimple?.iconTempRef ?? null; context: { $implicit: masterElement }"></ng-container>
-          </lux-list-item-icon>
-          <lux-list-item-content>
-            <ng-container *ngTemplateOutlet="masterSimple?.contentTempRef ?? null; context: { $implicit: masterElement }"></ng-container>
-          </lux-list-item-content>
-        </lux-list-item>
+          <lux-list-item
+            [luxTitleLineBreak]="luxTitleLineBreak"
+            luxTitle="{{ masterElement | luxPropertyFromObject: masterSimple?.luxTitleProp ?? '' }}"
+            luxTitleTooltip="{{ masterElement | luxPropertyFromObject: masterSimple?.luxTitleTooltipProp ?? '' }}"
+            luxSubTitle="{{ masterElement | luxPropertyFromObject: masterSimple?.luxSubTitleProp ?? '' }}"
+            luxSubTitleTooltip="{{ masterElement | luxPropertyFromObject: masterSimple?.luxSubTitleTooltipProp ?? '' }}"
+          >
+            @if (masterSimple?.customHeaderTempRef) {
+              <lux-list-item-custom-header>
+                <ng-container
+                  *ngTemplateOutlet="masterSimple?.customHeaderTempRef ?? null; context: { $implicit: masterElement }"
+                ></ng-container>
+              </lux-list-item-custom-header>
+            }
+            <lux-list-item-icon>
+              <ng-container *ngTemplateOutlet="masterSimple?.iconTempRef ?? null; context: { $implicit: masterElement }"></ng-container>
+            </lux-list-item-icon>
+            <lux-list-item-content>
+              <ng-container *ngTemplateOutlet="masterSimple?.contentTempRef ?? null; context: { $implicit: masterElement }"></ng-container>
+            </lux-list-item-content>
+          </lux-list-item>
         }
 
         <div
@@ -72,11 +79,11 @@
           [ngClass]="{ 'lux-spinner-hidden': !luxMasterIsLoading }"
         >
           @if (luxMasterIsLoading) {
-          <br />
+            <br />
           }
           <mat-progress-spinner class="lux-m-3" color="primary" mode="indeterminate" diameter="48"> </mat-progress-spinner>
           @if (luxMasterIsLoading) {
-          <br />
+            <br />
           }
         </div>
       </lux-list>
@@ -84,7 +91,7 @@
 
     <!-- Footer Element unter der Master-Liste -->
     @if (luxOpen) {
-    <ng-content select="lux-master-footer-ac"></ng-content>
+      <ng-content select="lux-master-footer-ac"></ng-content>
     }
   </div>
   <!-- Detail - Container -->
@@ -102,39 +109,47 @@
   >
     <!-- Button für die Mobile Ansicht -->
     @if (!luxOpen && isMobile) {
-    <div class="back-to-master-button-container lux-mb-3">
-      <lux-button
-        [luxRounded]="true"
-        class="back-to-master-button"
-        luxIconName="lux-interface-arrows-button-left"
-        luxTagId="back-to-master-btn"
-        (luxClicked)="onOpenMaster()"
-      ></lux-button>
-      <span class="back-to-master-label">{{ 'luxc.master-detail.back-to-master-label' | transloco }}</span>
-    </div>
+      <div class="back-to-master-button-container lux-mb-3">
+        <lux-button
+          [luxRounded]="true"
+          class="back-to-master-button"
+          luxIconName="lux-interface-arrows-button-left"
+          luxTagId="back-to-master-btn"
+          (luxClicked)="onOpenMaster()"
+        ></lux-button>
+        <span class="back-to-master-label">{{ 'luxc.master-detail.back-to-master-label' | transloco }}</span>
+      </div>
     }
     <!-- Detail-Header -->
     <div class="detail-header-container" [ngClass]="{ 'lux-display-none': selectedPosition < 0 }">
       @if (!detailHeader && luxDefaultDetailHeader) {
-      <lux-card
-        luxTitle="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxTitleProp ?? '' }}"
-        luxTitleTooltip="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxTitleTooltipProp ?? '' }}"
-        luxSubTitle="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxSubTitleProp ?? '' }}"
-        luxSubTitleTooltip="{{ luxMasterList[selectedPosition] | luxPropertyFromObject : masterSimple?.luxSubTitleTooltipProp ?? '' }}"
-        [luxTitleLineBreak]="luxTitleLineBreak"
-        class="lux-detail-header-ac lux-mb-4"
-        luxTagId="defaultDetailHeader"
-      >
-        @if (luxMasterList[selectedPosition]) {
-        <lux-card-content>
-          <ng-container
-            *ngTemplateOutlet="masterSimple?.contentTempRef ?? null; context: { $implicit: luxMasterList[selectedPosition] }"
-          ></ng-container>
-        </lux-card-content>
-        }
-      </lux-card>
-      } @if (detailHeader) {
-      <ng-content select="lux-detail-header-ac"></ng-content>
+        <lux-card
+          luxTitle="{{ luxMasterList[selectedPosition] | luxPropertyFromObject: masterSimple?.luxTitleProp ?? '' }}"
+          luxTitleTooltip="{{ luxMasterList[selectedPosition] | luxPropertyFromObject: masterSimple?.luxTitleTooltipProp ?? '' }}"
+          luxSubTitle="{{ luxMasterList[selectedPosition] | luxPropertyFromObject: masterSimple?.luxSubTitleProp ?? '' }}"
+          luxSubTitleTooltip="{{ luxMasterList[selectedPosition] | luxPropertyFromObject: masterSimple?.luxSubTitleTooltipProp ?? '' }}"
+          [luxTitleLineBreak]="luxTitleLineBreak"
+          class="lux-detail-header-ac lux-mb-4"
+          luxTagId="defaultDetailHeader"
+        >
+          @if (luxMasterList[selectedPosition] && masterSimple?.customHeaderTempRef) {
+            <lux-card-custom-header>
+              <ng-container
+                *ngTemplateOutlet="masterSimple?.customHeaderTempRef ?? null; context: { $implicit: luxMasterList[selectedPosition] }"
+              ></ng-container>
+            </lux-card-custom-header>
+          }
+          @if (luxMasterList[selectedPosition]) {
+            <lux-card-content>
+              <ng-container
+                *ngTemplateOutlet="masterSimple?.contentTempRef ?? null; context: { $implicit: luxMasterList[selectedPosition] }"
+              ></ng-container>
+            </lux-card-content>
+          }
+        </lux-card>
+      }
+      @if (detailHeader) {
+        <ng-content select="lux-detail-header-ac"></ng-content>
       }
     </div>
     <div class="lux-detail-view-container" [ngClass]="{ 'lux-display-none': selectedPosition < 0 }">
