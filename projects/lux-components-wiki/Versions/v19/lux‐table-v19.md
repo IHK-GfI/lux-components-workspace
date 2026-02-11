@@ -1,6 +1,6 @@
 # LUX-Table
 
-![Beispielbild LUX-Table](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img.png)
+![Beispielbild LUX-Table](lux‐table-v19-img.png)
 
 - [LUX-Table](#lux-table)
   - [Overview / API](#overview--api)
@@ -154,7 +154,7 @@
 
 ### 1. Simple Table
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-01.png)
+![Beispielbild 01](lux‐table-v19-img-01.png)
 
 Ts
 
@@ -217,7 +217,7 @@ Html
 
 ### 2. Filter und Spalten ausblenden
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-02.png)
+![Beispielbild 02](lux‐table-v19-img-02.png)
 
 Ts
 
@@ -284,7 +284,7 @@ Html
 
 ### 3. Pagination
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-03.png)
+![Beispielbild 03](lux‐table-v19-img-03.png)
 
 Ts
 
@@ -352,7 +352,7 @@ Html
 
 ### 4. Sortable
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-04.png)
+![Beispielbild 04](lux‐table-v19-img-04.png)
 
 **Anmerkung**: Damit die Sortierung funktioniert, muss der Wert aus der `luxColumnDef`-Property mit dem Propertynamen des Elements übereinstimmen.
 Z.B. `luxColumnDef="position"` und `{{element.position}}`. Wenn das keine Option ist, kann auch ein individueller Accessor angegeben werden.
@@ -436,7 +436,7 @@ Html
 
 ### 5. Filter, Pagination, Sortierung und angepassten Spaltenbreiten
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-05.png)
+![Beispielbild 05](lux‐table-v19-img-05.png)
 
 Ts
 
@@ -506,7 +506,7 @@ Html
 
 ### 6. Custom CSS
 
-![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-06.png)
+![Beispielbild 06](lux‐table-v19-img-06.png)
 
 Ts
 
@@ -593,7 +593,7 @@ Html
 
 ### 7. Async Data
 
-![Beispielbild 07](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-07.png)
+![Beispielbild 07](lux‐table-v19-img-07.png)
 
 TestHTTPDAO.ts
 
@@ -730,7 +730,7 @@ Html
 
 ### 8. Multiselect mit deaktivierten Checkboxen
 
-![Beispielbild 08](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-08.png)
+![Beispielbild 08](lux‐table-v19-img-08.png)
 
 Ts
 
@@ -818,10 +818,10 @@ Html
 ### 9. Responsive
 
 In der Media-Query "md":
-![Beispielbild 09-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-09-01.png)
+![Beispielbild 09-01](lux‐table-v19-img-09-01.png)
 
 In der Media-Query "sm":
-![Beispielbild 09-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐table-v19-img-09-02.png)
+![Beispielbild 09-02](lux‐table-v19-img-09-02.png)
 
 Ts
 

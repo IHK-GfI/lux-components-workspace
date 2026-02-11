@@ -1,6 +1,6 @@
 # LUX-Card
 
-![Beispielbild LUX-Card](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img.png)
+![Beispielbild LUX-Card](lux‐card-v19-img.png)
 
 - [LUX-Card](#lux-card)
   - [Overview / API](#overview--api)
@@ -120,7 +120,7 @@ Grundlegende Regeln zum Umgang mit Cards sind:
 
 ### 1. Simple Card
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-01.png)
+![Beispielbild 01](lux‐card-v19-img-01.png)
 
 Ts
 
@@ -146,7 +146,7 @@ Html
 
 ### 2. Card mit Actions
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-02.png)
+![Beispielbild 02](lux‐card-v19-img-02.png)
 
 Html
 
@@ -168,7 +168,7 @@ Html
 
 ### 3. Erweiterbare Card
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-03.png)
+![Beispielbild 03](lux‐card-v19-img-03.png)
 
 Html
 
@@ -197,8 +197,8 @@ Html
 
 ### 4. Dynamische Actions
 
-![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-04-01.png)
-![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-04-02.png)
+![Beispielbild 04-01](lux‐card-v19-img-04-01.png)
+![Beispielbild 04-02](lux‐card-v19-img-04-02.png)
 
 Die Actions werden je nach Platz im Menü versteckt.
 
@@ -255,7 +255,7 @@ Html
 
 ### 5. Layout mit Cards
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-05.png)
+![Beispielbild 05](lux‐card-v19-img-05.png)
 
 Html
 
@@ -353,7 +353,7 @@ Html
 
 ### 6. Card mit linksbündigen Actions
 
-![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐card-v19-img-06.png)
+![Beispielbild 06](lux‐card-v19-img-06.png)
 
 Html
 

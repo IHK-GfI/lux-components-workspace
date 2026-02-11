@@ -118,9 +118,9 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
    `ng update @angular/core@19 @angular/cli@19 --allow-dirty --force`
 
    Die Rückfrage nach dem _use-application-builder_ bestätigen.
-   ![application-builder](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/updater-question-app-builder.png)
+   ![application-builder](updater-question-app-builder.png)
    Die Rückfrage nach dem _provide-initializer_ bestätigen.
-   ![initializer](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/updater-question-initializer.png)
+   ![initializer](updater-question-initializer.png)
 
    `ng update @angular/cdk@19 @angular/material@19 @angular-eslint/schematics@19 --allow-dirty --force`
 

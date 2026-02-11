@@ -2,11 +2,11 @@
 
 Filter (aufgeklappt):
 
-![Beispielbild LUX-Filter-Form](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐filter‐form-v19-img1.png)
+![Beispielbild LUX-Filter-Form](lux‐filter‐form-v19-img1.png)
 
 Filter (zugeklappt):
 
-![Beispielbild LUX-Filter-Form](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐filter‐form-v19-img2.png)
+![Beispielbild LUX-Filter-Form](lux‐filter‐form-v19-img2.png)
 
 - [LUX-Filter-Form](#lux-filter-form)
   - [Overview / API](#overview--api)
@@ -131,11 +131,11 @@ Ein LuxFilterLoadDialogComponent zeigt die vorhandenen Filter an und bietet eine
 
 ### 1. Standard
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐filter‐form-v19-img-01-01.png)
+![Beispielbild 01](lux‐filter‐form-v19-img-01-01.png)
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐filter‐form-v19-img-01-02.png)
+![Beispielbild 01](lux‐filter‐form-v19-img-01-02.png)
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐filter‐form-v19-img-01-03.png)
+![Beispielbild 01](lux‐filter‐form-v19-img-01-03.png)
 
 Ts
 

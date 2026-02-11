@@ -1,6 +1,6 @@
 # LUX-Checkbox
 
-![Beispielbild LUX-Checkbox](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img.png)
+![Beispielbild LUX-Checkbox](lux‐checkbox-v19-img.png)
 
 - [LUX-Checkbox](#lux-checkbox)
   - [Overview / API](#overview--api)
@@ -54,7 +54,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img-01.png)
+![Beispielbild 01](lux‐checkbox-v19-img-01.png)
 
 Ts
 
@@ -78,7 +78,7 @@ Html
 
 ### 2. Mit Two-Way-Binding
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img-02.png)
+![Beispielbild 02](lux‐checkbox-v19-img-02.png)
 
 Ts
 
@@ -94,7 +94,7 @@ Html
 
 ### 3. Mit Formular
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox-v19-img-03.png)
+![Beispielbild 03](lux‐checkbox-v19-img-03.png)
 
 Ts
 

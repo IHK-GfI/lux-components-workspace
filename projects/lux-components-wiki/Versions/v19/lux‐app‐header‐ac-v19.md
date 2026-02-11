@@ -1,6 +1,6 @@
 # LUX-App-Header-Ac
 
-![Beispielbild LUX-App-Header](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header‐ac-v19-img.png)
+![Beispielbild LUX-App-Header](lux‐app‐header‐ac-v19-img.png)
 
 - [LUX-App-Header-Ac](#lux-app-header-ac)
   - [Overview / API](#overview--api)
@@ -144,7 +144,7 @@ Dafür einfach die Component in den LuxAppHeaderAcComponent einbauen und die gew
 
 ### 1. Header mit User-Menu, Sprachwechsler und Navigations-Menu
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header‐ac-v19-img-01.png)
+![Beispielbild 01](lux‐app‐header‐ac-v19-img-01.png)
 
 TS
 
@@ -228,7 +228,7 @@ Html
 
 ### 2. Header mit individuellem Action-Menü
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header‐ac-v19-img-02.png)
+![Beispielbild 02](lux‐app‐header‐ac-v19-img-02.png)
 
 TS
 

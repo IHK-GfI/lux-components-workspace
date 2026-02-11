@@ -1,6 +1,6 @@
 # LUX-Tabs
 
-![Beispielbild LUX-Tabs](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img.png)
+![Beispielbild LUX-Tabs](lux‐tabs-v19-img.png)
 
 - [LUX-Tabs](#lux-tabs)
   - [Overview / API](#overview--api)
@@ -78,7 +78,7 @@ Sie besitzt einen Header- und Content-Bereich und ist auch in der Lage, den Cont
 
 ### 1. Simple Tabs
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-01.png)
+![Beispielbild 01](lux‐tabs-v19-img-01.png)
 
 Html
 
@@ -107,7 +107,7 @@ Html
 
 ### 2. Tabs mit Zahl
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-02.png)
+![Beispielbild 02](lux‐tabs-v19-img-02.png)
 
 Html
 
@@ -148,7 +148,7 @@ Html
 
 ### 3. Tabs mit großen deaktivierten Icons
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-03.png)
+![Beispielbild 03](lux‐tabs-v19-img-03.png)
 
 Html
 
@@ -182,7 +182,7 @@ Html
 
 ### 4. Tab in eigene Komponente (mit Lazy-Loading) auslagern
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tabs-v19-img-04.png)
+![Beispielbild 04](lux‐tabs-v19-img-04.png)
 
 Html - Tabs
 

@@ -1,6 +1,6 @@
 # LUX-File-Input
 
-![Beispielbild LUX-File-Input](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img.png)
+![Beispielbild LUX-File-Input](lux‐file‐input-v19-img.png)
 
 - [LUX-File-Input](#lux-file-input)
   - [Overview / API](#overview--api)
@@ -133,7 +133,7 @@ Dieses Interface enthält die möglichen Einstellungen für die Action-Buttons d
 
 ### 1. Simple
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-01.png)
+![Beispielbild 01](lux‐file‐input-v19-img-01.png)
 
 Ts
 
@@ -182,7 +182,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-02.png)
+![Beispielbild 02](lux‐file‐input-v19-img-02.png)
 
 Ts
 
@@ -230,7 +230,7 @@ Html
 
 ### 3. Mit Upload-URL
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-03.png)
+![Beispielbild 03](lux‐file‐input-v19-img-03.png)
 
 Html
 
@@ -245,7 +245,7 @@ Html
 
 ### 4. Mit Base64-Callback
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-04.gif)
+![Beispielbild 04](lux‐file‐input-v19-img-04.gif)
 
 Ts
 
@@ -315,7 +315,7 @@ Html
 
 ### 5. Mit Download
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-05.png)
+![Beispielbild 05](lux‐file‐input-v19-img-05.png)
 
 Ts
 
@@ -366,7 +366,7 @@ Html
 
 ### 6. Mit Dateieinschränkungen
 
-![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐input-v19-img-06.gif)
+![Beispielbild 06](lux‐file‐input-v19-img-06.gif)
 
 Html
 

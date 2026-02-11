@@ -1,6 +1,6 @@
 # LUX-App-Footer
 
-![Beispielbild LUX-App-Footer](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐footer-v19-img.png)
+![Beispielbild LUX-App-Footer](lux‐app‐footer-v19-img.png)
 
 - [LUX-App-Footer](#lux-app-footer)
   - [Overview / API](#overview--api)
@@ -134,7 +134,7 @@ Die Klasse bietet über die statische `generateInfo`-Methode eine Factory-Method
 
 ### 1. Footerbuttons definieren
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐footer-v19-img-01.png)
+![Beispielbild 01](lux‐app‐footer-v19-img-01.png)
 
 Ts
 
@@ -267,4 +267,4 @@ Wichtig!
 Wenn der Footer _nicht_ fixiert ist, kann es auf Seiten mit wenig Inhalt dazu kommen, dass der Footer hoch rutscht (siehe Abbildung unten).
 D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig Inhalt trotzdem am unteren Rand angezeigt wird.
 
-![Verrutschter App-Footer](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐footer-v19-img-03.png)
+![Verrutschter App-Footer](lux‐app‐footer-v19-img-03.png)

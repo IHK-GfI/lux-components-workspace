@@ -1,6 +1,6 @@
 # LUX-Link
 
-![Beispielbild LUX-Link](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img.png)
+![Beispielbild LUX-Link](lux‐link-v19-img.png)
 
 - [LUX-Link](#lux-link)
   - [Overview / API](#overview--api)
@@ -48,7 +48,7 @@
 
 ### 1. Normale Links
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img-01.png)
+![Beispielbild 01](lux‐link-v19-img-01.png)
 
 Html
 
@@ -75,7 +75,7 @@ Html
 
 ### 2. Flat Links
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img-02.png)
+![Beispielbild 02](lux‐link-v19-img-02.png)
 
 Html
 
@@ -109,7 +109,7 @@ Html
 
 ### 2. Links mit Icons
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link-v19-img-03.png)
+![Beispielbild 03](lux‐link-v19-img-03.png)
 
 Html
 

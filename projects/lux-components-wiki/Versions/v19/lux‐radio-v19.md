@@ -1,6 +1,6 @@
 # LUX-Radio
 
-![Beispielbild LUX-Radio](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐radio-v19-img.png)
+![Beispielbild LUX-Radio](lux‐radio-v19-img.png)
 
 - [LUX-Radio](#lux-radio)
   - [Overview / API](#overview--api)
@@ -66,7 +66,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐radio-v19-img-01-01.png)
+![Beispielbild 01-01](lux‐radio-v19-img-01-01.png)
 
 #### String-Array
 
@@ -90,7 +90,7 @@ Html
 
 #### Object-Array mit deaktivierter Option
 
-![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐radio-v19-img-01-02.png)
+![Beispielbild 01-02](lux‐radio-v19-img-01-02.png)
 
 Ts
 
@@ -142,7 +142,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐radio-v19-img-02.png)
+![Beispielbild 02](lux‐radio-v19-img-02.png)
 
 Ts
 
@@ -173,7 +173,7 @@ Html
 
 ### 3. Mit pickValue-Fn
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐radio-v19-img-03.png)
+![Beispielbild 03](lux‐radio-v19-img-03.png)
 
 Ts
 

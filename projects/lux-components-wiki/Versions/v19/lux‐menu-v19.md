@@ -1,6 +1,6 @@
 # LUX-Menu
 
-![Beispielbild LUX-Menu](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img.png)
+![Beispielbild LUX-Menu](lux‐menu-v19-img.png)
 
 - [LUX-Menu](#lux-menu)
   - [Overview / API](#overview--api)
@@ -110,7 +110,7 @@ Diese Komponente funktioniert nur im Zusammenhang mit luxShowSelections.
 
 ### 1. Einfaches Menü
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img-01.png)
+![Beispielbild 01](lux‐menu-v19-img-01.png)
 
 Ts
 
@@ -132,7 +132,7 @@ Html
 
 ### 2. Extendedmenü (linksbündig)
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img-02.png)
+![Beispielbild 02](lux‐menu-v19-img-02.png)
 
 Ts
 
@@ -154,7 +154,7 @@ Html
 
 ### 3. Extendedmenü (rechtsbündig)
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img-03.png)
+![Beispielbild 03](lux‐menu-v19-img-03.png)
 
 Ts
 
@@ -176,7 +176,7 @@ Html
 
 ### 4. Das neue Menü mit Sectionen
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img-04.png)
+![Beispielbild 04](lux‐menu-v19-img-04.png)
 
 Ts
 
@@ -202,7 +202,7 @@ Html
 
 ### 5. Das neue große Menü mit Sectionen
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐menu-v19-img-04.png)
+![Beispielbild 05](lux‐menu-v19-img-04.png)
 
 Ts
 

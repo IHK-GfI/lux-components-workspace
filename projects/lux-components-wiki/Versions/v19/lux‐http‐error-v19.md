@@ -1,6 +1,6 @@
 # LUX-Http-Error
 
-![Beispielbild LUX-Http-Error](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐http‐error-v19-img.png)
+![Beispielbild LUX-Http-Error](lux‐http‐error-v19-img.png)
 
 - [LUX-Http-Error](#lux-http-error)
   - [Overview / API](#overview--api)
@@ -28,7 +28,7 @@ LuxHttpErrorComponent benutzt die [lux-message-box](lux‐message‐box-v19) zur
 
 ### 1. LuxHttpErrorInterceptors
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐http‐error-v19-img-01.png)
+![Beispielbild 01](lux‐http‐error-v19-img-01.png)
 
 Ts
 
@@ -53,7 +53,7 @@ Html
 
 ### 2. Fehler pushen
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐http‐error-v19-img-02.png)
+![Beispielbild 02](lux‐http‐error-v19-img-02.png)
 
 Ts
 

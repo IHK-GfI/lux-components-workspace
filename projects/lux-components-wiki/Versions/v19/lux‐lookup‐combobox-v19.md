@@ -1,6 +1,6 @@
 # LUX-Lookup-Combobox
 
-![Beispielbild LUX-Lookup-Combobox](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐combobox-v19-img.png)
+![Beispielbild LUX-Lookup-Combobox](lux‐lookup‐combobox-v19-img.png)
 
 - [LUX-Lookup-Combobox](#lux-lookup-combobox)
   - [Overview / API](#overview--api)
@@ -150,7 +150,7 @@ Definiert welche Optionen es gibt, um ungültige Einträge zu behandeln.
 
 ### 1. Simple Lookup-Combobox
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐combobox-v19-img-01.png)
+![Beispielbild 01](lux‐lookup‐combobox-v19-img-01.png)
 
 Ts
 
@@ -197,7 +197,7 @@ Html
 
 ### 2. Custom Styling
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐combobox-v19-img-02.png)
+![Beispielbild 02](lux‐lookup‐combobox-v19-img-02.png)
 
 Ts
 

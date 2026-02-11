@@ -1,6 +1,6 @@
 # LUX-Button
 
-![Beispielbild LUX-Button](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐button-v19-img.png)
+![Beispielbild LUX-Button](lux‐button-v21-img.png)
 
 - [LUX-Button](#lux-button)
   - [Overview / API](#overview--api)
@@ -37,12 +37,12 @@
 | luxStroked            | boolean                         | Gibt an, ob der Button eine Outline erhält.                                                                                                                                                                                                                                                                                                                     |
 | luxIconName           | string                          | Ein LUX-Iconname.                                                                                                                                                                                                                                                                                                                                               |
 | luxIconShowRight      | boolean                         | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                                                                                                                                                                                     |
-| luxTagId              | string                          | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                   |
+| luxTagId              | string                          | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                   |
 | luxDisabled           | boolean                         | Gibt an, ob das Element deaktiviert ist. Alternativ _luxDisabledAria_ verwenden.                                                                                                                                                                                                                                                                                |
 | luxDisabledAria       | boolean                         | Setzt das Attribut `aria-disabled="true"` am Button, ohne das native `disabled`-Attribut zu verwenden. Der Button bleibt damit technisch aktiv und fokussierbar, unterdrückt jedoch das Event _luxClicked_ und emittiert stattdessen das Event _luxClickNotAllowed_. Entwickler sollten dem Nutzer einen Hinweis auf die fachliche Deaktivierung bereitstellen. |
 | luxRounded            | boolean                         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                                                                                                                                                                                            |
 | luxIconAlignWithLabel | boolean                         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                                                                                                                                                                                        |
-| luxThrottleTime       | number                          | Verhindert, dass ein Button mehrfach hinter einander ausgelöst wird. Über diese Property kann mann den Standardwert aus der [Config - buttonConfiguration](config-v19#buttonConfiguration) überschreiben.                                                                                                                                                       |
+| luxThrottleTime       | number                          | Verhindert, dass ein Button mehrfach hinter einander ausgelöst wird. Über diese Property kann mann den Standardwert aus der [Config - buttonConfiguration](config-v21#buttonConfiguration) überschreiben.                                                                                                                                                       |
 | luxButtonBadge        | string                          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.                                                                                                                                                                |
 | luxButtonBadgeColor   | LuxThemePalette                 | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                                                                                                                                                                                            |
 
@@ -71,7 +71,7 @@ Grundlegende Regeln zum Umgang mit buttons sind:
 
 ### 1. Normale Buttons
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐button-v19-img-01.png)
+![Beispielbild 01](lux‐button-v21-img-01.png)
 
 Ts
 
@@ -109,7 +109,7 @@ Html
 
 ### 2. Flat Buttons
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐button-v19-img-02.png)
+![Beispielbild 02](lux‐button-v21-img-02.png)
 
 Ts
 
@@ -151,7 +151,7 @@ Html
 
 ### 3. Buttons mit Icons
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐button-v19-img-03.png)
+![Beispielbild 03](lux‐button-v21-img-03.png)
 
 Ts
 
@@ -197,7 +197,7 @@ Html
 
 ### 4. Runde Buttons
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐button-v19-img-04.png)
+![Beispielbild 04](lux‐button-v21-img-04.png)
 
 Ts
 
@@ -239,7 +239,7 @@ Html
 
 ### 5. Stroked-Buttons
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐button-v19-img-05.png)
+![Beispielbild 05](lux‐button-v21-img-05.png)
 
 Ts
 
@@ -285,7 +285,7 @@ Html
 
 ### 6. Rounded und Stroked-Buttons
 
-![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐button-v19-img-06.png)
+![Beispielbild 06](lux‐button-v21-img-06.png)
 
 Ts
 
@@ -337,7 +337,7 @@ Html
 
 ### Konfigurationsoptionen
 
-Durch Nutzung der [LUX-Components-Config](config-v19) kann für diese Component bestimmt werden, dass der Text immer in Großbuchstaben ausgegeben wird.
+Durch Nutzung der [LUX-Components-Config](config-v21) kann für diese Component bestimmt werden, dass der Text immer in Großbuchstaben ausgegeben wird.
 Will man die LuxButtons als Ausnahmen für die Ausgabe in Großbuchstaben hinzufügen, muss der Selektor "lux-button" dem Config-Module übergeben werden.
 
 Standardmäßig werden die Texte der Buttons immer in Großbuchstaben angezeigt.

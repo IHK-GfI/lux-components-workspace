@@ -1,6 +1,6 @@
 # LUX-Textarea
 
-![Beispielbild LUX-Textarea](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textarea-v19-img.png)
+![Beispielbild LUX-Textarea](lux‐textarea-v19-img.png)
 
 - [LUX-Textarea](#lux-textarea)
   - [Overview / API](#overview--api)
@@ -63,7 +63,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textarea-v19-img-01.png)
+![Beispielbild 01](lux‐textarea-v19-img-01.png)
 
 Ts
 
@@ -87,7 +87,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐textarea-v19-img-02.png)
+![Beispielbild 02](lux‐textarea-v19-img-02.png)
 
 Ts
 

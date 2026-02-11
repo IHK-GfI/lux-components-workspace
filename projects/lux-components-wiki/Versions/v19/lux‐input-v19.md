@@ -1,6 +1,6 @@
 # LUX-Input
 
-![Beispielbild LUX-Input](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img.png)
+![Beispielbild LUX-Input](lux‐input-v19-img.png)
 
 - [LUX-Input](#lux-input)
   - [Overview / API](#overview--api)
@@ -65,7 +65,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-01.png)
+![Beispielbild 01](lux‐input-v19-img-01.png)
 
 Ts
 
@@ -86,7 +86,7 @@ Html
 
 ### 2. Mit Suffix und Präfix
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-02.png)
+![Beispielbild 02](lux‐input-v19-img-02.png)
 
 Html
 
@@ -103,7 +103,7 @@ Html
 
 ### 3. Mit Formular
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-03.png)
+![Beispielbild 03](lux‐input-v19-img-03.png)
 
 Ts
 
@@ -174,9 +174,9 @@ Html
 
 ### 4. Komplexe Validierung mit Pattern
 
-![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-04-01.png)
+![Beispielbild 04-01](lux‐input-v19-img-04-01.png)
 
-![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐input-v19-img-04-02.png)
+![Beispielbild 04-02](lux‐input-v19-img-04-02.png)
 
 Dieses Beispiel zeigt, wie man Validatoren kombinieren kann,
 um komplexere Prüfungen umzusetzen. Zusätzlich wird über

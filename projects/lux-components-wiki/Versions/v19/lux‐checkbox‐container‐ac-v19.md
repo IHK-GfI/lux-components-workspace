@@ -1,6 +1,6 @@
 # LUX-Checkbox-Container-Ac
 
-![Beispielbild LUX-Checkbox-Container](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox‐container‐ac-v19-img.png)
+![Beispielbild LUX-Checkbox-Container](lux‐checkbox‐container‐ac-v19-img.png)
 
 - [LUX-Checkbox-Container-Ac](#lux-checkbox-container-ac)
   - [Overview / API](#overview--api)
@@ -34,7 +34,7 @@ Die Container können in einem Raster mit weiteren Ac-Form-Controls im luxDense-
 
 ### 1. Checkbox-Container mit einem Label
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox‐container‐ac-v19-img-01.png)
+![Beispielbild 01](lux‐checkbox‐container‐ac-v19-img-01.png)
 
 Html
 
@@ -49,7 +49,7 @@ Html
 
 ### 2. Mehrere Container in einem css-Grid
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐checkbox‐container‐ac-v19-img-02.png)
+![Beispielbild 02](lux‐checkbox‐container‐ac-v19-img-02.png)
 
 Html
 

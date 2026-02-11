@@ -1,6 +1,7 @@
 # LUX-Components
 
 - [LUX-Components](#lux-components)
+  - [DeepWiki/Support](#deepwikisupport)
   - [Config](#config)
   - [Layout](#layout)
   - [Komponenten](#komponenten)
@@ -11,6 +12,19 @@
     - [Directives](#directives)
     - [Pipes](#pipes)
   - [Util](#util)
+
+## DeepWiki/Support
+
+Im [DeepWiki](https://deepwiki.com/IHK-GfI/lux-components-workspace) können Sie nach Hilfe suchen und Supportfragen stellen.
+Nutzen Sie das Suchfeld, um gezielt nach Themen, Codebeispielen oder bestehenden Supportanfragen zu suchen.
+
+Sie können dort:
+
+- **Supportfragen** formulieren
+- **Codebeispiele** anfragen oder finden
+- **Probleme und Lösungen** recherchieren
+
+Das [DeepWiki](https://deepwiki.com/IHK-GfI/lux-components-workspace) bietet eine zentrale Anlaufstelle für alle Fragen rund um LUX-Components.
 
 ## Config
 

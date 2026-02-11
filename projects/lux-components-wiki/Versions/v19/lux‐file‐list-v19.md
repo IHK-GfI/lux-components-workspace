@@ -2,7 +2,7 @@
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild LUX-File-List](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img.png)
+![Beispielbild LUX-File-List](lux‐file‐list-v19-img.png)
 
 - [LUX-File-List](#lux-file-list)
   - [Overview / API](#overview--api)
@@ -145,9 +145,9 @@ Dieses Interface erweitert _ILuxFileListActionConfig_.
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-01-01.png)
+![Beispielbild 01-01](lux‐file‐list-v19-img-01-01.png)
 
-![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-01-02.png)
+![Beispielbild 01-02](lux‐file‐list-v19-img-01-02.png)
 
 Ts
 
@@ -198,7 +198,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-02.png)
+![Beispielbild 02](lux‐file‐list-v19-img-02.png)
 
 Ts
 
@@ -248,7 +248,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-03.png)
+![Beispielbild 03](lux‐file‐list-v19-img-03.png)
 
 Html
 
@@ -265,7 +265,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-04.gif)
+![Beispielbild 04](lux‐file‐list-v19-img-04.gif)
 
 Ts
 
@@ -338,7 +338,7 @@ Empty' : 'Empty' }}
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-05.png)
+![Beispielbild 05](lux‐file‐list-v19-img-05.png)
 
 Ts
 
@@ -391,7 +391,7 @@ Html
 
 **Diese Komponente ist veraltet. Bitte die Komponente LUX-File-Upload verwenden!**
 
-![Beispielbild 06-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐list-v19-img-06.gif)
+![Beispielbild 06-01](lux‐file‐list-v19-img-06.gif)
 
 Html
 

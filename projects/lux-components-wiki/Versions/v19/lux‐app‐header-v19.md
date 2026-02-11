@@ -1,6 +1,6 @@
 # LUX-App-Header
 
-![Beispielbild LUX-App-Header](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img.png)
+![Beispielbild LUX-App-Header](lux‐app‐header-v19-img.png)
 
 - [LUX-App-Header](#lux-app-header)
   - [Overview / API](#overview--api)
@@ -183,7 +183,7 @@ Dafür einfach die Component in den LuxAppHeaderComponent einbauen und die gewü
 
 ### 1. Menü links und rechts
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img-01.png)
+![Beispielbild 01](lux‐app‐header-v19-img-01.png)
 
 Html
 
@@ -247,7 +247,7 @@ Html
 
 ### 2. Actionmenü mit individueller Komponente (IHK-Selektor)
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img-02.png)
+![Beispielbild 02](lux‐app‐header-v19-img-02.png)
 
 Html
 
@@ -319,7 +319,7 @@ Html
 
 ### 3. Erweiterbares Menü
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐app‐header-v19-img-03.png)
+![Beispielbild 03](lux‐app‐header-v19-img-03.png)
 
 Html
 

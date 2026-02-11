@@ -1,6 +1,6 @@
 # LUX-Html
 
-![Beispielbild LUX-Html](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐html-v19-img.png)
+![Beispielbild LUX-Html](lux‐html-v19-img.png)
 
 - [LUX-Html](#lux-html)
   - [Overview / API](#overview--api)
@@ -55,7 +55,7 @@ Diese Klasse ermöglicht die Konfiguration beim Sanitizing.
 
 ## Beispiel
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐html-v19-img-01.png)
+![Beispielbild 01](lux‐html-v19-img-01.png)
 
 Ts
 

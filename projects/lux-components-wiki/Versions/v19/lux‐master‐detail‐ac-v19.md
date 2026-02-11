@@ -1,6 +1,6 @@
 # LUX-Master-Detail
 
-![Beispielbild LUX-Master-Detail-Ac](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐master‐detail‐ac-v19-img.png)
+![Beispielbild LUX-Master-Detail-Ac](lux‐master‐detail‐ac-v19-img.png)
 
 - [LUX-Master-Detail](#lux-master-detail)
   - [Overview / API](#overview--api)

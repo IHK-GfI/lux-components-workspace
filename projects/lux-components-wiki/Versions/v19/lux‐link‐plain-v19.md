@@ -1,6 +1,6 @@
 # LUX-Link-Plain
 
-![Beispielbild LUX-Link-Plain](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img.png)
+![Beispielbild LUX-Link-Plain](lux‐link‐plain-v19-img.png)
 
 - [LUX-Link-Plain](#lux-link-plain)
   - [Overview / API](#overview--api)
@@ -43,7 +43,7 @@
 
 ### 1. Normale Links
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img-01.png)
+![Beispielbild 01](lux‐link‐plain-v19-img-01.png)
 
 Html
 
@@ -61,7 +61,7 @@ Html
 
 ### 2. Links mit Icons
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img-02.png)
+![Beispielbild 02](lux‐link‐plain-v19-img-02.png)
 
 Html
 
@@ -89,7 +89,7 @@ Html
 
 ### 3. Links mit Custom-Class
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐link‐plain-v19-img-03.png)
+![Beispielbild 03](lux‐link‐plain-v19-img-03.png)
 
 Html
 

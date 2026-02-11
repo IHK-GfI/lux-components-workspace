@@ -1,6 +1,6 @@
 # LUX-Slider
 
-![Beispielbild LUX-Slider](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img.png)
+![Beispielbild LUX-Slider](lux‐slider-v19-img.png)
 
 - [LUX-Slider](#lux-slider)
   - [Overview / API](#overview--api)
@@ -64,7 +64,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img-01.png)
+![Beispielbild 01](lux‐slider-v19-img-01.png)
 
 Ts
 
@@ -98,7 +98,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img-02.png)
+![Beispielbild 02](lux‐slider-v19-img-02.png)
 
 Ts
 
@@ -140,7 +140,7 @@ Html
 
 ### 3. Mit DisplayWith-Function
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐slider-v19-img-03.png)
+![Beispielbild 03](lux‐slider-v19-img-03.png)
 
 Ts
 

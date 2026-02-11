@@ -29,7 +29,7 @@
 
 ### 1. Mit LUX-List
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/luxInfiniteScroll-v19-img-01.png)
+![Beispielbild 01](luxInfiniteScroll-v19-img-01.png)
 
 Ts
 
@@ -79,7 +79,7 @@ Html
 
 ### 2. Mit Div-Elementen
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/luxInfiniteScroll-v19-img-02.png)
+![Beispielbild 02](luxInfiniteScroll-v19-img-02.png)
 
 Ts
 

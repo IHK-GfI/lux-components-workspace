@@ -168,4 +168,4 @@ Falls es bei der Durchführung des LUX-Components-Update eine neuere Transloco-V
 
 1. Am Ende können die Dateien _messages.xlf_ und _messages.en.xlf_ gelöscht werden.
 
-1. Zurück zum [Update-Guide v20](update-guide-v20).
+1. Zurück zum [Update-Guide v21](update-guide-v21).

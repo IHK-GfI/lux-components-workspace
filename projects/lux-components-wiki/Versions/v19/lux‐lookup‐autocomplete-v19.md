@@ -1,6 +1,6 @@
 # LUX-Lookup-Autocomplete
 
-![Beispielbild LUX-Lookup-Autocomplete](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐autocomplete-v19-img.png)
+![Beispielbild LUX-Lookup-Autocomplete](lux‐lookup‐autocomplete-v19-img.png)
 
 - [LUX-Lookup-Autocomplete](#lux-lookup-autocomplete)
   - [Overview / API](#overview--api)
@@ -153,7 +153,7 @@ Definiert welche Optionen es gibt, um ungültige Einträge zu behandeln.
 
 ### 1. Simple Lookup-Autocomplete
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐autocomplete-v19-img-01.png)
+![Beispielbild 01](lux‐lookup‐autocomplete-v19-img-01.png)
 
 Ts
 
@@ -200,7 +200,7 @@ Html
 
 ### 2. Custom Styling
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐lookup‐autocomplete-v19-img-02.png)
+![Beispielbild 02](lux‐lookup‐autocomplete-v19-img-02.png)
 
 Ts
 

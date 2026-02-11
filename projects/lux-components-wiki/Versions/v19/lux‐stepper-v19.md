@@ -1,6 +1,6 @@
 # LUX-Stepper
 
-![Beispielbild LUX-Stepper](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img.png)
+![Beispielbild LUX-Stepper](lux‐stepper-v19-img.png)
 
 - [LUX-Stepper](#lux-stepper)
   - [Overview / API](#overview--api)
@@ -121,7 +121,7 @@ Objekte können dieses Interface implementieren, um so die einzelnen Steuer-Butt
 
 ### 1. Horizontaler Stepper mit angepassten Buttons
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img-01.png)
+![Beispielbild 01](lux‐stepper-v19-img-01.png)
 
 Ts
 
@@ -208,7 +208,7 @@ Html
 
 ### 2. Horizontaler Stepper mit Buttons im Footer
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img-02.png)
+![Beispielbild 02](lux‐stepper-v19-img-02.png)
 
 Ts
 
@@ -320,7 +320,7 @@ Html
 
 ### 3. Vertikaler Stepper
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐stepper-v19-img-03.png)
+![Beispielbild 03](lux‐stepper-v19-img-03.png)
 
 Ts
 

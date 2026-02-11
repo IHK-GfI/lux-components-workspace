@@ -1,6 +1,6 @@
 # LUX-Icon
 
-![Beispielbild LUX-Icon](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img.png)
+![Beispielbild LUX-Icon](lux‐icon-v19-img.png)
 
 - [LUX-Icon](#lux-icon)
   - [Overview / API](#overview--api)
@@ -67,7 +67,7 @@ Siehe [LUX-Components-Config](config-v19#icons-über-ein-cdn-laden).
 
 #### Default-Icon ohne Hintergrund
 
-![Beispielbild 01-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-01-01.png)
+![Beispielbild 01-01](lux‐icon-v19-img-01-01.png)
 
 Html
 
@@ -77,7 +77,7 @@ Html
 
 #### Default-Icon mit farbigen Hintergrund
 
-![Beispielbild 01-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-01-02.png)
+![Beispielbild 01-02](lux‐icon-v19-img-01-02.png)
 
 Html
 
@@ -89,7 +89,7 @@ Html
 
 #### Vorbelegte IconSize 1x, 2x, ..., 5x
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-02.png)
+![Beispielbild 02](lux‐icon-v19-img-02.png)
 
 Html
 
@@ -105,7 +105,7 @@ Html
 
 #### Anpassung der Linienfarbe
 
-![Beispielbild 03-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-03-01.png)
+![Beispielbild 03-01](lux‐icon-v19-img-03-01.png)
 
 Html
 
@@ -127,7 +127,7 @@ Html
 
 #### Anpassung der Hintergrundfarbe
 
-![Beispielbild 03-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-03-02.png)
+![Beispielbild 03-02](lux‐icon-v19-img-03-02.png)
 
 Html
 
@@ -151,7 +151,7 @@ Html
 
 #### Mit vorgegebener Iconsize 1x, 2x, ..., 5x
 
-![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-04-01.png)
+![Beispielbild 04-01](lux‐icon-v19-img-04-01.png)
 
 Html
 
@@ -165,7 +165,7 @@ Html
 
 #### Mit individueller Größe und Padding
 
-![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-04-02.png)
+![Beispielbild 04-02](lux‐icon-v19-img-04-02.png)
 
 Html
 
@@ -175,7 +175,7 @@ Html
 
 ### 5. Icon Padding
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-05.png)
+![Beispielbild 05](lux‐icon-v19-img-05.png)
 
 Html
 
@@ -185,7 +185,7 @@ Html
 
 ### 6. Icon Margin
 
-![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐icon-v19-img-06.png)
+![Beispielbild 06](lux‐icon-v19-img-06.png)
 
 Html
 

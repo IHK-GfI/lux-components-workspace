@@ -1,6 +1,6 @@
 # LUX-Progress
 
-![Beispielbild LUX-Progress](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐progress-v19-img.png)
+![Beispielbild LUX-Progress](lux‐progress-v19-img.png)
 
 - [LUX-Progress](#lux-progress)
   - [Overview / API](#overview--api)
@@ -45,7 +45,7 @@
 
 ### 1. Progressbar
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐progress-v19-img-01.png)
+![Beispielbild 01](lux‐progress-v19-img-01.png)
 
 Ts
 
@@ -94,7 +94,7 @@ Html
 
 ### 2. Progressbar (bunt / groß)
 
-![Beispielbild 02-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐progress-v19-img-02-01.png)
+![Beispielbild 02-01](lux‐progress-v19-img-02-01.png)
 
 Html
 
@@ -112,7 +112,7 @@ Html
 <lux-progress luxType="Progressbar" luxColor="brown"></lux-progress>
 ```
 
-![Beispielbild 02-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐progress-v19-img-02-02.png)
+![Beispielbild 02-02](lux‐progress-v19-img-02-02.png)
 
 Html
 
@@ -126,7 +126,7 @@ Html
 
 ### 3. Spinner
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐progress-v19-img-03.png)
+![Beispielbild 03](lux‐progress-v19-img-03.png)
 
 Ts
 
@@ -179,7 +179,7 @@ Html
 
 ### 4. Spinner (bunt)
 
-![Beispielbild 04-01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐progress-v19-img-04-01.png)
+![Beispielbild 04-01](lux‐progress-v19-img-04-01.png)
 
 Html
 
@@ -197,7 +197,7 @@ Html
 <lux-progress luxType="Spinner" luxColor="brown"></lux-progress>
 ```
 
-![Beispielbild 04-02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐progress-v19-img-04-02.png)
+![Beispielbild 04-02](lux‐progress-v19-img-04-02.png)
 
 Html
 

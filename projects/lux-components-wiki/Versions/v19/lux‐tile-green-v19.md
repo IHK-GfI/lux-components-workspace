@@ -1,6 +1,6 @@
 # LUX-Tile (Green)
 
-![Beispielbild LUX-Tile-Green](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tile-green-v19-img.png)
+![Beispielbild LUX-Tile-Green](lux‐tile-green-v19-img.png)
 
 - [LUX-Tile (Green)](#lux-tile-green)
   - [Overview / API](#overview--api)
@@ -52,7 +52,7 @@ Grundlegende Regeln zum Umgang mit Tile's sind:
 
 ### 1. Kachel mit Icon
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tile-green-v19-img-01.png)
+![Beispielbild 01](lux‐tile-green-v19-img-01.png)
 
 Html
 
@@ -64,7 +64,7 @@ Html
 
 ### 2. Kachel mit Bild
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tile-green-v19-img-02.png)
+![Beispielbild 02](lux‐tile-green-v19-img-02.png)
 
 Html
 
@@ -80,7 +80,7 @@ Html
 
 ### 3. Kachel mit Marker
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tile-green-v19-img-03.png)
+![Beispielbild 03](lux‐tile-green-v19-img-03.png)
 
 Html
 
@@ -100,7 +100,7 @@ Html
 
 ### 4. Kachel mit Zahl
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tile-green-v19-img-04.png)
+![Beispielbild 04](lux‐tile-green-v19-img-04.png)
 
 Html
 
@@ -120,7 +120,7 @@ Html
 
 ### 5. Kachel ohne Schatten
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐tile-green-v19-img-05.png)
+![Beispielbild 05](lux‐tile-green-v19-img-05.png)
 
 Html
 

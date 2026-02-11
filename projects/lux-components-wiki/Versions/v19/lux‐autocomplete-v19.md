@@ -1,6 +1,6 @@
 # LUX-autocomplete
 
-![Beispielbild LUX-Autocomplete](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img.png)
+![Beispielbild LUX-Autocomplete](lux‐autocomplete-v19-img.png)
 
 - [LUX-autocomplete](#lux-autocomplete)
   - [Overview / API](#overview--api)
@@ -68,7 +68,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-01.png)
+![Beispielbild 01](lux‐autocomplete-v19-img-01.png)
 
 Ts
 
@@ -97,7 +97,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-02.png)
+![Beispielbild 02](lux‐autocomplete-v19-img-02.png)
 
 Ts
 
@@ -131,7 +131,7 @@ Html
 
 ### 3. Einfaches String-Array als Optionen
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-03.png)
+![Beispielbild 03](lux‐autocomplete-v19-img-03.png)
 
 Ts
 
@@ -165,7 +165,7 @@ Html
 
 ### 4. Ohne Formular - Mit Label-Template
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐autocomplete-v19-img-01.png)
+![Beispielbild 01](lux‐autocomplete-v19-img-01.png)
 
 Ts
 

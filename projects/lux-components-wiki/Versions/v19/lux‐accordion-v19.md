@@ -1,6 +1,6 @@
 # LUX-Accordion
 
-![Beispielbild LUX-Accordion](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img.png)
+![Beispielbild LUX-Accordion](lux‐accordion-v19-img.png)
 
 - [LUX-Accordion](#lux-accordion)
   - [Overview / API](#overview--api)
@@ -134,7 +134,7 @@ die unterhalb des Inhalts angezeigt werden.
 
 ### 1. Accordion
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img-01.png)
+![Beispielbild 01](lux‐accordion-v19-img-01.png)
 
 Html
 
@@ -198,7 +198,7 @@ Html
 
 ### 2. Panel
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img-02.png)
+![Beispielbild 02](lux‐accordion-v19-img-02.png)
 
 Html
 
@@ -237,7 +237,7 @@ Html
 
 ### 3. Accordion mit Custom-Panel
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img-03.png)
+![Beispielbild 03](lux‐accordion-v19-img-03.png)
 
 Html - custom-panel.component.html
 
@@ -304,7 +304,7 @@ Html
 
 #### 4.1 Accordion mit der Farbe accent
 
-![Beispielbild 04](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img-04.png)
+![Beispielbild 04](lux‐accordion-v19-img-04.png)
 
 Html
 
@@ -357,7 +357,7 @@ Html
 ```
 #### 4.2 Accordion mit der Farbe warn
 
-![Beispielbild 05](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img-05.png)
+![Beispielbild 05](lux‐accordion-v19-img-05.png)
 
 Html
 
@@ -389,7 +389,7 @@ Html
 
 #### 4.3 Accordion mit der Farbe neutral
 
-![Beispielbild 06](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img-06.png)
+![Beispielbild 06](lux‐accordion-v19-img-06.png)
 
 Html
 
@@ -430,7 +430,7 @@ Html
 
 Die Position des Toggle Icons kann auch im Panel definiert werden. Priorität hat das Property im Panel.
 
-![Beispielbild 07](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐accordion-v19-img-07.png)
+![Beispielbild 07](lux‐accordion-v19-img-07.png)
 
 Html
 

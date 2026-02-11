@@ -1,6 +1,6 @@
 # LUX-Error-Page
 
-![Beispielbild LUX-Error-Page](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐error‐page-v19-img.png)
+![Beispielbild LUX-Error-Page](lux‐error‐page-v19-img.png)
 
 - [LUX-Error-Page](#lux-error-page)
   - [Overview / API](#overview--api)
@@ -64,7 +64,7 @@ Objekte, die das Interface ILuxError implementieren werden von der LuxErrorPageC
 
 ## Beispiel
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐error‐page-v19-img-01.png)
+![Beispielbild 01](lux‐error‐page-v19-img-01.png)
 
 Ts
 

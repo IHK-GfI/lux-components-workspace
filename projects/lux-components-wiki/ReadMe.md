@@ -6,9 +6,10 @@
 npx prettier --write "**/*.md"
 ```
 
-## Wiki lokal mit Docker ausführen
+## Wiki lokal mit Podman ausführen
 
 ```bash
-docker pull gollumwiki/gollum:v5.3.0
-docker run -d --rm -p 8050:4567 -v $(pwd):/wiki gollumwiki/gollum:v5.3.0 --ref develop
+podman build -f projects/lux-components-wiki/Dockerfile -t lux-components-wiki projects/lux-components-wiki
+podman run --rm -p 8050:4567 lux-components-wiki
+http://localhost:8050/
 ```

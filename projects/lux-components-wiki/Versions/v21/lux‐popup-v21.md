@@ -1,6 +1,6 @@
-# Lux-Popup
+# LUX-Popup
 
-- [Lux-Popup](#lux-popup)
+- [LUX-Popup](#lux-popup)
   - [Overview / API](#overview--api)
     - [Allgemein](#allgemein)
     - [Interaktionsmodi](#interaktionsmodi)

@@ -1,11 +1,11 @@
-# Update Guide 20
+# Update Guide 21
 
-In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisieren kann. Es handelt sich um inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge (Beispiel: 20.0.0 -> 20.0.1 -> 20.1.0 -> 20.1.1 ->...) ausgeführt werden und es darf kein Update übersprungen werden, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisieren kann. Es handelt sich um inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge (Beispiel: 21.0.0 -> 21.0.1 -> 21.1.0 -> 21.1.1 ->...) ausgeführt werden und es darf kein Update übersprungen werden, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
-- [Update Guide 20](#update-guide-20)
+- [Update Guide 21](#update-guide-21)
   - [Änderungen](#änderungen)
   - [Versionen](#versionen)
-    - [Version 20.0.0](#version-2000)
+    - [Version 21.0.0](#version-2100)
       - [Allgemein](#allgemein)
       - [Vor dem Update](#vor-dem-update)
       - [Update](#update)
@@ -23,7 +23,7 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
-### Version 20.0.0
+### Version 21.0.0
 
 #### Allgemein
 
@@ -61,15 +61,37 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
    `ng update angular-eslint@20 --allow-dirty --force`
 
+1. Die Abhängigkeit _ngx-cookie-service_ in der _package.json_ auf die Version _21.0.0_ setzen, aber **ohne** ein `npm install` auszuführen.
+
+1. Angular auf 21 aktualisieren:
+
+   `ng update @angular/core@21 @angular/cli@21 --allow-dirty --force`
+
+   Es wird empfohlen die folgenden Optionen zu aktivieren:
+
+   ```plain
+   Select the migrations that you'd like to run
+   ❯◉ [use-application-builder] Migrate application projects to the new build system. (https://angular.dev/tools/cli/build-system-migration)
+
+   Select the migrations that you'd like to run
+   ❯◉ [router-current-navigation] Replaces usages of the deprecated Router.getCurrentNavigation method with the Router.currentNavigation signal.
+   ```
+
+   Sollte dies aus Zeitgründen unmöglich sein, kann dies zum späteren Zeitpunkt nachgeholt werden.
+
+   `ng update @angular/cdk@21 @angular/material@21 --allow-dirty --force`
+
+   `ng update angular-eslint@21 --allow-dirty --force`
+
 1. LUX-Components-Updater aktualisieren:
 
-   `npm install @ihk-gfi/lux-components-update@20 --save-dev --force`
+   `npm install @ihk-gfi/lux-components-update@21 --save-dev --force`
 
    Die _NPM_-Fehler in der Console können ignoriert werden.
 
 1. Updater ausführen:
 
-   `ng g @ihk-gfi/lux-components-update:update-20.0.0`
+   `ng g @ihk-gfi/lux-components-update:update-21.0.0`
 
 1. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
 
@@ -77,7 +99,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
     `npm install`
 
-1. Migration nach [Transloco](transloco-migrate-v19) abschließen.
+1. Migration nach [Transloco](transloco-migrate-v21) abschließen.
 
 1. Fertig!
 
@@ -124,6 +146,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 #### Weiterführende Verweise bei Interesse oder Problemen
 
 - [Angular Update Guide von v19 nach v20](https://angular.dev/update-guide?v=19.0-20.0&l=3)
+- [Angular Update Guide von v20 nach v21](https://angular.dev/update-guide?v=20.0-21.0&l=3)
 - [Angular application build system](https://angular.dev/tools/cli/build-system-migration)
 
 #### Erklärung

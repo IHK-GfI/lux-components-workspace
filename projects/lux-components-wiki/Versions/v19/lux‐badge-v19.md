@@ -1,6 +1,6 @@
 # LUX-Badge
 
-![Beispielbild LUX-Badge](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐badge-v19-img.png)
+![Beispielbild LUX-Badge](lux‐badge-v19-img.png)
 
 - [LUX-Badge](#lux-badge)
   - [Overview / API](#overview--api)
@@ -33,7 +33,7 @@
 
 ## Beispiel
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐badge-v19-img-01.png)
+![Beispielbild 01](lux‐badge-v19-img-01.png)
 
 Html
 

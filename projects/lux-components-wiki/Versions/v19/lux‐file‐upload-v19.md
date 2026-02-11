@@ -1,6 +1,6 @@
 # LUX-File-Upload
 
-![Beispielbild LUX-File-Upload](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img.png)
+![Beispielbild LUX-File-Upload](lux‐file‐upload-v19-img.png)
 
 - [LUX-File-Upload](#lux-file-upload)
   - [Overview / API](#overview--api)
@@ -130,7 +130,7 @@ Dieses Interface erweitert _ILuxFileActionConfig_.
 
 ### 1. Simple
 
-![Beispielbild 01](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img-01.png)
+![Beispielbild 01](lux‐file‐upload-v19-img-01.png)
 
 Ts
 
@@ -148,7 +148,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img-02.png)
+![Beispielbild 02](lux‐file‐upload-v19-img-02.png)
 
 Ts
 
@@ -174,7 +174,7 @@ Html
 
 ### 3. Mit Dateieinschränkungen
 
-![Beispielbild 03](https://raw.githubusercontent.com/wiki/IHK-GfI/lux-components-workspace/Versions/v19/lux‐file‐upload-v19-img-03.png)
+![Beispielbild 03](lux‐file‐upload-v19-img-03.png)
 
 Ts
 
