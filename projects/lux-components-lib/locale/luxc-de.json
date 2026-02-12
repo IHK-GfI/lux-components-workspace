@@ -12,7 +12,23 @@
       "aria.title_icon.lbl": "Titelicon",
       "aria.usermenu.btn": "Benutzermenü / Navigation",
       "lang.select.trigger": "Spracheinstellungen",
-      "user.menu.trigger": "Benutzermenü"
+      "user.menu.trigger": "Benutzermenü",
+      "session-timer": {
+        "dialog.info.title": "Sind Sie noch da?",
+        "dialog.info.message.part1": "Bitte bestätigen Sie innerhalb von",
+        "dialog.info.message.part2": "2 Minuten",
+        "dialog.info.message.part3": "Ihre Anwesenheit. Danach beenden wir diese Sitzung. Sind Sie bei uns in weiteren Anwendungen angemeldet, werden diese ebenfalls beendet. Nicht gespeicherte Angaben werden gelöscht. Dieses dient zum Schutz Ihrer Daten.",
+        "dialog.extendSession.btn": "Angemeldet bleiben",
+        "dialog.logout.btn": "Abmelden",
+        "dialog.wait.title": "Auf Rückmeldung vom Server warten...",
+        "dialog.logout.title": "Sie wurden automatisch abgemeldet!",
+        "dialog.error.message": "Sie waren für mehr als 20 Minuten inaktiv und wurden deshalb automatisch abgemeldet. Nicht gespeicherte Informationen wurden aus Sicherheitsgründen gelöscht. Das hilft, Ihre Daten zu schützen.",
+        "dialog.backToLogin.btn": "Zum Login",
+        "timer.button.lbl.hours": "> 1 Stunde",
+        "timer.button.lbl.minutes": "Minuten",
+        "timer.button.lbl.seconds": "Sekunden",
+        "timer.button.announcer": "verbleibene Zeit der Sitzung. Zum verlängern Schaltfläche betätigen."
+      }
     },
     "app_content": {
       "ariarolemain": "Inhaltsbereich"
