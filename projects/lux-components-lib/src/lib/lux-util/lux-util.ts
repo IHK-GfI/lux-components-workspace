@@ -14,6 +14,7 @@ import {
   TAB,
   UP_ARROW
 } from '@angular/cdk/keycodes';
+import { HttpRequest } from '@angular/common/http';
 import { FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
 
@@ -390,5 +391,14 @@ export class LuxUtil {
     }
 
     return message;
+  }
+
+  /**
+   * Diese Methode prüft, ob es sich um einen Asset-Request handelt. Dies ist der Fall wenn in der URL "/assets/" vorkommt.
+   * @param request
+   */
+
+  public static checkIfRequestIsAssetRequest(request: HttpRequest<any>): boolean {
+    return request.url.includes('/assets/');
   }
 }

@@ -76,6 +76,7 @@ Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu er
 - [lux-list](lux‐list-v21)
 - [lux‐master‐detail‐ac](lux‐master‐detail‐ac-v21)
 - [lux-panel](lux‐panel-v21)
+- [lux-session-timer](lux‐session‐timer‐v21)
 - [lux-stepper](lux‐stepper-v21)
 - [lux-stepper-large](lux‐stepper‐large-v21)
 - [lux-tabs](lux‐tabs-v21)
