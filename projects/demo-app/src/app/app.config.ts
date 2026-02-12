@@ -2,13 +2,14 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
+import { LuxAppHeaderAcSessionTimerService, LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
 import { LangDefinition, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { provideLuxTranslocoRoot } from './transloco-root.config';
+import { MockAppHeaderAcLuxSessionTimerService } from './components-overview/session-timer-example/mock-session-timer-service';
 
 const myConfiguration: LuxComponentsConfigParameters = {
   generateLuxTagIds: environment.generateLuxTagIds,
@@ -16,6 +17,9 @@ const myConfiguration: LuxComponentsConfigParameters = {
   labelConfiguration: {
     allUppercase: false,
     notAppliedTo: ['lux-link', 'lux-menu-item', 'lux-side-nav-item', 'lux-tab', 'lux-step']
+  },
+  sessionTimerConfig: {
+    url: '/session'
   }
 };
 
@@ -42,6 +46,7 @@ export const appConfig: ApplicationConfig = {
       t.setActiveLang(chosen);
       // Sicherstellen, dass Ressourcen geladen sind bevor Bootstrap finalisiert.
       return firstValueFrom(t.load(chosen));
-    })
+    }),
+    { provide: LuxAppHeaderAcSessionTimerService, useClass: MockAppHeaderAcLuxSessionTimerService }
   ]
 };

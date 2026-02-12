@@ -77,4 +77,10 @@ export interface LuxComponentsConfigParameters {
     fixedDesktop?: boolean;
     fixedMobile?: boolean;
   };
+
+  sessionTimerConfig?: {
+    url?: string;
+    httpSessionTimeHeaderName?: string;
+    httpSessionProlongationHeaderName?: string;
+  };
 }

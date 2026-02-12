@@ -12,7 +12,23 @@
       "aria.title_icon.lbl": "Title icon",
       "aria.usermenu.btn": "User menu / Navigation",
       "lang.select.trigger": "Language settings",
-      "user.menu.trigger": "User menu"
+      "user.menu.trigger": "User menu",
+      "session-timer": {
+        "dialog.info.title": "Are you still there?",
+        "dialog.info.message.part1": "Please confirm your presence within",
+        "dialog.info.message.part2": "2 minutes.",
+        "dialog.info.message.part3": "After that we will end this session. If you are logged into other applications, those will also be closed. Unsaved entries will be deleted. This is to protect your data.",
+        "dialog.extendSession.btn": "Stay signed in",
+        "dialog.logout.btn": "Sign out",
+        "dialog.wait.title": "Waiting for response from the server...",
+        "dialog.logout.title": "You have been signed out automatically!",
+        "dialog.error.message": "You were inactive for more than 20 minutes and were therefore signed out automatically. Unsaved information was deleted for security reasons. This helps protect your data.",
+        "dialog.backToLogin.btn": "Back to login",
+        "timer.button.lbl.hours": "> 1 Hour",
+        "timer.button.lbl.minutes": "Minutes",
+        "timer.button.lbl.seconds": "Seconds",
+        "timer.button.announcer": "remaining session time. Press the button to extend."
+      }
     },
     "app_content": {
       "ariarolemain": "Main content"

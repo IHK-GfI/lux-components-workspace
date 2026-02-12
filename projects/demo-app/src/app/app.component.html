@@ -1,330 +1,337 @@
 <div class="lux-app-container">
   @if (this.luxAppHeader !== 'none' && themeName === 'green') {
-  <lux-app-header
-    luxAppTitle="LUX Components"
-    luxAppTitleShort="Components"
-    luxUserName="Max Mustermann"
-    luxIconName="lux-interface-lighting-light-bulb"
-    luxImageSrc="assets/png/example.png"
-    luxAriaTitleIconLabel="Titelicon  / Zur Hauptseie"
-    luxAriaTitleImageLabel="Titelbild  / Zur Hauptseie"
-    luxAriaTitleLinkLabel="LUX Components / Zur Hauptseie"
-    [luxLocaleSupported]="['de', 'en']"
-    (luxClicked)="router.navigate(['/'])"
-  >
-    <lux-side-nav
-      luxDashboardLink="https://github.com/IHK-GfI/lux-components/wiki"
-      [luxOpenLinkBlank]="true"
-      (luxSideNavExpandedChange)="onSideNavExpandedChange($event)"
+    <lux-app-header
+      luxAppTitle="LUX Components"
+      luxAppTitleShort="Components"
+      luxUserName="Max Mustermann"
+      luxIconName="lux-interface-lighting-light-bulb"
+      luxImageSrc="assets/png/example.png"
+      luxAriaTitleIconLabel="Titelicon  / Zur Hauptseie"
+      luxAriaTitleImageLabel="Titelbild  / Zur Hauptseie"
+      luxAriaTitleLinkLabel="LUX Components / Zur Hauptseie"
+      [luxLocaleSupported]="['de', 'en']"
+      (luxClicked)="router.navigate(['/'])"
     >
-      <lux-side-nav-header>
-        <h3 class="lux-side-nav-header-greeting">Navigation</h3>
-      </lux-side-nav-header>
-      <lux-side-nav-item
-        luxLabel="Home"
-        luxIconName="lux-interface-home-3"
-        (luxClicked)="goToHome()"
-        luxTagId="home-side-nav-item"
-        [luxSelected]="url.endsWith('home')"
+      <lux-side-nav
+        luxDashboardLink="https://github.com/IHK-GfI/lux-components/wiki"
+        [luxOpenLinkBlank]="true"
+        (luxSideNavExpandedChange)="onSideNavExpandedChange($event)"
       >
-      </lux-side-nav-item>
-      <lux-side-nav-item
-        luxLabel="{{ 'app.menu.forms' | transloco }}"
-        luxIconName="lux-interface-file-text"
-        (luxClicked)="goToForm()"
-        luxTagId="form-side-nav-item"
-        [luxSelected]="url.endsWith('form')"
-      >
-      </lux-side-nav-item>
-      <lux-side-nav-item
-        luxLabel="{{ 'app.menu.baseline' | transloco }}"
-        luxIconName="lux-interface-text-formatting-left-align"
-        (luxClicked)="goToBaseline()"
-        luxTagId="baseline-side-nav-item"
-        [luxSelected]="url.endsWith('baseline')"
-      >
-      </lux-side-nav-item>
-      <lux-side-nav-item
-        luxLabel="{{ 'app.menu.configuration' | transloco }}"
-        luxIconName="lux-interface-setting-slider-horizontal"
-        (luxClicked)="goToConfig()"
-        luxTagId="config-side-nav-item"
-        [luxSelected]="url.endsWith('configuration')"
-      >
-      </lux-side-nav-item>
-      <lux-side-nav-item
-        luxLabel="{{ 'app.menu.components' | transloco }}"
-        luxIconName="lux-interface-setting-tool-box"
-        (luxClicked)="goToComponents()"
-        luxTagId="cmp-side-nav-item"
-        [luxSelected]="url.includes('components-overview')"
-      >
-        @for (moduleName of navigationService.currentModuleNames; track moduleName) {
+        <lux-side-nav-header>
+          <h3 class="lux-side-nav-header-greeting">Navigation</h3>
+        </lux-side-nav-header>
         <lux-side-nav-item
-          [luxLabel]="'lux-' + moduleName"
-          [luxExpandable]="true"
-          [luxExpanded]="navigationService.currentModules.get(moduleName)!"
-          [luxCloseOnClick]="false"
-          luxIconName="lux-programming-module-puzzle"
-          [luxTagId]="'lux-' + moduleName + '-module'"
-          (luxClicked)="onModuleClicked(moduleName)"
+          luxLabel="Home"
+          luxIconName="lux-interface-home-3"
+          (luxClicked)="goToHome()"
+          luxTagId="home-side-nav-item"
+          [luxSelected]="url.endsWith('home')"
         >
-          @for (component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted; track component.label) {
-          <lux-side-nav-item
-            [luxLabel]="component.label"
-            [luxTagId]="component.label + '-side-nav-item'"
-            luxIconName="lux-interface-geometric-circle"
-            [luxSelected]="url.endsWith('/' + component.label.toLowerCase())"
-            (luxClicked)="component.onclick()"
-          >
-          </lux-side-nav-item>
+        </lux-side-nav-item>
+        <lux-side-nav-item
+          luxLabel="{{ 'app.menu.forms' | transloco }}"
+          luxIconName="lux-interface-file-text"
+          (luxClicked)="goToForm()"
+          luxTagId="form-side-nav-item"
+          [luxSelected]="url.endsWith('form')"
+        >
+        </lux-side-nav-item>
+        <lux-side-nav-item
+          luxLabel="{{ 'app.menu.baseline' | transloco }}"
+          luxIconName="lux-interface-text-formatting-left-align"
+          (luxClicked)="goToBaseline()"
+          luxTagId="baseline-side-nav-item"
+          [luxSelected]="url.endsWith('baseline')"
+        >
+        </lux-side-nav-item>
+        <lux-side-nav-item
+          luxLabel="{{ 'app.menu.configuration' | transloco }}"
+          luxIconName="lux-interface-setting-slider-horizontal"
+          (luxClicked)="goToConfig()"
+          luxTagId="config-side-nav-item"
+          [luxSelected]="url.endsWith('configuration')"
+        >
+        </lux-side-nav-item>
+        <lux-side-nav-item
+          luxLabel="{{ 'app.menu.components' | transloco }}"
+          luxIconName="lux-interface-setting-tool-box"
+          (luxClicked)="goToComponents()"
+          luxTagId="cmp-side-nav-item"
+          [luxSelected]="url.includes('components-overview')"
+        >
+          @for (moduleName of navigationService.currentModuleNames; track moduleName) {
+            <lux-side-nav-item
+              [luxLabel]="'lux-' + moduleName"
+              [luxExpandable]="true"
+              [luxExpanded]="navigationService.currentModules.get(moduleName)!"
+              [luxCloseOnClick]="false"
+              luxIconName="lux-programming-module-puzzle"
+              [luxTagId]="'lux-' + moduleName + '-module'"
+              (luxClicked)="onModuleClicked(moduleName)"
+            >
+              @for (
+                component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted;
+                track component.label
+              ) {
+                <lux-side-nav-item
+                  [luxLabel]="component.label"
+                  [luxTagId]="component.label + '-side-nav-item'"
+                  luxIconName="lux-interface-geometric-circle"
+                  [luxSelected]="url.endsWith('/' + component.label.toLowerCase())"
+                  (luxClicked)="component.onclick()"
+                >
+                </lux-side-nav-item>
+              }
+            </lux-side-nav-item>
           }
         </lux-side-nav-item>
-        }
-      </lux-side-nav-item>
-      <lux-side-nav-footer>
-        <div class="lux-flex lux-flex-wrap lux-justify-center lux-align-center lux-gap-3">
-          <lux-button luxLabel="Aufklappen" [luxRaised]="true" (luxClicked)="navigationService.onExpandAll()"></lux-button>
-          <lux-button luxLabel="Zuklappen" [luxRaised]="true" (luxClicked)="navigationService.onCollapseAll()"></lux-button>
-        </div>
-        <div class="lux-flex lux-flex-wrap lux-justify-center lux-align-center lux-gap-3 lux-mt-3">
-          <lux-link-plain luxLabel="Impressum" [luxRaised]="true" (luxClicked)="goToImpressum()"></lux-link-plain>
-          <lux-link-plain luxLabel="Lizenzhinweis" [luxRaised]="true" (luxClicked)="goToLicenseHint()"></lux-link-plain>
-        </div>
-      </lux-side-nav-footer>
-    </lux-side-nav>
-    <lux-app-header-action-nav>
-      <lux-app-header-action-nav-item
-        class="xs:lux-display-none"
-        luxIconName="lux-interface-alert-alarm-bell-2"
-        luxColor="accent"
-        luxAriaLabel="Nachrichten anzeigen"
-        luxTooltip="Test für Action-Nav-Item"
-        luxTagId="action0"
-        (luxClicked)="actionClicked('#0 Action clicked!')"
-      >
-      </lux-app-header-action-nav-item>
-      <lux-app-header-action-nav-item
-        class="xs:lux-display-none"
-        luxIconName="lux-interface-delete-bin-2"
-        luxColor="warn"
-        luxAriaLabel="Nachrichten löschen"
-        luxTagId="action1"
-        [luxDisabled]="true"
-        (luxClicked)="actionClicked('#1 Action clicked!')"
-      >
-      </lux-app-header-action-nav-item>
-      <lux-app-header-action-nav-item>
-        <lux-app-header-action-nav-item-custom>
-          <lux-menu
-            luxMenuLabel="IHK"
-            luxTooltip="IHK wechseln"
-            luxAriaMenuTriggerLabel="IHK wechseln"
-            luxMenuIconName="lux-interface-arrows-button-down"
-            [luxMenuTriggerIconShowRight]="true"
-            [luxDisplayExtended]="false"
-          >
-            <lux-menu-item
-              luxLabel="IHK 101"
-              luxIconName="lux-factory"
-              (luxClicked)="actionClicked('IHK 101-Action clicked!')"
-            ></lux-menu-item>
-            <lux-menu-item
-              luxLabel="IHK 106"
-              luxIconName="lux-factory"
-              (luxClicked)="actionClicked('IHK 106-Action clicked!')"
-            ></lux-menu-item>
-            <lux-menu-item
-              luxLabel="IHK 189"
-              luxIconName="lux-factory"
-              (luxClicked)="actionClicked('IHK 189-Action clicked!')"
-            ></lux-menu-item>
-          </lux-menu>
-        </lux-app-header-action-nav-item-custom>
-      </lux-app-header-action-nav-item>
-    </lux-app-header-action-nav>
-    @if (luxMode === 'stand-alone') {
-    <lux-app-header-right-nav>
-      <lux-menu-item
-        luxIconName="lux-interface-edit-brush-1"
-        luxLabel="Theme - green"
-        [luxDisabled]="themeName === 'green'"
-        luxClass="lux-selected-item-ac"
-        luxTagId="theme-green-menu-item-ac"
-        (luxClicked)="onChangeTheme('green')"
-      ></lux-menu-item>
-      <lux-menu-item
-        luxIconName="lux-interface-edit-brush-1"
-        luxLabel="Theme - authentic"
-        [luxDisabled]="false"
-        luxTagId="theme-authentic-menu-item-ac"
-        (luxClicked)="onChangeTheme('authentic')"
-      ></lux-menu-item>
-      <lux-menu-item luxLabel="Abmelden" luxIconName="lux-control-button-power-1" luxTagId="abmelden-menu-item"></lux-menu-item>
-    </lux-app-header-right-nav>
-    }
-  </lux-app-header>
-  } @if (this.luxAppHeader !== 'none' && themeName !== 'green') {
-  <lux-app-header-ac
-    luxAppTitle="LUX Components"
-    luxAppTitleShort="Components"
-    [luxUserName]="demoUserName"
-    [luxUserEmail]="demoUserEmail"
-    luxAppIconName="dashboard_customize"
-    [luxBrandLogoSrc]="tenantLogoConfig === undefined ? 'https://cdn.gfi.ihk.de/IHK-Logos/189_kurz.svg' : undefined"
-    luxAppLogoSrc="assets/favicons/favicon.svg"
-    luxAriaTitleIconLabel="Appicon / Link auf die Startseite"
-    luxAriaTitleImageLabel="Brandlogo / Externer Link auf die IHK-GfI Homepage"
-    [luxLocaleSupported]="['de', 'en']"
-    (luxAppLogoClicked)="goToHome()"
-    (luxBrandLogoClicked)="goToHomepage()"
-  >
-    <!-- Diese Komponente wechselt sich mit dem Attribut "luxBrandLogoSrc" von "lux-app-header-ac" ab, um die Komponente "lux-tenant-logo" anzuzeigen. -->
-    @if (tenantLogoConfig) {
-    <lux-tenant-logo
-      [luxTenantKey]="tenantLogoConfig.luxTenantKey"
-      [luxTenantVariant]="tenantLogoConfig.luxTenantVariant"
-      [luxTenantLogoHeight]="tenantLogoConfig.luxTenantLogoHeight"
-      (luxTenantLogoClicked)="onTenantLogoClicked()"
-    ></lux-tenant-logo>
-    } @if (luxMode === 'stand-alone') {
-    <lux-app-header-ac-user-menu luxTooltip="Usermenü" [luxUseSectionsAndHeaderPanel]="true">
-      <lux-divider #menuSection></lux-divider>
-      <lux-menu-section-title luxTitle="Theme" #menuSection></lux-menu-section-title>
-      <lux-menu-item
-        luxIconName="lux-interface-edit-brush-1"
-        luxLabel="green"
-        luxTagId="theme-green-menu-item-ac"
-        (luxClicked)="onChangeTheme('green')"
-        #menuSection
-      ></lux-menu-item>
-      <lux-menu-item
-        luxIconName="lux-interface-edit-brush-1"
-        luxLabel="authentic"
-        [luxDisabled]="true"
-        luxClass="lux-selected-item-ac"
-        luxTagId="theme-authentic-menu-item-ac"
-        (luxClicked)="onChangeTheme('authentic')"
-        #menuSection
-      ></lux-menu-item>
-      <lux-divider #menuSection></lux-divider>
-      <lux-menu-item
-        luxIconName="lux-interface-logout-circle"
-        [luxLabel]="demoLoginBtn"
-        (luxClicked)="toggleLogin()"
-        luxTagId="abmelden-menu-item"
-        #menuSection
-      ></lux-menu-item>
-    </lux-app-header-ac-user-menu>
-    }
-    <lux-app-header-ac-nav-menu [luxNavMenuMaximumExtended]="5">
-      <lux-app-header-ac-nav-menu-item
-        luxLabel="{{ 'app.menu.components' | transloco }}"
-        luxAriaLabel="Komponentenübersicht"
-        luxTagId="navItem0"
-        luxButtonBadge="{{ components }}"
-        luxButtonBadgeColor="primary"
-        [luxSelected]="url.includes('components-overview') && !url.includes('icon-overview')"
-        (luxClicked)="goToComponents()"
-      >
-      </lux-app-header-ac-nav-menu-item>
-      <lux-app-header-ac-nav-menu-item
-        luxLabel="{{ 'app.menu.iconSearch' | transloco }}"
-        luxAriaLabel="Lux-Icons suchen"
-        luxTagId="navItem4"
-        [luxSelected]="url.endsWith('icon-overview')"
-        (luxClicked)="goToIconSearch()"
-      ></lux-app-header-ac-nav-menu-item>
-      <lux-app-header-ac-nav-menu-item
-        luxLabel="{{ 'app.menu.forms' | transloco }}"
-        luxAriaLabel="Beispielformulare"
-        luxTagId="navItem1"
-        [luxSelected]="url.endsWith('form')"
-        (luxClicked)="goToForm()"
-      >
-      </lux-app-header-ac-nav-menu-item>
-      <lux-app-header-ac-nav-menu-item
-        luxLabel="{{ 'app.menu.baseline' | transloco }}"
-        luxAriaLabel="Baseline Beispiele"
-        luxTagId="navItem2"
-        [luxSelected]="url.endsWith('baseline')"
-        (luxClicked)="goToBaseline()"
-      >
-      </lux-app-header-ac-nav-menu-item>
-      <lux-app-header-ac-nav-menu-item
-        luxLabel="{{ 'app.menu.configuration' | transloco }}"
-        luxAriaLabel="Konfiguration einstellen"
-        luxTagId="navItem3"
-        [luxSelected]="url.endsWith('configuration')"
-        (luxClicked)="goToConfig()"
-      >
-      </lux-app-header-ac-nav-menu-item>
-      @if (mobileView) {
-      <lux-app-header-ac-nav-menu-item
-        luxLabel="Impressum"
-        luxAriaLabel="Impressum"
-        [luxSelected]="url.endsWith('impressum')"
-        (luxClicked)="router.navigate(['impressum'])"
-      >
-      </lux-app-header-ac-nav-menu-item>
-      } @if (mobileView) {
-      <lux-app-header-ac-nav-menu-item
-        luxLabel="Lizenzhinweis"
-        luxAriaLabel="Lizenzhinweis"
-        [luxSelected]="url.endsWith('license-hint')"
-        (luxClicked)="router.navigate(['license-hint'])"
-      >
-      </lux-app-header-ac-nav-menu-item>
+        <lux-side-nav-footer>
+          <div class="lux-flex lux-flex-wrap lux-justify-center lux-align-center lux-gap-3">
+            <lux-button luxLabel="Aufklappen" [luxRaised]="true" (luxClicked)="navigationService.onExpandAll()"></lux-button>
+            <lux-button luxLabel="Zuklappen" [luxRaised]="true" (luxClicked)="navigationService.onCollapseAll()"></lux-button>
+          </div>
+          <div class="lux-flex lux-flex-wrap lux-justify-center lux-align-center lux-gap-3 lux-mt-3">
+            <lux-link-plain luxLabel="Impressum" [luxRaised]="true" (luxClicked)="goToImpressum()"></lux-link-plain>
+            <lux-link-plain luxLabel="Lizenzhinweis" [luxRaised]="true" (luxClicked)="goToLicenseHint()"></lux-link-plain>
+          </div>
+        </lux-side-nav-footer>
+      </lux-side-nav>
+      <lux-app-header-action-nav>
+        <lux-app-header-action-nav-item
+          class="xs:lux-display-none"
+          luxIconName="lux-interface-alert-alarm-bell-2"
+          luxColor="accent"
+          luxAriaLabel="Nachrichten anzeigen"
+          luxTooltip="Test für Action-Nav-Item"
+          luxTagId="action0"
+          (luxClicked)="actionClicked('#0 Action clicked!')"
+        >
+        </lux-app-header-action-nav-item>
+        <lux-app-header-action-nav-item
+          class="xs:lux-display-none"
+          luxIconName="lux-interface-delete-bin-2"
+          luxColor="warn"
+          luxAriaLabel="Nachrichten löschen"
+          luxTagId="action1"
+          [luxDisabled]="true"
+          (luxClicked)="actionClicked('#1 Action clicked!')"
+        >
+        </lux-app-header-action-nav-item>
+        <lux-app-header-action-nav-item>
+          <lux-app-header-action-nav-item-custom>
+            <lux-menu
+              luxMenuLabel="IHK"
+              luxTooltip="IHK wechseln"
+              luxAriaMenuTriggerLabel="IHK wechseln"
+              luxMenuIconName="lux-interface-arrows-button-down"
+              [luxMenuTriggerIconShowRight]="true"
+              [luxDisplayExtended]="false"
+            >
+              <lux-menu-item
+                luxLabel="IHK 101"
+                luxIconName="lux-factory"
+                (luxClicked)="actionClicked('IHK 101-Action clicked!')"
+              ></lux-menu-item>
+              <lux-menu-item
+                luxLabel="IHK 106"
+                luxIconName="lux-factory"
+                (luxClicked)="actionClicked('IHK 106-Action clicked!')"
+              ></lux-menu-item>
+              <lux-menu-item
+                luxLabel="IHK 189"
+                luxIconName="lux-factory"
+                (luxClicked)="actionClicked('IHK 189-Action clicked!')"
+              ></lux-menu-item>
+            </lux-menu>
+          </lux-app-header-action-nav-item-custom>
+        </lux-app-header-action-nav-item>
+      </lux-app-header-action-nav>
+      @if (luxMode === 'stand-alone') {
+        <lux-app-header-right-nav>
+          <lux-menu-item
+            luxIconName="lux-interface-edit-brush-1"
+            luxLabel="Theme - green"
+            [luxDisabled]="themeName === 'green'"
+            luxClass="lux-selected-item-ac"
+            luxTagId="theme-green-menu-item-ac"
+            (luxClicked)="onChangeTheme('green')"
+          ></lux-menu-item>
+          <lux-menu-item
+            luxIconName="lux-interface-edit-brush-1"
+            luxLabel="Theme - authentic"
+            [luxDisabled]="false"
+            luxTagId="theme-authentic-menu-item-ac"
+            (luxClicked)="onChangeTheme('authentic')"
+          ></lux-menu-item>
+          <lux-menu-item luxLabel="Abmelden" luxIconName="lux-control-button-power-1" luxTagId="abmelden-menu-item"></lux-menu-item>
+        </lux-app-header-right-nav>
       }
-    </lux-app-header-ac-nav-menu>
-    <lux-app-header-ac-action-nav>
-      <lux-app-header-ac-action-nav-item>
-        <lux-app-header-ac-action-nav-item-custom>
-          <lux-menu
-            luxMenuLabel="IHK"
-            luxAriaMenuTriggerLabel="IHK wechseln"
-            luxMenuIconName="lux-interface-arrows-button-down"
-            [luxMenuTriggerIconShowRight]="true"
-            [luxDisplayExtended]="false"
-            luxTooltip="IHK wechseln"
-            [luxTooltipShowDelay]="1000"
+    </lux-app-header>
+  }
+  @if (this.luxAppHeader !== 'none' && themeName !== 'green') {
+    <lux-app-header-ac
+      luxAppTitle="LUX Components"
+      luxAppTitleShort="Components"
+      [luxUserName]="demoUserName"
+      [luxUserEmail]="demoUserEmail"
+      luxAppIconName="dashboard_customize"
+      [luxBrandLogoSrc]="tenantLogoConfig === undefined ? 'https://cdn.gfi.ihk.de/IHK-Logos/189_kurz.svg' : undefined"
+      luxAppLogoSrc="assets/favicons/favicon.svg"
+      luxAriaTitleIconLabel="Appicon / Link auf die Startseite"
+      luxAriaTitleImageLabel="Brandlogo / Externer Link auf die IHK-GfI Homepage"
+      [luxLocaleSupported]="['de', 'en']"
+      (luxAppLogoClicked)="goToHome()"
+      (luxBrandLogoClicked)="goToHomepage()"
+    >
+      <!-- Diese Komponente wechselt sich mit dem Attribut "luxBrandLogoSrc" von "lux-app-header-ac" ab, um die Komponente "lux-tenant-logo" anzuzeigen. -->
+      @if (tenantLogoConfig) {
+        <lux-tenant-logo
+          [luxTenantKey]="tenantLogoConfig.luxTenantKey"
+          [luxTenantVariant]="tenantLogoConfig.luxTenantVariant"
+          [luxTenantLogoHeight]="tenantLogoConfig.luxTenantLogoHeight"
+          (luxTenantLogoClicked)="onTenantLogoClicked()"
+        ></lux-tenant-logo>
+      }
+      @if (luxMode === 'stand-alone') {
+        <lux-app-header-ac-user-menu luxTooltip="Usermenü" [luxUseSectionsAndHeaderPanel]="true">
+          <lux-divider #menuSection></lux-divider>
+          <lux-menu-section-title luxTitle="Theme" #menuSection></lux-menu-section-title>
+          <lux-menu-item
+            luxIconName="lux-interface-edit-brush-1"
+            luxLabel="green"
+            luxTagId="theme-green-menu-item-ac"
+            (luxClicked)="onChangeTheme('green')"
+            #menuSection
+          ></lux-menu-item>
+          <lux-menu-item
+            luxIconName="lux-interface-edit-brush-1"
+            luxLabel="authentic"
+            [luxDisabled]="true"
+            luxClass="lux-selected-item-ac"
+            luxTagId="theme-authentic-menu-item-ac"
+            (luxClicked)="onChangeTheme('authentic')"
+            #menuSection
+          ></lux-menu-item>
+          <lux-divider #menuSection></lux-divider>
+          <lux-menu-item
+            luxIconName="lux-interface-logout-circle"
+            [luxLabel]="demoLoginBtn"
+            (luxClicked)="toggleLogin()"
+            luxTagId="abmelden-menu-item"
+            #menuSection
+          ></lux-menu-item>
+        </lux-app-header-ac-user-menu>
+      }
+      <lux-app-header-ac-nav-menu [luxNavMenuMaximumExtended]="5">
+        <lux-app-header-ac-nav-menu-item
+          luxLabel="{{ 'app.menu.components' | transloco }}"
+          luxAriaLabel="Komponentenübersicht"
+          luxTagId="navItem0"
+          luxButtonBadge="{{ components }}"
+          luxButtonBadgeColor="primary"
+          [luxSelected]="url.includes('components-overview') && !url.includes('icon-overview')"
+          (luxClicked)="goToComponents()"
+        >
+        </lux-app-header-ac-nav-menu-item>
+        <lux-app-header-ac-nav-menu-item
+          luxLabel="{{ 'app.menu.iconSearch' | transloco }}"
+          luxAriaLabel="Lux-Icons suchen"
+          luxTagId="navItem4"
+          [luxSelected]="url.endsWith('icon-overview')"
+          (luxClicked)="goToIconSearch()"
+        ></lux-app-header-ac-nav-menu-item>
+        <lux-app-header-ac-nav-menu-item
+          luxLabel="{{ 'app.menu.forms' | transloco }}"
+          luxAriaLabel="Beispielformulare"
+          luxTagId="navItem1"
+          [luxSelected]="url.endsWith('form')"
+          (luxClicked)="goToForm()"
+        >
+        </lux-app-header-ac-nav-menu-item>
+        <lux-app-header-ac-nav-menu-item
+          luxLabel="{{ 'app.menu.baseline' | transloco }}"
+          luxAriaLabel="Baseline Beispiele"
+          luxTagId="navItem2"
+          [luxSelected]="url.endsWith('baseline')"
+          (luxClicked)="goToBaseline()"
+        >
+        </lux-app-header-ac-nav-menu-item>
+        <lux-app-header-ac-nav-menu-item
+          luxLabel="{{ 'app.menu.configuration' | transloco }}"
+          luxAriaLabel="Konfiguration einstellen"
+          luxTagId="navItem3"
+          [luxSelected]="url.endsWith('configuration')"
+          (luxClicked)="goToConfig()"
+        >
+        </lux-app-header-ac-nav-menu-item>
+        @if (mobileView) {
+          <lux-app-header-ac-nav-menu-item
+            luxLabel="Impressum"
+            luxAriaLabel="Impressum"
+            [luxSelected]="url.endsWith('impressum')"
+            (luxClicked)="router.navigate(['impressum'])"
           >
-            <lux-menu-item
-              luxLabel="IHK 101"
-              luxIconName="lux-factory"
-              (luxClicked)="actionClicked('IHK 101-Action clicked!', 'lux-factory')"
-            ></lux-menu-item>
-            <lux-menu-item
-              luxLabel="IHK 106"
-              luxIconName="lux-factory"
-              (luxClicked)="actionClicked('IHK 106-Action clicked!', 'lux-factory')"
-            ></lux-menu-item>
-            <lux-menu-item
-              luxLabel="IHK 189"
-              luxIconName="lux-factory"
-              (luxClicked)="actionClicked('IHK 189-Action clicked!', 'lux-factory')"
-            ></lux-menu-item>
-          </lux-menu>
-        </lux-app-header-ac-action-nav-item-custom>
-      </lux-app-header-ac-action-nav-item>
-      <lux-app-header-ac-action-nav-item
-        luxIconName="lux-interface-alert-alarm-bell-2"
-        luxColor="primary"
-        luxLabel="Actionbeispiel-Button"
-        luxTagId="action0"
-        luxTooltip="Test für Action-Nav-Item"
-        [luxTooltipShowDelay]="1000"
-        (luxClicked)="actionClicked('Ihre Bestellung wird nun zubereitet!', 'lux-food-pizza')"
-      ></lux-app-header-ac-action-nav-item>
-    </lux-app-header-ac-action-nav>
-  </lux-app-header-ac>
+          </lux-app-header-ac-nav-menu-item>
+        }
+        @if (mobileView) {
+          <lux-app-header-ac-nav-menu-item
+            luxLabel="Lizenzhinweis"
+            luxAriaLabel="Lizenzhinweis"
+            [luxSelected]="url.endsWith('license-hint')"
+            (luxClicked)="router.navigate(['license-hint'])"
+          >
+          </lux-app-header-ac-nav-menu-item>
+        }
+      </lux-app-header-ac-nav-menu>
+      <lux-app-header-ac-action-nav>
+        <lux-app-header-ac-action-nav-item>
+          <lux-app-header-ac-action-nav-item-custom>
+            <lux-menu
+              luxMenuLabel="IHK"
+              luxAriaMenuTriggerLabel="IHK wechseln"
+              luxMenuIconName="lux-interface-arrows-button-down"
+              [luxMenuTriggerIconShowRight]="true"
+              [luxDisplayExtended]="false"
+              luxTooltip="IHK wechseln"
+              [luxTooltipShowDelay]="1000"
+            >
+              <lux-menu-item
+                luxLabel="IHK 101"
+                luxIconName="lux-factory"
+                (luxClicked)="actionClicked('IHK 101-Action clicked!', 'lux-factory')"
+              ></lux-menu-item>
+              <lux-menu-item
+                luxLabel="IHK 106"
+                luxIconName="lux-factory"
+                (luxClicked)="actionClicked('IHK 106-Action clicked!', 'lux-factory')"
+              ></lux-menu-item>
+              <lux-menu-item
+                luxLabel="IHK 189"
+                luxIconName="lux-factory"
+                (luxClicked)="actionClicked('IHK 189-Action clicked!', 'lux-factory')"
+              ></lux-menu-item>
+            </lux-menu>
+          </lux-app-header-ac-action-nav-item-custom>
+        </lux-app-header-ac-action-nav-item>
+        <lux-app-header-ac-session-timer (luxLogoutEvent)="logoutUser()" (luxLoginEvent)="loginUser()"></lux-app-header-ac-session-timer>
+        <lux-app-header-ac-action-nav-item
+          luxIconName="lux-interface-alert-alarm-bell-2"
+          luxColor="primary"
+          luxLabel="Actionbeispiel-Button"
+          luxTagId="action0"
+          luxTooltip="Test für Action-Nav-Item"
+          [luxTooltipShowDelay]="1000"
+          (luxClicked)="actionClicked('Ihre Bestellung wird nun zubereitet!', 'lux-food-pizza')"
+        ></lux-app-header-ac-action-nav-item>
+      </lux-app-header-ac-action-nav>
+    </lux-app-header-ac>
   }
   <lux-app-content luxAriaRoleMainLabel="{{ 'luxc.app_content.ariarolemain' | transloco }}" cdkScrollable>
-    @if (this.luxAppFooter !== 'none' && ((fixedFooterService.fixedModeAsObservable | async) === false)) {
-    <lux-app-footer luxVersion="20.0.0"></lux-app-footer>
+    @if (this.luxAppFooter !== 'none' && (fixedFooterService.fixedModeAsObservable | async) === false) {
+      <lux-app-footer luxVersion="20.0.0"></lux-app-footer>
     }
   </lux-app-content>
-  @if (this.luxAppFooter !== 'none' && ((fixedFooterService.fixedModeAsObservable | async) === true)) {
-  <lux-app-footer luxVersion="20.0.0"></lux-app-footer>
+  @if (this.luxAppFooter !== 'none' && (fixedFooterService.fixedModeAsObservable | async) === true) {
+    <lux-app-footer luxVersion="20.0.0"></lux-app-footer>
   }
 </div>
