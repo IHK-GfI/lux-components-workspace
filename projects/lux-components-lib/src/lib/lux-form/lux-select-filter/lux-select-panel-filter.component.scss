@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--mat-select-panel-background-color, #fff);
+}
+
+.lux-select-panel-filter {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 0.0625rem solid var(--lux-theme-border-subtle, #d1d5db);
+}
+
+.lux-select-panel-filter-input {
+  width: 100%;
+  min-height: 2rem;
+  padding: 0.25rem 0.5rem;
+  border: 0.0625rem solid var(--lux-theme-border-subtle, #9ca3af);
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+}

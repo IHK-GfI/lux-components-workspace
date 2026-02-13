@@ -17,6 +17,7 @@
         [luxReadonly]="readonly"
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
+        [luxEnableFilter]="enableFilter"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="value"
@@ -46,6 +47,7 @@
         [luxReadonly]="readonly"
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
+        [luxEnableFilter]="enableFilter"
         [luxMultiple]="true"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="multiselectValue"
@@ -74,6 +76,7 @@
         [luxReadonly]="readonly"
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
+        [luxEnableFilter]="enableFilter"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
@@ -126,6 +129,12 @@
     >
     </lux-input-ac>
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+    <lux-toggle-ac
+      [(luxChecked)]="enableFilter"
+      luxLabel="luxEnableFilter"
+      luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
     <lux-toggle-ac
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
