@@ -37,8 +37,6 @@ describe('LuxSelectAcComponent', () => {
     }).compileComponents();
   }));
 
-  let overlayContainerElement: HTMLElement;
-  let dir: { value: 'ltr' | 'rtl' };
   const scrolledSubject = new Subject();
 
   describe('innerhalb eines Formulars', () => {
@@ -65,7 +63,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       expect(options[0].classList).toContain('mdc-list-item--selected');
     }));
 
@@ -79,7 +77,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (fixture.nativeElement.querySelectorAll('mat-option')[1] as HTMLElement).click();
+      (document.querySelectorAll('.mat-mdc-select-panel mat-option')[1] as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -151,7 +149,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       expect(options[3].classList).toContain('mdc-list-item--selected');
     }));
 
@@ -162,7 +160,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (fixture.nativeElement.querySelector('mat-option') as HTMLElement).click();
+      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -356,7 +354,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       expect(options[3].classList).toContain('mdc-list-item--selected');
       discardPeriodicTasks();
     }));
@@ -389,7 +387,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       expect(options[3].classList).toContain('mdc-list-item--selected');
     }));
 
@@ -400,7 +398,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (fixture.nativeElement.querySelector('mat-option') as HTMLElement).click();
+      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -448,7 +446,7 @@ describe('LuxSelectAcComponent', () => {
 
       clickTrigger();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
 
       expect(options.length).toBe(testComponent.options.length);
       expect(options.item(0).innerText.trim()).toEqual('');
@@ -610,7 +608,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       (options[0] as HTMLElement).click();
       fixture.detectChanges();
       flush();
@@ -717,7 +715,7 @@ describe('LuxSelectAcComponent', () => {
 
     it('Sollte die Options richtig darstellen', fakeAsync(() => {
       // Vorbedingungen testen
-      let optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
+      let optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(0);
 
       // Änderungen durchführen
@@ -726,7 +724,7 @@ describe('LuxSelectAcComponent', () => {
       flush();
 
       // Nachbedingungen prüfen
-      optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
+      optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(4);
       expect(optionTexts[0].textContent!.trim()).toEqual('Option: A');
       expect(optionTexts[1].textContent!.trim()).toEqual('Option: B');
@@ -736,7 +734,7 @@ describe('LuxSelectAcComponent', () => {
 
     it('Sollte ngTemplate luxOptionLabelProp vorziehen', fakeAsync(() => {
       // Vorbedingungen testen
-      let optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
+      let optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(0);
 
       // Änderungen durchführen
@@ -748,12 +746,160 @@ describe('LuxSelectAcComponent', () => {
       flush();
 
       // Nachbedingungen prüfen
-      optionTexts = fixture.nativeElement.querySelectorAll('.mdc-list-item__primary-text');
+      optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(4);
       expect(optionTexts[0].textContent!.trim()).toEqual('Option: A');
       expect(optionTexts[1].textContent!.trim()).toEqual('Option: B');
       expect(optionTexts[2].textContent!.trim()).toEqual('Option: C');
       expect(optionTexts[3].textContent!.trim()).toEqual('Option: D');
+    }));
+  });
+
+  describe('mit aktivierter Filterfunktion', () => {
+    it('rendert das Filterfeld nicht als deaktivierte mat-option', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      expect(document.querySelector('.mat-mdc-select-panel mat-option.lux-select-panel-filter-option')).toBeNull();
+      expect(document.querySelector('lux-select-panel-filter')).not.toBeNull();
+    }));
+
+    it('reduziert die Optionsliste anhand des Suchtexts', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'gru';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
+      expect(options.length).toBe(1);
+      expect(options.item(0).innerText.trim()).toBe('Gruppenaufgaben');
+    }));
+
+    it('funktioniert mit Filterung und Auswahl kombiniert', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'zur';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const option = document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement;
+      option.click();
+      fixture.detectChanges();
+      flush();
+
+      expect(component.selectedOption?.value).toBe('C');
+    }));
+
+    it('zeigt wieder alle Optionen bei leerem Suchfeld', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'ver';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      filterInput.value = '';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = fixture.nativeElement.querySelectorAll(
+        'mat-option .mdc-list-item__primary-text'
+      ) as NodeListOf<HTMLElement>;
+      expect(options.length).toBe(4);
+    }));
+
+    it('funktioniert in Reactive Forms', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterReactiveFormComponent);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'vert';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      expect(component.formGroup.get('task')?.value?.value).toBe('D');
+    }));
+
+    it('funktioniert im Multiselect', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'aufgaben';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
+      (options.item(0) as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const reopenedFilterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      reopenedFilterInput.value = 'gruppe';
+      LuxTestHelper.dispatchFakeEvent(reopenedFilterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      expect(component.selectedOptions.length).toBe(2);
+      expect(component.selectedOptions[0].value).toBe('A');
+      expect(component.selectedOptions[1].value).toBe('B');
     }));
   });
 });
@@ -876,6 +1022,76 @@ class SelectStringArrayComponent {
   @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
   selectedOption: any = null;
   options: (string | null | undefined)[] = ['A', 'B', 'C', 'D'];
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      [luxOptions]="options"
+      luxOptionLabelProp="label"
+      [luxEnableFilter]="true"
+      [(luxSelected)]="selectedOption"
+      [luxMultiple]="false"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectFilterComponent {
+  selectedOption: Option | null = null;
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-select-ac
+        [luxOptions]="options"
+        luxOptionLabelProp="label"
+        luxControlBinding="task"
+        [luxEnableFilter]="true"
+      ></lux-select-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxSelectAcComponent]
+})
+class SelectFilterReactiveFormComponent {
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+
+  formGroup = new FormGroup({
+    task: new FormControl<Option | null>(null)
+  });
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      [luxOptions]="options"
+      luxOptionLabelProp="label"
+      [luxEnableFilter]="true"
+      [luxMultiple]="true"
+      [(luxSelected)]="selectedOptions"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectFilterMultipleComponent {
+  selectedOptions: Option[] = [];
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
 }
 
 declare interface Option {
@@ -1019,3 +1235,7 @@ class SelectWithTemplateComponent {
     { label: 'Vertretungsaufgaben', value: 'D' }
   ];
 }
+
+
+
+

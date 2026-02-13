@@ -27,6 +27,7 @@
         [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
         [luxControlValidators]="controlValidators"
         [luxEntryBlockSize]="entryBlockSize"
+        [luxEnableFilter]="enableFilter"
         [luxWithEmptyEntry]="bLuxWithEmptyEntry"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
@@ -63,6 +64,7 @@
         [(luxValue)]="multiValue"
         [luxCompareFn]="compareFn"
         [luxMultiple]="true"
+        [luxEnableFilter]="enableFilter"
         [luxWithEmptyEntry]="bLuxWithEmptyEntry"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
@@ -96,6 +98,7 @@
         [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
         [luxControlBinding]="controlBinding"
         [luxWithEmptyEntry]="bLuxWithEmptyEntry"
+        [luxEnableFilter]="enableFilter"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
         [luxCompareFn]="compareFn"
@@ -146,6 +149,13 @@
     >
     </lux-input-ac>
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+    <lux-toggle-ac
+      [(luxChecked)]="enableFilter"
+      luxLabel="luxEnableFilter"
+      luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig in den geladenen Optionen."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
     <lux-toggle-ac
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"

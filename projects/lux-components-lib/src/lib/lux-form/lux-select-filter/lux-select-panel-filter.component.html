@@ -1,0 +1,15 @@
+<div class="lux-select-panel-filter" role="presentation" (click)="stopPanelEvent($event)" (mousedown)="stopPanelEvent($event)">
+  <input
+    #filterInput
+    class="lux-select-panel-filter-input"
+    type="text"
+    [placeholder]="placeholder"
+    [value]="filterValue"
+    autocomplete="off"
+    role="searchbox"
+    aria-autocomplete="list"
+    [attr.aria-label]="placeholder"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
+  />
+</div>

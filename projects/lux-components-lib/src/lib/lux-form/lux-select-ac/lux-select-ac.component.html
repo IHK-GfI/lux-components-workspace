@@ -36,12 +36,30 @@
     [luxAriaDescribedby]="descripedBy()"
     (focusin)="onFocusIn($event)"
     (focusout)="onFocusOut($event)"
+    (openedChange)="onOpenedChange($event)"
     #select
   >
+    @if (luxEnableFilter) {
+    <lux-select-panel-filter
+      [placeholder]="luxFilterPlaceholder"
+      [filterValue]="filterValue"
+      (filterChange)="onFilterInput($event)"
+      (escapePressed)="onFilterKeydown($event)"
+      (arrowKeyPressed)="onFilterKeydown($event)"
+    ></lux-select-panel-filter>
+    }
     @for (item of luxOptions; track item; let i = $index) {
-    <mat-option [value]="luxPickValue ? _luxOptionsPickValue[i] : item" class="option-height">
-      <ng-container *ngTemplateOutlet="tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate; context: { $implicit: item }">
-      </ng-container>
+    <mat-option
+      [value]="luxPickValue ? _luxOptionsPickValue[i] : item"
+      class="option-height"
+      [style.display]="!luxEnableFilter || !filterValue || filteredOptionIndexSet.has(i) ? '' : 'none'"
+    >
+      <ng-container
+        *ngTemplateOutlet="
+          tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate;
+          context: { $implicit: item }
+        "
+      ></ng-container>
     </mat-option>
     }
   </mat-select>

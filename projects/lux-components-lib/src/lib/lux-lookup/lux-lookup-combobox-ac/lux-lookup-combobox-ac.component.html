@@ -31,9 +31,20 @@
     [attr.aria-required]="luxRequired"
     [attr.aria-readonly]="luxReadonly"
   >
+    @if (luxEnableFilter) {
+    <lux-select-panel-filter
+      [placeholder]="luxFilterPlaceholder"
+      [filterValue]="filterValue"
+      (filterChange)="onFilterInput($event)"
+      (escapePressed)="onFilterKeydown($event)"
+      (arrowKeyPressed)="onFilterKeydown($event)"
+    ></lux-select-panel-filter>
+    }
     @if (luxWithEmptyEntry && !luxMultiple) {
     <mat-option [value]="undefined" class="option-height"></mat-option>
-    } @for (entry of displayedEntries; track entry) { @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
+    }
+    @for (entry of filteredEntries; track entry) {
+    @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
     <mat-option
       class="option-height"
       [value]="entry"
@@ -43,7 +54,8 @@
     >
       <span>{{ getLabel(entry) }}</span>
     </mat-option>
-    } }
+    }
+    }
   </mat-select>
 </lux-form-control-wrapper>
 }

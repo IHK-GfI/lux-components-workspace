@@ -30,6 +30,7 @@
 | ---------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxPlaceholder         | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                     |
 | luxMultiple            | boolean                | Gibt an, ob eine Mehrfachselektion erlaubt ist.                                                                                                                                                                                                                                                                            |
+| luxEnableFilter        | boolean                | Aktiviert ein Suchfeld im Dropdown-Panel. Die Filterung erfolgt rein clientseitig auf Basis der aktuell geladenen Optionen. Standardwert: `false`.                                                                                                                                                                         |
 | luxSelected            | \<V = any>             | Das selektierte Element (luxMultiple = false). Die selektierten Elemente (luxMultiple = true).                                                                                                                                                                                                                             |
 | luxOptions             | \<O = any>[]           | Array, welches die möglichen Optionen für den Select bereitstellt.                                                                                                                                                                                                                                                         |
 | luxOptionLabelProp     | string                 | Gibt das Property an, aus dem das Label geholt wird (siehe Beispiel unten).                                                                                                                                                                                                                                                |
@@ -212,4 +213,28 @@ Html
 >
   <ng-template let-option> {{ option.label }} </ng-template>
 </lux-select-ac>
+```
+
+### 4. Mit clientseitiger Filterung
+
+Ts
+
+```typescript
+options: { label: string, value: string }[] = [
+  { label: 'Meine Aufgaben', value: 'A' },
+  { label: 'Gruppenaufgaben', value: 'B' },
+  { label: 'Zurückgestellte Aufgaben', value: 'C' }
+];
+selected: { label: string, value: string } | null = null;
+```
+
+Html
+
+```html
+<lux-select-ac
+  [luxOptions]="options"
+  luxOptionLabelProp="label"
+  [luxEnableFilter]="true"
+  [(luxSelected)]="selected"
+></lux-select-ac>
 ```
