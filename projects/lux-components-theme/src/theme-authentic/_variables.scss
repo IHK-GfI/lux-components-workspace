@@ -104,7 +104,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-data-bg: #ffffff;
   --lux-theme-app-gradient: linear-gradient(90deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
   --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
-  --lux-theme-app-border-color: rgba(0, 0, 0, 0.12);
+  --lux-theme-app-border-color: var(--mat-sys-outline-variant);
   --lux-theme-app-border-radius: 4px;
 
   // Form
@@ -143,7 +143,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Selektion
   --lux-theme-selected-border-color: #{palettes.$lux-primary-color};
   --lux-theme-selected-bg-color: var(--mat-option-selected-state-layer-color);
-  --lux-theme-on-selected-color: #f0f3f6;
+  --lux-theme-on-selected-color: var(--mat-option-selected-state-label-text-color);;
 
   // Snackbar
   --lux-theme-snackbar-red: #f17474;
@@ -156,12 +156,20 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Accordion
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-hover-color-on-neutral: var(--lux-theme-app-content-bg);
+  --lux-theme-accordion-header-focus-color-on-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-primary: var(--mat-sys-surface-container-high);
   --lux-theme-accordion-header-color-on-primary: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-hover-color-on-primary: var(--mat-sys-surface-container-high);
+  --lux-theme-accordion-header-focus-color-on-primary: var(--mat-sys-surface-container-high);
   --lux-theme-accordion-header-color-accent: var(--lux-theme-accent-98);
   --lux-theme-accordion-header-color-on-accent: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-hover-color-on-accent: var(--lux-theme-accent-98);
+  --lux-theme-accordion-header-focus-color-on-accent: var(--lux-theme-accent-98);
   --lux-theme-accordion-header-color-warn: var(--mat-sys-error-container);
   --lux-theme-accordion-header-color-on-warn: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-hover-color-on-warn: var(--mat-sys-error-container);
+  --lux-theme-accordion-header-focus-color-on-warn: var(--mat-sys-error-container);
 
   // LUX-Badge
   --lux-theme-badge-red: var(--lux-theme-custom-red);
@@ -191,46 +199,46 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-breadcrumb-hover-color: var(--lux-theme-link-plain-hover-color);
 
   // LUX-Button
-  --lux-theme-button-text-default-text-color: #000000;
-  --lux-theme-button-text-primary-text-color: #003366;
-  --lux-theme-button-text-accent-text-color: #00531d;
+  --lux-theme-button-text-default-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-button-text-primary-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-text-accent-text-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-button-text-warn-text-color: var(--mat-sys-error);
 
-  --lux-theme-button-flat-default-text-color: #000000;
+  --lux-theme-button-flat-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-flat-default-container-color: #ffffff;
-  --lux-theme-button-flat-primary-text-color: #ffffff;
-  --lux-theme-button-flat-primary-container-color: #003366;
-  --lux-theme-button-flat-accent-text-color: #000000;
-  --lux-theme-button-flat-accent-container-color: #56bd66;
-  --lux-theme-button-flat-warn-text-color: #ffffff;
+  --lux-theme-button-flat-primary-text-color: var(--mat-sys-on-primary);
+  --lux-theme-button-flat-primary-container-color: var(--mat-sys-primary);
+  --lux-theme-button-flat-accent-text-color: var(--mat-sys-on-tertiary);
+  --lux-theme-button-flat-accent-container-color: var(--mat-sys-tertiary);
+  --lux-theme-button-flat-warn-text-color: var(--mat-sys-on-error);
   --lux-theme-button-flat-warn-container-color: var(--mat-sys-error);
 
-  --lux-theme-button-raised-default-text-color: #000000;
+  --lux-theme-button-raised-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-raised-default-container-color: #ffffff;
-  --lux-theme-button-raised-primary-text-color: #ffffff;
-  --lux-theme-button-raised-primary-container-color: #003366;
-  --lux-theme-button-raised-accent-text-color: #000000;
-  --lux-theme-button-raised-accent-container-color: #56bd66;
-  --lux-theme-button-raised-warn-text-color: #ffffff;
+  --lux-theme-button-raised-primary-text-color: var(--mat-sys-on-primary);
+  --lux-theme-button-raised-primary-container-color: var(--mat-sys-primary);
+  --lux-theme-button-raised-accent-text-color: var(--mat-sys-on-tertiary);
+  --lux-theme-button-raised-accent-container-color: var(--mat-sys-tertiary);
+  --lux-theme-button-raised-warn-text-color: var(--mat-sys-on-error);
   --lux-theme-button-raised-warn-container-color: var(--mat-sys-error);
 
-  --lux-theme-button-stroked-default-text-color: #000000;
-  --lux-theme-button-stroked-primary-text-color: #003366;
-  --lux-theme-button-stroked-accent-text-color: #00531d;
+  --lux-theme-button-stroked-default-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-button-stroked-primary-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);;
   --lux-theme-button-stroked-warn-text-color: var(--mat-sys-error);
 
-  --lux-theme-button-rounded-stroked-default-text-color: #000000;
-  --lux-theme-button-rounded-stroked-primary-text-color: #003366;
-  --lux-theme-button-rounded-stroked-accent-text-color: #00531d;
+  --lux-theme-button-rounded-stroked-default-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-button-rounded-stroked-primary-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-rounded-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);;
   --lux-theme-button-rounded-stroked-warn-text-color: var(--mat-sys-error);
 
-  --lux-theme-button-rounded-default-text-color: #000000;
+  --lux-theme-button-rounded-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-rounded-default-container-color: #ffffff;
-  --lux-theme-button-rounded-primary-text-color: #ffffff;
-  --lux-theme-button-rounded-primary-container-color: #003366;
-  --lux-theme-button-rounded-accent-text-color: #000000;
-  --lux-theme-button-rounded-accent-container-color: #56bd66;
-  --lux-theme-button-rounded-warn-text-color: #ffffff;
+  --lux-theme-button-rounded-primary-text-color: var(--mat-sys-on-primary);
+  --lux-theme-button-rounded-primary-container-color: var(--mat-sys-primary);
+  --lux-theme-button-rounded-accent-text-color: var(--mat-sys-on-tertiary);
+  --lux-theme-button-rounded-accent-container-color: var(--mat-sys-tertiary);
+  --lux-theme-button-rounded-warn-text-color: var(--mat-sys-on-error);
   --lux-theme-button-rounded-warn-container-color: var(--mat-sys-error);
 
   --lux-theme-button-text-container-shape: 4px;
@@ -286,7 +294,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-datepicker-panel-shape: var(--lux-theme-app-border-radius);
   --lux-theme-datepicker-panel-text-color: #003366;
   --lux-theme-datepicker-panel-font-size: 1rem;
-  --lux-theme-datepicker-panel-date-border-radius: 50%;
+  --lux-theme-datepicker-panel-date-border-radius: 999px;
   --lux-theme-datepicker-panel-date-background-color: var(--lux-theme-panel-bg-color);
   --lux-theme-datepicker-panel-date-selected-color: #e3ebf5;
   --lux-theme-datepicker-panel-date-selected-background-color: #003366;
@@ -346,7 +354,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-lookup-invalid-option-font-weight: 300;
 
   // LUX-Menu
-  --lux-theme-menu-item-font-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-menu-item-font-color: var(--lux-theme-primary-color);
+  --lux-theme-menu-item-subtitle-font-color: var(--mat-sys-secondary-container);
   --lux-theme-menu-item-font-size: 1rem;
   --lux-theme-menu-button-item-font-size: 0.875rem;
   --lux-theme-menu-button-text-container-shape: 4px;
@@ -377,6 +386,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-messagebox-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
   // LUX-Popup
+  --lux-theme-popup-background-color: var(--lux-theme-panel-bg-color);
   --lux-theme-popup-fade-in-duration: 125ms;
   --lux-theme-popup-panel-padding: 16px;
   --lux-theme-popup-title-font-size: 1rem;
@@ -456,6 +466,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-tile-borderradius: 24px;
   --lux-theme-tile-bottom-line-color: #56bd66;
 
+  // LUX-Tile-Ac
+  --lux-theme-tile-ac-icon-color: var(--lux-theme-primary-color);
+
   // LUX-Tourhint
   --lux-theme-tour-hint-overlay-backdrop-color: rgba(0, 0, 0, 0.12);
 
@@ -464,7 +477,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-panel-option-padding: 12px 0;
   --lux-theme-panel-bg-color: var(--mat-sys-surface-container);
   --lux-theme-panel-option-label-text-size: 1rem;
-  --lux-theme-panel-option-label-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-panel-option-label-text-color: var(--lux-theme-primary-color);
+  --lux-theme-panel-option-selected-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);;
   --lux-theme-panel-option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
   --lux-theme-panel-option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
+  --lux-theme-panel-option-disabled-selected-checkmark-color: var(--lux-theme-dark-disabled-text);
+  --lux-theme-panel-option-selected-checkmark-color: var(--lux-theme-primary-color);
 }

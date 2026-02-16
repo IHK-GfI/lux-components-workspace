@@ -1,27 +1,28 @@
-$minHeightValidationInActive: 10px;
-$minHeightValidationActive: 58px;
-
-.valuefield-container {
-  padding-left: 9px;
-
+:host lux-table {
   &.validation-active {
-    min-height: $minHeightValidationActive;
+    ::ng-deep tr {
+      height: 74px;
+    }
+
+    .valuefield-container {
+      padding-left: 9px;
+      padding-top: 18px;
+    }
+
+    .formfield-container {
+      flex: 0 0 auto;
+      padding-top: 8px;
+    }
   }
 
   &:not(.validation-active) {
-    min-height: $minHeightValidationInActive;
-  }
-}
+    .valuefield-container {
+      padding-left: 9px;
+    }
 
-.formfield-container {
-  flex: 0 0 auto;
-
-  &.validation-active {
-    min-height: $minHeightValidationActive;
-  }
-
-  &:not(.validation-active) {
-    min-height: $minHeightValidationInActive;
+    .formfield-container {
+      flex: 0 0 auto;
+    }
   }
 }
 

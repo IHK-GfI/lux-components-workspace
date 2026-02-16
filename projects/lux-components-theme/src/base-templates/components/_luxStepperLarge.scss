@@ -171,6 +171,8 @@ lux-stepper-large {
 
   .lux-stepper-large-nav-item-number-container {
     box-sizing: border-box;
+    min-width: var(--lux-theme-stepper-large-nav-item-number-container-width);
+    min-height: var(--lux-theme-stepper-large-nav-item-number-container-height);
     max-width: var(--lux-theme-stepper-large-nav-item-number-container-width);
     max-height: var(--lux-theme-stepper-large-nav-item-number-container-height);
     margin: 0 15px 0 0;
@@ -370,10 +372,7 @@ lux-stepper-large {
   }
 
   .lux-stepper-large-mobile-nav-item-number-container {
-    max-width: 30px;
-    max-height: 30px;
     margin: 0 10px 0 0;
-    padding: 1px 6px 2px 5px;
     border-radius: 50%;
     font-weight: 400;
 

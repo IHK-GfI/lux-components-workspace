@@ -17,9 +17,9 @@ export interface Options {
   verbose: boolean;
 }
 
-export const updateMajorVersion = '20';
-export const updateMinVersion = '19.4.0';
-export const updateNodeMinVersion = '22.0.0';
+export const updateMajorVersion = '21';
+export const updateMinVersion = '19.5.0';
+export const updateNodeMinVersion = '20.0.0';
 export const addOrUpdate = false;
 
 export function update210000(options: Options): Rule {
@@ -34,6 +34,9 @@ export function updateProject(options: Options): Rule {
       messageInfoRule(`LUX-Components ${updateMajorVersion} werden aktualisiert...`),
       updatePackageJson(options),
       migrateToTransloco(options),
+      updateAngularJson(options),
+      updateKarmaConfJs(options),
+      updateStylesScss(options),
       messageSuccessRule(`LUX-Components ${updateMajorVersion} wurden aktualisiert.`)
     ]);
   };
@@ -56,6 +59,7 @@ export function updatePackageJson(_options: Options): Rule {
     updateDep('@ihk-gfi/lux-components', '21.0.0', addOrUpdate),
     updateDep('@ihk-gfi/lux-components-theme', '21.0.0', addOrUpdate),
     updateDep('@ihk-gfi/lux-components-icons-and-fonts', '1.10.0', addOrUpdate),
+    deleteDep('@angular-devkit/build-angular'),
     messageSuccessRule(`Abhängigkeiten in der Datei "package.json" wurden aktualisiert.`)
   ]);
 }
@@ -69,6 +73,7 @@ export function migrateToTransloco(options: Options): Rule {
     updateAngularJsonTransloco(options),
     updateMainTsAndTestTs(options),
     updateCompilerOptions(options),
+    addTranslocoProvider(options),
     messageSuccessRule(`I18n wurde auf Transloco umgestellt.`)
   ]);
 }
@@ -91,7 +96,6 @@ export function updatePackageJsonTransloco(options: Options): Rule {
     moveFilesToDirectory(options, 'files/transloco/base', '/src/app'),
     moveFilesToDirectory(options, 'files/transloco/i18n', '/src/locale'),
     moveFilesToDirectory(options, 'files/transloco/testing', '/src/testing'),
-    addTranslocoProvider(options),
     replaceRule(
       options,
       `move-de-files wird umbenannt in move-files...`,
@@ -107,12 +111,12 @@ export function updatePackageJsonTransloco(options: Options): Rule {
 function addTranslocoProvider(options: Options): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     const appConfigTs = (options.path ?? '') + '/src/app/app.config.ts';
-    const appComponentTs = (options.path ?? '') + '/src/app/app.component.ts';
+    const appModuleTs = (options.path ?? '') + '/src/app/app.module.ts';
 
-    const tsFile = tree.exists(appConfigTs) ? appConfigTs : appComponentTs;
+    const tsFile = tree.exists(appConfigTs) ? appConfigTs : appModuleTs;
 
     if (!tree.exists(tsFile)) {
-      logError(`Weder "app.config.ts" noch "app.component.ts" wurde im Pfad "${options.path}/src/app/" gefunden.`);
+      logError(`Weder "app.config.ts" noch "app.module.ts" wurde im Pfad "${options.path}/src/app/" gefunden.`);
       logError(`Der Transloco-Provider konnte nicht hinzugefügt werden.`);
       return tree;
     }
@@ -125,8 +129,6 @@ function addTranslocoProvider(options: Options): Rule {
     addImport(tree, tsFile, '@jsverse/transloco', 'TranslocoService');
     addImport(tree, tsFile, 'rxjs', 'firstValueFrom');
 
-    addComponentProvider(tree, tsFile, `provideLuxTranslocoRoot()`);
-    addComponentProvider(tree, tsFile, `CookieService`);
     addComponentProvider(
       tree,
       tsFile,
@@ -146,9 +148,56 @@ function addTranslocoProvider(options: Options): Rule {
       return firstValueFrom(t.load(chosen));
     })`
     );
+    addComponentProvider(tree, tsFile, `CookieService`);
+    addComponentProvider(tree, tsFile, `provideLuxTranslocoRoot()`);
 
     return tree;
   };
+}
+
+export function updateStylesScss(options: Options): Rule {
+  const filePath = (options.path ?? '') + '/src/styles.scss';
+
+  return chain([
+    replaceRule(
+      options,
+      `"styles.scss" wird aktualisiert...`,
+      `"styles.scss" wurde aktualisiert.`,
+      filePath,
+      new ReplaceItem('@ihk-gfi/lux-components-theme/src/base/luxfonts', '@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts', true)
+    )
+  ]);
+}
+
+export function updateAngularJson(options: Options): Rule {
+  const filePath = (options.path ?? '') + '/angular.json';
+
+  return chain([
+    replaceRule(
+      options,
+      `"angular.json" wird aktualisiert...`,
+      `"angular.json" wurde aktualisiert.`,
+      filePath,
+      new ReplaceItem('@angular-devkit/build-angular', '@angular/build', true)
+    )
+  ]);
+}
+
+export function updateKarmaConfJs(options: Options): Rule {
+  const filePath = (options.path ?? '') + '/karma.conf.js';
+
+  return chain([
+    replaceRule(
+      options,
+      `"karma.conf.js" wird aktualisiert...`,
+      `"karma.conf.js" wurde aktualisiert.`,
+      filePath,
+      new ReplaceItem('require(\'@angular-devkit/build-angular/plugins/karma\')', '', true),
+      new ReplaceItem('require("@angular-devkit/build-angular/plugins/karma")', '', true),
+      new ReplaceItem('require(\'@angular-devkit/build-angular/plugins/karma\'),', '', true),
+      new ReplaceItem('require("@angular-devkit/build-angular/plugins/karma"),', '', true),
+    )
+  ]);
 }
 
 export function updateAngularJsonTransloco(options: Options): Rule {

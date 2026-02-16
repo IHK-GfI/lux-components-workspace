@@ -80,6 +80,8 @@ lux-menu {
       item-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent),
       item-label-text-size: var(--lux-theme-menu-item-font-size),
       item-label-text-color: var(--lux-theme-menu-item-font-color),
+      item-icon-color: var(--lux-theme-menu-item-font-color),
+      divider-color: var(--lux-theme-dark-dividers)
     )
   );
 
@@ -185,7 +187,7 @@ lux-menu {
   }
 
   .lux-button-label-subtitle {
-    color: var(--lux-theme-menu-item-font-color);
+    color: var(--lux-theme-menu-item-subtitle-font-color);
     font-size: 0.875rem;
     font-style: normal;
     font-weight: 400;
@@ -232,10 +234,6 @@ lux-menu {
   }
   .lux-menu-item-divider {
     padding: 4px;
-  }
-  .lux-menu-item-divider-large {
-    margin-right: 16px;
-    margin-left: 16px;
   }
 
   .lux-menu-item-selected {

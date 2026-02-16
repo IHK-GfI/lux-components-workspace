@@ -55,7 +55,7 @@ $lux-theme: mat.define-theme(
     "secondary-container": map.get(map.get(palettes.$luxPalettes, "primary"), 40),       //hover-color, bg-hover-color für menu-items
     "on-secondary-container": map.get(map.get(palettes.$luxPalettes, "primary"), 100),   // text-farbe für gehoverte menu-items
     "tertiary": map.get(map.get(palettes.$luxPalettes, "tertiary"), 70),                 //bg-farbe für tertiary-button /früher accent
-    "on-tertiary": map.get(map.get(palettes.$luxPalettes, "tertiary"), 100),             //text-farbe für tertiary-button
+    "on-tertiary": map.get(map.get(palettes.$luxPalettes, "primary"), 20),             //text-farbe für tertiary-button
     "tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 95),       //farbe für accordion
     "on-tertiary-container": map.get(map.get(palettes.$luxPalettes, "tertiary"), 30),
     "error": #ad000f,                       // bg-farbe für error-button

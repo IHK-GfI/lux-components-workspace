@@ -73,7 +73,7 @@
   } @if (!isFirstStep) {
   <lux-button
     class="lux-stepper-large-button-prev"
-    luxLabel="{{ luxPrevButtonConfig.label || 'luxc.stepper.back.btn' | transloco }}"
+    luxLabel="{{ luxPrevButtonConfig.label || ('luxc.stepper.back.btn' | transloco) }}"
     [luxIconName]="luxPrevButtonConfig.iconName"
     [luxIconShowRight]="luxPrevButtonConfig.iconShowRight"
     [luxColor]="luxPrevButtonConfig.color"
@@ -83,7 +83,7 @@
   } @if (!isLastStep) {
   <lux-button
     class="lux-stepper-large-button-next"
-    luxLabel="{{ luxNextButtonConfig.label || 'luxc.stepper.next.btn' | transloco }}"
+    luxLabel="{{ luxNextButtonConfig.label || ('luxc.stepper.next.btn' | transloco) }}"
     [luxIconName]="luxNextButtonConfig.iconName"
     [luxIconShowRight]="luxNextButtonConfig.iconShowRight"
     [luxColor]="luxNextButtonConfig.color"
@@ -97,7 +97,7 @@
   } @if (isLastStep) {
   <lux-button
     class="lux-stepper-large-button-fin"
-    luxLabel="{{ luxFinButtonConfig.label || 'luxc.stepper.finish.btn' | transloco }}"
+    luxLabel="{{ luxFinButtonConfig.label || ('luxc.stepper.finish.btn' | transloco) }}"
     [luxIconName]="luxFinButtonConfig.iconName"
     [luxIconShowRight]="luxFinButtonConfig.iconShowRight"
     [luxColor]="luxFinButtonConfig.color"
