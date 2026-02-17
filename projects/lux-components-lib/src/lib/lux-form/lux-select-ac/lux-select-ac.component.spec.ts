@@ -834,6 +834,25 @@ describe('LuxSelectAcComponent', () => {
       expect(document.querySelector('lux-select-panel-filter')).not.toBeNull();
     }));
 
+    it('reicht placeholder, filterValue und clearAriaLabel an das Filterfeld durch', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('input.lux-select-panel-filter-input') as HTMLInputElement;
+      expect(filterInput).toBeTruthy();
+      expect(filterInput.getAttribute('aria-label')).toBe('Mein Filter');
+      expect(filterInput.value).toBe('init');
+
+      const clearBtn = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
+      expect(clearBtn).toBeTruthy();
+      expect(clearBtn.getAttribute('aria-label')).toBe('Filter leeren');
+    }));
+
     it('reduziert die Optionsliste anhand des Suchtexts', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
@@ -1153,6 +1172,9 @@ class SelectStringArrayComponent {
       [luxOptions]="options"
       luxOptionLabelProp="label"
       [luxEnableFilter]="true"
+      luxFilterPlaceholder="Mein Filter"
+      luxFilterValue="init"
+      luxFilterClearAriaLabel="Filter leeren"
       [(luxSelected)]="selectedOption"
       [luxMultiple]="false"
     ></lux-select-ac>

@@ -46,12 +46,50 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   @ViewChildren(MatOption) matOptions?: QueryList<MatOption>;
   @ViewChild('select', { read: MatSelect }) matSelect?: MatSelect;
 
+
+  /**
+   * Platzhalter-Text, der angezeigt wird, wenn kein Wert ausgewählt ist.
+   */
   @Input() luxPlaceholder = '';
+
+  /**
+   * Aktiviert die Mehrfachauswahl (Mehrfachselektion) im Select.
+   */
   @Input() luxMultiple = false;
+
+  /**
+   * Aktiviert das Filterfeld im Auswahl-Panel.
+   */
   @Input() luxEnableFilter = false;
+
+  /**
+   * Platzhalter-Text, der im Filtereingabefeld angezeigt wird.
+   */
   @Input() luxFilterPlaceholder = 'Filter';
+
+  /**
+   * Vorbelegter Filterwert für das Filtereingabefeld.
+   */
+  @Input() luxFilterValue = '';
+
+  /**
+   * ARIA-Label für die Schaltfläche zum Löschen des Filterwertes.
+   */
+  @Input() luxFilterClearAriaLabel = 'Clear filter';
+
+  /**
+   * Blendet alle Standard-Labels des Formularfeldes aus.
+   */
   @Input() luxNoLabels = false;
+
+  /**
+   * Blendet das obere Label (z.B. Feldbezeichnung) aus.
+   */
   @Input() luxNoTopLabel = false;
+
+  /**
+   * Blendet das untere Label (z.B. Fehlermeldungen/Hinweise) aus.
+   */
   @Input() luxNoBottomLabel = false;
 
   displayedViewValue?: string;
