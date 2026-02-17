@@ -45,6 +45,8 @@
     @if (luxEnableFilter) {
     <lux-select-panel-filter
       [placeholder]="luxFilterPlaceholder"
+      [filterValue]="luxFilterValue"
+      [clearAriaLabel]="luxFilterClearAriaLabel"
       [filterDirective]="selectFilter"
     ></lux-select-panel-filter>
     }

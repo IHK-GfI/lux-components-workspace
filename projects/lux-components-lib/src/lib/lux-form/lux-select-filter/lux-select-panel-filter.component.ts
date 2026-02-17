@@ -59,6 +59,23 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
     if (changes['placeholder']) {
       this.syncNativeInputAttributes();
     }
+
+    if (changes['filterValue'] || changes['filterDirective']) {
+      this.syncFilterValueToDirective();
+    }
+  }
+
+  private syncFilterValueToDirective(): void {
+    if (!this.filterDirective) {
+      return;
+    }
+
+    const nextValue = this.filterValue ?? '';
+    if (nextValue === this.filterDirective.filterValue) {
+      return;
+    }
+
+    this.filterDirective.onFilterInput(nextValue);
   }
 
   private syncNativeInputAttributes(): void {

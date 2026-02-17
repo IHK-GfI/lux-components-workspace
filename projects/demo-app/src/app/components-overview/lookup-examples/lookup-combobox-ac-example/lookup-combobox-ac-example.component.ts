@@ -45,6 +45,9 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
   entryBlockSize = 25;
   bLuxWithEmptyEntry = true;
   enableFilter = true;
+  filterPlaceholder = 'Filter';
+  filterValue = '';
+  filterClearAriaLabel = 'Clear filter';
   labelLongFormat = false;
   denseFormat = false;
   value336 = {

@@ -374,6 +374,25 @@ describe('LuxLookupComboboxAcComponent', () => {
       expect(document.querySelector('lux-select-panel-filter')).not.toBeNull();
     }));
 
+    it('reicht placeholder, filterValue und clearAriaLabel an das Filterfeld durch', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterInputBindingsComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('input.lux-select-panel-filter-input') as HTMLInputElement;
+      expect(filterInput).toBeTruthy();
+      expect(filterInput.getAttribute('aria-label')).toBe('Mein Filter');
+      expect(filterInput.value).toBe('init');
+
+      const clearBtn = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
+      expect(clearBtn).toBeTruthy();
+      expect(clearBtn.getAttribute('aria-label')).toBe('Filter leeren');
+    }));
+
     it('reduziert die Optionsliste anhand des Suchtexts', fakeAsync(() => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
       fixture.detectChanges();
@@ -661,6 +680,32 @@ class LuxScrollComponent {
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterComponent {
+  params = new LuxLookupParameters({
+    knr: 101,
+    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+  });
+  value?: LuxLookupTableEntry | null;
+}
+
+@Component({
+  template: `
+    <lux-lookup-combobox-ac
+      luxTableNo="5"
+      [(luxValue)]="value"
+      [luxEnableFilter]="true"
+      luxFilterPlaceholder="Mein Filter"
+      luxFilterValue="init"
+      luxFilterClearAriaLabel="Filter leeren"
+      [luxWithEmptyEntry]="false"
+      luxLookupId="filtercombobindings"
+      luxRenderProp="kurzText"
+      [luxParameters]="params"
+      [luxLabel]="'Label'"
+    ></lux-lookup-combobox-ac>
+  `,
+  imports: [LuxLookupComboboxAcComponent]
+})
+class LuxFilterInputBindingsComponent {
   params = new LuxLookupParameters({
     knr: 101,
     fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]

@@ -18,6 +18,9 @@
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
         [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="value"
@@ -48,6 +51,9 @@
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
         [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxMultiple]="true"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="multiselectValue"
@@ -77,6 +83,9 @@
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
         [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
@@ -135,6 +144,29 @@
       luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
       [luxNoTopLabel]="true"
     ></lux-toggle-ac>
+    @if (enableFilter) {
+    <lux-input-ac
+      luxName="select_luxFilterPlaceholder"
+      luxLabel="luxFilterPlaceholder"
+      luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
+      [(luxValue)]="filterPlaceholder"
+    >
+    </lux-input-ac>
+    <lux-input-ac
+      luxName="select_luxFilterValue"
+      luxLabel="luxFilterValue"
+      luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
+      [(luxValue)]="filterValue"
+    >
+    </lux-input-ac>
+    <lux-input-ac
+      luxName="select_luxFilterClearAriaLabel"
+      luxLabel="luxFilterClearAriaLabel"
+      luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
+      [(luxValue)]="filterClearAriaLabel"
+    >
+    </lux-input-ac>
+    }
     <lux-toggle-ac
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"

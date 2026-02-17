@@ -39,13 +39,60 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    */
   private static readonly SELECTED_ENTRIES_THRESHOLD = 5;
 
+  /**
+   * Aktiviert die Mehrfachauswahl (Mehrfachselektion) in der Combobox.
+   */
   @Input() luxMultiple = false;
+
+  /**
+   * Größe des Nachlade-Blocks für die angezeigten Einträge.
+   *
+   * Beim Öffnen werden initial nur so viele Einträge gerendert. Sobald der User im Panel scrollt,
+   * werden weitere Einträge in Blöcken dieser Größe nachgeladen.
+   */
   @Input() luxEntryBlockSize = 25;
+
+  /**
+   * Steuert, ob ein zusätzlicher Leereintrag ("keine Auswahl") angeboten wird.
+   *
+   * Der Leereintrag wird nur im Single-Select angezeigt (also wenn {@link luxMultiple} = false).
+   */
   @Input() luxWithEmptyEntry = true;
+
+  /**
+   * Blendet ein Filterfeld im Auswahl-Panel ein und aktiviert die clientseitige Filterung
+   * in den aktuell geladenen Einträgen.
+   */
   @Input() luxEnableFilter = false;
+
+  /**
+   * Platzhalter-Text des Filtereingabefeldes im Panel.
+   *
+   * Wird zusätzlich als ARIA-Label am nativen Input gesetzt.
+   */
   @Input() luxFilterPlaceholder = 'Filter';
+  /**
+   * Aktueller Textwert des Filterfeldes.
+   */
+  @Input() luxFilterValue = '';
+  /**
+   * ARIA-Label für die Schaltfläche zum Löschen des Filterwertes.
+   */
+  @Input() luxFilterClearAriaLabel = 'Clear filter';
+
+  /**
+   * Blendet alle Standard-Labels des Formularfeldes aus.
+   */
   @Input() luxNoLabels = false;
+
+  /**
+   * Blendet das obere Label (z.B. Feldbezeichnung) aus.
+   */
   @Input() luxNoTopLabel = false;
+
+  /**
+   * Blendet das untere Label (z.B. Fehlermeldungen/Hinweise) aus.
+   */
   @Input() luxNoBottomLabel = false;
 
   @ViewChild(MatSelect) matSelect!: MatSelect;
