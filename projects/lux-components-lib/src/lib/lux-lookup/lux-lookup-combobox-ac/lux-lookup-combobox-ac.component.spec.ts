@@ -389,9 +389,10 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
-      expect(options.length).toBe(1);
-      expect(options[0].querySelector('span')?.innerText).toBe('Deutschland');
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].querySelector('span')?.innerText).toBe('Deutschland');
     }));
 
     it('funktioniert mit Filterung und Auswahl kombiniert', fakeAsync(() => {
@@ -410,7 +411,9 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions[0] as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -437,8 +440,83 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
-      expect(options.length).toBe(5);
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(5);
+    }));
+
+    it('leert den Filter per Clear-Button', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'deu';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const clearButton = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
+      clearButton.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(5);
+    }));
+
+    it('ordnet selektierte Einträge nach oben (stabil)', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      const deutschlandOption = visibleOptions.find((opt) => opt.querySelector('span')?.innerText === 'Deutschland');
+      expect(deutschlandOption).toBeDefined();
+
+      (deutschlandOption as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      // Single-Select schließt das Panel nach Auswahl – erneut öffnen und Reihenfolge prüfen.
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const optionsAfter = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptionsAfter = Array.from(optionsAfter).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptionsAfter[0].querySelector('span')?.innerText).toBe('Deutschland');
+    }));
+
+    it('ordnet selektierte Einträge im Multiselect nach oben (stabil, unabhängig von Auswahlreihenfolge)', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterMultipleComponent);
+      const component = fixture.componentInstance;
+
+      // Reihenfolge im Value ist absichtlich nicht die Originalreihenfolge.
+      component.value = [mockResultTest[3], mockResultTest[0]];
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      const texts = visibleOptions.map((opt) => opt.querySelector('span')?.innerText);
+
+      expect(texts[0]).toBe('Afghanistan');
+      expect(texts[1]).toBe('Deutschland');
     }));
 
     it('funktioniert in Reactive Forms', fakeAsync(() => {
@@ -457,7 +535,9 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions[0] as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -480,21 +560,22 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions[0] as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
-      trigger.click();
+      // In Mehrfachauswahl bleibt das Panel nach der Auswahl typischerweise geöffnet.
+      // Daher können wir direkt im selben Panel weiter filtern und selektieren.
+      filterInput.value = 'alg';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
       flush();
 
-      const reopenedFilterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
-      reopenedFilterInput.value = 'alg';
-      LuxTestHelper.dispatchFakeEvent(reopenedFilterInput, 'input');
-      fixture.detectChanges();
-      flush();
-
-      (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
+      const options2 = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions2 = Array.from(options2).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions2[0] as HTMLElement).click();
       fixture.detectChanges();
       flush();
 
@@ -698,7 +779,6 @@ class MockLookupService {
     return of(mockResultTest.slice(0, +tableNo));
   }
 }
-
 
 
 

@@ -7,15 +7,9 @@
 }
 
 .lux-select-panel-filter {
-  padding: 0.5rem 0.75rem;
-  border-bottom: 0.0625rem solid var(--lux-theme-border-subtle, #d1d5db);
+  padding: 1rem;
 }
 
-.lux-select-panel-filter-input {
-  width: 100%;
-  min-height: 2rem;
-  padding: 0.25rem 0.5rem;
-  border: 0.0625rem solid var(--lux-theme-border-subtle, #9ca3af);
-  border-radius: 0.25rem;
-  box-sizing: border-box;
+.lux-select-panel-filter-input-wrapper {
+  display: block;
 }
