@@ -11,16 +11,18 @@
   luxTagId="luxSelectWrapper"
 >
   <!--
-    Material-Workaround: Inccorect use of <label for=FORM_ELEMENT> (Browser-Fehler in der Debug-Console)
+    Material-Workaround: Incorrect use of <label for=FORM_ELEMENT> (Browser-Fehler in der Debug-Console)
     ------------------------------------------------------------------------------------------------------------------
     Das mat-select nutzt intern kein echtes HTML-Element wie das select und darum wird der obige Fehler geworfen.
-    Die aktuelle Lösung ist ein zusätliches Select einzufügen und zu verstecken, damit der Fehler verschwindet.
-    Wenn der Fehler in den Material Components behoben wurde, dann das unsichtbare Select wieder entfernt werden.
+    Die aktuelle Lösung ist ein zusätzliches Select einzufügen und zu verstecken, damit der Fehler verschwindet.
+    Wenn der Fehler in den Material Components behoben wurde, dann kann das unsichtbare Select wieder entfernt werden.
     -->
   <select [id]="uid" style="display: none"></select>
   <mat-select
     luxTagIdHandler
     [luxTagId]="luxTagId"
+    [luxSelectFilter]="luxEnableFilter"
+    [luxFilterLabelFn]="filterLabelFn"
     [placeholder]="luxPlaceholder"
     [multiple]="luxMultiple"
     [compareWith]="compareObjects"
@@ -31,36 +33,34 @@
     [attr.aria-required]="luxRequired"
     [attr.aria-readonly]="luxReadonly"
     [id]="uid"
-    [panelClass]="[luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac', luxReadonly ? 'lux-display-none' : '']"
+    [panelClass]="[luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac', luxReadonly ? 'lux-display-none' : '', luxEnableFilter ? 'lux-select-panel-ac-filter' : '']"
     [luxAriaLabelledby]="uid + '-label'"
     [luxAriaDescribedby]="descripedBy()"
     (focusin)="onFocusIn($event)"
     (focusout)="onFocusOut($event)"
-    (openedChange)="onOpenedChange($event)"
+    (openedChange)="onOpenedChange($event, selectFilter)"
+    #selectFilter="luxSelectFilter"
     #select
   >
     @if (luxEnableFilter) {
     <lux-select-panel-filter
       [placeholder]="luxFilterPlaceholder"
-      [filterValue]="filterValue"
-      (filterChange)="onFilterInput($event)"
-      (escapePressed)="onFilterKeydown($event)"
-      (arrowKeyPressed)="onFilterKeydown($event)"
+      [filterDirective]="selectFilter"
     ></lux-select-panel-filter>
     }
-    @for (item of luxOptions; track item; let i = $index) {
-    <mat-option
-      [value]="luxPickValue ? _luxOptionsPickValue[i] : item"
-      class="option-height"
-      [style.display]="!luxEnableFilter || !filterValue || filteredOptionIndexSet.has(i) ? '' : 'none'"
-    >
-      <ng-container
-        *ngTemplateOutlet="
-          tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate;
-          context: { $implicit: item }
-        "
-      ></ng-container>
-    </mat-option>
+    @for (i of renderOptionIndexes; track i) {
+      <mat-option
+        [value]="luxPickValue ? _luxOptionsPickValue[i] : luxOptions[i]"
+        class="option-height"
+        [style.display]="!luxEnableFilter || selectFilter.isIndexVisible(i) ? '' : 'none'"
+      >
+        <ng-container
+          *ngTemplateOutlet="
+            tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate;
+            context: { $implicit: luxOptions[i] }
+          "
+        ></ng-container>
+      </mat-option>
     }
   </mat-select>
 </lux-form-control-wrapper>
