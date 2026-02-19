@@ -22,7 +22,7 @@ export class LuxBreadcrumbComponent implements OnDestroy {
   @Input() luxWrap = false;
 
   /**
-   * Zeigt nur den ersten und den letzten Eintrag an. Dazwischen wird ein Platzhalter ("...") dargestellt.
+   * Zeigt nur den ersten und den letzten Eintrag an. Alle dazwischenliegenden Einträge werden als Platzhalter ("...") dargestellt.
    */
   @Input() luxShowOnlyFirstAndLast = false;
 
