@@ -90,4 +90,3 @@ export const LuxSelectFilterUtils = {
     return selectedIndexes;
   }
 } as const;
-

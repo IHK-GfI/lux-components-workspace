@@ -34,7 +34,7 @@ describe('LuxSelectAcComponent', () => {
         provideNoopAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideLuxTranslocoTesting(),
+        provideLuxTranslocoTesting()
       ]
     }).compileComponents();
   }));
@@ -946,9 +946,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll(
-        'mat-option .mdc-list-item__primary-text'
-      ) as NodeListOf<HTMLElement>;
+      const options = fixture.nativeElement.querySelectorAll('mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
       expect(options.length).toBe(4);
     }));
 
@@ -1194,12 +1192,7 @@ class SelectFilterComponent {
 @Component({
   template: `
     <form [formGroup]="formGroup">
-      <lux-select-ac
-        [luxOptions]="options"
-        luxOptionLabelProp="label"
-        luxControlBinding="task"
-        [luxEnableFilter]="true"
-      ></lux-select-ac>
+      <lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="task" [luxEnableFilter]="true"></lux-select-ac>
     </form>
   `,
   imports: [ReactiveFormsModule, LuxSelectAcComponent]
@@ -1380,7 +1373,3 @@ class SelectWithTemplateComponent {
     { label: 'Vertretungsaufgaben', value: 'D' }
   ];
 }
-
-
-
-

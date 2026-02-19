@@ -46,7 +46,6 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   @ViewChildren(MatOption) matOptions?: QueryList<MatOption>;
   @ViewChild('select', { read: MatSelect }) matSelect?: MatSelect;
 
-
   /**
    * Platzhalter-Text, der angezeigt wird, wenn kein Wert ausgewählt ist.
    */
@@ -83,12 +82,12 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   @Input() luxNoLabels = false;
 
   /**
-   * Blendet das obere Label (z.B. Feldbezeichnung) aus.
+   * Blendet das obere Label (z. B. Feldbezeichnung) aus.
    */
   @Input() luxNoTopLabel = false;
 
   /**
-   * Blendet das untere Label (z.B. Fehlermeldungen/Hinweise) aus.
+   * Blendet das untere Label (z. B. Fehlermeldungen/Hinweise) aus.
    */
   @Input() luxNoBottomLabel = false;
 
@@ -110,7 +109,11 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
       return '';
     }
 
-    if (this.luxOptionLabelProp && Object.hasOwn(option, this.luxOptionLabelProp) && (option as any)[this.luxOptionLabelProp] !== undefined) {
+    if (
+      this.luxOptionLabelProp &&
+      Object.hasOwn(option, this.luxOptionLabelProp) &&
+      (option as any)[this.luxOptionLabelProp] !== undefined
+    ) {
       return '' + (option as any)[this.luxOptionLabelProp];
     }
 
@@ -143,7 +146,7 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   }
 
   /**
-   * Wird aufgerufen wenn das Panel geöffnet/geschlossen wird.
+   * Wird aufgerufen, wenn das Panel geöffnet/geschlossen wird.
    * Übergibt Items an die Filter-Directive und sortiert Optionen.
    */
   onOpenedChange(open: boolean, filterDirective?: LuxSelectFilterDirective) {
@@ -157,7 +160,7 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
     }
   }
 
-  descripedBy() {
+  describedBy() {
     if (this.errorMessage) {
       return this.uid + '-error';
     } else {
@@ -176,7 +179,7 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
       return;
     }
 
-    // Fokus setzen über das zugrunde liegende MatSelect
+    // Fokus setzen auf das zugrunde liegende MatSelect
     try {
       this.matSelect?.focus();
     } catch {
@@ -210,7 +213,7 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   }
 
   /**
-   * Prüft ob eine Option selektiert ist.
+   * Prüft, ob eine Option selektiert ist.
    */
   private isOptionSelected(option: O, index: number): boolean {
     const value = this.luxPickValue ? this._luxOptionsPickValue[index] : option;
