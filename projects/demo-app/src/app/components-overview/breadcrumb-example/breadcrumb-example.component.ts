@@ -43,6 +43,9 @@ export class BreadcrumbExampleComponent {
 
   public enableUrl = false;
 
+  public wrap = false;
+  public showOnlyFirstAndLast = false;
+
   public clickedEntry?: ILuxBreadcrumbEntry;
 
   currentArea?: string = 'Übersicht';

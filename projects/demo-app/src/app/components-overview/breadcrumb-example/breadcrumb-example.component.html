@@ -4,7 +4,13 @@
 >
   <example-base-content>
     <h3>Beispiel mit Angular Router</h3>
-    <lux-breadcrumb luxAutofocus [luxEntries]="entries" (luxClicked)="onClickedEntry($event)"></lux-breadcrumb>
+    <lux-breadcrumb
+      luxAutofocus
+      [luxEntries]="entries"
+      [luxWrap]="wrap"
+      [luxShowOnlyFirstAndLast]="showOnlyFirstAndLast"
+      (luxClicked)="onClickedEntry($event)"
+    ></lux-breadcrumb>
     @if (clickedEntry) {
     <example-value [value]="clickedEntry"></example-value>
     }
@@ -65,6 +71,12 @@
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>Diese Konfiguration bezieht sich nur auf das Beispiel mit dem Angular Router</h3>
     <lux-toggle-ac luxLabel="Url aktivieren" [(luxChecked)]="enableUrl" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Mehrzeilig (Umbruch)" [(luxChecked)]="wrap" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Nur erster & letzter Eintrag (Zwischenlinks als ... )"
+      [(luxChecked)]="showOnlyFirstAndLast"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
     @for (item of entries; track item.name; let i = $index) {
     <div>
       <h3>Breadcrumb Eintrag #{{ i + 1 }}</h3>
