@@ -824,6 +824,3 @@ class MockLookupService {
     return of(mockResultTest.slice(0, +tableNo));
   }
 }
-
-
-

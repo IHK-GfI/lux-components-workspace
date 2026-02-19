@@ -199,7 +199,6 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     return this.luxSelectFilter && this.filterValue.trim().length > 0;
   }
 
-
   // === PRIVATE METHODS ===
 
   private onPanelOpen(): void {
@@ -238,7 +237,6 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
         this.filteredIndexes.add(index);
       }
     });
-
   }
 
   private clearFilter(): void {
@@ -314,4 +312,3 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     }
   }
 }
-

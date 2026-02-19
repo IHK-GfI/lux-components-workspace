@@ -166,27 +166,27 @@
     >
     </lux-toggle-ac>
     @if (enableFilter) {
-    <lux-input-ac
-      luxName="lookup-combobox_luxFilterPlaceholder"
-      luxLabel="luxFilterPlaceholder"
-      luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
-      [(luxValue)]="filterPlaceholder"
-    >
-    </lux-input-ac>
-    <lux-input-ac
-      luxName="lookup-combobox_luxFilterValue"
-      luxLabel="luxFilterValue"
-      luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
-      [(luxValue)]="filterValue"
-    >
-    </lux-input-ac>
-    <lux-input-ac
-      luxName="lookup-combobox_luxFilterClearAriaLabel"
-      luxLabel="luxFilterClearAriaLabel"
-      luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
-      [(luxValue)]="filterClearAriaLabel"
-    >
-    </lux-input-ac>
+      <lux-input-ac
+        luxName="lookup-combobox_luxFilterPlaceholder"
+        luxLabel="luxFilterPlaceholder"
+        luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
+        [(luxValue)]="filterPlaceholder"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="lookup-combobox_luxFilterValue"
+        luxLabel="luxFilterValue"
+        luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
+        [(luxValue)]="filterValue"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="lookup-combobox_luxFilterClearAriaLabel"
+        luxLabel="luxFilterClearAriaLabel"
+        luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
+        [(luxValue)]="filterClearAriaLabel"
+      >
+      </lux-input-ac>
     }
     <lux-toggle-ac
       [(luxChecked)]="readonly"
@@ -237,23 +237,25 @@
     >
     </lux-toggle-ac>
     @if (useRenderFn) {
-    <pre class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
-    } @if (!useRenderFn) {
-    <lux-input-ac
-      [(luxValue)]="renderProp"
-      luxName="lookup-combobox_luxRenderProp"
-      luxLabel="luxRenderProp"
-      luxHint="Hier kann die Property festgelegt werden, welche zur Darstellung der einzelnen Einträge genutzt wird."
-    >
-    </lux-input-ac>
-    } @if (!useRenderFn) {
-    <lux-input-ac
-      [(luxValue)]="renderPropNoPropertyLabel"
-      luxName="lookup_autocomplete_luxRenderPropNoPropertyLabel"
-      luxLabel="luxRenderPropNoPropertyLabel"
-      luxHint="Dieser Text wird angezeigt, wenn das Property aus luxRenderProp bei dem Eintrag nicht existiert."
-    >
-    </lux-input-ac>
+      <pre class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
+    }
+    @if (!useRenderFn) {
+      <lux-input-ac
+        [(luxValue)]="renderProp"
+        luxName="lookup-combobox_luxRenderProp"
+        luxLabel="luxRenderProp"
+        luxHint="Hier kann die Property festgelegt werden, welche zur Darstellung der einzelnen Einträge genutzt wird."
+      >
+      </lux-input-ac>
+    }
+    @if (!useRenderFn) {
+      <lux-input-ac
+        [(luxValue)]="renderPropNoPropertyLabel"
+        luxName="lookup_autocomplete_luxRenderPropNoPropertyLabel"
+        luxLabel="luxRenderPropNoPropertyLabel"
+        luxHint="Dieser Text wird angezeigt, wenn das Property aus luxRenderProp bei dem Eintrag nicht existiert."
+      >
+      </lux-input-ac>
     }
     <lux-toggle-ac
       luxLabel="luxCompareFn"
@@ -277,7 +279,7 @@
     >
     </lux-toggle-ac>
     @if (customStyle) {
-    <pre class="lux-label"><b>customStyles</b> = {{ customStyle | json }}</pre>
+      <pre class="lux-label"><b>customStyles</b> = {{ customStyle | json }}</pre>
     }
     <lux-toggle-ac
       luxLabel="luxCustomInvalidStyles übergeben"
@@ -287,7 +289,7 @@
     >
     </lux-toggle-ac>
     @if (customInvalidStyle) {
-    <pre class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle | json }}</pre>
+      <pre class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle | json }}</pre>
     }
 
     <lux-select-ac
@@ -311,16 +313,17 @@
     >
     </lux-toggle-ac>
     @if (!useErrorMessage) {
-    <pre class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
-    } @if (useErrorMessage) {
-    <lux-input-ac
-      luxName="lookup-combobox_luxErrorMessage"
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <pre class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
+    }
+    @if (useErrorMessage) {
+      <lux-input-ac
+        luxName="lookup-combobox_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-    >
-    </lux-input-ac>
+        [(luxValue)]="errorMessage"
+      >
+      </lux-input-ac>
     }
     <lux-select-ac
       [luxOptions]="validatorOptions"

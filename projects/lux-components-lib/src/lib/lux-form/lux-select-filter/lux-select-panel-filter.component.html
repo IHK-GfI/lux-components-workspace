@@ -13,16 +13,16 @@
     (keydown)="onKeydown($event)"
   >
     @if (currentFilterValue) {
-    <lux-input-ac-suffix>
-      <lux-button
-        class="lux-select-panel-filter-clear-btn"
-        [luxRounded]="true"
-        luxIconName="lux-interface-delete-circle"
-        [luxLabel]="clearAriaLabel"
-        (mousedown)="onClearMouseDown($event)"
-        (luxClicked)="onClear($event)"
-      ></lux-button>
-    </lux-input-ac-suffix>
+      <lux-input-ac-suffix>
+        <lux-button
+          class="lux-select-panel-filter-clear-btn"
+          [luxRounded]="true"
+          luxIconName="lux-interface-delete-circle"
+          [luxLabel]="clearAriaLabel"
+          (mousedown)="onClearMouseDown($event)"
+          (luxClicked)="onClear($event)"
+        ></lux-button>
+      </lux-input-ac-suffix>
     }
   </lux-input-ac>
 </div>

@@ -10,8 +10,7 @@ import { LuxSelectFilterDirective } from './lux-select-filter.directive';
     <mat-select
       [luxSelectFilter]="enableFilter"
       [luxFilterLabelFn]="labelFn"
-      (luxFilteredIndexesChange)="onFilteredIndexesChange($event)"
-      (luxFilteredItemsChange)="onFilteredItemsChange($event)"
+
       (luxFilterActiveChange)="onFilterActiveChange($event)"
     >
       @for (item of items; track item) {
