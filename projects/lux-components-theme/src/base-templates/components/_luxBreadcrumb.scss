@@ -18,21 +18,16 @@ lux-breadcrumb {
     padding: 0;
 
     display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
     gap: 9px;
     align-items: center;
 
     max-width: 100%;
-    overflow: hidden;
     min-width: 0;
 
     list-style: none;
 
     &.lux-breadcrumb-container-wrap {
       flex-wrap: wrap;
-      overflow: visible;
-      align-items: baseline;
     }
   }
 
@@ -41,7 +36,7 @@ lux-breadcrumb {
     display: inline-flex;
     align-items: center;
 
-    font-family: var(--lux-theme-app-font-family);
+    font-family: var(--lux-theme-app-font-family), sans-serif;
     font-size: 1.125rem;
     font-weight: 500;
     color: var(--lux-theme-primary-color);
@@ -61,10 +56,7 @@ lux-breadcrumb {
     &.lux-breadcrumb-item-dotted {
       text-decoration: none;
 
-      :hover {
-        text-decoration: none;
-      }
-
+      :hover,
       a {
         text-decoration: none;
       }
@@ -98,12 +90,7 @@ lux-breadcrumb {
     a {
       padding: 2px 4px;
       color: var(--lux-theme-primary-color);
-      margin: 0px -2px;
 
-      flex: 1 1 auto;
-      min-width: 0;
-      display: block;
-      max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -122,9 +109,6 @@ lux-breadcrumb {
     }
 
     a {
-      display: block;
-      max-width: 100%;
-      min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
