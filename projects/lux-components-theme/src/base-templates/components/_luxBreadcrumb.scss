@@ -2,42 +2,73 @@
 @use "../common/luxbreakpoints";
 
 lux-breadcrumb {
-  padding: 8px; //Für Focusindicator
   margin: 20px 0 36px 0; //Stylevorgaben
-  display: flex;
-  box-sizing: border-box;
+  display: block;
 
   @include luxbreakpoints.lt-md {
     margin: 14px 0;
   }
 
   .lux-breadcrumb {
-    margin: -8px; //Fü Focusindicator
-    padding: 8px;
-    display: inline-flex;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    justify-content: flex-start;
-    gap: 9px;
-    align-items: baseline;
-    overflow: auto;
     max-width: 100%;
   }
 
   .lux-breadcrumb-container {
-    padding: 0%;
-    margin: 0px -2px;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 9px;
+    align-items: center;
+
+    max-width: 100%;
+    overflow: hidden;
+    min-width: 0;
+
+    list-style: none;
+
+    &.lux-breadcrumb-container-wrap {
+      flex-wrap: wrap;
+      overflow: visible;
+      align-items: baseline;
+    }
   }
 
+  .lux-breadcrumb-current-item,
   .lux-breadcrumb-item {
     display: inline-flex;
+    align-items: center;
+
     font-family: var(--lux-theme-app-font-family);
     font-size: 1.125rem;
     font-weight: 500;
-    text-decoration: underline;
     color: var(--lux-theme-primary-color);
     list-style-type: none;
     box-sizing: border-box;
+  }
+
+  .lux-breadcrumb-item {
+    min-width: 0;
+
+    // Basis = Inhalt (auto), damit nicht unnötig getruncatet wird, wenn insgesamt genug Platz da ist.
+    // Frühere Items dürfen stärker schrumpfen als das aktuelle (siehe .lux-breadcrumb-current-item).
+    flex: 0 2 auto;
+
+    text-decoration: underline;
+
+    &.lux-breadcrumb-item-dotted {
+      text-decoration: none;
+
+      :hover {
+        text-decoration: none;
+      }
+
+      a {
+        text-decoration: none;
+      }
+    }
 
     &.lux-breadcrumb-item-mobile {
       font-size: 1rem;
@@ -57,6 +88,7 @@ lux-breadcrumb {
 
     lux-icon {
       cursor: default;
+      flex: 0 0 auto;
       :hover {
         color: var(--lux-theme-primary-color);
         cursor: default;
@@ -67,21 +99,48 @@ lux-breadcrumb {
       padding: 2px 4px;
       color: var(--lux-theme-primary-color);
       margin: 0px -2px;
+
+      flex: 1 1 auto;
+      min-width: 0;
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
   }
 
   .lux-breadcrumb-current-item {
-    font-family: var(--lux-theme-app-font-family);
-    font-size: 1.125rem;
-    font-weight: 500;
-    color: var(--lux-theme-primary-color);
-    list-style-type: none;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 60%;
     padding: 4px;
-    box-sizing: border-box;
 
     &.lux-breadcrumb-current-item-mobile {
       font-size: 1rem;
+      max-width: 70%;
+    }
+
+    a {
+      display: block;
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .lux-breadcrumb-container-wrap {
+    .lux-breadcrumb-item a,
+    .lux-breadcrumb-current-item a {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+
+    .lux-breadcrumb-current-item {
+      max-width: none;
     }
   }
 }

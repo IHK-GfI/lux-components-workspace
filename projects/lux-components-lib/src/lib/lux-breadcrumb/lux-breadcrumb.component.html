@@ -1,16 +1,30 @@
 <nav class="lux-breadcrumb" aria-label="Seitenpfad">
-  @for (item of luxEntries; track item; let islast = $last) {
-  <ol class="lux-breadcrumb-container">
-    @if (!islast) {
-    <li class="lux-breadcrumb-item" [ngClass]="{ 'lux-breadcrumb-item-mobile': mobileView }">
-      <a (click)="clicked(item)" (keydown.enter)="clicked(item)" (keydown.space)="clicked(item)" tabindex="0">{{ item.name }}</a>
-      <lux-icon luxIconName="lux-interface-arrows-right" [luxIconSize]="getIconSize()" luxPadding="0.25rem 0.1875rem 0.25rem 0.375rem"></lux-icon>
-    </li>
-    } @else {
-    <li class="lux-breadcrumb-current-item" [ngClass]="{ 'lux-breadcrumb-current-item-mobile': mobileView }">
-      <a aria-current="page">{{ item.name }}</a>
-    </li>
+  <ol class="lux-breadcrumb-container" [ngClass]="{ 'lux-breadcrumb-container-wrap': luxWrap }">
+    @for (item of luxEntries ?? []; track item) {
+      @if (!$last) {
+        <li
+          class="lux-breadcrumb-item"
+          [ngClass]="{ 'lux-breadcrumb-item-mobile': mobileView, 'lux-breadcrumb-item-dotted': isDottedEntry($first, $last) }"
+        >
+          <a
+            (click)="onEntryClick($event, item)"
+            [attr.href]="item.url?.trim() || '#'"
+            [attr.aria-label]="item.name"
+            [attr.title]="item.name"
+          >
+            {{ isDottedEntry($first, $last) ? '...' : item.name }}
+          </a>
+          <lux-icon
+            luxIconName="lux-interface-arrows-right"
+            [luxIconSize]="mobileView ? '18px' : '20px'"
+            luxPadding="0.25rem 0.1875rem 0.25rem 0.375rem"
+          ></lux-icon>
+        </li>
+      } @else {
+        <li class="lux-breadcrumb-current-item" [ngClass]="{ 'lux-breadcrumb-current-item-mobile': mobileView }">
+          <a aria-current="page" [attr.aria-label]="item.name" [attr.title]="item.name">{{ item.name }}</a>
+        </li>
+      }
     }
   </ol>
-  }
 </nav>
