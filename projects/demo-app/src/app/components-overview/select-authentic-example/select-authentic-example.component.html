@@ -17,6 +17,10 @@
         [luxReadonly]="readonly"
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
+        [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="value"
@@ -46,6 +50,10 @@
         [luxReadonly]="readonly"
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
+        [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxMultiple]="true"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="multiselectValue"
@@ -74,6 +82,10 @@
         [luxReadonly]="readonly"
         [luxDense]="denseFormat"
         [luxPlaceholder]="placeholder"
+        [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
@@ -126,6 +138,35 @@
     >
     </lux-input-ac>
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+    <lux-toggle-ac
+      [(luxChecked)]="enableFilter"
+      luxLabel="luxEnableFilter"
+      luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    @if (enableFilter) {
+      <lux-input-ac
+        luxName="select_luxFilterPlaceholder"
+        luxLabel="luxFilterPlaceholder"
+        luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
+        [(luxValue)]="filterPlaceholder"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="select_luxFilterValue"
+        luxLabel="luxFilterValue"
+        luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
+        [(luxValue)]="filterValue"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="select_luxFilterClearAriaLabel"
+        luxLabel="luxFilterClearAriaLabel"
+        luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
+        [(luxValue)]="filterClearAriaLabel"
+      >
+      </lux-input-ac>
+    }
     <lux-toggle-ac
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
@@ -194,16 +235,17 @@
     >
     </lux-toggle-ac>
     @if (useErrorMessage) {
-    <lux-input-ac
-      luxName="select_luxErrorMessage"
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <lux-input-ac
+        luxName="select_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-    >
-    </lux-input-ac>
-    } @if (!useErrorMessage) {
-    <pre class="lux-label">{{ errorCallbackString }}</pre>
+        [(luxValue)]="errorMessage"
+      >
+      </lux-input-ac>
+    }
+    @if (!useErrorMessage) {
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-toggle-ac
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"

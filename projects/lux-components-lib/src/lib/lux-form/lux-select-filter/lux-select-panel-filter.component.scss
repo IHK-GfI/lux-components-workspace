@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--mat-select-panel-background-color, #fff);
+}
+
+.lux-select-panel-filter {
+  padding: 1rem;
+}
+
+.lux-select-panel-filter-input-wrapper {
+  display: block;
+}

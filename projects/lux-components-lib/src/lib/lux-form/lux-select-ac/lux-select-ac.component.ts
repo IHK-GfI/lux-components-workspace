@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, Input, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { Component, ContentChild, Input, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -8,6 +8,8 @@ import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-a
 import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
+import { LuxSelectFilterDirective } from '../lux-select-filter/lux-select-filter.directive';
+import { LuxSelectPanelFilterComponent } from '../lux-select-filter/lux-select-panel-filter.component';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-base.class';
 
@@ -31,10 +33,12 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     LuxAriaDescribedbyDirective,
     LuxAriaLabelledbyDirective,
     LuxTagIdDirective,
-    LuxRenderPropertyPipe
+    LuxRenderPropertyPipe,
+    LuxSelectPanelFilterComponent,
+    LuxSelectFilterDirective
   ]
 })
-export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> {
+export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> implements OnInit {
   private liveAnnouncer = inject(LiveAnnouncer);
 
   // Potenziell eingebettetes Template für Darstellung der Labels
@@ -42,14 +46,84 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   @ViewChildren(MatOption) matOptions?: QueryList<MatOption>;
   @ViewChild('select', { read: MatSelect }) matSelect?: MatSelect;
 
+  /**
+   * Platzhalter-Text, der angezeigt wird, wenn kein Wert ausgewählt ist.
+   */
   @Input() luxPlaceholder = '';
+
+  /**
+   * Aktiviert die Mehrfachauswahl (Mehrfachselektion) im Select.
+   */
   @Input() luxMultiple = false;
+
+  /**
+   * Aktiviert das Filterfeld im Auswahl-Panel.
+   */
+  @Input() luxEnableFilter = false;
+
+  /**
+   * Platzhalter-Text, der im Filtereingabefeld angezeigt wird.
+   */
+  @Input() luxFilterPlaceholder = 'Filter';
+
+  /**
+   * Vorbelegter Filterwert für das Filtereingabefeld.
+   */
+  @Input() luxFilterValue = '';
+
+  /**
+   * ARIA-Label für die Schaltfläche zum Löschen des Filterwertes.
+   */
+  @Input() luxFilterClearAriaLabel = 'Clear filter';
+
+  /**
+   * Blendet alle Standard-Labels des Formularfeldes aus.
+   */
   @Input() luxNoLabels = false;
+
+  /**
+   * Blendet das obere Label (z. B. Feldbezeichnung) aus.
+   */
   @Input() luxNoTopLabel = false;
+
+  /**
+   * Blendet das untere Label (z. B. Fehlermeldungen/Hinweise) aus.
+   */
   @Input() luxNoBottomLabel = false;
 
   displayedViewValue?: string;
   focused = false;
+
+  /**
+   * Indizes in der Reihenfolge, wie die Optionen gerendert werden sollen.
+   * Selektierte Optionen werden nach oben sortiert.
+   */
+  renderOptionIndexes: number[] = [];
+
+  /**
+   * Label-Extractor für Filter-Directive.
+   * Wird als Arrow-Function definiert um this-Kontext zu erhalten.
+   */
+  filterLabelFn = (option: O, _index: number): string => {
+    if (option === null || option === undefined) {
+      return '';
+    }
+
+    if (
+      this.luxOptionLabelProp &&
+      Object.hasOwn(option, this.luxOptionLabelProp) &&
+      (option as any)[this.luxOptionLabelProp] !== undefined
+    ) {
+      return '' + (option as any)[this.luxOptionLabelProp];
+    }
+
+    return '' + option;
+  };
+
+  override ngOnInit() {
+    super.ngOnInit();
+    this.refreshRenderOptionIndexes();
+  }
 
   override notifyFormValueChanged(formValue: any) {
     super.notifyFormValueChanged(formValue);
@@ -71,7 +145,22 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
     this.luxFocusOut.emit(e);
   }
 
-  descripedBy() {
+  /**
+   * Wird aufgerufen, wenn das Panel geöffnet/geschlossen wird.
+   * Übergibt Items an die Filter-Directive und sortiert Optionen.
+   */
+  onOpenedChange(open: boolean, filterDirective?: LuxSelectFilterDirective) {
+    if (open) {
+      // Selektierte Optionen nach oben sortieren
+      this.refreshRenderOptionIndexes();
+      // Items an Filter-Directive übergeben
+      if (filterDirective) {
+        filterDirective.setItems(this.luxOptions ?? []);
+      }
+    }
+  }
+
+  describedBy() {
     if (this.errorMessage) {
       return this.uid + '-error';
     } else {
@@ -89,8 +178,8 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
     if (this.luxDisabled || this.luxReadonly) {
       return;
     }
-    
-    // Fokus setzen über das zugrunde liegende MatSelect
+
+    // Fokus setzen auf das zugrunde liegende MatSelect
     try {
       this.matSelect?.focus();
     } catch {
@@ -99,9 +188,45 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
 
     // Panel nur öffnen, wenn noch nicht offen
     if (this.matSelect && !this.matSelect.panelOpen) {
-      if (!this.matSelect!.panelOpen) {
-        this.matSelect!.open();
+      this.matSelect.open();
+    }
+  }
+
+  /**
+   * Sortiert die Optionen: selektierte zuerst, dann rest.
+   * Wird beim Öffnen des Panels aufgerufen.
+   */
+  private refreshRenderOptionIndexes(): void {
+    const options = this.luxOptions ?? [];
+    const selectedIndexes: number[] = [];
+    const unselectedIndexes: number[] = [];
+
+    for (let i = 0; i < options.length; i++) {
+      if (this.isOptionSelected(options[i], i)) {
+        selectedIndexes.push(i);
+      } else {
+        unselectedIndexes.push(i);
       }
     }
+
+    this.renderOptionIndexes = [...selectedIndexes, ...unselectedIndexes];
+  }
+
+  /**
+   * Prüft, ob eine Option selektiert ist.
+   */
+  private isOptionSelected(option: O, index: number): boolean {
+    const value = this.luxPickValue ? this._luxOptionsPickValue[index] : option;
+    const selected = this.luxSelected;
+
+    if (selected === null || selected === undefined) {
+      return false;
+    }
+
+    if (Array.isArray(selected)) {
+      return selected.some((s) => this.compareObjects(value as any, s as any));
+    }
+
+    return this.compareObjects(value as any, selected as any);
   }
 }

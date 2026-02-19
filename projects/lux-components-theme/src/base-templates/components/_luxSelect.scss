@@ -9,6 +9,33 @@
       container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )
   );
+
+  .lux-select-panel-filter {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 8px 8px 4px;
+    background-color: var(--lux-theme-panel-bg-color);
+    border-bottom: 1px solid var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant));
+  }
+
+  .lux-select-panel-filter-option {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    min-height: auto !important;
+    padding: 0 !important;
+    pointer-events: auto;
+    cursor: default;
+  }
+
+  .lux-select-panel-filter-option .mdc-list-item__primary-text {
+    width: 100%;
+  }
+
+  &.lux-select-panel-ac-filter {
+    padding-top: 0;
+  }
 }
 
 lux-select-ac {

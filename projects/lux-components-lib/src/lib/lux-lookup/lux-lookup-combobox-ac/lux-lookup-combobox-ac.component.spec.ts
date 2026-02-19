@@ -5,7 +5,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, wait
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
@@ -241,7 +241,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(6);
       expect(options[1].querySelector('span')?.innerText).toEqual('Afghanistan');
       expect(options[2].querySelector('span')?.innerText).toEqual('Bellux');
@@ -263,7 +263,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(6);
       expect(options[1].querySelector('span')?.innerText).toEqual('Afghanistan');
       expect(options[2].querySelector('span')?.innerText).toEqual('Ägypten');
@@ -285,7 +285,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(6);
       expect(options[1].querySelector('span')?.innerText).toEqual('Afghanistan');
       expect(options[2].querySelector('span')?.innerText).toEqual('Bellux');
@@ -319,7 +319,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(9); // 8 + Leereintrag
       expect(component.myEntries.length).toBe(mockResultTest.length);
       expect(combobox.entries.length).toEqual(mockResultTest.length);
@@ -358,6 +358,251 @@ describe('LuxLookupComboboxAcComponent', () => {
       expect(component.combobox.luxValue).toEqual(component.value);
       expect(spy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  describe('mit aktivierter Filterfunktion', () => {
+    it('rendert das Filterfeld nicht als deaktivierte mat-option', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      expect(document.querySelector('.mat-mdc-select-panel mat-option.lux-select-panel-filter-option')).toBeNull();
+      expect(document.querySelector('lux-select-panel-filter')).not.toBeNull();
+    }));
+
+    it('reicht placeholder, filterValue und clearAriaLabel an das Filterfeld durch', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterInputBindingsComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('input.lux-select-panel-filter-input') as HTMLInputElement;
+      expect(filterInput).toBeTruthy();
+      expect(filterInput.getAttribute('aria-label')).toBe('Mein Filter');
+      expect(filterInput.value).toBe('init');
+
+      const clearBtn = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
+      expect(clearBtn).toBeTruthy();
+      expect(clearBtn.getAttribute('aria-label')).toBe('Filter leeren');
+    }));
+
+    it('reduziert die Optionsliste anhand des Suchtexts', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'deu';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].querySelector('span')?.innerText).toBe('Deutschland');
+    }));
+
+    it('funktioniert mit Filterung und Auswahl kombiniert', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'alg';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions[0] as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      expect((component.value as LuxLookupTableEntry)?.key).toBe('1100');
+    }));
+
+    it('zeigt wieder alle Optionen bei leerem Suchfeld', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'bell';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      filterInput.value = '';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(5);
+    }));
+
+    it('leert den Filter per Clear-Button', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'deu';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const clearButton = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
+      clearButton.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(5);
+    }));
+
+    it('ordnet selektierte Einträge nach oben (stabil)', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      const deutschlandOption = visibleOptions.find((opt) => opt.querySelector('span')?.innerText === 'Deutschland');
+      expect(deutschlandOption).toBeDefined();
+
+      (deutschlandOption as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      // Single-Select schließt das Panel nach Auswahl – erneut öffnen und Reihenfolge prüfen.
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const optionsAfter = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptionsAfter = Array.from(optionsAfter).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptionsAfter[0].querySelector('span')?.innerText).toBe('Deutschland');
+    }));
+
+    it('ordnet selektierte Einträge im Multiselect nach oben (stabil, unabhängig von Auswahlreihenfolge)', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterMultipleComponent);
+      const component = fixture.componentInstance;
+
+      // Reihenfolge im Value ist absichtlich nicht die Originalreihenfolge.
+      component.value = [mockResultTest[3], mockResultTest[0]];
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      const texts = visibleOptions.map((opt) => opt.querySelector('span')?.innerText);
+
+      expect(texts[0]).toBe('Afghanistan');
+      expect(texts[1]).toBe('Deutschland');
+    }));
+
+    it('funktioniert in Reactive Forms', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterReactiveFormComponent);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'afg';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions[0] as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      expect(component.form.get('entry')?.value?.key).toBe('1');
+    }));
+
+    it('funktioniert im Multiselect', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFilterMultipleComponent);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'deu';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions[0] as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      // In Mehrfachauswahl bleibt das Panel nach der Auswahl typischerweise geöffnet.
+      // Daher können wir direkt im selben Panel weiter filtern und selektieren.
+      filterInput.value = 'alg';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options2 = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions2 = Array.from(options2).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      (visibleOptions2[0] as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      const selectedEntries = component.value as LuxLookupTableEntry[];
+      expect(selectedEntries.length).toBe(2);
+      expect(selectedEntries[0].key).toBe('100');
+      expect(selectedEntries[1].key).toBe('1100');
+    }));
   });
 });
 
@@ -417,6 +662,105 @@ class LuxScrollComponent {
   updateEntries(entries: LuxLookupTableEntry[]) {
     this.myEntries = entries;
   }
+}
+
+@Component({
+  template: `
+    <lux-lookup-combobox-ac
+      luxTableNo="5"
+      [(luxValue)]="value"
+      [luxEnableFilter]="true"
+      [luxWithEmptyEntry]="false"
+      luxLookupId="filtercombo"
+      luxRenderProp="kurzText"
+      [luxParameters]="params"
+      [luxLabel]="'Label'"
+    ></lux-lookup-combobox-ac>
+  `,
+  imports: [LuxLookupComboboxAcComponent]
+})
+class LuxFilterComponent {
+  params = new LuxLookupParameters({
+    knr: 101,
+    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+  });
+  value?: LuxLookupTableEntry | null;
+}
+
+@Component({
+  template: `
+    <lux-lookup-combobox-ac
+      luxTableNo="5"
+      [(luxValue)]="value"
+      [luxEnableFilter]="true"
+      luxFilterPlaceholder="Mein Filter"
+      luxFilterValue="init"
+      luxFilterClearAriaLabel="Filter leeren"
+      [luxWithEmptyEntry]="false"
+      luxLookupId="filtercombobindings"
+      luxRenderProp="kurzText"
+      [luxParameters]="params"
+      [luxLabel]="'Label'"
+    ></lux-lookup-combobox-ac>
+  `,
+  imports: [LuxLookupComboboxAcComponent]
+})
+class LuxFilterInputBindingsComponent {
+  params = new LuxLookupParameters({
+    knr: 101,
+    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+  });
+  value?: LuxLookupTableEntry | null;
+}
+
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <lux-lookup-combobox-ac
+        luxTableNo="5"
+        [luxEnableFilter]="true"
+        [luxWithEmptyEntry]="false"
+        luxLookupId="filtercomboform"
+        luxRenderProp="kurzText"
+        [luxParameters]="params"
+        luxControlBinding="entry"
+      ></lux-lookup-combobox-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxLookupComboboxAcComponent]
+})
+class LuxFilterReactiveFormComponent {
+  params = new LuxLookupParameters({
+    knr: 101,
+    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+  });
+
+  form = new FormGroup({
+    entry: new FormControl<LuxLookupTableEntry | null>(null)
+  });
+}
+
+@Component({
+  template: `
+    <lux-lookup-combobox-ac
+      luxTableNo="5"
+      [(luxValue)]="value"
+      [luxEnableFilter]="true"
+      [luxMultiple]="true"
+      luxLookupId="filtercombomulti"
+      luxRenderProp="kurzText"
+      [luxParameters]="params"
+      [luxLabel]="'Label'"
+    ></lux-lookup-combobox-ac>
+  `,
+  imports: [LuxLookupComboboxAcComponent]
+})
+class LuxFilterMultipleComponent {
+  params = new LuxLookupParameters({
+    knr: 101,
+    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+  });
+  value: LuxLookupTableEntry[] = [];
 }
 
 const mockResultTest = [

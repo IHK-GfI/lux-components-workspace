@@ -1,6 +1,6 @@
-# LUX-Lookup-Combobox
+﻿# LUX-Lookup-Combobox
 
-![Beispielbild LUX-Lookup-Combobox](lux‐lookup‐combobox-v21-img.png)
+![Beispielbild LUX-Lookup-Combobox](luxâ€lookupâ€combobox-v21-img.png)
 
 - [LUX-Lookup-Combobox](#lux-lookup-combobox)
   - [Overview / API](#overview--api)
@@ -31,31 +31,32 @@
 
 | Name                      | Typ                                                                                                                                                  | Beschreibung                                                                                                                                                                                                                                                                                                                                 |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxMultiple               | boolean                                                                                                                                              | Ermöglicht die Mehrfachauswahl in der Combobox.                                                                                                                                                                                                                                                                                              |
-| luxEntryBlockSize         | number                                                                                                                                               | Bestimmt wie viele Elemente in der Selection-Box auf einmal angezeigt werden, für weitere Elemente kann der Anwender in dem Fenster herunterscrollen.                                                                                                                                                                                        |
-| luxLookupId               | string                                                                                                                                               | Enthält die ID, die diese Lookup-Komponente kennzeichnet. Wichtig: Muss definiert sein, da der LuxLookupHandler das Laden der Daten hierüber anstößt.                                                                                                                                                                                        |
-| luxTableNo                | number                                                                                                                                               | Bestimmt die Schlüsseltabelle, aus welcher die Daten geladen werden sollen. Kann einfach als Number-Wert übergeben werden (z.B: 1032)                                                                                                                                                                                                        |
-| luxRenderProp             | string \| Function                                                                                                                                   | Enthält die Property, welche für die Darstellung einzelnen Schlüsseltabelleneinträge genutzt wird. Wahlweise kann hier auch eine Funktion mitgegeben werden, welche als Parameter ein Objekt vom Typ LuxLookupTableEntry enthält und einen String als Rückgabewert besitzt.                                                                  |
-| renderPropNoPropertyLabel | string                                                                                                                                               | Dieses Label wird dargestellt, wenn ein Element nicht über das Property aus luxRenderProp (z.B. ableitungsText6) verfügt.                                                                                                                                                                                                                    |
-| luxCompareFn?             | LuxLookupCompareFn <br/><br/> (z.B. luxLookupCompareKeyFn, luxLookupCompareKurzTextFn, luxLookupCompareLangText1Fn oder luxLookupCompareLangText2Fn) | Bestimmt die Sortierreihenfolge der Schlüsseltabelleneinträge. Wenn keine Funktion übergeben wird, werden die Optionen angezeigt, wie sie geladen wurden.                                                                                                                                                                                    |
-| luxBehandlungUngueltige   | LuxBehandlungsOptionenUngueltige                                                                                                                     | Bestimmt wie mit ungültigen Einträgen umgegangen wird. Kann dabei folgende Werte beinhalten: LuxBehandlungsOptionenUngueltige.ausgrauen = Deaktiviert die ungültigen Einträge LuxBehandlungsOptionenUngueltige.ausblenden = Blendet die ungültigen Einträge aus LuxBehandlungsOptionenUngueltige.anzeigen = Zeigt die ungültigen Einträge an |
-| luxParameters             | LuxLookupParameters                                                                                                                                  | Beinhaltet die Parameter, welche für den Request Richtung Lookup-Service verwendet werden. Hier können die anzuzeigenden Felder, zu filternde Keys sowie die Option ob Schlüsselwerte mit führenden Nullen (raw) geholt werden, eingestellt werden.                                                                                          |
-| luxCustomStyles           | Object                                                                                                                                               | Enthält optional ein Objekt, welches Styles für die Darstellung der einzelnen Schlüsseltabelleneinträgen enthält.                                                                                                                                                                                                                            |
-| luxCustomInvalidStyles    | Object                                                                                                                                               | Enthält optional ein Objekt, welches Styles für die Darstellung von invaliden Schlüsseltabelleneinträgen enthält. Voraussetzung dafür ist allerdings, das die Behandlung der ungültigen Einträge auf "anzeigen" gesetzt ist.                                                                                                                 |
-| luxValue                  | LuxLookupTableEntry \| LuxLookupTableEntry[]                                                                                                         | Beinhaltet den aktuellen Wert der Komponente, es ist ein Two-Way-Binding möglich.                                                                                                                                                                                                                                                            |
+| luxMultiple               | boolean                                                                                                                                              | ErmÃ¶glicht die Mehrfachauswahl in der Combobox.                                                                                                                                                                                                                                                                                              |
+| luxEntryBlockSize         | number                                                                                                                                               | Bestimmt wie viele Elemente in der Selection-Box auf einmal angezeigt werden, fÃ¼r weitere Elemente kann der Anwender in dem Fenster herunterscrollen.                                                                                                                                                                                        |
+| luxEnableFilter           | boolean                                                                                                                                              | Aktiviert ein Suchfeld im Dropdown-Panel. Die Filterung erfolgt rein clientseitig auf Basis der aktuell geladenen Lookup-Eintraege. Standardwert: `false`.                                                                                                                                                                                     |
+| luxLookupId               | string                                                                                                                                               | EnthÃ¤lt die ID, die diese Lookup-Komponente kennzeichnet. Wichtig: Muss definiert sein, da der LuxLookupHandler das Laden der Daten hierÃ¼ber anstÃ¶ÃŸt.                                                                                                                                                                                        |
+| luxTableNo                | number                                                                                                                                               | Bestimmt die SchlÃ¼sseltabelle, aus welcher die Daten geladen werden sollen. Kann einfach als Number-Wert Ã¼bergeben werden (z.B: 1032)                                                                                                                                                                                                        |
+| luxRenderProp             | string \| Function                                                                                                                                   | EnthÃ¤lt die Property, welche fÃ¼r die Darstellung einzelnen SchlÃ¼sseltabelleneintrÃ¤ge genutzt wird. Wahlweise kann hier auch eine Funktion mitgegeben werden, welche als Parameter ein Objekt vom Typ LuxLookupTableEntry enthÃ¤lt und einen String als RÃ¼ckgabewert besitzt.                                                                  |
+| renderPropNoPropertyLabel | string                                                                                                                                               | Dieses Label wird dargestellt, wenn ein Element nicht Ã¼ber das Property aus luxRenderProp (z.B. ableitungsText6) verfÃ¼gt.                                                                                                                                                                                                                    |
+| luxCompareFn?             | LuxLookupCompareFn <br/><br/> (z.B. luxLookupCompareKeyFn, luxLookupCompareKurzTextFn, luxLookupCompareLangText1Fn oder luxLookupCompareLangText2Fn) | Bestimmt die Sortierreihenfolge der SchlÃ¼sseltabelleneintrÃ¤ge. Wenn keine Funktion Ã¼bergeben wird, werden die Optionen angezeigt, wie sie geladen wurden.                                                                                                                                                                                    |
+| luxBehandlungUngueltige   | LuxBehandlungsOptionenUngueltige                                                                                                                     | Bestimmt wie mit ungÃ¼ltigen EintrÃ¤gen umgegangen wird. Kann dabei folgende Werte beinhalten: LuxBehandlungsOptionenUngueltige.ausgrauen = Deaktiviert die ungÃ¼ltigen EintrÃ¤ge LuxBehandlungsOptionenUngueltige.ausblenden = Blendet die ungÃ¼ltigen EintrÃ¤ge aus LuxBehandlungsOptionenUngueltige.anzeigen = Zeigt die ungÃ¼ltigen EintrÃ¤ge an |
+| luxParameters             | LuxLookupParameters                                                                                                                                  | Beinhaltet die Parameter, welche fÃ¼r den Request Richtung Lookup-Service verwendet werden. Hier kÃ¶nnen die anzuzeigenden Felder, zu filternde Keys sowie die Option ob SchlÃ¼sselwerte mit fÃ¼hrenden Nullen (raw) geholt werden, eingestellt werden.                                                                                          |
+| luxCustomStyles           | Object                                                                                                                                               | EnthÃ¤lt optional ein Objekt, welches Styles fÃ¼r die Darstellung der einzelnen SchlÃ¼sseltabelleneintrÃ¤gen enthÃ¤lt.                                                                                                                                                                                                                            |
+| luxCustomInvalidStyles    | Object                                                                                                                                               | EnthÃ¤lt optional ein Objekt, welches Styles fÃ¼r die Darstellung von invaliden SchlÃ¼sseltabelleneintrÃ¤gen enthÃ¤lt. Voraussetzung dafÃ¼r ist allerdings, das die Behandlung der ungÃ¼ltigen EintrÃ¤ge auf "anzeigen" gesetzt ist.                                                                                                                 |
+| luxValue                  | LuxLookupTableEntry \| LuxLookupTableEntry[]                                                                                                         | Beinhaltet den aktuellen Wert der Komponente, es ist ein Two-Way-Binding mÃ¶glich.                                                                                                                                                                                                                                                            |
 | luxRequired               | boolean                                                                                                                                              | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                    |
 | luxControlBinding         | string                                                                                                                                               | Das Controlbinding (z.B. firstname) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                                                                                                                 |
 | luxErrorMessage           | string                                                                                                                                               | Fehlertext, wenn das Formularelement nicht valide ist. Der Fehlertext ersetzt den Hinweistext, wenn es einen gibt. Ersetzt den luxErrorCallback, wenn gesetzt.                                                                                                                                                                               |
-| luxDisabled               | boolean                                                                                                                                              | Bestimmt ob die Component deaktiviert ist oder nicht. Durch den Event-Emitter "luxDisabledChange" ist ein Two-Way-Binding möglich.                                                                                                                                                                                                           |
-| luxReadonly               | boolean                                                                                                                                              | Bestimmt ob sich das Feld im reinen Lese-Zustand befindet (ähnlich wie disabled, aber ohne die Auswirkungen auf Forms und andere visuelle Darstellung).                                                                                                                                                                                      |
-| luxErrorCallback          | LuxErrorCallbackFnType                                                                                                                               | Callback-Funktion die aufgerufen wird nachdem die Validierung der Component stattgefunden hat. Hier kann dann entsprechend aus dem übergebenen Errors-Objekt ein Fehler ausgelesen und die passende Fehlermeldung zurückgegeben werden. Liefert der Callback `undefined` zurück, wird die Defaultfehlermeldung ausgegeben.                   |
-| luxControlValidators      | ValidatorFnType                                                                                                                                      | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen.                                                                                       |
-| luxLabel                  | string                                                                                                                                               | Property welche ein Label oberhalb der FormComponent (Ausnahme: LuxToggle und LuxCheckbox, diese stellen das Label rechts von der Schaltfläche dar) darstellt.                                                                                                                                                                               |
+| luxDisabled               | boolean                                                                                                                                              | Bestimmt ob die Component deaktiviert ist oder nicht. Durch den Event-Emitter "luxDisabledChange" ist ein Two-Way-Binding mÃ¶glich.                                                                                                                                                                                                           |
+| luxReadonly               | boolean                                                                                                                                              | Bestimmt ob sich das Feld im reinen Lese-Zustand befindet (Ã¤hnlich wie disabled, aber ohne die Auswirkungen auf Forms und andere visuelle Darstellung).                                                                                                                                                                                      |
+| luxErrorCallback          | LuxErrorCallbackFnType                                                                                                                               | Callback-Funktion die aufgerufen wird nachdem die Validierung der Component stattgefunden hat. Hier kann dann entsprechend aus dem Ã¼bergebenen Errors-Objekt ein Fehler ausgelesen und die passende Fehlermeldung zurÃ¼ckgegeben werden. Liefert der Callback `undefined` zurÃ¼ck, wird die Defaultfehlermeldung ausgegeben.                   |
+| luxControlValidators      | ValidatorFnType                                                                                                                                      | Validator-Funktion oder ein Array von Validator-Funktionen, die fÃ¼r diese Component hereingereicht werden kÃ¶nnen. Diese werden nur fÃ¼r nicht-ReactiveForms-Components angewendet und sollen so eine Validierung fÃ¼r "normale" Komponenten ermÃ¶glichen.                                                                                       |
+| luxLabel                  | string                                                                                                                                               | Property welche ein Label oberhalb der FormComponent (Ausnahme: LuxToggle und LuxCheckbox, diese stellen das Label rechts von der SchaltflÃ¤che dar) darstellt.                                                                                                                                                                               |
 | luxHint                   | string                                                                                                                                               | Property, welche einen Tipp/Text unterhalb der FormComponent darstellt.                                                                                                                                                                                                                                                                      |
 | luxHintShowOnlyOnFocus    | boolean                                                                                                                                              | Gibt an, ob der Hinweis (siehe luxHint) nur angezeigt wird, wenn das Element den Fokus hat.                                                                                                                                                                                                                                                  |
-| luxWithEmptyEntry         | boolean                                                                                                                                              | Bestimmt ob ein zusätzlicher leerer Eintrag in der Auswahl angezeigt wird. Wert: `undefined`                                                                                                                                                                                                                                                 |
-| luxLabelLongFormat        | boolean                                                                                                                                              | Bestimmt, ob das Label mehrzeilig sein kann. Nutzung nur in Spalten empfohlen, da die Höhe des Formcontrols variieren kann. Dadurch kann die Ausrichtung an der Baseline nicht mehr gewährleistet werden.                                                                                                                                    |
-| luxDense                  | boolean                                                                                                                                              | Property um die Höhe der Komponente zu verringern. Diese Eigenschaft ist für den Einsatz in großen Formularen gedacht und soll nicht standardmäßig in einer Anwendung genutzt werden.                                                                                                                                                        |
+| luxWithEmptyEntry         | boolean                                                                                                                                              | Bestimmt ob ein zusÃ¤tzlicher leerer Eintrag in der Auswahl angezeigt wird. Wert: `undefined`                                                                                                                                                                                                                                                 |
+| luxLabelLongFormat        | boolean                                                                                                                                              | Bestimmt, ob das Label mehrzeilig sein kann. Nutzung nur in Spalten empfohlen, da die HÃ¶he des Formcontrols variieren kann. Dadurch kann die Ausrichtung an der Baseline nicht mehr gewÃ¤hrleistet werden.                                                                                                                                    |
+| luxDense                  | boolean                                                                                                                                              | Property um die HÃ¶he der Komponente zu verringern. Diese Eigenschaft ist fÃ¼r den Einsatz in groÃŸen Formularen gedacht und soll nicht standardmÃ¤ÃŸig in einer Anwendung genutzt werden.                                                                                                                                                        |
 
 ### @Output
 
@@ -63,9 +64,9 @@
 | ----------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | luxDataLoaded     | EventEmitter \<boolean>                                    | Output-Emitter, welcher mitteilt wenn Daten geladen wurden (true) oder ein Fehler aufgetreten ist (false). |
 | luxValueChange    | EventEmitter \<LuxLookupTableEntry, LuxLookupTableEntry[]> | Output-Emitter, der bei neuen Werten der Komponente ein Event ausgibt.                                     |
-| luxFocusIn        | EventEmitter \<FocusEvent>                                 | Event welches beim Fokussieren des Elements ausgelöst wird und ein Objekt vom Typ FocusEvent weitergibt.   |
-| luxFocusOut       | EventEmitter \<FocusEvent>                                 | Event welches beim Fokusverlust des Elements ausgelöst wird und ein Objekt vom Typ FocusEvent weitergibt.  |
-| luxDisabledChange | EventEmitter \<boolean>                                    | Event welches beim Disablen des Elements ausgelöst wird.                                                   |
+| luxFocusIn        | EventEmitter \<FocusEvent>                                 | Event welches beim Fokussieren des Elements ausgelÃ¶st wird und ein Objekt vom Typ FocusEvent weitergibt.   |
+| luxFocusOut       | EventEmitter \<FocusEvent>                                 | Event welches beim Fokusverlust des Elements ausgelÃ¶st wird und ein Objekt vom Typ FocusEvent weitergibt.  |
+| luxDisabledChange | EventEmitter \<boolean>                                    | Event welches beim Disablen des Elements ausgelÃ¶st wird.                                                   |
 
 ## Services
 
@@ -75,28 +76,28 @@ Der LuxLookupService dient den LuxLookupComponents dazu, auf die Lookup-Service 
 
 | Funktion                                                                                              | Beschreibung                                                                                                                                                                                                                                                                                  |
 | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| getLookupTable(tableNo: string, parameters: LuxLookupParameters): Observable <LuxLookupTableEntry[]>  | Ruft die gleichnamige Schnittstelle des Lookup-Services auf und gibt anschließend Elemente mit den den Parametern entsprechenden Feldern wieder.                                                                                                                                              |
-| getTableEntries(tableNo: string, parameters: LuxLookupParameters): Observable <LuxLookupTableEntry[]> | Ruft die gleichnamige Schnittstelle des Lookup-Services auf, filtert dabei nach den in den Parametern mitgegebenen "keys" und gibt anschließend die Elemente wieder. Die Funktionalität ist prinzipiell dieselbe wie bei getLookupTable, nur das hier eine Filterung nach "keys" stattfindet. |
+| getLookupTable(tableNo: string, parameters: LuxLookupParameters): Observable <LuxLookupTableEntry[]>  | Ruft die gleichnamige Schnittstelle des Lookup-Services auf und gibt anschlieÃŸend Elemente mit den den Parametern entsprechenden Feldern wieder.                                                                                                                                              |
+| getTableEntries(tableNo: string, parameters: LuxLookupParameters): Observable <LuxLookupTableEntry[]> | Ruft die gleichnamige Schnittstelle des Lookup-Services auf, filtert dabei nach den in den Parametern mitgegebenen "keys" und gibt anschlieÃŸend die Elemente wieder. Die FunktionalitÃ¤t ist prinzipiell dieselbe wie bei getLookupTable, nur das hier eine Filterung nach "keys" stattfindet. |
 
 ### LuxLookupHandlerService
 
-Der LuxLookupHandlerService dient der aufrufenden Komponente dazu, das Laden von Schlüsseltabelleninformationen auszulösen.
+Der LuxLookupHandlerService dient der aufrufenden Komponente dazu, das Laden von SchlÃ¼sseltabelleninformationen auszulÃ¶sen.
 
 | Funktion                           | Beschreibung                                                                                                                  |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| reloadData(lookupId: string): void | Triggert das Laden von Schlüsseltabellendaten für eine LookupComponent, vorausgesetzt, die richtige lookupId wird mitgegeben. |
+| reloadData(lookupId: string): void | Triggert das Laden von SchlÃ¼sseltabellendaten fÃ¼r eine LookupComponent, vorausgesetzt, die richtige lookupId wird mitgegeben. |
 
 ## Classes / Interfaces
 
 ### LuxLookupTableEntry
 
-Klasse, die einen einzelnen Eintrag aus einer Schlüsseltabelle kennzeichnet.
+Klasse, die einen einzelnen Eintrag aus einer SchlÃ¼sseltabelle kennzeichnet.
 
 | Name            | Typ            | Beschreibung                                          |
 | --------------- | -------------- | ----------------------------------------------------- |
-| key             | string         | Der einzigartige Schlüssel dieses einzelnen Eintrags. |
-| gueltigkeitBis  | string, number | Der Timestamp, bis zu dem dieser Eintrag gültig ist.  |
-| gueltigkeitVon  | string, number | Der Timestamp, ab dem dieser Eintrag gültig ist.      |
+| key             | string         | Der einzigartige SchlÃ¼ssel dieses einzelnen Eintrags. |
+| gueltigkeitBis  | string, number | Der Timestamp, bis zu dem dieser Eintrag gÃ¼ltig ist.  |
+| gueltigkeitVon  | string, number | Der Timestamp, ab dem dieser Eintrag gÃ¼ltig ist.      |
 | kurzText        | string         | Der Kurztext dieses Eintrags.                         |
 | langText1       | string         | Der erste lange Text dieses Eintrags.                 |
 | langText2       | string         | Der zweite lange Text dieses Eintrags.                |
@@ -114,13 +115,13 @@ Klasse, die benutzt wird, um die Abfrage an den Lookup-Service im Backend zu mod
 | Name   | Typ              | Beschreibung                                                                                                                 |
 | ------ | ---------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | knr    | number           | Eine 3-stellige Kammernummer (z.B. 101).                                                                                     |
-| keys   | any[]            | Array mit den fachlichen Schlüssel der gewünschten Tabelleneinträge.                                                         |
-| fields | LuxFieldValues[] | Enthält die Felder, die in den Resultaten angezeigt werden sollen. Mögliche Werte sind in dem entsprechenden Enum zu finden. |
-| raw    | boolean          | Schaltet das Normalisieren der zurückgegebenen Keys ein und aus (0012345 -> 12345)                                           |
+| keys   | any[]            | Array mit den fachlichen SchlÃ¼ssel der gewÃ¼nschten TabelleneintrÃ¤ge.                                                         |
+| fields | LuxFieldValues[] | EnthÃ¤lt die Felder, die in den Resultaten angezeigt werden sollen. MÃ¶gliche Werte sind in dem entsprechenden Enum zu finden. |
+| raw    | boolean          | Schaltet das Normalisieren der zurÃ¼ckgegebenen Keys ein und aus (0012345 -> 12345)                                           |
 
 ### LuxFieldValues
 
-Definiert welche Werte als "fields" übertragen werden können.
+Definiert welche Werte als "fields" Ã¼bertragen werden kÃ¶nnen.
 
 | Name            |
 | --------------- |
@@ -138,7 +139,7 @@ Definiert welche Werte als "fields" übertragen werden können.
 
 ### LuxBehandlungsOptionenUngueltige
 
-Definiert welche Optionen es gibt, um ungültige Einträge zu behandeln.
+Definiert welche Optionen es gibt, um ungÃ¼ltige EintrÃ¤ge zu behandeln.
 
 | Name       |
 | ---------- |
@@ -150,18 +151,18 @@ Definiert welche Optionen es gibt, um ungültige Einträge zu behandeln.
 
 ### 1. Simple Lookup-Combobox
 
-![Beispielbild 01](lux‐lookup‐combobox-v21-img-01.png)
+![Beispielbild 01](luxâ€lookupâ€combobox-v21-img-01.png)
 
 Ts
 
 ```typescript
 selected: LuxLookupTableEntry | null = null;
-/** Einstellungen für die Component vornehmen **/
+/** Einstellungen fÃ¼r die Component vornehmen **/
 
 
-// Ungültige Einträge werden angezeigt (andere Optionen wären ausblenden oder disabled darzustellen)
+// UngÃ¼ltige EintrÃ¤ge werden angezeigt (andere Optionen wÃ¤ren ausblenden oder disabled darzustellen)
 behandlungUngueltige: LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige.anzeigen;
-// Die zu übergebenden http-Parameter konfigurieren
+// Die zu Ã¼bergebenden http-Parameter konfigurieren
 parameters: LuxLookupParameters = new LuxLookupParameters({
     knr: 101,
     raw: false,
@@ -172,9 +173,9 @@ parameters: LuxLookupParameters = new LuxLookupParameters({
 constructor(private lookupHandler: LuxLookupHandlerService) {
 }
 
-// Es ist möglich, einen Reload der Daten über den LookupHandler anzustoßen
+// Es ist mÃ¶glich, einen Reload der Daten Ã¼ber den LookupHandler anzustoÃŸen
 reloadData() {
-    // dafür muss die luxLookupId an den Service übergeben werden
+    // dafÃ¼r muss die luxLookupId an den Service Ã¼bergeben werden
     this.lookupHandler.reloadData('beispiel');
 }
 ```
@@ -197,17 +198,17 @@ Html
 
 ### 2. Custom Styling
 
-![Beispielbild 02](lux‐lookup‐combobox-v21-img-02.png)
+![Beispielbild 02](luxâ€lookupâ€combobox-v21-img-02.png)
 
 Ts
 
 ```typescript
 selected: LuxLookupTableEntry | null = null;
-/** Einstellungen für die Component vornehmen **/
+/** Einstellungen fÃ¼r die Component vornehmen **/
 
-// Ungültige Einträge werden angezeigt (andere Optionen wären ausblenden oder disabled darzustellen)
+// UngÃ¼ltige EintrÃ¤ge werden angezeigt (andere Optionen wÃ¤ren ausblenden oder disabled darzustellen)
 behandlungUngueltige: LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige.anzeigen;
-// Die zu übergebenden http-Parameter konfigurieren
+// Die zu Ã¼bergebenden http-Parameter konfigurieren
 parameters: LuxLookupParameters = new LuxLookupParameters({
     knr: 101,
     raw: false,
@@ -220,14 +221,14 @@ customInvalidStyles = { 'text-decoration': 'line-through', 'color': 'red' };
 constructor(private lookupHandler: LuxLookupHandlerService) {
 }
 
-// Es ist möglich, einen Reload der Daten über den LookupHandler anzustoßen
+// Es ist mÃ¶glich, einen Reload der Daten Ã¼ber den LookupHandler anzustoÃŸen
 reloadData() {
-    // dafür muss die luxLookupId an den Service übergeben werden
+    // dafÃ¼r muss die luxLookupId an den Service Ã¼bergeben werden
     this.lookupHandler.reloadData('beispiel');
 }
 
 
-// Die Render-Funktion, die die Darstellung der einzelnen Einträge modifiziert
+// Die Render-Funktion, die die Darstellung der einzelnen EintrÃ¤ge modifiziert
 customRenderFn(entry: LuxLookupTableEntry) {
     return '[RenderFn] ' + entry?.kurzText;
 }
@@ -250,3 +251,31 @@ Html
 >
 </lux-lookup-combobox-ac>
 ```
+
+### 3. Mit clientseitiger Filterung
+
+Ts
+
+```typescript
+selected: LuxLookupTableEntry | null = null;
+parameters: LuxLookupParameters = new LuxLookupParameters({
+  knr: 101,
+  fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+});
+```
+
+Html
+
+```html
+<lux-lookup-combobox-ac
+  luxLabel="Beispiel"
+  luxRenderProp="kurzText"
+  [luxParameters]="parameters"
+  luxTableNo="1032"
+  [luxEnableFilter]="true"
+  [(luxValue)]="selected"
+  luxLookupId="beispiel"
+></lux-lookup-combobox-ac>
+```
+
+
