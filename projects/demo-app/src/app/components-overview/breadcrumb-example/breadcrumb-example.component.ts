@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    ILuxBreadcrumbEntry,
-    LuxAutofocusDirective,
-    LuxBreadcrumbComponent,
-    LuxButtonComponent,
-    LuxDividerComponent,
-    LuxInputAcComponent,
-    LuxLinkPlainComponent,
-    LuxToggleAcComponent
+  ILuxBreadcrumbEntry,
+  LuxAutofocusDirective,
+  LuxBreadcrumbComponent,
+  LuxButtonComponent,
+  LuxDividerComponent,
+  LuxInputAcComponent,
+  LuxLinkPlainComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
