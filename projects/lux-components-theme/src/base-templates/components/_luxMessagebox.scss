@@ -90,14 +90,15 @@ lux-message-box {
       @include luxfocus.focus-dark-mixin;
     }
 
-    & .lux-message-container.lux-bg-color-white {
+    & .lux-message-container.lux-messagebox-white {
       & .lux-message-text:focus-visible {
         @include luxfocus.focus-dark-mixin;
         border-radius: 4px;
       }
     }
 
-    & .lux-message-container:not(.lux-bg-color-white) {
+    & .lux-message-container:not(.lux-messagebox-white) {
+      --lux-theme-outline-color-dark: #ffffff;
       & .lux-message-text:focus-visible {
         @include luxfocus.focus-bright-mixin;
         border-radius: 4px;

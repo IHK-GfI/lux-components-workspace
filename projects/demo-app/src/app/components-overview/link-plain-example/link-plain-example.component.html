@@ -13,6 +13,7 @@
           luxIconName="lux-interface-arrows-bend-down-right-2"
           luxTagId="demo-link"
           [luxHref]="href"
+          (luxClicked)="click($event)"
           [luxBlank]="blank"
         ></lux-link-plain>
         mit Icon im normalen Fließtext.
@@ -26,6 +27,7 @@
           [luxIconShowRight]="iconShowRight"
           luxTagId="demo-link"
           [luxHref]="href"
+          (luxClicked)="click($event)"
           [luxBlank]="blank"
         ></lux-link-plain>
         in einer H3 mit einem Icon!
@@ -40,7 +42,8 @@
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
-              (luxClicked)="goTo('Form')"
+              luxHref="/form"
+              (luxClicked)="click($event)"
             ></lux-link-plain>
           </li>
           <li>
@@ -50,7 +53,8 @@
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
-              (luxClicked)="goTo('Components')"
+              luxHref="/components-overview"
+              (luxClicked)="click($event)"
             ></lux-link-plain>
           </li>
           <li>
@@ -60,7 +64,8 @@
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
-              (luxClicked)="goTo('Baseline')"
+              luxHref="/baseline"
+              (luxClicked)="click($event)"
             ></lux-link-plain>
           </li>
           <li>
@@ -70,7 +75,8 @@
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
-              (luxClicked)="goTo('configuration')"
+              luxHref="/configuration"
+              (luxClicked)="click($event)"
             ></lux-link-plain>
           </li>
         </ul>

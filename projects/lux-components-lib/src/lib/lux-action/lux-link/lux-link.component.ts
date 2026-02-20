@@ -49,22 +49,35 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
     }
   }
 
+  isExternal(): boolean {
+    if (!this.luxHref) return false;
+    const href = this.luxHref.trim();
+    return href.startsWith('http://') ||
+           href.startsWith('https://') ||
+           href.startsWith('//') ||
+           href.startsWith('mailto:') ||
+           href.startsWith('tel:');
+  }
+
   redirectToHref(event: Event) {
     this.luxClicked.emit(event);
-
-    if (this.luxHref) {
-      this.luxHref = this.luxHref.trim();
-      if (!this.luxHref.startsWith('http')) {
-        if (this.isOpenInNewTab(event)) {
-          const newRelativeUrl = this.router.createUrlTree([this.luxHref]);
-          const baseUrl = window.location.href.replace(this.router.url, '');
-
-          window.open(baseUrl + newRelativeUrl, '_blank');
-        } else {
-          this.router.navigate([this.luxHref]).then(() => {});
-        }
+    
+    if (!this.luxHref) return;
+    
+    event.preventDefault();
+    const href = this.luxHref.trim();
+    
+    if (this.isExternal()) {
+      // Externe Links: Öffne im aktuellen oder neuen Fenster
+      window.open(href, this.isOpenInNewTab(event) ? '_blank' : '_self');
+    } else {
+      // Interne Links: Nutze Angular Router
+      if (this.isOpenInNewTab(event)) {
+        const newRelativeUrl = this.router.createUrlTree([href]);
+        const baseUrl = window.location.href.replace(this.router.url, '');
+        window.open(baseUrl + newRelativeUrl, '_blank');
       } else {
-        window.open(this.luxHref, this.isOpenInNewTab(event) ? '_blank' : '_self');
+        this.router.navigate([href]).then(() => {});
       }
     }
   }

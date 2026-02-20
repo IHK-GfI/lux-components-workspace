@@ -136,10 +136,16 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
 
   /**
    * Wrapper-Klick: Fokus setzen und Panel öffnen (falls erlaubt).
-   * Vermeidet komplexe Template-Ausdrücke, verbessert Lesbarkeit.
+   * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
    */
-  onWrapperClick() {
+  onWrapperClick(event: MouseEvent) {
     if (this.luxDisabled || this.luxReadonly) {
+      return;
+    }
+    
+    // Nicht auf mat-option Elemente reagieren (diese haben ihre eigene Logik)
+    const target = event.target as HTMLElement;
+    if (target.closest('mat-option')) {
       return;
     }
     
@@ -152,9 +158,7 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     
     // Panel nur öffnen, wenn noch nicht offen
     if (this.matAutocompleteTrigger && !this.matAutocompleteTrigger.panelOpen) {
-      if (!this.matAutocompleteTrigger!.panelOpen) {
-        this.matAutocompleteTrigger!.openPanel();
-      }
+      this.matAutocompleteTrigger!.openPanel();
     }
   }
 
