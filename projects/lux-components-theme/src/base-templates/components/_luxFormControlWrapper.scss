@@ -233,6 +233,7 @@ lux-form-control-wrapper {
           }
         }
         .mat-mdc-form-field-error {
+          display: flex;
           background-color: var(--lux-theme-form-error-msg-background);
           border-radius: 4px;
           padding-right: 2px;

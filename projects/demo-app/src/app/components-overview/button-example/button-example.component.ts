@@ -17,6 +17,7 @@ import {
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
+import { NewMarkerComponent } from "../../base/new-marker/new-marker.component";
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -42,8 +43,9 @@ type ErrorBoxType = 'default' | 'gradient' | 'loading';
     LuxCardContentComponent,
     LuxCardActionsComponent,
     LuxTextboxComponent,
-    NgTemplateOutlet
-  ]
+    NgTemplateOutlet,
+    NewMarkerComponent
+]
 })
 export class ButtonExampleComponent implements OnDestroy {
   private configService = inject(LuxComponentsConfigService);

@@ -51,7 +51,10 @@ import { LuxSideNavComponent } from './lux-app-header-subcomponents/lux-side-nav
     LuxIconComponent,
     LuxImageComponent,
     TranslocoPipe
-  ]
+  ],
+  host: {
+    '[class.lux-header-mobile]': 'mobileView'
+  }
 })
 export class LuxAppHeaderComponent implements OnInit, OnChanges, OnDestroy {
   private queryService = inject(LuxMediaQueryObserverService);

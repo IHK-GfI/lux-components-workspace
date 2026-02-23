@@ -5,8 +5,22 @@
     (
       option-label-text-size: var(--lux-theme-panel-option-label-text-size),
       option-label-text-color: var(--lux-theme-panel-option-label-text-color),
+      option-selected-state-label-text-color: var(--lux-theme-panel-option-label-text-color),
+      option-selected-state-layer-color: var(--lux-theme-panel-option-selected-state-layer-color),
       option-hover-state-layer-color: var(--lux-theme-panel-option-hover-state-layer-color),
       option-focus-state-layer-color: var(--lux-theme-panel-option-focus-state-layer-color)
     )
   );
+}
+
+.mat-mdc-option {
+  .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after,
+  .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-indeterminate::after {
+    @include mat.pseudo-checkbox-overrides(
+      (
+        minimal-selected-checkmark-color: var(--lux-theme-panel-option-selected-checkmark-color),
+        minimal-disabled-selected-checkmark-color: var(--lux-theme-panel-option-disabled-selected-checkmark-color)
+      )
+    );
+  }
 }

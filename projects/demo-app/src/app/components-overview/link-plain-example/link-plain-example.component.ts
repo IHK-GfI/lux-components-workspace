@@ -1,12 +1,12 @@
 import { Component, OnDestroy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    LuxComponentsConfigParameters,
-    LuxComponentsConfigService,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxLinkPlainComponent,
-    LuxToggleAcComponent
+  LuxComponentsConfigParameters,
+  LuxComponentsConfigService,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxLinkPlainComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -78,25 +78,5 @@ export class LinkPlainExampleComponent implements OnDestroy {
 
   click(event: Event) {
     this.log(this.showOutputEvents, 'luxClicked', event);
-  }
-
-  goTo(target: string) {
-    switch (target) {
-      case 'Components':
-        this.router.navigate(['/components-overview']);
-        break;
-      case 'Form':
-        this.router.navigate(['/form']);
-        break;
-      case 'Configuration':
-        this.router.navigate(['/configuration']);
-        break;
-      case 'Baseline':
-        this.router.navigate(['/baseline']);
-        break;
-      case 'Home':
-        this.router.navigate(['/home']);
-        break;
-    }
   }
 }

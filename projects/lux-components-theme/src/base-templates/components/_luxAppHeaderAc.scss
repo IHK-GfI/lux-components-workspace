@@ -37,6 +37,7 @@ lux-app-header-ac {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: transparent;
 
     @include luxelevations.lux-elevation-z0;
 

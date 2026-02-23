@@ -1,6 +1,6 @@
 <a
   class="link-wrapper"
-  [href]="luxDisabled ? null : luxHref"
+  [attr.href]="luxDisabled || !luxHref ? null : luxHref"
   [target]="luxBlank ? '_blank' : '_self'"
   tabindex="{{ luxDisabled ? -1 : 0 }}"
   (focus)="tooltipDirective?.show()"

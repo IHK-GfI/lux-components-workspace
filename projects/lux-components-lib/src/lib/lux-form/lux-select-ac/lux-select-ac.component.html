@@ -1,6 +1,6 @@
 @if (formGroup) {
 <lux-form-control-wrapper
-  (click)="onWrapperClick()"
+  (mousedown)="onWrapperClick($event)"
   [luxFormComponent]="this"
   [formGroup]="formGroup"
   [luxNoLabels]="luxNoLabels"

@@ -334,9 +334,10 @@ lux-card.lux-card-grow {
 .lux-reset-icon {
   display: inline-block;
 
-  &:hover {
+  .lux-icon:hover {
     border-radius: 50%;
-    color: var(--lux-theme-hover-color);
+    color: var(--lux-theme-on-hover-color);
+    background-color: var(--lux-theme-hover-color);
     cursor: pointer;
   }
 }

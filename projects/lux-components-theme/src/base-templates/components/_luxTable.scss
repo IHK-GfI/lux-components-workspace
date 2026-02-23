@@ -52,13 +52,8 @@ lux-table {
       height: 30px;
     }
 
-    td,
     th {
-      padding: 0.5em 1em;
-    }
-
-    th {
-      padding-top: 1em;
+      padding: 1rem 1rem 0.5rem 1rem;
     }
 
     th.mat-mdc-header-cell,
@@ -98,18 +93,6 @@ lux-table {
       table {
         width: 100%;
         border-spacing: 0 !important;
-
-        td .lux-form-control-wrapper {
-          margin: 0;
-
-          .lux-form-control-container-authentic {
-            padding: 0.25em 0.5em; // bei den Form-Controls in einer Tabellen-Zelle wird die Höhe reduziert
-
-            &.lux-no-input-row {
-              padding: 0em;
-            }
-          }
-        }
 
         tbody tr:last-of-type td {
           border-bottom: none;
