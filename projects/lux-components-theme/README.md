@@ -13,8 +13,8 @@
       - [LUX-Button (rund) umstylen](#lux-button-rund-umstylen)
       - [LUX-Button (stroked) umstylen](#lux-button-stroked-umstylen)
       - [Css-Klasse](#css-klasse)
-  - [Lizenzhinweis - Icons](#lizenzhinweis---icons)
-  - [Lizenzhinweis - Fonts](#lizenzhinweis---fonts)
+  - [Lizenztext - Icons](#lizenztext---icons)
+  - [Lizenztext - Fonts](#lizenztext---fonts)
 
 > **Hinweis:** Seit Version 20 basiert das Theme auf [Material Theme 3 (MDC)](https://m3.material.io/) und verwendet Design Tokens für eine moderne, flexible und konsistente Gestaltung. Die Farbpaletten und Variablen wurden überarbeitet. Migrationstipps siehe unten.
 
@@ -200,16 +200,15 @@ Html-Datei:
 <div class="lux-color-accent-50 lux-bg-color-accent-30">Lorem ipsum</div>
 ```
 
-## Lizenzhinweis - Icons
+## Lizenztext - Icons
 
-Über das Github-Projekt https://github.com/IHK-GfI/lux-components-icons-and-fonts können statt der bisherigen Material- oder Font Awesome-Icons nun auch die "neuen" Streamline-Icons mit eingebunden werden, welche speziell für die Nutzung mit dem Theme-authentic ausgewählt wurden.
-Die Streamline Icons laufen unter der Lizenz CC-BY 4.0 und der Urheber ist „streamlinehq.com“ ("Streamline Icons Core Line free Copyright © by streamlinehq.com“).
-Bezugsquelle: „[Free Core Line – Free Icons Set - 1000 customizable PNGs, SVGs, PDFs (streamlinehq.com)](https://www.streamlinehq.com/icons/streamline-mini-line)“.
-Die Lizenz „[CC BY 4.0“ ist zu finden unter „[Streamline Free License | Streamline Help center (intercom.help)](https://intercom.help/streamlinehq/en/articles/5354376-streamline-free-license)“.
+In dieser Anwendung werden Streamline-Icons über das Github-Projekt "lux-components-icons-and-fonts" (https://github.com/IHK-GfI/lux-components-icons-and-fonts) der IHK-GfI mbH eingebunden. Die verwendeten Icons laufen unter der Lizenz CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/) und der Urheber ist „streamlinehq.com“ ("Streamline Icons Core Line free Copyright © by streamlinehq.com“).
+Bezugsquelle: „[Core Line - Free – Free Icons Set - 1000 customizable PNGs, SVGs, PDFs (streamlinehq.com)](https://www.streamlinehq.com/icons/core-line-free)".
+Die Lizensierungsinformationen „[CC BY 4.0“ sind zu finden unter „[Streamline Free License | Streamline Help center (intercom.help)](https://intercom.help/streamlinehq/en/articles/5354376-streamline-free-license)“.
 Die Icons aus dem o.a. Iconset wurden durch die IHK-GfI mbH nicht verändert. Es wurden jedoch eigene Icons im selben Stil erstellt und unserer Sammlung unter gleicher Lizenz hinzugefügt.
 
-## Lizenzhinweis - Fonts
+## Lizenztext - Fonts
 
-Über das Github-Projekt https://github.com/IHK-GfI/lux-components-icons-and-fonts können statt der bisher vorgeschlagenen Fontfamilien wie z.B. Korb, Roboo, etc.) nun auch die Schriftarten "Source Sans Pro" designed by Paul D. Hunt (Lizensiert unter SIL 1.1 Open Font License) sowie "BloggerSans" created by Sergiy Tkachenko (Lizensiert unter Creative Commons 4.0) verwendet werden, welche speziell für die Nutzung mit dem Theme-authentic ausgewählt wurden.
+Diese Anwendung verwendet die Schriftarten "Source Sans Pro" designed by Paul D. Hunt (Lizensiert unter SIL 1.1 Open Font License / https://github.com/IHK-GfI/lux-components-icons-and-fonts/blob/master/assets/fonts/Source%20Sans%20Pro/SIL%20Open%20Font%20License%20V1.1.md) sowie "BloggerSans" (Lizenz: https://www.fontsquirrel.com/license/blogger-sans) created by Sergiy Tkachenko (Lizensiert unter Creative Commons 4.0 / https://creativecommons.org/licenses/by/4.0/).
 
 > **Note:** Bei der Entwicklung einer Applikation auf Basis der LUX-Components sowie unter Nutzung der Schriftart "Source Sans Pro" ist zwingend die Lizenzdatei "SIL Open Font License V1.1.md" in die GUI der Applikation einzubinden. Bei Nutzung der Schriftart "BloggerSans" ist ein Verweis auf die Lizenz unter https://www.fontsquirrel.com/license/blogger-sans erforderlich.
