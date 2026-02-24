@@ -1,6 +1,6 @@
 # LUX-Datetimepicker
 
-![Beispielbild LUX-Datetimepicker](lux‐datetimepicker-v21-img.png)
+![Beispielbild LUX-Datetimepicker](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐datetimepicker-v21-img.png)
 
 - [LUX-Datetimepicker](#lux-datetimepicker)
   - [Overview / API](#overview--api)
@@ -65,7 +65,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01](lux‐datetimepicker-v21-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐datetimepicker-v21-img-01.png)
 
 Ts
 
@@ -92,7 +92,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](lux‐datetimepicker-v21-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐datetimepicker-v21-img-02.png)
 
 Ts
 
@@ -126,7 +126,7 @@ Html
 
 ### 3. Min- und Max-Datum
 
-![Beispielbild 03](lux‐datetimepicker-v21-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐datetimepicker-v21-img-03.png)
 
 Ts
 
@@ -147,7 +147,7 @@ Html
 
 ### 4. Eigener Filter
 
-![Beispielbild 04](lux‐datetimepicker-v21-img-04.png)
+![Beispielbild 04](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐datetimepicker-v21-img-04.png)
 
 Ts
 

@@ -22,7 +22,7 @@
 
 ## Beispiel
 
-![Beispielbild 01](lux‐label-v21-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐label-v21-img-01.png)
 
 Html
 

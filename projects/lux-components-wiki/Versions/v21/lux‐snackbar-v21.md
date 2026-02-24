@@ -1,6 +1,6 @@
 # LUX-Snackbar
 
-![Beispielbild LUX-Snackbar](lux‐snackbar-v21-img.png)
+![Beispielbild LUX-Snackbar](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐snackbar-v21-img.png)
 
 - [LUX-Snackbar](#lux-snackbar)
   - [Overview / API](#overview--api)
@@ -61,7 +61,7 @@ Diese Klasse ermöglicht die Konfiguration der anzuzeigenden Snackbar.
 
 ### 1. Snackbar mit Text
 
-![Beispielbild 01](lux‐snackbar-v21-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐snackbar-v21-img-01.png)
 
 Ts
 
@@ -74,7 +74,7 @@ constructor(private snackbar: LuxSnackbarService) {
 
 ### 2. Snackbar mit Icon und Action
 
-![Beispielbild 02](lux‐snackbar-v21-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐snackbar-v21-img-02.png)
 
 Ts
 

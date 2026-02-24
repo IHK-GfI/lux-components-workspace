@@ -77,7 +77,7 @@ Wichtig!
 Wenn der Footer _nicht_ fixiert ist, kann es auf Seiten mit wenig Inhalt dazu kommen, dass der Footer hoch rutscht (siehe Abbildung unten).
 D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig Inhalt trotzdem am unteren Rand angezeigt wird.
 
-![Verrutschter App-Footer](lux‐app‐footer-v21-img-03.png)
+![Verrutschter App-Footer](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐app‐footer-v21-img-03.png)
 
 #### buttonConfiguration
 

@@ -1,6 +1,6 @@
 # LUX-Session-Timer
 
-![Beispielbild Lux-Session-Timer](lux‐session-timer-v21-img.png)
+![Beispielbild Lux-Session-Timer](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐session-timer-v21-img.png)
 
 - [LUX-Session-Timer](#lux-session-timer)
   - [Overview / API](#overview--api)

@@ -82,7 +82,7 @@ Das Event-Payload beschreibt den Grund, warum ein Popup geschlossen wurde. Mögl
 
 ### 1. Transientes Kontext-Popup
 
-![Beispielbild 01](lux‐popup-v21-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐popup-v21-img-01.png)
 
 ```html
 <div
@@ -102,7 +102,7 @@ Das Event-Payload beschreibt den Grund, warum ein Popup geschlossen wurde. Mögl
 
 ### 2. Persistentes Aktions-Popup
 
-![Beispielbild 02](lux‐popup-v21-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐popup-v21-img-02.png)
 
 ```html
 <lux-button

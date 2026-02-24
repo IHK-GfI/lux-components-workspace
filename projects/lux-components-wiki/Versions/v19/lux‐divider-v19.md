@@ -1,6 +1,6 @@
 # LUX-Divider
 
-![Beispielbild LUX-Divider](lux‐divider-v19-img.png)
+![Beispielbild LUX-Divider](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/lux‐divider-v19-img.png)
 
 - [LUX-Divider](#lux-divider)
   - [Overview / API](#overview--api)
@@ -29,7 +29,7 @@
 
 ### 1. Horizontal Divider
 
-![Beispielbild 01](lux‐divider-v19-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/lux‐divider-v19-img-01.png)
 
 Html
 
@@ -43,7 +43,7 @@ Html
 
 ### 2. Vertical Divider
 
-![Beispielbild 02](lux‐divider-v19-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/lux‐divider-v19-img-02.png)
 
 Html
 

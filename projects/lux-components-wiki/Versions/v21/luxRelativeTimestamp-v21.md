@@ -1,6 +1,6 @@
 # luxRelativeTimestamp
 
-![Beispielbild LUX-Relative-Timestamp](luxRelativeTimestamp-v21-img.png)
+![Beispielbild LUX-Relative-Timestamp](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/luxRelativeTimestamp-v21-img.png)
 
 - [luxRelativeTimestamp](#luxrelativetimestamp)
   - [Overview / API](#overview--api)

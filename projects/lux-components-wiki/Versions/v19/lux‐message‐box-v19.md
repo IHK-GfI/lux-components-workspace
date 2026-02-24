@@ -1,6 +1,6 @@
 # LUX-Message-Box
 
-![Beispielbild LUX-Message-Box](lux‐message‐box-v19-img.png)
+![Beispielbild LUX-Message-Box](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/lux‐message‐box-v19-img.png)
 
 - [LUX-Message-Box](#lux-message-box)
   - [Overview / API](#overview--api)
@@ -104,7 +104,7 @@ Objekte dieses Interfaces werden beim Schließen einer angezeigten Nachricht als
 
 ## Beispiel
 
-![Beispielbild 01](lux‐message‐box-v19-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/lux‐message‐box-v19-img-01.png)
 
 Ts
 

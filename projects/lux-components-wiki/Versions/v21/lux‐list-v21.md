@@ -1,6 +1,6 @@
 # LUX-List
 
-![Beispielbild LUX-List](lux‐list-v21-img.png)
+![Beispielbild LUX-List](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐list-v21-img.png)
 
 - [LUX-List](#lux-list)
   - [Overview / API](#overview--api)
@@ -114,7 +114,7 @@ Diese Component umfasst den eigentlichen Inhalt des Listeneintrags.
 
 ### 1. Liste (gefüllt)
 
-![Beispielbild 01](lux‐list-v21-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐list-v21-img-01.png)
 
 Ts
 
@@ -155,7 +155,7 @@ Html
 
 ### 2. Liste (leer)
 
-![Beispielbild 02](lux‐list-v21-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐list-v21-img-02.png)
 
 Ts
 

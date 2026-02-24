@@ -1,6 +1,6 @@
 # LUX-Markdown
 
-![Beispielbild LUX-Markdown](lux‐markdown-v21-img.png)
+![Beispielbild LUX-Markdown](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐markdown-v21-img.png)
 
 - [LUX-Markdown](#lux-markdown)
   - [Overview / API](#overview--api)
@@ -39,7 +39,7 @@ werden.
 
 ## Beispiel
 
-![Beispielbild 01](lux‐markdown-v21-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐markdown-v21-img-01.png)
 
 Ts
 

@@ -1,7 +1,7 @@
 # LUX-File-Preview
 
-![Beispielbild LUX-File-Preview](lux‐file‐preview-v21-img.png)
-![Beispielbild LUX-File-Preview](lux‐file‐preview-v21-img2.png)
+![Beispielbild LUX-File-Preview](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐file‐preview-v21-img.png)
+![Beispielbild LUX-File-Preview](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐file‐preview-v21-img2.png)
 
 - [LUX-File-Preview](#lux-file-preview)
   - [Overview / API](#overview--api)
@@ -51,8 +51,8 @@
 
 ## Beispiel
 
-![Beispielbild 01-01](lux‐file‐preview-v21-img-01-01.png)
-![Beispielbild 01-02](lux‐file‐preview-v21-img-01-02.png)
+![Beispielbild 01-01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐file‐preview-v21-img-01-01.png)
+![Beispielbild 01-02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐file‐preview-v21-img-01-02.png)
 
 Ts
 

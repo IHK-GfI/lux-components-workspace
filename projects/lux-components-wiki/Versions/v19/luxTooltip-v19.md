@@ -1,6 +1,6 @@
 # luxTooltip
 
-![Beispielbild LUX-Tooltip](luxTooltip-v19-img.png)
+![Beispielbild LUX-Tooltip](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/luxTooltip-v19-img.png)
 
 - [luxTooltip](#luxtooltip)
   - [Overview / API](#overview--api)
@@ -30,7 +30,7 @@
 
 ## Beispiel
 
-![Beispielbild 01](luxTooltip-v19-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/luxTooltip-v19-img-01.png)
 
 Html
 

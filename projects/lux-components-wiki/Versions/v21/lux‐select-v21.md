@@ -1,6 +1,6 @@
 # LUX-Select
 
-![Beispielbild LUX-Select](lux‐select-v21-img.png)
+![Beispielbild LUX-Select](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐select-v21-img.png)
 
 - [LUX-Select](#lux-select)
   - [Overview / API](#overview--api)
@@ -67,7 +67,7 @@
 
 ### 1. Ohne Formular
 
-![Beispielbild 01-01](lux‐select-v21-img-01-01.png)
+![Beispielbild 01-01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐select-v21-img-01-01.png)
 
 #### String-Array
 
@@ -128,7 +128,7 @@ Html
 
 #### Mit Multiselect
 
-![Beispielbild 01-02](lux‐select-v21-img-01-02.png)
+![Beispielbild 01-02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐select-v21-img-01-02.png)
 
 Ts
 
@@ -154,7 +154,7 @@ Html
 
 ### 2. Mit Formular
 
-![Beispielbild 02](lux‐select-v21-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐select-v21-img-02.png)
 
 Ts
 
@@ -185,7 +185,7 @@ Html
 
 ### 3. Mit pickValue-Fn
 
-![Beispielbild 03](lux‐select-v21-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐select-v21-img-03.png)
 
 Ts
 

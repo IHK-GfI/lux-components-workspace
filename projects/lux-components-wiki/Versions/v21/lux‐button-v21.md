@@ -1,6 +1,6 @@
 # LUX-Button
 
-![Beispielbild LUX-Button](lux‐button-v21-img.png)
+![Beispielbild LUX-Button](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img.png)
 
 - [LUX-Button](#lux-button)
   - [Overview / API](#overview--api)
@@ -71,7 +71,7 @@ Grundlegende Regeln zum Umgang mit buttons sind:
 
 ### 1. Normale Buttons
 
-![Beispielbild 01](lux‐button-v21-img-01.png)
+![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-01.png)
 
 Ts
 
@@ -109,7 +109,7 @@ Html
 
 ### 2. Flat Buttons
 
-![Beispielbild 02](lux‐button-v21-img-02.png)
+![Beispielbild 02](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-02.png)
 
 Ts
 
@@ -151,7 +151,7 @@ Html
 
 ### 3. Buttons mit Icons
 
-![Beispielbild 03](lux‐button-v21-img-03.png)
+![Beispielbild 03](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-03.png)
 
 Ts
 
@@ -197,7 +197,7 @@ Html
 
 ### 4. Runde Buttons
 
-![Beispielbild 04](lux‐button-v21-img-04.png)
+![Beispielbild 04](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-04.png)
 
 Ts
 
@@ -239,7 +239,7 @@ Html
 
 ### 5. Stroked-Buttons
 
-![Beispielbild 05](lux‐button-v21-img-05.png)
+![Beispielbild 05](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-05.png)
 
 Ts
 
@@ -285,7 +285,7 @@ Html
 
 ### 6. Rounded und Stroked-Buttons
 
-![Beispielbild 06](lux‐button-v21-img-06.png)
+![Beispielbild 06](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-06.png)
 
 Ts
 
