@@ -5,8 +5,8 @@
   - [Dokumentation](#dokumentation)
   - [Aktualisierung](#aktualisierung)
   - [Autoren](#autoren)
-  - [Lizenzhinweis - Icons](#lizenzhinweis---icons)
-  - [Lizenzhinweis - Fonts](#lizenzhinweis---fonts)
+  - [Lizenztext - Icons](#lizenztext---icons)
+  - [Lizenztext - Fonts](#lizenztext---fonts)
 
 Die _LUX-Components_ bestehen aus einer Sammlung von _Angular Material_-Komponenten, die speziell für den _JAST_-Stack (**J**ava **A**ngular **S**QL **T**omcat)
 entwickelt wurden. Es gibt grundlegende Komponenten wie z.B. _lux-input_, _lux-checkbox_, etc. und komplexere Komponenten wie z.B. _lux-master-detail_ oder _lux-stepper_.
@@ -51,19 +51,15 @@ Für jede Version ist im dazugehörigen Update Guide (siehe [Dokumentation](http
 - Helena Majorek (IHK-GfI)
 - Dimitrij Ron (S&N)
 
-## Lizenzhinweis - Icons
+## Lizenztext - Icons
 
-Über das Github-Projekt [https://github.com/IHK-GfI/lux-components-icons-and-fonts](https://github.com/IHK-GfI/lux-components-icons-and-fonts) können statt der bisherigen Material- oder Font Awesome-Icons nun auch die "neuen" Streamline-Icons mit eingebunden werden, welche speziell für die Nutzung mit dem Theme-Authentic ausgewählt wurden.
-Ab der Version 15.0.0 werden ausschließlich nur noch die Streamline-Icons verwendet, die über das o.g. Projekt eingebunden werden.
-Die Streamline Icons laufen unter der Lizenz CC-BY 4.0 und der Urheber ist „streamlinehq.com“ ("Streamline Icons Core Line free Copyright © by streamlinehq.com“).
-Bezugsquelle: „[Free Core Line – Free Icons Set - 1000 customizable PNGs, SVGs, PDFs (streamlinehq.com)](https://www.streamlinehq.com/icons/streamline-mini-line)“.
-Die Lizenz „[CC BY 4.0“ ist zu finden unter „[Streamline Free License | Streamline Help center (intercom.help)](https://intercom.help/streamlinehq/en/articles/5354376-streamline-free-license)“.
-Die Icons aus dem o.a. Iconset wurden durch die IHK-GfI mbH nicht verändert. Zusätzlich wurden eigene Icons im selben Stil erstellt und unserer Sammlung unter gleicher Lizenz hinzugefügt.
+In dieser Anwendung werden Streamline-Icons über das Github-Projekt "lux-components-icons-and-fonts" (https://github.com/IHK-GfI/lux-components-icons-and-fonts) der IHK-GfI mbH eingebunden. Die verwendeten Icons laufen unter der Lizenz CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/) und der Urheber ist „streamlinehq.com“ ("Streamline Icons Core Line free Copyright © by streamlinehq.com“).
+Bezugsquelle: „[Core Line - Free – Free Icons Set - 1000 customizable PNGs, SVGs, PDFs (streamlinehq.com)](https://www.streamlinehq.com/icons/core-line-free)".
+Die Lizensierungsinformationen „[CC BY 4.0“ sind zu finden unter „[Streamline Free License | Streamline Help center (intercom.help)](https://intercom.help/streamlinehq/en/articles/5354376-streamline-free-license)“.
+Die Icons aus dem o.a. Iconset wurden durch die IHK-GfI mbH nicht verändert. Es wurden jedoch eigene Icons im selben Stil erstellt und unserer Sammlung unter gleicher Lizenz hinzugefügt.
 
-> **Note:** Bei der Entwicklung einer Applikation auf Basis der _LUX-Components_ sind die verwendeten Icon-Sets entsprechend zu erwähnen und der Lizenztext ist individuell anzupassen.
+## Lizenztext - Fonts
 
-## Lizenzhinweis - Fonts
+Diese Anwendung verwendet die Schriftarten "Source Sans Pro" designed by Paul D. Hunt (Lizensiert unter SIL 1.1 Open Font License / https://github.com/IHK-GfI/lux-components-icons-and-fonts/blob/master/assets/fonts/Source%20Sans%20Pro/SIL%20Open%20Font%20License%20V1.1.md) sowie "BloggerSans" (Lizenz: https://www.fontsquirrel.com/license/blogger-sans) created by Sergiy Tkachenko (Lizensiert unter Creative Commons 4.0 / https://creativecommons.org/licenses/by/4.0/).
 
-Über das Github-Projekt [https://github.com/IHK-GfI/lux-components-icons-and-fonts](https://github.com/IHK-GfI/lux-components-icons-and-fonts) werden statt der bisher vorgeschlagenen Fontfamilien wie z.B. Korb, Roboto, etc.) nun auch die Schriftarten "Source Sans Pro" entworfen by Paul D. Hunt (Lizenziert unter SIL 1.1 Open Font License) sowie "BloggerSans" created by Sergiy Tkachenko (Lizenziert unter Creative Commons 4.0) verwendet werden, welche speziell für die Nutzung mit dem Theme-authentic ausgewählt wurden.
-
-> **Note:** Bei der Entwicklung einer Applikation auf Basis der _LUX-Components_ sowie unter Nutzung der Schriftart "Source Sans Pro" ist zwingend die Lizenzdatei "SIL Open Font License V1.1.md" in die GUI der Applikation einzubinden. Bei Nutzung der Schriftart "BloggerSans" ist ein Verweis auf die Lizenz unter [https://www.fontsquirrel.com/license/blogger-sans](https://www.fontsquirrel.com/license/blogger-sans) erforderlich. Bei jeder Anwendung ist der Lizenzhinweis zu den tatsächlich verwendeten Schriften und Icons individuell anzupassen!
+> **Note:** Bei der Entwicklung einer Applikation auf Basis der LUX-Components sowie unter Nutzung der Schriftart "Source Sans Pro" ist zwingend die Lizenzdatei "SIL Open Font License V1.1.md" in die GUI der Applikation einzubinden. Bei Nutzung der Schriftart "BloggerSans" ist ein Verweis auf die Lizenz unter https://www.fontsquirrel.com/license/blogger-sans erforderlich.
