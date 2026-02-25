@@ -237,6 +237,30 @@ describe('LuxSelectAcComponent', () => {
       flush();
     }));
 
+    it('aktualisiert renderOptionIndexes bei asynchron geänderten Optionen', fakeAsync(() => {
+      const selectComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+
+      testComponent.options = [
+        { label: 'Neue Aufgabe A', value: 'NA' },
+        { label: 'Neue Aufgabe B', value: 'NB' }
+      ];
+      testComponent.selectedOption = testComponent.options[1];
+      fixture.detectChanges();
+      flush();
+
+      expect(selectComponent.renderOptionIndexes).toEqual([1, 0]);
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      expect(options.length).toBe(2);
+      const selectedOptions = Array.from(options).filter((opt) => opt.classList.contains('mdc-list-item--selected'));
+      expect(selectedOptions.length).toBe(1);
+      expect(selectedOptions[0].innerText.trim()).toContain('Neue Aufgabe B');
+    }));
+
     it('Sollte required sein', fakeAsync(() => {
       // Vorbedingungen testen
       const luxInput: LuxSelectAcComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance;
@@ -790,8 +814,10 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const optionsAfter = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
-      expect(optionsAfter[0].innerText.trim()).toContain('Zurückgestellte Aufgaben');
+      const optionsAfter = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
+      const selectedOptions = optionsAfter.filter((opt) => opt.classList.contains('mdc-list-item--selected'));
+      expect(selectedOptions.length).toBe(1);
+      expect(selectedOptions[0].innerText.trim()).toContain('Zurückgestellte Aufgaben');
     }));
 
     it('behält im Multiselect die stabile Ursprungsreihenfolge bei', fakeAsync(() => {
@@ -874,7 +900,7 @@ describe('LuxSelectAcComponent', () => {
       expect(visibleOptions[0].innerText.trim()).toContain('Gruppenaufgaben');
     }));
 
-    it('navigiert mit Pfeiltasten nur über gefilterte Optionen', fakeAsync(() => {
+    it('navigiert mit Pfeiltasten fortlaufend über gefilterte Optionen', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
@@ -886,18 +912,93 @@ describe('LuxSelectAcComponent', () => {
       flush();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
-      filterInput.value = 'gru';
+      filterInput.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
       flush();
 
-      // Pfeiltasten/Enter werden über das Filterfeld an den MatSelect weitergereicht.
+      // Pfeiltasten werden über das Filterfeld an den MatSelect-KeyManager weitergereicht.
+      LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       fixture.detectChanges();
       flush();
 
       const activeItem = (luxSelect.matSelect as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.value).toBe('B');
+    }));
+
+    it('navigiert mit Pfeiltasten zyklisch über gefilterte Optionen', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      fixture.detectChanges();
+
+      const luxSelect = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'aufgaben';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      for (let i = 0; i < 5; i++) {
+        LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
+      }
+      fixture.detectChanges();
+      flush();
+
+      const activeItem = (luxSelect.matSelect as any)?._keyManager?.activeItem;
+      expect(activeItem?.value?.value).toBe('A');
+    }));
+
+    it('schließt im Single-Select bei Enter auf aktiver Option und erlaubt erneute Arrow-Navigation', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const luxSelect = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'aufgaben';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
+      fixture.detectChanges();
+      flush();
+
+      const activeBeforeEnter = (luxSelect.matSelect as any)?._keyManager?.activeItem;
+      const activeElement = document.activeElement as HTMLElement;
+      LuxTestHelper.dispatchEvent(activeElement, LuxTestHelper.createKeyboardEvent('keydown', 13, activeElement, 'Enter'));
+      fixture.detectChanges();
+      flush();
+
+      expect(activeBeforeEnter).toBeTruthy();
+      expect(luxSelect.matSelect?.panelOpen).toBeFalse();
+      expect(component.selectedOption).toBeTruthy();
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInputAfterReopen = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInputAfterReopen.value = 'aufgaben';
+      LuxTestHelper.dispatchFakeEvent(filterInputAfterReopen, 'input');
+      LuxTestHelper.dispatchEvent(filterInputAfterReopen, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown'));
+      fixture.detectChanges();
+      flush();
+
+      const activeAfterReopen = (luxSelect.matSelect as any)?._keyManager?.activeItem;
+      expect(activeAfterReopen).toBeTruthy();
     }));
 
     it('funktioniert mit Filterung und Auswahl kombiniert', fakeAsync(() => {
@@ -1040,6 +1141,82 @@ describe('LuxSelectAcComponent', () => {
       expect(component.selectedOptions.length).toBe(2);
       expect(component.selectedOptions[0].value).toBe('A');
       expect(component.selectedOptions[1].value).toBe('B');
+    }));
+
+    it('sortiert im geöffneten Multiselect nicht sofort nach Auswahl', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      let options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
+      let visibleOptions = options.filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions[0].innerText.trim()).toContain('Meine Aufgaben');
+
+      const gruppenOption = visibleOptions.find((opt) => opt.innerText.includes('Gruppenaufgaben'));
+      expect(gruppenOption).toBeTruthy();
+      (gruppenOption as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
+      visibleOptions = options.filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions[0].innerText.trim()).toContain('Meine Aufgaben');
+    }));
+
+    it('hält im gefilterten Multiselect die Arrow-Navigation auf sichtbaren Optionen', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'gruppe';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].innerText.trim()).toContain('Gruppenaufgaben');
+
+      LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
+      LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
+      fixture.detectChanges();
+      flush();
+
+      const luxSelect = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+      const activeItem = (luxSelect.matSelect as any)?._keyManager?.activeItem;
+      expect(activeItem?.value?.value).toBe('B');
+    }));
+
+    it('hält im gefilterten Multiselect nach Arrow den Fokus im Filter-Input', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'aufgaben';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
+      fixture.detectChanges();
+      flush();
+
+      expect(document.activeElement).toBe(filterInput);
     }));
   });
 });

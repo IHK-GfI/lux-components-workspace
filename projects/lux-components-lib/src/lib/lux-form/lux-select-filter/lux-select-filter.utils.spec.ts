@@ -111,4 +111,5 @@ describe('LuxSelectFilterUtils', () => {
       expect(result).toEqual(new Set([2]));
     });
   });
+
 });

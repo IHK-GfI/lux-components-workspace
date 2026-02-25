@@ -1,18 +1,12 @@
-import { Directive, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { Subject, takeUntil } from 'rxjs';
+import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 
 /**
  * Directive für Filter-Funktionalität auf MatSelect.
  * Übernimmt State-Management, Filter-Logik, Keyboard-Navigation und Focus-Management.
- *
- * Verwendung:
- * ```html
- * <mat-select [luxSelectFilter]="luxEnableFilter" [luxFilterLabelFn]="labelExtractor">
- *   <lux-select-panel-filter [filterDirective]="filterDirective"></lux-select-panel-filter>
- *   ...
- * </mat-select>
- * ```
  */
 @Directive({
   selector: 'mat-select[luxSelectFilter]',
@@ -20,60 +14,30 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: true
 })
 export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
-  private matSelect = inject(MatSelect);
-  private destroy$ = new Subject<void>();
+  private readonly matSelect = inject(MatSelect);
+  private readonly destroyRef = inject(DestroyRef);
+
   private focusTimeout?: ReturnType<typeof setTimeout>;
-  private labelCache: string[] = [];
+  private panelAttachTimeout?: ReturnType<typeof setTimeout>;
+  private panelElement?: HTMLElement;
+  private normalizedLabelCache: string[] = [];
   private itemCache: T[] = [];
+  private readonly panelKeydownHandler = (event: KeyboardEvent) => {
+    this.handleOptionKeydown(event);
+  };
 
-  // === INPUTS ===
-
-  /**
-   * Aktiviert/deaktiviert die Filter-Funktionalität.
-   */
   @Input() luxSelectFilter = false;
-
-  /**
-   * Funktion zum Extrahieren des filterbaren Labels aus einem Item.
-   * Wird für Cache-Aufbau und Filterung verwendet.
-   */
   @Input() luxFilterLabelFn?: (item: T, index: number) => string;
 
-  // === OUTPUTS ===
-
-  /**
-   * Emittiert wenn der Filter aktiv/inaktiv wird.
-   * Nützlich für Lazy-Loading-Szenarien (alle Items nachladen bei Filter-Aktivierung).
-   */
   @Output() luxFilterActiveChange = new EventEmitter<boolean>();
 
-  // === PUBLIC STATE ===
-
-  /**
-   * Aktueller Filter-Wert.
-   */
   filterValue = '';
-
-  /**
-   * Set der gefilterten Items.
-   */
   filteredItems = new Set<T>();
-
-  /**
-   * Set der gefilterten Indizes.
-   */
   filteredIndexes = new Set<number>();
-
-  /**
-   * Referenz auf das Filter-Input-Element (wird von LuxSelectPanelFilterComponent gesetzt).
-   */
   filterInputRef?: ElementRef<HTMLInputElement>;
 
-  // === LIFECYCLE ===
-
   ngOnInit(): void {
-    // Subscribe auf Panel-Open/Close Events
-    this.matSelect.openedChange.pipe(takeUntil(this.destroy$)).subscribe((open) => {
+    this.matSelect.openedChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((open) => {
       if (open) {
         this.onPanelOpen();
       } else {
@@ -83,30 +47,21 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.removePanelKeydownListener();
     this.clearFocusTimeout();
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
-  // === PUBLIC API ===
-
-  /**
-   * Setzt die zu filternden Items und baut den Cache neu auf.
-   * Muss aufgerufen werden, wenn sich die Items ändern.
-   */
   setItems(items: readonly T[]): void {
     this.itemCache = [...items];
     this.rebuildCache();
     this.applyFilter();
   }
 
-  /**
-   * Wird vom Panel-Filter bei Eingabe aufgerufen.
-   */
   onFilterInput(value: string): void {
     const wasActive = this.isFilterActive();
     this.filterValue = value;
     this.applyFilter();
+    this.syncActiveItemToVisibleOptions();
 
     const isActive = this.isFilterActive();
     if (wasActive !== isActive) {
@@ -114,124 +69,73 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Setzt das Filter-Input-Element für Focus-Management.
-   */
   setFilterInputRef(ref: ElementRef<HTMLInputElement>): void {
     this.filterInputRef = ref;
   }
 
-  /**
-   * Keyboard-Navigation für Filter-Input.
-   *
-   * Verhalten:
-   * - Escape: Panel schließen
-   * - ArrowDown/ArrowUp: Fokus auf Options-Liste verschieben und navigieren
-   * - Tab: Fokus auf erste sichtbare Option
-   * - Enter: NUR aktive Option selektieren wenn KeyManager bereits aktiv (activeItemIndex >= 0)
-   * - Buchstaben/Zahlen: Filter-Eingabe fortsetzen (kein preventDefault!)
-   */
-  handleKeydown(event: KeyboardEvent): void {
-    if (!this.matSelect?.panelOpen) {
-      return;
-    }
-
-    // Escape: Panel schließen
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.matSelect.close();
-      return;
-    }
-
-    const keyManager = (this.matSelect as any)?._keyManager;
-
-    // ArrowDown/ArrowUp: Fokus auf Options-Liste verschieben
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.navigateToVisibleOption(event.key);
-      return;
-    }
-
-    // Tab: Fokus auf erste sichtbare Option
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      event.stopPropagation();
-      this.navigateToVisibleOption('ArrowDown');
-      return;
-    }
-
-    // Enter: NUR wenn KeyManager bereits eine Option fokussiert hat
-    if (event.key === 'Enter') {
-      // Prüfen ob KeyManager aktiv ist (activeItemIndex >= 0)
-      if (keyManager && keyManager.activeItemIndex >= 0) {
-        event.preventDefault();
-        event.stopPropagation();
-        // MatSelect's normale Enter-Behandlung aufrufen
-        (this.matSelect as any)?._handleKeydown(event);
-      }
-      // Sonst: Enter macht nichts (User tippt im Filter-Input)
-      return;
-    }
-
-    // Alle anderen Tasten: Nicht preventDefault! → Filter-Eingabe fortsetzen
+  handleKeydown(event: KeyboardEvent): boolean {
+    return this.handleKeyboard(event, 'input');
   }
 
-  /**
-   * Prüft, ob ein Item sichtbar (gefiltert) ist.
-   */
+  handleOptionKeydown(event: KeyboardEvent): boolean {
+    return this.handleKeyboard(event, 'panel');
+  }
+
   isItemVisible(item: T): boolean {
     return !this.isFilterActive() || this.filteredItems.has(item);
   }
 
-  /**
-   * Prüft, ob ein Index sichtbar (gefiltert) ist.
-   */
   isIndexVisible(index: number): boolean {
     return !this.isFilterActive() || this.filteredIndexes.has(index);
   }
 
-  /**
-   * Prüft, ob der Filter aktiv ist (nicht-leerer Filter-Wert).
-   */
   isFilterActive(): boolean {
     return this.luxSelectFilter && this.filterValue.trim().length > 0;
   }
 
-  // === PRIVATE METHODS ===
+  isOptionFocused(): boolean {
+    const panelElement = this.panelElement;
+    const activeElement = document.activeElement as HTMLElement | null;
+    if (!panelElement || !activeElement) {
+      return false;
+    }
+    return panelElement.contains(activeElement) && !!activeElement.closest('.mat-mdc-option');
+  }
 
   private onPanelOpen(): void {
-    if (!this.luxSelectFilter) return;
-
+    if (!this.luxSelectFilter) {
+      return;
+    }
     this.rebuildCache();
     this.applyFilter();
+    this.syncActiveItemToVisibleOptions();
+    this.registerPanelKeydownListener();
     this.focusFilterInput();
   }
 
   private onPanelClose(): void {
-    if (!this.luxSelectFilter) return;
-
+    if (!this.luxSelectFilter) {
+      return;
+    }
+    this.removePanelKeydownListener();
     this.clearFilter();
   }
 
   private rebuildCache(): void {
     if (!this.luxFilterLabelFn) {
-      this.labelCache = [];
+      this.normalizedLabelCache = [];
       return;
     }
-
-    this.labelCache = this.itemCache.map((item, index) => this.normalize(this.luxFilterLabelFn!(item, index)));
+    this.normalizedLabelCache = this.itemCache.map((item, index) => LuxSelectFilterUtils.normalize(this.luxFilterLabelFn!(item, index)));
   }
 
   private applyFilter(): void {
-    const normalizedFilter = this.normalize(this.filterValue).trim();
-
+    const normalizedFilter = LuxSelectFilterUtils.normalize(this.filterValue).trim();
     this.filteredItems.clear();
     this.filteredIndexes.clear();
 
     this.itemCache.forEach((item, index) => {
-      const label = this.labelCache[index] ?? '';
+      const label = this.normalizedLabelCache[index] ?? '';
       if (!normalizedFilter || label.includes(normalizedFilter)) {
         this.filteredItems.add(item);
         this.filteredIndexes.add(index);
@@ -250,8 +154,12 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   private focusFilterInput(): void {
     this.clearFocusTimeout();
     this.focusTimeout = setTimeout(() => {
-      this.filterInputRef?.nativeElement?.focus();
-      this.filterInputRef?.nativeElement?.select();
+      const input = this.filterInputRef?.nativeElement;
+      if (!this.matSelect.panelOpen || !input) {
+        return;
+      }
+      input.focus();
+      input.select();
     });
   }
 
@@ -262,53 +170,277 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     }
   }
 
-  private normalize(value: unknown): string {
-    return ('' + (value ?? '')).toLocaleLowerCase();
+  private registerPanelKeydownListener(): void {
+    this.removePanelKeydownListener();
+    const tryAttachListener = () => {
+      if (!this.matSelect.panelOpen) {
+        return;
+      }
+      const panel = this.matSelect.panel?.nativeElement as HTMLElement | undefined;
+      if (!panel) {
+        this.panelAttachTimeout = setTimeout(() => {
+          this.panelAttachTimeout = undefined;
+          tryAttachListener();
+        });
+        return;
+      }
+      this.panelElement = panel;
+      // Capture ist notwendig, damit die eigene sichtbarkeitsbasierte Navigation
+      // vor dem MatSelect-Handler greift und nicht doppelt verarbeitet wird.
+      panel.addEventListener('keydown', this.panelKeydownHandler, true);
+    };
+    tryAttachListener();
   }
 
-  private navigateToVisibleOption(key: string): void {
-    const keyManager = (this.matSelect as any)?._keyManager;
-    const options = this.matSelect.options?.toArray?.() ?? [];
+  private removePanelKeydownListener(): void {
+    if (this.panelAttachTimeout) {
+      clearTimeout(this.panelAttachTimeout);
+      this.panelAttachTimeout = undefined;
+    }
+    if (this.panelElement) {
+      this.panelElement.removeEventListener('keydown', this.panelKeydownHandler, true);
+    }
+    this.panelElement = undefined;
+  }
 
-    const isOptionVisible = (option: any): boolean => {
-      const el: HTMLElement | null = option?._getHostElement?.() ?? option?._element?.nativeElement ?? null;
-      if (!el) return true;
-      const style = window.getComputedStyle(el);
-      return style.display !== 'none' && style.visibility !== 'hidden';
-    };
+  private handleKeyboard(event: KeyboardEvent, source: 'input' | 'panel'): boolean {
+    if (!this.matSelect.panelOpen) {
+      return false;
+    }
+    if (source === 'panel' && this.isEventFromFilterInput(event)) {
+      return false;
+    }
 
-    const visibleOptionIndexes = options
-      .map((option: any, index: number) => ({ option, index }))
-      .filter(({ option }) => isOptionVisible(option))
-      .map(({ index }) => index);
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        event.stopPropagation();
+        this.moveActiveVisibleOption(1);
+        return true;
+      case 'ArrowUp':
+        event.preventDefault();
+        event.stopPropagation();
+        this.moveActiveVisibleOption(-1);
+        return true;
+      case 'Enter':
+        event.preventDefault();
+        event.stopPropagation();
+        this.selectActiveOrFirstVisibleOption();
+        return true;
+    }
 
-    if (visibleOptionIndexes.length === 0 || !keyManager) {
+    if (source === 'panel' && this.isPrintableCharacterKey(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.redirectCharacterInputToFilter(event.key);
+      return true;
+    }
+    return false;
+  }
+
+  private moveActiveVisibleOption(step: 1 | -1): void {
+    const keyManager = this.getInternalKeyManager();
+    if (!keyManager) {
       return;
     }
 
-    const scrollIntoView = (index: number) => {
-      const scrollFn = (this.matSelect as any)?._scrollOptionIntoView;
-      if (typeof scrollFn === 'function') {
-        scrollFn.call(this.matSelect, index);
-      }
-    };
+    const visibleOptionIndexes = this.getVisibleOptionIndexes();
+    if (visibleOptionIndexes.length === 0) {
+      return;
+    }
 
-    const activeIndex: number = keyManager.activeItemIndex;
-    const currentPos = visibleOptionIndexes.indexOf(activeIndex);
+    const currentActiveIndex = this.getActiveOptionIndex(keyManager);
+    const currentVisiblePos = visibleOptionIndexes.indexOf(currentActiveIndex);
+    let nextVisiblePos: number;
 
-    // Nur ArrowDown/ArrowUp Behandlung
-    if (key === 'ArrowDown' || key === 'ArrowUp') {
-      let nextIndex: number;
-      if (currentPos === -1) {
-        nextIndex = key === 'ArrowUp' ? visibleOptionIndexes[visibleOptionIndexes.length - 1] : visibleOptionIndexes[0];
+    if (currentVisiblePos < 0) {
+      nextVisiblePos = step === 1 ? 0 : visibleOptionIndexes.length - 1;
+    } else {
+      nextVisiblePos = (currentVisiblePos + step + visibleOptionIndexes.length) % visibleOptionIndexes.length;
+    }
+
+    const targetIndex = visibleOptionIndexes[nextVisiblePos];
+    keyManager.setActiveItem(targetIndex);
+    this.scrollOptionIntoView(targetIndex);
+  }
+
+  private selectActiveOrFirstVisibleOption(): void {
+    const keyManager = this.getInternalKeyManager();
+    if (!keyManager) {
+      return;
+    }
+    const visibleOptionIndexes = this.getVisibleOptionIndexes();
+    if (visibleOptionIndexes.length === 0) {
+      return;
+    }
+    const activeIndex = this.getActiveOptionIndex(keyManager);
+    const targetIndex = visibleOptionIndexes.includes(activeIndex) ? activeIndex : visibleOptionIndexes[0];
+    keyManager.setActiveItem(targetIndex);
+    this.scrollOptionIntoView(targetIndex);
+    const option = (this.matSelect.options?.toArray?.() ?? [])[targetIndex];
+    if (!option) {
+      return;
+    }
+
+    const internalOption = option as unknown as MatOptionInternal;
+    if (typeof internalOption._selectViaInteraction === 'function') {
+      internalOption._selectViaInteraction();
+    } else {
+      option.select();
+    }
+
+    if (!this.matSelect.multiple) {
+      this.matSelect.close();
+      return;
+    }
+
+    // Im Multi-Select bleibt das Panel offen; Fokus bleibt für weiteres Filtern im Input.
+    this.focusFilterInput();
+  }
+
+  private syncActiveItemToVisibleOptions(): void {
+    const keyManager = this.getInternalKeyManager();
+    if (!keyManager) {
+      return;
+    }
+
+    const visibleOptionIndexes = this.getVisibleOptionIndexes();
+    if (visibleOptionIndexes.length === 0) {
+      if (typeof keyManager.updateActiveItem === 'function') {
+        keyManager.updateActiveItem(-1);
       } else {
-        const delta = key === 'ArrowUp' ? -1 : 1;
-        const nextPos = (currentPos + delta + visibleOptionIndexes.length) % visibleOptionIndexes.length;
-        nextIndex = visibleOptionIndexes[nextPos];
+        keyManager.activeItemIndex = -1;
+      }
+      return;
+    }
+
+    const activeIndex = this.getActiveOptionIndex(keyManager);
+    if (activeIndex >= 0 && visibleOptionIndexes.includes(activeIndex)) {
+      return;
+    }
+
+    keyManager.setActiveItem(visibleOptionIndexes[0]);
+    this.scrollOptionIntoView(visibleOptionIndexes[0]);
+  }
+
+  private getVisibleOptionIndexes(): number[] {
+    const options = this.matSelect.options?.toArray?.() ?? [];
+    return options
+      .map((option, index: number) => ({ option, index }))
+      .filter(({ option }) => this.isOptionVisible(option))
+      .map(({ index }) => index);
+  }
+
+  private isOptionVisible(option: MatOption): boolean {
+    const el = this.getOptionHostElement(option);
+    if (!el) return true;
+
+    // Detached Test-Elemente liefern via getComputedStyle nicht zuverlässig `display:none`.
+    if (el.style.display === 'none' || el.style.visibility === 'hidden') {
+      return false;
+    }
+
+    const style = window.getComputedStyle(el);
+    return style.display !== 'none' && style.visibility !== 'hidden';
+  }
+
+  private getActiveOptionIndex(keyManager: InternalKeyManager): number {
+    if (keyManager.activeItemIndex >= 0) {
+      return keyManager.activeItemIndex;
+    }
+
+    const activeItem = keyManager.activeItem;
+    if (!activeItem) {
+      return -1;
+    }
+
+    const options = this.matSelect.options?.toArray?.() ?? [];
+    return options.indexOf(activeItem as MatOption);
+  }
+
+  private redirectCharacterInputToFilter(character: string): void {
+    this.focusFilterInput();
+
+    // Input-Update nach Fokuswechsel, damit Zeichen sicher im Filter landen
+    setTimeout(() => {
+      const input = this.filterInputRef?.nativeElement;
+      if (!input) {
+        return;
       }
 
-      keyManager.setActiveItem(nextIndex);
-      scrollIntoView(nextIndex);
+      input.focus();
+
+      const currentValue = input.value ?? this.filterValue ?? '';
+      const selectionStart = input.selectionStart ?? currentValue.length;
+      const selectionEnd = input.selectionEnd ?? currentValue.length;
+      const nextValue = `${currentValue.slice(0, selectionStart)}${character}${currentValue.slice(selectionEnd)}`;
+
+      this.onFilterInput(nextValue);
+      input.value = nextValue;
+
+      const caret = selectionStart + character.length;
+      input.setSelectionRange(caret, caret);
+    });
+  }
+
+  private isPrintableCharacterKey(event: KeyboardEvent): boolean {
+    if (event.ctrlKey || event.altKey || event.metaKey) {
+      return false;
+    }
+
+    return event.key.length === 1;
+  }
+
+  private scrollOptionIntoView(index: number): void {
+    const scrollFn = this.getInternalSelect()._scrollOptionIntoView;
+    if (typeof scrollFn === 'function' && this.matSelect.panel?.nativeElement) {
+      scrollFn.call(this.matSelect, index);
     }
   }
+
+  private getInternalKeyManager(): InternalKeyManager | undefined {
+    return this.getInternalSelect()._keyManager;
+  }
+
+  private getInternalSelect(): MatSelectInternal {
+    return this.matSelect as unknown as MatSelectInternal;
+  }
+
+  private getOptionHostElement(option: MatOption): HTMLElement | null {
+    const internalOption = option as unknown as MatOptionInternal;
+
+    if (typeof internalOption._getHostElement === 'function') {
+      return internalOption._getHostElement();
+    }
+
+    return internalOption._element?.nativeElement ?? null;
+  }
+
+  private isEventFromFilterInput(event: KeyboardEvent): boolean {
+    const target = event.target as HTMLElement | null;
+    if (!target) {
+      return false;
+    }
+
+    return !!target.closest('.lux-select-panel-filter, .lux-select-panel-filter-input');
+  }
+}
+
+interface InternalKeyManager {
+  activeItemIndex: number;
+  activeItem?: { focus?: () => void } | null;
+  setActiveItem(index: number): void;
+  updateActiveItem?(index: number): void;
+}
+
+interface MatSelectInternal {
+  _keyManager?: InternalKeyManager;
+  _handleKeydown?(event: KeyboardEvent): void;
+  _scrollOptionIntoView?(index: number): void;
+}
+
+interface MatOptionInternal {
+  _getHostElement?(): HTMLElement;
+  _element?: ElementRef<HTMLElement>;
+  _selectViaInteraction?(): void;
 }

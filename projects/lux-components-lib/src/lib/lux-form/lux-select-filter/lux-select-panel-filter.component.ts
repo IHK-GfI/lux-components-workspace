@@ -109,11 +109,12 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
   }
 
   onKeydown(event: KeyboardEvent): void {
-    event.stopPropagation();
-
     // Wenn Directive vorhanden, Keyboard-Navigation delegieren
     if (this.filterDirective) {
-      this.filterDirective.handleKeydown(event);
+      const handled = this.filterDirective.handleKeydown(event);
+      if (handled) {
+        event.stopPropagation();
+      }
       return;
     }
 

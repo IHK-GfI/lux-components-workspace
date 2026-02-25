@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, Input, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { Component, ContentChild, Input, OnChanges, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -38,7 +38,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     LuxSelectFilterDirective
   ]
 })
-export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> implements OnInit {
+export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> implements OnInit, OnChanges {
   private liveAnnouncer = inject(LiveAnnouncer);
 
   // Potenziell eingebettetes Template für Darstellung der Labels
@@ -123,6 +123,12 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   override ngOnInit() {
     super.ngOnInit();
     this.refreshRenderOptionIndexes();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['luxOptions'] || changes['luxPickValue']) {
+      this.refreshRenderOptionIndexes();
+    }
   }
 
   override notifyFormValueChanged(formValue: any) {

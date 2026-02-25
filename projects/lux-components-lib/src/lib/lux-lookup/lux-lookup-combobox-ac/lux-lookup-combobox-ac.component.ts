@@ -130,6 +130,8 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   }
 
   ngAfterViewInit() {
+    this.ensureInitialFilterEntriesLoaded();
+
     this.subscription = this.matSelect.openedChange.subscribe((open: boolean) => {
       if (open) {
         // Selektierte Einträge nach oben sortieren
@@ -175,7 +177,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
 
     this.displayedEntries = [];
     this.invisibleEntries = [...entries];
-    this.updateDisplayedEntries();
+    this.updateDisplayedEntries(this.shouldLoadAllEntriesForActiveFilter() ? this.invisibleEntries.length : this.luxEntryBlockSize);
     this.ensureSelectedEntriesLoaded();
     this.refreshRenderedEntries();
   }
@@ -370,5 +372,33 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     }
 
     return this.compareByKey(entry, currentValue as unknown as LuxLookupTableEntry);
+  }
+
+  private shouldLoadAllEntriesForActiveFilter(): boolean {
+    if (!this.luxEnableFilter) {
+      return false;
+    }
+
+    if (this.filterDirective?.isFilterActive()) {
+      return true;
+    }
+
+    return (this.luxFilterValue ?? '').trim().length > 0;
+  }
+
+  private ensureInitialFilterEntriesLoaded(): void {
+    if (!this.luxEnableFilter) {
+      return;
+    }
+
+    if ((this.luxFilterValue ?? '').trim().length === 0) {
+      return;
+    }
+
+    if (this.invisibleEntries.length === 0) {
+      return;
+    }
+
+    this.updateDisplayedEntries(this.invisibleEntries.length);
   }
 }
