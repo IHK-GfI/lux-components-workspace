@@ -3,18 +3,20 @@
 - [Theme](#theme)
   - [Installation](#installation)
   - [LUX-Theme](#lux-theme)
-    - [Allgemeine Css-Variablen](#allgemeine-css-variablen)
-      - [Css-Variablen-Beispiele](#css-variablen-beispiele)
-    - [Allgemeine Css-Klassen](#allgemeine-css-klassen)
-      - [Css-Klassen](#css-klassen)
+    - [Allgemeine CSS-Variablen](#allgemeine-css-variablen)
+      - [CSS-Variablen-Beispiele](#css-variablen-beispiele)
+    - [Allgemeine CSS-Klassen](#allgemeine-css-klassen)
+      - [CSS-Klassen](#css-klassen)
     - [Code-Beispiele](#code-beispiele)
-      - [Css-Variable nutzen](#css-variable-nutzen)
+      - [CSS-Variable nutzen](#css-variable-nutzen)
       - [LUX-Card umstylen](#lux-card-umstylen)
       - [LUX-Button (rund) umstylen](#lux-button-rund-umstylen)
       - [LUX-Button (stroked) umstylen](#lux-button-stroked-umstylen)
-      - [Css-Klasse](#css-klasse)
+      - [CSS-Klasse](#css-klasse)
   - [Lizenztext - Icons](#lizenztext---icons)
   - [Lizenztext - Fonts](#lizenztext---fonts)
+
+Dieses Projekt enthält alle Themes der [LUX-Components](https://www.npmjs.com/package/@ihk-gfi/lux-components).
 
 > **Hinweis:** Seit Version 20 basiert das Theme auf [Material Theme 3 (MDC)](https://m3.material.io/) und verwendet Design Tokens für eine moderne, flexible und konsistente Gestaltung. Die Farbpaletten und Variablen wurden überarbeitet. Migrationstipps siehe unten.
 
@@ -33,27 +35,27 @@ Ein LUX-Theme besteht immer aus unterschiedlichen Farbpaletten:
 - `lux-palette_warn`
 - `lux-palette_neutral`
 
-Aus den Farbpaletten werden eine Menge von Css-Variablen und Css-Klassen abgeleitet.
-Zusätzlich gibt es eine Menge von allgemeinen Css-Variablen und Css-Klassen.
-Alles zusammen bildet die Grundlage für das Theming der eigenen Komponenten auf Basis eines LUX-Themes.
+Aus den Farbpaletten werden zahlreiche CSS-Variablen und CSS-Klassen abgeleitet.
+Zusätzlich gibt es viele allgemeine CSS-Variablen und CSS-Klassen.
+Alles zusammen bildet die Grundlage für das Theming eigener Komponenten auf Basis eines LUX-Themes.
 
-### Allgemeine Css-Variablen
+### Allgemeine CSS-Variablen
 
-Die verfügbaren Css-Variablen stehen im jeweiligen Theme:
+Die verfügbaren CSS-Variablen stehen im jeweiligen Theme:
 
 - `projects\lux-components-theme\src\${themeName}\_variables.scss`
 - `projects\lux-components-theme\src\${themeName}\_variablesPreferContrast.scss`
 
-#### Css-Variablen-Beispiele
+#### CSS-Variablen-Beispiele
 
-- --lux-theme-app-font-family (Schriften)
+- --lux-theme-app-font-family (Schriftart)
 - --lux-theme-custom-red (Hintergrundfarbe)
 - --lux-theme-custom-on-red (Textfarbe)
 - --lux-theme-accordion-header-color-neutral (Hintergrundfarbe)
 - --lux-theme-accordion-header-color-on-neutral (Textfarbe)
 - ...
 
-### Allgemeine Css-Klassen
+### Allgemeine CSS-Klassen
 
 - `lux-app-header-bg`
 - `lux-app-content-bg`
@@ -81,10 +83,10 @@ Die verfügbaren Css-Variablen stehen im jeweiligen Theme:
 - `lux-outline-light`
 - `lux-outline-dark`
 
-#### Css-Klassen
+#### CSS-Klassen
 
-Zu jedem Eintrag (z.B. 0, 10, 20,...) der Farbpalette gibt es im LUX-Theme entsprechende Css-Klassen.
-Hier im Beispiel werden nur die Css-Klassen des Eintrags 20 aufgeführt. Die Klassen der anderen Einträge
+Zu jedem Eintrag (z.B. 0, 10, 20,...) der Farbpalette gibt es im LUX-Theme entsprechende CSS-Klassen.
+Hier im Beispiel werden nur die CSS-Klassen des Eintrags 20 aufgeführt. Die Klassen der anderen Einträge
 (0, 10, 20,...) sind analog aufgebaut.
 
 - `lux-color-primary-20`
@@ -109,17 +111,17 @@ Hier im Beispiel werden nur die Css-Klassen des Eintrags 20 aufgeführt. Die Kla
 
 ### Code-Beispiele
 
-#### Css-Variable nutzen
+#### CSS-Variable nutzen
 
 Beispiel:
 
-Html-Datei:
+HTML-Datei:
 
 ```html
 <span class="highlight">Lorem ipsum</span>
 ```
 
-Scss-Datei:
+SCSS-Datei:
 
 ```scss
 span.highlight {
@@ -131,13 +133,13 @@ span.highlight {
 
 Beispiel:
 
-Html-Datei:
+HTML-Datei:
 
 ```html
 <lux-card class="highlight" luxTitle="Lorem ipsum"></lux-card>
 ```
 
-Scss-Datei:
+SCSS-Datei:
 
 ```scss
 lux-card.highlight {
@@ -156,13 +158,13 @@ lux-card.highlight {
 
 Beispiel:
 
-Html-Datei:
+HTML-Datei:
 
 ```html
 <lux-button class="my-button" luxIconName="lux-save" [luxRounded]="true" [luxStroked]="true" luxLabel="Lorem ipsum"></lux-button>
 ```
 
-Scss-Datei:
+SCSS-Datei:
 
 ```scss
 lux-button.my-button {
@@ -175,13 +177,13 @@ lux-button.my-button {
 
 Beispiel:
 
-Html-Datei:
+HTML-Datei:
 
 ```html
 <lux-button class="my-button" luxLabel="Lorem ipsum" [luxStroked]="true" luxLabel="Lorem ipsum"></lux-button>
 ```
 
-Scss-Datei:
+SCSS-Datei:
 
 ```scss
 lux-button.my-button {
@@ -192,9 +194,9 @@ lux-button.my-button {
 }
 ```
 
-#### Css-Klasse
+#### CSS-Klasse
 
-Html-Datei:
+HTML-Datei:
 
 ```html
 <div class="lux-color-accent-50 lux-bg-color-accent-30">Lorem ipsum</div>
