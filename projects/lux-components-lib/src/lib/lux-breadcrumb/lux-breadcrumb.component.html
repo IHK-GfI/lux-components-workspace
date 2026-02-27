@@ -11,6 +11,7 @@
             [attr.href]="item.url?.trim() || '#'"
             [attr.aria-label]="item.name"
             [attr.title]="item.name"
+            class="lux-breadcrumb-item-title"
           >
             {{ isDottedEntry($first, $last) ? '...' : item.name }}
           </a>
@@ -21,8 +22,8 @@
           ></lux-icon>
         </li>
       } @else {
-        <li class="lux-breadcrumb-current-item" [ngClass]="{ 'lux-breadcrumb-current-item-mobile': mobileView }">
-          <a aria-current="page" [attr.aria-label]="item.name" [attr.title]="item.name">{{ item.name }}</a>
+        <li class="lux-breadcrumb-item-current" aria-current="page" [ngClass]="{ 'lux-breadcrumb-current-item-mobile': mobileView }">
+          <span class="lux-breadcrumb-item-title" [attr.title]='item.name' [attr.aria-label]="item.name">{{ item.name }}</span>
         </li>
       }
     }

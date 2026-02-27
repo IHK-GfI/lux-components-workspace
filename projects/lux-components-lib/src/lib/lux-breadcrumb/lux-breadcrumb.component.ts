@@ -32,11 +32,11 @@ export class LuxBreadcrumbComponent implements OnDestroy {
   subscriptions: Subscription[] = [];
 
   constructor() {
-    this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs' || this.mediaQueryService.activeMediaQuery === 'sd';
+    this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs' || this.mediaQueryService.activeMediaQuery === 'sm';
 
     this.subscriptions.push(
       this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.mobileView = query === 'xs' || query === 'sd';
+        this.mobileView = query === 'xs' || query === 'sm';
       })
     );
   }
