@@ -7,6 +7,16 @@
   border-radius: var(--lux-theme-app-border-radius);
 }
 
+.cdk-overlay-pane.mat-mdc-dialog-panel.lux-dialog {
+  @include mat.dialog-overrides(
+    (
+      container-max-width: 5000px,
+      container-small-max-width: 5000px,
+      container-min-width: 0
+    )
+  );
+}
+
 lux-dialog-preset {
   height: 100%;
 }
@@ -25,6 +35,7 @@ lux-dialog-structure {
   ));
 
   display: flex;
+  flex: 1 1 auto;
   min-height: 100%;
 
   .lux-dialog {

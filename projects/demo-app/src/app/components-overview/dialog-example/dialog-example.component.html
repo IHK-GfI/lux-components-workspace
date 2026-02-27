@@ -11,20 +11,50 @@
     >
     </lux-toggle-ac>
     <h3>Allgemeine Properties</h3>
-    <lux-input-ac
-      luxName="dialog_width"
-      luxLabel="width"
-      luxHint="Diese Property legt die Breite des Dialogs fest."
-      [(luxValue)]="dialogConfig.width"
-    >
-    </lux-input-ac>
-    <lux-input-ac
-      luxName="dialog_height"
-      luxLabel="height"
-      luxHint="Diese Property legt die Höhe des Dialogs fest."
-      [(luxValue)]="dialogConfig.height"
-    >
-    </lux-input-ac>
+    <div class="lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
+      <lux-input-ac
+        luxName="dialog_width"
+        luxLabel="width"
+        [(luxValue)]="dialogConfig.width"
+        [luxNoBottomLabel]="true"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="dialog_height"
+        luxLabel="height"
+        [(luxValue)]="dialogConfig.height"
+        [luxNoBottomLabel]="true"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="dialog_minWidth"
+        luxLabel="minWidth"
+        [(luxValue)]="dialogConfig.minWidth"
+        [luxNoBottomLabel]="true"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="dialog_minHeight"
+        luxLabel="minHeight"
+        [(luxValue)]="dialogConfig.minHeight"
+        [luxNoBottomLabel]="true"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="dialog_maxWidth"
+        luxLabel="maxWidth"
+        [(luxValue)]="dialogConfig.maxWidth"
+        [luxNoBottomLabel]="true"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="dialog_maxHeight"
+        luxLabel="maxHeight"
+        [(luxValue)]="dialogConfig.maxHeight"
+        [luxNoBottomLabel]="true"
+      >
+      </lux-input-ac>
+    </div>
     @if (!useContentTemplate) {
     <lux-input-ac
       luxName="dialog_panelClass"
