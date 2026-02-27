@@ -18,6 +18,7 @@
       <div class="lux-chip-container">
         <mat-chip-row
           class="lux-chip"
+          [luxTooltip]="''"
           [ngClass]="{
             'lux-chip-disabled': chip.luxDisabled,
             'lux-chip-color-default': !chip.luxColor,
@@ -57,6 +58,7 @@
       <div class="lux-chip-container">
         <mat-chip-row
           class="lux-chip"
+          [luxTooltip]="''"
           [ngClass]="{
             'lux-chip-disabled': chipGroup.luxDisabled,
             'lux-chip-color-default': !chipGroup.luxColor,
@@ -149,5 +151,5 @@
 </div>
 
 <ng-template #noTemplateRef let-label>
-  {{ label }}
+  <span class="lux-chip-label">{{ label }}</span>
 </ng-template>

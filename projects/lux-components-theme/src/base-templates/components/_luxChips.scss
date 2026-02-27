@@ -59,6 +59,27 @@ lux-chips-ac {
     min-height: unset;
   }
 
+  // Lange Chip-Inhalte abschneiden, Icon sichtbar lassen
+  .lux-chip-container {
+    max-width: calc(100% - 8px);
+  }
+
+  .lux-chip {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .lux-chip .mdc-evolution-chip__cell--primary {
+    min-width: 0;
+  }
+
+  .lux-chip .mdc-evolution-chip__text-label,
+  .lux-chip .lux-chip-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-container-authentic {
     padding: 12px 8px;
   }
