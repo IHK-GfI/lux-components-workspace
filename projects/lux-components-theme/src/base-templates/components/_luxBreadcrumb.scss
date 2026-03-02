@@ -35,7 +35,7 @@ lux-breadcrumb {
     display: inline-flex;
     align-items: center;
     max-width: 64ch;
-    min-width: 0;
+    min-width: 8ch;
 
     list-style-type: none;
     box-sizing: border-box;
@@ -91,6 +91,7 @@ lux-breadcrumb {
 
   .lux-breadcrumb-item-dotted {
     text-decoration: none;
+    min-width: auto;
 
     :hover,
     a {
