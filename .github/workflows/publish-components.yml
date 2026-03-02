@@ -41,4 +41,4 @@ jobs:
           npm run pack:components
           cd dist/lux-components-lib
           ls -lR
-          npm publish --tag 19.6.0
+          npm publish --tag v19
