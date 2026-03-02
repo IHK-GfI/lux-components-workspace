@@ -41,4 +41,4 @@ jobs:
           npm run pack:updater
           cd dist/updater
           ls -lR
-          npm publish
+          npm publish --tag 19.6.0
