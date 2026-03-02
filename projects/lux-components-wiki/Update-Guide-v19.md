@@ -195,7 +195,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 - Falls eine neue Node-Version installiert wurde, muss diese auch in die zentralen Builds eingetragen werden.<br>
   D.h. in der _pipeline.yaml_ muss z.B. von _node:18-alpine_ auf _node:22-alpine_ umgestellt werden.
 - Bei der Umstellung auf eine neuere Node-Version sollte der Parameter _--no-optional_ aus der _pipeline.yaml_ entfernt werden.
-- Bitte die _CSP_-Abschnitte in den Dateien _application-xxx.yml_ im _UI-Service_ anpassen.
+- Bitte die _CSP_-Abschnitte in der Datei _application.yml_ und allen _application-xxx.yml_ im _UI-Service_ anpassen.
 
 #### Weiterführende Verweise bei Interesse oder Problemen
 

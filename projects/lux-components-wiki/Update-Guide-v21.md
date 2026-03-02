@@ -141,9 +141,10 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 #### Ergänzung für JAST-Projekte
 
 - Falls eine neue Node-Version installiert wurde, muss diese auch in die zentralen Builds eingetragen werden.<br>
-   Das heißt, in der _pipeline.yaml_ muss z.B. auf _node:24-alpine_ umgestellt werden.
+   Das heißt, in der _pipeline.yaml_ muss z.B. auf _node:24-alpine_, _node-java-alpine:node24-java21_ und _node-chromium:node-24_ umgestellt werden.
 - Bei der Umstellung auf eine neuere Node-Version sollte der Parameter _--no-optional_ aus der _pipeline.yaml_ entfernt werden.
-- Bitte die _CSP_-Abschnitte in den Dateien _application-xxx.yml_ im _UI-Service_ anpassen.
+- Bitte unbedingt alle Schritte für die v21 der JAST-Anleitung _"How To: I18N-Funktionalität (Internationalisation) verwenden"_ des JAST-Stacks durchführen.
+- Bitte die _CSP_-Abschnitte in der Datei _application.yml_ und allen _application-xxx.yml_ im _UI-Service_ anpassen.
 
 #### Weiterführende Verweise bei Interesse oder Problemen
 
