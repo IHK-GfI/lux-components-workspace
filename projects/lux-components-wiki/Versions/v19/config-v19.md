@@ -53,17 +53,18 @@ Dieser Service sollte dann vom Entwickler genutzt werden, wenn die Konfiguration
 
 ### LuxComponentsConfigParameters
 
-| Property                      | Typ     | Beschreibung                                                                                                                                                                                |
-| ----------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| generateLuxTagIds?            | boolean | Bestimmt, ob die LuxTagIds (und dazugehörende) Warnungen generiert werden.                                                                                                                  |
-| displayLuxConsoleLogs?        | boolean | Bestimmt, ob die Ausgaben des LuxConsoleService in die Developer-Console des Browsers geschrieben werden.                                                                                   |
-| lookupServiceUrl?             | string  | Bestimmt den Basepfad des Lookup-Services für die LookupComponents.                                                                                                                         |
-| labelConfiguration?           | Object  | Bestimmt, ob die Labels für LuxButtons, LuxLinks, LuxMenuItems, LuxStepper, LuxSideNavItem und LuxTabs immer Uppercase dargestellt werden. Siehe [labelConfiguration](#labelconfiguration). |
-| cardExpansionAnimationActive? | boolean | Flag, um die Ausklappanimationen von LuxCards zu aktivieren bzw. zu deaktivieren.                                                                                                           |
-| rippleConfiguration?          | Object  | Bestimmt die globalen Einstellungen für die Animationen der LuxRipple-Direktiven. Siehe [rippleConfiguration](#rippleconfiguration).                                                        |
-| iconBasePath?                 | string  | Bestimmt den Basepfad der LUX-Icons.                                                                                                                                                        |
-| tenantLogoLookupServiceUrl    | string  | Bestimmt den Basepfad der Tenantlogos.                                                                                                                                                      |
-| appFooter                     | Object  | Einstellungen des Footers.                                                                                                                                                                  |
+| Property                            | Typ     | Beschreibung                                                                                                                                                                                |
+| ----------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| generateLuxTagIds?                  | boolean | Bestimmt, ob die LuxTagIds (und dazugehörende) Warnungen generiert werden.                                                                                                                  |
+| displayLuxConsoleLogs?              | boolean | Bestimmt, ob die Ausgaben des LuxConsoleService in die Developer-Console des Browsers geschrieben werden.                                                                                   |
+| lookupServiceUrl?                   | string  | Bestimmt den Basepfad des Lookup-Services für die LookupComponents.                                                                                                                         |
+| labelConfiguration?                 | Object  | Bestimmt, ob die Labels für LuxButtons, LuxLinks, LuxMenuItems, LuxStepper, LuxSideNavItem und LuxTabs immer Uppercase dargestellt werden. Siehe [labelConfiguration](#labelconfiguration). |
+| cardExpansionAnimationActive?       | boolean | Flag, um die Ausklappanimationen von LuxCards zu aktivieren bzw. zu deaktivieren.                                                                                                           |
+| rippleConfiguration?                | Object  | Bestimmt die globalen Einstellungen für die Animationen der LuxRipple-Direktiven. Siehe [rippleConfiguration](#rippleconfiguration).                                                        |
+| iconBasePath?                       | string  | Bestimmt den Basepfad der LUX-Icons.                                                                                                                                                        |
+| tenantLogoLookupServiceUrl          | string  | Bestimmt den Basepfad der Tenantlogos.                                                                                                                                                      |
+| appFooter                           | Object  | Einstellungen des Footers.                                                                                                                                                                  |
+| useLocalStorageForComponentsAllowed | boolean | Bestimmt, ob Komponenten (z.B. Table, Tour-Hint und der LuxThemeService) den Local Storage des Browsers nutzen dürfen, um Informationen zu speichern.                                       |
 
 #### appFooter
 
