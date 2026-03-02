@@ -115,6 +115,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private luxConsole = inject(LuxConsoleService);
   private liveAnnouncer = inject(LiveAnnouncer);
   private tService = inject(TranslocoService);
+  private defaultColumnVisibilityStore = inject(LuxTableLocalColumnVisibilityStore);
 
   static AUTO_PAGINATION_START = 100; // 100 Elemente bis automatisch die Pagination aktiviert wird
 
@@ -158,7 +159,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
   luxShowColumnSelector = input<boolean>(false);
   @Input() luxColumnStorageKey?: string;
-  @Input() luxColumnVisibilityStore: ILuxTableColumnVisibilityStore = new LuxTableLocalColumnVisibilityStore();
+  @Input() luxColumnVisibilityStore: ILuxTableColumnVisibilityStore = this.defaultColumnVisibilityStore;
   @Input() luxColWidthsPercent: number[] = [];
   @Input() luxFilterText = 'Filter';
   @Input() luxNoDataText = 'Keine Daten gefunden.';

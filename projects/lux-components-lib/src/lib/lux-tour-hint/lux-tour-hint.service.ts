@@ -1,5 +1,6 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable } from '@angular/core';
+import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
 import { LuxStorageService } from '../lux-util/lux-storage.service';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 import { ILuxTourHintStepConfig } from './lux-tour-hint-model/lux-tour-hint-step-config.interface';
@@ -20,6 +21,7 @@ export class LuxTourHintService {
   private injector = inject(EnvironmentInjector);
   private tourHintRef = inject(LuxTourHintRef);
   private storage = inject(LuxStorageService);
+  private configService = inject(LuxComponentsConfigService);
 
   public tourContainer?: ComponentRef<LuxTourHintComponent>;
 
@@ -136,7 +138,9 @@ export class LuxTourHintService {
   }
 
   private dsaCallback(dsaId: string) {
-    this.storage.setItem(dsaId, 'true', false);
+    if (this.configService.currentConfig.useLocalStorageForComponentsAllowed) {
+      this.storage.setItem(dsaId, 'true', false);
+    }
   }
 
   public clearDSACacheForConfig(tourConfig: ILuxTourHintStepConfig | ILuxTourHintStepConfig[]) {
