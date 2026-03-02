@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LuxComponentsConfigParameters } from './lux-components-config-parameters.interface';
 import { LuxConfigTokenService } from './lux-components-config.module';
@@ -11,6 +12,7 @@ import { LuxConfigTokenService } from './lux-components-config.module';
   providedIn: 'root'
 })
 export class LuxComponentsConfigService {
+  private lastUseLocalStorageForComponentsAllowed = false;
   public static readonly DEFAULT_CONFIG = {
     iconBasePath: '/',
     displayLuxConsoleLogs: false,
@@ -36,7 +38,8 @@ export class LuxComponentsConfigService {
     appFooter: {
       fixedDesktop: true,
       fixedMobile: true
-    }
+    },
+    useLocalStorageForComponentsAllowed: false
   };
 
   private config$: BehaviorSubject<LuxComponentsConfigParameters> = new BehaviorSubject<LuxComponentsConfigParameters>(
@@ -66,6 +69,29 @@ export class LuxComponentsConfigService {
     } else {
       this.config$.next(this.mergeDefaultData(config));
     }
+
+    // Initial-Warnung, falls LocalStorage nicht erlaubt ist
+    this.lastUseLocalStorageForComponentsAllowed = !!this.currentConfig.useLocalStorageForComponentsAllowed;
+    if (!this.lastUseLocalStorageForComponentsAllowed) {
+      this.logLocalStorageWarning();
+    }
+
+    // Warnung bei jeder Änderung
+    this.config$.pipe(takeUntilDestroyed()).subscribe((cfg) => {
+      const nextAllowed = !!cfg.useLocalStorageForComponentsAllowed;
+      if (this.lastUseLocalStorageForComponentsAllowed !== nextAllowed && !nextAllowed) {
+        this.logLocalStorageWarning();
+      }
+      this.lastUseLocalStorageForComponentsAllowed = nextAllowed;
+    });
+  }
+  /**
+   * Gibt eine Warnung aus, wenn LocalStorage nicht erlaubt ist.
+   */
+  private logLocalStorageWarning() {
+    console.warn(
+      'Achtung: Die Nutzung des Local Storage ist deaktiviert (useLocalStorageAllowed = false). Die Funktionsweise der App ist eingeschränkt. Die Komponenten LUX-Table, LUX-Tour-Hint und das LUX-Theme können ihre Einstellungen nicht im Local Storage speichern.'
+    );
   }
 
   /**

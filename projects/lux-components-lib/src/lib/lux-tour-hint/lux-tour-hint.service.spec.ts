@@ -3,6 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { LuxTestHelper } from '../lux-util/testing/lux-test-helper';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 
+import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
 import { LuxTourHintService } from './lux-tour-hint.service';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -215,6 +216,10 @@ describe('LuxTourHintService', () => {
           content: 'content'
         }
       };
+
+      TestBed.inject(LuxComponentsConfigService).updateConfiguration({
+        useLocalStorageForComponentsAllowed: true
+      });
 
       /* ___Vorbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);
