@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/v19.x'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
            ls -lR
 
   publish-npm:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/v19.x'
     needs: build
     runs-on: ubuntu-latest
     steps:
