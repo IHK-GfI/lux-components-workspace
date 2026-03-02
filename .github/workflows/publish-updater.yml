@@ -41,4 +41,4 @@ jobs:
           npm run pack:updater
           cd dist/updater
           ls -lR
-          npm publish --tag v19
+          npm publish --tag v19-lts
