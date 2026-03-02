@@ -2,42 +2,57 @@
 @use "../common/luxbreakpoints";
 
 lux-breadcrumb {
-  padding: 8px; //Für Focusindicator
   margin: 20px 0 36px 0; //Stylevorgaben
-  display: flex;
-  box-sizing: border-box;
+  display: block;
 
   @include luxbreakpoints.lt-md {
     margin: 14px 0;
   }
 
   .lux-breadcrumb {
-    margin: -8px; //Fü Focusindicator
-    padding: 8px;
-    display: inline-flex;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    justify-content: flex-start;
-    gap: 9px;
-    align-items: baseline;
-    overflow: auto;
     max-width: 100%;
   }
 
   .lux-breadcrumb-container {
-    padding: 0%;
-    margin: 0px -2px;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    width: auto;
+    max-width: 100%;
+
+    list-style: none;
+
+    &.lux-breadcrumb-container-wrap {
+      flex-wrap: wrap;
+    }
+  }
+
+  .lux-breadcrumb-item-current,
+  .lux-breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    max-width: 64ch;
+    min-width: 8ch;
+
+    list-style-type: none;
+    box-sizing: border-box;
+    color: var(--lux-theme-primary-color);
+  }
+
+  .lux-breadcrumb-item-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    color: var(--lux-theme-primary-color);
+    padding: 2px 4px;
   }
 
   .lux-breadcrumb-item {
-    display: inline-flex;
-    font-family: var(--lux-theme-app-font-family);
-    font-size: 1.125rem;
-    font-weight: 500;
-    text-decoration: underline;
-    color: var(--lux-theme-primary-color);
-    list-style-type: none;
-    box-sizing: border-box;
+    flex: 0 1 auto;
 
     &.lux-breadcrumb-item-mobile {
       font-size: 1rem;
@@ -57,31 +72,46 @@ lux-breadcrumb {
 
     lux-icon {
       cursor: default;
+      flex: 0 0 auto;
       :hover {
         color: var(--lux-theme-primary-color);
         cursor: default;
       }
     }
+  }
 
-    a {
-      padding: 2px 4px;
-      color: var(--lux-theme-primary-color);
-      margin: 0px -2px;
-      white-space: nowrap;
+  .lux-breadcrumb-item-current {
+    flex: 0 0 content;
+    max-width: 50%;
+
+    .lux-breadcrumb-item-title {
+      text-decoration: none;
     }
   }
 
-  .lux-breadcrumb-current-item {
-    font-family: var(--lux-theme-app-font-family);
-    font-size: 1.125rem;
-    font-weight: 500;
-    color: var(--lux-theme-primary-color);
-    list-style-type: none;
-    padding: 4px;
-    box-sizing: border-box;
+  .lux-breadcrumb-item-dotted {
+    text-decoration: none;
+    min-width: auto;
 
-    &.lux-breadcrumb-current-item-mobile {
-      font-size: 1rem;
+    :hover,
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .lux-breadcrumb-container-wrap {
+    .lux-breadcrumb-item,
+    .lux-breadcrumb-item-current {
+      max-width: 100%;
+      display: inline;
+    }
+
+    .lux-breadcrumb-item-title {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+      line-height: 1.75rem;
+      vertical-align: bottom;
     }
   }
 }
