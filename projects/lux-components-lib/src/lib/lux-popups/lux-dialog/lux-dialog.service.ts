@@ -88,11 +88,18 @@ export class LuxDialogService {
       const dialogRef = new LuxDialogRef();
       const injector = Injector.create({parent: this.parentInjector, providers: [{provide: LuxDialogRef, useValue: dialogRef}]});
 
+      const maxWidth = config.maxWidth ?? (config.width && config.width !== 'auto' ? config.width : undefined);
+      const maxHeight = config.maxHeight ?? (config.height && config.height !== 'auto' ? config.height : undefined);
+
       // Dialog öffnen und Konfiguration übergeben
       const matDialogRef = this.matDialog.open(component, {
         injector,
         width: config.width,
         height: config.height,
+        minWidth: config.minWidth,
+        minHeight: config.minHeight,
+        maxWidth,
+        maxHeight,
         autoFocus: false,
         restoreFocus: true,
         disableClose: config.disableClose,
