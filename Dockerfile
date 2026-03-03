@@ -2,7 +2,7 @@
 # Stage 1: Dependencies
 # Ziel: Deterministische Installation (npm ci) mit Cache-Effekt
 #############################
-FROM node:22-alpine AS deps
+FROM node:24-alpine AS deps
 LABEL maintainer="thomas.dickhut@gfi.ihk.de"
 
 WORKDIR /app
@@ -19,7 +19,7 @@ RUN npm ci --ignore-scripts
 #############################
 # Stage 2: Build
 #############################
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
 
 # node-gyp / build toolchain minimal (nur falls benötigt). Entfernen wenn überflüssig:
