@@ -48,20 +48,21 @@ EXPOSE 8080
 # Sicherheitsupdates für Alpine Basis
 RUN apk update && apk upgrade --no-cache
 
-# Nginx Verzeichnisse + statische Root
-RUN mkdir -p /run/nginx /var/www/html
+# Nginx-Verzeichnisse erstellen und Berechtigungen setzen (kombiniert für weniger Layer)
+RUN mkdir -p /run/nginx /var/www/html /var/cache/nginx /var/log/nginx /var/lib/nginx/logs \
+    && chown -R 1000:1000 /var/lib/nginx /var/cache/nginx /var/log/nginx /run/nginx
 
 # Konfiguration kopieren
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Statischer Build-Output (Ownership direkt setzen, spart separates chown)
-COPY --chown=nginx:nginx --from=build /app/dist/demo-app/browser /var/www/html/
-COPY --chown=nginx:nginx --from=build /app/dist/demo-app/3rdpartylicenses.txt /var/www/html/
+COPY --chown=1000:1000 --from=build /app/dist/demo-app/browser /var/www/html/
+COPY --chown=1000:1000 --from=build /app/dist/demo-app/3rdpartylicenses.txt /var/www/html/
 
-USER nginx
+USER 1000:1000
 WORKDIR /var/www/html
 
-# Healthcheck (optional einkommentieren)
-# HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -q -O /dev/null http://localhost:8080/ || exit 1
+# Healthcheck für Kubernetes/Container-Orchestrierung
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -q -O /dev/null http://localhost:8080/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
