@@ -18,8 +18,19 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   private readonly destroyRef = inject(DestroyRef);
 
   private focusTimeout?: ReturnType<typeof setTimeout>;
+  private focusRestoreTimeout?: ReturnType<typeof setTimeout>;
+  private tabNavigationTimeout?: ReturnType<typeof setTimeout>;
   private panelAttachTimeout?: ReturnType<typeof setTimeout>;
   private panelElement?: HTMLElement;
+  /**
+   * Modelliert, warum das Panel geschlossen wurde.
+   * Damit bleibt der Fokus-Flow deterministisch:
+   * - `default`: Trigger-Fokus ggf. restaurieren
+   * - `native-tab`: nativen Tab-Flow nicht überschreiben
+   * - `manual-tab-*`: Tab aus Filter-Input wurde preventDefault behandelt
+   *   und muss nach dem Schließen manuell fortgesetzt werden.
+   */
+  private closeIntent: CloseIntent = 'default';
   private normalizedLabelCache: string[] = [];
   private itemCache: T[] = [];
   private readonly panelKeydownHandler = (event: KeyboardEvent) => {
@@ -49,6 +60,8 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.removePanelKeydownListener();
     this.clearFocusTimeout();
+    this.clearFocusRestoreTimeout();
+    this.clearTabNavigationTimeout();
   }
 
   setItems(items: readonly T[]): void {
@@ -106,6 +119,9 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     if (!this.luxSelectFilter) {
       return;
     }
+    this.closeIntent = 'default';
+    this.clearFocusRestoreTimeout();
+    this.clearTabNavigationTimeout();
     this.rebuildCache();
     this.applyFilter();
     this.syncActiveItemToVisibleOptions();
@@ -119,6 +135,18 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     }
     this.removePanelKeydownListener();
     this.clearFilter();
+
+    if (this.closeIntent === 'manual-tab-forward' || this.closeIntent === 'manual-tab-backward') {
+      this.executePendingTabNavigation();
+      return;
+    }
+
+    if (this.closeIntent === 'native-tab') {
+      this.closeIntent = 'default';
+      return;
+    }
+
+    this.restoreTriggerFocusIfNeeded();
   }
 
   private rebuildCache(): void {
@@ -170,6 +198,20 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     }
   }
 
+  private clearFocusRestoreTimeout(): void {
+    if (this.focusRestoreTimeout) {
+      clearTimeout(this.focusRestoreTimeout);
+      this.focusRestoreTimeout = undefined;
+    }
+  }
+
+  private clearTabNavigationTimeout(): void {
+    if (this.tabNavigationTimeout) {
+      clearTimeout(this.tabNavigationTimeout);
+      this.tabNavigationTimeout = undefined;
+    }
+  }
+
   private registerPanelKeydownListener(): void {
     this.removePanelKeydownListener();
     const tryAttachListener = () => {
@@ -207,6 +249,23 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     if (!this.matSelect.panelOpen) {
       return false;
     }
+
+    if (source === 'input' && event.key === 'Tab') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeIntent = event.shiftKey ? 'manual-tab-backward' : 'manual-tab-forward';
+
+      this.matSelect.close();
+
+      return true;
+    }
+
+    if (source === 'panel' && event.key === 'Tab') {
+      // Nativer Tab-Flow darf beim Schließen nicht durch Trigger-Restore überschrieben werden.
+      this.closeIntent = 'native-tab';
+      return false;
+    }
+
     if (source === 'panel' && this.isEventFromFilterInput(event)) {
       return false;
     }
@@ -229,13 +288,32 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
         return true;
     }
 
-    if (source === 'panel' && this.isPrintableCharacterKey(event)) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.redirectCharacterInputToFilter(event.key);
+    return false;
+  }
+
+  private restoreTriggerFocusIfNeeded(): void {
+    this.closeIntent = 'default';
+    this.clearFocusRestoreTimeout();
+    this.focusRestoreTimeout = setTimeout(() => {
+      this.focusRestoreTimeout = undefined;
+      if (!this.shouldRestoreTriggerFocus()) {
+        return;
+      }
+      this.matSelect.focus();
+    });
+  }
+
+  private shouldRestoreTriggerFocus(): boolean {
+    const activeElement = document.activeElement;
+    if (!activeElement) {
       return true;
     }
-    return false;
+
+    if (activeElement === document.body || activeElement === document.documentElement) {
+      return true;
+    }
+
+    return activeElement instanceof HTMLElement && !activeElement.isConnected;
   }
 
   private moveActiveVisibleOption(step: 1 | -1): void {
@@ -358,37 +436,43 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     return options.indexOf(activeItem as MatOption);
   }
 
-  private redirectCharacterInputToFilter(character: string): void {
-    this.focusFilterInput();
+  private executePendingTabNavigation(): void {
+    const intent = this.closeIntent;
+    this.closeIntent = 'default';
 
-    // Input-Update nach Fokuswechsel, damit Zeichen sicher im Filter landen
-    setTimeout(() => {
-      const input = this.filterInputRef?.nativeElement;
-      if (!input) {
+    if (intent !== 'manual-tab-forward' && intent !== 'manual-tab-backward') {
+      return;
+    }
+
+    this.clearTabNavigationTimeout();
+    this.tabNavigationTimeout = setTimeout(() => {
+      this.tabNavigationTimeout = undefined;
+      const focusAnchor = this.getTabNavigationAnchorElement();
+      if (!focusAnchor) {
         return;
       }
 
-      input.focus();
-
-      const currentValue = input.value ?? this.filterValue ?? '';
-      const selectionStart = input.selectionStart ?? currentValue.length;
-      const selectionEnd = input.selectionEnd ?? currentValue.length;
-      const nextValue = `${currentValue.slice(0, selectionStart)}${character}${currentValue.slice(selectionEnd)}`;
-
-      this.onFilterInput(nextValue);
-      input.value = nextValue;
-
-      const caret = selectionStart + character.length;
-      input.setSelectionRange(caret, caret);
+      if (intent === 'manual-tab-backward') {
+        LuxSelectFilterUtils.focusPreviousFocusableElement(focusAnchor);
+      } else {
+        LuxSelectFilterUtils.focusNextFocusableElement(focusAnchor);
+      }
     });
   }
 
-  private isPrintableCharacterKey(event: KeyboardEvent): boolean {
-    if (event.ctrlKey || event.altKey || event.metaKey) {
-      return false;
+  private getTabNavigationAnchorElement(): HTMLElement | undefined {
+    const activeElement = document.activeElement;
+    if (activeElement instanceof HTMLElement && activeElement !== document.body && activeElement !== document.documentElement) {
+      return activeElement;
     }
 
-    return event.key.length === 1;
+    const selectHost = this.getInternalSelect()._elementRef?.nativeElement;
+    if (!selectHost) {
+      return undefined;
+    }
+
+    const focusTarget = selectHost.querySelector<HTMLElement>('[tabindex], button, a[href], input, select, textarea');
+    return focusTarget ?? selectHost;
   }
 
   private scrollOptionIntoView(index: number): void {
@@ -437,6 +521,7 @@ interface MatSelectInternal {
   _keyManager?: InternalKeyManager;
   _handleKeydown?(event: KeyboardEvent): void;
   _scrollOptionIntoView?(index: number): void;
+  _elementRef?: ElementRef<HTMLElement>;
 }
 
 interface MatOptionInternal {
@@ -444,3 +529,5 @@ interface MatOptionInternal {
   _element?: ElementRef<HTMLElement>;
   _selectViaInteraction?(): void;
 }
+
+type CloseIntent = 'default' | 'native-tab' | 'manual-tab-forward' | 'manual-tab-backward';

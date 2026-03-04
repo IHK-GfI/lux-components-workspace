@@ -4,6 +4,7 @@ import { ElementRef } from '@angular/core';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LuxSelectFilterDirective } from './lux-select-filter.directive';
+import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 
 @Component({
   selector: 'lux-test-component',
@@ -357,15 +358,56 @@ describe('LuxSelectFilterDirective', () => {
     expect(keyManager.setActiveItem).toHaveBeenCalledWith(2);
   });
 
-  it('sollte Tab aus Input und Panel nativ unbehandelt lassen', () => {
+  it('sollte Tab aus dem Filter-Input behandeln und schließen', fakeAsync(() => {
+    const closeSpy = jasmine.createSpy('close');
+    const focusNextSpy = spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement');
     spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect.close = closeSpy;
+    (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
 
     const fromInput = directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(fromInput).toBeTrue();
+    expect(closeSpy).toHaveBeenCalled();
+    expect(focusNextSpy).toHaveBeenCalled();
+  }));
+
+  it('sollte Shift+Tab aus dem Filter-Input rückwärts behandeln und schließen', fakeAsync(() => {
+    const closeSpy = jasmine.createSpy('close');
+    const focusPreviousSpy = spyOn(LuxSelectFilterUtils, 'focusPreviousFocusableElement');
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect.close = closeSpy;
+    (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
+
+    const fromInput = directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(fromInput).toBeTrue();
+    expect(closeSpy).toHaveBeenCalled();
+    expect(focusPreviousSpy).toHaveBeenCalled();
+  }));
+
+  it('sollte Tab aus dem Panel nativ unbehandelt lassen', () => {
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
     const fromPanel = directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
 
-    expect(fromInput).toBeFalse();
     expect(fromPanel).toBeFalse();
   });
+
+  it('sollte nach nativem Tab aus dem Panel keinen Trigger-Fokus erzwingen', fakeAsync(() => {
+    const focusSpy = jasmine.createSpy('focus');
+    (directive as any).matSelect.focus = focusSpy;
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+
+    directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(focusSpy).not.toHaveBeenCalled();
+  }));
 
   it('sollte Escape nativ unbehandelt lassen', () => {
     spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
@@ -375,24 +417,100 @@ describe('LuxSelectFilterDirective', () => {
     expect(handled).toBeFalse();
   });
 
-  it('sollte Zeichen aus Option ins Filter-Input übernehmen', fakeAsync(() => {
+  it('sollte beim Schließen den Trigger fokussieren, wenn der Fokus verloren ging', fakeAsync(() => {
+    const focusSpy = jasmine.createSpy('focus');
+    (directive as any).matSelect.focus = focusSpy;
+
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(focusSpy).toHaveBeenCalled();
+  }));
+
+  it('sollte nach Tab-basiertem Schließen keinen Trigger-Fokus erzwingen', fakeAsync(() => {
+    const focusSpy = jasmine.createSpy('focus');
+    (directive as any).matSelect.focus = focusSpy;
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+
+    directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(focusSpy).not.toHaveBeenCalled();
+  }));
+
+  it('sollte keinen Trigger-Fokus erzwingen, wenn bereits ein anderes Element fokussiert ist', fakeAsync(() => {
+    const focusSpy = jasmine.createSpy('focus');
+    (directive as any).matSelect.focus = focusSpy;
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    input.focus();
+
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(focusSpy).not.toHaveBeenCalled();
+
+    document.body.removeChild(input);
+  }));
+
+  it('sollte Zeichen im Panel nicht in den Filter umleiten', () => {
     const keyManager = {
       activeItemIndex: 0,
       destroy: jasmine.createSpy('destroy'),
       setActiveItem: jasmine.createSpy('setActiveItem')
     };
-    const input = document.createElement('input');
-    input.value = 'ab';
-    input.setSelectionRange(2, 2);
-    directive.setFilterInputRef(new ElementRef(input));
     directive.filterValue = 'ab';
 
     spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
 
-    directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'c' }));
+    const handled = directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'c' }));
+
+    expect(handled).toBeFalse();
+    expect(directive.filterValue).toBe('ab');
+  });
+
+  it('sollte Tab-Navigation am aktiven Element ausrichten, wenn der Select-Host nicht fokussierbar ist', fakeAsync(() => {
+    const closeSpy = jasmine.createSpy('close');
+    const focusNextSpy = spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement');
+    const activeAnchor = document.createElement('button');
+    document.body.appendChild(activeAnchor);
+    activeAnchor.focus();
+
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect.close = closeSpy;
+    (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
+
+    directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+    (directive as any).onPanelClose();
     tick();
 
-    expect(directive.filterValue).toBe('c');
+    expect(closeSpy).toHaveBeenCalled();
+    expect(focusNextSpy).toHaveBeenCalledWith(activeAnchor);
+
+    document.body.removeChild(activeAnchor);
+  }));
+
+  it('sollte geplante Tab-Navigation bei Destroy abbrechen', fakeAsync(() => {
+    const closeSpy = jasmine.createSpy('close');
+    const focusNextSpy = spyOn(LuxSelectFilterUtils, 'focusNextFocusableElement');
+    const activeAnchor = document.createElement('button');
+    document.body.appendChild(activeAnchor);
+    activeAnchor.focus();
+
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect.close = closeSpy;
+    (directive as any).matSelect._elementRef = new ElementRef(document.createElement('div'));
+
+    directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+    (directive as any).onPanelClose();
+    directive.ngOnDestroy();
+    tick();
+
+    expect(closeSpy).toHaveBeenCalled();
+    expect(focusNextSpy).not.toHaveBeenCalled();
+
+    document.body.removeChild(activeAnchor);
   }));
 });

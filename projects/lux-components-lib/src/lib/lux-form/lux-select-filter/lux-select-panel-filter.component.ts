@@ -112,9 +112,14 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
     // Wenn Directive vorhanden, Keyboard-Navigation delegieren
     if (this.filterDirective) {
       const handled = this.filterDirective.handleKeydown(event);
-      if (handled) {
+
+      // Eigene Overrides werden immer gestoppt.
+      // Nicht behandelte Tasten bleiben isoliert - außer Escape,
+      // damit MatSelect sein natives Close-Verhalten ausführen kann.
+      if (handled || event.key !== 'Escape') {
         event.stopPropagation();
       }
+
       return;
     }
 
