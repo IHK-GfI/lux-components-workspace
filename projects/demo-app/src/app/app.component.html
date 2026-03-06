@@ -274,6 +274,13 @@
         (luxClicked)="router.navigate(['license-hint'])"
       >
       </lux-app-header-ac-nav-menu-item>
+      } @if (mobileView) {
+      <lux-app-header-ac-nav-menu-item
+        luxLabel="Einwilligung"
+        luxAriaLabel="Einwilligung"
+        (luxClicked)="onOpenConsent()"
+      >
+      </lux-app-header-ac-nav-menu-item>
       }
     </lux-app-header-ac-nav-menu>
     <lux-app-header-ac-action-nav>

@@ -4,6 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
 import { environment } from '../environments/environment';
+import { appConsentProvider } from './app.consent';
 import { routes } from './app.routes';
 
 const myConfiguration: LuxComponentsConfigParameters = {
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     importProvidersFrom([LuxComponentsConfigModule.forRoot(myConfiguration)]),
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    appConsentProvider
   ]
 };

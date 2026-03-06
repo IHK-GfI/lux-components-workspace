@@ -10,9 +10,9 @@ export * from './lib/lux-action/lux-button/lux-button.component';
 export * from './lib/lux-action/lux-link-plain/lux-link-plain.component';
 export * from './lib/lux-action/lux-link/lux-link.component';
 export { LuxMenuItemComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
-export { LuxMenuTriggerComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
 export { LuxMenuPanelHeaderComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-panel-header.component';
 export { LuxMenuSectionTitleComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-section-title.component';
+export { LuxMenuTriggerComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
 export * from './lib/lux-action/lux-menu/lux-menu.component';
 
 /**
@@ -138,6 +138,16 @@ export * from './lib/lux-filter/lux-filter-dialog/lux-filter-load-dialog/lux-fil
 export * from './lib/lux-filter/lux-filter-dialog/lux-filter-save-dialog/lux-filter-save-dialog.component';
 export * from './lib/lux-filter/lux-filter-form/lux-filter-form-extended/lux-filter-form-extended.component';
 export * from './lib/lux-filter/lux-filter-form/lux-filter-form.component';
+
+/**
+ * LUX-Consent
+ */
+export * from './lib/lux-consent/lux-consent-config.interface';
+export * from './lib/lux-consent/lux-consent-dialog-launcher';
+export * from './lib/lux-consent/lux-consent-dialog-launcher.service';
+export * from './lib/lux-consent/lux-consent-dialog.component';
+export * from './lib/lux-consent/lux-consent.model';
+export * from './lib/lux-consent/lux-consent.service';
 
 /**
  * LUX-Icon
@@ -309,3 +319,4 @@ export * from './lib/lux-util/testing/lux-test-overlay-helper';
  */
 export * from './lib/lux-theme/lux-theme';
 export * from './lib/lux-theme/lux-theme.service';
+

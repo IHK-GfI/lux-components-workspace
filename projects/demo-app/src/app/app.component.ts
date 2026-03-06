@@ -1,3 +1,4 @@
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { HammerModule } from '@angular/platform-browser';
@@ -24,12 +25,16 @@ import {
   LuxAppService,
   LuxAriaLabelDirective,
   LuxButtonComponent,
+  LuxConsentService,
   LuxConsoleService,
+  LuxDividerComponent,
+  LuxIconRegistryService,
   LuxLinkPlainComponent,
   LuxLookupService,
   LuxMediaQueryObserverService,
   LuxMenuComponent,
   LuxMenuItemComponent,
+  LuxMenuSectionTitleComponent,
   LuxSideNavComponent,
   LuxSideNavFooterComponent,
   LuxSideNavHeaderComponent,
@@ -37,17 +42,13 @@ import {
   LuxSnackbarService,
   LuxTenantLogoComponent,
   LuxThemeService,
-  LuxTooltipDirective,
-  LuxDividerComponent,
-  LuxMenuSectionTitleComponent,
-  LuxIconRegistryService
+  LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
 import { MockLuxLookupService } from './components-overview/lookup-examples/mock-lookup-service';
 import { TenantLogoExampleConfigData } from './components-overview/tenant-logo-example/tenant-logo-example-config/tenant-logo-example-config-data';
 import { TenantLogoExampleHeaderService } from './components-overview/tenant-logo-example/tenant-logo-example-header.service';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-root',
@@ -97,6 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private appService = inject(LuxAppService);
   private mediaQueryService = inject(LuxMediaQueryObserverService);
+  private consentService = inject(LuxConsentService);
   componentsOverviewService = inject(ComponentsOverviewNavigationService);
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
   fixedFooterService = inject(LuxAppFooterFixedService);
@@ -153,8 +155,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.linkService.pushLinkInfos(
       new LuxAppFooterLinkInfo('Datenschutz', 'datenschutz', true),
       new LuxAppFooterLinkInfo('Impressum', 'impressum'),
-      new LuxAppFooterLinkInfo('Lizenzhinweis', 'license-hint')
+      new LuxAppFooterLinkInfo('Lizenzhinweis', 'license-hint'),
+      new LuxAppFooterLinkInfo('Einwilligung', '', true, false, () => this.onOpenConsent())
     );
+
+    this.consentService.openIfNeeded();
   }
 
   ngOnDestroy() {
@@ -178,11 +183,16 @@ export class AppComponent implements OnInit, OnDestroy {
       this.demoUserName = '';
       this.demoUserEmail = '';
       this.demoLoginBtn = 'Anmelden';
+      this.consentService.clearSessionConsent();
     } else {
       this.demoUserName = 'Susanne Sonnenschein';
       this.demoUserEmail = 'susanne.sonnenschein@example.com';
       this.demoLoginBtn = 'Abmelden';
     }
+  }
+
+  onOpenConsent() {
+    this.consentService.open();
   }
 
   goToHome() {

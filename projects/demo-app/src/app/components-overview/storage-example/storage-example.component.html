@@ -10,14 +10,14 @@
         <div class="lux-flex lux-flex-col lux-gap-2">
           <div class="lux-flex">
             <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Key:</b></div>
-            <div class="lux-flex-auto">{{ localStorage.key(i) }}</div>
+            <div class="lux-flex-auto">{{ localKeys[i] }}</div>
           </div>
           <div class="lux-flex">
             <div class="lux-flex lux-flex-basis-12 lux-flex-shrink-0 lux-flex-grow-0"><b>Value:</b></div>
-            <div class="lux-flex-auto">{{ luxStorageService.getItemAsObservable(localStorage.key(i)!) | async }}</div>
+            <div class="lux-flex-auto">{{ luxStorageService.getItemAsObservable(localKeys[i]!) | async }}</div>
           </div>
         </div>
-        @if (!localStorage.key(i)!.endsWith('sensitive')) {
+        @if (!localKeys[i]!.endsWith('sensitive')) {
         <div class="lux-flex lux-gap-2 lt-md:lux-flex-col lt-md:lux-gap-0">
           <lux-input-ac class="lux-flex-auto" luxLabel="Neuer Value" #luxInput [luxNoBottomLabel]="true"></lux-input-ac>
           <div class="lux-flex lux-flex-none lux-gap-2">
@@ -29,7 +29,7 @@
               [luxRounded]="true"
               [luxDisabled]="!luxInput.luxValue"
               luxAriaLabel="Wert speichern"
-              (luxClicked)="updateExisting(localStorage.key(i)!, luxInput)"
+              (luxClicked)="updateExisting(localKeys[i]!, luxInput)"
             >
             </lux-button>
             <lux-button
@@ -38,7 +38,7 @@
               luxColor="warn"
               luxTagId="remove-storage-entry-btn"
               [luxRounded]="true"
-              (luxClicked)="luxStorageService.removeItem(localStorage.key(i)!)"
+              (luxClicked)="luxStorageService.removeItem(localKeys[i]!)"
               luxAriaLabel="Wert löschen"
             >
             </lux-button>

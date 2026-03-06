@@ -10,7 +10,7 @@
   } @if (linkInfos) {
   <div class="lux-app-footer-links">
     @for (linkItem of linkInfos; track linkItem) { @if (linkItem.alwaysVisible || desktopView) {
-    <lux-link [luxLabel]="linkItem.label" [luxHref]="linkItem.path" [luxBlank]="linkItem.blank"> </lux-link>
+    <lux-link [luxLabel]="linkItem.label" [luxHref]="linkItem.path" [luxBlank]="linkItem.blank" (luxClicked)="linkItem.onClick?.(linkItem)"> </lux-link>
     } }
   </div>
   }

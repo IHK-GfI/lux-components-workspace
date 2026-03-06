@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
+import { LuxConsentPurpose } from '../lux-consent/lux-consent.model';
+import { LuxConsentService } from '../lux-consent/lux-consent.service';
 import { LuxConsoleService } from '../lux-util/lux-console.service';
 import { LuxStorageService } from '../lux-util/lux-storage.service';
 import { LuxTheme } from './lux-theme';
@@ -10,8 +11,7 @@ import { LuxTheme } from './lux-theme';
 })
 export class LuxThemeService {
   private storageService = inject(LuxStorageService);
-  private configService = inject(LuxComponentsConfigService);
-
+  private consentService = inject(LuxConsentService);
   private readonly storageKeyThemeName = 'lux.app.theme.name';
   private themes: LuxTheme[];
   private theme$: BehaviorSubject<LuxTheme>;
@@ -35,7 +35,7 @@ export class LuxThemeService {
 
   setTheme(themeName: string) {
     this.theme$.next(this.findTheme(themeName));
-    if (this.configService.currentConfig.useLocalStorageForComponentsAllowed) {
+    if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
       this.storageService.setItem(this.storageKeyThemeName, themeName, false);
     }
     this.loadTheme();
@@ -87,13 +87,17 @@ export class LuxThemeService {
   private getInitTheme() {
     let theme;
 
-    // Prüfe, ob im Storage ein Themename hinterlegt ist.
-    const storedThemeName = this.storageService.getItem(this.storageKeyThemeName);
-    if (storedThemeName) {
-      const selectedTheme = this.themes.find((currentTheme) => currentTheme.name === storedThemeName);
-      if (selectedTheme) {
-        theme = selectedTheme;
+    if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
+      // Prüfe, ob im Storage ein Themename hinterlegt ist.
+      const storedThemeName = this.storageService.getItem(this.storageKeyThemeName);
+      if (storedThemeName) {
+        const selectedTheme = this.themes.find((currentTheme) => currentTheme.name === storedThemeName);
+        if (selectedTheme) {
+          theme = selectedTheme;
+        }
       }
+    } else {
+      this.storageService.removeItem(this.storageKeyThemeName)
     }
 
     // Wenn kein Theme hinterlegt wurde, nimm das erste verfügbare Theme.
