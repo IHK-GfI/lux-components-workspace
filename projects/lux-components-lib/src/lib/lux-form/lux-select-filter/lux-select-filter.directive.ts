@@ -258,7 +258,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
 
   private restoreTriggerFocusIfNeeded(): void {
     this.setTimer('focusRestore', () => {
-      if (this.shouldRestoreTriggerFocus()) this.matSelect.focus();
+      this.matSelect.focus();
     });
   }
 
