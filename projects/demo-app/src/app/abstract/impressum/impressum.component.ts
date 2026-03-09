@@ -15,6 +15,8 @@ export class ImpressumComponent implements OnInit {
   private impressumContent = inject(ImpressumContentService);
   private cdr = inject(ChangeDetectorRef);
 
+  @Input() fullWidth = false;
+
   @Input()
   public content?: string;
 

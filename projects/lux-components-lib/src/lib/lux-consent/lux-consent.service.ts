@@ -3,7 +3,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ILuxConsentConfig } from './lux-consent-config.interface';
 import { LUX_CONSENT_DIALOG_LAUNCHER } from './lux-consent-dialog-launcher';
-import { LuxConsentPurpose, LuxConsentState } from './lux-consent.model';
+import LUX_CONSENT_ENTRIES from './lux-consent-entries';
+import { LuxConsentEntry, LuxConsentPurpose, LuxConsentState } from './lux-consent.model';
 
 const LUX_CONSENT_COOKIE_DEFAULT_KEY = 'lux-app-consent';
 
@@ -88,8 +89,7 @@ export class LuxConsentService {
   }
 
   acceptAll(configOverride?: Partial<ILuxConsentConfig>): void {
-    const allPurposes = Object.values(LuxConsentPurpose);
-    this.saveConsent(allPurposes, configOverride);
+    this.saveConsent(this.getAcceptedPurposesForAcceptAll(configOverride), configOverride);
   }
 
   declineNonFunctional(configOverride?: Partial<ILuxConsentConfig>): void {
@@ -148,6 +148,15 @@ export class LuxConsentService {
     // Session-Storage Einwilligung entfernen, da Cookie gesetzt wurde
     sessionStorage.removeItem(config.cookieKey);
     this.consentState$.next(state);
+  }
+
+  private getAcceptedPurposesForAcceptAll(configOverride?: Partial<ILuxConsentConfig>): LuxConsentPurpose[] {
+    const config = this.resolveConfig(configOverride);
+    const configuredEntries: LuxConsentEntry[] = [...LUX_CONSENT_ENTRIES, ...(config.entries ?? [])];
+    const acceptedPurposes = new Set(configuredEntries.map((entry) => entry.purpose));
+    acceptedPurposes.add(LuxConsentPurpose.Essential);
+
+    return Object.values(LuxConsentPurpose).filter((purpose) => acceptedPurposes.has(purpose));
   }
 
   private loadConsent(configOverride?: Partial<ILuxConsentConfig>): void {

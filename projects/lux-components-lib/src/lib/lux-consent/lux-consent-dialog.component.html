@@ -29,7 +29,7 @@
           @if (activeSection === 'consent' && !isExpanded) {
             <div class="lux-flex lux-flex-col lux-gap-4 lux-pb-4">
               @for (category of cookieCategories; track $index) {
-                @if (hasEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
+                @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
                   <lux-toggle-ac
                     [luxNoTopLabel]="true"
                     [luxDense]="true"
@@ -62,7 +62,7 @@
                   <div class="purpose-checkboxes">
                     <lux-checkbox-container-ac>
                       @for (category of cookieCategories; track $index) {
-                        @if (hasEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
+                        @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
                           <lux-checkbox-ac
                             [luxNoLabels]="true"
                             [luxLabel]="category.name"
@@ -80,7 +80,7 @@
                 <div class="cookies-content lux-p-4">
                   <h3 i18n="@@luxc.consent.cookies_used_title">Verwendete Cookies</h3>
                   @for (category of cookieCategories; track $index) {
-                    @if (hasEntriesForCategory(category.purpose)) {
+                    @if (hasConfiguredEntriesForCategory(category.purpose)) {
                       <div class="purpose-section">
                         <h4 class="purpose-title">{{ category.name }}</h4>
                         <p>
@@ -88,10 +88,10 @@
                         </p>
 
                         @for (type of storageTypes; track $index) {
-                          @if (getTableData(category.purpose, type).length > 0) {
+                          @if (getEntriesForPurposeAndType(category.purpose, type).length > 0) {
                             <div class="storage-type-section">
                               <h5 class="storage-type-title">{{ type }}</h5>
-                              <lux-table [luxData]="getTableData(category.purpose, type)">
+                              <lux-table [luxData]="getEntriesForPurposeAndType(category.purpose, type)">
                                 <lux-table-column luxColumnDef="name">
                                   <lux-table-column-header>
                                     <ng-template i18n="@@luxc.consent.table_header_name">Name</ng-template>

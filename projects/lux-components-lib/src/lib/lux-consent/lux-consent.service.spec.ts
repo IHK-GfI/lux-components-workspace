@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { CookieService } from 'ngx-cookie-service';
 import { ILuxConsentConfig } from './lux-consent-config.interface';
 import { LUX_CONSENT_DIALOG_LAUNCHER } from './lux-consent-dialog-launcher';
-import { LuxConsentPurpose } from './lux-consent.model';
+import { LuxConsentPurpose, LuxConsentStorageType } from './lux-consent.model';
 import { LUX_CONSENT_CONFIG, LuxConsentService } from './lux-consent.service';
 
 describe('LuxConsentService (config overrides)', () => {
@@ -93,5 +93,26 @@ describe('LuxConsentService (config overrides)', () => {
     service.acceptAll();
 
     expect(cookieStore.has(baseKey)).toBeTrue();
+  });
+
+  it('acceptAll stores only essential and purposes with entries', () => {
+    service.acceptAll({
+      entries: [
+        {
+          type: LuxConsentStorageType.Cookie,
+          name: 'consent-marketing',
+          processingCountry: 'DE',
+          purpose: LuxConsentPurpose.Marketing,
+          duration: '1 Jahr',
+          description: 'Marketing Consent'
+        }
+      ]
+    });
+
+    const saved = cookieStore.get(baseKey);
+    expect(saved).toBeTruthy();
+
+    const parsed = JSON.parse(saved!) as { purposes: LuxConsentPurpose[] };
+    expect(parsed.purposes).toEqual([LuxConsentPurpose.Essential, LuxConsentPurpose.Marketing]);
   });
 });

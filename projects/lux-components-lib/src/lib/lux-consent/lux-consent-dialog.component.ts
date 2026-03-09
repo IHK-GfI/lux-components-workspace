@@ -83,10 +83,10 @@ export class LuxConsentDialogComponent implements OnInit {
     // merge default entries with any entries provided via DI config
     this.combinedEntries = [...LUX_CONSENT_ENTRIES, ...(this.consentConfig?.entries ?? [])];
 
-    this.precomputeTableData();
+    this.buildTableDataByPurposeAndType();
   }
 
-  precomputeTableData() {
+  private buildTableDataByPurposeAndType() {
     this.tableDataByPurposeAndType = {};
     for (const category of this.cookieCategories) {
       for (const type of this.storageTypes) {
@@ -98,12 +98,12 @@ export class LuxConsentDialogComponent implements OnInit {
     }
   }
 
-  getTableData(purpose: LuxConsentPurpose, type: LuxConsentStorageType): LuxConsentEntry[] {
+  getEntriesForPurposeAndType(purpose: LuxConsentPurpose, type: LuxConsentStorageType): LuxConsentEntry[] {
     return this.tableDataByPurposeAndType[`${purpose}_${type}`] || [];
   }
 
-  protected hasEntriesForCategory(purpose: LuxConsentPurpose): boolean {
-    return this.storageTypes.some((type) => this.getTableData(purpose, type).length > 0);
+  protected hasConfiguredEntriesForCategory(purpose: LuxConsentPurpose): boolean {
+    return this.storageTypes.some((type) => this.getEntriesForPurposeAndType(purpose, type).length > 0);
   }
 
   toggleDetails() {
@@ -140,14 +140,14 @@ export class LuxConsentDialogComponent implements OnInit {
     });
   }
 
-  protected getCategoryByPurpose(purpose: LuxConsentPurpose) {
+  protected findCategoryByPurpose(purpose: LuxConsentPurpose) {
     return this.cookieCategories.find((cat) => cat.purpose === purpose);
   }
 
-  protected toggleCategoryEnabled(purpose: LuxConsentPurpose, $event: boolean) {
-    const category = this.getCategoryByPurpose(purpose);
+  protected toggleCategoryEnabled(purpose: LuxConsentPurpose, isEnabled: boolean) {
+    const category = this.findCategoryByPurpose(purpose);
     if (category && !category.disabled) {
-      category.enabled = $event;
+      category.enabled = isEnabled;
     }
   }
 

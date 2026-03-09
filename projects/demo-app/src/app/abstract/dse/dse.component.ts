@@ -15,6 +15,8 @@ export class DseComponent implements OnInit {
   private dseContent = inject(DseContentService);
   private cdr = inject(ChangeDetectorRef);
 
+  @Input() fullWidth = false;
+
   @Input()
   public content?: string;
 

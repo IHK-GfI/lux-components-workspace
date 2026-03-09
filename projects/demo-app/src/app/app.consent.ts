@@ -5,7 +5,9 @@ export const appConsentProvider = {
   useFactory: () => ({
     cookieKey: 'lux-app-demo-consent',
     impressumComponentLoader: () => import('./abstract/impressum/impressum.component').then((m) => m.ImpressumComponent),
+    impressumComponentInputs: { fullWidth: true },
     datenschutzComponentLoader: () => import('./abstract/dse/dse.component').then((m) => m.DseComponent),
+    datenschutzComponentInputs: { fullWidth: true },
     entries: [
       {
         type: LuxConsentStorageType.LocalStorage,
