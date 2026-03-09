@@ -262,13 +262,6 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     });
   }
 
-  private shouldRestoreTriggerFocus(): boolean {
-    const activeElement = document.activeElement;
-    if (!activeElement) return true;
-    if (activeElement === document.body || activeElement === document.documentElement) return true;
-    return activeElement instanceof HTMLElement && !activeElement.isConnected;
-  }
-
   private scheduleManualTabNavigation(intent: ManualTabIntent): void {
     this.setTimer('tabNavigation', () => {
       const focusAnchor = this.getTabNavigationAnchorElement();

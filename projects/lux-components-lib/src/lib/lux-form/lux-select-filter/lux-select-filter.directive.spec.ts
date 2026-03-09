@@ -439,21 +439,6 @@ describe('LuxSelectFilterDirective', () => {
     expect(focusSpy).not.toHaveBeenCalled();
   }));
 
-  it('sollte keinen Trigger-Fokus erzwingen, wenn bereits ein anderes Element fokussiert ist', fakeAsync(() => {
-    const focusSpy = jasmine.createSpy('focus');
-    (directive as any).matSelect.focus = focusSpy;
-    const input = document.createElement('input');
-    document.body.appendChild(input);
-    input.focus();
-
-    (directive as any).onPanelClose();
-    tick();
-
-    expect(focusSpy).not.toHaveBeenCalled();
-
-    document.body.removeChild(input);
-  }));
-
   it('sollte Zeichen im Panel nicht in den Filter umleiten', () => {
     const keyManager = {
       activeItemIndex: 0,
