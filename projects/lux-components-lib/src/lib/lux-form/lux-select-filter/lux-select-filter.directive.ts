@@ -114,6 +114,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     if (!this.luxSelectFilter) return;
 
     this.removePanelKeydownListener();
+    this.clearPanelFilterOffset();
     this.clearFilter();
 
     const closeAction = this.consumeCloseIntent();
@@ -207,6 +208,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
       }
 
       this.panelElement = panel;
+      this.updatePanelFilterOffset(panel);
       // Capture: eigene Sichtbarkeitsnavigation vor MatSelect-Handler ausführen.
       panel.addEventListener('keydown', this.panelKeydownHandler, true);
     };
@@ -302,7 +304,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
         ? step === 1
           ? 0
           : visibleOptionIndexes.length - 1
-        : (currentVisiblePos + step + visibleOptionIndexes.length) % visibleOptionIndexes.length;
+        : Math.max(0, Math.min(currentVisiblePos + step, visibleOptionIndexes.length - 1));
 
     const targetIndex = visibleOptionIndexes[nextVisiblePos];
     keyManager.setActiveItem(targetIndex);
@@ -391,10 +393,16 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   }
 
   private scrollOptionIntoView(index: number): void {
+    const panel = this.matSelect.panel?.nativeElement as HTMLElement | undefined;
+    const option = (this.matSelect.options?.toArray?.() ?? [])[index];
+    if (!panel || !option) return;
+
     const scrollFn = this.internalSelect._scrollOptionIntoView;
-    if (typeof scrollFn === 'function' && this.matSelect.panel?.nativeElement) {
+    if (typeof scrollFn === 'function') {
       scrollFn.call(this.matSelect, index);
     }
+
+    this.ensureOptionVisibleBelowFilter(panel, option);
   }
 
   private getInternalKeyManager(): InternalKeyManager | undefined {
@@ -410,6 +418,52 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   private isEventFromFilterInput(event: KeyboardEvent): boolean {
     const target = event.target as HTMLElement | null;
     return !!target?.closest('.lux-select-panel-filter, .lux-select-panel-filter-input');
+  }
+
+  private ensureOptionVisibleBelowFilter(panel: HTMLElement, option: MatOption): void {
+    const optionHost = this.getOptionHostElement(option);
+    if (!optionHost) return;
+
+    const filterHeight = this.getFilterHeight(panel);
+    if (filterHeight <= 0) return;
+
+    const panelRect = panel.getBoundingClientRect();
+    const optionRect = optionHost.getBoundingClientRect();
+    const visibleTop = panelRect.top + filterHeight;
+    const visibleBottom = panelRect.bottom;
+
+    if (optionRect.top < visibleTop) {
+      panel.scrollTop -= visibleTop - optionRect.top;
+      return;
+    }
+
+    if (optionRect.bottom > visibleBottom) {
+      panel.scrollTop += optionRect.bottom - visibleBottom;
+    }
+  }
+
+  private updatePanelFilterOffset(panel: HTMLElement): void {
+    const filterHeight = this.getFilterHeight(panel);
+    panel.style.setProperty('--lux-select-filter-offset', `${filterHeight}px`);
+  }
+
+  private clearPanelFilterOffset(): void {
+    const panel = this.matSelect.panel?.nativeElement as HTMLElement | undefined;
+    if (!panel) return;
+
+    panel.style.removeProperty('--lux-select-filter-offset');
+  }
+
+  private getFilterHeight(panel: HTMLElement): number {
+    const filterHost = panel.querySelector<HTMLElement>('lux-select-panel-filter');
+    if (!filterHost) return 0;
+
+    const style = window.getComputedStyle(filterHost);
+    if (style.display === 'none' || style.visibility === 'hidden') {
+      return 0;
+    }
+
+    return filterHost.getBoundingClientRect().height;
   }
 }
 

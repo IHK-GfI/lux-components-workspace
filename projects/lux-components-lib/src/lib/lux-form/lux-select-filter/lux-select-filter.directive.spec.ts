@@ -148,7 +148,7 @@ describe('LuxSelectFilterDirective', () => {
 
     expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
     expect(keyManager.setActiveItem).toHaveBeenCalledWith(1);
-    expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
+    expect(keyManager.setActiveItem).toHaveBeenCalledWith(1);
   });
 
   it('sollte bei ArrowUp im Filter fortlaufend nach oben navigieren', () => {
@@ -179,7 +179,7 @@ describe('LuxSelectFilterDirective', () => {
 
     expect(keyManager.setActiveItem).toHaveBeenCalledWith(1);
     expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
-    expect(keyManager.setActiveItem).toHaveBeenCalledWith(1);
+    expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
   });
 
   it('sollte bei Filteränderung aktive unsichtbare Option auf erste sichtbare setzen', () => {

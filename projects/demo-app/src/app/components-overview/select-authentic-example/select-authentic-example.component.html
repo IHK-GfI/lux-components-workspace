@@ -21,6 +21,7 @@
         [luxFilterPlaceholder]="filterPlaceholder"
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="value"
@@ -54,6 +55,7 @@
         [luxFilterPlaceholder]="filterPlaceholder"
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
         [luxMultiple]="true"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="multiselectValue"
@@ -86,6 +88,7 @@
         [luxFilterPlaceholder]="filterPlaceholder"
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
@@ -164,6 +167,14 @@
         luxLabel="luxFilterClearAriaLabel"
         luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
         [(luxValue)]="filterClearAriaLabel"
+      >
+      </lux-input-ac>
+      <lux-input-ac
+        luxName="select_luxVisibleOptionCount"
+        luxLabel="luxVisibleOptionCount"
+        luxHint="Begrenzt die Anzahl der sichtbaren Optionen im Dropdown. 0 verwendet die Standardhöhe."
+        [(luxValue)]="visibleOptionCount"
+        luxType="number"
       >
       </lux-input-ac>
     }

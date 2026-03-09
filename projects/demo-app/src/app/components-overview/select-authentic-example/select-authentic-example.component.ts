@@ -64,6 +64,7 @@ export class SelectAuthenticExampleComponent {
   filterPlaceholder = 'Filter';
   filterValue = '';
   filterClearAriaLabel = 'Clear filter';
+  visibleOptionCount = 0;
   // prettier-ignore
   options: { label: string; value: number }[] = [
     { label: 'Argentinien, Bolivien, Chile, Costa Rica, Dominikanische Republik, Ecuador, El Salvador, Guatemala, Honduras, Kolumbien, Kuba, Mexiko', value: 0 },

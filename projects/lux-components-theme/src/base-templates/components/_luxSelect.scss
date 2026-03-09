@@ -10,13 +10,21 @@
     )
   );
 
-  .lux-select-panel-filter {
+  lux-select-panel-filter {
     position: sticky;
     top: 0;
     z-index: 2;
-    padding: 8px 8px 4px;
+    display: block;
+    box-sizing: border-box;
     background-color: var(--lux-theme-panel-bg-color);
     border-bottom: 1px solid var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant));
+  }
+
+  .lux-select-panel-filter {
+    display: block;
+    box-sizing: border-box;
+    padding: 8px 8px 4px;
+    background-color: var(--lux-theme-panel-bg-color);
   }
 
   .lux-select-panel-filter-option {
@@ -35,6 +43,11 @@
 
   &.lux-select-panel-ac-filter {
     padding-top: 0;
+    scroll-padding-top: var(--lux-select-filter-offset, 0px);
+  }
+
+  &.lux-select-panel-ac-filter .mat-mdc-option {
+    scroll-margin-top: var(--lux-select-filter-offset, 0px);
   }
 }
 

@@ -48,6 +48,7 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
   filterPlaceholder = 'Filter';
   filterValue = '';
   filterClearAriaLabel = 'Clear filter';
+  visibleOptionCount = 0;
   labelLongFormat = false;
   denseFormat = false;
   value336 = {

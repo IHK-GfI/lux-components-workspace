@@ -927,7 +927,7 @@ describe('LuxSelectAcComponent', () => {
       expect(activeItem?.value?.value).toBe('B');
     }));
 
-    it('navigiert mit Pfeiltasten zyklisch über gefilterte Optionen', fakeAsync(() => {
+    it('stoppt mit Pfeiltasten an der letzten gefilterten Option', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
@@ -951,7 +951,7 @@ describe('LuxSelectAcComponent', () => {
       flush();
 
       const activeItem = (luxSelect.matSelect as any)?._keyManager?.activeItem;
-      expect(activeItem?.value?.value).toBe('A');
+      expect(activeItem?.value?.value).toBe('D');
     }));
 
     it('schließt im Single-Select bei Enter auf aktiver Option und erlaubt erneute Arrow-Navigation', fakeAsync(() => {
@@ -1219,6 +1219,25 @@ describe('LuxSelectAcComponent', () => {
       expect(document.activeElement).toBe(filterInput);
     }));
   });
+
+  describe('mit konfigurierter sichtbarer Optionsanzahl', () => {
+    it('begrenzt die Panelhöhe auf die konfigurierte Anzahl sichtbarer Optionen', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectVisibleOptionCountComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const panel = document.querySelector('.mat-mdc-select-panel') as HTMLElement;
+      const options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
+      const optionHeight = options[0].getBoundingClientRect().height;
+      const maxHeight = parseFloat(panel.style.maxHeight);
+
+      expect(maxHeight).toBeCloseTo(optionHeight * 2, 0);
+    }));
+  });
 });
 
 @Component({
@@ -1401,6 +1420,27 @@ class SelectFilterReactiveFormComponent {
 })
 class SelectFilterMultipleComponent {
   selectedOptions: Option[] = [];
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      [luxOptions]="options"
+      luxOptionLabelProp="label"
+      [luxVisibleOptionCount]="2"
+      [(luxSelected)]="selectedOption"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectVisibleOptionCountComponent {
+  selectedOption: Option | null = null;
   options: Option[] = [
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },

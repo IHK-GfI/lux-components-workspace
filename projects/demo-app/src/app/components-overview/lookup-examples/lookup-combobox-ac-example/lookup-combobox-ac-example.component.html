@@ -31,6 +31,7 @@
         [luxFilterPlaceholder]="filterPlaceholder"
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
         [luxWithEmptyEntry]="bLuxWithEmptyEntry"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
@@ -71,6 +72,7 @@
         [luxFilterPlaceholder]="filterPlaceholder"
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
         [luxWithEmptyEntry]="bLuxWithEmptyEntry"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
@@ -108,6 +110,7 @@
         [luxFilterPlaceholder]="filterPlaceholder"
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
         [luxCompareFn]="compareFn"
@@ -220,6 +223,16 @@
       <lux-form-hint>
         Mit dieser Property wird die Anzahl der maximal dargestellten Optionen bestimmt.<br />
         Wenn mehr Datensätze vorhanden sind und der User in der Liste scrollt, wird der nächste Block gerendert.
+      </lux-form-hint>
+    </lux-input-ac>
+    <lux-input-ac
+      luxName="lookup-combobox_luxVisibleOptionCount"
+      luxLabel="luxVisibleOptionCount"
+      [(luxValue)]="visibleOptionCount"
+      luxType="number"
+    >
+      <lux-form-hint>
+        Begrenzt die sichtbare Panelhöhe auf eine feste Anzahl Optionen. 0 verwendet die Standardhöhe und ändert `luxEntryBlockSize` nicht.
       </lux-form-hint>
     </lux-input-ac>
     <lux-toggle-ac

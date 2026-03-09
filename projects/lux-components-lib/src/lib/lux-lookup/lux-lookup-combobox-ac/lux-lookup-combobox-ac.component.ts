@@ -10,6 +10,7 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxFormControlWrapperComponent } from '../../lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxSelectFilterDirective } from '../../lux-form/lux-select-filter/lux-select-filter.directive';
 import { LuxSelectPanelFilterComponent } from '../../lux-form/lux-select-filter/lux-select-panel-filter.component';
+import { LuxSelectVisibleOptionCountDirective } from '../../lux-form/lux-select-filter/lux-select-visible-option-count.directive';
 import { LuxLookupComponent } from '../lux-lookup-model/lux-lookup-component';
 import { LuxLookupErrorStateMatcher } from '../lux-lookup-model/lux-lookup-error-state-matcher';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
@@ -29,7 +30,8 @@ import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry'
     MatOption,
     NgStyle,
     LuxSelectPanelFilterComponent,
-    LuxSelectFilterDirective
+    LuxSelectFilterDirective,
+    LuxSelectVisibleOptionCountDirective
   ]
 })
 export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLookupComponent<T> implements AfterViewInit, OnDestroy {
@@ -51,6 +53,12 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    * werden weitere Einträge in Blöcken dieser Größe nachgeladen.
    */
   @Input() luxEntryBlockSize = 25;
+
+  /**
+   * Begrenzt die Anzahl der gleichzeitig sichtbaren Optionen im geöffneten Panel.
+   * Werte <= 0 deaktivieren das Override und verwenden die Standardhöhe.
+   */
+  @Input() luxVisibleOptionCount?: number | null;
 
   /**
    * Steuert, ob ein zusätzlicher Leereintrag ("keine Auswahl") angeboten wird.

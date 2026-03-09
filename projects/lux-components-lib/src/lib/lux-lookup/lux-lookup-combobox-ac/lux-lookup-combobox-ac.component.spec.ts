@@ -450,7 +450,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       expect(activeItem?.value?.key).toBe('1100');
     }));
 
-    it('navigiert mit Pfeiltasten zyklisch über gefilterte Optionen', fakeAsync(() => {
+    it('stoppt mit Pfeiltasten an der letzten gefilterten Option', fakeAsync(() => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
       fixture.detectChanges();
 
@@ -474,7 +474,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxAcComponent))
         .componentInstance as LuxLookupComboboxAcComponent;
       const activeItem = (luxLookup.matSelect as any)?._keyManager?.activeItem;
-      expect(activeItem?.value?.key).toBe('1');
+      expect(activeItem?.value?.key).toBe('1100');
     }));
 
     it('schließt im Single-Select bei Enter auf aktiver Option und erlaubt erneute Arrow-Navigation', fakeAsync(() => {
@@ -813,6 +813,28 @@ describe('LuxLookupComboboxAcComponent', () => {
 
       expect(document.activeElement).toBe(filterInput);
     }));
+
+    it('begrenzt die Panelhöhe unabhängig von luxEntryBlockSize', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxVisibleOptionCountComponent);
+      fixture.detectChanges();
+      flush();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const panel = document.querySelector('.mat-mdc-select-panel') as HTMLElement;
+      const filterHost = document.querySelector('lux-select-panel-filter') as HTMLElement;
+      const options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
+      const optionHeight = options[0].getBoundingClientRect().height;
+      const filterHeight = filterHost.getBoundingClientRect().height;
+      const maxHeight = parseFloat(panel.style.maxHeight);
+      const combobox = fixture.componentInstance.combobox;
+
+      expect(combobox.displayedEntries.length).toBe(5);
+      expect(maxHeight).toBeCloseTo(filterHeight + optionHeight * 2, 0);
+    }));
   });
 });
 
@@ -998,6 +1020,34 @@ class LuxFilterMultipleComponent {
     fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
   });
   value: LuxLookupTableEntry[] = [];
+}
+
+@Component({
+  template: `
+    <lux-lookup-combobox-ac
+      luxTableNo="11"
+      [(luxValue)]="value"
+      [luxEnableFilter]="true"
+      [luxEntryBlockSize]="5"
+      [luxVisibleOptionCount]="2"
+      [luxWithEmptyEntry]="false"
+      luxLookupId="visiblecountcombo"
+      luxRenderProp="kurzText"
+      [luxParameters]="params"
+      [luxLabel]="'Label'"
+    ></lux-lookup-combobox-ac>
+  `,
+  imports: [LuxLookupComboboxAcComponent]
+})
+class LuxVisibleOptionCountComponent {
+  @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
+
+  params = new LuxLookupParameters({
+    knr: 101,
+    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+  });
+
+  value?: LuxLookupTableEntry | null;
 }
 
 const mockResultTest = [

@@ -10,6 +10,7 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
 import { LuxSelectFilterDirective } from '../lux-select-filter/lux-select-filter.directive';
 import { LuxSelectPanelFilterComponent } from '../lux-select-filter/lux-select-panel-filter.component';
+import { LuxSelectVisibleOptionCountDirective } from '../lux-select-filter/lux-select-visible-option-count.directive';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-base.class';
 
@@ -35,7 +36,8 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     LuxTagIdDirective,
     LuxRenderPropertyPipe,
     LuxSelectPanelFilterComponent,
-    LuxSelectFilterDirective
+    LuxSelectFilterDirective,
+    LuxSelectVisibleOptionCountDirective
   ]
 })
 export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> implements OnInit, OnChanges {
@@ -75,6 +77,12 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
    * ARIA-Label für die Schaltfläche zum Löschen des Filterwertes.
    */
   @Input() luxFilterClearAriaLabel = 'Clear filter';
+
+  /**
+   * Begrenzt die Anzahl der gleichzeitig sichtbaren Optionen im geöffneten Panel.
+   * Werte <= 0 deaktivieren das Override und verwenden die Standardhöhe.
+   */
+  @Input() luxVisibleOptionCount?: number | null;
 
   /**
    * Blendet alle Standard-Labels des Formularfeldes aus.
