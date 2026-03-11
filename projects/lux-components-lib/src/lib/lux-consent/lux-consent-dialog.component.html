@@ -30,8 +30,7 @@
                 @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
                   @if (category.purpose === LuxConsentPurpose.Essential) {
                     <p>
-                      <span>{{ category.name }}</span
-                      >: <span class="essential-always-active">immer aktiv</span><br />
+                      <span class="essential-always-active">immer aktiv</span>: <span>{{ category.name }}</span>
                       <span class="essential-hint">{{ category.hint }}</span>
                     </p>
                   } @else {
@@ -60,8 +59,7 @@
                       @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
                         @if (category.purpose === LuxConsentPurpose.Essential) {
                           <p>
-                            <span>{{ category.name }}</span
-                            >: <span class="essential-always-active">immer aktiv</span>
+                            <span class="essential-always-active">immer aktiv</span>: <span>{{ category.name }}</span>
                           </p>
                         } @else {
                           <lux-toggle-ac
