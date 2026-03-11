@@ -7,10 +7,14 @@ import LUX_CONSENT_ENTRIES from './lux-consent-entries';
 import { LuxConsentEntry, LuxConsentPurpose, LuxConsentState } from './lux-consent.model';
 
 const LUX_CONSENT_COOKIE_DEFAULT_KEY = 'lux-app-consent';
+const LUX_CONSENT_COOKIE_DEFAULT_DURATION_DAYS = 365;
 
 export const LUX_CONSENT_CONFIG = new InjectionToken<ILuxConsentConfig>('LUX_CONSENT_CONFIG', {
   providedIn: 'root',
-  factory: (): ILuxConsentConfig => ({ cookieKey: LUX_CONSENT_COOKIE_DEFAULT_KEY })
+  factory: (): ILuxConsentConfig => ({
+    cookieKey: LUX_CONSENT_COOKIE_DEFAULT_KEY,
+    consentCookieDurationDays: LUX_CONSENT_COOKIE_DEFAULT_DURATION_DAYS
+  })
 });
 
 @Injectable({
@@ -20,7 +24,6 @@ export class LuxConsentService {
   private readonly cookieService = inject(CookieService);
   private readonly dialogLauncher = inject(LUX_CONSENT_DIALOG_LAUNCHER);
   private readonly consentConfig = inject(LUX_CONSENT_CONFIG);
-  private readonly CONSENT_COOKIE_DURATION_DAYS = 365;
   private consentState$ = new BehaviorSubject<LuxConsentState | null>(null);
   private runtimeConfigOverride?: Partial<ILuxConsentConfig>;
 
@@ -78,9 +81,14 @@ export class LuxConsentService {
 
   /**
    * Prüft, ob der Consent-Dialog angezeigt werden soll.
-   * Der Dialog wird angezeigt, wenn weder ein Consent-Cookie noch ein temporärer Session-Storage-Eintrag vorhanden ist.
+   * Der Dialog wird angezeigt, wenn mindestens ein nicht-funktionaler Eintrag konfiguriert ist
+   * und weder ein Consent-Cookie noch ein temporärer Session-Storage-Eintrag vorhanden ist.
    */
   shouldShowDialog(configOverride?: Partial<ILuxConsentConfig>): boolean {
+    if (!this.hasNonEssentialEntries(configOverride)) {
+      return false;
+    }
+
     const config = this.resolveConfig(configOverride);
     if (sessionStorage.getItem(config.cookieKey)) {
       return false;
@@ -135,6 +143,10 @@ export class LuxConsentService {
   }
 
   private saveConsent(purposes: LuxConsentPurpose[], configOverride?: Partial<ILuxConsentConfig>): void {
+    if (!this.hasNonEssentialEntries(configOverride)) {
+      return;
+    }
+
     const config = this.resolveConfig(configOverride);
     const state: LuxConsentState = {
       purposes,
@@ -143,7 +155,7 @@ export class LuxConsentService {
 
     const stateJson = JSON.stringify(state);
 
-    this.cookieService.set(config.cookieKey, stateJson, this.CONSENT_COOKIE_DURATION_DAYS, '/', undefined, false, 'Lax');
+    this.cookieService.set(config.cookieKey, stateJson, config.consentCookieDurationDays, '/', undefined, false, 'Lax');
 
     // Session-Storage Einwilligung entfernen, da Cookie gesetzt wurde
     sessionStorage.removeItem(config.cookieKey);
@@ -157,6 +169,13 @@ export class LuxConsentService {
     acceptedPurposes.add(LuxConsentPurpose.Essential);
 
     return Object.values(LuxConsentPurpose).filter((purpose) => acceptedPurposes.has(purpose));
+  }
+
+  private hasNonEssentialEntries(configOverride?: Partial<ILuxConsentConfig>): boolean {
+    const config = this.resolveConfig(configOverride);
+    const configuredEntries: LuxConsentEntry[] = [...LUX_CONSENT_ENTRIES, ...(config.entries ?? [])];
+
+    return configuredEntries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
   }
 
   private loadConsent(configOverride?: Partial<ILuxConsentConfig>): void {
@@ -212,6 +231,10 @@ export class LuxConsentService {
 
     if (!config.cookieKey) {
       config.cookieKey = LUX_CONSENT_COOKIE_DEFAULT_KEY;
+    }
+
+    if (typeof config.consentCookieDurationDays !== 'number') {
+      config.consentCookieDurationDays = LUX_CONSENT_COOKIE_DEFAULT_DURATION_DAYS;
     }
 
     return config;

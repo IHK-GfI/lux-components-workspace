@@ -6,10 +6,11 @@
     <div class="lux-flex lux-flex-col lux-gap-4">
       <h3>Einwilligung testen</h3>
       <p>Aktives Ziel für Impressum und Datenschutz: <b>{{ activeTargetLabel }}</b></p>
+      <p>Aktive Entry-Konfiguration: <b>{{ activeEntriesLabel }}</b></p>
       <p>Cookie-Key: <i>lux-app-demo-consent-example</i></p>
 
       <lux-button
-        luxLabel="Einwilligung öffnen"
+        [luxLabel]="useEssentialOnlyEntries ? 'Cookie-Einstellungen' : 'Einwilligung'"
         luxColor="primary"
         [luxRaised]="true"
         (luxClicked)="openConsent()"
@@ -40,5 +41,12 @@
       [(luxValue)]="datenschutzUrl"
       [luxDisabled]="useComponentTargets"
     ></lux-input-ac>
+
+    <lux-toggle-ac
+      luxLabel="Nur essentielle LuxConsentEntry-Einträge verwenden"
+      luxHint="Zum Testen des Verhaltens ohne optionale Zwecke."
+      [luxNoTopLabel]="true"
+      [(luxChecked)]="useEssentialOnlyEntries"
+    ></lux-toggle-ac>
   </example-base-simple-options>
 </example-base-structure>

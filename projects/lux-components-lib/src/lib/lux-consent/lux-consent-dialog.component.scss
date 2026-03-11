@@ -1,7 +1,63 @@
+:host ::ng-deep {
+  // Größere Schrift für die Hinweistexte der Toggle
+  lux-toggle-ac lux-form-control-wrapper .lux-form-control-wrapper .lux-form-control-misc-authentic {
+    font-size: 0.875rem;
+  }
+}
+
+.lux-consent-description {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.cookie-card {
+  padding: 4px;
+}
+
+.essential-always-active {
+  font-weight: 700;
+}
+
+.essential-hint {
+  display: flex;
+  font-size: 0.875rem;
+  line-height: 1em;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.6);
+  word-wrap: break-word;
+  margin: 0.25em calc(0.5em + 1px) 0 calc(0.5em + 1px);
+}
+
+.lux-consent-dialog-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .storage-type-title {
-    padding-left: 26px;
+  padding-left: 26px;
 }
 
 .storage-name {
-    word-break: break-all;
+  word-break: break-all;
+}
+
+::ng-deep lux-consent-dialog.mobile-view {
+  .lux-consent-dialog-actions {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    justify-content: space-between;
+
+    lux-button {
+      display: flex;
+      flex: 1 1 auto;
+
+      ::ng-deep button {
+        display: flex;
+        flex: 1 1 auto;
+      }
+    }
+  }
 }

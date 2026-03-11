@@ -34,7 +34,17 @@ describe('LuxConsentService (config overrides)', () => {
     } as CookieService;
 
     const consentConfig: ILuxConsentConfig = {
-      cookieKey: baseKey
+      cookieKey: baseKey,
+      entries: [
+        {
+          type: LuxConsentStorageType.Cookie,
+          name: 'consent-preferences',
+          processingCountry: 'DE',
+          purpose: LuxConsentPurpose.Preferences,
+          duration: '1 Jahr',
+          description: 'Preferences Consent'
+        }
+      ]
     };
 
     TestBed.configureTestingModule({
@@ -114,5 +124,42 @@ describe('LuxConsentService (config overrides)', () => {
 
     const parsed = JSON.parse(saved!) as { purposes: LuxConsentPurpose[] };
     expect(parsed.purposes).toEqual([LuxConsentPurpose.Essential, LuxConsentPurpose.Marketing]);
+  });
+
+  it('does not show dialog when only essential entries are configured', () => {
+    service.openIfNeeded({
+      cookieKey: overrideKey,
+      entries: [
+        {
+          type: LuxConsentStorageType.Cookie,
+          name: 'consent-essential',
+          processingCountry: 'DE',
+          purpose: LuxConsentPurpose.Essential,
+          duration: 'Session',
+          description: 'Essential Consent'
+        }
+      ]
+    });
+
+    expect(openSpy).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem(overrideKey)).toBeNull();
+  });
+
+  it('does not set cookie when only essential entries are configured', () => {
+    service.acceptAll({
+      cookieKey: overrideKey,
+      entries: [
+        {
+          type: LuxConsentStorageType.Cookie,
+          name: 'consent-essential',
+          processingCountry: 'DE',
+          purpose: LuxConsentPurpose.Essential,
+          duration: 'Session',
+          description: 'Essential Consent'
+        }
+      ]
+    });
+
+    expect(cookieStore.has(overrideKey)).toBeFalse();
   });
 });

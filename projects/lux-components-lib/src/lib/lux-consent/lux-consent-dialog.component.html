@@ -1,10 +1,10 @@
 <lux-dialog-structure>
   <lux-dialog-title i18n="@@luxc.consent.title">Standardhinweis</lux-dialog-title>
-  <lux-dialog-content class="consent-content">
+  <lux-dialog-content>
     <div class="cookie-card" [class.cookie-card-detail-view]="isExpanded">
       <div class="cookie-body">
         <div class="cookie-summary">
-          <p class="cookie-overlay-description" i18n="@@luxc.consent.description">
+          <p class="lux-consent-description" i18n="@@luxc.consent.description">
             Wir verwenden Cookies, um die Bereitstellung unserer Dienste zu erleichtern. Cookies sind kleine Textdateien, die von Webseiten
             verwendet werden, um die Benutzererfahrung effizienter zu gestalten. Laut Gesetz können wir Cookies auf Ihrem Gerät speichern,
             wenn diese für den Betrieb dieser Seite unbedingt notwendig sind. Für alle anderen Cookie-Typen benötigen wir Ihre Erlaubnis.
@@ -21,36 +21,32 @@
           }
 
           @if (activeSection === 'impressum' && impressumComponentResolved) {
-            <ng-container
-              *ngComponentOutlet="impressumComponentResolved; inputs: consentConfig.impressumComponentInputs"
-            ></ng-container>
+            <ng-container *ngComponentOutlet="impressumComponentResolved; inputs: consentConfig.impressumComponentInputs"></ng-container>
           }
 
           @if (activeSection === 'consent' && !isExpanded) {
             <div class="lux-flex lux-flex-col lux-gap-4 lux-pb-4">
               @for (category of cookieCategories; track $index) {
                 @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
-                  <lux-toggle-ac
-                    [luxNoTopLabel]="true"
-                    [luxDense]="true"
-                    [luxLabel]="category.name"
-                    [luxDisabled]="category.disabled"
-                    [luxHint]="category.hint"
-                    [luxChecked]="category.enabled"
-                    (luxCheckedChange)="toggleCategoryEnabled(category.purpose, $event)"
-                  ></lux-toggle-ac>
+                  @if (category.purpose === LuxConsentPurpose.Essential) {
+                    <p>
+                      <span>{{ category.name }}</span
+                      >: <span class="essential-always-active">immer aktiv</span><br />
+                      <span class="essential-hint">{{ category.hint }}</span>
+                    </p>
+                  } @else {
+                    <lux-toggle-ac
+                      [luxNoTopLabel]="true"
+                      [luxDense]="true"
+                      [luxLabel]="category.name"
+                      [luxDisabled]="category.disabled"
+                      [luxHint]="category.hint"
+                      [luxChecked]="category.enabled"
+                      (luxCheckedChange)="toggleCategoryEnabled(category.purpose, $event)"
+                    ></lux-toggle-ac>
+                  }
                 }
               }
-            </div>
-
-            <div class="lux-flex lux-justify-center">
-              <lux-link-plain
-                luxLabel="Details anzeigen"
-                i18n-luxLabel="@@luxc.consent.show_details"
-                luxIconName="lux-interface-arrows-bend-down-right-2"
-                [luxIconShowRight]="false"
-                (luxClicked)="toggleDetails()"
-              ></lux-link-plain>
             </div>
           }
 
@@ -60,20 +56,25 @@
                 <div class="purposes-sidebar">
                   <h3 class="sidebar-title" i18n="@@luxc.consent.purposes_title">Zweckarten</h3>
                   <div class="purpose-checkboxes">
-                    <lux-checkbox-container-ac>
-                      @for (category of cookieCategories; track $index) {
-                        @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
-                          <lux-checkbox-ac
+                    @for (category of cookieCategories; track $index) {
+                      @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
+                        @if (category.purpose === LuxConsentPurpose.Essential) {
+                          <p>
+                            <span>{{ category.name }}</span
+                            >: <span class="essential-always-active">immer aktiv</span>
+                          </p>
+                        } @else {
+                          <lux-toggle-ac
                             [luxNoLabels]="true"
                             [luxLabel]="category.name"
                             [(luxChecked)]="category.enabled"
                             [luxDisabled]="category.disabled"
                             [luxTagId]="'cookie-' + category.purpose"
                           >
-                          </lux-checkbox-ac>
+                          </lux-toggle-ac>
                         }
                       }
-                    </lux-checkbox-container-ac>
+                    }
                   </div>
                 </div>
 
@@ -81,6 +82,9 @@
                   <h3 i18n="@@luxc.consent.cookies_used_title">Verwendete Cookies</h3>
                   @for (category of cookieCategories; track $index) {
                     @if (hasConfiguredEntriesForCategory(category.purpose)) {
+                      @if ($index !== 0) {
+                        <lux-divider class="lux-pt-4"></lux-divider>
+                      }
                       <div class="purpose-section">
                         <h4 class="purpose-title">{{ category.name }}</h4>
                         <p>
@@ -127,25 +131,17 @@
                           }
                         }
                       </div>
-                      <lux-divider class="lux-pt-4"></lux-divider>
                     }
                   }
                 </div>
               </div>
             </div>
-
-            <div class="lux-flex lux-justify-center">
-              <lux-link-plain
-                luxLabel="Weniger anzeigen"
-                i18n-luxLabel="@@luxc.consent.hide_details"
-                luxIconName="lux-interface-arrows-bend-down-right-2"
-                [luxIconShowRight]="false"
-                (luxClicked)="toggleDetails()"
-              ></lux-link-plain>
-            </div>
           }
         </div>
-        <div class="lux-flex lux-gap-5 lux-mt-5 lux-justify-end lt-sm:lux-flex-col lt-sm:lux-mt-1">
+
+        <lux-divider></lux-divider>
+
+        <div class="lux-flex lux-gap-5 lux-mt-3 lux-justify-start lt-sm:lux-flex-col lt-sm:lux-mt-1">
           @if (activeSection !== 'consent') {
             <lux-link-plain
               luxLabel="Zurück"
@@ -153,7 +149,22 @@
               (luxClicked)="showSection('consent')"
             ></lux-link-plain>
           }
-
+          @if (activeSection === 'consent' && isExpanded) {
+            <lux-link-plain
+              luxLabel="Zurück"
+              i18n-luxLabel="@@luxc.consent.hide_details"
+              [luxIconShowRight]="false"
+              (luxClicked)="toggleDetails()"
+            ></lux-link-plain>
+          }
+          @if (activeSection === 'consent' && !isExpanded) {
+            <lux-link-plain
+              luxLabel="Details"
+              i18n-luxLabel="@@luxc.consent.show_details"
+              [luxIconShowRight]="false"
+              (luxClicked)="toggleDetails()"
+            ></lux-link-plain>
+          }
           <lux-link-plain
             luxLabel="Datenschutz"
             i18n-luxLabel="@@luxc.consent.link_datenschutz"
@@ -168,33 +179,45 @@
       </div>
     </div>
   </lux-dialog-content>
-  <lux-dialog-actions class="lux-flex lux-flex-wrap lux-gap-3"
-    ><lux-button
-      luxLabel="Optionale ablehnen"
-      i18n-luxLabel="@@luxc.consent.button_decline_optional"
-      luxTagId="decline-optional"
-      [luxRaised]="true"
-      luxColor="primary"
-      (luxClicked)="declineAll()"
-    >
-    </lux-button>
-    <lux-button
-      luxLabel="Auswahl akzeptieren"
-      i18n-luxLabel="@@luxc.consent.button_accept_selected"
-      luxTagId="accept-selected"
-      [luxRaised]="true"
-      luxColor="primary"
-      (luxClicked)="acceptSelected()"
-    >
-    </lux-button>
-    <lux-button
-      luxLabel="Alle akzeptieren"
-      i18n-luxLabel="@@luxc.consent.button_accept_all"
-      luxTagId="accept-all"
-      [luxRaised]="true"
-      luxColor="primary"
-      (luxClicked)="acceptAll()"
-    >
-    </lux-button
-  ></lux-dialog-actions>
+  <lux-dialog-actions class="lux-consent-dialog-actions">
+    @if (hasNonEssentialEntries) {
+      <lux-button
+        luxLabel="Optionale ablehnen"
+        i18n-luxLabel="@@luxc.consent.button_decline_optional"
+        luxTagId="decline-optional"
+        [luxRaised]="true"
+        luxColor="primary"
+        (luxClicked)="declineAll()"
+      >
+      </lux-button>
+      <lux-button
+        luxLabel="Auswahl akzeptieren"
+        i18n-luxLabel="@@luxc.consent.button_accept_selected"
+        luxTagId="accept-selected"
+        [luxRaised]="true"
+        luxColor="primary"
+        (luxClicked)="acceptSelected()"
+      >
+      </lux-button>
+      <lux-button
+        luxLabel="Alle akzeptieren"
+        i18n-luxLabel="@@luxc.consent.button_accept_all"
+        luxTagId="accept-all"
+        [luxRaised]="true"
+        luxColor="primary"
+        (luxClicked)="acceptAll()"
+      >
+      </lux-button>
+    } @else {
+      <lux-button
+        luxLabel="Schließen"
+        i18n-luxLabel="@@luxc.consent.button_close"
+        luxTagId="close"
+        [luxRaised]="true"
+        luxColor="primary"
+        (luxClicked)="closeDialog()"
+      >
+      </lux-button>
+    }
+  </lux-dialog-actions>
 </lux-dialog-structure>

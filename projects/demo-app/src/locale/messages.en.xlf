@@ -270,9 +270,25 @@
           <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="luxc.consent.hide_details" datatype="html">
+        <source>Zurück</source>
+        <target>Back</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.consent.show_details" datatype="html">
+        <source>Details</source>
+        <target>Details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="luxc.consent.link_datenschutz" datatype="html">
         <source>Datenschutz</source>
-        <target>Data protection</target>
+        <target>Privacy Policy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>
@@ -280,31 +296,15 @@
       </trans-unit>
       <trans-unit id="luxc.consent.link_impressum" datatype="html">
         <source>Impressum</source>
-        <target>Legal notice</target>
+        <target>Legal Notice</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="luxc.consent.button_decline_optional" datatype="html">
-        <source>Optionale ablehnen</source>
-        <target>Decline optional</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.consent.button_accept_selected" datatype="html">
-        <source>Auswahl akzeptieren</source>
-        <target>Accept selection</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.consent.button_accept_all" datatype="html">
-        <source>Alle akzeptieren</source>
-        <target>Accept all</target>
+      <trans-unit id="luxc.consent.button_close" datatype="html">
+        <source>Schließen</source>
+        <target>Close</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>
@@ -312,7 +312,7 @@
       </trans-unit>
       <trans-unit id="luxc.consent.title" datatype="html">
         <source>Standardhinweis</source>
-        <target>Standard notice</target>
+        <target>Default Notice</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>
@@ -320,31 +320,15 @@
       </trans-unit>
       <trans-unit id="luxc.consent.description" datatype="html">
         <source> Wir verwenden Cookies, um die Bereitstellung unserer Dienste zu erleichtern. Cookies sind kleine Textdateien, die von Webseiten verwendet werden, um die Benutzererfahrung effizienter zu gestalten. Laut Gesetz können wir Cookies auf Ihrem Gerät speichern, wenn diese für den Betrieb dieser Seite unbedingt notwendig sind. Für alle anderen Cookie-Typen benötigen wir Ihre Erlaubnis. Diese Seite verwendet unterschiedliche Cookie-Typen. Einige Cookies werden von Drittparteien platziert, die auf unseren Seiten erscheinen. Sie können Ihre Einwilligung jederzeit von der Cookie-Erklärung auf unserer Website ändern oder widerrufen. </source>
-        <target>We use cookies to facilitate the provision of our services. Cookies are small text files used by websites to make the user experience more efficient. According to the law, we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies, we need your permission. This site uses different types of cookies. Some cookies are placed by third parties that appear on our pages. You can change or revoke your consent at any time from the cookie statement on our website.</target>
+        <target> We use cookies to facilitate the provision of our services. Cookies are small text files that are used by websites to make the user experience more efficient. By law, we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies, we need your permission. This site uses different types of cookies. Some cookies are placed by third parties who appear on our pages. You can change or withdraw your consent at any time from the cookie declaration on our website. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="luxc.consent.show_details" datatype="html">
-        <source>Details anzeigen</source>
-        <target>Show details</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.consent.hide_details" datatype="html">
-        <source>Weniger anzeigen</source>
-        <target>Show less</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="luxc.consent.purposes_title" datatype="html">
         <source>Zweckarten</source>
-        <target>Types of purposes</target>
+        <target>Purpose types</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>
@@ -352,7 +336,6 @@
       </trans-unit>
       <trans-unit id="luxc.consent.cookies_used_title" datatype="html">
         <source>Verwendete Cookies</source>
-        <target>Used cookies</target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>
@@ -382,9 +365,32 @@
           <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="luxc.consent.button_decline_optional" datatype="html">
+        <source>Optionale ablehnen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.consent.button_accept_selected" datatype="html">
+        <source>Auswahl akzeptieren</source>
+        <target>Accept selected</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.consent.button_accept_all" datatype="html">
+        <source>Alle akzeptieren</source>
+        <target>Accept all</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="luxc.errorpage.error_number" datatype="html">
         <source>Fehlernummer: <x id="INTERPOLATION"/></source>
-        <target>Error number: <x id="INTERPOLATION"/> </target>
+        <target>Error number: <x id="INTERPOLATION"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-error/lux-error-page/lux-error-page.component.html</context>
           <context context-type="linenumber">1</context>

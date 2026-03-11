@@ -237,6 +237,20 @@
           <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="luxc.consent.hide_details" datatype="html">
+        <source>Zurück</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.consent.show_details" datatype="html">
+        <source>Details</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="luxc.consent.link_datenschutz" datatype="html">
         <source>Datenschutz</source>
         <context-group purpose="location">
@@ -251,22 +265,8 @@
           <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="luxc.consent.button_decline_optional" datatype="html">
-        <source>Optionale ablehnen</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.consent.button_accept_selected" datatype="html">
-        <source>Auswahl akzeptieren</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.consent.button_accept_all" datatype="html">
-        <source>Alle akzeptieren</source>
+      <trans-unit id="luxc.consent.button_close" datatype="html">
+        <source>Schließen</source>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>
@@ -284,20 +284,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.consent.show_details" datatype="html">
-        <source>Details anzeigen</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="luxc.consent.hide_details" datatype="html">
-        <source>Weniger anzeigen</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
-          <context context-type="linenumber">1,2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="luxc.consent.purposes_title" datatype="html">
@@ -330,6 +316,27 @@
       </trans-unit>
       <trans-unit id="luxc.consent.table_header_description" datatype="html">
         <source>Beschreibung</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.consent.button_decline_optional" datatype="html">
+        <source>Optionale ablehnen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.consent.button_accept_selected" datatype="html">
+        <source>Auswahl akzeptieren</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
+          <context context-type="linenumber">1,2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="luxc.consent.button_accept_all" datatype="html">
+        <source>Alle akzeptieren</source>
         <context-group purpose="location">
           <context context-type="sourcefile">projects/lux-components-lib/src/lib/lux-consent/lux-consent-dialog.component.html</context>
           <context context-type="linenumber">1,2</context>

@@ -10,6 +10,22 @@ export const appConsentProvider = {
     datenschutzComponentInputs: { fullWidth: true },
     entries: [
       {
+        type: LuxConsentStorageType.Cookie,
+        name: 'lux-app-demo-consent',
+        processingCountry: 'Deutschland',
+        purpose: LuxConsentPurpose.Essential,
+        duration: '365 Tage',
+        description: 'Speichert die Einwilligung.'
+      },
+      {
+        type: LuxConsentStorageType.Cookie,
+        name: 'lux-app-demo-consent-example',
+        processingCountry: 'Deutschland',
+        purpose: LuxConsentPurpose.Essential,
+        duration: '365 Tage',
+        description: 'Speichert die Einwilligung der Demoseite lux-consent.'
+      },
+      {
         type: LuxConsentStorageType.LocalStorage,
         name: 'lux.app.theme.name',
         processingCountry: 'Deutschland',

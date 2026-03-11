@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import {
-    ILuxConsentConfig,
-    LuxButtonComponent,
-    LuxConsentPurpose,
-    LuxConsentService,
-    LuxConsentStorageType,
-    LuxInputAcComponent,
-    LuxToggleAcComponent
+  ILuxConsentConfig,
+  LuxButtonComponent,
+  LuxConsentPurpose,
+  LuxConsentService,
+  LuxConsentStorageType,
+  LuxInputAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -28,6 +28,7 @@ export class ConsentExampleComponent {
   private consentService = inject(LuxConsentService);
 
   useComponentTargets = true;
+  useEssentialOnlyEntries = false;
   impressumUrl = 'https://www.ihk-gfi.de/impressum-5343024';
   datenschutzUrl = 'https://www.ihk-gfi.de/datenschutz-5342920';
 
@@ -105,16 +106,33 @@ export class ConsentExampleComponent {
     }
   ];
 
-  private readonly componentConfig: ILuxConsentConfig = {
-    cookieKey: 'lux-app-demo-consent-example',
-    impressumComponentLoader: () => import('../../abstract/impressum/impressum.component').then((m) => m.ImpressumComponent),
-    datenschutzComponentLoader: () => import('../../abstract/dse/dse.component').then((m) => m.DseComponent),
-    impressumComponentInputs: undefined,
-    datenschutzComponentInputs: undefined,
-    impressumUrl: undefined,
-    datenschutzUrl: undefined,
-    entries: this.consentEntries
-  };
+  private readonly essentialOnlyConsentEntries = [
+    {
+      type: LuxConsentStorageType.LocalStorage,
+      name: 'lux.app.required.runtime',
+      processingCountry: 'Deutschland',
+      purpose: LuxConsentPurpose.Essential,
+      duration: 'session',
+      description: 'Notwendiger technischer Speicher für den Betrieb der Anwendung.'
+    }
+  ];
+
+  private get activeConsentEntries() {
+    return this.useEssentialOnlyEntries ? this.essentialOnlyConsentEntries : this.consentEntries;
+  }
+
+  private get componentConfig(): ILuxConsentConfig {
+    return {
+      cookieKey: 'lux-app-demo-consent-example',
+      impressumComponentLoader: () => import('../../abstract/impressum/impressum.component').then((m) => m.ImpressumComponent),
+      datenschutzComponentLoader: () => import('../../abstract/dse/dse.component').then((m) => m.DseComponent),
+      impressumComponentInputs: undefined,
+      datenschutzComponentInputs: undefined,
+      impressumUrl: undefined,
+      datenschutzUrl: undefined,
+      entries: this.activeConsentEntries
+    };
+  }
 
   private get urlConfig(): ILuxConsentConfig {
     return {
@@ -125,12 +143,16 @@ export class ConsentExampleComponent {
       datenschutzComponentInputs: undefined,
       impressumUrl: this.impressumUrl,
       datenschutzUrl: this.datenschutzUrl,
-      entries: this.consentEntries
+      entries: this.activeConsentEntries
     };
   }
 
   get activeTargetLabel() {
     return this.useComponentTargets ? 'Komponenten' : 'URLs';
+  }
+
+  get activeEntriesLabel() {
+    return this.useEssentialOnlyEntries ? 'Nur essentielle Einträge' : 'Gemischte Einträge';
   }
 
   openConsent() {

@@ -3,6 +3,7 @@ import { LuxConsentEntry } from './lux-consent.model';
 
 export interface ILuxConsentConfig {
   cookieKey: string;
+  consentCookieDurationDays?: number;
   /** Optional additional entries provided by the host app; merged with defaults by the service. */
   entries?: LuxConsentEntry[];
   impressumUrl?: string;

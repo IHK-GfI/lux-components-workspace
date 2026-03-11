@@ -17,7 +17,7 @@ export class LuxConsentDialogLauncherService implements ILuxConsentDialogLaunche
       .then(({ LuxConsentDialogComponent }) => {
         const dialogRef = this.dialogService.openComponent(LuxConsentDialogComponent, {
           width: 'auto',
-          height: this.mediaService.isSmaller('md') ? '90%' : '80%',
+          height: this.mediaService.isSmaller('md') ? '90%' : '70%',
           panelClass: 'lux-consent-dialog'
         });
 
