@@ -19,7 +19,8 @@ import { MatChip, MatChipGrid, MatChipInput, MatChipRemove, MatChipRow } from '@
 import { MatOption } from '@angular/material/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -46,7 +47,8 @@ let luxChipControlUID = 0;
     MatAutocompleteTrigger,
     MatAutocomplete,
     MatOption,
-    TranslocoPipe
+    TranslocoPipe,
+    LuxTooltipDirective
   ]
 })
 export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
@@ -100,6 +102,8 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implemen
   @ContentChildren(LuxChipAcComponent) luxChipComponents!: QueryList<LuxChipAcComponent>;
   @ContentChildren(LuxChipAcGroupComponent) luxChipGroupComponents!: QueryList<LuxChipAcGroupComponent>;
   @ViewChildren(MatChip) matChips!: QueryList<MatChip>;
+  @ViewChildren(MatChipRow, { read: ElementRef }) chipRowElements!: QueryList<ElementRef<HTMLElement>>;
+  @ViewChildren(LuxTooltipDirective) chipTooltips!: QueryList<LuxTooltipDirective>;
 
   @ViewChild('input', { read: ElementRef }) matInput!: ElementRef;
   @ViewChild('input', { read: MatAutocompleteTrigger }) matAutocompleteTrigger?: MatAutocompleteTrigger;
@@ -250,6 +254,48 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implemen
         })
       );
     }
+
+    if (this.chipRowElements) {
+      this.updateChipTooltips();
+      this.subscriptions.push(this.chipRowElements.changes.pipe(debounceTime(50)).subscribe(() => this.updateChipTooltips()));
+    }
+
+    if (this.chipTooltips) {
+      this.updateChipTooltips();
+      this.subscriptions.push(this.chipTooltips.changes.pipe(debounceTime(50)).subscribe(() => this.updateChipTooltips()));
+    }
+  }
+
+  private updateChipTooltips() {
+    if (!this.chipRowElements || !this.chipTooltips) {
+      return;
+    }
+
+    const rows = this.chipRowElements.toArray();
+    const tooltips = this.chipTooltips.toArray();
+    const count = Math.min(rows.length, tooltips.length);
+
+    // Tooltip-Änderungen asynchron durchführen, um ExpressionChangedAfterItHasBeenCheckedError zu vermeiden
+    Promise.resolve().then(() => {
+      // Re-check: Komponente könnte zwischenzeitlich zerstört worden sein
+      if (!this.chipRowElements || !this.chipTooltips) {
+        return;
+      }
+
+      for (let i = 0; i < count; i++) {
+        const rowElement = rows[i].nativeElement;
+        const text = rowElement.textContent?.trim() ?? '';
+        const tooltip = tooltips[i];
+        const labelElement = rowElement.querySelector<HTMLElement>('.mdc-evolution-chip__text-label, .lux-chip-label');
+        const targetElement = labelElement ?? rowElement;
+        const isTruncated = targetElement.scrollWidth > targetElement.clientWidth;
+
+        tooltip.luxTooltipShowDelay = 500;
+        tooltip.luxTooltip = isTruncated ? text : '';
+        tooltip.message = isTruncated ? text : '';
+        tooltip.disabled = !isTruncated;
+      }
+    });
   }
 
   /**

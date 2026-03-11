@@ -4,7 +4,12 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 - [Update Guide 21](#update-guide-21)
   - [Änderungen](#änderungen)
+  - [Local Storage](#local-storage)
+    - [lux-theme](#lux-theme)
+    - [lux-tour-hint](#lux-tour-hint)
+    - [lux-table](#lux-table)
   - [Versionen](#versionen)
+    - [Version 21.1.0](#version-2110)
     - [Version 21.0.0](#version-2100)
       - [Allgemein](#allgemein)
       - [Vor dem Update](#vor-dem-update)
@@ -19,9 +24,62 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 **Wichtig!** Bitte alle Änderungen in der [CHANGELOG.md](https://github.com/IHK-GfI/lux-components-workspace/blob/main/projects/lux-components-lib/CHANGELOG.md) durchlesen.
 
+## Local Storage
+
+Folende Komponenten nutzen den Local Storage des Browsers, wenn in der [Config](config-v19) die Property _useLocalStorageForComponentsAllowed_ gesetzt ist.
+
+### lux-theme
+
+Das LUX-Theme nutzt den Local Storage um zu speichern, welches Theme ausgewählt wurde.
+
+|            |                                                                                           |
+| ---------- | ----------------------------------------------------------------------------------------- |
+| Key        | "lux.app.theme.name"                                                                      |
+| Key-Präfix | ---                                                                                       |
+| Wert       | "green" oder "authentic"                                                                  |
+| Beispiel   | lux.app.theme.name="authentic"                                                            |
+| Auswirkung | Das Theme wird nicht gespeichert und die Anwendung startet immer mit dem authentic-Theme. |
+
+### lux-tour-hint
+
+Der LUX-Tour-Hinweis nutzt den Local Storage um zu speichern, ob ein Hinweis nicht erneut angezeigt werden soll.
+
+|            |                                                                                                                                 |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Key        | Legt die Fachanwendung fest                                                                                                     |
+| Key-Präfix | "[lux-tour-hint-dsa] "                                                                                                          |
+| Wert       | boolean                                                                                                                         |
+| Beispiel   | \[lux-tour-hint-dsa\] Hint_001=true                                                                                             |
+| Auswirkung | Die Checkbox "Nicht wieder anzeigen" in den Hinweisen hat keine Auswirkung mehr und die Hinweise werden immer wieder angezeigt. |
+
+### lux-table
+
+Die LUX-Table nutzt den Local Storage um zu speichern, welche Tabellen ausgeblendet wurden, aber nur wenn das Feature "Spalten ausblenden" (siehe Property " luxShowColumnSelector ")  verwendet wird.
+
+|            |                                                                                                                                                                                                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Key        | Legt die Fachanwendung fest                                                                                                                                                                                                                                                           |
+| Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                         |
+| Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                      |
+| Beispiel   | lux-demo-table-example=\["name", "symbol"\]                                                                                                                                                                                                                                           |
+| Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector")  verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
+
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. Das heißt, alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+### Version 21.1.0
+
+**WICHTIG**: Mit der Umstellung auf 21.1.0 speichern die LUX-Components keine Informationen in den [Local Storage](#local-storage) des Browsers mehr. Wenn es gewünscht ist, dass die LUX-Components weiter in den Local Storage schreiben sollen, dann muss in der [Config](config-v19) die Property _useLocalStorageForComponentsAllowed_ auf _true_ gesetzt werden.
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-21.1.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
 
 ### Version 21.0.0
 
@@ -141,9 +199,10 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 #### Ergänzung für JAST-Projekte
 
 - Falls eine neue Node-Version installiert wurde, muss diese auch in die zentralen Builds eingetragen werden.<br>
-   Das heißt, in der _pipeline.yaml_ muss z.B. auf _node:24-alpine_ umgestellt werden.
+   Das heißt, in der _pipeline.yaml_ muss z.B. auf _node:24-alpine_, _node-java-alpine:node24-java21_ und _node-chromium:node-24_ umgestellt werden.
 - Bei der Umstellung auf eine neuere Node-Version sollte der Parameter _--no-optional_ aus der _pipeline.yaml_ entfernt werden.
-- Bitte die _CSP_-Abschnitte in den Dateien _application-xxx.yml_ im _UI-Service_ anpassen.
+- Bitte unbedingt alle Schritte für die v21 der JAST-Anleitung _"How To: I18N-Funktionalität (Internationalisation) verwenden"_ des JAST-Stacks durchführen.
+- Bitte die _CSP_-Abschnitte in der Datei _application.yml_ und allen _application-xxx.yml_ im _UI-Service_ anpassen.
 
 #### Weiterführende Verweise bei Interesse oder Problemen
 

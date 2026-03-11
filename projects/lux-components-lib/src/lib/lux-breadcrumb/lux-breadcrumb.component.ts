@@ -16,19 +16,42 @@ export class LuxBreadcrumbComponent implements OnDestroy {
 
   @Input() luxEntries?: ILuxBreadcrumbEntry[] = [];
 
+  /**
+   * Aktiviert eine mehrzeilige Darstellung (Umbruch). Standard: einzeilig mit Truncation.
+   */
+  @Input() luxWrap = false;
+
+  /**
+   * Zeigt nur den ersten und den letzten Eintrag an. Alle dazwischenliegenden Einträge werden als Platzhalter ("...") dargestellt.
+   */
+  @Input() luxShowOnlyFirstAndLast = false;
+
   @Output() luxClicked = new EventEmitter<ILuxBreadcrumbEntry>();
 
   mobileView: boolean;
   subscriptions: Subscription[] = [];
 
   constructor() {
-    this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs' || this.mediaQueryService.activeMediaQuery === 'sd';
+    this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs' || this.mediaQueryService.activeMediaQuery === 'sm';
 
     this.subscriptions.push(
       this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.mobileView = query === 'xs' || query === 'sd';
+        this.mobileView = query === 'xs' || query === 'sm';
       })
     );
+  }
+
+  isCollapsedMode(): boolean {
+    return this.luxShowOnlyFirstAndLast && (this.luxEntries?.length ?? 0) > 2;
+  }
+
+  isDottedEntry(isFirst: boolean, isLast: boolean): boolean {
+    return this.isCollapsedMode() && !isFirst && !isLast;
+  }
+
+  onEntryClick(event: Event, item: ILuxBreadcrumbEntry) {
+    event.preventDefault();
+    this.clicked(item);
   }
 
   clicked(item: ILuxBreadcrumbEntry) {
@@ -39,12 +62,5 @@ export class LuxBreadcrumbComponent implements OnDestroy {
     this.subscriptions.forEach((sub) => {
       sub.unsubscribe();
     });
-  }
-
-  getIconSize(): string {
-    if (this.mobileView) {
-      return '18px';
-    }
-    return '20px';
   }
 }

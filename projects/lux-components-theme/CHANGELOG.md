@@ -1,18 +1,28 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues)
-  - [Version 19.3.0](#version-1930)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-1)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-2)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-3)
-  - [Version 19.0.1](#version-1901)
+  - [Version 19.1.0](#version-1910)
     - [Issues](#issues-4)
-  - [Version 19.0.0](#version-1900)
+  - [Version 19.0.1](#version-1901)
     - [Issues](#issues-5)
+  - [Version 19.0.0](#version-1900)
+    - [Issues](#issues-6)
+
+## Version 21.1.0
+
+### Issues
+
+- Issue #156: Chips mit langem Inhalt laufen aus der Ansicht (#163)
+- Issue #153: Enhance lux-breadcrumb component with multi-line support … (#159)
+- Issue #161: Dialog Breite einstellen funktioniert nicht (#162)
 
 ## Version 21.0.0
 

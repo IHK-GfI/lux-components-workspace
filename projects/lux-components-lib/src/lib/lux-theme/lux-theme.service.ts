@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
 import { LuxConsoleService } from '../lux-util/lux-console.service';
 import { LuxStorageService } from '../lux-util/lux-storage.service';
 import { LuxTheme } from './lux-theme';
@@ -9,6 +10,7 @@ import { LuxTheme } from './lux-theme';
 })
 export class LuxThemeService {
   private storageService = inject(LuxStorageService);
+  private configService = inject(LuxComponentsConfigService);
 
   private readonly storageKeyThemeName = 'lux.app.theme.name';
   private themes: LuxTheme[];
@@ -33,7 +35,9 @@ export class LuxThemeService {
 
   setTheme(themeName: string) {
     this.theme$.next(this.findTheme(themeName));
-    this.storageService.setItem(this.storageKeyThemeName, themeName, false);
+    if (this.configService.currentConfig.useLocalStorageForComponentsAllowed) {
+      this.storageService.setItem(this.storageKeyThemeName, themeName, false);
+    }
     this.loadTheme();
   }
 
