@@ -6,13 +6,14 @@
  * LUX-Action
  */
 export * from './lib/lux-action/lux-action-model/lux-action-component-base.class';
+export * from './lib/lux-action/lux-button-toggle/lux-button-toggle.component';
 export * from './lib/lux-action/lux-button/lux-button.component';
 export * from './lib/lux-action/lux-link-plain/lux-link-plain.component';
 export * from './lib/lux-action/lux-link/lux-link.component';
 export { LuxMenuItemComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
-export { LuxMenuTriggerComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
 export { LuxMenuPanelHeaderComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-panel-header.component';
 export { LuxMenuSectionTitleComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-section-title.component';
+export { LuxMenuTriggerComponent } from './lib/lux-action/lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
 export * from './lib/lux-action/lux-menu/lux-menu.component';
 
 /**
@@ -169,10 +170,10 @@ export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponent
 export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-action-nav/lux-app-header-ac-action-nav.component';
 export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-nav-menu/lux-app-header-ac-nav-menu-item/lux-app-header-ac-nav-menu-item.component';
 export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-nav-menu/lux-app-header-ac-nav-menu.component';
-export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-user-menu.component';
 export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer';
-export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
 export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-interceptor';
+export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-session-timer/lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
+export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac-subcomponents/lux-app-header-ac-user-menu.component';
 export * from './lib/lux-layout/lux-app-header-ac/lux-app-header-ac.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-app-header-action-nav/lux-app-header-action-nav-item/lux-app-header-action-nav-item-custom.component';
 export * from './lib/lux-layout/lux-app-header/lux-app-header-subcomponents/lux-app-header-action-nav/lux-app-header-action-nav-item/lux-app-header-action-nav-item.component';
@@ -319,3 +320,4 @@ export * from './lib/lux-util/testing/lux-test-overlay-helper';
  */
 export * from './lib/lux-theme/lux-theme';
 export * from './lib/lux-theme/lux-theme.service';
+

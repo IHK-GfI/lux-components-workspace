@@ -36,6 +36,10 @@
     "autocomplete": {
       "error_message.not_an_option": "Der eingegebene Wert ist nicht Teil der Auswahl."
     },
+    "button-toggle": {
+      "aria_label": "Auswahl",
+      "error_message.required": "Das ist ein Pflichtfeld"
+    },
     "card": {
       "expandedLabel.close": "Weniger",
       "expandedLabel.open": "Mehr"

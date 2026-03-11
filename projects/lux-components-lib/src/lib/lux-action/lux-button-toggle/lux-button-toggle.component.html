@@ -1,0 +1,45 @@
+@if (hasMinimumOptions) {
+  <div class="lux-button-toggle-wrapper">
+    <mat-button-toggle-group
+      class="lux-button-toggle-group"
+      [attr.aria-label]="ariaLabel"
+      [attr.aria-describedby]="errorMessage ? errorElementId : hintMessage ? hintElementId : null"
+      [multiple]="luxMultiple()"
+      [disabled]="isDisabled"
+      [attr.required]="luxRequired() ? '' : null"
+      [value]="luxMultiple() ? undefined : luxSelected()"
+      (change)="onSingleSelectionChange($event)"
+      (focusout)="markAsTouched()"
+    >
+      @for (option of luxOptions(); track option.value) {
+        <mat-button-toggle
+          class="lux-button-toggle"
+          [value]="option.value"
+          [disabled]="!!option.disabled"
+          [attr.aria-label]="option.ariaLabel || option.label"
+          [checked]="luxMultiple() ? isChecked(option.value) : undefined"
+          (change)="luxMultiple() ? onMultipleSelectionChange(option.value, $event.source.checked) : null"
+        >
+          {{ option.label }}
+        </mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+
+    <div class="lux-flex lux-button-toggle-misc">
+      @if (errorMessage) {
+        <div [attr.id]="errorElementId" class="lux-button-toggle-error" role="alert">
+          <lux-icon
+            class="lux-color-red lux-alert-icon"
+            luxIconName="lux-interface-alert-warning-triangle"
+            luxIconSize="0.875rem"
+            luxPadding="2px"
+            luxMargin="0px 2px 0px 0px"
+          ></lux-icon
+          ><span>{{ errorMessage }}</span>
+        </div>
+      } @else if (hintMessage) {
+        <div [attr.id]="hintElementId" class="lux-button-toggle-hint">{{ hintMessage }}</div>
+      }
+    </div>
+  </div>
+}

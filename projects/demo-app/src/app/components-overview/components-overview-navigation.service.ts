@@ -46,6 +46,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
 
   components: { onclick: any; label: string; icon: string; moduleName?: string; news: boolean }[] = [
     this.create('action', 'Button'),
+    this.create('action', 'Button-Toggle', true),
     this.create('action', 'Link'),
     this.create('action', 'Link-Plain'),
     this.create('action', 'Menu'),

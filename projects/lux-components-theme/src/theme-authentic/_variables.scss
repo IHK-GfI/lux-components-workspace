@@ -143,7 +143,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Selektion
   --lux-theme-selected-border-color: #{palettes.$lux-primary-color};
   --lux-theme-selected-bg-color: var(--mat-option-selected-state-layer-color);
-  --lux-theme-on-selected-color: var(--mat-option-selected-state-label-text-color);;
+  --lux-theme-on-selected-color: var(--mat-option-selected-state-label-text-color);
 
   // Snackbar
   --lux-theme-snackbar-red: #f17474;
@@ -224,12 +224,12 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   --lux-theme-button-stroked-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-stroked-primary-text-color: var(--lux-theme-primary-color);
-  --lux-theme-button-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);;
+  --lux-theme-button-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-button-stroked-warn-text-color: var(--mat-sys-error);
 
   --lux-theme-button-rounded-stroked-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-rounded-stroked-primary-text-color: var(--lux-theme-primary-color);
-  --lux-theme-button-rounded-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);;
+  --lux-theme-button-rounded-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-button-rounded-stroked-warn-text-color: var(--mat-sys-error);
 
   --lux-theme-button-rounded-default-text-color: var(--lux-theme-dark-primary-text);
@@ -276,6 +276,21 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-flat-text-tracking: 0.078125rem;
   --lux-theme-button-raised-text-tracking: 0.078125rem;
   --lux-theme-button-stroked-text-tracking: 0.078125rem;
+
+  // LUX-Button-Toggle
+  --lux-theme-button-toggle-height: 2.25rem;
+  --lux-theme-button-toggle-height-dense: 1.5rem;
+  --lux-theme-button-toggle-shape: var(--lux-theme-app-border-radius);
+  --lux-theme-button-toggle-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-toggle-divider-color: var(--lux-theme-primary-color);
+  --lux-theme-button-toggle-disabled-divider-color: var(--lux-theme-app-border-color);
+  --lux-theme-button-toggle-selected-state-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-toggle-selected-state-background-color: var(--mat-sys-surface-container-high);
+  --lux-theme-button-toggle-hover-state-layer-opacity: 0.08;
+  --lux-theme-button-toggle-disabled-selected-state-text-color: var(--lux-theme-dark-disabled-text);
+  --lux-theme-button-toggle-disabled-selected-state-background-color: var(--lux-theme-app-content-bg);
+  --lux-theme-button-toggle-disabled-state-text-color: var(--lux-theme-dark-disabled-text);
+  --lux-theme-button-toggle-disabled-state-background-color: var(--lux-theme-app-border-color);
 
   // LUX-Card
   --lux-theme-card-title-line-height: 2rem;
@@ -478,7 +493,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-panel-bg-color: var(--mat-sys-surface-container);
   --lux-theme-panel-option-label-text-size: 1rem;
   --lux-theme-panel-option-label-text-color: var(--lux-theme-primary-color);
-  --lux-theme-panel-option-selected-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);;
+  --lux-theme-panel-option-selected-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
   --lux-theme-panel-option-hover-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
   --lux-theme-panel-option-focus-state-layer-color: color-mix(in srgb, var(--mat-sys-secondary-container) 12%, transparent);
   --lux-theme-panel-option-disabled-selected-checkmark-color: var(--lux-theme-dark-disabled-text);

@@ -36,6 +36,10 @@
     "autocomplete": {
       "error_message.not_an_option": "The entered value is not a valid option."
     },
+    "button-toggle": {
+      "aria_label": "Selection",
+      "error_message.required": "Required"
+    },
     "card": {
       "expandedLabel.close": "Hide",
       "expandedLabel.open": "More"
