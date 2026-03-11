@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild
@@ -21,11 +20,7 @@ import { LuxSelectFilterDirective } from './lux-select-filter.directive';
   styleUrls: ['./lux-select-panel-filter.component.scss'],
   imports: [LuxInputAcComponent, LuxInputAcSuffixComponent, LuxButtonComponent]
 })
-export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnChanges {
-  /**
-   * Referenz auf die Filter-Directive.
-   * Wenn gesetzt, wird die Directive direkt aufgerufen statt Events zu emittieren.
-   */
+export class LuxSelectPanelFilterComponent implements AfterViewInit, OnChanges {
   @Input() filterDirective?: LuxSelectFilterDirective;
 
   @Input() placeholder = 'Filter';
@@ -50,20 +45,9 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
     return this.filterDirective?.filterValue ?? this.filterValue;
   }
 
-  ngOnInit(): void {
-    // Registriere Input-Referenz bei Directive für Focus-Management
-    if (this.filterDirective && this.filterInput) {
-      this.filterDirective.setFilterInputRef(this.filterInput);
-    }
-  }
-
   ngAfterViewInit(): void {
     this.syncNativeInputAttributes();
-
-    // Registriere Input-Referenz bei Directive nach View-Init
-    if (this.filterDirective && this.filterInput) {
-      this.filterDirective.setFilterInputRef(this.filterInput);
-    }
+    this.syncDirectiveBindings();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -71,8 +55,18 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
       this.syncNativeInputAttributes();
     }
 
+    if (changes['filterDirective']) {
+      this.syncDirectiveBindings();
+    }
+
     if (changes['filterValue'] || changes['filterDirective']) {
       this.syncFilterValueToDirective();
+    }
+  }
+
+  private syncDirectiveBindings(): void {
+    if (this.filterDirective && this.filterInput) {
+      this.filterDirective.setFilterInputRef(this.filterInput);
     }
   }
 
@@ -100,22 +94,16 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
   }
 
   onInput(value: string): void {
-    // Wenn Directive vorhanden, direkt aufrufen
     if (this.filterDirective) {
       this.filterDirective.onFilterInput(value ?? '');
     }
-    // Event trotzdem emittieren für Rückwärtskompatibilität
+
     this.filterChange.emit(value ?? '');
   }
 
   onKeydown(event: KeyboardEvent): void {
-    // Wenn Directive vorhanden, Keyboard-Navigation delegieren
     if (this.filterDirective) {
       const handled = this.filterDirective.handleKeydown(event);
-
-      // Eigene Overrides werden immer gestoppt.
-      // Nicht behandelte Tasten bleiben isoliert - außer Escape,
-      // damit MatSelect sein natives Close-Verhalten ausführen kann.
       if (handled || event.key !== 'Escape') {
         event.stopPropagation();
       }
@@ -123,7 +111,6 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
       return;
     }
 
-    // Fallback: Events emittieren (Rückwärtskompatibilität)
     if (event.key === 'Escape') {
       this.escapePressed.emit(event);
       return;
@@ -142,7 +129,6 @@ export class LuxSelectPanelFilterComponent implements OnInit, AfterViewInit, OnC
   onClear(event: Event): void {
     event.stopPropagation();
 
-    // Wenn Directive vorhanden, Filter zurücksetzen
     if (this.filterDirective) {
       this.filterDirective.onFilterInput('');
     }
