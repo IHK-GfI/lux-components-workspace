@@ -182,6 +182,80 @@ describe('LuxSelectFilterDirective', () => {
     expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
   });
 
+  it('sollte bei PageDown ohne aktive Option material-konform ans sichtbare Ende springen', () => {
+    const keyManager = {
+      activeItemIndex: -1,
+      destroy: jasmine.createSpy('destroy'),
+      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
+        keyManager.activeItemIndex = index;
+      })
+    };
+
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect._keyManager = keyManager;
+    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect.options = {
+      toArray: () =>
+        Array.from({ length: 5 }, () => ({
+          _getHostElement: () => document.createElement('div')
+        })) as any[]
+    };
+
+    directive.handleKeydown(new KeyboardEvent('keydown', { key: 'PageDown' }));
+
+    expect(keyManager.setActiveItem).toHaveBeenCalledWith(4);
+  });
+
+  it('sollte bei PageUp ohne aktive Option material-konform an den sichtbaren Anfang springen', () => {
+    const keyManager = {
+      activeItemIndex: -1,
+      destroy: jasmine.createSpy('destroy'),
+      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
+        keyManager.activeItemIndex = index;
+      })
+    };
+
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect._keyManager = keyManager;
+    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect.options = {
+      toArray: () =>
+        Array.from({ length: 5 }, () => ({
+          _getHostElement: () => document.createElement('div')
+        })) as any[]
+    };
+
+    directive.handleKeydown(new KeyboardEvent('keydown', { key: 'PageUp' }));
+
+    expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
+  });
+
+  it('sollte bei Home und End zu den sichtbaren Grenzen navigieren', () => {
+    const keyManager = {
+      activeItemIndex: -1,
+      destroy: jasmine.createSpy('destroy'),
+      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
+        keyManager.activeItemIndex = index;
+      })
+    };
+
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect._keyManager = keyManager;
+    (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
+    (directive as any).matSelect.options = {
+      toArray: () =>
+        Array.from({ length: 5 }, () => ({
+          _getHostElement: () => document.createElement('div')
+        })) as any[]
+    };
+
+    directive.handleKeydown(new KeyboardEvent('keydown', { key: 'End' }));
+    directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Home' }));
+
+    expect(keyManager.setActiveItem).toHaveBeenCalledWith(4);
+    expect(keyManager.setActiveItem).toHaveBeenCalledWith(0);
+  });
+
   it('sollte bei Filteränderung aktive unsichtbare Option auf erste sichtbare setzen', () => {
     const keyManager = {
       activeItemIndex: 2,
@@ -427,6 +501,22 @@ describe('LuxSelectFilterDirective', () => {
     expect(focusSpy).toHaveBeenCalled();
   }));
 
+  it('sollte externen Fokus beim Schließen nicht überschreiben', fakeAsync(() => {
+    const focusSpy = jasmine.createSpy('focus');
+    const externalButton = document.createElement('button');
+    document.body.appendChild(externalButton);
+    externalButton.focus();
+    (directive as any).matSelect.focus = focusSpy;
+
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(document.activeElement).toBe(externalButton);
+    expect(focusSpy).not.toHaveBeenCalled();
+
+    document.body.removeChild(externalButton);
+  }));
+
   it('sollte nach Tab-basiertem Schließen keinen Trigger-Fokus erzwingen', fakeAsync(() => {
     const focusSpy = jasmine.createSpy('focus');
     (directive as any).matSelect.focus = focusSpy;
@@ -497,5 +587,59 @@ describe('LuxSelectFilterDirective', () => {
     expect(focusNextSpy).not.toHaveBeenCalled();
 
     document.body.removeChild(activeAnchor);
+  }));
+
+  it('sollte bei Outside-Click keinen Trigger-Fokus erzwingen', fakeAsync(() => {
+    const focusSpy = jasmine.createSpy('focus');
+    const selectHost = document.createElement('div');
+    const panel = document.createElement('div');
+    const externalButton = document.createElement('button');
+    document.body.appendChild(selectHost);
+    document.body.appendChild(panel);
+    document.body.appendChild(externalButton);
+
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    (directive as any).matSelect.focus = focusSpy;
+    (directive as any).matSelect.panel = new ElementRef(panel);
+    (directive as any).matSelect._elementRef = new ElementRef(selectHost);
+
+    (directive as any).registerPanelKeydownListener();
+    externalButton.focus();
+    externalButton.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    (directive as any).onPanelClose();
+    tick();
+
+    expect(document.activeElement).toBe(externalButton);
+    expect(focusSpy).not.toHaveBeenCalled();
+
+    directive.ngOnDestroy();
+    document.body.removeChild(externalButton);
+    document.body.removeChild(panel);
+    document.body.removeChild(selectHost);
+  }));
+
+  it('sollte im geöffneten Multiselect nach Mausklick auf eine Option wieder das Filter-Input fokussieren', fakeAsync(() => {
+    const input = document.createElement('input');
+    const panel = document.createElement('div');
+    const option = document.createElement('div');
+    option.classList.add('mat-mdc-option');
+    panel.appendChild(option);
+    document.body.appendChild(input);
+    document.body.appendChild(panel);
+
+    directive.setFilterInputRef(new ElementRef(input));
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    spyOnProperty((directive as any).matSelect, 'multiple', 'get').and.returnValue(true);
+    (directive as any).matSelect.panel = new ElementRef(panel);
+
+    (directive as any).registerPanelKeydownListener();
+    option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    tick();
+
+    expect(document.activeElement).toBe(input);
+
+    directive.ngOnDestroy();
+    document.body.removeChild(panel);
+    document.body.removeChild(input);
   }));
 });

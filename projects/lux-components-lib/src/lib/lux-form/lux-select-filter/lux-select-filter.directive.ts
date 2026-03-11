@@ -2,6 +2,20 @@ import { DestroyRef, Directive, ElementRef, EventEmitter, inject, Input, OnDestr
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { LuxUtil } from '../../lux-util/lux-util';
+import {
+  isMeaningfullyFocusedElement,
+  isOutsideSelectContext,
+  ManualTabIntent,
+  PendingCloseFocusAction,
+  shouldRestoreTriggerFocus
+} from './lux-select-filter-close-focus';
+import {
+  getAdjacentVisiblePosition,
+  getBoundaryVisiblePosition,
+  getPageVisiblePosition,
+  VisibleBoundary
+} from './lux-select-filter-navigation';
 import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 
 @Directive({
@@ -15,18 +29,18 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   private readonly internalSelect = this.matSelect as unknown as MatSelectInternal;
   private readonly timers: TimeoutMap = {};
   private panelElement?: HTMLElement;
+  private lastPanelElement?: HTMLElement;
 
   /**
-   * Steuert den Close-Fokusfluss:
-   * `default` = Trigger ggf. restaurieren,
-   * `native-tab` = nativen Tabfluss nicht überschreiben,
-   * `manual-tab-*` = preventDefault-Tab aus Filter-Input manuell fortsetzen.
+   * Beschreibt nur die gewünschte Fokus-Aktion nach dem Schließen des Panels.
    */
-  private closeIntent: CloseIntent = 'default';
+  private pendingCloseFocusAction: PendingCloseFocusAction = 'restore-trigger';
 
   private normalizedLabelCache: string[] = [];
   private itemCache: T[] = [];
   private readonly panelKeydownHandler = (event: KeyboardEvent) => this.handleOptionKeydown(event);
+  private readonly documentPointerdownHandler = (event: PointerEvent) => this.handleDocumentPointerdown(event);
+  private readonly panelClickHandler = (event: MouseEvent) => this.handlePanelClick(event);
 
   @Input() luxSelectFilter = false;
   @Input() luxFilterLabelFn?: (item: T, index: number) => string;
@@ -49,6 +63,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.removePanelKeydownListener();
+    this.removeDocumentPointerdownListener();
     this.clearAllTimers();
   }
 
@@ -100,7 +115,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
   private onPanelOpen(): void {
     if (!this.luxSelectFilter) return;
 
-    this.closeIntent = 'default';
+    this.pendingCloseFocusAction = 'restore-trigger';
     this.clearTimer('focusRestore');
     this.clearTimer('tabNavigation');
     this.rebuildCache();
@@ -114,23 +129,25 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     if (!this.luxSelectFilter) return;
 
     this.removePanelKeydownListener();
+    this.removeDocumentPointerdownListener();
     this.clearPanelFilterOffset();
     this.clearFilter();
 
-    const closeAction = this.consumeCloseIntent();
-    if (closeAction === 'native-tab') return;
+    const closeAction = this.consumePendingCloseFocusAction();
     if (closeAction === 'manual-tab-forward' || closeAction === 'manual-tab-backward') {
       this.scheduleManualTabNavigation(closeAction);
       return;
     }
 
+    if (closeAction === 'preserve-external-focus') return;
+
     this.restoreTriggerFocusIfNeeded();
   }
 
-  private consumeCloseIntent(): CloseIntent {
-    const currentIntent = this.closeIntent;
-    this.closeIntent = 'default';
-    return currentIntent;
+  private consumePendingCloseFocusAction(): PendingCloseFocusAction {
+    const currentAction = this.pendingCloseFocusAction;
+    this.pendingCloseFocusAction = 'restore-trigger';
+    return currentAction;
   }
 
   private rebuildCache(): void {
@@ -197,6 +214,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
 
   private registerPanelKeydownListener(): void {
     this.removePanelKeydownListener();
+    this.removeDocumentPointerdownListener();
 
     const tryAttachListener = () => {
       if (!this.matSelect.panelOpen) return;
@@ -208,9 +226,12 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
       }
 
       this.panelElement = panel;
+      this.lastPanelElement = panel;
       this.updatePanelFilterOffset(panel);
       // Capture: eigene Sichtbarkeitsnavigation vor MatSelect-Handler ausführen.
       panel.addEventListener('keydown', this.panelKeydownHandler, true);
+      panel.addEventListener('click', this.panelClickHandler, true);
+      document.addEventListener('pointerdown', this.documentPointerdownHandler, true);
     };
 
     tryAttachListener();
@@ -221,34 +242,45 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     if (!this.panelElement) return;
 
     this.panelElement.removeEventListener('keydown', this.panelKeydownHandler, true);
+    this.panelElement.removeEventListener('click', this.panelClickHandler, true);
     this.panelElement = undefined;
+  }
+
+  private removeDocumentPointerdownListener(): void {
+    document.removeEventListener('pointerdown', this.documentPointerdownHandler, true);
   }
 
   private handleKeyboard(event: KeyboardEvent, source: 'input' | 'panel'): boolean {
     if (!this.matSelect.panelOpen) return false;
     if (source === 'panel' && this.isEventFromFilterInput(event)) return false;
 
-    if (event.key === 'Tab') {
-      if (source === 'input') {
-        event.preventDefault();
-        event.stopPropagation();
-        this.closeIntent = event.shiftKey ? 'manual-tab-backward' : 'manual-tab-forward';
-        this.matSelect.close();
-        return true;
-      }
-
-      this.closeIntent = 'native-tab';
-      return false;
+    if (LuxUtil.isKeyTab(event)) {
+      return source === 'input' ? this.handleTabFromInput(event) : this.handleTabFromPanel();
     }
 
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    if ((LuxUtil.isKeyPageDown(event) || LuxUtil.isKeyPageUp(event)) && this.isListNavigationModifierAllowed(event)) {
       event.preventDefault();
       event.stopPropagation();
-      this.moveActiveVisibleOption(event.key === 'ArrowDown' ? 1 : -1);
+      this.moveActiveVisibleOptionByPage(LuxUtil.isKeyPageDown(event) ? 1 : -1);
       return true;
     }
 
-    if (event.key === 'Enter') {
+    // Home/End intentionally navigate the filtered option list even while the input keeps focus.
+    if ((LuxUtil.isKeyHome(event) || LuxUtil.isKeyEnd(event)) && this.isListNavigationModifierAllowed(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.moveToVisibleBoundary(LuxUtil.isKeyHome(event) ? 'start' : 'end');
+      return true;
+    }
+
+    if (LuxUtil.isKeyArrowDown(event) || LuxUtil.isKeyArrowUp(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.moveActiveVisibleOption(LuxUtil.isKeyArrowDown(event) ? 1 : -1);
+      return true;
+    }
+
+    if (LuxUtil.isKeyEnter(event)) {
       event.preventDefault();
       event.stopPropagation();
       this.selectActiveOrFirstVisibleOption();
@@ -258,8 +290,26 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     return false;
   }
 
+  private handleTabFromInput(event: KeyboardEvent): boolean {
+    event.preventDefault();
+    event.stopPropagation();
+    this.pendingCloseFocusAction = event.shiftKey ? 'manual-tab-backward' : 'manual-tab-forward';
+    this.matSelect.close();
+    return true;
+  }
+
+  private handleTabFromPanel(): boolean {
+    this.pendingCloseFocusAction = 'preserve-external-focus';
+    return false;
+  }
+
   private restoreTriggerFocusIfNeeded(): void {
     this.setTimer('focusRestore', () => {
+      const selectHost = this.getSelectHostElement();
+      if (!shouldRestoreTriggerFocus(document.activeElement, selectHost, this.lastPanelElement)) {
+        return;
+      }
+
       this.matSelect.focus();
     });
   }
@@ -279,11 +329,11 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
 
   private getTabNavigationAnchorElement(): HTMLElement | undefined {
     const activeElement = document.activeElement;
-    if (activeElement instanceof HTMLElement && activeElement !== document.body && activeElement !== document.documentElement) {
+    if (isMeaningfullyFocusedElement(activeElement)) {
       return activeElement;
     }
 
-    const selectHost = this.internalSelect._elementRef?.nativeElement;
+    const selectHost = this.getSelectHostElement();
     if (!selectHost) return undefined;
 
     const focusTarget = selectHost.querySelector<HTMLElement>('[tabindex], button, a[href], input, select, textarea');
@@ -299,14 +349,43 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
 
     const currentActiveIndex = this.getActiveOptionIndex(keyManager);
     const currentVisiblePos = visibleOptionIndexes.indexOf(currentActiveIndex);
-    const nextVisiblePos =
-      currentVisiblePos < 0
-        ? step === 1
-          ? 0
-          : visibleOptionIndexes.length - 1
-        : Math.max(0, Math.min(currentVisiblePos + step, visibleOptionIndexes.length - 1));
+    const nextVisiblePos = getAdjacentVisiblePosition(currentVisiblePos, visibleOptionIndexes.length, step);
 
-    const targetIndex = visibleOptionIndexes[nextVisiblePos];
+    this.activateVisibleOptionByPosition(keyManager, visibleOptionIndexes, nextVisiblePos);
+  }
+
+  private moveActiveVisibleOptionByPage(direction: 1 | -1): void {
+    const keyManager = this.getInternalKeyManager();
+    if (!keyManager) return;
+
+    const visibleOptionIndexes = this.getVisibleOptionIndexes();
+    if (visibleOptionIndexes.length === 0) return;
+
+    const currentActiveIndex = this.getActiveOptionIndex(keyManager);
+    const currentVisiblePos = visibleOptionIndexes.indexOf(currentActiveIndex);
+    const targetVisiblePos = getPageVisiblePosition(currentVisiblePos, visibleOptionIndexes.length, direction);
+
+    this.activateVisibleOptionByPosition(keyManager, visibleOptionIndexes, targetVisiblePos);
+  }
+
+  private moveToVisibleBoundary(boundary: VisibleBoundary): void {
+    const keyManager = this.getInternalKeyManager();
+    if (!keyManager) return;
+
+    const visibleOptionIndexes = this.getVisibleOptionIndexes();
+    if (visibleOptionIndexes.length === 0) return;
+
+    const targetVisiblePos = getBoundaryVisiblePosition(visibleOptionIndexes.length, boundary);
+    this.activateVisibleOptionByPosition(keyManager, visibleOptionIndexes, targetVisiblePos);
+  }
+
+  private activateVisibleOptionByPosition(
+    keyManager: InternalKeyManager,
+    visibleOptionIndexes: number[],
+    targetVisiblePos: number
+  ): void {
+    const clampedVisiblePos = Math.max(0, Math.min(targetVisiblePos, visibleOptionIndexes.length - 1));
+    const targetIndex = visibleOptionIndexes[clampedVisiblePos];
     keyManager.setActiveItem(targetIndex);
     this.scrollOptionIntoView(targetIndex);
   }
@@ -420,6 +499,10 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     return !!target?.closest('.lux-select-panel-filter, .lux-select-panel-filter-input');
   }
 
+  private isListNavigationModifierAllowed(event: KeyboardEvent): boolean {
+    return !event.altKey && !event.ctrlKey && !event.metaKey;
+  }
+
   private ensureOptionVisibleBelowFilter(panel: HTMLElement, option: MatOption): void {
     const optionHost = this.getOptionHostElement(option);
     if (!optionHost) return;
@@ -454,6 +537,31 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     panel.style.removeProperty('--lux-select-filter-offset');
   }
 
+  private handleDocumentPointerdown(event: PointerEvent): void {
+    if (!isOutsideSelectContext(event.target, this.getSelectHostElement(), this.panelElement)) {
+      return;
+    }
+
+    this.pendingCloseFocusAction = 'preserve-external-focus';
+  }
+
+  private handlePanelClick(event: MouseEvent): void {
+    if (!this.matSelect.multiple) {
+      return;
+    }
+
+    const target = event.target;
+    if (!(target instanceof HTMLElement) || !target.closest('.mat-mdc-option')) {
+      return;
+    }
+
+    this.focusFilterInput();
+  }
+
+  private getSelectHostElement(): HTMLElement | undefined {
+    return this.internalSelect._elementRef?.nativeElement;
+  }
+
   private getFilterHeight(panel: HTMLElement): number {
     const filterHost = panel.querySelector<HTMLElement>('lux-select-panel-filter');
     if (!filterHost) return 0;
@@ -486,7 +594,5 @@ interface MatOptionInternal {
   _selectViaInteraction?(): void;
 }
 
-type CloseIntent = 'default' | 'native-tab' | ManualTabIntent;
-type ManualTabIntent = 'manual-tab-forward' | 'manual-tab-backward';
 type TimerKey = 'focusInput' | 'focusRestore' | 'tabNavigation' | 'panelAttach';
 type TimeoutMap = Partial<Record<TimerKey, ReturnType<typeof setTimeout>>>;

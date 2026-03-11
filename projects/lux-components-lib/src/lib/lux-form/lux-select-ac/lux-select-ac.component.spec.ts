@@ -954,6 +954,70 @@ describe('LuxSelectAcComponent', () => {
       expect(activeItem?.value?.value).toBe('D');
     }));
 
+    it('navigiert mit PageUp und PageDown über sichtbare Optionen', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      fixture.detectChanges();
+
+      const luxSelect = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = '';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }));
+      fixture.detectChanges();
+      flush();
+
+      let keyManager = (luxSelect.matSelect as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      expect(keyManager?.activeItem?.value?.value).toBe('D');
+
+      LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'PageUp', bubbles: true }));
+      fixture.detectChanges();
+      flush();
+
+      keyManager = (luxSelect.matSelect as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      expect(keyManager?.activeItem?.value?.value).toBe('A');
+    }));
+
+    it('navigiert mit Home und End zur ersten bzw. letzten sichtbaren Option', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterComponent);
+      fixture.detectChanges();
+
+      const luxSelect = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = '';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+      fixture.detectChanges();
+      flush();
+
+      let keyManager = (luxSelect.matSelect as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      expect(keyManager?.activeItem?.value?.value).toBe('D');
+
+      LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+      fixture.detectChanges();
+      flush();
+
+      keyManager = (luxSelect.matSelect as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      expect(keyManager?.activeItem?.value?.value).toBe('A');
+    }));
+
     it('schließt im Single-Select bei Enter auf aktiver Option und erlaubt erneute Arrow-Navigation', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       const component = fixture.componentInstance;
@@ -1124,6 +1188,8 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
+      expect(document.activeElement).toBe(filterInput);
+
       // In Mehrfachauswahl bleibt das Panel nach der Auswahl typischerweise geöffnet.
       // Daher können wir direkt im selben Panel weiter filtern und selektieren.
       filterInput.value = 'gruppe';
@@ -1138,6 +1204,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
+      expect(document.activeElement).toBe(filterInput);
       expect(component.selectedOptions.length).toBe(2);
       expect(component.selectedOptions[0].value).toBe('A');
       expect(component.selectedOptions[1].value).toBe('B');
