@@ -7,6 +7,7 @@ const day = hour * 24;
 const week = day * 7;
 const month = week * 4;
 const year = month * 12;
+const fixedNow = new Date(2026, 0, 15, 12, 0, 0, 0);
 
 describe('LuxRelativeTimestampPipe', () => {
   function createPipe() {
@@ -14,11 +15,18 @@ describe('LuxRelativeTimestampPipe', () => {
   }
 
   beforeEach(() => {
+    jasmine.clock().install();
+    jasmine.clock().mockDate(fixedNow);
+
     TestBed.configureTestingModule({
       providers: [
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(() => {
+    jasmine.clock().uninstall();
   });
 
   it('create an instance', () => {
@@ -28,7 +36,7 @@ describe('LuxRelativeTimestampPipe', () => {
 
   it('should show default text', () => {
     const pipe = createPipe();
-    expect(pipe.transform(null as any, 'Keine Zeit')).toEqual('Keine Zeit');
+    expect(pipe.transform(null, 'Keine Zeit')).toEqual('Keine Zeit');
   });
 
   it('should show correct future times', () => {

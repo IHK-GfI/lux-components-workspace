@@ -33,6 +33,11 @@
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxMultiple               | boolean                                                                                                                                              | Ermöglicht die Mehrfachauswahl in der Combobox.                                                                                                                                                                                                                                                                                              |
 | luxEntryBlockSize         | number                                                                                                                                               | Bestimmt wie viele Elemente in der Selection-Box auf einmal angezeigt werden, für weitere Elemente kann der Anwender in dem Fenster herunterscrollen.                                                                                                                                                                                        |
+| luxVisibleOptionCount     | number                                                                                                                                               | Begrenzt die Anzahl der gleichzeitig sichtbaren Optionen im geöffneten Panel. Werte `<= 0`, `null` oder `undefined` deaktivieren das Override und verwenden die Standardhöhe. Hat keinen Einfluss auf das blockweise Nachladen über `luxEntryBlockSize`.                                                                          |
+| luxEnableFilter           | boolean                                                                                                                                              | Aktiviert ein Suchfeld im Dropdown-Panel. Die Filterung erfolgt rein clientseitig auf Basis der aktuell geladenen Lookup-Eintraege. Standardwert: `false`.                                                                                                                                                                                     |
+| luxFilterPlaceholder      | string                                                                                                                                               | Platzhalter- und ARIA-Label-Text des Filtereingabefeldes im Dropdown-Panel. Standardwert: `Filter`.                                                                                                                                                                                                                                          |
+| luxFilterValue            | string                                                                                                                                               | Vorbelegter Wert des Filtereingabefeldes. Ein nicht-leerer Wert aktiviert die clientseitige Filterung direkt beim Öffnen. Standardwert: leerer String.                                                                                                                                                                                       |
+| luxFilterClearAriaLabel   | string                                                                                                                                               | ARIA-Label der Schaltfläche zum Leeren des Filtereingabefeldes. Standardwert: `Clear filter`.                                                                                                                                                                                                                                                |
 | luxLookupId               | string                                                                                                                                               | Enthält die ID, die diese Lookup-Komponente kennzeichnet. Wichtig: Muss definiert sein, da der LuxLookupHandler das Laden der Daten hierüber anstößt.                                                                                                                                                                                        |
 | luxTableNo                | number                                                                                                                                               | Bestimmt die Schlüsseltabelle, aus welcher die Daten geladen werden sollen. Kann einfach als Number-Wert übergeben werden (z.B: 1032)                                                                                                                                                                                                        |
 | luxRenderProp             | string \| Function                                                                                                                                   | Enthält die Property, welche für die Darstellung einzelnen Schlüsseltabelleneinträge genutzt wird. Wahlweise kann hier auch eine Funktion mitgegeben werden, welche als Parameter ein Objekt vom Typ LuxLookupTableEntry enthält und einen String als Rückgabewert besitzt.                                                                  |
@@ -250,3 +255,30 @@ Html
 >
 </lux-lookup-combobox-ac>
 ```
+
+### 3. Mit clientseitiger Filterung
+
+Ts
+
+```typescript
+selected: LuxLookupTableEntry | null = null;
+parameters: LuxLookupParameters = new LuxLookupParameters({
+  knr: 101,
+  fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+});
+```
+
+Html
+
+```html
+<lux-lookup-combobox-ac
+  luxLabel="Beispiel"
+  luxRenderProp="kurzText"
+  [luxParameters]="parameters"
+  luxTableNo="1032"
+  [luxEnableFilter]="true"
+  [(luxValue)]="selected"
+  luxLookupId="beispiel"
+></lux-lookup-combobox-ac>
+```
+

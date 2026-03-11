@@ -44,6 +44,11 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
   multiValue: LuxLookupTableEntry | LuxLookupTableEntry[] | null = null;
   entryBlockSize = 25;
   bLuxWithEmptyEntry = true;
+  enableFilter = true;
+  filterPlaceholder = 'Filter';
+  filterValue = '';
+  filterClearAriaLabel = 'Clear filter';
+  visibleOptionCount = 0;
   labelLongFormat = false;
   denseFormat = false;
   value336 = {
