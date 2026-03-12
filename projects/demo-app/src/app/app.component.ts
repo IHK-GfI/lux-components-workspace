@@ -17,6 +17,7 @@ import {
   LuxAppHeaderAcComponent,
   LuxAppHeaderAcNavMenuComponent,
   LuxAppHeaderAcNavMenuItemComponent,
+  LuxAppHeaderAcSessionTimerComponent,
   LuxAppHeaderAcUserMenuComponent,
   LuxAppHeaderActionNavComponent,
   LuxAppHeaderActionNavItemComponent,
@@ -26,6 +27,7 @@ import {
   LuxAppService,
   LuxAriaLabelDirective,
   LuxButtonComponent,
+  LuxConsentService,
   LuxConsoleService,
   LuxDividerComponent,
   LuxIconRegistryService,
@@ -42,8 +44,7 @@ import {
   LuxSnackbarService,
   LuxTenantLogoComponent,
   LuxThemeService,
-  LuxTooltipDirective,
-  LuxAppHeaderAcSessionTimerComponent
+  LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -102,6 +103,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private appService = inject(LuxAppService);
   private mediaQueryService = inject(LuxMediaQueryObserverService);
+  private consentService = inject(LuxConsentService);
   componentsOverviewService = inject(ComponentsOverviewNavigationService);
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
   fixedFooterService = inject(LuxAppFooterFixedService);
@@ -161,6 +163,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.updateFooterLinks();
+
+    this.consentService.openIfNeeded();
   }
 
   ngOnDestroy() {
@@ -184,11 +188,16 @@ export class AppComponent implements OnInit, OnDestroy {
       this.demoUserName = '';
       this.demoUserEmail = '';
       this.demoLoginBtn = 'Anmelden';
+      this.consentService.clearSessionConsent();
     } else {
       this.demoUserName = 'Susanne Sonnenschein';
       this.demoUserEmail = 'susanne.sonnenschein@example.com';
       this.demoLoginBtn = 'Abmelden';
     }
+  }
+
+  onOpenConsent() {
+    this.consentService.open();
   }
 
   goToHome() {
@@ -253,7 +262,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.linkService.linkInfos = [
       new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.dataProtection'), 'datenschutz', true),
       new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.impressum'), 'impressum'),
-      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.licenseHint'), 'license-hint')
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.licenseHint'), 'license-hint'),
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.consent'), '', true, false, () => this.onOpenConsent())
     ];
   }
 

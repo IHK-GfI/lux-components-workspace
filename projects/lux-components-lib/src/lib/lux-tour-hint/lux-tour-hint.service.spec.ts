@@ -1,19 +1,27 @@
-﻿import { Component, inject } from '@angular/core';
+﻿import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
+import { LuxConsentService } from '../lux-consent/lux-consent.service';
 import { LuxTestHelper } from '../lux-util/testing/lux-test-helper';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
-
-import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
 import { LuxTourHintService } from './lux-tour-hint.service';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 
 describe('LuxTourHintService', () => {
   beforeEach(waitForAsync(() => {
+    const consentServiceMock = {
+      hasConsent: () => true
+    };
+
     TestBed.configureTestingModule({
-      providers: [LuxTourHintService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
+      providers: [
+        LuxTourHintService,
+        { provide: LuxConsentService, useValue: consentServiceMock },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      , provideLuxTranslocoTesting()],
     }).compileComponents();
   }));
 
@@ -217,10 +225,6 @@ describe('LuxTourHintService', () => {
           content: 'content'
         }
       };
-
-      TestBed.inject(LuxComponentsConfigService).updateConfiguration({
-        useLocalStorageForComponentsAllowed: true
-      });
 
       /* ___Vorbedingungen testen___ */
       expect(document.body.getElementsByTagName('lux-tour-hint').length).toBe(0);

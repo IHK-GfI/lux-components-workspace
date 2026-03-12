@@ -48,6 +48,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'tabs', loadComponent: () => import('./tabs-example/tabs-example.component').then(m => m.TabsExampleComponent) },
       { path: 'infinite-scrolling', loadComponent: () => import('./infinite-scrolling-example/infinite-scrolling-example.component').then(m => m.InfiniteScrollingExampleComponent) },
       { path: 'dialog', loadComponent: () => import('./dialog-example/dialog-example.component').then(m => m.DialogExampleComponent) },
+      { path: 'consent', loadComponent: () => import('./consent-example/consent-example.component').then(m => m.ConsentExampleComponent) },
       { path: 'file-input-ac', loadComponent: () => import('./file-example/file-input-authentic-example/file-input-authentic-example.component').then(m => m.FileInputAuthenticExampleComponent) },
       { path: 'file-list', loadComponent: () => import('./file-example/file-list-example/file-list-example.component').then(m => m.FileListExampleComponent) },
       { path: 'file-upload', loadComponent: () => import('./file-example/file-upload-example/file-upload-example.component').then(m => m.FileUploadExampleComponent) },

@@ -1,0 +1,200 @@
+<lux-dialog-structure>
+  <lux-dialog-title>{{ 'luxc.consent.title' | transloco }}</lux-dialog-title>
+  <lux-dialog-content>
+    <div class="lux-consent-card">
+      <p class="lux-consent-description">
+        {{ 'luxc.consent.description' | transloco }}
+      </p>
+
+      <lux-divider></lux-divider>
+
+      @if (activeSection === 'datenschutz' && datenschutzComponentResolved) {
+        <ng-container *ngComponentOutlet="datenschutzComponentResolved; inputs: consentConfig.datenschutzComponentInputs"></ng-container>
+      }
+
+      @if (activeSection === 'impressum' && impressumComponentResolved) {
+        <ng-container *ngComponentOutlet="impressumComponentResolved; inputs: consentConfig.impressumComponentInputs"></ng-container>
+      }
+
+      @if (activeSection === 'consent' && !isExpanded) {
+        <div class="lux-flex lux-flex-col lux-gap-4 lux-pb-4">
+          @for (category of cookieCategories; track $index) {
+            @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
+              @if (category.purpose === LuxConsentPurpose.Essential) {
+                <p>
+                  <span class="essential-always-active">{{ 'luxc.consent.always_active' | transloco }}</span
+                  >: <span>{{ category.name | transloco }}</span>
+                  <span class="essential-hint">{{ category.hint | transloco }}</span>
+                </p>
+              } @else {
+                <lux-toggle-ac
+                  [luxNoTopLabel]="true"
+                  [luxDense]="true"
+                  [luxLabel]="category.name | transloco"
+                  [luxDisabled]="category.disabled"
+                  [luxHint]="category.hint | transloco"
+                  [luxChecked]="category.enabled"
+                  (luxCheckedChange)="toggleCategoryEnabled(category.purpose, $event)"
+                ></lux-toggle-ac>
+              }
+            }
+          }
+        </div>
+      }
+
+      @if (activeSection === 'consent' && isExpanded) {
+        <div class="cookie-details">
+          <div class="details-container lux-mb-3">
+            <div class="purposes-sidebar">
+              <h3 class="sidebar-title">{{ 'luxc.consent.purposes_title' | transloco }}</h3>
+              <div class="purpose-checkboxes">
+                @for (category of cookieCategories; track $index) {
+                  @if (hasConfiguredEntriesForCategory(category.purpose) || category.purpose === LuxConsentPurpose.Essential) {
+                    @if (category.purpose === LuxConsentPurpose.Essential) {
+                      <p>
+                        <span class="essential-always-active">{{ 'luxc.consent.always_active' | transloco }}</span
+                        >: <span>{{ category.name | transloco }}</span>
+                      </p>
+                    } @else {
+                      <lux-toggle-ac
+                        [luxNoLabels]="true"
+                        [luxLabel]="category.name | transloco"
+                        [(luxChecked)]="category.enabled"
+                        [luxDisabled]="category.disabled"
+                        [luxTagId]="'cookie-' + category.purpose"
+                      >
+                      </lux-toggle-ac>
+                    }
+                  }
+                }
+              </div>
+            </div>
+
+            <div class="cookies-content lux-p-4">
+              <h3>{{ 'luxc.consent.cookies_used_title' | transloco }}</h3>
+              @for (category of cookieCategories; track $index) {
+                @if (hasConfiguredEntriesForCategory(category.purpose)) {
+                  @if ($index !== 0) {
+                    <lux-divider class="lux-pt-4"></lux-divider>
+                  }
+                  <div class="purpose-section">
+                    <h4 class="purpose-title">{{ category.name | transloco }}</h4>
+                    <p>
+                      {{ category.hint | transloco }}
+                    </p>
+
+                    @for (type of storageTypes; track $index) {
+                      @if (getEntriesForPurposeAndType(category.purpose, type).length > 0) {
+                        <div class="storage-type-section">
+                          <h5 class="storage-type-title">{{ type }}</h5>
+                          <lux-table [luxData]="getEntriesForPurposeAndType(category.purpose, type)">
+                            <lux-table-column luxColumnDef="name">
+                              <lux-table-column-header>
+                                <ng-template>{{ 'luxc.consent.table_header_name' | transloco }}</ng-template>
+                              </lux-table-column-header>
+                              <lux-table-column-content>
+                                <ng-template let-element>
+                                  <span class="storage-name">{{ element.name }}</span>
+                                </ng-template>
+                              </lux-table-column-content>
+                            </lux-table-column>
+                            <lux-table-column luxColumnDef="duration" luxResponsiveBehaviour="name" [luxResponsiveAt]="['xs', 'sm']">
+                              <lux-table-column-header>
+                                <ng-template>{{ 'luxc.consent.table_header_duration' | transloco }}</ng-template>
+                              </lux-table-column-header>
+                              <lux-table-column-content>
+                                <ng-template let-element>
+                                  {{ element.duration }}
+                                </ng-template>
+                              </lux-table-column-content>
+                            </lux-table-column>
+                            <lux-table-column luxColumnDef="description" luxResponsiveBehaviour="name" [luxResponsiveAt]="['xs', 'sm']">
+                              <lux-table-column-header>
+                                <ng-template>{{ 'luxc.consent.table_header_description' | transloco }}</ng-template>
+                              </lux-table-column-header>
+                              <lux-table-column-content>
+                                <ng-template let-element>
+                                  <span
+                                    >{{ element.description }}
+                                    @if (element.nameIsPrefix) {
+                                      <span class="essential-hint">{{ 'luxc.consent.multiple_entries_note' | transloco }}</span>
+                                    }
+                                  </span>
+                                </ng-template>
+                              </lux-table-column-content>
+                            </lux-table-column>
+                          </lux-table>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <lux-divider></lux-divider>
+
+    <div class="lux-flex lux-gap-5 lux-mt-3 lux-justify-start lt-sm:lux-flex-col lt-sm:lux-mt-1">
+      @if (activeSection !== 'consent') {
+        <lux-link-plain [luxLabel]="'luxc.consent.link_back' | transloco" (luxClicked)="showSection('consent')"></lux-link-plain>
+      }
+      @if (activeSection === 'consent' && isExpanded) {
+        <lux-link-plain
+          [luxLabel]="'luxc.consent.hide_details' | transloco"
+          [luxIconShowRight]="false"
+          (luxClicked)="toggleDetails()"
+        ></lux-link-plain>
+      }
+      @if (activeSection === 'consent' && !isExpanded) {
+        <lux-link-plain
+          [luxLabel]="'luxc.consent.show_details' | transloco"
+          [luxIconShowRight]="false"
+          (luxClicked)="toggleDetails()"
+        ></lux-link-plain>
+      }
+      <lux-link-plain [luxLabel]="'luxc.consent.link_datenschutz' | transloco" (luxClicked)="showSection('datenschutz')"></lux-link-plain>
+      <lux-link-plain [luxLabel]="'luxc.consent.link_impressum' | transloco" (luxClicked)="showSection('impressum')"></lux-link-plain>
+    </div>
+  </lux-dialog-content>
+  <lux-dialog-actions class="lux-consent-dialog-actions">
+    @if (hasNonEssentialEntries) {
+      <lux-button
+        [luxLabel]="'luxc.consent.button_decline_optional' | transloco"
+        luxTagId="decline-optional"
+        [luxFlat]="true"
+        luxColor="primary"
+        (luxClicked)="declineAll()"
+      >
+      </lux-button>
+      <lux-button
+        [luxLabel]="'luxc.consent.button_accept_selected' | transloco"
+        luxTagId="accept-selected"
+        [luxFlat]="true"
+        luxColor="primary"
+        (luxClicked)="acceptSelected()"
+      >
+      </lux-button>
+      <lux-button
+        [luxLabel]="'luxc.consent.button_accept_all' | transloco"
+        luxTagId="accept-all"
+        [luxFlat]="true"
+        luxColor="primary"
+        (luxClicked)="acceptAll()"
+      >
+      </lux-button>
+    } @else {
+      <lux-button
+        [luxLabel]="'luxc.consent.button_close' | transloco"
+        luxTagId="close"
+        [luxFlat]="true"
+        luxColor="primary"
+        (luxClicked)="closeDialog()"
+      >
+      </lux-button>
+    }
+  </lux-dialog-actions>
+</lux-dialog-structure>

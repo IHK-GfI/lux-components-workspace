@@ -23,9 +23,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-app-footer  |
+| Name     | Beschreibung   |
+| -------- | -------------- |
+| selector | lux-app-footer |
 
 ### @Input
 
@@ -87,7 +87,7 @@ darzustellen. Der Service nimmt einzelne Objekte bzw. Arrays von `LuxAppFooterLi
 | Property              | Beschreibung         |                                                                     |
 | --------------------- | -------------------- | ------------------------------------------------------------------- |
 | fixedMode             | boolean              | Lierfert `true` zurück, wenn der Footer fixiert ist, `false` sonst. |
-| fixedModeAsObservable | Observable\<boolean> | Sendet `true`, wenn der Footer fixiert ist, `false` sonst. |
+| fixedModeAsObservable | Observable\<boolean> | Sendet `true`, wenn der Footer fixiert ist, `false` sonst.          |
 
 Wichtig! Bitte den Hinweis im Abschnitt [3. Footer nicht fixiert](#3-footer-nicht-fixiert) beachten.
 
@@ -123,12 +123,13 @@ Ein Beispiel ist in dem Blueprint zu sehen. Der Link-Service nimmt Objekte der K
 
 Die Klasse bietet über die statische `generateInfo`-Methode eine Factory-Methode für die Erzeugung an.
 
-| Name          | Typ     | Beschreibung                                                             |
-| ------------- | ------- | ------------------------------------------------------------------------ |
-| label         | string  | Label das für den Eintrag angezeigt wird.                                |
-| path          | string  | Pfad, der über den Routing Service zu einer Seite der Webanwendung führt |
-| alwaysVisible | boolean | Unabhängig von allen Faktoren diesen Eintrag anzeigen.                   |
-| blank         | boolean | Ermöglicht es, einen externen Link in einem neuen Tab zu öffnen.         |
+| Name          | Typ                                   | Beschreibung                                                             |
+| ------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| label         | string                                | Label das für den Eintrag angezeigt wird.                                |
+| path          | string                                | Pfad, der über den Routing Service zu einer Seite der Webanwendung führt |
+| alwaysVisible | boolean                               | Unabhängig von allen Faktoren diesen Eintrag anzeigen.                   |
+| blank         | boolean                               | Ermöglicht es, einen externen Link in einem neuen Tab zu öffnen.         |
+| onClick       | (that: ILuxAppFooterLinkInfo) => void | Die Funktion wird aufgerufen, wenn der Link betätigt wurde.              |
 
 ## Beispiele
 

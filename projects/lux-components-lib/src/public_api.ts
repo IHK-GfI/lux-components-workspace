@@ -141,6 +141,16 @@ export * from './lib/lux-filter/lux-filter-form/lux-filter-form-extended/lux-fil
 export * from './lib/lux-filter/lux-filter-form/lux-filter-form.component';
 
 /**
+ * LUX-Consent
+ */
+export * from './lib/lux-consent/lux-consent-config.interface';
+export * from './lib/lux-consent/lux-consent-dialog-launcher';
+export * from './lib/lux-consent/lux-consent-dialog-launcher.service';
+export * from './lib/lux-consent/lux-consent-dialog.component';
+export * from './lib/lux-consent/lux-consent.model';
+export * from './lib/lux-consent/lux-consent.service';
+
+/**
  * LUX-Icon
  */
 export * from './lib/lux-icon/lux-icon/lux-icon-registry.service';

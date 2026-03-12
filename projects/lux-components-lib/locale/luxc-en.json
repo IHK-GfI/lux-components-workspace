@@ -48,6 +48,46 @@
       "input.placeholder.lbl": "enter or select",
       "remove": "remove"
     },
+    "consent": {
+      "always_active": "always active",
+      "button_accept_all": "Accept all",
+      "button_accept_selected": "Accept selection",
+      "button_close": "Close",
+      "button_decline_optional": "Decline optional",
+      "cookies_used_title": "Cookies used",
+      "description": "We use cookies to facilitate the provision of our services. Cookies are small text files that websites use to make the user experience more efficient. By law, we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are set by third parties that appear on our pages. You can change or withdraw your consent at any time from the cookie declaration on our website.",
+      "essential": {
+        "hint": "Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies.",
+        "name": "Essential"
+      },
+      "hide_details": "Back",
+      "link_back": "Back",
+      "link_datenschutz": "Privacy policy",
+      "link_impressum": "Legal notice",
+      "marketing": {
+        "hint": "Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and therefore more valuable for publishers and third-party advertisers.",
+        "name": "Marketing"
+      },
+      "multiple_entries_note": "(* there can be multiple entries)",
+      "other": {
+        "hint": "Unclassified cookies are cookies that we are currently trying to classify together with providers of individual cookies.",
+        "name": "Unclassified"
+      },
+      "preferences": {
+        "hint": "Preference cookies enable a website to remember information that changes the way the website behaves or looks, like your preferred language or the region that you are in.",
+        "name": "Preferences"
+      },
+      "purposes_title": "Purposes",
+      "show_details": "Details",
+      "statistics": {
+        "hint": "Statistic cookies help website owners understand how visitors interact with websites by collecting and reporting information anonymously.",
+        "name": "Statistics"
+      },
+      "table_header_description": "Description",
+      "table_header_duration": "Duration",
+      "table_header_name": "Name",
+      "title": "Standard notice"
+    },
     "datepicker": {
       "error_message.empty": "The date should not be empty",
       "error_message.invalid": "Invalid date",

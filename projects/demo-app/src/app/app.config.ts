@@ -7,9 +7,10 @@ import { LangDefinition, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
+import { appConsentProvider } from './app.consent';
 import { routes } from './app.routes';
-import { provideLuxTranslocoRoot } from './transloco-root.config';
 import { MockAppHeaderAcLuxSessionTimerService } from './components-overview/session-timer-example/mock-session-timer-service';
+import { provideLuxTranslocoRoot } from './transloco-root.config';
 
 const myConfiguration: LuxComponentsConfigParameters = {
   generateLuxTagIds: environment.generateLuxTagIds,
@@ -47,6 +48,7 @@ export const appConfig: ApplicationConfig = {
       // Sicherstellen, dass Ressourcen geladen sind bevor Bootstrap finalisiert.
       return firstValueFrom(t.load(chosen));
     }),
-    { provide: LuxAppHeaderAcSessionTimerService, useClass: MockAppHeaderAcLuxSessionTimerService }
+    { provide: LuxAppHeaderAcSessionTimerService, useClass: MockAppHeaderAcLuxSessionTimerService },
+    appConsentProvider
   ]
 };

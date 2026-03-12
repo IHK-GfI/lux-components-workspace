@@ -94,6 +94,8 @@ class MockStorage {
   }
 
   setItem(key: string, value: string, sensitive: boolean) {}
+
+  removeItem(key: string) {}
 }
 
 @Component({

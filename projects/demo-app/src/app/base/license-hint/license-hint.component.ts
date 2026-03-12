@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { LuxCardComponent, LuxCardContentComponent } from '@ihk-gfi/lux-components';
 import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 
@@ -22,6 +22,8 @@ Bis zur Version 14.x.x werden ebenfalls die Font-Awesome sowie Material-Icons ve
 
 Diese Anwendung verwendet die Schriftarten "Source Sans Pro" designed by Paul D. Hunt (lizensiert unter [SIL Open Font License V1.1](https://github.com/IHK-GfI/lux-components-icons-and-fonts/blob/master/assets/fonts/Source%20Sans%20Pro/SIL%20Open%20Font%20License%20V1.1.md)) sowie "BloggerSans" created by Sergiy Tkachenko (Lizenz: https://www.fontsquirrel.com/license/blogger-sans, lizensiert unter [Creative Commons 4.0 (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)).
   `;
+
+  @Input() fullWidth = false;
 
   constructor() {}
 }

@@ -64,7 +64,6 @@ Dieser Service sollte dann vom Entwickler genutzt werden, wenn die Konfiguration
 | iconBasePath?                       | string  | Bestimmt den Basepfad der LUX-Icons.                                                                                                                                                        |
 | tenantLogoLookupServiceUrl          | string  | Bestimmt den Basepfad der Tenantlogos.                                                                                                                                                      |
 | appFooter                           | Object  | Einstellungen des Footers.                                                                                                                                                                  |
-| useLocalStorageForComponentsAllowed | boolean | Bestimmt, ob Komponenten (z.B. Table, Tour-Hint und der LuxThemeService) den Local Storage des Browsers nutzen dürfen, um Informationen zu speichern.                                       |
 
 #### appFooter
 

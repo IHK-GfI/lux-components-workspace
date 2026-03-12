@@ -1,0 +1,52 @@
+<example-base-structure
+  exampleTitle="Consent"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90consent-v19"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col lux-gap-4">
+      <h3>Einwilligung testen</h3>
+      <p>Aktives Ziel für Impressum und Datenschutz: <b>{{ activeTargetLabel }}</b></p>
+      <p>Aktive Entry-Konfiguration: <b>{{ activeEntriesLabel }}</b></p>
+      <p>Cookie-Key: <i>lux-app-demo-consent-example</i></p>
+
+      <lux-button
+        [luxLabel]="useEssentialOnlyEntries ? 'Cookie-Einstellungen' : 'Einwilligung'"
+        luxColor="primary"
+        [luxFlat]="true"
+        (luxClicked)="openConsent()"
+      ></lux-button>
+    </div>
+  </example-base-content>
+
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Impressum/Datenschutz als Components öffnen"
+      luxHint="Wenn deaktiviert, werden stattdessen externe URLs verwendet."
+      [luxNoTopLabel]="true"
+      [(luxChecked)]="useComponentTargets"
+    ></lux-toggle-ac>
+
+    <lux-input-ac
+      luxName="consent-impressum-url"
+      luxLabel="Impressum URL"
+      luxHint="URL für Impressum im Consent-Dialog (URL-Modus)."
+      [(luxValue)]="impressumUrl"
+      [luxDisabled]="useComponentTargets"
+    ></lux-input-ac>
+
+    <lux-input-ac
+      luxName="consent-datenschutz-url"
+      luxLabel="Datenschutz URL"
+      luxHint="URL für Datenschutz im Consent-Dialog (URL-Modus)."
+      [(luxValue)]="datenschutzUrl"
+      [luxDisabled]="useComponentTargets"
+    ></lux-input-ac>
+
+    <lux-toggle-ac
+      luxLabel="Nur essentielle LuxConsentEntry-Einträge verwenden"
+      luxHint="Zum Testen des Verhaltens ohne optionale Zwecke."
+      [luxNoTopLabel]="true"
+      [(luxChecked)]="useEssentialOnlyEntries"
+    ></lux-toggle-ac>
+  </example-base-simple-options>
+</example-base-structure>

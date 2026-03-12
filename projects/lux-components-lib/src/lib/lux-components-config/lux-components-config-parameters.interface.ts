@@ -83,6 +83,4 @@ export interface LuxComponentsConfigParameters {
     httpSessionTimeHeaderName?: string;
     httpSessionProlongationHeaderName?: string;
   };
-
-  useLocalStorageForComponentsAllowed?: boolean;
 }

@@ -48,6 +48,46 @@
       "input.placeholder.lbl": "eingeben oder auswählen",
       "remove": "entfernen"
     },
+    "consent": {
+      "always_active": "immer aktiv",
+      "button_accept_all": "Alle akzeptieren",
+      "button_accept_selected": "Auswahl akzeptieren",
+      "button_close": "Schließen",
+      "button_decline_optional": "Optionale ablehnen",
+      "cookies_used_title": "Verwendete Cookies",
+      "description": "Wir verwenden Cookies, um die Bereitstellung unserer Dienste zu erleichtern. Cookies sind kleine Textdateien, die von Webseiten verwendet werden, um die Benutzererfahrung effizienter zu gestalten. Laut Gesetz können wir Cookies auf Ihrem Gerät speichern, wenn diese für den Betrieb dieser Seite unbedingt notwendig sind. Für alle anderen Cookie-Typen benötigen wir Ihre Erlaubnis. Diese Seite verwendet unterschiedliche Cookie-Typen. Einige Cookies werden von Drittparteien platziert, die auf unseren Seiten erscheinen. Sie können Ihre Einwilligung jederzeit von der Cookie-Erklärung auf unserer Website ändern oder widerrufen.",
+      "essential": {
+        "hint": "Notwendige Cookies helfen dabei, eine Webseite nutzbar zu machen, indem sie Grundfunktionen wie Seitennavigation und Zugriff auf sichere Bereiche der Webseite ermöglichen. Die Webseite kann ohne diese Cookies nicht richtig funktionieren.",
+        "name": "Notwendig"
+      },
+      "hide_details": "Zurück",
+      "link_back": "Zurück",
+      "link_datenschutz": "Datenschutz",
+      "link_impressum": "Impressum",
+      "marketing": {
+        "hint": "Marketing-Cookies werden verwendet, um Besuchern auf Webseiten zu folgen. Die Absicht ist, Anzeigen zu zeigen, die relevant und ansprechend für den einzelnen Benutzer sind und daher wertvoller für Publisher und werbetreibende Drittparteien sind.",
+        "name": "Marketing"
+      },
+      "multiple_entries_note": "(* es kann mehrere Einträge geben)",
+      "other": {
+        "hint": "Nicht klassifizierte Cookies sind Cookies, die wir gerade versuchen zu klassifizieren, zusammen mit Anbietern von individuellen Cookies.",
+        "name": "Nicht klassifiziert"
+      },
+      "preferences": {
+        "hint": "Präferenz-Cookies ermöglichen einer Webseite sich an Informationen zu erinnern, die die Art beeinflussen, wie sich eine Webseite verhält oder aussieht, wie z. B. Ihre bevorzugte Sprache oder die Region in der Sie sich befinden.",
+        "name": "Präferenzen"
+      },
+      "purposes_title": "Zweckarten",
+      "show_details": "Details",
+      "statistics": {
+        "hint": "Statistik-Cookies helfen Webseiten-Besitzern zu verstehen, wie Besucher mit Webseiten interagieren, indem Informationen anonym gesammelt und gemeldet werden.",
+        "name": "Statistiken"
+      },
+      "table_header_description": "Beschreibung",
+      "table_header_duration": "Dauer",
+      "table_header_name": "Name",
+      "title": "Standardhinweis"
+    },
     "datepicker": {
       "error_message.empty": "Das Datum darf nicht leer sein",
       "error_message.invalid": "Das Datum ist ungültig",

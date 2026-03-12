@@ -3,8 +3,19 @@
 @use "../common/luxbreakpoints";
 @use "@angular/material" as mat;
 
-.cdk-overlay-pane.mat-mdc-dialog-panel .mat-mdc-dialog-container {
-  border-radius: var(--lux-theme-app-border-radius);
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+  .mat-mdc-dialog-container {
+    border-radius: var(--lux-theme-app-border-radius);
+    height: inherit;
+    min-height: inherit;
+    max-height: inherit;
+    min-width: 100%;
+  }
+
+  .mat-mdc-dialog-inner-container {
+    min-width: 100%;
+    min-height: 100%;
+  }
 }
 
 .cdk-overlay-pane.mat-mdc-dialog-panel.lux-dialog {
@@ -29,10 +40,11 @@ lux-dialog-action {
 }
 
 lux-dialog-structure {
-
-  @include mat.dialog-overrides((
-    supporting-text-size: 1rem
-  ));
+  @include mat.dialog-overrides(
+    (
+      supporting-text-size: 1rem
+    )
+  );
 
   display: flex;
   flex: 1 1 auto;

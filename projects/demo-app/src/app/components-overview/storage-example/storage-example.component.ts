@@ -1,14 +1,14 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, DoCheck, OnDestroy, inject } from '@angular/core';
 import {
-    LuxAriaLabelDirective,
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxMenuComponent,
-    LuxMenuItemComponent,
-    LuxStorageService,
-    LuxToggleAcComponent
+  LuxAriaLabelDirective,
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxMenuComponent,
+  LuxMenuItemComponent,
+  LuxStorageService,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Observable, Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -44,8 +44,7 @@ export class StorageExampleComponent implements OnDestroy, DoCheck {
 
   value$: Observable<string | null>;
   valueSubscription: Subscription;
-
-  localStorage = localStorage;
+  localKeys: string[] = [];
   storageLength = 0;
 
   constructor() {
@@ -57,8 +56,15 @@ export class StorageExampleComponent implements OnDestroy, DoCheck {
   }
 
   ngDoCheck() {
-    if (this.localStorage.length !== this.storageLength) {
-      this.storageLength = this.localStorage.length;
+    const len = this.luxStorageService.length;
+    const keys = this.luxStorageService.getKeys();
+    const keysChanged =
+      keys.length !== this.localKeys.length ||
+      keys.some((key, index) => key !== this.localKeys[index]);
+
+    if (len !== this.storageLength || keysChanged) {
+      this.storageLength = len;
+      this.localKeys = keys;
     }
   }
 

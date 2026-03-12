@@ -5,12 +5,14 @@
       "iconSearch": "Iconsuche",
       "forms": "Formulare",
       "baseline": "Baseline",
-      "configuration": "Konfiguration"
+      "configuration": "Konfiguration",
+      "consent": "Einwilligung"
     },
     "footer": {
       "link.dataProtection": "Datenschutz",
       "link.impressum": "Impressum",
-      "link.licenseHint": "Lizenzhinweis"
+      "link.licenseHint": "Lizenzhinweis",
+      "link.consent": "Einwilligung"
     }
   },
   "home": {

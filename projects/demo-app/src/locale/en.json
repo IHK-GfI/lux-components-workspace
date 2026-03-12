@@ -5,12 +5,14 @@
       "iconSearch": "Icon Search",
       "forms": "Forms",
       "baseline": "Baseline",
-      "configuration": "Settings"
+      "configuration": "Settings",
+      "consent": "Consent"
     },
     "footer": {
       "link.dataProtection": "Privacy Policy ",
       "link.impressum": "Legal Notice",
-      "link.licenseHint": "License Notice"
+      "link.licenseHint": "License Notice",
+      "link.consent": "Consent"
     }
   },
   "home": {

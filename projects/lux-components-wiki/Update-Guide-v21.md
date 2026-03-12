@@ -26,7 +26,7 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 ## Local Storage
 
-Folende Komponenten nutzen den Local Storage des Browsers, wenn in der [Config](config-v19) die Property _useLocalStorageForComponentsAllowed_ gesetzt ist.
+Folende Komponenten nutzen den Local Storage des Browsers, wenn in der [Config](config-v21) die Property _useLocalStorageForComponentsAllowed_ gesetzt ist.
 
 ### lux-theme
 
@@ -70,7 +70,7 @@ In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren k
 
 ### Version 21.1.0
 
-**WICHTIG**: Mit der Umstellung auf 21.1.0 speichern die LUX-Components keine Informationen in den [Local Storage](#local-storage) des Browsers mehr. Wenn es gewünscht ist, dass die LUX-Components weiter in den Local Storage schreiben sollen, dann muss in der [Config](config-v19) die Property _useLocalStorageForComponentsAllowed_ auf _true_ gesetzt werden.
+**WICHTIG**: Mit der Umstellung auf 21.1.0 speichern die LUX-Components keine Informationen in den [Local Storage](#local-storage) des Browsers mehr. Wenn es gewünscht ist, dass die LUX-Components weiter in den Local Storage schreiben sollen, dann muss in der [Config](config-v21) die Property _useLocalStorageForComponentsAllowed_ auf _true_ gesetzt werden.
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
