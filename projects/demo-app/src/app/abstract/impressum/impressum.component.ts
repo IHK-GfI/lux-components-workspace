@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LuxCardComponent, LuxCardContentComponent } from '@ihk-gfi/lux-components';
+import { ImpressumContentService } from './impressum-content.service';
 
 @Component({
   selector: 'lux-impressum',
@@ -11,14 +12,27 @@ import { LuxCardComponent, LuxCardContentComponent } from '@ihk-gfi/lux-componen
 })
 export class ImpressumComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private impressumContent = inject(ImpressumContentService);
+  private cdr = inject(ChangeDetectorRef);
 
+  @Input() fullWidth = false;
+
+  @Input()
   public content?: string;
 
-  ngOnInit() {
-    this.content = this.route.snapshot.data['content'];
+  async ngOnInit() {
+    if (!this.content) {
+      this.content = this.route.snapshot.data['content'];
+    }
+
+    if (!this.content) {
+      this.content = await this.impressumContent.load();
+    }
 
     if (typeof this.content === 'string' && this.content.includes('<html') && this.content.includes('</html')) {
       this.content = 'In der lokalen Demo wird kein Impressum angezeigt.';
     }
+
+    this.cdr.markForCheck();
   }
 }

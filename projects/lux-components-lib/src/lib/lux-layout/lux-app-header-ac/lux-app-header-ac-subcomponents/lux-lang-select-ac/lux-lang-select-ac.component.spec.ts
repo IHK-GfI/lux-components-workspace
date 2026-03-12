@@ -125,7 +125,10 @@ class MockCookieService {
   locale: string | undefined = 'de';
 
   get(name: string) {
-    return this.locale;
+    if (name === 'X-GFI-LANGUAGE') {
+      return this.locale;
+    }
+    return '';
   }
 
   set(name: string, value: string) {

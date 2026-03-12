@@ -106,6 +106,8 @@ class MockStorageService {
   getItem() {
     return 1;
   }
+
+  removeItem() {}
 }
 
 @NgModule({

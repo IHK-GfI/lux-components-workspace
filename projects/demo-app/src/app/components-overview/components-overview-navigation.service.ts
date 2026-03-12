@@ -100,6 +100,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('markdown', 'Markdown'),
     this.create('pipes', 'Timestamp'),
     this.create('popup', 'Dialog'),
+    this.create('popup', 'Consent'),
     this.create('popup', 'Snackbar'),
     this.create('tenant-logo', 'Tenant-Logo'),
     this.create('tour-hint', 'Tour-Hint'),

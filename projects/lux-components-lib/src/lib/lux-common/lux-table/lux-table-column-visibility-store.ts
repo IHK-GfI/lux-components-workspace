@@ -14,30 +14,30 @@ export interface ILuxTableColumnVisibilityStore {
  * Verwendet JSON-Array (z.B. ["columnDef1", "columnDef2"]).
  */
 import { Injectable, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
+import { LuxConsentPurpose } from '../../lux-consent/lux-consent.model';
+import { LuxConsentService } from '../../lux-consent/lux-consent.service';
+import { LuxStorageService } from '../../lux-util/lux-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LuxTableLocalColumnVisibilityStore implements ILuxTableColumnVisibilityStore {
-  private configService = inject(LuxComponentsConfigService);
-  private useLocalStorageForComponentsAllowed = this.configService.currentConfig.useLocalStorageForComponentsAllowed;
-
-  constructor() {
-    this.configService.config.pipe(takeUntilDestroyed()).subscribe((cfg) => {
-      this.useLocalStorageForComponentsAllowed = cfg.useLocalStorageForComponentsAllowed;
-    });
-  }
+  private consentService = inject(LuxConsentService);
+  private storageService = inject(LuxStorageService);
 
   load(key: string): string[] {
     try {
-      const raw = localStorage.getItem(key);
-      if (!raw) {
+      if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
+        const raw = this.storageService.getItem(key);
+        if (!raw) {
+          return [];
+        }
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr.filter((v) => typeof v === 'string') : [];
+      } else {
+        this.storageService.removeItem(key);
         return [];
       }
-      const arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr.filter((v) => typeof v === 'string') : [];
     } catch {
       return [];
     }
@@ -45,8 +45,10 @@ export class LuxTableLocalColumnVisibilityStore implements ILuxTableColumnVisibi
 
   save(key: string, hidden: string[]): void {
     try {
-      if (this.useLocalStorageForComponentsAllowed) {
-        localStorage.setItem(key, JSON.stringify(hidden || []));
+      if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
+        this.storageService.setItem(key, JSON.stringify(hidden || []), false);
+      } else {
+        this.storageService.removeItem(key);
       }
     } catch {
       /* ignore quota errors */

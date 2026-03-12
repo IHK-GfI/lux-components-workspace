@@ -3,6 +3,7 @@ export interface ILuxAppFooterLinkInfo {
   path: string;
   alwaysVisible?: boolean;
   blank?: boolean;
+  onClick?: (that: ILuxAppFooterLinkInfo) => void;
 }
 
 export class LuxAppFooterLinkInfo implements ILuxAppFooterLinkInfo {
@@ -10,12 +11,14 @@ export class LuxAppFooterLinkInfo implements ILuxAppFooterLinkInfo {
   path: string;
   alwaysVisible: boolean;
   blank: boolean;
+  onClick?: (that: ILuxAppFooterLinkInfo) => void;
 
-  constructor(label: string, path: string, alwaysVisible?: boolean, blank?: boolean) {
+  constructor(label: string, path: string, alwaysVisible?: boolean, blank?: boolean, onClick?: (that: ILuxAppFooterLinkInfo) => void) {
     this.label = label;
     this.path = path;
     this.alwaysVisible = alwaysVisible ?? false;
     this.blank = blank ?? false;
+    this.onClick = onClick;
   }
 
   /**
@@ -25,6 +28,6 @@ export class LuxAppFooterLinkInfo implements ILuxAppFooterLinkInfo {
    * @returns eine Link Info
    */
   static generateInfo(data: ILuxAppFooterLinkInfo): LuxAppFooterLinkInfo {
-    return new LuxAppFooterLinkInfo(data.label, data.path, data.alwaysVisible);
+    return new LuxAppFooterLinkInfo(data.label, data.path, data.alwaysVisible, data.blank, data.onClick);
   }
 }

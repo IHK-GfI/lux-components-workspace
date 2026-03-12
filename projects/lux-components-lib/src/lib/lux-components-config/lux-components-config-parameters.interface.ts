@@ -77,6 +77,4 @@ export interface LuxComponentsConfigParameters {
     fixedDesktop?: boolean;
     fixedMobile?: boolean;
   };
-
-  useLocalStorageForComponentsAllowed?: boolean;
 }

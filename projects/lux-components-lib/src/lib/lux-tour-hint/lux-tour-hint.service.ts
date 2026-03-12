@@ -1,6 +1,7 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable } from '@angular/core';
-import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
+import { LuxConsentPurpose } from '../lux-consent/lux-consent.model';
+import { LuxConsentService } from '../lux-consent/lux-consent.service';
 import { LuxStorageService } from '../lux-util/lux-storage.service';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 import { ILuxTourHintStepConfig } from './lux-tour-hint-model/lux-tour-hint-step-config.interface';
@@ -21,8 +22,7 @@ export class LuxTourHintService {
   private injector = inject(EnvironmentInjector);
   private tourHintRef = inject(LuxTourHintRef);
   private storage = inject(LuxStorageService);
-  private configService = inject(LuxComponentsConfigService);
-
+  private consentService = inject(LuxConsentService);
   public tourContainer?: ComponentRef<LuxTourHintComponent>;
 
   constructor() {
@@ -58,9 +58,13 @@ export class LuxTourHintService {
     const dsaCacheId = this.getDontShowAgainId(initializedConfigs);
 
     //If the dsa id is in local storage cancel showing the tour-hint
-    const cacheEntry = this.storage.getItem(dsaCacheId);
-    if (cacheEntry) {
-      return this.tourHintRef;
+    if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
+      const cacheEntry = this.storage.getItem(dsaCacheId);
+      if (cacheEntry) {
+        return this.tourHintRef;
+      }
+    } else {
+      this.storage.removeItem(dsaCacheId);
     }
 
     //The preset / custom component
@@ -114,10 +118,10 @@ export class LuxTourHintService {
   }
 
   private getDontShowAgainId(configs: InitializedTourHintConfig[]): string {
-    let id = '[lux-tour-hint-dsa] ';
+    let id = 'lux.app.tour-hint.dsa';
 
     for (let i = 0; i < configs.length; i++) {
-      if (i != 0) id += '_';
+      id += i === 0 ? '.' : '_';
 
       const config = configs[i];
       id += config.targetId;
@@ -138,8 +142,10 @@ export class LuxTourHintService {
   }
 
   private dsaCallback(dsaId: string) {
-    if (this.configService.currentConfig.useLocalStorageForComponentsAllowed) {
+    if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
       this.storage.setItem(dsaId, 'true', false);
+    } else {
+      this.storage.removeItem(dsaId);
     }
   }
 

@@ -57,6 +57,28 @@ export class LuxStorageService implements OnDestroy {
   }
 
   /**
+   * Liefert alle Keys im LocalStorage als Array zurück.
+   */
+  getKeys(): string[] {
+    const keys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k) {
+        keys.push(k);
+      }
+    }
+
+    return keys;
+  }
+
+  /**
+   * Liefert die Anzahl der Einträge im LocalStorage zurück.
+   */
+  get length(): number {
+    return localStorage.length;
+  }
+
+  /**
    * Diese Methode setzt den übergebenen Wert für den Schlüssel. Zusätzlich muss angegeben werden, ob es sich um
    * sensible oder personenbezogene Daten handelt.
    * @param key - Der eindeutige Schlüssel.
