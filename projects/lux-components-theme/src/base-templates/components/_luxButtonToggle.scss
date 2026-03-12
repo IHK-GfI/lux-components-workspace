@@ -1,0 +1,61 @@
+@use "@angular/material" as mat;
+
+lux-button-toggle {
+  @include mat.button-toggle-overrides(
+    (
+      shape: var(--lux-theme-button-toggle-shape),
+      text-color: var(--lux-theme-button-toggle-text-color),
+      selected-state-text-color: var(--lux-theme-button-toggle-selected-state-text-color),
+      selected-state-background-color: var(--lux-theme-button-toggle-selected-state-background-color),
+      hover-state-layer-opacity: var(--lux-theme-button-toggle-hover-state-layer-opacity),
+      disabled-selected-state-text-color: var(--lux-theme-button-toggle-disabled-selected-state-text-color),
+      disabled-selected-state-background-color: var(--lux-theme-button-toggle-disabled-selected-state-background-color),
+      disabled-state-text-color: var(--lux-theme-button-toggle-disabled-state-text-color),
+      disabled-state-background-color: var(--lux-theme-button-toggle-disabled-state-background-color),
+      height: var(--lux-theme-button-toggle-height),
+      divider-color: var(--lux-theme-button-toggle-divider-color)
+    )
+  );
+
+  mat-button-toggle-group[aria-disabled="true"] {
+    @include mat.button-toggle-overrides(
+      (
+        divider-color: var(--lux-theme-button-toggle-disabled-divider-color)
+      )
+    );
+  }
+
+  &.lux-dense {
+    @include mat.button-toggle-overrides(
+      (
+        height: var(--lux-theme-button-toggle-height-dense)
+      )
+    );
+  }
+
+  .lux-button-toggle-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .lux-button-toggle-misc {
+    display: flex;
+    margin-left: 12px;
+    font-size: 0.75rem;
+    line-height: 1.2rem;
+    color: var(--lux-theme-dark-secondary-text);
+    word-wrap: break-word;
+  }
+
+  .lux-button-toggle-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: var(--lux-theme-form-error-msg-background);
+    border-radius: 4px;
+    padding-right: 2px;
+    color: var(--mat-sys-on-error-container);
+  }
+}
