@@ -288,9 +288,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-toggle-selected-state-background-color: var(--mat-sys-surface-container-high);
   --lux-theme-button-toggle-hover-state-layer-opacity: 0.08;
   --lux-theme-button-toggle-disabled-selected-state-text-color: var(--lux-theme-dark-disabled-text);
-  --lux-theme-button-toggle-disabled-selected-state-background-color: var(--lux-theme-app-content-bg);
+  --lux-theme-button-toggle-disabled-selected-state-background-color: var(--lux-theme-app-border-color);
   --lux-theme-button-toggle-disabled-state-text-color: var(--lux-theme-dark-disabled-text);
-  --lux-theme-button-toggle-disabled-state-background-color: var(--lux-theme-app-border-color);
+  --lux-theme-button-toggle-disabled-state-background-color: transparent;
 
   // LUX-Card
   --lux-theme-card-title-line-height: 2rem;

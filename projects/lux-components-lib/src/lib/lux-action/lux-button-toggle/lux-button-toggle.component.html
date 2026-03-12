@@ -14,6 +14,7 @@
       @for (option of luxOptions(); track option.value) {
         <mat-button-toggle
           class="lux-button-toggle"
+          [disableRipple]="true"
           [value]="option.value"
           [disabled]="!!option.disabled"
           [attr.aria-label]="option.ariaLabel || option.label"
