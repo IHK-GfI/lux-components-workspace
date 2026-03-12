@@ -86,6 +86,7 @@ Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu er
 
 - [lux-badge](lux‐badge-v19)
 - [lux-breadcrumb](lux‐breadcrumb-v19)
+- [lux-consent](lux‐consent-v19)
 - [lux-dialog](lux‐dialog-v19)
 - [lux-error-page](lux‐error‐page-v19)
 - [lux-file-preview](lux‐file‐preview-v19)

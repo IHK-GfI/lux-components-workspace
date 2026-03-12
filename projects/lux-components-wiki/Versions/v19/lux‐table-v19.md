@@ -238,7 +238,7 @@ Html
   [luxData]="dataSource" 
   [luxShowFilter]="true"
   [luxShowColumnSelector]="true"
-  luxColumnStorageKey="lux-demo-table-example">
+  luxColumnStorageKey="lux.app.demo.table">
   <lux-table-column luxColumnDef="position" luxConfigLabel="Position">
     <lux-table-column-header
       ><ng-template>ID</ng-template></lux-table-column-header

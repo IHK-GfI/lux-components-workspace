@@ -9,6 +9,7 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
     - [lux-tour-hint](#lux-tour-hint)
     - [lux-table](#lux-table)
   - [Versionen](#versionen)
+    - [Version 19.7.0](#version-1970)
     - [Version 19.6.0](#version-1960)
     - [Version 19.5.0](#version-1950)
     - [Version 19.4.0](#version-1940)
@@ -32,7 +33,7 @@ In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 ## Local Storage
 
-Folende Komponenten nutzen den Local Storage des Browsers, wenn in der [Config](config-v19) die Property _useLocalStorageForComponentsAllowed_ gesetzt ist.
+Folgende Komponenten nutzen den Local Storage des Browsers, wenn eine Einwilligung vorliegt (siehe _lux-consent_).
 
 ### lux-theme
 
@@ -53,9 +54,9 @@ Der LUX-Tour-Hinweis nutzt den Local Storage um zu speichern, ob ein Hinweis nic
 |            |                                                                                                                                 |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | Key        | Legt die Fachanwendung fest                                                                                                     |
-| Key-Präfix | "[lux-tour-hint-dsa] "                                                                                                          |
+| Key-Präfix | "lux.app.tour-hint.dsa"                                                                                                         |
 | Wert       | boolean                                                                                                                         |
-| Beispiel   | \[lux-tour-hint-dsa\] Hint_001=true                                                                                             |
+| Beispiel   | lux.app.tour-hint.dsa.Hint_001=true                                                                                             |
 | Auswirkung | Die Checkbox "Nicht wieder anzeigen" in den Hinweisen hat keine Auswirkung mehr und die Hinweise werden immer wieder angezeigt. |
 
 ### lux-table
@@ -67,16 +68,29 @@ Die LUX-Table nutzt den Local Storage um zu speichern, welche Tabellen ausgeblen
 | Key        | Legt die Fachanwendung fest                                                                                                                                                                                                                                                           |
 | Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                         |
 | Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                      |
-| Beispiel   | lux-demo-table-example=\["name", "symbol"\]                                                                                                                                                                                                                                           |
+| Beispiel   | lux.app.demo.table=\["name", "symbol"\]                                                                                                                                                                                                                                               |
 | Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector")  verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
 
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
+### Version 19.7.0
+
+**WICHTIG**: Mit der Umstellung auf 19.7.0 wird die temporäre Lösung mit der Property _useLocalStorageForComponentsAllowed_ in der [Config](config-v19) zu Gunsten eines Einwilligungskonzepts (siehe [lux-consent](lux‐consent-v19)) entfernt.
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-19.7.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
+
 ### Version 19.6.0
 
-**WICHTIG**: Mit der Umstellung auf 19.6.0 speichern die LUX-Components keine Informationen in den [Local Storage](#local-storage) des Browsers mehr. Wenn es gewünscht ist, dass die LUX-Components weiter in den Local Storage schreiben sollen, dann muss in der [Config](config-v19) die Property _useLocalStorageForComponentsAllowed_ auf _true_ gesetzt werden.
+**WICHTIG**: Mit der Umstellung auf 19.6.0 speichern die LUX-Components keine Informationen in den [Local Storage](#local-storage) des Browsers mehr. Wenn es gewünscht ist, dass die LUX-Components weiter in den Local Storage schreiben sollen, dann muss in der [Config](config-v19) die Property _useLocalStorageForComponentsAllowed_ auf _true_ gesetzt werden. Diese Property gibt es auch nur in dieser Version und wird mit der nächsten wieder ausgebaut.
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
