@@ -316,6 +316,34 @@ describe('LuxButtonComponent', () => {
       Checker.checkLuxLoading(fixture);
     }));
   });
+
+  describe('Attribut "luxIconButton"', () => {
+    let fixture: ComponentFixture<MockButtonComponent>;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(MockButtonComponent);
+      fixture.componentInstance.iconButton = true;
+      fixture.componentInstance.raised = false;
+      fixture.componentInstance.round = false;
+      fixture.componentInstance.flat = false;
+      fixture.componentInstance.outlined = false;
+      fixture.detectChanges();
+    }));
+
+    it('rendert die Icon-Button-Variante', fakeAsync(() => {
+      const buttonEl = fixture.debugElement.query(By.css('button'));
+      expect(buttonEl.nativeElement.classList).toContain('lux-button-icon-only');
+      expect(buttonEl.nativeElement.classList).toContain('mat-mdc-icon-button');
+    }));
+
+    it('emittiert luxClicked bei Klick', fakeAsync(() => {
+      Checker.checkLuxClicked(fixture);
+    }));
+
+    it('beachtet luxDisabled', fakeAsync(() => {
+      Checker.checkLuxDisabled(fixture);
+    }));
+  });
 });
 
 class Checker {
@@ -411,6 +439,7 @@ class Checker {
       [luxRaised]="raised"
       [luxFlat]="flat"
       [luxStroked]="outlined"
+      [luxIconButton]="iconButton"
     ></lux-button>
   `,
   imports: [LuxButtonComponent]
@@ -422,6 +451,7 @@ class MockButtonComponent {
   raised = false;
   flat = false;
   outlined = false;
+  iconButton = false;
 
   onClick() {}
   onClickNotAllowed() {}
@@ -437,6 +467,7 @@ class MockButtonComponent {
       [luxRaised]="raised"
       [luxFlat]="flat"
       [luxStroked]="outlined"
+      [luxIconButton]="iconButton"
     ></lux-button>
   `,
   imports: [LuxButtonComponent]
@@ -448,6 +479,7 @@ class MockButtonLabelComponent {
   label = '';
   flat = false;
   outlined = false;
+  iconButton = false;
 
   onClick() {}
 }
@@ -462,6 +494,7 @@ class MockButtonLabelComponent {
       [luxRaised]="raised"
       [luxFlat]="flat"
       [luxStroked]="outlined"
+      [luxIconButton]="iconButton"
       [luxLoading]="loading"
     ></lux-button>
   `,
@@ -474,6 +507,7 @@ class MockButtonLoadingComponent {
   label = '';
   flat = false;
   outlined = false;
+  iconButton = false;
   loading = false;
 
   onClick() {}

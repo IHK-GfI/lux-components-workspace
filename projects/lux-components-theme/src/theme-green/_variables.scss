@@ -126,7 +126,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-error-msg-background: rgb(255, 228, 231);
   --lux-theme-form-autofill-background-color: #e6e9ee;
   --lux-theme-form-readonly-color: var(--lux-theme-primary-color);
-  --lux-theme-form-readonly-bg-color: #EFF3F6;
+  --lux-theme-form-readonly-bg-color: #eff3f6;
 
   // Fokus
   --lux-theme-outline-dark: 4px solid var(--lux-theme-accent-secondary-color) !important;
@@ -205,6 +205,13 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-text-accent-text-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-button-text-warn-text-color: var(--mat-sys-error);
 
+  --lux-theme-button-icon-default-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-button-icon-primary-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-icon-accent-text-color: var(--mat-sys-on-tertiary-container);
+  --lux-theme-button-icon-warn-text-color: var(--mat-sys-error);
+  --lux-theme-button-icon-size: 18px;
+  --lux-theme-button-icon-container-size: 36px;
+
   --lux-theme-button-flat-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-flat-default-container-color: #ffffff;
   --lux-theme-button-flat-primary-text-color: var(--mat-sys-on-primary);
@@ -225,12 +232,12 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   --lux-theme-button-stroked-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-stroked-primary-text-color: var(--lux-theme-primary-color);
-  --lux-theme-button-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);;
+  --lux-theme-button-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-button-stroked-warn-text-color: var(--mat-sys-error);
 
   --lux-theme-button-rounded-stroked-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-rounded-stroked-primary-text-color: var(--lux-theme-primary-color);
-  --lux-theme-button-rounded-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);;
+  --lux-theme-button-rounded-stroked-accent-text-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-button-rounded-stroked-warn-text-color: var(--mat-sys-error);
 
   --lux-theme-button-rounded-default-text-color: var(--lux-theme-dark-primary-text);
@@ -387,7 +394,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-messagebox-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
   // LUX-Popup
-  --lux-theme-popup-background-color: #E3EBF5;
+  --lux-theme-popup-background-color: #e3ebf5;
   --lux-theme-popup-fade-in-duration: 125ms;
   --lux-theme-popup-panel-padding: 16px;
   --lux-theme-popup-title-font-size: 1rem;
@@ -467,7 +474,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-tile-borderradius: 24px;
   --lux-theme-tile-bottom-line-color: #56bd66;
 
-    // LUX-Tile-Ac
+  // LUX-Tile-Ac
   --lux-theme-tile-ac-icon-color: var(--lux-theme-primary-color);
 
   // LUX-Tourhint
