@@ -106,6 +106,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
   --lux-theme-app-border-color: var(--mat-sys-outline-variant);
   --lux-theme-app-border-radius: 4px;
+  --lux-theme-app-state-layer-color: #{map.get(palettes.$lux-palette_primary, 40)};
 
   // Form
   --lux-theme-form-border-width: 1px;
