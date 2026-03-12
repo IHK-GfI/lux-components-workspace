@@ -44,7 +44,7 @@ export class ConsentExampleComponent {
     {
       type: LuxConsentStorageType.LocalStorage,
       name: 'lux.app.demo.table',
-      nameIsPrefix: true,
+      nameIsPrefix: false,
       processingCountry: 'Deutschland',
       purpose: LuxConsentPurpose.Preferences,
       duration: 'persistent',
@@ -53,7 +53,7 @@ export class ConsentExampleComponent {
     {
       type: LuxConsentStorageType.LocalStorage,
       name: 'lux-app.demo.preferences.localstorage.test',
-      nameIsPrefix: true,
+      nameIsPrefix: false,
       processingCountry: 'Deutschland',
       purpose: LuxConsentPurpose.Preferences,
       duration: 'persistent',
@@ -62,7 +62,7 @@ export class ConsentExampleComponent {
     {
       type: LuxConsentStorageType.SessionStorage,
       name: 'lux-app.demo.preferences.session.test',
-      nameIsPrefix: true,
+      nameIsPrefix: false,
       processingCountry: 'Deutschland',
       purpose: LuxConsentPurpose.Preferences,
       duration: 'persistent',
@@ -71,7 +71,7 @@ export class ConsentExampleComponent {
     {
       type: LuxConsentStorageType.Cookie,
       name: 'lux-app.demo.preferences.cookietest',
-      nameIsPrefix: true,
+      nameIsPrefix: false,
       processingCountry: 'Deutschland',
       purpose: LuxConsentPurpose.Preferences,
       duration: 'persistent',
@@ -80,7 +80,7 @@ export class ConsentExampleComponent {
     {
       type: LuxConsentStorageType.Cookie,
       name: 'lux-app.demo.marketing.test',
-      nameIsPrefix: true,
+      nameIsPrefix: false,
       processingCountry: 'Deutschland',
       purpose: LuxConsentPurpose.Marketing,
       duration: 'persistent',
@@ -89,7 +89,7 @@ export class ConsentExampleComponent {
     {
       type: LuxConsentStorageType.SessionStorage,
       name: 'lux-app.demo.statistics.test',
-      nameIsPrefix: true,
+      nameIsPrefix: false,
       processingCountry: 'Deutschland',
       purpose: LuxConsentPurpose.Statistics,
       duration: 'persistent',
@@ -98,7 +98,7 @@ export class ConsentExampleComponent {
     {
       type: LuxConsentStorageType.SessionStorage,
       name: 'lux-app.demo.other.test',
-      nameIsPrefix: true,
+      nameIsPrefix: false,
       processingCountry: 'Deutschland',
       purpose: LuxConsentPurpose.Other,
       duration: 'persistent',

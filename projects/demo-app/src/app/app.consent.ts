@@ -44,21 +44,12 @@ export const appConsentProvider = {
       },
       {
         type: LuxConsentStorageType.LocalStorage,
-        name: 'lux.app.tour-hint.dsa.Karte_1',
-        nameIsPrefix: false,
+        name: 'lux.app.tour-hint.dsa.*',
+        nameIsPrefix: true,
         processingCountry: 'Deutschland',
         purpose: LuxConsentPurpose.Preferences,
         duration: 'persistent',
-        description: 'Speichert, ob der Hinweis erneut angezeigt werden soll.'
-      },
-      {
-        type: LuxConsentStorageType.LocalStorage,
-        name: 'lux.app.tour-hint.dsa.Karte_1.Input_1.Input_2.Und_3.Karte_1.Aktionen.Karte_1.Aktion_1.Karte_1.Aktion_2.Karte_2.Karte_2.Aktion_1',
-        nameIsPrefix: false,
-        processingCountry: 'Deutschland',
-        purpose: LuxConsentPurpose.Preferences,
-        duration: 'persistent',
-        description: 'Speichert, ob die Tour erneut angezeigt werden soll.'
+        description: 'Speichert, ob die App-Hinweise und App-Touren erneut angezeigt werden sollen.'
       }
     ]
   })

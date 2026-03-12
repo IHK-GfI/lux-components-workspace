@@ -120,7 +120,12 @@
                                   </lux-table-column-header>
                                   <lux-table-column-content>
                                     <ng-template let-element>
-                                      {{ element.description }}
+                                      <span
+                                        >{{ element.description }}
+                                        @if (element.nameIsPrefix) {
+                                          <span class="essential-hint">(* es kann mehrere Einträge geben)</span>
+                                        }
+                                      </span>
                                     </ng-template>
                                   </lux-table-column-content>
                                 </lux-table-column>
