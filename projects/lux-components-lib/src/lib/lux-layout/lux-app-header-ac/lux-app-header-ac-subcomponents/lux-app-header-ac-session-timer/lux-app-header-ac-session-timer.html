@@ -1,4 +1,4 @@
-@if (luxSessionTimerService.showSessionTimer() && !mobileView) {
+@if (showSessionTimer() && !isMobileView()) {
 <lux-button
   luxTagId="lux-session-timer-button"
   luxColor="primary"
@@ -7,8 +7,8 @@
   (luxClicked)="extendTimer()"
   [luxAriaLabel]="getTimerLabel()"
   (focusin)="announceSessionTimer()"
-  [luxLoading]="luxLoading"
-  luxTooltip="Laufzeit verlängern?"
+  [luxLoading]="isLuxLoading()"
+  [luxTooltip]="getTimerTooltip()"
   [luxTooltipShowDelay]="1000"
 ></lux-button>
 }

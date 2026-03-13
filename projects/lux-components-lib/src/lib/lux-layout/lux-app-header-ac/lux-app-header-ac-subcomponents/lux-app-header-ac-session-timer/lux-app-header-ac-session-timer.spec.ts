@@ -84,6 +84,61 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     fixture.detectChanges();
     expect(dialogOpenCount).toBe(1);
   }));
+
+  it('sollte dialogWasClosed auf true lassen wenn canExtendSession false ist, ein Dialog geöffnet und geschlossen wurde und ein neuer Request reinkommt', fakeAsync(() => {
+    timerService.canExtendSession = false;
+
+    let dialogOpenCount = 0;
+    spyOn(timerService, 'openDialog').and.callFake(() => {
+      dialogOpenCount++;
+      // Simuliert openNotExtendableDialog: Dialog schließt und setzt dialogWasClosed = true
+      (timerService as any).dialogWasClosed = true;
+    });
+
+    // Timer unter 120s setzen – Dialog öffnet sich
+    timerService.resetTimer(110);
+    tick(100);
+    fixture.detectChanges();
+
+    expect(dialogOpenCount).toBe(1);
+    expect((timerService as any).dialogWasClosed).toBeTrue();
+
+    // Neuer Request: der Timer wird erneut gesetzt
+    timerService.resetTimer(110);
+    tick(1000);
+    fixture.detectChanges();
+
+    // dialogWasClosed sollte weiterhin true sein
+    expect((timerService as any).dialogWasClosed).toBeTrue();
+    // Dialog sollte nicht erneut geöffnet werden
+    expect(dialogOpenCount).toBe(1);
+  }));
+
+  it('sollte den Session Timer verstecken wenn der Timer zurückgesetzt wird', fakeAsync(() => {
+    timerService.resetTimer(180);
+    tick(100);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('lux-button')).toBeTruthy();
+
+    timerService.resetTimer(0);
+    tick(100);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('lux-button')).toBeNull();
+  }));
+
+  it('sollte luxTimeoutEvent emittieren wenn der Timer abläuft', fakeAsync(() => {
+    let timeoutFired = false;
+    timerService.luxTimeoutEvent.subscribe(() => {
+      timeoutFired = true;
+    });
+
+    timerService.resetTimer(2);
+    tick(1000); // 1s verbleibend → setTimeout(0) wird geplant
+    tick(1); // setTimeout(0) feuert → timeoutUser()
+
+    expect(timeoutFired).toBeTrue();
+    expect(timerService.showSessionTimer()).toBeFalse();
+  }));
 });
 
 @Component({
