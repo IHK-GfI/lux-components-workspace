@@ -24,10 +24,12 @@ Die `lux-app-header-ac-session-timer`-Komponente zeigt die verbleibende Zeit der
 
 ### @Output
 
-| Name           | Typ                   | Beschreibung                                                                                                                                   |
-| -------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxLoginEvent  | Output Signal \<void> | Dieses Event wird ausgelöst, wenn im Dialog der "zum Login" Button geklickt wird. Damit soll der User direkt zur Login-Seite navigiert werden. |
-| luxLogoutEvent | Output Signal \<void> | Dieses Event wird ausgelöst, wenn der User den Button "abmelden" betätigt. Der User soll dadurch einfach abgemeldet werden.                    |
+| Name            | Typ                   | Beschreibung                                                                     |
+| --------------- | --------------------- | -------------------------------------------------------------------------------- |
+| luxTimeoutEvent | Output Signal \<void> | Dieses Event wird ausgelöst, wenn die Session abläuft (Timeout).                 |
+| luxLogoutEvent  | Output Signal \<void> | Dieses Event wird ausgelöst, wenn der User im Session-Timer den Logout ausführt. |
+
+## Setup
 
 ### 1. Konfiguration
 
@@ -42,17 +44,14 @@ const myConfiguration: LuxComponentsConfigParameters = {
     // Optional:
     httpSessionTimeHeaderName: 'X-GfI-Session-Time', // Der Name des HTTP-Headers, aus dem die Session-Zeit ausgelesen wird. 'X-GfI-Session-Time' wird standardmäßig verwendet, wenn der Name des Headers abweicht, muss dieser Parameter gesetzt werden.
     httpSessionProlongationHeaderName: 'X-GfI-Session-Prolongation' // Dieser HTTP-Header wird genutzt, um zu entscheiden, ob die Session verlängert werden darf. Standardmäßig wird der Header 'X-GfI-Session-Prolongation' genutzt, wenn ein anderer Header genutzt wird, muss der Parameter gesetzt werden.
+  }
 };
 
 export const appConfig: ApplicationConfig = {
   providers: [
     // ... andere Konfigurationen
-    provideHttpClient(withInterceptorsFromDi()),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LuxAppHeaderAcSessionTimerInterceptor,
-      multi: true
-    }
+    provideHttpClient(withInterceptors([luxSessionTimerInterceptor]))
+  ]
 };
 ```
 
@@ -64,7 +63,7 @@ Die Komponente wird im Menü des App-Headers angezeigt.
 <lux-app-header-ac>
   <lux-app-header-ac-action-nav>
     <lux-app-header-ac-session-timer
-      (luxLoginEvent)="sharedService.login()"
+      (luxTimeoutEvent)="sharedService.onSessionTimeout()"
       (luxLogoutEvent)="sharedService.logout(true)"
     ></lux-app-header-ac-session-timer>
   </lux-app-header-ac-action-nav>

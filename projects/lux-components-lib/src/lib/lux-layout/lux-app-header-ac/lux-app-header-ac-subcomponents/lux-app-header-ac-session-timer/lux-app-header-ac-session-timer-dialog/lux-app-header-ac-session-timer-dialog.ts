@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { LuxDialogRef } from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-ref.class';
 import { LuxDialogStructureComponent } from '../../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component';
 import { LuxProgressComponent } from '../../../../../lux-common/lux-progress/lux-progress.component';
@@ -9,11 +9,12 @@ import { LuxAppHeaderAcSessionTimerService } from '../lux-app-header-ac-session-
 import { LuxDialogActionsComponent } from '../../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-actions.component';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../../../../lux-directives/lux-aria/lux-aria-label.directive';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export enum LuxSessionTimerDialogType {
   INFO = 'info',
   WAIT = 'wait',
-  LOGOUT = 'logout'
+  NOTEXTENDABLE = 'notextendable'
 }
 
 @Component({
@@ -31,42 +32,39 @@ export enum LuxSessionTimerDialogType {
   templateUrl: './lux-app-header-ac-session-timer-dialog.html'
 })
 export class LuxAppHeaderAcSessionTimerDialogComponent {
-  timerService = inject(LuxAppHeaderAcSessionTimerService);
-  luxDialogRef = inject(LuxDialogRef<any>);
+  private readonly timerService = inject(LuxAppHeaderAcSessionTimerService);
+  private readonly luxDialogRef = inject(LuxDialogRef<any>);
+  private readonly destroyRef = inject(DestroyRef);
   currentStep = signal<LuxSessionTimerDialogType>(LuxSessionTimerDialogType.INFO);
-
-  constructor() {}
 
   extendSession() {
     const extendSessionTimer$ = this.timerService?.extendSessionTimer();
     if (!extendSessionTimer$) {
-      this.currentStep.set(LuxSessionTimerDialogType.LOGOUT);
+      this.currentStep.set(LuxSessionTimerDialogType.NOTEXTENDABLE);
       return;
     }
-    extendSessionTimer$.subscribe({
-      next: () => {
-        this.currentStep.set(LuxSessionTimerDialogType.WAIT);
-      },
+    //Bei Langsamen Antworten soll die UI direkt anzeigen dass die Verlängerung läuft, damit der Nutzer weiß dass etwas passiert.
+    this.currentStep.set(LuxSessionTimerDialogType.WAIT);
+    extendSessionTimer$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       complete: () => {
-        this.luxDialogRef.closeDialog('confirmed');
+        this.confirmDialog();
       },
       error: () => {
-        this.currentStep.set(LuxSessionTimerDialogType.LOGOUT);
+        this.luxDialogRef.closeDialog('error');
       }
     });
   }
 
   logoutUser() {
     this.timerService.logoutUser();
-    this.currentStep.set(LuxSessionTimerDialogType.LOGOUT);
+    this.luxDialogRef.closeDialog('logout');
   }
 
-  setLogoutDialog() {
-    this.currentStep.set(LuxSessionTimerDialogType.LOGOUT);
+  setNotExtendableDialog() {
+    this.currentStep.set(LuxSessionTimerDialogType.NOTEXTENDABLE);
   }
 
-  backToLogin() {
-    this.timerService.backToLogin();
-    this.luxDialogRef.closeDialog();
+  confirmDialog() {
+    this.luxDialogRef.closeDialog('confirmed');
   }
 }

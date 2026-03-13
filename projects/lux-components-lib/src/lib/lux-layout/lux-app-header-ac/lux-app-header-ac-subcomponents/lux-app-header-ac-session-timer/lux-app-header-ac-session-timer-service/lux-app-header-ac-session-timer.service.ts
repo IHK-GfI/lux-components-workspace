@@ -6,26 +6,40 @@ import { ILuxDialogConfig } from '../../../../../lux-popups/lux-dialog/lux-dialo
 import { map, switchMap, takeWhile, timer } from 'rxjs';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { LuxComponentsConfigService } from '../../../../../lux-components-config/lux-components-config.service';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LuxAppHeaderAcSessionTimerService {
-  http = inject(HttpClient);
-  dialogService = inject(LuxDialogService);
-  configService = inject(LuxComponentsConfigService);
-  router = inject(Router);
+  private readonly http = inject(HttpClient);
+  private readonly dialogService = inject(LuxDialogService);
+  private readonly configService = inject(LuxComponentsConfigService);
 
   luxLogoutEvent = new EventEmitter<void>();
-  luxLoginEvent = new EventEmitter<void>();
+  luxTimeoutEvent = new EventEmitter<void>();
 
   private dialogIsOpen = false;
   private dialogWasClosed = false;
   private currentDialogRef: any = null;
-  startingSeconds = signal<number>(0);
-  url = '';
-  canExtendSession = false;
+  protected readonly startingSeconds = signal<number>(0);
+  private urlValue = '';
+  private canExtendSessionValue = true;
+
+  get url(): string {
+    return this.urlValue;
+  }
+
+  set url(value: string) {
+    this.urlValue = value;
+  }
+
+  get canExtendSession(): boolean {
+    return this.canExtendSessionValue;
+  }
+
+  set canExtendSession(value: boolean) {
+    this.canExtendSessionValue = value;
+  }
 
   timeRemaining$ = toObservable(this.startingSeconds).pipe(
     switchMap((seconds) =>
@@ -61,6 +75,9 @@ export class LuxAppHeaderAcSessionTimerService {
   });
 
   dialogConfig: ILuxDialogConfig = {
+    height: 'auto',
+    width: 'auto',
+    maxWidth: '90%',
     disableClose: false,
     panelClass: ['session-timer-dialog-panel-class']
   };
@@ -70,17 +87,19 @@ export class LuxAppHeaderAcSessionTimerService {
     toObservable(this.startingSeconds)
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
-        this.dialogWasClosed = false;
+        if (this.canExtendSession) {
+          this.dialogWasClosed = false;
+        }
       });
 
-    const timerSub = this.timeRemaining$.pipe(takeUntilDestroyed()).subscribe((remainingMs: number) => {
+    this.timeRemaining$.pipe(takeUntilDestroyed()).subscribe((remainingMs: number) => {
       // Dialog öffnen wenn: Zeit < 120s, Dialog ist nicht offen, Timer wird angezeigt UND Dialog wurde noch nicht geschlossen
       if (remainingMs / 1000 < 120 && !this.dialogIsOpen && this.showSessionTimer() && !this.dialogWasClosed) {
         this.openDialog();
       }
 
       // 1 Sekunde vor Ablauf damit der Dialog nicht geöffnet wird wenn keine Zeit gesetzt wurde
-      if (remainingMs / 1000 == 1) {
+      if (remainingMs / 1000 === 1) {
         if (this.currentDialogRef) {
           this.currentDialogRef.closeDialog();
           this.currentDialogRef = null;
@@ -90,7 +109,7 @@ export class LuxAppHeaderAcSessionTimerService {
         setTimeout(() => {
           this.dialogIsOpen = false;
           this.dialogWasClosed = false;
-          this.openLogoutDialog();
+          this.timeoutUser();
         });
       }
     });
@@ -107,6 +126,11 @@ export class LuxAppHeaderAcSessionTimerService {
   }
 
   openDialog() {
+    if (!this.canExtendSession) {
+      this.openNotExtendableDialog();
+      return;
+    }
+
     this.dialogIsOpen = true;
     this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig);
 
@@ -121,23 +145,25 @@ export class LuxAppHeaderAcSessionTimerService {
     });
   }
 
-  openLogoutDialog() {
+  openNotExtendableDialog() {
     this.dialogIsOpen = true;
-    this.logoutUser();
     this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig);
-    this.currentDialogRef.componentInstance.setLogoutDialog();
-    this.currentDialogRef.dialogClosed.subscribe(() => {
+    this.currentDialogRef.componentInstance.setNotExtendableDialog();
+
+    this.currentDialogRef.dialogClosed.subscribe((result: any) => {
       this.dialogIsOpen = false;
+      this.dialogWasClosed = true;
     });
+  }
+
+  timeoutUser() {
+    this.resetTimer(0);
+    this.luxTimeoutEvent.emit();
   }
 
   logoutUser() {
     this.resetTimer(0);
     this.luxLogoutEvent.emit();
-  }
-
-  backToLogin() {
-    this.luxLoginEvent.emit();
   }
 
   resetTimer(seconds: number) {

@@ -1,7 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
-import { LuxDialogService } from '../../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
 import { LuxTooltipDirective } from '../../../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxMediaQueryObserverService } from '../../../../lux-util/lux-media-query-observer.service';
@@ -15,18 +14,17 @@ import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-a
   templateUrl: './lux-app-header-ac-session-timer.html'
 })
 export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
-  luxDialogService = inject(LuxDialogService);
-  luxSessionTimerService = inject(LuxAppHeaderAcSessionTimerService);
-  private mediaQueryService = inject(LuxMediaQueryObserverService);
-  tService = inject(TranslocoService);
-  private liveAnnouncer = inject(LiveAnnouncer);
-  private destroyRef = inject(DestroyRef);
-  luxLoading = false;
+  private readonly luxSessionTimerService = inject(LuxAppHeaderAcSessionTimerService);
+  private readonly mediaQueryService = inject(LuxMediaQueryObserverService);
+  private readonly tService = inject(TranslocoService);
+  private readonly liveAnnouncer = inject(LiveAnnouncer);
+  private readonly destroyRef = inject(DestroyRef);
 
-  mobileView: boolean;
+  private luxLoading = false;
+  private mobileView: boolean;
 
   luxLogoutEvent = output<void>();
-  luxLoginEvent = output<void>();
+  luxTimeoutEvent = output<void>();
 
   constructor() {
     this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs';
@@ -40,8 +38,8 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.luxSessionTimerService.luxLoginEvent.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.luxLoginEvent.emit();
+    this.luxSessionTimerService.luxTimeoutEvent.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.luxTimeoutEvent.emit();
     });
 
     this.luxSessionTimerService.luxLogoutEvent.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -49,13 +47,33 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
     });
   }
 
+  protected isMobileView(): boolean {
+    return this.mobileView;
+  }
+
+  protected isLuxLoading(): boolean {
+    return this.luxLoading;
+  }
+
+  protected showSessionTimer(): boolean {
+    return this.luxSessionTimerService.showSessionTimer();
+  }
+
   extendTimer() {
-    const extendSessionTimer$ = this.luxSessionTimerService?.extendSessionTimer();
-    if (!extendSessionTimer$) {
-      this.luxSessionTimerService.openLogoutDialog();
+    if (!this.luxSessionTimerService.canExtendSession) {
+      this.luxSessionTimerService.openNotExtendableDialog();
       return;
     }
-    extendSessionTimer$.subscribe({
+    const extendSessionTimer$ = this.luxSessionTimerService?.extendSessionTimer();
+    if (!extendSessionTimer$) {
+      this.luxSessionTimerService.logoutUser();
+      return;
+    }
+
+    //Bei Langsamen Antworten soll die UI direkt anzeigen dass die Verlängerung läuft, damit der Nutzer weiß dass etwas passiert.
+    this.luxLoading = true;
+
+    extendSessionTimer$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.luxLoading = true;
       },
@@ -65,7 +83,7 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
       error: (err) => {
         console.error('LuxAppHeaderAcSessionTimerComponent: Error while extending session timer: ', err);
         this.luxLoading = false;
-        this.luxSessionTimerService.openLogoutDialog();
+        this.luxSessionTimerService.logoutUser();
       }
     });
   }
@@ -82,5 +100,9 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
 
   announceSessionTimer(): void {
     this.liveAnnouncer.announce(`${this.tService.translate('luxc.app-header.session-timer.timer.button.announcer')}`);
+  }
+
+  getTimerTooltip(): string {
+    return this.tService.translate('luxc.app-header.session-timer.timer.button.tooltip');
   }
 }
