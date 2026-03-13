@@ -267,12 +267,17 @@ export class AppComponent implements OnInit, OnDestroy {
     ];
   }
 
-  loginUser() {
-    console.log('Session Timer: Login User');
-    this.router.navigate(['/']);
+  timeout() {
+    console.log('Timeout Event wurde vom LuxAppHeaderAcSessionTimerService ausgelöst');
+    this.snackbarService.open(4000, {
+      text: 'Timeout wurde ausgelöst'
+    });
   }
 
   logoutUser() {
-    console.log('Session Timer: Logout User');
+    console.log('Logout Event wurde vom LuxAppHeaderAcSessionTimerService ausgelöst');
+    this.snackbarService.open(4000, {
+      text: 'Logout wurde ausgelöst'
+    });
   }
 }
