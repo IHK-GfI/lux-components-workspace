@@ -1,6 +1,6 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { MatButton, MatFabButton } from '@angular/material/button';
+import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { Subject, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-progress/lux-progress.component';
@@ -15,12 +15,13 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   selector: 'lux-button',
   templateUrl: './lux-button.component.html',
   styleUrls: ['./lux-button.component.scss'],
-  imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, LuxIconComponent, LuxProgressComponent],
+  imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, MatIconButton, LuxIconComponent, LuxProgressComponent],
   host: {
     '[class.lux-flat]': 'luxFlat',
     '[class.lux-raised]': 'luxRaised',
     '[class.lux-rounded]': 'luxRounded',
-    '[class.lux-stroked]': 'luxStroked'
+    '[class.lux-stroked]': 'luxStroked',
+    '[class.lux-icon-button]': 'luxIconButton'
   }
 })
 export class LuxButtonComponent extends LuxActionComponentBaseClass implements OnInit, OnDestroy {
@@ -46,6 +47,7 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   @Input() luxSpinnerValue = 70;
   @Input() luxLoading = false;
   @Input() luxDisabledAria = false;
+  @Input() luxIconButton = false;
 
   @Output() luxAuxClicked = new EventEmitter<Event>();
   @Output() luxClickNotAllowed = new EventEmitter<Event>();
@@ -59,15 +61,24 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
         : LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs;
     }
 
-    if ((this.luxRaised && this.luxFlat) || (this.luxRaised && this.luxStroked) || (this.luxStroked && this.luxFlat)) {
+    if (
+      (this.luxRaised && this.luxFlat) ||
+      (this.luxRaised && this.luxStroked) ||
+      (this.luxStroked && this.luxFlat) ||
+      (this.luxIconButton && (this.luxRaised || this.luxFlat || this.luxStroked || this.luxRounded))
+    ) {
       console.log(
-        'Es kann nur eine Property gesetzt werden!',
+        'Es kann nur eine Button-Variante gesetzt werden!',
         'luxRaised: ',
         this.luxRaised,
         'luxFlat: ',
         this.luxFlat,
         'luxStroked: ',
-        this.luxStroked
+        this.luxStroked,
+        'luxRounded: ',
+        this.luxRounded,
+        'luxIconButton: ',
+        this.luxIconButton
       );
     }
 

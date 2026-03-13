@@ -15,6 +15,7 @@
     - [4. Runde Buttons](#4-runde-buttons)
     - [5. Stroked-Buttons](#5-stroked-buttons)
     - [6. Rounded und Stroked-Buttons](#6-rounded-und-stroked-buttons)
+    - [7. Reine Icon-Buttons](#7-reine-icon-buttons)
   - [Zusatzinformationen](#zusatzinformationen)
     - [Konfigurationsoptionen](#konfigurationsoptionen)
 
@@ -45,6 +46,10 @@
 | luxThrottleTime       | number                          | Verhindert, dass ein Button mehrfach hinter einander ausgelöst wird. Über diese Property kann mann den Standardwert aus der [Config - buttonConfiguration](config-v21#buttonConfiguration) überschreiben.                                                                                                                                                       |
 | luxButtonBadge        | string                          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.                                                                                                                                                                |
 | luxButtonBadgeColor   | LuxThemePalette                 | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                                                                                                                                                                                            |
+
+Zusatz-Input für neue Variante:
+
+- `luxIconButton` (`boolean`): Aktiviert die Variante für reine Icon-Buttons ohne farbigen Hintergrund und ohne Rahmen. Diese Variante ist nicht mit `luxRaised`, `luxFlat`, `luxStroked` oder `luxRounded` kombinierbar. Für die Barrierefreiheit sollte `luxLabel` als aussagekräftiges Aria-Label gesetzt werden.
 
 ### @Output
 
@@ -329,6 +334,50 @@ Html
     luxLabel="Lorem accent"
     luxColor="accent"
     (luxClicked)="onClick('Lorem accent')"
+  ></lux-button>
+</div>
+```
+
+### 7. Reine Icon-Buttons
+
+Ts
+
+```typescript
+onClick(label: string) {
+  console.log(label);
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    (luxClicked)="onClick('ohne Farbe')"
+  ></lux-button>
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    luxColor="primary"
+    (luxClicked)="onClick('primary')"
+  ></lux-button>
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    luxColor="warn"
+    (luxClicked)="onClick('warn')"
+  ></lux-button>
+  <lux-button
+    luxIconName="lux-save"
+    [luxIconButton]="true"
+    luxLabel="Speichern"
+    luxColor="accent"
+    (luxClicked)="onClick('accent')"
   ></lux-button>
 </div>
 ```

@@ -79,9 +79,9 @@ lux-link {
   }
 
   .lux-button-spinner {
-    mat-progress-spinner {
-      width: 0.875rem !important;
-      height: 0.875rem !important;
+    .lux-progress-small mat-progress-spinner {
+      width: 1.125rem !important;
+      height: 1.125rem !important;
     }
     .spinner-padding {
       padding: 0;

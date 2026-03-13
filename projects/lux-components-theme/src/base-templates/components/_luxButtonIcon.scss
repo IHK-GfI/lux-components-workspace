@@ -1,0 +1,44 @@
+@use "@angular/material" as mat;
+
+lux-button.lux-icon-button {
+  @include mat.icon-button-overrides(
+    (
+      container-shape: var(--lux-theme-button-icon-container-shape),
+      icon-color: var(--lux-theme-button-icon-default-text-color),
+      icon-size: var(--lux-theme-button-icon-size),
+      state-layer-size: var(--lux-theme-button-icon-container-size),
+      state-layer-color: var(--lux-theme-app-state-layer-color),
+      touch-target-size: var(--lux-theme-button-icon-container-size)
+    )
+  );
+
+  lux-icon,
+  .lux-icon {
+    width: var(--lux-theme-button-icon-size);
+    height: var(--lux-theme-button-icon-size);
+  }
+
+  .mat-primary {
+    @include mat.icon-button-overrides(
+      (
+        icon-color: var(--lux-theme-button-icon-primary-text-color)
+      )
+    );
+  }
+
+  .mat-accent {
+    @include mat.icon-button-overrides(
+      (
+        icon-color: var(--lux-theme-button-icon-accent-text-color)
+      )
+    );
+  }
+
+  .mat-warn {
+    @include mat.icon-button-overrides(
+      (
+        icon-color: var(--lux-theme-button-icon-warn-text-color)
+      )
+    );
+  }
+}

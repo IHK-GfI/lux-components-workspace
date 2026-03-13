@@ -57,8 +57,15 @@ lux-link.lux-rounded.lux-stroked {
     height: var(--lux-theme-button-rounded-stroked-text-size);
   }
 
-  .lux-stroked:not(:disabled):not([aria-disabled="true"]) {
+  .lux-stroked {
     border: 1px solid;
+
+    &:disabled {
+      border-color: transparent;
+    }
+  }
+
+  .lux-stroked:not(:disabled):not([aria-disabled="true"]) {
     border-color: var(--lux-theme-button-rounded-stroked-default-text-color);
 
     &.mat-primary {

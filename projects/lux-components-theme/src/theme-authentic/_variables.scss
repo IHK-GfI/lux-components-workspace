@@ -106,6 +106,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, var(--mat-sys-surface-container) 100%);
   --lux-theme-app-border-color: var(--mat-sys-outline-variant);
   --lux-theme-app-border-radius: 4px;
+  --lux-theme-app-state-layer-color: #{map.get(palettes.$lux-palette_primary, 40)};
 
   // Form
   --lux-theme-form-border-width: 1px;
@@ -203,6 +204,14 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-button-text-primary-text-color: var(--lux-theme-primary-color);
   --lux-theme-button-text-accent-text-color: var(--mat-sys-on-tertiary-container);
   --lux-theme-button-text-warn-text-color: var(--mat-sys-error);
+
+  --lux-theme-button-icon-default-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-button-icon-primary-text-color: var(--lux-theme-primary-color);
+  --lux-theme-button-icon-accent-text-color: var(--mat-sys-on-tertiary-container);
+  --lux-theme-button-icon-warn-text-color: var(--mat-sys-error);
+  --lux-theme-button-icon-size: 18px;
+  --lux-theme-button-icon-container-size: 36px;
+  --lux-theme-button-icon-container-shape: 50%;
 
   --lux-theme-button-flat-default-text-color: var(--lux-theme-dark-primary-text);
   --lux-theme-button-flat-default-container-color: #ffffff;

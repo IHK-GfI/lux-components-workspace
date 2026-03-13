@@ -61,6 +61,39 @@
   >
     <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
   </button>
+} @else if (!luxRaised && !luxRounded && !luxFlat && !luxStroked && luxIconButton) {
+  <button
+    mat-icon-button
+    class="lux-button lux-button-icon-only"
+    (focus)="tooltipDirective?.show()"
+    (blur)="tooltipDirective?.hide()"
+    [disableRipple]="true"
+    [color]="luxColor"
+    (click)="clicked($event)"
+    (auxclick)="auxClicked($event)"
+    [disabled]="luxDisabled"
+    [type]="luxType"
+    luxTagIdHandler
+    [luxTagId]="luxTagId"
+    [ngClass]="{ 'lux-icon-button': true, 'lux-button-spinner': luxLoading }"
+    [attr.aria-label]="luxLabel ? luxLabel : ''"
+    [attr.aria-disabled]="luxDisabledAria ? 'true' : null"
+  >
+    @if (luxLoading && !luxDisabled) {
+      <lux-progress
+        inert
+        luxType="Spinner"
+        luxSize="small"
+        [luxMode]="luxSpinnerMode"
+        [luxValue]="luxSpinnerValue"
+        luxAnimationDuration="slow"
+        class="lux-button-spinner"
+      ></lux-progress>
+    }
+    @if ((!luxLoading || (luxLoading && luxDisabled)) && luxIconName) {
+      <lux-icon [luxIconName]="luxIconName" luxPadding="unset" luxMargin="unset" class="lux-button-icon"></lux-icon>
+    }
+  </button>
 } @else if (luxRounded && !luxStroked) {
   <button
     mat-fab

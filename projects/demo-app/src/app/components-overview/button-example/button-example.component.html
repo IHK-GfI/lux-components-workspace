@@ -132,6 +132,23 @@
                 </lux-button>
               }
             </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+                <lux-button
+                  [luxLabel]="label"
+                  [luxColor]="color.value"
+                  [luxIconName]="iconName"
+                  [luxIconButton]="true"
+                  [luxDisabled]="disabled"
+                  [luxDisabledAria]="disabledAria"
+                  luxTagId="demo-icon-button{{ i }}"
+                  (luxClicked)="onButtonClick('default', false, $event)"
+                  (luxAuxClicked)="onButtonClick('default', true, $event)"
+                  (luxClickNotAllowed)="onClickNotAllowed('default', $event)"
+                >
+                </lux-button>
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -243,7 +260,7 @@
                 </lux-button>
               }
             </div>
-            <div class="lux-flex lux-flex-col lux-gap-4 lux-min-width-48">
+            <div class="lux-flex lux-flex-col lux-gap-4">
               @for (color of colors; track color; let i = $index) {
                 <lux-button
                   [luxLabel]="label"
@@ -255,6 +272,23 @@
                   [luxDisabled]="disabled"
                   [luxDisabledAria]="disabledAria"
                   luxTagId="demo-button-rounded-stroked{{ i }}"
+                  (luxClicked)="onButtonClick('gradient', false, $event)"
+                  (luxAuxClicked)="onButtonClick('gradient', true, $event)"
+                  (luxClickNotAllowed)="onClickNotAllowed('gradient', $event)"
+                >
+                </lux-button>
+              }
+            </div>
+            <div class="lux-flex lux-flex-col lux-gap-4">
+              @for (color of colors; track color; let i = $index) {
+                <lux-button
+                  [luxLabel]="label"
+                  [luxColor]="color.value"
+                  [luxIconName]="iconName"
+                  [luxIconButton]="true"
+                  [luxDisabled]="disabled"
+                  [luxDisabledAria]="disabledAria"
+                  luxTagId="demo-icon-button{{ i }}"
                   (luxClicked)="onButtonClick('gradient', false, $event)"
                   (luxAuxClicked)="onButtonClick('gradient', true, $event)"
                   (luxClickNotAllowed)="onClickNotAllowed('gradient', $event)"
@@ -387,7 +421,7 @@
                   </lux-button>
                 }
               </div>
-              <div class="lux-flex lux-flex-col lux-gap-4 lux-min-width-48">
+              <div class="lux-flex lux-flex-col lux-gap-4">
                 @for (color of colors; track color; let i = $index) {
                   <lux-button
                     [luxLabel]="label"
@@ -399,6 +433,26 @@
                     [luxDisabled]="disabled"
                     [luxDisabledAria]="disabledAria"
                     luxTagId="demo-button-rounded-stroked{{ i }}"
+                    (luxClicked)="onButtonClick('loading', false, $event)"
+                    (luxAuxClicked)="onButtonClick('loading', true, $event)"
+                    (luxClickNotAllowed)="onClickNotAllowed('loading', $event)"
+                    [luxLoading]="true"
+                    [luxSpinnerMode]="spinnerMode"
+                    [luxSpinnerValue]="spinnerValue"
+                  >
+                  </lux-button>
+                }
+              </div>
+              <div class="lux-flex lux-flex-col lux-gap-4">
+                @for (color of colors; track color; let i = $index) {
+                  <lux-button
+                    [luxLabel]="label"
+                    [luxColor]="color.value"
+                    [luxIconName]="iconName"
+                    [luxIconButton]="true"
+                    [luxDisabled]="disabled"
+                    [luxDisabledAria]="disabledAria"
+                    luxTagId="demo-icon-button{{ i }}"
                     (luxClicked)="onButtonClick('loading', false, $event)"
                     (luxAuxClicked)="onButtonClick('loading', true, $event)"
                     (luxClickNotAllowed)="onClickNotAllowed('loading', $event)"
