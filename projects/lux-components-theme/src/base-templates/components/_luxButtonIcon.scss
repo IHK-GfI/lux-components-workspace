@@ -3,6 +3,7 @@
 lux-button.lux-icon-button {
   @include mat.icon-button-overrides(
     (
+      container-shape: var(--lux-theme-button-icon-container-shape),
       icon-color: var(--lux-theme-button-icon-default-text-color),
       icon-size: var(--lux-theme-button-icon-size),
       state-layer-size: var(--lux-theme-button-icon-container-size),
