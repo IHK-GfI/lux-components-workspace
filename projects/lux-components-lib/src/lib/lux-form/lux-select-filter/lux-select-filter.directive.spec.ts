@@ -642,4 +642,30 @@ describe('LuxSelectFilterDirective', () => {
     document.body.removeChild(panel);
     document.body.removeChild(input);
   }));
+
+  it('sollte den Refokus nach Multiselect-Klick ohne Scrollen ausführen', fakeAsync(() => {
+    const input = document.createElement('input');
+    const focusSpy = spyOn(input, 'focus').and.callThrough();
+    const panel = document.createElement('div');
+    const option = document.createElement('div');
+    option.classList.add('mat-mdc-option');
+    panel.appendChild(option);
+    document.body.appendChild(input);
+    document.body.appendChild(panel);
+
+    directive.setFilterInputRef(new ElementRef(input));
+    spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
+    spyOnProperty((directive as any).matSelect, 'multiple', 'get').and.returnValue(true);
+    (directive as any).matSelect.panel = new ElementRef(panel);
+
+    (directive as any).registerPanelKeydownListener();
+    option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    tick();
+
+    expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+
+    directive.ngOnDestroy();
+    document.body.removeChild(panel);
+    document.body.removeChild(input);
+  }));
 });
