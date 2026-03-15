@@ -2,10 +2,8 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
-  Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -21,15 +19,11 @@ import { LuxSelectFilterDirective } from './lux-select-filter.directive';
   imports: [LuxInputAcComponent, LuxInputAcSuffixComponent, LuxButtonComponent]
 })
 export class LuxSelectPanelFilterComponent implements AfterViewInit, OnChanges {
-  @Input() filterDirective?: LuxSelectFilterDirective;
+  @Input({ required: true }) filterDirective!: LuxSelectFilterDirective;
 
   @Input() placeholder = 'Filter';
   @Input() filterValue = '';
   @Input() clearAriaLabel = 'Clear filter';
-
-  @Output() filterChange = new EventEmitter<string>();
-  @Output() escapePressed = new EventEmitter<KeyboardEvent>();
-  @Output() arrowKeyPressed = new EventEmitter<KeyboardEvent>();
 
   @ViewChild('filterInput') filterInputComponent?: LuxInputAcComponent<string>;
 
@@ -37,10 +31,6 @@ export class LuxSelectPanelFilterComponent implements AfterViewInit, OnChanges {
     return this.filterInputComponent?.inputElement as ElementRef<HTMLInputElement> | undefined;
   }
 
-  /**
-   * Gibt den aktuellen Filter-Wert zurück.
-   * Wenn eine Directive gesetzt ist, wird deren Wert verwendet.
-   */
   get currentFilterValue(): string {
     return this.filterDirective?.filterValue ?? this.filterValue;
   }
@@ -65,16 +55,12 @@ export class LuxSelectPanelFilterComponent implements AfterViewInit, OnChanges {
   }
 
   private syncDirectiveBindings(): void {
-    if (this.filterDirective && this.filterInput) {
+    if (this.filterInput) {
       this.filterDirective.setFilterInputRef(this.filterInput);
     }
   }
 
   private syncFilterValueToDirective(): void {
-    if (!this.filterDirective) {
-      return;
-    }
-
     const nextValue = this.filterValue ?? '';
     if (nextValue === this.filterDirective.filterValue) {
       return;
@@ -94,30 +80,13 @@ export class LuxSelectPanelFilterComponent implements AfterViewInit, OnChanges {
   }
 
   onInput(value: string): void {
-    if (this.filterDirective) {
-      this.filterDirective.onFilterInput(value ?? '');
-    }
-
-    this.filterChange.emit(value ?? '');
+    this.filterDirective.onFilterInput(value ?? '');
   }
 
   onKeydown(event: KeyboardEvent): void {
-    if (this.filterDirective) {
-      const handled = this.filterDirective.handleKeydown(event);
-      if (handled || event.key !== 'Escape') {
-        event.stopPropagation();
-      }
-
-      return;
-    }
-
-    if (event.key === 'Escape') {
-      this.escapePressed.emit(event);
-      return;
-    }
-
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Enter') {
-      this.arrowKeyPressed.emit(event);
+    const handled = this.filterDirective.handleKeydown(event);
+    if (handled || event.key !== 'Escape') {
+      event.stopPropagation();
     }
   }
 
@@ -128,13 +97,8 @@ export class LuxSelectPanelFilterComponent implements AfterViewInit, OnChanges {
 
   onClear(event: Event): void {
     event.stopPropagation();
-
-    if (this.filterDirective) {
-      this.filterDirective.onFilterInput('');
-    }
-
-    this.filterChange.emit('');
-    this.filterInput?.nativeElement.focus();
+    this.filterDirective.onFilterInput('');
+    this.filterInput?.nativeElement.focus({ preventScroll: true });
   }
 
   stopPanelEvent(event: Event): void {

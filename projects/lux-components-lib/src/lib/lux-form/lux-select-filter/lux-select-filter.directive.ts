@@ -100,10 +100,6 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
     return this.filterState.isFilterActive();
   }
 
-  isOptionFocused(): boolean {
-    return this.navigator.isOptionFocused(this.panelElement);
-  }
-
   private onPanelOpen(): void {
     if (!this.luxSelectFilter) {
       return;
@@ -150,7 +146,7 @@ export class LuxSelectFilterDirective<T = any> implements OnInit, OnDestroy {
         return;
       }
 
-      input.focus();
+      input.focus({ preventScroll: true });
       input.select();
     });
   }
