@@ -14,7 +14,7 @@ import {
   LuxUtil
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
-import { NewMarkerComponent } from '../../base/new-marker/new-marker.component';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ComponentsOverviewNavigationService } from '../../components-overview/components-overview-navigation.service';
 
 @Component({
@@ -32,7 +32,7 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
     NgClass,
     RouterOutlet,
     LuxLinkPlainComponent,
-    NewMarkerComponent
+    StatusMarkerComponent
   ]
 })
 export class ExampleRootComponent implements OnDestroy {

@@ -12,11 +12,6 @@ export class LuxSelectFilterNavigator {
     private readonly getFilterHeight: (panel: HTMLElement) => number
   ) {}
 
-  isOptionFocused(panelElement?: HTMLElement): boolean {
-    const activeElement = document.activeElement as HTMLElement | null;
-    return !!panelElement && !!activeElement && panelElement.contains(activeElement) && !!activeElement.closest('.mat-mdc-option');
-  }
-
   syncActiveItemToVisibleOptions(): void {
     const keyManager = this.getInternalKeyManager();
     if (!keyManager) {

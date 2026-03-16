@@ -531,7 +531,7 @@
         [luxNoTopLabel]="true"
         (luxCheckedChange)="disabled = disabledAria ? false : disabled"
       ></lux-toggle-ac>
-      <app-new-marker></app-new-marker>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
     </div>
     <lux-toggle-ac luxLabel="Label Uppercase" [(luxChecked)]="allUpperCase" [luxNoTopLabel]="true">
       <lux-form-hint>

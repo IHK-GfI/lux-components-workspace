@@ -25,7 +25,7 @@
         [luxLabel]="component.label"
         (luxClicked)="component.onclick()"
         [luxTagId]="component.label"
-        [luxBadgeNotification]="component.news ? 'neu' : ''"
+        [luxBadgeNotification]="navigationService.getMarkerLabel(component.markerType)"
         luxBadgeColor="accent"
         luxBadgeSize="large"
         class="lux-flex-auto"

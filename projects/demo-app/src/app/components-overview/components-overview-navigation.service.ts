@@ -3,6 +3,11 @@ import { NavigationEnd, Router } from '@angular/router';
 import { LuxThemeService } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import {
+  DemoMarkerType,
+  DemoNavigationComponentEntry,
+  getDemoMarkerLabel
+} from '../base/status-marker/status-marker.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,22 +39,22 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['session-timer', 'lux-interface-time-reset']
   ]);
 
-  private create(moduleName: string, label: string, news = false) {
+  private create(moduleName: string, label: string, markerType?: DemoMarkerType): DemoNavigationComponentEntry {
     return {
       onclick: () => this.goTo(label.toLowerCase()),
       icon: this.moduleIcons.get(moduleName)!,
-      label: label,
-      moduleName: moduleName,
-      news: news
+      label,
+      moduleName,
+      markerType
     };
   }
 
-  components: { onclick: any; label: string; icon: string; moduleName?: string; news: boolean }[] = [
-    this.create('action', 'Button'),
-    this.create('action', 'Button-Toggle', true),
+  components: DemoNavigationComponentEntry[] = [
+    this.create('action', 'Button', DemoMarkerType.Updated),
+    this.create('action', 'Button-Toggle', DemoMarkerType.New),
     this.create('action', 'Link'),
     this.create('action', 'Link-Plain'),
-    this.create('action', 'Menu'),
+    this.create('action', 'Menu', DemoMarkerType.Updated),
     this.create('common', 'Badge'),
     this.create('common', 'Message-Box'),
     this.create('common', 'Progress'),
@@ -76,7 +81,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('form', 'File-Upload'),
     this.create('form', 'Input-Ac'),
     this.create('form', 'Radio-Button-Ac'),
-    this.create('form', 'Select-Ac', true),
+    this.create('form', 'Select-Ac', DemoMarkerType.Updated),
     this.create('form', 'Slider-Ac'),
     this.create('form', 'Textarea-Ac'),
     this.create('form', 'Toggle-Ac'),
@@ -97,22 +102,22 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('layout', 'Tile'),
     this.create('layout', 'Tile-Ac'),
     this.create('lookup', 'Lookup-Autocomplete-Ac'),
-    this.create('lookup', 'Lookup-Combobox-Ac', true),
+    this.create('lookup', 'Lookup-Combobox-Ac', DemoMarkerType.Updated),
     this.create('lookup', 'Lookup-Label'),
     this.create('markdown', 'Markdown'),
     this.create('pipes', 'Timestamp'),
-    this.create('popup', 'Popup', true),
+    this.create('popup', 'Popup', DemoMarkerType.New),
     this.create('popup', 'Dialog'),
-    this.create('popup', 'Consent'),
+    this.create('popup', 'Consent', DemoMarkerType.New),
     this.create('popup', 'Snackbar'),
     this.create('tenant-logo', 'Tenant-Logo'),
     this.create('tour-hint', 'Tour-Hint'),
     this.create('breadcrumb', 'Breadcrumb'),
-    this.create('session-timer', 'Session-Timer', true)
+    this.create('session-timer', 'Session-Timer', DemoMarkerType.Updated)
   ];
 
-  sortedComponents: any[] = [];
-  sortedComponentEntries: Map<string, any[]> = new Map<string, any[]>();
+  sortedComponents: DemoNavigationComponentEntry[] = [];
+  sortedComponentEntries: Map<string, DemoNavigationComponentEntry[]> = new Map<string, DemoNavigationComponentEntry[]>();
   currentModules: Map<string, boolean> = new Map<string, boolean>([
     ['action', false],
     ['breadcrumb', false],
@@ -133,7 +138,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['tour-hint', false]
   ]);
   currentModuleNames: string[] = [];
-  selectedComponent: any;
+  selectedComponent: DemoNavigationComponentEntry | null = null;
   subscriptions: Subscription[] = [];
 
   constructor() {
@@ -175,12 +180,16 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
 
   get filteredComponents() {
     return this.components.filter(
-      (component: any) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName)
+      (component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName)
     );
   }
 
   getFilteredComponents(filterValue: string) {
-    return this.filteredComponents.filter((component: any) => component.label.toLowerCase().includes(filterValue.toLowerCase()));
+    return this.filteredComponents.filter((component) => component.label.toLowerCase().includes(filterValue.toLowerCase()));
+  }
+
+  getMarkerLabel(markerType?: DemoMarkerType) {
+    return getDemoMarkerLabel(markerType);
   }
 
   goTo(id: string): void {
@@ -197,13 +206,13 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
 
   navigateToPrevComponent() {
     const currentComponent = this.selectedComponent;
-    const currentIndex = this.sortedComponents.findIndex((component: any) => component.label === currentComponent.label);
+    const currentIndex = this.sortedComponents.findIndex((component) => component.label === currentComponent?.label);
     this.sortedComponents[currentIndex > 0 ? currentIndex - 1 : this.sortedComponents.length - 1].onclick();
   }
 
   navigateToNextComponent() {
     const currentComponent = this.selectedComponent;
-    const currentIndex = this.sortedComponents.findIndex((component: any) => component.label === currentComponent.label);
+    const currentIndex = this.sortedComponents.findIndex((component) => component.label === currentComponent?.label);
     this.sortedComponents[currentIndex < this.sortedComponents.length - 1 ? currentIndex + 1 : 0].onclick();
   }
 
@@ -212,7 +221,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
       this.sortedComponentEntries.set(
         moduleName,
         this.components.filter(
-          (component: any) =>
+          (component) =>
             component.moduleName === moduleName &&
             (!component.themes || !!component.themes.find((theme: string) => theme === this.themeName))
         )

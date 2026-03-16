@@ -6,12 +6,15 @@
     Bei einer verbleibenden Session-Zeit von 2 minuten wird ein Dialog geöffnet, mit dem die Session verlängert oder beendet werden kann.
     Mit dem Button kann der Dialog manuell geöffnet werden.
     <lux-button luxLabel="Dialog öffnen" [luxFlat]="true" luxColor="primary" (luxClicked)="timerService.openDialog()"></lux-button>
-    <lux-toggle-ac
-      luxLabel="Session darf verlängert werden"
-      luxColor="primary"
-      [luxChecked]="canExtendSession"
-      (luxCheckedChange)="toggleCanExtendSession($event)"
-    ></lux-toggle-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        luxLabel="Session darf verlängert werden"
+        luxColor="primary"
+        [luxChecked]="canExtendSession"
+        (luxCheckedChange)="toggleCanExtendSession($event)"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
     <div class="lux-mt-3"></div>
     <lux-input-ac luxLabel="Startzeit der Session in Sekunden" [(luxValue)]="startingSeconds"></lux-input-ac>
     <lux-button luxLabel="Zeit setzen" [luxFlat]="true" luxColor="primary" (luxClicked)="setTimer()"></lux-button>

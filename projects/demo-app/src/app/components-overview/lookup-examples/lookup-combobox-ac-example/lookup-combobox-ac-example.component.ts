@@ -10,6 +10,8 @@ import {
   LuxSelectAcComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { DemoMarkerType } from '../../../base/status-marker/status-marker.model';
+import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -37,11 +39,13 @@ import { LookupExampleComponent } from '../lookup-example.component';
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    JsonPipe
+    JsonPipe,
+    StatusMarkerComponent
   ]
 })
 export class LookupComboboxAcExampleComponent extends LookupExampleComponent implements OnInit {
   multiValue: LuxLookupTableEntry | LuxLookupTableEntry[] | null = null;
+  readonly markerTypeNew = DemoMarkerType.New;
   entryBlockSize = 25;
   bLuxWithEmptyEntry = true;
   enableFilter = true;
