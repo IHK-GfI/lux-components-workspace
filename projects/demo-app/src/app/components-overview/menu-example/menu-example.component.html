@@ -324,16 +324,24 @@
       <h3>LuxMenuItemComponent (mit Sections)</h3>
       <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
     </div>
-    <lux-input-ac
-      luxLabel="luxTitle"
-      luxHint="Diese Property ermöglicht es, den Titel (Benutzername) des Panel Headers zu ändern."
-      [(luxValue)]="menuSectionHeaderTitle"
-    ></lux-input-ac>
-    <lux-input-ac
-      luxLabel="luxSubtitle"
-      luxHint="Diese Property ermöglicht es, den Untertitel (Email) des Panel Headers zu ändern."
-      [(luxValue)]="menuSectionHeaderSubtitle"
-    ></lux-input-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-input-ac
+        class="lux-flex-auto"
+        luxLabel="luxTitle"
+        luxHint="Diese Property ermöglicht es, den Titel (Benutzername) des Panel Headers zu ändern."
+        [(luxValue)]="menuSectionHeaderTitle"
+      ></lux-input-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-input-ac
+        class="lux-flex-auto"
+        luxLabel="luxSubtitle"
+        luxHint="Diese Property ermöglicht es, den Untertitel (Email) des Panel Headers zu ändern."
+        [(luxValue)]="menuSectionHeaderSubtitle"
+      ></lux-input-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
     <lux-input-ac
       luxLabel="luxTitle"
       luxHint="Diese Property ermöglicht es, die erste Überschrift im 1. Panel zu ändern."
@@ -391,13 +399,17 @@
             [(luxValue)]="item.buttonBadge"
           >
           </lux-input-ac>
-          <lux-toggle-ac
-            luxLabel="luxMenuItemSelected"
-            luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
-            [(luxChecked)]="item.selected"
-            [luxNoTopLabel]="true"
-          >
-          </lux-toggle-ac>
+          <div class="lux-flex lux-items-center lux-gap-2">
+            <lux-toggle-ac
+              class="lux-flex-auto"
+              luxLabel="luxMenuItemSelected"
+              luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
+              [(luxChecked)]="item.selected"
+              [luxNoTopLabel]="true"
+            >
+            </lux-toggle-ac>
+            <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+          </div>
         </lux-panel-content>
       </lux-panel>
       }
@@ -426,12 +438,16 @@
             [(luxValue)]="item.label"
           >
           </lux-input-ac>
-          <lux-input-ac
-            luxLabel="luxMenuItemSubtitle"
-            luxHint="Diese Property ermöglicht es, das Untertitel eines Menu-Eintrags zu ändern."
-            [(luxValue)]="item.subtitle"
-          >
-          </lux-input-ac>
+          <div class="lux-flex lux-items-center lux-gap-2">
+            <lux-input-ac
+              class="lux-flex-auto"
+              luxLabel="luxMenuItemSubtitle"
+              luxHint="Diese Property ermöglicht es, das Untertitel eines Menu-Eintrags zu ändern."
+              [(luxValue)]="item.subtitle"
+            >
+            </lux-input-ac>
+            <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+          </div>
           <lux-input-ac luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(luxValue)]="item.tooltipMenu"> </lux-input-ac>
           <lux-input-ac
             luxLabel="luxIconName"

@@ -57,13 +57,13 @@ interface SelectDummyForm {
   ]
 })
 export class SelectAuthenticExampleComponent {
+  readonly markerTypeNew = DemoMarkerType.New;
   useErrorMessage = true;
   useTemplatesForLabels = false;
   useCompareWithFn = false;
   useValueFn = false;
   useSimpleArray = false;
   showOutputEvents = false;
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
   enableFilter = true;
   filterPlaceholder = 'Filter';
   filterValue = '';

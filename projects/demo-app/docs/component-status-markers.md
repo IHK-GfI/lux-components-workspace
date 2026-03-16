@@ -27,4 +27,5 @@ Der sichtbare Text in der Demo lautet:
 
 - Ein Inline-Marker wird nur dort gesetzt, wo die neue oder geaenderte Option im Beispiel direkt sichtbar gemacht werden soll.
 - Die Navigation und die Komponentenuebersicht bleiben die zentrale Quelle fuer den Komponentenstatus.
+- Bei bestehenden Komponenten mit Status `updated` werden neu hinzugekommene API-Optionen im Example nach Moeglichkeit mit einem zusaetzlichen `neu`-Marker direkt am betroffenen Control markiert.
 - Aeltere, bereits vorhandene Inline-Marker koennen voruebergehend bestehen bleiben, auch wenn sie nicht Teil der aktuellen Release-Kandidaten sind.

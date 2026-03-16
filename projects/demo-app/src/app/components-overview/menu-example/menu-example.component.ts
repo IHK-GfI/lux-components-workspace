@@ -50,6 +50,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 export class MenuExampleComponent {
   showOutputEvents = false;
   log = logResult;
+  readonly markerTypeNew = DemoMarkerType.New;
   readonly markerTypeUpdated = DemoMarkerType.Updated;
   menuItems: ExampleMenuItem[] = [
     {

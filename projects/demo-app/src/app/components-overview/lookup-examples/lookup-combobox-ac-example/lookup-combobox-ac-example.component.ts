@@ -45,7 +45,7 @@ import { LookupExampleComponent } from '../lookup-example.component';
 })
 export class LookupComboboxAcExampleComponent extends LookupExampleComponent implements OnInit {
   multiValue: LuxLookupTableEntry | LuxLookupTableEntry[] | null = null;
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
+  readonly markerTypeNew = DemoMarkerType.New;
   entryBlockSize = 25;
   bLuxWithEmptyEntry = true;
   enableFilter = true;

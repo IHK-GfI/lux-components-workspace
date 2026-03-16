@@ -148,38 +148,54 @@
         luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
         [luxNoTopLabel]="true"
       ></lux-toggle-ac>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
     </div>
     @if (enableFilter) {
-      <lux-input-ac
-        luxName="select_luxFilterPlaceholder"
-        luxLabel="luxFilterPlaceholder"
-        luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
-        [(luxValue)]="filterPlaceholder"
-      >
-      </lux-input-ac>
-      <lux-input-ac
-        luxName="select_luxFilterValue"
-        luxLabel="luxFilterValue"
-        luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
-        [(luxValue)]="filterValue"
-      >
-      </lux-input-ac>
-      <lux-input-ac
-        luxName="select_luxFilterClearAriaLabel"
-        luxLabel="luxFilterClearAriaLabel"
-        luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
-        [(luxValue)]="filterClearAriaLabel"
-      >
-      </lux-input-ac>
-      <lux-input-ac
-        luxName="select_luxVisibleOptionCount"
-        luxLabel="luxVisibleOptionCount"
-        luxHint="Begrenzt die Anzahl der sichtbaren Optionen im Dropdown. 0 verwendet die Standardhöhe."
-        [(luxValue)]="visibleOptionCount"
-        luxType="number"
-      >
-      </lux-input-ac>
+      <div class="lux-flex lux-items-center lux-gap-2">
+        <lux-input-ac
+          class="lux-flex-auto"
+          luxName="select_luxFilterPlaceholder"
+          luxLabel="luxFilterPlaceholder"
+          luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
+          [(luxValue)]="filterPlaceholder"
+        >
+        </lux-input-ac>
+        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      </div>
+      <div class="lux-flex lux-items-center lux-gap-2">
+        <lux-input-ac
+          class="lux-flex-auto"
+          luxName="select_luxFilterValue"
+          luxLabel="luxFilterValue"
+          luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
+          [(luxValue)]="filterValue"
+        >
+        </lux-input-ac>
+        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      </div>
+      <div class="lux-flex lux-items-center lux-gap-2">
+        <lux-input-ac
+          class="lux-flex-auto"
+          luxName="select_luxFilterClearAriaLabel"
+          luxLabel="luxFilterClearAriaLabel"
+          luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
+          [(luxValue)]="filterClearAriaLabel"
+        >
+        </lux-input-ac>
+        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      </div>
+      <div class="lux-flex lux-items-center lux-gap-2">
+        <lux-input-ac
+          class="lux-flex-auto"
+          luxName="select_luxVisibleOptionCount"
+          luxLabel="luxVisibleOptionCount"
+          luxHint="Begrenzt die Anzahl der sichtbaren Optionen im Dropdown. 0 verwendet die Standardhöhe."
+          [(luxValue)]="visibleOptionCount"
+          luxType="number"
+        >
+        </lux-input-ac>
+        <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      </div>
     }
     <lux-toggle-ac
       [(luxChecked)]="readonly"

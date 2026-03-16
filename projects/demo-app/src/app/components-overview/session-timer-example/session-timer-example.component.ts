@@ -18,7 +18,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
   templateUrl: './session-timer-example.component.html'
 })
 export class SessionTimerExampleComponent {
-  readonly markerTypeUpdated = DemoMarkerType.Updated;
+  readonly markerTypeNew = DemoMarkerType.New;
   protected timerService = inject(LuxAppHeaderAcSessionTimerService);
   startingSeconds = 1800;
 
