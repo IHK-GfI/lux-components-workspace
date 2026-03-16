@@ -15,6 +15,8 @@ import {
   LuxMenuPanelHeaderComponent,
   LuxMenuSectionTitleComponent
 } from '@ihk-gfi/lux-components';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -41,12 +43,14 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseAdvancedOptionsComponent,
     LuxDividerComponent,
     LuxMenuPanelHeaderComponent,
-    LuxMenuSectionTitleComponent
+    LuxMenuSectionTitleComponent,
+    StatusMarkerComponent
   ]
 })
 export class MenuExampleComponent {
   showOutputEvents = false;
   log = logResult;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   menuItems: ExampleMenuItem[] = [
     {
       iconName: 'lux-interface-login-circle',

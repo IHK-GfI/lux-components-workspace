@@ -141,12 +141,15 @@
     >
     </lux-input-ac>
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
-    <lux-toggle-ac
-      [(luxChecked)]="enableFilter"
-      luxLabel="luxEnableFilter"
-      luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
-      [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        [(luxChecked)]="enableFilter"
+        luxLabel="luxEnableFilter"
+        luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
     @if (enableFilter) {
       <lux-input-ac
         luxName="select_luxFilterPlaceholder"

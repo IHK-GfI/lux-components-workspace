@@ -235,13 +235,16 @@
         Begrenzt die sichtbare Panelhöhe auf eine feste Anzahl Optionen. 0 verwendet die Standardhöhe und ändert `luxEntryBlockSize` nicht.
       </lux-form-hint>
     </lux-input-ac>
-    <lux-toggle-ac
-      luxLabel="Selektiere Keys 336 und 504"
-      luxHint="Die Keys 336 und 504 sind initial nicht geladen. So kann getestet werden, ob die Component diese Einträge nachlädt."
-      (luxCheckedChange)="on336And504Change($event)"
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        luxLabel="Selektiere Keys 336 und 504"
+        luxHint="Die Keys 336 und 504 sind initial nicht geladen. So kann getestet werden, ob die Component diese Einträge nachlädt."
+        (luxCheckedChange)="on336And504Change($event)"
+        [luxNoTopLabel]="true"
+      >
+      </lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
     <lux-toggle-ac
       luxLabel="Render-Funktion nutzen"
       luxHint="Wenn 'true' wird für 'luxRenderProp' anstelle einer Render-Property (z.B. 'label') eine Callback-Funktion übergeben."

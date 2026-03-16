@@ -17,7 +17,8 @@ import {
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
-import { NewMarkerComponent } from "../../base/new-marker/new-marker.component";
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -44,8 +45,8 @@ type ErrorBoxType = 'default' | 'gradient' | 'loading';
     LuxCardActionsComponent,
     LuxTextboxComponent,
     NgTemplateOutlet,
-    NewMarkerComponent
-]
+    StatusMarkerComponent
+  ]
 })
 export class ButtonExampleComponent implements OnDestroy {
   private configService = inject(LuxComponentsConfigService);
@@ -78,6 +79,7 @@ export class ButtonExampleComponent implements OnDestroy {
   subscription: Subscription;
   spinnerModes = ['determinate', 'indeterminate'];
   spinnerMode: LuxProgressModeType = 'determinate';
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   spinnerValue = 70;
   spinnerExampleLoading = false;
   spinnerExampleFirstname = '';

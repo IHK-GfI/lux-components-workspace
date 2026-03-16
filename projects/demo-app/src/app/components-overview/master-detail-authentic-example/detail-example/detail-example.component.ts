@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { LuxCardComponent, LuxCardContentComponent, LuxDividerComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
-import { NewMarkerComponent } from "../../../base/new-marker/new-marker.component";
+import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 
 @Component({
   selector: 'detail-example',
   templateUrl: './detail-example.component.html',
-  imports: [LuxDividerComponent, LuxCardContentComponent, LuxCardComponent, LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, NewMarkerComponent]
+  imports: [LuxDividerComponent, LuxCardContentComponent, LuxCardComponent, LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, StatusMarkerComponent]
 })
 export class DetailExampleComponent {
   @Input() selectedDetail?: any;

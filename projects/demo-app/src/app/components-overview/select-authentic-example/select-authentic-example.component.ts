@@ -10,6 +10,8 @@ import {
   LuxSelectAcComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -50,7 +52,8 @@ interface SelectDummyForm {
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     ExampleBaseOptionsActionsComponent,
-    JsonPipe
+    JsonPipe,
+    StatusMarkerComponent
   ]
 })
 export class SelectAuthenticExampleComponent {
@@ -60,6 +63,7 @@ export class SelectAuthenticExampleComponent {
   useValueFn = false;
   useSimpleArray = false;
   showOutputEvents = false;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   enableFilter = true;
   filterPlaceholder = 'Filter';
   filterValue = '';

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LuxAccordionComponent, LuxBadgeColors, LuxButtonComponent, LuxFormHintComponent, LuxIconComponent, LuxInputAcComponent, LuxListComponent, LuxListItemComponent, LuxListItemContentComponent, LuxListItemCustomHeaderComponent, LuxListItemIconComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
-import { NewMarkerComponent } from "../../base/new-marker/new-marker.component";
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -33,8 +33,8 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseAdvancedOptionsComponent,
     ExampleBaseOptionsActionsComponent,
     LuxListItemCustomHeaderComponent,
-    NewMarkerComponent
-]
+    StatusMarkerComponent
+  ]
 })
 export class ListExampleComponent {
   showCustomHeader = false;

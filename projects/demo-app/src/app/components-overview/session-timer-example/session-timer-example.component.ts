@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { LuxAppHeaderAcSessionTimerService, LuxButtonComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 
@@ -10,11 +12,13 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
     ExampleBaseSimpleOptionsComponent,
     LuxButtonComponent,
     LuxInputAcComponent,
-    LuxToggleAcComponent
+    LuxToggleAcComponent,
+    StatusMarkerComponent
   ],
   templateUrl: './session-timer-example.component.html'
 })
 export class SessionTimerExampleComponent {
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   protected timerService = inject(LuxAppHeaderAcSessionTimerService);
   startingSeconds = 1800;
 
