@@ -1,20 +1,31 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.1.0](#version-2110)
+  - [Version 21.2.0](#version-2120)
     - [Issues](#issues)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues-1)
-  - [Version 19.3.0](#version-1930)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-2)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-3)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-4)
-  - [Version 19.0.1](#version-1901)
+  - [Version 19.1.0](#version-1910)
     - [Issues](#issues-5)
-  - [Version 19.0.0](#version-1900)
+  - [Version 19.0.1](#version-1901)
     - [Issues](#issues-6)
+  - [Version 19.0.0](#version-1900)
+    - [Issues](#issues-7)
+
+## Version 21.2.0
+
+### Issues
+
+- Issue #141: Selectable Filter (#158)
+- Issue #155: reine Icon-Buttons (#175)
+- Issue #169: Neue Komponte "Button-Toggle" (#173)
+- Issue #170: Neue Komponente "Cookie Consent" (#172)
 
 ## Version 21.1.0
 
