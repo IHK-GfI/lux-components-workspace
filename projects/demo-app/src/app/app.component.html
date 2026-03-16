@@ -231,6 +231,8 @@
         </lux-app-header-ac-user-menu>
       }
       <lux-app-header-ac-nav-menu [luxNavMenuMaximumExtended]="5">
+        <lux-app-header-ac-nav-menu-item luxLabel="DeepWiki" luxAriaLabel="DeepWiki" luxTagId="navItem0" (luxClicked)="goToDeepWiki()">
+        </lux-app-header-ac-nav-menu-item>
         <lux-app-header-ac-nav-menu-item
           luxLabel="{{ 'app.menu.components' | transloco }}"
           luxAriaLabel="Komponentenübersicht"

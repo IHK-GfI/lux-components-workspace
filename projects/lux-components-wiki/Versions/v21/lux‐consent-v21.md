@@ -207,6 +207,15 @@ export const appConsentProvider = {
 };
 ```
 
+Bitte den Provider noch in der _app.config.ts_ oder _app.module.ts_ ergänzen.
+
+```typescript
+providers: [
+  ...,
+  appConsentProvider
+]
+```
+
 ### 2. Dialog beim App-Start nur bei Bedarf öffnen
 
 ```typescript
@@ -234,15 +243,30 @@ export class AppComponent implements OnInit {
 ```
 
 ```typescript
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LuxAppFooterLinkService, LuxAppFooterLinkInfo, LuxConsentService, LuxMediaQueryObserverService,... } from '@ihk-gfi/lux-components';
+...
+
 export class AppComponent implements OnInit {
   private linkService = inject(LuxAppFooterLinkService);
   private consentService = inject(LuxConsentService);
+  private readonly mediaService = inject(LuxMediaQueryObserverService);
+  ...
+
+  mobileView = false;
+  ...
+
+  constructor() {
+    ...
+    
+    this.mediaService.getMediaQueryChangedAsObservable().pipe(takeUntilDestroyed()).subscribe(() => {
+      this.mobileView = this.mediaService.isSmallerOrEqual('md');
+    });
+  }
 
   ngOnInit(): void {
     this.linkService.pushLinkInfos(
-      new LuxAppFooterLinkInfo('Datenschutz', 'datenschutz', true),
-      new LuxAppFooterLinkInfo('Impressum', 'impressum'),
-      new LuxAppFooterLinkInfo('Lizenzhinweis', 'license-hint'),
+      ...
       new LuxAppFooterLinkInfo('Einwilligung', '', true, false, () => this.onOpenConsent())
     );
 

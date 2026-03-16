@@ -18,7 +18,7 @@ export interface Options {
 }
 
 export const updateMajorVersion = '21';
-export const updateMinVersion = '19.6.0';
+export const updateMinVersion = '19.7.0';
 export const updateNodeMinVersion = '20.0.0';
 export const addOrUpdate = false;
 

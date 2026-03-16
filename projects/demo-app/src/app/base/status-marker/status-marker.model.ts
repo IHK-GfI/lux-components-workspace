@@ -22,7 +22,7 @@ const DEMO_MARKER_LABELS: Record<DemoMarkerType, string> = {
 
 const DEMO_MARKER_COLORS: Record<DemoMarkerType, DemoMarkerColor> = {
   [DemoMarkerType.New]: 'green',
-  [DemoMarkerType.Updated]: 'blue'
+  [DemoMarkerType.Updated]: 'green'
 };
 
 export function getDemoMarkerLabel(markerType?: DemoMarkerType): string {

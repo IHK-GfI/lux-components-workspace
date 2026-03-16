@@ -8,9 +8,16 @@ applyTo: '**'
 
 - Angular monorepo with multiple workspaces under projects/: the component library, a demo app, a theme package, and update schematics.
 - Core library exports are centralized in [projects/lux-components-lib/src/public_api.ts](projects/lux-components-lib/src/public_api.ts); ng-packagr entry is [projects/lux-components-lib/ng-package.json](projects/lux-components-lib/ng-package.json).
+- Use DestroyRef + takeUntilDestroyed for automatic cleanup of subscriptions in components/services.
+- Use Signal-based APIs for reactive state management in components/services; see Angular docs for best practices.
+- Use inject-Function instead of constructor injection where possible for better tree-shaking and simpler code.
+- Use ChangeDetectionStrategy.OnPush change detection for all new components for better performance; use ChangeDetectorRef.markForCheck() when manual checks are needed.
+- Add unit tests for all new components/services using Jasmine/Karma; place tests alongside implementation files with .spec.ts suffix.
 - The demo app consumes the library and themes; it uses transloco for translations, and theme CSS from dist/theme (see assets in [angular.json](angular.json)).
 - Themes are CSS variables + classes (Material Theme 3). Variables live under projects/lux-components-theme/src/<themeName>/\_variables\*.scss.
 - Update scripts are Angular schematics in projects/lux-components-update (see README).
+- Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>.
+- Update the demo page of the component in the folder projects\demo-app\src\app\components-overview\<component-name>.
 
 ## Key workflows (Windows-friendly)
 

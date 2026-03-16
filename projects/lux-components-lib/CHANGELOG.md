@@ -1,22 +1,26 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.1.0](#version-2110)
+  - [Version 21.2.0](#version-2120)
     - [Issues](#issues)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues-1)
-  - [Version 19.6.0](#version-1960)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-2)
-  - [Version 19.5.0](#version-1950)
+  - [Version 19.7.0](#version-1970)
     - [Issues](#issues-3)
-  - [Version 19.4.0](#version-1940)
+  - [Version 19.6.0](#version-1960)
     - [Issues](#issues-4)
-  - [Version 19.3.0](#version-1930)
+  - [Version 19.5.0](#version-1950)
     - [Issues](#issues-5)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.4.0](#version-1940)
     - [Issues](#issues-6)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-7)
+  - [Version 19.2.0](#version-1920)
+    - [Issues](#issues-8)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues-9)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -24,7 +28,17 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues-8)
+    - [Issues](#issues-10)
+
+## Version 21.2.0
+
+### Issues
+
+- Issue #141: Selectable Filter (#158)
+- Issue #155: reine Icon-Buttons (#175)
+- Issue #169: Neue Komponte "Button-Toggle" (#173)
+- Issue #170: Neue Komponente "Cookie Consent" (#172)
+- Issue #176: Sprung nach Selektieren von Optionen gefixet und Tests erweitert (#178)
 
 ## Version 21.1.0
 
@@ -52,6 +66,13 @@
 - Issue #134: Erweiterung Button-Komponente: luxDisabledAria & ClickNotAllowed Event (#145)
 - Issue #137: Umstellung auf Angular v21 (#147)
 - Issue #157: Finalisierung Release v21: Bugfixes, Dokumentation, Updater,... (#160)
+    - [Issues](#issues-7)
+
+## Version 19.7.0
+
+### Issues
+
+- Issue #170: Neue Komponente "Cookie Consent" (#172)
 
 ## Version 19.6.0
 

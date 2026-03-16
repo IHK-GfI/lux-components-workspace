@@ -204,6 +204,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.navigate(['home']);
   }
 
+  goToDeepWiki() {
+    window.open('https://deepwiki.com/IHK-GfI/lux-components-workspace', '_blank', 'noopener,noreferrer');
+  }
+
   goToComponents() {
     this.router.navigate(['components-overview']);
   }
