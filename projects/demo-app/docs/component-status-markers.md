@@ -10,7 +10,7 @@ Dieses Marker-System ist rein demo-app-intern. Es ist kein Bestandteil des LUX-D
 Der sichtbare Text in der Demo lautet:
 
 - `new` -> `neu`
-- `updated` -> `update`
+- `updated` -> `aktualisiert`
 
 ## Pflegeorte
 

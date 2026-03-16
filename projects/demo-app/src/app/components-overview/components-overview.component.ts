@@ -4,7 +4,6 @@ import {
   LuxAppFooterButtonService,
   LuxAriaLabelDirective,
   LuxAutofocusDirective,
-  LuxBadgeNotificationDirective,
   LuxIconComponent,
   LuxImageComponent,
   LuxInputAcComponent,
@@ -13,6 +12,7 @@ import {
   LuxTileAcComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../base/status-marker/status-marker.component';
 import { ComponentsOverviewNavigationService } from './components-overview-navigation.service';
 
 @Component({
@@ -24,12 +24,12 @@ import { ComponentsOverviewNavigationService } from './components-overview-navig
     LuxImageComponent,
     LuxIconComponent,
     LuxTileAcComponent,
-    LuxBadgeNotificationDirective,
     LuxAriaLabelDirective,
     LuxInputAcSuffixComponent,
     LuxInputAcPrefixComponent,
     LuxInputAcComponent,
-    LuxAutofocusDirective
+    LuxAutofocusDirective,
+    StatusMarkerComponent
   ]
 })
 export class ComponentsOverviewComponent implements OnInit, AfterViewInit {

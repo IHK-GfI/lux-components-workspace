@@ -11,8 +11,18 @@
   }
 }
 
-.lux-tile-ac-wrapper-demo ::ng-deep {
-  .lux-tile-ac {
+.lux-tile-ac-wrapper-demo {
+  position: relative;
+
+  .lux-tile-ac-status-marker {
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  ::ng-deep .lux-tile-ac {
     width: 260px;
     min-height: 120px;
   }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { LuxBadgeComponent, LuxLabelComponent } from '@ihk-gfi/lux-components';
-import { DemoMarkerType, getDemoMarkerColor, getDemoMarkerLabel } from './status-marker.model';
+import { DemoMarkerType, getDemoMarkerLabel } from './status-marker.model';
 
 @Component({
   selector: 'app-status-marker',
@@ -12,7 +12,7 @@ export class StatusMarkerComponent {
   private static globalCounter = 0;
 
   readonly markerType = input(DemoMarkerType.New);
+  readonly badgeColor = computed(() => (this.markerType() === DemoMarkerType.New ? 'green' : 'lightblue'));
   readonly label = computed(() => getDemoMarkerLabel(this.markerType()));
-  readonly color = computed(() => getDemoMarkerColor(this.markerType()));
   readonly counter = StatusMarkerComponent.globalCounter++;
 }
