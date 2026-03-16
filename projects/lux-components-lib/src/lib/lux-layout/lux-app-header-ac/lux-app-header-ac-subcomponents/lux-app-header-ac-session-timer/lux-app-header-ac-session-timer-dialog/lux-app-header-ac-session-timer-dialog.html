@@ -1,7 +1,7 @@
 @switch (currentStep()) { @default {
 <lux-dialog-structure luxTagId="lux-session-timer-dialog-default" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
   <lux-dialog-content luxTagId="lux-session-timer-dialog-content-default" class="lux-session-timer-dialog-info">
-    <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-time-sleep" luxIconSize="3x"></lux-icon>
+    <lux-icon class="lux-session-timer-dialog-icon lux-color-blue" luxIconName="lux-interface-time-sleep" luxIconSize="3x"></lux-icon>
     <h2>{{ 'luxc.app-header.session-timer.dialog.info.title' | transloco }}</h2>
     <p>
       {{ 'luxc.app-header.session-timer.dialog.info.message.part1' | transloco }}
@@ -39,7 +39,11 @@
 } @case ("notextendable") {
 <lux-dialog-structure luxTagId="lux-session-timer-dialog-logout" class="lux-session-timer-dialog lux-flex lux-flex-col lux-flex-auto">
   <lux-dialog-content luxTagId="lux-session-timer-dialog-content-logout" class="lux-session-timer-dialog-logout">
-    <lux-icon class="lux-session-timer-dialog-icon" luxIconName="lux-interface-arrows-synchronize-warning" luxIconSize="3x"></lux-icon>
+    <lux-icon
+      class="lux-session-timer-dialog-icon lux-color-blue"
+      luxIconName="lux-interface-arrows-synchronize-warning"
+      luxIconSize="3x"
+    ></lux-icon>
     <h2>{{ 'luxc.app-header.session-timer.dialog.notextendable.title' | transloco }}</h2>
     <p>{{ 'luxc.app-header.session-timer.dialog.notextendable.message' | transloco }}</p>
   </lux-dialog-content>
