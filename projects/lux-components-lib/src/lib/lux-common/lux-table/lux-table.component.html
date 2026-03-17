@@ -196,8 +196,8 @@
             'lux-row-selected': luxSelected.has(rowData) && luxMultiSelect,
             'lux-cursor':
               luxDoubleClicked.observed ||
-              (luxSelectedChange.observed && !luxMultiSelectOnlyCheckboxClick) ||
-              (luxSelectedAsArrayChange.observed && !luxMultiSelectOnlyCheckboxClick)
+              (luxSelectedChange.observed && luxMultiSelect && !luxMultiSelectOnlyCheckboxClick) ||
+              (luxSelectedAsArrayChange.observed && luxMultiSelect && !luxMultiSelectOnlyCheckboxClick)
           }"
           (dblclick)="onDoubleClick($event, rowData)"
           (click)="onSingleClick($event, rowData, i)"
