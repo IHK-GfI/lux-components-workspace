@@ -21,13 +21,15 @@
   <div class="lux-flex lux-flex-wrap lux-justify-start lux-align-start lux-gap-6 lux-mb-4">
     @for (component of navigationService.getFilteredComponents(filterValue) | luxAlphabeticallySorted; track component.label) {
     <div class="lux-tile-ac-wrapper-demo">
+      @if (component.markerType) {
+        <div class="lux-tile-ac-status-marker">
+          <app-status-marker [markerType]="component.markerType"></app-status-marker>
+        </div>
+      }
       <lux-tile-ac
         [luxLabel]="component.label"
         (luxClicked)="component.onclick()"
         [luxTagId]="component.label"
-        [luxBadgeNotification]="navigationService.getMarkerLabel(component.markerType)"
-        luxBadgeColor="accent"
-        luxBadgeSize="large"
         class="lux-flex-auto"
       >
         @if (!component.useImage) {

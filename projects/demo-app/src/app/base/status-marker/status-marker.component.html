@@ -1,3 +1,7 @@
-<lux-badge [luxColor]="color()" [luxUppercase]="false">
-  <lux-label luxId="luxCustomHeader_status_{{ counter }}">{{ label() }}</lux-label>
+<lux-badge
+  class="status-marker-badge"
+  [luxColor]="badgeColor()"
+  [luxUppercase]="false"
+>
+  <lux-label luxId="status-marker-{{ counter }}">{{ label() }}</lux-label>
 </lux-badge>

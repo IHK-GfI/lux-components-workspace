@@ -37,7 +37,6 @@ $checkmark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width=
     overflow-y: auto;
     border-right: 1px solid var(--lux-theme-light-dividers);
     min-width: 253px;
-    min-width: 253px;
     padding: 16px 8px;
 
     ::ng-deep {
@@ -119,6 +118,7 @@ lux-link-plain.sr-only ::ng-deep .link-wrapper:focus {
 
       .example-component-list-item-status-marker {
         padding-left: 16px;
+        line-height: normal;
       }
 
       &:focus-visible {
