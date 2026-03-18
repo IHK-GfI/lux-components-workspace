@@ -134,7 +134,11 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
    Bei fehlenden NPM-Paketen siehe [hier](#fehlende-pakete-bei-npm-install).
 
-1. Die Abhängigkeit _ngx-cookie-service_ in der _package.json_ auf die Version _^21.0.0_ setzen, aber **ohne** ein `npm install` auszuführen.
+1. Die Abhängigkeit _ngx-cookie-service_ in der _package.json_ auf die Version _^21.0.0_ setzen.
+
+1. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
+
+1. `npm install --force`
 
 1. `ng update @angular/cli@21 @angular/core@21 @angular/material@21 angular-eslint@21 --force --allow-dirty`
 

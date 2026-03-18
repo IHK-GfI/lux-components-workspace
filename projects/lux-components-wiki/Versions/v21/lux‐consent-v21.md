@@ -17,11 +17,15 @@
     - [LuxConsentState](#luxconsentstate)
     - [LuxConsentPurpose](#luxconsentpurpose)
     - [LuxConsentStorageType](#luxconsentstoragetype)
-  - [Beispiele](#beispiele)
-    - [1. Consent global konfigurieren (Provider)](#1-consent-global-konfigurieren-provider)
-    - [2. Dialog beim App-Start nur bei Bedarf öffnen](#2-dialog-beim-app-start-nur-bei-bedarf-öffnen)
-    - [3. Dialog manuell öffnen (z. B. Footer-Link)](#3-dialog-manuell-öffnen-z-b-footer-link)
-    - [4. Einwilligung gezielt prüfen](#4-einwilligung-gezielt-prüfen)
+  - [Verwendung](#verwendung)
+    - [Nur eine Sprache](#nur-eine-sprache)
+      - [Einwilligung anlegen](#einwilligung-anlegen)
+      - [Einwilligung einbinden](#einwilligung-einbinden)
+      - [Einwilligung abfragen](#einwilligung-abfragen)
+    - [Mehrere Sprachen](#mehrere-sprachen)
+      - [Einwilligung anlegen](#einwilligung-anlegen-1)
+      - [Einwilligung einbinden](#einwilligung-einbinden-1)
+      - [Einwilligung abfragen](#einwilligung-abfragen-1)
   - [Zusatzinformationen](#zusatzinformationen)
 
 ## Overview / API
@@ -106,11 +110,11 @@ InjectionToken zum Austauschen des Standard-Öffnungsverhaltens des Consent-Dial
 | entries                    | LuxConsentEntry[] \| undefined                 | Zusätzliche app-spezifische Consent-Einträge (werden mit den LUX-Components-Defaults zusammengeführt). |
 | impressumUrl               | string \| undefined                            | Alternative URL für Impressum.                                                                         |
 | impressumComponent         | Type\<unknown\> \| undefined                   | Statisch gesetzte Impressum-Komponente.                                                                |
-| impressumComponentLoader   | () =\> Promise\<Type\<unknown\>\> \| undefined | Lazy Loader für Impressum-Komponente.                                                                  |
+| impressumComponentLoader   | () =\> Promise\<Type\<unknown\>\> \| undefined | Lazy-Loader für Impressum-Komponente.                                                                  |
 | impressumComponentInputs   | Record\<string, unknown\> \| undefined         | Inputs für Impressum-Komponente.                                                                       |
 | datenschutzUrl             | string \| undefined                            | Alternative URL für Datenschutz.                                                                       |
 | datenschutzComponent       | Type\<unknown\> \| undefined                   | Statisch gesetzte Datenschutz-Komponente.                                                              |
-| datenschutzComponentLoader | () =\> Promise\<Type\<unknown\>\> \| undefined | Lazy Loader für Datenschutz-Komponente.                                                                |
+| datenschutzComponentLoader | () =\> Promise\<Type\<unknown\>\> \| undefined | Lazy-Loader für Datenschutz-Komponente.                                                                |
 | datenschutzComponentInputs | Record\<string, unknown\> \| undefined         | Inputs für Datenschutz-Komponente.                                                                     |
 
 ### LuxConsentEntry
@@ -121,8 +125,8 @@ Beschreibt einen technisch verwendeten Cookie-/Storage-Eintrag, der im Dialog tr
 | ----------------- | --------------------- | ----------------------------------------------------------- |
 | type              | LuxConsentStorageType | Art des Speichers (Cookie, Local Storage, Session Storage). |
 | name              | string                | Schlüsselname des Eintrags.                                 |
-| nameIsPrefix      | boolean \| undefined  | Markiert den Namen als Prefix für dynamische Keys.          |
-| processingCountry | string                | Land in dem die Daten verarbeitet werden.                   |
+| nameIsPrefix      | boolean \| undefined  | Markiert den Namen als Präfix für dynamische Keys.          |
+| processingCountry | string                | Land, in dem die Daten verarbeitet werden.                  |
 | purpose           | LuxConsentPurpose     | Zweckart des Eintrags.                                      |
 | duration          | string                | Speicherdauer (z. B. `persistent`, `session`, `30 Tage`).   |
 | description       | string                | Fachliche Beschreibung des Eintrags.                        |
@@ -152,9 +156,11 @@ Enum der unterstützten Speicherarten:
 - `Local Storage`
 - `Session Storage`
 
-## Beispiele
+## Verwendung
 
-### 1. Consent global konfigurieren (Provider)
+### Nur eine Sprache
+
+#### Einwilligung anlegen
 
 ```typescript
 import { LUX_CONSENT_CONFIG, LuxConsentPurpose, LuxConsentStorageType } from '@ihk-gfi/lux-components';
@@ -207,7 +213,9 @@ export const appConsentProvider = {
 };
 ```
 
-Bitte den Provider noch in der _app.config.ts_ oder _app.module.ts_ ergänzen.
+#### Einwilligung einbinden
+
+_app.config.ts_ (neu) oder _app.module.ts_ (alt):
 
 ```typescript
 providers: [
@@ -216,40 +224,19 @@ providers: [
 ]
 ```
 
-### 2. Dialog beim App-Start nur bei Bedarf öffnen
+Anmerkung: Die _openIfNeeded_-Methode öffnet den Einwilligungsdialog nur, wenn kein Einwilligungscookie vorliegt und es mindestens einen Eintrag mit einem anderen Verwendungszweck als _LuxConsentPurpose.Essential_ gibt. Soll der Dialog in jedem Fall geöffnet werden, muss die _open_-Methode verwendet werden.
 
-```typescript
-export class AppComponent implements OnInit {
-  private consentService = inject(LuxConsentService);
-
-  ngOnInit(): void {
-    this.consentService.openIfNeeded();
-  }
-}
-```
-
-### 3. Dialog manuell öffnen (z. B. Footer-Link)
-
-```html
-  <lux-app-header-ac-nav-menu>
-  @if (mobileView) {
-    <lux-app-header-ac-nav-menu-item
-      luxLabel="Einwilligung"
-      luxAriaLabel="Einwilligung"
-      (luxClicked)="onOpenConsent()">
-    </lux-app-header-ac-nav-menu-item>
-  }
-  </lux-app-header-ac-nav-menu>
-```
+_app.component.ts_:
 
 ```typescript
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LuxAppFooterLinkService, LuxAppFooterLinkInfo, LuxConsentService, LuxMediaQueryObserverService,... } from '@ihk-gfi/lux-components';
+import { LUX_CONSENT_CONFIG, LuxAppFooterLinkService, LuxAppFooterLinkInfo, LuxConsentService, LuxMediaQueryObserverService,... } from '@ihk-gfi/lux-components';
 ...
 
 export class AppComponent implements OnInit {
-  private linkService = inject(LuxAppFooterLinkService);
-  private consentService = inject(LuxConsentService);
+  private readonly linkService = inject(LuxAppFooterLinkService);
+  private readonly consentConfig = inject(LUX_CONSENT_CONFIG);
+  private readonly consentService = inject(LuxConsentService);
   private readonly mediaService = inject(LuxMediaQueryObserverService);
   ...
 
@@ -267,7 +254,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.linkService.pushLinkInfos(
       ...
-      new LuxAppFooterLinkInfo('Einwilligung', '', true, false, () => this.onOpenConsent())
+      new LuxAppFooterLinkInfo(this.hasNonEssentialEntries() ? 'Einwilligung' : 'Cookie-Einstellungen', '', true, false, () => this.onOpenConsent())
     );
 
     this.consentService.openIfNeeded();
@@ -276,19 +263,251 @@ export class AppComponent implements OnInit {
   onOpenConsent(): void {
     this.consentService.open();
   }
+
+  hasNonEssentialEntries(): boolean {
+    return !!this.consentConfig.entries && this.consentConfig.entries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
+  }
 }
 ```
 
-### 4. Einwilligung gezielt prüfen
+_app.component.html_:
+
+```html
+  <lux-app-header-ac-nav-menu>
+  @if (mobileView) {
+    <lux-app-header-ac-nav-menu-item
+      [luxLabel]="hasNonEssentialEntries() ? 'Einwilligung' : 'Cookie-Einstellungen'"
+      (luxClicked)="onOpenConsent()">
+    </lux-app-header-ac-nav-menu-item>
+  }
+  </lux-app-header-ac-nav-menu>
+```
+
+#### Einwilligung abfragen
+
+An jeder Code-Stelle kann die Einwilligung wie folgt abgefragt werden:
 
 ```typescript
 import { inject } from '@angular/core';
 import { LuxConsentPurpose, LuxConsentService } from '@ihk-gfi/lux-components';
 
-const consentService = inject(LuxConsentService);
+export class MyComponent {
+  ...
+  private readonly consentService = inject(LuxConsentService);
+  ...
 
-if (consentService.hasConsent(LuxConsentPurpose.Statistics)) {
-  // Statistik-Funktionalität aktivieren
+  onLoremIpsum() {
+   if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
+     // Funktionalität aktivieren
+   }
+  }
+}
+```
+
+### Mehrere Sprachen
+
+#### Einwilligung anlegen
+
+```typescript
+import { TranslocoService } from '@jsverse/transloco';
+import { LUX_CONSENT_CONFIG, LuxConsentEntry, LuxConsentPurpose, LuxConsentStorageType } from '@ihk-gfi/lux-components';
+
+interface ConsentEntryTranslation {
+  processingCountry: string;
+  duration: string;
+  description: string;
+}
+
+const CONSENT_TRANSLATION_KEYS = {
+  countryGermany: 'luxbp.consent.country.germany',
+  duration365Days: 'luxbp.consent.duration.365days',
+  durationSessionEnd: 'luxbp.consent.duration.sessionEnd',
+  appConsentDescription: 'luxbp.consent.description.appConsent',
+  xsrfDescription: 'luxbp.consent.description.xsrf',
+  jsessionIdDescription: 'luxbp.consent.description.jsessionid'
+} as const;
+
+function createTranslations(translocoService: TranslocoService): {
+  appConsent: ConsentEntryTranslation;
+  xsrf: ConsentEntryTranslation;
+  jsessionid: ConsentEntryTranslation;
+} {
+  return {
+    appConsent: {
+      processingCountry: translocoService.translate(CONSENT_TRANSLATION_KEYS.countryGermany),
+      duration: translocoService.translate(CONSENT_TRANSLATION_KEYS.duration365Days),
+      description: translocoService.translate(CONSENT_TRANSLATION_KEYS.appConsentDescription)
+    },
+    xsrf: {
+      processingCountry: translocoService.translate(CONSENT_TRANSLATION_KEYS.countryGermany),
+      duration: translocoService.translate(CONSENT_TRANSLATION_KEYS.durationSessionEnd),
+      description: translocoService.translate(CONSENT_TRANSLATION_KEYS.xsrfDescription)
+    },
+    jsessionid: {
+      processingCountry: translocoService.translate(CONSENT_TRANSLATION_KEYS.countryGermany),
+      duration: translocoService.translate(CONSENT_TRANSLATION_KEYS.durationSessionEnd),
+      description: translocoService.translate(CONSENT_TRANSLATION_KEYS.jsessionIdDescription)
+    }
+  };
+}
+
+export const appConsentProvider = {
+  provide: LUX_CONSENT_CONFIG,
+  deps: [TranslocoService],
+  useFactory: (translocoService: TranslocoService) => {
+    const consentConfig = {
+      cookieKey: 'BP_LUX_APP_CONSENT',
+      // impressumUrl: 'https://www.ihk-gfi.de/impressum/',
+      impressumComponentLoader: () => import('./components/impressum/impressum.component').then((m) => m.ImpressumComponent),
+      impressumComponentInputs: { fullWidth: true },
+      // datenschutzUrl: 'https://www.ihk-gfi.de/datenschutz/',
+      datenschutzComponentLoader: () => import('./components/datenschutz/datenschutz.component').then((m) => m.DatenschutzComponent),
+      datenschutzComponentInputs: { fullWidth: true },
+      entries: [] as LuxConsentEntry[]
+    };
+
+    const updateEntries = () => {
+      const translations = createTranslations(translocoService);
+      consentConfig.entries = [
+        {
+          type: LuxConsentStorageType.Cookie,
+          name: 'BP_LUX_APP_CONSENT',
+          processingCountry: translations.appConsent.processingCountry,
+          purpose: LuxConsentPurpose.Essential,
+          duration: translations.appConsent.duration,
+          description: translations.appConsent.description
+        },
+        {
+          type: LuxConsentStorageType.Cookie,
+          name: 'LUXBP_XSRF-TOKEN',
+          processingCountry: translations.xsrf.processingCountry,
+          purpose: LuxConsentPurpose.Essential,
+          duration: translations.xsrf.duration,
+          description: translations.xsrf.description
+        },
+        {
+          type: LuxConsentStorageType.Cookie,
+          name: 'BP_JSESSIONID',
+          processingCountry: translations.jsessionid.processingCountry,
+          purpose: LuxConsentPurpose.Essential,
+          duration: translations.jsessionid.duration,
+          description: translations.jsessionid.description
+        }
+      ];
+    };
+
+    updateEntries();
+    translocoService.langChanges$.subscribe(() => updateEntries());
+
+    return consentConfig;
+  }
+};
+```
+
+#### Einwilligung einbinden
+
+_app.config.ts_ (neu) oder _app.module.ts_ (alt):
+
+```typescript
+providers: [
+  ...,
+  appConsentProvider
+]
+```
+
+Anmerkung: Die _openIfNeeded_-Methode öffnet den Einwilligungsdialog nur, wenn kein Einwilligungscookie vorliegt und es mindestens einen Eintrag mit einem anderen Verwendungszweck als _LuxConsentPurpose.Essential_ gibt. Soll der Dialog in jedem Fall geöffnet werden, muss die _open_-Methode verwendet werden.
+
+_app.component.ts_:
+
+```typescript
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LUX_CONSENT_CONFIG, LuxAppFooterLinkService, LuxAppFooterLinkInfo, LuxConsentService, LuxMediaQueryObserverService,... } from '@ihk-gfi/lux-components';
+...
+
+export class AppComponent implements OnInit {
+  private readonly linkService = inject(LuxAppFooterLinkService);
+  private readonly consentConfig = inject(LUX_CONSENT_CONFIG);
+  private readonly consentService = inject(LuxConsentService);
+  private readonly mediaService = inject(LuxMediaQueryObserverService);
+  ...
+
+  mobileView = false;
+  ...
+
+  constructor() {
+    ...
+    
+    this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.updateFooterLinks();
+    });
+
+    this.mediaService.getMediaQueryChangedAsObservable().pipe(takeUntilDestroyed()).subscribe(() => {
+      this.mobileView = this.mediaService.isSmallerOrEqual('md');
+    });
+  }
+
+  ngOnInit(): void {
+    this.linkService.pushLinkInfos(
+      ...
+      new LuxAppFooterLinkInfo(this.hasNonEssentialEntries() ? 'Einwilligung' : 'Cookie-Einstellungen', '', true, false, () => this.onOpenConsent())
+    );
+
+    this.consentService.openIfNeeded();
+  }
+
+  onOpenConsent(): void {
+    this.consentService.open();
+  }
+
+  hasNonEssentialEntries(): boolean {
+    return !!this.consentConfig.entries && this.consentConfig.entries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
+  }
+
+  private updateFooterLinks() {
+    this.linkService.linkInfos = [
+      ...
+        this.tService.translate(`luxbp.footer.btn.consent${!this.hasNonEssentialEntries() ? '.onlyEssential' : ''}`),
+        '',
+        true,
+        false,
+        () => this.onOpenConsent()
+      )
+    ];
+  }
+}
+```
+
+_app.component.html_:
+
+```html
+  <lux-app-header-ac-nav-menu>
+  @if (mobileView) {
+    <lux-app-header-ac-nav-menu-item
+      luxLabel="{{ 'luxbp.footer.btn.consent' + (!hasNonEssentialEntries() ? '.onlyEssential' : '') | transloco }}"
+      (luxClicked)="onOpenConsent()">
+    </lux-app-header-ac-nav-menu-item>
+  }
+  </lux-app-header-ac-nav-menu>
+```
+
+#### Einwilligung abfragen
+
+An jeder Code-Stelle kann die Einwilligung wie folgt abgefragt werden:
+
+```typescript
+import { inject } from '@angular/core';
+import { LuxConsentPurpose, LuxConsentService } from '@ihk-gfi/lux-components';
+
+export class MyComponent {
+  ...
+  private readonly consentService = inject(LuxConsentService);
+  ...
+
+  onLoremIpsum() {
+   if (this.consentService.hasConsent(LuxConsentPurpose.Preferences)) {
+     // Funktionalität aktivieren
+   }
+  }
 }
 ```
 
