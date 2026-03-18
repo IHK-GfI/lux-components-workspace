@@ -1,12 +1,27 @@
 {
   "app": {
+    "consent": {
+      "country": {
+        "germany": "Deutschland"
+      },
+      "duration": {
+        "365days": "365 Tage",
+        "persistent": "Dauerhaft"
+      },
+      "description": {
+        "appConsent": "Dieses Cookie wird zur Speicherung des Consents zur Cookie-Verwendung benötigt.",
+        "demoConsent": "Dieses Cookie wird zur Speicherung des Demo-Consents zur Cookie-Verwendung benötigt.",
+        "themeConsent": "Speichert das Theme, mit dem die Anwendung dargestellt werden soll.",
+        "tableConsent": "Speichert die Einstellungen zu Spaltenbreiten einer Tabelle der Anwendung.",
+        "hintConsent": "Speichert, ob die Anwendungstour beim nächsten Aufruf der Anwendung nochmal angezeigt werden soll."
+      }
+    },
     "menu": {
       "components": "Komponenten",
       "iconSearch": "Iconsuche",
       "forms": "Formulare",
       "baseline": "Baseline",
-      "configuration": "Konfiguration",
-      "consent": "Einwilligung"
+      "configuration": "Konfiguration"
     },
     "footer": {
       "link.dataProtection": "Datenschutz",

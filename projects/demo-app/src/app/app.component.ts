@@ -5,6 +5,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HammerModule } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import {
+  LUX_CONSENT_CONFIG,
   LuxAlphabeticallySortedPipe,
   LuxAppContentComponent,
   LuxAppFooterComponent,
@@ -27,6 +28,7 @@ import {
   LuxAppService,
   LuxAriaLabelDirective,
   LuxButtonComponent,
+  LuxConsentPurpose,
   LuxConsentService,
   LuxConsoleService,
   LuxDividerComponent,
@@ -103,6 +105,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private appService = inject(LuxAppService);
   private mediaQueryService = inject(LuxMediaQueryObserverService);
+  private readonly consentConfig = inject(LUX_CONSENT_CONFIG);
   private consentService = inject(LuxConsentService);
   componentsOverviewService = inject(ComponentsOverviewNavigationService);
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
@@ -198,6 +201,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onOpenConsent() {
     this.consentService.open();
+  }
+
+  hasNonEssentialEntries(): boolean {
+    return !!this.consentConfig.entries && this.consentConfig.entries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
   }
 
   goToHome() {

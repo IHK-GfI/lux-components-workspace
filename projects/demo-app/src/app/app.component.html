@@ -276,8 +276,8 @@
         </lux-app-header-ac-nav-menu-item>
         @if (mobileView) {
           <lux-app-header-ac-nav-menu-item
-            luxLabel="Impressum"
-            luxAriaLabel="Impressum"
+            luxLabel="{{ 'app.footer.link.impressum' | transloco }}"
+            luxAriaLabel="{{ 'app.footer.link.impressum' | transloco }}"
             [luxSelected]="url.endsWith('impressum')"
             (luxClicked)="router.navigate(['impressum'])"
           >
@@ -285,8 +285,8 @@
         }
         @if (mobileView) {
           <lux-app-header-ac-nav-menu-item
-            luxLabel="Lizenzhinweis"
-            luxAriaLabel="Lizenzhinweis"
+            luxLabel="{{ 'app.footer.link.licenseHint' | transloco }}"
+            luxAriaLabel="{{ 'app.footer.link.licenseHint' | transloco }}"
             [luxSelected]="url.endsWith('license-hint')"
             (luxClicked)="router.navigate(['license-hint'])"
           >
@@ -294,8 +294,8 @@
         }
         @if (mobileView) {
           <lux-app-header-ac-nav-menu-item
-            luxLabel="{{ 'app.menu.consent' | transloco }}"
-            luxAriaLabel="Einwilligung"
+            luxLabel="{{ 'app.footer.link.consent' | transloco }}"
+            luxAriaLabel="{{ 'app.footer.link.consent' | transloco }}"
             (luxClicked)="onOpenConsent()"
           >
           </lux-app-header-ac-nav-menu-item>

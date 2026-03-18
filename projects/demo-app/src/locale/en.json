@@ -1,12 +1,27 @@
 {
   "app": {
+    "consent": {
+      "country": {
+        "germany": "Germany"
+      },
+      "duration": {
+        "365days": "365 days",
+        "persistent": "Persistent"
+      },
+      "description": {
+        "appConsent": "This cookie is required to store the consent for cookie usage.",
+        "demoConsent": "This cookie is required to store the demo consent for cookie usage.",
+        "themeConsent": "Stores the theme with which the application should be displayed.",
+        "tableConsent": "Stores the settings for column widths of a table in the application.",
+        "hintConsent": "Stores whether the application tour should be shown again on the next application launch."
+      }
+    },
     "menu": {
       "components": "Components",
       "iconSearch": "Icon Search",
       "forms": "Forms",
       "baseline": "Baseline",
-      "configuration": "Settings",
-      "consent": "Consent"
+      "configuration": "Settings"
     },
     "footer": {
       "link.dataProtection": "Privacy Policy ",
