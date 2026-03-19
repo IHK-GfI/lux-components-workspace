@@ -23,6 +23,27 @@
 >
   <lux-form-hint>Diese Property kann nur verwendet werden, wenn <i>luxMultiSelect</i> deaktiviert ist.</lux-form-hint>
 </lux-toggle-ac>
+<lux-toggle-ac
+  luxLabel="[(luxSelected)] loggen"
+  [(luxChecked)]="tableExample.bindLuxSelected"
+  (luxCheckedChange)="tableExample.refreshSelectionBindings()"
+  [luxNoLabels]="true"
+>
+</lux-toggle-ac>
+<lux-toggle-ac
+  luxLabel="(luxSelectedChange) loggen"
+  [(luxChecked)]="tableExample.observeSelectedChange"
+  (luxCheckedChange)="tableExample.refreshSelectionBindings()"
+  [luxNoLabels]="true"
+>
+</lux-toggle-ac>
+<lux-toggle-ac
+  luxLabel="(luxSelectedAsArrayChange) loggen"
+  [(luxChecked)]="tableExample.observeSelectedAsArrayChange"
+  (luxCheckedChange)="tableExample.refreshSelectionBindings()"
+  [luxNoLabels]="true"
+>
+</lux-toggle-ac>
 <lux-input-ac luxLabel="luxNoDataText" [(luxValue)]="tableExample.noDataText">
   <lux-form-hint>Diese Property enthält den Text der angezeigt wird wenn keine Datensätze gefunden werden konnten. </lux-form-hint>
 </lux-input-ac>

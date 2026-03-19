@@ -1,14 +1,14 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
 import { Component, ViewChild, inject } from '@angular/core';
 import {
-    LuxConsoleService,
-    LuxMenuComponent,
-    LuxMenuItemComponent,
-    LuxTableColumnComponent,
-    LuxTableColumnContentComponent,
-    LuxTableColumnFooterComponent,
-    LuxTableColumnHeaderComponent,
-    LuxTableComponent
+  LuxConsoleService,
+  LuxMenuComponent,
+  LuxMenuItemComponent,
+  LuxTableColumnComponent,
+  LuxTableColumnContentComponent,
+  LuxTableColumnFooterComponent,
+  LuxTableColumnHeaderComponent,
+  LuxTableComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -72,6 +72,10 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
 
   onSelectedAsArrayChange(selected: any[]) {
     console.log('als Array:', selected);
+  }
+
+  override refreshSelectionBindings(): void {
+    // This example handles selection via template bindings.
   }
 
   reload() {
