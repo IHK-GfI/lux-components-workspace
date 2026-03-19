@@ -187,6 +187,23 @@
           [ngClass]="{ 'lux-display-none': dataSource.totalElements > 0 && dataSource.filteredData.length > 0 }"
         ></tr>
         <!-- Die Table-Rows für alle Inhalts-Spalten -->
+        <!--
+          Cursor-Logik (Wahrheitstabelle, verkuerzt):
+          - MS=true,  CC=false, DIS=false, DBLobs=false           => Cursor: ja
+          - MS=true,  CC=true  (oder DIS=true oder DBLobs=true)   => Cursor: nein
+          - MS=false, SELobs=true,  DIS=false, DBLobs=false       => Cursor: ja
+          - MS=false, SGLobs=true                                 => Cursor: ja
+          - MS=false, DBLobs=true                                 => Cursor: ja
+          - MS=false, keine Observer (SELobs/SGLobs/DBLobs=false) => Cursor: nein
+
+          Legende:
+          MS     = luxMultiSelect
+          CC     = luxMultiSelectOnlyCheckboxClick
+          DIS    = rowData[luxMultiSelectDisabledProperty] === true
+          DBLobs = luxDoubleClicked.observed
+          SGLobs = luxSingleClicked.observed
+          SELobs = luxSelectedChange.observed || luxSelectedAsArrayChange.observed
+        -->
         <tr
           mat-row
           *matRowDef="let rowData; columns: dataColumnDefs; let i = index"
@@ -195,9 +212,16 @@
           [ngClass]="{
             'lux-row-selected': luxSelected.has(rowData) && luxMultiSelect,
             'lux-cursor':
-              luxDoubleClicked.observed ||
-              (luxSelectedChange.observed && !luxMultiSelectOnlyCheckboxClick) ||
-              (luxSelectedAsArrayChange.observed && !luxMultiSelectOnlyCheckboxClick)
+              (luxMultiSelect &&
+                !luxMultiSelectOnlyCheckboxClick &&
+                !luxDoubleClicked.observed &&
+                !(luxMultiSelectDisabledProperty && rowData[luxMultiSelectDisabledProperty] === true)) ||
+              (!luxMultiSelect &&
+                !luxDoubleClicked.observed &&
+                !(luxMultiSelectDisabledProperty && rowData[luxMultiSelectDisabledProperty] === true) &&
+                (luxSelectedChange.observed || luxSelectedAsArrayChange.observed)) ||
+              (!luxMultiSelect && luxSingleClicked.observed) ||
+              (!luxMultiSelect && luxDoubleClicked.observed)
           }"
           (dblclick)="onDoubleClick($event, rowData)"
           (click)="onSingleClick($event, rowData, i)"

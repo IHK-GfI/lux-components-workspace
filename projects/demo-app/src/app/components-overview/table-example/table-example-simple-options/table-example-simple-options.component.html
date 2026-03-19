@@ -9,7 +9,7 @@
 >
   <lux-form-hint>Deaktiviert die erste und dritte Checkbox in der Tabelle.</lux-form-hint>
 </lux-toggle-ac>
-<lux-toggle-ac luxLabel="luxMultiSelectOnlyCheckboxClick" [(luxChecked)]="tableExample.multiSelectOnlyCheckboxClick" [luxNoTopLabel]="true">
+<lux-toggle-ac luxLabel="luxMultiSelectOnlyCheckboxClick" [(luxChecked)]="tableExample.multiSelectOnlyCheckboxClick" [luxNoTopLabel]="true" [luxDisabled]="!tableExample.multiSelect">
   <lux-form-hint
     >Dieses Flag steuert, ob auch ein Klick auf die Zeile die Checkbox aktiviert oder ausschließlich ein Klick auf die Checkbox
     selbst.</lux-form-hint

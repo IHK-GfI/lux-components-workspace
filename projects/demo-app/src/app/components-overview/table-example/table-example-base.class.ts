@@ -105,6 +105,8 @@ export abstract class TableExampleBaseClass implements OnDestroy {
 
     if (multiSelect) {
       this._doubleClickActive = false;
+    } else {
+      this.multiSelectOnlyCheckboxClick = false;
     }
   }
 
