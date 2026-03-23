@@ -56,6 +56,48 @@ h6 {
   margin-block-end: 0.8rem;
 }
 
+.lux-h1,
+h1.lux-h1 {
+  font-family: var(--lux-theme-app-headline-font);
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.lux-h2,
+h2.lux-h2 {
+  font-family: var(--lux-theme-app-headline-font);
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.lux-h3,
+h3.lux-h3 {
+  font-family: var(--lux-theme-app-headline-font);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.lux-h4,
+h4.lux-h4 {
+  font-family: var(--lux-theme-app-headline-font);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.lux-h5,
+h5.lux-h5 {
+  font-family: var(--lux-theme-app-headline-font);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.lux-h6,
+h6.lux-h6 {
+  font-family: var(--lux-theme-app-headline-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 a:not(.lux-link) {
   background-color: var(--lux-theme-link-plain-background-color);
   color: var(--lux-theme-link-plain-color);

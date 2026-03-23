@@ -21,7 +21,7 @@ lux-link.lux-rounded.lux-stroked {
         (
           foreground-color: var(--lux-theme-button-rounded-stroked-primary-text-color),
           container-color: transparent,
-          hover-state-layer-opacity: 0.1
+          hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
         )
       );
     }
@@ -31,7 +31,7 @@ lux-link.lux-rounded.lux-stroked {
         (
           foreground-color: var(--lux-theme-button-rounded-stroked-accent-text-color),
           container-color: transparent,
-          hover-state-layer-opacity: 0.1
+          hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
         )
       );
     }
@@ -41,7 +41,7 @@ lux-link.lux-rounded.lux-stroked {
         (
           foreground-color: var(--lux-theme-button-rounded-stroked-warn-text-color),
           container-color: transparent,
-          hover-state-layer-opacity: 0.1
+          hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
         )
       );
     }
@@ -65,7 +65,7 @@ lux-link.lux-rounded.lux-stroked {
     }
   }
 
-  .lux-stroked:not(:disabled):not([aria-disabled="true"]) {
+  .lux-stroked:not(:disabled) {
     border-color: var(--lux-theme-button-rounded-stroked-default-text-color);
 
     &.mat-primary {

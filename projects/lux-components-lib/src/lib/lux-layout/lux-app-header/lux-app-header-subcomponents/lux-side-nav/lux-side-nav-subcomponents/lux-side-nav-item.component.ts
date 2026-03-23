@@ -1,19 +1,19 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  EventEmitter,
-  forwardRef,
-  inject,
-  Input,
-  OnChanges,
-  Output,
-  QueryList,
-  TemplateRef,
-  ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    EventEmitter,
+    forwardRef,
+    inject,
+    Input,
+    OnChanges,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { LuxButtonComponent } from '../../../../../lux-action/lux-button/lux-button.component';
 import { LuxAriaExpandedDirective } from '../../../../../lux-directives/lux-aria/lux-aria-expanded.directive';
@@ -54,6 +54,10 @@ export class LuxSideNavItemComponent implements AfterViewInit, OnChanges {
   }
 
   onClick(event: Event) {
+    if (this.luxDisabled) {
+      return;
+    }
+
     this.luxClicked.emit(event);
     if (this.luxExpandable) {
       this.luxExpanded = !this.luxExpanded;

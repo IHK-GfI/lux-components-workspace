@@ -7,7 +7,7 @@ lux-button.lux-icon-button {
       icon-color: var(--lux-theme-button-icon-default-text-color),
       icon-size: var(--lux-theme-button-icon-size),
       state-layer-size: var(--lux-theme-button-icon-container-size),
-      state-layer-color: var(--lux-theme-app-state-layer-color),
+      state-layer-color: var(--lux-theme-state-layer-color),
       touch-target-size: var(--lux-theme-button-icon-container-size)
     )
   );

@@ -206,7 +206,7 @@ lux-form-control-wrapper {
     // HOVER
     &:hover:not(.lux-form-control-disabled-authentic):not(.lux-focused-authentic):not(.lux-form-control-error-authentic) {
       .lux-form-control-container-authentic:not(.lux-no-input-row) {
-        border-color: var(--lux-theme-dark-primary-text);
+        border-color: var(--lux-theme-form-hover-border-color);
       }
     }
     // FOCUS

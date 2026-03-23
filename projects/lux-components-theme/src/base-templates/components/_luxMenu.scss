@@ -141,6 +141,16 @@ lux-menu {
   .lux-menu-item-icon {
     align-self: center;
     vertical-align: middle;
+    width: var(--lux-theme-menu-item-icon-size);
+    height: var(--lux-theme-menu-item-icon-size);
+
+    .lux-icon,
+    mat-icon {
+      width: 100%;
+      height: 100%;
+      font-size: var(--lux-theme-menu-item-icon-size);
+    }
+
     mat-icon {
       margin: 0;
     }
@@ -188,7 +198,7 @@ lux-menu {
 
   .lux-button-label-subtitle {
     color: var(--lux-theme-menu-item-subtitle-font-color);
-    font-size: 0.875rem;
+    font-size: var(--lux-theme-menu-item-subtitle-font-size);
     font-style: normal;
     font-weight: 400;
     letter-spacing: 0.07px;
@@ -201,8 +211,9 @@ lux-menu {
     align-items: flex-start;
     gap: 4px;
     align-self: stretch;
-    font-weight: 600;
-    font-size: 1rem;
+    color: var(--lux-theme-menu-panel-header-font-color);
+    font-weight: var(--lux-theme-menu-panel-header-font-weight);
+    font-size: var(--lux-theme-menu-panel-header-font-size);
     font-style: normal;
     line-height: 120%;
   }
@@ -266,5 +277,17 @@ lux-menu {
 
   .lux-menu-item-badge-right {
     text-align: end;
+  }
+
+  &.lux-menu-panel-large {
+    .lux-menu-item-icon {
+      width: var(--lux-theme-menu-item-icon-size-large);
+      height: var(--lux-theme-menu-item-icon-size-large);
+
+      .lux-icon,
+      mat-icon {
+        font-size: var(--lux-theme-menu-item-icon-size-large);
+      }
+    }
   }
 }

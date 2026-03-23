@@ -13,8 +13,8 @@ lux-link.lux-flat {
       filled-container-height: var(--lux-theme-button-flat-container-height),
       filled-label-text-color: var(--lux-theme-button-flat-default-text-color),
       filled-container-color: var(--lux-theme-button-flat-default-container-color),
-      filled-focus-state-layer-opacity: 0.1,
-      filled-hover-state-layer-opacity: 0.1
+      filled-focus-state-layer-opacity: var(--lux-theme-focus-state-layer-opacity),
+      filled-hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
     )
   );
 
@@ -23,8 +23,8 @@ lux-link.lux-flat {
       (
         filled-label-text-color: var(--lux-theme-button-flat-primary-text-color),
         filled-container-color: var(--lux-theme-button-flat-primary-container-color),
-        filled-focus-state-layer-opacity: 0.1,
-        filled-hover-state-layer-opacity: 0.1
+        filled-focus-state-layer-opacity: var(--lux-theme-focus-state-layer-opacity),
+        filled-hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
       )
     );
   }
@@ -34,8 +34,8 @@ lux-link.lux-flat {
       (
         filled-label-text-color: var(--lux-theme-button-flat-accent-text-color),
         filled-container-color: var(--lux-theme-button-flat-accent-container-color),
-        filled-focus-state-layer-opacity: 0.1,
-        filled-hover-state-layer-opacity: 0.1
+        filled-focus-state-layer-opacity: var(--lux-theme-focus-state-layer-opacity),
+        filled-hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
       )
     );
   }
@@ -45,8 +45,8 @@ lux-link.lux-flat {
       (
         filled-label-text-color: var(--lux-theme-button-flat-warn-text-color),
         filled-container-color: var(--lux-theme-button-flat-warn-container-color),
-        filled-focus-state-layer-opacity: 0.1,
-        filled-hover-state-layer-opacity: 0.1
+        filled-focus-state-layer-opacity: var(--lux-theme-focus-state-layer-opacity),
+        filled-hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
       )
     );
   }
