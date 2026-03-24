@@ -1,6 +1,7 @@
 import { Injectable, InjectionToken, inject } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { isTestEnv } from '../lux-util/env-utils';
 import { ILuxConsentConfig } from './lux-consent-config.interface';
 import { LUX_CONSENT_DIALOG_LAUNCHER } from './lux-consent-dialog-launcher';
 import LUX_CONSENT_ENTRIES from './lux-consent-entries';
@@ -181,7 +182,7 @@ export class LuxConsentService {
   private loadConsent(configOverride?: Partial<ILuxConsentConfig>): void {
     const config = this.resolveConfig(configOverride);
 
-    if (!configOverride && config.cookieKey === LUX_CONSENT_COOKIE_DEFAULT_KEY) {
+    if (!configOverride && config.cookieKey === LUX_CONSENT_COOKIE_DEFAULT_KEY && !isTestEnv()) {
       console.warn(
         `Der Standard-cookieKey "${LUX_CONSENT_COOKIE_DEFAULT_KEY}" wird verwendet. Bitte geben Sie einen individuellen cookieKey in der Consent-Konfiguration an, um Konflikte mit anderen LUX-Anwendungen zu vermeiden!!!`
       );
