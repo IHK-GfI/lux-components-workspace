@@ -2,10 +2,10 @@ import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics'
 import * as chalk from 'chalk';
 import { updateDep } from '../../update-dependencies/index';
 import { AddTransUnitItem } from '../../utility/replace-item';
+import { Options } from '../../utility/types';
 import { finish, messageInfoRule, messageSuccessRule, updateMessages } from '../../utility/util';
-import { Options } from '../19.0.0';
 
-export function update190300(options: any, runNpmInstall = true): Rule {
+export function update190300(options: Options, runNpmInstall = true): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     return chain([
       messageInfoRule(`Die LUX-Components werden auf die Version 19.3.0 aktualisiert...`),

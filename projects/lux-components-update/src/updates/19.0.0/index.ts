@@ -13,14 +13,11 @@ import {
 } from '../../utility/json';
 import { logInfoWithDescriptor, logSuccess } from '../../utility/logging';
 import { AddTransUnitItem, RemoveTransUnitItem, ReplaceItem } from '../../utility/replace-item';
+import type { Options } from '../../utility/types';
 import { applyRuleIf, finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
 import { validateLuxComponentsVersion, validateNodeVersion } from '../../utility/validation';
 
-export interface Options {
-  project: string;
-  path: string;
-  verbose: boolean;
-}
+
 
 export const updateMajorVersion = '19';
 export const updateMinVersion = '18.5.0';
@@ -60,7 +57,7 @@ export function updateProject(options: Options): Rule {
       updateKarmaConfJs(options),
       updateMainTs(options),
       updateTestTs(options),
-      deleteFile(options.path ?? '', '.eslintrc.json'),
+      deleteFile(options, '.eslintrc.json'),
       updateMessages(options),
       messageSuccessRule(`LUX-Components ${updateMajorVersion} wurden aktualisiert.`)
     ]);
@@ -80,7 +77,7 @@ function check(_options: Options): Rule {
   };
 }
 
-export function copyFiles(options: any): Rule {
+export function copyFiles(options: Options): Rule {
   return chain([
     messageInfoRule(`Dateien werden kopiert...`),
     moveFilesToDirectory(options, 'files/root', '/'),

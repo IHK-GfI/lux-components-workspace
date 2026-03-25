@@ -12,8 +12,9 @@ import {
   Tree,
   url
 } from '@angular-devkit/schematics';
-import { logInfo, logInfoWithDescriptor, logSuccess } from './logging';
+import { logDebug, logInfo, logInfoWithDescriptor, logSuccess } from './logging';
 import { ReplaceItem } from './replace-item';
+import type { Options } from './types';
 import { messageInfoRule, messageSuccessRule, replaceRegEx, replaceString } from './util';
 
 /**
@@ -68,9 +69,6 @@ export function deleteLineFromFile(tree: Tree, _context: SchematicContext, fileP
           }
         }
       }
-      // Doppelte Zeilenumbrüche entfernen
-      content = content.replace(new RegExp('\r\n', 'g'), '\r\n');
-      content = content.replace(new RegExp('\r\n\r\n', 'g'), '\r\n');
 
       tree.overwrite(filePath, content);
       changed = true;
@@ -99,7 +97,7 @@ export function deleteLineFromFile(tree: Tree, _context: SchematicContext, fileP
  */
 export function writeLinesToFile(tree: Tree, _context: SchematicContext, filePath: string, ...lines: string[]) {
   const fileContent: Buffer | null = tree.read(filePath);
-  let content: string = '';
+  let content = '';
 
   lines.forEach((line: string) => {
     if (fileContent && fileContent.toString().indexOf(line) === -1) {
@@ -116,6 +114,47 @@ export function writeLinesToFile(tree: Tree, _context: SchematicContext, filePat
   }
 }
 
+function isIgnoredPath(filePath: string, ignoreSpecFiles = false): boolean {
+  if (
+    ['/node_modules/', '/.idea/', '/coverage/', '/dist/', '/.git/', '/.angular/', '/.cache/', '/tmp/', '/out/', '/src-gen/'].some((segment) =>
+      filePath.includes(segment)
+    )
+  ) {
+    return true;
+  }
+
+  return ignoreSpecFiles && filePath.endsWith('.spec.ts');
+}
+
+/**
+ * Traversiert Verzeichnisse rekursiv, bricht aber früh ab, wenn ein Verzeichnis
+ * in den Ignore-Regeln ist. Dadurch wird das Betreten großer Ordner wie
+ * node_modules verhindert und die Laufzeit erheblich verbessert.
+ */
+function visitWithPrune(tree: Tree, startDirPath: string, fileCallback: (filePath: string) => void, ignoreSpecFiles = false) {
+  const dir: DirEntry | null = tree.getDir(startDirPath);
+  if (!dir) {
+    return;
+  }
+
+  // Prüfen, ob das gesamte Verzeichnis ignoriert werden soll
+  if (isIgnoredPath(dir.path + '/', ignoreSpecFiles)) {
+    return;
+  }
+
+  // Dateien im aktuellen Verzeichnis verarbeiten
+  dir.subfiles.forEach((fileName) => {
+    const filePath = join(dir.path, fileName) as string;
+    fileCallback(filePath);
+  });
+
+  // Rekursiv in Unterverzeichnisse gehen (nur die erlaubten)
+  dir.subdirs.forEach((subdir) => {
+    const subdirPath = `${dir.path}/${subdir}`;
+    visitWithPrune(tree, subdirPath, fileCallback, ignoreSpecFiles);
+  });
+}
+
 /**
  * Iteriert über alle Dateien vom Root-Pfad aus.
  * Über die filePathEndings lassen sich Einschränkungen bzgl. des Datei-Typs festlegen (z.B. .html).
@@ -125,29 +164,33 @@ export function writeLinesToFile(tree: Tree, _context: SchematicContext, filePat
  * @param callback(filePath, content)
  * @param filePathEndings Z.B. .html, .ts, src/styles.scss,...
  */
-export function iterateFilesAndModifyContent(tree: Tree, rootPath: string = '', callback: Function, ...filePathEndings: string[]) {
-  tree.getDir(rootPath).visit((filePath: string) => {
-    // Ignoriere folende Odner
-    if (
-      filePath.startsWith('/node_modules/') ||
-      filePath.startsWith('/.idea/') ||
-      filePath.startsWith('/coverage/') ||
-      filePath.startsWith('/dist/')
-    ) {
-      return;
-    }
+export function iterateFilesAndModifyContent(tree: Tree, rootPath = '', verbose = false, callback: (filePath: string, content: string) => void, ...filePathEndings: string[]) {
+  const normalizedRootPath = rootPath && rootPath.trim() ? rootPath.trim() : '/';
 
+  if (verbose) {
+    logDebug(`Suche nach "${filePathEndings.length > 0 ? filePathEndings.join(', ') : 'allen'}" Dateien unter dem Pfad "${normalizedRootPath}"...`);
+  }
+  
+  visitWithPrune(tree, normalizedRootPath, (filePath: string) => {
     // Endung der Datei mit erlaubten Endungen abgleichen
-    let modifyFile: boolean = false;
-    for (let fileEnding of filePathEndings) {
+    let modifyFile = false;
+    for (const fileEnding of filePathEndings) {
       if (filePath.endsWith(fileEnding)) {
         modifyFile = true;
         break;
       }
     }
+    
     // Besitzt die Datei die richtige Endung?
     if (!modifyFile) {
+      if (verbose) {
+        logDebug(`${filePath} wurde übersprungen...`);
+      }
       return;
+    }
+
+    if (verbose) {
+      logDebug(`${filePath} wird verarbeitet...`);
     }
     // Inhalt auslesen
     const content = tree.read(filePath);
@@ -158,6 +201,10 @@ export function iterateFilesAndModifyContent(tree: Tree, rootPath: string = '', 
 
     // Callback mit aktuellem Pfad + Inhalt der Datei aufrufen
     callback(filePath, content.toString());
+
+    if (verbose) {
+      logInfo(`${filePath} wurde verarbeitet.`);
+    }
   });
 }
 
@@ -172,7 +219,7 @@ export function iterateFilesAndModifyContent(tree: Tree, rootPath: string = '', 
  * @param sourcePath Ein Quellpfad (z.B. files/theming für alle Dateien unter /theming).
  * @param targetPath Ein Zielpfad (z.B. src/theming/).
  */
-export function moveFilesToDirectory(options: any, sourcePath: string, targetPath: string): Rule {
+export function moveFilesToDirectory(options: Options, sourcePath: string, targetPath: string): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     if (!targetPath.startsWith('/')) {
       targetPath = '/' + targetPath;
@@ -214,7 +261,7 @@ export function moveFilesToDirectory(options: any, sourcePath: string, targetPat
  * @param path Der Pfad.
  * @param exclude Ein Array mit Dateinamen, die nicht gelöscht werden sollen.
  */
-export function deleteFilesInDirectory(options: any, path: string, exclude: string[]): Rule {
+export function deleteFilesInDirectory(options: Options, path: string, exclude: string[]): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     if (!path.startsWith('/')) {
       path = '/' + path;
@@ -244,24 +291,13 @@ export function searchInComponentAndModifyModule(
   tree: Tree,
   rootPath: string,
   searchStrings: string[],
-  callback: Function,
+  callback: (filePath: string, content: string) => void,
   ...filePathEndings: string[]
 ) {
-  tree.getDir(rootPath).visit((filePath: string) => {
-    // Ignoriere folende Odner
-    if (
-      filePath.startsWith('/node_modules/') ||
-      filePath.startsWith('/.idea/') ||
-      filePath.startsWith('/coverage/') ||
-      filePath.startsWith('/dist/') ||
-      filePath.endsWith('.spec.ts')
-    ) {
-      return;
-    }
-
+  visitWithPrune(tree, rootPath, (filePath: string) => {
     // Endung der Datei mit erlaubten Endungen abgleichen
-    let modifyFile: boolean = false;
-    for (let fileEnding of filePathEndings) {
+    let modifyFile = false;
+    for (const fileEnding of filePathEndings) {
       if (filePath.endsWith(fileEnding)) {
         modifyFile = true;
         break;
@@ -278,7 +314,7 @@ export function searchInComponentAndModifyModule(
       return;
     }
 
-    let foundSearchString: string = '';
+    let foundSearchString = '';
     searchStrings.forEach((searchString: string) => {
       if (!foundSearchString && content.toString().indexOf(searchString) > -1) {
         foundSearchString = searchString;
@@ -292,12 +328,12 @@ export function searchInComponentAndModifyModule(
     // den Ordner der gefundenen Datei nehmen
     const fileDir = filePath.substring(0, filePath.lastIndexOf('/'));
     const modulePath: Path = findModule(tree, fileDir);
-    let moduleContent = tree.read(modulePath);
+    const moduleContent = tree.read(modulePath);
     if (moduleContent) {
       // Callback mit aktuellem Pfad + Inhalt der Datei aufrufen
       callback(modulePath, moduleContent.toString());
     }
-  });
+  }, true);
 }
 
 /**
@@ -338,7 +374,7 @@ export function findModule(host: Tree, generateDir: string, moduleExt = '.module
  * @param options
  * @param targetPath
  */
-export function deleteFile(options: any, targetPath: string): Rule {
+export function deleteFile(options: Options, targetPath: string): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     logInfoWithDescriptor('Lösche Datei ' + targetPath + '.');
     if (!targetPath.startsWith('/')) {
@@ -357,13 +393,14 @@ export function deleteFile(options: any, targetPath: string): Rule {
   };
 }
 
-export function replaceRule(options: any, startMsg: string, endMsg: string, filePattern: string, ...replaceItems: ReplaceItem[]): Rule {
+export function replaceRule(options: Options, startMsg: string, endMsg: string, filePattern: string, ...replaceItems: ReplaceItem[]): Rule {
   return chain([
     messageInfoRule(startMsg),
     (tree: Tree, _context: SchematicContext) => {
       iterateFilesAndModifyContent(
         tree,
         options.path,
+        !!options.verbose,
         (filePath: string, content: string) => {
           let result = content;
 

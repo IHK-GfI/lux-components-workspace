@@ -3,8 +3,8 @@ import * as chalk from 'chalk';
 import { updateDep } from '../../update-dependencies/index';
 import { replaceRule } from '../../utility/files';
 import { AddTransUnitItem } from '../../utility/replace-item';
+import { Options } from '../../utility/types';
 import { finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
-import { Options } from '../19.0.0';
 
 export function update190700(options: Options, runNpmInstall = true): Rule {
   return (_tree: Tree, _context: SchematicContext) => {

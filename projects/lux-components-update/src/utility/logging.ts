@@ -8,7 +8,7 @@ export const TAB = '\t   ';
  * @param messages
  */
 export const logInfoWithDescriptor = (...messages: string[]) => {
-  let message = generateLogMessage(...messages);
+  const message = generateLogMessage(...messages);
   console.log(chalk.blueBright(`[INFO]${TAB}${message}`));
 };
 
@@ -16,8 +16,17 @@ export const logInfoWithDescriptor = (...messages: string[]) => {
  * Erzeugt eine Info-Log-Ausgabe in hellem Weiß ohne Icon.
  * @param messages
  */
+export const logDebug = (...messages: string[]) => {
+  const message = generateLogMessage(...messages);
+  console.log(chalk.grey(`${TAB}${message}`));
+};
+
+/**
+ * Erzeugt eine Info-Log-Ausgabe in hellem Weiß ohne Icon.
+ * @param messages
+ */
 export const logInfo = (...messages: string[]) => {
-  let message = generateLogMessage(...messages);
+  const message = generateLogMessage(...messages);
   console.log(chalk.whiteBright(`${TAB}${message}`));
 };
 
@@ -26,7 +35,7 @@ export const logInfo = (...messages: string[]) => {
  * @param messages
  */
 export const logSuccess = (...messages: string[]) => {
-  let message = generateLogMessage(...messages);
+  const message = generateLogMessage(...messages);
   console.log(chalk.yellowBright(`[SUCCESS]  ${message}`));
 };
 
@@ -35,7 +44,7 @@ export const logSuccess = (...messages: string[]) => {
  * @param messages
  */
 export const logWarn = (...messages: string[]) => {
-  let message = generateLogMessage(...messages);
+  const message = generateLogMessage(...messages);
   console.log(chalk.yellowBright(`[WARN]     ${message}`));
 };
 
@@ -55,7 +64,7 @@ export const logError = (...messages: string[]) => {
  * @constructor
  */
 export const formattedSchematicsException: (...messages: string[]) => SchematicsException = (...messages: string[]) => {
-  let message = generateLogMessage(...messages);
+  const message = generateLogMessage(...messages);
   // Die eigentliche Exception zum Aufrufer zurückgeben '
   return new SchematicsException(`[ERROR]    ${message}`);
 };
@@ -66,7 +75,7 @@ export const formattedSchematicsException: (...messages: string[]) => Schematics
  * @param messages
  */
 function generateLogMessage(...messages: string[]): string {
-  let fullMessage: string = '';
+  let fullMessage = '';
   for (let i = 0; i < messages.length; i++) {
     if (i !== 0) {
       fullMessage += TAB;

@@ -1,7 +1,7 @@
 import { callRule, Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
-import { replaceRule } from './files';
+import { deleteLineFromFile, replaceRule } from './files';
 import {
   AddTransUnitItem,
   RemoveHtmlAttributeItem,
@@ -12,6 +12,7 @@ import {
   ReplaceItem
 } from './replace-item';
 import { appOptions, workspaceOptions } from './test';
+import { Options } from './types';
 import { UtilConfig } from './util';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -21,7 +22,7 @@ describe('file', () => {
   let runner: SchematicTestRunner;
   let context: any;
 
-  const testOptions: any = {};
+  const testOptions: Options = { project: '', path: '', verbose: false };
 
   beforeEach(async () => {
     runner = new SchematicTestRunner('schematics', collectionPath);
@@ -283,6 +284,29 @@ describe('file', () => {
       },
       error: (reason) => expect(reason).toBeUndefined()
     });
+  });
+
+  it('deleteLineFromFile entfernt die Zeile und entfernt das Komma in vorheriger Zeile (JSON)', () => {
+    const filePath = testOptions.path + '/deleteLine/test.json';
+
+    const json = `{
+  "dependencies": {
+    "@angular/common": "9.1.0",
+    "lux-components": "1.8.3"
+  }
+}`;
+
+    appTree.create(filePath, json);
+
+    const changed = deleteLineFromFile(appTree, null as any, filePath, 'lux-components', true);
+    expect(changed).toBeTrue();
+
+    const content = appTree.read(filePath)?.toString() ?? '';
+    // Die entfernte Zeile darf nicht mehr vorkommen
+    expect(content).not.toContain('lux-components');
+    // Die Zeile vorher darf kein Komma am Ende mehr haben
+    expect(content).toContain('"@angular/common": "9.1.0"');
+    expect(content).not.toContain('"@angular/common": "9.1.0",');
   });
 });
 

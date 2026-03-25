@@ -3,8 +3,8 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { getPackageJsonDependency } from '../../utility/dependencies';
 import { appOptions, workspaceOptions } from '../../utility/test';
+import { Options } from '../../utility/types';
 import { UtilConfig } from '../../utility/util';
-import { Options } from '../19.0.0';
 import { update190600 } from './index';
 
 describe('update190600', () => {
