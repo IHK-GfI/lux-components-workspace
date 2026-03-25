@@ -1,12 +1,10 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logInfo, logWarn } from '../utility/logging';
+import type { Options as BaseOptions } from '../utility/types';
 import { messageInfoRule } from '../utility/util';
 
-export interface Options {
-  project: string;
-  path: string;
+export interface Options extends BaseOptions {
   namespace: boolean;
-  verbose: boolean;
 }
 
 export function migrateXlf(options: Options): Rule {

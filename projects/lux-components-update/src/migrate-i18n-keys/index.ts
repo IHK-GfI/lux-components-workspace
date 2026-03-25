@@ -1,13 +1,8 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { iterateFilesAndModifyContent } from '../utility/files';
 import { logInfo } from '../utility/logging';
+import { Options } from '../utility/types';
 import { messageInfoRule } from '../utility/util';
-
-export interface Options {
-  project: string;
-  path: string;
-  verbose: boolean;
-}
 
 export function migrateI18nKeys(options: Options): Rule {
   return chain([
@@ -22,8 +17,9 @@ function migrateI18nKeysIntern(options: Options): Rule {
     iterateFilesAndModifyContent(
       tree,
       options.path,
+      !!options.verbose,
       (filePath: string, content: string) => {
-        let result = transformContent(content);
+        const result = transformContent(content);
 
         if (result.changed) {
           logInfo(filePath + ' wurde angepasst.');
@@ -44,7 +40,7 @@ function transformContent(content: string) {
   // (?:([\w:-]+)="[^"]*"\s+i18n-\2|i18n-([\w:-]+))="@@?([^"]+)"
   // Group 2 or 3 = attribute name; group 4 = key
   const attrRegex = /(\s)(?:([\w:-]+)="[^"]*"\s+i18n-\2|i18n-([\w:-]+))="@@?([^"]+)"/g;
-  content = content.replace(attrRegex, (m, ws, attrWithValue, attrOnly, key) => {
+  content = content.replace(attrRegex, (_m, ws, attrWithValue, attrOnly, key) => {
     const attrName = attrWithValue || attrOnly;
     changed = true;
     return `${ws}${attrName}="{{ '${key}' | transloco }}"`;

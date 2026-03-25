@@ -2,8 +2,9 @@ import { callRule, SchematicContext } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as path from 'path';
 import { appOptions, workspaceOptions } from '../utility/test';
+import { Options } from '../utility/types';
 import { UtilConfig } from '../utility/util';
-import { migrateI18nKeys, Options } from './index';
+import { migrateI18nKeys } from './index';
 
 describe('migrateI18nKeys', () => {
   let appTree: UnitTestTree;

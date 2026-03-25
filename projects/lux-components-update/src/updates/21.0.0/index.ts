@@ -7,15 +7,12 @@ import { deleteFile, iterateFilesAndModifyContent, moveFilesToDirectory, replace
 import { deleteJsonArray, deleteJsonValue, findStringInArray, updateJsonArray } from '../../utility/json';
 import { logError, logInfo, logInfoWithDescriptor, logSuccess } from '../../utility/logging';
 import { ReplaceItem } from '../../utility/replace-item';
+import type { Options } from '../../utility/types';
 import { addComponentProvider, addImport } from '../../utility/typescript';
 import { applyRuleIf, finish, messageInfoRule, messageSuccessRule, replaceAll } from '../../utility/util';
 import { validateLuxComponentsVersion, validateNodeVersion } from '../../utility/validation';
 
-export interface Options {
-  project: string;
-  path: string;
-  verbose: boolean;
-}
+
 
 export const updateMajorVersion = '21';
 export const updateMinVersion = '19.7.0';
@@ -91,7 +88,7 @@ export function updatePackageJsonTransloco(options: Options): Rule {
       packageJson,
       new ReplaceItem(' --localize', '', true)
     ),
-    deleteFile(options.path ?? '', 'move-de-files.js'),
+    deleteFile(options, 'move-de-files.js'),
     moveFilesToDirectory(options, 'files/scripts', '/scripts'),
     moveFilesToDirectory(options, 'files/transloco/base', '/src/app'),
     moveFilesToDirectory(options, 'files/transloco/i18n', '/src/locale'),
@@ -239,6 +236,7 @@ function updateMainTsAndTestTs(options: Options): Rule {
     iterateFilesAndModifyContent(
       tree,
       options.path,
+      !!options.verbose,
       (filePath: string, content: string) => {
         let result = content;
 

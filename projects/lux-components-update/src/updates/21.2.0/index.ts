@@ -1,8 +1,8 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as chalk from 'chalk';
 import { updateDep } from '../../update-dependencies/index';
+import { Options } from '../../utility/types';
 import { finish, messageInfoRule, messageSuccessRule } from '../../utility/util';
-import { Options } from '../19.0.0';
 
 export function update210200(_options: Options, runNpmInstall = true): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
