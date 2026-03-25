@@ -6,15 +6,12 @@
 .cdk-overlay-pane.mat-mdc-dialog-panel {
   .mat-mdc-dialog-container {
     border-radius: var(--lux-theme-app-border-radius);
-    height: inherit;
-    min-height: inherit;
-    max-height: inherit;
-    min-width: 100%;
-  }
-
-  .mat-mdc-dialog-inner-container {
-    min-width: 100%;
-    min-height: 100%;
+     width: unset;
+     height: unset;
+     min-width: 100%;
+     max-width: 100%;
+     min-height: 100%;
+     max-height: 100%;
   }
 }
 
@@ -26,10 +23,6 @@
       container-min-width: 0
     )
   );
-}
-
-lux-dialog-preset {
-  height: 100%;
 }
 
 lux-dialog-action {
@@ -48,7 +41,6 @@ lux-dialog-structure {
 
   display: flex;
   flex: 1 1 auto;
-  min-height: 100%;
 
   .lux-dialog {
     // Das Element kann fokussiert werden, das muss aber nicht zwingend mit der Outline gezeigt werden
@@ -73,7 +65,6 @@ lux-dialog-structure {
     .lux-dialog-content {
       margin: 0;
       padding: 0;
-      max-height: 100%;
       font-family: var(--lux-theme-app-font-family);
       letter-spacing: normal;
       color: var(--lux-theme-dark-primary-text);
