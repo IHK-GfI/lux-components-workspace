@@ -9,6 +9,7 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
     - [lux-tour-hint](#lux-tour-hint)
     - [lux-table](#lux-table)
   - [Versionen](#versionen)
+    - [Version 21.3.0](#version-2130)
     - [Version 21.2.0](#version-2120)
     - [Version 21.1.0](#version-2110)
     - [Version 21.0.0](#version-2100)
@@ -68,6 +69,19 @@ Die LUX-Table nutzt den Local Storage um zu speichern, welche Tabellen ausgeblen
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. Das heißt, alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+### Version 21.3.0
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+**Hinweis**: Im `lux-file-upload` blendet `luxListOnly=true` ab Version 21.3.0 nur noch die Upload-Möglichkeit aus. Die Sichtbarkeit von View/Delete/Custom-Buttons wird über die jeweiligen Action-Configs (insbesondere `hidden`) gesteuert.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-21.3.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
 
 ### Version 21.2.0
 
