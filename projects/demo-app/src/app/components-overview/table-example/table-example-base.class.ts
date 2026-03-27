@@ -71,6 +71,10 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   tableHeightPx = 500;
   hideBorders = false;
   selected = new Set<any>();
+  unboundSelected = new Set<any>();
+  bindLuxSelected = true;
+  observeSelectedChange = true;
+  observeSelectedAsArrayChange = true;
   nameConfig: ColumnConfig = new ColumnConfig({ label: 'Name', sticky: false });
   symbolConfig: ColumnConfig = new ColumnConfig({ label: 'Symbol' });
   dateConfig: ColumnConfig = new ColumnConfig({ label: 'Datum', sticky: false,  responsiveAt: ['xs', 'sm', 'md'], responsiveBehaviour: ResponsiveBehaviour.COLUMN_HIDE });
@@ -105,12 +109,16 @@ export abstract class TableExampleBaseClass implements OnDestroy {
 
     if (multiSelect) {
       this._doubleClickActive = false;
+    } else {
+      this.multiSelectOnlyCheckboxClick = false;
     }
   }
 
   abstract getTableComponent(): LuxTableComponent;
 
   abstract getDataArr(): any[];
+
+  abstract refreshSelectionBindings(): void;
 
   ngOnDestroy(): void {
     this.dblClickSub?.unsubscribe();

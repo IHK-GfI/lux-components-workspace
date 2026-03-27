@@ -1152,6 +1152,93 @@ describe('LuxTableComponent', () => {
       expect(selectedCount).toEqual('2 / 2');
     }));
   });
+
+  describe('Cursor-Hinweis', () => {
+    let component: TableCursorComponent;
+    let fixture: ComponentFixture<TableCursorComponent>;
+    let luxTableComponent: LuxTableComponent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TableCursorComponent);
+      component = fixture.componentInstance;
+      luxTableComponent = fixture.debugElement.query(By.directive(LuxTableComponent)).componentInstance;
+      fixture.detectChanges();
+    });
+
+    function getFirstRow(): HTMLElement {
+      return fixture.nativeElement.querySelector('.lux-row') as HTMLElement;
+    }
+
+    it('Setzt ohne beobachtete Events und ohne Multiselect keinen Cursor', fakeAsync(() => {
+      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      LuxTestHelper.wait(fixture);
+
+      const row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeFalse();
+    }));
+
+    it('Setzt ohne Multiselect bei beobachtetem luxSelectedChange einen Cursor', fakeAsync(() => {
+      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      luxTableComponent.luxSelectedChange.subscribe(() => {});
+      LuxTestHelper.wait(fixture);
+
+      const row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeTrue();
+    }));
+
+    it('Setzt Cursor bei beobachtetem luxSingleClicked', fakeAsync(() => {
+      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      luxTableComponent.luxSingleClicked.subscribe(() => {});
+      LuxTestHelper.wait(fixture);
+
+      const row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeTrue();
+    }));
+
+    it('Setzt Cursor bei Multiselect mit beobachtetem luxSelectedChange nur ohne Checkbox-Only-Click', fakeAsync(() => {
+      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      component.multiSelect = true;
+      component.multiSelectOnlyCheckboxClick = false;
+      luxTableComponent.luxSelectedChange.subscribe(() => {});
+      LuxTestHelper.wait(fixture);
+
+      let row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeTrue();
+
+      component.multiSelectOnlyCheckboxClick = true;
+      LuxTestHelper.wait(fixture);
+
+      row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeFalse();
+    }));
+
+    it('Setzt bei Multiselect ohne beobachtete Events Cursor nur ohne Checkbox-Only-Click', fakeAsync(() => {
+      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      component.multiSelect = true;
+      component.multiSelectOnlyCheckboxClick = false;
+      LuxTestHelper.wait(fixture);
+
+      let row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeTrue();
+
+      component.multiSelectOnlyCheckboxClick = true;
+      LuxTestHelper.wait(fixture);
+
+      row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeFalse();
+    }));
+
+    it('Setzt bei Multiselect und beobachtetem luxDoubleClicked keinen Cursor', fakeAsync(() => {
+      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      component.multiSelect = true;
+      component.multiSelectOnlyCheckboxClick = false;
+      luxTableComponent.luxDoubleClicked.subscribe(() => {});
+      LuxTestHelper.wait(fixture);
+
+      const row = getFirstRow();
+      expect(row.classList.contains('lux-cursor')).toBeFalse();
+    }));
+  });
 });
 
 @Component({
@@ -1249,6 +1336,41 @@ class TableComponent {
   c2RespAt?: string | string[];
   c1RespBeh?: string;
   c2RespBeh?: string;
+
+  constructor() {}
+}
+
+@Component({
+  template: `
+    <lux-table [luxData]="dataSource" [luxMultiSelect]="multiSelect" [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick">
+      <lux-table-column luxColumnDef="c1">
+        <lux-table-column-header>
+          <ng-template>C1</ng-template>
+        </lux-table-column-header>
+        <lux-table-column-content>
+          <ng-template let-element>
+            <span>{{ element.c1 }}</span>
+          </ng-template>
+        </lux-table-column-content>
+      </lux-table-column>
+      <lux-table-column luxColumnDef="c2">
+        <lux-table-column-header>
+          <ng-template>C2</ng-template>
+        </lux-table-column-header>
+        <lux-table-column-content>
+          <ng-template let-element>
+            <span>{{ element.c2 }}</span>
+          </ng-template>
+        </lux-table-column-content>
+      </lux-table-column>
+    </lux-table>
+  `,
+  imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnHeaderComponent, LuxTableColumnContentComponent]
+})
+class TableCursorComponent {
+  dataSource: TableItem[] = [];
+  multiSelect = false;
+  multiSelectOnlyCheckboxClick = false;
 
   constructor() {}
 }

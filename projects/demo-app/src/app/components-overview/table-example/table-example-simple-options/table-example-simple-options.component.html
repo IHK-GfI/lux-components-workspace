@@ -9,7 +9,7 @@
 >
   <lux-form-hint>Deaktiviert die erste und dritte Checkbox in der Tabelle.</lux-form-hint>
 </lux-toggle-ac>
-<lux-toggle-ac luxLabel="luxMultiSelectOnlyCheckboxClick" [(luxChecked)]="tableExample.multiSelectOnlyCheckboxClick" [luxNoTopLabel]="true">
+<lux-toggle-ac luxLabel="luxMultiSelectOnlyCheckboxClick" [(luxChecked)]="tableExample.multiSelectOnlyCheckboxClick" [luxNoTopLabel]="true" [luxDisabled]="!tableExample.multiSelect">
   <lux-form-hint
     >Dieses Flag steuert, ob auch ein Klick auf die Zeile die Checkbox aktiviert oder ausschließlich ein Klick auf die Checkbox
     selbst.</lux-form-hint
@@ -22,6 +22,27 @@
   [luxNoTopLabel]="true"
 >
   <lux-form-hint>Diese Property kann nur verwendet werden, wenn <i>luxMultiSelect</i> deaktiviert ist.</lux-form-hint>
+</lux-toggle-ac>
+<lux-toggle-ac
+  luxLabel="[(luxSelected)] loggen"
+  [(luxChecked)]="tableExample.bindLuxSelected"
+  (luxCheckedChange)="tableExample.refreshSelectionBindings()"
+  [luxNoLabels]="true"
+>
+</lux-toggle-ac>
+<lux-toggle-ac
+  luxLabel="(luxSelectedChange) loggen"
+  [(luxChecked)]="tableExample.observeSelectedChange"
+  (luxCheckedChange)="tableExample.refreshSelectionBindings()"
+  [luxNoLabels]="true"
+>
+</lux-toggle-ac>
+<lux-toggle-ac
+  luxLabel="(luxSelectedAsArrayChange) loggen"
+  [(luxChecked)]="tableExample.observeSelectedAsArrayChange"
+  (luxCheckedChange)="tableExample.refreshSelectionBindings()"
+  [luxNoLabels]="true"
+>
 </lux-toggle-ac>
 <lux-input-ac luxLabel="luxNoDataText" [(luxValue)]="tableExample.noDataText">
   <lux-form-hint>Diese Property enthält den Text der angezeigt wird wenn keine Datensätze gefunden werden konnten. </lux-form-hint>

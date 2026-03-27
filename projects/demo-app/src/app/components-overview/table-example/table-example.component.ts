@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxMenuComponent,
@@ -12,6 +12,7 @@ import {
   LuxToggleAcComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
+import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -48,8 +49,11 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
     DatePipe
   ]
 })
-export class TableExampleComponent extends TableExampleBaseClass {
+export class TableExampleComponent extends TableExampleBaseClass implements AfterViewInit, OnDestroy {
   @ViewChild('myTable') tableComponent!: LuxTableComponent;
+
+  private selectedChangeSub?: Subscription;
+  private selectedAsArrayChangeSub?: Subscription;
 
   dataSource: any[] = [];
   showColumnSelector = true;
@@ -74,12 +78,54 @@ export class TableExampleComponent extends TableExampleBaseClass {
     return this.dataSource;
   }
 
+  ngAfterViewInit(): void {
+    this.refreshSelectionBindings();
+  }
+
+  override ngOnDestroy(): void {
+    this.selectedChangeSub?.unsubscribe();
+    this.selectedAsArrayChangeSub?.unsubscribe();
+    super.ngOnDestroy();
+  }
+
+  override refreshSelectionBindings() {
+    this.selectedChangeSub?.unsubscribe();
+    this.selectedAsArrayChangeSub?.unsubscribe();
+
+    if (!this.tableComponent) {
+      return;
+    }
+
+    if (this.bindLuxSelected || this.observeSelectedChange) {
+      this.selectedChangeSub = this.tableComponent.luxSelectedChange.subscribe((selected) => {
+        if (this.bindLuxSelected) {
+          this.onLuxSelectedBinding(selected);
+          this.selected = selected;
+        }
+
+        if (this.observeSelectedChange) {
+          this.onSelectedChange(selected);
+        }
+      });
+    }
+
+    if (this.observeSelectedAsArrayChange) {
+      this.selectedAsArrayChangeSub = this.tableComponent.luxSelectedAsArrayChange.subscribe((selected) => {
+        this.onSelectedAsArrayChange(selected);
+      });
+    }
+  }
+
   onSelectedChange(selected: Set<any>) {
-    console.log('als Set:  ', selected);
+    console.log('(luxSelectedChange):', selected);
+  }
+
+  onLuxSelectedBinding(selected: Set<any>) {
+    console.log('[(luxSelected)]:', selected);
   }
 
   onSelectedAsArrayChange(selected: any[]) {
-    console.log('als Array:', selected);
+    console.log('(luxSelectedAsArrayChange):', selected);
   }
 
   clearData() {
