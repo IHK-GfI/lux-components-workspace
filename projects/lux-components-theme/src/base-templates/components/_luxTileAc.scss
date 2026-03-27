@@ -62,9 +62,13 @@ lux-tile-ac {
 
   // Hover
   &:hover {
+    .lux-tile-ac {
+      background-image: var(--lux-theme-tile-ac-hover-bg-color);
+    }
+
     @include mat.card-overrides(
       (
-        elevated-container-elevation: #{"0 0 0 1px #000, #{$tileBoxShadow}"}
+        elevated-container-elevation: #{"0 0 0 1px var(--lux-theme-tile-ac-hover-border-color), #{$tileBoxShadow}"}
       )
     );
   }

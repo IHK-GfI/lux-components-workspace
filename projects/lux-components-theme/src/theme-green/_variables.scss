@@ -25,7 +25,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-dark-primary-text: #003366;
   --lux-theme-dark-secondary-text: #335c85;
   --lux-theme-dark-disabled-text: #636d76;
-  --lux-theme-dark-dividers: rgba(0, 51, 102, 0.2);
+  --lux-theme-dark-dividers: rgba(0, 51, 102, 0.1);
   --lux-theme-dark-focused: rgba(0, 0, 0, 0.12);
 
   --lux-theme-light-primary-text: white;
@@ -33,6 +33,35 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-light-disabled-text: rgba(255, 255, 255, 0.5);
   --lux-theme-light-dividers: #e3ebf5;
   --lux-theme-light-focused: rgba(255, 255, 255, 0.12);
+
+  // Base-Tokens
+  --lux-theme-breakpoint-xs: 599px;
+  --lux-theme-breakpoint-sm: 959px;
+  --lux-theme-breakpoint-md: 1279px;
+  --lux-theme-breakpoint-lg: 1919px;
+  --lux-theme-breakpoint-xl: 4999px;
+
+  --lux-theme-radius-xs: 2px;
+  --lux-theme-radius-sm: 4px;
+  --lux-theme-radius-md: 8px;
+  --lux-theme-radius-lg: 18px;
+  --lux-theme-radius-xl: 20px;
+  --lux-theme-radius-xxl: 999px;
+
+  --lux-theme-spacing-xxs: 2px;
+  --lux-theme-spacing-xs: 4px;
+  --lux-theme-spacing-sm: 8px;
+  --lux-theme-spacing-md: 16px;
+  --lux-theme-spacing-lg: 24px;
+  --lux-theme-spacing-xl: 32px;
+  --lux-theme-spacing-xxl: 48px;
+  --lux-theme-spacing-xxxl: 64px;
+
+  --lux-theme-font-size-xs: 0.75rem;
+  --lux-theme-font-size-sm: 0.875rem;
+  --lux-theme-font-size-md: 1rem;
+  --lux-theme-font-size-lg: 1.125rem;
+  --lux-theme-font-size-xl: 1.25rem;
 
   // Hauptfarben
   --lux-theme-primary-color: #{palettes.$lux-primary-color};
@@ -107,7 +136,11 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-gradient-reverse: none;
   --lux-theme-app-border-color: var(--mat-sys-outline-variant);
   --lux-theme-app-border-radius: 14px;
+  --lux-theme-state-layer-color: #E3EBF5;
   --lux-theme-app-state-layer-color: #{map.get(palettes.$lux-palette_primary, 40)};
+  --lux-theme-hover-state-layer-opacity: 0.08;
+  --lux-theme-focus-state-layer-opacity: 0.12;
+  --lux-theme-pressed-state-layer-opacity: 0.16;
 
   // Form
   --lux-theme-form-border-width: 1px;
@@ -118,6 +151,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-form-control-label-margin: 0 0 0.25rem 0;
   --lux-theme-form-control-error-margin: 0.25rem 0 0 0;
   --lux-theme-form-border-color: rgba(0, 0, 0, 0.42);
+  --lux-theme-form-hover-border-color: var(--lux-theme-neutral-10);
   --lux-theme-form-focus-border-color: var(--lux-theme-primary-20);
   --lux-theme-form-focus-box-shadow: 0 0 0 2px var(--lux-theme-accent-secondary-color), 0 0 4px 2px var(--lux-theme-accent-secondary-color);
   --lux-theme-form-error-border-color: var(--lux-theme-warn-50);
@@ -140,7 +174,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // Hover
   --lux-theme-hover-color: var(--mat-option-hover-state-layer-color);
   --lux-theme-on-hover-color: var(--mat-option-label-text-color);
-  --lux-theme-hover-color-for-dark-background: #335c85;
+  --lux-theme-hover-color-for-dark-background: var(--lux-theme-primary-40);
 
   // Selektion
   --lux-theme-selected-border-color: var(--lux-theme-accent-secondary-color);
@@ -317,17 +351,17 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   // LUX-Datepicker
   --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
   --lux-theme-datepicker-panel-shape: var(--lux-theme-app-border-radius);
-  --lux-theme-datepicker-panel-text-color: #003366;
+  --lux-theme-datepicker-panel-text-color: var(--lux-theme-primary-20);
   --lux-theme-datepicker-panel-font-size: 1.125rem;
   --lux-theme-datepicker-panel-date-border-radius: 0;
   --lux-theme-datepicker-panel-date-background-color: #e3ebf5;
-  --lux-theme-datepicker-panel-date-selected-color: #e3ebf5;
-  --lux-theme-datepicker-panel-date-selected-background-color: #003366;
-  --lux-theme-datepicker-panel-date-hover-background-color: rgba(0, 51, 102, 0.3);
+  --lux-theme-datepicker-panel-date-selected-color: #ffffff;
+  --lux-theme-datepicker-panel-date-selected-background-color: var(--lux-theme-primary-20);
+  --lux-theme-datepicker-panel-date-hover-background-color: var(--lux-theme-panel-option-hover-state-layer-color);
 
   // LUX-Dialog
-  --lux-theme-dialog-close-button-hover-color: var(--lux-theme-dark-primary-text);
-  --lux-theme-dialog-close-button-hover-background-color: color-mix(in srgb, var(--mat-sys-secondary-container) 8%, transparent);
+  --lux-theme-dialog-close-button-hover-color: var(--lux-theme-on-hover-color);
+  --lux-theme-dialog-close-button-hover-background-color: var(--lux-theme-on-hover-color);
 
   // LUX-File-Upload
   --lux-theme-file-upload-padding: 24px 48px;
@@ -375,12 +409,18 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-link-plain-hover-background-color: #e4f1e4;
 
   // Lookup
-  --lux-theme-lookup-invalid-option-text-color: var(--lux-theme-warn-50);
+  --lux-theme-lookup-invalid-option-text-color: var(--mat-sys-error);
   --lux-theme-lookup-invalid-option-font-weight: 300;
 
   // LUX-Menu
   --lux-theme-menu-item-font-color: var(--lux-theme-primary-color);
   --lux-theme-menu-item-subtitle-font-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-menu-item-subtitle-font-size: 0.875rem;
+  --lux-theme-menu-panel-header-font-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-menu-panel-header-font-weight: 600;
+  --lux-theme-menu-panel-header-font-size: 1rem;
+  --lux-theme-menu-item-icon-size: 20px;
+  --lux-theme-menu-item-icon-size-large: 40px;
   --lux-theme-menu-item-font-size: 1rem;
   --lux-theme-menu-button-item-font-size: 0.875rem;
   --lux-theme-menu-button-text-container-shape: 4px;
@@ -455,7 +495,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   // LUX-Tabs
   --lux-theme-tabs-text-font: var(--lux-theme-app-headline-font);
-  --lux-theme-tabs-label-text-size: 1.125rem;
+  --lux-theme-tabs-label-text-size: 1rem;
   --lux-theme-tabs-label-text-weight: 600;
   --lux-theme-tabs-border-radius: var(--lux-theme-card-shape);
 
@@ -486,13 +526,16 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-textbox-yellow-icon-color: #f4cb25;
 
   // LUX-Tile
-  --lux-theme-tile-font-hover-color: var(--lux-theme-accent-secondary-color);
-  --lux-theme-tile-icon-color: #56bd66;
-  --lux-theme-tile-borderradius: 24px;
-  --lux-theme-tile-bottom-line-color: #56bd66;
+  --lux-theme-tile-font-hover-color: var(--mat-sys-on-tertiary-container);
+  --lux-theme-tile-icon-color: var(--mat-sys-tertiary);
+  --lux-theme-tile-border-radius: var(--lux-theme-app-border-radius);
+  --lux-theme-tile-borderradius: var(--lux-theme-tile-border-radius);
+  --lux-theme-tile-bottom-line-color: var(--mat-sys-tertiary);
 
   // LUX-Tile-Ac
   --lux-theme-tile-ac-icon-color: var(--lux-theme-primary-color);
+  --lux-theme-tile-ac-hover-bg-color: var(--lux-theme-app-gradient-reverse);
+  --lux-theme-tile-ac-hover-border-color: var(--lux-theme-form-hover-border-color);
 
   // LUX-Tourhint
   --lux-theme-tour-hint-overlay-backdrop-color: rgba(0, 0, 0, 0.12);

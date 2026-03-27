@@ -23,7 +23,7 @@ lux-app-header-ac {
         (
           foreground-color: var(--mat-sys-primary),
           container-color: var(--mat-sys-on-primary),
-          hover-state-layer-opacity: 0.1
+          hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
         )
       );
     }

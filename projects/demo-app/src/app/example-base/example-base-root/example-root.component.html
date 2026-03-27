@@ -29,20 +29,18 @@
           <lux-panel-content>
             @for (component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted; track component) {
               <div
+                tabindex="0"
+                role="button"
+                (click)="onComponentClick(component)"
+                (keydown.space)="onComponentClick(component)"
+                (keydown.enter)="onComponentClick(component)"
                 class="lux-flex lux-items-center lux-gap-2 example-component-list-item lux-color-primary-20"
                 [ngClass]="{
                   'example-component-list-item-selected':
                     navigationService.selectedComponent && navigationService.selectedComponent.label === component.label
                 }"
               >
-                <div
-                  class="example-component-list-item-label"
-                  tabindex="0"
-                  role="button"
-                  (click)="onComponentClick(component)"
-                  (keydown.space)="onComponentClick(component)"
-                  (keydown.enter)="onComponentClick(component)"
-                >
+                <div class="example-component-list-item-label">
                   {{ component.label }}
                 </div>
                 @if (component.markerType) {

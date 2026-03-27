@@ -12,7 +12,7 @@ lux-tile {
 
   mat-card[class~="lux-cursor"] {
     &.mat-mdc-card {
-      border-radius: var(--lux-theme-tile-borderradius);
+      border-radius: var(--lux-theme-tile-border-radius);
       overflow: hidden !important;
       padding: 24px;
     }

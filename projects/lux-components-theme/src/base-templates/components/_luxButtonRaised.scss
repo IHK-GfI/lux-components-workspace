@@ -13,8 +13,8 @@ lux-link.lux-raised {
       protected-container-height: var(--lux-theme-button-raised-container-height),
       protected-label-text-color: var(--lux-theme-button-raised-default-text-color),
       protected-container-color: var(--lux-theme-button-raised-default-container-color),
-      protected-focus-state-layer-opacity: 0.1,
-      protected-hover-state-layer-opacity: 0.1
+      protected-focus-state-layer-opacity: var(--lux-theme-focus-state-layer-opacity),
+      protected-hover-state-layer-opacity: var(--lux-theme-hover-state-layer-opacity)
     )
   );
 
