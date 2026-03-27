@@ -85,6 +85,28 @@ describe('LuxFileUploadComponent', () => {
       expect(fileComponent.luxSelected!.length).toBe(2);
       expect(fileComponent.formControl.errors).toBeNull();
     }));
+
+    it('Sollte den Delete-Button bei luxListOnly=true anzeigen, wenn hidden=false konfiguriert ist', () => {
+      testComponent.listOnly = true;
+      testComponent.deleteActionConfig = { ...testComponent.deleteActionConfig, hidden: false };
+      testComponent.selected = [{ name: 'mockfile1.txt', type: 'text/plain' }];
+
+      fixture.detectChanges();
+
+      const deleteButton = fixture.debugElement.query(By.css('.lux-file-upload-view-item-delete-button'));
+      expect(deleteButton).toBeTruthy();
+    });
+
+    it('Sollte den Delete-Button bei hidden=true auch mit luxListOnly=true ausblenden', () => {
+      testComponent.listOnly = true;
+      testComponent.deleteActionConfig = { ...testComponent.deleteActionConfig, hidden: true };
+      testComponent.selected = [{ name: 'mockfile1.txt', type: 'text/plain' }];
+
+      fixture.detectChanges();
+
+      const deleteButton = fixture.debugElement.query(By.css('.lux-file-upload-view-item-delete-button'));
+      expect(deleteButton).toBeFalsy();
+    });
   });
 });
 
@@ -106,6 +128,7 @@ class MockStorage {
       [luxRequired]="required"
       [luxReadonly]="readonly"
       [luxDisabled]="disabled"
+      [luxListOnly]="listOnly"
       [luxAccept]="accept"
       [luxCapture]="capture"
       [luxMaxSizeMB]="maxSizeMb"
@@ -136,6 +159,7 @@ class FileComponent {
   uploadUrl?: string;
   multiple?: boolean;
   contentsAsBlob?: boolean;
+  listOnly?: boolean;
 
   selected: ILuxFileObject[] | null = null;
 

@@ -123,7 +123,7 @@
           [luxDisabled]="customConfig.disabled || luxDisabled"
           (luxClicked)="customConfig.onClick ? customConfig.onClick(file) : noop()"
         ></lux-button>
-        } } @if (!luxReadonly && !luxDisabled && !luxListOnly && !luxDeleteActionConfig.hidden) {
+        } } @if (!luxReadonly && !luxDisabled && !luxDeleteActionConfig.hidden) {
         <lux-button
           luxAriaLabel="{{ 'luxc.file.upload.delete.btn.arialabel' | transloco: { fileName: file.name } }}"
           [luxTagId]="uid + '-delete-button_' + i"
