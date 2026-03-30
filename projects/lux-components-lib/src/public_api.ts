@@ -315,6 +315,7 @@ export * from './lib/lux-breadcrumb/lux-breadcrumb.component';
 /**
  * LUX-Util
  */
+export * from './lib/lux-util/env-utils';
 export * from './lib/lux-util/lux-app.service';
 export * from './lib/lux-util/lux-colors.enum';
 export * from './lib/lux-util/lux-console.service';

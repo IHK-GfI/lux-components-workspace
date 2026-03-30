@@ -182,11 +182,11 @@ Die _assets_-Abschnitte in der _angular.json_ ergänzen:
 Den foldenden Code in der _styles.scss_ ergänzen:
 
 ```scss
-@import '@ihk-gfi/lux-components-theme/src/base/luxfonts';
+@use "@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts" as luxfonts;
 
-$basepath: '/';
+$basepath: "/";
 
-@include web-fonts($basepath);
+@include luxfonts.web-fonts($basepath);
 ```
 
 ##### Icons über ein CDN laden
@@ -227,26 +227,12 @@ Die folgenden Einträge können gelöscht werden:
 ]
 ```
 
-Der folgende Abschnitt muss ergänzt werden:
-
-```json
-"assets": [
-  ...
-  {
-    "glob": "lux-icons.json",
-    "input": "./node_modules/@ihk-gfi/lux-components-icons-and-fonts/assets/icons/",
-    "output": "./assets/icons"
-  },
-  ...
-]
-```
-
-Die Konfiguration in der _app.module.ts_ muss wie folgt angepasst werden:
+Die Konfiguration in der _app.config.ts_ oder _app.module.ts_ muss wie folgt angepasst werden:
 
 ```ts
 const myConfiguration: LuxComponentsConfigParameters = {
   ...
-  iconBasePath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.10.0/',
+  iconBasePath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.11.0/',
   ...
 };
 ```
@@ -254,17 +240,17 @@ const myConfiguration: LuxComponentsConfigParameters = {
 Derselbe Pfad muss in der _styles.scss_ eingesetzt werden:
 
 ```scss
-@import '@ihk-gfi/lux-components-theme/src/base/luxfonts';
+@use "@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts" as luxfonts;
 
-$basepath: 'https://[my-domain].de/lux-components/icons-and-fonts/v1.10.0/';
+$basepath: "https://[my-domain]/lux-components/icons-and-fonts/v1.11.0/";
 
-@include web-fonts($basepath);
+@include luxfonts.web-fonts($basepath);
 ```
 
 D.h. die Icons and Fonts müssen nicht mit der App ausgeliefert werden. Sie werden direkt vom CDN-Server geladen.
 
 Im CDN müssen die Icons in den Unterordner _assets_ angelegt werden.
-Z.B. _`https://[my-domain].de/lux-components/icons-and-fonts/v1.10.0/assets/icons/Interface-Essentials/Validation/interface-validation-check-circle--checkmark-addition-circle-success-check-validation-add-form.svg`_
+Z.B. _`https://[my-domain].de/lux-components/icons-and-fonts/v1.11.0/assets/icons/Interface-Essentials/Validation/interface-validation-check-circle--checkmark-addition-circle-success-check-validation-add-form.svg`_
 
 **_Wichtig!_** Falls eine CSP (Content Security Policy) den Zugriff auf Icon-Ressourcen einschränkt, muss diese um die CDN-Url (z.B. https://[my-domain].de ) erweitert werden.
 Z.B. in Spring-Boot-Projekten kann die CSP (siehe _http - security - csp - connect-src_) über die Konfigurationsdateien _application.yml_, _application-dev.yml_,... festgelegt werden.

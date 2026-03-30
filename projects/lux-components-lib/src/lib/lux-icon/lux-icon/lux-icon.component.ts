@@ -71,12 +71,17 @@ export class LuxIconComponent {
 
   @Input()
   set luxIconName(iconNameValue: string | undefined) {
-    if (iconNameValue) {
-      this._luxIconName = iconNameValue;
-      this.registerIcon(iconNameValue);
-    } else {
+    if (!iconNameValue) {
       this._luxIconName = '';
+      return;
     }
+
+    if (iconNameValue === this._luxIconName) {
+      return;
+    }
+
+    this._luxIconName = iconNameValue;
+    this.registerIcon(iconNameValue);
   }
 
   @Output() luxLoad = new EventEmitter<Event>();
@@ -88,7 +93,7 @@ export class LuxIconComponent {
       console.warn(
         `Das Icon "${iconName}" konnte nicht gefunden werden. Stattdessen wird das Icon "${this.notFoundIconName}" verwendet. Bitte anpassen!`
       );
-      this.luxIconName = this.notFoundIconName;
+      this._luxIconName = this.notFoundIconName;
     }
   }
 }
