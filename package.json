@@ -1,6 +1,6 @@
 {
   "name": "@ihk-gfi/lux-components-workspace",
-  "version": "21.3.0",
+  "version": "21.3.1",
   "license": "IHK-GfI Open-Source-Lizenz",
   "engines": {
     "node": ">=20.19.0 <25.0.0"
