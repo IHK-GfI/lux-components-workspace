@@ -46,7 +46,10 @@ LABEL maintainer="thomas.dickhut@gfi.ihk.de"
 EXPOSE 8080
 
 # Sicherheitsupdates für Alpine Basis
-RUN apk update && apk upgrade --no-cache
+# alpine-baselayout wird ausgeschlossen: Das Upgrade versucht /var/run in einen Symlink
+# umzuwandeln, was in Kubernetes-Pods mit gemounteten Service-Account-Tokens fehlschlägt.
+RUN apk update \
+    && apk upgrade --no-cache --ignore alpine-baselayout --ignore alpine-baselayout-data
 
 # Nginx-Verzeichnisse erstellen und Berechtigungen setzen (kombiniert für weniger Layer)
 RUN mkdir -p /run/nginx /var/www/html /var/cache/nginx /var/log/nginx /var/lib/nginx/logs \
