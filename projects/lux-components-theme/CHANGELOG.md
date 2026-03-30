@@ -1,22 +1,31 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.2.0](#version-2120)
+  - [Version 21.3.0](#version-2130)
     - [Issues](#issues)
-  - [Version 21.1.0](#version-2110)
+  - [Version 21.2.0](#version-2120)
     - [Issues](#issues-1)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues-2)
-  - [Version 19.3.0](#version-1930)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-3)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-4)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-5)
-  - [Version 19.0.1](#version-1901)
+  - [Version 19.1.0](#version-1910)
     - [Issues](#issues-6)
-  - [Version 19.0.0](#version-1900)
+  - [Version 19.0.1](#version-1901)
     - [Issues](#issues-7)
+  - [Version 19.0.0](#version-1900)
+    - [Issues](#issues-8)
+
+## Version 21.3.0
+
+### Issues
+
+- Issue #166: Feinschliff Styletokens v21 (#187)
+- Issue #183: LuxDialogService: Error in ui when setting percentage for width/height in dialogConfig (#186)
 
 ## Version 21.2.0
 
