@@ -1,6 +1,6 @@
 {
   "name": "@ihk-gfi/lux-components",
-  "version": "21.2.0",
+  "version": "21.3.0",
   "private": false,
   "publishConfig": {
     "access": "public"
