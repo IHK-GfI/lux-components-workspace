@@ -26,6 +26,25 @@
       "kubernetes": {
         "id": "lux-components-demo",
         "argocd": "devportal",
+        "toolchainVersion": "GEN 2",
+        "environments": {
+          "build": [
+            {
+              "namespace": "lux-components-demo-build",
+              "cluster": "sl-plattform-build-prod"
+            }
+          ],
+          "deployment": {
+            "entw": {
+              "namespace": "lux-components-demo-entw",
+              "cluster": "sl-app-plat-prod"
+            },
+            "prod": {
+              "namespace": "lux-components-demo-prod",
+              "cluster": "sl-app-plat-prod"
+            }
+          }
+        },
         "deployments": {
           "backstage": {
             "imagePath": "lux-components-demo/lux-components-demo"
