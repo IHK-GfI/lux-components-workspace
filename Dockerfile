@@ -1,8 +1,13 @@
+# Globale ARGs müssen VOR dem ersten FROM stehen, damit sie in allen FROM-Zeilen verfügbar sind
+ARG DEPS_IMAGE=node:24-alpine
+ARG BUILDER_IMAGE=node:24-alpine
+ARG RUNTIME_IMAGE=nginx:stable-alpine3.23-slim
+
 #############################
 # Stage 1: Dependencies
 # Ziel: Deterministische Installation (npm ci) mit Cache-Effekt
 #############################
-FROM node:24-alpine AS deps
+FROM ${DEPS_IMAGE} AS deps
 LABEL maintainer="thomas.dickhut@gfi.ihk.de"
 
 WORKDIR /app
@@ -19,7 +24,7 @@ RUN npm ci --ignore-scripts
 #############################
 # Stage 2: Build
 #############################
-FROM node:24-alpine AS build
+FROM ${BUILDER_IMAGE} AS build
 WORKDIR /app
 
 # node-gyp / build toolchain minimal (nur falls benötigt). Entfernen wenn überflüssig:
@@ -38,10 +43,13 @@ RUN set -eux; \
     head -n1 node_modules/.bin/ng || true; \
     node node_modules/@angular/cli/bin/ng build demo-app --configuration production;
 
+# SBOM für Trivy-Scan generieren (nur Production-Dependencies)
+RUN npm sbom --sbom-format cyclonedx --omit=dev > /app/trivy-sbom.cdx.json
+
 #############################
 # Stage 3: Runtime
 #############################
-FROM nginx:stable-alpine3.23-slim
+FROM ${RUNTIME_IMAGE}
 LABEL maintainer="thomas.dickhut@gfi.ihk.de"
 EXPOSE 8080
 
@@ -62,9 +70,11 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=1000:1000 --from=build /app/dist/demo-app/browser /var/www/html/
 COPY --chown=1000:1000 --from=build /app/dist/demo-app/3rdpartylicenses.txt /var/www/html/
 
-# Trivy-Scan: package-lock.json + package.json ins Image, damit Trivy den Dependency-Graph
-# (npm) beim Harbor-Scan auswerten kann (siehe https://trivy.dev/docs/guide/coverage/language/nodejs/)
-COPY --chown=1000:1000 package-lock.json package.json /app/
+# Trivy-Scan: CycloneDX SBOM ins Image, damit Trivy den Dependency-Graph
+# (npm) beim Scan auswerten kann (siehe https://trivy.dev/docs/guide/coverage/language/nodejs/)
+# Nur Production-Dependencies (--omit=dev), daher präziser als package.json und package-lock.json
+# Trivy kann so die tatsächlichen Produktions-Dependencies scannen, ohne package.json, package-lock.json oder node_modules zu benötigen.
+COPY --chown=1000:1000 --from=build /app/trivy-sbom.cdx.json /app/
 
 USER 1000:1000
 WORKDIR /var/www/html
