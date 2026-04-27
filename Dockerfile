@@ -62,6 +62,10 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY --chown=1000:1000 --from=build /app/dist/demo-app/browser /var/www/html/
 COPY --chown=1000:1000 --from=build /app/dist/demo-app/3rdpartylicenses.txt /var/www/html/
 
+# Trivy-Scan: package-lock.json + package.json ins Image, damit Trivy den Dependency-Graph
+# (npm) beim Harbor-Scan auswerten kann (siehe https://trivy.dev/docs/guide/coverage/language/nodejs/)
+COPY --chown=1000:1000 package-lock.json package.json /app/
+
 USER 1000:1000
 WORKDIR /var/www/html
 
