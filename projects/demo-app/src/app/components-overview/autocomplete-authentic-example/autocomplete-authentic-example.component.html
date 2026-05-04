@@ -46,10 +46,10 @@
         <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
         }
         @if(useTemplatesForLabels) {
-          <ng-template let-option>
+          <ng-template let-option #labelTemplate>
             <div class="lux-flex ">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
-              <div>via Template {{ option[renderProperty]}}</div>
+              <div>via Template {{ option[renderProperty]}}@if(useTranslocoDate) {&nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})}</div>
             </div>
           </ng-template>
         }
@@ -94,10 +94,10 @@
         <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
         }
          @if(useTemplatesForLabels) {
-          <ng-template let-option>
+          <ng-template let-option #labelTemplate>
             <div class="lux-flex ">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
-              <div>via Template {{ option[renderProperty]}}</div>
+              <div>via Template {{ option[renderProperty]}}@if(useTranslocoDate) {&nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})}</div>
             </div>
           </ng-template>
         }
@@ -293,6 +293,14 @@
     </lux-toggle-ac>
     <lux-toggle-ac [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
       <lux-form-hint> Die Labels können über in die Component eingereichte Template-Tags erstellt werden. </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      [(luxChecked)]="useTranslocoDate"
+      luxLabel="translocoDate in Template verwenden"
+      luxHint="Steuert, ob das Datum über die translocoDate-Pipe im Label-Template angezeigt wird."
+      [luxDisabled]="!useTemplatesForLabels"
+      [luxNoTopLabel]="true"
+    >
     </lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"

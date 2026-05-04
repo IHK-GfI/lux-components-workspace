@@ -57,6 +57,7 @@
     "@ihk-gfi/lux-components-icons-and-fonts": "1.11.0",
     "@ihk-gfi/lux-components-theme": "21.3.0",
     "@jsverse/transloco": "^8.0.2",
+    "@jsverse/transloco-locale": "^8.2.1",
     "dompurify": "~3.2.6",
     "marked": "15.0.12",
     "ngx-cookie-service": "^21.1.0",
