@@ -65,7 +65,7 @@
         <!-- Zellen, welche nur bei Multiselect-Tabellen dargestellt werden und die Checkboxen + Counter beinhalten -->
         @if (luxMultiSelect) {
         <ng-container matColumnDef="multiSelect">
-          <th class="lux-multiselect-th" mat-header-cell *matHeaderCellDef mat-sort-header="multiSelect">
+          <th class="lux-multiselect-th" mat-header-cell *matHeaderCellDef mat-sort-header="multiSelect" [disabled]="luxHttpDAO && luxMultiSelect">
             <div class="lux-flex lux-flex-col">
               <span class="lux-selected-count">{{ luxSelected.size }} / {{ dataSource.totalElements }}</span>
             </div>

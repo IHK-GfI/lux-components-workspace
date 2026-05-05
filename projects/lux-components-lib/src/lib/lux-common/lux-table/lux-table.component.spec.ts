@@ -825,6 +825,61 @@ describe('LuxTableComponent', () => {
       counter = document.querySelector('.lux-selected-count') as HTMLElement;
       expect(counter.textContent?.trim()).toBe('0 / 2');
     }));
+
+    it('multiSelect-Spalte Sortierung ist bei HTTP-DAO + MultiSelect deaktiviert', fakeAsync(() => {
+      // Vorbedingungen: Tabelle initialisiert
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen: Der Sort-Header der multiSelect-Spalte muss die CSS-Klasse mat-sort-header-disabled tragen
+      const multiSelectTh = fixture.nativeElement.querySelector('th.lux-multiselect-th');
+      expect(multiSelectTh).toBeTruthy();
+      expect(multiSelectTh.classList.contains('mat-sort-header-disabled')).toBeTrue();
+
+      flush();
+    }));
+
+    it('Sort-Event auf multiSelect-Spalte mit HTTP-DAO + MultiSelect ruft loadHttpDAOData nicht auf', fakeAsync(() => {
+      // Vorbedingungen: Tabelle initialisiert
+      LuxTestHelper.wait(fixture);
+
+      // Spy auf loadHttpDAOData erstellen
+      spyOn<any>(luxTableComponent, 'loadHttpDAOData');
+
+      // handleSort aufrufen um die Subscription neu zu registrieren
+      (luxTableComponent as any).handleSort();
+
+      // Sort-Event auf multiSelect-Spalte auslösen – soll vom Guard ignoriert werden
+      expect(luxTableComponent.sort).toBeTruthy();
+      luxTableComponent.sort!.sortChange.emit({ active: 'multiSelect', direction: 'asc' });
+      LuxTestHelper.wait(fixture);
+
+      // loadHttpDAOData darf NICHT aufgerufen worden sein
+      expect(luxTableComponent['loadHttpDAOData']).not.toHaveBeenCalled();
+
+      flush();
+    }));
+
+    it('Sortierung auf normale Spalten mit HTTP-DAO + MultiSelect ruft loadHttpDAOData auf', fakeAsync(() => {
+      // Vorbedingungen: Tabelle initialisiert (HttpDaoTableComponent hat luxMultiSelect=true und luxHttpDAO gesetzt)
+      LuxTestHelper.wait(fixture);
+
+      // Spy auf loadHttpDAOData erstellen
+      spyOn<any>(luxTableComponent, 'loadHttpDAOData');
+
+      // handleSort aufrufen um die Subscription neu zu registrieren
+      (luxTableComponent as any).handleSort();
+
+      // Sort-Event auf eine normale Datenspalte auslösen
+      expect(luxTableComponent.sort).toBeTruthy();
+      luxTableComponent.sort!.sortChange.emit({ active: 'c2', direction: 'asc' });
+      LuxTestHelper.wait(fixture);
+
+      // loadHttpDAOData MUSS aufgerufen worden sein
+      expect(luxTableComponent['loadHttpDAOData']).toHaveBeenCalled();
+
+      flush();
+    }));
+
   });
 
   describe('Multiselect', () => {
@@ -1151,6 +1206,7 @@ describe('LuxTableComponent', () => {
       selectedCount = (document.getElementsByClassName('lux-selected-count').item(0) as HTMLElement).innerText;
       expect(selectedCount).toEqual('2 / 2');
     }));
+
   });
 
   describe('Cursor-Hinweis', () => {
