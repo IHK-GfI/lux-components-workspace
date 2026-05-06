@@ -805,6 +805,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         this.sortChangedSubscription.unsubscribe();
       }
       this.sortChangedSubscription = this.sort.sortChange.subscribe((sort: any) => {
+        // If this is a server-side table with multiSelect enabled,
+        // ignore sort events on the internal selection column to avoid
+        // inconsistent selection state and duplicate entries.
+        if (sort && sort.active === 'multiSelect' && this.luxHttpDAO && this.luxMultiSelect) {
+          return;
+        }
+
         if (this.paginator) {
           this.paginator.pageIndex = 0;
         }
