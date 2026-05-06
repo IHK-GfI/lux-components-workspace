@@ -18,6 +18,7 @@ applyTo: '**'
 - Update scripts are Angular schematics in projects/lux-components-update (see README).
 - Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>.
 - Update the demo page of the component in the folder projects\demo-app\src\app\components-overview\<component-name>.
+- Make a spell check for changed .md files (e.g. README, Wiki-Doku).
 
 ## Key workflows (Windows-friendly)
 

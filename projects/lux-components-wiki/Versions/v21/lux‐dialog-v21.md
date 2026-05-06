@@ -25,9 +25,9 @@
 
 ### Allgemein
 
-| Name   | Beschreibung     |
-| ------ | ---------------- |
-| name   | LuxDialogService |
+| Name | Beschreibung     |
+| ---- | ---------------- |
+| name | LuxDialogService |
 
 | Funktion                                                                                                 | Beschreibung                                                                                                                                                                                  |
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -86,10 +86,10 @@ Dieses Interface dient der Konfiguration der Aktionsschaltflächen für die LuxD
 | -------- | --------------- | ------------------------------------------------------------------------- |
 | label    | string          | Bestimmt das Label dieser Aktionsschaltfläche.                            |
 | color    | LuxThemePalette | Diese Property legt die Farbe fest ('primary', 'accent', 'warn', '')      |
-| raised   | boolean         | Bestimmt ob der Button hervorgehoben dargestellt werden soll.             |
+| raised   | boolean         | Bestimmt, ob der Button hervorgehoben dargestellt werden soll.            |
 | iconName | string          | Legt das Icon der Schaltfläche fest.                                      |
 | tagId    | string          | Einzigartige ID für die Erstellung von e2e Tests.                         |
-| disabled | boolean         | Bestimmt ob der Button deaktiviert ist.                                   |
+| disabled | boolean         | Bestimmt, ob der Button deaktiviert ist.                                  |
 | rounded  | boolean         | Legt den Button als abgerundet fest (er sollte dann kein Label besitzen). |
 
 ### ILuxDialogConfig
@@ -107,7 +107,7 @@ Es existiert ein zusätzliches Objekt DEFAULT_DIALOG_CONF mit zuvor festgelegten
 | maxWidth     | string           | Bestimmt die maximale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.             |
 | maxHeight    | string           | Bestimmt die maximale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.               |
 | panelClass   | string, string[] | Über diese Property ist es möglich eine einzelne bzw. mehrere CSS-Klassen an den geöffneten Dialog zu setzen. |
-| disableClose | boolean          | Diese Property bestimmt ob der Dialog nur über die Schaltflächen schließbar ist oder nicht.                   |
+| disableClose | boolean          | Diese Property bestimmt, ob der Dialog nur über die Schaltflächen schließbar ist oder nicht.                  |
 
 ### ILuxDialogPresetConfig
 
@@ -152,7 +152,7 @@ Ts
 ```typescript
 dialogConfig: ILuxDialogPresetConfig = {
     title: 'Daten löschen?',
-    content: 'Ihre Date werden endgültig gelöscht. Das Löschen kann nicht rückgängig gemacht werden.',
+    content: 'Ihre Daten werden endgültig gelöscht. Das Löschen kann nicht rückgängig gemacht werden.',
     disableClose: true,
     width: 'auto',
     height: 'auto',

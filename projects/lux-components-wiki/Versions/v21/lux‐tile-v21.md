@@ -29,23 +29,23 @@
 | luxLabel                         | string  | Enthält das Label, welches oben im Tile angezeigt wird.                                                                                                        |
 | luxLabelTruncateAfterOneLine     | boolean | Gibt an, ob das _luxLabel_ nach der ersten Zeile abgeschnitten wird.                                                                                           |
 | luxLabelTruncateAfterTwoLine     | boolean | Gibt an, ob das _luxLabel_ nach der zweiten Zeile abgeschnitten wird.                                                                                          |
-| luxSubTitle                      | string  | Enthält den Untertitel, welches unten im Tile angezeigt wird.                                                                                                  |
-| luxSubTitleTruncateAfterOneLine  | boolean | Gibt an, ob das _luxLabel_ nach der ersten Zeile abgeschnitten wird.                                                                                           |
-| luxSubTitleTruncateAfterTwoLines | boolean | Gibt an, ob das _luxLabel_ nach der zweiten Zeile abgeschnitten wird.                                                                                          |
+| luxSubTitle                      | string  | Enthält den Untertitel, der unten im Tile angezeigt wird.                                                                                                      |
+| luxSubTitleTruncateAfterOneLine  | boolean | Gibt an, ob das _luxSubTitle_ nach der ersten Zeile abgeschnitten wird.                                                                                        |
+| luxSubTitleTruncateAfterTwoLines | boolean | Gibt an, ob das _luxSubTitle_ nach der zweiten Zeile abgeschnitten wird.                                                                                       |
 | luxTagId                         | string  | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                  |
 | luxCounter                       | number  | Zeigt eine Zahl auf der rechten, oberen Seite des Tiles an.                                                                                                    |
 | luxCounterCap                    | number  | Die Obergrenze für den luxCounter. Wenn der luxCounter größer als der luxCounterCap ist, wird der luxCounterCap mit einem zusätzlichen '+'-Symbol dargestellt. |
-| luxShowNotification              | boolean | Bestimmt ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                             |
+| luxShowNotification              | boolean | Bestimmt, ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                            |
 
 ### @Output
 
-| Name       | Typ                   | Beschreibung                                               |
-| ---------- | --------------------- | ---------------------------------------------------------- |
-| luxClicked | EventEmitter \<Event> | Event das ausgestoßen wird, wenn das Tile angeklickt wird. |
+| Name       | Typ                   | Beschreibung                                              |
+| ---------- | --------------------- | --------------------------------------------------------- |
+| luxClicked | EventEmitter \<Event> | Event, das ausgelöst wird, wenn das Tile angeklickt wird. |
 
 ## Styleguide
 
-Grundlegende Regeln zum Umgang mit Tile's sind:
+Grundlegende Regeln zum Umgang mit Tiles sind:
 
 - Die Überschriften bei den Tile's sind analog zur lux-card grundsätzlich links auszurichten.
 

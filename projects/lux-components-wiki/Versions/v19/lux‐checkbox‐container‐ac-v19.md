@@ -14,9 +14,9 @@
 
 ### Allgemein
 
-Diese Komponente bietet einen einfachen Layout-Container um mehrer Checkboxen analog zu einer Radio-Group anzuordnen.
+Diese Komponente bietet einen einfachen Layout-Container um mehrere Checkboxen analog zu einer Radio-Group anzuordnen.
 Er ist für die Verwendung der lux-checkbox-ac konzipiert.
-Diese wird automatisch in der komprimierten Darstelllung angezeigt _**und enthält daher keinen Hinweis/Fehler-Container mehr!**_
+Diese wird automatisch in der komprimierten Darstellung angezeigt _**und enthält daher keinen Hinweis/Fehler-Container mehr!**_
 Die Container können in einem Raster mit weiteren Ac-Form-Controls im luxDense-Format ausgerichtet werden.
 
 | Name     | Beschreibung              |
@@ -25,10 +25,10 @@ Die Container können in einem Raster mit weiteren Ac-Form-Controls im luxDense-
 
 ### @Input
 
-| Name        | Typ     | Beschreibung                                                                                                                                                                                                                                        |
-| ----------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxLabel    | String  | Optionales Label oberhalb des Containers. Es ist im Styling dem Formcontrol-Label angepasst. Damit kann der Container mit weiteren Ac-Formular-Elementen kombiniert werden. Wird kein Label angeben wird der Label Container komplett ausgeblendet. |
-| luxVertical | boolean | Mit dieser Property kann die Ausrichtung des Containers bestimmt werden. Default ist "true" und die Checkboxen werden in einer Spalte dargestellt, mit false wird auf eine Reihendarstellung gewechselt.                                            |
+| Name        | Typ     | Beschreibung                                                                                                                                                                                                                                           |
+| ----------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| luxLabel    | String  | Optionales Label oberhalb des Containers. Es ist im Styling dem Formcontrol-Label angepasst. Damit kann der Container mit weiteren Ac-Formular-Elementen kombiniert werden. Wird kein Label angegeben, wird der Label-Container komplett ausgeblendet. |
+| luxVertical | boolean | Mit dieser Property kann die Ausrichtung des Containers bestimmt werden. Default ist "true" und die Checkboxen werden in einer Spalte dargestellt, mit false wird auf eine Reihendarstellung gewechselt.                                               |
 
 ## Beispiele
 

@@ -23,14 +23,14 @@
 
 ### Allgemein
 
-| Name   | Beschreibung       |
-| ------ | ------------------ |
-| name   | LuxTourHintService |
+| Name | Beschreibung       |
+| ---- | ------------------ |
+| name | LuxTourHintService |
 
-| Funktion                                                                                                                                                         | Beschreibung                                                                                                                                                                                             |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| open(tourConfig: ILuxTourHintStepConfig \| ILuxTourHintStepConfig[], optionDontShowAgain: boolean = true): LuxTourHintRef                                        | Diese Methode öffnet eine/n Tour/Hint anhand der übergebenen Konfiguration. Titel, Beschreibung der einzelnen Schritte können über die Konfiuration übergeben werden.                                    |
-| openForComponent(comp: ComponentType\<any>, tourConfig: ILuxTourHintStepConfig \| ILuxTourHintStepConfig[], optionDontShowAgain: boolean = true): LuxTourHintRef | Diese Methode öffnet eine/n Tour/Hint mit der übergebenen Component. Titel, Zusätzlich zur Konfiguration lässt sich noch ein Daten-Objekt übergeben, welches dann von der Component genutzt werden kann. |
+| Funktion                                                                                                                                                          | Beschreibung                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| open(tourConfig: ILuxTourHintStepConfig \| ILuxTourHintStepConfig[], optionDontShowAgain: boolean = true): LuxTourHintRef                                         | Diese Methode öffnet eine(n) Tour/Hint anhand der übergebenen Konfiguration. Titel und Beschreibung der einzelnen Schritte können über die Konfiguration übergeben werden.                   |
+| openForComponent(comp: ComponentType\<any\>, tourConfig: ILuxTourHintStepConfig \| ILuxTourHintStepConfig[], optionDontShowAgain: boolean = true): LuxTourHintRef | Diese Methode öffnet eine(n) Tour/Hint mit der übergebenen Component. Zusätzlich zur Konfiguration lässt sich noch ein Datenobjekt übergeben, welches von der Component genutzt werden kann. |
 
 ## Components
 
@@ -55,22 +55,22 @@ Dieses Interface dient der Konfiguration eines Hinweises oder eines Schrittes f�
 
 ### LuxTourHintRef\<T>
 
-Diese Klasse wird von den open- und openComponent-Funktionen des LuxTourHintService zurückgegeben und ermöglichen über Methoden und Attribute mit dem geöffneten Tour-Hint Modal zu interagieren.
-Eigene Dialog-Component müssen diese Klasse via Dependency-Injection besitzen, um den Tour-Hint-Modal schließen zu können.
+Diese Klasse wird von den open- und openComponent-Funktionen des LuxTourHintService zurückgegeben und ermöglicht über Methoden und Attribute die Interaktion mit dem geöffneten Tour-Hint-Modal.
+Eigene Dialog-Components müssen diese Klasse via Dependency Injection besitzen, um das Tour-Hint-Modal schließen zu können.
 
 | Name                                                | Typ     | Beschreibung                                                                                              |
 | --------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------- |
 | data                                                | T       | Der aktuelle mitgegebene Datensatz für die Tour-Hint Komponente                                           |
 | step                                                | number  | Der aktuelle Schritt in der Tour                                                                          |
-| steps                                               | number  | Die Anzahl Schritte, die es in der Tour gibt. (Wenn 1 dann ist es ein Hinweis und keine Tour)             |
+| steps                                               | number  | Die Anzahl der Schritte, die es in der Tour gibt. (Wenn 1, dann ist es ein Hinweis und keine Tour)        |
 | opened                                              | boolean | Gibt an, ob die Tour-Hint Komponente momentan geöffnet ist.                                               |
 | optionDontShowAgain                                 | boolean | Gibt an, ob die Option 'Nicht wieder anzeigen' mit angezeigt werden soll.                                 |
 | init()                                              | Methode | Initialisiert diese Component neu und setzt dabei alle Properties zurück.                                 |
-| hasNext()                                           | Methode | Liefert einen Wahrheitswert, der angibt, ob es einen nächster Schritt in der Tour gibt.                   |
-| hasPrevious()                                       | Methode | Liefert einen Wahrheitswert, der angibt, ob es einen voherigen Schritt in der Tour gibt.                  |
-| next()                                              | Methode | Lässt die Tour einen Schritt voranschreiten und Aktualisiert die Tour-Hint Komponente für das neue Ziel.  |
-| prev()                                              | Methode | Lässt die Tour einen Schritt zurückschreiten und Aktualisiert die Tour-Hint Komponente für das neue Ziel. |
-| close(dontShowAgain: boolean = false)               | Methode | Schließt die Tour-Hint Komponente und gibt an, ob diese nicht nochmal angezeigt werden soll.              |
+| hasNext()                                           | Methode | Liefert einen Wahrheitswert, der angibt, ob es einen nächsten Schritt in der Tour gibt.                   |
+| hasPrevious()                                       | Methode | Liefert einen Wahrheitswert, der angibt, ob es einen vorherigen Schritt in der Tour gibt.                 |
+| next()                                              | Methode | Lässt die Tour einen Schritt voranschreiten und aktualisiert die Tour-Hint-Komponente für das neue Ziel.  |
+| prev()                                              | Methode | Lässt die Tour einen Schritt zurückschreiten und aktualisiert die Tour-Hint-Komponente für das neue Ziel. |
+| close(dontShowAgain: boolean = false)               | Methode | Schließt die Tour-Hint-Komponente und gibt an, ob diese nicht noch einmal angezeigt werden soll.          |
 | onClose(listener: (dontShowAgain: boolean) => void) | Methode | Registriert einen Listener, der auf das Schließen der Komponente hört.                                    |
 
 ## Beispiele
@@ -89,7 +89,7 @@ private basicHint: ILuxTourHintStepConfig = {
   targetId: "myInput",
   data: {
     title: "Hinweis",
-    content: "Hier können Sie eine Bewertung zurück lassen"
+    content: "Hier können Sie eine Bewertung zurücklassen"
   }
 };
 
@@ -137,7 +137,7 @@ private basicTour: ILuxTourHintStepConfig[] = [
     targetId: "button2",
     data: {
       title: "Aktionen",
-      content: "Wenn Sie diesen Knopf drücken wird ihre Bewertung unwiederruflich abgeschickt."
+      content: "Wenn Sie diesen Knopf drücken, wird Ihre Bewertung unwiderruflich abgeschickt."
     }
   },
 ];
@@ -174,7 +174,7 @@ Html
 
 ![Beispielbild 05](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐tour-hint-v21-img-05.png)
 
-Hierfür kann bei dem Öffnen der Tour-Hint Komponente einfach ein 'false' als 2. Parameter mitgegeben werden:
+Hierfür kann beim Öffnen der Tour-Hint-Komponente einfach ein 'false' als zweiten Parameter mitgegeben werden:
 
 Ts
 
@@ -201,10 +201,10 @@ ngAfterViewInit(){
 
 ### Tastaturabkürzungen
 
-Mit den Pfeiltasten kann sich ganz einfach innerhalb einer Tour bewegt werden.\
-Mit der Entertaste schließt sich die Tour/ der Hint.
+Mit den Pfeiltasten kann man sich innerhalb einer Tour bewegen.
+Mit der Entertaste schließt sich die Tour bzw. der Hint.
 
 ### "Nicht wieder anzeigen" - Cache
 
-Wenn ein Hinweis oder eine Tour mit der Option "Nicht wieder anzeigen" geschlossen wird, ist eine id zu der Tour im Webbrowser abgespeichert, welche das erneute öffnen der Tour-Hint Komponente verhindert.\
-Mit der Methode LuxTourHintService.clearDSACacheForConfig(this.myTourConfig) kann die id aus der cache gelöscht werden und somit die Tour-Hint Komponente erneut geöffnet werden.
+Wenn ein Hinweis oder eine Tour mit der Option "Nicht wieder anzeigen" geschlossen wird, ist eine ID der Tour im Webbrowser gespeichert, welche das erneute Öffnen der Tour-Hint-Komponente verhindert.
+Mit der Methode `LuxTourHintService.clearDSACacheForConfig(this.myTourConfig)` kann die ID aus dem Cache gelöscht werden und somit die Tour-Hint-Komponente erneut geöffnet werden.

@@ -10,15 +10,15 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-label       |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-label    |
 
 ### @Input
 
-| Name  | Typ    | Beschreibung                                               |
-| ----- | ------ | ---------------------------------------------------------- |
-| luxId | string | Setzt die (HTML-)ID des spans, welches den Inhalt anzeigt. |
+| Name  | Typ    | Beschreibung                                                   |
+| ----- | ------ | -------------------------------------------------------------- |
+| luxId | string | Setzt die (HTML-)ID des span-Elements, das den Inhalt anzeigt. |
 
 ## Beispiel
 

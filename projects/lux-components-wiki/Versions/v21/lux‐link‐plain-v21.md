@@ -16,9 +16,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-link-plain  |
+| Name     | Beschreibung   |
+| -------- | -------------- |
+| selector | lux-link-plain |
 
 ### @Input
 
@@ -94,15 +94,14 @@ Html
 Html
 
 ```html
-Dies ist ein<lux-link-plain
+Dies ist ein <lux-link-plain
   luxLabel="Beispiel-Link"
   luxHref="http://www.ihk-gfi.de"
   luxCustomClass="my-custom-class"
-></lux-link-plain
->im Fließtext.
+></lux-link-plain> im Fließtext.
 ```
 
-scss
+Scss
 
 ```scss
 .my-custom-class {

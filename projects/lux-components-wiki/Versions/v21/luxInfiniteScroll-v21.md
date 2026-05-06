@@ -21,7 +21,7 @@
 | Name                 | Typ                  | Beschreibung                                                             |
 | -------------------- | -------------------- | ------------------------------------------------------------------------ |
 | luxScrollPercent     | number               | Prozentzahl in der Scrollbar, ab der das luxScrolled-Event emitted wird. |
-| luxImmediateCallback | boolean              | Einstellung ob bei Initiierung ein luxScrolled-Event abgegeben wird.     |
+| luxImmediateCallback | boolean              | Einstellung, ob bei Initiierung ein luxScrolled-Event abgegeben wird.    |
 | luxIsLoading         | boolean              | Teilt der Komponente mit, ob gerade Daten geladen werden.                |
 | luxScrolled          | EventEmitter \<void> | Event, wenn das scrollende Element neue Daten bereitstellen sollte.      |
 

@@ -16,9 +16,9 @@ werden.
 
 ### Allgemein
 
-| Name     | Beschreibung      |
-| -------- | ----------------- |
-| selector | lux-markdown      |
+| Name     | Beschreibung                         |
+| -------- | ------------------------------------ |
+| selector | lux-markdown                         |
 | import   | @ihk-gfi/lux-components/lux-markdown |
 
 ### @Input
@@ -46,12 +46,12 @@ Ts
 ```typescript
 markdownData = `# Title
 ## Subtitle
-Show doch mal bei der [IHK-GfI](https://www.ihk-gfi.de) vorbei!
+Schau doch mal bei der [IHK-GfI](https://www.ihk-gfi.de) vorbei!
 
 ### Tabelle
-| Name     | Beschreibung      |
-| -------- | ----------------- |
-| selector | lux-markdown      |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-markdown |
 
 ### Aufzählung
 1. A

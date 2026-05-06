@@ -25,11 +25,11 @@
   - [22. Grid Auto Columns](#22-grid-auto-columns)
   - [23. Grid Auto Rows](#23-grid-auto-rows)
 
-Mit der Version Angular 16 wurde das Modul flex-layout deprecated. Dieses erforderte die Ergänzung der bisherigen Style-Klassen um zusätzliche Layout-Klassen. Wir haben uns dabei an dem Framework TailwindCSS orientiert und die CSS-Klassen für layout, flexbox und grid übernommen, sowohl bei der Namensgebung als auch bei den zugehörigen CSS-Regeln.
+Mit Angular 16 wurde das Modul `flex-layout` deprecated. Dies erforderte die Ergänzung der bisherigen Style-Klassen um zusätzliche Layout-Klassen. Wir haben uns dabei an dem Framework TailwindCSS orientiert und die CSS-Klassen für Layout, Flexbox und Grid übernommen, sowohl bei der Namensgebung als auch bei den zugehörigen CSS-Regeln.
 
 Siehe auch [Tailwind-Dokumentation](https://tailwindcss.com/docs/flex)
 
-Für die Anpassung der Breakpoints wurden sass-mixins erstellt und die neuen Layoutklassen können durch einen entsprechenden Prefix ergänzt werden. Die Werte für die Breakpoints und Namensgebung entsprechenden den bisherigen Bezeichnung der Angular-Material-Components auf denen die Lux-Components basieren.
+Für die Anpassung der Breakpoints wurden Sass-Mixins erstellt und die neuen Layoutklassen können durch einen entsprechenden Prefix ergänzt werden. Die Werte für die Breakpoints und die Namensgebung entsprechen den bisherigen Bezeichnungen der Angular-Material-Components, auf denen die LUX-Components basieren.
 
 Siehe dazu: [Austauschmöglichkeiten für Angular/Flex-Layout](Replace-FxLayout-v21.md).
 
@@ -37,8 +37,8 @@ Siehe dazu: [Austauschmöglichkeiten für Angular/Flex-Layout](Replace-FxLayout-
 
 | Klasse                     | CSS-Regel                 | Beschreibung                                                                                                                                                                                                               |
 | :------------------------- | :------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| lux-flex                   | display: flex;            | Erzeugt einen Flex-Container als blocklevel Element.[css flexible layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout)                                                                        |
-| lux-block                  | display: block;           | Erzeugt einen Block-Container als blocklevel Element.                                                                                                                                                                      |
+| lux-flex                   | display: flex;            | Erzeugt einen Flex-Container als Block-Element. [css flexible layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_flexible_box_layout)                                                                            |
+| lux-block                  | display: block;           | Erzeugt einen Block-Container.                                                                                                                                                                                             |
 | lux-grid                   | display: grid;            | Erzeugt einen Grid-Container.                                                                                                                                                                                              |
 | lux-inline-flex            | display: inline-flex;     | Erzeugt einen Flex-Container als inline Element.                                                                                                                                                                           |
 | lux-inline-block           | display: inline-block;    | Erzeugt einen Block-Container als inline Element.                                                                                                                                                                          |
@@ -76,10 +76,10 @@ Klassen für die initiale Größe von flex-items.
 | lux-flex-basis-40   | flex-basis: 10rem;   (160px)  |              |
 | lux-flex-basis-44   | flex-basis: 11rem;   (176px)  |              |
 | lux-flex-basis-48   | flex-basis: 12rem;  (192px)   |              |
-| lux-flex-basis-52   | flex-basis: 13rem; (208px*/   |              |
+| lux-flex-basis-52   | flex-basis: 13rem; (208px)    |              |
 | lux-flex-basis-56   | flex-basis: 14rem; (224px)    |              |
 | lux-flex-basis-60   | flex-basis: 15rem; (240px)    |              |
-| lux-flex-basis-64   | flex-basis: 16rem; /*256px*/  |              |
+| lux-flex-basis-64   | flex-basis: 16rem; (256px)    |              |
 | lux-flex-basis-72   | flex-basis: 18rem; (288px)    |              |
 | lux-flex-basis-80   | flex-basis: 20rem;  (320px)   |              |
 | lux-flex-basis-96   | flex-basis: 24rem;  (384px)   |              |
@@ -97,17 +97,17 @@ Klassen für die initiale Größe von flex-items.
 | lux-flex-basis-7/10 | flex-basis: 70%;              |              |
 | lux-flex-basis-8/10 | flex-basis: 80%;              |              |
 | lux-flex-basis-9/10 | flex-basis: 90%;              |              |
-</table>
 
 ## 3. Flex-Direction
 
 Klassen für die Ausrichtung der Hauptachse in einer Flexbox
-| Klasse               | CSS-Regel                    | Beschreibung                                                          |
-| :------------------- | :--------------------------- | :-------------------------------------------------------------------- |
-| lux-flex-row         | flex-direction: row;         | Richtet die Elemente in einer Reihe aus.                              |
-| lux-flex-row-reverse | flex-direction: row-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Reihe aus.   |
-| lux-flex-col         | flex-direction: col;         | Richtete die Elemente in einer Spalte aus.                            |
-| lux-flex-col-reverse | flex-direction: col-reverse; | Richtete die Elemente in umgekehrter Reihenfolge in einer Spalte aus. |
+
+| Klasse               | CSS-Regel                    | Beschreibung                                                         |
+| :------------------- | :--------------------------- | :------------------------------------------------------------------- |
+| lux-flex-row         | flex-direction: row;         | Richtet die Elemente in einer Reihe aus.                             |
+| lux-flex-row-reverse | flex-direction: row-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Reihe aus.  |
+| lux-flex-col         | flex-direction: col;         | Richtet die Elemente in einer Spalte aus.                            |
+| lux-flex-col-reverse | flex-direction: col-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Spalte aus. |
 
 ## 4. Flex Wrap
 
@@ -116,19 +116,19 @@ Klassen für den Zeilenumbruch in einer flex-row.
 | Klasse                | CSS-Regel                | Beschreibung                                                                                              |
 | :-------------------- | :----------------------- | :-------------------------------------------------------------------------------------------------------- |
 | lux-flex-wrap         | flex-wrap: wrap;         | Ermöglicht den Zeilenumbruch von Flex-Items in einer Flexbox.                                             |
-| lux-flex-nowrap       | flex-wrap: nowap;        | Verhindert den Zeilenumbruch von Flex-Items in einer Flexbox. Kann zu einem Overflow in der Reihe führen. |
+| lux-flex-nowrap       | flex-wrap: nowrap;       | Verhindert den Zeilenumbruch von Flex-Items in einer Flexbox. Kann zu einem Overflow in der Reihe führen. |
 | lux-flex-wrap-reverse | flex-wrap: wrap-reverse; | Ermöglicht den Zeilenumbruch von Flex-Items in einer Flexbox, in umgekehrter Reihenfolge.                 |
 
 ## 5. Flex
 
 Klassen um das Grow und Shrink-Verhalten der Flex-Items gleichzeitig zu steuern.
 
-| Klasse           | CSS-Regel                                   | Beschreibung                                                                                               |
-| :--------------- | :------------------------------------------ | :--------------------------------------------------------------------------------------------------------- |
-| lux-flex-1       | flex: 1 1 0%;                               | Erlaubt es dem Flex-Item zu schrumpfen und zu wachsen, ignoriert die initiale Größe.                       |
-| lux-flex-auto    | flex: 1 1 auto;                             | Erlaubt es dem Flex-Item zu schrumpfen und zu wachsen, unter Berücksichtigung der initialen Größe.         |
-| lux-flex-initial | flex: 0 1 auto;                             | Erlaubt es dem Flex-Item zu schrumpfen, aber nicht zu wachsen, unter Berücksichtigung der initialen Größe. |
-| lux-flex-none    | flex: none;(Äquivalent für flex: 0 0 auto;) | Verhindert das Schrumpfen oder Wachsen eines Flex-Items.                                                   |
+| Klasse           | CSS-Regel                                    | Beschreibung                                                                                               |
+| :--------------- | :------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| lux-flex-1       | flex: 1 1 0%;                                | Erlaubt es dem Flex-Item zu schrumpfen und zu wachsen, ignoriert die initiale Größe.                       |
+| lux-flex-auto    | flex: 1 1 auto;                              | Erlaubt es dem Flex-Item zu schrumpfen und zu wachsen, unter Berücksichtigung der initialen Größe.         |
+| lux-flex-initial | flex: 0 1 auto;                              | Erlaubt es dem Flex-Item zu schrumpfen, aber nicht zu wachsen, unter Berücksichtigung der initialen Größe. |
+| lux-flex-none    | flex: none; (Äquivalent für flex: 0 0 auto;) | Verhindert das Schrumpfen oder Wachsen eines Flex-Items.                                                   |
 
 ## 6. Flex Grow / Shrink
 

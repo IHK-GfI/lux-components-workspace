@@ -21,7 +21,7 @@ Damit nicht alle Entwickler zwanghaft allen LUX-Components eine LUX-Tag-Id setze
 `LuxTagIdDirective` und `LuxCustomTagIdDirective` eingeführt. Die `LuxTagIdDirective`-Directive versucht, die LUX-Tag-Ids automatisch zu generieren. Um eine
 Eindeutigkeit zu gewährleisten, sammelt die Direktive die LUX-Tag-Ids der Eltern ein und konkateniert diese z.B. mit
 dem Label oder Controlbinding. Wenn die Direktive einmal nicht in der Lage ist, eine LUX-Tag-Id zu generieren,
-wird eine Warnung in der Console ausgegeben. In diesen Fällen muss der Entwickler die LUX-Tag-Id manuell (z.B
+wird eine Warnung in der Konsole ausgegeben. In diesen Fällen muss der Entwickler die LUX-Tag-Id manuell (z.B.
 über das Attribut `luxTagId` oder mit der `LuxCustomTagIdDirective`-Directive) angeben.
 
 ### Generierte LUX-Tag-Id
@@ -100,7 +100,7 @@ HTML-Ausgabe:
 </lux-card>
 ```
 
-Anmerkung: Das Attribut `luxCustomTagIdSelector` muss nicht angegeben werden. Wenn das Attribut fehlt, wird das wird das Element verwendet, an dem es definiert wurde.
+Anmerkung: Das Attribut `luxCustomTagIdSelector` muss nicht angegeben werden. Wenn das Attribut fehlt, wird das Element verwendet, an dem es definiert wurde.
 
 ## Konfiguration
 

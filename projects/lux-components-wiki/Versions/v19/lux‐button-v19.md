@@ -22,28 +22,28 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-button      |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-button   |
 
 ### @Input
 
-| Name                  | Typ                             | Beschreibung                                                                                                                                                                                              |
-| --------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxType               | 'button' \| 'reset' \| 'submit' | Bestimmt den Typ des Buttons, das bestimmt ob in einem ReactiveForm der jeweilige "submit" oder "reset" bzw. kein Form-Event ausgestoßen wird ("button"). Mögliche Werte: "submit", "reset", "button"     |
-| luxLabel              | string                          | Bestimmt das Label, welches in dieser Component angezeigt werden soll.                                                                                                                                    |
-| luxColor              | LuxThemePalette                 | Diese Property definiert die Farben der Component.                                                                                                                                                        |
-| luxRaised             | boolean                         | Gibt an, ob der Button hervorgehoben wird.                                                                                                                                                                |
-| luxStroked            | boolean                         | Gibt an, ob der Button eine Outline erhält.                                                                                                                                                               |
-| luxIconName           | string                          | Ein LUX-Iconname.                                                                                                                                                                                         |
-| luxIconShowRight      | boolean                         | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                               |
-| luxTagId              | string                          | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                             |
-| luxDisabled           | boolean                         | Gibt an, ob das Element deaktiviert ist.                                                                                                                                                                  |
-| luxRounded            | boolean                         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                                      |
-| luxIconAlignWithLabel | boolean                         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                                  |
-| luxThrottleTime       | number                          | Verhindert, dass ein Button mehrfach hinter einander ausgelöst wird. Über diese Property kann mann den Standardwert aus der [Config - buttonConfiguration](config-v19#buttonConfiguration) überschreiben. |
-| luxButtonBadge        | string                          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.          |
-| luxButtonBadgeColor   | LuxThemePalette                 | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                                      |
+| Name                  | Typ                             | Beschreibung                                                                                                                                                                                            |
+| --------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxType               | 'button' \| 'reset' \| 'submit' | Bestimmt den Typ des Buttons, das bestimmt, ob in einem ReactiveForm der jeweilige "submit" oder "reset" bzw. kein Form-Event ausgestoßen wird ("button"). Mögliche Werte: "submit", "reset", "button"  |
+| luxLabel              | string                          | Bestimmt das Label, welches in dieser Component angezeigt werden soll.                                                                                                                                  |
+| luxColor              | LuxThemePalette                 | Diese Property definiert die Farben der Component.                                                                                                                                                      |
+| luxRaised             | boolean                         | Gibt an, ob der Button hervorgehoben wird.                                                                                                                                                              |
+| luxStroked            | boolean                         | Gibt an, ob der Button eine Outline erhält.                                                                                                                                                             |
+| luxIconName           | string                          | Ein LUX-Iconname.                                                                                                                                                                                       |
+| luxIconShowRight      | boolean                         | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                             |
+| luxTagId              | string                          | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                                                           |
+| luxDisabled           | boolean                         | Gibt an, ob das Element deaktiviert ist.                                                                                                                                                                |
+| luxRounded            | boolean                         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                                    |
+| luxIconAlignWithLabel | boolean                         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                                |
+| luxThrottleTime       | number                          | Verhindert, dass ein Button mehrfach hintereinander ausgelöst wird. Über diese Property kann man den Standardwert aus der [Config - buttonConfiguration](config-v19#buttonConfiguration) überschreiben. |
+| luxButtonBadge        | string                          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.        |
+| luxButtonBadgeColor   | LuxThemePalette                 | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                                    |
 
 ### @Output
 

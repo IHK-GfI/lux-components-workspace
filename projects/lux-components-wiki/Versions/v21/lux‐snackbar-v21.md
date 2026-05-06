@@ -18,9 +18,9 @@
 
 ### Allgemein
 
-| Name   | Beschreibung       |
-| ------ | ------------------ |
-| name   | LuxSnackbarService |
+| Name | Beschreibung       |
+| ---- | ------------------ |
+| name | LuxSnackbarService |
 
 | Funktion                                                                               | Beschreibung                                                                                                                 |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -55,7 +55,7 @@ Diese Klasse ermöglicht die Konfiguration der anzuzeigenden Snackbar.
 | text        | string                     | Diese Property legt den Text der Snackbar fest.                                            |
 | textColor   | string                     | Bestimmt die Text-Farbe (beliebiger CSS-Farbwert eintragbar). Bestimmt die Text-Farbe.     |
 | action      | string                     | Über diese Eigenschaft kann der Text einer Action gesetzt werden.                          |
-| actionColor | stringF                    | Bestimmt die Action-Farbe (beliebiger CSS-Farbwert eintragbar). Bestimmt die Action-Farbe. |
+| actionColor | string                     | Bestimmt die Action-Farbe (beliebiger CSS-Farbwert eintragbar). Bestimmt die Action-Farbe. |
 
 ## Beispiele
 

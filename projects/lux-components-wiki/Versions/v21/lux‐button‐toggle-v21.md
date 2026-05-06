@@ -18,7 +18,7 @@
 | -------- | ----------------- |
 | selector | lux-button-toggle |
 
-Hinweis: Die Komponente benötigt mindestens 2 Optionen in `luxOptions`.
+Hinweis: Die Komponente benötigt mindestens zwei Optionen in `luxOptions`.
 
 ### @Input
 

@@ -14,16 +14,16 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-divider     |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-divider  |
 
 ### @Input
 
-| Name        | Typ     | Beschreibung                                                                                                         |
-| ----------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
-| luxInset    | boolean | Bestimmt ob der Divider über die komplette Breite der aktuellen Komponente geht oder nur mit einem leichten Versatz. |
-| luxVertical | boolean | Bestimmt ob der Divider vertikal oder horizontal dargestellt wird.                                                   |
+| Name        | Typ     | Beschreibung                                                                                                          |
+| ----------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
+| luxInset    | boolean | Bestimmt, ob der Divider über die komplette Breite der aktuellen Komponente geht oder nur mit einem leichten Versatz. |
+| luxVertical | boolean | Bestimmt, ob der Divider vertikal oder horizontal dargestellt wird.                                                   |
 
 ## Beispiele
 

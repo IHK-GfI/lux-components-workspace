@@ -37,28 +37,28 @@ Komponente zur Darstellung des Applikationsheaders. Hier können ein seitliches 
 
 > Bitte darauf achten, dass kein Parent-Element des Headers einen niedrigen z-index-Wert setzt, da ansonsten das seitliche Menü nicht mehr korrekt über den anderen Elementen liegt und der Overlay ebenfalls fehlerhaft ist.
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-app-header  |
+| Name     | Beschreibung   |
+| -------- | -------------- |
+| selector | lux-app-header |
 
 ### @Input
 
-| Name                       | Typ      | Beschreibung                                                                                                                                                                                              |
-| -------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxAppTitle                | string   | Applikationstitel (z.B. LUX Components)                                                                                                                                                                   |
-| luxAppTitleShort           | string   | Applikationstitel in kurz (wird für Mobilansichten verwendet)                                                                                                                                             |
-| luxUserName                | string   | Benutzername (z.B. Max Mustermann)                                                                                                                                                                        |
-| luxIconName                | string   | Ein LUX-Iconname. Das Icon wird ausschließlich angezeigt, wenn keine LUX-SIDE-NAV (das Appmenü) verwendet wird.                                                                                           |
-| luxImageSrc                | string   | Quelle des Bildes (z.B. assets/images/example.svg). Das Icon wird ausschließlich angezeigt, wenn keine LUX-SIDE-NAV (das Appmenü) verwendet wird.                                                         |
-| luxImageHeight             | string   | Über diese Property kann die Höhe des Bildes (siehe luxImageSrc) beeinflusst werden.                                                                                                                      |
-| luxAriaRoleHeaderLabel     | string   | Aria-Label (z.B. für Screenreader) für das Attribute "role" mit dem Wert "banner". Wenn man den Wert auf '' setzt, wird kein Attribute "role" gesetzt.                                                    |
-| luxAriaAppMenuButtonLabel  | string   | Aria-Label (z.B. für Screenreader) für den Appmenübutton.                                                                                                                                                 |
-| luxAriaUserMenuButtonLabel | string   | Aria-Label (z.B. für Screenreader) für den Benutzermenübutton.                                                                                                                                            |
-| luxAriaTitleIconLabel      | string   | Aria-Label (z.B. für Screenreader) für das Titelicon (nur wenn ein Link hinterlegt ist). Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'Titelicon / Zur Hauptseite wechseln' ändern.   |
-| luxAriaTitleImageLabel     | string   | Aria-Label (z.B. für Screenreader) für das Titelimage (nur wenn ein Link hinterlegt ist). Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'Titelimage / Zur Hauptseite wechseln' ändern. |
-| luxAriaTitleLinkLabel      | string   | Aria-Label (z.B. für Screenreader) für Apptitel (nur wenn ein Link hinterlegt ist). Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'LUX Components / Zur Hauptseite wechseln' ändern.   |
-| luxLocaleSupported         | string[] | Array mit den unterstützten Sprachen. Die Sprachauswahl wird erst im App-Header angezeigt, wenn mindestens 2 Sprachen angegeben wurden.                                                                   |
-| luxLocaleBaseHref          | string   | Der BaseHref, wie z.B. '/subdomain/'                                                                                                                                                                      |
+| Name                       | Typ      | Beschreibung                                                                                                                                                                                                |
+| -------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxAppTitle                | string   | Applikationstitel (z.B. LUX Components)                                                                                                                                                                     |
+| luxAppTitleShort           | string   | Applikationstitel in Kurzform (wird für Mobilansichten verwendet)                                                                                                                                           |
+| luxUserName                | string   | Benutzername (z.B. Max Mustermann)                                                                                                                                                                          |
+| luxIconName                | string   | Ein LUX-Iconname. Das Icon wird ausschließlich angezeigt, wenn keine LUX-SIDE-NAV (das Appmenü) verwendet wird.                                                                                             |
+| luxImageSrc                | string   | Quelle des Bildes (z.B. assets/images/example.svg). Das Icon wird ausschließlich angezeigt, wenn keine LUX-SIDE-NAV (das Appmenü) verwendet wird.                                                           |
+| luxImageHeight             | string   | Über diese Property kann die Höhe des Bildes (siehe luxImageSrc) beeinflusst werden.                                                                                                                        |
+| luxAriaRoleHeaderLabel     | string   | Aria-Label (z.B. für Screenreader) für das Attribut "role" mit dem Wert "banner". Wenn man den Wert auf '' setzt, wird kein Attribut "role" gesetzt.                                                        |
+| luxAriaAppMenuButtonLabel  | string   | Aria-Label (z.B. für Screenreader) für den Appmenübutton.                                                                                                                                                   |
+| luxAriaUserMenuButtonLabel | string   | Aria-Label (z.B. für Screenreader) für den Benutzermenübutton.                                                                                                                                              |
+| luxAriaTitleIconLabel      | string   | Aria-Label (z.B. für Screenreader) für das Titel-Icon (nur wenn ein Link hinterlegt ist). Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'Titel-Icon / Zur Hauptseite wechseln' ändern.   |
+| luxAriaTitleImageLabel     | string   | Aria-Label (z.B. für Screenreader) für das Titel-Image (nur wenn ein Link hinterlegt ist). Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'Titel-Image / Zur Hauptseite wechseln' ändern. |
+| luxAriaTitleLinkLabel      | string   | Aria-Label (z.B. für Screenreader) für Apptitel (nur wenn ein Link hinterlegt ist). Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'LUX Components / Zur Hauptseite wechseln' ändern.     |
+| luxLocaleSupported         | string[] | Array mit den unterstützten Sprachen. Die Sprachauswahl wird erst im App-Header angezeigt, wenn mindestens 2 Sprachen angegeben wurden.                                                                     |
+| luxLocaleBaseHref          | string   | Der BaseHref, wie z.B. '/subdomain/'                                                                                                                                                                        |
 
 ### @Output
 
@@ -120,16 +120,16 @@ Komponente, welche einen einzelnen Eintrag in der seitlichen Navigation darstell
 
 #### @Input
 
-| Name            | Typ     | Beschreibung                                                                                                                                      |
-| --------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxLabel        | string  | Bestimmt das Label dieses Navigationsmenüeintrags.                                                                                                |
-| luxDisabled     | boolean | Bestimmt ob dieser Menüeintrag deaktiviert ist oder nicht.                                                                                        |
-| luxTagId        | string  | Enthält die TagId, die für die automatischen Tests wichtig ist.                                                                                   |
-| luxSelected     | boolean | Bestimmt ob dieser Eintrag als selektiert dargestellt wird. Es findet keine Prüfung auf Selektion mit den anderen Einträgen dieser SideNav statt. |
-| luxCloseOnClick | boolean | Bestimmt ob ein Klick auf diesen Eintrag das SideNav schließt oder nicht.                                                                         |
-| luxIconName     | string  | Enthält den Namen des Icons für diesen Eintrag (optional).                                                                                        |
-| luxExpandable   | boolean | Bestimmt, ob dieses Item ausklappbar ist.                                                                                                         |
-| luxExpanded     | boolean | Dieses Flag legt fest ob der Eintrag aktuell ausgeklappt ist.                                                                                     |
+| Name            | Typ     | Beschreibung                                                                                                                                       |
+| --------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxLabel        | string  | Bestimmt das Label dieses Navigationsmenüeintrags.                                                                                                 |
+| luxDisabled     | boolean | Bestimmt, ob dieser Menüeintrag deaktiviert ist oder nicht.                                                                                        |
+| luxTagId        | string  | Enthält die TagId, die für die automatischen Tests wichtig ist.                                                                                    |
+| luxSelected     | boolean | Bestimmt, ob dieser Eintrag als selektiert dargestellt wird. Es findet keine Prüfung auf Selektion mit den anderen Einträgen dieser SideNav statt. |
+| luxCloseOnClick | boolean | Bestimmt, ob ein Klick auf diesen Eintrag das SideNav schließt oder nicht.                                                                         |
+| luxIconName     | string  | Enthält den Namen des Icons für diesen Eintrag (optional).                                                                                         |
+| luxExpandable   | boolean | Bestimmt, ob dieses Item ausklappbar ist.                                                                                                          |
+| luxExpanded     | boolean | Dieses Flag legt fest ob der Eintrag aktuell ausgeklappt ist.                                                                                      |
 
 #### @Output
 

@@ -29,11 +29,11 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
 
 ## Local Storage
 
-Folende Komponenten nutzen den Local Storage des Browsers, wenn in der [Config](config-v21) die Property _useLocalStorageForComponentsAllowed_ gesetzt ist.
+Folgende Komponenten nutzen den Local Storage des Browsers, wenn in der [Config](config-v21) die Property _useLocalStorageForComponentsAllowed_ gesetzt ist.
 
 ### lux-theme
 
-Das LUX-Theme nutzt den Local Storage um zu speichern, welches Theme ausgewählt wurde.
+Das LUX-Theme nutzt den Local Storage, um zu speichern, welches Theme ausgewählt wurde.
 
 |            |                                                                                           |
 | ---------- | ----------------------------------------------------------------------------------------- |
@@ -45,7 +45,7 @@ Das LUX-Theme nutzt den Local Storage um zu speichern, welches Theme ausgewählt
 
 ### lux-tour-hint
 
-Der LUX-Tour-Hinweis nutzt den Local Storage um zu speichern, ob ein Hinweis nicht erneut angezeigt werden soll.
+Der LUX-Tour-Hinweis nutzt den Local Storage, um zu speichern, ob ein Hinweis nicht erneut angezeigt werden soll.
 
 |            |                                                                                                                                 |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -57,7 +57,7 @@ Der LUX-Tour-Hinweis nutzt den Local Storage um zu speichern, ob ein Hinweis nic
 
 ### lux-table
 
-Die LUX-Table nutzt den Local Storage um zu speichern, welche Tabellen ausgeblendet wurden, aber nur wenn das Feature "Spalten ausblenden" (siehe Property " luxShowColumnSelector ")  verwendet wird.
+Die LUX-Table nutzt den Local Storage, um zu speichern, welche Tabellen ausgeblendet wurden, aber nur, wenn das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet wird.
 
 |            |                                                                                                                                                                                                                                                                                       |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -65,7 +65,7 @@ Die LUX-Table nutzt den Local Storage um zu speichern, welche Tabellen ausgeblen
 | Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                         |
 | Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                      |
 | Beispiel   | lux-demo-table-example=\["name", "symbol"\]                                                                                                                                                                                                                                           |
-| Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector")  verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
+| Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
 
 ## Versionen
 

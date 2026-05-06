@@ -12,10 +12,11 @@
       - [Allgemein](#allgemein-1)
       - [@Input](#input-1)
     - [LuxAppHeaderAcUserMenu](#luxappheaderacusermenu)
-    - [LuxAppHeaderAcNavMenu](#luxappheaderacnavmenu)
       - [@Input](#input-2)
-    - [LuxAppHeaderAcNavMenuItem](#luxappheaderacnavmenuitem)
+    - [LuxAppHeaderAcNavMenu](#luxappheaderacnavmenu)
       - [@Input](#input-3)
+    - [LuxAppHeaderAcNavMenuItem](#luxappheaderacnavmenuitem)
+      - [@Input](#input-4)
     - [LuxAppHeaderAcActionNavComponent](#luxappheaderacactionnavcomponent)
   - [Beispiele](#beispiele)
     - [1. Header mit User-Menu, Sprachwechsler und Navigations-Menu](#1-header-mit-user-menu-sprachwechsler-und-navigations-menu)
@@ -27,8 +28,8 @@
 
 ### Allgemein
 
-App-Header für das Theme Authentic. Der Header wird in zwei Zeilen aufgeteilt. In der oberen "Top-Bar" werden ein Icon für die jeweilige IHK und ein individuelles App-Icon angezeigt. Diese sollen mit den Links zur Hompage oder Start-Seite der App veknüpft werden. Weiterhin können hier optional eigene Action-Menüs und ein User-Menu eingefügt werden.
-Darunter befindet sich Zeile in der die Nav-Bar angezeigt wird.
+App-Header für das Theme Authentic. Der Header wird in zwei Zeilen aufgeteilt. In der oberen "Top-Bar" werden ein Icon für die jeweilige IHK und ein individuelles App-Icon angezeigt. Diese sollen mit den Links zur Homepage oder Start-Seite der App verknüpft werden. Weiterhin können hier optional eigene Action-Menüs und ein User-Menu eingefügt werden.
+Darunter befindet sich eine Zeile, in der die Nav-Bar angezeigt wird.
 
 | Name     | Beschreibung      |
 | -------- | ----------------- |
@@ -39,18 +40,18 @@ Darunter befindet sich Zeile in der die Nav-Bar angezeigt wird.
 | Name                       | Typ      | Beschreibung                                                                                                                                                                             |
 | -------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxAppTitle                | string   | Applikationstitel (z.B. LUX Components)                                                                                                                                                  |
-| luxAppTitleShort           | string   | Applikationstitel in kurz (wird für Mobilansichten verwendet)                                                                                                                            |
+| luxAppTitleShort           | string   | Applikationstitel in Kurzform (wird für Mobilansichten verwendet)                                                                                                                            |
 | luxUserName                | string   | Benutzername (z.B. Max Mustermann)                                                                                                                                                       |
 | luxUserEmail               | string   | Email (z.B. max@mustermann.example.com)                                                                                                                                                  |
 | luxBrandLogoSrc            | string   | Relative Pfadangabe zur Logodatei z.B. "assets/logos/brandlogo.svg"                                                                                                                      |
 | luxHideBrandLogo           | boolean  | Flag zum Ausblenden des Brandlogos des Headers, default = false                                                                                                                          |
-| luxAppLogoSrc              | string   | Relative Pfadangabe zum Appicon, dieses Icon soll gleichzeitig als favicon verwendet werden z.B. "assets/favicons/favicon.svg"                                                           |
-| luxHideAppLogo             | boolean  | Flag zum Ausblenden der Applogos des Headers, default = false                                                                                                                            |
+| luxAppLogoSrc              | string   | Relative Pfadangabe zum App-Icon, dieses Icon soll gleichzeitig als favicon verwendet werden z.B. "assets/favicons/favicon.svg"                                                           |
+| luxHideAppLogo             | boolean  | Flag zum Ausblenden der App-Logos des Headers, default = false                                                                                                                            |
 | luxHideTopBar              | boolean  | Flag zum Ausblenden der Topbar des Headers, default = false                                                                                                                              |
 | luxHideNavBar              | boolean  | Flag zum Ausblenden der Navbar des Headers, default = false                                                                                                                              |
 | luxAriaUserMenuButtonLabel | string   | Aria-Label (z.B. für Screenreader) für den Benutzermenübutton.                                                                                                                           |
 | luxAriaRoleHeaderLabel     | string   | Aria-Label (z.B. für Screenreader) für das Attribute "role" mit dem Wert "banner". Wenn man den Wert auf '' setzt, wird kein Attribute "role" gesetzt.                                   |
-| luxAriaTitleIconLabel      | string   | Aria-Label (z.B. für Screenreader) für das Appicon in der Mitte der Topbar. Wenn der Link zur Startseite führt, könnte man den Wert auch auf 'Appicon / Zur Hauptseite wechseln' ändern. |
+| luxAriaTitleIconLabel      | string   | Aria-Label (z.B. für Screenreader) für das App-Icon in der Mitte der Top-Bar. Wenn der Link zur Startseite führt, könnte man den Wert auch auf 'App-Icon / Zur Hauptseite wechseln' ändern. |
 | luxAriaTitleImageLabel     | string   | Aria-Label (z.B. für Screenreader) für das Titelimage. Wenn der Link zur Hauptseite führt, könnte man den Wert auch auf 'Brandlogo / Zur Hauptseite wechseln' ändern.                    |
 | luxLocaleSupported         | string[] | Array mit den unterstützten Sprachen. Die Sprachauswahl wird erst im App-Header angezeigt, wenn mindestens 2 Sprachen angegeben wurden.                                                  |
 | luxLocaleBaseHref          | string   | Der BaseHref, wie z.B. '/subdomain/'                                                                                                                                                     |
@@ -340,7 +341,7 @@ Ts
 ```typescript
 const myConfiguration: LuxComponentsConfigParameters = {
   viewConfiguration: {
-    centerdView: true,
+    centeredView: true,
     centeredWidth: '1000px'
   }
 };

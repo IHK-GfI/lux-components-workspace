@@ -21,12 +21,11 @@
 
 | Name                | Typ             | Beschreibung                                                                                                                            |
 | ------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| luxTooltipDisabled  | boolean         | Bestimmt ob der Tooltip deaktiviert ist oder nicht.                                                                                     |
-| luxTooltipHideDelay | number          | Bestimmt die zeitliche Verzögerung in ms bis der Tooltip ausgeblendet wird.                                                             |
-| luxTooltipShowDelay | number          | Bestimmt die zeitliche Verzögerung in ms bis der Tooltip eingeblendet wird.                                                             |
+| luxTooltipDisabled  | boolean         | Bestimmt, ob der Tooltip deaktiviert ist oder nicht.                                                                                    |
+| luxTooltipHideDelay | number          | Bestimmt die zeitliche Verzögerung in ms, bis der Tooltip ausgeblendet wird.                                                            |
+| luxTooltipShowDelay | number          | Bestimmt die zeitliche Verzögerung in ms, bis der Tooltip eingeblendet wird.                                                            |
 | luxTooltip          | string          | Beinhaltet den Text des Tooltips.                                                                                                       |
-| luxTooltipPosition  | TooltipPosition | Bestimmt die Position des Tooltips im Verhältnis zum Host-Element. Mögliche Werte: 'below', 'after', 'left', 'right', 'before', 'after' |
-| luxTooltipDisabled  | boolean         | Bestimmt ob der Tooltip deaktiviert ist, oder nicht.                                                                                    |
+| luxTooltipPosition  | TooltipPosition | Bestimmt die Position des Tooltips im Verhältnis zum Host-Element. Mögliche Werte: 'below', 'after', 'left', 'right', 'before', 'above' |
 
 ## Beispiel
 

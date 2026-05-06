@@ -15,9 +15,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung  |
-| -------- | ------------- |
-| selector | lux-image     |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-image    |
 
 ### @Input
 
@@ -25,7 +25,7 @@
 | -------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxImageSrc    | string  | Pfad zur Bild-Datei, wenn es eine lokale Datei ist, muss das Bild unter dem Ordner /assets liegen. Beispiel: luxImageSrc="/assets/svgs/beispiel.svg"                    |
 | luxImageWidth  | string  | Bestimmt die Breite des Bildes, hier können alle (CSS) bekannten Größen eingegeben werden. Beispiel: luxImageWidth="100%", luxImageWidth="10em", luxImageWidth="100px"  |
-| luxImageHeight | boolean | Bestimmt die Höhe des Bildes, hier können alle (CSS) bekannten Größen eingegeben werden. Beispiel: luxImageHeight="100%", luxImageHeight="10em", luxImageHeight="100px" |
+| luxImageHeight | string  | Bestimmt die Höhe des Bildes, hier können alle (CSS) bekannten Größen eingegeben werden. Beispiel: luxImageHeight="100%", luxImageHeight="10em", luxImageHeight="100px" |
 | luxRawSrc      | boolean | Deaktiviert wenn "true" jegliche Bearbeitung der luxImageSrc durch diese Component. Dadurch sind relativ liegende Image-Links erreichbar (z.B. /fb/test.png).           |
 | luxAlt         | string  | Eine Bildbeschreibung.                                                                                                                                                  |
 

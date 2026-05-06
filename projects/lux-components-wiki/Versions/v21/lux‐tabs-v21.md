@@ -22,19 +22,19 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-tabs        |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-tabs     |
 
 ### @Input
 
-| Name                  | Typ     | Beschreibung                                                                                                                                   |
-| --------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxActiveTab          | number  | Bestimmt den Starttab, der immer angezeigt werden soll. Wenn der Wert größer als die maximale Anzahl an Tabs ist wird der letzte Tab genommen. |
-| luxIconSize           | string  | Bestimmt die Größe der Icons innerhalb der Tab-Header, mögliche Werte analog zu denen der LuxIcons (1x,2x,3x,4x,5x).                           |
-| luxTagId              | string  | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                  |
-| luxDisplayDivider     | boolean | Bestimmt, ob der Trennstrich angezeigt wird. Mit Version 1.7.8 wird er Standardwert auf true geändert.                                         |
-| luxLazyLoading        | boolean | Bestimmt, ob die Tabs ihre Inhaltskomponenten direkt laden oder erst wenn ein Tab ausgewählt wird.                                             |
+| Name              | Typ     | Beschreibung                                                                                                                                    |
+| ----------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxActiveTab      | number  | Bestimmt den Starttab, der immer angezeigt werden soll. Wenn der Wert größer als die maximale Anzahl an Tabs ist, wird der letzte Tab genommen. |
+| luxIconSize       | string  | Bestimmt die Größe der Icons innerhalb der Tab-Header, mögliche Werte analog zu denen der LuxIcons (1x,2x,3x,4x,5x).                            |
+| luxTagId          | string  | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                   |
+| luxDisplayDivider | boolean | Bestimmt, ob der Trennstrich angezeigt wird. Mit Version 1.7.8 wird er Standardwert auf true geändert.                                          |
+| luxLazyLoading    | boolean | Bestimmt, ob die Tabs ihre Inhaltskomponenten direkt laden oder erst wenn ein Tab ausgewählt wird.                                              |
 
 ### @Output
 
@@ -57,20 +57,20 @@ Sie besitzt einen Header- und Content-Bereich und ist auch in der Lage, den Cont
 
 #### @Input
 
-| Name                | Typ                           | Beschreibung                                                                                                                                                                                                                              |
-| ------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxTitle            | string                        | Property für den Text, der im Tab selbst angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet.                                                                                                                                |
-| luxIconName         | string                        | Property für das Icon, welches im Tab angezeigt wird.                                                                                                                                                                                     |
-| luxImageSrc         | string                        | Property für das Bild, welches im Tab angezeigt wird. Wenn `luxIconName` gesetzt ist, wird diese Property ignoriert. D.h. es kann entweder `luxIconName` oder `luxImageSrc` verwendet werden, aber nicht beides.                          |
-| luxImageAlign       | 'left' \| 'center' \| 'right' | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                           |
-| luxImageWidth       | string                        | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                           |
-| luxImageHeight      | string                        | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                           |
-| luxCounter          | number                        | Property für einen optionalen Counter, welcher rechts vom Text im Tab angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet. (ab 1.7.14 wird der Counter auch in mobilen Ansichten angezeigt)                                  |
-| luxCounterCap       | number                        | Property die bestimmt bis zu welcher Zahl der Counter angezeigt werden soll. Höhere Zahlen werden mithilfe eines "+"-Symbols dargestellt (z.B. counter = 100, counterCap = 99 ==> Ausgabe: 99+)                                           |
-| luxShowNotification | boolean                       | Property die bestimmt ob und wie das Notifizierungssymbol angezeigt wird. Wenn der Wert true ist, wird ein aktives Symbol angezeigt, bei false ein ausgegrautes und bei undefined wird gar kein Symbol angezeigt. Default-Wert: undefined |
-| luxDisabled         | boolean                       | Bestimmt ob der Tab deaktiviert ist oder nicht. Default-Wert: false                                                                                                                                                                       |
-| luxTagIdHeader      | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                             |
-| luxTagIdContent     | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                             |
+| Name                | Typ                           | Beschreibung                                                                                                                                                                                                                               |
+| ------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| luxTitle            | string                        | Property für den Text, der im Tab selbst angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet.                                                                                                                                 |
+| luxIconName         | string                        | Property für das Icon, welches im Tab angezeigt wird.                                                                                                                                                                                      |
+| luxImageSrc         | string                        | Property für das Bild, welches im Tab angezeigt wird. Wenn `luxIconName` gesetzt ist, wird diese Property ignoriert. D.h. es kann entweder `luxIconName` oder `luxImageSrc` verwendet werden, aber nicht beides.                           |
+| luxImageAlign       | 'left' \| 'center' \| 'right' | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                            |
+| luxImageWidth       | string                        | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                            |
+| luxImageHeight      | string                        | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                            |
+| luxCounter          | number                        | Property für einen optionalen Counter, welcher rechts vom Text im Tab angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet. (ab 1.7.14 wird der Counter auch in mobilen Ansichten angezeigt)                                   |
+| luxCounterCap       | number                        | Property die bestimmt bis zu welcher Zahl der Counter angezeigt werden soll. Höhere Zahlen werden mithilfe eines "+"-Symbols dargestellt (z.B. counter = 100, counterCap = 99 ==> Ausgabe: 99+)                                            |
+| luxShowNotification | boolean                       | Property die bestimmt, ob und wie das Notifizierungssymbol angezeigt wird. Wenn der Wert true ist, wird ein aktives Symbol angezeigt, bei false ein ausgegrautes und bei undefined wird gar kein Symbol angezeigt. Default-Wert: undefined |
+| luxDisabled         | boolean                       | Bestimmt, ob der Tab deaktiviert ist oder nicht. Default-Wert: false                                                                                                                                                                       |
+| luxTagIdHeader      | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                              |
+| luxTagIdContent     | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                              |
 
 ## Classes / Interfaces
 

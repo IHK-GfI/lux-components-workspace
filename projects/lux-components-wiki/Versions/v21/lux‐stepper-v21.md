@@ -30,9 +30,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-stepper     |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-stepper  |
 
 ### @Input
 
@@ -49,7 +49,7 @@
 | luxPreviousButtonConfig          | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Zurück-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                         |
 | luxNextButtonConfig              | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Weiter-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                         |
 | luxFinishButtonConfig            | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Abschließen-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                    |
-| luxNumberAlignLeft               | boolean                 | Bestimmt ob der Inhalt in einem number-Input-Feld links- oder rechtsbündig dargestellt wird.                                                                                                                            |
+| luxNumberAlignLeft               | boolean                 | Bestimmt, ob der Inhalt in einem number-Input-Feld links- oder rechtsbündig dargestellt wird.                                                                                                                           |
 
 ### @Output
 
@@ -82,8 +82,8 @@ zusätzlich muss die FormGroup aktuell auch dem LuxStepContentComponent zugewies
 | -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | luxStepControl | FormGroup | Enthält die FormGroup, die für den aktuellen Step notwendig ist. Alternativ ist es ab 1.7.10 möglich, luxCompleted zu nutzen.                                            |
 | luxIconName    | string    | Enthält das Icon, welches für diesen Step angezeigt werden soll. Funktioniert nur, wenn der dazugehörige LuxStepper den Wert für luxUseCustomIcons auf true gesetzt hat. |
-| luxOptional    | boolean   | Bestimmt ob dieser Step optional ist. Greift nur, wenn kein luxStepControl gesetzt ist, welches invalid ist.                                                             |
-| luxEditable    | boolean   | Bestimmt ob dieser Step wieder angesteuert werden kann, nachdem er bearbeitet und verlassen wurde.                                                                       |
+| luxOptional    | boolean   | Bestimmt, ob dieser Step optional ist. Greift nur, wenn kein luxStepControl gesetzt ist, welches invalid ist.                                                            |
+| luxEditable    | boolean   | Bestimmt, ob dieser Step wieder angesteuert werden kann, nachdem er bearbeitet und verlassen wurde.                                                                      |
 | luxCompleted   | boolean   | Alternative zu luxStepControl, ermöglicht es die Validierung für den Step ohne eine FormGroup zu machen.                                                                 |
 
 ### LuxStepHeaderComponent

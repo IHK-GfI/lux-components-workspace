@@ -36,6 +36,6 @@ myPopupState = false;
 
 Html
 
-```typescript
-<lux-button luxIconName="lux-interface-setting-menu-1" [luxAriaHasPopup]="myPopupState" luxAriaLabel="Namen"></lux-button>
+```html
+<lux-button luxIconName="lux-interface-setting-menu-1" [luxAriaHasPopup]="myPopupState" luxAriaLabel="Name"></lux-button>
 ```

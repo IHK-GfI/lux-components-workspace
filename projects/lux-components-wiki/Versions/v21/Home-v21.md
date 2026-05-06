@@ -33,7 +33,7 @@ Details befinden sich auf der [Config](config-v21)-Seite.
 
 ## Layout
 
-Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu erstellen.
+Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu erstellen.
 
 - [Styling-Klassen](newlayoutclasses-v21)
 - [Liste der Austauschmöglichkeiten für die entfallenen Direktiven](replace-fxLayout-v21)

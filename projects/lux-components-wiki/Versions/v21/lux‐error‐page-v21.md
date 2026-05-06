@@ -70,7 +70,7 @@ Ts
 
 ```typescript
 constructor(private errorService: LuxErrorService) {
-    // Das ist optional, es wird ansonst eine Standard-Konfiguration gewählt. Die einzelnen Felder sind ebenfalls alle optional.
+    // Das ist optional, es wird ansonsten eine Standard-Konfiguration gewählt. Die einzelnen Felder sind ebenfalls alle optional.
     this.errorService.setConfig({
         iconName: 'lux-interface-delete-1',
         iconSize: '3x',

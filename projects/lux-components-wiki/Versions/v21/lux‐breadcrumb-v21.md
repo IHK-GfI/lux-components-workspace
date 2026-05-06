@@ -23,32 +23,32 @@
 
 ### LuxBreadcrumbComponent
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
+| Name     | Beschreibung   |
+| -------- | -------------- |
 | selector | lux-breadcrumb |
 
 #### @Input
 
-| Name       | Typ                     | Beschreibung                                                                     |
-| ---------- | ----------------------- | -------------------------------------------------------------------------------- |
-| luxEntries | ILuxBreadcrumbEntry[]  | Ein Array mit allen Einträgen des Breadcrumb                                    |
+| Name       | Typ                   | Beschreibung                                  |
+| ---------- | --------------------- | --------------------------------------------- |
+| luxEntries | ILuxBreadcrumbEntry[] | Ein Array mit allen Einträgen des Breadcrumbs |
 
 #### @Output
 
-| Name        | Typ                                  | Beschreibung                                                                                                         |
-| ----------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| luxClicked  | EventEmitter \<ILuxBreadcrumbEntry> | Output-Event welches ausgelöst wird, wenn ein Breadcrumb angeklickt wird. Gibt den entsprechenden Breadcrumb zurück. |
+| Name       | Typ                                 | Beschreibung                                                                                                         |
+| ---------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| luxClicked | EventEmitter \<ILuxBreadcrumbEntry> | Output-Event, welches ausgelöst wird, wenn ein Breadcrumb angeklickt wird und den entsprechenden Eintrag zurückgibt. |
 
 ## Interface
 
 ### ILuxBreadcrumbEntry
 
-Dieses Interface ist für die Ansicht und Reihenfolge der Breadcrumb Einträge da.
+Dieses Interface dient der Darstellung und Reihenfolge der Breadcrumb-Einträge.
 
-| Name  | Typ    | Beschreibung                                                                                      |
-| ----- | ------ | ------------------------------------------------------------------------------------------------- |
-| name  | string | Bestimmt den Namen der Url, der in den Breadcrumb angezeigt wird.                                |
-| url   | string | Hier wird der Pfad zu der gewünschten Seite eingetragen, die url kann auch leer gelassen werden.  |
+| Name | Typ    | Beschreibung                                                                                  |
+| ---- | ------ | --------------------------------------------------------------------------------------------- |
+| name | string | Bestimmt den Namen der URL, die im Breadcrumb angezeigt wird.                                 |
+| url  | string | Hier wird der Pfad zur gewünschten Seite eingetragen; die URL kann auch leer gelassen werden. |
 
 ## Beispiele
 

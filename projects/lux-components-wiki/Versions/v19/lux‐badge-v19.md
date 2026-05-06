@@ -13,17 +13,17 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-badge       |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-badge    |
 
 ### @Input
 
 | Name         | Typ           | Beschreibung                                                                                                    |
 | ------------ | ------------- | --------------------------------------------------------------------------------------------------------------- |
-| luxUppercase | boolean       | Bestimmt ob der Text innerhalb der Badge nur mit Großbuchstaben dargestellt wird.                               |
+| luxUppercase | boolean       | Bestimmt, ob der Text innerhalb der Badge nur mit Großbuchstaben dargestellt wird.                              |
 | luxIconName  | string        | Enthält den Namen des Icons, welches für die Badge angezeigt werden soll (z.B. 'lux-interface-setting-menu-1'). |
-| luxColor     | LuxBadgeColor | Bestimmt die Hintergrundfarbe und davon abhängig die Schrift- farbe des Badges.                                 |
+| luxColor     | LuxBadgeColor | Bestimmt die Hintergrundfarbe und davon abhängig die Schriftfarbe des Badges.                                   |
 
 #### ng-content
 

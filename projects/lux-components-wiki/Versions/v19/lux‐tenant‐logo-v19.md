@@ -17,13 +17,13 @@
 
 ## Overview / API
 
-Diese Komponente soll wie eine Lookup Komponente benutzt werden, die eine Lookup-Url bereitstellt und je nach Bildschirmauflösung zwischen verschiedenen Varianten wechselt.
+Diese Komponente soll wie eine Lookup-Komponente benutzt werden, die eine Lookup-URL bereitstellt und je nach Bildschirmauflösung zwischen verschiedenen Varianten wechselt.
 
 ### Allgemein
 
-| Name     | Beschreibung        |
-| -------- | ------------------- |
-| selector | lux-tenant-logo     |
+| Name     | Beschreibung    |
+| -------- | --------------- |
+| selector | lux-tenant-logo |
 
 ### LuxTenantLogo
 
@@ -32,8 +32,8 @@ Diese Komponente soll wie eine Lookup Komponente benutzt werden, die eine Lookup
 | Name                | Typ    | Beschreibung                                                                                                                                                                           |
 | ------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxTenantKey        | string | Bestimmt den Schlüssel, der die unterschiedlichen Logos unterscheidet.                                                                                                                 |
-| luxTenantVariant    | string | Bestimmt die Variante des Logos. Wird automatisch ermittelt wenn diese Property leer gelassen wird.                                                                                    |
-| luxTenantLogoHeight | string | Bestimmt die Höhe des Bildes, hier können alle (CSS) bekannten Größen eingegeben werden. Beispiele: luxTenantLogoHeight="10%", luxTenantLogoHeight="10em", luxTenantLogoHeight="100px" |
+| luxTenantVariant    | string | Bestimmt die Variante des Logos. Wird automatisch ermittelt, wenn diese Property leer gelassen wird.                                                                                   |
+| luxTenantLogoHeight | string | Bestimmt die Höhe des Bildes, hier können alle (CSS-)bekannten Größen eingegeben werden. Beispiele: luxTenantLogoHeight="10%", luxTenantLogoHeight="10em", luxTenantLogoHeight="100px" |
 
 ### @Output
 

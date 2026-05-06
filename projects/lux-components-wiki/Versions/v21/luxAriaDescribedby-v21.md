@@ -32,5 +32,5 @@ Html
 
 ```html
 <lux-button luxLabel="Speichern" luxAriaDescribedby="save-hint"></lux-button>
-<div id="save-hint">Bitte vergessen Sie nicht die AGBs zu akzeptieren!</div>
+<div id="save-hint">Bitte vergessen Sie nicht, die AGBs zu akzeptieren!</div>
 ```

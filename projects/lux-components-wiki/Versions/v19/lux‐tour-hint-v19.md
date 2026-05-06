@@ -23,13 +23,13 @@
 
 ### Allgemein
 
-| Name   | Beschreibung       |
-| ------ | ------------------ |
-| name   | LuxTourHintService |
+| Name | Beschreibung       |
+| ---- | ------------------ |
+| name | LuxTourHintService |
 
 | Funktion                                                                                                                                                         | Beschreibung                                                                                                                                                                                             |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| open(tourConfig: ILuxTourHintStepConfig \| ILuxTourHintStepConfig[], optionDontShowAgain: boolean = true): LuxTourHintRef                                        | Diese Methode öffnet eine/n Tour/Hint anhand der übergebenen Konfiguration. Titel, Beschreibung der einzelnen Schritte können über die Konfiuration übergeben werden.                                    |
+| open(tourConfig: ILuxTourHintStepConfig \| ILuxTourHintStepConfig[], optionDontShowAgain: boolean = true): LuxTourHintRef                                        | Diese Methode öffnet eine/n Tour/Hint anhand der übergebenen Konfiguration. Titel, Beschreibung der einzelnen Schritte können über die Konfiguration übergeben werden.                                   |
 | openForComponent(comp: ComponentType\<any>, tourConfig: ILuxTourHintStepConfig \| ILuxTourHintStepConfig[], optionDontShowAgain: boolean = true): LuxTourHintRef | Diese Methode öffnet eine/n Tour/Hint mit der übergebenen Component. Titel, Zusätzlich zur Konfiguration lässt sich noch ein Daten-Objekt übergeben, welches dann von der Component genutzt werden kann. |
 
 ## Components
@@ -67,7 +67,7 @@ Eigene Dialog-Component müssen diese Klasse via Dependency-Injection besitzen, 
 | optionDontShowAgain                                 | boolean | Gibt an, ob die Option 'Nicht wieder anzeigen' mit angezeigt werden soll.                                 |
 | init()                                              | Methode | Initialisiert diese Component neu und setzt dabei alle Properties zurück.                                 |
 | hasNext()                                           | Methode | Liefert einen Wahrheitswert, der angibt, ob es einen nächster Schritt in der Tour gibt.                   |
-| hasPrevious()                                       | Methode | Liefert einen Wahrheitswert, der angibt, ob es einen voherigen Schritt in der Tour gibt.                  |
+| hasPrevious()                                       | Methode | Liefert einen Wahrheitswert, der angibt, ob es einen vorherigen Schritt in der Tour gibt.                 |
 | next()                                              | Methode | Lässt die Tour einen Schritt voranschreiten und Aktualisiert die Tour-Hint Komponente für das neue Ziel.  |
 | prev()                                              | Methode | Lässt die Tour einen Schritt zurückschreiten und Aktualisiert die Tour-Hint Komponente für das neue Ziel. |
 | close(dontShowAgain: boolean = false)               | Methode | Schließt die Tour-Hint Komponente und gibt an, ob diese nicht nochmal angezeigt werden soll.              |
@@ -137,7 +137,7 @@ private basicTour: ILuxTourHintStepConfig[] = [
     targetId: "button2",
     data: {
       title: "Aktionen",
-      content: "Wenn Sie diesen Knopf drücken wird ihre Bewertung unwiederruflich abgeschickt."
+      content: "Wenn Sie diesen Knopf drücken wird ihre Bewertung unwiderruflich abgeschickt."
     }
   },
 ];

@@ -46,4 +46,4 @@ Html
 Diese Komponente beinhaltet das `router-outlet`-Tag und füllt mithilfe von eigenen CSS-Styles den Bereich zwischen
 `LuxAppHeader` und `LuxAppFooter` auf.
 
-Optional ist es möglich, direkt Inhalte via Content-Projection in die `LuxAppContentComponent` hereinzureichen.
+Optional ist es möglich, direkt Inhalte via Content-Projection in die `LuxAppContentComponent` einzubinden.

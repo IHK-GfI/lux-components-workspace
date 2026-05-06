@@ -51,7 +51,7 @@ Diese Component rendert Inline-Overlays und kann sowohl informative Hinweise als
 | `luxPersistent` | `boolean` | `false`  | Aktiviert das dialogähnliche, persistente Verhalten.          |
 | `luxMinWidth`   | `number`  | `220`    | Minimale Breite des Overlays in Pixeln.                       |
 | `luxMaxWidth`   | `number`  | `360`    | Maximale Breite (wird intern stets ≥ `luxMinWidth` gehalten). |
-| `luxAriaLabel`  | `string`  | –        | Optionales, explizites ARIA-Label für Screenreader.           |
+| `luxAriaLabel`  | `string`  | –        | Optionales, explizites Aria-Label für Screenreader.           |
 
 | Event       | Payload               | Beschreibung                                                                            |
 | ----------- | --------------------- | --------------------------------------------------------------------------------------- |

@@ -14,7 +14,7 @@
 
 ### Allgemein
 
-Eine Pipe die es möglich macht, einen Timestamp in eine relative Zeitangabe umzuwandeln.
+Eine Pipe, die es ermöglicht, einen Timestamp in eine relative Zeitangabe umzuwandeln.
 
 | Name     | Beschreibung         |
 | -------- | -------------------- |
@@ -22,11 +22,11 @@ Eine Pipe die es möglich macht, einen Timestamp in eine relative Zeitangabe umz
 
 ### @Input
 
-| Name        | Typ            | Beschreibung                                                                        |
-| ----------- | -------------- | ----------------------------------------------------------------------------------- |
-| timestamp   | number \| null | Input-Wert der Pipe (muss nicht explizit bei Aufruf gefüllt werden)                 |
-| defaultText | string         | Parameter der den Default-Text anzeigt, wenn der timestamp-Wert null/undefined ist. |
-| prefix      | string         | Parameter der einen alternativen Präfix (anstelle von "in/vor") forciert.           |
+| Name        | Typ            | Beschreibung                                                                         |
+| ----------- | -------------- | ------------------------------------------------------------------------------------ |
+| timestamp   | number \| null | Input-Wert der Pipe (muss nicht explizit bei Aufruf gefüllt werden)                  |
+| defaultText | string         | Parameter, der den Default-Text anzeigt, wenn der timestamp-Wert null/undefined ist. |
+| prefix      | string         | Parameter, der einen alternativen Präfix (anstelle von "in/vor") erzwingt.           |
 
 ## Beispiele
 

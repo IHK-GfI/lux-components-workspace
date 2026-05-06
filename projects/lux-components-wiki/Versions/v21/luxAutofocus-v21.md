@@ -12,7 +12,7 @@
 
 ### Allgemein
 
-Diese Directive fokussiert eine Komponente (_lux-autocomplete-ac_, _lux-breadcrumb_, _lux-button_, _lux-checkbox-ac_, _lux-chips-ac_, _lux-datepicker-ac_, _lux-datetimepicker-ac_, _lux-file-input-ac_, _lux-file-list_, _lux-file-upload_, _lux-input-ac_, _lux-link_, _lux-link-plain_, _lux-lookup-autocomplete-ac_, _lux-lookup-combobox-ac_, _lux-radio-ac_, _lux-select-ac_, _lux-slider-ac_, _lux-textarea-ac_, _lux-tile_, _lux-tile-ac_ und _lux-toggle-ac_).
+Diese Direktive fokussiert eine Komponente (_lux-autocomplete-ac_, _lux-breadcrumb_, _lux-button_, _lux-checkbox-ac_, _lux-chips-ac_, _lux-datepicker-ac_, _lux-datetimepicker-ac_, _lux-file-input-ac_, _lux-file-list_, _lux-file-upload_, _lux-input-ac_, _lux-link_, _lux-link-plain_, _lux-lookup-autocomplete-ac_, _lux-lookup-combobox-ac_, _lux-radio-ac_, _lux-select-ac_, _lux-slider-ac_, _lux-textarea-ac_, _lux-tile_, _lux-tile-ac_ und _lux-toggle-ac_).
 
 | Name     | Beschreibung |
 | -------- | ------------ |

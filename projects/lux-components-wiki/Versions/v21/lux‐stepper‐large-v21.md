@@ -33,23 +33,23 @@
 
 ## Overview / API
 
-Der Lux-Stepper-Large implementiert das sogenannte Wizard-Pattern. Mit diesem Pattern können komplexe Prozesse vereinfacht werden, die nur selten oder von unerfahrenen Benutzerninnen ausgeführt werden. Dabei wird der Prozess in einzelne Schritte aufgeteilt, die dann in einer festen Reihefolgen nacheinander abgearbeitet werden.
-Dadurch können sich die Nutzerinnen besser auf die jeweiligen Inhalte kontzentrieren und die Fehlerwahrscheinlichkeit nimmt ab.
+Der Lux-Stepper-Large implementiert das sogenannte Wizard-Pattern. Mit diesem Pattern können komplexe Prozesse vereinfacht werden, die nur selten oder von unerfahrenen Benutzerninnen ausgeführt werden. Dabei wird der Prozess in einzelne Schritte aufgeteilt, die dann in einer festen Reihenfolge nacheinander abgearbeitet werden.
+Dadurch können sich die Nutzerinnen besser auf die jeweiligen Inhalte konzentrieren und die Fehlerwahrscheinlichkeit nimmt ab.
 Hängt ein Schritt von vorhergehenden Nutzereingaben ab, stellt der Stepper sicher, dass die jeweils relevanten Schritte und Informationen richtig angezeigt werden.
 
-Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es ein überschaubarer Prozess ist. Hier können ein einzelnes (sich aufbauendes) Formular oder die Tab-Komponente eine alternative Lösung sein.
+Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es ein überschaubarer Prozess ist. Hier kann ein einzelnes (sich aufbauendes) Formular oder die Tab-Komponente eine alternative Lösung sein.
 
 ### Best Practices
 
 - Die Anzahl der Schritte sollte nicht größer als 10 sein.
 - Schritt 1 soll einen Überblick über den folgenden Prozess enthalten, z.B. welche Daten und Dokumente im Folgenden benötigt werden, die zu erwartende Bearbeitungszeit oder ob Bearbeitungsgebühren für diesen Prozess anfallen.
 - Der letzte Schritt soll eine Zusammenfassung aller eingegebenen Daten enthalten. Hier werden auch notwendige Zustimmungen für die weitere Verarbeitung, z.B. zum Speichern der Daten, abgefragt.
-- Die Informationen und Angaben in einem Schritt sollen thematisch zusammen gehören.
+- Die Informationen und Angaben in einem Schritt sollen thematisch zusammengehören.
 - Die Navigationsliste enthält alle Schritte. Optionale oder abhängige Schritte sind zunächst deaktiviert (grau dargestellt) und werden bei Bedarf während des Prozesses aktiviert.
 - Jeder Schritt erhält eine prägnante Überschrift, die als luxTitle ebenfalls in der Navigationsliste erscheint (evtl. verkürzt).
 - Die Nutzereingaben sollen beim Verlassen eines Schritts zwischengespeichert werden, damit der Nutzer den Prozess unterbrechen und zu einem späteren Zeitpunkt fortsetzen kann.
 
-**Tipp:** Enthält ein Prozess Abzweigungen und optionale Schritte, ist eine sorgfältige Planung **VOR** der Implementierung notwendig. Wir empfehlen den Prozess an Hand eines Flussdiagramms zu modellieren und mit allen Stakeholdern abzusprechen. Anschließend können daraus die notwendigen einzelnen Schritte für einenen Stepper ermittelt und die UI dafür konzepiert werden.
+**Tipp:** Enthält ein Prozess Abzweigungen und optionale Schritte, ist eine sorgfältige Planung **VOR** der Implementierung notwendig. Wir empfehlen den Prozess anhand eines Flussdiagramms zu modellieren und mit allen Stakeholdern abzusprechen. Anschließend können daraus die notwendigen einzelnen Schritte für einen Stepper ermittelt und die UI dafür konzipiert werden.
 
 ### Aufbau des Steppers
 
@@ -74,7 +74,7 @@ Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es e
 
 ### Standard-Verhalten bei aktivierter Validierung
 
-Das Standardverhalten des Steppers sieht es vor, dass der Nutzer einen Schritt nach dem anderen in der vorhergesehenen Reihenfolge durchläuft. Erst wenn ein Schritt vollständig und fehlerfrei abgearbeitet wurde, kann zu dem nächsten Schritt navigiert werden.
+Das Standardverhalten des Steppers sieht es vor, dass der Nutzer einen Schritt nach dem anderen in der vorhergesehenen Reihenfolge durchläuft. Erst wenn ein Schritt vollständig und fehlerfrei abgearbeitet wurde, kann zum nächsten Schritt navigiert werden.
 Der letzte Schritt des Steppers soll eine Zusammenfassung der zuvor eingegebenen Daten und ausgewählten Optionen enthalten. Das Abschließen des letzten Schritts ist gleichzeitig der Abschluss des gesamten Prozesses.
 
 Über die Stepper-Buttons unterhalb des Content-Bereichs können der direkte Nachfolgeschritt bzw. der direkte Vorgänger erreicht werden.
@@ -100,10 +100,10 @@ Der Nutzer kann jedoch zu vorherigen Schritten zurück navigieren. In der Naviga
 
 ### Accessibility
 
-Für die Verbesserung der Zugänglichkeit wurde der luxA11YMode eingeführt. Dieser erfüllt die technischen Bedingungen und gewährleistet die Funtkionalität von Assistenztechnologien. Er wird mit v19 der LUX-Components zum Standard bei aktivierter Validierung.
+Für die Verbesserung der Zugänglichkeit wurde der luxA11YMode eingeführt. Dieser erfüllt die technischen Bedingungen und gewährleistet die Funktionalität von Assistenztechnologien. Er wird mit v19 der LUX-Components zum Standard bei aktivierter Validierung.
 
 Ein weiteres Erfolgskriterium zur Barrierefreiheit ist die Vorhersehbarkeit. Für den Stepper bedeutet es, dass die einzelnen Schritte in einer logischen Reihenfolge erfolgen sollen. Jeder Schritt ist in sich abgeschlossen und behandelt ein bestimmtes Thema.
-Die Zusammenfassung im letzten Schritt erfolgt in der selben Reihenfolge und mit den selben Überschriften der jeweiligen Schritte.
+Die Zusammenfassung im letzten Schritt erfolgt in derselben Reihenfolge und mit denselben Überschriften der jeweiligen Schritte.
 Die Nutzereingaben werden in der Zusammenfassung klar gegliedert in Textform dargestellt.
 
 **Wichtig:** Textfelder im Zustand "readonly" oder "disabled" sind nicht barrierefrei, und dürfen für die Anzeige der Daten in einer Zusammenfassung nicht verwendet werden!

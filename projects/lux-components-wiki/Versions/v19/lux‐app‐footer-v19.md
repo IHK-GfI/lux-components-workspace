@@ -31,9 +31,9 @@
 
 | Name                   | Typ     | Beschreibung                                                                                                                                                                        |
 | ---------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxVersion             | string  | Ein App-Version (z.B. 1.0.0). Die Version wird allerdings nur in Bildschirmbreiten >= 1920px dargestellt.                                                                           |
+| luxVersion             | string  | Eine App-Version (z.B. 1.0.0). Die Version wird allerdings nur in Bildschirmbreiten >= 1920px dargestellt.                                                                          |
 | luxAriaRoleFooterLabel | string  | Aria-Label (z.B. für Screenreader) für das `role`-Attribut mit dem Wert `contentinfo`. Wird der Wert geleert (''), dann wird kein `role`-Attribut gesetzt.                          |
-| luxCenteredView        | boolean | Flag um den Inhalt des Headers auf eine Max-Width zu beschränkt und bei grosser Screensize zentriert darzustellen, default = false. Empfehlung, diesen Wert über die config setzen. |
+| luxCenteredView        | boolean | Flag um den Inhalt des Headers auf eine Max-Width zu beschränken und bei großer Screensize zentriert darzustellen, default = false. Empfehlung, diesen Wert über die config setzen. |
 | luxCenteredWidth       | string  | Größenangabe für einen beschränkten und zentrierten Header-Inhalt, default = 1500px. Empfehlung, diesen Wert über die config setzen.                                                |
 
 ### @ViewChild
@@ -61,7 +61,7 @@ ngOnDestroy() {
 | Funktion                                                              | Beschreibung                                                                                                                                                                         |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | buttonInfos(): LuxAppFooterButtonInfo[]                               | Die Funktion liefert die angezeigten Buttons zurück.                                                                                                                                 |
-| getButtonInfosAsObservable(): Observable \<LuxAppFooterButtonInfo[]\> | Die Funktion Liefert ein Observable zurück.                                                                                                                                          |
+| getButtonInfosAsObservable(): Observable \<LuxAppFooterButtonInfo[]\> | Die Funktion liefert ein Observable zurück.                                                                                                                                          |
 | pushButtonInfos(...value: LuxAppFooterButtonInfo[]): void             | Ermöglicht es, dem aktuellen Array von Buttons für den Footer neue Einträge hinzuzufügen. Hier kann ein Array, aber auch ein einzelnes Objekt übergeben werden.                      |
 | removeButtonInfoAtIndex(i: number):void                               | Entfernt einen Button an der Position i aus dem aktuellen Array von Buttons.                                                                                                         |
 | removeButtonInfoByCmd(cmd: string): void                              | Entfernt einen Button anhand des ihm zugewiesenen cmd-Strings aus dem Array von Buttons.                                                                                             |
@@ -71,23 +71,22 @@ ngOnDestroy() {
 
 ### LuxAppFooterLinkService
 
-Dieser Service bietet die Möglichkeit Links linksbündig eine Reihe von `LuxLinkComponents` darzustellen.
-darzustellen. Der Service nimmt einzelne Objekte bzw. Arrays von `LuxAppFooterLinkInfo` entgegen.
+Dieser Service bietet die Möglichkeit Links linksbündig eine Reihe von `LuxLinkComponents` darzustellen. Der Service nimmt einzelne Objekte bzw. Arrays von `LuxAppFooterLinkInfo` entgegen.
 
 | Funktion                                                          | Beschreibung                                                                                                          |
 | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | linkInfos(): LuxAppFooterLinkInfo[]                               | Die Funktion liefert die angezeigten Links zurück.                                                                    |
-| getLinkInfosAsObservable(): Observable \<LuxAppFooterLinkInfo[]\> | Die Funktion Liefert ein Observable zurück.                                                                           |
-| pushLinkInfos(...links: LuxAppFooterLinkInfo[]): void             | Die Fukntion ermöglicht es, neue Links hinzuzufügen. Es können einzelne Links oder ein ganzes Array übergeben werden. |
+| getLinkInfosAsObservable(): Observable \<LuxAppFooterLinkInfo[]\> | Die Funktion liefert ein Observable zurück.                                                                           |
+| pushLinkInfos(...links: LuxAppFooterLinkInfo[]): void             | Die Funktion ermöglicht es, neue Links hinzuzufügen. Es können einzelne Links oder ein ganzes Array übergeben werden. |
 | removeLinkInfoAtIndex(i: number): void                            | Die Funktion entfernt den Link an der übergebenen Position.                                                           |
 | clearLinkInfos(): void                                            | Die Funktion entfernt alle Links.                                                                                     |
 
 ### LuxAppFooterFixedService
 
-| Property              | Beschreibung         |                                                                     |
-| --------------------- | -------------------- | ------------------------------------------------------------------- |
-| fixedMode             | boolean              | Lierfert `true` zurück, wenn der Footer fixiert ist, `false` sonst. |
-| fixedModeAsObservable | Observable\<boolean> | Sendet `true`, wenn der Footer fixiert ist, `false` sonst.          |
+| Property              | Beschreibung         |                                                                    |
+| --------------------- | -------------------- | ------------------------------------------------------------------ |
+| fixedMode             | boolean              | Liefert `true` zurück, wenn der Footer fixiert ist, `false` sonst. |
+| fixedModeAsObservable | Observable\<boolean> | Sendet `true`, wenn der Footer fixiert ist, `false` sonst.         |
 
 Wichtig! Bitte den Hinweis im Abschnitt [3. Footer nicht fixiert](#3-footer-nicht-fixiert) beachten.
 
@@ -214,12 +213,12 @@ Html
 ### 2. Zentrierter Inhalt des App-Footers
 
 Empfehlung: Die Werte für luxCenteredView und luxCenteredWidth über eine Config-Datei zu setzen [vgl.](config-v19.md).
-Damit werden die selben Parameter auch beim App-Header-Ac gesetzt.
+Damit werden dieselben Parameter auch beim App-Header-Ac gesetzt.
 Die centeredWidth kann optional verändert werden (default=1500px).
 Aufgrund der unterschiedlichen Möglichkeiten der App-Gestaltung, muss in allen Fällen der Content-Bereich selbstständig angepasst werden.
 Dazu kann die layout-Klasse "lux-container" verwendet werden und z.B. dem Host-Element als Attribut übergeben werden.
 
-Bei der Verwendung von Mediaquerries, lux-tabs und lux-table ist das gewünschte Responsive Verhalten zu testen und gegebenenfalls anzupassen.
+Bei der Verwendung von Media Queries, lux-tabs und lux-table ist das gewünschte Responsive Verhalten zu testen und gegebenenfalls anzupassen.
 
 Ts
 
@@ -227,7 +226,7 @@ Ts
 const myConfiguration: LuxComponentsConfigParameters = {
  
   viewConfiguration: {
-    centerdView: true,
+    centeredView: true,
     centeredWidth: '1000px',
   }
 };
@@ -265,7 +264,7 @@ _app.components.html_:
 
 Wichtig!
 
-Wenn der Footer _nicht_ fixiert ist, kann es auf Seiten mit wenig Inhalt dazu kommen, dass der Footer hoch rutscht (siehe Abbildung unten).
+Wenn der Footer _nicht_ fixiert ist, kann es auf Seiten mit wenig Inhalt dazu kommen, dass der Footer hochrutscht (siehe Abbildung unten).
 D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig Inhalt trotzdem am unteren Rand angezeigt wird.
 
 ![Verrutschter App-Footer](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v19/lux‐app‐footer-v19-img-03.png)

@@ -30,8 +30,8 @@ Das responsive Design wurde um eine Medium-Size-Variante ergänzt. In dieser tei
 In der Mobilen Ansicht ist der Button zum Wechseln von der Detail- zur Master-Ansicht nicht mehr im App-Header, sondern oben im Detail platziert. Das Swipen bei Touch-Displays ist noch wie vor möglich.
 Die Desktop-Variante behält das Seiten-Verhältnis von 30%/70% zwischen Master und Detail bei, jedoch nur bis zu einer Max-Width von 500px für den Master. Der restliche Platz wird dem Detail zugesprochen.
 Die lux-master-view-Component wurde entfernt. Es kann nur noch der Simple-Master genutzt werden.
-Die Subcomponent lux-detail-header-ac wurde ergänzt. Diese wird in einer Standard-Variante immer angezeigt und kann durch eigenen Inhaht überschrieben werden.
-Erhält die Masterliste den Focus (mit dem "Tab"-Key) wird jetzt direkt das selektierte Element oder das erste Listenelement, wenn nichts selektiert ist, fokussiert. Danach ist die Navigation durch die Liste-Elemente mit den Pfeiltasten weiterhin möglich. Mit einem weitern "Tab" wird die Liste verlassen.
+Die Subcomponent lux-detail-header-ac wurde ergänzt. Diese wird in einer Standard-Variante immer angezeigt und kann durch eigenen Inhalt überschrieben werden.
+Erhält die Masterliste den Focus (mit dem "Tab"-Key) wird jetzt direkt das selektierte Element oder das erste Listenelement, wenn nichts selektiert ist, fokussiert. Danach ist die Navigation durch die Liste-Elemente mit den Pfeiltasten weiterhin möglich. Mit einem weiteren "Tab" wird die Liste verlassen.
 
 ### Allgemein
 
@@ -107,7 +107,7 @@ Wird von LuxMasterDetailAcComponent genutzt um die Liste zu generieren. Erwartet
 
 (Optionale) Komponente die oberhalb der Masterliste einen frei befüllbaren Header-Bereich einräumt. Diese sollte immer gesetzt werden z.B. mit einer Überschrift, damit der Button zum Schließen der Master-Liste richtig platziert wird
 
-| Name     | Bescheibung          |
+| Name     | Beschreibung         |
 | -------- | -------------------- |
 | selector | lux-master-header-ac |
 
