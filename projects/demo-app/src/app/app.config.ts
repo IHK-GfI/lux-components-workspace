@@ -4,6 +4,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { LuxAppHeaderAcSessionTimerService, LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
 import { LangDefinition, TranslocoService } from '@jsverse/transloco';
+import { provideTranslocoLocale } from '@jsverse/transloco-locale';
 import { CookieService } from 'ngx-cookie-service';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
@@ -32,6 +33,12 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom([LuxComponentsConfigModule.forRoot(myConfiguration)]),
     provideHttpClient(withFetch()),
     provideLuxTranslocoRoot(),
+    provideTranslocoLocale({
+      langToLocaleMapping: {
+        en: 'en-US',
+        de: 'de-DE'
+      }
+    }),
     CookieService,
     provideAppInitializer(() => {
       // Dependencies per inject() to avoid deprecated APP_INITIALIZER pattern.

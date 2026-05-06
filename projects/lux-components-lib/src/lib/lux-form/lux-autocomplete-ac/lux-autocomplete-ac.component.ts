@@ -502,9 +502,9 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   }
 
   /**
-   * Durch diese track-Funktion wird der folgendfe Fehler vermieden:
+   * Durch diese Track-Funktion wird der folgende Fehler vermieden:
    * NG0955: The provided track expression resulted in duplicated keys for a given collection.
-   * 
+   *
    * @param index
    * @param option
    * @returns
@@ -518,7 +518,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
       if (this.luxPickValue) {
         const pickValue = this.luxPickValue(option);
         if (pickValue !== undefined && pickValue !== null) {
-          return pickValue;
+          return `${pickValue}-${index}`;
         }
       }
       return option;
@@ -526,4 +526,5 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
 
     return `${option}-${index}`;
   }
+
 }

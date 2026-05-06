@@ -11,6 +11,7 @@ import {
   LuxSelectAcComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { TranslocoDatePipe } from '@jsverse/transloco-locale';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -53,7 +54,8 @@ interface AutocompleteForm {
     LuxInputAcSuffixComponent,
     LuxSelectAcComponent,
     LuxToggleAcComponent,
-    LuxAutofocusDirective
+    LuxAutofocusDirective,
+    TranslocoDatePipe
   ]
 })
 export class AutocompleteAuthenticExampleComponent {
@@ -69,10 +71,10 @@ export class AutocompleteAuthenticExampleComponent {
   optionBlockSize = 500;
   options: AutocompleteAcExampleOption[] = this.createOption();
   options2: AutocompleteAcExampleOption[] = [
-    { label: 'Meine Aufgaben 2', short: 'MA2', value: 'A2' },
-    { label: 'Gruppenaufgaben 2', short: 'GA2', value: 'B2' },
-    { label: 'Zurückgestellte Aufgaben 2', short: 'ZA2', value: 'C2' },
-    { label: 'Vertretungsaufgaben 2', short: 'VA2', value: 'D2' }
+    { label: 'Meine Aufgaben 2', short: 'MA2', value: 'A2', gueltigAb: new Date(2024, 0, 1)},
+    { label: 'Gruppenaufgaben 2', short: 'GA2', value: 'B2', gueltigAb: new Date(2024, 0, 1) },
+    { label: 'Zurückgestellte Aufgaben 2', short: 'ZA2', value: 'C2', gueltigAb: new Date(2024, 0, 1) },
+    { label: 'Vertretungsaufgaben 2', short: 'VA2', value: 'D2', gueltigAb: new Date(2024, 0, 1) }
   ];
   stringOptions = this.options.map((o) => o.label);
   stringOptions2 = ['Nur eine Option'];
@@ -114,6 +116,7 @@ export class AutocompleteAuthenticExampleComponent {
   useFilterFn = false;
   luxPanelWidth: string | number = '';
   useTemplatesForLabels = false;
+  useTranslocoDate = false;
 
   constructor() {
     this.form = new FormGroup<AutocompleteForm>({
@@ -149,21 +152,21 @@ export class AutocompleteAuthenticExampleComponent {
 
   private createOption() {
     const options = [
-      { label: 'Meine Aufgaben', short: 'MA', value: 'A' },
-      { label: 'Gruppenaufgaben', short: 'GA', value: 'B' },
-      { label: 'Zurückgestellte Aufgaben', short: 'ZA', value: 'C' },
-      { label: this.longOptionLabel, short: 'LI', value: 'D' },
-      { label: 'Vertretungsaufgaben', short: 'VA', value: 'F' },
-      { label: this.longOptionLabel, short: 'L2', value: 'L2' },
-      { label: this.longOptionLabel, short: 'L3', value: 'L3' },
-      { label: 'Neue Aufgaben', short: 'NA', value: 'G' },
-      { label: 'Extraaufgaben', short: 'EA', value: 'H' },
-      { label: 'Optionale Aufgaben', short: 'ZA', value: 'I' }
+      { label: 'Meine Aufgaben', short: 'MA', value: 'A', gueltigAb: new Date(2024, 0, 1) },
+      { label: 'Gruppenaufgaben', short: 'GA', value: 'B', gueltigAb: new Date(2024, 0, 1) },
+      { label: 'Zurückgestellte Aufgaben', short: 'ZA', value: 'C', gueltigAb: new Date(2024, 0, 1) },
+      { label: this.longOptionLabel, short: 'LI', value: 'D', gueltigAb: new Date(2024, 0, 1) },
+      { label: 'Vertretungsaufgaben', short: 'VA', value: 'F', gueltigAb: new Date(2024, 0, 1) },
+      { label: this.longOptionLabel, short: 'L2', value: 'L2', gueltigAb: new Date(2024, 0, 1) },
+      { label: this.longOptionLabel, short: 'L3', value: 'L3', gueltigAb: new Date(2024, 0, 1) },
+      { label: 'Neue Aufgaben', short: 'NA', value: 'G', gueltigAb: new Date(2024, 0, 1) },
+      { label: 'Extraaufgaben', short: 'EA', value: 'H', gueltigAb: new Date(2024, 0, 1) },
+      { label: 'Optionale Aufgaben', short: 'ZA', value: 'I', gueltigAb: new Date(2024, 0, 1) }
     ];
 
     for (let i = 0; i < 2000; i++) {
       const number = `${i}`.padStart(5, '0');
-      options.push({ label: 'Lorem ipsum ' + number, short: 'LI_' + number, value: 'Li_' + number });
+      options.push({ label: 'Lorem ipsum ' + number, short: 'LI_' + number, value: 'Li_' + number, gueltigAb: new Date(2024, 0, 1) });
     }
 
     return options;
