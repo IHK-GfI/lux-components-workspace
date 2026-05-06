@@ -16,6 +16,7 @@
     - [5. Stroked-Buttons](#5-stroked-buttons)
     - [6. Rounded und Stroked-Buttons](#6-rounded-und-stroked-buttons)
     - [7. Reine Icon-Buttons](#7-reine-icon-buttons)
+    - [8. Buttons mit Loading State](#8-buttons-mit-loading-state)
   - [Zusatzinformationen](#zusatzinformationen)
     - [Konfigurationsoptionen](#konfigurationsoptionen)
 
@@ -29,23 +30,26 @@
 
 ### @Input
 
-| Name                  | Typ                             | Beschreibung                                                                                                                                                                                                                                                                                                                                                    |
-| --------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxType               | 'button' \| 'reset' \| 'submit' | Bestimmt den Typ des Buttons; legt fest, ob in einem Reactive-Form der jeweilige "submit" oder "reset" bzw. kein Form-Event ausgelöst wird ("button"). Mögliche Werte: "submit", "reset", "button"                                                                                                                                                              |
-| luxLabel              | string                          | Bestimmt das Label, das in dieser Komponente angezeigt wird.                                                                                                                                                                                                                                                                                                    |
-| luxColor              | LuxThemePalette                 | Diese Property definiert die Farben der Komponente.                                                                                                                                                                                                                                                                                                             |
-| luxRaised             | boolean                         | Gibt an, ob der Button hervorgehoben wird.                                                                                                                                                                                                                                                                                                                      |
-| luxStroked            | boolean                         | Gibt an, ob der Button eine Outline erhält.                                                                                                                                                                                                                                                                                                                     |
-| luxIconName           | string                          | Ein LUX-Iconname.                                                                                                                                                                                                                                                                                                                                               |
-| luxIconShowRight      | boolean                         | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                                                                                                                                                                                     |
-| luxTagId              | string                          | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                   |
-| luxDisabled           | boolean                         | Gibt an, ob das Element deaktiviert ist. Alternativ _luxDisabledAria_ verwenden.                                                                                                                                                                                                                                                                                |
-| luxDisabledAria       | boolean                         | Setzt das Attribut `aria-disabled="true"` am Button, ohne das native `disabled`-Attribut zu verwenden. Der Button bleibt damit technisch aktiv und fokussierbar, unterdrückt jedoch das Event _luxClicked_ und emittiert stattdessen das Event _luxClickNotAllowed_. Entwickler sollten dem Nutzer einen Hinweis auf die fachliche Deaktivierung bereitstellen. |
-| luxRounded            | boolean                         | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                                                                                                                                                                                            |
-| luxIconAlignWithLabel | boolean                         | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                                                                                                                                                                                        |
-| luxThrottleTime       | number                          | Verhindert, dass ein Button mehrfach hintereinander ausgelöst wird. Über diese Property kann man den Standardwert aus der [Config - buttonConfiguration](config-v21#buttonConfiguration) überschreiben.                                                                                                                                                         |
-| luxButtonBadge        | string                          | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.                                                                                                                                                                |
-| luxButtonBadgeColor   | LuxThemePalette                 | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                                                                                                                                                                                            |
+| Name                  | Typ                              | Beschreibung                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxType               | 'button' \| 'reset' \| 'submit'  | Bestimmt den Typ des Buttons; legt fest, ob in einem Reactive-Form der jeweilige "submit" oder "reset" bzw. kein Form-Event ausgelöst wird ("button"). Mögliche Werte: "submit", "reset", "button"                                                                                                                                                              |
+| luxLabel              | string                           | Bestimmt das Label, das in dieser Komponente angezeigt wird.                                                                                                                                                                                                                                                                                                    |
+| luxColor              | LuxThemePalette                  | Diese Property definiert die Farben der Komponente.                                                                                                                                                                                                                                                                                                             |
+| luxRaised             | boolean                          | Gibt an, ob der Button hervorgehoben wird.                                                                                                                                                                                                                                                                                                                      |
+| luxStroked            | boolean                          | Gibt an, ob der Button eine Outline erhält.                                                                                                                                                                                                                                                                                                                     |
+| luxIconName           | string                           | Ein LUX-Iconname.                                                                                                                                                                                                                                                                                                                                               |
+| luxIconShowRight      | boolean                          | Gibt an, ob das Icon rechts angezeigt wird.                                                                                                                                                                                                                                                                                                                     |
+| luxTagId              | string                           | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                   |
+| luxDisabled           | boolean                          | Gibt an, ob das Element deaktiviert ist. Alternativ _luxDisabledAria_ verwenden.                                                                                                                                                                                                                                                                                |
+| luxDisabledAria       | boolean                          | Setzt das Attribut `aria-disabled="true"` am Button, ohne das native `disabled`-Attribut zu verwenden. Der Button bleibt damit technisch aktiv und fokussierbar, unterdrückt jedoch das Event _luxClicked_ und emittiert stattdessen das Event _luxClickNotAllowed_. Entwickler sollten dem Nutzer einen Hinweis auf die fachliche Deaktivierung bereitstellen. |
+| luxRounded            | boolean                          | Gibt an, ob ein runder Button verwendet werden soll.                                                                                                                                                                                                                                                                                                            |
+| luxIconAlignWithLabel | boolean                          | Entfernt die vertikale Zentrierung des Icons, so dass es mit dem Label ausgerichtet ist.                                                                                                                                                                                                                                                                        |
+| luxThrottleTime       | number                           | Verhindert, dass ein Button mehrfach hintereinander ausgelöst wird. Über diese Property kann man den Standardwert aus der [Config - buttonConfiguration](config-v21#buttonConfiguration) überschreiben.                                                                                                                                                         |
+| luxButtonBadge        | string                           | Text der in einer Badge hinter dem Label in einem Lux-Button angezeigt werden kann. Die maximale Länge beträgt vier Zeichen und wird bei Überlänge automatisch mit Ellipsis '...' abgeschnitten.                                                                                                                                                                |
+| luxButtonBadgeColor   | LuxThemePalette                  | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                                                                                                                                                                                            |
+| luxLoading            | boolean                          | Gibt an, ob der Button sich im Lade-Zustand befindet und einen Spinner/Progress angezeigt werden soll. Standardwert: false.                                                                                                                                                                                                                                     |
+| luxSpinnerMode        | 'determinate' \| 'indeterminate' | Bestimmt den Modus des Spinners/Progress-Indikators. Im "determinate"-Modus wird der Fortschritt anhand von `luxSpinnerValue` angezeigt (0-100). Im "indeterminate"-Modus wird ein kontinuierlicher Ladezeiger angezeigt. Standardwert: "indeterminate".                                                                                                        |
+| luxSpinnerValue       | number                           | Setzt den Wert des Spinners/Progress-Indikators im "determinate"-Modus (0-100). Dies ist nur relevant, wenn `luxSpinnerMode` auf "determinate" gesetzt ist. Standardwert: 70.                                                                                                                                                                                   |
 
 Zusatz-Input für neue Variante:
 
@@ -340,6 +344,8 @@ Html
 
 ### 7. Reine Icon-Buttons
 
+![Beispielbild 07](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-07.png)
+
 Ts
 
 ```typescript
@@ -378,6 +384,50 @@ Html
     luxLabel="Speichern"
     luxColor="accent"
     (luxClicked)="onClick('accent')"
+  ></lux-button>
+</div>
+```
+
+### 8. Buttons mit Loading State
+
+![Beispielbild 08](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐button-v21-img-08.png)
+
+Ts
+
+```typescript
+loadingState = true;
+loadingProgressValue = 50;
+
+toggleLoading() {
+  this.loadingState = !this.loadingState;
+}
+```
+
+Html
+
+```html
+<div class="lux-flex lux-gap-4">
+  <!-- Indeterminate Loading State -->
+  <lux-button
+    luxLabel="Lädt..."
+    [luxLoading]="loadingState"
+    luxSpinnerMode="indeterminate"
+    (luxClicked)="toggleLoading()"
+  ></lux-button>
+  <!-- Determinate Loading State -->
+  <lux-button
+    luxLabel="Upload"
+    [luxLoading]="loadingState"
+    luxSpinnerMode="determinate"
+    [luxSpinnerValue]="loadingProgressValue"
+    (luxClicked)="toggleLoading()"
+  ></lux-button>
+  <!-- Determinate with Different Progress -->
+  <lux-button
+    luxLabel="Speichern"
+    [luxLoading]="true"
+    luxSpinnerMode="determinate"
+    [luxSpinnerValue]="75"
   ></lux-button>
 </div>
 ```
