@@ -84,7 +84,6 @@ describe('LuxChipComponent-Authentic', () => {
       expect(labelElement!.nativeElement.textContent).toContain('Neu');
     }));
 
-
     it('Sollte das Label anzeigen, wenn luxInputAllowed aktiv ist', fakeAsync(() => {
       testComponent.inputAllowed = true;
       testComponent.inputLabelAlwaysVisible = false;
@@ -450,6 +449,117 @@ describe('LuxChipComponent-Authentic', () => {
 
       expect(chipElements.length).toEqual(0);
     }));
+
+    it('Sollte required-Fehler auch ohne Group zeigen, wenn FormControl null ist', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFormRequiredNoGroupInFormComponent);
+      fixture.detectChanges();
+      LuxTestHelper.wait(fixture);
+
+      const chipsAcComponent: LuxChipsAcComponent = fixture.debugElement.query(By.directive(LuxChipsAcComponent)).componentInstance;
+      chipsAcComponent.formControl.markAsTouched();
+      LuxTestHelper.wait(fixture);
+
+      const errorElement = fixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).not.toBeNull();
+    }));
+
+    it('Sollte keinen required-Fehler auch ohne Group zeigen, wenn FormControl Werte hat', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxFormRequiredNoGroupInFormComponent);
+      const testComponent = fixture.componentInstance;
+      testComponent.form.controls['names'].setValue(['A']);
+      fixture.detectChanges();
+      LuxTestHelper.wait(fixture);
+
+      const chipsAcComponent: LuxChipsAcComponent = fixture.debugElement.query(By.directive(LuxChipsAcComponent)).componentInstance;
+      chipsAcComponent.formControl.markAsTouched();
+      LuxTestHelper.wait(fixture);
+
+      const errorElement = fixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).toBeNull();
+    }));
+  });
+
+  describe('luxRequired (ohne Group)', () => {
+    it('Sollte keinen required-Fehler zeigen, wenn Chips vorhanden sind', fakeAsync(() => {
+      const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
+      const testComponent = localFixture.componentInstance;
+      testComponent.required = true;
+      testComponent.chips = [{ label: 'Chip #1', color: undefined, removable: true, disabled: false }];
+      localFixture.detectChanges();
+      LuxTestHelper.wait(localFixture);
+
+      const chipsAcComponent: LuxChipsAcComponent = localFixture.debugElement.query(By.directive(LuxChipsAcComponent)).componentInstance;
+      chipsAcComponent.formControl.markAsTouched();
+      LuxTestHelper.wait(localFixture);
+
+      const errorElement = localFixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).toBeNull();
+    }));
+
+    it('Sollte den required-Fehler zeigen, wenn keine Chips vorhanden sind', fakeAsync(() => {
+      const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
+      const testComponent = localFixture.componentInstance;
+      testComponent.required = true;
+      testComponent.chips = [];
+      localFixture.detectChanges();
+      LuxTestHelper.wait(localFixture);
+
+      const chipsAcComponent: LuxChipsAcComponent = localFixture.debugElement.query(By.directive(LuxChipsAcComponent)).componentInstance;
+      chipsAcComponent.formControl.markAsTouched();
+      LuxTestHelper.wait(localFixture);
+
+      const errorElement = localFixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).not.toBeNull();
+      expect(errorElement.nativeElement.innerHTML).toContain('* Pflichtfeld');
+    }));
+
+    it('Sollte den required-Fehler entfernen, wenn ein Chip hinzugefügt wird', fakeAsync(() => {
+      const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
+      const testComponent = localFixture.componentInstance;
+      testComponent.required = true;
+      testComponent.chips = [];
+      localFixture.detectChanges();
+      LuxTestHelper.wait(localFixture);
+
+      const chipsAcComponent: LuxChipsAcComponent = localFixture.debugElement.query(By.directive(LuxChipsAcComponent)).componentInstance;
+      chipsAcComponent.formControl.markAsTouched();
+      LuxTestHelper.wait(localFixture);
+
+      let errorElement = localFixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).not.toBeNull();
+
+      testComponent.chips = [{ label: 'Neuer Chip', color: undefined, removable: true, disabled: false }];
+      LuxTestHelper.wait(localFixture);
+
+      errorElement = localFixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).toBeNull();
+    }));
+
+    it('Sollte den required-Fehler anzeigen, wenn ein Chip wieder entfernt wird', fakeAsync(() => {
+      const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
+      const testComponent = localFixture.componentInstance;
+      testComponent.required = true;
+      testComponent.chips = [{ label: 'Chip #1', color: undefined, removable: true, disabled: false }];
+      localFixture.detectChanges();
+      LuxTestHelper.wait(localFixture);
+
+      const chipsAcComponent: LuxChipsAcComponent = localFixture.debugElement.query(By.directive(LuxChipsAcComponent)).componentInstance;
+      chipsAcComponent.formControl.markAsTouched();
+      LuxTestHelper.wait(localFixture);
+
+      // Vorbedingung: kein Fehler, da Chip vorhanden
+      let errorElement = localFixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).toBeNull();
+
+      // Chip entfernen
+      testComponent.chips = [];
+      LuxTestHelper.wait(localFixture);
+
+      // Nachbedingung: Fehler erscheint wieder
+      errorElement = localFixture.debugElement.query(By.css('mat-error'));
+      expect(errorElement).not.toBeNull();
+      expect(errorElement.nativeElement.innerHTML).toContain('* Pflichtfeld');
+    }));
   });
 
   describe('luxStrict', () => {
@@ -501,7 +611,7 @@ describe('LuxChipComponent-Authentic', () => {
     describe('innerhalb eines Formulars', () => {
       let fixture: ComponentFixture<LuxStrictFormComponent>;
       let testComponent: LuxStrictFormComponent;
-      
+
       beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(LuxStrictFormComponent);
         testComponent = fixture.componentInstance;
@@ -797,5 +907,62 @@ class ChipsComponent {
 
   addMockGroupLabels() {
     this.groupLabels = ['Group Label 0', 'Group Label 1', 'Group Label 2'];
+  }
+}
+
+@Component({
+  template: `
+    <lux-chips-ac [luxRequired]="required">
+      @for (chip of chips; track chip.label; let i = $index) {
+        <lux-chip-ac
+          [luxDisabled]="chip.disabled"
+          [luxColor]="chip.color"
+          [luxRemovable]="chip.removable"
+          (luxChipRemoved)="chipRemoved($event)"
+        >
+          {{ chip.label }}
+        </lux-chip-ac>
+      }
+    </lux-chips-ac>
+  `,
+  imports: [LuxChipAcComponent, LuxChipsAcComponent]
+})
+class LuxRequiredNoGroupComponent {
+  required = false;
+  chips: { label: string; color: LuxThemePalette; removable: boolean; disabled: boolean }[] = [];
+
+  chipRemoved(chipIndex: number) {
+    this.chips = this.chips.filter((_value: unknown, index: number) => index !== chipIndex);
+  }
+}
+
+@Component({
+  template: `
+    <div [formGroup]="form">
+      <lux-chips-ac luxControlBinding="names">
+        @for (chip of chips; track chip.label; let i = $index) {
+          <lux-chip-ac
+            [luxDisabled]="chip.disabled"
+            [luxColor]="chip.color"
+            [luxRemovable]="chip.removable"
+            (luxChipRemoved)="chipRemoved($event)"
+          >
+            {{ chip.label }}
+          </lux-chip-ac>
+        }
+      </lux-chips-ac>
+    </div>
+  `,
+  imports: [ReactiveFormsModule, LuxChipAcComponent, LuxChipsAcComponent]
+})
+class LuxFormRequiredNoGroupInFormComponent {
+  form = new FormGroup({
+    names: new FormControl<string[] | null>(null, Validators.required)
+  });
+
+  chips: { label: string; color: LuxThemePalette; removable: boolean; disabled: boolean }[] = [];
+
+  chipRemoved(chipIndex: number) {
+    this.chips = this.chips.filter((_value: unknown, index: number) => index !== chipIndex);
   }
 }
