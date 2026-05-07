@@ -1,5 +1,6 @@
 @use "@angular/material" as mat;
 @use "../common/luxfocus";
+@use "../common/luxbreakpoints" as bp;
 
 $margin-right-icon: 20px;
 
@@ -47,11 +48,13 @@ lux-card {
       }
 
       .lux-card-icon-container {
+        margin-top: 4px;
         margin-right: 10px;
         order: 5;
       }
 
       .lux-card-info-container {
+        margin-top: 4px;
         order: 15;
 
         // Damit die Info-Komponente immer rechtsbündig im Card-Header ist, auch wenn der Titel oder Subtitle kurz sind.
@@ -110,6 +113,26 @@ lux-card {
     // damit es mit den anderen Paddings innerhalb der Card (wie z.B. Header und Content) übereinstimmt.
     .lux-card-actions {
       padding: var(--lux-theme-card-padding);
+
+      @include bp.xs {
+        lux-card-actions {
+          flex-direction: column;
+        }
+
+        .lux-card-actions-container {
+          flex-direction: column;
+          align-items: stretch;
+
+          lux-button {
+            display: block;
+            width: 100%;
+
+            button.lux-button {
+              width: 100%;
+            }
+          }
+        }
+      }
     }
   }
 
