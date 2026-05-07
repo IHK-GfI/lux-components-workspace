@@ -39,11 +39,15 @@ export abstract class LuxFormCheckableBaseClass<T> extends LuxFormComponentBase<
   }
 
   protected override checkValidatorsContainRequired(validators: ValidatorFnType) {
-    // Fall: required = true, aber neue Validatoren werden gesetzt
     if (this.luxRequired !== null && this.luxRequired !== undefined) {
       if (this.luxRequired) {
-        // Sind es mehrere Validatoren, aber kein "requiredTrue"? Dann wird er ergänzt.
-        if (Array.isArray(validators) && validators.indexOf(Validators.requiredTrue) === -1) {
+        // Fall: `luxRequired = true` — füge `Validators.requiredTrue` hinzu.
+        // - Keine Validatoren: setze `Validators.requiredTrue`
+        // - Array ohne `required`: `push(Validators.requiredTrue)`
+        // - Einzelner, nicht-`requiredTrue`-Validator: in Array mit `Validators.requiredTrue` umwandeln.
+        if (!validators) {
+          validators = Validators.requiredTrue;
+        } else if (Array.isArray(validators) && validators.indexOf(Validators.requiredTrue) === -1) {
           validators.push(Validators.requiredTrue);
         } else if (validators && !Array.isArray(validators) && validators !== Validators.requiredTrue) {
           // Ist es nur ein einzelner Validator und nicht "requiredTrue"? Dann Array erstellen und beide kombinieren.

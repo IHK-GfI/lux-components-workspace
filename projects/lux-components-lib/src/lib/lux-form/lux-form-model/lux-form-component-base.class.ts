@@ -383,9 +383,13 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected checkValidatorsContainRequired(validators: ValidatorFnType) {
     if (this.luxRequired !== null && this.luxRequired !== undefined) {
       if (this.luxRequired) {
-        // Fall: required = true, aber neue Validatoren werden gesetzt.
-        // Sind es mehrere Validatoren, aber kein "required"? Dann wird er ergänzt
-        if (Array.isArray(validators) && validators.indexOf(Validators.required) === -1) {
+        // Fall: `luxRequired = true` — füge `Validators.required` hinzu.
+        // - Keine Validatoren: setze `Validators.required`
+        // - Array ohne `required`: `push(Validators.required)`
+        // - Einzelner, nicht-`required`-Validator: in Array mit `Validators.required` umwandeln.
+        if (!validators) {
+          validators = Validators.required;
+        } else if (Array.isArray(validators) && validators.indexOf(Validators.required) === -1) {
           validators.push(Validators.required);
         } else if (validators && !Array.isArray(validators) && validators !== Validators.required) {
           // Ist es nur ein einzelner Validator und nicht "required"? Dann Array erstellen und beide kombinieren.
@@ -414,12 +418,23 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * @param checkRequiredValidator
    */
   protected updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
-    if ((!Array.isArray(validators) && validators) || (Array.isArray(validators) && validators.length > 0)) {
+    // Falls Validatoren übergeben wurden oder das Flag luxRequired gesetzt ist
+    // und wir prüfen sollen, ob required ergänzt werden muss, dann setzen
+    // wir Validatoren auf das interne FormControl. Dadurch wird sichergestellt,
+    // dass auch bei nur gesetztem `luxRequired` (ohne explizite
+    // `luxControlValidators`) ein `Validators.required` angewendet wird.
+    const shouldApplyValidators =
+      (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0) ||
+      (checkRequiredValidator && this.luxRequired);
+
+    if (shouldApplyValidators) {
       if (!this.inForm) {
         setTimeout(() => {
+          let finalValidators: ValidatorFnType = validators;
           if (checkRequiredValidator) {
-            this._luxControlValidators = this.checkValidatorsContainRequired(validators);
+            finalValidators = this.checkValidatorsContainRequired(finalValidators);
           }
+          this._luxControlValidators = finalValidators;
           this.formControl.setValidators(this.luxControlValidators ?? null);
           this.formControl.updateValueAndValidity();
         });

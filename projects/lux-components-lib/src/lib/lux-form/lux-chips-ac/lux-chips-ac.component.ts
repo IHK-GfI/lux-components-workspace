@@ -51,7 +51,7 @@ let luxChipControlUID = 0;
     LuxTooltipDirective
   ]
 })
-export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   private _luxAutocompleteOptions: string[] = [];
 
@@ -199,6 +199,35 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implemen
 
       this.filteredOptions = this.luxAutocompleteOptions ? this.luxAutocompleteOptions : [];
     }
+
+    // Für den Fall ohne ChipGroup (einzelne lux-chip-ac Elemente) muss der interne
+    // FormControl-Wert mit der Anzahl der Chips synchronisiert werden, damit der
+    // required-Validator korrekt funktioniert.
+    // Achtung: Wenn die Komponente Teil einer ReactiveForm (`inForm === true`) ist,
+    // darf der Wert nicht hier überschrieben werden (das Formular ist die Quelle der Wahrheit).
+    if (!this.luxNewChipGroup && !this.inForm) {
+      // setTimeout vermeidet ExpressionChangedAfterItHasBeenCheckedError, da
+      // syncFormControlWithStandaloneChips den FormControl-Wert nach dem
+      // Change-Detection-Durchlauf von ngAfterContentInit verändert.
+      setTimeout(() => this.syncFormControlWithStandaloneChips());
+      this.subscriptions.push(
+        this.luxChipComponents.changes.subscribe(() => this.syncFormControlWithStandaloneChips())
+      );
+    }
+  }
+
+  private syncFormControlWithStandaloneChips() {
+    const count = this.luxChipComponents ? this.luxChipComponents.length : 0;
+    // Bei 0 Chips setzen wir bewusst `null`, damit der FormControl-Typ
+    // `FormControl<string[] | null>` die Semantik "kein Wert" repräsentiert.
+    // Hinweis: Der Array-Inhalt dient hier nur als Präsenz-Indikator für den
+    // required-Validator. Die tatsächlichen Chip-Labels werden ausschließlich
+    // durch das Parent-Template verwaltet (deklarative lux-chip-ac-Elemente).
+    const newValue: string[] | null = count > 0 ? new Array(count).fill('') : null;
+    this.formControl.setValue(newValue, { emitEvent: false });
+    // emitEvent: false wird auch hier gesetzt, damit kein doppeltes valueChanges-Event
+    // ausgelöst wird; updateValueAndValidity wertet lediglich die Validatoren neu aus.
+    this.formControl.updateValueAndValidity({ emitEvent: false });
   }
 
   ngAfterViewInit() {
@@ -379,13 +408,14 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[]> implemen
 
   onFocusOut() {
     if (this.luxNewChipGroup) {
+      // Verzögerung nur bei luxNewChipGroup: dort wird der Wert asynchron gesetzt
+      // (add/remove löst setValue erst nach dem Event aus), sodass ein direktes
+      // markAsTouched kurzzeitig einen falschen required-Fehler anzeigen würde.
       setTimeout(() => {
-        // Hier wird der markAsTouched-Aufruf gezielt verzögert,
-        // damit die Darstellung eines required-Chips nicht flackert
-        // (kurzzeitig rot, wegen der Pflichtfeldfehlermeldung,
-        // danach wieder normal, sobald der Wert gesetzt wurde).
         this.formControl.markAsTouched();
       }, 100);
+    } else {
+      this.formControl.markAsTouched();
     }
   }
 

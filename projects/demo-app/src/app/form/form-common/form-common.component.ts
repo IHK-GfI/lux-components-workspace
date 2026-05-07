@@ -110,7 +110,7 @@ export class FormCommonComponent extends FormBase implements OnInit {
       }),
       description: new FormControl<string | null>(''),
       newsletter: new FormControl<boolean | null>(true),
-      hobbies: new FormControl<string[] | null>([]),
+      hobbies: new FormControl<string[] | null>(null),
       donation: new FormControl<number | null>(0, Validators.compose([Validators.min(0), Validators.max(1000)])),
       hungry: new FormControl<boolean | null>(true),
       chipsDeletable: new FormControl<string[] | null>([...this.chipItems]),
