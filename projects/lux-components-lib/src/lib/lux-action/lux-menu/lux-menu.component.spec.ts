@@ -205,6 +205,40 @@ describe('LuxMenuComponent', () => {
     expect(items.length).toBe(5);
   }));
 
+  it('Sollte den Fokus auf den Custom-Trigger zurücksetzen nach dem Schließen des Menüs', fakeAsync(() => {
+    // Vorbedingungen prüfen
+    component.generateItems(3);
+    component.showMockTrigger = true;
+    LuxTestHelper.wait(fixture);
+
+    const mockTriggerBtn = fixture.debugElement.query(By.css('.mock-trigger')).nativeElement as HTMLElement;
+    const focusSpy = spyOn(mockTriggerBtn, 'focus');
+
+    // Menü schließen simulieren
+    menuComponent.onMenuClosed();
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen
+    expect(focusSpy).toHaveBeenCalled();
+  }));
+
+  it('Sollte den Fokus auf den Default-Trigger zurücksetzen nach dem Schließen des Menüs (kein Custom-Trigger)', fakeAsync(() => {
+    // Vorbedingungen prüfen
+    component.generateItems(3);
+    component.showMockTrigger = false;
+    LuxTestHelper.wait(fixture);
+
+    const defaultTriggerBtn = menuComponent.defaultTriggerElRef!.nativeElement.children.item(0) as HTMLElement;
+    const focusSpy = spyOn(defaultTriggerBtn, 'focus');
+
+    // Menü schließen simulieren
+    menuComponent.onMenuClosed();
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen
+    expect(focusSpy).toHaveBeenCalled();
+  }));
+
   const updateExtendedMenuItems = () => {
     LuxTestHelper.wait(fixture);
     menuComponent.updateExtendedMenuItems();
@@ -236,7 +270,7 @@ describe('LuxMenuComponent', () => {
     }
     @if (showMockTrigger) {
       <lux-menu-trigger>
-        <span class="mock-trigger">Mock-Spock</span>
+        <button class="mock-trigger">Mock-Spock</button>
       </lux-menu-trigger>
     }
   </lux-menu>`,
