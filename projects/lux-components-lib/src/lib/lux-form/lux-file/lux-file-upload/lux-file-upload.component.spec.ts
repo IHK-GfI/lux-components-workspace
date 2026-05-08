@@ -131,7 +131,7 @@ class MockStorage {
       [luxListOnly]="listOnly"
       [luxAccept]="accept"
       [luxCapture]="capture"
-      [luxMaxSizeMB]="maxSizeMb"
+      [luxMaxSizeMiB]="maxSizeMiB"
       [luxUploadUrl]="uploadUrl"
       [luxSelected]="selected"
       [luxMultiple]="multiple"
@@ -155,7 +155,7 @@ class FileComponent {
   accept?: string;
   capture?: string;
   iconName?: string;
-  maxSizeMb = 10;
+  maxSizeMiB = 10;
   uploadUrl?: string;
   multiple?: boolean;
   contentsAsBlob?: boolean;

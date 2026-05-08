@@ -426,7 +426,7 @@ describe('LuxFileInputAcComponent', () => {
         expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
         // Änderungen durchführen
-        testComponent.maxSizeMb = 5;
+        testComponent.maxSizeMiB = 5;
         LuxTestHelper.wait(fixture);
 
         files = [LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')];
@@ -444,7 +444,7 @@ describe('LuxFileInputAcComponent', () => {
         expect(fileComponent.formControl.value).toBeNull();
         expect(fixture.debugElement.query(By.css('mat-error'))).not.toBeNull();
         expect(fixture.debugElement.query(By.css('mat-error')).nativeElement.textContent.trim()).toEqual(
-          'Die Datei "mockfile2.txt" überschreitet mit 20MB die erlaubte Dateigröße von 5MB'
+          'Die Datei "mockfile2.txt" überschreitet mit 20 MB die erlaubte Dateigröße von 5 MB'
         );
       }));
 
@@ -463,7 +463,7 @@ describe('LuxFileInputAcComponent', () => {
         expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
         // Änderungen durchführen
-        testComponent.maxSizeMb = 5;
+        testComponent.maxSizeMiB = 5;
         fileComponent.luxClearOnError = false;
         LuxTestHelper.wait(fixture);
 
@@ -485,7 +485,7 @@ describe('LuxFileInputAcComponent', () => {
         expect(fileComponent.formControl.value!.type).toBe('text/txt');
         expect(fixture.debugElement.query(By.css('mat-error'))).not.toBeNull();
         expect(fixture.debugElement.query(By.css('mat-error')).nativeElement.textContent.trim()).toEqual(
-          'Die Datei "mockfile2.txt" überschreitet mit 20MB die erlaubte Dateigröße von 5MB'
+          'Die Datei "mockfile2.txt" überschreitet mit 20 MB die erlaubte Dateigröße von 5 MB'
         );
       }));
 
@@ -809,7 +809,7 @@ describe('LuxFileInputAcComponent', () => {
       [luxAccept]="accept"
       [luxCapture]="capture"
       [luxDnDActive]="dndActive"
-      [luxMaxSizeMB]="maxSizeMb"
+      [luxMaxSizeMiB]="maxSizeMiB"
       [luxUploadUrl]="uploadUrl"
       [luxSelected]="selected"
       [luxUploadActionConfig]="uploadActionConfig"
@@ -834,7 +834,7 @@ class FileComponent {
   capture?: string;
   dndActive = true;
   iconName?: string;
-  maxSizeMb = 10;
+  maxSizeMiB = 10;
   uploadUrl?: string;
   contentsAsBlob?: boolean;
 
@@ -888,7 +888,7 @@ class FileComponent {
         [luxAccept]="accept"
         [luxCapture]="capture"
         [luxDnDActive]="dndActive"
-        [luxMaxSizeMB]="maxSizeMb"
+        [luxMaxSizeMiB]="maxSizeMiB"
         [luxUploadUrl]="uploadUrl"
         [luxClearOnError]="clearOnError"
       >
@@ -910,7 +910,7 @@ class FileFormComponent {
   capture?: string;
   dndActive = true;
   iconName?: string;
-  maxSizeMb = 10;
+  maxSizeMiB = 10;
   uploadUrl?: string;
   clearOnError = true;
 

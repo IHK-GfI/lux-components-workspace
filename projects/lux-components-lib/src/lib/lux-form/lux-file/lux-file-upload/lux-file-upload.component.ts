@@ -7,7 +7,9 @@ import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxLinkPlainComponent } from '../../../lux-action/lux-link-plain/lux-link-plain.component';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxTooltipDirective } from '../../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
+import { LuxBytesToLabelPipe } from '../../../lux-pipes/lux-bytes-to-label/lux-bytes-to-label.pipe';
 import { ILuxDialogConfig } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxTheme } from '../../../lux-theme/lux-theme';
@@ -39,7 +41,9 @@ import { LuxFileReplaceDialogComponent } from '../lux-file-subcomponents/lux-fil
     LuxButtonComponent,
     LuxIconComponent,
     LuxLinkPlainComponent,
-    TranslocoPipe
+    TranslocoPipe,
+    LuxBytesToLabelPipe,
+    LuxTooltipDirective
   ]
 })
 export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements OnInit, AfterViewInit, OnDestroy {
@@ -445,7 +449,7 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   protected override getMaxSizeErrorMessage(file: File): string {
     return this.tService.translate(`luxc.file.upload.error_message.max_file_size`, {
       fileName: file.name,
-      maxSizeMB: this.luxMaxSizeMB
+      maxSizeMiB: this.luxMaxSizeMiB
     });
   }
 

@@ -272,6 +272,7 @@ export * from './lib/lux-lookup/lux-lookup-service/lux-lookup.service';
  * LUX-Pipes
  */
 export * from './lib/lux-pipes/lux-alphabetically-sorted/lux-alphabetically-sorted.pipe';
+export * from './lib/lux-pipes/lux-bytes-to-label/lux-bytes-to-label.pipe';
 export * from './lib/lux-pipes/lux-property-from-object/lux-property-from-object.pipe';
 export * from './lib/lux-pipes/lux-relative-timestamp/lux-relative-timestamp.pipe';
 export * from './lib/lux-pipes/lux-render-property/lux-render-property.pipe';
