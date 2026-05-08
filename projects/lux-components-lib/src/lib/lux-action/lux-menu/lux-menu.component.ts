@@ -292,12 +292,18 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
 
   /**
    * Wird nach dem Schließen des Menus aufgerufen und emitted die Output-Property.
-   * Setzt den Fokus auf den Default-Trigger (Custom-Trigger => eigene Verantwortung).
+   * Setzt den Fokus auf den Custom-Trigger oder – falls kein Custom-Trigger vorhanden – auf den Default-Trigger.
    */
   onMenuClosed() {
     this.luxMenuClosed.emit();
-    if (this.defaultTriggerElRef) {
-      (this.defaultTriggerElRef.nativeElement.children.item(0) as any).focus();
+    if (this.luxMenuTriggerComponent) {
+      const triggerEl = (this.elementRef.nativeElement as HTMLElement).querySelector('lux-menu-trigger');
+      const focusableEl = triggerEl?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      focusableEl?.focus();
+    } else if (this.defaultTriggerElRef) {
+      (this.defaultTriggerElRef.nativeElement.children.item(0) as HTMLElement | null)?.focus();
     }
   }
 
