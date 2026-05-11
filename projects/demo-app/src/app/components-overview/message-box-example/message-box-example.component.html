@@ -3,21 +3,47 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90message%E2%80%90box-v21"
 >
   <example-base-content>
-    <lux-message-box
-      [luxMessages]="messages"
-      [luxIndex]="messageIndex"
-      [luxMaximumDisplayed]="maximumDisplayed"
-      (luxMessageClosed)="logClosed($event)"
-      (luxMessageBoxClosed)="logBoxClosed()"
-      (luxMessageChanged)="logChanged($event)"
-    >
-    </lux-message-box>
+    @if (showInCard) {
+      <lux-card luxTitle="Message-Box in Karte">
+        <lux-card-content>
+          <p>Klappe die Karte auf und zu, um zu prüfen, ob die Message-Box nach dem erneuten Ausklappen sichtbar bleibt.</p>
+        </lux-card-content>
+        <lux-card-content-expanded>
+          <lux-message-box
+            [(luxMessages)]="messages"
+            [luxIndex]="messageIndex"
+            [luxMaximumDisplayed]="maximumDisplayed"
+            (luxMessageClosed)="logClosed($event)"
+            (luxMessageBoxClosed)="logBoxClosed()"
+            (luxMessageChanged)="logChanged($event)"
+          >
+          </lux-message-box>
+        </lux-card-content-expanded>
+      </lux-card>
+    } @else {
+      <lux-message-box
+        [(luxMessages)]="messages"
+        [luxIndex]="messageIndex"
+        [luxMaximumDisplayed]="maximumDisplayed"
+        (luxMessageClosed)="logClosed($event)"
+        (luxMessageBoxClosed)="logBoxClosed()"
+        (luxMessageChanged)="logChanged($event)"
+      >
+      </lux-message-box>
+    }
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Message-Box in Karte anzeigen"
+      luxHint="Schaltet die Message-Box zwischen dem Bereich außerhalb und innerhalb der Karte um."
+      [(luxChecked)]="showInCard"
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>

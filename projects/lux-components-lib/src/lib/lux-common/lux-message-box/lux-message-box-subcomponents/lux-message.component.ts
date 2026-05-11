@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -15,13 +15,13 @@ import { ILuxMessage } from '../lux-message-box-model/lux-message.interface';
 export class LuxMessageComponent {
   private _luxMessage?: ILuxMessage;
 
+  readonly closing = signal(false);
+
   @Output() luxMessageClosed = new EventEmitter<ILuxMessage>();
 
   @Input() set luxMessage(message: ILuxMessage | undefined) {
     this._luxMessage = message;
-    if (this.luxMessage) {
-      this.updateColor();
-    }
+    this.closing.set(false);
   }
 
   get luxMessage(): ILuxMessage | undefined {
@@ -31,18 +31,16 @@ export class LuxMessageComponent {
   constructor() {}
 
   /**
-   * Setzt die Messages auf ein leeres Array, um so die MessageBox auszublenden.
+   * Setzt das closing-Signal auf true – die CSS-Transition übernimmt das Ausblenden.
+   * Der Close-Event wird erst in onTransitionEnd() emittiert.
    */
   close() {
-    this.luxMessageClosed.emit(this.luxMessage);
+    this.closing.set(true);
   }
 
-  /**
-   * Aktualisiert die Farbe dieser Box passend zur Farbe der Nachricht.
-   */
-  private updateColor() {
-    if (this.luxMessage) {
-      const color = this.luxMessage.color;
+  onTransitionEnd(event: TransitionEvent) {
+    if (this.closing() && event.propertyName === 'opacity') {
+      this.luxMessageClosed.emit(this.luxMessage);
     }
   }
 }

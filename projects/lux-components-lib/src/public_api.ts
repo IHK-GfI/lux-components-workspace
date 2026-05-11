@@ -166,7 +166,6 @@ export * from './lib/lux-tenant-logo/lux-tenant-logo.component';
 /**
  * LUX-Layout
  */
-export { visibilityTrigger } from './lib/lux-common/lux-message-box/lux-message-box-model/lux-message-box.animations';
 export * from './lib/lux-layout/lux-accordion/lux-accordion.component';
 export * from './lib/lux-layout/lux-app-content/lux-app-content.component';
 export * from './lib/lux-layout/lux-app-footer/lux-app-footer-button-info';
