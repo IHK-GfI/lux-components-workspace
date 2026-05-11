@@ -494,6 +494,29 @@ describe('LuxDatetimepickerAcComponent', () => {
       flush();
     }));
 
+    it('Sollte beim Öffnen den korrekten Monat anzeigen, wenn der 1. eines Monats ausgewählt ist', fakeAsync(() => {
+      // Vorbedingungen testen
+      expect(testComponent.value).toBeFalsy();
+
+      // Änderungen durchführen: Wert auf den 1. April setzen (UTC Mitternacht)
+      testComponent.value = '2024-04-01T00:00:00.000Z';
+      testComponent.opened = true;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen: Die ausgewählte Zelle muss "April" enthalten (nicht "März")
+      const selectedCell = overlayHelper.selectOneFromOverlay('.mat-calendar-body-selected');
+      expect(selectedCell).not.toBeNull();
+      // Die aria-label der ausgewählten Zelle muss April enthalten
+      const ariaLabel = selectedCell?.closest('button')?.getAttribute('aria-label') ?? selectedCell?.getAttribute('aria-label') ?? '';
+      expect(ariaLabel).toContain('April');
+
+      testComponent.opened = false;
+      LuxTestHelper.wait(fixture);
+      LuxTestHelper.wait(fixture);
+
+      flush();
+    }));
+
     it('Sollte luxValueChange angemessen oft aufrufen', fakeAsync(() => {
       // Vorbedingungen testen
       const spy = spyOn(testComponent, 'valueChanged');
