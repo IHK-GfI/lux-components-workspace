@@ -51,7 +51,10 @@ let luxChipControlUID = 0;
     LuxTooltipDirective
   ]
 })
-export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+export class LuxChipsAcComponent
+  extends LuxFormComponentBase<string[] | null>
+  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
+{
   private subscriptions: Subscription[] = [];
   private _luxAutocompleteOptions: string[] = [];
 
@@ -116,7 +119,8 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
   }
 
   @Input() override set luxDisabled(disabled: boolean) {
-    this._luxDisabled = disabled;
+    super.luxDisabled = disabled;
+
     if (!this.initRunning) {
       // Den Disabled-State nicht während der Initialisierung übertragen.
       setTimeout(() => {
@@ -210,9 +214,7 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
       // syncFormControlWithStandaloneChips den FormControl-Wert nach dem
       // Change-Detection-Durchlauf von ngAfterContentInit verändert.
       setTimeout(() => this.syncFormControlWithStandaloneChips());
-      this.subscriptions.push(
-        this.luxChipComponents.changes.subscribe(() => this.syncFormControlWithStandaloneChips())
-      );
+      this.subscriptions.push(this.luxChipComponents.changes.subscribe(() => this.syncFormControlWithStandaloneChips()));
     }
   }
 
