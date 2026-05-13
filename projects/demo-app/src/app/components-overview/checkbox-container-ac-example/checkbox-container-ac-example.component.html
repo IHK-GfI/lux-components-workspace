@@ -36,6 +36,58 @@
         Spalten und in der mobilen Ansicht in Zeilen an.
       </p>
     </div>
+
+    <h2>Beispiel in Reactive-Form</h2>
+    <form [formGroup]="validatorDemoForm" class="lux-flex lux-flex-col lux-gap-4">
+      <div>
+        <div formGroupName="options">
+          <lux-checkbox-container-ac luxLabel="Lorem ipsum" [luxShowRequiredMarker]="true">
+            <lux-checkbox-ac luxLabel="Option 1" luxControlBinding="cb1"></lux-checkbox-ac>
+            <lux-checkbox-ac luxLabel="Option 2" luxControlBinding="cb2"></lux-checkbox-ac>
+            <lux-checkbox-ac luxLabel="Option 3" luxControlBinding="cb3"></lux-checkbox-ac>
+          </lux-checkbox-container-ac>
+        </div>
+        @if (validatorDemoForm.get('options')?.hasError('luxAtLeastOneCheckboxChecked') && validatorDemoForm.get('options')?.touched) {
+          <div class="lux-pl-3 lux-form-error-container">
+            <lux-icon
+              class="lux-form-error-icon"
+              luxIconName="lux-interface-alert-warning-triangle"
+              luxIconSize="0.875rem"
+              luxPadding="1px"
+              luxMargin="0px 2px 0px 0px"
+            ></lux-icon>
+            <mat-error class="lux-form-error-label">Es muss mindestens eine Option ausgewählt werden.</mat-error>
+          </div>
+        }
+      </div>
+      <div>
+        <lux-button luxLabel="Absenden" (luxClicked)="submitValidatorDemo()"></lux-button>
+      </div>
+    </form>
+
+    <h2>Beispiel ohne Reactive-Form</h2>
+    <div>
+      <lux-checkbox-container-ac luxLabel="Lorem ipsum" [luxShowRequiredMarker]="true">
+        <lux-checkbox-ac luxLabel="Option A" [(luxChecked)]="standalone1"></lux-checkbox-ac>
+        <lux-checkbox-ac luxLabel="Option B" [(luxChecked)]="standalone2"></lux-checkbox-ac>
+        <lux-checkbox-ac luxLabel="Option C" [(luxChecked)]="standalone3"></lux-checkbox-ac>
+      </lux-checkbox-container-ac>
+      @if (standaloneSubmitted && !luxAtLeastOneChecked([standalone1, standalone2, standalone3])) {
+        <div class="lux-pl-3 lux-form-error-container">
+          <lux-icon
+            class="lux-form-error-icon"
+            luxIconName="lux-interface-alert-warning-triangle"
+            luxIconSize="0.875rem"
+            luxPadding="1px"
+            luxMargin="0px 2px 0px 0px"
+          ></lux-icon>
+          <mat-error class="lux-form-error-label">Es muss mindestens eine Option ausgewählt werden.</mat-error>
+        </div>
+      }
+    </div>
+    <div class="lux-pb-2">
+      <lux-button luxLabel="Absenden" (luxClicked)="submitStandaloneDemo()"></lux-button>
+    </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label">
@@ -47,6 +99,9 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    <p class="lux-text-highlight-alert">Vorsicht: Checkboxen innerhalb eines <code>lux-checkbox-container-ac</code> zeigen weder einen Hinweis noch eine Fehlermeldung an, da der Error-Container aus Platzgründen ausgeblendet wird.</p>
+    <p class="lux-text-highlight-alert">
+      Vorsicht: Checkboxen innerhalb eines <code>lux-checkbox-container-ac</code> zeigen weder einen Hinweis noch eine Fehlermeldung an, da
+      der Error-Container aus Platzgründen ausgeblendet wird.
+    </p>
   </example-base-simple-options>
 </example-base-structure>

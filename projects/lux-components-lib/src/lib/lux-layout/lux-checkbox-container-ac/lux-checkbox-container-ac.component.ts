@@ -9,6 +9,7 @@ import { Component, Input } from '@angular/core';
 export class LuxCheckboxContainerAcComponent {
   @Input() luxLabel = '';
   @Input() luxVertical = true;
+  @Input() luxShowRequiredMarker = false;
 
   constructor() {}
 }

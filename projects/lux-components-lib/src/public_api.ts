@@ -128,6 +128,7 @@ export * from './lib/lux-form/lux-select-ac/lux-select-ac.component';
 export * from './lib/lux-form/lux-slider-ac/lux-slider-ac.component';
 export * from './lib/lux-form/lux-textarea-ac/lux-textarea-ac.component';
 export * from './lib/lux-form/lux-toggle-ac/lux-toggle-ac.component';
+export * from './lib/lux-form/lux-validators';
 
 /**
  * LUX-Filter
@@ -331,4 +332,3 @@ export * from './lib/lux-util/testing/lux-test-overlay-helper';
  */
 export * from './lib/lux-theme/lux-theme';
 export * from './lib/lux-theme/lux-theme.service';
-
