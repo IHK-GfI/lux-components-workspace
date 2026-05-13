@@ -87,6 +87,8 @@ Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu er
 
 - [lux-badge](lux‐badge-v21)
 - [lux-breadcrumb](lux‐breadcrumb-v21)
+- [lux-chat](lux-chat-v21)
+- [lux-chat-popup](lux-chat-popup-v21)
 - [lux-consent](lux‐consent-v21)
 - [lux-dialog](lux‐dialog-v21)
 - [lux-error-page](lux‐error‐page-v21)

@@ -1,0 +1,38 @@
+<example-base-structure
+    exampleTitle="Chat">
+
+    <example-base-content>
+        @if(!showChatPopup){
+            <div style="height: calc(100vh - 270px);">
+                <lux-chat
+                    [luxChatData]="chatData"
+                    [luxChatUserName]="exampleUsername"
+                    (luxChatOutput)="onMessageEntered($event)"
+                ></lux-chat>
+            </div>
+        }
+
+        @if(showChatPopup){
+            <lux-chat-popup>
+                <lux-chat
+                    [luxChatData]="chatData"
+                    [luxChatUserName]="exampleUsername"
+                    (luxChatOutput)="onMessageEntered($event)"
+                ></lux-chat>
+            </lux-chat-popup>
+        }
+
+    </example-base-content>
+
+    <example-base-simple-options>
+        <lux-toggle-ac
+            luxLabel="Zeige Chat in LuxChatPopup Komponente"
+            [(luxChecked)]="showChatPopup"
+        ></lux-toggle-ac>
+        <lux-input-ac
+        luxLabel="Chat Username"
+            [(luxValue)]="exampleUsername"
+        ></lux-input-ac>
+    </example-base-simple-options>
+
+</example-base-structure>

@@ -347,6 +347,12 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-card-background-color: var(--lux-theme-app-data-bg);
   --lux-theme-card-padding: 20px;
 
+  // LUX-Chat
+  --lux-theme-chat-entry-header-text-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-chat-entry-container-left-background-color: var(--lux-theme-accent-98);
+  --lux-theme-chat-entry-container-right-background-color: var(--lux-theme-primary-95);
+  --lux-theme-chat-background-color: var(--lux-theme-app-data-bg);
+
   // LUX-Datepicker
   --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
   --lux-theme-datepicker-panel-shape: var(--lux-theme-app-border-radius);

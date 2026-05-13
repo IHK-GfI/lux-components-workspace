@@ -45,6 +45,17 @@
       "expandedLabel.close": "Hide",
       "expandedLabel.open": "More"
     },
+    "chat": {
+      "input.arialabel": "Chat Input",
+      "input.placeholder.default": "Your message",
+      "title.created_at": "Created at: ",
+      "button_fullscreen.arialabel": "Fullscreen",
+      "button_close.arialabel": "Close"
+    },
+    "chat-popup": {
+      "button_close.arialabel": "Close Chat",
+      "button_open.arialabel": "Open Chat"
+    },
     "chips": {
       "input.placeholder.lbl": "enter or select",
       "remove": "remove"

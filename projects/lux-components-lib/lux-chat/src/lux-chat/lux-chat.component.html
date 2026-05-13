@@ -1,0 +1,80 @@
+<div class="lux-chat">
+    <!-- Chat header -->
+    <div class="lux-chat-header">
+        <p class="lux-chat-header-title">
+            <b>{{ luxChatData()?.title }}</b><br/>
+            @if(luxChatData()){
+                {{'luxc.chat.title.created_at' | transloco}}<b>{{ luxChatData()!.createdAt | date:'dd.MM HH:mm' }}</b>
+            }
+        </p>
+        
+        @if(showFullscreenButton() || showCloseButton()){
+            <div>
+                @if(showFullscreenButton()){
+                    <lux-button
+                        [luxIconButton]="true"
+                        [luxIconName]="_chatFullscreen ? 'lux-interface-arrows-shrink-1' : 'lux-interface-arrows-expand-1'"
+                        (luxClicked)="onFullscreenChatClicked()"
+                        [luxAriaLabel]="'luxc.chat.button_fullscreen.arialabel' | transloco"
+                    ></lux-button>
+                }
+
+                @if(showCloseButton()){
+                    <lux-button
+                        [luxIconButton]="true"
+                        luxIconName="lux-interface-delete-1"
+                        (luxClicked)="onCloseChatClicked()"
+                        [luxAriaLabel]="'luxc.chat.button_close.arialabel' | transloco"
+                    ></lux-button>
+                }
+            </div>
+        }
+    </div>
+    
+    <lux-divider [luxInset]="true"></lux-divider>
+
+    <!-- Chat base -->
+    <div class="lux-chat-base" tabindex="0" #chatBase>
+        @for (item of luxChatData()?.messages; track $index){
+            @if(item.metadata["_showDateSplit"]){
+                <div class="lux-chat-entry-date-split">
+                    {{ item.time | luxChatRelativeUntilTimestamp:undefined:undefined:-2:0:locale }}
+                </div>
+            }
+
+            <div [ngClass]="{
+                'lux-chat-entry-container': true,
+                'lux-chat-entry-container-left': !item.metadata._isUser,
+                'lux-chat-entry-container-right': item.metadata._isUser,
+            }">
+                <div class="lux-chat-entry-header">
+                    @if(item.metadata["_showEntryHeaderTime"]){
+                        @if(item.user !== luxChatUserName()){
+                            <span>{{item.user}}</span>
+                        }
+                        <span>{{item.time | date:'HH:mm'}}</span>
+                    }
+                </div>
+                <div class="lux-chat-entry-card">
+                    <p>{{item.content}}</p>
+                </div>
+            </div>
+
+        }
+    </div>
+
+    <!-- Chat action -->
+    <lux-textarea-ac 
+        luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
+        luxAriaLabelSelector="textarea"
+        class="lux-chat-input"
+        luxTagId="chatInput" 
+        [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
+        [(luxValue)]="chatInput" 
+        luxAutocomplete="off" 
+        [luxNoTopLabel]="true" 
+        [luxNoBottomLabel]="true"
+        [luxMaxRows]="4"
+        (keydown.enter)="onChatEntered($event)"
+    ></lux-textarea-ac>
+</div>

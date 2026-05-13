@@ -1,0 +1,75 @@
+
+@use "../common/luxelevations";
+@use "../common/luxbreakpoints";
+
+.lux-chat-popup-container {
+    position: relative;
+    z-index: 1000;
+}
+
+.lux-chat-popup-content {
+    position: fixed;
+    
+    right: 2em;
+    bottom: 5em;
+    top: 8em;
+
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+}
+
+.lux-chat-popup-floating-button {
+    align-self: end;
+}
+
+.lux-chat-popup-inner-container {
+    z-index: 1000; 
+
+    min-width: 20vw;
+    max-width: 400px;
+    
+    max-height: min(calc(100% - 4em), 60vh);
+
+    
+    @include luxelevations.lux-elevation-z4;
+
+    background-color: var(--lux-theme-chat-background-color);
+    border-radius: 8px;
+    border: 1px solid lightgray; //TODO: variable
+
+    flex: 1;
+
+    &.lux-chat-popup-inner-container-fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        
+        width: 100%;
+        min-width: unset;
+        max-width: unset;
+
+        
+        height: 100%;
+        max-height: unset;
+
+        .lux-chat {
+            margin: 32px 16px; //TODO: Pixel ?
+            height: calc(100% - 56px); //TODO: Pixel ?
+
+            .lux-chat-base {
+                width: min(100%, 850px); //TODO: Pixel ?
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .lux-chat-input {
+                width: min(100%, 850px); //TODO: Pixel ?
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+    }
+}
+
