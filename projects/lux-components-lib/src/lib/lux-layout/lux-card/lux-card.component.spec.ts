@@ -18,7 +18,12 @@ import { LuxCardComponent } from './lux-card.component';
 describe('LuxCardComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideNoopAnimations(), provideLuxTranslocoTesting()]
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideNoopAnimations(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -247,8 +252,7 @@ describe('LuxCardComponent', () => {
 
     it('Sollte luxTitle und luxSubTitle darstellen', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('');
-      expect(fixture.debugElement.query(By.css('.lux-card-subtitle')).nativeElement.textContent.trim()).toEqual('');
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
 
       // Änderungen durchführen
       component.title = 'Hallo';
@@ -256,11 +260,12 @@ describe('LuxCardComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).not.toBeNull();
       expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('Hallo');
       expect(fixture.debugElement.query(By.css('.lux-card-subtitle')).nativeElement.textContent.trim()).toEqual('Welt');
     }));
 
-    it('Sollte lux-card-title ausblenden, wenn luxTitle undefined', fakeAsync(() => {
+    it('Sollte mat-card-header nicht rendern, wenn luxTitle auf undefined gesetzt wird', fakeAsync(() => {
       // Vorbedingungen testen
       component.title = 'Hallo';
       LuxTestHelper.wait(fixture);
@@ -272,8 +277,7 @@ describe('LuxCardComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none-important'))).not.toBeNull();
-      expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('');
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
     }));
 
     it('Sollte lux-card-title nicht ausblenden, wenn luxTitle undefined aber lux-card-info gesetzt ist', fakeAsync(() => {
@@ -293,7 +297,7 @@ describe('LuxCardComponent', () => {
       expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('');
     }));
 
-    it('Sollte lux-card-subtitle ausblenden, wenn luxSubTitle undefined', fakeAsync(() => {
+    it('Sollte mat-card-header nicht rendern, wenn luxSubTitle auf undefined gesetzt wird', fakeAsync(() => {
       // Vorbedingungen testen
       component.subTitle = 'Hallo';
       LuxTestHelper.wait(fixture);
@@ -304,7 +308,7 @@ describe('LuxCardComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(fixture.debugElement.query(By.css('.lux-card-subtitle.lux-display-none-important'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
     }));
 
     it('Sollte mat-card-actions ausblenden, wenn keine Actions gesetzt sind', fakeAsync(() => {
@@ -319,6 +323,30 @@ describe('LuxCardComponent', () => {
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.mat-mdc-card-actions.lux-display-none-important'))).not.toBeNull();
+    }));
+
+    it('Sollte mat-card-header nicht rendern, wenn kein Header-Inhalt vorhanden ist', fakeAsync(() => {
+      // Vorbedingungen testen
+      component.title = undefined;
+      component.subTitle = undefined;
+      component.testShowIcon = false;
+      component.testShowInfo = false;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
+    }));
+
+    it('Sollte mat-card-header rendern, wenn luxTitle gesetzt ist', fakeAsync(() => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
+
+      // Änderungen durchführen
+      component.title = 'Titel';
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('mat-card-header'))).not.toBeNull();
     }));
 
     it('Sollte Click-Events deaktivieren (luxDisabled)', fakeAsync(() => {
@@ -411,19 +439,20 @@ class LuxContentExpandedComponent {
   template: `
     <lux-card [luxTitle]="title" [luxSubTitle]="subTitle" [luxDisabled]="disabled" (luxClicked)="cardClicked()">
       @if (testShowIcon) {
-      <lux-icon luxIconName="lux-interface-validation-check"></lux-icon>
-      } @if (testShowInfo) {
-      <lux-card-info>
-        <span class="test-card-info">Card-Info</span>
-      </lux-card-info>
+        <lux-icon luxIconName="lux-interface-validation-check"></lux-icon>
+      }
+      @if (testShowInfo) {
+        <lux-card-info>
+          <span class="test-card-info">Card-Info</span>
+        </lux-card-info>
       }
       <lux-card-content>
         <span class="test-card-content">Card-Content</span>
       </lux-card-content>
       @if (testShowAction) {
-      <lux-card-actions>
-        <span class="test-card-action"></span>
-      </lux-card-actions>
+        <lux-card-actions>
+          <span class="test-card-action"></span>
+        </lux-card-actions>
       }
     </lux-card>
   `,
