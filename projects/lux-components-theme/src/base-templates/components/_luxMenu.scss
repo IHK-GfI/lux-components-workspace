@@ -139,6 +139,7 @@ lux-menu {
   }
 
   .lux-menu-item-icon {
+    display: inline-block;
     align-self: center;
     vertical-align: middle;
     width: var(--lux-theme-menu-item-icon-size);
