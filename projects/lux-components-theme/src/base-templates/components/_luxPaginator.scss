@@ -1,0 +1,7 @@
+@use "@angular/material" as mat;
+
+:root {
+  @include mat.paginator-overrides((
+    container-background-color: transparent,
+  ));
+}
