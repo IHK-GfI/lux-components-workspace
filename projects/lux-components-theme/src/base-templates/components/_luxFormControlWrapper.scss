@@ -13,6 +13,26 @@
   color: var(--lux-theme-dark-secondary-text);
 }
 
+@mixin form-error-icon {
+  color: var(--mat-sys-on-error-container);
+  mat-icon.mat-icon {
+    box-sizing: border-box;
+  }
+}
+
+@mixin form-error-label {
+  display: flex;
+  flex: 0 1 auto;
+  background-color: var(--lux-theme-form-error-msg-background);
+  border-radius: 4px;
+  padding-right: 2px;
+  color: var(--mat-sys-on-error-container) !important;
+  box-shadow:
+    -18px 0px 0 0 var(--lux-theme-form-error-msg-background),
+    -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
+    0 -1px 0 0 var(--lux-theme-form-error-msg-background);
+}
+
 @mixin lux-form-control-min-height($min-height) {
   input,
   mat-select,
@@ -227,21 +247,10 @@ lux-form-control-wrapper {
       }
       .lux-form-control-misc-authentic {
         .lux-alert-icon {
-          color: var(--mat-sys-on-error-container);
-          mat-icon.mat-icon {
-            box-sizing: border-box;
-          }
+          @include form-error-icon;
         }
         .mat-mdc-form-field-error {
-          display: flex;
-          background-color: var(--lux-theme-form-error-msg-background);
-          border-radius: 4px;
-          padding-right: 2px;
-          color: var(--mat-sys-on-error-container) !important;
-          box-shadow:
-            -18px 0px 0 0 var(--lux-theme-form-error-msg-background),
-            -18px -1px 0 0 var(--lux-theme-form-error-msg-background),
-            0 -1px 0 0 var(--lux-theme-form-error-msg-background);
+          @include form-error-label;
         }
       }
     }
@@ -273,4 +282,18 @@ lux-form-control-wrapper {
     -webkit-box-shadow: 0 0 1000px 0 var(--lux-theme-form-autofill-background-color) inset;
     transition: background-color 5000s ease-in-out 0s;
   }
+}
+
+.lux-form-error-container {
+  display: flex;
+  flex: 0 1 auto;
+  font-size: 0.75rem;
+}
+
+.lux-form-error-icon {
+  @include form-error-icon;
+}
+
+.lux-form-error-label {
+  @include form-error-label;
 }
