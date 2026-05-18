@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
-import { Component } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, signal } from '@angular/core';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { MockMediaObserverService } from '../../lux-util/testing/mock-media-observer.service';
 import { ICustomCSSConfig } from './lux-table-custom-css-config.interface';
 
@@ -105,14 +105,14 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
       const eventSpy = jasmine.createSpy('eventSpy');
       luxTableComponent.luxHiddenColumnsChange.subscribe(eventSpy);
-      
+
       // Spalte c2 ausblenden
       component.showColumnSelector = true;
       fixture.detectChanges();
       luxTableComponent.onHiddenColumnsChange(['c2']);
       LuxTestHelper.wait(fixture);
       expect(eventSpy).toHaveBeenCalledWith(['c2']);
-      
+
       // Spalte c2 wieder einblenden
       luxTableComponent.onHiddenColumnsChange([]);
       LuxTestHelper.wait(fixture);
@@ -698,6 +698,38 @@ describe('LuxTableComponent', () => {
 
       flush();
     }));
+
+    it('Sollte den luxNoDataText nicht anzeigen, wenn Daten über ein Signal gesetzt werden (Issue #217)', fakeAsync(() => {
+      // Separates Fixture für Signal-basierte Komponente
+      const signalFixture = TestBed.createComponent(TableSignalComponent);
+      const signalComponent = signalFixture.componentInstance;
+
+      // Vorbedingungen testen: Keine Daten → noDataText sichtbar
+      signalFixture.detectChanges();
+      tick();
+      signalFixture.detectChanges();
+      let noDataRow = document.querySelector('.lux-table-header-no-data');
+      expect(noDataRow?.classList.contains('lux-display-none')).toBeFalse();
+
+      // Änderungen durchführen: Signal mit Daten befüllen;
+      // nur einen CD-Zyklus ausführen (wie bei Signal-basiertem Angular ohne Zone.js)
+      signalComponent.tableData.set([
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ]);
+      signalFixture.detectChanges();
+      // setTimeout in luxData-Setter feuert: setzt totalElements und ruft markForCheck() auf.
+      // Der nachfolgende detectChanges() verarbeitet die markForCheck()-Anforderung und
+      // aktualisiert die View korrekt – noDataText muss jetzt ausgeblendet sein.
+      tick();
+      signalFixture.detectChanges();
+
+      // Nachbedingungen testen: noDataText darf NICHT sichtbar sein, da Daten vorhanden sind
+      noDataRow = document.querySelector('.lux-table-header-no-data');
+      expect(noDataRow?.classList.contains('lux-display-none')).toBeTrue();
+
+      flush();
+    }));
   });
 
   describe('HTTP-DAO', () => {
@@ -879,7 +911,6 @@ describe('LuxTableComponent', () => {
 
       flush();
     }));
-
   });
 
   describe('Multiselect', () => {
@@ -1206,7 +1237,6 @@ describe('LuxTableComponent', () => {
       selectedCount = (document.getElementsByClassName('lux-selected-count').item(0) as HTMLElement).innerText;
       expect(selectedCount).toEqual('2 / 2');
     }));
-
   });
 
   describe('Cursor-Hinweis', () => {
@@ -1299,6 +1329,24 @@ describe('LuxTableComponent', () => {
 
 @Component({
   template: `
+    <lux-table [luxData]="tableData()" [luxShowPagination]="false" luxNoDataText="Keine Daten gefunden.">
+      <lux-table-column luxColumnDef="c1">
+        <lux-table-column-content>
+          <ng-template let-element
+            ><span>{{ element.c1 }}</span></ng-template
+          >
+        </lux-table-column-content>
+      </lux-table-column>
+    </lux-table>
+  `,
+  imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnContentComponent]
+})
+class TableSignalComponent {
+  tableData = signal<TableItem[]>([]);
+}
+
+@Component({
+  template: `
     <div [ngStyle]="{ height: containerHeight + 'px', width: containerWidth + 'px' }">
       <lux-table
         [luxShowColumnSelector]="showColumnSelector"
@@ -1322,9 +1370,9 @@ describe('LuxTableComponent', () => {
           [luxResponsiveBehaviour]="c1RespBeh"
         >
           @if (!hideHeaders) {
-          <lux-table-column-header>
-            <ng-template>C1</ng-template>
-          </lux-table-column-header>
+            <lux-table-column-header>
+              <ng-template>C1</ng-template>
+            </lux-table-column-header>
           }
           <lux-table-column-content>
             <ng-template let-element>
@@ -1343,9 +1391,9 @@ describe('LuxTableComponent', () => {
           [luxResponsiveBehaviour]="c2RespBeh"
         >
           @if (!hideHeaders) {
-          <lux-table-column-header>
-            <ng-template>C2</ng-template>
-          </lux-table-column-header>
+            <lux-table-column-header>
+              <ng-template>C2</ng-template>
+            </lux-table-column-header>
           }
           <lux-table-column-content>
             <ng-template let-element

@@ -2,6 +2,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   DoCheck,
@@ -116,6 +117,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private liveAnnouncer = inject(LiveAnnouncer);
   private tService = inject(TranslocoService);
   private defaultColumnVisibilityStore = inject(LuxTableLocalColumnVisibilityStore);
+  private cdr = inject(ChangeDetectorRef);
 
   static AUTO_PAGINATION_START = 100; // 100 Elemente bis automatisch die Pagination aktiviert wird
 
@@ -256,6 +258,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     data = data ? data : [];
     this.dataSource.data = data;
     if (this.dataSource) {
+      // Sofort setzen, damit die noData-Zeile bereits im ersten CD-Zyklus korrekt
+      // ausgeblendet wird, wenn Daten über Signals (z.B. rxResource) geladen werden (Issue #217).
+      // updateDataSourceAttributes() setzt totalElements nach dem setTimeout ebenfalls
+      // (dort wird auch Pagination/Sort berücksichtigt).
+      if (!this.luxHttpDAO) {
+        this.dataSource.totalElements = data.length;
+      }
       setTimeout(() => {
         this.updateDataSourceAttributes(data);
         this.handleSort();
@@ -263,6 +272,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         this.updateColumnsByMediaQuery();
         this.calculateProportions();
         this.updateSelection();
+        // markForCheck() stellt sicher, dass Konsumenten mit OnPush nach dem Timeout
+        // einen weiteren CD-Zyklus erhalten (zoneless-kompatibel).
+        this.cdr.markForCheck();
       });
     }
   }
