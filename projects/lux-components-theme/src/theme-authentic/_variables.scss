@@ -189,6 +189,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-snackbar-white: #ffffff;
 
   // Accordion
+  --lux-theme-accordion-panel-container-elevation-shadow-width: 1px;
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
   --lux-theme-accordion-header-hover-color-on-neutral: var(--lux-theme-app-content-bg);
