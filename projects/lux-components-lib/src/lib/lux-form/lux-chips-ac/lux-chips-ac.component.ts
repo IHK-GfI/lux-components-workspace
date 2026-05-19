@@ -99,6 +99,9 @@ export class LuxChipsAcComponent
   @Input() luxOptionBlockSize = 500;
   @Input() luxHideBorder = false;
   @Input() luxInputLabelAlwaysVisible = false;
+  @Input() luxNoLabels = false;
+  @Input() luxNoTopLabel = false;
+  @Input() luxNoBottomLabel = false;
 
   @Output() luxChipAdded = new EventEmitter<string>();
 

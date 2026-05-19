@@ -3,6 +3,9 @@
     [luxFormComponent]="this"
     [luxIgnoreDefaultLabel]="!luxInputAllowed && !luxInputLabelAlwaysVisible"
     [luxLabelLongFormat]="luxLabelLongFormat"
+    [luxNoLabels]="luxNoLabels"
+    [luxNoTopLabel]="luxNoTopLabel"
+    [luxNoBottomLabel]="luxNoBottomLabel"
     luxTagId="luxChipsWrapper"
     [ngClass]="{ 'lux-hide-input-border': luxHideBorder && !luxInputAllowed }"
   >
@@ -15,136 +18,138 @@
     >
       <!-- Direkte Chip-Components -->
       @for (chip of chipComponents; track chip; let i = $index) {
-      <div class="lux-chip-container">
-        <mat-chip-row
-          class="lux-chip"
-          [luxTooltip]="''"
-          [ngClass]="{
-            'lux-chip-disabled': chip.luxDisabled,
-            'lux-chip-color-default': !chip.luxColor,
-            'lux-chip-color-primary': chip.luxColor === 'primary',
-            'lux-chip-color-accent': chip.luxColor === 'accent',
-            'lux-chip-color-warn': chip.luxColor === 'warn'
-          }"
-          [removable]="chip.luxRemovable"
-          [disabled]="chip.luxDisabled"
-          [color]="chip.luxColor"
-          [disableRipple]="true"
-          (keydown.delete)="chip.remove(i)"
-          (click)="chip.click(i)"
-        >
-          <ng-template *ngTemplateOutlet="chip.templateRef"></ng-template>
-          @if (chip.luxRemovable) {
-          <lux-icon
-            class="lux-chip-icon"
-            [ngClass]="{ 'lux-chip-icon-disabled': chip.luxDisabled }"
-            matChipRemove
-            aria-label="{{ 'luxc.chips.remove' | transloco }}"
-            luxIconName="lux-interface-delete-circle"
-            luxMargin="0 0 0 0.375rem"
-            luxPadding="0"
-            class="lux-chip-icon lux-cursor"
-            (click)="chip.remove(i)"
-            (keydown.enter)="chip.remove(i)"
-            (keydown.space)="chip.remove(i)"
-          ></lux-icon>
-          }
-        </mat-chip-row>
-      </div>
+        <div class="lux-chip-container">
+          <mat-chip-row
+            class="lux-chip"
+            [luxTooltip]="''"
+            [ngClass]="{
+              'lux-chip-disabled': chip.luxDisabled,
+              'lux-chip-color-default': !chip.luxColor,
+              'lux-chip-color-primary': chip.luxColor === 'primary',
+              'lux-chip-color-accent': chip.luxColor === 'accent',
+              'lux-chip-color-warn': chip.luxColor === 'warn'
+            }"
+            [removable]="chip.luxRemovable"
+            [disabled]="chip.luxDisabled"
+            [color]="chip.luxColor"
+            [disableRipple]="true"
+            (keydown.delete)="chip.remove(i)"
+            (click)="chip.click(i)"
+          >
+            <ng-template *ngTemplateOutlet="chip.templateRef"></ng-template>
+            @if (chip.luxRemovable) {
+              <lux-icon
+                class="lux-chip-icon"
+                [ngClass]="{ 'lux-chip-icon-disabled': chip.luxDisabled }"
+                matChipRemove
+                aria-label="{{ 'luxc.chips.remove' | transloco }}"
+                luxIconName="lux-interface-delete-circle"
+                luxMargin="0 0 0 0.375rem"
+                luxPadding="0"
+                class="lux-chip-icon lux-cursor"
+                (click)="chip.remove(i)"
+                (keydown.enter)="chip.remove(i)"
+                (keydown.space)="chip.remove(i)"
+              ></lux-icon>
+            }
+          </mat-chip-row>
+        </div>
       }
 
       <!-- Chips via ChipGroup-Components -->
-      @for (chipGroup of chipGroupComponents; track chipGroup) { @for (label of chipGroup.luxLabels; track label; let i = $index) {
-      <div class="lux-chip-container">
-        <mat-chip-row
-          class="lux-chip"
-          [luxTooltip]="''"
-          [ngClass]="{
-            'lux-chip-disabled': chipGroup.luxDisabled,
-            'lux-chip-color-default': !chipGroup.luxColor,
-            'lux-chip-color-primary': chipGroup.luxColor === 'primary',
-            'lux-chip-color-accent': chipGroup.luxColor === 'accent',
-            'lux-chip-color-warn': chipGroup.luxColor === 'warn'
-          }"
-          [removable]="chipGroup.luxRemovable"
-          [disabled]="chipGroup.luxDisabled"
-          [disableRipple]="true"
-          [color]="chipGroup.luxColor"
-          (keydown.delete)="onChipGroupRemove(chipGroup, i)"
-          (click)="chipGroup.click(i)"
-        >
-          <ng-container
-            *ngTemplateOutlet="chipGroup.tempRef ? chipGroup.tempRef : noTemplateRef; context: { $implicit: label }"
-          ></ng-container>
-          @if (chipGroup.luxRemovable) {
-          <lux-icon
-            class="lux-chip-icon"
-            [ngClass]="{ 'lux-chip-icon-disabled': chipGroup.luxDisabled }"
-            matChipRemove
-            aria-label="{{ 'luxc.chips.remove' | transloco }}"
-            luxIconName="lux-interface-delete-circle"
-            luxMargin="0 0 0 6px"
-            luxPadding="0px"
-            class="lux-chip-icon lux-cursor"
-            (click)="onChipGroupRemove(chipGroup, i)"
-            (keydown.enter)="onChipGroupRemove(chipGroup, i)"
-            (keydown.space)="onChipGroupRemove(chipGroup, i)"
-          ></lux-icon>
-          }
-        </mat-chip-row>
-      </div>
-      } }
+      @for (chipGroup of chipGroupComponents; track chipGroup) {
+        @for (label of chipGroup.luxLabels; track label; let i = $index) {
+          <div class="lux-chip-container">
+            <mat-chip-row
+              class="lux-chip"
+              [luxTooltip]="''"
+              [ngClass]="{
+                'lux-chip-disabled': chipGroup.luxDisabled,
+                'lux-chip-color-default': !chipGroup.luxColor,
+                'lux-chip-color-primary': chipGroup.luxColor === 'primary',
+                'lux-chip-color-accent': chipGroup.luxColor === 'accent',
+                'lux-chip-color-warn': chipGroup.luxColor === 'warn'
+              }"
+              [removable]="chipGroup.luxRemovable"
+              [disabled]="chipGroup.luxDisabled"
+              [disableRipple]="true"
+              [color]="chipGroup.luxColor"
+              (keydown.delete)="onChipGroupRemove(chipGroup, i)"
+              (click)="chipGroup.click(i)"
+            >
+              <ng-container
+                *ngTemplateOutlet="chipGroup.tempRef ? chipGroup.tempRef : noTemplateRef; context: { $implicit: label }"
+              ></ng-container>
+              @if (chipGroup.luxRemovable) {
+                <lux-icon
+                  class="lux-chip-icon"
+                  [ngClass]="{ 'lux-chip-icon-disabled': chipGroup.luxDisabled }"
+                  matChipRemove
+                  aria-label="{{ 'luxc.chips.remove' | transloco }}"
+                  luxIconName="lux-interface-delete-circle"
+                  luxMargin="0 0 0 6px"
+                  luxPadding="0px"
+                  class="lux-chip-icon lux-cursor"
+                  (click)="onChipGroupRemove(chipGroup, i)"
+                  (keydown.enter)="onChipGroupRemove(chipGroup, i)"
+                  (keydown.space)="onChipGroupRemove(chipGroup, i)"
+                ></lux-icon>
+              }
+            </mat-chip-row>
+          </div>
+        }
+      }
     </mat-chip-grid>
     <div class="lux-chips-input-container">
       @if (luxInputAllowed) {
-      <input
-        [id]="uid"
-        placeholder="{{ luxPlaceholder || ('luxc.chips.input.placeholder.lbl' | transloco) }}"
-        [matChipInputFor]="chips"
-        [matChipInputAddOnBlur]="true"
-        [matAutocomplete]="auto"
-        [attr.aria-labelledby]="uid + '-label'"
-        [disabled]="luxDisabled"
-        (matChipInputTokenEnd)="inputAdd(input)"
-        (focusout)="onFocusOut()"
-        (keyup)="inputChanged(input.value)"
-        (click)="onAutocompleteClick()"
-        type="text"
-        class="lux-chips-autocomplete-input lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
-        #input
-      />
-      @if (displayedOptions.length > 0) {
-      <svg
-        class="lux-select-arrow"
-        [class.lux-rotate]="matAutocompleteTrigger?.panelOpen"
-        focusable="false"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        (click)="onArrowIcon()"
-      >
-        <path d="M7 10l5 5 5-5z"></path>
-      </svg>
-      }
-      <mat-autocomplete
-        class="lux-autocomplete-panel-ac lux-chips-ac-autocomplete-panel"
-        [class.lux-chips-ac-autocomplete-panel-dense]="luxDense"
-        [disableRipple]="true"
-        (optionSelected)="autoCompleteAdd(input, $event.option.value)"
-        (opened)="onAutoCompleteOpened()"
-        #auto="matAutocomplete"
-      >
-        @for (option of displayedOptions; track option) {
-        <mat-option [value]="option">
-          {{ option }}
-        </mat-option>
+        <input
+          [id]="uid"
+          placeholder="{{ luxPlaceholder || ('luxc.chips.input.placeholder.lbl' | transloco) }}"
+          [matChipInputFor]="chips"
+          [matChipInputAddOnBlur]="true"
+          [matAutocomplete]="auto"
+          [attr.aria-labelledby]="uid + '-label'"
+          [disabled]="luxDisabled"
+          (matChipInputTokenEnd)="inputAdd(input)"
+          (focusout)="onFocusOut()"
+          (keyup)="inputChanged(input.value)"
+          (click)="onAutocompleteClick()"
+          type="text"
+          class="lux-chips-autocomplete-input lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
+          #input
+        />
+        @if (displayedOptions.length > 0) {
+          <svg
+            class="lux-select-arrow"
+            [class.lux-rotate]="matAutocompleteTrigger?.panelOpen"
+            focusable="false"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            (click)="onArrowIcon()"
+          >
+            <path d="M7 10l5 5 5-5z"></path>
+          </svg>
         }
-      </mat-autocomplete>
+        <mat-autocomplete
+          class="lux-autocomplete-panel-ac lux-chips-ac-autocomplete-panel"
+          [class.lux-chips-ac-autocomplete-panel-dense]="luxDense"
+          [disableRipple]="true"
+          (optionSelected)="autoCompleteAdd(input, $event.option.value)"
+          (opened)="onAutoCompleteOpened()"
+          #auto="matAutocomplete"
+        >
+          @for (option of displayedOptions; track option) {
+            <mat-option [value]="option">
+              {{ option }}
+            </mat-option>
+          }
+        </mat-autocomplete>
       } @else {
-      <!-- Wenn es kein Input gibt, wird der folgende Fehler geworfen:
+        <!-- Wenn es kein Input gibt, wird der folgende Fehler geworfen:
           filter-example.component.ts:165 ERROR Error: mat-chip-grid must be used in combination with matChipInputFor.
           Aus diesem Grund wird hier ein unsichtbares Ersatzinput eingefügt.
           -->
-      <input class="lux-display-none" [matChipInputFor]="chips" #input />
+        <input class="lux-display-none" [matChipInputFor]="chips" #input />
       }
     </div>
   </lux-form-control-wrapper>
