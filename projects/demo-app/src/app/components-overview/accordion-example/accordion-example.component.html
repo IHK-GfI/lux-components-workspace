@@ -3,91 +3,93 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90accordion-v21"
 >
   <example-base-content>
-    <!-- Beispiel-Component mit allen Input-/Output-Properties -->
-    <lux-accordion
-      [luxMode]="displayMode"
-      [luxDisabled]="disabled"
-      [luxExpandedHeaderHeight]="expandedHeaderHeight"
-      [luxCollapsedHeaderHeight]="collapsedHeaderHeight"
-      [luxDynamicHeaderHeight]="dynamicHeaderHeight"
-      [luxHideToggle]="hideToggle"
-      [luxMulti]="multiMode"
-      [luxTogglePosition]="togglePosition"
-      [luxColor]="color"
-    >
-      <!-- Mehrere Panels mit ihren Input-/Output-Properties -->
-      @for (panelConfig of panelConfigArr; track panelConfig) {
-      <lux-panel
-        [luxExpanded]="expanded"
-        [luxHideToggle]="hideToggle1Panel"
-        [luxDisabled]="disabled1Panel"
-        [luxExpandedHeaderHeight]="expandedHeaderHeight1Panel"
-        [luxCollapsedHeaderHeight]="collapsedHeaderHeight1Panel"
-        [luxDynamicHeaderHeight]="dynamicHeaderHeight1Panel"
-        (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
-        (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
-        (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
-      >
-        <lux-panel-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.title">{{
-          panelConfig.title
-        }}</lux-panel-header-title>
-        <lux-panel-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.description">{{
-          panelConfig.description
-        }}</lux-panel-header-description>
-        <lux-panel-content>
-          <p>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-            aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-          </p>
-        </lux-panel-content>
-      </lux-panel>
-      }
-      <lux-panel
-        [luxExpanded]="expanded"
-        [luxHideToggle]="hideToggle2Panel"
-        [luxDisabled]="disabled2Panel"
-        [luxExpandedHeaderHeight]="expandedHeaderHeight2Panel"
-        [luxCollapsedHeaderHeight]="collapsedHeaderHeight2Panel"
-        [luxDynamicHeaderHeight]="dynamicHeaderHeight2Panel"
-        (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
-        (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
-        (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
-      >
-        <lux-panel-header-title
-          >Panel #{{ panelConfigArr.length + 1
-          }}{{
-            isLongLabels ? 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut' : ''
-          }}</lux-panel-header-title
-        >
-        <lux-panel-header-description>Beschreibung Panel #{{ panelConfigArr.length + 1 }}</lux-panel-header-description>
-        <lux-panel-content class="lux-flex">
-          <lux-card
-            luxTitle="Testkarte - Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut"
-            luxSubTitle="TEST2"
-            class="lux-mt-4"
-          >
-            <lux-card-content>
-              <h3>H3 - Lorem ipsum</h3>
-              <p>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-                takimata sanctus est Lorem ipsum dolor sit amet.
-              </p>
-            </lux-card-content>
-          </lux-card>
-        </lux-panel-content>
-      </lux-panel>
-      <app-custom-panel
-        [showOutputEvents]="showOutputEvents"
-        [luxExpanded]="expanded"
-        [luxHideToggle]="hideToggle"
+    <div [class.border-check]="borderCheck">
+      <!-- Beispiel-Component mit allen Input-/Output-Properties -->
+      <lux-accordion
+        [luxMode]="displayMode"
         [luxDisabled]="disabled"
         [luxExpandedHeaderHeight]="expandedHeaderHeight"
         [luxCollapsedHeaderHeight]="collapsedHeaderHeight"
         [luxDynamicHeaderHeight]="dynamicHeaderHeight"
+        [luxHideToggle]="hideToggle"
+        [luxMulti]="multiMode"
         [luxTogglePosition]="togglePosition"
-      ></app-custom-panel>
-    </lux-accordion>
+        [luxColor]="color"
+      >
+        <!-- Mehrere Panels mit ihren Input-/Output-Properties -->
+        @for (panelConfig of panelConfigArr; track panelConfig) {
+          <lux-panel
+            [luxExpanded]="expanded"
+            [luxHideToggle]="hideToggle1Panel"
+            [luxDisabled]="disabled1Panel"
+            [luxExpandedHeaderHeight]="expandedHeaderHeight1Panel"
+            [luxCollapsedHeaderHeight]="collapsedHeaderHeight1Panel"
+            [luxDynamicHeaderHeight]="dynamicHeaderHeight1Panel"
+            (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
+            (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
+            (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+          >
+            <lux-panel-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.title">{{
+              panelConfig.title
+            }}</lux-panel-header-title>
+            <lux-panel-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.description">{{
+              panelConfig.description
+            }}</lux-panel-header-description>
+            <lux-panel-content>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              </p>
+            </lux-panel-content>
+          </lux-panel>
+        }
+        <lux-panel
+          [luxExpanded]="expanded"
+          [luxHideToggle]="hideToggle2Panel"
+          [luxDisabled]="disabled2Panel"
+          [luxExpandedHeaderHeight]="expandedHeaderHeight2Panel"
+          [luxCollapsedHeaderHeight]="collapsedHeaderHeight2Panel"
+          [luxDynamicHeaderHeight]="dynamicHeaderHeight2Panel"
+          (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
+          (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
+          (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+        >
+          <lux-panel-header-title
+            >Panel #{{ panelConfigArr.length + 1
+            }}{{
+              isLongLabels ? 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut' : ''
+            }}</lux-panel-header-title
+          >
+          <lux-panel-header-description>Beschreibung Panel #{{ panelConfigArr.length + 1 }}</lux-panel-header-description>
+          <lux-panel-content class="lux-flex">
+            <lux-card
+              luxTitle="Testkarte - Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut"
+              luxSubTitle="TEST2"
+              class="lux-mt-4"
+            >
+              <lux-card-content>
+                <h3>H3 - Lorem ipsum</h3>
+                <p>
+                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                  aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
+                  sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+              </lux-card-content>
+            </lux-card>
+          </lux-panel-content>
+        </lux-panel>
+        <app-custom-panel
+          [showOutputEvents]="showOutputEvents"
+          [luxExpanded]="expanded"
+          [luxHideToggle]="hideToggle"
+          [luxDisabled]="disabled"
+          [luxExpandedHeaderHeight]="expandedHeaderHeight"
+          [luxCollapsedHeaderHeight]="collapsedHeaderHeight"
+          [luxDynamicHeaderHeight]="dynamicHeaderHeight"
+          [luxTogglePosition]="togglePosition"
+        ></app-custom-panel>
+      </lux-accordion>
+    </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac
@@ -142,7 +144,12 @@
         ></lux-form-hint
       >
     </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxDynamicHeaderHeight" [(luxChecked)]="dynamicHeaderHeight" (luxCheckedChange)="onChangeDynamicHeaderHeight($event)" [luxNoLabels]="true"></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="luxDynamicHeaderHeight"
+      [(luxChecked)]="dynamicHeaderHeight"
+      (luxCheckedChange)="onChangeDynamicHeaderHeight($event)"
+      [luxNoLabels]="true"
+    ></lux-toggle-ac>
     <lux-input-ac
       luxName="accordion_luxExpandedHeaderHeight"
       luxLabel="luxExpandedHeaderHeight"
@@ -161,6 +168,12 @@
     >
       <lux-form-hint> Diese Property bestimmt die Höhe aller Panel-Header im eingeklappten Zustand. </lux-form-hint>
     </lux-input-ac>
+    <lux-toggle-ac
+      luxLabel="Border prüfen"
+      luxHint="Bitte aktivieren und prüfen, dass alle Ränder (roter Vergleichsrand und Panelränder) sichtbar sind. Es empfiehlt sich, einen großen Zoomfaktor zu verwenden."
+      [(luxChecked)]="borderCheck"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <div class="lux-flex lux-flex-col">

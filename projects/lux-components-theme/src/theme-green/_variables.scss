@@ -136,7 +136,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-app-gradient-reverse: none;
   --lux-theme-app-border-color: var(--mat-sys-outline-variant);
   --lux-theme-app-border-radius: 14px;
-  --lux-theme-state-layer-color: #E3EBF5;
+  --lux-theme-state-layer-color: #e3ebf5;
   --lux-theme-app-state-layer-color: #{map.get(palettes.$lux-palette_primary, 40)};
   --lux-theme-hover-state-layer-opacity: 0.08;
   --lux-theme-focus-state-layer-opacity: 0.12;
@@ -190,6 +190,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-snackbar-white: #ffffff;
 
   // Accordion
+  --lux-theme-accordion-panel-container-elevation-shadow-width: 1px;
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
   --lux-theme-accordion-header-hover-color-on-neutral: var(--lux-theme-app-content-bg);
