@@ -46,8 +46,6 @@ export class LuxAppHeaderAcSessionTimerService {
     this.canExtendSessionValue = value;
   }
 
-
-
   // Observable for time remaining, based on synchronized endTime
   timeRemaining$ = toObservable(this.startingSeconds).pipe(
     switchMap((seconds) => {
@@ -131,7 +129,10 @@ export class LuxAppHeaderAcSessionTimerService {
     });
 
     // Listen for storage events to sync timer across tabs/apps using LuxStorageService observable
-    this.storageService.getItemAsObservable(LuxAppHeaderAcSessionTimerService.STORAGE_KEY)
+    this.storageService
+      .getItemAsObservable(
+        this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
+      )
       .pipe(
         takeUntilDestroyed(),
         map((value) => (value ? parseInt(value, 10) : 0)),
@@ -230,7 +231,9 @@ export class LuxAppHeaderAcSessionTimerService {
    * Get the shared endTime from LuxStorageService
    */
   private getStoredEndTime(): number {
-    const value = this.storageService.getItem(LuxAppHeaderAcSessionTimerService.STORAGE_KEY);
+    const value = this.storageService.getItem(
+      this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
+    );
     return value ? parseInt(value, 10) : 0;
   }
 
@@ -239,7 +242,11 @@ export class LuxAppHeaderAcSessionTimerService {
    */
   private setStoredEndTime(endTime: number) {
     if (endTime > 0) {
-      this.storageService.setItem(LuxAppHeaderAcSessionTimerService.STORAGE_KEY, endTime.toString(), false);
+      this.storageService.setItem(
+        this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY,
+        endTime.toString(),
+        false
+      );
     }
   }
 
@@ -247,6 +254,8 @@ export class LuxAppHeaderAcSessionTimerService {
    * Remove the shared endTime from LuxStorageService
    */
   private clearStoredEndTime() {
-    this.storageService.removeItem(LuxAppHeaderAcSessionTimerService.STORAGE_KEY);
+    this.storageService.removeItem(
+      this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
+    );
   }
 }

@@ -130,6 +130,12 @@
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input-ac>
+      <lux-input-ac
+        luxLabel="Local Storage Key Name des Session-Timers"
+        [(luxValue)]="currentConfig.sessionTimerConfig!.localStorageKeyName"
+        (luxValueChange)="updateConfig()"
+        [luxNoBottomLabel]="true"
+      ></lux-input-ac>
     </lux-card-content>
   </lux-card>
 </div>
