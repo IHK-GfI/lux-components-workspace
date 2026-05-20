@@ -45,10 +45,9 @@ export class LuxAppHeaderAcSessionTimerService {
   timeRemaining$ = toObservable(this.startingSeconds).pipe(
     switchMap((seconds) => {
       this.endTime = seconds > 0 ? Date.now() + seconds * 1000 : 0;
-
       return timer(0, 1000).pipe(
         map(() => Math.max(0, this.endTime - Date.now())),
-        takeWhile((remaining) => remaining > 0)
+        takeWhile((remaining) => remaining > 0, true)
       );
     })
   );
@@ -101,8 +100,8 @@ export class LuxAppHeaderAcSessionTimerService {
         this.openDialog();
       }
 
-      // ca. 1 Sekunde vor Ablauf damit der Dialog nicht geöffnet wird wenn keine Zeit gesetzt wurde
-      if (remainingMs / 1000 <= 1) {
+      // Timer ist natürlich abgelaufen (nicht durch explizites Zurücksetzen auf 0)
+      if (remainingMs <= 1000) {
         if (this.currentDialogRef) {
           this.currentDialogRef.closeDialog();
           this.currentDialogRef = null;

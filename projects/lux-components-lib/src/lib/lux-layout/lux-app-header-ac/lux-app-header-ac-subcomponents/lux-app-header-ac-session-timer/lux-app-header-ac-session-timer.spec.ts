@@ -133,6 +133,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     });
 
     timerService.resetTimer(2);
+    tick(0); // Microtasks flushen → endTime = Date.now() + 2000, erste timer(0) Emission
     tick(1000); // 1s verbleibend → setTimeout(0) wird geplant
     tick(1); // setTimeout(0) feuert → timeoutUser()
 
