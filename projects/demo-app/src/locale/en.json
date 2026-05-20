@@ -6,14 +6,16 @@
       },
       "duration": {
         "365days": "365 days",
-        "persistent": "Persistent"
+        "persistent": "Persistent",
+        "sessionActive": "as long as a session is active"
       },
       "description": {
         "appConsent": "This cookie is required to store the consent for cookie usage.",
         "demoConsent": "This cookie is required to store the demo consent for cookie usage.",
         "themeConsent": "Stores the theme with which the application should be displayed.",
         "tableConsent": "Stores the settings for column widths of a table in the application.",
-        "hintConsent": "Stores whether the application tour should be shown again on the next application launch."
+        "hintConsent": "Stores whether the application tour should be shown again on the next application launch.",
+        "sessionConsent": "Required to store the remaining session duration. It will be deleted when the session ends."
       }
     },
     "menu": {

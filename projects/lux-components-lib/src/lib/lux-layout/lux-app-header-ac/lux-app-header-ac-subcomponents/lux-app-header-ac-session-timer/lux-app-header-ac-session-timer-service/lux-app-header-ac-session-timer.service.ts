@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, Signal, signal, EventEmitter } from '@angular/core';
+import { LuxStorageService } from '../../../../../lux-util/lux-storage.service';
 import { LuxDialogService } from '../../../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxAppHeaderAcSessionTimerDialogComponent } from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
 import { ILuxDialogConfig } from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
-import { map, switchMap, takeWhile, timer } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, takeWhile, timer } from 'rxjs';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { LuxComponentsConfigService } from '../../../../../lux-components-config/lux-components-config.service';
 
@@ -14,6 +15,9 @@ export class LuxAppHeaderAcSessionTimerService {
   private readonly http = inject(HttpClient);
   private readonly dialogService = inject(LuxDialogService);
   private readonly configService = inject(LuxComponentsConfigService);
+  private readonly storageService = inject(LuxStorageService);
+
+  private static readonly STORAGE_KEY = 'lux-components-session-endtime';
 
   luxLogoutEvent = new EventEmitter<void>();
   luxTimeoutEvent = new EventEmitter<void>();
@@ -22,6 +26,7 @@ export class LuxAppHeaderAcSessionTimerService {
   private dialogWasClosed = false;
   private currentDialogRef: any = null;
   protected readonly startingSeconds = signal<number>(0);
+  private endTime = 0;
   private urlValue = '';
   private canExtendSessionValue = true;
 
@@ -41,13 +46,22 @@ export class LuxAppHeaderAcSessionTimerService {
     this.canExtendSessionValue = value;
   }
 
+  // Observable for time remaining, based on synchronized endTime
   timeRemaining$ = toObservable(this.startingSeconds).pipe(
-    switchMap((seconds) =>
-      timer(0, 1000).pipe(
-        map((n) => (seconds - n) * 1000),
-        takeWhile((n) => n >= 0)
-      )
-    )
+    switchMap((seconds) => {
+      // Use endTime from LuxStorageService if available
+      const storedEndTime = this.getStoredEndTime();
+      if (storedEndTime && storedEndTime > Date.now()) {
+        this.endTime = storedEndTime;
+      } else {
+        this.endTime = seconds > 0 ? Date.now() + seconds * 1000 : 0;
+        this.setStoredEndTime(this.endTime);
+      }
+      return timer(0, 1000).pipe(
+        map(() => Math.max(0, this.getStoredEndTime() - Date.now())),
+        takeWhile((remaining) => remaining > 0, true)
+      );
+    })
   );
 
   timeRemaining = toSignal(this.timeRemaining$, { initialValue: 0 });
@@ -98,8 +112,8 @@ export class LuxAppHeaderAcSessionTimerService {
         this.openDialog();
       }
 
-      // 1 Sekunde vor Ablauf damit der Dialog nicht geöffnet wird wenn keine Zeit gesetzt wurde
-      if (remainingMs / 1000 === 1) {
+      // Timer ist natürlich abgelaufen (nicht durch explizites Zurücksetzen auf 0)
+      if (remainingMs <= 1000) {
         if (this.currentDialogRef) {
           this.currentDialogRef.closeDialog();
           this.currentDialogRef = null;
@@ -114,6 +128,28 @@ export class LuxAppHeaderAcSessionTimerService {
       }
     });
 
+    // Listen for storage events to sync timer across tabs/apps using LuxStorageService observable
+    this.storageService
+      .getItemAsObservable(
+        this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
+      )
+      .pipe(
+        takeUntilDestroyed(),
+        map((value) => (value ? parseInt(value, 10) : 0)),
+        distinctUntilChanged()
+      )
+      .subscribe((newEndTime) => {
+        if (newEndTime !== this.endTime) {
+          this.endTime = newEndTime;
+          const seconds = Math.max(0, Math.floor((this.endTime - Date.now()) / 1000));
+          this.startingSeconds.set(seconds);
+          // Nur Timeout auslösen wenn Zeit tatsächlich abgelaufen ist (nicht bei explizitem Reset auf 0 durch Logout)
+          if (newEndTime > 0 && newEndTime <= Date.now()) {
+            this.timeoutUser();
+          }
+        }
+      });
+
     this.url = this.configService.currentConfig.sessionTimerConfig?.url ?? '';
   }
 
@@ -122,7 +158,17 @@ export class LuxAppHeaderAcSessionTimerService {
       return;
     }
 
-    return this.http.post(this.url, null);
+    // On successful extension, update endTime in LuxStorageService
+    return this.http.post(this.url, null).pipe(
+      map((res) => {
+        const extensionSeconds = this.startingSeconds();
+        const newEndTime = Date.now() + extensionSeconds * 1000;
+        this.setStoredEndTime(newEndTime);
+        this.endTime = newEndTime;
+        this.startingSeconds.set(extensionSeconds);
+        return res;
+      })
+    );
   }
 
   openDialog() {
@@ -158,16 +204,58 @@ export class LuxAppHeaderAcSessionTimerService {
 
   timeoutUser() {
     this.resetTimer(0);
+    this.clearStoredEndTime();
     this.luxTimeoutEvent.emit();
   }
 
   logoutUser() {
     this.resetTimer(0);
+    this.clearStoredEndTime();
     this.luxLogoutEvent.emit();
   }
 
   resetTimer(seconds: number) {
     this.startingSeconds.set(0);
+    if (seconds > 0) {
+      const newEndTime = Date.now() + seconds * 1000;
+      this.setStoredEndTime(newEndTime);
+      this.endTime = newEndTime;
+    } else {
+      this.clearStoredEndTime();
+      this.endTime = 0;
+    }
     this.startingSeconds.set(seconds);
+  }
+
+  /**
+   * Get the shared endTime from LuxStorageService
+   */
+  private getStoredEndTime(): number {
+    const value = this.storageService.getItem(
+      this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
+    );
+    return value ? parseInt(value, 10) : 0;
+  }
+
+  /**
+   * Set the shared endTime in LuxStorageService
+   */
+  private setStoredEndTime(endTime: number) {
+    if (endTime > 0) {
+      this.storageService.setItem(
+        this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY,
+        endTime.toString(),
+        false
+      );
+    }
+  }
+
+  /**
+   * Remove the shared endTime from LuxStorageService
+   */
+  private clearStoredEndTime() {
+    this.storageService.removeItem(
+      this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
+    );
   }
 }
