@@ -7,8 +7,9 @@
     - [Allgemein](#allgemein)
     - [@Output](#output)
   - [Setup](#setup)
-    - [1. Konfiguration](#1-konfiguration)
-    - [2. Komponente einbinden](#2-komponente-einbinden)
+    - [Einwilligung](#einwilligung)
+    - [Konfiguration](#konfiguration)
+    - [Komponente einbinden](#komponente-einbinden)
   - [Beispiel](#beispiel)
     - [Vollständiges Beispiel](#vollständiges-beispiel)
 
@@ -31,7 +32,28 @@ Die `lux-app-header-ac-session-timer`-Komponente zeigt die verbleibende Zeit der
 
 ## Setup
 
-### 1. Konfiguration
+### Einwilligung
+
+Der Session Timer benutzt zur Berechnung der Restzeit den Local Storage. Dies MUSS in der Einwilligung der Seite erwähnt werden.
+
+```typescript
+export const appConsentProvider = {
+    //...
+    entries: [
+      {
+        type: LuxConsentStorageType.LocalStorage,
+        name: 'lux-components-session-endtime',
+        processingCountry: 'Deutschland',
+        purpose: LuxConsentPurpose.Essential,
+        duration: 'solange eine Sitzung aktiv ist',
+        description: 'Wird zur Speicherung der verbleibenden Sessiondauer benötigt. Es wird mit Sitzungsende gelöscht.'
+      }
+    ]
+  })
+};
+```
+
+### Konfiguration
 
 In der `app.config.ts` müssen die Endpunkte für den Session-Timer über den `LuxComponentsConfigModule` konfiguriert werden.
 
@@ -55,7 +77,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-### 2. Komponente einbinden
+### Komponente einbinden
 
 Die Komponente wird im Menü des App-Headers angezeigt.
 

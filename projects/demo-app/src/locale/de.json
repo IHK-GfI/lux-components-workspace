@@ -6,14 +6,16 @@
       },
       "duration": {
         "365days": "365 Tage",
-        "persistent": "Dauerhaft"
+        "persistent": "Dauerhaft",
+        "sessionActive": "solange eine Sitzung aktiv ist"
       },
       "description": {
         "appConsent": "Dieses Cookie wird zur Speicherung des Consents zur Cookie-Verwendung benötigt.",
         "demoConsent": "Dieses Cookie wird zur Speicherung des Demo-Consents zur Cookie-Verwendung benötigt.",
         "themeConsent": "Speichert das Theme, mit dem die Anwendung dargestellt werden soll.",
         "tableConsent": "Speichert die Einstellungen zu Spaltenbreiten einer Tabelle der Anwendung.",
-        "hintConsent": "Speichert, ob die Anwendungstour beim nächsten Aufruf der Anwendung nochmal angezeigt werden soll."
+        "hintConsent": "Speichert, ob die Anwendungstour beim nächsten Aufruf der Anwendung nochmal angezeigt werden soll.",
+        "sessionConsent": "Wird zur Speicherung der verbleibenden Sessiondauer benötigt. Es wird mit Sitzungsende gelöscht."
       }
     },
     "menu": {
