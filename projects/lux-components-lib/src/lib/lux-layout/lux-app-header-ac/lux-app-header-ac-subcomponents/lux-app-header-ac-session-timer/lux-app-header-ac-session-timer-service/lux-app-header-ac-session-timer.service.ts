@@ -22,6 +22,7 @@ export class LuxAppHeaderAcSessionTimerService {
   private dialogWasClosed = false;
   private currentDialogRef: any = null;
   protected readonly startingSeconds = signal<number>(0);
+  private endTime = 0;
   private urlValue = '';
   private canExtendSessionValue = true;
 
@@ -42,12 +43,14 @@ export class LuxAppHeaderAcSessionTimerService {
   }
 
   timeRemaining$ = toObservable(this.startingSeconds).pipe(
-    switchMap((seconds) =>
-      timer(0, 1000).pipe(
-        map((n) => (seconds - n) * 1000),
-        takeWhile((n) => n >= 0)
-      )
-    )
+    switchMap((seconds) => {
+      this.endTime = seconds > 0 ? Date.now() + seconds * 1000 : 0;
+
+      return timer(0, 1000).pipe(
+        map(() => Math.max(0, this.endTime - Date.now())),
+        takeWhile((remaining) => remaining > 0)
+      );
+    })
   );
 
   timeRemaining = toSignal(this.timeRemaining$, { initialValue: 0 });
@@ -98,8 +101,8 @@ export class LuxAppHeaderAcSessionTimerService {
         this.openDialog();
       }
 
-      // 1 Sekunde vor Ablauf damit der Dialog nicht geöffnet wird wenn keine Zeit gesetzt wurde
-      if (remainingMs / 1000 === 1) {
+      // ca. 1 Sekunde vor Ablauf damit der Dialog nicht geöffnet wird wenn keine Zeit gesetzt wurde
+      if (remainingMs / 1000 <= 1) {
         if (this.currentDialogRef) {
           this.currentDialogRef.closeDialog();
           this.currentDialogRef = null;
