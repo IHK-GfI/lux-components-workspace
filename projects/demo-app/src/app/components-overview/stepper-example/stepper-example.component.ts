@@ -1,33 +1,41 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, ViewChild, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-    ILuxStepperButtonConfig,
-    LuxAccordionComponent,
-    LuxAppFooterButtonInfo,
-    LuxAppFooterButtonService,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxSnackbarService,
-    LuxStepComponent,
-    LuxStepContentComponent,
-    LuxStepHeaderComponent,
-    LuxStepperComponent,
-    LuxStepperHelperService,
-    LuxTextboxComponent,
-    LuxToggleAcComponent
+  ILuxStepperButtonConfig,
+  LuxAccordionComponent,
+  LuxAppFooterButtonInfo,
+  LuxAppFooterButtonService,
+  LuxButtonComponent,
+  LuxDialogService,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxSelectAcComponent,
+  LuxSnackbarService,
+  LuxStepComponent,
+  LuxStepContentComponent,
+  LuxStepHeaderComponent,
+  LuxStepperComponent,
+  LuxStepperHelperService,
+  LuxTextboxComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
+import { StepperDialogExampleComponent } from './stepper-dialog-example/stepper-dialog-example.component';
+
+interface IStepperButtonConfigWithVariant extends ILuxStepperButtonConfig {
+  variant?: 'default' | 'flat' | 'stroked';
+}
 
 interface StepperDummyForm {
   control1: FormControl<string>;
@@ -63,6 +71,7 @@ interface StepperForm2DummyForm {
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxFormHintComponent,
+    LuxButtonComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ReactiveFormsModule,
@@ -76,6 +85,8 @@ export class StepperExampleComponent implements OnDestroy {
   private buttonService = inject(LuxAppFooterButtonService);
   private snackbar = inject(LuxSnackbarService);
   private router = inject(Router);
+  private dialogService = inject(LuxDialogService);
+  private destroyRef = inject(DestroyRef);
 
   @ViewChild(LuxStepperComponent, { static: true }) stepperComponent!: LuxStepperComponent;
   newStepsVisible = false;
@@ -118,17 +129,17 @@ export class StepperExampleComponent implements OnDestroy {
       hide: false
     }
   ];
-  previousButtonConfig: ILuxStepperButtonConfig = {
+  previousButtonConfig: IStepperButtonConfigWithVariant = {
     label: '',
     iconName: 'lux-interface-arrows-left',
     color: 'primary'
   };
-  nextButtonConfig: ILuxStepperButtonConfig = {
+  nextButtonConfig: IStepperButtonConfigWithVariant = {
     label: '',
     iconName: 'lux-interface-arrows-right',
     color: 'primary'
   };
-  finishButtonConfig: ILuxStepperButtonConfig = {
+  finishButtonConfig: IStepperButtonConfigWithVariant = {
     label: '',
     iconName: 'lux-interface-validation-check',
     color: 'primary'
@@ -141,6 +152,59 @@ export class StepperExampleComponent implements OnDestroy {
   editedIconName = 'lux-interface-edit-pencil';
   horizontalAnimation = false;
   verticalStepper = false;
+  a11yMode = false;
+  buttonAlignLeft = false;
+  noHeaderLabels = false;
+  validationAttempted = false;
+  readonly validationMessage = 'Bitte füllen Sie alle Pflichtfelder aus.';
+
+  get showValidationMessage(): boolean {
+    let currentForm = this.currentStepNumber === 0 || this.currentStepNumber === 1 ? this.steps[this.currentStepNumber].stepControl : null;
+
+    if (this.newStepsVisible) {
+      currentForm = this.currentStepNumber === 2 ? this.newStepsForm1 : this.currentStepNumber === 3 ? this.newStepsForm2 : currentForm;
+    }
+
+    return !!this.a11yMode && this.validationAttempted && (currentForm?.invalid ?? false);
+  }
+
+  get computedPreviousButtonConfig(): ILuxStepperButtonConfig {
+    return {
+      ...this.previousButtonConfig,
+      flat: this.previousButtonConfig.variant === 'flat',
+      stroked: this.previousButtonConfig.variant === 'stroked'
+    };
+  }
+
+  get computedNextButtonConfig(): ILuxStepperButtonConfig {
+    return {
+      ...this.nextButtonConfig,
+      flat: this.nextButtonConfig.variant === 'flat',
+      stroked: this.nextButtonConfig.variant === 'stroked'
+    };
+  }
+
+  get computedFinishButtonConfig(): ILuxStepperButtonConfig {
+    return {
+      ...this.finishButtonConfig,
+      flat: this.finishButtonConfig.variant === 'flat',
+      stroked: this.finishButtonConfig.variant === 'stroked'
+    };
+  }
+
+  openStepperDialog(): void {
+    const dialogRef = this.dialogService.openComponent(StepperDialogExampleComponent, {
+      minWidth: '90vw',
+      maxWidth: '90vw',
+      minHeight: '60vh',
+      maxHeight: '95vh',
+      disableClose: false,
+      disableBackdropAndEscClose: true
+    });
+    dialogRef.dialogClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
+      this.log(this.showOutputEvents, 'Stepper-Dialog geschlossen', result);
+    });
+  }
 
   constructor() {
     this.newStepsForm1 = new FormGroup<StepperForm1DummyForm>({
@@ -209,6 +273,7 @@ export class StepperExampleComponent implements OnDestroy {
     if (this.currentStepNumber !== event.selectedIndex) {
       this.currentStepNumber = event.selectedIndex;
     }
+    this.validationAttempted = false;
     this.updateFooterButtonStates();
   }
 
@@ -218,6 +283,14 @@ export class StepperExampleComponent implements OnDestroy {
 
   checkValidation(index: number) {
     this.log(this.showOutputEvents, `luxCheckValidation`, index);
+    // index enthält den aktuellen Step-Index (den blockierten Step, der validiert werden muss).
+    let currentForm = this.currentStepNumber === 0 || this.currentStepNumber === 1 ? this.steps[this.currentStepNumber].stepControl : null;
+    if (this.newStepsVisible) {
+      currentForm = this.currentStepNumber === 2 ? this.newStepsForm1 : this.currentStepNumber === 3 ? this.newStepsForm2 : currentForm;
+    }
+    if (currentForm === null || !currentForm.valid) {
+      this.validationAttempted = true;
+    }
   }
 
   /**

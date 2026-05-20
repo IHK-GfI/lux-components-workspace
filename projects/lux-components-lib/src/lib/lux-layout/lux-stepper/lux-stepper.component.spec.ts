@@ -242,6 +242,32 @@ describe('LuxStepperComponent', () => {
     expect(navButtons.length).toBe(0);
   }));
 
+  it('Sollte den Next-Button im linearen Modus ohne A11Y deaktivieren', fakeAsync(() => {
+    component.linear = true;
+    component.a11yMode = false;
+    LuxTestHelper.wait(fixture);
+
+    const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
+    expect(nextButton.disabled).toBeTrue();
+  }));
+
+  it('Sollte den Next-Button im A11Y-Modus aktiviert lassen', fakeAsync(() => {
+    component.linear = true;
+    component.a11yMode = true;
+    LuxTestHelper.wait(fixture);
+
+    const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
+    expect(nextButton.disabled).toBeFalse();
+  }));
+
+  it('Sollte die Navigations-Buttons linksbündig darstellen', fakeAsync(() => {
+    component.buttonAlignLeft = true;
+    LuxTestHelper.wait(fixture);
+
+    const navButtonContainer = fixture.debugElement.query(By.css('lux-stepper-nav-buttons > div'));
+    expect(navButtonContainer.nativeElement.classList.contains('lux-place-content-start')).toBeTrue();
+  }));
+
   it('Sollte einen vertikalen Stepper erstellen', fakeAsync(() => {
     // Vorbedingungen testen
     let stepperHorizontal = fixture.debugElement.query(By.css('mat-horizontal-stepper'));
@@ -292,6 +318,43 @@ describe('LuxStepperComponent', () => {
     flush();
   }));
 
+  it('Sollte luxCheckValidation emitten, wenn Header-Navigation blockiert wird', fakeAsync(() => {
+    component.linear = true;
+    LuxTestHelper.wait(fixture);
+
+    const spy = spyOn(component, 'checkValidation');
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
+    stepHeaders[1].nativeElement.click();
+    LuxTestHelper.wait(fixture);
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(0); // aktueller Step (0), nicht Ziel-Step
+  }));
+
+  it('Sollte luxCheckValidation emitten, wenn Next-Button-Navigation blockiert wird (A11Y-Modus)', fakeAsync(() => {
+    // Vorbedingungen: linear=true, step0 nicht abgeschlossen, A11Y-Modus damit Button klickbar bleibt
+    component.linear = true;
+    component.a11yMode = true;
+    LuxTestHelper.wait(fixture);
+
+    const spy = spyOn(component, 'checkValidation');
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    // Next-Button von Step 0 klicken (erster Button in lux-stepper-nav-buttons)
+    const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
+    nextButton.click();
+    LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+
+    // Nachbedingungen prüfen: aktueller Step-Index (0) muss emittiert werden, nicht der Ziel-Step
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(0);
+
+    flush();
+    discardPeriodicTasks();
+  }));
+
   it('Sollte luxFinishButtonClicked emitten', fakeAsync(() => {
     // Vorbedingungen testen
     const spy = spyOn(component, 'finClicked');
@@ -322,6 +385,8 @@ describe('LuxStepperComponent', () => {
       [luxUseCustomIcons]="customIcons"
       [luxVerticalStepper]="vertical"
       [luxLinear]="linear"
+      [luxA11YMode]="a11yMode"
+      [luxButtonAlignLeft]="buttonAlignLeft"
       [luxHorizontalStepAnimationActive]="horAnimation"
       [luxShowNavigationButtons]="showNavButtons"
       [luxEditedIconName]="editedIconName"
@@ -329,6 +394,7 @@ describe('LuxStepperComponent', () => {
       [luxNextButtonConfig]="nextConf"
       [luxFinishButtonConfig]="finConf"
       (luxStepChanged)="stepChange($event)"
+      (luxCheckValidation)="checkValidation($event)"
       (luxFinishButtonClicked)="finClicked()"
     >
       <lux-step
@@ -375,6 +441,8 @@ class MockStepperComponent {
   customIcons = false;
   vertical = false;
   linear = false;
+  a11yMode = false;
+  buttonAlignLeft = false;
   horAnimation = true;
   showNavButtons = true;
   editedIconName?: string;
@@ -406,6 +474,8 @@ class MockStepperComponent {
   form;
 
   stepChange(selectionEvent: StepperSelectionEvent) {}
+
+  checkValidation(index: number) {}
 
   finClicked() {}
 

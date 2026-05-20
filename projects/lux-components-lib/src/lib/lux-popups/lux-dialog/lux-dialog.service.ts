@@ -26,14 +26,12 @@ export class LuxDialogService {
   /**
    * @deprecated Wird nicht mehr benötigt, da die Dialogreferenz nicht mehr zwischengespeichert wird.
    */
-  storeDialogRef() {
-  }
+  storeDialogRef() {}
 
   /**
    * @deprecated Wird nicht mehr benötigt, da die Dialogreferenz nicht mehr zwischengespeichert wird.
    */
-  restoreDialogRef() {
-  }
+  restoreDialogRef() {}
 
   /**
    * Öffnet einen Dialog basierend auf der LuxDialogComponent und der LuxDialogConfig.
@@ -58,59 +56,66 @@ export class LuxDialogService {
     data?: any,
     defaultConfig: ILuxDialogConfig | ILuxDialogPresetConfig = DEFAULT_DIALOG_CONF
   ): LuxDialogRef<any> {
-      // Wenn keine Config übergeben ist, die defaultConfig nehmen
-      config = config ? config : defaultConfig;
+    // Wenn keine Config übergeben ist, die defaultConfig nehmen
+    config = config ? config : defaultConfig;
 
-      // Die CSS-Klassen fürs Panel herausfinden
-      const panelClass = ['lux-dialog'];
-      if (config.panelClass) {
-        if (Array.isArray(config.panelClass)) {
-          panelClass.push(...config.panelClass);
-        } else {
-          panelClass.push(config.panelClass);
-        }
+    // Die CSS-Klassen fürs Panel herausfinden
+    const panelClass = ['lux-dialog'];
+    if (config.panelClass) {
+      if (Array.isArray(config.panelClass)) {
+        panelClass.push(...config.panelClass);
+      } else {
+        panelClass.push(config.panelClass);
       }
+    }
 
-      // Workaround: https://github.com/IHK-GfI/lux-components-workspace/issues/3
-      // Blocked aria-hidden on an element because its descendant retained focus. 
-      // The focus must not be hidden from assistive technology users. 
-      // Avoid using aria-hidden on a focused element or its ancestor. 
-      // Consider using the inert attribute instead, which will also prevent focus. 
-      // For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
-      // Element with focus: ...
-      // Ancestor with aria-hidden: <app-root>
-      const activeElement = document.activeElement as HTMLElement;
+    // Workaround: https://github.com/IHK-GfI/lux-components-workspace/issues/3
+    // Blocked aria-hidden on an element because its descendant retained focus.
+    // The focus must not be hidden from assistive technology users.
+    // Avoid using aria-hidden on a focused element or its ancestor.
+    // Consider using the inert attribute instead, which will also prevent focus.
+    // For more details, see the aria-hidden section of the WAI-ARIA specification at https://w3c.github.io/aria/#aria-hidden.
+    // Element with focus: ...
+    // Ancestor with aria-hidden: <app-root>
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement) {
+      activeElement.blur();
+    }
+
+    // Neue LuxDialogRef-Instanz für diesen Dialog erstellen
+    const dialogRef = new LuxDialogRef();
+
+    // Show-close-button unabhängig von disableBackdropAndEscClose steuern
+    dialogRef.showCloseButton = !config.disableClose;
+
+    const injector = Injector.create({ parent: this.parentInjector, providers: [{ provide: LuxDialogRef, useValue: dialogRef }] });
+
+    // MatDialog's disableClose muss true sein, wenn entweder
+    // config.disableClose oder config.disableBackdropAndEscClose gesetzt ist.
+    const matDisableClose = !!config.disableClose || !!config.disableBackdropAndEscClose;
+
+    // Dialog öffnen und Konfiguration übergeben
+    const matDialogRef = this.matDialog.open(component, {
+      injector,
+      width: config.width,
+      height: config.height,
+      minWidth: config.minWidth,
+      minHeight: config.minHeight,
+      maxWidth: config.maxWidth,
+      maxHeight: config.maxHeight,
+      autoFocus: false,
+      restoreFocus: true,
+      disableClose: matDisableClose,
+      panelClass
+    });
+
+    matDialogRef.afterClosed().subscribe(() => {
       if (activeElement) {
-        activeElement.blur();
+        activeElement.focus();
       }
+    });
 
-      // Neue LuxDialogRef-Instanz für diesen Dialog erstellen
-      const dialogRef = new LuxDialogRef();
-      const injector = Injector.create({parent: this.parentInjector, providers: [{provide: LuxDialogRef, useValue: dialogRef}]});
-
-      // Dialog öffnen und Konfiguration übergeben
-      const matDialogRef = this.matDialog.open(component, {
-        injector,
-        width: config.width,
-        height: config.height,
-        minWidth: config.minWidth,
-        minHeight: config.minHeight,
-        maxWidth: config.maxWidth,
-        maxHeight: config.maxHeight,
-        autoFocus: false,
-        restoreFocus: true,
-        disableClose: config.disableClose,
-        panelClass
-      });
-
-      matDialogRef.afterClosed().subscribe(() => {
-        if (activeElement) {
-          activeElement.focus();
-        }
-      });
-
-      dialogRef.init(matDialogRef, data);
-
+    dialogRef.init(matDialogRef, data);
 
     return dialogRef;
   }

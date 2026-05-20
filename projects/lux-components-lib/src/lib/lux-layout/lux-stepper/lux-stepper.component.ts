@@ -45,7 +45,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
   private queryService = inject(LuxMediaQueryObserverService);
 
   private readonly _DEFAULT_PREV_BTN_CONF: ILuxStepperButtonConfig = {
-    label:''
+    label: ''
   };
   private readonly _DEFAULT_NEXT_BTN_CONF: ILuxStepperButtonConfig = {
     label: ''
@@ -131,8 +131,14 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
           // Voraussetzung: Stepper nicht deaktiviert
           if (!this.stepperConfiguration.luxDisabled) {
             if (next === true) {
+              const indexBeforeNext = this.stepperConfiguration.luxCurrentStepNumber ?? 0;
               this.checkValidation();
               this.matStepper.next();
+              // Navigation wurde blockiert (z.B. linearer Stepper, Step ungültig) → Event emittieren.
+              // Emittiert wird der aktuelle Step-Index – also der Step, der validiert werden muss.
+              if (this.matStepper.selectedIndex === indexBeforeNext) {
+                this.luxCheckValidation.emit(indexBeforeNext);
+              }
               if (this.matStepper.selectedIndex < this.matStepHeaders.length) {
                 this.matStepHeaders[this.matStepper.selectedIndex].focus();
               }
@@ -238,9 +244,17 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
   onStepClicked(event: number) {
     this.luxStepClicked.emit(event);
 
-    this.checkValidation();
-    // Das Event könnte interessant sein, wenn die Property "luxCompleted" verwendet wird und kein Formular.
-    this.luxCheckValidation.emit(event);
+    // Aufgrund der Event-Bubbling-Reihenfolge (selectionChange vor click) wurde luxCurrentStepNumber
+    // bereits auf den neuen Step aktualisiert, wenn dieser Handler feuert.
+    // Nur wenn der aktuelle Index NICHT dem geklickten Index entspricht, wurde die Navigation blockiert
+    // (z.B. linearer Stepper, ungültiger Step) → dann validieren und Event emittieren.
+    const currentIndex = this.stepperConfiguration.luxCurrentStepNumber ?? 0;
+    if (currentIndex !== event) {
+      this.checkValidation();
+      // Das Event könnte interessant sein, wenn die Property "luxCompleted" verwendet wird und kein Formular.
+      // Emittiert wird der aktuelle Step-Index – also der Step, der validiert werden muss.
+      this.luxCheckValidation.emit(currentIndex);
+    }
   }
 
   /**
@@ -258,7 +272,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
       instanceIconEdited.luxIconName = this.luxEditedIconName;
       instanceIconEdited.luxIconSize = '1.25rem';
       instanceIconEdited.luxRounded = true;
-      instanceIconEdited.luxMargin = '0 0.5rem 0 0';
+      instanceIconEdited.luxMargin = '0 0 0 0';
       instanceIconEdited.luxPadding = '0.625rem';
       componentIconEdited.location.nativeElement.className += ' lux-stepper-edited-icon';
 
@@ -267,7 +281,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
       instanceIconNormal.luxIconName = luxStep.luxIconName;
       instanceIconNormal.luxIconSize = '1.25rem';
       instanceIconNormal.luxRounded = true;
-      instanceIconNormal.luxMargin = '0 0.5rem 0 0';
+      instanceIconNormal.luxMargin = '0 0 0 0';
       instanceIconNormal.luxPadding = '0.625rem';
       componentIconNormal.location.nativeElement.className += ' lux-stepper-normal-icon';
     }
@@ -409,5 +423,23 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
 
   @Input() set luxFinishButtonConfig(config: ILuxStepperButtonConfig | undefined) {
     this.stepperConfiguration.luxFinishButtonConfig = config ? config : this._DEFAULT_FIN_BTN_CONF;
+  }
+
+  /**** Getter/Setter luxA11YMode ****/
+  get luxA11YMode() {
+    return this.stepperConfiguration.luxA11YMode ?? false;
+  }
+
+  @Input() set luxA11YMode(a11yMode: boolean) {
+    this.stepperConfiguration.luxA11YMode = a11yMode;
+  }
+
+  /**** Getter/Setter luxButtonAlignLeft ****/
+  get luxButtonAlignLeft() {
+    return this.stepperConfiguration.luxButtonAlignLeft ?? false;
+  }
+
+  @Input() set luxButtonAlignLeft(alignLeft: boolean) {
+    this.stepperConfiguration.luxButtonAlignLeft = alignLeft;
   }
 }
