@@ -8,12 +8,15 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideLuxTranslocoTesting } from '../../../../../testing/transloco-test.provider';
 
 describe('LuxAppHeaderAcSessionTimerComponent', () => {
+  const sessionTimerStorageKey = 'lux-components-session-endtime';
   let component: MockSessionTimerComponent;
   let fixture: ComponentFixture<MockSessionTimerComponent>;
   let timerService: LuxAppHeaderAcSessionTimerService;
   let httpController: HttpTestingController;
 
   beforeEach(waitForAsync(() => {
+    localStorage.removeItem(sessionTimerStorageKey);
+
     TestBed.configureTestingModule({
       imports: [MockSessionTimerComponent],
       providers: [
@@ -30,6 +33,10 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     httpController = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   }));
+
+  afterEach(() => {
+    localStorage.removeItem(sessionTimerStorageKey);
+  });
 
   it('sollte erstellt werden', fakeAsync(() => {
     expect(component).toBeTruthy();
