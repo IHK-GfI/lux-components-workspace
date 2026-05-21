@@ -6,6 +6,7 @@
   - [Overview / API](#overview--api)
     - [Allgemein](#allgemein)
     - [@Input](#input)
+    - [@Output](#output)
   - [Beispiele](#beispiele)
     - [1. Pixel-Größen](#1-pixel-größen)
     - [2. Prozent-Größen](#2-prozent-größen)
@@ -28,6 +29,13 @@
 | luxImageHeight | string  | Bestimmt die Höhe des Bildes, hier können alle (CSS) bekannten Größen eingegeben werden. Beispiel: luxImageHeight="100%", luxImageHeight="10em", luxImageHeight="100px" |
 | luxRawSrc      | boolean | Deaktiviert wenn "true" jegliche Bearbeitung der luxImageSrc durch diese Component. Dadurch sind relativ liegende Image-Links erreichbar (z.B. /fb/test.png).           |
 | luxAlt         | string  | Eine Bildbeschreibung.                                                                                                                                                  |
+
+### @Output
+
+| Name          | Typ                 | Beschreibung                                                                                                                                                     |
+| ------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxClicked    | EventEmitter<Event> | Wird ausgelöst, wenn auf das Bild geklickt wird. Das Original-Event wird durchgereicht.                                                                          |
+| luxImageError | EventEmitter<Event> | Neu: Wird ausgelöst, wenn das img-Element ein `error`-Event feuert (z.B. bei 404 oder Netzwerkfehlern). Nützlich, um Fallback-Logik oder Platzhalter anzuzeigen. |
 
 ## Beispiele
 

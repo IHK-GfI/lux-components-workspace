@@ -16,7 +16,7 @@ applyTo: '**'
 - The demo app consumes the library and themes; it uses transloco for translations, and theme CSS from dist/theme (see assets in [angular.json](angular.json)).
 - Themes are CSS variables + classes (Material Theme 3). Variables live under projects/lux-components-theme/src/<themeName>/\_variables\*.scss.
 - Update scripts are Angular schematics in projects/lux-components-update (see README).
-- Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>.
+- Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>. Check if all Inputs and Outputs are documented.
 - Update the demo page of the component in the folder projects\demo-app\src\app\components-overview\<component-name>.
 - Make a spell check for changed .md files (e.g. README, Wiki-Doku).
 

@@ -47,6 +47,12 @@
         [luxNoBottomLabel]="true"
       ></lux-select-ac>
       <lux-input-ac
+        luxLabel="Tenant URL"
+        [(luxValue)]="currentConfig.tenantLogoLookupServiceUrl"
+        [luxNoBottomLabel]="true"
+        (luxValueChange)="updateConfig()"
+      ></lux-input-ac>
+      <lux-input-ac
         luxLabel="Lookup URL"
         [(luxValue)]="currentConfig.lookupServiceUrl"
         [luxNoBottomLabel]="true"

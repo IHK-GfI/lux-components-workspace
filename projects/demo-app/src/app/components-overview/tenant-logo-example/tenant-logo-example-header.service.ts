@@ -8,12 +8,14 @@ export class TenantLogoExampleHeaderService {
   public tenantConfigChange: EventEmitter<TenantLogoExampleConfigData> = new EventEmitter<TenantLogoExampleConfigData>();
 
   public showBorderForTenantImage(el: ElementRef, toggle: boolean) {
-    const c = el.nativeElement.querySelector('img');
+    let c = el.nativeElement.querySelector('img');
 
-    if (toggle) {
-      c.style.border = '2px solid red';
-    } else {
-      c.style.border = '';
+    if (!c) {
+      c = el.nativeElement.querySelector('.lux-tenant-logo-error');
+    }
+
+    if (c) {
+      c.style.border = toggle ? '2px solid red' : '';
     }
   }
 }

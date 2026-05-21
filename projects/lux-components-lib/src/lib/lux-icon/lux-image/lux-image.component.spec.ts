@@ -69,6 +69,18 @@ describe('LuxImageComponent', () => {
     // Then
     expect(imageEl.nativeElement.src).toContain('/fb/myimage.png');
   }));
+
+  it('Sollte luxImageError Event emittieren bei Fehler', () => {
+    // Given
+    component.href = 'assets/png/example.png';
+    // When
+    fixture.detectChanges();
+    const imageEl = fixture.debugElement.query(By.css('.lux-image'));
+    const spy = spyOn(component.imageCmp.luxImageError, 'emit');
+    imageEl.nativeElement.dispatchEvent(new Event('error'));
+    // Then
+    expect(spy).toHaveBeenCalled();
+  });
 });
 
 @Component({

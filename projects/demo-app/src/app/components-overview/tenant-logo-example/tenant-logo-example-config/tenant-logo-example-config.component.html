@@ -9,6 +9,8 @@
   <lux-select-ac
     class=""
     [(luxSelected)]="tenantLogoConfig.luxTenantKey"
+    luxOptionLabelProp="label"
+    [luxPickValue]="pickValueKeyFn"
     [luxOptions]="tenantKeyArr"
     luxLabel="luxTenantKey"
     luxHint="Diese Property legt den Schlüssel für den Tenant fest, dessen Image gezeigt werden soll."
@@ -19,12 +21,12 @@
     <lux-form-hint>
       Diese Property legt die Variante für den Tenant fest.<br />
       Wenn der Variant leer gelassen wird, wechselt die Komponente je nach Media Query die Variante
-      <span [style]="{ 'font-weight': tenantLogoConfig.luxTenantVariant ? '' : 'bold' }">automatisch</span>. @if
-      (!tenantLogoConfig.luxTenantVariant) {
-      <div>
-        <br />
-        Automatisch ausgewählt: <b>{{ actualTenantVariant }}</b>
-      </div>
+      <span [style]="{ 'font-weight': tenantLogoConfig.luxTenantVariant ? '' : 'bold' }">automatisch</span>.
+      @if (!tenantLogoConfig.luxTenantVariant) {
+        <div>
+          <br />
+          Automatisch ausgewählt: <b>{{ actualTenantVariant }}</b>
+        </div>
       }
     </lux-form-hint>
   </lux-select-ac>

@@ -38,7 +38,7 @@ export class TenantLogoExampleComponent {
   public localTenantLogoConfig: TenantLogoExampleConfigData = {
     luxTenantKey: '100',
     luxTenantVariant: '',
-    luxTenantLogoHeight: '100px',
+    luxTenantLogoHeight: '50px',
     luxTenantLogoClicked: undefined
   };
 

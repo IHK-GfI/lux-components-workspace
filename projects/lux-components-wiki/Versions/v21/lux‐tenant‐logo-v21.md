@@ -11,6 +11,7 @@
     - [Konfiguration](#konfiguration)
       - [Logos mit der App ausliefern](#logos-mit-der-app-ausliefern)
       - [Logos über ein CDN laden](#logos-über-ein-cdn-laden)
+  - [Fehlerbehandlung](#fehlerbehandlung)
   - [Beispiele](#beispiele)
     - [1. Tenant Logo in lux-app-header-ac](#1-tenant-logo-in-lux-app-header-ac)
     - [2. Tenant Logo mit automatischen Varianten](#2-tenant-logo-mit-automatischen-varianten)
@@ -50,6 +51,16 @@ Siehe [LUX-Components-Config](config-v21#logos-mit-der-app-ausliefern).
 #### Logos über ein CDN laden
 
 Siehe [LUX-Components-Config](config-v21#logos-über-ein-cdn-laden).
+
+## Fehlerbehandlung
+
+Die Komponente verfügt über ein robustes Fehlerbehandlungssystem für die Verwaltung fehlender oder nicht erreichbarer Logos:
+
+1. **Gewünschtes Logo wird gefunden**: Das Logo wird normal angezeigt.
+2. **Gewünschtes Logo nicht gefunden**: Die Komponente greift auf ein Standardlogo zurück, indem die Variante "kurz" verwendet wird (z.B. wenn "100_lang.svg" nicht gefunden wird, versucht es "100_kurz.svg").
+3. **CDN nicht erreichbar oder Standardlogo auch nicht verfügbar**: Eine lokalisierte Fehlermeldung (z.B. "Logo nicht verfügbar") wird angezeigt.
+
+Diese automatische Fehlerbehandlung stellt sicher, dass die Anwendung auch bei fehlenden Ressourcen stabil läuft und dem Benutzer eine aussagekräftige Rückmeldung gegeben wird.
 
 ## Beispiele
 
