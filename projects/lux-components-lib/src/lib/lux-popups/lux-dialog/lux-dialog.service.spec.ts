@@ -357,6 +357,28 @@ describe('LuxDialogService', () => {
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
       expect(spy).toHaveBeenCalledTimes(1);
     }));
+
+    it('Sollte bei disableBackdropAndEscClose=true den Dialog über MatDialog sperren, aber den X-Button anzeigen', fakeAsync(() => {
+      dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent, {
+        disableClose: false,
+        disableBackdropAndEscClose: true
+      });
+      LuxTestHelper.wait(fixture);
+
+      expect(dialogRef._matDialogRef.disableClose).toBeTrue();
+      expect(overlayHelper.selectOneFromOverlay('.lux-icon-close')).not.toBeNull();
+    }));
+
+    it('Sollte bei disableClose=true den X-Button ausblenden', fakeAsync(() => {
+      dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent, {
+        disableClose: true,
+        disableBackdropAndEscClose: false
+      });
+      LuxTestHelper.wait(fixture);
+
+      expect(dialogRef._matDialogRef.disableClose).toBeTrue();
+      expect(overlayHelper.selectOneFromOverlay('.lux-icon-close')).toBeNull();
+    }));
   });
 });
 

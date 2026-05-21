@@ -21,6 +21,7 @@
     - [3. Vertikaler Stepper](#3-vertikaler-stepper)
     - [4. Stepper ohne StepControl](#4-stepper-ohne-stepcontrol)
     - [5. Schritt in eigene Komponente auslagern](#5-schritt-in-eigene-komponente-auslagern)
+    - [6. Stepper im Dialog](#6-stepper-im-dialog)
   - [Zusatzinformationen](#zusatzinformationen)
     - [Allgemein](#allgemein-2)
     - [Validierung der Steps](#validierung-der-steps)
@@ -49,7 +50,8 @@
 | luxPreviousButtonConfig          | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Zurück-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                         |
 | luxNextButtonConfig              | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Weiter-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                         |
 | luxFinishButtonConfig            | ILuxStepperButtonConfig | Konfigurationsobjekt, welches die Anpassung des Abschließen-Buttons regelt. Mögliche Optionen sind im Interface ILuxStepperButtonConfig eingetragen.                                                                    |
-| luxNumberAlignLeft               | boolean                 | Bestimmt, ob der Inhalt in einem number-Input-Feld links- oder rechtsbündig dargestellt wird.                                                                                                                           |
+| luxA11YMode                      | boolean                 | Wenn aktiv, sind die Navigations-Buttons immer klickbar (nicht visuell deaktiviert), auch wenn der aktuelle Step noch nicht abgeschlossen ist. Standardwert: `false`.                                                   |
+| luxButtonAlignLeft               | boolean                 | Wenn aktiv, werden die Navigations-Buttons linksbündig unterhalb des Step-Contents angezeigt. Standardwert: `false` (rechtsbündig).                                                                                     |
 
 ### @Output
 
@@ -116,6 +118,8 @@ Objekte können dieses Interface implementieren, um so die einzelnen Steuer-Butt
 | color              | LuxThemePalette | Farbe des Buttons                           |
 | iconName           | string          | Name des Icons, für diesen Button.          |
 | alignIconWithLabel | boolean         | Vertikale Anordnung des Icons mit dem Text. |
+| flat               | boolean         | Stellt den Button als Flat-Button dar.      |
+| stroked            | boolean         | Stellt den Button als Stroked-Button dar.   |
 
 ## Beispiele
 
@@ -523,6 +527,82 @@ Html - lux-step-person
     ></lux-input>
   </div>
 </ng-template>
+```
+
+### 6. Stepper im Dialog
+
+In diesem Beispiel wird ein Stepper in einem Dialog verwendet. Der Stepper ist im Dialog-Inhalt sichtbar, und die Dialog-Actions ersetzen die Stepper-Navigations-Buttons. Dazu wird `luxShowNavigationButtons="false"` gesetzt.
+
+Ts – Dialog-Component
+
+```typescript
+@Component({
+  selector: 'app-stepper-dialog-example',
+  templateUrl: './stepper-dialog-example.component.html',
+  imports: [/* ... */]
+})
+export class StepperDialogExampleComponent {
+  luxDialogRef = inject(LuxDialogRef);
+  currentStepNumber = 0;
+  readonly totalSteps = 3;
+
+  get isFirstStep(): boolean { return this.currentStepNumber === 0; }
+  get isLastStep(): boolean { return this.currentStepNumber === this.totalSteps - 1; }
+
+  prevStep(): void { if (this.currentStepNumber > 0) this.currentStepNumber--; }
+  nextStep(): void { if (this.currentStepNumber < this.totalSteps - 1) this.currentStepNumber++; }
+  finish(): void { this.luxDialogRef.closeDialog(true); }
+  cancel(): void { this.luxDialogRef.closeDialog(false); }
+}
+```
+
+Html – Dialog-Component
+
+```html
+<lux-dialog-structure>
+  <lux-dialog-title>Stepper im Dialog</lux-dialog-title>
+  <lux-dialog-content>
+    <lux-stepper
+      [luxShowNavigationButtons]="false"
+      [luxLinear]="false"
+      [luxCurrentStepNumber]="currentStepNumber"
+      (luxCurrentStepNumberChange)="currentStepNumber = $event"
+    >
+      <lux-step>
+        <lux-step-header>Schritt 1</lux-step-header>
+        <lux-step-content>...</lux-step-content>
+      </lux-step>
+      <lux-step>
+        <lux-step-header>Schritt 2</lux-step-header>
+        <lux-step-content>...</lux-step-content>
+      </lux-step>
+      <lux-step>
+        <lux-step-header>Zusammenfassung</lux-step-header>
+        <lux-step-content>...</lux-step-content>
+      </lux-step>
+    </lux-stepper>
+  </lux-dialog-content>
+  <lux-dialog-actions>
+    @if (!isFirstStep) {
+    <lux-button luxLabel="Zurück" (luxClicked)="prevStep()"></lux-button>
+    }
+    @if (!isLastStep) {
+    <lux-button luxLabel="Weiter" luxColor="primary" [luxFlat]="true" (luxClicked)="nextStep()"></lux-button>
+    }
+    @if (isLastStep) {
+    <lux-button luxLabel="Abschließen" luxColor="primary" [luxFlat]="true" (luxClicked)="finish()"></lux-button>
+    }
+    <lux-button luxLabel="Abbrechen" (luxClicked)="cancel()"></lux-button>
+  </lux-dialog-actions>
+</lux-dialog-structure>
+```
+
+Ts – Öffnen des Dialogs
+
+```typescript
+openStepperDialog(): void {
+  this.dialogService.openComponent(StepperDialogExampleComponent, { width: '600px', disableClose: true });
+}
 ```
 
 ## Zusatzinformationen

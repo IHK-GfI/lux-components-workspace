@@ -61,6 +61,7 @@ export class DialogExampleComponent implements OnDestroy {
     title: 'Daten löschen?',
     content: 'Ihre Daten werden endgültig gelöscht. Das Löschen kann nicht rückgängig gemacht werden.',
     disableClose: false,
+    disableBackdropAndEscClose: false,
     width: 'auto',
     height: 'auto',
     iconName: 'lux-interface-alert-warning-triangle',
@@ -157,7 +158,9 @@ export class DialogExampleComponent implements OnDestroy {
   }
 
   openDialogComponent() {
-    const dialogRef = this.dialogService.openComponent(DialogComponentExampleComponent, this.dialogConfig, { showOutputEvents: this.showOutputEvents });
+    const dialogRef = this.dialogService.openComponent(DialogComponentExampleComponent, this.dialogConfig, {
+      showOutputEvents: this.showOutputEvents
+    });
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {

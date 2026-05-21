@@ -98,16 +98,17 @@ Dieses Interface legt die einstellbaren Optionen für die Dialoge fest (LuxDialo
 
 Es existiert ein zusätzliches Objekt DEFAULT_DIALOG_CONF mit zuvor festgelegten Standardwerten die hier ebenfalls angegeben sind.
 
-| Name         | Typ              | Beschreibung                                                                                                  |
-| ------------ | ---------------- | ------------------------------------------------------------------------------------------------------------- |
-| width        | string           | Bestimmt die Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                      |
-| height       | string           | Bestimmt die Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                        |
-| minWidth     | string           | Bestimmt die minimale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.             |
-| minHeight    | string           | Bestimmt die minimale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.               |
-| maxWidth     | string           | Bestimmt die maximale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.             |
-| maxHeight    | string           | Bestimmt die maximale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.               |
-| panelClass   | string, string[] | Über diese Property ist es möglich eine einzelne bzw. mehrere CSS-Klassen an den geöffneten Dialog zu setzen. |
-| disableClose | boolean          | Diese Property bestimmt, ob der Dialog nur über die Schaltflächen schließbar ist oder nicht.                  |
+| Name                       | Typ              | Beschreibung                                                                                                                                                                                                 |
+| -------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| width                      | string           | Bestimmt die Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                                     |
+| height                     | string           | Bestimmt die Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                                       |
+| minWidth                   | string           | Bestimmt die minimale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                            |
+| minHeight                  | string           | Bestimmt die minimale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                              |
+| maxWidth                   | string           | Bestimmt die maximale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                            |
+| maxHeight                  | string           | Bestimmt die maximale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                              |
+| panelClass                 | string, string[] | Über diese Property ist es möglich eine einzelne bzw. mehrere CSS-Klassen an den geöffneten Dialog zu setzen.                                                                                                |
+| disableClose               | boolean          | Diese Property bestimmt, ob der Dialog nur über die Schaltflächen schließbar ist oder nicht.                                                                                                                 |
+| disableBackdropAndEscClose | boolean          | Wenn `true`, werden Backdrop-Klicks und die ESC-Taste ignoriert – der X-Schließen-Button bleibt jedoch weiterhin sichtbar. Unterschied zu `disableClose`: `disableClose` verhindert zusätzlich den X-Button. |
 
 ### ILuxDialogPresetConfig
 

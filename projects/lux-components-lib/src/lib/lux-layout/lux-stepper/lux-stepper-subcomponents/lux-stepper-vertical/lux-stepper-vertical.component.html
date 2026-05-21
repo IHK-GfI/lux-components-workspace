@@ -14,29 +14,31 @@
   #stepper
 >
   @for (luxStep of luxStepperConfig?.luxSteps; track luxStep; let i = $index) {
-  <mat-step [completed]="luxStep.isCompleted()" [optional]="luxStep.luxOptional" [editable]="luxStep.luxEditable">
-    <!-- Header des Steps -->
-    <ng-template matStepLabel>
-      <div class="lux-flex lux-place-content-start lux-items-center">
-        <ng-template #matStepLabel></ng-template>
-        <ng-container *ngTemplateOutlet="luxStep.headerTemplate"></ng-container>
-      </div>
-    </ng-template>
-    <!-- Content des Steps, wenn Animationen aktiviert sind -->
-    <ng-container *ngTemplateOutlet="luxStep.contentTemplate"></ng-container>
-    <!-- Nav-Buttons, wenn aktiviert -->
-    @if (luxStepperConfig?.luxShowNavigationButtons) {
-    <lux-stepper-nav-buttons
-      [luxIndex]="i"
-      [luxStep]="luxStep"
-      [luxStepperConfig]="luxStepperConfig"
-      (luxPrevClick)="luxPrevButtonClicked.emit()"
-      (luxNextClick)="luxNextButtonClicked.emit()"
-      (luxFinClick)="luxFinButtonClicked.emit()"
-    >
-    </lux-stepper-nav-buttons>
-    }
-  </mat-step>
+    <mat-step [completed]="luxStep.isCompleted()" [optional]="luxStep.luxOptional" [editable]="luxStep.luxEditable">
+      <!-- Header des Steps -->
+      <ng-template matStepLabel>
+        <div class="lux-flex lux-place-content-start lux-items-center">
+          <ng-template #matStepLabel></ng-template>
+          @if (luxStep.hasHeader) {
+            <ng-container *ngTemplateOutlet="luxStep.headerTemplate"></ng-container>
+          }
+        </div>
+      </ng-template>
+      <!-- Content des Steps, wenn Animationen aktiviert sind -->
+      <ng-container *ngTemplateOutlet="luxStep.contentTemplate"></ng-container>
+      <!-- Nav-Buttons, wenn aktiviert -->
+      @if (luxStepperConfig?.luxShowNavigationButtons) {
+        <lux-stepper-nav-buttons
+          [luxIndex]="i"
+          [luxStep]="luxStep"
+          [luxStepperConfig]="luxStepperConfig"
+          (luxPrevClick)="luxPrevButtonClicked.emit()"
+          (luxNextClick)="luxNextButtonClicked.emit()"
+          (luxFinClick)="luxFinButtonClicked.emit()"
+        >
+        </lux-stepper-nav-buttons>
+      }
+    </mat-step>
   }
 
   <!-- Überschreiben der default Material-Icons -->

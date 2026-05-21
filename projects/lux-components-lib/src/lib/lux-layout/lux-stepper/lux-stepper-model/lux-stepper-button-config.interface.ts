@@ -8,4 +8,6 @@ export interface ILuxStepperButtonConfig {
   color?: LuxThemePalette;
   iconName?: string;
   alignIconWithLabel?: boolean;
+  flat?: boolean;
+  stroked?: boolean;
 }
