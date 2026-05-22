@@ -8,7 +8,10 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
     - [lux-theme](#lux-theme)
     - [lux-tour-hint](#lux-tour-hint)
     - [lux-table](#lux-table)
+    - [lux-session-timer](#lux-session-timer)
   - [Versionen](#versionen)
+    - [Version 21.4.0](#version-2140)
+      - [WICHTIG! - Die Einwilligung (Consent) muss ggf. ergänzt werden](#wichtig---die-einwilligung-consent-muss-ggf-ergänzt-werden)
     - [Version 21.3.1](#version-2131)
     - [Version 21.3.0](#version-2130)
     - [Version 21.2.0](#version-2120)
@@ -57,19 +60,47 @@ Der LUX-Tour-Hinweis nutzt den Local Storage, um zu speichern, ob ein Hinweis ni
 
 ### lux-table
 
-Die LUX-Table nutzt den Local Storage, um zu speichern, welche Tabellen ausgeblendet wurden, aber nur, wenn das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet wird.
+Die LUX-Table nutzt den Local Storage, um zu speichern, welche Spalten ausgeblendet wurden, aber nur, wenn das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet wird.
 
-|            |                                                                                                                                                                                                                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Key        | Legt die Fachanwendung fest                                                                                                                                                                                                                                                           |
-| Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                         |
-| Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                      |
-| Beispiel   | lux-demo-table-example=\["name", "symbol"\]                                                                                                                                                                                                                                           |
+|            |                                                                                                                                                                                                                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Key        | Legt die Fachanwendung fest                                                                                                                                                                                                                                                          |
+| Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                        |
+| Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                     |
+| Beispiel   | lux-demo-table-example=\["name", "symbol"\]                                                                                                                                                                                                                                          |
 | Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
+
+### lux-session-timer
+
+Der LUX-Session-Timer nutzt den Local Storage, um die berechnete Endzeit der aktuellen Session zu speichern.
+
+|            |                                                                                                                                                                                        |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Key        | "lux-components-session-endtime" (kann über die Config-Property _sessionTimerConfig.localStorageKeyName_ angepasst werden)                                                             |
+| Key-Präfix | ---                                                                                                                                                                                    |
+| Wert       | Timestamp (Endzeit der Session in Millisekunden)                                                                                                                                       |
+| Beispiel   | lux-components-session-endtime=1716390000000                                                                                                                                           |
+| Auswirkung | Wenn der Local Storage nicht verwendet werden darf, kann der Session-Timer die verbleibende Sessiondauer nicht korrekt berechnen und die Anzeige der Restzeit funktioniert nicht mehr. |
 
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. Das heißt, alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+### Version 21.4.0
+
+#### WICHTIG! - Die Einwilligung (Consent) muss ggf. ergänzt werden
+
+In diesem Update wurde für den [lux-session-timer](lux‐session‐timer‐v21) ein neuer Local Storage Key ([siehe hier](#lux-session-timer)) eingeführt.
+D.h. wenn die eigene Anwendung den [lux-session-timer](lux‐session‐timer‐v21) verwendet, muss die Einwilligung entsprechend ergänzt werden!!!
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-21.4.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
 
 ### Version 21.3.1
 
@@ -97,7 +128,7 @@ In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren k
 
 ### Version 21.2.0
 
-**WICHTIG**: Mit der Umstellung auf 21.1.0 wird die temporäre Lösung mit der Property _useLocalStorageForComponentsAllowed_ in der [Config](config-v21) zu Gunsten eines Einwilligungskonzepts (siehe [lux-consent](lux‐consent-v21)) entfernt.
+**WICHTIG**: Mit der Umstellung auf 21.2.0 wird die temporäre Lösung mit der Property _useLocalStorageForComponentsAllowed_ in der [Config](config-v21) zugunsten eines Einwilligungskonzepts (siehe [lux-consent](lux‐consent-v21)) entfernt.
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
@@ -223,7 +254,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 #### Troubleshooting
 
-- Bei fehlenden NPM-Paketen siehe hier.
+- Bei fehlenden NPM-Paketen siehe [hier](#fehlende-pakete-bei-npm-install).
 - JAST-Projekte: Wenn die Fehlermeldung _java.lang.StackOverflowError_ im zentralen Build erscheint, könnte es daran liegen, dass das Skript _move-files.js_ die Dateien aus dem _de_-Ordner nicht in den Root-Ordner kopiert.
 - Wenn der Fehler `Can't find stylesheet to import` beim Importieren von SCSS-Dateien aus dem `node_module`-Ordner auftritt, bitte den folgenden Abschnitt in der _angular.json_ unterhalb von `"styles": ["src/styles.scss"],` hinzufügen:
 

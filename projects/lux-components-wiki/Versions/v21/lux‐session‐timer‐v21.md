@@ -10,8 +10,6 @@
     - [Einwilligung](#einwilligung)
     - [Konfiguration](#konfiguration)
     - [Komponente einbinden](#komponente-einbinden)
-  - [Beispiel](#beispiel)
-    - [Vollständiges Beispiel](#vollständiges-beispiel)
 
 ## Overview / API
 
