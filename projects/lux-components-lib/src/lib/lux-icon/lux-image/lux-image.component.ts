@@ -15,6 +15,7 @@ export class LuxImageComponent implements OnChanges, OnInit {
   @Input() luxAlt = '';
 
   @Output() luxClicked = new EventEmitter<Event>();
+  @Output() luxImageError = new EventEmitter<Event>();
 
   isObserved = false;
 
@@ -40,6 +41,10 @@ export class LuxImageComponent implements OnChanges, OnInit {
 
   clicked(event: Event) {
     this.luxClicked.emit(event);
+  }
+
+  protected onImageError(event: Event) {
+    this.luxImageError.emit(event);
   }
 
   private updateImageSrc() {

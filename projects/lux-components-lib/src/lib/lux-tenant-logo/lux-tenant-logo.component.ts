@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigParameters } from '../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
@@ -10,7 +11,7 @@ import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observ
   selector: 'lux-tenant-logo',
   templateUrl: './lux-tenant-logo.component.html',
   styleUrls: ['./lux-tenant-logo.component.scss'],
-  imports: [LuxImageComponent, LuxAriaLabelDirective]
+  imports: [LuxImageComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxTenantLogoComponent implements OnInit, OnDestroy {
   private componentsConfigService = inject(LuxComponentsConfigService);
@@ -86,10 +87,14 @@ export class LuxTenantLogoComponent implements OnInit, OnDestroy {
 
   private apiPath?: string;
   private mediaQuery?: string;
+  private currentTenantKey?: string;
+  private currentVariant?: string;
+  protected hasTriedFallback = false;
 
-  public tenantLogoSrc: any;
+  protected tenantLogoSrc: string | undefined;
   public luxTenantLogoAriaLabel?: string;
   public luxTenantLogoAlt = 'Tenant Logo';
+  protected imageLoadError = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -117,6 +122,12 @@ export class LuxTenantLogoComponent implements OnInit, OnDestroy {
   private updateSrc(): void {
     if (!this.apiPath) return;
     if (!this.mediaQuery) return;
+
+    // Setze Fallback-Flag zurück und clear error state bei neuer URL
+    this.hasTriedFallback = false;
+    this.imageLoadError = false;
+    this.currentTenantKey = this.luxTenantKey;
+    this.currentVariant = this.luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(this.mediaQuery!);
 
     this.tenantLogoSrc = LuxTenantLogoComponent.buildTenantLogoUrlFromMediaQuery(
       this.apiPath,
@@ -146,5 +157,22 @@ export class LuxTenantLogoComponent implements OnInit, OnDestroy {
 
   public onImageClicked(event: any): void {
     this.luxTenantLogoClicked.emit(event);
+  }
+
+  protected onImageError(): void {
+    // Wenn noch kein Fallback versucht wurde, versuche mit dem Standardlogo (nnn_kurz.svg)
+    if (this.currentVariant !== 'kurz' && !this.hasTriedFallback && this.currentTenantKey) {
+      this.hasTriedFallback = true;
+      const standardVariant = 'kurz';
+      this.tenantLogoSrc = LuxTenantLogoComponent.buildTenantLogoUrl(
+        this.apiPath || LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl,
+        this.currentTenantKey,
+        standardVariant
+      );
+    } else {
+      // Fallback ist auch fehlgeschlagen - zeige Fehlermeldung
+      this.imageLoadError = true;
+      this.tenantLogoSrc = undefined;
+    }
   }
 }

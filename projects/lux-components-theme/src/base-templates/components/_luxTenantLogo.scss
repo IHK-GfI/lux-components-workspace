@@ -1,0 +1,27 @@
+﻿@use "../common/luxfocus";
+
+lux-tenant-logo {
+  .lux-tenant-logo-error-container {
+    display: flex;
+    flex: 0 1 auto;
+
+    .lux-tenant-logo-error {
+      display: flex;
+      flex: 0 1 auto;
+      align-items: center;
+      padding: 4px;
+      color: var(--lux-theme-custom-gray);
+      background-color: var(--lux-theme-custom-on-gray);
+      font-size: 1rem;
+      font-style: italic;
+      border: 1px solid var(--lux-theme-app-border-color);
+      border-radius: var(--lux-theme-app-border-radius);
+    }
+  }
+
+  img:focus-visible,
+  .lux-tenant-logo-error:focus-visible {
+    @include luxfocus.focus-dark-mixin;
+    border-radius: var(--lux-theme-app-border-radius);
+  }
+}

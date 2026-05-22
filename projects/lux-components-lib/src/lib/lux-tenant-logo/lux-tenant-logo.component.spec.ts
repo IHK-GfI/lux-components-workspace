@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
+import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observer.service';
 import { LuxTenantLogoComponent } from './lux-tenant-logo.component';
 
@@ -10,6 +11,10 @@ describe('LuxTenantLogoComponent', () => {
 
   beforeEach(() => {
     mediaQuerySubject = new Subject<string>();
+
+    TestBed.configureTestingModule({
+      providers: [provideLuxTranslocoTesting()]
+    });
 
     const mediaQueryService = TestBed.inject(LuxMediaQueryObserverService);
     spyOn(mediaQueryService, 'getMediaQueryChangedAsObservable').and.returnValue(mediaQuerySubject);
@@ -232,6 +237,79 @@ describe('LuxTenantLogoComponent', () => {
       expect(luxImageEl.nativeElement.src).toContain(
         '/assets/ihk-logos/' + testComponent.tenantKey + '_' + expectedComputedVariant + '.svg'
       );
+    }));
+  });
+
+  describe('Fehlerbehandlung und Fallback Testen', () => {
+    let fixture: ComponentFixture<LuxMockTenantLogoComponent>;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxMockTenantLogoComponent);
+      fixture.detectChanges();
+
+      mediaQuerySubject.next('lg');
+      fixture.detectChanges();
+    }));
+
+    it('Sollte auf Standardlogo fallback bei Fehler des gewünschten Logos', fakeAsync(() => {
+      const tenantLogoEl = fixture.debugElement.query(By.css('lux-tenant-logo'));
+      const initialTenantKey = '100';
+      const initialVariant = 'lang';
+
+      /* ___Vorbedingungen testen___ */
+      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+      expect(tenantLogoEl.componentInstance.tenantLogoSrc).toContain(initialTenantKey + '_' + initialVariant + '.svg');
+
+      /* ___Fehler simulieren___ */
+      tenantLogoEl.componentInstance.onImageError();
+      fixture.detectChanges();
+
+      /* ___Nachbedingungen testen - Fallback auf kurz Variante___ */
+      expect(tenantLogoEl.componentInstance.hasTriedFallback).toEqual(true);
+      expect(tenantLogoEl.componentInstance.tenantLogoSrc).toContain(initialTenantKey + '_kurz.svg');
+      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+    }));
+
+    it('Sollte Fehlermeldung anzeigen wenn auch Fallback fehlschlägt', fakeAsync(() => {
+      const tenantLogoEl = fixture.debugElement.query(By.css('lux-tenant-logo'));
+
+      /* ___Vorbedingungen testen___ */
+      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+
+      /* ___Erster Fehler simulieren (Fallback wird versucht)___ */
+      tenantLogoEl.componentInstance.onImageError();
+      fixture.detectChanges();
+      expect(tenantLogoEl.componentInstance.hasTriedFallback).toEqual(true);
+      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+
+      /* ___Zweiter Fehler simulieren (Fallback schlägt fehl)___ */
+      tenantLogoEl.componentInstance.onImageError();
+      fixture.detectChanges();
+
+      /* ___Nachbedingungen testen - Fehlermeldung anzeigen___ */
+      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(true);
+      expect(tenantLogoEl.componentInstance.tenantLogoSrc).toEqual(undefined);
+      const errorDiv = fixture.debugElement.query(By.css('.lux-tenant-logo-error'));
+      expect(errorDiv).toBeTruthy();
+      expect(errorDiv.nativeElement.textContent).toContain('100 nicht verfügbar');
+    }));
+
+    it('Sollte Error-Flag zurücksetzen wenn neue URL aufgebaut wird', fakeAsync(() => {
+      const tenantLogoEl = fixture.debugElement.query(By.css('lux-tenant-logo'));
+
+      /* ___Fehlermeldung anzeigen___ */
+      tenantLogoEl.componentInstance.onImageError();
+      tenantLogoEl.componentInstance.onImageError();
+      fixture.detectChanges();
+      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(true);
+
+      /* ___Tenant Key ändern (neue URL wird aufgebaut)___ */
+      fixture.componentInstance.tenantKey = '202';
+      fixture.detectChanges();
+
+      /* ___Nachbedingungen testen - Error-Flag zurückgesetzt___ */
+      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+      expect(tenantLogoEl.componentInstance.hasTriedFallback).toEqual(false);
     }));
   });
 });

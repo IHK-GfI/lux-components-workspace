@@ -283,6 +283,9 @@
       "sort.descending": "descending",
       "sort.no_longer": "no longer"
     },
+    "tenant-logo": {
+      "error.not-available": "not available"
+    },
     "util": {
       "error_message.email": "Invalid e-mail address",
       "error_message.max": "The maximum value is {{max}}",
