@@ -2,7 +2,7 @@ import { Directive, ElementRef, Input, OnChanges, SimpleChanges, inject } from '
 import { MatBadge } from '@angular/material/badge';
 import { LuxUtil } from '../../lux-util/lux-util';
 
-export declare type LuxBadgeNotificationColor = 'primary' | 'warn' | 'accent' | string;
+export declare type LuxBadgeNotificationColor = 'primary' | 'warn' | 'accent' | 'default' | string;
 export declare type LuxBadgeNotificationSize = 'small' | 'medium' | 'large';
 export declare type LuxBadgeNotificationPosition = 'above after' | 'above before' | 'below before' | 'below after';
 

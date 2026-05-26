@@ -2,18 +2,19 @@ import { NgStyle } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
-    LuxAccordionComponent,
-    LuxAutofocusDirective,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxTabComponent,
-    LuxTabsComponent,
-    LuxTextareaAcComponent,
-    LuxToggleAcComponent
+  LuxAccordionComponent,
+  LuxAutofocusDirective,
+  LuxBadgeNotificationColor,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxSelectAcComponent,
+  LuxTabComponent,
+  LuxTabsComponent,
+  LuxTextareaAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -22,6 +23,20 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
 import { CustomTabComponent } from './custom-tab/custom-tab.component';
 import { TabsExampleContentComponent } from './tabs-example-content/tabs-example-content.component';
+
+interface TabConfig {
+  title: string;
+  disabled: boolean;
+  iconName: string;
+  imageSrc: string;
+  imageAlign: 'left' | 'center' | 'right';
+  imageHeight: string;
+  imageWidth: string;
+  showNotification: boolean | undefined;
+  notificationColor: LuxBadgeNotificationColor;
+  counterCap: number;
+  counter: number | undefined;
+}
 
 @Component({
   selector: 'app-tabs',
@@ -59,7 +74,9 @@ export class TabsExampleComponent {
   backgroundColor = '#ffffff';
   showBorder = false;
 
-  tabs: any[] = [
+  notificationColors: LuxBadgeNotificationColor[] = ['primary', 'warn', 'accent', 'default'];
+
+  tabs: TabConfig[] = [
     {
       title: 'Title #1',
       disabled: false,
@@ -69,6 +86,7 @@ export class TabsExampleComponent {
       imageHeight: '36px',
       imageWidth: '36px',
       showNotification: true,
+      notificationColor: 'accent',
       counterCap: 10,
       counter: 10
     },
@@ -81,7 +99,8 @@ export class TabsExampleComponent {
       imageWidth: '36px',
       imageAlign: 'center',
       showNotification: true,
-      counterCap: undefined,
+      notificationColor: 'warn',
+      counterCap: 10,
       counter: undefined
     },
     {
@@ -93,6 +112,7 @@ export class TabsExampleComponent {
       imageWidth: '36px',
       imageAlign: 'center',
       showNotification: false,
+      notificationColor: 'primary',
       counterCap: 99,
       counter: 99
     }
@@ -104,7 +124,7 @@ export class TabsExampleComponent {
     this.log(this.showOutputEvents, 'luxActiveTabChanged', event);
   }
 
-  tabContentCreated(tab: any) {
+  tabContentCreated(tab: TabConfig) {
     this.log(this.showOutputEvents, 'Tab-Content created', tab);
   }
 }
