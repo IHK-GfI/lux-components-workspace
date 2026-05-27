@@ -21,9 +21,11 @@ lux-tabs {
   );
 
   mat-tab-group:not(.lux-tabs-show-divider) {
-    @include mat.tabs-overrides((
-      divider-height: 0,
-    ));
+    @include mat.tabs-overrides(
+      (
+        divider-height: 0
+      )
+    );
   }
 
   .mdc-tab {
@@ -59,8 +61,23 @@ lux-tabs {
     padding-top: 4px;
   }
 
+  // HINWEIS: Für jeden Wert in LuxBadgeNotificationColor muss hier eine Klasse existieren.
+  .lux-notification-color-primary {
+    background-color: var(--lux-theme-primary-color);
+  }
+
+  // Deprecated: .lux-notification-new wird in einer zukünftigen Version entfernt. Bitte stattdessen .lux-notification-color-accent verwenden.
+  .lux-notification-color-accent,
   .lux-notification-new {
-    background-color: var(--lux-theme-custom-green);
+    background-color: var(--lux-theme-accent-70);
+  }
+
+  .lux-notification-color-warn {
+    background-color: var(--mat-sys-error);
+  }
+
+  .lux-notification-color-default {
+    background-color: #605e5e;
   }
 
   .lux-tabs-notification-icon {

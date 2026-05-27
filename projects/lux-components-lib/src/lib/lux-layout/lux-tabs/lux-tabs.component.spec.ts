@@ -7,6 +7,7 @@ import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { LuxBadgeNotificationColor } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTabComponent } from './lux-tabs-subcomponents/lux-tab.component';
 import { LuxTabsComponent } from './lux-tabs.component';
 
@@ -347,18 +348,88 @@ describe('LuxTabsComponent', () => {
 
   describe('ohne Tabanzahlanzeige', () => {
     let fixture: ComponentFixture<LuxTabWithoutNumberComponent>;
-    let testComponent: LuxTabWithoutNumberComponent;
 
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(LuxTabWithoutNumberComponent);
       fixture.detectChanges();
-      testComponent = fixture.componentInstance;
       flush();
     }));
 
     it('Attribut "tabCounter" nicht gesetzt.', fakeAsync(() => {
       // Nachbedingungen testen
       expect(getBadgeElement(fixture)).toBeNull();
+    }));
+  });
+
+  describe('Attribut "luxNotificationColor"', () => {
+    let component: LuxNotificationColorComponent;
+    let fixture: ComponentFixture<LuxNotificationColorComponent>;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxNotificationColorComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      flush();
+    }));
+
+    it('sollte Standard-Farbe "accent" verwenden', fakeAsync(() => {
+      // Given
+      component.showNotification = true;
+      fixture.detectChanges();
+      flush();
+
+      // Then
+      expect(getNotificationSpan(fixture, 'lux-notification-color-accent')).not.toBeNull();
+    }));
+
+    it('sollte die gesetzte Farbe als CSS-Klasse rendern', fakeAsync(() => {
+      // Given
+      component.showNotification = true;
+      component.notificationColor = 'warn';
+      fixture.detectChanges();
+      flush();
+
+      // Then
+      expect(getNotificationSpan(fixture, 'lux-notification-color-warn')).not.toBeNull();
+    }));
+
+    it('sollte die CSS-Klasse bei Farbwechsel aktualisieren', fakeAsync(() => {
+      // Given
+      component.showNotification = true;
+      component.notificationColor = 'primary';
+      fixture.detectChanges();
+      flush();
+      expect(getNotificationSpan(fixture, 'lux-notification-color-primary')).not.toBeNull();
+
+      // When
+      component.notificationColor = 'accent';
+      fixture.detectChanges();
+      flush();
+
+      // Then
+      expect(getNotificationSpan(fixture, 'lux-notification-color-accent')).not.toBeNull();
+      expect(getNotificationSpan(fixture, 'lux-notification-color-primary')).toBeNull();
+    }));
+
+    it('sollte "lux-notification-read" setzen, wenn luxShowNotification false ist', fakeAsync(() => {
+      // Given
+      component.showNotification = false;
+      fixture.detectChanges();
+      flush();
+
+      // Then
+      expect(getNotificationSpan(fixture, 'lux-notification-read')).not.toBeNull();
+      expect(getNotificationSpan(fixture, 'lux-notification-color-accent')).toBeNull();
+    }));
+
+    it('sollte "lux-notification-read" setzen, wenn luxShowNotification undefined ist', fakeAsync(() => {
+      // Given
+      component.showNotification = undefined;
+      fixture.detectChanges();
+      flush();
+
+      // Then
+      expect(getNotificationSpan(fixture, 'lux-notification-read')).not.toBeNull();
     }));
   });
 });
@@ -500,10 +571,27 @@ class LuxTabLuxDisabledComponent {
   disabled = false;
 }
 
-/**
- * @param fixture
- */
-export function getBadgeElement(fixture: ComponentFixture<any>): any {
+@Component({
+  template: `
+    <lux-tabs>
+      <lux-tab luxIconName="lux-ovals" [luxShowNotification]="showNotification" [luxNotificationColor]="notificationColor">
+        <ng-template><span>Inhalt</span></ng-template>
+      </lux-tab>
+    </lux-tabs>
+  `,
+  imports: [LuxTabsComponent, LuxTabComponent]
+})
+class LuxNotificationColorComponent {
+  showNotification: boolean | undefined = undefined;
+  notificationColor: LuxBadgeNotificationColor = 'accent';
+}
+
+function getNotificationSpan(fixture: ComponentFixture<any>, colorClass: string): any {
+  const found = fixture.debugElement.query(By.css(`.lux-tabs-notification-icon-position-after-icon.${colorClass}`));
+  return found ? found.nativeElement : null;
+}
+
+function getBadgeElement(fixture: ComponentFixture<any>): any {
   let badgeSelector: string;
   if (document.body.clientWidth > 959) {
     badgeSelector = '.lux-tab-title .mat-badge-content';

@@ -1,4 +1,5 @@
 import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { LuxBadgeNotificationColor } from '../../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 
 @Component({
   selector: 'lux-tab',
@@ -10,6 +11,7 @@ export class LuxTabComponent {
   @Input() luxCounter?: number;
   @Input() luxCounterCap = 10;
   @Input() luxShowNotification?: boolean;
+  @Input() luxNotificationColor: LuxBadgeNotificationColor = 'accent';
   @Input() luxDisabled = false;
   @Input() luxTagIdHeader?: string;
   @Input() luxTagIdContent?: string;
@@ -19,8 +21,6 @@ export class LuxTabComponent {
   @Input() luxImageHeight = '36px';
 
   @ContentChild(TemplateRef) contentTemplate!: TemplateRef<any>;
-
-  constructor() {}
 
   onTabActivated() {
     // Wird aufgerufen, wenn der Tab aktiviert wird (sichtbar wird).

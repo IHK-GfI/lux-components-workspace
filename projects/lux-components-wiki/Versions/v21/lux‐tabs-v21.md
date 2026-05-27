@@ -57,22 +57,31 @@ Sie besitzt einen Header- und Content-Bereich und ist auch in der Lage, den Cont
 
 #### @Input
 
-| Name                | Typ                           | Beschreibung                                                                                                                                                                                                                               |
-| ------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| luxTitle            | string                        | Property für den Text, der im Tab selbst angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet.                                                                                                                                 |
-| luxIconName         | string                        | Property für das Icon, welches im Tab angezeigt wird.                                                                                                                                                                                      |
-| luxImageSrc         | string                        | Property für das Bild, welches im Tab angezeigt wird. Wenn `luxIconName` gesetzt ist, wird diese Property ignoriert. D.h. es kann entweder `luxIconName` oder `luxImageSrc` verwendet werden, aber nicht beides.                           |
-| luxImageAlign       | 'left' \| 'center' \| 'right' | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                            |
-| luxImageWidth       | string                        | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                            |
-| luxImageHeight      | string                        | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                            |
-| luxCounter          | number                        | Property für einen optionalen Counter, welcher rechts vom Text im Tab angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet. (ab 1.7.14 wird der Counter auch in mobilen Ansichten angezeigt)                                   |
-| luxCounterCap       | number                        | Property die bestimmt bis zu welcher Zahl der Counter angezeigt werden soll. Höhere Zahlen werden mithilfe eines "+"-Symbols dargestellt (z.B. counter = 100, counterCap = 99 ==> Ausgabe: 99+)                                            |
-| luxShowNotification | boolean                       | Property die bestimmt, ob und wie das Notifizierungssymbol angezeigt wird. Wenn der Wert true ist, wird ein aktives Symbol angezeigt, bei false ein ausgegrautes und bei undefined wird gar kein Symbol angezeigt. Default-Wert: undefined |
-| luxDisabled         | boolean                       | Bestimmt, ob der Tab deaktiviert ist oder nicht. Default-Wert: false                                                                                                                                                                       |
-| luxTagIdHeader      | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                              |
-| luxTagIdContent     | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                              |
+| Name                 | Typ                           | Beschreibung                                                                                                                                                                                                                                           |
+| -------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| luxTitle             | string                        | Property für den Text, der im Tab selbst angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet.                                                                                                                                             |
+| luxIconName          | string                        | Property für das Icon, welches im Tab angezeigt wird.                                                                                                                                                                                                  |
+| luxImageSrc          | string                        | Property für das Bild, welches im Tab angezeigt wird. Wenn `luxIconName` gesetzt ist, wird diese Property ignoriert. D.h. es kann entweder `luxIconName` oder `luxImageSrc` verwendet werden, aber nicht beides.                                       |
+| luxImageAlign        | 'left' \| 'center' \| 'right' | Die Ausrichtung des Bildes (siehe luxImageSrc).                                                                                                                                                                                                        |
+| luxImageWidth        | string                        | Die Breite des Bildes (siehe luxImageSrc). Default-Wert: '36px'                                                                                                                                                                                        |
+| luxImageHeight       | string                        | Die Höhe des Bildes (siehe luxImageSrc). Default-Wert: '36px'                                                                                                                                                                                          |
+| luxCounter           | number                        | Property für einen optionalen Counter, welcher rechts vom Text im Tab angezeigt wird. Wird bei Smartphone-Ansichten (.sm) ausgeblendet. (ab 1.7.14 wird der Counter auch in mobilen Ansichten angezeigt)                                               |
+| luxCounterCap        | number                        | Property die bestimmt bis zu welcher Zahl der Counter angezeigt werden soll. Höhere Zahlen werden mithilfe eines "+"-Symbols dargestellt (z.B. counter = 100, counterCap = 99 ==> Ausgabe: 99+)                                                        |
+| luxShowNotification  | boolean                       | Property die bestimmt, ob und wie das Notifizierungssymbol angezeigt wird. Wenn der Wert true ist, wird ein aktives Symbol angezeigt, bei false wird das Symbol ausgeblendet und bei undefined wird gar kein Symbol angezeigt. Default-Wert: undefined |
+| luxNotificationColor | LuxBadgeNotificationColor     | Bestimmt die Farbe des Notifizierungssymbols. Standardwerte: 'primary', 'warn', 'accent', 'default'. Wird nur berücksichtigt, wenn luxShowNotification true ist. Default-Wert: 'accent'                                                                |
+| luxDisabled          | boolean                       | Bestimmt, ob der Tab deaktiviert ist oder nicht. Default-Wert: false                                                                                                                                                                                   |
+| luxTagIdHeader       | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                          |
+| luxTagIdContent      | string                        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                          |
 
 ## Classes / Interfaces
+
+### LuxBadgeNotificationColor
+
+Typ aus `lux-badge-notification.directive.ts`. Wird für `luxNotificationColor` verwendet.
+
+```typescript
+export type LuxBadgeNotificationColor = 'primary' | 'warn' | 'accent' | 'default' | string;
+```
 
 ## Beispiele
 
@@ -138,6 +147,7 @@ Html
     luxIconName="lux-interface-setting-tool-box"
     [luxCounter]="5"
     [luxShowNotification]="true"
+    luxNotificationColor="warn"
   >
     <ng-template>
       <p>Einstellungen hier</p>
