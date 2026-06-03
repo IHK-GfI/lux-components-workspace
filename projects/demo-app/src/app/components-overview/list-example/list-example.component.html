@@ -38,10 +38,86 @@
             <lux-icon [luxIconName]="item.iconName" class="{{ 'lux-color-' + colors[i % colors.length] }}"></lux-icon>
           </lux-list-item-icon>
           <lux-list-item-content>
-            Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad
-            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in
-            voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
+            @if (!showInteractiveContent) {
+              Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim
+              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident,
+              sunt in culpa qui officia deserunt mollit anim id est laborum.
+            } @else {
+              <div class="lux-flex lux-flex-col lux-gap-2 lux-mt-2">
+                @if (showRow1) {
+                  <div class="lux-flex lux-gap-2 lux-flex-wrap lux-items-center">
+                    <lux-chips-ac [luxHideBorder]="true" [luxNoLabels]="true" [luxInputAllowed]="false" [luxNewChipGroup]="group">
+                      <lux-chip-ac-group [luxLabels]="item.chips" luxColor="primary" [luxRemovable]="true" #group> </lux-chip-ac-group>
+                    </lux-chips-ac>
+                  </div>
+                }
+                @if (showRow2) {
+                  <div class="lux-flex lux-gap-2 lux-flex-wrap lux-items-center">
+                    <lux-input-ac
+                      luxAriaLabel="Lorem ipsum"
+                      luxAriaLabelSelector="input"
+                      luxPlaceholder="Input"
+                      class="lux-min-width-36 lux-max-width-36"
+                      [luxDense]="true"
+                      [luxNoLabels]="true"
+                      [(luxValue)]="item.title"
+                    ></lux-input-ac>
+                    <lux-autocomplete-ac
+                      luxAriaLabel="Lorem ipsum"
+                      luxAriaLabelSelector="input"
+                      luxPlaceholder="Input"
+                      class="lux-min-width-36 lux-max-width-36"
+                      [luxDense]="true"
+                      [luxNoLabels]="true"
+                      [luxOptions]="['Label 1', 'Label 2']"
+                    ></lux-autocomplete-ac>
+                    <lux-select-ac
+                      luxAriaLabel="Lorem ipsum"
+                      luxAriaLabelSelector="[role='combobox']"
+                      luxPlaceholder="Select"
+                      class="lux-min-width-36 lux-max-width-36"
+                      [luxOptions]="['Option 1', 'Option 2', 'Option 3']"
+                      [luxDense]="true"
+                      [luxNoLabels]="true"
+                    ></lux-select-ac>
+                    <lux-checkbox-ac luxLabel="Checkbox" [luxDense]="true" [luxNoLabels]="true"></lux-checkbox-ac>
+                    <lux-toggle-ac luxLabel="Toggle" [luxDense]="true" [luxNoLabels]="true"></lux-toggle-ac>
+                    <lux-radio-ac
+                      luxAriaLabel="Lorem ipsum"
+                      [luxOptions]="['A', 'B', 'C']"
+                      [luxGroupName]="'radio-' + i"
+                      [luxDense]="true"
+                      [luxNoLabels]="true"
+                      [luxOrientationVertical]="false"
+                    ></lux-radio-ac>
+                  </div>
+                }
+                @if (showRow3) {
+                  <div class="lux-flex lux-gap-4 lux-flex-wrap lux-items-center">
+                    <lux-button
+                      luxLabel="Bearbeiten"
+                      luxColor="primary"
+                      [luxStroked]="true"
+                      (luxClicked)="log(showOutputEvents, 'Bearbeiten geklickt', item.title)"
+                    ></lux-button>
+                    <lux-link
+                      luxHref="#"
+                      luxLabel="Löschen"
+                      luxColor="warn"
+                      [luxStroked]="true"
+                      (luxClicked)="log(showOutputEvents, 'Löschen geklickt', item.title)"
+                    ></lux-link>
+                    <lux-link-plain
+                      luxHref="#"
+                      luxLabel="Link-Plain"
+                      [luxStroked]="true"
+                      (luxClicked)="log(showOutputEvents, 'Link-Plain geklickt', item.title)"
+                    ></lux-link-plain>
+                  </div>
+                }
+              </div>
+            }
           </lux-list-item-content>
         </lux-list-item>
       }
@@ -54,13 +130,41 @@
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     ></lux-toggle-ac>
-    <div class="lux-flex lux-items-center">
+    <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
-        luxLabel="luxListItemCustomHeader anzeigen"
-        [(luxChecked)]="showCustomHeader"
-        [luxNoLabels]="true"
+        luxLabel="Interaktive Elemente in List-Items anzeigen (Grid-Navigation)"
+        [(luxChecked)]="showInteractiveContent"
+        [luxNoTopLabel]="true"
+        ><lux-form-hint
+          >Bearbeiten-Modus: Wird dieser aktiviert, können interaktive Elemente (Formularelemente, Buttons, etc.) im selektierten List-Item
+          genutzt werden.<br />
+          Enter/F2/Space aktiviert den Bearbeiten-Modus,<br />Escape kehrt zur Liste zurück.<br /><span class="lux-text-highlight-alert"
+            >Vorsicht! Wenn man viele List-Items mit mehreren interaktiven Elementen hat, kann dies die Performance beeinträchtigen.</span
+          ></lux-form-hint
+        ></lux-toggle-ac
       >
-      </lux-toggle-ac>
+      <app-status-marker></app-status-marker>
+    </div>
+    <lux-toggle-ac
+      luxLabel="Zeige Zeile 1 (mit Chips)"
+      [(luxChecked)]="showRow1"
+      [luxNoLabels]="true"
+      [luxDisabled]="!showInteractiveContent"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Zeige Zeile 2 (mit Formularelementen)"
+      [(luxChecked)]="showRow2"
+      [luxNoLabels]="true"
+      [luxDisabled]="!showInteractiveContent"
+    ></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Zeige Zeile 3 (mit Buttons)"
+      [(luxChecked)]="showRow3"
+      [luxNoLabels]="true"
+      [luxDisabled]="!showInteractiveContent"
+    ></lux-toggle-ac>
+    <div class="lux-flex lux-items-center">
+      <lux-toggle-ac luxLabel="luxListItemCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true"> </lux-toggle-ac>
       <app-status-marker></app-status-marker>
     </div>
     <lux-input-ac
@@ -146,7 +250,7 @@
     <div class="lux-simple-form row">
       <lux-button luxLabel="Leeren" luxColor="warn" [luxStroked]="true" [luxDisabled]="items.length === 0" (luxClicked)="clear()">
       </lux-button>
-      <lux-button luxLabel="Füllen" luxColor="primary" [luxFlat]="true" (luxClicked)="fill(10)"> </lux-button>
+      <lux-button luxLabel="Füllen" luxColor="primary" [luxFlat]="true" (luxClicked)="fill(30)"> </lux-button>
     </div>
   </example-base-options-actions>
 </example-base-structure>

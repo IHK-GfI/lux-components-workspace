@@ -52,21 +52,28 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
   isExternal(): boolean {
     if (!this.luxHref) return false;
     const href = this.luxHref.trim();
-    return href.startsWith('http://') ||
-           href.startsWith('https://') ||
-           href.startsWith('//') ||
-           href.startsWith('mailto:') ||
-           href.startsWith('tel:');
+    return (
+      href.startsWith('http://') ||
+      href.startsWith('https://') ||
+      href.startsWith('//') ||
+      href.startsWith('mailto:') ||
+      href.startsWith('tel:')
+    );
   }
 
   redirectToHref(event: Event) {
+    if (this.luxDisabled) {
+      event.preventDefault();
+      return;
+    }
+
     this.luxClicked.emit(event);
-    
+
     if (!this.luxHref) return;
-    
+
     event.preventDefault();
     const href = this.luxHref.trim();
-    
+
     if (this.isExternal()) {
       // Externe Links: Öffne im aktuellen oder neuen Fenster
       window.open(href, this.isOpenInNewTab(event) ? '_blank' : '_self');

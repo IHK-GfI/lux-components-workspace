@@ -3,11 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { LuxThemeService } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import {
-  DemoMarkerType,
-  DemoNavigationComponentEntry,
-  getDemoMarkerLabel
-} from '../base/status-marker/status-marker.model';
+import { DemoMarkerType, DemoNavigationComponentEntry, getDemoMarkerLabel } from '../base/status-marker/status-marker.model';
 
 @Injectable({
   providedIn: 'root'
@@ -93,8 +89,13 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('layout', 'Card'),
     this.create('layout', 'Checkbox-Container-Ac'),
     this.create('layout', 'Divider'),
-    this.create('layout', 'List'),
-    this.create('layout', 'Master-Detail-Ac'),
+    this.create('layout', 'List', DemoMarkerType.Updated),
+    {
+      onclick: () => this.router.navigate(['components-overview/master-detail-ac']),
+      icon: this.moduleIcons.get('layout')!,
+      label: 'Master-Detail-Ac',
+      moduleName: 'layout'
+    },
     this.create('layout', 'Stepper'),
     this.create('layout', 'Stepper-Large'),
     this.create('layout', 'Storage'),
@@ -179,9 +180,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
   }
 
   get filteredComponents() {
-    return this.components.filter(
-      (component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName)
-    );
+    return this.components.filter((component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName));
   }
 
   getFilteredComponents(filterValue: string) {

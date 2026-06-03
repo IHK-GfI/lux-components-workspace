@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 // prettier-ignore
 export const COMPONENT_OVERVIEW_ROUTES: Routes = [
   { path: '', loadComponent: () => import('./components-overview.component').then(m => m.ComponentsOverviewComponent) },
+  { path: 'master-detail-ac', loadComponent: () => import('./master-detail-authentic-example/master-detail-authentic-example.component').then(m => m.MasterDetailAuthenticExampleComponent) },
   {
     path: 'example', loadComponent: () => import('../example-base/example-base-root/example-root.component').then(m => m.ExampleRootComponent), children: [
       { path: 'accordion', loadComponent: () => import('./accordion-example/accordion-example.component').then(m => m.AccordionExampleComponent) },
@@ -63,7 +64,6 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'input-ac', loadComponent: () => import('./input-authentic-example/input-authentic-example.component').then(m => m.InputAuthenticExampleComponent) },
       { path: 'checkbox-ac', loadComponent: () => import('./checkbox-authentic-example/checkbox-authentic-example.component').then(m => m.CheckboxAuthenticExampleComponent) },
       { path: 'tile-overview', loadComponent: () => import('./tile-authentic-example/overview-example/overview-example.component').then(m => m.OverviewExampleComponent) },
-      { path: 'master-detail-ac', loadComponent: () => import('./master-detail-authentic-example/master-detail-authentic-example.component').then(m => m.MasterDetailAuthenticExampleComponent) },
       { path: 'checkbox-container-ac', loadComponent: () => import('./checkbox-container-ac-example/checkbox-container-ac-example.component').then(m => m.CheckboxContainerAcExampleComponent) },
       { path: 'textbox', loadComponent: () => import('./textbox-example/textbox-example.component').then(m => m.TextboxExampleComponent) },
       { path: 'tenant-logo', loadComponent: () => import('./tenant-logo-example/tenant-logo-example.component').then(m => m.TenantLogoExampleComponent) },

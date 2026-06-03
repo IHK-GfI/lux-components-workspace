@@ -1,7 +1,33 @@
-import { NgTemplateOutlet } from "@angular/common";
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { LuxAppFooterButtonInfo, LuxAppFooterButtonService, LuxBadgeComponent, LuxButtonComponent, LuxConsoleService, LuxDetailHeaderAcComponent, LuxDetailViewAcComponent, LuxFilterFormComponent, LuxFilterFormExtendedComponent, LuxIconComponent, LuxLabelComponent, LuxMasterDetailAcComponent, LuxMasterFooterAcComponent, LuxMasterHeaderContentAcComponent, LuxMasterListAcComponent, LuxMenuComponent, LuxMenuItemComponent, LuxRelativeTimestampPipe, LuxSelectAcComponent, LuxTabComponent, LuxTabsComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import {
+  LuxAppFooterButtonInfo,
+  LuxAppFooterButtonService,
+  LuxBadgeComponent,
+  LuxButtonComponent,
+  LuxConsoleService,
+  LuxDetailHeaderAcComponent,
+  LuxDetailViewAcComponent,
+  LuxFilterFormComponent,
+  LuxFilterFormExtendedComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxLabelComponent,
+  LuxMasterDetailAcComponent,
+  LuxMasterFooterAcComponent,
+  LuxMasterHeaderContentAcComponent,
+  LuxMasterListAcComponent,
+  LuxMenuComponent,
+  LuxMenuItemComponent,
+  LuxRelativeTimestampPipe,
+  LuxSelectAcComponent,
+  LuxTabComponent,
+  LuxTabsComponent,
+  LuxThemeService,
+  LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { of } from 'rxjs';
 import { delay, take, tap } from 'rxjs/operators';
 import { DetailExampleComponent } from './detail-example/detail-example.component';
@@ -35,14 +61,20 @@ import { TextExampleComponent } from './text-example/text-example.component';
     TextExampleComponent,
     LuxBadgeComponent,
     LuxLabelComponent,
-    NgTemplateOutlet
-]
+    NgTemplateOutlet,
+    LuxInputAcComponent
+  ],
+  host: {
+    '[class.authentic]': 'theme === "authentic"',
+    '[class.green]': 'theme === "green"'
+  }
 })
 export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy {
   private dataService = inject(MasterDetailExampleDataService);
   private router = inject(Router);
   private footerService = inject(LuxAppFooterButtonService);
   private logger = inject(LuxConsoleService);
+  private themeService = inject(LuxThemeService);
 
   options = [
     { value: null, label: 'Kein Filter' },
@@ -94,12 +126,20 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
   masterEntries: any[] = [];
   selectedDetail: any;
   showCustomDetailHeader = false;
+  theme = this.themeService.getTheme().name;
 
   constructor() {
     this.allMasterEntries = this.dataService.createExampleData(20);
     const temp = this.allMasterEntries.slice(0, 10);
 
     this.masterEntries = this.masterEntries.concat(temp);
+
+    this.themeService
+      .getThemeAsObservable()
+      .pipe(takeUntilDestroyed())
+      .subscribe((theme) => {
+        this.theme = theme.name;
+      });
   }
 
   ngOnInit(): void {
@@ -112,7 +152,10 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
         raised: true,
         alwaysVisible: false,
         onClick: () => {
-          window.open('https://github.com/IHK-GfI/lux-components/wiki/lux%E2%80%90master%E2%80%90detail', '_blank');
+          window.open(
+            'https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90master%E2%80%90detail%E2%80%90ac-v21',
+            '_blank'
+          );
         }
       }),
       LuxAppFooterButtonInfo.generateInfo({
