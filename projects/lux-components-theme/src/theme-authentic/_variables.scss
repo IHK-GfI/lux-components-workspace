@@ -50,7 +50,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   --lux-theme-spacing-xxs: 2px;
   --lux-theme-spacing-xs: 4px;
+  --lux-theme-spacing-1-5: 6px;
   --lux-theme-spacing-sm: 8px;
+  --lux-theme-spacing-3: 12px;
   --lux-theme-spacing-md: 16px;
   --lux-theme-spacing-lg: 24px;
   --lux-theme-spacing-xl: 32px;
@@ -62,6 +64,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-font-size-md: 1rem;
   --lux-theme-font-size-lg: 1.125rem;
   --lux-theme-font-size-xl: 1.25rem;
+  --lux-theme-font-size-2xl: 1.5rem;
 
   // Hauptfarben
   --lux-theme-primary-color: #{palettes.$lux-primary-color};

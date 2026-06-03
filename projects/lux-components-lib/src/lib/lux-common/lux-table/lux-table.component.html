@@ -2,14 +2,14 @@
   <!-- Progress für das Laden/Filtern von Daten -->
   <div class="lux-table-progress-container">
     @if (isLoadingResults) {
-    <lux-progress luxTagId="tableProgress" luxColor="blue" luxType="Progressbar" class="lux-mb-3"></lux-progress>
+      <lux-progress luxTagId="tableProgress" luxColor="blue" luxType="Progressbar" class="lux-mb-3"></lux-progress>
     }
   </div>
   <!-- Input-Feld für das Filtern der Datensätze dieser Tabelle -->
   <div class="lux-table-filter lux-flex lux-flex-auto lux-gap-4" [ngClass]="{ 'lux-hide': !luxShowFilter && !luxShowColumnSelector() }">
     <lux-input-ac
       class="lux-table-filter-input lux-flex-auto"
-      [ngClass]="{ 'lux-hide': !luxShowFilter}"
+      [ngClass]="{ 'lux-hide': !luxShowFilter }"
       luxAutocomplete="off"
       [luxTagId]="luxFilterText"
       [luxLabel]="luxFilterText"
@@ -35,9 +35,9 @@
         [luxOptions]="allColumnsForVisibility"
         (luxSelectedChange)="onHiddenColumnsChange($event)"
       >
-      <ng-template let-option>
-        {{ option.label }}
-      </ng-template>
+        <ng-template let-option>
+          {{ option.label }}
+        </ng-template>
       </lux-select-ac>
     }
   </div>
@@ -45,7 +45,7 @@
   <div
     [ngStyle]="{ 'max-height': tableHeightCSSCalc }"
     class="lux-table"
-    [ngClass]="{ 'lux-block-pointer-events': isLoadingResults }"
+    [ngClass]="{ 'lux-pointer-events-none': isLoadingResults }"
     #tableContainer
   >
     <!-- Overlay, welches bei der Anzeige des Ladebalkens die Interaktion mit der Tabelle unterbindet -->
@@ -62,132 +62,146 @@
         (matSortChange)="announceSortChange($event)"
       >
         @if (tableColumns) {
-        <!-- Zellen, welche nur bei Multiselect-Tabellen dargestellt werden und die Checkboxen + Counter beinhalten -->
-        @if (luxMultiSelect) {
-        <ng-container matColumnDef="multiSelect">
-          <th class="lux-multiselect-th" mat-header-cell *matHeaderCellDef mat-sort-header="multiSelect" [disabled]="luxHttpDAO && luxMultiSelect">
-            <div class="lux-flex lux-flex-col">
-              <span class="lux-selected-count">{{ luxSelected.size }} / {{ dataSource.totalElements }}</span>
-            </div>
-          </th>
-          <td
-            class="lux-multiselect-td"
-            mat-cell
-            *matCellDef="let element; let i = index"
-            [tabindex]="luxMultiSelectOnlyCheckboxClick ? 0 : -1"
-            (click)="changeSelectedEntry(element, true)"
-            (keydown.space)="changeSelectedEntry(element, true)"
-            (keydown.enter)="changeSelectedEntry(element, true)"
-            [ngClass]="{ 'lux-element-align-top': luxAlignElementsTop }"
-          >
-            <lux-checkbox-ac
-              luxTagId="lux-table-multiselect-content-{{ i }}"
-              class="lux-multiselect-toggle"
-              [luxDisabled]="element[luxMultiSelectDisabledProperty!] === true"
-              luxTabIndex="-1"
-              [luxApplyToChildren]="true"
-              luxAriaLabel="{{ 'luxc.table.multiselect.chk.arialabel' | transloco:{ i: i } }}"
-              luxAriaLabelSelector="input"
-              [luxReadonly]="true"
-              [luxChecked]="luxSelected.has(element)"
-              [luxNoLabels]="true"
-            >
-            </lux-checkbox-ac>
-          </td>
-          <td class="lux-multiselect-tf" mat-footer-cell *matFooterCellDef>
-            <div class="lux-multiselect-toggle-all-wrapper lux-flex lux-flex-col lux-place-content-center">
-              <lux-checkbox-ac
-                luxTagId="lux-table-multiselect-header"
-                class="lux-multiselect-toggle-all"
-                luxAriaLabel="{{ 'luxc.table.multiselect.all.chk.arialabel' | transloco }}"
-                luxAriaLabelSelector="input"
-                luxTabIndex="-1"
-                [luxApplyToChildren]="true"
-                [luxReadonly]="true"
-                [luxChecked]="allSelected"
-                [luxNoLabels]="true"
+          <!-- Zellen, welche nur bei Multiselect-Tabellen dargestellt werden und die Checkboxen + Counter beinhalten -->
+          @if (luxMultiSelect) {
+            <ng-container matColumnDef="multiSelect">
+              <th
+                class="lux-multiselect-th"
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header="multiSelect"
+                [disabled]="luxHttpDAO && luxMultiSelect"
               >
-              </lux-checkbox-ac>
-            </div>
-          </td>
-        </ng-container>
-        }
-        <!-- Diese Zelle wird nur dargestellt wenn keine Daten/die dataSource.totalElements === 0 sind -->
-        <ng-container matColumnDef="noData">
-          <th mat-header-cell *matHeaderCellDef [colSpan]="tableColumns.length">
-            <span class="lux-no-data-text">{{ luxNoDataText }}</span>
-          </th>
-        </ng-container>
-        <!-- Hier sind die eigentlichen Inhalts-Zellen -->
-        @for (tableColumn of tableColumns.toArray(); track tableColumn; let colIndex = $index) {
-        <ng-container
-          [matColumnDef]="tableColumn.luxColumnDef"
-          [sticky]="colIndex === 0 && tableColumn.luxSticky"
-          [stickyEnd]="colIndex === tableColumns.length - 1 && tableColumn.luxSticky"
-        >
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            [mat-sort-header]="tableColumn.luxColumnDef"
-            [disabled]="!tableColumn.luxSortable"
-            [ngClass]="
-              'lux-table-column-header-' +
-              colIndex +
-              (!tableColumn.luxSortable ? ' lux-table-header-blocked' : '') +
-              (!tableColumn.header ? ' lux-table-column-header-empty' : '')
-            "
-            [ngStyle]="{
-              width: luxColWidthsPercent && luxColWidthsPercent[colIndex] ? luxColWidthsPercent[colIndex] + '%' : 'unset'
-            }"
-          >
-            <ng-container *ngTemplateOutlet="tableColumn.header?.tempRef ?? null"></ng-container>
-          </th>
-          <!-- Hier entstehen die Zellen mit den Inhalten -->
-          <td
-            mat-cell
-            *matCellDef="let element; let i = index"
-            [ngStyle]="{
-              width: luxColWidthsPercent && luxColWidthsPercent[colIndex] ? luxColWidthsPercent[colIndex] + '%' : 'unset'
-            }"
-            [ngClass]="{ 'lux-element-align-top': luxAlignElementsTop }"
-          >
-            @if (hasMovedColumnsMap.has(tableColumn.luxColumnDef)) {
-            <div class="lux-header-title lux-label">
-              <ng-container *ngTemplateOutlet="tableColumn.header?.tempRef ?? null"></ng-container>
-            </div>
-            }
-            <ng-container *ngTemplateOutlet="tableColumn.content?.tempRef ?? null; context: { $implicit: element, index: i }"></ng-container>
-            @if (hasMovedColumnsMap.has(tableColumn.luxColumnDef)) {
-            <div class="lux-mb-3"></div>
-            }
-            <!-- Hier werden die aufgrund von Responsive-Verhalten verschobenen Spalten innerhalb dieser Spalte dargestellt -->
-            @for (movedTableColumn of movedTableColumns; track movedTableColumn) { @if (movedTableColumn.luxResponsiveBehaviour ===
-            tableColumn.luxColumnDef && (!luxShowColumnSelector() || !hiddenColumns.includes(movedTableColumn.luxColumnDef))) {
-            <div class="lux-moved-header-title lux-label">
-              <ng-container *ngTemplateOutlet="movedTableColumn.header?.tempRef ?? null"></ng-container>
-            </div>
-            <div>
-              <ng-container *ngTemplateOutlet="movedTableColumn.content?.tempRef ?? null; context: { $implicit: element, index: i }"></ng-container>
-            </div>
-            <div class="lux-mb-3"></div>
-            } }
-          </td>
-          <td mat-footer-cell *matFooterCellDef>
-            <ng-container *ngTemplateOutlet="tableColumn.footer?.tempRef ?? null"></ng-container>
-          </td>
-        </ng-container>
-        }
-        <!-- Die Table-Row für die Header (standardmäßig sticky) -->
-        <tr mat-header-row *matHeaderRowDef="dataColumnDefs; sticky: true"></tr>
-        <!-- Die Table-Row für die "no-data"-Anzeige -->
-        <tr
-          mat-header-row
-          *matHeaderRowDef="['noData']; sticky: true"
-          class="lux-table-header-no-data"
-          [ngClass]="{ 'lux-display-none': dataSource.totalElements > 0 && dataSource.filteredData.length > 0 }"
-        ></tr>
-        <!-- Die Table-Rows für alle Inhalts-Spalten -->
-        <!--
+                <div class="lux-flex lux-flex-col">
+                  <span class="lux-selected-count">{{ luxSelected.size }} / {{ dataSource.totalElements }}</span>
+                </div>
+              </th>
+              <td
+                class="lux-multiselect-td"
+                mat-cell
+                *matCellDef="let element; let i = index"
+                [tabindex]="luxMultiSelectOnlyCheckboxClick ? 0 : -1"
+                (click)="changeSelectedEntry(element, true)"
+                (keydown.space)="changeSelectedEntry(element, true)"
+                (keydown.enter)="changeSelectedEntry(element, true)"
+                [ngClass]="{ 'lux-element-align-top': luxAlignElementsTop }"
+              >
+                <lux-checkbox-ac
+                  luxTagId="lux-table-multiselect-content-{{ i }}"
+                  class="lux-multiselect-toggle"
+                  [luxDisabled]="element[luxMultiSelectDisabledProperty!] === true"
+                  luxTabIndex="-1"
+                  [luxApplyToChildren]="true"
+                  luxAriaLabel="{{ 'luxc.table.multiselect.chk.arialabel' | transloco: { i: i } }}"
+                  luxAriaLabelSelector="input"
+                  [luxReadonly]="true"
+                  [luxChecked]="luxSelected.has(element)"
+                  [luxNoLabels]="true"
+                >
+                </lux-checkbox-ac>
+              </td>
+              <td class="lux-multiselect-tf" mat-footer-cell *matFooterCellDef>
+                <div class="lux-multiselect-toggle-all-wrapper lux-flex lux-flex-col lux-place-content-center">
+                  <lux-checkbox-ac
+                    luxTagId="lux-table-multiselect-header"
+                    class="lux-multiselect-toggle-all"
+                    luxAriaLabel="{{ 'luxc.table.multiselect.all.chk.arialabel' | transloco }}"
+                    luxAriaLabelSelector="input"
+                    luxTabIndex="-1"
+                    [luxApplyToChildren]="true"
+                    [luxReadonly]="true"
+                    [luxChecked]="allSelected"
+                    [luxNoLabels]="true"
+                  >
+                  </lux-checkbox-ac>
+                </div>
+              </td>
+            </ng-container>
+          }
+          <!-- Diese Zelle wird nur dargestellt wenn keine Daten/die dataSource.totalElements === 0 sind -->
+          <ng-container matColumnDef="noData">
+            <th mat-header-cell *matHeaderCellDef [colSpan]="tableColumns.length">
+              <span class="lux-no-data-text">{{ luxNoDataText }}</span>
+            </th>
+          </ng-container>
+          <!-- Hier sind die eigentlichen Inhalts-Zellen -->
+          @for (tableColumn of tableColumns.toArray(); track tableColumn; let colIndex = $index) {
+            <ng-container
+              [matColumnDef]="tableColumn.luxColumnDef"
+              [sticky]="colIndex === 0 && tableColumn.luxSticky"
+              [stickyEnd]="colIndex === tableColumns.length - 1 && tableColumn.luxSticky"
+            >
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                [mat-sort-header]="tableColumn.luxColumnDef"
+                [disabled]="!tableColumn.luxSortable"
+                [ngClass]="
+                  'lux-table-column-header-' +
+                  colIndex +
+                  (!tableColumn.luxSortable ? ' lux-table-header-blocked' : '') +
+                  (!tableColumn.header ? ' lux-table-column-header-empty' : '')
+                "
+                [ngStyle]="{
+                  width: luxColWidthsPercent && luxColWidthsPercent[colIndex] ? luxColWidthsPercent[colIndex] + '%' : 'unset'
+                }"
+              >
+                <ng-container *ngTemplateOutlet="tableColumn.header?.tempRef ?? null"></ng-container>
+              </th>
+              <!-- Hier entstehen die Zellen mit den Inhalten -->
+              <td
+                mat-cell
+                *matCellDef="let element; let i = index"
+                [ngStyle]="{
+                  width: luxColWidthsPercent && luxColWidthsPercent[colIndex] ? luxColWidthsPercent[colIndex] + '%' : 'unset'
+                }"
+                [ngClass]="{ 'lux-element-align-top': luxAlignElementsTop }"
+              >
+                @if (hasMovedColumnsMap.has(tableColumn.luxColumnDef)) {
+                  <div class="lux-header-title lux-label">
+                    <ng-container *ngTemplateOutlet="tableColumn.header?.tempRef ?? null"></ng-container>
+                  </div>
+                }
+                <ng-container
+                  *ngTemplateOutlet="tableColumn.content?.tempRef ?? null; context: { $implicit: element, index: i }"
+                ></ng-container>
+                @if (hasMovedColumnsMap.has(tableColumn.luxColumnDef)) {
+                  <div class="lux-mb-3"></div>
+                }
+                <!-- Hier werden die aufgrund von Responsive-Verhalten verschobenen Spalten innerhalb dieser Spalte dargestellt -->
+                @for (movedTableColumn of movedTableColumns; track movedTableColumn) {
+                  @if (
+                    movedTableColumn.luxResponsiveBehaviour === tableColumn.luxColumnDef &&
+                    (!luxShowColumnSelector() || !hiddenColumns.includes(movedTableColumn.luxColumnDef))
+                  ) {
+                    <div class="lux-moved-header-title lux-label">
+                      <ng-container *ngTemplateOutlet="movedTableColumn.header?.tempRef ?? null"></ng-container>
+                    </div>
+                    <div>
+                      <ng-container
+                        *ngTemplateOutlet="movedTableColumn.content?.tempRef ?? null; context: { $implicit: element, index: i }"
+                      ></ng-container>
+                    </div>
+                    <div class="lux-mb-3"></div>
+                  }
+                }
+              </td>
+              <td mat-footer-cell *matFooterCellDef>
+                <ng-container *ngTemplateOutlet="tableColumn.footer?.tempRef ?? null"></ng-container>
+              </td>
+            </ng-container>
+          }
+          <!-- Die Table-Row für die Header (standardmäßig sticky) -->
+          <tr mat-header-row *matHeaderRowDef="dataColumnDefs; sticky: true"></tr>
+          <!-- Die Table-Row für die "no-data"-Anzeige -->
+          <tr
+            mat-header-row
+            *matHeaderRowDef="['noData']; sticky: true"
+            class="lux-table-header-no-data"
+            [ngClass]="{ 'lux-display-none': dataSource.totalElements > 0 && dataSource.filteredData.length > 0 }"
+          ></tr>
+          <!-- Die Table-Rows für alle Inhalts-Spalten -->
+          <!--
           Cursor-Logik (Wahrheitstabelle, verkuerzt):
           - MS=true,  CC=false, DIS=false, DBLobs=false           => Cursor: ja
           - MS=true,  CC=true  (oder DIS=true oder DBLobs=true)   => Cursor: nein
@@ -204,45 +218,45 @@
           SGLobs = luxSingleClicked.observed
           SELobs = luxSelectedChange.observed || luxSelectedAsArrayChange.observed
         -->
-        <tr
-          mat-row
-          *matRowDef="let rowData; columns: dataColumnDefs; let i = index"
-          class="lux-row {{ getCustomClassesForIndex(rowData) }}"
-          [tabindex]="luxMultiSelectOnlyCheckboxClick ? '-1' : '0'"
-          [ngClass]="{
-            'lux-row-selected': luxSelected.has(rowData) && luxMultiSelect,
-            'lux-cursor':
-              (luxMultiSelect &&
-                !luxMultiSelectOnlyCheckboxClick &&
-                !luxDoubleClicked.observed &&
-                !(luxMultiSelectDisabledProperty && rowData[luxMultiSelectDisabledProperty] === true)) ||
-              (!luxMultiSelect &&
-                !luxDoubleClicked.observed &&
-                !(luxMultiSelectDisabledProperty && rowData[luxMultiSelectDisabledProperty] === true) &&
-                (luxSelectedChange.observed || luxSelectedAsArrayChange.observed)) ||
-              (!luxMultiSelect && luxSingleClicked.observed) ||
-              (!luxMultiSelect && luxDoubleClicked.observed)
-          }"
-          (dblclick)="onDoubleClick($event, rowData)"
-          (click)="onSingleClick($event, rowData, i)"
-          (keydown.space)="onSingleClick($event, rowData, i)"
-          (keydown.enter)="onSingleClick($event, rowData, i)"
-        ></tr>
-        <!-- Die Table-Row für den Footer dieser Tabelle -->
-        <tr
-          mat-footer-row
-          *matFooterRowDef="dataColumnDefs; sticky: true"
-          class="lux-footer-row"
-          [ngClass]="{
-            'lux-display-none': !anyFootersAvailable(),
-            'lux-cursor': luxMultiSelect && !luxHttpDAO,
-            'lux-element-align-top': luxAlignElementsTop
-          }"
-          tabindex="0"
-          (click)="changeSelectedEntries()"
-          (keydown.space)="changeSelectedEntries()"
-          (keydown.enter)="changeSelectedEntries()"
-        ></tr>
+          <tr
+            mat-row
+            *matRowDef="let rowData; columns: dataColumnDefs; let i = index"
+            class="lux-row {{ getCustomClassesForIndex(rowData) }}"
+            [tabindex]="luxMultiSelectOnlyCheckboxClick ? '-1' : '0'"
+            [ngClass]="{
+              'lux-row-selected': luxSelected.has(rowData) && luxMultiSelect,
+              'lux-cursor-pointer':
+                (luxMultiSelect &&
+                  !luxMultiSelectOnlyCheckboxClick &&
+                  !luxDoubleClicked.observed &&
+                  !(luxMultiSelectDisabledProperty && rowData[luxMultiSelectDisabledProperty] === true)) ||
+                (!luxMultiSelect &&
+                  !luxDoubleClicked.observed &&
+                  !(luxMultiSelectDisabledProperty && rowData[luxMultiSelectDisabledProperty] === true) &&
+                  (luxSelectedChange.observed || luxSelectedAsArrayChange.observed)) ||
+                (!luxMultiSelect && luxSingleClicked.observed) ||
+                (!luxMultiSelect && luxDoubleClicked.observed)
+            }"
+            (dblclick)="onDoubleClick($event, rowData)"
+            (click)="onSingleClick($event, rowData, i)"
+            (keydown.space)="onSingleClick($event, rowData, i)"
+            (keydown.enter)="onSingleClick($event, rowData, i)"
+          ></tr>
+          <!-- Die Table-Row für den Footer dieser Tabelle -->
+          <tr
+            mat-footer-row
+            *matFooterRowDef="dataColumnDefs; sticky: true"
+            class="lux-footer-row"
+            [ngClass]="{
+              'lux-display-none': !anyFootersAvailable(),
+              'lux-cursor-pointer': luxMultiSelect && !luxHttpDAO,
+              'lux-element-align-top': luxAlignElementsTop
+            }"
+            tabindex="0"
+            (click)="changeSelectedEntries()"
+            (keydown.space)="changeSelectedEntries()"
+            (keydown.enter)="changeSelectedEntries()"
+          ></tr>
         }
       </table>
     </div>

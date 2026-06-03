@@ -502,7 +502,7 @@ const templateRename001 = `
         >
           <ng-template *ngTemplateOutlet="chip.templateRef"></ng-template>
           <lux-icon
-            class="lux-chip-icon lux-chip-icon lux-cursor"
+            class="lux-chip-icon lux-chip-icon lux-cursor-pointer"
             [ngClass]="{ 'lux-chip-icon-selected': chip.luxSelected, 'lux-chip-icon-disabled': chip.luxDisabled }"
             matChipRemove
             luxIconName="cancel"
@@ -533,7 +533,7 @@ const templateRename001 = `
               *ngTemplateOutlet="chipGroup.tempRef ? chipGroup.tempRef : noTemplateRef; context: { $implicit: label }"
             ></ng-container>
             <lux-icon
-              class="lux-chip-icon lux-chip-icon lux-cursor"
+              class="lux-chip-icon lux-chip-icon lux-cursor-pointer"
               [ngClass]="{ 'lux-chip-icon-selected': chipGroup.luxSelected, 'lux-chip-icon-disabled': chipGroup.luxDisabled }"
               matChipRemove
               luxIconName="cancel"

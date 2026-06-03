@@ -1,0 +1,340 @@
+@use "luxfocus" as focus;
+
+// =============================================================================
+// LUX Utility Classes
+// =============================================================================
+// Tailwind-inspired utility classes that complement the LUX component styles.
+// LUX component styles cover: display, flex, gap, margin, padding,
+//   width/height, align, justify.
+// These utilities add: positioning, overflow, border, cursor, typography,
+//   z-index, interaction patterns.
+//
+// Usage in consuming apps:
+//   The utilities are included automatically via the LUX theme package.
+// =============================================================================
+
+// =============================================================================
+// LUX Utility Design Tokens
+// =============================================================================
+// Utilities-spezifische CSS Custom Properties.
+// Theme-agnostische Base-Tokens (Spacing, Font-Size) sind in _variables.scss.
+// =============================================================================
+
+:root {
+  // --- Focus State Layer ---
+  // Background tint applied behind focus-visible outlines (12% primary, per Figma "focus-state-layer-color").
+  --lux-focus-state-layer-color: color-mix(in srgb, var(--lux-theme-primary-color) 12%, transparent);
+
+  // --- Z-Index ---
+  --lux-z-action-bar: 8;
+  --lux-z-header: 100;
+  --lux-z-backdrop: 199;
+  --lux-z-drawer: 200;
+  --lux-z-skip-link: 10000;
+}
+
+// =============================================================================
+// Positioning
+// =============================================================================
+
+$positions: static, relative, absolute, fixed, sticky;
+@each $pos in $positions {
+  .lux-#{$pos} {
+    position: $pos;
+  }
+}
+
+// Inset (top, right, bottom, left)
+$inset-values: (
+  "0": 0,
+  "auto": auto
+);
+@each $key, $val in $inset-values {
+  .lux-inset-#{$key} {
+    inset: $val;
+  }
+  .lux-top-#{$key} {
+    top: $val;
+  }
+  .lux-right-#{$key} {
+    right: $val;
+  }
+  .lux-bottom-#{$key} {
+    bottom: $val;
+  }
+  .lux-left-#{$key} {
+    left: $val;
+  }
+}
+
+// =============================================================================
+// Z-Index
+// =============================================================================
+
+$z-indices: (
+  "auto": auto,
+  "0": 0,
+  "1": 1,
+  "5": 5,
+  "8": 8,
+  "9": 9,
+  "10": 10,
+  "100": 100,
+  "199": 199,
+  "200": 200,
+  "500": 500,
+  "1000": 1000,
+  "10000": 10000
+);
+@each $key, $val in $z-indices {
+  .lux-z-#{$key} {
+    z-index: $val;
+  }
+}
+
+// =============================================================================
+// Overflow
+// =============================================================================
+// Note: .lux-overflow-y-hidden and .lux-overflow-y-auto are also defined in
+// _luxstyles.scss. The definitions below are identical and take precedence
+// due to cascade order.
+
+$overflow-values: auto, hidden, visible, scroll;
+@each $val in $overflow-values {
+  .lux-overflow-#{$val} {
+    overflow: $val;
+  }
+  .lux-overflow-x-#{$val} {
+    overflow-x: $val;
+  }
+  .lux-overflow-y-#{$val} {
+    overflow-y: $val;
+  }
+}
+
+// =============================================================================
+// Border
+// =============================================================================
+
+.lux-border-0 {
+  border: none;
+}
+
+$border-radius: (
+  "none": 0,
+  "sm": var(--lux-theme-radius-xs),
+  "md": var(--lux-theme-radius-sm),
+  "lg": var(--lux-theme-radius-md),
+  "full": 50%,
+  "theme": var(--lux-theme-app-border-radius)
+);
+@each $key, $val in $border-radius {
+  .lux-rounded-#{$key} {
+    border-radius: $val;
+  }
+}
+
+// =============================================================================
+// Box Shadow
+// =============================================================================
+
+.lux-shadow-none {
+  box-shadow: none;
+}
+
+// =============================================================================
+// Cursor
+// =============================================================================
+
+.lux-cursor-pointer {
+  cursor: pointer;
+}
+
+.lux-cursor-default {
+  cursor: default;
+}
+
+// =============================================================================
+// Pointer Events
+// =============================================================================
+
+.lux-pointer-events-none {
+  pointer-events: none;
+}
+
+.lux-pointer-events-auto {
+  pointer-events: auto;
+}
+
+// =============================================================================
+// Typography
+// =============================================================================
+
+// Font size
+$font-sizes: (
+  "xs": var(--lux-theme-font-size-xs),
+  "sm": var(--lux-theme-font-size-sm),
+  "base": var(--lux-theme-font-size-md),
+  "lg": var(--lux-theme-font-size-lg),
+  "xl": var(--lux-theme-font-size-xl),
+  "2xl": var(--lux-theme-font-size-2xl)
+);
+@each $key, $val in $font-sizes {
+  .lux-text-#{$key} {
+    font-size: $val;
+  }
+}
+
+// Font weight
+$font-weights: (
+  "light": 300,
+  "normal": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700
+);
+@each $key, $val in $font-weights {
+  .lux-font-#{$key} {
+    font-weight: $val;
+  }
+}
+
+// Font family
+.lux-font-headline {
+  font-family: var(--lux-theme-app-headline-font, inherit);
+}
+
+.lux-font-body {
+  font-family: var(--lux-theme-app-font-family, inherit);
+}
+
+// Line height
+$line-heights: (
+  "none": 1,
+  "tight": 1.2,
+  "normal": 1.5,
+  "relaxed": 1.75
+);
+@each $key, $val in $line-heights {
+  .lux-leading-#{$key} {
+    line-height: $val;
+  }
+}
+
+// White space
+.lux-whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.lux-whitespace-normal {
+  white-space: normal;
+}
+
+// =============================================================================
+// Background
+// =============================================================================
+
+.lux-bg-transparent {
+  background: transparent;
+}
+
+.lux-bg-header {
+  background-color: var(--lux-theme-app-header-bg);
+}
+
+.lux-bg-content {
+  background-color: var(--lux-theme-app-content-bg);
+}
+
+.lux-bg-footer {
+  background-color: var(--lux-theme-app-footer-bg);
+}
+
+.lux-bg-primary {
+  background-color: var(--lux-theme-primary-color);
+}
+
+// =============================================================================
+// Text Color
+// =============================================================================
+
+.lux-text-primary {
+  color: var(--lux-theme-primary-color);
+}
+
+.lux-text-dark {
+  color: var(--lux-theme-dark-primary-text);
+}
+
+.lux-text-light {
+  color: var(--lux-theme-light-primary-text);
+}
+
+.lux-text-secondary {
+  color: var(--lux-theme-dark-secondary-text);
+}
+
+.lux-text-disabled {
+  color: var(--lux-theme-dark-disabled-text);
+}
+
+// =============================================================================
+// Outline
+// =============================================================================
+
+.lux-outline-none {
+  outline: none;
+}
+
+// =============================================================================
+// Transition
+// =============================================================================
+
+.lux-transition-none {
+  transition: none;
+}
+
+// =============================================================================
+// Skip-Link
+// =============================================================================
+// Visually hidden until focused; reveals as a high-contrast pill above all content.
+// Pair with `lux-sr-only` on the element so it stays hidden by default.
+
+.lux-skip-link {
+  &:focus-visible {
+    position: fixed;
+    top: var(--lux-theme-spacing-sm);
+    left: var(--lux-theme-spacing-sm);
+    width: auto;
+    height: auto;
+    padding: var(--lux-theme-spacing-sm) var(--lux-theme-spacing-md);
+    background-color: var(--lux-theme-primary-20);
+    color: var(--lux-theme-primary-100);
+    font-size: var(--lux-theme-font-size-sm);
+    font-weight: 600;
+    border-radius: var(--lux-theme-radius-sm);
+    z-index: var(--lux-z-skip-link);
+    outline: 3px solid var(--lux-theme-custom-lightblue);
+  }
+}
+
+// =============================================================================
+// Interaction
+// =============================================================================
+// Applies the LUX hover/active/focus pattern to custom interactive elements
+// (e.g. <a> or <button> without lux-button).
+// Use together with .lux-rounded-theme for consistent styling.
+
+.lux-interactive {
+  &:hover:not(:focus-visible) {
+    background-color: var(--lux-theme-hover-color);
+  }
+
+  &:active {
+    background-color: var(--lux-theme-selected-bg-color);
+  }
+
+  &:focus-visible {
+    @include focus.lux-button-focus;
+  }
+}

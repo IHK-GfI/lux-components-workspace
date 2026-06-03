@@ -30,7 +30,13 @@ describe('LuxAppHeaderComponent', () => {
     viewport.set('desktop');
 
     TestBed.configureTestingModule({
-      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -39,7 +45,7 @@ describe('LuxAppHeaderComponent', () => {
       const fixture = TestBed.createComponent(MockLabelClickedAppHeaderComponent);
       LuxTestHelper.wait(fixture);
 
-      const element = fixture.debugElement.query(By.css('span.lux-cursor'));
+      const element = fixture.debugElement.query(By.css('span.lux-cursor-pointer'));
       const onClickSpy = spyOn(fixture.componentInstance, 'onClicked');
 
       element.nativeElement.click();
@@ -47,14 +53,14 @@ describe('LuxAppHeaderComponent', () => {
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
-      expect(element.classes['lux-cursor']).toBeTrue();
+      expect(element.classes['lux-cursor-pointer']).toBeTrue();
     }));
 
     it('Icon im App-Header sollte angeklickt werden können', fakeAsync(() => {
       const fixture = TestBed.createComponent(MockIconClickedAppHeaderComponent);
       LuxTestHelper.wait(fixture);
 
-      const element = fixture.debugElement.query(By.css('lux-icon.lux-cursor'));
+      const element = fixture.debugElement.query(By.css('lux-icon.lux-cursor-pointer'));
       const onClickSpy = spyOn(fixture.componentInstance, 'onClicked');
 
       element.nativeElement.click();
@@ -62,14 +68,14 @@ describe('LuxAppHeaderComponent', () => {
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
-      expect(element.classes['lux-cursor']).toBeTrue();
+      expect(element.classes['lux-cursor-pointer']).toBeTrue();
     }));
 
     it('Image im App-Header sollte angeklickt werden können', fakeAsync(() => {
       const fixture = TestBed.createComponent(MockImageClickedAppHeaderComponent);
       LuxTestHelper.wait(fixture);
 
-      const element = fixture.debugElement.query(By.css('lux-image.lux-cursor'));
+      const element = fixture.debugElement.query(By.css('lux-image.lux-cursor-pointer'));
       const onClickSpy = spyOn(fixture.componentInstance, 'onClicked');
 
       element.nativeElement.click();
@@ -77,7 +83,7 @@ describe('LuxAppHeaderComponent', () => {
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
-      expect(element.classes['lux-cursor']).toBeTrue();
+      expect(element.classes['lux-cursor-pointer']).toBeTrue();
     }));
   });
 
@@ -617,51 +623,53 @@ class MockIconClickedAppHeaderComponent {
   template: `
     <lux-app-header [luxUserName]="username" [luxAppTitle]="title" [luxAppTitleShort]="titleShort">
       @if (testUseSideNav) {
-      <lux-side-nav [luxDashboardLink]="dashboardLink" [luxDashboardLinkTitle]="dashboardTitle" [luxOpenLinkBlank]="dashboardBlank">
-        <lux-side-nav-header>
-          <span class="test-side-nav-header">SideNav-Header</span>
-        </lux-side-nav-header>
-        @for (sideNavItem of sideNavItems; track sideNavItem.label) {
-        <ng-container ngProjectAs="lux-side-nav-item">
-          @if (!sideNavItem.ignoreThisItem) {
-          <lux-side-nav-item
-            [luxDisabled]="sideNavItem.disabled"
-            [luxLabel]="sideNavItem.label"
-            [luxIconName]="sideNavItem.iconName"
-            [luxSelected]="sideNavItem.selected"
-            [luxCloseOnClick]="sideNavItem.closeOnClick"
-            (luxClicked)="onClick(sideNavItem)"
-          ></lux-side-nav-item>
+        <lux-side-nav [luxDashboardLink]="dashboardLink" [luxDashboardLinkTitle]="dashboardTitle" [luxOpenLinkBlank]="dashboardBlank">
+          <lux-side-nav-header>
+            <span class="test-side-nav-header">SideNav-Header</span>
+          </lux-side-nav-header>
+          @for (sideNavItem of sideNavItems; track sideNavItem.label) {
+            <ng-container ngProjectAs="lux-side-nav-item">
+              @if (!sideNavItem.ignoreThisItem) {
+                <lux-side-nav-item
+                  [luxDisabled]="sideNavItem.disabled"
+                  [luxLabel]="sideNavItem.label"
+                  [luxIconName]="sideNavItem.iconName"
+                  [luxSelected]="sideNavItem.selected"
+                  [luxCloseOnClick]="sideNavItem.closeOnClick"
+                  (luxClicked)="onClick(sideNavItem)"
+                ></lux-side-nav-item>
+              }
+            </ng-container>
           }
-        </ng-container>
-        }
-        <lux-side-nav-footer>
-          <span class="test-side-nav-footer">SideNav-Footer</span>
-        </lux-side-nav-footer>
-      </lux-side-nav>
-      } @if (testUseActionNav) {
-      <lux-app-header-action-nav>
-        @for (actionNavItem of actionNavItems; track actionNavItem.label) {
-        <lux-app-header-action-nav-item
-          [luxIconName]="actionNavItem.iconName"
-          [luxDisabled]="actionNavItem.disabled"
-          [luxLabel]="actionNavItem.label"
-          (luxClicked)="onClick(actionNavItem)"
-        >
-        </lux-app-header-action-nav-item>
-        }
-      </lux-app-header-action-nav>
-      } @if (testUseRightNav) {
-      <lux-app-header-right-nav>
-        @for (rightNavItem of rightNavItems; track rightNavItem.label) {
-        <lux-menu-item
-          [luxIconName]="rightNavItem.iconName"
-          [luxDisabled]="rightNavItem.disabled"
-          [luxLabel]="rightNavItem.label"
-          (luxClicked)="onClick(rightNavItem)"
-        ></lux-menu-item>
-        }
-      </lux-app-header-right-nav>
+          <lux-side-nav-footer>
+            <span class="test-side-nav-footer">SideNav-Footer</span>
+          </lux-side-nav-footer>
+        </lux-side-nav>
+      }
+      @if (testUseActionNav) {
+        <lux-app-header-action-nav>
+          @for (actionNavItem of actionNavItems; track actionNavItem.label) {
+            <lux-app-header-action-nav-item
+              [luxIconName]="actionNavItem.iconName"
+              [luxDisabled]="actionNavItem.disabled"
+              [luxLabel]="actionNavItem.label"
+              (luxClicked)="onClick(actionNavItem)"
+            >
+            </lux-app-header-action-nav-item>
+          }
+        </lux-app-header-action-nav>
+      }
+      @if (testUseRightNav) {
+        <lux-app-header-right-nav>
+          @for (rightNavItem of rightNavItems; track rightNavItem.label) {
+            <lux-menu-item
+              [luxIconName]="rightNavItem.iconName"
+              [luxDisabled]="rightNavItem.disabled"
+              [luxLabel]="rightNavItem.label"
+              (luxClicked)="onClick(rightNavItem)"
+            ></lux-menu-item>
+          }
+        </lux-app-header-right-nav>
       }
     </lux-app-header>
   `,

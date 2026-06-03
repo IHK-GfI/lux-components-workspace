@@ -4,7 +4,7 @@
   [selectedIndex]="luxStepperConfig?.luxCurrentStepNumber"
   [ngClass]="{
     'lux-ignore-mat-step-icons': luxStepperConfig?.luxUseCustomIcons,
-    'lux-block-pointer-events': luxStepperConfig?.luxDisabled,
+    'lux-pointer-events-none': luxStepperConfig?.luxDisabled,
     'lux-linear-stepper': luxStepperConfig?.luxLinear,
     'lux-no-animation': !luxStepperConfig?.luxHorizontalStepAnimationActive
   }"
