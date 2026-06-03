@@ -119,11 +119,11 @@
           </th>
         </ng-container>
         <!-- Hier sind die eigentlichen Inhalts-Zellen -->
-        @for (tableColumn of tableColumns.toArray(); track tableColumn; let i = $index) {
+        @for (tableColumn of tableColumns.toArray(); track tableColumn; let colIndex = $index) {
         <ng-container
           [matColumnDef]="tableColumn.luxColumnDef"
-          [sticky]="i === 0 && tableColumn.luxSticky"
-          [stickyEnd]="i === tableColumns.length - 1 && tableColumn.luxSticky"
+          [sticky]="colIndex === 0 && tableColumn.luxSticky"
+          [stickyEnd]="colIndex === tableColumns.length - 1 && tableColumn.luxSticky"
         >
           <th
             mat-header-cell
@@ -132,12 +132,12 @@
             [disabled]="!tableColumn.luxSortable"
             [ngClass]="
               'lux-table-column-header-' +
-              i +
+              colIndex +
               (!tableColumn.luxSortable ? ' lux-table-header-blocked' : '') +
               (!tableColumn.header ? ' lux-table-column-header-empty' : '')
             "
             [ngStyle]="{
-              width: luxColWidthsPercent && luxColWidthsPercent[i] ? luxColWidthsPercent[i] + '%' : 'unset'
+              width: luxColWidthsPercent && luxColWidthsPercent[colIndex] ? luxColWidthsPercent[colIndex] + '%' : 'unset'
             }"
           >
             <ng-container *ngTemplateOutlet="tableColumn.header?.tempRef ?? null"></ng-container>
@@ -147,7 +147,7 @@
             mat-cell
             *matCellDef="let element; let i = index"
             [ngStyle]="{
-              width: luxColWidthsPercent && luxColWidthsPercent[i] ? luxColWidthsPercent[i] + '%' : 'unset'
+              width: luxColWidthsPercent && luxColWidthsPercent[colIndex] ? luxColWidthsPercent[colIndex] + '%' : 'unset'
             }"
             [ngClass]="{ 'lux-element-align-top': luxAlignElementsTop }"
           >

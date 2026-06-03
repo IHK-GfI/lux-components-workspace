@@ -388,6 +388,16 @@ describe('LuxTableComponent', () => {
       expect(tableHeaders.length).toBe(2);
       expect((tableHeaders.item(0) as HTMLElement).style.width).toEqual('5%');
       expect((tableHeaders.item(1) as HTMLElement).style.width).toEqual('25%');
+
+      // Datenzellen müssen ebenfalls die korrekten Spaltenbreiten erhalten (Issue #232)
+      const dataRows = document.querySelectorAll('.mat-mdc-row');
+      expect(dataRows.length).toBe(4);
+      dataRows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        expect(cells.length).toBe(2);
+        expect((cells.item(0) as HTMLElement).style.width).toEqual('5%');
+        expect((cells.item(1) as HTMLElement).style.width).toEqual('25%');
+      });
     }));
 
     it('Einzelne Spalten links und rechts fixieren', fakeAsync(() => {
