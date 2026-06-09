@@ -122,9 +122,12 @@ $overflow-values: auto, hidden, visible, scroll;
 
 $border-radius: (
   "none": 0,
-  "sm": var(--lux-theme-radius-xs),
-  "md": var(--lux-theme-radius-sm),
-  "lg": var(--lux-theme-radius-md),
+  "xs": var(--lux-theme-radius-xs),
+  "sm": var(--lux-theme-radius-sm),
+  "md": var(--lux-theme-radius-md),
+  "lg": var(--lux-theme-radius-lg),
+  "xl": var(--lux-theme-radius-xl),
+  "xxl": var(--lux-theme-radius-xxl),
   "full": 50%,
   "theme": var(--lux-theme-app-border-radius)
 );
