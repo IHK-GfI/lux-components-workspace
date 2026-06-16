@@ -91,8 +91,8 @@ describe('LuxCardComponent', () => {
       testComponent = fixture.componentInstance;
     }));
 
-    it('Style lux-cursor darf nicht gesetzt sein', fakeAsync(() => {
-      const card = fixture.debugElement.query(By.css('.lux-cursor'));
+    it('Style lux-cursor-pointer darf nicht gesetzt sein', fakeAsync(() => {
+      const card = fixture.debugElement.query(By.css('.lux-cursor-pointer'));
       expect(card).toBeNull();
     }));
   });
@@ -107,8 +107,8 @@ describe('LuxCardComponent', () => {
       testComponent = fixture.componentInstance;
     }));
 
-    it('Style lux-cursor muss gesetzt sein', fakeAsync(() => {
-      const card = fixture.debugElement.query(By.css('.lux-cursor'));
+    it('Style lux-cursor-pointer muss gesetzt sein', fakeAsync(() => {
+      const card = fixture.debugElement.query(By.css('.lux-cursor-pointer'));
       expect(card).not.toBeNull();
     }));
   });

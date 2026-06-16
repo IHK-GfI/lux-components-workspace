@@ -10,7 +10,7 @@ lux-tile {
     background-color: var(--lux-theme-accent-70);
   }
 
-  mat-card[class~="lux-cursor"] {
+  mat-card[class~="lux-cursor-pointer"] {
     &.mat-mdc-card {
       border-radius: var(--lux-theme-tile-border-radius);
       overflow: hidden !important;
@@ -171,9 +171,11 @@ lux-tile {
 
   /** ########## Focus / Hover ########## **/
 
-  mat-card[class~="lux-cursor"] {
+  mat-card[class~="lux-cursor-pointer"] {
     &.mat-mdc-card:focus-visible {
-      box-shadow: 0 0 0 2px #2e8533, 0 0 8px 2px #2e8533 !important;
+      box-shadow:
+        0 0 0 2px #2e8533,
+        0 0 8px 2px #2e8533 !important;
       outline: 0 !important;
     }
 

@@ -1270,7 +1270,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
 
     it('Setzt ohne Multiselect bei beobachtetem luxSelectedChange einen Cursor', fakeAsync(() => {
@@ -1279,7 +1279,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
     }));
 
     it('Setzt Cursor bei beobachtetem luxSingleClicked', fakeAsync(() => {
@@ -1288,7 +1288,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
     }));
 
     it('Setzt Cursor bei Multiselect mit beobachtetem luxSelectedChange nur ohne Checkbox-Only-Click', fakeAsync(() => {
@@ -1299,13 +1299,13 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
 
       component.multiSelectOnlyCheckboxClick = true;
       LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
 
     it('Setzt bei Multiselect ohne beobachtete Events Cursor nur ohne Checkbox-Only-Click', fakeAsync(() => {
@@ -1315,13 +1315,13 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
 
       component.multiSelectOnlyCheckboxClick = true;
       LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
 
     it('Setzt bei Multiselect und beobachtetem luxDoubleClicked keinen Cursor', fakeAsync(() => {
@@ -1332,7 +1332,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
   });
 });
