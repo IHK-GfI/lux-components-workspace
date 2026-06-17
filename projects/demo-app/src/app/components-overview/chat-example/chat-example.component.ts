@@ -5,6 +5,7 @@ import { LuxChatComponent, LuxChatData } from '@ihk-gfi/lux-components/lux-chat'
 import { LuxChatPopupComponent } from '@ihk-gfi/lux-components/lux-chat-popup';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { CommonModule } from '@angular/common';
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -25,7 +26,8 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
     LuxInputAcComponent,
-    LuxToggleAcComponent
+    LuxToggleAcComponent,
+    CommonModule
 ],
   templateUrl: './chat-example.component.html',
   styleUrl: './chat-example.component.scss'
@@ -34,19 +36,6 @@ export class ChatExampleComponent {
 
     public exampleUsername = "Nutzer C";
     public showChatPopup = false;
-
-    // public chatData: LuxChatData = new LuxChatData("Neuer Chat", new Date(), [
-    //     {user: "User A", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User B", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User A", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User A", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User B", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User A", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User B", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User C", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User C", content: "test1", time: new Date(), metadata: {}},
-    //     {user: "User D", content: "test1", time: new Date(), metadata: {}},
-    // ]);
 
     public chatData: LuxChatData = new LuxChatData("Neuer Chat", new Date(), [
         {user: "Nutzer A", content: "Erster Eintrag!", time: new Date("2024-11-05T10:30:00Z"), metadata: {}},
@@ -68,18 +57,11 @@ export class ChatExampleComponent {
         {user: "Nutzer B", content: "Diese Nachricht wurde heute geschrieben.", time: new Date(nowTime - 1 * HOUR), metadata: {}},
         {user: "Nutzer B", content: "Wie ihr sehen könnt wird für heute und gestern eine relative Bezeichnung gewählt.", time: new Date(nowTime - 1 * HOUR + 2 * MINUTE), metadata: {}},
         {user: "Nutzer A", content: "... Ich habe mich das schon länger gefragt, aber wem erklärst du das eigentlich?!", time: new Date(nowTime - 10 * MINUTE), metadata: {}},
-        {user: "Nutzer B", content: "Schreib du doch auch mal was, damit Nutzer A weiss wen ich meine.", time: new Date(nowTime - 6 * MINUTE), metadata: {}},
+        {user: "Nutzer B", content: "Schreib du doch auch mal was, damit Nutzer A weiß, wen ich meine.", time: new Date(nowTime - 6 * MINUTE), metadata: {}},
     ]);
 
     public onMessageEntered(input: string) {
         this.chatData.addMessage({user: this.exampleUsername, content: input, time: new Date(), metadata: {}})
-    }
-
-    constructor(){
-        // setTimeout(() => {
-        //     console.log("UPDATE");
-        //     this.onMessageEntered("TEST TEST");
-        // }, 3000); 
     }
 
 

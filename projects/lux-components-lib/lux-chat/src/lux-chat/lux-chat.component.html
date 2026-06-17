@@ -2,16 +2,24 @@
     <!-- Chat header -->
     <div class="lux-chat-header">
         <p class="lux-chat-header-title">
-            <b>{{ luxChatData()?.title }}</b><br/>
-            @if(luxChatData()){
-                {{'luxc.chat.title.created_at' | transloco}}<b>{{ luxChatData()!.createdAt | date:'dd.MM HH:mm' }}</b>
+            <span class="lux-chat-header-title-text">
+                {{luxChatTitle()}}
+            </span>
+            
+            @if(luxChatSubTitle()){
+                <br/>
+                <span class="lux-chat-header-sub-title">
+                    {{luxChatSubTitle()}}
+                </span>
             }
         </p>
+
         
         @if(showFullscreenButton() || showCloseButton()){
-            <div>
+            <div class="lux-flex lux-gap-4">
                 @if(showFullscreenButton()){
                     <lux-button
+                        luxColor="primary"
                         [luxIconButton]="true"
                         [luxIconName]="_chatFullscreen ? 'lux-interface-arrows-shrink-1' : 'lux-interface-arrows-expand-1'"
                         (luxClicked)="onFullscreenChatClicked()"
@@ -21,6 +29,7 @@
 
                 @if(showCloseButton()){
                     <lux-button
+                        luxColor="primary"
                         [luxIconButton]="true"
                         luxIconName="lux-interface-delete-1"
                         (luxClicked)="onCloseChatClicked()"
@@ -31,7 +40,7 @@
         }
     </div>
     
-    <lux-divider [luxInset]="true"></lux-divider>
+    <lux-divider [luxInset]="false"></lux-divider>
 
     <!-- Chat base -->
     <div class="lux-chat-base" tabindex="0" #chatBase>
@@ -56,25 +65,44 @@
                     }
                 </div>
                 <div class="lux-chat-entry-card">
-                    <p>{{item.content}}</p>
+                    @if(luxChatEntryComponent()){
+                        <ng-container *ngTemplateOutlet="luxChatEntryComponent()?.templateRef(); context: { $implicit: item }"></ng-container>
+                    }
+                    @else {
+                        <lux-markdown 
+                            [luxData]="item.content"
+                        ></lux-markdown>
+                    }
                 </div>
             </div>
-
         }
     </div>
 
     <!-- Chat action -->
-    <lux-textarea-ac 
-        luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
-        luxAriaLabelSelector="textarea"
-        class="lux-chat-input"
-        luxTagId="chatInput" 
-        [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
-        [(luxValue)]="chatInput" 
-        luxAutocomplete="off" 
-        [luxNoTopLabel]="true" 
-        [luxNoBottomLabel]="true"
-        [luxMaxRows]="4"
-        (keydown.enter)="onChatEntered($event)"
-    ></lux-textarea-ac>
+    <div class="lux-chat-action-container">
+        <lux-textarea-ac 
+            class="lux-chat-action-input"
+            luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
+            luxAriaLabelSelector="textarea"
+            luxTagId="chatInput" 
+            [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
+            [(luxValue)]="chatInput" 
+            luxAutocomplete="off" 
+            [luxNoTopLabel]="true" 
+            [luxNoBottomLabel]="true"
+            [luxMaxRows]="4"
+            (keydown.enter)="onChatEntered($event)"
+        ></lux-textarea-ac>
+
+        @if(chatInput){
+            <lux-button
+                class="lux-chat-action-send"
+                [luxIconButton]="true"
+                [luxRounded]="true"
+                [luxRaised]="true"
+                luxIconName="lux-mail-send-email"
+                luxColor="primary"
+            ></lux-button>
+        }
+    </div>
 </div>

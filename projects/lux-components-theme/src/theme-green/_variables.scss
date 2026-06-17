@@ -348,6 +348,28 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-card-background-color: var(--lux-theme-app-data-bg);
   --lux-theme-card-padding: 20px;
 
+  // LUX-Chat
+  --lux-theme-chat-background-color: var(--lux-theme-app-data-bg);
+  --lux-theme-chat-header-title-text-color: var(--lux-theme-dark-primary-text);
+  --lux-theme-chat-header-title-text-weight: 600;
+  --lux-theme-chat-header-sub-title-text-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-chat-entry-date-split-text-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-chat-entry-header-text-color: var(--lux-theme-dark-secondary-text);
+  --lux-theme-chat-entry-card-border-radius: var(--lux-theme-radius-lg);
+  --lux-theme-chat-entry-card-incomming-background-color: #E4F1E4;
+  --lux-theme-chat-entry-card-incomming-text-color: #003366;
+  --lux-theme-chat-entry-card-outgoing-background-color: #E3EBF5;
+  --lux-theme-chat-entry-card-outgoing-text-color: #003366;
+  --lux-theme-chat-entry-card-padding-top: var(--lux-theme-spacing-md);
+  --lux-theme-chat-entry-card-padding-right: var(--lux-theme-spacing-lg);
+  --lux-theme-chat-entry-card-padding-bottom: var(--lux-theme-spacing-md);
+  --lux-theme-chat-entry-card-padding-left: var(--lux-theme-spacing-lg);
+
+  // LUX-Chat-Popup
+  --lux-theme-chat-popup-container-border-radius: var(--lux-theme-radius-sm);
+  --lux-theme-chat-popup-fab-background-color: var(--mat-sys-primary);
+  --lux-theme-chat-popup-fab-icon-color: var(--mat-sys-on-primary);
+
   // LUX-Datepicker
   --lux-theme-datepicker-icon-color: #{map.get(palettes.$lux-palette_primary, 20)};
   --lux-theme-datepicker-panel-shape: var(--lux-theme-app-border-radius);
