@@ -12,6 +12,7 @@ import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/l
 import { LuxDatepickerAcComponent } from '../../lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
 import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
 import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxTimepickerComponent } from '../../lux-form/lux-timepicker/lux-timepicker.component';
 import { LuxToggleAcComponent } from '../../lux-form/lux-toggle-ac/lux-toggle-ac.component';
 import { LuxFilterItemDirective } from '../lux-filter-base/lux-filter-item.directive';
 import { LuxFilterFormComponent } from './lux-filter-form.component';
@@ -94,6 +95,24 @@ describe('LuxFilterFormComponent', () => {
     expect(component.filterComponent.filterForm.get('autocomplete')!.value).toEqual(component.autoCompleteOptions[0]);
     expect(component.filterComponent.filterForm.get('input')!.value).toBeUndefined();
   });
+
+  it('Sollte auch mit Datepicker-Timepicker-Kombination funktionieren', () => {
+    // Init
+    const spy = spyOn(component, 'onFilter').and.callThrough();
+
+    // Vorbedingungen testen
+    expect(component.filterComponent.filterForm.get('combinedDateTime')!.value).toBeUndefined();
+
+    // Änderungen durchführen
+    component.initFilter = { input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' };
+    fixture.detectChanges();
+
+    // Nachbedingungen prüfen
+    expect(component.filterComponent.filterForm.valid).toBeTrue();
+    expect(component.filterComponent.filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30:00.000Z');
+    expect(component.currentFilter.combinedDateTime).toEqual('2020-07-21T14:30:00.000Z');
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });
 
 @Component({
@@ -136,6 +155,38 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterHidden]="datepickerHidden"
         luxFilterItem
       ></lux-datepicker-ac>
+      <lux-timepicker
+        luxLabel="Timepicker"
+        luxName="filter_timepicker"
+        luxControlBinding="timepicker"
+        [luxFilterDisabled]="timepickerDisabled"
+        [luxFilterHidden]="timepickerHidden"
+        luxFilterItem
+      ></lux-timepicker>
+      <div>
+        <div>
+          <lux-datepicker-ac
+            luxLabel="Datepicker + Timepicker (Datum)"
+            luxName="filter_datepicker_combined"
+            luxControlBinding="combinedDateTime"
+            [luxFilterDisabled]="combinedDateTimeDisabled"
+            [luxFilterHidden]="combinedDateTimeHidden"
+            [luxReferenceControl]="combinedTimepicker"
+            luxFilterItem
+            #combinedDatepicker
+          ></lux-datepicker-ac>
+          <lux-timepicker
+            luxLabel="Datepicker + Timepicker (Uhrzeit)"
+            luxName="filter_timepicker_combined"
+            luxControlBinding="combinedDateTime"
+            [luxFilterDisabled]="combinedDateTimeDisabled"
+            [luxFilterHidden]="combinedDateTimeHidden"
+            [luxReferenceControl]="combinedDatepicker"
+            luxFilterItem
+            #combinedTimepicker
+          ></lux-timepicker>
+        </div>
+      </div>
       <lux-select-ac
         luxLabel="Single-Select"
         luxControlBinding="singleSelect"
@@ -178,7 +229,8 @@ describe('LuxFilterFormComponent', () => {
     LuxSelectAcComponent,
     LuxInputAcComponent,
     LuxAutocompleteAcComponent,
-    LuxDatepickerAcComponent
+    LuxDatepickerAcComponent,
+    LuxTimepickerComponent
   ]
 })
 class TestFilterFormComponent implements OnDestroy {
@@ -220,6 +272,10 @@ class TestFilterFormComponent implements OnDestroy {
   autoCompleteHidden = false;
   datepickerDisabled = false;
   datepickerHidden = false;
+  timepickerDisabled = false;
+  timepickerHidden = false;
+  combinedDateTimeDisabled = false;
+  combinedDateTimeHidden = false;
   singleSelectDisabled = false;
   singleSelectHidden = false;
   multiSelectDisabled = false;

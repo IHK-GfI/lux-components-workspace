@@ -15,6 +15,7 @@ import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxValidationErrors } from '../lux-form-model/lux-form-component-base.class';
 import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.class';
+import { LuxReferenceControl } from '../lux-form-model/lux-reference-control.interface';
 import { LuxDatepickerAcAdapter } from './lux-datepicker-ac-adapter';
 import { LuxDatepickerAcCustomHeaderComponent } from './lux-datepicker-ac-custom-header/lux-datepicker-ac-custom-header.component';
 
@@ -57,12 +58,12 @@ export declare type LuxStartAcView = 'month' | 'year' | 'multi-year';
 export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> implements OnInit, OnChanges, OnDestroy {
   private dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
   private mediaObserver = inject(LuxMediaQueryObserverService);
-  private elementRef = inject(ElementRef);
   private themeService = inject(LuxThemeService);
 
   private originalTouchUi = false;
   private mediaSubscription?: Subscription;
   private previousISO?: string;
+  lastValue: Date | null = null;
   min: Date | null = null;
   max: Date | null = null;
   start: Date | null = null;
@@ -79,6 +80,7 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   @Input() luxNoLabels = false;
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
+  @Input() luxReferenceControl?: LuxReferenceControl;
 
   @ViewChild(MatDatepicker) matDatepicker?: MatDatepicker<any>;
   @ViewChild('datepickerInput', { read: ElementRef }) datepickerInput?: ElementRef;
@@ -108,6 +110,10 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
 
   set dateInputValue(newValue: string) {
     this.datepickerInput!.nativeElement.value = newValue;
+  }
+
+  get shouldEmitDirectly() {
+    return !!this.luxReferenceControl && this.inForm;
   }
 
   constructor() {
@@ -162,6 +168,16 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   override ngOnInit() {
     super.ngOnInit();
     this.originalTouchUi = this.luxTouchUi;
+    (this.dateAdapter as LuxDatepickerAcAdapter).referenceTimeProvider = () => {
+      const referenceValue = this.luxReferenceControl?.lastValue;
+      if (referenceValue instanceof Date && LuxUtil.isDate(referenceValue)) {
+        return referenceValue;
+      }
+      if (this.previousISO && LuxUtil.ISO_8601_FULL.test(this.previousISO)) {
+        return new Date(this.previousISO);
+      }
+      return null;
+    };
     this.mediaSubscription = this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
       this.checkMediaObserver();
     });
@@ -169,6 +185,7 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
 
   override ngOnDestroy() {
     super.ngOnDestroy();
+    (this.dateAdapter as LuxDatepickerAcAdapter).referenceTimeProvider = null;
 
     if (this.mediaSubscription) {
       this.mediaSubscription.unsubscribe();
@@ -252,36 +269,42 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
    * @param isoValue
    */
   private setISOValue(isoValue: string) {
-    setTimeout(() => {
-      this.previousISO = isoValue;
+    this.previousISO = isoValue;
 
-      let minOk = true;
-      if (this.min && isoValue && this.dateAdapter.compareDate(new Date(isoValue), this.min) < 0) {
-        minOk = false;
-      }
+    let minOk = true;
+    if (this.min && isoValue && this.dateAdapter.compareDate(new Date(isoValue), this.min) < 0) {
+      minOk = false;
+    }
 
-      let maxOk = true;
-      if (this.max && isoValue && this.dateAdapter.compareDate(new Date(isoValue), this.max) > 0) {
-        maxOk = false;
-      }
+    let maxOk = true;
+    if (this.max && isoValue && this.dateAdapter.compareDate(new Date(isoValue), this.max) > 0) {
+      maxOk = false;
+    }
 
-      // Der valueChange-Emitter wird nur anstoßen, wenn das Datum innerhalb der Grenzen (min und max) liegt.
-      if (minOk && maxOk) {
-        this.notifyFormValueChanged(isoValue);
-      }
-
-      // "silently" den FormControl auf den (potenziell) geänderten Wert aktualisieren
+    if (this.formControl.value !== isoValue) {
+      // "silently" den FormControl auf den (potenziell) geänderten Wert aktualisieren,
+      // damit die Änderung nicht erneut über valueChanges getriggert wird.
+      // Damit wird auch verhindert, dass beim Tippen ins Input-Feld der Wert sofort vervollständigt wird.
       this.formControl.setValue(isoValue as any, {
-        emitEvent: false,
-        emitModelToViewChange: false,
-        emitViewToModelChange: false
+        emitEvent: this.shouldEmitDirectly,
+        emitModelToViewChange: this.shouldEmitDirectly,
+        emitViewToModelChange: this.shouldEmitDirectly
       });
+    }
 
-      // Per Hand dem Input-Element einen formatierten String übergeben
-      if (this.datepickerInput && !this.datepickerInput.nativeElement.value && isoValue) {
-        this.datepickerInput.nativeElement.value = this.dateAdapter.format(isoValue as any, APP_DATE_FORMATS_AC.display.dateInput);
-      }
-    });
+    // Per Hand dem Input-Element einen formatierten String übergeben
+    if (this.datepickerInput && !this.datepickerInput.nativeElement.value && isoValue) {
+      this.datepickerInput.nativeElement.value = this.dateAdapter.format(isoValue as any, APP_DATE_FORMATS_AC.display.dateInput);
+    }
+
+    // Der valueChange-Emitter wird nur anstoßen, wenn das Datum innerhalb der Grenzen (min und max) liegt.
+    if (minOk && maxOk) {
+      // ExpressionChangedError vermeiden, indem die Änderung des ValueChange-Emitters in einen Timeout gepackt wird, damit sie nach der aktuellen Änderungsschleife ausgeführt wird.
+      // Wenn z.B. ein Datum mit Uhrzeit von außen übergeben wird, wird das Datum intern angepasst (z.B. auf 00:00 Uhr gesetzt), damit es im Datepicker korrekt dargestellt wird. In diesem Fall würde der ValueChange-Emitter sofort erneut getriggert werden, was zu einem ExpressionChangedError führen kann, da sich der Wert während der Änderungsschleife ändert.
+      setTimeout(() => {
+        this.notifyFormValueChanged(isoValue);
+      });
+    }
   }
 
   protected override setValue(value: any) {
@@ -294,10 +317,19 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
     }
   }
 
+  private valueChangesRunning = false;
+
   protected override initFormValueSubscription() {
     // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden
     this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {
-      this.updateDateValue(value);
+      try {
+        if (!this.valueChangesRunning) {
+          this.valueChangesRunning = true;
+          this.updateDateValue(value);
+        }
+      } finally {
+        this.valueChangesRunning = false;
+      }
     });
 
     if (this.formControl.value) {
@@ -321,15 +353,24 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
       value = this.dateAdapter.parse(value, {});
     }
 
+    if (!LuxUtil.isDate(value)) {
+      return;
+    }
+
     const eventDate: Date = value;
-    const tempDate = new Date(0);
-    tempDate.setUTCFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-    tempDate.setUTCHours(0, 0, 0, 0);
+    const newDate = new Date(0);
+    newDate.setUTCFullYear(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate());
+    if (this.luxReferenceControl) {
+      newDate.setUTCHours(eventDate.getUTCHours(), eventDate.getUTCMinutes(), eventDate.getUTCSeconds(), 0);
+    } else {
+      newDate.setUTCHours(0, 0, 0, 0);
+    }
+    this.lastValue = newDate;
 
     // Sicherheitshalber noch einmal prüfen, kann vorkommen das ein unsinniger Wert eingetragen wird
     // z.B. 'asdf', das führt zu InvalidDate's
-    if (LuxUtil.isDate(tempDate) && this.previousISO !== tempDate.toISOString()) {
-      this.setISOValue(tempDate.toISOString());
+    if (LuxUtil.isDate(newDate) && this.previousISO !== newDate.toISOString()) {
+      this.setISOValue(newDate.toISOString());
     }
   }
 

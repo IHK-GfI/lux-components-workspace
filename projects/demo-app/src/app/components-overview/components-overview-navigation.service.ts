@@ -72,6 +72,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('form', 'Chips-Ac'),
     this.create('form', 'Datepicker-Ac'),
     this.create('form', 'Datetimepicker-Ac'),
+    this.create('form', 'Timepicker', DemoMarkerType.New),
     this.create('form', 'File-Input-Ac'),
     this.create('form', 'File-List'),
     this.create('form', 'File-Upload'),

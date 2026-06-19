@@ -15,6 +15,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'chips-ac', loadComponent: () => import('./chip-authentic-example/chip-authentic-example.component').then(m => m.ChipAuthenticExampleComponent) },
       { path: 'datepicker-ac', loadComponent: () => import('./datepicker-authentic-example/datepicker-authentic-example.component').then(m => m.DatepickerAuthenticExampleComponent) },
       { path: 'datetimepicker-ac', loadComponent: () => import('./datetimepicker-authentic-example/datetimepicker-authentic-example.component').then(m => m.DatetimepickerAuthenticExampleComponent) },
+      { path: 'timepicker', loadComponent: () => import('./timepicker-authentic-example/timepicker-authentic-example.component').then(m => m.TimepickerAuthenticExampleComponent) },
       { path: 'divider', loadComponent: () => import('./divider-example/divider-example.component').then(m => m.DividerExampleComponent) },
       { path: 'error-page', loadComponent: () => import('./errorpage-example/errorpage-example.component').then(m => m.ErrorpageExampleComponent) },
       { path: 'http-error', loadComponent: () => import('./http-error-example/http-error-example.component').then(m => m.HttpErrorExampleComponent) },
