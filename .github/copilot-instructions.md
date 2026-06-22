@@ -24,7 +24,7 @@ applyTo: '**'
 
 - Install: npm install (Node >= 20.19; see package.json engines).
 - Run demo: npm run start:demo (checks demo conditions, then ng serve).
-- Dev watch loop: npm run start:dev (builds library + theme in watch mode, then starts demo when dist outputs exist).
+- Dev watch loop (start dev server): npm run start:dev (builds library + theme in watch mode, then starts demo when dist outputs exist).
 - Build all packages: npm run pack:all (cleans dist, then builds theme, library, updater, demo).
 - Tests: npm run test:components (lint + Karma headless for library), npm run test:all (demo/theme/updater smoke tests).
 

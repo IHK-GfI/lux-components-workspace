@@ -61,6 +61,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-select](lux‐select-v21)
 - [lux-slider](lux‐slider-v21)
 - [lux-textarea](lux‐textarea-v21)
+- [lux-timepicker](lux‐timepicker-v21)
 - [lux-toggle](lux‐toggle-v21)
 
 ### Layout

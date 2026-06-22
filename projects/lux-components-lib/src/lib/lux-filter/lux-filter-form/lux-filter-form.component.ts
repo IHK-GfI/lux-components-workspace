@@ -357,7 +357,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     // über die Tastenkombination "Shift + Enter" das Filtern auslösen. Das
     // Filterpanel würde sich nach dem Filtern schließen, aber das Optionspanel
     // des Autocomplete-Feld-Feldes würde stehen bleiben. Dasselbe Problem
-    // besteht natürlich auch beim Datepicker, Select und den
+    // besteht natürlich auch beim Datepicker, Timepicker, Select und den
     // Lookup-Komponenten. Aus diesem Grund werden hier zuerst alle geöffneten
     // Popups/Panels geschlossen. Im Anschluss wird wie gewohnt gefiltert.
     if (!this.luxDisableShortcut) {
@@ -367,6 +367,8 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
             formComponent.datepickerAuthentic.matDatepicker.close();
           } else if (formComponent.datetimepickerAuthentic && formComponent.datetimepickerAuthentic.dateTimeOverlayComponent) {
             formComponent.datetimepickerAuthentic.dateTimeOverlayComponent.close();
+          } else if (formComponent.timepickerAuthentic && formComponent.timepickerAuthentic.matTimepicker) {
+            formComponent.timepickerAuthentic.matTimepicker.close();
           } else if (formComponent.selectAuthentic && formComponent.selectAuthentic.matSelect) {
             formComponent.selectAuthentic.matSelect.close();
           } else if (formComponent.autoCompleteAuthentic) {

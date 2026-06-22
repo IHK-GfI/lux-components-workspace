@@ -120,6 +120,7 @@ export * from './lib/lux-form/lux-form-model/lux-form-component-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-file-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-input-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-selectable-base.class';
+export * from './lib/lux-form/lux-form-model/lux-reference-control.interface';
 export * from './lib/lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
 export * from './lib/lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
 export * from './lib/lux-form/lux-input-ac/lux-input-ac.component';
@@ -127,6 +128,8 @@ export * from './lib/lux-form/lux-radio-ac/lux-radio-ac.component';
 export * from './lib/lux-form/lux-select-ac/lux-select-ac.component';
 export * from './lib/lux-form/lux-slider-ac/lux-slider-ac.component';
 export * from './lib/lux-form/lux-textarea-ac/lux-textarea-ac.component';
+export * from './lib/lux-form/lux-timepicker/lux-timepicker-adapter';
+export * from './lib/lux-form/lux-timepicker/lux-timepicker.component';
 export * from './lib/lux-form/lux-toggle-ac/lux-toggle-ac.component';
 export * from './lib/lux-form/lux-validators';
 

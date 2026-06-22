@@ -8,6 +8,7 @@ import { LuxFormSelectableBase } from '../../lux-form/lux-form-model/lux-form-se
 import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
 import { LuxRadioAcComponent } from '../../lux-form/lux-radio-ac/lux-radio-ac.component';
 import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxTimepickerComponent } from '../../lux-form/lux-timepicker/lux-timepicker.component';
 import { LuxToggleAcComponent } from '../../lux-form/lux-toggle-ac/lux-toggle-ac.component';
 import { LuxLookupAutocompleteAcComponent } from '../../lux-lookup/lux-lookup-autocomplete-ac/lux-lookup-autocomplete-ac.component';
 import { LuxLookupComboboxAcComponent } from '../../lux-lookup/lux-lookup-combobox-ac/lux-lookup-combobox-ac.component';
@@ -24,6 +25,7 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
   autoCompleteLookupAuthentic = inject(LuxLookupAutocompleteAcComponent, { optional: true });
   datepickerAuthentic = inject(LuxDatepickerAcComponent, { optional: true });
   datetimepickerAuthentic = inject(LuxDatetimepickerAcComponent, { optional: true });
+  timepickerAuthentic = inject(LuxTimepickerComponent, { optional: true });
   toggleAuthentic = inject(LuxToggleAcComponent, { optional: true });
   checkboxAuthentic = inject(LuxCheckboxAcComponent, { optional: true });
   selectAuthentic = inject(LuxSelectAcComponent, { optional: true });
@@ -49,6 +51,8 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
       this.formComponent = this.datepickerAuthentic;
     } else if (this.datetimepickerAuthentic) {
       this.formComponent = this.datetimepickerAuthentic;
+    } else if (this.timepickerAuthentic) {
+      this.formComponent = this.timepickerAuthentic;
     } else if (this.toggleAuthentic) {
       this.formComponent = this.toggleAuthentic;
     } else if (this.checkboxAuthentic) {
@@ -94,6 +98,8 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
         this.filterItem.renderFn = this.renderDateAcFn;
       } else if (this.filterItem.component instanceof LuxDatetimepickerAcComponent) {
         this.filterItem.renderFn = this.renderDateTimeAcFn;
+      } else if (this.filterItem.component instanceof LuxTimepickerComponent) {
+        this.filterItem.renderFn = this.renderTimeAcFn;
       } else if (
         this.filterItem.component instanceof LuxSelectAcComponent ||
         this.filterItem.component instanceof LuxAutocompleteAcComponent ||
@@ -175,6 +181,10 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
   }
   renderDateTimeAcFn(filterItem: LuxFilterItem, value: any) {
     return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl.nativeElement.value;
+  }
+
+  renderTimeAcFn(filterItem: LuxFilterItem, value: any) {
+    return (filterItem.component as LuxTimepickerComponent).timepickerInput?.nativeElement.value;
   }
 
   renderToggleFn<T>(filterItem: LuxFilterItem<T>, value: any) {

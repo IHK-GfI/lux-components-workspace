@@ -107,6 +107,12 @@
       "panel.hours.arialabel": "Stunden",
       "panel.minutes.arialabel": "Minuten"
     },
+    "timepicker": {
+      "error_message.empty": "Die Zeit darf nicht leer sein",
+      "error_message.invalid": "Die Zeit ist ungültig",
+      "error_message.max": "Die Zeit überschreitet den Maximalwert",
+      "error_message.min": "Die Zeit unterschreitet den Minimalwert"
+    },
     "dialog": {
       "btn.close.arialabel": "Dialog schließen"
     },
