@@ -14,15 +14,15 @@
       "lang.select.trigger": "Spracheinstellungen",
       "user.menu.trigger": "Benutzermenü",
       "session-timer": {
-        "dialog.info.title": "Sind Sie noch da?",
-        "dialog.info.message.part1": "Bitte bestätigen Sie innerhalb von",
+        "dialog.info.title": "Soll die Sitzung fortgesetzt werden?",
+        "dialog.info.message.part1": "Bitte innerhalb von",
         "dialog.info.message.part2": "2 Minuten",
-        "dialog.info.message.part3": "Ihre Anwesenheit. Danach beenden wir diese Sitzung. Nicht gespeicherte Angaben werden gelöscht. Dieses dient zum Schutz Ihrer Daten.",
+        "dialog.info.message.part3": "die Anwesenheit bestätigen. Danach wird diese Sitzung beendet. Nicht gespeicherte Angaben werden gelöscht. Dies dient dem Datenschutz.",
         "dialog.extendSession.btn": "Angemeldet bleiben",
         "dialog.logout.btn": "Abmelden",
         "dialog.wait.title": "Auf Rückmeldung vom Server warten...",
-        "dialog.notextendable.title": "Ihre Sitzung kann nicht verlängert werden!",
-        "dialog.notextendable.message": "Ihre Sitzung läuft in Kürze ab und kann nicht verlängert werden. Nicht gespeicherte Angaben werden gelöscht. Sie können sich nach Abmeldung oder Sitzungsablauf erneut anmelden.",
+        "dialog.notextendable.title": "Diese Sitzung kann nicht verlängert werden.",
+        "dialog.notextendable.message": "Diese Sitzung läuft in Kürze ab und kann nicht verlängert werden. Nicht gespeicherte Angaben werden gelöscht. Nach der automatischen Abmeldung oder dem Sitzungsablauf ist eine erneute Anmeldung möglich.",
         "dialog.confirm.btn": "Bestätigen",
         "timer.button.lbl.hours": "> 1 Stunde",
         "timer.button.lbl.minutes": "Minuten",
@@ -56,7 +56,7 @@
       "button_close": "Schließen",
       "button_decline_optional": "Optionale ablehnen",
       "cookies_used_title": "Verwendete Cookies",
-      "description": "Wir verwenden Cookies, um die Bereitstellung unserer Dienste zu erleichtern. Cookies sind kleine Textdateien, die von Webseiten verwendet werden, um die Benutzererfahrung effizienter zu gestalten. Laut Gesetz können wir Cookies auf Ihrem Gerät speichern, wenn diese für den Betrieb dieser Seite unbedingt notwendig sind. Für alle anderen Cookie-Typen benötigen wir Ihre Erlaubnis. Diese Seite verwendet unterschiedliche Cookie-Typen. Einige Cookies werden von Drittparteien platziert, die auf unseren Seiten erscheinen. Sie können Ihre Einwilligung jederzeit von der Cookie-Erklärung auf unserer Website ändern oder widerrufen.",
+      "description": "Wir verwenden Cookies, um die Bereitstellung unserer Dienste zu erleichtern. Cookies sind kleine Textdateien, die von Webseiten verwendet werden, um die Benutzererfahrung effizienter zu gestalten. Laut Gesetz dürfen wir Cookies auf dem Endgerät speichern, wenn diese für den Betrieb dieser Seite unbedingt notwendig sind. Für alle anderen Cookie-Typen benötigen wir die Erlaubnis des/der Anwenders/Anwenderin. Diese Seite verwendet unterschiedliche Cookie-Typen. Einige Cookies werden von Drittparteien platziert, die auf unseren Seiten erscheinen. Die Einwilligung kann jederzeit über die Cookie-Erklärung auf unserer Website geändert oder widerrufen werden.",
       "essential": {
         "hint": "Notwendige Cookies helfen dabei, eine Webseite nutzbar zu machen, indem sie Grundfunktionen wie Seitennavigation und Zugriff auf sichere Bereiche der Webseite ermöglichen. Die Webseite kann ohne diese Cookies nicht richtig funktionieren.",
         "name": "Notwendig"
@@ -66,16 +66,16 @@
       "link_datenschutz": "Datenschutz",
       "link_impressum": "Impressum",
       "marketing": {
-        "hint": "Marketing-Cookies werden verwendet, um Besuchern auf Webseiten zu folgen. Die Absicht ist, Anzeigen zu zeigen, die relevant und ansprechend für den einzelnen Benutzer sind und daher wertvoller für Publisher und werbetreibende Drittparteien sind.",
+        "hint": "Marketing-Cookies werden verwendet, um Besuchern auf Webseiten zu folgen. Die Absicht ist, Anzeigen zu präsentieren, die relevant und ansprechend für den einzelnen Benutzer sind und daher wertvoller für Publisher und werbetreibende Drittparteien sind.",
         "name": "Marketing"
       },
       "multiple_entries_note": "(* es kann mehrere Einträge geben)",
       "other": {
-        "hint": "Nicht klassifizierte Cookies sind Cookies, die wir gerade versuchen zu klassifizieren, zusammen mit Anbietern von individuellen Cookies.",
+        "hint": "Nicht klassifizierte Cookies sind Cookies, die wir derzeit gemeinsam mit den Anbietern der einzelnen Cookies zu klassifizieren versuchen.",
         "name": "Nicht klassifiziert"
       },
       "preferences": {
-        "hint": "Präferenz-Cookies ermöglichen einer Webseite sich an Informationen zu erinnern, die die Art beeinflussen, wie sich eine Webseite verhält oder aussieht, wie z. B. Ihre bevorzugte Sprache oder die Region in der Sie sich befinden.",
+        "hint": "Präferenz-Cookies ermöglichen einer Webseite sich an Informationen zu erinnern, die die Art beeinflussen, wie sich eine Webseite verhält oder aussieht, wie z. B. die bevorzugte Sprache oder die Region des/der Nutzers/Nutzerin.",
         "name": "Präferenzen"
       },
       "purposes_title": "Zweckarten",
@@ -102,8 +102,8 @@
       "error_message.invalid": "Die Datum-/Uhrzeitkombination ist ungültig",
       "error_message.max": "Das Datum überschreitet den Maximalwert",
       "error_message.min": "Das Datum unterschreitet den Minimalwert",
-      "invalid.date": "Bitte wählen Sie ein Datum aus",
-      "invalid.time": "Bitte geben Sie eine Zeit ein",
+      "invalid.date": "Bitte ein Datum wählen",
+      "invalid.time": "Bitte eine Zeit eingeben",
       "panel.hours.arialabel": "Stunden",
       "panel.minutes.arialabel": "Minuten"
     },
@@ -126,26 +126,26 @@
     },
     "file": {
       "delete.dialog.cancel.lbl": "Abbrechen",
-      "delete.dialog.content": "Wenn Sie die Datei löschen, wird diese unwiderruflich gelöscht.",
+      "delete.dialog.content": "Wenn die Datei gelöscht wird, wird diese unwiderruflich entfernt.",
       "delete.dialog.delete.lbl": "Löschen",
-      "delete.dialog.title": "Wollen Sie die Datei wirklich löschen?",
+      "delete.dialog.title": "Wirklich löschen?",
       "rename.dialog.cancel.lbl": "Abbrechen",
       "rename.dialog.rename.lbl": "Umbenennen",
-      "rename.dialog.title": "Wollen Sie die Datei umbenennen?",
+      "rename.dialog.title": "Soll die Datei umbenannt werden?",
       "rename.input.lbl": "Neuer Dateiname",
       "replace.dialog.cancel.lbl": "Abbrechen",
-      "replace.dialog.content": "Wenn Sie eine neue Datei auswählen, wird die vorhandene Datei ersetzt.",
-      "replace.dialog.content.multiple": "Wenn Sie Dateien mit gleichen Namen hochladen, werden diese ersetzt.",
-      "replace.dialog.deleteprotection": "Es soll eine Datei ersetzt werden, die weder erstetzt noch gelöscht werden darf!",
+      "replace.dialog.content": "Wenn eine neue Datei ausgewählt wird, ersetzt diese die vorhandene Datei.",
+      "replace.dialog.content.multiple": "Wenn Dateien mit gleichen Namen hochgeladen werden, ersetzen diese bereits vorhandene Dateien.",
+      "replace.dialog.deleteprotection": "Es soll eine Datei ersetzt werden, die weder ersetzt noch gelöscht werden darf!",
       "replace.dialog.replace.lbl": "Ersetzen",
-      "replace.dialog.title": "Wollen Sie fortfahren und die Datei ersetzen?",
-      "replace.dialog.title.multiple": "Wollen Sie fortfahren und die Dateien mit gleichen Namen ersetzen?",
+      "replace.dialog.title": "Soll fortgefahren und die Datei wirklich ersetzt werden?",
+      "replace.dialog.title.multiple": "Soll fortgefahren und die Dateien mit gleichen Namen ersetzt werden?",
       "upload.delete.btn.arialabel": "Button zum Löschen der Datei {{fileName}}",
       "upload.error_message.max_file_size": "Die Datei \"{{fileName}}\" überschreitet die maximal zulässige Dateigröße von {{maxSizeMB}} Megabytes.",
       "upload.error_message.not_accepted": "Die Datei \"{{fileName}}\" entspricht keinem akzeptierten Dateityp. Es sind nur Dateien vom Typ {{acceptTypes}} erlaubt.",
       "upload.error_message.only_one_file": "Es darf nur eine Datei hochgeladen werden.",
-      "upload.error_message.read_error": "Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.",
-      "upload.error_message.upload_error": "Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.",
+      "upload.error_message.read_error": "Beim Lesen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte erneut versuchen.",
+      "upload.error_message.upload_error": "Beim Hochladen der ausgewählten Datei ist ein Fehler aufgetreten. Bitte erneut versuchen.",
       "upload.file.type.concat": " oder ",
       "upload.label": "Zum Hochladen Datei hier ablegen oder ",
       "upload.label.link": "Datei durchsuchen",
@@ -278,7 +278,7 @@
       "next.btn": "Weiter"
     },
     "stepper-large": {
-      "error_message.steps_not_completed": "Die Angaben in Schritt {{i}} sind unvollständig oder fehlerhaft. Bitte korrigieren Sie erst Ihre Angaben in diesem Schritt."
+      "error_message.steps_not_completed": "Die Angaben in Schritt {{i}} sind unvollständig oder fehlerhaft. Bitte erst die Angaben in diesem Schritt korrigieren."
     },
     "table": {
       "column.selector.lbl": "Spalten ausblenden",
