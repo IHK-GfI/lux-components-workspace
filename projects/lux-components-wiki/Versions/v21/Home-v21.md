@@ -103,6 +103,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-lookup-label](lux‐lookup‐label-v21)
 - [lux-markdown](lux‐markdown-v21)
 - [lux-message-box](lux‐message‐box-v21)
+- [lux-paginator](lux‐paginator-v21)
 - [lux-popup](lux‐popup-v21)
 - [lux-progress](lux‐progress-v21)
 - [lux-snackbar](lux‐snackbar-v21)

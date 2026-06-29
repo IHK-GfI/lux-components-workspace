@@ -35,6 +35,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'textarea-ac', loadComponent: () => import('./textarea-authentic-example/textarea-authentic-example.component').then(m => m.TextareaAuthenticExampleComponent) },
       { path: 'tooltip', loadComponent: () => import('./tooltip-example/tooltip-example.component').then(m => m.TooltipExampleComponent) },
       { path: 'popup', loadComponent: () => import('./popup-example/popup-example.component').then(m => m.PopupExampleComponent) },
+      { path: 'paginator', loadComponent: () => import('./paginator-example/paginator-example.component').then(m => m.PaginatorExampleComponent) },
       { path: 'lookup-combobox-ac', loadComponent: () => import('./lookup-examples/lookup-combobox-ac-example/lookup-combobox-ac-example.component').then(m => m.LookupComboboxAcExampleComponent) },
       { path: 'lookup-autocomplete-ac', loadComponent: () => import('./lookup-examples/lookup-autocomplete-ac-example/lookup-autocomplete-ac-example.component').then(m => m.LookupAutocompleteAcExampleComponent) },
       { path: 'lookup-label', loadComponent: () => import('./lookup-examples/lookup-label-example/lookup-label-example.component').then(m => m.LookupLabelExampleComponent) },

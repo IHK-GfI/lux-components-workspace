@@ -648,7 +648,7 @@ describe('LuxTableComponent', () => {
     it('Sollte automatisch die Pagination bei > 100 Einträgen aktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      let hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      let hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
       // Änderungen durchführen
@@ -661,7 +661,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeFalsy();
 
       flush();
@@ -670,7 +670,7 @@ describe('LuxTableComponent', () => {
     it('Sollte nicht automatisch die Pagination bei > 100 Einträgen aktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      let hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      let hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
       // Änderungen durchführen
@@ -682,7 +682,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
       flush();

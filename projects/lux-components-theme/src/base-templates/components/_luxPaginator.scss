@@ -1,7 +1,39 @@
 @use "@angular/material" as mat;
 
-:root {
-  @include mat.paginator-overrides((
-    container-background-color: transparent,
-  ));
+lux-paginator {
+  @include mat.paginator-overrides(
+    (
+      container-background-color: transparent
+    )
+  );
+
+  // Override the form field styles for the paginator's page size select
+  @include mat.form-field-overrides(
+    (
+      filled-container-color: transparent
+    )
+  );
+
+  mat-paginator.lux-no-wrap .mat-mdc-paginator-container {
+    flex-wrap: nowrap;
+  }
+
+  mat-paginator {
+    .mat-mdc-paginator-range-label {
+      margin-left: 0.25rem;
+      margin-right: 0.25rem;
+    }
+
+    &.lux-dense {
+      .mat-mdc-form-field-infix {
+        min-height: 0;
+      }
+
+      @include mat.form-field-overrides(
+        (
+          container-vertical-padding: 4px
+        )
+      );
+    }
+  }
 }

@@ -1,10 +1,9 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild, inject } from '@angular/core';
-import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
-import { LuxPaginatorIntl } from '../../lux-util/lux-paginator-intl';
 import { ILuxMessageChangeEvent, ILuxMessageCloseEvent } from './lux-message-box-model/lux-message-events.interface';
 import { ILuxMessage } from './lux-message-box-model/lux-message.interface';
 import { LuxMessageComponent } from './lux-message-box-subcomponents/lux-message.component';
@@ -12,8 +11,7 @@ import { LuxMessageComponent } from './lux-message-box-subcomponents/lux-message
 @Component({
   selector: 'lux-message-box',
   templateUrl: './lux-message-box.component.html',
-  providers: [{ provide: MatPaginatorIntl, useClass: LuxPaginatorIntl }],
-  imports: [LuxAriaLabelDirective, LuxMessageComponent, NgClass, MatPaginator, TranslocoPipe]
+  imports: [LuxAriaLabelDirective, LuxMessageComponent, NgClass, LuxPaginatorComponent, TranslocoPipe]
 })
 export class LuxMessageBoxComponent {
   private liveAnnouncer = inject(LiveAnnouncer);
@@ -122,7 +120,7 @@ export class LuxMessageBoxComponent {
    * gibt außerdem das Change-Event mit den angezeigten/vorherigen Nachrichten.
    * @param pageEvent
    */
-  pageChanged(pageEvent: PageEvent) {
+  pageChanged(pageEvent: LuxPageEvent) {
     const previousDisplayedMessages = [...this.displayedMessages];
     const previousIndex = this.luxIndex;
 

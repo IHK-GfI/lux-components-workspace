@@ -53,6 +53,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('action', 'Menu', DemoMarkerType.Updated),
     this.create('common', 'Badge'),
     this.create('common', 'Message-Box'),
+    this.create('common', 'Paginator', DemoMarkerType.New),
     this.create('common', 'Progress'),
     this.create('common', 'Spinner'),
     this.create('common', 'Table'),
