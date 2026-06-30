@@ -214,6 +214,9 @@
       "upload.files.announce": "Please wait. The file is processed.",
       "view.action.lbl": "Show"
     },
+    "input": {
+      "clear.btn.arialabel": "Clear input"
+    },
     "lang-select": {
       "aria.langmenu.btn": "Language menu"
     },

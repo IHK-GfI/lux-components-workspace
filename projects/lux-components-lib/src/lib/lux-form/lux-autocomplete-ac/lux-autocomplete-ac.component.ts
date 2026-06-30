@@ -18,9 +18,10 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger }
 import { MatOption } from '@angular/material/core';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
@@ -48,12 +49,14 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     NgTemplateOutlet,
     LuxAriaDescribedbyDirective,
     LuxTagIdDirective,
-    LuxRenderPropertyPipe
+    LuxRenderPropertyPipe,
+    LuxButtonComponent,
+    TranslocoPipe
   ]
 })
 export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormComponentBase<V> implements OnInit, OnDestroy, AfterViewInit {
   tservice = inject(TranslocoService);
-  
+
   private selected$: ReplaySubject<any> = new ReplaySubject<any>(1);
   private subscriptions: Subscription[] = [];
   private valueChangeSubscription?: Subscription;
@@ -91,6 +94,8 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
   @Input() luxOptionBlockSize = 500;
+  @Input() luxClearable = false;
+  @Input() luxClearAriaLabel = '';
 
   @Output() luxValueChange = new EventEmitter<V | null>();
   @Output() luxOptionSelected = new EventEmitter<V | null>();
@@ -482,9 +487,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
       return;
     }
 
-    // Nicht auf mat-option Elemente reagieren (diese haben ihre eigene Logik)
-    const target = event.target as HTMLElement;
-    if (target.closest('mat-option')) {
+    if (this.ignoreWrapperClick(event)) {
       return;
     }
 
@@ -499,6 +502,52 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     if (this.matAutoComplete && !this.matAutoComplete.panelOpen) {
       this.matAutoComplete.openPanel();
     }
+  }
+
+  showClearButton(): boolean {
+    if (!this.luxClearable || this.luxReadonly || this.luxDisabled) {
+      return false;
+    }
+
+    const value = this.inForm ? this.formControl?.value : this.luxValue;
+    return value !== null && value !== undefined && value !== '';
+  }
+
+  onClearMouseDown(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  clearInputValue(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const inputElement = this.matInput?.nativeElement as HTMLInputElement | undefined;
+    const inputWasFocused = !!inputElement && document.activeElement === inputElement;
+
+    if (this.inForm) {
+      this.formControl.setValue(null as V);
+    } else {
+      this.luxValue = null as V;
+    }
+    this.matAutoComplete?.closePanel();
+
+    if (inputWasFocused) {
+      try {
+        inputElement?.focus({ preventScroll: true });
+      } catch {
+        // Ignorieren
+      }
+    }
+  }
+
+  private ignoreWrapperClick(event: MouseEvent): boolean {
+    const target = event.target as HTMLElement | null;
+    if (!target) {
+      return false;
+    }
+
+    return !!target.closest('mat-option, .lux-input-clear-btn-container, .lux-input-clear-btn');
   }
 
   /**
@@ -526,5 +575,4 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
 
     return `${option}-${index}`;
   }
-
 }

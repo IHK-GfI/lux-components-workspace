@@ -29,6 +29,7 @@
         [luxControlValidators]="controlValidators"
         [luxDebounceTime]="debounceTime"
         [luxMaximumDisplayed]="maximumDisplayed"
+        [luxClearable]="clearable"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
         (luxValueChange)="log(showOutputEvents, 'luxValueChange', $event)"
@@ -63,6 +64,7 @@
         [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
         [luxDebounceTime]="debounceTime"
         [luxMaximumDisplayed]="maximumDisplayed"
+        [luxClearable]="clearable"
         [luxControlBinding]="controlBinding"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
@@ -122,6 +124,13 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
+    <lux-toggle-ac
+      [(luxChecked)]="clearable"
+      luxLabel="luxClearable"
+      luxHint="Zeigt einen optionalen Button zum Zurücksetzen des Suchtextes bzw. Werts an."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
@@ -161,23 +170,25 @@
     >
     </lux-toggle-ac>
     @if (useRenderFn) {
-    <pre class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
-    } @if (!useRenderFn) {
-    <lux-input-ac
-      [(luxValue)]="renderProp"
-      luxName="lookup_autocomplete_luxRenderProp"
-      luxLabel="luxRenderProp"
-      luxHint="Hier kann die Property festgelegt werden, welche zur Darstellung der einzelnen Einträge genutzt wird."
-    >
-    </lux-input-ac>
-    } @if (!useRenderFn) {
-    <lux-input-ac
-      [(luxValue)]="renderPropNoPropertyLabel"
-      luxName="lookup_autocomplete_luxRenderPropNoPropertyLabel"
-      luxLabel="luxRenderPropNoPropertyLabel"
-      luxHint="Dieser Text wird angezeigt, wenn das Property aus luxRenderProp bei dem Eintrag nicht existiert."
-    >
-    </lux-input-ac>
+      <pre class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
+    }
+    @if (!useRenderFn) {
+      <lux-input-ac
+        [(luxValue)]="renderProp"
+        luxName="lookup_autocomplete_luxRenderProp"
+        luxLabel="luxRenderProp"
+        luxHint="Hier kann die Property festgelegt werden, welche zur Darstellung der einzelnen Einträge genutzt wird."
+      >
+      </lux-input-ac>
+    }
+    @if (!useRenderFn) {
+      <lux-input-ac
+        [(luxValue)]="renderPropNoPropertyLabel"
+        luxName="lookup_autocomplete_luxRenderPropNoPropertyLabel"
+        luxLabel="luxRenderPropNoPropertyLabel"
+        luxHint="Dieser Text wird angezeigt, wenn das Property aus luxRenderProp bei dem Eintrag nicht existiert."
+      >
+      </lux-input-ac>
     }
     <lux-toggle-ac
       luxLabel="luxCompareFn"
@@ -194,7 +205,7 @@
     >
     </lux-toggle-ac>
     @if (customStyle) {
-    <pre class="lux-label"><b>customStyles</b> = {{ customStyle | json }}</pre>
+      <pre class="lux-label"><b>customStyles</b> = {{ customStyle | json }}</pre>
     }
     <lux-toggle-ac
       luxLabel="luxCustomInvalidStyles übergeben"
@@ -204,7 +215,7 @@
     >
     </lux-toggle-ac>
     @if (customInvalidStyle) {
-    <pre class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle | json }}</pre>
+      <pre class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle | json }}</pre>
     }
 
     <lux-select-ac
@@ -228,16 +239,17 @@
     >
     </lux-toggle-ac>
     @if (!useErrorMessage) {
-    <pre class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
-    } @if (useErrorMessage) {
-    <lux-input-ac
-      luxName="lookup_autocomplete_luxErrorMessage"
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <pre class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
+    }
+    @if (useErrorMessage) {
+      <lux-input-ac
+        luxName="lookup_autocomplete_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-    >
-    </lux-input-ac>
+        [(luxValue)]="errorMessage"
+      >
+      </lux-input-ac>
     }
     <lux-select-ac
       [luxOptions]="validatorOptions"
