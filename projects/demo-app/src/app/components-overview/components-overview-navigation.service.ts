@@ -185,7 +185,8 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
   }
 
   getFilteredComponents(filterValue: string) {
-    return this.filteredComponents.filter((component) => component.label.toLowerCase().includes(filterValue.toLowerCase()));
+    const newValue = filterValue ? filterValue.trim().toLowerCase() : '';
+    return this.filteredComponents.filter((component) => component.label.toLowerCase().includes(newValue));
   }
 
   getMarkerLabel(markerType?: DemoMarkerType) {

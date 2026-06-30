@@ -5,6 +5,7 @@
       luxAutofocus
       luxAriaLabel="Suchbegriff"
       luxTagId="Suchbegriff"
+      [luxClearable]="true"
       [luxNoTopLabel]="true"
       luxPlaceholder="Suchbegriff eingeben"
       [(luxValue)]="filterValue"
@@ -13,32 +14,25 @@
       <lux-input-ac-prefix class="lux-mr-3" luxTagId="searchInput">
         <lux-icon luxIconName="lux-interface-search"></lux-icon>
       </lux-input-ac-prefix>
-      <lux-input-ac-suffix>
-        <lux-icon luxIconName="lux-interface-delete-circle" class="lux-reset-icon lux-color-blue" (click)="filterValue = ''"></lux-icon>
-      </lux-input-ac-suffix>
     </lux-input-ac>
   </div>
   <div class="lux-flex lux-flex-wrap lux-justify-start lux-align-start lux-gap-6 lux-mb-4">
     @for (component of navigationService.getFilteredComponents(filterValue) | luxAlphabeticallySorted; track component.label) {
-    <div class="lux-tile-ac-wrapper-demo">
-      @if (component.markerType) {
-        <div class="lux-tile-ac-status-marker">
-          <app-status-marker [markerType]="component.markerType"></app-status-marker>
-        </div>
-      }
-      <lux-tile-ac
-        [luxLabel]="component.label"
-        (luxClicked)="component.onclick()"
-        [luxTagId]="component.label"
-        class="lux-flex-auto"
-      >
-        @if (!component.useImage) {
-        <lux-icon [luxIconName]="navigationService.moduleIcons.get(component.moduleName)"></lux-icon>
-        } @if (component.useImage) {
-        <lux-image [luxImageSrc]="component.icon" luxImageWidth="100%" luxImageHeight="100%"></lux-image>
+      <div class="lux-tile-ac-wrapper-demo">
+        @if (component.markerType) {
+          <div class="lux-tile-ac-status-marker">
+            <app-status-marker [markerType]="component.markerType"></app-status-marker>
+          </div>
         }
-      </lux-tile-ac>
-    </div>
+        <lux-tile-ac [luxLabel]="component.label" (luxClicked)="component.onclick()" [luxTagId]="component.label" class="lux-flex-auto">
+          @if (!component.useImage) {
+            <lux-icon [luxIconName]="navigationService.moduleIcons.get(component.moduleName)"></lux-icon>
+          }
+          @if (component.useImage) {
+            <lux-image [luxImageSrc]="component.icon" luxImageWidth="100%" luxImageHeight="100%"></lux-image>
+          }
+        </lux-tile-ac>
+      </div>
     }
   </div>
 </div>

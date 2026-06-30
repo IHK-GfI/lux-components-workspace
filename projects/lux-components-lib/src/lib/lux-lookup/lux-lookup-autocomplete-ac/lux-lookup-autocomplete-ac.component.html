@@ -1,61 +1,80 @@
 @if (formGroup) {
-<lux-form-control-wrapper
-  (mousedown)="onWrapperClick($event)"
-  [luxFormComponent]="this"
-  [luxNoLabels]="luxNoLabels"
-  [luxNoBottomLabel]="luxNoBottomLabel"
-  [luxNoTopLabel]="luxNoTopLabel"
-  [formGroup]="formGroup"
-  [luxLabelLongFormat]="luxLabelLongFormat"
-  luxTagId="luxLookupAutocompleteWrapper"
->
-  <div class="lux-input-row-authentic">
-    <input
-      type="text"
-      [placeholder]="luxPlaceholder"
-      matInput
-      [matAutocomplete]="auto"
-      (click)="onClick($event)"
-      autocomplete="off"
-      luxTagIdHandler
-      [luxTagId]="luxTagId"
-      [required]="luxRequired"
-      [readonly]="luxReadonly"
-      [formControl]="formControl"
-      [errorStateMatcher]="stateMatcher"
-      (blur)="luxBlur.emit($event)"
-      (focus)="luxFocus.emit($event)"
-      (focusin)="luxFocusIn.emit($event)"
-      (focusout)="luxFocusOut.emit($event)"
-      [id]="uid"
-      [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
-      #autoCompleteInput
-    />
-    <mat-autocomplete
-      #auto="matAutocomplete"
-      class="lux-autocomplete-panel-ac"
-      [class.lux-dense]="luxDense"
-      [displayWith]="displayFn.bind(this)"
-      [disableRipple]="true"
-      (optionSelected)="selected($event)"
-    >
-      @if (entriesCount !== 1 && entriesCount > luxMaximumDisplayed && latestSearchValue) {
-      <mat-option [disabled]="true" class="information-option">
-        <div class="lux-flex">
-          <div>{{ entriesCount - luxMaximumDisplayed }} Treffer werden nicht angezeigt. <br />Bitte verfeinern Sie Ihre Suche.</div>
-        </div>
-      </mat-option>
-      } @for (entry of filtered; track entry) { @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
-      <mat-option
-        [value]="entry"
-        [ngClass]="{ invalid: entry.isUngueltig }"
-        [ngStyle]="getStyles(entry.isUngueltig)"
-        [disabled]="entry.isUngueltig && disableUngueltige()"
+  <lux-form-control-wrapper
+    (mousedown)="onWrapperClick($event)"
+    [luxFormComponent]="this"
+    [luxNoLabels]="luxNoLabels"
+    [luxNoBottomLabel]="luxNoBottomLabel"
+    [luxNoTopLabel]="luxNoTopLabel"
+    [formGroup]="formGroup"
+    [luxLabelLongFormat]="luxLabelLongFormat"
+    luxTagId="luxLookupAutocompleteWrapper"
+  >
+    <div class="lux-input-row-authentic">
+      <input
+        type="text"
+        [placeholder]="luxPlaceholder"
+        matInput
+        [matAutocomplete]="auto"
+        (click)="onClick($event)"
+        autocomplete="off"
+        luxTagIdHandler
+        [luxTagId]="luxTagId"
+        [required]="luxRequired"
+        [readonly]="luxReadonly"
+        [formControl]="formControl"
+        [errorStateMatcher]="stateMatcher"
+        (blur)="luxBlur.emit($event)"
+        (focus)="luxFocus.emit($event)"
+        (focusin)="luxFocusIn.emit($event)"
+        (focusout)="luxFocusOut.emit($event)"
+        [id]="uid"
+        [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
+        #autoCompleteInput
+      />
+      @if (showClearButton()) {
+        <span
+          class="lux-input-clear-btn-container"
+          [attr.aria-disabled]="luxDisabled ? 'true' : null"
+          matSuffix
+          (mousedown)="onClearMouseDown($event)"
+        >
+          <lux-button
+            class="lux-input-clear-btn"
+            [luxIconButton]="true"
+            luxIconName="lux-interface-delete-circle"
+            [luxLabel]="luxClearAriaLabel || ('luxc.input.clear.btn.arialabel' | transloco)"
+            (luxClicked)="clearInputValue($event)"
+          ></lux-button>
+        </span>
+      }
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        class="lux-autocomplete-panel-ac"
+        [class.lux-dense]="luxDense"
+        [displayWith]="displayFn.bind(this)"
+        [disableRipple]="true"
+        (optionSelected)="selected($event)"
       >
-        <span>{{ getLabel(entry) }}</span>
-      </mat-option>
-      } }
-    </mat-autocomplete>
-  </div>
-</lux-form-control-wrapper>
+        @if (entriesCount !== 1 && entriesCount > luxMaximumDisplayed && latestSearchValue) {
+          <mat-option [disabled]="true" class="information-option">
+            <div class="lux-flex">
+              <div>{{ entriesCount - luxMaximumDisplayed }} Treffer werden nicht angezeigt. <br />Bitte verfeinern Sie Ihre Suche.</div>
+            </div>
+          </mat-option>
+        }
+        @for (entry of filtered; track entry) {
+          @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
+            <mat-option
+              [value]="entry"
+              [ngClass]="{ invalid: entry.isUngueltig }"
+              [ngStyle]="getStyles(entry.isUngueltig)"
+              [disabled]="entry.isUngueltig && disableUngueltige()"
+            >
+              <span>{{ getLabel(entry) }}</span>
+            </mat-option>
+          }
+        }
+      </mat-autocomplete>
+    </div>
+  </lux-form-control-wrapper>
 }

@@ -65,13 +65,14 @@ export class AutocompleteAuthenticExampleComponent {
   showSuffix = false;
   useStringValues = false;
   denseFormat = false;
+  clearable = false;
   longOptionLabel =
     'Lorem ipsum dolor \n sit amet consectetur adipisicing elit. Nulla officiis consectetur natus id iusto asperiores cum eum sint esse in?';
   toggleOptions = true;
   optionBlockSize = 500;
   options: AutocompleteAcExampleOption[] = this.createOption();
   options2: AutocompleteAcExampleOption[] = [
-    { label: 'Meine Aufgaben 2', short: 'MA2', value: 'A2', gueltigAb: new Date(2024, 0, 1)},
+    { label: 'Meine Aufgaben 2', short: 'MA2', value: 'A2', gueltigAb: new Date(2024, 0, 1) },
     { label: 'Gruppenaufgaben 2', short: 'GA2', value: 'B2', gueltigAb: new Date(2024, 0, 1) },
     { label: 'Zurückgestellte Aufgaben 2', short: 'ZA2', value: 'C2', gueltigAb: new Date(2024, 0, 1) },
     { label: 'Vertretungsaufgaben 2', short: 'VA2', value: 'D2', gueltigAb: new Date(2024, 0, 1) }

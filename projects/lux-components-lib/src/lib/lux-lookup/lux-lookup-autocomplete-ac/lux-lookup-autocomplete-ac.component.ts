@@ -3,8 +3,11 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Outp
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatOption } from '@angular/material/core';
+import { MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../../lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -27,7 +30,10 @@ import { LuxAutocompleteErrorStateMatcherAc } from './lux-autocomplete-error-sta
     MatAutocomplete,
     MatOption,
     NgClass,
-    NgStyle
+    NgStyle,
+    MatSuffix,
+    LuxButtonComponent,
+    TranslocoPipe
   ]
 })
 export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
@@ -44,6 +50,8 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
   @Input() luxNoLabels = false;
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
+  @Input() luxClearable = false;
+  @Input() luxClearAriaLabel = '';
 
   @Output() luxBlur = new EventEmitter<FocusEvent>();
   @Output() luxFocus = new EventEmitter<FocusEvent>();
@@ -142,24 +150,68 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     if (this.luxDisabled || this.luxReadonly) {
       return;
     }
-    
-    // Nicht auf mat-option Elemente reagieren (diese haben ihre eigene Logik)
-    const target = event.target as HTMLElement;
-    if (target.closest('mat-option')) {
+
+    if (this.ignoreWrapperClick(event)) {
       return;
     }
-    
+
     // Fokus auf Input
     try {
       this.matInput?.nativeElement?.focus();
     } catch {
       // Ignorieren, falls ElementRef nicht verfügbar
     }
-    
+
     // Panel nur öffnen, wenn noch nicht offen
     if (this.matAutocompleteTrigger && !this.matAutocompleteTrigger.panelOpen) {
       this.matAutocompleteTrigger!.openPanel();
     }
+  }
+
+  showClearButton(): boolean {
+    if (!this.luxClearable || this.luxReadonly || this.luxDisabled) {
+      return false;
+    }
+
+    const value = this.inForm ? this.formControl?.value : this.luxValue;
+    return value !== null && value !== undefined && value !== '';
+  }
+
+  onClearMouseDown(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  clearInputValue(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const inputElement = this.matInput?.nativeElement as HTMLInputElement | undefined;
+    const inputWasFocused = !!inputElement && document.activeElement === inputElement;
+
+    if (this.inForm) {
+      this.formControl.setValue(null as T);
+    } else {
+      this.luxValue = null as T;
+    }
+    this.matAutocompleteTrigger?.closePanel();
+
+    if (inputWasFocused) {
+      try {
+        inputElement?.focus({ preventScroll: true });
+      } catch {
+        // Ignorieren
+      }
+    }
+  }
+
+  private ignoreWrapperClick(event: MouseEvent): boolean {
+    const target = event.target as HTMLElement | null;
+    if (!target) {
+      return false;
+    }
+
+    return !!target.closest('mat-option, .lux-input-clear-btn-container, .lux-input-clear-btn');
   }
 
   /**

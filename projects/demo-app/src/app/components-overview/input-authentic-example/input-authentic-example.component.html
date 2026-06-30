@@ -23,6 +23,7 @@
         [luxType]="inputType"
         [luxNumberAlignLeft]="numberLeft"
         [luxHideCounterLabel]="hideCounterLabel"
+        [luxClearable]="clearable"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
         (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
@@ -32,9 +33,10 @@
         luxTagId="input-non-reactive"
       >
         @if (showPrefix) {
-        <lux-input-ac-prefix> <lux-icon luxIconName="lux-interface-alert-information-circle"></lux-icon>&nbsp; </lux-input-ac-prefix>
-        } @if (showSuffix) {
-        <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
+          <lux-input-ac-prefix> <lux-icon luxIconName="lux-interface-alert-information-circle"></lux-icon>&nbsp; </lux-input-ac-prefix>
+        }
+        @if (showSuffix) {
+          <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
         }
         <lux-form-hint
           >Lorem ipsum
@@ -66,6 +68,7 @@
         [luxType]="inputType"
         [luxNumberAlignLeft]="numberLeft"
         [luxHideCounterLabel]="hideCounterLabel"
+        [luxClearable]="clearable"
         [luxLabelLongFormat]="labelLongFormat"
         [luxDense]="denseFormat"
         (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
@@ -75,9 +78,10 @@
         luxTagId="input-reactive"
       >
         @if (showPrefix) {
-        <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-cogs'"></lux-icon>&nbsp; </lux-input-ac-prefix>
-        } @if (showSuffix) {
-        <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
+          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-cogs'"></lux-icon>&nbsp; </lux-input-ac-prefix>
+        }
+        @if (showSuffix) {
+          <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
         }
         <lux-form-hint
           >Lorem ipsum
@@ -181,6 +185,13 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
+    <lux-toggle-ac
+      [(luxChecked)]="clearable"
+      luxLabel="luxClearable"
+      luxHint="Zeigt einen optionalen Button zum Zurücksetzen des Eingabewerts an."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
@@ -211,21 +222,22 @@
     >
     </lux-input-ac>
     @if (inputType === 'number') {
-    <lux-toggle-ac
-      luxLabel="luxNumberAlignLeft"
-      luxHint="Mithilfe dieses Flags kann eingestellt werden, ob Zahlen links- oder rechtsbündig dargestellt werden."
-      [(luxChecked)]="numberLeft"
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
-    } @if (inputType === 'text' && maxLength) {
-    <lux-toggle-ac
-      luxLabel="luxHideCounterLabel"
-      luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
-      [(luxChecked)]="hideCounterLabel"
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+      <lux-toggle-ac
+        luxLabel="luxNumberAlignLeft"
+        luxHint="Mithilfe dieses Flags kann eingestellt werden, ob Zahlen links- oder rechtsbündig dargestellt werden."
+        [(luxChecked)]="numberLeft"
+        [luxNoTopLabel]="true"
+      >
+      </lux-toggle-ac>
+    }
+    @if (inputType === 'text' && maxLength) {
+      <lux-toggle-ac
+        luxLabel="luxHideCounterLabel"
+        luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
+        [(luxChecked)]="hideCounterLabel"
+        [luxNoTopLabel]="true"
+      >
+      </lux-toggle-ac>
     }
     <lux-select-ac
       luxLabel="luxAutocomplete"
@@ -258,15 +270,16 @@
     >
     </lux-toggle-ac>
     @if (useErrorMessage) {
-    <lux-input-ac
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <lux-input-ac
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-    >
-    </lux-input-ac>
-    } @if (!useErrorMessage) {
-    <pre class="lux-label">{{ errorCallbackString }}</pre>
+        [(luxValue)]="errorMessage"
+      >
+      </lux-input-ac>
+    }
+    @if (!useErrorMessage) {
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac
       [luxOptions]="validatorOptions"

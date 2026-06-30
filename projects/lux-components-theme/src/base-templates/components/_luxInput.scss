@@ -1,3 +1,5 @@
+@use "@angular/material" as mat;
+
 // Muss der Wrapper sein, da Input-Elemente auch in anderen Komponenten (z.B. lux-autocomplete) genutzt werden
 lux-form-control-wrapper {
   input {
@@ -18,9 +20,43 @@ lux-form-control-wrapper {
 
 lux-input-ac {
   // Theming des Prefix- und Suffix-Containers
-   lux-input-ac-prefix,
-   lux-input-ac-suffix {
-     display: flex;
-     white-space: nowrap;
+  lux-input-ac-prefix,
+  lux-input-ac-suffix {
+    display: flex;
+    white-space: nowrap;
   }
+}
+
+@mixin input-clear-button($size) {
+  lux-button.lux-icon-button.lux-input-clear-btn {
+    --lux-theme-button-icon-size: #{$size};
+    --lux-theme-button-icon-container-size: #{$size};
+    --lux-theme-button-icon-default-text-color: var(--lux-theme-primary-color);
+
+    display: flex;
+
+    @include mat.icon-button-overrides(
+      (
+        container-shape: var(--lux-theme-button-icon-container-shape),
+        icon-color: var(--lux-theme-button-icon-default-text-color),
+        icon-size: var(--lux-theme-button-icon-size),
+        state-layer-size: var(--lux-theme-button-icon-container-size),
+        state-layer-color: var(--lux-theme-state-layer-color),
+        touch-target-size: var(--lux-theme-button-icon-container-size)
+      )
+    );
+
+    lux-icon,
+    .lux-icon {
+      width: var(--lux-theme-button-icon-size);
+      height: var(--lux-theme-button-icon-size);
+    }
+  }
+}
+
+//Clear-Button für Input-Felder
+@include input-clear-button("1.5rem");
+
+.lux-dense-authentic {
+  @include input-clear-button("1.25rem");
 }

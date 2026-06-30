@@ -4,8 +4,10 @@ import { Component, ContentChild, ElementRef, inject, Input, OnInit, ViewChild }
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaDescribedbyDirective } from '../../../lib/lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxTagIdDirective } from '../../../lib/lux-directives/lux-tag-id/lux-tag-id.directive';
+import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxMaxLengthDirective } from '../lux-form-control/lux-form-directives/lux-maxlength/lux-max-length.directive';
 import { LuxNameDirectiveDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
@@ -27,6 +29,8 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     LuxMaxLengthDirective,
     NgClass,
     MatSuffix,
+    TranslocoPipe,
+    LuxButtonComponent,
     LuxTagIdDirective,
     LuxAriaDescribedbyDirective
   ]
@@ -42,6 +46,8 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
   @Input() luxHideCounterLabel = false;
+  @Input() luxClearable = false;
+  @Input() luxClearAriaLabel = '';
 
   @Input() set luxMaxLength(maxLength: number) {
     this._luxMaxLength = maxLength;
@@ -100,6 +106,63 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
   onFocusOut(e: FocusEvent) {
     this.focused = false;
     this.luxFocusOut.emit(e);
+  }
+
+  onWrapperClick(event: MouseEvent) {
+    if (this.luxDisabled || this.luxReadonly) {
+      return;
+    }
+
+    if (this.ignoreWrapperClick(event)) {
+      return;
+    }
+
+    this.inputElement?.nativeElement?.focus();
+  }
+
+  showClearButton(): boolean {
+    if (!this.luxClearable || this.luxReadonly || this.luxDisabled) {
+      return false;
+    }
+
+    const value = this.inForm ? this.formControl?.value : this.luxValue;
+    return value !== null && value !== undefined && value !== '';
+  }
+
+  onClearMouseDown(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  clearInputValue(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const inputElement = this.inputElement?.nativeElement as HTMLInputElement | undefined;
+    const inputWasFocused = !!inputElement && document.activeElement === inputElement;
+
+    if (this.inForm) {
+      this.formControl.setValue(null as T);
+    } else {
+      this.luxValue = null as T;
+    }
+
+    if (inputWasFocused) {
+      try {
+        inputElement?.focus({ preventScroll: true });
+      } catch {
+        // Ignorieren
+      }
+    }
+  }
+
+  private ignoreWrapperClick(event: MouseEvent): boolean {
+    const target = event.target as HTMLElement | null;
+    if (!target) {
+      return false;
+    }
+
+    return !!target.closest('.lux-input-clear-btn-container, .lux-input-clear-btn');
   }
 
   descripedBy() {

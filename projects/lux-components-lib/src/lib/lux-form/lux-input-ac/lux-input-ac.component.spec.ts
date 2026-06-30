@@ -19,7 +19,13 @@ import { LuxInputAcComponent } from './lux-input-ac.component';
 describe('LuxInputAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -687,6 +693,91 @@ describe('LuxInputAcComponent', () => {
     }));
   });
 
+  describe('luxClearable', () => {
+    describe('innerhalb eines Formulars', () => {
+      let fixture: ComponentFixture<LuxInputClearableInFormComponent>;
+      let component: LuxInputClearableInFormComponent;
+      let inputAc: LuxInputAcComponent;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputClearableInFormComponent);
+        fixture.detectChanges();
+        component = fixture.componentInstance;
+        inputAc = fixture.debugElement.query(By.directive(LuxInputAcComponent)).componentInstance;
+      }));
+
+      it('Sollte den Clear-Button anzeigen wenn ein Wert gesetzt ist', fakeAsync(() => {
+        // Vorbedingungen testen
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+
+        // Änderungen durchführen
+        component.formGroup.get('text')!.setValue('Hallo');
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+      }));
+
+      it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
+        // Vorbedingungen testen
+        component.formGroup.get('text')!.setValue('Hallo');
+        LuxTestHelper.wait(fixture);
+
+        expect(component.formGroup.get('text')!.value).toEqual('Hallo');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+
+        // Änderungen durchführen
+        fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(inputAc.formControl.value).toBeNull();
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.value).toEqual('');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+      }));
+
+      it('Sollte den Clear-Button nicht anzeigen wenn readonly=true', fakeAsync(() => {
+        // Änderungen durchführen
+        component.formGroup.get('text')!.setValue('Hallo');
+        component.readonly = true;
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+      }));
+    });
+
+    describe('außerhalb eines Formulars', () => {
+      let fixture: ComponentFixture<LuxInputClearableOutsideFormComponent>;
+      let component: LuxInputClearableOutsideFormComponent;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputClearableOutsideFormComponent);
+        fixture.detectChanges();
+        component = fixture.componentInstance;
+      }));
+
+      it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
+        // Vorbedingungen testen
+        component.value = 'Welt';
+        LuxTestHelper.wait(fixture);
+
+        expect(component.value).toEqual('Welt');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+
+        // Änderungen durchführen
+        fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        const inputAc: LuxInputAcComponent = fixture.debugElement.query(By.directive(LuxInputAcComponent)).componentInstance;
+        expect(inputAc.formControl.value).toBeNull();
+        expect(fixture.debugElement.query(By.css('input')).nativeElement.value).toEqual('');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+      }));
+    });
+  });
+
   describe('Input-Attribute', () => {
     let fixture: ComponentFixture<LuxInputAttributesComponent>;
     let testComponent: LuxInputAttributesComponent;
@@ -858,6 +949,30 @@ describe('LuxInputAcComponent', () => {
     }));
   });
 });
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxControlBinding="text" [luxClearable]="true" [luxReadonly]="readonly"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputClearableInFormComponent {
+  readonly = false;
+
+  formGroup = new FormGroup({
+    text: new FormControl<string | null>(null)
+  });
+}
+
+@Component({
+  template: ` <lux-input-ac luxLabel="Text" [(luxValue)]="value" [luxClearable]="true"></lux-input-ac> `,
+  imports: [LuxInputAcComponent]
+})
+class LuxInputClearableOutsideFormComponent {
+  value: string | null = null;
+}
 
 @Component({
   template: `

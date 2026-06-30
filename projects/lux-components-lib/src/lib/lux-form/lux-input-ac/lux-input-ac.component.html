@@ -1,73 +1,92 @@
 @if (formGroup) {
-<lux-form-control-wrapper
-  (click)="!luxDisabled && !luxReadonly && inputElement.nativeElement.focus()"
-  [luxFormComponent]="this"
-  [formGroup]="formGroup"
-  [luxNoLabels]="luxNoLabels"
-  [luxNoBottomLabel]="luxNoBottomLabel"
-  [luxNoTopLabel]="luxNoTopLabel"
-  [luxCounterLabel]="counterLabel"
-  [luxHideCounterLabel]="luxHideCounterLabel"
-  [luxLabelLongFormat]="luxLabelLongFormat"
-  luxTagId="luxInputWrapper"
->
-  <div class="lux-input-row-authentic">
-    @if (inputPrefix) {
-    <span class="lux-input-prefix-container" [attr.aria-disabled]="luxDisabled ? 'true' : null" matPrefix>
-      <ng-content select="lux-input-ac-prefix"></ng-content>
-    </span>
-    } @if (luxType !== 'number') {
-    <input
-      matInput
-      luxTagIdHandler
-      [luxNameAttr]="luxName"
-      [luxTagId]="luxTagId"
-      [placeholder]="luxPlaceholder"
-      [type]="luxType"
-      [luxMaxLengthAttr]="luxMaxLength"
-      [formControl]="formControl"
-      [required]="luxRequired"
-      [readonly]="luxReadonly"
-      [autocomplete]="luxAutocomplete"
-      (blur)="luxBlur.emit($event)"
-      (focus)="onFocus($event)"
-      (focusin)="onFocusIn($event)"
-      (focusout)="onFocusOut($event)"
-      [luxAriaDescribedby]="descripedBy()"
-      [id]="uid"
-      #input
-    />
-    } @if (luxType === 'number') {
-    <input
-      matInput
-      luxTagIdHandler
-      [luxNameAttr]="luxName"
-      [luxTagId]="luxTagId"
-      [placeholder]="luxPlaceholder"
-      type="number"
-      [luxMaxLengthAttr]="luxMaxLength"
-      [formControl]="formControl"
-      [required]="luxRequired"
-      [readonly]="luxReadonly"
-      [autocomplete]="luxAutocomplete"
-      [ngClass]="{
-        'lux-number ': luxType === 'number',
-        'lux-number-left': luxType !== 'number' || (luxType === 'number' && luxNumberAlignLeft)
-      }"
-      (blur)="luxBlur.emit($event)"
-      (focus)="onFocus($event)"
-      (focusin)="onFocusIn($event)"
-      (focusout)="onFocusOut($event)"
-      (keydown)="onKeyDown($event)"
-      [luxAriaDescribedby]="descripedBy()"
-      [id]="uid"
-      #input
-    />
-    } @if (inputSuffix) {
-    <span class="lux-input-suffix-container" [attr.aria-disabled]="luxDisabled ? 'true' : null" matSuffix>
-      <ng-content select="lux-input-ac-suffix"></ng-content>
-    </span>
-    }
-  </div>
-</lux-form-control-wrapper>
+  <lux-form-control-wrapper
+    (click)="onWrapperClick($event)"
+    [luxFormComponent]="this"
+    [formGroup]="formGroup"
+    [luxNoLabels]="luxNoLabels"
+    [luxNoBottomLabel]="luxNoBottomLabel"
+    [luxNoTopLabel]="luxNoTopLabel"
+    [luxCounterLabel]="counterLabel"
+    [luxHideCounterLabel]="luxHideCounterLabel"
+    [luxLabelLongFormat]="luxLabelLongFormat"
+    luxTagId="luxInputWrapper"
+  >
+    <div class="lux-input-row-authentic">
+      @if (inputPrefix) {
+        <span class="lux-input-prefix-container" [attr.aria-disabled]="luxDisabled ? 'true' : null" matPrefix>
+          <ng-content select="lux-input-ac-prefix"></ng-content>
+        </span>
+      }
+      @if (luxType !== 'number') {
+        <input
+          matInput
+          luxTagIdHandler
+          [luxNameAttr]="luxName"
+          [luxTagId]="luxTagId"
+          [placeholder]="luxPlaceholder"
+          [type]="luxType"
+          [luxMaxLengthAttr]="luxMaxLength"
+          [formControl]="formControl"
+          [required]="luxRequired"
+          [readonly]="luxReadonly"
+          [autocomplete]="luxAutocomplete"
+          (blur)="luxBlur.emit($event)"
+          (focus)="onFocus($event)"
+          (focusin)="onFocusIn($event)"
+          (focusout)="onFocusOut($event)"
+          [luxAriaDescribedby]="descripedBy()"
+          [id]="uid"
+          #input
+        />
+      }
+      @if (luxType === 'number') {
+        <input
+          matInput
+          luxTagIdHandler
+          [luxNameAttr]="luxName"
+          [luxTagId]="luxTagId"
+          [placeholder]="luxPlaceholder"
+          type="number"
+          [luxMaxLengthAttr]="luxMaxLength"
+          [formControl]="formControl"
+          [required]="luxRequired"
+          [readonly]="luxReadonly"
+          [autocomplete]="luxAutocomplete"
+          [ngClass]="{
+            'lux-number ': luxType === 'number',
+            'lux-number-left': luxType !== 'number' || (luxType === 'number' && luxNumberAlignLeft)
+          }"
+          (blur)="luxBlur.emit($event)"
+          (focus)="onFocus($event)"
+          (focusin)="onFocusIn($event)"
+          (focusout)="onFocusOut($event)"
+          (keydown)="onKeyDown($event)"
+          [luxAriaDescribedby]="descripedBy()"
+          [id]="uid"
+          #input
+        />
+      }
+      @if (inputSuffix) {
+        <span class="lux-input-suffix-container" [attr.aria-disabled]="luxDisabled ? 'true' : null" matSuffix>
+          <ng-content select="lux-input-ac-suffix"></ng-content>
+        </span>
+      }
+      @if (showClearButton()) {
+        <span
+          class="lux-input-clear-btn-container"
+          [attr.aria-disabled]="luxDisabled ? 'true' : null"
+          matSuffix
+          (mousedown)="onClearMouseDown($event)"
+        >
+          <lux-button
+            class="lux-input-clear-btn"
+            [luxIconButton]="true"
+            luxIconName="lux-interface-delete-circle"
+            [luxLabel]="luxClearAriaLabel || ('luxc.input.clear.btn.arialabel' | transloco)"
+            (luxClicked)="clearInputValue($event)"
+          ></lux-button>
+        </span>
+      }
+    </div>
+  </lux-form-control-wrapper>
 }
