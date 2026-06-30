@@ -323,7 +323,6 @@ export * from './lib/lux-util/lux-app.service';
 export * from './lib/lux-util/lux-colors.enum';
 export * from './lib/lux-util/lux-console.service';
 export * from './lib/lux-util/lux-media-query-observer.service';
-export * from './lib/lux-util/lux-paginator-intl';
 export * from './lib/lux-util/lux-storage.service';
 export * from './lib/lux-util/lux-util';
 export * from './lib/lux-util/testing/lux-test-helper';

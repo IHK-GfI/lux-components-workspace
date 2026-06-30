@@ -261,16 +261,17 @@
       </table>
     </div>
   </div>
-  <mat-paginator
+  <lux-paginator
     #paginator
     class="lux-table-paginator"
-    [disabled]="luxPagerDisabled"
+    [luxDisabled]="luxPagerDisabled"
     [luxTooltip]="luxPagerTooltip"
-    [length]="dataSource.totalElements"
-    [pageSize]="luxPageSize"
-    [pageSizeOptions]="luxPageSizeOptions"
-    [showFirstLastButtons]="luxPagerFirstLastButton"
+    [luxLength]="dataSource.totalElements"
+    [luxPageSize]="luxPageSize"
+    [luxPageSizeOptions]="luxPageSizeOptions"
+    [luxShowFirstLastButtons]="luxPagerFirstLastButton"
+    (luxPageChange)="onPaginatorPageChange($event)"
     [ngClass]="{ 'lux-hide': !luxShowPagination }"
   >
-  </mat-paginator>
+  </lux-paginator>
 </div>

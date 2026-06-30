@@ -2,16 +2,16 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { Component, ContentChild, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    LuxAppFooterButtonInfo,
-    LuxAppFooterButtonService,
-    LuxCardActionsComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxComponentsConfigParameters,
-    LuxComponentsConfigService,
-    LuxMediaQueryObserverService,
-    LuxTabComponent,
-    LuxTabsComponent
+  LuxAppFooterButtonInfo,
+  LuxAppFooterButtonService,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxComponentsConfigParameters,
+  LuxComponentsConfigService,
+  LuxMediaQueryObserverService,
+  LuxTabComponent,
+  LuxTabsComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../example-base-content/example-base-content.component';
@@ -95,6 +95,11 @@ export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  onTabChanged(): void {
+    this.simpleOptionsComponent?.markForCheck();
+    this.advancedOptionsComponent?.markForCheck();
   }
 
   ngOnDestroy() {

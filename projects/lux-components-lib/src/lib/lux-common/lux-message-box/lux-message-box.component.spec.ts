@@ -3,9 +3,9 @@ import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angu
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { ILuxMessageChangeEvent } from './lux-message-box-model/lux-message-events.interface';
@@ -20,7 +20,12 @@ describe('LuxMessageBoxComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideNoopAnimations(), provideLuxTranslocoTesting()]
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideNoopAnimations(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -139,13 +144,13 @@ describe('LuxMessageBoxComponent', () => {
     // Vorbedingungen testen
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
     const changeSpy = spyOn(component, 'changed').and.callThrough();
-    const matPaginator: MatPaginator = fixture.debugElement.query(By.directive(MatPaginator)).componentInstance;
+    const paginator: LuxPaginatorComponent = fixture.debugElement.query(By.directive(LuxPaginatorComponent)).componentInstance;
 
     expect(messageText.nativeElement.textContent.trim()).toEqual('Msg 1');
     expect(component.eventObject).toBeUndefined();
 
     // Änderungen durchführen [NACH VORNE STEPPEN]
-    matPaginator.nextPage();
+    paginator.nextPage();
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -158,7 +163,7 @@ describe('LuxMessageBoxComponent', () => {
     expect(component.eventObject!.currentPage.index).toBe(1);
 
     // Änderungen durchführen [NACH HINTEN STEPPEN]
-    matPaginator.previousPage();
+    paginator.previousPage();
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen

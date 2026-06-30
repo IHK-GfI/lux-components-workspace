@@ -7,7 +7,6 @@
       - [2. Beispiel: Statische Funktionen](#2-beispiel-statische-funktionen)
     - [LuxMediaQueryObserverService](#luxmediaqueryobserverservice)
       - [1. Beispiel: MediaQuery-Changes](#1-beispiel-mediaquery-changes)
-    - [LuxPaginatorIntl](#luxpaginatorintl)
     - [LuxStorageService](#luxstorageservice)
       - [1. Beispiel: Ohne Observer](#1-beispiel-ohne-observer)
       - [2. Beispiel: Mit Observer](#2-beispiel-mit-observer)
@@ -106,20 +105,6 @@ export class BeispielComponent implements OnInit, OnDestroy {
     }
  }
 ```
-
-### LuxPaginatorIntl
-
-Die Lux-Implementierung von MatPaginatorIntl, also der Sprachkonfiguration für die Paginations.
-Die [lux-table](lux‐table-v21) und [lux-message-box](lux‐message‐box-v21) nutzen beide diese Konfiguration.
-
-| Name              | Neuer Wert              |
-| ----------------- | ----------------------- |
-| itemsPerPageLabel | 'Elemente pro Seite'    |
-| nextPageLabel     | 'Nächste Seite'         |
-| previousPageLabel | 'Vorherige Seite'       |
-| lastPageLabel     | 'Letzte Seite'          |
-| firstPageLabel    | 'Erste Seite'           |
-| getRangeLabel     | \<x\> + ' von ' + \<y\> |
 
 ### LuxStorageService
 
