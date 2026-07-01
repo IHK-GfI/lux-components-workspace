@@ -26,6 +26,10 @@
       luxLabel="luxImageSrc"
       luxHint="Diese Property bestimmt den Pfad zum Bild."
     >
+      <lux-form-hint>
+        Eine der Auswahloptionen wird zur Laufzeit als <i>blob:</i>-URL erzeugt und kann direkt zum Testen externer Blob-Bilder verwendet
+        werden.
+      </lux-form-hint>
     </lux-select-ac>
     <lux-toggle-ac luxLabel="luxRawSrc" [(luxChecked)]="imgRawSrc" [luxNoTopLabel]="true">
       <lux-form-hint>

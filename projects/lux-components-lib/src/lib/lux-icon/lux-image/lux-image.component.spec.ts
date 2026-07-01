@@ -31,6 +31,15 @@ describe('LuxImageComponent', () => {
     expect(component.imageCmp.luxImageSrc).toEqual('http://png/example.png');
   });
 
+  it('Sollte den externen Http-Link mit großem Schema nicht verändern', () => {
+    // Given
+    component.href = 'HTTP://png/example.png';
+    // When
+    fixture.detectChanges();
+    // Then
+    expect(component.imageCmp.luxImageSrc).toEqual('HTTP://png/example.png');
+  });
+
   it('Sollte den externen Https-Link nicht verändern', () => {
     // Given
     component.href = 'https://png/example.png';
@@ -38,6 +47,42 @@ describe('LuxImageComponent', () => {
     fixture.detectChanges();
     // Then
     expect(component.imageCmp.luxImageSrc).toEqual('https://png/example.png');
+  });
+
+  it('Sollte den externen Blob-Link nicht verändern', () => {
+    // Given
+    component.href = 'blob:https://example.org/1234-5678';
+    // When
+    fixture.detectChanges();
+    // Then
+    expect(component.imageCmp.luxImageSrc).toEqual('blob:https://example.org/1234-5678');
+  });
+
+  it('Sollte den externen Data-Link nicht verändern', () => {
+    // Given
+    component.href = 'data:image/png;base64,abc123';
+    // When
+    fixture.detectChanges();
+    // Then
+    expect(component.imageCmp.luxImageSrc).toEqual('data:image/png;base64,abc123');
+  });
+
+  it('Sollte den protokoll-relativen Link nicht verändern', () => {
+    // Given
+    component.href = '//cdn.example.org/example.png';
+    // When
+    fixture.detectChanges();
+    // Then
+    expect(component.imageCmp.luxImageSrc).toEqual('//cdn.example.org/example.png');
+  });
+
+  it('Sollte unbekannte URI-Schemata nicht als extern behandeln', () => {
+    // Given
+    component.href = 'javascript:alert(1)';
+    // When
+    fixture.detectChanges();
+    // Then
+    expect(component.imageCmp.luxImageSrc).toEqual('assets/javascript:alert(1)');
   });
 
   it('Sollte mehrfache und anführende Schrägstriche entfernen', () => {
