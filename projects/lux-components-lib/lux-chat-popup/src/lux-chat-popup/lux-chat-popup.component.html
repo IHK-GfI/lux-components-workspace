@@ -6,18 +6,18 @@
             (click)="onChatIconClicked()"
             [type]="'button'"
             class="lux-chat-popup-floating-button"
-            [attr.aria-label]="(chatOpened ? 'luxc.chat-popup.button_close.arialabel' : 'luxc.chat-popup.button_open.arialabel') | transloco"
+            [attr.aria-label]="(luxChatOpened() ? 'luxc.chat-popup.button_close.arialabel' : 'luxc.chat-popup.button_open.arialabel') | transloco"
         >
             <lux-icon 
-                [luxIconName]="chatOpened ? 'lux-interface-delete-1' : 'lux-mail-chat-bubble-typing-square'" 
+                [luxIconName]="luxChatOpened() ? 'lux-interface-delete-1' : 'lux-mail-chat-bubble-typing-square'" 
                 luxPadding="0px" 
                 luxMargin="0px"
             ></lux-icon>
         </button>
 
 
-        @if(chatOpened){
-            <div class="lux-chat-popup-inner-container" [ngClass]="{'lux-chat-popup-inner-container-fullscreen': (mobileView || fullScreen)}">
+        @if(luxChatOpened()){
+            <div class="lux-chat-popup-inner-container" [ngClass]="{'lux-chat-popup-inner-container-fullscreen': (mobileView || luxFullScreen())}">
                 <ng-content></ng-content>
             </div>
         }

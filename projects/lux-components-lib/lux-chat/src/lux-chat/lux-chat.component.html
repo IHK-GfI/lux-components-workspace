@@ -78,19 +78,37 @@
 
     <!-- Chat action -->
     <div class="lux-chat-action-container">
-        <lux-textarea-ac 
-            class="lux-chat-action-input"
-            luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
-            luxAriaLabelSelector="textarea"
-            luxTagId="chatInput" 
-            [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
-            [(luxValue)]="chatInput" 
-            luxAutocomplete="off" 
-            [luxNoTopLabel]="true" 
-            [luxNoBottomLabel]="true"
-            [luxMaxRows]="4"
-            (keydown.enter)="onChatEntered($event)"
-        ></lux-textarea-ac>
+        @if(luxAutoFocus()){
+            <lux-textarea-ac 
+                class="lux-chat-action-input"
+                luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
+                luxAriaLabelSelector="textarea"
+                luxTagId="chatInput" 
+                [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
+                [(luxValue)]="chatInput" 
+                luxAutocomplete="off" 
+                [luxNoTopLabel]="true" 
+                [luxNoBottomLabel]="true"
+                [luxMaxRows]="4"
+                (keydown.enter)="onChatEntered($event)"
+                luxAutofocus
+            ></lux-textarea-ac>
+        }
+        @else {
+            <lux-textarea-ac 
+                class="lux-chat-action-input"
+                luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
+                luxAriaLabelSelector="textarea"
+                luxTagId="chatInput" 
+                [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
+                [(luxValue)]="chatInput" 
+                luxAutocomplete="off" 
+                [luxNoTopLabel]="true" 
+                [luxNoBottomLabel]="true"
+                [luxMaxRows]="4"
+                (keydown.enter)="onChatEntered($event)"
+            ></lux-textarea-ac>
+        }
 
         @if(chatInput){
             <lux-button
@@ -100,6 +118,7 @@
                 [luxRaised]="true"
                 luxIconName="lux-mail-send-email"
                 luxColor="primary"
+                (luxClicked)="onChatEnterButtonPressed()"
             ></lux-button>
         }
     </div>

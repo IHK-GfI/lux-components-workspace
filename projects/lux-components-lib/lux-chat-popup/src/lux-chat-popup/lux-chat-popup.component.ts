@@ -1,33 +1,29 @@
 import { NgClass } from '@angular/common';
-import { Component, contentChildren, inject, OnDestroy, OnInit, DestroyRef } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { Component, inject, OnDestroy, model, effect, contentChild } from '@angular/core';
 import { MatFabButton } from '@angular/material/button';
 import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components'
 import { LuxChatComponent } from '@ihk-gfi/lux-components/lux-chat'
-import { TranslocoModule, TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe } from '@jsverse/transloco';
 import { Unsubscribable } from 'rxjs';
 
 @Component({
   selector: 'lux-chat-popup',
   imports: [
     NgClass,
-    LuxChatComponent,
     LuxIconComponent,
     MatFabButton,
     TranslocoPipe
 ],
   templateUrl: './lux-chat-popup.component.html'
 })
-export class LuxChatPopupComponent implements OnInit, OnDestroy {
+export class LuxChatPopupComponent implements OnDestroy {
 
   private queryService = inject(LuxMediaQueryObserverService);
-  private destroyRef = inject(DestroyRef);
 
-  children = contentChildren<LuxChatComponent>(LuxChatComponent);
-  private children$ = toObservable(this.children);
+  private childChat = contentChild(LuxChatComponent);
 
-  public chatOpened = false;
-  public fullScreen = false;
+  public luxChatOpened = model(false);
+  public luxFullScreen = model(false);
   public mobileView = false;
   
   chatCloseSubscriptions: Unsubscribable[] = [];
@@ -35,7 +31,7 @@ export class LuxChatPopupComponent implements OnInit, OnDestroy {
   subscriptions: Unsubscribable[] = [];
 
   public onChatIconClicked(value?: boolean): void {
-    this.chatOpened = (value !== undefined) ? value : !this.chatOpened;
+    this.luxChatOpened.set((value !== undefined) ? value : !this.luxChatOpened());
   }
 
   constructor(){
@@ -45,47 +41,35 @@ export class LuxChatPopupComponent implements OnInit, OnDestroy {
         this.mobileView = query === 'xs' || query === 'sm';
       })
     );
-  }
 
-  ngOnInit(): void {
-    this.children$
-    .pipe(
-      takeUntilDestroyed(this.destroyRef)
-    )
-    .subscribe(changes => {
-      this.unsubscribeAll();
-      for(const item of changes){
-        if(item.showFullscreenButton() === undefined){
-          item.showFullscreenButton.set(true)
+    effect(() => {
+      const fullscreen = this.luxFullScreen();
+      const childChat = this.childChat();
+
+      if(childChat){
+        childChat._chatFullscreen = fullscreen;
+
+        if(!childChat.showFullscreenButton()){
+          childChat.showFullscreenButton.set(true)
         }
 
-        if(item.showCloseButton() === undefined){
-          item.showCloseButton.set(true);
+        if(!childChat.showCloseButton()){
+          childChat.showCloseButton.set(true);
         }
 
-        this.setCloseListenerForChatContentChild(item);
-        this.setFullscreenListenerForChatContentChild(item);
+        this.setCloseListenerForChatContentChild(childChat);
+        this.setFullscreenListenerForChatContentChild(childChat);
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  private unsubscribeAll(){
-    for(const subscriptionRef of this.chatCloseSubscriptions){
-      subscriptionRef.unsubscribe();
-    }
-    
-    for(const subscriptionRef of this.chatFullscreenSubscriptions){
-      subscriptionRef.unsubscribe();
-    }
-  }
-
   private setCloseListenerForChatContentChild(contentChild: LuxChatComponent){
     const subscriptionRef = contentChild.chatClose.subscribe(() => {
-      this.chatOpened = false;
+      this.luxChatOpened.set(false);
     });
 
     this.chatCloseSubscriptions.push(subscriptionRef);
@@ -94,7 +78,7 @@ export class LuxChatPopupComponent implements OnInit, OnDestroy {
 
   private setFullscreenListenerForChatContentChild(contentChild: LuxChatComponent){
     const subscriptionRef = contentChild.chatFullscreen.subscribe(value => {
-      this.fullScreen = value;
+      this.luxFullScreen.set(value);
     });
 
     this.chatFullscreenSubscriptions.push(subscriptionRef)

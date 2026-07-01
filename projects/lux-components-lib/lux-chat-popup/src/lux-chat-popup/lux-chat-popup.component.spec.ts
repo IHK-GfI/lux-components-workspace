@@ -70,21 +70,21 @@ describe('LuxChatPopupComponent', () => {
   // ---------------------------------------------------------------------------
   describe('onChatIconClicked', () => {
     it('sollte chatOpened ohne Parameter umschalten', () => {
-      expect(popupComponent.chatOpened).toBeFalse();
+      expect(popupComponent.luxChatOpened()).toBeFalse();
 
       popupComponent.onChatIconClicked();
-      expect(popupComponent.chatOpened).toBeTrue();
+      expect(popupComponent.luxChatOpened()).toBeTrue();
 
       popupComponent.onChatIconClicked();
-      expect(popupComponent.chatOpened).toBeFalse();
+      expect(popupComponent.luxChatOpened()).toBeFalse();
     });
 
     it('sollte chatOpened auf den übergebenen Wert setzen', () => {
       popupComponent.onChatIconClicked(true);
-      expect(popupComponent.chatOpened).toBeTrue();
+      expect(popupComponent.luxChatOpened()).toBeTrue();
 
       popupComponent.onChatIconClicked(false);
-      expect(popupComponent.chatOpened).toBeFalse();
+      expect(popupComponent.luxChatOpened()).toBeFalse();
     });
   });
 
@@ -108,9 +108,9 @@ describe('LuxChatPopupComponent', () => {
     });
 
     it('sollte die Fullscreen-Klasse setzen, wenn fullScreen=true ist', () => {
-      popupComponent.chatOpened = true;
+      popupComponent.luxChatOpened.set(true);
       popupComponent.mobileView = false;
-      popupComponent.fullScreen = true;
+      popupComponent.luxFullScreen.set(true);
       fixture.detectChanges();
 
       const chatContainer = fixture.debugElement.query(By.css('.lux-chat-popup-inner-container'));
@@ -118,9 +118,9 @@ describe('LuxChatPopupComponent', () => {
     });
 
     it('sollte die Fullscreen-Klasse setzen, wenn mobileView=true ist', () => {
-      popupComponent.chatOpened = true;
+      popupComponent.luxChatOpened.set(true);
       popupComponent.mobileView = true;
-      popupComponent.fullScreen = false;
+      popupComponent.luxFullScreen.set(false);
       fixture.detectChanges();
 
       const chatContainer = fixture.debugElement.query(By.css('.lux-chat-popup-inner-container'));
@@ -141,22 +141,22 @@ describe('LuxChatPopupComponent', () => {
     }));
 
     it('sollte chatOpened auf false setzen, wenn chatClose emittiert wird', fakeAsync(() => {
-      popupComponent.chatOpened = true;
+      popupComponent.luxChatOpened.set(true);
 
       chatComponent.chatClose.emit();
       tick();
 
-      expect(popupComponent.chatOpened).toBeFalse();
+      expect(popupComponent.luxChatOpened()).toBeFalse();
     }));
 
     it('sollte fullScreen aktualisieren, wenn chatFullscreen emittiert wird', fakeAsync(() => {
       chatComponent.chatFullscreen.emit(true);
       tick();
-      expect(popupComponent.fullScreen).toBeTrue();
+      expect(popupComponent.luxFullScreen()).toBeTrue();
 
       chatComponent.chatFullscreen.emit(false);
       tick();
-      expect(popupComponent.fullScreen).toBeFalse();
+      expect(popupComponent.luxFullScreen()).toBeFalse();
     }));
   });
 
