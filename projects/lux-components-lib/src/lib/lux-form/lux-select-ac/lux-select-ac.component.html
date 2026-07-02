@@ -62,7 +62,7 @@
           [style.display]="!luxEnableFilter || selectFilter.isIndexVisible(i) ? '' : 'none'"
         >
           <ng-container
-            *ngTemplateOutlet="tempRef && !luxOptionLabelProp ? tempRef : noTemplateRefTemplate; context: { $implicit: luxOptions[i] }"
+            *ngTemplateOutlet="tempRef ? tempRef : noTemplateRefTemplate; context: { $implicit: luxOptions[i] }"
           ></ng-container>
         </mat-option>
       }

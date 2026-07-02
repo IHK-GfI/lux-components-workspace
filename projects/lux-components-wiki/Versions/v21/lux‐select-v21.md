@@ -243,3 +243,15 @@ Html
   [(luxSelected)]="selected"
 ></lux-select-ac>
 ```
+
+#### Mit ng-template, Tooltip und Filter
+
+Html
+
+```html
+<lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" [luxEnableFilter]="true" [(luxSelected)]="selected">
+  <ng-template let-option>
+    <span [luxTooltip]="option.label">{{ option.label }}</span>
+  </ng-template>
+</lux-select-ac>
+```

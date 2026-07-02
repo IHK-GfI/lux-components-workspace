@@ -7,7 +7,7 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-select-ac
         luxAutofocus
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray ? optionsPrimitive : options"
         [luxLabel]="label"
         [luxHint]="hint"
@@ -33,15 +33,13 @@
         (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents, 'luxSelectedChange', $event)"
         #defaultSelectComp
-      >
-        <ng-template let-item>via Template {{ item | json }}</ng-template>
-      </lux-select-ac>
+      ></lux-select-ac>
       <example-value [value]="value"></example-value>
     </div>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel mit Multiselect (ohne Reactive-Form)</h3>
       <lux-select-ac
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray ? optionsPrimitive : options"
         [luxLabel]="label"
         [luxHint]="hint"
@@ -66,15 +64,13 @@
         (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
         #multiselectComp
-      >
-        <ng-template let-item>via Template {{ item | json }}</ng-template>
-      </lux-select-ac>
+      ></lux-select-ac>
       <example-value [value]="multiselectValue"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-select-ac
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray ? optionsPrimitive : options"
         [luxControlBinding]="controlBinding"
         [luxLabel]="label"
@@ -99,10 +95,29 @@
         (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents, 'luxSelectedChange', $event)"
         #reactiveSelectComp
-      >
-        <ng-template let-item>via Template {{ item | json }}</ng-template>
-      </lux-select-ac>
+      ></lux-select-ac>
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Beispiel mit Options via ng-template (inkl. Tooltip)</h3>
+      <lux-select-ac
+        luxOptionLabelProp="label"
+        [luxOptions]="options"
+        luxLabel="Optionen via ng-template"
+        luxHint="Jede Option wird über ein ng-template gerendert und zeigt einen Tooltip. Der Filter lässt sich über die Optionen zuschalten."
+        [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
+        [luxDense]="denseFormat"
+        [(luxSelected)]="templateValue"
+      >
+        <ng-template let-item>
+          <span [luxTooltip]="item.label">via Template {{ item | json }}</span>
+        </ng-template>
+      </lux-select-ac>
+      <example-value [value]="templateValue"></example-value>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -253,9 +268,6 @@
           <b>{{ compareWithFnString }}</b>
         </div>
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
-      <lux-form-hint> Die Labels können über in die Component eingereichte Template-Tags erstellt werden. </lux-form-hint>
     </lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="luxErrorMessage verwenden"

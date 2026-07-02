@@ -8,7 +8,8 @@ import {
   LuxFormSelectableBase,
   LuxInputAcComponent,
   LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxToggleAcComponent,
+  LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
@@ -52,14 +53,14 @@ interface SelectDummyForm {
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     ExampleBaseOptionsActionsComponent,
-    JsonPipe,
-    StatusMarkerComponent
+    LuxTooltipDirective,
+    StatusMarkerComponent,
+    JsonPipe
   ]
 })
 export class SelectAuthenticExampleComponent {
   readonly markerTypeNew = DemoMarkerType.New;
   useErrorMessage = true;
-  useTemplatesForLabels = false;
   useCompareWithFn = false;
   useValueFn = false;
   useSimpleArray = false;
@@ -131,6 +132,7 @@ export class SelectAuthenticExampleComponent {
   errorMessage = 'Das Feld enthält keinen gültigen Wert';
   value: any = null;
   multiselectValue: any = null;
+  templateValue: any = null;
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   pickValueFn = examplePickValueFn;

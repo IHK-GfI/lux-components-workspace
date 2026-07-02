@@ -847,6 +847,34 @@ describe('LuxSelectAcComponent', () => {
   });
 
   describe('mit aktivierter Filterfunktion', () => {
+    it('verwendet ng-template trotz gesetztem luxOptionLabelProp und filtert weiterhin korrekt', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterWithTemplateComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const optionTexts = Array.from(
+        document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>
+      ).map((el) => el.textContent?.trim() ?? '');
+
+      expect(optionTexts.length).toBe(4);
+      expect(optionTexts[0]).toContain('OptionTpl: Meine Aufgaben');
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'gruppe';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].innerText.trim()).toContain('OptionTpl: Gruppenaufgaben');
+    }));
+
     it('rendert das Filterfeld nicht als deaktivierte mat-option', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
@@ -1057,7 +1085,10 @@ describe('LuxSelectAcComponent', () => {
       const filterInputAfterReopen = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInputAfterReopen.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInputAfterReopen, 'input');
-      LuxTestHelper.dispatchEvent(filterInputAfterReopen, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown'));
+      LuxTestHelper.dispatchEvent(
+        filterInputAfterReopen,
+        LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown')
+      );
       fixture.detectChanges();
       flush();
 
@@ -1454,6 +1485,24 @@ class SelectFilterComponent {
 
 @Component({
   template: `
+    <lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" [luxEnableFilter]="true" [(luxSelected)]="selectedOption">
+      <ng-template let-option> {{ 'OptionTpl: ' + option.label }} </ng-template>
+    </lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectFilterWithTemplateComponent {
+  selectedOption: Option | null = null;
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+}
+
+@Component({
+  template: `
     <form [formGroup]="formGroup">
       <lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="task" [luxEnableFilter]="true"></lux-select-ac>
     </form>
@@ -1638,7 +1687,7 @@ class SelectMultiplePickValueFnComponent {
 
 @Component({
   template: `
-    <lux-select-ac [luxOptions]="options" [(luxSelected)]="selectedOption">
+    <lux-select-ac [luxOptions]="options" [luxOptionLabelProp]="labelProp" [(luxSelected)]="selectedOption">
       <ng-template let-option>
         {{ 'Option: ' + option.value }}
       </ng-template>
