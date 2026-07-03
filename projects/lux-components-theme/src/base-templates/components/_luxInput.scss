@@ -27,36 +27,37 @@ lux-input-ac {
   }
 }
 
-@mixin input-clear-button($size) {
+@mixin input-clear-button($touchSize, $containerSize) {
   lux-button.lux-icon-button.lux-input-clear-btn {
-    --lux-theme-button-icon-size: #{$size};
-    --lux-theme-button-icon-container-size: #{$size};
-    --lux-theme-button-icon-default-text-color: var(--lux-theme-primary-color);
-
     display: flex;
 
     @include mat.icon-button-overrides(
       (
         container-shape: var(--lux-theme-button-icon-container-shape),
-        icon-color: var(--lux-theme-button-icon-default-text-color),
-        icon-size: var(--lux-theme-button-icon-size),
-        state-layer-size: var(--lux-theme-button-icon-container-size),
-        state-layer-color: var(--lux-theme-state-layer-color),
-        touch-target-size: var(--lux-theme-button-icon-container-size)
+        icon-color: var(--lux-theme-primary-color),
+        icon-size: var(--mat-icon-button-icon-size),
+        state-layer-size: #{$containerSize},
+        state-layer-color: var(--mat-sys-on-surface-variant),
+        touch-target-size: #{$touchSize}
       )
     );
 
     lux-icon,
     .lux-icon {
-      width: var(--lux-theme-button-icon-size);
-      height: var(--lux-theme-button-icon-size);
+      width: var(--mat-icon-button-icon-size);
+      height: var(--mat-icon-button-icon-size);
+    }
+
+    button:not([disabled]):focus,
+    button:not([disabled]):focus-visible {
+      outline-color: transparent !important; // In V22 wieder entfernen, wenn alle !important entfernt wurden
     }
   }
 }
 
 //Clear-Button für Input-Felder
-@include input-clear-button("1.5rem");
+@include input-clear-button(calc(var(--lux-theme-form-min-height) - 2 * var(--lux-theme-form-border-width)), "40px");
 
 .lux-dense-authentic {
-  @include input-clear-button("1.25rem");
+  @include input-clear-button(calc(var(--lux-theme-form-dense-min-height) - 2 * var(--lux-theme-form-border-width)), "36px");
 }

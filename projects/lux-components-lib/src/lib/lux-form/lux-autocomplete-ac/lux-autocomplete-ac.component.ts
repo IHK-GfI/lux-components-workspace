@@ -523,7 +523,6 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     event.stopPropagation();
 
     const inputElement = this.matInput?.nativeElement as HTMLInputElement | undefined;
-    const inputWasFocused = !!inputElement && document.activeElement === inputElement;
 
     if (this.inForm) {
       this.formControl.setValue(null as V);
@@ -532,12 +531,10 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     }
     this.matAutoComplete?.closePanel();
 
-    if (inputWasFocused) {
-      try {
-        inputElement?.focus({ preventScroll: true });
-      } catch {
-        // Ignorieren
-      }
+    try {
+      inputElement?.focus({ preventScroll: true });
+    } catch {
+      // Ignorieren
     }
   }
 

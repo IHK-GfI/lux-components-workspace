@@ -139,7 +139,6 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
     event.stopPropagation();
 
     const inputElement = this.inputElement?.nativeElement as HTMLInputElement | undefined;
-    const inputWasFocused = !!inputElement && document.activeElement === inputElement;
 
     if (this.inForm) {
       this.formControl.setValue(null as T);
@@ -147,12 +146,10 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
       this.luxValue = null as T;
     }
 
-    if (inputWasFocused) {
-      try {
-        inputElement?.focus({ preventScroll: true });
-      } catch {
-        // Ignorieren
-      }
+    try {
+      inputElement?.focus({ preventScroll: true });
+    } catch {
+      // Ignorieren
     }
   }
 

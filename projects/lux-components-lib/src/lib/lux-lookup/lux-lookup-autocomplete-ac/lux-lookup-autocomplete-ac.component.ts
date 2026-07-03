@@ -187,7 +187,6 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     event.stopPropagation();
 
     const inputElement = this.matInput?.nativeElement as HTMLInputElement | undefined;
-    const inputWasFocused = !!inputElement && document.activeElement === inputElement;
 
     if (this.inForm) {
       this.formControl.setValue(null as T);
@@ -196,12 +195,10 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     }
     this.matAutocompleteTrigger?.closePanel();
 
-    if (inputWasFocused) {
-      try {
-        inputElement?.focus({ preventScroll: true });
-      } catch {
-        // Ignorieren
-      }
+    try {
+      inputElement?.focus({ preventScroll: true });
+    } catch {
+      // Ignorieren
     }
   }
 
