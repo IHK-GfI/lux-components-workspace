@@ -199,6 +199,18 @@
       </lux-form-hint>
     </lux-toggle-ac>
     <lux-toggle-ac
+      luxLabel="Zusatz-Validatoren auf FormControl setzen (minLength(3), maxLength(10))"
+      [luxChecked]="extraValidators"
+      (luxCheckedChange)="changeExtraValidators($event)"
+      [luxNoTopLabel]="true"
+    >
+      <lux-form-hint>
+        Fügt dem FormControl der Reactive-Form-Component die Validatoren <b>minLength(3)</b> und <b>maxLength(10)</b> hinzu.<br />
+        Zusammen mit <i>luxRequired</i> lässt sich so prüfen, ob bestehende Validatoren beim Setzen von <code>[luxRequired]</code> erhalten
+        bleiben.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."

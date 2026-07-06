@@ -8,12 +8,19 @@ import { LuxValidationErrors } from '@ihk-gfi/lux-components';
  * @param controlName
  */
 export const setRequiredValidatorForFormControl = (addValidator: boolean, form: FormGroup, controlName: string) => {
-  if (addValidator) {
-    form.get(controlName)!.setValidators(Validators.required);
-  } else {
-    form.get(controlName)!.setValidators(null);
+  const control = form.get(controlName);
+
+  if (!control) {
+    return;
   }
-  form.get(controlName)!.updateValueAndValidity();
+
+  if (addValidator) {
+    control.addValidators(Validators.required);
+  } else {
+    control.removeValidators(Validators.required);
+  }
+
+  control.updateValueAndValidity();
 };
 
 /**
@@ -42,9 +49,15 @@ export const logResult = (shouldLog: boolean, msg: string, event?: any) => {
  * @param errors
  */
 export const exampleErrorCallback = (value: any, errors: LuxValidationErrors) => {
-  console.log('exampleErrorCallback (value =', value, ', errors =', errors + ')');
+  console.log('exampleErrorCallback (value =', value, ', errors =', errors, ')');
   if (errors['required']) {
     return 'Achtung, dies ist ein Pflichtfeld.';
+  } else if (errors['email']) {
+    return 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
+  } else if (errors['minlength']) {
+    return `Die Eingabe muss mindestens ${errors['minlength'].requiredLength} Zeichen enthalten.`;
+  } else if (errors['maxlength']) {
+    return `Die Eingabe darf maximal ${errors['maxlength'].requiredLength} Zeichen enthalten.`;
   }
   return 'Es ist ein Fehler aufgetreten.';
 };

@@ -79,7 +79,7 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
   @Input() luxNoLabels = false;
   @Input() luxNoTopLabel = false;
   @Input() luxNoBottomLabel = false;
-  
+
   luxLocale = signal<string>('de-DE');
 
   dateTimeValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -143,7 +143,7 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
           this.luxLocale.set(lang);
       }
       this.dateTimeAdapter.setLocale(this.luxLocale());
-      
+
       // Input-Feld neu formatieren
       if (this.formControl && this.dateTimePickerInputEl) {
         this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
@@ -292,28 +292,39 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
   }
 
   protected override updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
-    if ((!Array.isArray(validators) && validators) || (Array.isArray(validators) && validators.length > 0)) {
-      if (!this.inForm) {
-        setTimeout(() => {
-          if (checkRequiredValidator) {
-            this._luxControlValidators = this.checkValidatorsContainRequired(validators);
-          }
+    const hasValidators = (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0);
 
-          this.formControl.setValidators(validators ?? null);
-          this.formControl.addValidators(this.dateTimeValidator);
-          this.formControl.updateValueAndValidity();
-        });
-      }
-    } else {
-      if (!this.inForm) {
-        setTimeout(() => {
-          if (checkRequiredValidator) {
-            this._luxControlValidators = this.checkValidatorsContainRequired(validators);
+    // Zum Zeitpunkt dieses synchronen Aufrufs ist inForm noch false, weil Angular @Input()-Properties
+    // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
+    if (!this.inForm) {
+      setTimeout(() => {
+        // Der setTimeout-Callback feuert asynchron – nach ngOnInit. Zu diesem Zeitpunkt kann inForm
+        // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
+        // Guard würde setValidators() die Validatoren des FormControls überschreiben.
+        if (this.inForm) {
+          return;
+        }
+
+        this._luxControlValidators = validators;
+        this.formControl.setValidators(validators ?? null);
+        this.formControl.addValidators(this.dateTimeValidator);
+
+        if (checkRequiredValidator) {
+          if (this.luxRequired) {
+            this.formControl.addValidators(this.getRequiredValidator());
+          } else {
+            this.formControl.removeValidators(this.getRequiredValidator());
           }
-          this.formControl.setValidators([this.dateTimeValidator]);
-          this.formControl.updateValueAndValidity();
-        });
-      }
+        }
+
+        this.formControl.updateValueAndValidity();
+      });
+    } else if (hasValidators) {
+      this.logger.warn(
+        `
+Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding}) können ausschließlich über das Formular gesetzt werden,
+aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignoriert!`
+      );
     }
   }
 

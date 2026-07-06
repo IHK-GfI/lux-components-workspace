@@ -4,7 +4,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -15,6 +15,16 @@ import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class
 import { LuxInputAcPrefixComponent } from './lux-input-ac-subcomponents/lux-input-ac-prefix.component';
 import { LuxInputAcSuffixComponent } from './lux-input-ac-subcomponents/lux-input-ac-suffix.component';
 import { LuxInputAcComponent } from './lux-input-ac.component';
+
+const startsWithLuxValidator: ValidatorFn = (control: AbstractControl) => {
+  const value = control.value as string | null;
+
+  if (!value) {
+    return null;
+  }
+
+  return value.startsWith('lux') ? null : { startsWithLux: true };
+};
 
 describe('LuxInputAcComponent', () => {
   beforeEach(waitForAsync(() => {
@@ -139,6 +149,114 @@ describe('LuxInputAcComponent', () => {
         // Nachbedingungen prüfen
         expect(luxInput.formControl.valid).toBe(true);
         expect(luxInput.formControl.errors).toBeNull();
+      }));
+
+      it('Sollte bestehende Validatoren bei [luxRequired] in Reactive Forms nicht überschreiben', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+        textControl.setValue('ab');
+        textControl.markAsTouched();
+        textControl.updateValueAndValidity();
+
+        LuxTestHelper.wait(fixture);
+
+        expect(textControl.hasError('minlength')).toBeTrue();
+        expect(textControl.hasError('startsWithLux')).toBeTrue();
+        expect(textControl.hasError('required')).toBeFalse();
+      }));
+
+      it('Sollte required-Fehler der FormGroup bei leerem Wert anzeigen (Reactive Form)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+        textControl.setValue(null);
+        textControl.markAsTouched();
+        textControl.updateValueAndValidity();
+
+        LuxTestHelper.wait(fixture);
+
+        // required-Fehler kommt vom FormGroup-Validator, nicht von [luxRequired]
+        expect(textControl.hasError('required')).toBeTrue();
+        expect(textControl.hasError('minlength')).toBeFalse();
+        expect(textControl.hasError('startsWithLux')).toBeFalse();
+      }));
+
+      it('Sollte bei gültigem Wert keine Validierungsfehler haben (Reactive Form)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+        textControl.setValue('lux-test');
+        textControl.markAsTouched();
+        textControl.updateValueAndValidity();
+
+        LuxTestHelper.wait(fixture);
+
+        expect(textControl.valid).toBeTrue();
+        expect(textControl.errors).toBeNull();
+      }));
+
+      it('Sollte Validatoren nach [luxRequired]-Änderung (true → false) in Reactive Form erhalten', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        // luxRequired auf false ändern, nachdem die Komponente gerendert wurde
+        testComponent.required = false;
+        fixture.detectChanges();
+        LuxTestHelper.wait(fixture);
+
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+        textControl.setValue('ab');
+        textControl.markAsTouched();
+        textControl.updateValueAndValidity();
+
+        LuxTestHelper.wait(fixture);
+
+        // Eigene Validatoren der FormGroup müssen weiterhin aktiv sein
+        expect(textControl.hasError('minlength')).toBeTrue();
+        expect(textControl.hasError('startsWithLux')).toBeTrue();
+      }));
+
+      it('Sollte required extern per addValidators/removeValidators an- und wieder abschaltbar sein (Reactive Form)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputExternalRequiredToggleComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#text')).componentInstance;
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+
+        // Initial: nicht required
+        LuxTestHelper.wait(fixture);
+        expect(luxInput.luxRequired).toBe(false);
+
+        // Required extern hinzufügen (wie setRequiredValidatorForFormControl(true, ...))
+        textControl.addValidators(Validators.required);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(true);
+        textControl.markAsTouched();
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+        expect(textControl.hasError('required')).toBeTrue();
+
+        // Required extern wieder entfernen (wie setRequiredValidatorForFormControl(false, ...)).
+        // Regressionstest: Die native [required]-Bindung auf dem Input darf hierbei nicht dazu führen,
+        // dass die Angular-eigene RequiredValidator-Direktive das Zurücksetzen verhindert (Issue #240).
+        textControl.removeValidators(Validators.required);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(false);
+        expect(textControl.hasError('required')).toBeFalse();
+        expect(textControl.valid).toBeTrue();
       }));
     });
 
@@ -878,6 +996,16 @@ describe('LuxInputAcComponent', () => {
       expect(input.nativeElement.disabled).toBe(true);
     }));
 
+    it('Sollte den Fehler bei luxRequired=true nicht anzeigen, solange das Feld nicht touched ist', fakeAsync(() => {
+      const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.directive(LuxInputAcComponent)).componentInstance;
+
+      testComponent.required = true;
+      LuxTestHelper.wait(fixture);
+
+      expect(luxInput.formControl.touched).toBe(false);
+      expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
+    }));
+
     it('Sollte required sein', fakeAsync(() => {
       // Vorbedingungen testen
       const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.directive(LuxInputAcComponent)).componentInstance;
@@ -900,6 +1028,17 @@ describe('LuxInputAcComponent', () => {
       expect(luxInput.formControl.valid).toBe(false);
       expect(luxInput.formControl.errors).not.toBeNull();
       expect(luxInput.formControl.errors!['required']).toBe(true);
+
+      // Änderungen durchführen: luxRequired wieder deaktivieren (Issue #240 Regressionstest)
+      testComponent.required = false;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen prüfen
+      expect(input.nativeElement.required).toEqual(false);
+      luxInput.formControl.updateValueAndValidity();
+      LuxTestHelper.wait(fixture);
+      expect(luxInput.formControl.valid).toBe(true);
+      expect(luxInput.formControl.errors).toBeNull();
     }));
 
     it('Sollte CSS-Class für linksbündige Zahlen einbauen', fakeAsync(() => {
@@ -1044,6 +1183,40 @@ class LuxInputInsideFormComponent {
     amount0: new FormControl<number>(0, { nonNullable: true }),
     amount1: new FormControl<number>(0, { nonNullable: true }),
     amount2: new FormControl<number>(0, { nonNullable: true }),
+    text: new FormControl<string | null>(null)
+  });
+}
+
+// Hinweis: Diese Testkomponente setzt [luxRequired] bewusst innerhalb einer Reactive Form.
+// Das löst logger.error() aus (korrektes Framework-Verhalten), ist aber für den Regressionstest
+// von Issue #240 notwendig, um sicherzustellen, dass bestehende FormControl-Validatoren nicht
+// durch die luxRequired-Bindung überschrieben werden.
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac [luxRequired]="required" luxControlBinding="text" id="text"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputRequiredReactiveFormComponent {
+  required = true;
+
+  formGroup = new FormGroup({
+    text: new FormControl<string | null>(null, [Validators.required, Validators.minLength(3), startsWithLuxValidator])
+  });
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxControlBinding="text" id="text"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputExternalRequiredToggleComponent {
+  formGroup = new FormGroup({
     text: new FormControl<string | null>(null)
   });
 }
