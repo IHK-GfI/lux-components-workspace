@@ -6,8 +6,8 @@ import { By } from '@angular/platform-browser';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
-import { LuxMenuItemComponent } from '../lux-menu/lux-menu-subcomponents/lux-menu-item.component';
-import { LuxMenuTriggerComponent } from '../lux-menu/lux-menu-subcomponents/lux-menu-trigger.component';
+import { LuxMenuItemComponent } from './lux-menu-subcomponents/lux-menu-item.component';
+import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigger.component';
 import { LuxMenuComponent } from './lux-menu.component';
 
 describe('LuxMenuComponent', () => {
@@ -17,7 +17,7 @@ describe('LuxMenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 
@@ -107,6 +107,15 @@ describe('LuxMenuComponent', () => {
     expect(mockTriggerNode).not.toBeNull();
   }));
 
+  it('Sollte die Klasse lux-menu-extended im Nicht-Extended-Modus nicht setzen', fakeAsync(() => {
+    component.displayExtended = false;
+    LuxTestHelper.wait(fixture);
+
+    const menuExtendedNode = fixture.debugElement.query(By.css('div.lux-menu-extended'));
+
+    expect(menuExtendedNode).toBeNull();
+  }));
+
   it('Sollte nur n (n = luxMaximumExtend) Menu-Items darstellen', fakeAsync(() => {
     // Vorbedingungen testen
     component.generateItems(3);
@@ -147,7 +156,7 @@ describe('LuxMenuComponent', () => {
 
     let menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
     let children = menuExtendedEl.children;
-    
+
     expect(children[0].nativeElement.classList).toContain('lux-menu-item');
 
     // Änderungen durchführen
@@ -156,7 +165,7 @@ describe('LuxMenuComponent', () => {
 
     menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
     children = menuExtendedEl.children;
-    
+
     expect(children[0].nativeElement.classList).toContain('lux-menu-trigger');
   }));
 

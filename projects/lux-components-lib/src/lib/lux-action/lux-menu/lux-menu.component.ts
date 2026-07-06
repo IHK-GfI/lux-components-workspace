@@ -54,7 +54,8 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     MatMenuTrigger,
     LuxIconComponent,
     MatDivider,
-    TranslocoPipe
+    TranslocoPipe,
+    LuxButtonComponent
   ]
 })
 export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy, OnInit {
@@ -298,9 +299,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     this.luxMenuClosed.emit();
     if (this.luxMenuTriggerComponent) {
       const triggerEl = (this.elementRef.nativeElement as HTMLElement).querySelector('lux-menu-trigger');
-      const focusableEl = triggerEl?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+      const focusableEl = triggerEl?.querySelector<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
       focusableEl?.focus();
     } else if (this.defaultTriggerElRef) {
       (this.defaultTriggerElRef.nativeElement.children.item(0) as HTMLElement | null)?.focus();

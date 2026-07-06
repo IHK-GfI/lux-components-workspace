@@ -165,6 +165,26 @@
       ></lux-menu-item>
       }}
     </lux-menu>
+    <h3>Custom Trigger (Fokusring-Test)</h3>
+    <lux-menu
+      class="demo-custom-trigger-menu"
+      [luxDisplayExtended]="false"
+      [luxDisplayMenuLeft]="true"
+      (luxMenuClosed)="log(showOutputEvents, 'Menu closed (Custom Trigger)', $event)"
+      luxTagId="demo-menu-custom-trigger"
+    >
+      <lux-menu-trigger>
+        <lux-button
+          luxIconName="lux-interface-user-single"
+          luxAriaLabel="Profil-Menü öffnen"
+          [luxRounded]="true"
+          [luxStroked]="true"
+          luxTagId="custom-trigger-btn"
+        ></lux-button>
+      </lux-menu-trigger>
+      <lux-menu-item luxLabel="Einstellungen" luxIconName="lux-interface-setting-cog" luxTagId="ct-item-1" (luxClicked)="log(showOutputEvents, 'Einstellungen clicked', $event)"></lux-menu-item>
+      <lux-menu-item luxLabel="Abmelden" luxIconName="lux-interface-logout-circle" luxTagId="ct-item-2" (luxClicked)="log(showOutputEvents, 'Abmelden clicked', $event)"></lux-menu-item>
+    </lux-menu>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac

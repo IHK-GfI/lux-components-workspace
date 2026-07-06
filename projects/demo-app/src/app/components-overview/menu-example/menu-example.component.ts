@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import {
   LuxAccordionComponent,
+  LuxButtonComponent,
   LuxDividerComponent,
   LuxFormHintComponent,
   LuxIconRegistryService,
@@ -9,6 +10,7 @@ import {
   LuxMenuItemComponent,
   LuxMenuPanelHeaderComponent,
   LuxMenuSectionTitleComponent,
+  LuxMenuTriggerComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
@@ -27,6 +29,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-menu-example',
   templateUrl: './menu-example.component.html',
+  styleUrl: './menu-example.component.scss',
   imports: [
     LuxMenuComponent,
     LuxMenuItemComponent,
@@ -45,6 +48,8 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxDividerComponent,
     LuxMenuPanelHeaderComponent,
     LuxMenuSectionTitleComponent,
+    LuxMenuTriggerComponent,
+    LuxButtonComponent,
     StatusMarkerComponent
   ]
 })

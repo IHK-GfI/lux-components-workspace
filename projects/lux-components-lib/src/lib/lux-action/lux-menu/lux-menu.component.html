@@ -1,5 +1,5 @@
 <div class="lux-flex lux-place-content-end lux-items-stretch">
-  <div class="lux-menu-extended lux-flex lux-flex-auto lux-place-content-end lux-items-center" #menuExtendedContainer>
+  <div class="lux-flex lux-flex-auto lux-place-content-end lux-items-center" [class.lux-menu-extended]="luxDisplayExtended" #menuExtendedContainer>
     <!-- Trigger, wenn luxDisplayMenuLeft === false -->
     @if (!luxDisplayMenuLeft) {
     <ng-container [ngTemplateOutlet]="menuTriggerTemplate"></ng-container>
@@ -159,8 +159,8 @@
     </span>
   </button>
   }
-  <!-- das neue Panel mit Gruppierung -->
   @else {
+    <!-- das neue Panel mit Gruppierung -->
   <button
     mat-menu-item
     [disableRipple]="true"
