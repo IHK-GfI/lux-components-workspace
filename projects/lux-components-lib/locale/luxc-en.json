@@ -144,7 +144,7 @@
       "upload.error_message.max_file_size": "The file \"{{fileName}}\" exceeds the maximum file size of {{maxSizeMB}} megabytes.",
       "upload.error_message.not_accepted": "The file \"{{fileName}}\" does not match an accepted file type. Only {{acceptTypes}} files are allowed.",
       "upload.error_message.only_one_file": "Only one file may be uploaded.",
-      "upload.error_message.read_error": "An error occurred while uploading the selected file. Please try again.",
+      "upload.error_message.read_error": "An error occurred while reading the selected file. Please try again.",
       "upload.error_message.upload_error": "An error occurred while uploading the selected file. Please try again.",
       "upload.file.type.concat": " or ",
       "upload.label": "Drop file here or ",
