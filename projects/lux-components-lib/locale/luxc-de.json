@@ -214,6 +214,9 @@
       "upload.files.announce": "Bitte warten. Die Datei wird verarbeitet.",
       "view.action.lbl": "Ansehen"
     },
+    "input": {
+      "clear.btn.arialabel": "Eingabe löschen"
+    },
     "lang-select": {
       "aria.langmenu.btn": "Sprachmenü"
     },
