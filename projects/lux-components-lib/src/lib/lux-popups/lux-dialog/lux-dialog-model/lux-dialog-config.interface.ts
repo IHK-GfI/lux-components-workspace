@@ -1,4 +1,15 @@
 /**
+ * Standard-Breiten für LuxDialog
+ */
+export const DIALOG_WIDTH_SMALL_PX = 400;
+export const DIALOG_WIDTH_MEDIUM_PX = 600;
+export const DIALOG_WIDTH_LARGE_PX = 800;
+
+export const DIALOG_WIDTH_SMALL = DIALOG_WIDTH_SMALL_PX + 'px';
+export const DIALOG_WIDTH_MEDIUM = DIALOG_WIDTH_MEDIUM_PX + 'px';
+export const DIALOG_WIDTH_LARGE = DIALOG_WIDTH_LARGE_PX + 'px';
+
+/**
  * Config-Interface für die Dialoge.
  */
 export interface ILuxDialogConfig {
@@ -25,3 +36,12 @@ export const DEFAULT_DIALOG_CONF: ILuxDialogConfig = {
   panelClass: [],
   disableClose: true
 };
+
+export function minWidth(width: number): string {
+  if (typeof window === 'undefined') {
+    return width + 'px';
+  }
+
+  return Math.min(width, window.innerWidth - 50) + 'px';
+}
+

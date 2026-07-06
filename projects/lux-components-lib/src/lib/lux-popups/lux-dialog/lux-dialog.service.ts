@@ -1,7 +1,13 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { Injectable, Injector, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DEFAULT_DIALOG_CONF, ILuxDialogConfig } from './lux-dialog-model/lux-dialog-config.interface';
+import {
+  DEFAULT_DIALOG_CONF,
+  DIALOG_WIDTH_LARGE_PX,
+  DIALOG_WIDTH_SMALL_PX,
+  ILuxDialogConfig,
+  minWidth
+} from './lux-dialog-model/lux-dialog-config.interface';
 import { DEFAULT_DIALOG_PRESET_CONF, ILuxDialogPresetConfig } from './lux-dialog-model/lux-dialog-preset-config.interface';
 import { LuxDialogRef } from './lux-dialog-model/lux-dialog-ref.class';
 import { LuxDialogPresetComponent } from './lux-dialog-preset/lux-dialog-preset.component';
@@ -58,6 +64,14 @@ export class LuxDialogService {
   ): LuxDialogRef<any> {
     // Wenn keine Config übergeben ist, die defaultConfig nehmen
     config = config ? config : defaultConfig;
+
+    // Mit einer Kopie arbeiten, um das übergebene Object nicht zu manipulieren
+    config = { ...config };
+
+    // Falls maxWidth nicht gesetzt ist UND width ist 'auto' oder nicht gesetzt, den Dialog-Default setzen.
+    if (!config.maxWidth && (!config.width || config.width === 'auto')) {
+      config.maxWidth = component === LuxDialogPresetComponent ? minWidth(DIALOG_WIDTH_SMALL_PX) : minWidth(DIALOG_WIDTH_LARGE_PX);
+    }
 
     // Die CSS-Klassen fürs Panel herausfinden
     const panelClass = ['lux-dialog'];

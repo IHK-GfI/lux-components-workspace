@@ -1,12 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, Signal, signal, EventEmitter } from '@angular/core';
-import { LuxStorageService } from '../../../../../lux-util/lux-storage.service';
-import { LuxDialogService } from '../../../../../lux-popups/lux-dialog/lux-dialog.service';
-import { LuxAppHeaderAcSessionTimerDialogComponent } from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
-import { ILuxDialogConfig } from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
-import { distinctUntilChanged, map, switchMap, takeWhile, timer } from 'rxjs';
+import { computed, EventEmitter, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { distinctUntilChanged, map, switchMap, takeWhile, timer } from 'rxjs';
 import { LuxComponentsConfigService } from '../../../../../lux-components-config/lux-components-config.service';
+import {
+  DIALOG_WIDTH_MEDIUM_PX,
+  ILuxDialogConfig,
+  minWidth
+} from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
+import { LuxDialogService } from '../../../../../lux-popups/lux-dialog/lux-dialog.service';
+import { LuxStorageService } from '../../../../../lux-util/lux-storage.service';
+import { LuxAppHeaderAcSessionTimerDialogComponent } from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -91,7 +95,7 @@ export class LuxAppHeaderAcSessionTimerService {
   dialogConfig: ILuxDialogConfig = {
     height: 'auto',
     width: 'auto',
-    maxWidth: '90%',
+    maxWidth: minWidth(DIALOG_WIDTH_MEDIUM_PX),
     disableClose: false,
     panelClass: ['session-timer-dialog-panel-class']
   };

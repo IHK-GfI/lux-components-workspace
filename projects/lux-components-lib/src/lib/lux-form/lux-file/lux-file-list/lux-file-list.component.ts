@@ -25,7 +25,11 @@ import { LuxCardContentComponent } from '../../../lux-layout/lux-card/lux-card-s
 import { LuxCardInfoComponent } from '../../../lux-layout/lux-card/lux-card-subcomponents/lux-card-info.component';
 import { LuxCardComponent } from '../../../lux-layout/lux-card/lux-card.component';
 import { LuxDividerComponent } from '../../../lux-layout/lux-divider/lux-divider.component';
-import { ILuxDialogConfig } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
+import {
+  DIALOG_WIDTH_SMALL_PX,
+  ILuxDialogConfig,
+  minWidth
+} from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxValidationErrors } from '../../lux-form-model/lux-form-component-base.class';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
@@ -86,7 +90,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
 
   dialogReplaceConfig: ILuxDialogConfig = {
     disableClose: false,
-    width: 'auto',
+    width: minWidth(DIALOG_WIDTH_SMALL_PX),
     height: 'auto',
     panelClass: ['file-dialog', 'file-replace-dialog']
   };
@@ -574,3 +578,4 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     this.fileUploadSingleInput.nativeElement.value = null;
   }
 }
+

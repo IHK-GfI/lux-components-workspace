@@ -9,6 +9,8 @@ import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.compo
 import { LuxComponentsConfigModule } from '../../lux-components-config/lux-components-config.module';
 import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxOverlayHelper } from '../../lux-util/testing/lux-test-overlay-helper';
+import { DIALOG_WIDTH_LARGE_PX, DIALOG_WIDTH_SMALL_PX, minWidth } from './lux-dialog-model/lux-dialog-config.interface';
+import { ILuxDialogPresetConfig } from './lux-dialog-model/lux-dialog-preset-config.interface';
 import { LuxDialogRef } from './lux-dialog-model/lux-dialog-ref.class';
 import { LuxDialogActionsComponent } from './lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-actions.component';
 import { LuxDialogContentComponent } from './lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-content.component';
@@ -293,6 +295,50 @@ describe('LuxDialogService', () => {
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
       expect(spy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('Sollte bei Preset-Dialogen ohne maxWidth und mit width=auto eine Default-maxWidth setzen', fakeAsync(() => {
+      dialogRef = testComponent.dialogService.open({
+        width: 'auto',
+        maxWidth: undefined
+      });
+      LuxTestHelper.wait(fixture);
+
+      const config = (dialogRef._matDialogRef as any)._containerInstance._config;
+      expect(config.maxWidth).toEqual(minWidth(DIALOG_WIDTH_SMALL_PX));
+    }));
+
+    it('Sollte bei Preset-Dialogen mit konkreter width keine Default-maxWidth setzen', fakeAsync(() => {
+      dialogRef = testComponent.dialogService.open({
+        width: '700px',
+        maxWidth: undefined
+      });
+      LuxTestHelper.wait(fixture);
+
+      const config = (dialogRef._matDialogRef as any)._containerInstance._config;
+      expect(config.maxWidth).toBeUndefined();
+    }));
+
+    it('Sollte das übergebene Config-Objekt nicht mutieren', fakeAsync(() => {
+      const inputConfig: ILuxDialogPresetConfig = {
+        width: 'auto'
+      };
+
+      dialogRef = testComponent.dialogService.open(inputConfig);
+      LuxTestHelper.wait(fixture);
+
+      expect(inputConfig.maxWidth).toBeUndefined();
+    }));
+
+    it('Sollte bei Nicht-Preset-Dialogen ohne maxWidth und mit width=auto eine Default-maxWidth setzen', fakeAsync(() => {
+      dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent, {
+        width: 'auto',
+        maxWidth: undefined
+      });
+      LuxTestHelper.wait(fixture);
+
+      const config = (dialogRef._matDialogRef as any)._containerInstance._config;
+      expect(config.maxWidth).toEqual(minWidth(DIALOG_WIDTH_LARGE_PX));
     }));
   });
 

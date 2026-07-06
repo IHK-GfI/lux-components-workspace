@@ -8,7 +8,11 @@ import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.co
 import { LuxLinkPlainComponent } from '../../../lux-action/lux-link-plain/lux-link-plain.component';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
-import { ILuxDialogConfig } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
+import {
+  DIALOG_WIDTH_SMALL_PX,
+  ILuxDialogConfig,
+  minWidth
+} from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxTheme } from '../../../lux-theme/lux-theme';
 import { LuxThemeService } from '../../../lux-theme/lux-theme.service';
@@ -136,14 +140,14 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
 
   dialogDeleteConfig: ILuxDialogConfig = {
     disableClose: false,
-    width: 'auto',
+    width: minWidth(DIALOG_WIDTH_SMALL_PX),
     height: 'auto',
     panelClass: ['file-dialog', 'file-delete-dialog']
   };
 
   dialogReplaceConfig: ILuxDialogConfig = {
     disableClose: false,
-    width: 'auto',
+    width: minWidth(DIALOG_WIDTH_SMALL_PX),
     height: 'auto',
     panelClass: ['file-dialog', 'file-replace-dialog']
   };
@@ -243,7 +247,9 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
           const index = selectedFilesArray.findIndex((compareFile: ILuxFileObject) => compareFile.name === file.name);
           if (index > -1) {
             replaceableFilesMap.set(index, file);
-            replaceFileDeleteProtection = replaceFileDeleteProtection || (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false);
+            replaceFileDeleteProtection =
+              replaceFileDeleteProtection ||
+              (this.luxDeleteActionConfig.isDeletable ? !this.luxDeleteActionConfig.isDeletable(files[0]) : false);
           }
         });
       }
@@ -468,3 +474,4 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
     return this.tService.translate(`luxc.file.upload.error_message.upload_error`);
   }
 }
+

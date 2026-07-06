@@ -37,7 +37,11 @@ import { LuxPanelContentComponent } from '../../lux-layout/lux-panel/lux-panel-s
 import { LuxPanelHeaderTitleComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-header-title.component';
 import { LuxPanelComponent } from '../../lux-layout/lux-panel/lux-panel.component';
 import { LuxLookupComboboxAcComponent } from '../../lux-lookup/lux-lookup-combobox-ac/lux-lookup-combobox-ac.component';
-import { ILuxDialogConfig } from '../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
+import {
+  DIALOG_WIDTH_SMALL_PX,
+  ILuxDialogConfig,
+  minWidth
+} from '../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
@@ -84,7 +88,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   private mediaQuery = inject(LuxMediaQueryObserverService);
 
   dialogConfig: ILuxDialogConfig = {
-    width: Math.min(600, window.innerWidth - 50) + 'px',
+    width: minWidth(DIALOG_WIDTH_SMALL_PX),
     height: 'auto',
     panelClass: []
   };
@@ -468,3 +472,4 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     return newFilter;
   }
 }
+
