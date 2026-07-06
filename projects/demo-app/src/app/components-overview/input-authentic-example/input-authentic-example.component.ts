@@ -104,10 +104,13 @@ export class InputAuthenticExampleComponent {
   labelLongFormat = false;
   denseFormat = false;
   clearable = false;
+  extraValidators = false;
   exampleCompany = '';
   exampleDate = '';
   exampleStreet = '';
   exampleNumber = '';
+  minLengthValidator = Validators.minLength(3);
+  maxLengthValidator = Validators.maxLength(10);
 
   constructor() {
     this.form = new FormGroup<InputDummyForm>({
@@ -118,6 +121,19 @@ export class InputAuthenticExampleComponent {
   changeRequired(required: boolean) {
     this.required = required;
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
+  }
+
+  changeExtraValidators(enabled: boolean) {
+    this.extraValidators = enabled;
+    const control = this.form.get(this.controlBinding);
+    if (control) {
+      if (enabled) {
+        control.addValidators([this.minLengthValidator, this.maxLengthValidator]);
+      } else {
+        control.removeValidators([this.minLengthValidator, this.maxLengthValidator]);
+      }
+      control.updateValueAndValidity();
+    }
   }
 
   pickValidatorValueFn(selected: any) {
