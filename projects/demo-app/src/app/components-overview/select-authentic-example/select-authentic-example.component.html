@@ -105,6 +105,12 @@
         [luxOptions]="options"
         luxLabel="Optionen via ng-template"
         luxHint="Jede Option wird über ein ng-template gerendert und zeigt einen Tooltip. Der Filter lässt sich über die Optionen zuschalten."
+        [luxPlaceholder]="placeholder"
+        [luxRequired]="required"
+        [luxReadonly]="readonly"
+        [(luxDisabled)]="disabled"
+        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
+        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
         [luxEnableFilter]="enableFilter"
         [luxFilterPlaceholder]="filterPlaceholder"
         [luxFilterValue]="filterValue"
@@ -112,6 +118,7 @@
         [luxVisibleOptionCount]="visibleOptionCount"
         [luxDense]="denseFormat"
         [(luxSelected)]="templateValue"
+        #tooltipSelectComp
       >
         <ng-template let-item>
           <span [luxTooltip]="item.label">via Template {{ item | json }}</span>
@@ -302,14 +309,14 @@
       <lux-button
         [luxStroked]="true"
         luxLabel="Werte resetten"
-        (luxClicked)="reset(defaultSelectComp, multiselectComp, reactiveSelectComp)"
+        (luxClicked)="reset(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
         class="lux-flex-none"
       >
       </lux-button>
       <lux-button
         [luxStroked]="true"
         luxLabel="Fehler anzeigen"
-        (luxClicked)="showErrors(defaultSelectComp, multiselectComp, reactiveSelectComp)"
+        (luxClicked)="showErrors(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
         class="lux-flex-none"
       >
       </lux-button>

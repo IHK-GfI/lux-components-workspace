@@ -11,8 +11,8 @@ import {
   LuxToggleAcComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -155,6 +155,7 @@ export class SelectAuthenticExampleComponent {
   showErrors(...comps: LuxFormSelectableBase[]) {
     this.value = null;
     this.multiselectValue = null;
+    this.templateValue = null;
     this.form.get(this.controlBinding)!.setValue(null);
 
     this.changeRequired(true);
@@ -194,6 +195,7 @@ export class SelectAuthenticExampleComponent {
   reset(...comps: LuxFormSelectableBase[]) {
     this.value = undefined;
     this.multiselectValue = undefined;
+    this.templateValue = undefined;
     this.form.get(this.controlBinding)!.setValue(undefined);
 
     comps.forEach((comp: LuxFormSelectableBase) => {
