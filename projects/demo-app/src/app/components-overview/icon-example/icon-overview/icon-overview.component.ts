@@ -4,25 +4,24 @@ import { Subscription } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-    LuxAriaLabelDirective,
-    LuxAutofocusDirective,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxCardInfoComponent,
-    LuxChipAcComponent,
-    LuxChipsAcComponent,
-    LuxIconColor,
-    LuxIconComponent,
-    LuxIconRegistryService,
-    LuxInfiniteScrollDirective,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxMediaQueryObserverService,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxSvgIcon,
-    LuxTooltipDirective
+  LuxAriaLabelDirective,
+  LuxAutofocusDirective,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCardInfoComponent,
+  LuxChipAcComponent,
+  LuxChipsAcComponent,
+  LuxIconColor,
+  LuxIconComponent,
+  LuxIconRegistryService,
+  LuxInfiniteScrollDirective,
+  LuxInputAcComponent,
+  LuxInputAcPrefixComponent,
+  LuxMediaQueryObserverService,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxSvgIcon,
+  LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 
 declare interface SearchBinding {
@@ -44,7 +43,6 @@ declare interface SearchBinding {
     LuxInfiniteScrollDirective,
     LuxSelectAcComponent,
     LuxRadioAcComponent,
-    LuxInputAcSuffixComponent,
     LuxInputAcPrefixComponent,
     LuxInputAcComponent,
     LuxChipsAcComponent,
@@ -106,8 +104,9 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
   }
 
   set inputValue(input: string) {
-    if (this._inputValue !== input) {
-      this._inputValue = input;
+    const newValue = input ?? '';
+    if (this._inputValue !== newValue) {
+      this._inputValue = newValue;
       this.onIconSearch(this._inputValue);
     }
   }
@@ -239,12 +238,6 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
       this.updateIcons(this.allIcons);
       this.chipLabels.length = 0;
     }
-  }
-
-  onResetInput() {
-    this.updateIcons(this.allIcons);
-    this.chipLabels.length = 0;
-    this.inputValue = '';
   }
 
   onChipRemoved(event: number) {

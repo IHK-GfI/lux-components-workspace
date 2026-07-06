@@ -22,6 +22,7 @@ export class LuxAutofocusDirective implements AfterViewInit {
         tagName === 'lux-lookup-autocomplete-ac' ||
         tagName === 'lux-checkbox-ac' ||
         tagName === 'lux-chips-ac' ||
+        tagName === 'lux-timepicker' ||
         tagName === 'lux-datepicker-ac' ||
         tagName === 'lux-datetimepicker-ac' ||
         tagName === 'lux-file-input-ac' ||

@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
-    LuxAutofocusDirective,
-    LuxButtonComponent,
-    LuxCardActionsComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxDatepickerAcComponent,
-    LuxFormHintComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxLinkPlainComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxDatepickerAcComponent,
+  LuxFormHintComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxInputAcPrefixComponent,
+  LuxInputAcSuffixComponent,
+  LuxLinkPlainComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent,
     LuxValidators
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -22,10 +22,10 @@ import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import {
-    emptyErrorCallback,
-    exampleErrorCallback,
-    logResult,
-    setRequiredValidatorForFormControl
+  emptyErrorCallback,
+  exampleErrorCallback,
+  logResult,
+  setRequiredValidatorForFormControl
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
@@ -105,10 +105,14 @@ export class InputAuthenticExampleComponent {
   hideCounterLabel = false;
   labelLongFormat = false;
   denseFormat = false;
+  clearable = false;
+  extraValidators = false;
   exampleCompany = '';
   exampleDate = '';
   exampleStreet = '';
   exampleNumber = '';
+  minLengthValidator = Validators.minLength(3);
+  maxLengthValidator = Validators.maxLength(10);
 
   constructor() {
     this.form = new FormGroup<InputDummyForm>({
@@ -119,6 +123,19 @@ export class InputAuthenticExampleComponent {
   changeRequired(required: boolean) {
     this.required = required;
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
+  }
+
+  changeExtraValidators(enabled: boolean) {
+    this.extraValidators = enabled;
+    const control = this.form.get(this.controlBinding);
+    if (control) {
+      if (enabled) {
+        control.addValidators([this.minLengthValidator, this.maxLengthValidator]);
+      } else {
+        control.removeValidators([this.minLengthValidator, this.maxLengthValidator]);
+      }
+      control.updateValueAndValidity();
+    }
   }
 
   pickValidatorValueFn(selected: any) {

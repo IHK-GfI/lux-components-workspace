@@ -25,6 +25,7 @@
         [luxReadonly]="readonly"
         [luxStrict]="strict"
         [luxDense]="denseFormat"
+        [luxClearable]="clearable"
         [luxLookupDelay]="delay"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
         [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
@@ -41,15 +42,21 @@
         #autocomplete
       >
         @if (showPrefix) {
-        <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks"></lux-icon>&nbsp; </lux-input-ac-prefix>
-        } @if (showSuffix) {
-        <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
+          <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks"></lux-icon>&nbsp; </lux-input-ac-prefix>
         }
-        @if(useTemplatesForLabels) {
+        @if (showSuffix) {
+          <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
+        }
+        @if (useTemplatesForLabels) {
           <ng-template let-option #labelTemplate>
-            <div class="lux-flex ">
+            <div class="lux-flex">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
-              <div>via Template {{ option[renderProperty]}}@if(useTranslocoDate) {&nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})}</div>
+              <div>
+                via Template {{ option[renderProperty] }}
+                @if (useTranslocoDate) {
+                  &nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})
+                }
+              </div>
             </div>
           </ng-template>
         }
@@ -74,6 +81,7 @@
         [luxReadonly]="readonly"
         [luxStrict]="strict"
         [luxDense]="denseFormat"
+        [luxClearable]="clearable"
         [luxLookupDelay]="delay"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
         [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
@@ -89,15 +97,21 @@
         luxTagId="autocomplete-reactive"
       >
         @if (showPrefix) {
-        <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'"></lux-icon>&nbsp; </lux-input-ac-prefix>
-        } @if (showSuffix) {
-        <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
+          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'"></lux-icon>&nbsp; </lux-input-ac-prefix>
         }
-         @if(useTemplatesForLabels) {
+        @if (showSuffix) {
+          <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
+        }
+        @if (useTemplatesForLabels) {
           <ng-template let-option #labelTemplate>
-            <div class="lux-flex ">
+            <div class="lux-flex">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
-              <div>via Template {{ option[renderProperty]}}@if(useTranslocoDate) {&nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})}</div>
+              <div>
+                via Template {{ option[renderProperty] }}
+                @if (useTranslocoDate) {
+                  &nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})
+                }
+              </div>
             </div>
           </ng-template>
         }
@@ -160,6 +174,13 @@
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      [(luxChecked)]="clearable"
+      luxLabel="luxClearable"
+      luxHint="Zeigt einen optionalen Button zum Zurücksetzen des Eingabewerts an."
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
@@ -256,25 +277,27 @@
       </lux-form-hint>
     </lux-select-ac>
     @if (strict) {
-    <lux-input-ac
-      luxName="autocomplete_luxErrorMessageNotAnOption"
-      luxLabel="luxErrorMessageNotAnOption"
-      luxHint="Die Property kann die Fehlermeldung für invalide Optionen einstellen."
-      [(luxValue)]="errorMessageNotAnOption"
-    >
-      <lux-form-hint> Die Property kann die Fehlermeldung für invalide Optionen einstellen. </lux-form-hint>
-    </lux-input-ac>
-    } @if (useErrorMessage) {
-    <lux-input-ac
-      luxName="autocomplete_luxErrorMessage"
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <lux-input-ac
+        luxName="autocomplete_luxErrorMessageNotAnOption"
+        luxLabel="luxErrorMessageNotAnOption"
+        luxHint="Die Property kann die Fehlermeldung für invalide Optionen einstellen."
+        [(luxValue)]="errorMessageNotAnOption"
+      >
+        <lux-form-hint> Die Property kann die Fehlermeldung für invalide Optionen einstellen. </lux-form-hint>
+      </lux-input-ac>
+    }
+    @if (useErrorMessage) {
+      <lux-input-ac
+        luxName="autocomplete_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-    >
-    </lux-input-ac>
-    } @if (!useErrorMessage) {
-    <pre class="lux-label">{{ errorCallbackString }}</pre>
+        [(luxValue)]="errorMessage"
+      >
+      </lux-input-ac>
+    }
+    @if (!useErrorMessage) {
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-toggle-ac
       luxLabel="luxErrorMessage verwenden"

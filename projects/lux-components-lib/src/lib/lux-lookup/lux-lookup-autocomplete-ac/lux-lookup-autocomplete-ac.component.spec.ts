@@ -77,7 +77,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
 
       // Nachbedingungen testen
-      const options = fixture.nativeElement.querySelectorAll('mat-option')
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');
@@ -136,6 +136,29 @@ describe('LuxLookupAutocompleteAcComponent', () => {
 
       discardPeriodicTasks();
     }));
+
+    describe('Clear-Button', () => {
+      beforeEach(fakeAsync(() => {
+        component.clearable = true;
+        fixture.detectChanges();
+      }));
+
+      it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
+        LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'A');
+        LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
+
+        expect(autocomplete.formControl.value as any).toEqual('A');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+
+        fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        expect(autocomplete.formControl.value).toBeNull();
+        expect(autocomplete.matInput.nativeElement.value).toEqual('');
+
+        discardPeriodicTasks();
+      }));
+    });
   });
 });
 
@@ -148,6 +171,8 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       luxRenderProp="kurzText"
       [luxCompareFn]="compareFn"
       [luxControlValidators]="validators"
+      [luxClearable]="clearable"
+      [luxClearAriaLabel]="clearAriaLabel"
       [(luxValue)]="value"
       luxLookupId="test"
       [luxLabel]="'Label'"
@@ -163,6 +188,8 @@ class LuxNoFormComponent {
   validators?: ValidatorFnType;
   value?: any;
   compareFn?: LuxLookupCompareFn;
+  clearable = false;
+  clearAriaLabel = 'Wert leeren';
 }
 
 class MockLookupService {
