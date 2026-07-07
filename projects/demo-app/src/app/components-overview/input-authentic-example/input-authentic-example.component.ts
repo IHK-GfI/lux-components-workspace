@@ -77,7 +77,6 @@ export class InputAuthenticExampleComponent {
   validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
-    { value: Validators.email, label: 'Validators.email' },
     { value: LuxValidators.email, label: 'LuxValidators.email' }
   ];
   typeOptions = ['text', 'number', 'email', 'time', 'password', 'color'];
