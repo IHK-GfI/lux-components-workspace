@@ -90,6 +90,49 @@
       [luxTooltipHideDelay]="hideDelay"
       [luxTooltipShowDelay]="showDelay"
     ></lux-link-plain>
+
+    <!-- Eigene Sektion: Tooltip nur bei abgeschnittenem Text (luxTooltipIfTruncated).
+         luxTooltip, luxTooltipIfTruncated und die Crop-Klasse liegen auf demselben Element, damit
+         scrollWidth die volle Textbreite liefert (auch mit Ellipsis) und die Erkennung greift.
+         Auf einem Button funktioniert das bewusst nicht, weil der Text dort tiefer im Label liegt. -->
+    <div
+      class="lux-flex lux-flex-col lux-gap-4"
+      style="width: 100%; margin-top: 16px; padding-top: 24px; border-top: 1px solid var(--lux-theme-card-outline-color)"
+    >
+      <span style="font-weight: 600; font-size: 1.1em">Tooltip nur bei abgeschnittenem Text</span>
+      <span>
+        Aktiviert wird der Tooltip über den Input <code>[luxTooltipIfTruncated]="true"</code> zusammen mit einer Crop-Klasse
+        (hier <code>.lux-crop</code> mit <code>overflow: hidden; white-space: nowrap; text-overflow: ellipsis</code>).
+        <code>luxTooltip</code>, <code>luxTooltipIfTruncated</code> und die Crop-Klasse müssen auf demselben Element liegen.
+      </span>
+      <div
+        style="
+          resize: horizontal;
+          overflow: hidden;
+          width: 300px;
+          min-width: 0;
+          max-width: 100%;
+          padding: 24px;
+          border: 1px solid var(--lux-theme-card-outline-color);
+          border-radius: 8px;
+          background: var(--lux-theme-card-background-color);
+        "
+      >
+        <div
+          tabindex="0"
+          class="lux-crop"
+          style="color: var(--lux-theme-primary-color)"
+          luxTooltip="{{ resizableMessage }}"
+          [luxTooltipIfTruncated]="true"
+        >
+          {{ resizableMessage }}
+        </div>
+      </div>
+      <span class="lux-hint">
+        Das Fenster lässt sich am Griff unten rechts in der Breite ändern. Bei voller Breite bleibt der Tooltip aus. Sobald der Text
+        abgeschnitten wird, erscheint er beim Hover.
+      </span>
+    </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac
