@@ -59,12 +59,15 @@ export class DialogExampleComponent implements OnDestroy {
 
   dialogConfig: ILuxDialogPresetConfig = {
     title: 'Daten löschen?',
-    content: 'Ihre Daten werden endgültig gelöscht. Das Löschen kann nicht rückgängig gemacht werden.',
+    content:
+      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna' +
+      ' aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no' +
+      ' sea takimata sanctus est Lorem ipsum dolor sit amet.',
     disableClose: false,
     disableBackdropAndEscClose: false,
     width: 'auto',
     height: 'auto',
-    iconName: 'lux-interface-alert-warning-triangle',
+    iconName: '',
     panelClass: [],
     confirmAction: {
       label: 'Löschen',

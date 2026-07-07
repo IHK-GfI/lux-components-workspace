@@ -92,11 +92,14 @@ In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren k
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
+**Hinweis (Breaking Change)**: Beim Preset-Dialog und bei Dialogen aus `openComponent(...)` wird ab Version 21.6.0 automatisch eine `maxWidth` gesetzt, wenn keine `maxWidth` angegeben ist und `width` auf `auto` steht (oder nicht gesetzt ist). Preset-Dialoge verwenden dabei `minWidth(DIALOG_WIDTH_SMALL_PX)`, eigene Dialog-Components `minWidth(DIALOG_WIDTH_LARGE_PX)`. Verwendet eine Anwendung bereits eine feste `width` oder eine eigene `maxWidth`, bleibt dieses Verhalten unverändert.
+
+**Hinweis (Breaking Change)**: Der Import von `LuxPaginatorIntl` wurde umgestellt. Falls der Typ verwendet wird, bitte den Importpfad auf `@ihk-gfi/lux-components/lux-paginator` ändern (statt des bisherigen Imports über `@ihk-gfi/lux-components`).
+
 - LUX-Components-Updater aktualisieren:
   - `npm update @ihk-gfi/lux-components-update`
 - LUX-Components-Updater ausführen:
   - `ng generate @ihk-gfi/lux-components-update:update-21.6.0`
-  - **Hinweis (Breaking Change)**: Der Import von `LuxPaginatorIntl` wurde umgestellt. Falls der Typ verwendet wird, bitte den Importpfad auf `@ihk-gfi/lux-components/lux-paginator` ändern (statt des bisherigen Imports über `@ihk-gfi/lux-components`).
 - Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
 - Fertig!
 
