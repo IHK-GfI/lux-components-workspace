@@ -73,7 +73,7 @@ const luxEmailValidator: ValidatorFn = (control: AbstractControl): ValidationErr
   if (!value) {
     return null;
   }
-  return LUX_EMAIL_REGEXP.test(value) ? null : { mail: true };
+  return LUX_EMAIL_REGEXP.test(value) ? null : { email: true };
 };
 
 /**
