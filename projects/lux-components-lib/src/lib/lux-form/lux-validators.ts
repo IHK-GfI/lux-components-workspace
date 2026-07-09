@@ -1,5 +1,8 @@
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
+// Stricter email pattern aligned with the JAST-Stack backend validation.
+const LUX_EMAIL_REGEXP = /^(?=.{1,64}@)[\p{L}0-9_-]+(\.[\p{L}0-9_-]+)*@[\p{L}0-9][\p{L}0-9-]+(\.[\p{L}0-9-]+)*(\.[\p{L}]{2,})$/u;
+
 /**
  * Prüft, ob mindestens einer der übergebenen boolean-Werte `true` ist.
  * Geeignet für Checkboxen ohne Formular (z.B. mit `[(luxChecked)]`-Binding).
@@ -20,7 +23,7 @@ import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angu
  * ```
  */
 export function luxAtLeastOneChecked(values: boolean[]): boolean {
-  return values.some((v) => v === true);
+  return values.some((v) => v);
 }
 
 /**
@@ -53,3 +56,34 @@ export function luxAtLeastOneCheckboxChecked(controlNames: string[]): ValidatorF
     return atLeastOneChecked ? null : { luxAtLeastOneCheckboxChecked: true };
   };
 }
+
+/**
+ * Validator für E-Mail-Adressen mit strengerer Prüfung als `Validators.email`,
+ * abgestimmt auf die serverseitige JAST-Stack-Validierung.
+ *
+ * Fehlerkey: `luxEmail`
+ *
+ * @example
+ * ```ts
+ * new FormControl('', { validators: LuxValidators.email })
+ * ```
+ */
+const luxEmailValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value as string | null | undefined;
+  if (!value) {
+    return null;
+  }
+  return LUX_EMAIL_REGEXP.test(value) ? null : { email: true };
+};
+
+/**
+ * Sammlung eigener LUX-Validatoren, analog zu Angulars `Validators`-Klasse.
+ *
+ * @example
+ * ```ts
+ * new FormControl('', { validators: LuxValidators.email })
+ * ```
+ */
+export const LuxValidators = {
+  email: luxEmailValidator
+} as const;

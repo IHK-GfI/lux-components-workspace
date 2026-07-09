@@ -14,7 +14,8 @@ import {
   LuxInputAcSuffixComponent,
   LuxLinkPlainComponent,
   LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxToggleAcComponent,
+    LuxValidators
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -76,7 +77,7 @@ export class InputAuthenticExampleComponent {
   validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
-    { value: Validators.email, label: 'Validators.email' }
+    { value: LuxValidators.email, label: 'LuxValidators.email' }
   ];
   typeOptions = ['text', 'number', 'email', 'time', 'password', 'color'];
   autocompleteOptions = ['on', 'off'];

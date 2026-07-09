@@ -42,7 +42,7 @@
 | luxDisabled            | boolean                | Bestimmt, ob die Component deaktiviert ist oder nicht. Durch den Event-Emitter "luxDisabledChange" ist ein Two-Way-Binding möglich.                                                                                                                                                                                                                                          |
 | luxReadonly            | boolean                | Bestimmt, ob sich das Feld im reinen Lese-Zustand befindet (ähnlich wie disabled, aber ohne die Auswirkungen auf Forms und andere visuelle Darstellung).                                                                                                                                                                                                                     |
 | luxErrorCallback       | LuxErrorCallbackFnType | Callback-Funktion die aufgerufen wird nachdem die Validierung der Component stattgefunden hat. Hier kann dann entsprechend aus dem übergebenen Errors-Objekt ein Fehler ausgelesen und die passende Fehlermeldung zurückgegeben werden. Liefert der Callback `undefined` zurück, wird die Defaultfehlermeldung ausgegeben.                                                   |
-| luxControlValidators   | ValidatorFnType        | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen.                                                                                                                       |
+| luxControlValidators   | ValidatorFnType        | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen. Für eine strengere E-Mail-Validierung kann z.B. `LuxValidators.email` verwendet werden.                                 |
 | luxLabel               | string                 | Property welche ein Label oberhalb der FormComponent (Ausnahme: LuxToggle und LuxCheckbox, diese stellen das Label rechts von der Schaltfläche dar) darstellt.                                                                                                                                                                                                               |
 | luxHint                | string                 | Property, welche einen Tipp/Text unterhalb der FormComponent darstellt. Alternativ kann man über das Content-Child `lux-form-hint` komplexere Hinweise (z.B. mit einem Link) darstellen.                                                                                                                                                                                     |
 | luxHintShowOnlyOnFocus | boolean                | Gibt an, ob der Hinweis (siehe luxHint) nur angezeigt wird, wenn das Element den Fokus hat.                                                                                                                                                                                                                                                                                  |
@@ -110,6 +110,8 @@ Html
 Ts
 
 ```typescript
+import { LuxValidators } from '@ihk-gfi/lux-components';
+
 myGroup: FormGroup;
 
   constructor() {
@@ -118,7 +120,7 @@ myGroup: FormGroup;
         {
           firstname: new FormControl('', Validators.pattern('[a-zA-Z0-9]*')),
           lastname: new FormControl('', Validators.compose([Validators.required, Validators.minLength(3)])),
-          email: new FormControl('', Validators.compose([Validators.required, Validators.email])),
+          email: new FormControl('', Validators.compose([Validators.required, LuxValidators.email])),
           password: new FormControl(''),
         }
       ),
@@ -129,6 +131,8 @@ myGroup: FormGroup;
     this.myGroup.controls['description'].disable();
 }
 ```
+
+Hinweis: `LuxValidators.email` validiert E-Mail-Adressen strenger als `Validators.email` (passend zur serverseitigen JAST-Stack-Prüfung).
 
 Html
 
