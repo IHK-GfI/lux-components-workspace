@@ -8,21 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout LUX-components
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{secrets.GITHUB}}
           ref: main
           path: components
-      
+
       - name: Checkout Wiki
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: IHK-GfI/lux-components-workspace.wiki
           token: ${{secrets.GITHUB}}
           ref: master
           path: wiki
           clean: false
-      
+
       - name: Update Wiki
         run: |
           ls -l
