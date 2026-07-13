@@ -1,3 +1,4 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
@@ -14,10 +15,11 @@ describe('LuxMenuComponent', () => {
   let component: MockComponent;
   let fixture: ComponentFixture<MockComponent>;
   let menuComponent: LuxMenuComponent;
+  let overlayContainer: OverlayContainer;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()],
+      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 
@@ -27,6 +29,7 @@ describe('LuxMenuComponent', () => {
     fixture.detectChanges();
 
     menuComponent = fixture.debugElement.query(By.directive(LuxMenuComponent)).componentInstance;
+    overlayContainer = TestBed.inject(OverlayContainer);
   });
 
   it('Sollte erstellt werden', fakeAsync(() => {
@@ -147,7 +150,7 @@ describe('LuxMenuComponent', () => {
 
     let menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
     let children = menuExtendedEl.children;
-    
+
     expect(children[0].nativeElement.classList).toContain('lux-menu-item');
 
     // Änderungen durchführen
@@ -156,7 +159,7 @@ describe('LuxMenuComponent', () => {
 
     menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
     children = menuExtendedEl.children;
-    
+
     expect(children[0].nativeElement.classList).toContain('lux-menu-trigger');
   }));
 
@@ -237,6 +240,33 @@ describe('LuxMenuComponent', () => {
 
     // Nachbedingungen prüfen
     expect(focusSpy).toHaveBeenCalled();
+  }));
+
+  it('Sollte Panel-Items mit warn/accent Farbe die entsprechende Farbklasse vergeben', fakeAsync(() => {
+    // Vorbedingungen
+    component.generateItems(3);
+    component.displayExtended = false;
+    component.items[0].color = 'warn';
+    component.items[1].color = 'accent';
+    component.items[2].color = 'primary';
+    LuxTestHelper.wait(fixture);
+
+    // Menü öffnen
+    menuComponent.menuTriggerElRef!.nativeElement.click();
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen
+    const overlayEl = overlayContainer.getContainerElement();
+    const warnItems = overlayEl.querySelectorAll('button.lux-menu-item.lux-menu-item-color-warn');
+    const accentItems = overlayEl.querySelectorAll('button.lux-menu-item.lux-menu-item-color-accent');
+    const primaryItems = overlayEl.querySelectorAll('button.lux-menu-item:not(.lux-menu-item-color-warn):not(.lux-menu-item-color-accent)');
+
+    expect(warnItems.length).toBe(1);
+    expect(accentItems.length).toBe(1);
+    expect(primaryItems.length).toBe(1);
+
+    flush();
+    discardPeriodicTasks();
   }));
 
   const updateExtendedMenuItems = () => {
