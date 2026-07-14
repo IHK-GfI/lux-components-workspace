@@ -18,5 +18,14 @@
     <div class="lux-mt-3"></div>
     <lux-input-ac luxLabel="Startzeit der Session in Sekunden" [(luxValue)]="startingSeconds"></lux-input-ac>
     <lux-button luxLabel="Zeit setzen" [luxFlat]="true" luxColor="primary" (luxClicked)="setTimer()"></lux-button>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-button
+        luxLabel="Timer zurücksetzen"
+        [luxFlat]="true"
+        luxColor="primary"
+        (luxClicked)="this.timerService.clearTimer()"
+      ></lux-button>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
   </example-base-simple-options>
 </example-base-structure>

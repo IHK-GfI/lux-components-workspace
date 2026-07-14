@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, EventEmitter, inject, Injectable, Signal, signal } from '@angular/core';
+import { computed, DestroyRef, EventEmitter, inject, Injectable, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map, switchMap, takeWhile, timer } from 'rxjs';
 import { LuxComponentsConfigService } from '../../../../../lux-components-config/lux-components-config.service';
@@ -22,6 +22,11 @@ export class LuxAppHeaderAcSessionTimerService {
   private readonly storageService = inject(LuxStorageService);
 
   private static readonly STORAGE_KEY = 'lux-components-session-endtime';
+  private static readonly BROADCAST_CHANNEL_NAME = 'lux-session-timer';
+
+  private readonly broadcastChannel: BroadcastChannel | null =
+    typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel(LuxAppHeaderAcSessionTimerService.BROADCAST_CHANNEL_NAME) : null;
+  private fromBroadcast = false;
 
   luxLogoutEvent = new EventEmitter<void>();
   luxTimeoutEvent = new EventEmitter<void>();
@@ -117,7 +122,7 @@ export class LuxAppHeaderAcSessionTimerService {
       }
 
       // Timer ist natürlich abgelaufen (nicht durch explizites Zurücksetzen auf 0)
-      if (remainingMs <= 1000) {
+      if (remainingMs <= 1000 && remainingMs !== 0) {
         if (this.currentDialogRef) {
           this.currentDialogRef.closeDialog();
           this.currentDialogRef = null;
@@ -155,6 +160,11 @@ export class LuxAppHeaderAcSessionTimerService {
       });
 
     this.url = this.configService.currentConfig.sessionTimerConfig?.url ?? '';
+
+    if (this.broadcastChannel) {
+      this.broadcastChannel.onmessage = () => this.handleBroadcastMessage();
+      inject(DestroyRef).onDestroy(() => this.broadcastChannel?.close());
+    }
   }
 
   extendSessionTimer() {
@@ -170,6 +180,7 @@ export class LuxAppHeaderAcSessionTimerService {
         this.setStoredEndTime(newEndTime);
         this.endTime = newEndTime;
         this.startingSeconds.set(extensionSeconds);
+        this.broadcast();
         return res;
       })
     );
@@ -187,11 +198,15 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
       this.dialogIsOpen = false;
       this.dialogWasClosed = result !== 'confirmed';
+      if (result !== 'confirmed') {
+        this.broadcast();
+      }
     });
 
     this.currentDialogRef.dialogDeclined.subscribe(() => {
       this.dialogIsOpen = false;
       this.dialogWasClosed = true;
+      this.broadcast();
     });
   }
 
@@ -203,18 +218,19 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
       this.dialogIsOpen = false;
       this.dialogWasClosed = true;
+      this.broadcast();
     });
   }
 
   timeoutUser() {
+    this.broadcast();
     this.resetTimer(0);
-    this.clearStoredEndTime();
     this.luxTimeoutEvent.emit();
   }
 
   logoutUser() {
+    this.broadcast();
     this.resetTimer(0);
-    this.clearStoredEndTime();
     this.luxLogoutEvent.emit();
   }
 
@@ -261,5 +277,31 @@ export class LuxAppHeaderAcSessionTimerService {
     this.storageService.removeItem(
       this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
     );
+  }
+
+  /**
+   * Clear the timer and remove the stored endTime from LuxStorageService
+   */
+  clearTimer() {
+    this.resetTimer(0);
+  }
+
+  private broadcast() {
+    if (!this.fromBroadcast) {
+      this.broadcastChannel?.postMessage('dialog-closed');
+    }
+  }
+
+  private handleBroadcastMessage() {
+    this.fromBroadcast = true;
+
+    if (this.currentDialogRef) {
+      this.currentDialogRef.closeDialog('dismissed');
+      this.currentDialogRef = null;
+    }
+    this.dialogIsOpen = false;
+    this.dialogWasClosed = true;
+
+    this.fromBroadcast = false;
   }
 }
