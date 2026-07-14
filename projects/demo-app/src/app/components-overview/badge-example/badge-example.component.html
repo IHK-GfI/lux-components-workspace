@@ -4,11 +4,13 @@
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
     @for (color of colors; track color) {
-    <lux-badge [luxIconName]="iconName" [luxColor]="color" [luxUppercase]="uppercase">
-      <lux-label luxId="bsp-badge-label">
-        {{ text }}
-      </lux-label>
-    </lux-badge>
+      <div class="lux-min-height-12">
+        <lux-badge [luxIconName]="iconName" [luxColor]="color" [luxUppercase]="uppercase" [luxMuted]="muted" [luxSize]="size">
+          <lux-label [luxId]="'bsp-badge-label-' + color">
+            {{ text }}
+          </lux-label>
+        </lux-badge>
+      </div>
     }
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -27,10 +29,26 @@
     <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
     </lux-input-ac>
+    <lux-select-ac
+      luxLabel="luxSize"
+      luxHint="Setzt die Schriftgröße des Badges. Ohne Angabe wird die Schriftgröße vom Parent-Element geerbt."
+      [(luxSelected)]="size"
+      [luxOptions]="sizeOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="sizePickValue"
+    >
+    </lux-select-ac>
     <lux-toggle-ac
       [(luxChecked)]="uppercase"
       luxLabel="luxUppercase"
       luxHint="Die Property ermöglicht eine Uppercase-Darstellung des Textes in der Badge einzuschalten."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      [(luxChecked)]="muted"
+      luxLabel="luxMuted"
+      luxHint="Die Property aktiviert die Muted-Darstellung mit hellem Hintergrund und farbigem Rahmen."
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>

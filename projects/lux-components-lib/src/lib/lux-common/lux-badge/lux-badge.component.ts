@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
-import { LuxBadgeColor } from '../../lux-util/lux-colors.enum';
+import { LuxBadgeColor, LuxBadgeSize } from '../../lux-util/lux-colors.enum';
 
 @Component({
   selector: 'lux-badge',
@@ -16,4 +16,6 @@ export class LuxBadgeComponent {
   @Input() luxUppercase = true;
   @Input() luxIconName = '';
   @Input() luxColor: LuxBadgeColor = this.DEFAULT_BADGE_COLOR;
+  @Input() luxMuted = false;
+  @Input() luxSize: LuxBadgeSize = '';
 }
