@@ -69,6 +69,18 @@ lux-menu {
 }
 
 /* Menu-Overlay-Panel anpassen */
+.lux-menu-panel:not(.lux-menu-section-panel) {
+  .lux-menu-item-color-warn:not([disabled]) {
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-warn-text-color);
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-warn-text-color);
+  }
+
+  .lux-menu-item-color-accent:not([disabled]) {
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-accent-text-color);
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-accent-text-color);
+  }
+}
+
 .lux-menu-panel {
   @include mat.menu-overrides(
     (
@@ -259,6 +271,26 @@ lux-menu {
   }
   .lux-menu-item-divider {
     padding: 4px;
+  }
+
+  .lux-menu-item-color-warn:not([disabled]) {
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-warn-text-color);
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-warn-text-color);
+
+    .lux-button-label,
+    .lux-button-label-subtitle {
+      color: var(--lux-theme-button-text-warn-text-color);
+    }
+  }
+
+  .lux-menu-item-color-accent:not([disabled]) {
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-accent-text-color);
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-accent-text-color);
+
+    .lux-button-label,
+    .lux-button-label-subtitle {
+      color: var(--lux-theme-button-text-accent-text-color);
+    }
   }
 
   .lux-menu-item-selected {
