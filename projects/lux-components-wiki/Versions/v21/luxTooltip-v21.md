@@ -26,7 +26,7 @@
 | luxTooltipShowDelay | number          | Bestimmt die zeitliche Verzögerung in ms, bis der Tooltip eingeblendet wird.                                                            |
 | luxTooltip          | string          | Beinhaltet den Text des Tooltips.                                                                                                       |
 | luxTooltipPosition  | TooltipPosition | Bestimmt die Position des Tooltips im Verhältnis zum Host-Element. Mögliche Werte: 'below', 'after', 'left', 'right', 'before', 'above' |
-| luxTooltipIfTruncated | boolean      | Aktiviert den Tooltip nur dann, wenn der Host-Text visuell gekürzt wird (`scrollWidth > clientWidth`).                                   |
+| luxTooltipIfTruncated | boolean      | Aktiviert den Tooltip nur dann, wenn der Host-Text visuell gekürzt wird — horizontal (`scrollWidth > clientWidth`, z.B. `text-overflow: ellipsis`) oder vertikal (`scrollHeight > clientHeight`, z.B. `-webkit-line-clamp`).                                   |
 
 ## Beispiel
 

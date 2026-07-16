@@ -135,6 +135,33 @@ describe('LuxTooltipDirective', () => {
     expect(overlayContainerElement.textContent).toEqual('DEMO');
   }));
 
+  it('should enable the tooltip when the text is truncated vertically (line-clamp)', fakeAsync(() => {
+    // Given
+    mockComp.message = 'DEMO';
+    mockComp.ifTruncated = true;
+    fixture.detectChanges();
+    flushTruncationWatch();
+    const watcher = (tooltip as any).truncationWatcher;
+    // Kein horizontaler Überlauf (line-clamp kürzt nur vertikal)
+    Object.defineProperty(tooltipSpan, 'clientWidth', { configurable: true, value: 200 });
+    Object.defineProperty(tooltipSpan, 'scrollWidth', { configurable: true, value: 200 });
+    Object.defineProperty(tooltipSpan, 'clientHeight', { configurable: true, value: 40 });
+
+    // When the text overflows vertically (fits -> truncated)
+    Object.defineProperty(tooltipSpan, 'scrollHeight', { configurable: true, value: 60 });
+    watcher.refresh();
+
+    // Then the tooltip becomes enabled
+    expect(tooltip.disabled).toBe(false);
+
+    // When the text fits again (truncated -> fits)
+    Object.defineProperty(tooltipSpan, 'scrollHeight', { configurable: true, value: 40 });
+    watcher.refresh();
+
+    // Then the tooltip is disabled again
+    expect(tooltip.disabled).toBe(true);
+  }));
+
   it('should keep the tooltip disabled when explicit disable is set', fakeAsync(() => {
     // Given
     mockComp.message = 'DEMO';

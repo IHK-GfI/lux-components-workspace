@@ -1,6 +1,7 @@
 /**
- * Beobachtet ein Host-Element und meldet, ob dessen Text visuell gekürzt ist
- * (`scrollWidth > clientWidth`, z.B. durch `text-overflow: ellipsis`).
+ * Beobachtet ein Host-Element und meldet, ob dessen Text visuell gekürzt ist —
+ * horizontal (`scrollWidth > clientWidth`, z.B. durch `text-overflow: ellipsis`)
+ * oder vertikal (`scrollHeight > clientHeight`, z.B. durch `-webkit-line-clamp`).
  *
  * Die Klasse ist bewusst framework-agnostisch (kein Angular), damit die reine
  * DOM-Beobachtungs-Mechanik aus der {@link LuxTooltipDirective} herausgelöst und
@@ -76,7 +77,10 @@ export class LuxTooltipTruncationWatcher {
    */
   refresh(): void {
     const wasTruncated = this.truncated;
-    this.truncated = this.element.scrollWidth > this.element.clientWidth;
+    // Horizontal (text-overflow: ellipsis) und vertikal (-webkit-line-clamp) prüfen:
+    // Bei line-clamp ist der Überlauf rein vertikal, scrollWidth bleibt gleich clientWidth.
+    this.truncated =
+      this.element.scrollWidth > this.element.clientWidth || this.element.scrollHeight > this.element.clientHeight;
     if (this.truncated !== wasTruncated) {
       this.onTruncationChange();
     }
