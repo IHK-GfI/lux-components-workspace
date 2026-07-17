@@ -12,6 +12,11 @@ import { LuxDialogService } from '../../../../../lux-popups/lux-dialog/lux-dialo
 import { LuxStorageService } from '../../../../../lux-util/lux-storage.service';
 import { LuxAppHeaderAcSessionTimerDialogComponent } from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
 
+export enum LuxSessionTimerBroadcastType {
+  CONFIRMED = 'confirmed',
+  DECLINED = 'declined'
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -163,7 +168,7 @@ export class LuxAppHeaderAcSessionTimerService {
     this.url = this.configService.currentConfig.sessionTimerConfig?.url ?? '';
 
     if (this.broadcastChannel) {
-      this.broadcastChannel.onmessage = () => this.ngZone.run(() => this.handleBroadcastMessage());
+      this.broadcastChannel.onmessage = (event: MessageEvent) => this.ngZone.run(() => this.handleBroadcastMessage(event));
       inject(DestroyRef).onDestroy(() => this.broadcastChannel?.close());
     }
   }
@@ -181,7 +186,8 @@ export class LuxAppHeaderAcSessionTimerService {
         this.setStoredEndTime(newEndTime);
         this.endTime = newEndTime;
         this.startingSeconds.set(extensionSeconds);
-        this.broadcast();
+        this.dialogWasClosed = false;
+        this.broadcast(LuxSessionTimerBroadcastType.CONFIRMED);
         return res;
       })
     );
@@ -197,15 +203,12 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig);
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
-      this.dialogIsOpen = false;
-      this.dialogWasClosed = result !== 'confirmed';
-      this.broadcast();
+      const confirmed = result === LuxSessionTimerBroadcastType.CONFIRMED;
+      this.broadcast(confirmed ? LuxSessionTimerBroadcastType.CONFIRMED : LuxSessionTimerBroadcastType.DECLINED);
     });
 
     this.currentDialogRef.dialogDeclined.subscribe(() => {
-      this.dialogIsOpen = false;
-      this.dialogWasClosed = true;
-      this.broadcast();
+      this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     });
   }
 
@@ -215,20 +218,18 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef.componentInstance.setNotExtendableDialog();
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
-      this.dialogIsOpen = false;
-      this.dialogWasClosed = true;
-      this.broadcast();
+      this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     });
   }
 
   timeoutUser() {
-    this.broadcast();
+    this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     this.resetTimer(0);
     this.luxTimeoutEvent.emit();
   }
 
   logoutUser() {
-    this.broadcast();
+    this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     this.resetTimer(0);
     this.luxLogoutEvent.emit();
   }
@@ -285,20 +286,35 @@ export class LuxAppHeaderAcSessionTimerService {
     this.resetTimer(0);
   }
 
-  private broadcast() {
+  private broadcast(type: LuxSessionTimerBroadcastType) {
     if (!this.fromBroadcast) {
-      this.broadcastChannel?.postMessage('dialog-closed');
+      this.broadcastChannel?.postMessage({ type });
     }
   }
 
-  private handleBroadcastMessage() {
+  //Wenn der Dialog confirmed wird, wird dialogWasClosed auf False gesetzt damit der Dialog wieder aufgeht. Bei Declined soll der Dialog nicht wieder aufgehen wenn die Zeit weniger als 2 Minuten hat.
+  private handleBroadcastMessage(event: MessageEvent) {
     this.fromBroadcast = true;
+    const type: LuxSessionTimerBroadcastType = event.data?.type;
 
-    if (this.currentDialogRef) {
-      this.currentDialogRef.closeDialog('dismissed');
-      this.currentDialogRef = null;
+    switch (type) {
+      case LuxSessionTimerBroadcastType.CONFIRMED:
+        if (this.currentDialogRef) {
+          this.currentDialogRef.closeDialog('confirmed');
+          this.currentDialogRef = null;
+        }
+        this.dialogIsOpen = false;
+        this.dialogWasClosed = false;
+        break;
+      case LuxSessionTimerBroadcastType.DECLINED:
+        if (this.currentDialogRef) {
+          this.currentDialogRef.closeDialog('dismissed');
+          this.currentDialogRef = null;
+        }
+        this.dialogIsOpen = false;
+        this.dialogWasClosed = true;
+        break;
     }
-    this.dialogIsOpen = false;
 
     this.fromBroadcast = false;
   }
