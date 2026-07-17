@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, DestroyRef, EventEmitter, inject, Injectable, Signal, signal } from '@angular/core';
+import { computed, DestroyRef, EventEmitter, inject, Injectable, NgZone, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map, switchMap, takeWhile, timer } from 'rxjs';
 import { LuxComponentsConfigService } from '../../../../../lux-components-config/lux-components-config.service';
@@ -20,6 +20,7 @@ export class LuxAppHeaderAcSessionTimerService {
   private readonly dialogService = inject(LuxDialogService);
   private readonly configService = inject(LuxComponentsConfigService);
   private readonly storageService = inject(LuxStorageService);
+  private readonly ngZone = inject(NgZone);
 
   private static readonly STORAGE_KEY = 'lux-components-session-endtime';
   private static readonly BROADCAST_CHANNEL_NAME = 'lux-session-timer';
@@ -162,7 +163,7 @@ export class LuxAppHeaderAcSessionTimerService {
     this.url = this.configService.currentConfig.sessionTimerConfig?.url ?? '';
 
     if (this.broadcastChannel) {
-      this.broadcastChannel.onmessage = () => this.handleBroadcastMessage();
+      this.broadcastChannel.onmessage = () => this.ngZone.run(() => this.handleBroadcastMessage());
       inject(DestroyRef).onDestroy(() => this.broadcastChannel?.close());
     }
   }
@@ -198,9 +199,7 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
       this.dialogIsOpen = false;
       this.dialogWasClosed = result !== 'confirmed';
-      if (result !== 'confirmed') {
-        this.broadcast();
-      }
+      this.broadcast();
     });
 
     this.currentDialogRef.dialogDeclined.subscribe(() => {

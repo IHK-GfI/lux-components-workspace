@@ -10,6 +10,7 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
     - [lux-table](#lux-table)
     - [lux-session-timer](#lux-session-timer)
   - [Versionen](#versionen)
+    - [Version 21.7.0](#version-2170)
     - [Version 21.6.0](#version-2160)
     - [Version 21.5.0](#version-2150)
     - [Version 21.4.0](#version-2140)
