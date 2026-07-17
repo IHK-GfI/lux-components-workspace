@@ -3,6 +3,7 @@ export declare type LuxFgColor = 'white' | 'black';
 export declare type LuxBgBaseColor = 'red' | 'green' | 'purple' | 'blue' | 'gray' | 'orange' | 'yellow' | 'pink' | 'lightblue';
 export declare type LuxBgAllColor = LuxBgBaseColor | 'black' | 'white';
 export declare type LuxBadgeColor = LuxBgBaseColor | 'black';
+export declare type LuxBadgeSize = 'small' | 'medium' | 'large' | '';
 export declare type LuxIconColor = LuxBgBaseColor | 'black';
 export declare type LuxMessageBoxColor = LuxBgBaseColor | 'white';
 export declare type LuxProgressColor = LuxBgBaseColor;
@@ -23,29 +24,8 @@ export const LuxBgAllColors: LuxBgAllColor[] = [
   'pink',
   'lightblue'
 ];
-export const LuxBadgeColors: LuxBadgeColor[] = [
-  'blue',
-  'green',
-  'red',
-  'orange',
-  'yellow',
-  'lightblue',
-  'pink',
-  'gray',
-  'purple'
-];
-export const LuxIconColors: LuxIconColor[] = [
-  'red',
-  'green',
-  'purple',
-  'blue',
-  'gray',
-  'orange',
-  'black',
-  'yellow',
-  'pink',
-  'lightblue'
-];
+export const LuxBadgeColors: LuxBadgeColor[] = ['blue', 'green', 'red', 'orange', 'yellow', 'lightblue', 'pink', 'gray', 'black', 'purple'];
+export const LuxIconColors: LuxIconColor[] = ['red', 'green', 'purple', 'blue', 'gray', 'orange', 'black', 'yellow', 'pink', 'lightblue'];
 export const LuxMessageBoxColors: LuxMessageBoxColor[] = ['white', 'blue', 'red', 'green', 'gray', 'orange', 'yellow', 'purple'];
 export const LuxProgressColors: LuxProgressColor[] = ['red', 'green', 'purple', 'blue', 'gray', 'orange'];
 export const LuxSnackbarColors: LuxSnackbarColor[] = ['white', 'red', 'blue', 'green', 'orange', 'yellow'];
