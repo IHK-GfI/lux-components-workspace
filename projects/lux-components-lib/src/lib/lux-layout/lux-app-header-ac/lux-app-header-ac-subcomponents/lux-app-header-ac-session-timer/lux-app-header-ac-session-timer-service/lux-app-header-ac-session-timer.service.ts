@@ -299,7 +299,6 @@ export class LuxAppHeaderAcSessionTimerService {
       this.currentDialogRef = null;
     }
     this.dialogIsOpen = false;
-    this.dialogWasClosed = true;
 
     this.fromBroadcast = false;
   }
