@@ -1,6 +1,9 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { LuxAppHeaderAcSessionTimerComponent } from './lux-app-header-ac-session-timer';
-import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
+import {
+  LuxAppHeaderAcSessionTimerService,
+  LuxSessionTimerBroadcastType
+} from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
 import { Component } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
@@ -166,7 +169,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
       timerService.timeoutUser();
 
-      expect(broadcastChannel.postMessage).toHaveBeenCalledWith('dialog-closed');
+      expect(broadcastChannel.postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.DECLINED });
     }));
 
     it('sollte "dialog-closed" senden wenn logoutUser aufgerufen wird', fakeAsync(() => {
@@ -175,7 +178,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
       timerService.logoutUser();
 
-      expect(broadcastChannel.postMessage).toHaveBeenCalledWith('dialog-closed');
+      expect(broadcastChannel.postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.DECLINED });
     }));
 
     it('sollte extendSessionTimer erfolgreich durchführen und Broadcast auslösen', fakeAsync(() => {
@@ -192,7 +195,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
       tick();
 
       // extendSessionTimer sendet broadcast in seinem map() Handler
-      expect((broadcastChannel as any).postMessage).toHaveBeenCalledWith('dialog-closed');
+      expect((broadcastChannel as any).postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.CONFIRMED });
     }));
 
     it('sollte extendSessionTimer mit HTTP-Fehler abfangen', fakeAsync(() => {
@@ -229,7 +232,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
       (timerService as any).dialogIsOpen = true;
       (timerService as any).dialogWasClosed = false;
 
-      (broadcastChannel as any).onmessage({ data: { type: 'timeout' } });
+      (broadcastChannel as any).onmessage({ data: { type: LuxSessionTimerBroadcastType.DECLINED } });
 
       expect((timerService as any).dialogWasClosed).toBeTrue();
       expect((timerService as any).dialogIsOpen).toBeFalse();
@@ -240,7 +243,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
       (timerService as any).currentDialogRef = mockDialogRef;
       (timerService as any).dialogIsOpen = true;
 
-      (broadcastChannel as any).onmessage({ data: { type: 'dialog-closed' } });
+      (broadcastChannel as any).onmessage({ data: { type: LuxSessionTimerBroadcastType.DECLINED } });
 
       expect(mockDialogRef.closeDialog).toHaveBeenCalledWith('dismissed');
       expect((timerService as any).currentDialogRef).toBeNull();
@@ -273,7 +276,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
         dialogRef._dialogClosed.next('dismissed');
         tick();
 
-        expect((broadcastChannel as any).postMessage).toHaveBeenCalledWith('dialog-closed');
+        expect((broadcastChannel as any).postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.DECLINED });
       }
     }));
 
