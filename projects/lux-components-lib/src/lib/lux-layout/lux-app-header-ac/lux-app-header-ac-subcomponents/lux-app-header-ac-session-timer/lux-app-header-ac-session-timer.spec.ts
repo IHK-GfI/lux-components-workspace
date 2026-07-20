@@ -1,6 +1,9 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { LuxAppHeaderAcSessionTimerComponent } from './lux-app-header-ac-session-timer';
-import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
+import {
+  LuxAppHeaderAcSessionTimerService,
+  LuxSessionTimerBroadcastType
+} from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
 import { Component } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
@@ -147,6 +150,147 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     expect(timeoutFired).toBeTrue();
     expect(timerService.showSessionTimer()).toBeFalse();
   }));
+
+  describe('BroadcastChannel Synchronisation', () => {
+    let broadcastChannel: BroadcastChannel;
+
+    beforeEach(() => {
+      broadcastChannel = (timerService as any).broadcastChannel;
+      spyOn(broadcastChannel, 'postMessage');
+    });
+
+    it('sollte einen BroadcastChannel erstellt haben', () => {
+      expect(broadcastChannel).toBeTruthy();
+    });
+
+    it('sollte "dialog-closed" senden wenn timeoutUser aufgerufen wird', fakeAsync(() => {
+      timerService.resetTimer(300);
+      tick(0);
+
+      timerService.timeoutUser();
+
+      expect(broadcastChannel.postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.DECLINED });
+    }));
+
+    it('sollte "dialog-closed" senden wenn logoutUser aufgerufen wird', fakeAsync(() => {
+      timerService.resetTimer(300);
+      tick(0);
+
+      timerService.logoutUser();
+
+      expect(broadcastChannel.postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.DECLINED });
+    }));
+
+    it('sollte extendSessionTimer erfolgreich durchführen und Broadcast auslösen', fakeAsync(() => {
+      const url = '/api/test/extend';
+      timerService.url = url;
+      timerService.resetTimer(300);
+      tick(0);
+      (broadcastChannel as any).postMessage.calls.reset();
+
+      timerService.extendSessionTimer()?.subscribe();
+
+      const req = httpController.expectOne(url);
+      req.flush({});
+      tick();
+
+      // extendSessionTimer sendet broadcast in seinem map() Handler
+      expect((broadcastChannel as any).postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.CONFIRMED });
+    }));
+
+    it('sollte extendSessionTimer mit HTTP-Fehler abfangen', fakeAsync(() => {
+      const url = '/api/test/extend';
+      timerService.url = url;
+      timerService.resetTimer(300);
+      tick(0);
+      let errorCaught = false;
+
+      timerService.extendSessionTimer()?.subscribe({
+        error: () => {
+          errorCaught = true;
+        }
+      });
+
+      const req = httpController.expectOne(url);
+      req.error(new ProgressEvent('error'));
+      tick();
+
+      expect(errorCaught).toBeTrue();
+    }));
+
+    it('sollte extendSessionTimer undefined zurückgeben wenn canExtendSession false ist', fakeAsync(() => {
+      timerService.canExtendSession = false;
+      timerService.resetTimer(300);
+      tick(0);
+
+      const result = timerService.extendSessionTimer();
+
+      expect(result).toBeUndefined();
+    }));
+
+    it('sollte bei empfangener Nachricht den Dialog-Status zurücksetzen', fakeAsync(() => {
+      (timerService as any).dialogIsOpen = true;
+      (timerService as any).dialogWasClosed = false;
+
+      (broadcastChannel as any).onmessage({ data: { type: LuxSessionTimerBroadcastType.DECLINED } });
+
+      expect((timerService as any).dialogWasClosed).toBeTrue();
+      expect((timerService as any).dialogIsOpen).toBeFalse();
+    }));
+
+    it('sollte den offenen Dialog mit "dismissed" schließen wenn "dialog-closed" empfangen wird', fakeAsync(() => {
+      const mockDialogRef = jasmine.createSpyObj('dialogRef', ['closeDialog']);
+      (timerService as any).currentDialogRef = mockDialogRef;
+      (timerService as any).dialogIsOpen = true;
+
+      (broadcastChannel as any).onmessage({ data: { type: LuxSessionTimerBroadcastType.DECLINED } });
+
+      expect(mockDialogRef.closeDialog).toHaveBeenCalledWith('dismissed');
+      expect((timerService as any).currentDialogRef).toBeNull();
+    }));
+
+    it('sollte clearTimer() aufgerufen können um Timer zu löschen', fakeAsync(() => {
+      timerService.resetTimer(180);
+      tick(100);
+      expect(timerService.showSessionTimer()).toBeTrue();
+
+      timerService.clearTimer();
+      tick(100);
+
+      expect(timerService.showSessionTimer()).toBeFalse();
+      expect((timerService as any).endTime).toBe(0);
+    }));
+  });
+
+  describe('Dialog Events', () => {
+    it('sollte bei dialogClosed mit result !== "confirmed" broadcast auslösen', fakeAsync(() => {
+      const broadcastChannel = (timerService as any).broadcastChannel;
+      spyOn(broadcastChannel, 'postMessage');
+      timerService.resetTimer(119);
+      tick(100);
+      fixture.detectChanges();
+      (broadcastChannel as any).postMessage.calls.reset();
+
+      const dialogRef = (timerService as any).currentDialogRef;
+      if (dialogRef) {
+        dialogRef._dialogClosed.next('dismissed');
+        tick();
+
+        expect((broadcastChannel as any).postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.DECLINED });
+      }
+    }));
+
+    it('sollte openNotExtendableDialog mit setNotExtendableDialog aufrufen', fakeAsync(() => {
+      timerService.canExtendSession = false;
+      spyOn(timerService, 'openNotExtendableDialog').and.callThrough();
+
+      timerService.resetTimer(119);
+      tick(100);
+      fixture.detectChanges();
+
+      expect(timerService.openNotExtendableDialog).toHaveBeenCalled();
+    }));
+  });
 });
 
 @Component({

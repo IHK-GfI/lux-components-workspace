@@ -90,3 +90,14 @@ Die Komponente wird im Menü des App-Headers angezeigt.
   </lux-app-header-ac-action-nav>
 </lux-app-header-ac>
 ```
+
+```typescript
+//shared.service.ts
+private sessionTimerService = inject(LuxAppHeaderAcSessionTimerService);
+//...
+public logout(withRedirect: boolean): void {
+  //...
+  this.sessionTimerService.clearTimer();
+  //...
+}
+```

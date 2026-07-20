@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, EventEmitter, inject, Injectable, Signal, signal } from '@angular/core';
+import { computed, DestroyRef, EventEmitter, inject, Injectable, NgZone, Signal, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map, switchMap, takeWhile, timer } from 'rxjs';
 import { LuxComponentsConfigService } from '../../../../../lux-components-config/lux-components-config.service';
@@ -12,6 +12,11 @@ import { LuxDialogService } from '../../../../../lux-popups/lux-dialog/lux-dialo
 import { LuxStorageService } from '../../../../../lux-util/lux-storage.service';
 import { LuxAppHeaderAcSessionTimerDialogComponent } from '../lux-app-header-ac-session-timer-dialog/lux-app-header-ac-session-timer-dialog';
 
+export enum LuxSessionTimerBroadcastType {
+  CONFIRMED = 'confirmed',
+  DECLINED = 'declined'
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,8 +25,14 @@ export class LuxAppHeaderAcSessionTimerService {
   private readonly dialogService = inject(LuxDialogService);
   private readonly configService = inject(LuxComponentsConfigService);
   private readonly storageService = inject(LuxStorageService);
+  private readonly ngZone = inject(NgZone);
 
   private static readonly STORAGE_KEY = 'lux-components-session-endtime';
+  private static readonly BROADCAST_CHANNEL_NAME = 'lux-session-timer';
+
+  private readonly broadcastChannel: BroadcastChannel | null =
+    typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel(LuxAppHeaderAcSessionTimerService.BROADCAST_CHANNEL_NAME) : null;
+  private fromBroadcast = false;
 
   luxLogoutEvent = new EventEmitter<void>();
   luxTimeoutEvent = new EventEmitter<void>();
@@ -117,7 +128,7 @@ export class LuxAppHeaderAcSessionTimerService {
       }
 
       // Timer ist natürlich abgelaufen (nicht durch explizites Zurücksetzen auf 0)
-      if (remainingMs <= 1000) {
+      if (remainingMs <= 1000 && remainingMs !== 0) {
         if (this.currentDialogRef) {
           this.currentDialogRef.closeDialog();
           this.currentDialogRef = null;
@@ -155,6 +166,11 @@ export class LuxAppHeaderAcSessionTimerService {
       });
 
     this.url = this.configService.currentConfig.sessionTimerConfig?.url ?? '';
+
+    if (this.broadcastChannel) {
+      this.broadcastChannel.onmessage = (event: MessageEvent) => this.ngZone.run(() => this.handleBroadcastMessage(event));
+      inject(DestroyRef).onDestroy(() => this.broadcastChannel?.close());
+    }
   }
 
   extendSessionTimer() {
@@ -170,6 +186,8 @@ export class LuxAppHeaderAcSessionTimerService {
         this.setStoredEndTime(newEndTime);
         this.endTime = newEndTime;
         this.startingSeconds.set(extensionSeconds);
+        this.dialogWasClosed = false;
+        this.broadcast(LuxSessionTimerBroadcastType.CONFIRMED);
         return res;
       })
     );
@@ -185,13 +203,12 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef = this.dialogService.openComponent(LuxAppHeaderAcSessionTimerDialogComponent, this.dialogConfig);
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
-      this.dialogIsOpen = false;
-      this.dialogWasClosed = result !== 'confirmed';
+      const confirmed = result === LuxSessionTimerBroadcastType.CONFIRMED;
+      this.broadcast(confirmed ? LuxSessionTimerBroadcastType.CONFIRMED : LuxSessionTimerBroadcastType.DECLINED);
     });
 
     this.currentDialogRef.dialogDeclined.subscribe(() => {
-      this.dialogIsOpen = false;
-      this.dialogWasClosed = true;
+      this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     });
   }
 
@@ -201,20 +218,19 @@ export class LuxAppHeaderAcSessionTimerService {
     this.currentDialogRef.componentInstance.setNotExtendableDialog();
 
     this.currentDialogRef.dialogClosed.subscribe((result: any) => {
-      this.dialogIsOpen = false;
-      this.dialogWasClosed = true;
+      this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     });
   }
 
   timeoutUser() {
+    this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     this.resetTimer(0);
-    this.clearStoredEndTime();
     this.luxTimeoutEvent.emit();
   }
 
   logoutUser() {
+    this.broadcast(LuxSessionTimerBroadcastType.DECLINED);
     this.resetTimer(0);
-    this.clearStoredEndTime();
     this.luxLogoutEvent.emit();
   }
 
@@ -261,5 +277,45 @@ export class LuxAppHeaderAcSessionTimerService {
     this.storageService.removeItem(
       this.configService.currentConfig.sessionTimerConfig?.localStorageKeyName ?? LuxAppHeaderAcSessionTimerService.STORAGE_KEY
     );
+  }
+
+  /**
+   * Clear the timer and remove the stored endTime from LuxStorageService
+   */
+  clearTimer() {
+    this.resetTimer(0);
+  }
+
+  private broadcast(type: LuxSessionTimerBroadcastType) {
+    if (!this.fromBroadcast) {
+      this.broadcastChannel?.postMessage({ type });
+    }
+  }
+
+  //Wenn der Dialog confirmed wird, wird dialogWasClosed auf False gesetzt damit der Dialog wieder aufgeht. Bei Declined soll der Dialog nicht wieder aufgehen wenn die Zeit weniger als 2 Minuten hat.
+  private handleBroadcastMessage(event: MessageEvent) {
+    this.fromBroadcast = true;
+    const type: LuxSessionTimerBroadcastType = event.data?.type;
+
+    switch (type) {
+      case LuxSessionTimerBroadcastType.CONFIRMED:
+        if (this.currentDialogRef) {
+          this.currentDialogRef.closeDialog('confirmed');
+          this.currentDialogRef = null;
+        }
+        this.dialogIsOpen = false;
+        this.dialogWasClosed = false;
+        break;
+      case LuxSessionTimerBroadcastType.DECLINED:
+        if (this.currentDialogRef) {
+          this.currentDialogRef.closeDialog('dismissed');
+          this.currentDialogRef = null;
+        }
+        this.dialogIsOpen = false;
+        this.dialogWasClosed = true;
+        break;
+    }
+
+    this.fromBroadcast = false;
   }
 }

@@ -10,6 +10,7 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
     - [lux-table](#lux-table)
     - [lux-session-timer](#lux-session-timer)
   - [Versionen](#versionen)
+    - [Version 21.7.0](#version-2170)
     - [Version 21.6.0](#version-2160)
     - [Version 21.5.0](#version-2150)
     - [Version 21.4.0](#version-2140)
@@ -87,6 +88,19 @@ Der LUX-Session-Timer nutzt den Local Storage, um die berechnete Endzeit der akt
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. Das heißt, alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+### Version 21.7.0
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+**Hinweis**: Damit beim Logout des Users der SessionTimer richtig beendet wird und der Local Storage geleert wird, muss beim Logout die Funktion LuxAppHeaderAcSessionTimerService.clearTimer() aufgerufen werden.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-21.7.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
 
 ### Version 21.6.0
 
