@@ -7,9 +7,9 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
 import { LuxInputAcPrefixComponent } from './lux-input-ac-subcomponents/lux-input-ac-prefix.component';
@@ -1087,6 +1087,44 @@ describe('LuxInputAcComponent', () => {
       expect(spy).toHaveBeenCalledTimes(2);
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxInputA11yComponent>;
+    let testComponent: LuxInputA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxInputA11yComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -1318,4 +1356,14 @@ class LuxInputCounterLabelComponent {
   hint?: string;
   disabled?: boolean;
   maxLength?: number;
+}
+
+@Component({
+  template: ` <lux-input-ac luxLabel="Label" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-input-ac> `,
+  imports: [LuxInputAcComponent]
+})
+class LuxInputA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

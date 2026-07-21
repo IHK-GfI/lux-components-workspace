@@ -12,7 +12,8 @@
       "@ihk-gfi/lux-components/lux-file-preview": ["./dist/lux-components-lib/lux-file-preview"],
       "@ihk-gfi/lux-components/lux-html": ["./dist/lux-components-lib/lux-html"],
       "@ihk-gfi/lux-components/lux-markdown": ["./dist/lux-components-lib/lux-markdown"],
-      "@ihk-gfi/lux-components/lux-paginator": ["./dist/lux-components-lib/lux-paginator"]
+      "@ihk-gfi/lux-components/lux-paginator": ["./dist/lux-components-lib/lux-paginator"],
+      "@ihk-gfi/lux-components/test-utils": ["./dist/lux-components-lib/test-utils"]
     },
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

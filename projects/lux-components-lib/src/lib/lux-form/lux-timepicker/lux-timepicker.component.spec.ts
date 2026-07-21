@@ -6,9 +6,9 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTimepickerSelected } from '@angular/material/timepicker';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxUtil } from '../../lux-util/lux-util';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxDatepickerAcComponent } from '../lux-datepicker-ac/lux-datepicker-ac.component';
 import { LuxTimepickerComponent } from './lux-timepicker.component';
 
@@ -114,6 +114,44 @@ describe('LuxTimepickerComponent', () => {
     expect(datepickerComponent.luxValue).toEqual('2026-06-18T09:30:00.000Z');
     expect(timepickerComponent.luxValue).toEqual('2026-06-18T09:30:00.000Z');
   }));
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxTimepickerA11yComponent>;
+    let testComponent: LuxTimepickerA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxTimepickerA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -186,4 +224,16 @@ class LuxTimepickerCombinedFormTestComponent {
   get combinedControl() {
     return this.form.get('combined') as FormControl<string | null>;
   }
+}
+
+@Component({
+  template: `
+    <lux-timepicker luxLabel="Zeit" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-timepicker>
+  `,
+  imports: [LuxTimepickerComponent]
+})
+class LuxTimepickerA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

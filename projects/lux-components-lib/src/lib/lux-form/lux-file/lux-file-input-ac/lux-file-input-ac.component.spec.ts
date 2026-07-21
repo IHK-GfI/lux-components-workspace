@@ -8,10 +8,10 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validator
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../../lux-util/lux-console.service';
 import { LuxStorageService } from '../../../lux-util/lux-storage.service';
-import { LuxTestHelper } from '../../../lux-util/testing/lux-test-helper';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
 import { ILuxFileActionConfig } from '../lux-file-model/lux-file-action-config.interface';
 import { LuxFileErrorCause } from '../lux-file-model/lux-file-error.interface';

@@ -5,16 +5,22 @@ import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angu
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
 import { LuxCheckboxAcComponent } from './lux-checkbox-ac.component';
 
 describe('LuxCheckboxAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting(), LuxConsoleService]
+      providers: [
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting(),
+        LuxConsoleService
+      ]
     }).compileComponents();
   }));
 
@@ -369,6 +375,44 @@ describe('LuxCheckboxAcComponent', () => {
       }));
     });
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxCheckboxA11yComponent>;
+    let testComponent: LuxCheckboxA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxCheckboxA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -459,4 +503,16 @@ class LuxCheckboxRequiredInFormAttributeComponent {
 class LuxValidatorsComponent {
   eula?: boolean;
   validators?: ValidatorFnType;
+}
+
+@Component({
+  template: `
+    <lux-checkbox-ac luxLabel="Checkbox" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-checkbox-ac>
+  `,
+  imports: [LuxCheckboxAcComponent]
+})
+class LuxCheckboxA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

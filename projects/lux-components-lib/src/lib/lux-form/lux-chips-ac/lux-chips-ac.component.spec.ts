@@ -7,10 +7,10 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxChipsAcComponent, LuxChipsAcOrientation } from './lux-chips-ac.component';
 import { LuxChipAcGroupComponent } from './lux-chips-subcomponents/lux-chip-ac-group.component';
 import { LuxChipAcComponent } from './lux-chips-subcomponents/lux-chip-ac.component';
@@ -705,6 +705,45 @@ describe('LuxChipComponent-Authentic', () => {
       discardPeriodicTasks();
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxChipsA11yComponent>;
+    let testComponent: LuxChipsA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxChipsA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      discardPeriodicTasks();
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -965,4 +1004,20 @@ class LuxFormRequiredNoGroupInFormComponent {
   chipRemoved(chipIndex: number) {
     this.chips = this.chips.filter((_value: unknown, index: number) => index !== chipIndex);
   }
+}
+
+@Component({
+  template: `<lux-chips-ac
+    luxLabel="Chips"
+    [luxInputAllowed]="true"
+    [luxDisabled]="disabled"
+    [luxReadonly]="readonly"
+    [luxRequired]="required"
+  ></lux-chips-ac>`,
+  imports: [LuxChipsAcComponent]
+})
+class LuxChipsA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

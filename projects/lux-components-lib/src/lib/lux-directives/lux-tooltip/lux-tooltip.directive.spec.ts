@@ -5,7 +5,7 @@ import { ComponentFixture, fakeAsync, flushMicrotasks, inject, TestBed, tick, wa
 import { TooltipPosition } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxTooltipDirective } from './lux-tooltip.directive';
 
 describe('LuxTooltipDirective', () => {

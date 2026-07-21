@@ -7,13 +7,13 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsyn
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxAutocompleteAcComponent } from '../lux-autocomplete-ac/lux-autocomplete-ac.component';
 import { LuxCheckboxAcComponent } from '../lux-checkbox-ac/lux-checkbox-ac.component';
 import { LuxDatepickerAcComponent } from '../lux-datepicker-ac/lux-datepicker-ac.component';
 
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxFileInputAcComponent } from '../lux-file/lux-file-input-ac/lux-file-input-ac.component';
 import { LuxFileListComponent } from '../lux-file/lux-file-list/lux-file-list.component';
 import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';

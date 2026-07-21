@@ -7,15 +7,21 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxDisplayWithAcFnType, LuxSliderAcComponent } from './lux-slider-ac.component';
 
 describe('LuxSliderAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -261,10 +267,49 @@ describe('LuxSliderAcComponent', () => {
       expect(thumbLabelText.nativeElement.textContent).toEqual('6k');
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxSliderA11yComponent>;
+    let testComponent: LuxSliderA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxSliderA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
   template: `<lux-slider-ac
+    luxLabel="Lorem ipsum"
     [luxColor]="color"
     [luxDisabled]="disabled"
     [luxShowThumbLabel]="showThumbLabel"
@@ -324,4 +369,16 @@ class MockSliderFormComponent {
       slider: new FormControl<number>(0)
     });
   }
+}
+
+@Component({
+  template: `
+    <lux-slider-ac luxLabel="Slider" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-slider-ac>
+  `,
+  imports: [LuxSliderAcComponent]
+})
+class LuxSliderA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

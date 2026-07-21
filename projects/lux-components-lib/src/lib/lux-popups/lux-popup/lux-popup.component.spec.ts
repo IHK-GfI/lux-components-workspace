@@ -2,10 +2,9 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, importProvidersFrom, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxComponentsConfigModule } from '../../lux-components-config/lux-components-config.module';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
-import { LuxOverlayHelper } from '../../lux-util/testing/lux-test-overlay-helper';
 import { LuxPopupTriggerDirective } from './lux-popup-trigger.directive';
 import { LuxPopupComponent } from './lux-popup.component';
 import { LuxPopupCloseReason, LuxPopupPosition } from './lux-popup.types';

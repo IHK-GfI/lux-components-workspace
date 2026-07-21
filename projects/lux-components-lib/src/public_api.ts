@@ -325,8 +325,6 @@ export * from './lib/lux-util/lux-console.service';
 export * from './lib/lux-util/lux-media-query-observer.service';
 export * from './lib/lux-util/lux-storage.service';
 export * from './lib/lux-util/lux-util';
-export * from './lib/lux-util/testing/lux-test-helper';
-export * from './lib/lux-util/testing/lux-test-overlay-helper';
 
 /**
  * LUX-Theme
