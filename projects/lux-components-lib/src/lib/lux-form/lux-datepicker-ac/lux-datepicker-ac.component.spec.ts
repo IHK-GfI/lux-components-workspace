@@ -8,11 +8,10 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TranslocoService } from '@jsverse/transloco';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { LuxA11yTestHelper, LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxUtil } from '../../lux-util/lux-util';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
-import { LuxOverlayHelper } from '../../lux-util/testing/lux-test-overlay-helper';
 import { LuxValidationErrors, ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
 import { LuxDateFilterAcFn, LuxDatepickerAcComponent } from './lux-datepicker-ac.component';
 
@@ -718,6 +717,45 @@ describe('LuxDatepickerAcComponent', () => {
       expect(spy).toHaveBeenCalledTimes(251);
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxDatepickerA11yComponent>;
+    let testComponent: LuxDatepickerA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxDatepickerA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      discardPeriodicTasks();
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -821,4 +859,16 @@ class LuxFormTestComponent {
     });
     this.formControl = this.form.get('datepicker')!;
   }
+}
+
+@Component({
+  template: `
+    <lux-datepicker-ac luxLabel="Datum" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-datepicker-ac>
+  `,
+  imports: [LuxDatepickerAcComponent]
+})
+class LuxDatepickerA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

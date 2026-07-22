@@ -7,16 +7,22 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
 import { LuxToggleAcComponent } from './lux-toggle-ac.component';
 
 describe('LuxToggleAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -372,6 +378,44 @@ describe('LuxToggleAcComponent', () => {
       }));
     });
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxToggleA11yComponent>;
+    let testComponent: LuxToggleA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxToggleA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -462,4 +506,16 @@ class LuxToggleRequiredInFormAttributeComponent {
 class LuxValidatorsComponent {
   eula?: boolean;
   validators: ValidatorFnType;
+}
+
+@Component({
+  template: `
+    <lux-toggle-ac luxLabel="Eula gelesen?" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-toggle-ac>
+  `,
+  imports: [LuxToggleAcComponent]
+})
+class LuxToggleA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

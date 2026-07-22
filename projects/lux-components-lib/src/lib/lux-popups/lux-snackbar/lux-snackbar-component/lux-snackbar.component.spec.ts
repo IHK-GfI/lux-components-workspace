@@ -5,6 +5,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestB
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxAppHeaderRightNavComponent } from '../../../lux-layout/lux-app-header/lux-app-header-subcomponents/lux-app-header-right-nav/lux-app-header-right-nav.component';
@@ -14,7 +15,6 @@ import { LuxDialogContentComponent } from '../../../lux-popups/lux-dialog/lux-di
 import { LuxDialogTitleComponent } from '../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-title.component';
 import { LuxDialogStructureComponent } from '../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component';
 import { LuxStorageService } from '../../../lux-util/lux-storage.service';
-import { LuxTestHelper } from '../../../lux-util/testing/lux-test-helper';
 import { LuxSnackbarService } from '../lux-snackbar.service';
 
 describe('LuxSnackbarComponent', () => {

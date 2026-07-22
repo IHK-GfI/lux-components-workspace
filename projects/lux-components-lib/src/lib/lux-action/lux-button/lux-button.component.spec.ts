@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from './lux-button.component';
 
@@ -344,6 +345,104 @@ describe('LuxButtonComponent', () => {
       Checker.checkLuxDisabled(fixture);
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<MockA11yComponent>;
+    let testComponent: MockA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(MockA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('Button (normal) hat keine Barrierefreiheitsverletzungen', async () => {
+      testComponent.raised = false;
+      testComponent.round = false;
+      testComponent.flat = false;
+      testComponent.outlined = false;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+
+      testComponent.disabled = true;
+      testComponent.disabledAria = false;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+
+      testComponent.disabled = false;
+      testComponent.disabledAria = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Button (raised) hat keine Barrierefreiheitsverletzungen', async () => {
+      testComponent.raised = true;
+      testComponent.round = false;
+      testComponent.flat = false;
+      testComponent.outlined = false;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Button (round) hat keine Barrierefreiheitsverletzungen', async () => {
+      testComponent.raised = false;
+      testComponent.round = true;
+      testComponent.flat = false;
+      testComponent.outlined = false;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Button (flat) hat keine Barrierefreiheitsverletzungen', async () => {
+      testComponent.raised = false;
+      testComponent.round = false;
+      testComponent.flat = true;
+      testComponent.outlined = false;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Button (stroked) hat keine Barrierefreiheitsverletzungen', async () => {
+      testComponent.raised = false;
+      testComponent.round = false;
+      testComponent.flat = false;
+      testComponent.outlined = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Button (stroked & rounded) hat keine Barrierefreiheitsverletzungen', async () => {
+      testComponent.raised = false;
+      testComponent.round = true;
+      testComponent.flat = false;
+      testComponent.outlined = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Button (iconButton) hat keine Barrierefreiheitsverletzungen', async () => {
+      testComponent.iconButton = true;
+      testComponent.raised = false;
+      testComponent.round = false;
+      testComponent.flat = false;
+      testComponent.outlined = false;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 class Checker {
@@ -511,4 +610,29 @@ class MockButtonLoadingComponent {
   loading = false;
 
   onClick() {}
+}
+
+@Component({
+  template: `
+    <lux-button
+      luxLabel="Lorem ipsum 4711"
+      [luxDisabled]="disabled"
+      [luxDisabledAria]="disabledAria"
+      [luxRounded]="round"
+      [luxRaised]="raised"
+      [luxFlat]="flat"
+      [luxStroked]="outlined"
+      [luxIconButton]="iconButton"
+    ></lux-button>
+  `,
+  imports: [LuxButtonComponent]
+})
+class MockA11yComponent {
+  disabled = false;
+  disabledAria = false;
+  round = false;
+  raised = false;
+  flat = false;
+  outlined = false;
+  iconButton = false;
 }

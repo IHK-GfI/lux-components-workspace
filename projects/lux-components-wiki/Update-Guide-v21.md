@@ -95,6 +95,8 @@ In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren k
 
 **Hinweis**: Damit beim Logout des Users der SessionTimer richtig beendet wird und der Local Storage geleert wird, muss beim Logout die Funktion LuxAppHeaderAcSessionTimerService.clearTimer() aufgerufen werden.
 
+**Hinweis (Breaking Change)**: Der Import von `LuxTestHelper` und `LuxOverlayHelper` wurde umgestellt. Falls diese Test-Utilities verwendet werden, bitte den Importpfad auf `@ihk-gfi/lux-components/test-utils` ändern (statt des bisherigen Imports über `@ihk-gfi/lux-components`). Der LUX-Components-Updater passt betroffene Imports in `.spec.ts`-Dateien automatisch an.
+
 - LUX-Components-Updater aktualisieren:
   - `npm update @ihk-gfi/lux-components-update`
 - LUX-Components-Updater ausführen:

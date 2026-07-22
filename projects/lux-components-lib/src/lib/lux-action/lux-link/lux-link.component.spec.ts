@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxLinkComponent } from './lux-link.component';
 
 describe('LuxLinkComponent', () => {

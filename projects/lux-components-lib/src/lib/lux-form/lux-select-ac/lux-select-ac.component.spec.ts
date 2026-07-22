@@ -9,10 +9,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxPickValueFnType } from '../lux-form-model/lux-form-selectable-base.class';
 import { LuxSelectAcComponent } from './lux-select-ac.component';
 
@@ -1336,6 +1336,45 @@ describe('LuxSelectAcComponent', () => {
       expect(maxHeight).toBeCloseTo(optionHeight * 2, 0);
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxSelectA11yComponent>;
+    let testComponent: LuxSelectA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxSelectA11yComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+      discardPeriodicTasks();
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -1705,4 +1744,24 @@ class SelectWithTemplateComponent {
     { label: 'Zurückgestellte Aufgaben', value: 'C' },
     { label: 'Vertretungsaufgaben', value: 'D' }
   ];
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      luxLabel="Aufgaben"
+      luxOptionLabelProp="label"
+      [luxOptions]="options"
+      [luxDisabled]="disabled"
+      [luxReadonly]="readonly"
+      [luxRequired]="required"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class LuxSelectA11yComponent {
+  options = [{ label: 'Meine Aufgaben', value: 'A' }];
+  disabled = false;
+  readonly = false;
+  required = false;
 }

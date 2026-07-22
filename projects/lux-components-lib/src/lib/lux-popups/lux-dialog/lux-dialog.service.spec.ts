@@ -4,11 +4,10 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, importProvidersFrom, inject, TemplateRef, ViewChild } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
+import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigModule } from '../../lux-components-config/lux-components-config.module';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
-import { LuxOverlayHelper } from '../../lux-util/testing/lux-test-overlay-helper';
 import { DIALOG_WIDTH_LARGE_PX, DIALOG_WIDTH_SMALL_PX, minWidth } from './lux-dialog-model/lux-dialog-config.interface';
 import { ILuxDialogPresetConfig } from './lux-dialog-model/lux-dialog-preset-config.interface';
 import { LuxDialogRef } from './lux-dialog-model/lux-dialog-ref.class';

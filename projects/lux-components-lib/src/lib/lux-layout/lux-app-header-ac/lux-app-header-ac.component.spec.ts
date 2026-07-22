@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { discardPeriodicTasks, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Viewport } from 'karma-viewport/dist/adapter/viewport';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxAppHeaderAcComponent } from './lux-app-header-ac.component';
 
 declare const viewport: Viewport;

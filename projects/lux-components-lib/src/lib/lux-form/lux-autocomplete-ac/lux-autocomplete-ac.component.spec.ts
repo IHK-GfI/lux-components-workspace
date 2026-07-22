@@ -5,10 +5,10 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitF
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxAutocompleteAcComponent } from './lux-autocomplete-ac.component';
 
 interface TestOption {
@@ -768,6 +768,56 @@ describe('LuxAutocompleteAcComponent', () => {
       discardPeriodicTasks();
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxAutocompleteA11yComponent>;
+    let testComponent: LuxAutocompleteA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxAutocompleteA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      tick(0);
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (mit Wert)', async () => {
+      testComponent.value = testComponent.options[0];
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -1071,6 +1121,30 @@ class LuxAutoCompleteSingleOptionComponent {
   formGroup = new FormGroup({
     aufgaben: new FormControl<TestOption | null>(null)
   });
+}
+
+@Component({
+  template: `
+    <lux-autocomplete-ac
+      luxLabel="Autocomplete"
+      [luxOptions]="options"
+      luxOptionLabelProp="label"
+      [luxLookupDelay]="0"
+      [luxDisabled]="disabled"
+      [luxReadonly]="readonly"
+      [luxRequired]="required"
+      [luxValue]="value"
+    ></lux-autocomplete-ac>
+  `,
+  imports: [LuxAutocompleteAcComponent]
+})
+class LuxAutocompleteA11yComponent {
+  options: TestOption[] = [{ label: 'Meine Aufgaben', value: 'A' }];
+
+  disabled = false;
+  readonly = false;
+  required = false;
+  value?: TestOption;
 }
 
 /**
