@@ -99,6 +99,12 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
    */
   @Input() luxNoBottomLabel = false;
 
+  /**
+   * Behält die ursprüngliche Reihenfolge der Optionen bei. Ist das Flag aktiv,
+   * werden selektierte Optionen nicht mehr an den Anfang der Liste sortiert.
+   */
+  @Input() luxKeepOptionOrder = false;
+
   displayedViewValue?: string;
   focused = false;
 
@@ -218,6 +224,13 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
    */
   private refreshRenderOptionIndexes(): void {
     const options = this.luxOptions ?? [];
+
+    // Bei aktivem Flag die ursprüngliche Reihenfolge beibehalten (kein Sortieren nach oben).
+    if (this.luxKeepOptionOrder) {
+      this.renderOptionIndexes = options.map((_, i) => i);
+      return;
+    }
+
     const selectedIndexes: number[] = [];
     const unselectedIndexes: number[] = [];
 

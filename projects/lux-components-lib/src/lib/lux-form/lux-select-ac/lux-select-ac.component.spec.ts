@@ -844,6 +844,62 @@ describe('LuxSelectAcComponent', () => {
       expect(optionTexts[2]).toBe('Handball');
       expect(optionTexts[3]).toBe('Stricken');
     }));
+
+    it('behält bei aktivem luxKeepOptionOrder die Ursprungsreihenfolge (renderOptionIndexes)', fakeAsync(() => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(SelectKeepOptionOrderComponent);
+      const testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const selectComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent))
+        .componentInstance as LuxSelectAcComponent;
+      expect(selectComponent.renderOptionIndexes).toEqual([0, 1, 2, 3]);
+
+      // Änderungen durchführen: mittlere Option selektieren
+      testComponent.selectedOption = testComponent.options[2];
+      fixture.detectChanges();
+      flush();
+
+      // Nachbedingungen prüfen: Reihenfolge bleibt stabil (kein Sortieren nach oben)
+      expect(selectComponent.renderOptionIndexes).toEqual([0, 1, 2, 3]);
+
+      flush();
+    }));
+
+    it('lässt bei aktivem luxKeepOptionOrder die selektierte Option nicht nach oben wandern', fakeAsync(() => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(SelectKeepOptionOrderComponent);
+      const testComponent = fixture.componentInstance;
+      testComponent.selectedOption = testComponent.options[2];
+      fixture.detectChanges();
+      flush();
+
+      // Änderungen durchführen: Panel öffnen
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      // Nachbedingungen prüfen: gerenderte Reihenfolge entspricht der Ursprungsreihenfolge
+      const optionTexts = Array.from(
+        document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>
+      ).map((el) => el.textContent!.trim());
+
+      expect(optionTexts).toEqual([
+        'Meine Aufgaben',
+        'Gruppenaufgaben',
+        'Zurückgestellte Aufgaben',
+        'Vertretungsaufgaben'
+      ]);
+
+      const selectedOptions = Array.from(
+        document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>
+      ).filter((opt) => opt.classList.contains('mdc-list-item--selected'));
+      expect(selectedOptions.length).toBe(1);
+      expect(selectedOptions[0].innerText.trim()).toContain('Zurückgestellte Aufgaben');
+
+      flush();
+    }));
   });
 
   describe('mit aktivierter Filterfunktion', () => {
@@ -1596,6 +1652,32 @@ class SelectFilterMultipleComponent {
 })
 class SelectVisibleOptionCountComponent {
   selectedOption: Option | null = null;
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      luxLabel="Aufgaben"
+      [luxOptions]="options"
+      luxOptionLabelProp="label"
+      [(luxSelected)]="selectedOption"
+      [luxMultiple]="false"
+      [luxKeepOptionOrder]="true"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectKeepOptionOrderComponent {
+  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+
+  selectedOption: Option | null = null;
+
   options: Option[] = [
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },
