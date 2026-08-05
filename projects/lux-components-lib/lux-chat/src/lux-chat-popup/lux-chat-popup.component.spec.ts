@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
-import { LuxChatComponent } from '@ihk-gfi/lux-components/lux-chat';
+import { LuxChatComponent } from './../lux-chat/lux-chat.component';
 import { Subject } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxChatPopupComponent } from './lux-chat-popup.component';
