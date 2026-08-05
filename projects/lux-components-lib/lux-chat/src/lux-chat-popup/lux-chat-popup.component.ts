@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, inject, OnDestroy, model, effect, contentChild } from '@angular/core';
 import { MatFabButton } from '@angular/material/button';
 import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components'
-import { LuxChatComponent } from '@ihk-gfi/lux-components/lux-chat'
+import { LuxChatController } from '@ihk-gfi/lux-components/lux-chat'
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Unsubscribable } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class LuxChatPopupComponent implements OnDestroy {
 
   private queryService = inject(LuxMediaQueryObserverService);
 
-  private childChat = contentChild(LuxChatComponent);
+  private childChat = contentChild(LuxChatController);
 
   public luxChatOpened = model(false);
   public luxFullScreen = model(false);
@@ -29,6 +29,9 @@ export class LuxChatPopupComponent implements OnDestroy {
   chatCloseSubscriptions: Unsubscribable[] = [];
   chatFullscreenSubscriptions: Unsubscribable[] = [];
   subscriptions: Unsubscribable[] = [];
+
+  private chatPopupCloseSubcription?: Unsubscribable;
+  private chatPopupFullscreenSubcription?: Unsubscribable;
 
   public onChatIconClicked(value?: boolean): void {
     this.luxChatOpened.set((value !== undefined) ? value : !this.luxChatOpened());
@@ -57,8 +60,25 @@ export class LuxChatPopupComponent implements OnDestroy {
           childChat.showCloseButton.set(true);
         }
 
-        this.setCloseListenerForChatContentChild(childChat);
-        this.setFullscreenListenerForChatContentChild(childChat);
+        if(this.chatPopupCloseSubcription){
+          this.chatPopupCloseSubcription.unsubscribe();
+        }
+
+        this.chatPopupCloseSubcription = childChat.chatClose.subscribe(() => {
+          this.luxChatOpened.set(false);
+        });
+
+        this.subscriptions.push(this.chatPopupCloseSubcription);
+
+        if(this.chatPopupFullscreenSubcription){
+          this.chatPopupFullscreenSubcription.unsubscribe();
+        }
+        
+        this.chatPopupFullscreenSubcription = childChat.chatFullscreen.subscribe(value => {
+          this.luxFullScreen.set(value);
+        });
+
+        this.subscriptions.push(this.chatPopupFullscreenSubcription);
       }
     });
   }
@@ -66,25 +86,5 @@ export class LuxChatPopupComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
-
-  private setCloseListenerForChatContentChild(contentChild: LuxChatComponent){
-    const subscriptionRef = contentChild.chatClose.subscribe(() => {
-      this.luxChatOpened.set(false);
-    });
-
-    this.chatCloseSubscriptions.push(subscriptionRef);
-    this.subscriptions.push(subscriptionRef);
-  }
-
-  private setFullscreenListenerForChatContentChild(contentChild: LuxChatComponent){
-    const subscriptionRef = contentChild.chatFullscreen.subscribe(value => {
-      this.luxFullScreen.set(value);
-    });
-
-    this.chatFullscreenSubscriptions.push(subscriptionRef)
-    this.subscriptions.push(subscriptionRef);
-  }
-
-
 
 }

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
-import { LuxChatComponent, LuxChatData } from '@ihk-gfi/lux-components/lux-chat';
-import { LuxChatPopupComponent } from '@ihk-gfi/lux-components/lux-chat-popup';
+import { LuxChatComponent, LuxChatData, LuxChatPopupComponent } from '@ihk-gfi/lux-components/lux-chat';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { CommonModule } from '@angular/common';

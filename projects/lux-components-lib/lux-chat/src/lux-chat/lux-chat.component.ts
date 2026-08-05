@@ -1,12 +1,12 @@
 import { Component, contentChild, effect, ElementRef, inject, input, model, output, viewChild } from '@angular/core';
 import { LuxChatData } from './lux-chat-data';
 import { LuxChatMessageData } from './lux-chat-message-data';
+import { LuxChatController } from './lux-chat-controller';
 import { CommonModule } from '@angular/common';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxDividerComponent, LuxTextareaAcComponent, LuxAriaLabelDirective, LuxButtonComponent, LuxAutofocusDirective } from '@ihk-gfi/lux-components';
 import { LuxChatRelativeUntilTimestamp } from "./lux-chat-relative-until-timestamp.pipe";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 import { LuxChatEntryComponent } from './lux-chat-entry.component';
 
 const HEADER_SHOW_TIME_OFFSET = 1000 * 60 * 10;
@@ -14,6 +14,7 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
 @Component({
   selector: 'lux-chat',
+  providers: [{ provide: LuxChatController, useExisting: LuxChatComponent}],
   imports: [
     CommonModule,
     LuxButtonComponent,
@@ -26,8 +27,8 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 ],
   templateUrl: './lux-chat.component.html'
 })
-export class LuxChatComponent {
-  
+export class LuxChatComponent extends LuxChatController {
+
   private tService = inject(TranslocoService);
 
   public luxChatData = input<LuxChatData>();
@@ -47,12 +48,16 @@ export class LuxChatComponent {
   public chatFullscreen = output<boolean>();
   public _chatFullscreen = false;
 
+  public luxChatTitleClicked = output<void>();
+
   public luxChatEntryComponent = contentChild(LuxChatEntryComponent);
 
 
   public locale = "de-DE";
 
   constructor(){
+    super();
+
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
       this.locale = this.parseMatLocale(lang);
     });
@@ -91,6 +96,10 @@ export class LuxChatComponent {
       }
     });
 
+  }
+
+  public onTitleClicked() {
+    this.luxChatTitleClicked.emit();
   }
 
   public checkShowDateSplit(item: LuxChatMessageData, index: number): boolean {
