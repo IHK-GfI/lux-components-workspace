@@ -32,6 +32,7 @@
 
 ### Issues
 
+- Issue #267: lux-sr-only auf das clip-Muster umgestellt
 - Issue #247: Menu-Panels-Items analog zu Button-Farben darstellen (#258)
 - Issue #248: Muted-Colors für Badges anbieten (#260)
 
