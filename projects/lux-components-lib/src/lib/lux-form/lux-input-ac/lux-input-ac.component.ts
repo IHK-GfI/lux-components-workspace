@@ -6,6 +6,8 @@ import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaDescribedbyDirective } from '../../../lib/lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../../lib/lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaLabelledbyDirective } from '../../../lib/lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../../lib/lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -32,7 +34,9 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     TranslocoPipe,
     LuxButtonComponent,
     LuxTagIdDirective,
-    LuxAriaDescribedbyDirective
+    LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
+    LuxAriaLabelledbyDirective
   ]
 })
 export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> implements OnInit {

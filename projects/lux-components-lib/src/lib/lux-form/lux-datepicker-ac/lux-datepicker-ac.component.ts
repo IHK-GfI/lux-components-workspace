@@ -7,6 +7,8 @@ import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle, MatDatepickerTo
 import { MatInput } from '@angular/material/input';
 import { Subscription } from 'rxjs';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxThemeService } from '../../lux-theme/lux-theme.service';
@@ -52,6 +54,8 @@ export declare type LuxStartAcView = 'month' | 'year' | 'multi-year';
     MatDatepickerToggleIcon,
     MatDatepicker,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
+    LuxAriaLabelledbyDirective,
     LuxTagIdDirective
   ]
 })
