@@ -94,9 +94,6 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   @Input() luxPickValue?: ((selected: O | null | undefined) => V) | undefined;
   @Input() luxFilterFn?: (filterTerm: string, label: string, option: any) => boolean;
   @Input() luxPanelWidth: string | number = '';
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxOptionBlockSize = 500;
   @Input() luxClearable = false;
   @Input() luxClearAriaLabel = '';

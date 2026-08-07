@@ -51,9 +51,6 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
 
   @Input() luxDebounceTime = 250;
   @Input() luxMaximumDisplayed = 50;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxClearable = false;
   @Input() luxClearAriaLabel = '';
 

@@ -46,9 +46,6 @@ export class LuxFileInputAcComponent extends LuxFormFileBase<ILuxFileObject | nu
 
   @Input() luxPlaceholder = '';
   @Input() luxClearOnError = true;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
 
   focused = false;
 

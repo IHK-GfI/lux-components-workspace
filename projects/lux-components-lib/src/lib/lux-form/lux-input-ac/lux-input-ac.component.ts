@@ -46,9 +46,6 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
 
   @Input() luxType = 'text';
   @Input() luxNumberAlignLeft = false;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxHideCounterLabel = false;
   @Input() luxClearable = false;
   @Input() luxClearAriaLabel = '';

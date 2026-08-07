@@ -81,9 +81,6 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   @Input() luxShowToggle = true;
   @Input() luxMaxDate: string | null = null;
   @Input() luxMinDate: string | null = null;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxReferenceControl?: LuxReferenceControl;
 
   @ViewChild(MatDatepicker) matDatepicker?: MatDatepicker<any>;

@@ -80,9 +80,6 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
   @Input() luxCustomFilter?: LuxDateFilterAcFn;
   @Input() luxMaxDate?: string;
   @Input() luxMinDate?: string;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
 
   luxLocale = signal<string>('de-DE');
 

@@ -87,21 +87,6 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
   @Input() luxVisibleOptionCount?: number | null;
 
   /**
-   * Blendet alle Standard-Labels des Formularfeldes aus.
-   */
-  @Input() luxNoLabels = false;
-
-  /**
-   * Blendet das obere Label (z. B. Feldbezeichnung) aus.
-   */
-  @Input() luxNoTopLabel = false;
-
-  /**
-   * Blendet das untere Label (z. B. Fehlermeldungen/Hinweise) aus.
-   */
-  @Input() luxNoBottomLabel = false;
-
-  /**
    * Behält die ursprüngliche Reihenfolge der Optionen bei. Ist das Flag aktiv,
    * werden selektierte Optionen nicht mehr an den Anfang der Liste sortiert.
    */

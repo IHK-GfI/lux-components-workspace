@@ -28,10 +28,6 @@ import { LuxFormCheckableBaseClass } from '../lux-form-model/lux-form-checkable-
   ]
 })
 export class LuxToggleAcComponent<T = boolean> extends LuxFormCheckableBaseClass<T> implements OnInit {
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
-
   focused = false;
 
   onFocusIn(e: FocusEvent) {

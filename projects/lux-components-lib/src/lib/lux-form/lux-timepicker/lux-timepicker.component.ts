@@ -68,9 +68,6 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> im
   @Input() luxInterval: string | number | null = '30m';
   @Input() luxMinTime: string | null = null;
   @Input() luxMaxTime: string | null = null;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxReferenceControl?: LuxReferenceControl;
 
   @ViewChild(MatTimepicker) matTimepicker?: MatTimepicker<any>;

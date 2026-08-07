@@ -46,9 +46,6 @@ export class LuxRadioAcComponent<O = any, V = any> extends LuxFormSelectableBase
   @HostBinding('class.lux-pb-3') pb3 = true;
   @Input() luxGroupName = '';
   @Input() luxOrientationVertical = true;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
 
   focused = false;
 

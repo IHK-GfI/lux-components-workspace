@@ -88,6 +88,24 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * auf ein eigenes, externes Label-Element. Hat Vorrang vor luxAriaLabel und luxLabel.
    */
   @Input() luxAriaLabelledby?: string;
+  /**
+   * Blendet das obere Label nur visuell aus (lux-sr-only). Das <label> bleibt im DOM,
+   * der zugängliche Name des Controls bleibt erhalten (Issue #267).
+   */
+  @Input() luxNoTopLabel = false;
+  /**
+   * Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM.
+   * Achtung, bewusste Entscheidung: Damit entfällt auch die per aria-describedby
+   * referenzierte Fehlermeldung. Nur einsetzen, wenn Fehler an anderer Stelle
+   * wahrnehmbar gemacht werden.
+   */
+  @Input() luxNoBottomLabel = false;
+  /**
+   * Kombination aus luxNoTopLabel und luxNoBottomLabel: Das Label wird nur visuell
+   * versteckt, der untere Bereich inklusive Fehlermeldung wird entfernt.
+   * Siehe die Hinweise an den beiden Einzel-Inputs.
+   */
+  @Input() luxNoLabels = false;
 
   @Input() luxControlBinding?: string;
   @Input() luxErrorMessage?: string;

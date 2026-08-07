@@ -44,9 +44,6 @@ export class LuxSliderAcComponent extends LuxFormComponentBase<number> implement
   @Input() luxColor: LuxSliderAcColor = 'primary';
   @Input() luxShowThumbLabel = true;
   @Input() luxTagId?: string;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
 
   get luxValue(): number {
     const value = this.getValue();

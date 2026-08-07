@@ -36,9 +36,6 @@ export class LuxTextareaAcComponent<T = string> extends LuxFormInputBaseClass<T>
 
   @Input() luxMaxRows = -1;
   @Input() luxMinRows = 0;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxHideCounterLabel = false;
   @Input() set luxMaxLength(maxLength: number) {
     this._luxMaxLength = maxLength;

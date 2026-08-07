@@ -90,21 +90,6 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    */
   @Input() luxFilterClearAriaLabel = 'Clear filter';
 
-  /**
-   * Blendet alle Standard-Labels des Formularfeldes aus.
-   */
-  @Input() luxNoLabels = false;
-
-  /**
-   * Blendet das obere Label (z.B. Feldbezeichnung) aus.
-   */
-  @Input() luxNoTopLabel = false;
-
-  /**
-   * Blendet das untere Label (z.B. Fehlermeldungen/Hinweise) aus.
-   */
-  @Input() luxNoBottomLabel = false;
-
   @ViewChild(MatSelect) matSelect!: MatSelect;
   @ViewChild(LuxSelectFilterDirective) filterDirective?: LuxSelectFilterDirective;
 
