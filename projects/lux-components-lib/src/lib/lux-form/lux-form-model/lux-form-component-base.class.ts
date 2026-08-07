@@ -191,6 +191,9 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     this.initFormValueSubscription();
     this.initFormStateSubscription();
     this.updateValidators(this.luxControlValidators, true);
+
+    // Verzögert prüfen, damit der @ContentChild formLabelComponent bereits aufgelöst ist.
+    setTimeout(() => this.checkA11yName());
   }
 
   ngDoCheck() {
@@ -277,6 +280,27 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    */
   protected errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     return undefined;
+  }
+
+  /**
+   * Prüft, ob das Control einen zugänglichen Namen besitzt bzw. ob ein
+   * abweichendes luxAriaLabel ein sichtbares Label überschreibt (WCAG 2.5.3),
+   * und gibt andernfalls eine Warnung aus (nur im Debug-Modus sichtbar).
+   */
+  protected checkA11yName() {
+    const hasVisibleLabel = !!this.formLabelComponent || !!this.luxLabel;
+
+    if (!hasVisibleLabel && !this.luxAriaLabel && !this.luxAriaLabelledby) {
+      this.logger.warn(
+        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt keinen zugänglichen Namen. ` +
+          `Bitte luxLabel (ggf. mit luxNoTopLabel), luxAriaLabel oder luxAriaLabelledby setzen.`
+      );
+    } else if (hasVisibleLabel && !!this.luxAriaLabel && this.luxAriaLabel !== this.luxLabel) {
+      this.logger.warn(
+        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt ein sichtbares Label ` +
+          `und ein davon abweichendes luxAriaLabel. Das aria-label überschreibt das sichtbare Label (WCAG 2.5.3 "Label in Name").`
+      );
+    }
   }
 
   /**

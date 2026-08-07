@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -57,3 +57,75 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
 class AriaBaseTestComponent {
   @ViewChild(LuxInputAcComponent, { static: true }) input!: LuxInputAcComponent;
 }
+
+describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
+  let warnSpy: jasmine.Spy;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    const consoleService = TestBed.inject(LuxConsoleService);
+    warnSpy = jasmine.createSpy('warn');
+    spyOnProperty(consoleService, 'warn', 'get').and.returnValue(warnSpy);
+  });
+
+  it('warnt, wenn ein Control keinerlei zugänglichen Namen hat', fakeAsync(() => {
+    const fixture = TestBed.createComponent(NoNameTestComponent);
+    fixture.detectChanges();
+    tick();
+
+    expect(warnSpy).toHaveBeenCalledWith(jasmine.stringContaining('keinen zugänglichen Namen'));
+  }));
+
+  it('warnt bei sichtbarem Label plus abweichendem luxAriaLabel (WCAG 2.5.3)', fakeAsync(() => {
+    const fixture = TestBed.createComponent(ConflictingNameTestComponent);
+    fixture.detectChanges();
+    tick();
+
+    expect(warnSpy).toHaveBeenCalledWith(jasmine.stringContaining('2.5.3'));
+  }));
+
+  it('warnt nicht, wenn luxLabel gesetzt ist', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AriaBaseTestComponent);
+    fixture.detectChanges();
+    tick();
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  }));
+
+  it('warnt nicht, wenn nur luxAriaLabel gesetzt ist', fakeAsync(() => {
+    const fixture = TestBed.createComponent(AriaOnlyTestComponent);
+    fixture.detectChanges();
+    tick();
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  }));
+});
+
+@Component({
+  imports: [LuxInputAcComponent],
+  template: `<lux-input-ac></lux-input-ac>`
+})
+class NoNameTestComponent {}
+
+@Component({
+  imports: [LuxInputAcComponent],
+  template: `<lux-input-ac luxLabel="Nachname" luxAriaLabel="Familienname"></lux-input-ac>`
+})
+class ConflictingNameTestComponent {}
+
+@Component({
+  imports: [LuxInputAcComponent],
+  template: `<lux-input-ac luxAriaLabel="Suchbegriff eingeben"></lux-input-ac>`
+})
+class AriaOnlyTestComponent {}
