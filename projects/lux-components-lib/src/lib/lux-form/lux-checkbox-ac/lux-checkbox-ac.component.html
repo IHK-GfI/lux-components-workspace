@@ -25,6 +25,8 @@
     luxAriaRequiredSelector=".mat-checkbox-input"
     [luxAriaInvalid]="'' + formControl.invalid"
     luxAriaInvalidSelector=".mat-checkbox-input"
+    [luxAriaLabel]="luxAriaLabel"
+    luxAriaLabelSelector="input"
     (focusin)="onFocusIn($event)"
     (focusout)="onFocusOut($event)"
     tabIndex="{{ luxReadonly ? -1 : 0 }}"

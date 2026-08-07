@@ -8,13 +8,16 @@ import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../lux-util/lux-console.service';
 import { LuxAutocompleteAcComponent } from './lux-autocomplete-ac/lux-autocomplete-ac.component';
+import { LuxCheckboxAcComponent } from './lux-checkbox-ac/lux-checkbox-ac.component';
 import { LuxDatepickerAcComponent } from './lux-datepicker-ac/lux-datepicker-ac.component';
 import { LuxDatetimepickerAcComponent } from './lux-datetimepicker-ac/lux-datetimepicker-ac.component';
 import { LuxFileInputAcComponent } from './lux-file/lux-file-input-ac/lux-file-input-ac.component';
 import { LuxInputAcComponent } from './lux-input-ac/lux-input-ac.component';
 import { LuxSelectAcComponent } from './lux-select-ac/lux-select-ac.component';
+import { LuxSliderAcComponent } from './lux-slider-ac/lux-slider-ac.component';
 import { LuxTextareaAcComponent } from './lux-textarea-ac/lux-textarea-ac.component';
 import { LuxTimepickerComponent } from './lux-timepicker/lux-timepicker.component';
+import { LuxToggleAcComponent } from './lux-toggle-ac/lux-toggle-ac.component';
 
 describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', () => {
   let fixture: ComponentFixture<AriaBindingsTestComponent>;
@@ -149,5 +152,74 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
 })
 class SelectAriaTestComponent {
   label = '';
+  ariaLabel?: string;
+}
+
+describe('Form-Controls - Slider/Checkbox/Toggle', () => {
+  let fixture: ComponentFixture<CheckableAriaTestComponent>;
+  let testComponent: CheckableAriaTestComponent;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(CheckableAriaTestComponent);
+    testComponent = fixture.componentInstance;
+  });
+
+  it('Slider: luxAriaLabel hat Vorrang vor dem luxLabel-Fallback', fakeAsync(() => {
+    testComponent.ariaLabel = 'Lautstärke';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const sliderEl = fixture.debugElement.query(By.css('mat-slider'));
+    expect(sliderEl.nativeElement.getAttribute('aria-label')).toBe('Lautstärke');
+  }));
+
+  it('Slider: ohne luxAriaLabel bleibt luxLabel der aria-label-Fallback', fakeAsync(() => {
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const sliderEl = fixture.debugElement.query(By.css('mat-slider'));
+    expect(sliderEl.nativeElement.getAttribute('aria-label')).toBe('Pegel');
+  }));
+
+  it('Checkbox: luxAriaLabel landet am nativen input', fakeAsync(() => {
+    testComponent.ariaLabel = 'AGB akzeptieren';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const checkboxInputEl = fixture.debugElement.query(By.css('mat-checkbox input[type="checkbox"]'));
+    expect(checkboxInputEl.nativeElement.getAttribute('aria-label')).toBe('AGB akzeptieren');
+  }));
+
+  it('Toggle: luxAriaLabel landet am Switch-Button', fakeAsync(() => {
+    testComponent.ariaLabel = 'Benachrichtigungen';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const switchEl = fixture.debugElement.query(By.css('mat-slide-toggle button[role="switch"]'));
+    expect(switchEl.nativeElement.getAttribute('aria-label')).toBe('Benachrichtigungen');
+  }));
+});
+
+@Component({
+  imports: [LuxSliderAcComponent, LuxCheckboxAcComponent, LuxToggleAcComponent],
+  template: `
+    <lux-slider-ac luxLabel="Pegel" [luxAriaLabel]="ariaLabel"></lux-slider-ac>
+    <lux-checkbox-ac luxLabel="AGB" [luxAriaLabel]="ariaLabel"></lux-checkbox-ac>
+    <lux-toggle-ac luxLabel="Aktiv" [luxAriaLabel]="ariaLabel"></lux-toggle-ac>
+  `
+})
+class CheckableAriaTestComponent {
   ariaLabel?: string;
 }

@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxAriaRequiredDirective } from '../../lux-directives/lux-aria/lux-aria-required.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -21,6 +22,7 @@ import { LuxFormCheckableBaseClass } from '../lux-form-model/lux-form-checkable-
     LuxAriaDescribedbyDirective,
     LuxAriaRequiredDirective,
     LuxAriaInvalidDirective,
+    LuxAriaLabelDirective,
     LuxTagIdDirective
   ]
 })
