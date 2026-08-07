@@ -10,9 +10,13 @@
   (focusin)="focusin()"
   (focusout)="focusout()"
 >
-  <!-- Container für das Label -->
-  @if (!luxNoTopLabel && !luxNoLabels) {
-  <div class="lux-form-control-label-authentic" [ngClass]="{ 'lux-label-long-format': luxLabelLongFormat }">
+  <!-- Container für das Label. Bei luxNoTopLabel/luxNoLabels wird das Label nur visuell
+       versteckt (lux-sr-only), damit der zugängliche Name des Controls erhalten bleibt. -->
+  <div
+    class="lux-form-control-label-authentic"
+    [class.lux-sr-only]="luxNoTopLabel || luxNoLabels"
+    [ngClass]="{ 'lux-label-long-format': luxLabelLongFormat }"
+  >
     <!-- Hier wird entweder das luxLabel oder das übergebene Tag heraus gerendert -->
     @if (!luxIgnoreDefaultLabel) {
     <div class="lux-label-authentic">
@@ -28,7 +32,6 @@
     </div>
     }
   </div>
-  }
   <!-- Container für das FormControl -->
   <div class="lux-form-control-container-authentic" [ngClass]="{ 'lux-no-input-row': luxNoInputRow }">
     <ng-content></ng-content>
