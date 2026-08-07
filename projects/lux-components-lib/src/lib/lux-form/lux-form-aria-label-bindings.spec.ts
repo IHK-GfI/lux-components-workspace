@@ -144,6 +144,18 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
     const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
     expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
   }));
+
+  it('vergibt die uid nur einmal im DOM (keine doppelte id)', fakeAsync(() => {
+    testComponent.label = 'Anrede';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const selectComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+    const elementsWithUid = fixture.nativeElement.querySelectorAll(`[id="${selectComponent.uid}"]`);
+    expect(elementsWithUid.length).toBe(1);
+    // Die uid gehört dem versteckten nativen <select>, auf das das Wrapper-Label per for verweist.
+    expect(elementsWithUid[0].tagName.toLowerCase()).toBe('select');
+  }));
 });
 
 @Component({
