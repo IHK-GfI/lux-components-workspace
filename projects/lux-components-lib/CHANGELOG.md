@@ -48,7 +48,7 @@
 
 ### Issues
 
-- Issue #267: A11y: luxNoTopLabel/luxNoLabels blenden das Label nur noch visuell aus (lux-sr-only), das <label> bleibt im DOM und der zugängliche Name erhalten. Neu: luxAriaLabel und luxAriaLabelledby als Inputs auf allen Form-Controls. Behoben: doppelte DOM-ID in lux-select-ac. Hinweis 1: Anwendungs-Tests, die bei luxNoTopLabel auf ein fehlendes <label> prüfen, müssen angepasst werden. Hinweis 2: luxNoBottomLabel/luxNoLabels entfernen weiterhin bewusst Hint und Fehlermeldung aus dem DOM.
+- Issue #267: A11y: luxNoTopLabel/luxNoLabels blenden das Label nur noch visuell aus (lux-sr-only), das `<label>` bleibt im DOM und der zugängliche Name erhalten. Neu: luxAriaLabel und luxAriaLabelledby als Inputs auf allen Form-Controls. Behoben: doppelte DOM-ID in lux-select-ac. Hinweis 1: Anwendungs-Tests, die bei luxNoTopLabel auf ein fehlendes `<label>` prüfen, müssen angepasst werden. Hinweis 2: luxNoBottomLabel/luxNoLabels entfernen weiterhin bewusst Hint und Fehlermeldung aus dem DOM. Hinweis 3: lux-file-list und lux-file-upload folgen in einem separaten Issue. Hinweis 4 für fakeAsync-Tests: Die Form-Controls planen beim Initialisieren einen einmaligen setTimeout für die A11y-Prüfung ein, der in fakeAsync-Tests per tick() oder flush() abgearbeitet werden muss.
 
 ## Version 21.7.0
 

@@ -299,7 +299,7 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
     if (!this.inForm) {
       setTimeout(() => {
-        // Der setTimeout-Callback feuert asynchron – nach ngOnInit. Zu diesem Zeitpunkt kann inForm
+        // Der setTimeout-Callback feuert asynchron - nach ngOnInit. Zu diesem Zeitpunkt kann inForm
         // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
         // Guard würde setValidators() die Validatoren des FormControls überschreiben.
         if (this.inForm) {

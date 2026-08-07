@@ -44,6 +44,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected _luxReadonly = false;
   protected _luxRequired = false;
   protected _luxControlValidators?: ValidatorFnType;
+  private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
 
   errorMessage: string | undefined = undefined;
 
@@ -211,7 +212,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     this.updateValidators(this.luxControlValidators, true);
 
     // Verzögert prüfen, damit der @ContentChild formLabelComponent bereits aufgelöst ist.
-    setTimeout(() => this.checkA11yName());
+    this.a11yNameCheckTimeout = setTimeout(() => this.checkA11yName());
   }
 
   ngDoCheck() {
@@ -239,6 +240,10 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
     if (this._configSubscription) {
       this._configSubscription.unsubscribe();
+    }
+
+    if (this.a11yNameCheckTimeout) {
+      clearTimeout(this.a11yNameCheckTimeout);
     }
   }
 
@@ -304,6 +309,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * Prüft, ob das Control einen zugänglichen Namen besitzt bzw. ob ein
    * abweichendes luxAriaLabel ein sichtbares Label überschreibt (WCAG 2.5.3),
    * und gibt andernfalls eine Warnung aus (nur im Debug-Modus sichtbar).
+   * Die Prüfung läuft einmalig bei der Initialisierung; spätere dynamische
+   * Änderungen an den betroffenen Inputs werden nicht erneut geprüft.
    */
   protected checkA11yName() {
     const hasVisibleLabel = !!this.formLabelComponent || !!this.luxLabel;
@@ -474,7 +481,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
     if (!this.inForm) {
       setTimeout(() => {
-        // Der setTimeout-Callback feuert asynchron – nach ngOnInit. Zu diesem Zeitpunkt kann inForm
+        // Der setTimeout-Callback feuert asynchron - nach ngOnInit. Zu diesem Zeitpunkt kann inForm
         // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
         // Guard würde setValidators() die Validatoren des FormControls überschreiben.
         if (this.inForm) {

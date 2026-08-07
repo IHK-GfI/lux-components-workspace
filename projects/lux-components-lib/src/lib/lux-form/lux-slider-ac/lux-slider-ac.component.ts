@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -27,6 +28,7 @@ export declare type LuxSliderAcColor = 'primary' | 'accent' | 'warn';
     MatSliderThumb,
     NgClass,
     LuxAriaLabelDirective,
+    LuxAriaLabelledbyDirective,
     LuxAriaInvalidDirective,
     LuxAriaDescribedbyDirective,
     LuxTagIdDirective,

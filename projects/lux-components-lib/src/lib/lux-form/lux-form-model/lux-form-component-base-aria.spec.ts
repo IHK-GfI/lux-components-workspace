@@ -49,6 +49,14 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
     testComponent.input.luxLabel = '';
     expect(testComponent.input.labelledBy()).toBeUndefined();
   });
+
+  it('liefert uid + "-label" bei projiziertem lux-form-label ohne luxLabel/Aria-Inputs', () => {
+    const projectedFixture = TestBed.createComponent(ProjectedLabelOnlyTestComponent);
+    projectedFixture.detectChanges();
+    const input = projectedFixture.componentInstance.input;
+
+    expect(input.labelledBy()).toBe(input.uid + '-label');
+  });
 });
 
 @Component({
@@ -56,6 +64,14 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
   template: `<lux-input-ac luxLabel="Nachname"></lux-input-ac>`
 })
 class AriaBaseTestComponent {
+  @ViewChild(LuxInputAcComponent, { static: true }) input!: LuxInputAcComponent;
+}
+
+@Component({
+  imports: [LuxInputAcComponent, LuxFormLabelComponent],
+  template: `<lux-input-ac><lux-form-label>Nachname</lux-form-label></lux-input-ac>`
+})
+class ProjectedLabelOnlyTestComponent {
   @ViewChild(LuxInputAcComponent, { static: true }) input!: LuxInputAcComponent;
 }
 

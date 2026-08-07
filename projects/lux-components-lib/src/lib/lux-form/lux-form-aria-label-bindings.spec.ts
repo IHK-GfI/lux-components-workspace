@@ -9,6 +9,7 @@ import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provide
 import { LuxConsoleService } from '../lux-util/lux-console.service';
 import { LuxAutocompleteAcComponent } from './lux-autocomplete-ac/lux-autocomplete-ac.component';
 import { LuxCheckboxAcComponent } from './lux-checkbox-ac/lux-checkbox-ac.component';
+import { LuxChipsAcComponent } from './lux-chips-ac/lux-chips-ac.component';
 import { LuxDatepickerAcComponent } from './lux-datepicker-ac/lux-datepicker-ac.component';
 import { LuxDatetimepickerAcComponent } from './lux-datetimepicker-ac/lux-datetimepicker-ac.component';
 import { LuxFileInputAcComponent } from './lux-file/lux-file-input-ac/lux-file-input-ac.component';
@@ -193,16 +194,25 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
     fixture.detectChanges();
     LuxTestHelper.wait(fixture);
 
-    const sliderEl = fixture.debugElement.query(By.css('mat-slider'));
-    expect(sliderEl.nativeElement.getAttribute('aria-label')).toBe('Lautstärke');
+    const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
+    expect(sliderInputEl.nativeElement.getAttribute('aria-label')).toBe('Lautstärke');
   }));
 
   it('Slider: ohne luxAriaLabel bleibt luxLabel der aria-label-Fallback', fakeAsync(() => {
     fixture.detectChanges();
     LuxTestHelper.wait(fixture);
 
-    const sliderEl = fixture.debugElement.query(By.css('mat-slider'));
-    expect(sliderEl.nativeElement.getAttribute('aria-label')).toBe('Pegel');
+    const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
+    expect(sliderInputEl.nativeElement.getAttribute('aria-label')).toBe('Pegel');
+  }));
+
+  it('Slider: luxAriaLabelledby landet als aria-labelledby am Thumb-Input', fakeAsync(() => {
+    testComponent.ariaLabelledby = 'externes-label-id';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
+    expect(sliderInputEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
   }));
 
   it('Checkbox: luxAriaLabel landet am nativen input', fakeAsync(() => {
@@ -214,6 +224,15 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
     expect(checkboxInputEl.nativeElement.getAttribute('aria-label')).toBe('AGB akzeptieren');
   }));
 
+  it('Checkbox: luxAriaLabelledby landet als aria-labelledby am nativen input', fakeAsync(() => {
+    testComponent.ariaLabelledby = 'externes-label-id';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const checkboxInputEl = fixture.debugElement.query(By.css('mat-checkbox input[type="checkbox"]'));
+    expect(checkboxInputEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
+  }));
+
   it('Toggle: luxAriaLabel landet am Switch-Button', fakeAsync(() => {
     testComponent.ariaLabel = 'Benachrichtigungen';
     fixture.detectChanges();
@@ -222,16 +241,60 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
     const switchEl = fixture.debugElement.query(By.css('mat-slide-toggle button[role="switch"]'));
     expect(switchEl.nativeElement.getAttribute('aria-label')).toBe('Benachrichtigungen');
   }));
+
+  it('Toggle: luxAriaLabelledby landet als aria-labelledby am Switch-Button', fakeAsync(() => {
+    testComponent.ariaLabelledby = 'externes-label-id';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const switchEl = fixture.debugElement.query(By.css('mat-slide-toggle button[role="switch"]'));
+    expect(switchEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
+  }));
 });
 
 @Component({
   imports: [LuxSliderAcComponent, LuxCheckboxAcComponent, LuxToggleAcComponent],
   template: `
-    <lux-slider-ac luxLabel="Pegel" [luxAriaLabel]="ariaLabel"></lux-slider-ac>
-    <lux-checkbox-ac luxLabel="AGB" [luxAriaLabel]="ariaLabel"></lux-checkbox-ac>
-    <lux-toggle-ac luxLabel="Aktiv" [luxAriaLabel]="ariaLabel"></lux-toggle-ac>
+    <lux-slider-ac luxLabel="Pegel" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-slider-ac>
+    <lux-checkbox-ac luxLabel="AGB" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-checkbox-ac>
+    <lux-toggle-ac luxLabel="Aktiv" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-toggle-ac>
   `
 })
 class CheckableAriaTestComponent {
   ariaLabel?: string;
+  ariaLabelledby?: string;
 }
+
+describe('Form-Controls - Chips: kein toter aria-labelledby-Verweis', () => {
+  let fixture: ComponentFixture<ChipsAriaTestComponent>;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ChipsAriaTestComponent);
+  });
+
+  it('Standardkonfiguration (nur luxLabel gesetzt) besitzt kein aria-labelledby, da der Wrapper kein Label rendert', fakeAsync(() => {
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const chipGridEl = fixture.debugElement.query(By.css('mat-chip-grid'));
+    expect(chipGridEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
+  }));
+});
+
+@Component({
+  imports: [LuxChipsAcComponent],
+  template: `<lux-chips-ac luxLabel="Kategorien"></lux-chips-ac>`
+})
+class ChipsAriaTestComponent {}

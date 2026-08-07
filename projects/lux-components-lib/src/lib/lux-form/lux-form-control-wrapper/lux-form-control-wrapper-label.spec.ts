@@ -8,7 +8,7 @@ import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.prov
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
 
-describe('LuxFormControlWrapper – Label verstecken statt entfernen', () => {
+describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
   let fixture: ComponentFixture<WrapperLabelTestComponent>;
   let testComponent: WrapperLabelTestComponent;
 
