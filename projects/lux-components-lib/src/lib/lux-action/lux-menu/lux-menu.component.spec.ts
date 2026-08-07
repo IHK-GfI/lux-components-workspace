@@ -349,6 +349,67 @@ describe('LuxMenuComponent', () => {
       discardPeriodicTasks();
     }));
 
+    it('Sollte aria-disabled behalten, wenn luxDisabled zur Laufzeit von true auf false wechselt', fakeAsync(() => {
+      // Regression: Das MatMenuItem-Host-Binding (aria-disabled = disabled) schreibt das
+      // Attribut bei einer eigenen Wertänderung neu und würde den Direktiven-Wert überschreiben.
+      component.generateItems(2);
+      component.displayExtended = false;
+      component.items[0].disabledAria = true;
+      component.items[0].disabled = true;
+      LuxTestHelper.wait(fixture);
+
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      component.items[0].disabled = false;
+      LuxTestHelper.wait(fixture);
+
+      const overlayEl = overlayContainer.getContainerElement();
+      const ariaDisabledItems = overlayEl.querySelectorAll('button.lux-menu-item[aria-disabled="true"]');
+      expect(ariaDisabledItems.length).toBe(1);
+      expect(ariaDisabledItems[0].hasAttribute('disabled')).toBeFalse();
+
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('Sollte aria-disabled entfernen, wenn luxDisabledAria zurückgesetzt wird', fakeAsync(() => {
+      component.generateItems(2);
+      component.displayExtended = false;
+      component.items[0].disabledAria = true;
+      LuxTestHelper.wait(fixture);
+
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      component.items[0].disabledAria = false;
+      LuxTestHelper.wait(fixture);
+
+      const overlayEl = overlayContainer.getContainerElement();
+      expect(overlayEl.querySelectorAll('button.lux-menu-item[aria-disabled="true"]').length).toBe(0);
+
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('Sollte luxHidden unverändert lassen (verstecktes Item erscheint trotz luxDisabledAria nicht im Panel)', fakeAsync(() => {
+      component.generateItems(2);
+      component.displayExtended = false;
+      component.items[0].disabledAria = true;
+      component.items[0].hidden = true;
+      LuxTestHelper.wait(fixture);
+
+      menuComponent.menuTriggerElRef!.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      const overlayEl = overlayContainer.getContainerElement();
+      expect(overlayEl.querySelectorAll('button.lux-menu-item').length).toBe(1);
+      expect(overlayEl.querySelectorAll('button.lux-menu-item[aria-disabled="true"]').length).toBe(0);
+
+      flush();
+      discardPeriodicTasks();
+    }));
+
     it('Sollte luxDisabled unverändert lassen (natives disabled, kein luxClickNotAllowed)', fakeAsync(() => {
       // Vorbedingungen prüfen
       const notAllowedSpy = spyOn(component, 'clickNotAllowed');
@@ -396,6 +457,7 @@ describe('LuxMenuComponent', () => {
         [luxAlwaysVisible]="item.alwaysVisible"
         [luxDisabled]="item.disabled"
         [luxDisabledAria]="item.disabledAria"
+        [luxHidden]="item.hidden"
         [luxRaised]="item.raised"
         [luxColor]="item.color"
         (luxClicked)="clicked()"
@@ -426,6 +488,7 @@ class MockComponent {
     alwaysVisible: boolean;
     disabled: boolean;
     disabledAria: boolean;
+    hidden: boolean;
     raised?: boolean;
     color: LuxThemePalette;
   }[] = [];
@@ -450,6 +513,7 @@ class MockComponent {
         alwaysVisible: false,
         disabled: false,
         disabledAria: false,
+        hidden: false,
         color: 'primary'
       });
     }

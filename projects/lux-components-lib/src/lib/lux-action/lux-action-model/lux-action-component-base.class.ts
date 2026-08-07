@@ -22,6 +22,8 @@ export class LuxActionComponentBaseClass {
    * eigenes Styling, die Anwendung reagiert über luxClickNotAllowed.
    * Abgrenzung: luxDisabled entfernt die Action aus der Tastaturreihenfolge,
    * luxHidden blendet sie komplett aus.
+   * Hinweis: Wird derzeit von lux-button und lux-menu-item umgesetzt;
+   * lux-link und lux-link-plain werten dieses Flag noch nicht aus.
    */
   @Input() luxDisabledAria? = false;
   @Input() luxRounded? = false;
