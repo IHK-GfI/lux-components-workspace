@@ -1,38 +1,45 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.7.0](#version-2170)
+  - [Version 21.8.0](#version-2180)
     - [Issues](#issues)
-  - [Version 21.6.0](#version-2160)
+  - [Version 21.7.0](#version-2170)
     - [Issues](#issues-1)
-  - [Version 21.5.0](#version-2150)
+  - [Version 21.6.0](#version-2160)
     - [Issues](#issues-2)
-  - [Version 21.4.0](#version-2140)
+  - [Version 21.5.0](#version-2150)
     - [Issues](#issues-3)
-  - [Version 21.3.0](#version-2130)
+  - [Version 21.4.0](#version-2140)
     - [Issues](#issues-4)
-  - [Version 21.2.0](#version-2120)
+  - [Version 21.3.0](#version-2130)
     - [Issues](#issues-5)
-  - [Version 21.1.0](#version-2110)
+  - [Version 21.2.0](#version-2120)
     - [Issues](#issues-6)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues-7)
-  - [Version 19.3.0](#version-1930)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-8)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-9)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-10)
-  - [Version 19.0.1](#version-1901)
+  - [Version 19.1.0](#version-1910)
     - [Issues](#issues-11)
-  - [Version 19.0.0](#version-1900)
+  - [Version 19.0.1](#version-1901)
     - [Issues](#issues-12)
+  - [Version 19.0.0](#version-1900)
+    - [Issues](#issues-13)
+
+## Version 21.8.0
+
+### Issues
+
+- Issue #267: lux-sr-only auf das clip-Muster umgestellt
 
 ## Version 21.7.0
 
 ### Issues
 
-- Issue #267: lux-sr-only auf das clip-Muster umgestellt
 - Issue #247: Menu-Panels-Items analog zu Button-Farben darstellen (#258)
 - Issue #248: Muted-Colors für Badges anbieten (#260)
 

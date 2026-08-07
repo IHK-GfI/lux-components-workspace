@@ -300,6 +300,7 @@ lux-card.lux-card-grow {
 }
 
 .lux-sr-only {
+  // sr=screen-reader vgl. https://webaim.org/techniques/css/invisiblecontent/
   position: absolute;
   width: 1px;
   height: 1px;
