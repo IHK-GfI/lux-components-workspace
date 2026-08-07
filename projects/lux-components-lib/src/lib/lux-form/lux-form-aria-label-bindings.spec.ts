@@ -93,7 +93,7 @@ class AriaBindingsTestComponent {
   ariaLabelledby?: string;
 }
 
-describe('Form-Controls – Namenskaskade bei aria-labelledby-Controls (Select)', () => {
+describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', () => {
   let fixture: ComponentFixture<SelectAriaTestComponent>;
   let testComponent: SelectAriaTestComponent;
 
