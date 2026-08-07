@@ -76,6 +76,18 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   @Input() luxHintShowOnlyOnFocus = false;
   @Input() luxLabel = '';
   @Input() luxLabelLongFormat = false;
+  /**
+   * Setzt "aria-label" auf dem nativen Eingabeelement. Nur für Felder gedacht,
+   * die kein sichtbares Label besitzen (z.B. Suchfeld). Hat ein Control ein
+   * sichtbares Label, überschreibt ein abweichendes aria-label den sichtbaren
+   * Text (WCAG 2.5.3 "Label in Name") - siehe Warnung in checkA11yName().
+   */
+  @Input() luxAriaLabel?: string;
+  /**
+   * Setzt "aria-labelledby" auf dem nativen Eingabeelement und verweist damit
+   * auf ein eigenes, externes Label-Element. Hat Vorrang vor luxAriaLabel und luxLabel.
+   */
+  @Input() luxAriaLabelledby?: string;
 
   @Input() luxControlBinding?: string;
   @Input() luxErrorMessage?: string;
@@ -88,6 +100,22 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
   @Input() set luxFormControl(formControl: FormControl<T>) {
     this.formControl = formControl;
+  }
+
+  /**
+   * Liefert den Wert für "aria-labelledby" gemäß der Namenskaskade:
+   * luxAriaLabelledby vor luxAriaLabel vor luxLabel (uid + '-label').
+   * undefined bedeutet: kein aria-labelledby setzen (die Aria-Direktiven
+   * entfernen das Attribut dann), damit ein gesetztes luxAriaLabel greifen kann.
+   */
+  labelledBy(): string | undefined {
+    if (this.luxAriaLabelledby) {
+      return this.luxAriaLabelledby;
+    }
+    if (this.luxAriaLabel) {
+      return undefined;
+    }
+    return this.formLabelComponent || this.luxLabel ? this.uid + '-label' : undefined;
   }
 
   get luxFormGroup(): FormGroup {
