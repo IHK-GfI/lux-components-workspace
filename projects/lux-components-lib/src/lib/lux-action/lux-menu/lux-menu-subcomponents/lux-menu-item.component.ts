@@ -15,6 +15,7 @@ export class LuxMenuItemComponent extends LuxActionComponentBaseClass {
   luxMenuItemSubtitle = input<string>('');
   luxMenuItemSelected = input<boolean>(false);
 
+  @Output() luxClickNotAllowed = new EventEmitter<Event>();
   @Output() luxHiddenChange = new EventEmitter<boolean>();
   @Output() luxHideLabelIfExtendedChange = new EventEmitter<boolean>();
   @Output() luxAlwaysVisibleChange = new EventEmitter<boolean>();
@@ -66,5 +67,9 @@ export class LuxMenuItemComponent extends LuxActionComponentBaseClass {
 
   clicked(event: Event) {
     this.luxClicked.emit(event);
+  }
+
+  clickNotAllowed(event: Event) {
+    this.luxClickNotAllowed.emit(event);
   }
 }

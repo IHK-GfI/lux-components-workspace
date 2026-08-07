@@ -15,6 +15,15 @@ export class LuxActionComponentBaseClass {
   @Input() luxIconShowRight? = false;
   @Input() luxTagId?: string;
   @Input() luxDisabled? = false;
+  /**
+   * Markiert die Action als wahrnehmbar deaktiviert (aria-disabled): sichtbar und
+   * fokussierbar, Screenreader sagen "deaktiviert" an, die Aktion wird aber nicht
+   * ausgeführt. Statt luxClicked wird luxClickNotAllowed emittiert. Bewusst ohne
+   * eigenes Styling, die Anwendung reagiert über luxClickNotAllowed.
+   * Abgrenzung: luxDisabled entfernt die Action aus der Tastaturreihenfolge,
+   * luxHidden blendet sie komplett aus.
+   */
+  @Input() luxDisabledAria? = false;
   @Input() luxRounded? = false;
   @Input() luxFlat? = false;
   @Input() luxStroked? = false;

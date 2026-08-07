@@ -46,7 +46,6 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   @Input() luxSpinnerMode: LuxProgressModeType = 'indeterminate';
   @Input() luxSpinnerValue = 70;
   @Input() luxLoading = false;
-  @Input() luxDisabledAria = false;
   @Input() luxIconButton = false;
 
   @Output() luxAuxClicked = new EventEmitter<Event>();
