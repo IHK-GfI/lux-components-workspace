@@ -12,6 +12,7 @@ import { LuxDatepickerAcComponent } from './lux-datepicker-ac/lux-datepicker-ac.
 import { LuxDatetimepickerAcComponent } from './lux-datetimepicker-ac/lux-datetimepicker-ac.component';
 import { LuxFileInputAcComponent } from './lux-file/lux-file-input-ac/lux-file-input-ac.component';
 import { LuxInputAcComponent } from './lux-input-ac/lux-input-ac.component';
+import { LuxSelectAcComponent } from './lux-select-ac/lux-select-ac.component';
 import { LuxTextareaAcComponent } from './lux-textarea-ac/lux-textarea-ac.component';
 import { LuxTimepickerComponent } from './lux-timepicker/lux-timepicker.component';
 
@@ -90,4 +91,63 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
 class AriaBindingsTestComponent {
   ariaLabel?: string;
   ariaLabelledby?: string;
+}
+
+describe('Form-Controls – Namenskaskade bei aria-labelledby-Controls (Select)', () => {
+  let fixture: ComponentFixture<SelectAriaTestComponent>;
+  let testComponent: SelectAriaTestComponent;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
+    }).compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SelectAriaTestComponent);
+    testComponent = fixture.componentInstance;
+  });
+
+  it('mit luxLabel: aria-labelledby verweist auf das Wrapper-Label', fakeAsync(() => {
+    testComponent.label = 'Anrede';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
+    const labelEl = fixture.debugElement.query(By.css('label.lux-form-label-authentic'));
+    expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBe(labelEl.nativeElement.id);
+  }));
+
+  it('ohne luxLabel, mit luxAriaLabel: kein toter labelledby-Verweis, aria-label greift', fakeAsync(() => {
+    testComponent.ariaLabel = 'Liste sortieren nach';
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
+    expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
+    expect(matSelectEl.nativeElement.getAttribute('aria-label')).toBe('Liste sortieren nach');
+  }));
+
+  it('ohne jegliches Label: aria-labelledby wird nicht gesetzt (kein toter Verweis)', fakeAsync(() => {
+    fixture.detectChanges();
+    LuxTestHelper.wait(fixture);
+
+    const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
+    expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
+  }));
+});
+
+@Component({
+  imports: [LuxSelectAcComponent],
+  template: `<lux-select-ac [luxLabel]="label" [luxAriaLabel]="ariaLabel" [luxOptions]="['A', 'B']"></lux-select-ac>`
+})
+class SelectAriaTestComponent {
+  label = '';
+  ariaLabel?: string;
 }

@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
@@ -32,6 +33,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     MatOption,
     NgTemplateOutlet,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
     LuxAriaLabelledbyDirective,
     LuxTagIdDirective,
     LuxRenderPropertyPipe,

@@ -39,7 +39,8 @@
         luxReadonly ? 'lux-display-none' : '',
         luxEnableFilter ? 'lux-select-panel-ac-filter' : ''
       ]"
-      [luxAriaLabelledby]="uid + '-label'"
+      [luxAriaLabelledby]="labelledBy()"
+      [luxAriaLabel]="luxAriaLabel"
       [luxAriaDescribedby]="describedBy()"
       (focusin)="onFocusIn($event)"
       (focusout)="onFocusOut($event)"

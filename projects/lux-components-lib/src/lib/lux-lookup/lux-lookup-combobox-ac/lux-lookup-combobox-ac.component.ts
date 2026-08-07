@@ -5,6 +5,7 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { Subscription } from 'rxjs';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../../lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -26,6 +27,7 @@ import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry'
     MatSelect,
     LuxTagIdDirective,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
     LuxAriaLabelledbyDirective,
     MatOption,
     NgStyle,
