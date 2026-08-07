@@ -113,6 +113,24 @@
     </lux-card-content>
   </lux-card>
 
+  <lux-card luxTitle="A11y - Visuell versteckte Labels" luxTagId="forms-a11y">
+    <lux-card-content>
+      <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
+        <!-- Issue #267: zulässige Ausnahmen für visuell versteckte Labels -->
+        <lux-input-ac
+          luxLabel="Suchbegriff eingeben"
+          [luxNoTopLabel]="true"
+          luxPlaceholder="Suchen..."
+        ></lux-input-ac>
+
+        <lux-select-ac
+          luxAriaLabel="Liste sortieren nach"
+          [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
+        ></lux-select-ac>
+      </div>
+    </lux-card-content>
+  </lux-card>
+
   <lux-card luxTitle="Formulardaten">
     <lux-card-content>
       <div>
