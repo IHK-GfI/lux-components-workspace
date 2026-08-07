@@ -295,7 +295,13 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
         `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt keinen zugänglichen Namen. ` +
           `Bitte luxLabel (ggf. mit luxNoTopLabel), luxAriaLabel oder luxAriaLabelledby setzen.`
       );
-    } else if (hasVisibleLabel && !!this.luxAriaLabel && this.luxAriaLabel !== this.luxLabel) {
+    } else if (
+      // Bei projiziertem <lux-form-label> ist der Text hier nicht auslesbar; um falsche Alarme zu
+      // vermeiden, wird in diesem Fall keine 2.5.3-Warnung ausgegeben.
+      !!this.luxLabel &&
+      !!this.luxAriaLabel &&
+      this.luxAriaLabel !== this.luxLabel
+    ) {
       this.logger.warn(
         `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt ein sichtbares Label ` +
           `und ein davon abweichendes luxAriaLabel. Das aria-label überschreibt das sichtbare Label (WCAG 2.5.3 "Label in Name").`

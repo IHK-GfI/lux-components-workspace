@@ -5,6 +5,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angul
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
+import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
 import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
 
 describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
@@ -110,6 +111,14 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
 
     expect(warnSpy).not.toHaveBeenCalled();
   }));
+
+  it('warnt nicht bei projiziertem lux-form-label plus luxAriaLabel (Text hier nicht auslesbar)', fakeAsync(() => {
+    const fixture = TestBed.createComponent(ProjectedLabelTestComponent);
+    fixture.detectChanges();
+    tick();
+
+    expect(warnSpy).not.toHaveBeenCalled();
+  }));
 });
 
 @Component({
@@ -129,3 +138,9 @@ class ConflictingNameTestComponent {}
   template: `<lux-input-ac luxAriaLabel="Suchbegriff eingeben"></lux-input-ac>`
 })
 class AriaOnlyTestComponent {}
+
+@Component({
+  imports: [LuxInputAcComponent, LuxFormLabelComponent],
+  template: `<lux-input-ac luxAriaLabel="Familienname"><lux-form-label>Nachname</lux-form-label></lux-input-ac>`
+})
+class ProjectedLabelTestComponent {}
