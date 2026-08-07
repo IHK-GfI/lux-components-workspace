@@ -14,11 +14,13 @@
         [luxStroked]="menuItem.luxStroked"
         [luxIconName]="menuItem.luxIconName"
         [luxDisabled]="menuItem.luxDisabled"
+        [luxDisabledAria]="menuItem.luxDisabledAria"
         [luxTagId]="menuItem.luxTagId"
         [luxRounded]="menuItem.luxRounded"
         [luxButtonBadge]="menuItem.luxButtonBadge"
         [luxButtonBadgeColor]="menuItem.luxButtonBadgeColor"
         (luxClicked)="menuItemClicked(menuItem, $event)"
+        (luxClickNotAllowed)="menuItem.clickNotAllowed($event)"
         luxAriaLabel="{{ menuItem.luxLabel }}"
         luxAriaLabelSelector="button"
         luxTabIndex="0"
@@ -58,6 +60,7 @@
           [class.with-badge]="menuItem.luxButtonBadge"
           [luxTooltip]="menuItem.luxMenuTooltip"
           [disabled]="menuItem.luxDisabled"
+          [luxAriaDisabled]="menuItem.luxDisabledAria ? 'true' : undefined"
           luxTagIdHandler
           [luxTagIdStartElement]="elementRef.nativeElement"
           [luxTagIdTargetSelf]="true"
@@ -130,6 +133,7 @@
             [class.with-badge]="menuItem.luxButtonBadge"
             [luxTooltip]="menuItem.luxMenuTooltip"
             [disabled]="menuItem.luxDisabled"
+            [luxAriaDisabled]="menuItem.luxDisabledAria ? 'true' : undefined"
             [ngClass]="
               (menuItem.luxClass ?? '') +
               (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : '') +
@@ -194,6 +198,7 @@
             [class.with-badge]="menuItem.luxButtonBadge"
             [luxTooltip]="menuItem.luxMenuTooltip"
             [disabled]="menuItem.luxDisabled"
+            [luxAriaDisabled]="menuItem.luxDisabledAria ? 'true' : undefined"
             luxTagIdHandler
             [luxTagIdStartElement]="elementRef.nativeElement"
             [luxTagIdTargetSelf]="true"
