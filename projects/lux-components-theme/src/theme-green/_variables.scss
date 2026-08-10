@@ -17,6 +17,11 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   @include lux-theme-palette-vars("accent", palettes.$lux-palette_accent, palettes.$sizes);
   @include lux-theme-palette-vars("neutral", palettes.$lux-palette_neutral, palettes.$sizes);
   @include lux-theme-palette-vars("warn", palettes.$lux-palette_warn, palettes.$sizes);
+  @include lux-theme-palette-vars("custom-orange", palettes.$lux-palette_custom_orange, palettes.$customPaletteSizes);
+  @include lux-theme-palette-vars("custom-yellow", palettes.$lux-palette_custom_yellow, palettes.$customPaletteSizes);
+  @include lux-theme-palette-vars("custom-pink", palettes.$lux-palette_custom_pink, palettes.$customPaletteSizes);
+  @include lux-theme-palette-vars("custom-purple", palettes.$lux-palette_custom_purple, palettes.$customPaletteSizes);
+  @include lux-theme-palette-vars("custom-lightblue", palettes.$lux-palette_custom_lightblue, palettes.$customPaletteSizes);
 
   // Allgemein
   --lux-theme-app-font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
@@ -236,36 +241,36 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-on-lightblue: var(--lux-theme-custom-on-lightblue);
 
   // LUX-Badge Muted
-  --lux-theme-badge-muted-red: #ffedea;
+  --lux-theme-badge-muted-red: var(--lux-theme-warn-95);
   --lux-theme-badge-muted-on-red: #93000c;
-  --lux-theme-badge-muted-stroke-red: #ffb4ab;
-  --lux-theme-badge-muted-green: #ebffe6;
-  --lux-theme-badge-muted-on-green: #00531d;
-  --lux-theme-badge-muted-stroke-green: #75dc81;
-  --lux-theme-badge-muted-purple: #f4eeff;
-  --lux-theme-badge-muted-on-purple: #4a3597;
-  --lux-theme-badge-muted-stroke-purple: #d2bbff;
-  --lux-theme-badge-muted-blue: #ffffff;
-  --lux-theme-badge-muted-on-blue: #003366;
-  --lux-theme-badge-muted-stroke-blue: #003366;
-  --lux-theme-badge-muted-gray: #f4f0ef;
-  --lux-theme-badge-muted-on-gray: #484646;
-  --lux-theme-badge-muted-stroke-gray: #c9c6c5;
-  --lux-theme-badge-muted-orange: #ffede4;
-  --lux-theme-badge-muted-on-orange: #793100;
-  --lux-theme-badge-muted-stroke-orange: #793100;
-  --lux-theme-badge-muted-black: #ffffff;
-  --lux-theme-badge-muted-on-black: #1c1b1b;
-  --lux-theme-badge-muted-stroke-black: #605e5e;
-  --lux-theme-badge-muted-yellow: #ffefd3;
-  --lux-theme-badge-muted-on-yellow: #5a4400;
-  --lux-theme-badge-muted-stroke-yellow: #f5bf00;
-  --lux-theme-badge-muted-pink: #ffecf2;
-  --lux-theme-badge-muted-on-pink: #8e0051;
-  --lux-theme-badge-muted-stroke-pink: #ffb0ce;
-  --lux-theme-badge-muted-lightblue: #e6f2ff;
-  --lux-theme-badge-muted-on-lightblue: #003366;
-  --lux-theme-badge-muted-stroke-lightblue: #91cdff;
+  --lux-theme-badge-muted-stroke-red: var(--lux-theme-warn-80);
+  --lux-theme-badge-muted-green: var(--lux-theme-accent-98);
+  --lux-theme-badge-muted-on-green: var(--lux-theme-accent-30);
+  --lux-theme-badge-muted-stroke-green: var(--lux-theme-accent-80);
+  --lux-theme-badge-muted-purple: var(--lux-theme-custom-purple-95);
+  --lux-theme-badge-muted-on-purple: var(--lux-theme-custom-purple-30);
+  --lux-theme-badge-muted-stroke-purple: var(--lux-theme-custom-purple-80);
+  --lux-theme-badge-muted-blue: var(--lux-theme-primary-100);
+  --lux-theme-badge-muted-on-blue: var(--lux-theme-primary-20);
+  --lux-theme-badge-muted-stroke-blue: var(--lux-theme-primary-20);
+  --lux-theme-badge-muted-gray: var(--lux-theme-neutral-95);
+  --lux-theme-badge-muted-on-gray: var(--lux-theme-neutral-30);
+  --lux-theme-badge-muted-stroke-gray: var(--lux-theme-neutral-80);
+  --lux-theme-badge-muted-orange: var(--lux-theme-custom-orange-95);
+  --lux-theme-badge-muted-on-orange: var(--lux-theme-custom-orange-30);
+  --lux-theme-badge-muted-stroke-orange: var(--lux-theme-custom-orange-30);
+  --lux-theme-badge-muted-black: var(--lux-theme-neutral-100);
+  --lux-theme-badge-muted-on-black: var(--lux-theme-neutral-10);
+  --lux-theme-badge-muted-stroke-black: var(--lux-theme-neutral-40);
+  --lux-theme-badge-muted-yellow: var(--lux-theme-custom-yellow-95);
+  --lux-theme-badge-muted-on-yellow: var(--lux-theme-custom-yellow-30);
+  --lux-theme-badge-muted-stroke-yellow: var(--lux-theme-custom-yellow-80);
+  --lux-theme-badge-muted-pink: var(--lux-theme-custom-pink-95);
+  --lux-theme-badge-muted-on-pink: var(--lux-theme-custom-pink-30);
+  --lux-theme-badge-muted-stroke-pink: var(--lux-theme-custom-pink-80);
+  --lux-theme-badge-muted-lightblue: var(--lux-theme-custom-lightblue-95);
+  --lux-theme-badge-muted-on-lightblue: var(--lux-theme-primary-20);
+  --lux-theme-badge-muted-stroke-lightblue: var(--lux-theme-custom-lightblue-80);
 
   // LUX-Breadcrumb
   --lux-theme-breadcrumb-hover-color: var(--lux-theme-accent-secondary-color);
