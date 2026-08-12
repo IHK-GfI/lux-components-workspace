@@ -1,10 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, OnDestroy, model, effect, contentChild } from '@angular/core';
 import { MatFabButton } from '@angular/material/button';
-import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components'
-import { LuxChatController } from '@ihk-gfi/lux-components/lux-chat'
+import { LuxIconComponent, LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Unsubscribable } from 'rxjs';
+import { LuxChatController } from '../lux-chat/lux-chat-controller';
 
 @Component({
   selector: 'lux-chat-popup',
