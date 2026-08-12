@@ -39,7 +39,6 @@
         margin: 0 !important;
     }
 
-    
 
     .lux-chat-base {
         flex: 1;
@@ -61,7 +60,7 @@
 
         .lux-chat-entry-container {
             min-width: 20px; //TODO: Pixel ? Variable ?
-            max-width: max(55%, min(90%, 500px));
+            max-width: max(80%, min(90%, 500px));
             margin-bottom: 8px; //TODO: Pixel ? Variable ?
             
 

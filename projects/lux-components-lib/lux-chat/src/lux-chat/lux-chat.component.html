@@ -1,7 +1,7 @@
 <div class="lux-chat">
     <!-- Chat header -->
     <div class="lux-chat-header">
-        <p class="lux-chat-header-title">
+        <p class="lux-chat-header-title" tabindex="0" (click.keydown)="onTitleClicked()">
             <span class="lux-chat-header-title-text">
                 {{luxChatTitle()}}
             </span>
@@ -112,10 +112,11 @@
 
         @if(chatInput){
             <lux-button
+                luxTagId="lux-chat-ai-input-button-send"
                 class="lux-chat-action-send"
                 [luxIconButton]="true"
-                [luxRounded]="true"
                 [luxRaised]="true"
+                [luxRounded]="true"
                 luxIconName="lux-mail-send-email"
                 luxColor="primary"
                 (luxClicked)="onChatEnterButtonPressed()"
