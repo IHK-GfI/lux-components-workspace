@@ -305,29 +305,6 @@ describe('LuxChatComponent', () => {
   });
 
   // ---------------------------------------------------------------------------
-  // isMessageFromUser
-  // ---------------------------------------------------------------------------
-  describe('isMessageFromUser', () => {
-    it('sollte true zurückgeben, wenn die Nachricht vom aktuellen Benutzer stammt', fakeAsync(() => {
-      fixture.componentRef.setInput('luxChatUserName', 'User1');
-      fixture.detectChanges();
-      tick();
-
-      const msg = createMessage('User1', 'hi', new Date());
-      expect(component.isMessageFromUser(msg)).toBeTrue();
-    }));
-
-    it('sollte false zurückgeben, wenn die Nachricht von einem anderen Benutzer stammt', fakeAsync(() => {
-      fixture.componentRef.setInput('luxChatUserName', 'User1');
-      fixture.detectChanges();
-      tick();
-
-      const msg = createMessage('User2', 'hi', new Date());
-      expect(component.isMessageFromUser(msg)).toBeFalse();
-    }));
-  });
-
-  // ---------------------------------------------------------------------------
   // checkShowDateSplit
   // ---------------------------------------------------------------------------
   describe('checkShowDateSplit', () => {

@@ -3,7 +3,7 @@ import { LuxChatData } from './lux-chat-data';
 import { LuxChatMessageData } from './lux-chat-message-data';
 import { CommonModule } from '@angular/common';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { LuxDividerComponent, LuxTextareaAcComponent, LuxAriaLabelDirective, LuxButtonComponent } from '@ihk-gfi/lux-components';
+import { LuxDividerComponent, LuxTextareaAcComponent, LuxAriaLabelDirective, LuxButtonComponent, LuxAutofocusDirective } from '@ihk-gfi/lux-components';
 import { LuxChatRelativeUntilTimestamp } from "./lux-chat-relative-until-timestamp.pipe";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
@@ -21,7 +21,8 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     LuxTextareaAcComponent,
     LuxAriaLabelDirective,
     TranslocoPipe,
-    LuxChatRelativeUntilTimestamp
+    LuxChatRelativeUntilTimestamp,
+    LuxAutofocusDirective
 ],
   templateUrl: './lux-chat.component.html'
 })
@@ -35,6 +36,7 @@ export class LuxChatComponent {
   public luxChatUserName = input<string>();
   public showFullscreenButton = model<boolean>();
   public showCloseButton = model<boolean>();
+  public luxAutoFocus = input<boolean>(false);
 
   public chatInput = "";
 
@@ -71,6 +73,8 @@ export class LuxChatComponent {
     effect(() => {
       const _chatData = this.luxChatData();
       if(!_chatData) return;
+
+      _chatData.scrollHandler = () => this.scrollToBottom();
       
       _chatData.messageAddedEvents.subscribe((message) => {
         message.metadata["_isUser"] = message.user === this.luxChatUserName();
@@ -87,10 +91,6 @@ export class LuxChatComponent {
       }
     });
 
-  }
-
-  public isMessageFromUser(item: LuxChatMessageData): boolean {
-    return item.user === this.luxChatUserName();
   }
 
   public checkShowDateSplit(item: LuxChatMessageData, index: number): boolean {
@@ -133,6 +133,14 @@ export class LuxChatComponent {
     //Prevent Enter key from being processed
     event.preventDefault();
 
+    this.luxChatOutput.emit(this.chatInput)
+
+    this.chatInput = "";
+
+    this.scrollToBottom();
+  }
+
+  public onChatEnterButtonPressed(): void {
     this.luxChatOutput.emit(this.chatInput)
 
     this.chatInput = "";
