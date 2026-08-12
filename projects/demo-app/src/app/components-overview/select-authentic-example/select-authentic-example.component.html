@@ -22,6 +22,7 @@
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="value"
@@ -54,6 +55,7 @@
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
         [luxMultiple]="true"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="multiselectValue"
@@ -85,6 +87,7 @@
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
@@ -116,6 +119,7 @@
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
         [luxDense]="denseFormat"
         [(luxSelected)]="templateValue"
         #tooltipSelectComp
@@ -226,6 +230,15 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        [(luxChecked)]="keepOptionOrder"
+        luxLabel="luxKeepOptionOrder"
+        luxHint="Behält die ursprüngliche Reihenfolge der Optionen bei. Selektierte Optionen werden nicht mehr an den Anfang der Liste sortiert."
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
     <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
