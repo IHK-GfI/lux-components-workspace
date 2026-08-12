@@ -1,0 +1,46 @@
+<example-base-structure
+    exampleTitle="Chat">
+
+    <example-base-content>
+        @if(!showChatPopup){
+            <div style="height: calc(100vh - 270px);">
+                <lux-chat-ai
+                    [luxBaseUrl]="'http://localhost:8081/api'"
+                    [luxUserName]="'User'"
+                    [luxAssistantName]="'My Chatbot'"
+                    [luxAutoFocus]="true"
+                    [luxChatShowMetadata]="luxChatShowMetadata"
+                    [luxChatId]="loadedChatId" 
+                    (luxChatIdChange)="onChatIdChange($event)" 
+                ></lux-chat-ai>
+            </div>
+        }
+
+        @if(showChatPopup){
+            <lux-chat-popup [luxChatOpened]="true">
+                <lux-chat-ai
+                    [luxBaseUrl]="'http://localhost:8081/api'"
+                    [luxUserName]="'User'"
+                    [luxAssistantName]="'My Chatbot'"
+                    [luxAutoFocus]="true"
+                    [luxChatShowMetadata]="luxChatShowMetadata"
+                    [luxChatId]="loadedChatId" 
+                    (luxChatIdChange)="onChatIdChange($event)" 
+                ></lux-chat-ai>
+            </lux-chat-popup>
+        }
+
+    </example-base-content>
+
+    <example-base-simple-options>
+        <lux-toggle-ac
+            luxLabel="Zeige Chat in LuxChatPopup Komponente"
+            [(luxChecked)]="showChatPopup"
+        ></lux-toggle-ac>
+        <lux-toggle-ac
+            luxLabel="Zeige Metadaten für die Tool-Calls"
+            [(luxChecked)]="luxChatShowMetadata"
+        ></lux-toggle-ac>
+    </example-base-simple-options>
+
+</example-base-structure>

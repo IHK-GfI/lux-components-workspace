@@ -28,8 +28,7 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     LuxToggleAcComponent,
     CommonModule
 ],
-  templateUrl: './chat-example.component.html',
-  styleUrl: './chat-example.component.scss'
+  templateUrl: './chat-example.component.html'
 })
 export class ChatExampleComponent {
 

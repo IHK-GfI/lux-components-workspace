@@ -11,6 +11,8 @@ import { appConsentProvider } from './app.consent';
 import { routes } from './app.routes';
 import { MockAppHeaderAcLuxSessionTimerService } from './components-overview/session-timer-example/mock-session-timer-service';
 import { provideLuxTranslocoRoot } from './transloco-root.config';
+import { LuxChatAiService } from '@ihk-gfi/lux-components/lux-chat-ai';
+import { MockLuxChatAiService } from './components-overview/chat-ai-example/mock-chat-ai.service';
 
 const myConfiguration: LuxComponentsConfigParameters = {
   generateLuxTagIds: environment.generateLuxTagIds,
@@ -49,6 +51,7 @@ export const appConfig: ApplicationConfig = {
       return firstValueFrom(t.load(chosen));
     }),
     { provide: LuxAppHeaderAcSessionTimerService, useClass: MockAppHeaderAcLuxSessionTimerService },
-    appConsentProvider
+    appConsentProvider,
+    { provide: LuxChatAiService, useClass: MockLuxChatAiService }
   ]
 };

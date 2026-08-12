@@ -1,0 +1,172 @@
+
+.lux-chat-ai {
+    height: 100%;
+}
+
+.lux-chat-ai-content-link {
+    font-size: 0.9rem;
+    background-color: #00000010;
+    border: 1px solid #00000040;
+    border-radius: 16px;
+    padding: 2px 8px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+
+
+$indent: 1.25rem;
+$color-key: #3b9ae8;
+$color-string: #bd5d40;
+$color-number: #b5cea8;
+$color-boolean: #4fc1ff;
+$color-null: #888;
+$color-index: #858585;
+$color-type-array: #c586c0;
+$color-type-object: #839ad8;
+$color-separator: #ccc;
+$bg-summary-hover: rgba(255, 255, 255, 0.05);
+$border-tree: rgba(255, 255, 255, 0.1);
+
+.lux-chat-ai-tool-call {
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #d4d4d4;
+
+    .json-node {
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .outer-node {
+        background-color: #b1b1b133;
+        border: 1px solid #f1f1f133;
+        border-radius: 8px;
+
+        padding-left: 8px;
+        width: calc(100% - 8px);
+
+        margin-bottom: 8px;
+    }
+
+    
+    // --- details / summary ---
+
+    details {
+        width: 100%;
+
+        & > summary {
+            list-style: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            user-select: none;
+            white-space: nowrap;
+
+            &::-webkit-details-marker {
+            display: none;
+            }
+
+            &::before {
+            content: '▶';
+            font-size: 0.6rem;
+            color: $color-separator;
+            transition: transform 0.15s ease;
+            display: inline-block;
+            width: 0.75rem;
+            flex-shrink: 0;
+            }
+
+            &:hover {
+            background: $bg-summary-hover;
+            }
+        }
+
+        &[open] > summary::before {
+            transform: rotate(90deg);
+        }
+    }
+
+    // --- tree children ---
+
+    .json-children {
+        padding-left: $indent;
+        border-left: 1px solid $border-tree;
+        margin-left: 0.35rem;
+    }
+
+    // --- entries ---
+
+    .json-entry {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.25rem;
+        padding: 0.05rem 0;
+
+        // nested json-node inside an entry fills remaining space
+        app-json-viewer {
+            flex: 1;
+            min-width: 0;
+        }
+    }
+
+    // --- labels ---
+
+    .json-summary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .json-key {
+        color: $color-key;
+        font-weight: 500;
+    }
+
+    .json-separator {
+        color: $color-separator;
+    }
+
+    .json-index {
+        color: $color-index;
+        min-width: 1.5rem;
+        text-align: right;
+        flex-shrink: 0;
+    }
+
+    // --- value types ---
+
+    .json-value {
+        word-break: break-word;
+    }
+
+    .json-string  { color: $color-string; }
+    .json-number  { color: $color-number; }
+    .json-boolean { color: $color-boolean; font-style: italic; }
+    .json-null    { color: $color-null;    font-style: italic; }
+    .json-unknown { color: $color-separator; }
+
+    // --- type badges ---
+
+    .json-type {
+        font-size: 0.75rem;
+        padding: 0.05rem 0.35rem;
+        border-radius: 3px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+
+        &--array {
+            color: $color-type-array;
+            border: 1px solid rgba($color-type-array, 0.4);
+        }
+
+        &--object {
+            color: $color-type-object;
+            border: 1px solid rgba($color-type-object, 0.4);
+        }
+    }
+}

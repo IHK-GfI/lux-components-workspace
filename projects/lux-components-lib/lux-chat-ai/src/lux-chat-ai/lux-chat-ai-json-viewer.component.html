@@ -1,0 +1,52 @@
+<div [ngClass]="{'json-node': true, 'outer-node': depth === 0}">
+
+  @if (collapsable() && isArray) {
+    <details [open]="false">
+      <summary class="json-summary">
+        @if (key !== undefined) {
+          <span class="json-key">{{ key }}</span><span class="json-separator">: </span>
+        }
+      </summary>
+      <div class="json-children">
+        @for (item of arrayItems; track item.index) {
+          <div class="json-entry">
+            @if (isComplex(item.value)) {
+              <lux-chat-ai-json-viewer [data]="item.value" key="[{{ item.index }}]" [depth]="depth + 1" />
+            } @else {
+              <span class="json-key">[{{ item.index }}]</span><span class="json-separator">: </span><span class="json-value" [ngClass]="primitiveClass(item.value)">{{ formatValue(item.value) }}</span>
+            }
+          </div>
+        }
+      </div>
+    </details>
+
+  } @else if (collapsable() && isObject) {
+    <details [open]="false">
+      <summary class="json-summary">
+        @if (key !== undefined) {
+          <span class="json-key">{{ key }}</span><span class="json-separator">: </span>
+        }
+      </summary>
+      <div class="json-children">
+        @for (entry of objectEntries; track entry.key) {
+          @if(!entry.key.startsWith("_")){
+            <div class="json-entry">
+              @if (isComplex(entry.value)) {
+                <lux-chat-ai-json-viewer [data]="entry.value" [key]="entry.key" [depth]="depth + 1" />
+              } @else {
+                <span class="json-key">{{ entry.key }}</span><span class="json-separator">: </span><span class="json-value" [ngClass]="primitiveClass(entry.value)">{{ formatValue(entry.value) }}</span>
+              }
+            </div>
+          }
+        }
+      </div>
+    </details>
+
+  } @else {
+    @if (key !== undefined) {
+      <span class="json-key">{{ key }}</span><span class="json-separator"></span>
+    }
+    <span class="json-value" [ngClass]="primitiveClass(data)">{{ formatValue(data) }}</span>
+  }
+
+</div>

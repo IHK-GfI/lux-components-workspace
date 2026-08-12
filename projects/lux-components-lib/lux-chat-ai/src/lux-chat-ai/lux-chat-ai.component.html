@@ -1,0 +1,39 @@
+@if(luxChatData){
+    <lux-chat
+        [luxChatData]="luxChatData"
+        [luxChatTitle]="luxChatData.title"
+        luxChatSubTitle="Erstellt am:  {{luxChatData.createdAt | date:'dd.MM HH:mm'}}"
+        [luxChatUserName]="luxUserName()"
+        (luxChatOutput)="onMessageEntered($event)"
+        [luxAutoFocus]="luxAutoFocus()"
+        [showFullscreenButton]="showFullscreenButton()"
+        [showCloseButton]="showCloseButton()"
+        (luxChatTitleClicked)="onChatTitleClicked()"
+        #luxChat
+    >
+
+        <lux-chat-entry>
+            <ng-template let-item>
+                <div style="margin-bottom: 18px;"></div>
+                    
+                @if(!item.metadata?.internal_messages){
+                    <lux-markdown [luxSanitizeConfig]="sanitizeConfig" [luxData]="item.content ?? 'Invalid content'" (click)="onChatContentReferenceClicked($event)"></lux-markdown>
+                }
+                @else {
+                    @for(msg of item.metadata.internal_messages; track $index){
+                        @if(msg.type === 'content'){
+                            @if(msg.content){
+                                <lux-markdown [luxSanitizeConfig]="sanitizeConfig" [luxClass]="'test'" [luxData]="msg._visible_content || msg.content" (click)="onChatContentReferenceClicked($event)"></lux-markdown>
+                            }
+                        }
+                        @else if(msg._visible_name){
+                            <lux-chat-ai-json-viewer class="lux-chat-ai-tool-call" [data]="msg" [key]="msg._visible_name" [collapsable]="luxChatShowMetadata()"></lux-chat-ai-json-viewer>
+                        }
+                    }
+                }
+                
+                <div style="margin-top: 18px;"></div>
+            </ng-template>
+        </lux-chat-entry>
+    </lux-chat>
+}
