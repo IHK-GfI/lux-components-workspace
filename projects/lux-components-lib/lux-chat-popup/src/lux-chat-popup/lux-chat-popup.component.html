@@ -1,0 +1,26 @@
+<div class="lux-chat-popup-container">
+    <div class="lux-chat-popup-content">
+
+        <button
+            mat-fab
+            (click)="onChatIconClicked()"
+            [type]="'button'"
+            class="lux-button lux-chat-popup-floating-button"
+            [attr.aria-label]="(chatOpened ? 'luxc.chat-popup.button_close.arialabel' : 'luxc.chat-popup.button_open.arialabel') | transloco"
+        >
+            <lux-icon 
+                [luxIconName]="chatOpened ? 'lux-interface-delete-1' : 'lux-mail-chat-bubble-typing-square'" 
+                luxPadding="0px" 
+                luxMargin="0px"
+            ></lux-icon>
+        </button>
+
+
+        @if(chatOpened){
+            <div class="lux-chat-popup-inner-container" [ngClass]="{'lux-chat-popup-inner-container-fullscreen': (mobileView || fullScreen)}">
+                <ng-content></ng-content>
+            </div>
+        }
+        
+    </div>
+</div>
