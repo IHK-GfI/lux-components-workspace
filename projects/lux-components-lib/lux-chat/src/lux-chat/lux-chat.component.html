@@ -69,9 +69,7 @@
                         <ng-container *ngTemplateOutlet="luxChatEntryComponent()?.templateRef(); context: { $implicit: item }"></ng-container>
                     }
                     @else {
-                        <lux-markdown 
-                            [luxData]="item.content"
-                        ></lux-markdown>
+                        <p class="lux-chat-entry-card-default-text">{{item.content}}</p>
                     }
                 </div>
             </div>

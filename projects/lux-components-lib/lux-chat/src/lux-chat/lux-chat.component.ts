@@ -21,8 +21,7 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     LuxTextareaAcComponent,
     LuxAriaLabelDirective,
     TranslocoPipe,
-    LuxChatRelativeUntilTimestamp,
-    LuxMarkdownComponent,
+    LuxChatRelativeUntilTimestamp
 ],
   templateUrl: './lux-chat.component.html'
 })
@@ -50,10 +49,6 @@ export class LuxChatComponent {
 
 
   public locale = "de-DE";
-
-  ngOnInit() {
-    console.log(this.luxChatEntryComponent());
-  }
 
   constructor(){
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
