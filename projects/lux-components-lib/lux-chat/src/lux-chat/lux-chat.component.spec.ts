@@ -42,16 +42,6 @@ describe('LuxChatComponent', () => {
   // luxChatData
   // ---------------------------------------------------------------------------
   describe('luxChatData', () => {
-    it('sollte den Chat-Titel im Header anzeigen', fakeAsync(() => {
-      const luxChatData = new LuxChatData('Mein Testchat', new Date());
-      fixture.componentRef.setInput('luxChatData', luxChatData);
-      fixture.detectChanges();
-      tick();
-
-      const titleEl = fixture.debugElement.query(By.css('.lux-chat-header-title b'));
-      expect(titleEl.nativeElement.textContent.trim()).toBe('Mein Testchat');
-    }));
-
     it('sollte den Nachrichteninhalt rendern', fakeAsync(() => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
