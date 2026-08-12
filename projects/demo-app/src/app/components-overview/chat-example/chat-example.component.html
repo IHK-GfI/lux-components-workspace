@@ -6,9 +6,12 @@
             <div style="height: calc(100vh - 270px);">
                 <lux-chat
                     [luxChatData]="chatData"
+                    [luxChatTitle]="chatData.title"
+                    luxChatSubTitle="Erstellt am:  {{chatData.createdAt | date:'dd.MM HH:mm'}}"
                     [luxChatUserName]="exampleUsername"
                     (luxChatOutput)="onMessageEntered($event)"
-                ></lux-chat>
+                >
+            </lux-chat>
             </div>
         }
 
@@ -16,6 +19,8 @@
             <lux-chat-popup>
                 <lux-chat
                     [luxChatData]="chatData"
+                    [luxChatTitle]="chatData.title"
+                    luxChatSubTitle="Erstellt am:  {{chatData.createdAt | date:'dd.MM HH:mm'}}"
                     [luxChatUserName]="exampleUsername"
                     (luxChatOutput)="onMessageEntered($event)"
                 ></lux-chat>

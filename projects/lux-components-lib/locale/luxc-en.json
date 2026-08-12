@@ -47,7 +47,7 @@
     },
     "chat": {
       "input.arialabel": "Chat Input",
-      "input.placeholder.default": "Your message",
+      "input.placeholder.default": "Enter message...",
       "title.created_at": "Created at: ",
       "button_fullscreen.arialabel": "Fullscreen",
       "button_close.arialabel": "Close"
