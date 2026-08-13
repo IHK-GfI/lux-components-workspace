@@ -52,9 +52,17 @@
   .mat-expansion-panel-header {
     position: sticky;
     top: var(--lux-panel-sticky-header-offset, 0);
+    // Die Mobile-Styles setzen verschachtelten Headern/Contents position: relative;
+    // der klebende Header muss darüber liegen, damit er beim Scrollen sichtbar bleibt.
     z-index: 2;
-    // Der Header ist standardmäßig transparent; ohne eigenen Hintergrund
-    // würde der Panel-Inhalt beim Kleben durchscheinen.
-    background: var(--mat-expansion-container-background-color, var(--mat-sys-surface));
   }
+}
+
+// Eigene, niedrig spezifische Regel für den Fallback-Hintergrund: Theme-Farben
+// (lux-accordion .lux-primary/.lux-accent/... .lux-expansion-panel-header.mat-expanded)
+// und Materials Keyboard-Fokus-State-Layer müssen den Hintergrund weiterhin
+// überschreiben können. Der Header ist standardmäßig transparent; ohne eigenen
+// Hintergrund würde der Panel-Inhalt beim Kleben durchscheinen.
+:where(.lux-panel.lux-panel-sticky-header.mat-expanded) .mat-expansion-panel-header {
+  background: var(--mat-expansion-container-background-color, var(--mat-sys-surface));
 }

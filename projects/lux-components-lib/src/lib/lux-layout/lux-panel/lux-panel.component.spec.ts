@@ -36,6 +36,13 @@ describe('LuxPanelComponent', () => {
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
+
+      // Änderungen durchführen
+      fixture.componentInstance.offset = undefined;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen
+      expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('');
     }));
   });
 });
