@@ -7,6 +7,8 @@
   (closed)="onClosed()"
   class="lux-panel"
   [class.lux-panel-mobile]="mobile"
+  [class.lux-panel-sticky-header]="!!luxStickyHeader"
+  [style.--lux-panel-sticky-header-offset]="luxStickyHeaderOffset ?? null"
 >
   <mat-expansion-panel-header
     class="lux-expansion-panel-header"

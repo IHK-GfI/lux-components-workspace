@@ -25,6 +25,8 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() luxExpanded = false;
   @Input() luxHideToggle?: boolean;
   @Input() luxTogglePosition?: LuxTogglePosition;
+  @Input() luxStickyHeader?: boolean;
+  @Input() luxStickyHeaderOffset?: string;
 
   @Input() luxCollapsedHeaderHeight?: string;
   @Input() luxExpandedHeaderHeight?: string;

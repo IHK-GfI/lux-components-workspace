@@ -38,3 +38,23 @@
     }
   }
 }
+
+.lux-panel.lux-panel-sticky-header.mat-expanded {
+  // Material setzt overflow: hidden am Panel; das macht das Panel selbst zum
+  // Sticky-Kontext und verhindert das Kleben des Headers am Scroll-Container.
+  overflow: visible;
+
+  // Ersatz-Clipping für die Auf-/Zuklapp-Animation (Header liegt außerhalb).
+  ::ng-deep .mat-expansion-panel-content-wrapper {
+    overflow: hidden;
+  }
+
+  .mat-expansion-panel-header {
+    position: sticky;
+    top: var(--lux-panel-sticky-header-offset, 0);
+    z-index: 2;
+    // Der Header ist standardmäßig transparent; ohne eigenen Hintergrund
+    // würde der Panel-Inhalt beim Kleben durchscheinen.
+    background: var(--mat-expansion-container-background-color, var(--mat-sys-surface));
+  }
+}
