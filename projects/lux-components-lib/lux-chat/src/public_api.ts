@@ -5,7 +5,8 @@
 export * from './lux-chat/lux-chat.component';
 export * from './lux-chat/lux-chat-data';
 export * from './lux-chat/lux-chat-message-data';
-export * from './lux-chat/lux-chat-entry.component';
+export * from './lux-chat/lux-chat-subcomponents/lux-chat-entry.component';
+export * from './lux-chat/lux-chat-subcomponents/lux-chat-header.component';
 export * from './lux-chat/lux-chat-controller';
 
 /**

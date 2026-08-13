@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
-import { LuxChatComponent, LuxChatData, LuxChatPopupComponent } from '@ihk-gfi/lux-components/lux-chat';
+import { LuxChatComponent, LuxChatData, LuxChatPopupComponent, LuxChatHeaderComponent } from '@ihk-gfi/lux-components/lux-chat';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { CommonModule } from '@angular/common';
@@ -20,13 +20,14 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
   selector: 'app-chat-example',
   imports: [
     LuxChatComponent,
+    LuxChatHeaderComponent,
     LuxChatPopupComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
     LuxInputAcComponent,
     LuxToggleAcComponent,
-    CommonModule
+    CommonModule,
 ],
   templateUrl: './chat-example.component.html',
   styleUrl: './chat-example.component.scss'
@@ -35,6 +36,7 @@ export class ChatExampleComponent {
 
     public exampleUsername = "Nutzer C";
     public showChatPopup = false;
+    public showCustomHeader = false;
 
     public chatData: LuxChatData = new LuxChatData("Neuer Chat", new Date(), [
         {user: "Nutzer A", content: "Erster Eintrag!", time: new Date("2024-11-05T10:30:00Z"), metadata: {}},

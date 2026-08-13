@@ -52,12 +52,8 @@ export class LuxChatPopupComponent implements OnDestroy {
       if(childChat){
         childChat._chatFullscreen = fullscreen;
 
-        if(!childChat.showFullscreenButton()){
-          childChat.showFullscreenButton.set(true)
-        }
-
-        if(!childChat.showCloseButton()){
-          childChat.showCloseButton.set(true);
+        if(!childChat.chatPopupMode()){
+          childChat.chatPopupMode.set(true);
         }
 
         if(this.chatPopupCloseSubcription){

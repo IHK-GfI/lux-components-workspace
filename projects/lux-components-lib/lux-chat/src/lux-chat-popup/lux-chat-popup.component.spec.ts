@@ -132,12 +132,11 @@ describe('LuxChatPopupComponent', () => {
   // Content Child Integration
   // ---------------------------------------------------------------------------
   describe('Content Child Integration', () => {
-    it('sollte showFullscreenButton und showCloseButton für das Chat-Child standardmäßig auf true setzen', fakeAsync(() => {
+    it('sollte chatPopupMode für das Chat-Child standardmäßig auf true setzen', fakeAsync(() => {
       fixture.detectChanges();
       tick();
 
-      expect(chatComponent.showFullscreenButton()).toBeTrue();
-      expect(chatComponent.showCloseButton()).toBeTrue();
+      expect(chatComponent.chatPopupMode()).toBeTrue();
     }));
 
     it('sollte chatOpened auf false setzen, wenn chatClose emittiert wird', fakeAsync(() => {
