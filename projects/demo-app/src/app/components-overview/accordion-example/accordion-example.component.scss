@@ -1,3 +1,13 @@
 .border-check {
   border: 1px solid red;
 }
+
+// luxStickyHeader benötigt einen durchgängigen Sticky-Containing-Block bis zum
+// Scroll-Container lux-app-content. Die allgemeine lux-card-Theme-Regel
+// "lux-card .lux-card .lux-card-content { overflow-y: hidden }" liegt zwischen
+// dem Panel-Header und lux-app-content und unterbricht diese Kette, wodurch
+// position: sticky wirkungslos bleibt. Für diese Beispielseite lokal aufgehoben,
+// bis das generelle lux-card-Thema in einem separaten Issue geklärt ist.
+:host ::ng-deep .lux-card .lux-card-content {
+  overflow-y: visible;
+}
