@@ -34,6 +34,8 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
   _luxExpandedHeaderHeight?: string;
   _luxCollapsedHeaderHeight?: string;
   _luxTogglePosition?: LuxTogglePosition;
+  _luxStickyHeader?: boolean;
+  _luxStickyHeaderOffset?: string;
 
   @Input()
   get luxDisabled() {
@@ -99,6 +101,28 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
     this._luxTogglePosition = position;
 
     this.changed$.next('luxTogglePosition');
+  }
+
+  @Input()
+  get luxStickyHeader() {
+    return this._luxStickyHeader;
+  }
+
+  set luxStickyHeader(sticky: boolean | undefined) {
+    this._luxStickyHeader = sticky;
+
+    this.changed$.next('luxStickyHeader');
+  }
+
+  @Input()
+  get luxStickyHeaderOffset() {
+    return this._luxStickyHeaderOffset;
+  }
+
+  set luxStickyHeaderOffset(offset: string | undefined) {
+    this._luxStickyHeaderOffset = offset;
+
+    this.changed$.next('luxStickyHeaderOffset');
   }
 
   @ViewChild(MatAccordion, { static: true }) matAccordion!: MatAccordion;

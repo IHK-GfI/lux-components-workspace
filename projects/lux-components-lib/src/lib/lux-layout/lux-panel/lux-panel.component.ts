@@ -95,6 +95,12 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
           this.luxTogglePosition = this.parent.luxTogglePosition;
         }
       }
+      if (this.luxStickyHeader === undefined) {
+        this.luxStickyHeader = this.parent.luxStickyHeader;
+      }
+      if (this.luxStickyHeaderOffset === undefined) {
+        this.luxStickyHeaderOffset = this.parent.luxStickyHeaderOffset;
+      }
 
       // Um eine zyklische Abhängigkeit mit dem lux-accordion zu vermeiden,
       // wurde hier ein Event verwendet.
@@ -113,6 +119,10 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
               this.luxCollapsedHeaderHeight = this.parent.luxCollapsedHeaderHeight;
             } else if (propertyName === 'luxTogglePosition') {
               this.luxTogglePosition = this.parent.luxTogglePosition;
+            } else if (propertyName === 'luxStickyHeader') {
+              this.luxStickyHeader = this.parent.luxStickyHeader;
+            } else if (propertyName === 'luxStickyHeaderOffset') {
+              this.luxStickyHeaderOffset = this.parent.luxStickyHeaderOffset;
             }
           }
         })
