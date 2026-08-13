@@ -11,6 +11,18 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yell
   }
 }
 
+@mixin lux-badge-muted-color-mixin($prefix) {
+  @each $colorName in $componentColorNames {
+    &.lux-badge-#{$colorName} {
+      background-color: var(#{$prefix}-#{$colorName});
+      box-shadow: inset 0 0 0 1px var(#{$prefix}-stroke-#{$colorName});
+    }
+    &.lux-badge-on-#{$colorName} {
+      color: var(#{$prefix}-on-#{$colorName});
+    }
+  }
+}
+
 .lux-badge {
   border-radius: 8px;
   display: inline-flex;
@@ -18,6 +30,22 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yell
   flex: initial;
 
   @include lux-badge-color-mixin("--lux-theme-badge");
+
+  &.lux-badge-muted {
+    @include lux-badge-muted-color-mixin("--lux-theme-badge-muted");
+  }
+
+  &.lux-badge-size-small {
+    font-size: 0.75rem;
+  }
+
+  &.lux-badge-size-medium {
+    font-size: 1rem;
+  }
+
+  &.lux-badge-size-large {
+    font-size: 1.25rem;
+  }
 }
 
 .lux-badge.lux-badge-uppercase * {
@@ -36,5 +64,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yell
     font-style: normal;
     font-weight: 600;
     line-height: normal;
+
+    &.lux-badge-size-small {
+      font-size: 1rem;
+    }
   }
 }

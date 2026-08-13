@@ -37,10 +37,10 @@ Ober-Komponente der LuxChips. Kann einzelne LuxChip- oder auch die LuxChipGroup-
 | Name                       | Typ                   | Beschreibung                                                                                                                                                                                                                                           |
 | -------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | luxOrientation             | LuxChipsOrientation   | Definiert die Ausrichtung der Chips. Mögliche Werte: 'horizontal' \| 'vertical'                                                                                                                                                                        |
-| luxInputAllowed            | boolean               | Boolean-Flag der definiert ob das Input-Feld für das dynamische Hinzufügen von Chips verfügbar sein soll.                                                                                                                                              |
+| luxInputAllowed            | boolean               | Boolean-Flag, das definiert, ob das Input-Feld für das dynamische Hinzufügen von Chips verfügbar sein soll.                                                                                                                                            |
 | luxInputLabelAlwaysVisible | boolean               | Blendet das Label auch dann ein, wenn `luxInputAllowed` auf false gesetzt ist.                                                                                                                                                                         |
 | luxInputLabel              | string                | Der Text der über dem Input-Feld angezeigt wird.                                                                                                                                                                                                       |
-| luxDisabled                | boolean               | Boolean-Flag der definiert ob diese LuxChips-Komponente und alle darunterliegenden LuxChipGroups und LuxChips deaktiviert sein sollen. Deaktiviert ebenfalls das Input-Feld, wenn auf true gesetzt.                                                    |
+| luxDisabled                | boolean               | Boolean-Flag, das definiert, ob diese LuxChips-Komponente und alle darunterliegenden LuxChipGroups und LuxChips deaktiviert sein sollen. Deaktiviert ebenfalls das Input-Feld, wenn auf true gesetzt.                                                  |
 | luxNewChipGroup            | LuxChipGroupComponent | Die LuxChipGroup der dynamisch neue LuxChips hinzugefügt werden, wenn eine Eingabe in dem Input-Feld gemacht wird. Wenn nicht gesetzt wird stattdessen das @Output-Event luxChipAdded ausgelöst, damit der Aufrufer selbst reagieren kann.             |
 | luxAutocompleteOptions     | string[]              | Optionales Array, welches dann - vorausgesetzt luxInputAllowed hat den Wert true - in einem Autocomplete-Feld unterhalb des Inputs dargestellt wird.                                                                                                   |
 | luxPlaceholder             | string                | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                 |
@@ -49,7 +49,7 @@ Ober-Komponente der LuxChips. Kann einzelne LuxChip- oder auch die LuxChipGroup-
 | luxStrict                  | boolean               | Gibt an, ob nur Chips ausgewählt werden dürfen, die Teil der Optionen sind (siehe `luxAutocompleteOptions`). Doppelte Einträge sind ebenfalls nicht erlaubt.                                                                                           |
 | luxControlBinding          | string                | Das Controlbinding (z.B. countries) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                           |
 | luxControlValidators       | ValidatorFnType       | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen. |
-| luxRequired                | boolean               | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                              |
+| luxRequired                | boolean               | Bestimmt, ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                             |
 | luxDense                   | boolean               | Property um die Höhe der Komponente zu verringern. Diese Eigenschaft ist für den Einsatz in großen Formularen gedacht und soll nicht standardmäßig in einer Anwendung genutzt werden.                                                                  |
 | luxHideBorder              | boolean               | Mit dieser Property kann die Border um das Inputelement ausgeblendet werden, falls luxInputAllowed auf false gesetzt ist.                                                                                                                              |
 
@@ -82,8 +82,8 @@ Um den Inhalt eines einzelnen Chips zu definieren, erwartet die LuxChipGroup ein
 | lux-chip-ac-group | Selector        |                                                                                                                                                                  |
 | luxLabels         | string[]        | Enthält das Array mit den Labels, die in den einzelnen LuxChips angezeigt werden. Erlaubt auch das Two-Way-Binding (praktisch für die Arbeit in Reactive-Forms). |
 | luxColor          | LuxThemePalette | Definiert die Farbe der LuxChips innerhalb dieser LuxGroup. Mögliche Werte: 'primary', 'accent' und 'warn'                                                       |
-| luxDisabled       | boolean         | Boolean-Flag der definiert ob die LuxChips in dieser LuxGroup deaktiviert sind oder nicht.                                                                       |
-| luxRemovable      | boolean         | Boolean-Flag der definiert ob die LuxChips in dieser LuxGroup entfernt werden können oder nicht.                                                                 |
+| luxDisabled       | boolean         | Boolean-Flag, das definiert, ob die LuxChips in dieser LuxGroup deaktiviert sind oder nicht.                                                                     |
+| luxRemovable      | boolean         | Boolean-Flag, das definiert, ob die LuxChips in dieser LuxGroup entfernt werden können oder nicht.                                                               |
 
 #### @Output
 
@@ -105,11 +105,11 @@ Stellt einen einzelnen Chip dar.
 
 #### @Input
 
-| Name         | Typ             | Beschreibung                                                                                                                                                                                      |
-| ------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxColor     | LuxThemePalette | Definiert die Farbe dieses LuxChip. Mögliche Werte: 'primary', 'accent' und 'warn'                                                                                                                |
-| luxDisabled  | boolean         | Boolean-Flag der definiert ob dieser LuxChip deaktiviert ist oder nicht. Wenn auf true gesetzt, wird das Icon für das Entfernen dieses Chips versteckt.                                           |
-| luxRemovable | boolean         | Boolean-Flag der definiert ob dieser LuxChip entfernt werden kann oder nicht. Wenn auf true gesetzt, wird ein Icon mit einem "x"-Symbol dargestellt, welches beim Klick das Remove-Event anstößt. |
+| Name         | Typ             | Beschreibung                                                                                                                                                                                        |
+| ------------ | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxColor     | LuxThemePalette | Definiert die Farbe dieses LuxChip. Mögliche Werte: 'primary', 'accent' und 'warn'                                                                                                                  |
+| luxDisabled  | boolean         | Boolean-Flag, das definiert, ob dieser LuxChip deaktiviert ist oder nicht. Wenn auf true gesetzt, wird das Icon für das Entfernen dieses Chips versteckt.                                           |
+| luxRemovable | boolean         | Boolean-Flag, das definiert, ob dieser LuxChip entfernt werden kann oder nicht. Wenn auf true gesetzt, wird ein Icon mit einem "x"-Symbol dargestellt, welches beim Klick das Remove-Event anstößt. |
 
 #### @Output
 

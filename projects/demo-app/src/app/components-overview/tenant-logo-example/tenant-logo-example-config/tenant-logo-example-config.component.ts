@@ -1,16 +1,21 @@
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import {
-    LuxComponentsConfigParameters,
-    LuxComponentsConfigService,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxMediaQueryObserverService,
-    LuxSelectAcComponent,
-    LuxTenantLogoComponent,
-    LuxToggleAcComponent
+  LuxComponentsConfigParameters,
+  LuxComponentsConfigService,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxMediaQueryObserverService,
+  LuxSelectAcComponent,
+  LuxTenantLogoComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { TenantLogoExampleConfigData } from './tenant-logo-example-config-data';
+
+interface TenantLogoExampleKey {
+  label: string;
+  value: string;
+}
 
 @Component({
   selector: 'app-tenant-logo-example-config',
@@ -22,13 +27,20 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
   private componentsConfigService = inject(LuxComponentsConfigService);
   private queryObserver = inject(LuxMediaQueryObserverService);
 
+  pickValueKeyFn = (option: TenantLogoExampleKey) => option.value;
+
   @Input()
   public title!: string;
 
   @Input()
   public tenantLogoConfig!: TenantLogoExampleConfigData;
 
-  public tenantKeyArr: string[] = ['100', '202', '341'];
+  public tenantKeyArr: TenantLogoExampleKey[] = [
+    { label: '100', value: '100' },
+    { label: '101 (nicht verfügbar)', value: '101' },
+    { label: '202', value: '202' },
+    { label: '341 (Variante "unten" nicht verfügbar - Fallback auf "kurz")', value: '341' }
+  ];
 
   public tenantVariantArr: string[] = ['', 'lang', 'kurz', 'unten'];
 

@@ -33,11 +33,11 @@
 
 ## Overview / API
 
-Der Lux-Stepper-Large implementiert das sogenannte Wizard-Pattern. Mit diesem Pattern können komplexe Prozesse vereinfacht werden, die nur selten oder von unerfahrenen Benutzerninnen ausgeführt werden. Dabei wird der Prozess in einzelne Schritte aufgeteilt, die dann in einer festen Reihefolgen nacheinander abgearbeitet werden.
-Dadurch können sich die Nutzerinnen besser auf die jeweiligen Inhalte kontzentrieren und die Fehlerwahrscheinlichkeit nimmt ab.
+Der Lux-Stepper-Large implementiert das sogenannte Wizard-Pattern. Mit diesem Pattern können komplexe Prozesse vereinfacht werden, die nur selten oder von unerfahrenen Benutzerninnen ausgeführt werden. Dabei wird der Prozess in einzelne Schritte aufgeteilt, die dann in einer festen Reihenfolge nacheinander abgearbeitet werden.
+Dadurch können sich die Nutzerinnen besser auf die jeweiligen Inhalte konzentrieren und die Fehlerwahrscheinlichkeit nimmt ab.
 Hängt ein Schritt von vorhergehenden Nutzereingaben ab, stellt der Stepper sicher, dass die jeweils relevanten Schritte und Informationen richtig angezeigt werden.
 
-Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es ein überschaubarer Prozess ist. Hier können ein einzelnes (sich aufbauendes) Formular oder die Tab-Komponente eine alternative Lösung sein.
+Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es ein überschaubarer Prozess ist. Hier kann ein einzelnes (sich aufbauendes) Formular oder die Tab-Komponente eine alternative Lösung sein.
 
 ### Best Practices
 
@@ -49,7 +49,7 @@ Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es e
 - Jeder Schritt erhält eine prägnante Überschrift, die als luxTitle ebenfalls in der Navigationsliste erscheint (evtl. verkürzt).
 - Die Nutzereingaben sollen beim Verlassen eines Schritts zwischengespeichert werden, damit der Nutzer den Prozess unterbrechen und zu einem späteren Zeitpunkt fortsetzen kann.
 
-**Tipp:** Enthält ein Prozess Abzweigungen und optionale Schritte, ist eine sorgfältige Planung **VOR** der Implementierung notwendig. Wir empfehlen den Prozess an Hand eines Flussdiagramms zu modellieren und mit allen Stakeholdern abzusprechen. Anschließend können daraus die notwendigen einzelnen Schritte für einenen Stepper ermittelt und die UI dafür konzepiert werden.
+**Tipp:** Enthält ein Prozess Abzweigungen und optionale Schritte, ist eine sorgfältige Planung **VOR** der Implementierung notwendig. Wir empfehlen den Prozess an Hand eines Flussdiagramms zu modellieren und mit allen Stakeholdern abzusprechen. Anschließend können daraus die notwendigen einzelnen Schritte für einen Stepper ermittelt und die UI dafür konzipiert werden.
 
 ### Aufbau des Steppers
 
@@ -70,7 +70,7 @@ Der Stepper ist eher ungeeignet für erfahrene Nutzer (Poweruser) oder wenn es e
 1. Step-Header - Nummer des aktuellen Schritts und Icon-Button zum Öffnen der Navigationsliste
 2. Content-Bereich - der Inhaltsbereich des aktuellen Schritts
 3. Stepper-Buttons - Navigation-Buttons zu dem direkten Vorgänger und Nachfolger des aktuellen Schritts
-4. Navigationsliste - wird in einem separatem Overlay geöffnet
+4. Navigationsliste - wird in einem separaten Overlay geöffnet
 
 ### Standard-Verhalten bei aktivierter Validierung
 
@@ -85,7 +85,7 @@ Die Navigationsliste bietet den Nutzerinnen einen Überblick über den gesamten 
 Für eine bessere Barrierefreiheit werden die "Weiter"-Buttons nicht mehr über das disabled-Attribut, sondern über aria-disabled gesteuert.
 Dadurch bleiben diese Buttons für alle Nutzerinnen immer wahrnehmbar, klickbar und tastaturbedienbar.
 Im luxA11YMode wird die "Weiter"-Navigation solange verhindert, bis der Schritt als vollständig gilt. Ist der Schritt nicht vollständigt, wird durch den Button-Klick ein Fehler-Event ausgelöst. Dieses muss in der Anwendung separat behandelt werden, s.u.
-Nach dem erfolgreichen Abschliessen eines Schritts, kann über die Buttons und die Navigationsliste wie gewohnt navigiert werden.
+Nach dem erfolgreichen Abschließen eines Schritts kann über die Buttons und die Navigationsliste wie gewohnt navigiert werden.
 
 #### Empfohlene Umsetzung bei LuxNotCompleted
 
@@ -100,13 +100,13 @@ Der Nutzer kann jedoch zu vorherigen Schritten zurück navigieren. In der Naviga
 
 ### Accessibility
 
-Für die Verbesserung der Zugänglichkeit wurde der luxA11YMode eingeführt. Dieser erfüllt die technischen Bedingungen und gewährleistet die Funtkionalität von Assistenztechnologien. Er wird mit v19 der LUX-Components zum Standard bei aktivierter Validierung.
+Für die Verbesserung der Zugänglichkeit wurde der luxA11YMode eingeführt. Dieser erfüllt die technischen Bedingungen und gewährleistet die Funktionalität von Assistenztechnologien. Er wird mit v19 der LUX-Components zum Standard bei aktivierter Validierung.
 
 Ein weiteres Erfolgskriterium zur Barrierefreiheit ist die Vorhersehbarkeit. Für den Stepper bedeutet es, dass die einzelnen Schritte in einer logischen Reihenfolge erfolgen sollen. Jeder Schritt ist in sich abgeschlossen und behandelt ein bestimmtes Thema.
-Die Zusammenfassung im letzten Schritt erfolgt in der selben Reihenfolge und mit den selben Überschriften der jeweiligen Schritte.
+Die Zusammenfassung im letzten Schritt erfolgt in derselben Reihenfolge und mit denselben Überschriften der jeweiligen Schritte.
 Die Nutzereingaben werden in der Zusammenfassung klar gegliedert in Textform dargestellt.
 
-**Wichtig:** Textfelder im Zustand "readonly" oder "disabled" sind nicht barrierefrei, und dürfen für die Anzeige der Daten in einer Zusammenfassung nicht verwendet werden!
+**Wichtig:** Textfelder im Zustand "readonly" oder "disabled" sind nicht barrierefrei und dürfen für die Anzeige der Daten in einer Zusammenfassung nicht verwendet werden!
 
 ### Allgemein
 
@@ -116,23 +116,23 @@ Die Nutzereingaben werden in der Zusammenfassung klar gegliedert in Textform dar
 
 ### @Input
 
-| Name                    | Typ                       | Beschreibung                                                                                                                                                                                                                                                                                                                        |
-| ----------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxPrevButtonConfig     | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Zurück-Buttons.                                                                                                                                                                                                                                                                                            |
-| luxNextButtonConfig     | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Weiter-Buttons.                                                                                                                                                                                                                                                                                            |
-| luxFinButtonConfig      | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Abschließen-Buttons.                                                                                                                                                                                                                                                                                       |
-| luxCurrentStepNumber    | number                    | Der Index des aktuellen Schritts (0..n). (Two-Way-Binding möglich)                                                                                                                                                                                                                                                                  |
-| luxStepValidationActive | boolean                   | Über diese Property kann die Validierung der Schritte (de-)aktiviert werden. Wenn die Validierung deaktiviert wird, dann ist er Weiter-Button immer aktiv und nur die Veto-Funktionen können das Navigieren zum nächsten Schritt verhindern.                                                                                        |
-| luxA11YMode             | boolean                   | Diese Property verwendet bei aktivierter Validierung aria-disabled statt wie bisher disabled bei den NextButtons. Dieses erfordert eine Anpassung beim Eventhandling (siehe [Empfohlene Umsetzung bei LuxNotCompleted](#empfohlene-umsetzung-bei-luxnotcompleted)). Dieser Modus wird mit v19 zum Standard bei aktiver Validierung. |
+| Name                    | Typ                       | Beschreibung                                                                                                                                                                                                                                                                                                                           |
+| ----------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxPrevButtonConfig     | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Zurück-Buttons.                                                                                                                                                                                                                                                                                               |
+| luxNextButtonConfig     | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Weiter-Buttons.                                                                                                                                                                                                                                                                                               |
+| luxFinButtonConfig      | LuxStepperLargeButtonInfo | Konfigurationsobjekt des Abschließen-Buttons.                                                                                                                                                                                                                                                                                          |
+| luxCurrentStepNumber    | number                    | Der Index des aktuellen Schritts (0..n). (Two-Way-Binding möglich)                                                                                                                                                                                                                                                                     |
+| luxStepValidationActive | boolean                   | Über diese Property kann die Validierung der Schritte (de-)aktiviert werden. Wenn die Validierung deaktiviert wird, dann ist der Weiter-Button immer aktiv und nur die Veto-Funktionen können das Navigieren zum nächsten Schritt verhindern.                                                                                          |
+| luxA11YMode             | boolean                   | Diese Property verwendet bei aktivierter Validierung `aria-disabled` statt wie bisher `disabled` bei den Next-Buttons. Dies erfordert eine Anpassung beim Eventhandling (siehe [Empfohlene Umsetzung bei LuxNotCompleted](#empfohlene-umsetzung-bei-luxnotcompleted)). Dieser Modus wird mit v19 zum Standard bei aktiver Validierung. |
 
 ### @Output
 
-| Name                       | Typ                                           | Beschreibung                                                                                                                     |
-| -------------------------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| luxStepperFinished         | EventEmitter \<void>                          | Das Event wird gefeuert, wenn der Stepper erfolgreich abgeschlossen wurde.                                                       |
-| luxStepChanged             | EventEmitter \<LuxStepperLargeSelectionEvent> | Das Event wird gefeuert, wenn der Schritt gewechselt wird.                                                                       |
-| luxCurrentStepNumberChange | EventEmitter \<number\>                       | Das Event wird gefeuert, wenn der Schritt gewechselt wird und ermöglicht das Two-Way-Binding.                                    |
-| luxStepNotComplete         | EventEmitter \<number\>                       | Das Event wird gefeuert, wenn der luxA11YMode aktiviert ist und der User den NextButton betätigt bevor luxCompleted = true gilt. |
+| Name                       | Typ                                           | Beschreibung                                                                                                                         |
+| -------------------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| luxStepperFinished         | EventEmitter \<void>                          | Das Event wird gefeuert, wenn der Stepper erfolgreich abgeschlossen wurde.                                                           |
+| luxStepChanged             | EventEmitter \<LuxStepperLargeSelectionEvent> | Das Event wird gefeuert, wenn der Schritt gewechselt wird.                                                                           |
+| luxCurrentStepNumberChange | EventEmitter \<number\>                       | Das Event wird gefeuert, wenn der Schritt gewechselt wird und ermöglicht das Two-Way-Binding.                                        |
+| luxStepNotComplete         | EventEmitter \<number\>                       | Das Event wird gefeuert, wenn der luxA11YMode aktiviert ist und der User den Next-Button betätigt, bevor `luxCompleted = true` gilt. |
 
 ## Components
 

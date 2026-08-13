@@ -25,15 +25,15 @@
 
 | Name     | Typ             | Beschreibung                                                                     |
 | -------- | --------------- | -------------------------------------------------------------------------------- |
-| luxTitel | string          | Enthält die optionale Überschrift für die Textbox.                               |
+| luxTitle | string          | Enthält die optionale Überschrift für die Textbox.                               |
 | luxIcon  | string          | Enthält den Iconnamen für ein optionales Icon.                                   |
 | luxColor | LuxTextboxColor | Bestimmt das Farbthema der Box. Erlaubte Werte 'blue', 'green', 'yellow', 'red'. |
 
 ## Styleguide
 
-Mit der lux-textbox können wichtige textuelle Hinweise innerhalb der Anwendung optisch hervorgehoben haben. Sie orientiert sich dabei an gängigen Themen wie Information, Tipp/Success, Hinweis/Alert und Warnung.
+Mit der lux-textbox können wichtige textuelle Hinweise innerhalb der Anwendung optisch hervorgehoben werden. Sie orientiert sich dabei an gängigen Themen wie Information, Tipp/Success, Hinweis/Alert und Warnung.
 Das Thema wird über die Property luxColor gewählt, Vorschläge für entsprechende Icons sind hier oder in der Demo-Anwendung zu finden.
-Die Breite der Textbox ist flexibel und sollte je nach Anwendungsfall mit einer passenenden "max-width" versehen werden.
+Die Breite der Textbox ist flexibel und sollte je nach Anwendungsfall mit einer passenden "max-width" versehen werden.
 Die Textboxen sollten gezielt eingesetzt werden, möglichst eine pro Seite.
 Der eigentliche Inhalt der Box wird via Content-Projection hinzugefügt. Da es sich um eine reine Styling-Komponente handelt, sollten keine Funktionalitäten (Buttons, Tabs o.ä.) eingefügt werden.
 Für Links empfehlen wir lux-link-plain zu verwenden.

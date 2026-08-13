@@ -3,14 +3,14 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90button-v21"
 >
   <example-base-content>
-    @if (localTenantLogoConfig) {
-    <lux-tenant-logo
-      [luxTenantKey]="localTenantLogoConfig.luxTenantKey"
-      [luxTenantVariant]="localTenantLogoConfig.luxTenantVariant"
-      [luxTenantLogoHeight]="localTenantLogoConfig.luxTenantLogoHeight"
-      (luxTenantLogoClicked)="onTenenatLogoClicked(localTenantLogoConfig)"
-      #exampleLogo
-    ></lux-tenant-logo>
+    @if (localTenantLogoConfig && !useTenantLogoForHeader) {
+      <lux-tenant-logo
+        [luxTenantKey]="localTenantLogoConfig.luxTenantKey"
+        [luxTenantVariant]="localTenantLogoConfig.luxTenantVariant"
+        [luxTenantLogoHeight]="localTenantLogoConfig.luxTenantLogoHeight"
+        (luxTenantLogoClicked)="onTenenatLogoClicked(localTenantLogoConfig)"
+        #exampleLogo
+      ></lux-tenant-logo>
     }
   </example-base-content>
   <example-base-simple-options>
@@ -24,10 +24,10 @@
     ></lux-toggle-ac>
 
     @if (useTenantLogoForHeader) {
-    <app-tenant-logo-example-config
-      title="Header-Beispiel Konfiguration"
-      [tenantLogoConfig]="headerTenantLogoConfig"
-    ></app-tenant-logo-example-config>
+      <app-tenant-logo-example-config
+        title="Header-Beispiel Konfiguration"
+        [tenantLogoConfig]="headerTenantLogoConfig"
+      ></app-tenant-logo-example-config>
     }
 
     <h3 class="sectionHeader">Beispiel Konfiguration</h3>

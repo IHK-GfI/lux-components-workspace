@@ -3,7 +3,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxInfiniteScrollDirective } from './lux-infinite-scroll.directive';
 
 describe('LuxInfiniteScrollDirective', () => {

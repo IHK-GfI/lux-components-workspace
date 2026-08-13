@@ -57,7 +57,7 @@ Filter (zugeklappt):
 | luxButtonDialogDelete   | LuxThemePalette | Farbe ('primary', 'accent', 'warn', 'default')                                     |
 | luxButtonDialogClose    | LuxThemePalette | Farbe ('primary', 'accent', 'warn', 'default')                                     |
 | luxDisableShortcut      | boolean         | Property, die das Tastaturkürzel für das Auslösen des Filters unterdrückt.         |
-| luxHideChipsBorder      | boolean         | Gibt an, ob ein Rahmen um die Chips dargestelt wird.                               |
+| luxHideChipsBorder      | boolean         | Gibt an, ob ein Rahmen um die Chips dargestellt wird.                              |
 | luxHideMenu             | boolean         | Gibt an, ob das Filtermenü im oberen Bereich angezeigt werden soll.                |
 
 ### @Output
@@ -119,7 +119,7 @@ Ein LuxFilterLoadDialogComponent zeigt die vorhandenen Filter an und bietet eine
 | ------------- | ----------------------------------------------- | ------------------------------------------------------------------------ |
 | label         | string                                          | Eine Bezeichnung (z.B. Land).                                            |
 | binding       | string                                          | Ein Binding (z.B. country).                                              |
-| component     | LuxFormComponentBase                            | Die Formularkomponete (z.B. lux-input).                                  |
+| component     | LuxFormComponentBase                            | Die Formularkomponente (z.B. lux-input).                                 |
 | value         | \<T = any>                                      | Der Wert.                                                                |
 | defaultValues | any[]                                           | Die Defaultwerte.                                                        |
 | color         | LuxThemePalette                                 | Eine Farbe.                                                              |

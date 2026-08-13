@@ -117,14 +117,17 @@ a:not(.lux-link) {
   }
 }
 
+// @deprecated Verwende stattdessen .lux-bg-header aus _luxutilities.scss.
 .lux-app-header-bg {
   background-color: var(--lux-theme-app-header-bg);
 }
 
+// @deprecated Verwende stattdessen .lux-bg-content aus _luxutilities.scss.
 .lux-app-content-bg {
   background-color: var(--lux-theme-app-content-bg);
 }
 
+// @deprecated Verwende stattdessen .lux-bg-footer aus _luxutilities.scss.
 .lux-app-footer-bg {
   background-color: var(--lux-theme-app-footer-bg);
 }
@@ -314,14 +317,17 @@ lux-card.lux-card-grow {
   box-sizing: content-box;
 }
 
+// @deprecated Verwende stattdessen .lux-whitespace-nowrap aus _luxutilities.scss.
 .lux-nowrap {
   white-space: nowrap;
 }
 
+// @deprecated Verwende stattdessen .lux-cursor-pointer aus _luxutilities.scss.
 .lux-cursor {
   cursor: pointer;
 }
 
+// @deprecated Verwende stattdessen .lux-pointer-events-none aus _luxutilities.scss.
 .lux-block-pointer-events {
   pointer-events: none;
 }
@@ -336,14 +342,6 @@ lux-card.lux-card-grow {
 
 .lux-semi-transparent {
   opacity: 0.6;
-}
-
-.lux-overflow-y-hidden {
-  overflow-y: hidden;
-}
-
-.lux-overflow-y-auto {
-  overflow-y: auto;
 }
 
 .lux-overflow-wrap-break-word {
@@ -402,6 +400,7 @@ $gapSteps: 10, 20, 30;
 }
 
 /*
+  @deprecated Verwende stattdessen .lux-z-{n} aus _luxutilities.scss (z.B. .lux-z-100).
   Erstellt die Z-Indizes.
   Um weitere Z-Indizes anzulegen, die Variable zindexSteps um die entsprechenden Werte ergaenzen.
  */

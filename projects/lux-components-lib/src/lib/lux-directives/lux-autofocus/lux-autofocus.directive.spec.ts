@@ -18,13 +18,19 @@ import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.co
 import { LuxRadioAcComponent } from '../../lux-form/lux-radio-ac/lux-radio-ac.component';
 import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
 import { LuxTextareaAcComponent } from '../../lux-form/lux-textarea-ac/lux-textarea-ac.component';
+import { LuxTimepickerComponent } from '../../lux-form/lux-timepicker/lux-timepicker.component';
 import { LuxToggleAcComponent } from '../../lux-form/lux-toggle-ac/lux-toggle-ac.component';
 import { LuxAutofocusDirective } from './lux-autofocus.directive';
 
 describe('LuxAutofocusDirective', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxComponentsConfigService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [
+        LuxComponentsConfigService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -70,6 +76,16 @@ describe('LuxAutofocusDirective', () => {
 
   it('Sollte mit lux-datepicker-ac funktionieren', fakeAsync(() => {
     const fixture = TestBed.createComponent(LuxAutoFocusDatePickerComponent);
+    fixture.detectChanges();
+    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+
+    tick();
+
+    expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
+  }));
+
+  it('Sollte mit lux-timepicker funktionieren', fakeAsync(() => {
+    const fixture = TestBed.createComponent(LuxAutoFocusTimepickerComponent);
     fixture.detectChanges();
     spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
 
@@ -203,6 +219,13 @@ class LuxAutoFocusChipsComponent {}
   imports: [LuxDatepickerAcComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusDatePickerComponent {}
+
+@Component({
+  selector: 'lux-autofocus-test-timepicker',
+  template: `<lux-timepicker luxAutofocus></lux-timepicker>`,
+  imports: [LuxTimepickerComponent, LuxAutofocusDirective]
+})
+class LuxAutoFocusTimepickerComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-datetimepicker',

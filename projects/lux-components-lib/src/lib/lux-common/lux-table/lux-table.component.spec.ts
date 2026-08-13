@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
-import { Component } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, signal } from '@angular/core';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { MockMediaObserverService } from '../../lux-util/testing/mock-media-observer.service';
 import { ICustomCSSConfig } from './lux-table-custom-css-config.interface';
 
@@ -11,10 +11,10 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { ILuxTableHttpDao } from './lux-table-http/lux-table-http-dao.interface';
 import { LuxTableColumnContentComponent } from './lux-table-subcomponents/lux-table-column-content.component';
 import { LuxTableColumnFooterComponent } from './lux-table-subcomponents/lux-table-column-footer.component';
@@ -105,14 +105,14 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
       const eventSpy = jasmine.createSpy('eventSpy');
       luxTableComponent.luxHiddenColumnsChange.subscribe(eventSpy);
-      
+
       // Spalte c2 ausblenden
       component.showColumnSelector = true;
       fixture.detectChanges();
       luxTableComponent.onHiddenColumnsChange(['c2']);
       LuxTestHelper.wait(fixture);
       expect(eventSpy).toHaveBeenCalledWith(['c2']);
-      
+
       // Spalte c2 wieder einblenden
       luxTableComponent.onHiddenColumnsChange([]);
       LuxTestHelper.wait(fixture);
@@ -388,6 +388,16 @@ describe('LuxTableComponent', () => {
       expect(tableHeaders.length).toBe(2);
       expect((tableHeaders.item(0) as HTMLElement).style.width).toEqual('5%');
       expect((tableHeaders.item(1) as HTMLElement).style.width).toEqual('25%');
+
+      // Datenzellen müssen ebenfalls die korrekten Spaltenbreiten erhalten (Issue #232)
+      const dataRows = document.querySelectorAll('.mat-mdc-row');
+      expect(dataRows.length).toBe(4);
+      dataRows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        expect(cells.length).toBe(2);
+        expect((cells.item(0) as HTMLElement).style.width).toEqual('5%');
+        expect((cells.item(1) as HTMLElement).style.width).toEqual('25%');
+      });
     }));
 
     it('Einzelne Spalten links und rechts fixieren', fakeAsync(() => {
@@ -638,7 +648,7 @@ describe('LuxTableComponent', () => {
     it('Sollte automatisch die Pagination bei > 100 Einträgen aktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      let hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      let hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
       // Änderungen durchführen
@@ -651,7 +661,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeFalsy();
 
       flush();
@@ -660,7 +670,7 @@ describe('LuxTableComponent', () => {
     it('Sollte nicht automatisch die Pagination bei > 100 Einträgen aktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      let hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      let hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
       // Änderungen durchführen
@@ -672,7 +682,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      hiddenPaginator = document.querySelector('mat-paginator.lux-hide');
+      hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
       flush();
@@ -695,6 +705,38 @@ describe('LuxTableComponent', () => {
       // Nachbedingungen testen
       noBorderTable = document.getElementsByClassName('lux-hide-borders');
       expect(noBorderTable.length).toBe(1);
+
+      flush();
+    }));
+
+    it('Sollte den luxNoDataText nicht anzeigen, wenn Daten über ein Signal gesetzt werden (Issue #217)', fakeAsync(() => {
+      // Separates Fixture für Signal-basierte Komponente
+      const signalFixture = TestBed.createComponent(TableSignalComponent);
+      const signalComponent = signalFixture.componentInstance;
+
+      // Vorbedingungen testen: Keine Daten → noDataText sichtbar
+      signalFixture.detectChanges();
+      tick();
+      signalFixture.detectChanges();
+      let noDataRow = document.querySelector('.lux-table-header-no-data');
+      expect(noDataRow?.classList.contains('lux-display-none')).toBeFalse();
+
+      // Änderungen durchführen: Signal mit Daten befüllen;
+      // nur einen CD-Zyklus ausführen (wie bei Signal-basiertem Angular ohne Zone.js)
+      signalComponent.tableData.set([
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ]);
+      signalFixture.detectChanges();
+      // setTimeout in luxData-Setter feuert: setzt totalElements und ruft markForCheck() auf.
+      // Der nachfolgende detectChanges() verarbeitet die markForCheck()-Anforderung und
+      // aktualisiert die View korrekt – noDataText muss jetzt ausgeblendet sein.
+      tick();
+      signalFixture.detectChanges();
+
+      // Nachbedingungen testen: noDataText darf NICHT sichtbar sein, da Daten vorhanden sind
+      noDataRow = document.querySelector('.lux-table-header-no-data');
+      expect(noDataRow?.classList.contains('lux-display-none')).toBeTrue();
 
       flush();
     }));
@@ -824,6 +866,60 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
       counter = document.querySelector('.lux-selected-count') as HTMLElement;
       expect(counter.textContent?.trim()).toBe('0 / 2');
+    }));
+
+    it('multiSelect-Spalte Sortierung ist bei HTTP-DAO + MultiSelect deaktiviert', fakeAsync(() => {
+      // Vorbedingungen: Tabelle initialisiert
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen: Der Sort-Header der multiSelect-Spalte muss die CSS-Klasse mat-sort-header-disabled tragen
+      const multiSelectTh = fixture.nativeElement.querySelector('th.lux-multiselect-th');
+      expect(multiSelectTh).toBeTruthy();
+      expect(multiSelectTh.classList.contains('mat-sort-header-disabled')).toBeTrue();
+
+      flush();
+    }));
+
+    it('Sort-Event auf multiSelect-Spalte mit HTTP-DAO + MultiSelect ruft loadHttpDAOData nicht auf', fakeAsync(() => {
+      // Vorbedingungen: Tabelle initialisiert
+      LuxTestHelper.wait(fixture);
+
+      // Spy auf loadHttpDAOData erstellen
+      spyOn<any>(luxTableComponent, 'loadHttpDAOData');
+
+      // handleSort aufrufen um die Subscription neu zu registrieren
+      (luxTableComponent as any).handleSort();
+
+      // Sort-Event auf multiSelect-Spalte auslösen – soll vom Guard ignoriert werden
+      expect(luxTableComponent.sort).toBeTruthy();
+      luxTableComponent.sort!.sortChange.emit({ active: 'multiSelect', direction: 'asc' });
+      LuxTestHelper.wait(fixture);
+
+      // loadHttpDAOData darf NICHT aufgerufen worden sein
+      expect(luxTableComponent['loadHttpDAOData']).not.toHaveBeenCalled();
+
+      flush();
+    }));
+
+    it('Sortierung auf normale Spalten mit HTTP-DAO + MultiSelect ruft loadHttpDAOData auf', fakeAsync(() => {
+      // Vorbedingungen: Tabelle initialisiert (HttpDaoTableComponent hat luxMultiSelect=true und luxHttpDAO gesetzt)
+      LuxTestHelper.wait(fixture);
+
+      // Spy auf loadHttpDAOData erstellen
+      spyOn<any>(luxTableComponent, 'loadHttpDAOData');
+
+      // handleSort aufrufen um die Subscription neu zu registrieren
+      (luxTableComponent as any).handleSort();
+
+      // Sort-Event auf eine normale Datenspalte auslösen
+      expect(luxTableComponent.sort).toBeTruthy();
+      luxTableComponent.sort!.sortChange.emit({ active: 'c2', direction: 'asc' });
+      LuxTestHelper.wait(fixture);
+
+      // loadHttpDAOData MUSS aufgerufen worden sein
+      expect(luxTableComponent['loadHttpDAOData']).toHaveBeenCalled();
+
+      flush();
     }));
   });
 
@@ -1174,7 +1270,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
 
     it('Setzt ohne Multiselect bei beobachtetem luxSelectedChange einen Cursor', fakeAsync(() => {
@@ -1183,7 +1279,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
     }));
 
     it('Setzt Cursor bei beobachtetem luxSingleClicked', fakeAsync(() => {
@@ -1192,7 +1288,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
     }));
 
     it('Setzt Cursor bei Multiselect mit beobachtetem luxSelectedChange nur ohne Checkbox-Only-Click', fakeAsync(() => {
@@ -1203,13 +1299,13 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
 
       component.multiSelectOnlyCheckboxClick = true;
       LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
 
     it('Setzt bei Multiselect ohne beobachtete Events Cursor nur ohne Checkbox-Only-Click', fakeAsync(() => {
@@ -1219,13 +1315,13 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeTrue();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
 
       component.multiSelectOnlyCheckboxClick = true;
       LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
 
     it('Setzt bei Multiselect und beobachtetem luxDoubleClicked keinen Cursor', fakeAsync(() => {
@@ -1236,10 +1332,28 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
-      expect(row.classList.contains('lux-cursor')).toBeFalse();
+      expect(row.classList.contains('lux-cursor-pointer')).toBeFalse();
     }));
   });
 });
+
+@Component({
+  template: `
+    <lux-table [luxData]="tableData()" [luxShowPagination]="false" luxNoDataText="Keine Daten gefunden.">
+      <lux-table-column luxColumnDef="c1">
+        <lux-table-column-content>
+          <ng-template let-element
+            ><span>{{ element.c1 }}</span></ng-template
+          >
+        </lux-table-column-content>
+      </lux-table-column>
+    </lux-table>
+  `,
+  imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnContentComponent]
+})
+class TableSignalComponent {
+  tableData = signal<TableItem[]>([]);
+}
 
 @Component({
   template: `
@@ -1266,9 +1380,9 @@ describe('LuxTableComponent', () => {
           [luxResponsiveBehaviour]="c1RespBeh"
         >
           @if (!hideHeaders) {
-          <lux-table-column-header>
-            <ng-template>C1</ng-template>
-          </lux-table-column-header>
+            <lux-table-column-header>
+              <ng-template>C1</ng-template>
+            </lux-table-column-header>
           }
           <lux-table-column-content>
             <ng-template let-element>
@@ -1287,9 +1401,9 @@ describe('LuxTableComponent', () => {
           [luxResponsiveBehaviour]="c2RespBeh"
         >
           @if (!hideHeaders) {
-          <lux-table-column-header>
-            <ng-template>C2</ng-template>
-          </lux-table-column-header>
+            <lux-table-column-header>
+              <ng-template>C2</ng-template>
+            </lux-table-column-header>
           }
           <lux-table-column-content>
             <ng-template let-element

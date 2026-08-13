@@ -8,10 +8,10 @@ import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { ValidatorFnType } from '../../lux-form/lux-form-model/lux-form-component-base.class';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxLookupCompareFn, luxLookupCompareKeyFn, luxLookupCompareKurzTextFn } from '../lux-lookup-model/lux-lookup-component';
 import { LuxFieldValues, LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
@@ -77,7 +77,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
 
       // Nachbedingungen testen
-      const options = fixture.nativeElement.querySelectorAll('mat-option')
+      const options = fixture.nativeElement.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');
@@ -136,6 +136,29 @@ describe('LuxLookupAutocompleteAcComponent', () => {
 
       discardPeriodicTasks();
     }));
+
+    describe('Clear-Button', () => {
+      beforeEach(fakeAsync(() => {
+        component.clearable = true;
+        fixture.detectChanges();
+      }));
+
+      it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
+        LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'A');
+        LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
+
+        expect(autocomplete.formControl.value as any).toEqual('A');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+
+        fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        expect(autocomplete.formControl.value).toBeNull();
+        expect(autocomplete.matInput.nativeElement.value).toEqual('');
+
+        discardPeriodicTasks();
+      }));
+    });
   });
 });
 
@@ -148,6 +171,8 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       luxRenderProp="kurzText"
       [luxCompareFn]="compareFn"
       [luxControlValidators]="validators"
+      [luxClearable]="clearable"
+      [luxClearAriaLabel]="clearAriaLabel"
       [(luxValue)]="value"
       luxLookupId="test"
       [luxLabel]="'Label'"
@@ -163,6 +188,8 @@ class LuxNoFormComponent {
   validators?: ValidatorFnType;
   value?: any;
   compareFn?: LuxLookupCompareFn;
+  clearable = false;
+  clearAriaLabel = 'Wert leeren';
 }
 
 class MockLookupService {

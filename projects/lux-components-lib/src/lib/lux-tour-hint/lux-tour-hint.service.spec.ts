@@ -2,9 +2,9 @@
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxConsentService } from '../lux-consent/lux-consent.service';
-import { LuxTestHelper } from '../lux-util/testing/lux-test-helper';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 import { LuxTourHintService } from './lux-tour-hint.service';
 

@@ -1,0 +1,7 @@
+@use "@angular/material" as mat;
+
+lux-timepicker {
+  button:not(:disabled) .lux-timepicker-toggle-icon {
+    color: var(--lux-theme-datepicker-icon-color);
+  }
+}

@@ -104,7 +104,7 @@ Diese werden unterhalb der LuxCardContentComponent dargestellt.
 
 | Name     | Typ             | Beschreibung                                                       |
 | -------- | --------------- | ------------------------------------------------------------------ |
-| luxAlign | 'left', 'right' | Bestimmt, ob die Buttons links- oder rechtbündig anzegeigt werden. |
+| luxAlign | 'left', 'right' | Bestimmt, ob die Buttons links- oder rechtbündig angezeigt werden. |
 
 ## Styleguide
 

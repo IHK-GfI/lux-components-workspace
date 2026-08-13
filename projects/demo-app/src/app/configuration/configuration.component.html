@@ -47,6 +47,12 @@
         [luxNoBottomLabel]="true"
       ></lux-select-ac>
       <lux-input-ac
+        luxLabel="Tenant URL"
+        [(luxValue)]="currentConfig.tenantLogoLookupServiceUrl"
+        [luxNoBottomLabel]="true"
+        (luxValueChange)="updateConfig()"
+      ></lux-input-ac>
+      <lux-input-ac
         luxLabel="Lookup URL"
         [(luxValue)]="currentConfig.lookupServiceUrl"
         [luxNoBottomLabel]="true"
@@ -127,6 +133,12 @@
       <lux-input-ac
         luxLabel="Url des Session-Timers"
         [(luxValue)]="currentConfig.sessionTimerConfig!.url"
+        (luxValueChange)="updateConfig()"
+        [luxNoBottomLabel]="true"
+      ></lux-input-ac>
+      <lux-input-ac
+        luxLabel="Local Storage Key Name des Session-Timers"
+        [(luxValue)]="currentConfig.sessionTimerConfig!.localStorageKeyName"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input-ac>

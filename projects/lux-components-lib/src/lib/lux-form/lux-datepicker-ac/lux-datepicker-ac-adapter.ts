@@ -21,43 +21,63 @@ export class LuxDatepickerAcAdapter extends NativeDateAdapter {
   // ddMMyyyy
   private readonly noSeparatorRegExp = new RegExp(/\d{1,2}\d{1,2}\d{4}/);
 
+  referenceTimeProvider: (() => Date | null) | null = null;
+
+  override createDate(year: number, month: number, date: number): Date {
+    // Create UTC-Date
+    const result = new Date(Date.UTC(year, month, date));
+    const refTime = this.referenceTimeProvider?.();
+    if (refTime) {
+      result.setUTCHours(refTime.getUTCHours(), refTime.getUTCMinutes(), refTime.getUTCSeconds(), 0);
+    } else {
+      result.setUTCHours(0, 0, 0, 0);
+    }
+    return result;
+  }
+
   override format(date: Date | string, displayFormat: DateTimeFormatOptions): string {
+    let result: string;
     if (date) {
       if (displayFormat) {
         if (typeof date === 'string') {
           date = new Date(date);
         }
-        return date.toLocaleDateString(this.locale, displayFormat);
+        result = date.toLocaleDateString(this.locale, displayFormat);
       } else {
-        return (date as Date).toLocaleDateString(this.locale);
+        result = (date as Date).toLocaleDateString(this.locale);
       }
     } else {
-      return '';
+      result = '';
     }
+    return result;
   }
 
   override parse(value: string): Date | null {
+    let result: Date | null;
     if (value) {
       // Prüfen, ob der Wert ein ISO-String ist
       if (LuxUtil.ISO_8601_FULL.test(value)) {
-        return new Date(value);
-      }
-
-      // Hat der String das Format dd.MM.YYYY ?
-      if (this.dotRegExp.test(value)) {
-        return this.getUTCNulled_ddMMYYYY(value, '.');
+        result = new Date(value);
+      } else if (this.dotRegExp.test(value)) {
+        // Hat der String das Format dd.MM.YYYY ?
+        result = this.getUTCNulled_ddMMYYYY(value, '.');
       } else if (this.backslashRegExp.test(value)) {
-        return this.getUTCNulled_MMddYYY(value, '/');
+        result = this.getUTCNulled_MMddYYY(value, '/');
       } else if (this.hyphenRegExp.test(value)) {
-        return this.getUTCNulled_ddMMYYYY(value, '-');
+        result = this.getUTCNulled_ddMMYYYY(value, '-');
       } else if (this.hyphenRegExp_1.test(value)) {
-        return this.getUTCNulled_YYYYMMdd(value, '-');
+        result = this.getUTCNulled_YYYYMMdd(value, '-');
       } else if (this.noSeparatorRegExp.test(value)) {
-        return this.getUTCNulled_ddMMYYYYNoSeparator(value);
+        result = this.getUTCNulled_ddMMYYYYNoSeparator(value);
+      } else {
+        // Dies ist nötig, damit die Fehlermeldung "Das Feld enthält keinen gültigen Wert" angezeigt wird,
+        // wenn der String nicht geparst werden kann.
+        result = value as any;
       }
-      return value as any;
+    } else {
+      result = null;
     }
-    return null;
+    return result;
   }
 
   override getFirstDayOfWeek(): number {
@@ -70,6 +90,14 @@ export class LuxDatepickerAcAdapter extends NativeDateAdapter {
     return startDay;
   }
 
+  private applyReferenceTime(date: Date): Date {
+    const refTime = this.referenceTimeProvider?.();
+    if (refTime) {
+      date.setUTCHours(refTime.getUTCHours(), refTime.getUTCMinutes(), refTime.getUTCSeconds(), 0);
+    }
+    return date;
+  }
+
   /**
    * UTC Date mit 0-Werten für Time aus einem ddMMYYYY-String erhalten.
    * @param dateString
@@ -79,7 +107,7 @@ export class LuxDatepickerAcAdapter extends NativeDateAdapter {
     const splitDate = dateString.split(separator);
     const tempDate = new Date(0);
     tempDate.setUTCFullYear(+splitDate[2], this.calculateMonth(+splitDate[1]), +splitDate[0]);
-    return tempDate;
+    return this.applyReferenceTime(tempDate);
   }
 
   /**
@@ -89,7 +117,7 @@ export class LuxDatepickerAcAdapter extends NativeDateAdapter {
   private getUTCNulled_ddMMYYYYNoSeparator(dateString: string) {
     const tempDate = new Date(0);
     tempDate.setUTCFullYear(+dateString.substring(4, 8), this.calculateMonth(+dateString.substring(2, 4)), +dateString.substring(0, 2));
-    return tempDate;
+    return this.applyReferenceTime(tempDate);
   }
 
   /**
@@ -101,7 +129,7 @@ export class LuxDatepickerAcAdapter extends NativeDateAdapter {
     const splitDate = dateString.split(separator);
     const tempDate = new Date(0);
     tempDate.setUTCFullYear(+splitDate[0], this.calculateMonth(+splitDate[1]), +splitDate[2]);
-    return tempDate;
+    return this.applyReferenceTime(tempDate);
   }
 
   /**
@@ -113,7 +141,7 @@ export class LuxDatepickerAcAdapter extends NativeDateAdapter {
     const splitDate = dateString.split(separator);
     const tempDate = new Date(0);
     tempDate.setUTCFullYear(+splitDate[2], this.calculateMonth(+splitDate[0]), +splitDate[1]);
-    return tempDate;
+    return this.applyReferenceTime(tempDate);
   }
 
   override isValid(date: any) {

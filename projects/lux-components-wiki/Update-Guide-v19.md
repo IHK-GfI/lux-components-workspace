@@ -1,8 +1,8 @@
-# Update Guide 19
+# Update-Guide 19
 
 In diesem Update Guide wird beschrieben, wie man die LUX-Components aktualisieren kann. Es handelt sich um inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge (Beispiel: 19.0.0 -> 19.0.1 -> 19.1.0 -> 19.1.1 ->...) ausgeführt werden und es darf kein Update übersprungen werden, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
-- [Update Guide 19](#update-guide-19)
+- [Update-Guide 19](#update-guide-19)
   - [Änderungen](#änderungen)
   - [Local Storage](#local-storage)
     - [lux-theme](#lux-theme)
@@ -37,7 +37,7 @@ Folgende Komponenten nutzen den Local Storage des Browsers, wenn eine Einwilligu
 
 ### lux-theme
 
-Das LUX-Theme nutzt den Local Storage um zu speichern, welches Theme ausgewählt wurde.
+Das LUX-Theme nutzt den Local Storage, um zu speichern, welches Theme ausgewählt wurde.
 
 |            |                                                                                           |
 | ---------- | ----------------------------------------------------------------------------------------- |
@@ -49,7 +49,7 @@ Das LUX-Theme nutzt den Local Storage um zu speichern, welches Theme ausgewählt
 
 ### lux-tour-hint
 
-Der LUX-Tour-Hinweis nutzt den Local Storage um zu speichern, ob ein Hinweis nicht erneut angezeigt werden soll.
+Der LUX-Tour-Hinweis nutzt den Local Storage, um zu speichern, ob ein Hinweis nicht erneut angezeigt werden soll.
 
 |            |                                                                                                                                 |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -61,7 +61,7 @@ Der LUX-Tour-Hinweis nutzt den Local Storage um zu speichern, ob ein Hinweis nic
 
 ### lux-table
 
-Die LUX-Table nutzt den Local Storage um zu speichern, welche Tabellen ausgeblendet wurden, aber nur wenn das Feature "Spalten ausblenden" (siehe Property " luxShowColumnSelector ")  verwendet wird.
+Die LUX-Table nutzt den Local Storage, um zu speichern, welche Tabellen ausgeblendet wurden, aber nur, wenn das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet wird.
 
 |            |                                                                                                                                                                                                                                                                                       |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -69,7 +69,7 @@ Die LUX-Table nutzt den Local Storage um zu speichern, welche Tabellen ausgeblen
 | Key-Präfix | Wird von der Fachanwendung festgelegt über die Property "luxColumnStorageKey"                                                                                                                                                                                                         |
 | Wert       | String-Array mit den Spalten-Ids                                                                                                                                                                                                                                                      |
 | Beispiel   | lux.app.demo.table=\["name", "symbol"\]                                                                                                                                                                                                                                               |
-| Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector")  verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
+| Auswirkung | Hat nur Auswirkungen, wenn die Tabelle das Feature "Spalten ausblenden" (siehe Property "luxShowColumnSelector") verwendet. Wenn der Local Storage nicht mehr verwendet werden darf, werden die ausgeblendeten Spalten nach jedem Neuladen der Tabellen-Komponente wieder angezeigt. |
 
 ## Versionen
 
@@ -212,7 +212,7 @@ Bitte zuerst die vollständige Anleitung lesen und danach mit dem Update beginne
 
 1. Die Datei _package-lock.json_ und den Ordner _node_modules_ löschen.
 
-1. Allen runden Buttons (_<lux-button [luxRounded]="true"..._) muss manuell ein aussagekräftiges Label (_luxLabel="xxx"_) gegeben werden, das als Aria-Label für die Barrierfreiheit verwendet werden kann.
+1. Allen runden Buttons (_<lux-button [luxRounded]="true"..._) muss manuell ein aussagekräftiges Label (_luxLabel="xxx"_) gegeben werden, das als Aria-Label für die Barrierefreiheit verwendet werden kann.
 
 1. Abhängigkeiten aktualisieren:
 

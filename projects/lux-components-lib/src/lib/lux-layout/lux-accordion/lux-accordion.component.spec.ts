@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxPanelContentComponent } from '../lux-panel/lux-panel-subcomponents/lux-panel-content.component';
 import { LuxPanelHeaderTitleComponent } from '../lux-panel/lux-panel-subcomponents/lux-panel-header-title.component';
 import { LuxPanelComponent } from '../lux-panel/lux-panel.component';

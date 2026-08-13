@@ -37,8 +37,6 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected _formStatusChangeSub?: Subscription;
   protected _configSubscription?: Subscription;
 
-  private hasHadRequiredValidator = false;
-
   protected latestErrors: any = null;
   protected _initialValue?: any;
   protected _initialDisabled?: boolean;
@@ -65,7 +63,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   @ContentChild(LuxFormHintComponent) formHintComponent?: LuxFormHintComponent;
 
   @ViewChild(LuxFormControlWrapperComponent) formControlWrapperComponent?: LuxFormControlWrapperComponent;
-  @ViewChild(LuxFormControlWrapperComponent, { read: ElementRef}) formControlWrapperComponentRef?: ElementRef;
+  @ViewChild(LuxFormControlWrapperComponent, { read: ElementRef }) formControlWrapperComponentRef?: ElementRef;
 
   @HostBinding('class.lux-form-control-readonly') cssReadonly = false;
 
@@ -168,6 +166,12 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   }
 
   ngDoCheck() {
+    // Required-Validator kann sich ändern, ohne dass sich der FormControl-Status ändert.
+    // Deshalb in Reactive Forms den luxRequired-Status pro Check synchronisieren.
+    if (this.inForm) {
+      this.updateValidatorsInForm();
+    }
+
     // Prüfen, ob es neue Fehlermeldungen gibt, wenn ja diese laden und speichern.
     if (this.latestErrors !== this.formControl.errors && this.formControl.touched) {
       this.latestErrors = this.formControl.errors;
@@ -284,24 +288,22 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * Wird nach der Aktualisierung des Status aufgerufen.
    * @param formStatus
    */
-  protected notifyFormStatusChanged(formStatus: any) {
-    if (this.inForm && (formStatus === 'VALID' || formStatus === 'INVALID')) {
-      this.updateValidatorsInForm();
-    }
-  }
+  protected notifyFormStatusChanged(formStatus: any) {}
 
   /**
-   * Prüft, ob das übergebene Control einen required-Validator besitzt.
+   * Prüft, ob das übergebene Control einen required-Validator (Validators.required oder
+   * Validators.requiredTrue) besitzt.
+   *
+   * Hinweis: Prüft gezielt auf diese beiden Validator-Referenzen, statt den komponierten
+   * Validator gegen ein Dummy-Control auszuführen. Ein Verhaltens-Check (Aufruf des
+   * komponierten Validators) würde hier fälschlicherweise auch den von der nativen
+   * [required]-Bindung eingeschleusten Angular-RequiredValidator erkennen, dessen Zustand
+   * selbst wieder von luxRequired abhängt (Zirkelbezug: das eigentlich gewollte Entfernen
+   * von required würde dadurch nie erkannt werden, siehe Issue #240).
    * @param abstractControl
    */
   protected hasRequiredValidator(abstractControl: AbstractControl) {
-    if (abstractControl.validator) {
-      const validator = abstractControl.validator({} as AbstractControl);
-      if (validator && (validator['required'] || validator['requiredTrue'])) {
-        return true;
-      }
-    }
-    return false;
+    return abstractControl.hasValidator(Validators.required) || abstractControl.hasValidator(Validators.requiredTrue);
   }
 
   /**
@@ -372,39 +374,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     });
   }
 
-  /**
-   * Diese Funktion prüft ob luxRequired auf true gesetzt wurde und die übergebenen validators bereits den
-   * required-Validator besitzen.
-   * Für den Fall das luxRequired auf false gesetzt worden ist, wird der Validator entfernt.
-   *
-   * Hinweis: LuxFormCheckableBase überschreibt diese Funktion, um statt required requiredTrue zu setzen.
-   * @param validators
-   */
-  protected checkValidatorsContainRequired(validators: ValidatorFnType) {
-    if (this.luxRequired !== null && this.luxRequired !== undefined) {
-      if (this.luxRequired) {
-        // Fall: required = true, aber neue Validatoren werden gesetzt.
-        // Sind es mehrere Validatoren, aber kein "required"? Dann wird er ergänzt
-        if (Array.isArray(validators) && validators.indexOf(Validators.required) === -1) {
-          validators.push(Validators.required);
-        } else if (validators && !Array.isArray(validators) && validators !== Validators.required) {
-          // Ist es nur ein einzelner Validator und nicht "required"? Dann Array erstellen und beide kombinieren.
-          validators = [validators, Validators.required];
-        }
-      } else {
-        if (Array.isArray(validators)) {
-          validators = validators.filter((validator: ValidatorFn) => validator !== Validators.required);
-        } else if (validators === Validators.required) {
-          validators = undefined;
-        }
-      }
-    } else {
-      // Die Aufrufe mit "null" und "undefined" werden an dieser Stelle absichtlich nicht weiter behandelt.
-      // Todo: Mit der neuen Angular-Version sind neue Methoden wie z.B. FormControl.hasValidator hinzugekommen.
-      //       D.h. die komplizierte Behandlung von Validators.required kann vereinfacht werden.
-    }
-
-    return validators;
+  protected getRequiredValidator(): ValidatorFn {
+    return Validators.required;
   }
 
   /**
@@ -414,31 +385,54 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * @param checkRequiredValidator
    */
   protected updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
-    if ((!Array.isArray(validators) && validators) || (Array.isArray(validators) && validators.length > 0)) {
-      if (!this.inForm) {
-        setTimeout(() => {
-          if (checkRequiredValidator) {
-            this._luxControlValidators = this.checkValidatorsContainRequired(validators);
+    const hasValidators = (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0);
+    const requiredValidator = this.getRequiredValidator();
+    const hasRequiredValidator = !!this.formControl && this.formControl.hasValidator(requiredValidator);
+    const shouldHandleRequired = checkRequiredValidator && (this.luxRequired || hasRequiredValidator);
+
+    if (!hasValidators && !shouldHandleRequired) {
+      return;
+    }
+
+    // Zum Zeitpunkt dieses synchronen Aufrufs ist inForm noch false, weil Angular @Input()-Properties
+    // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
+    if (!this.inForm) {
+      setTimeout(() => {
+        // Der setTimeout-Callback feuert asynchron – nach ngOnInit. Zu diesem Zeitpunkt kann inForm
+        // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
+        // Guard würde setValidators() die Validatoren des FormControls überschreiben.
+        if (this.inForm) {
+          return;
+        }
+
+        this._luxControlValidators = validators;
+        this.formControl.setValidators(this.luxControlValidators ?? null);
+
+        if (checkRequiredValidator) {
+          if (this.luxRequired) {
+            this.formControl.addValidators(requiredValidator);
+          } else {
+            this.formControl.removeValidators(requiredValidator);
           }
-          this.formControl.setValidators(this.luxControlValidators ?? null);
-          this.formControl.updateValueAndValidity();
-        });
-      } else {
-        this.logger.warn(
-          `
+        }
+
+        this.formControl.updateValueAndValidity();
+      });
+    } else if (hasValidators) {
+      this.logger.warn(
+        `
 Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding}) können ausschließlich über das Formular gesetzt werden,
 aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignoriert!`
-        );
-      }
+      );
     }
   }
 
   private updateValidatorsInForm() {
     const hasRequiredValidator = this.hasRequiredValidator(this.formControl);
-    if (this.hasHadRequiredValidator !== hasRequiredValidator) {
-      this._luxRequired = hasRequiredValidator;
-    }
 
-    this.hasHadRequiredValidator = hasRequiredValidator;
+    if (this._luxRequired !== hasRequiredValidator) {
+      this._luxRequired = hasRequiredValidator;
+      this.cdr.markForCheck();
+    }
   }
 }

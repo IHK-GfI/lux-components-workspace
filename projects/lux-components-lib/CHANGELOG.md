@@ -1,30 +1,38 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.3.1](#version-2131)
+  - [Version 21.7.0](#version-2170)
     - [Issues](#issues)
-  - [Version 21.3.0](#version-2130)
+  - [Version 21.6.0](#version-2160)
     - [Issues](#issues-1)
-  - [Version 21.2.0](#version-2120)
+  - [Version 21.5.0](#version-2150)
     - [Issues](#issues-2)
-  - [Version 21.1.0](#version-2110)
+  - [Version 21.4.0](#version-2140)
     - [Issues](#issues-3)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.3.1](#version-2131)
     - [Issues](#issues-4)
-  - [Version 19.7.0](#version-1970)
+  - [Version 21.3.0](#version-2130)
     - [Issues](#issues-5)
-  - [Version 19.6.0](#version-1960)
+  - [Version 21.2.0](#version-2120)
     - [Issues](#issues-6)
-  - [Version 19.5.0](#version-1950)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues-7)
-  - [Version 19.4.0](#version-1940)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-8)
-  - [Version 19.3.0](#version-1930)
+  - [Version 19.7.0](#version-1970)
     - [Issues](#issues-9)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.6.0](#version-1960)
     - [Issues](#issues-10)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.5.0](#version-1950)
     - [Issues](#issues-11)
+  - [Version 19.4.0](#version-1940)
+    - [Issues](#issues-12)
+  - [Version 19.3.0](#version-1930)
+    - [Issues](#issues-13)
+  - [Version 19.2.0](#version-1920)
+    - [Issues](#issues-14)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues-15)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -32,7 +40,65 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues-12)
+    - [Issues](#issues-16)
+
+## Version 21.7.0
+
+### Issues
+
+- Issue #74: axe-core für automatisierte Tests verwenden (#265)
+- Issue #238: Lux-Session-Timer verschwindet nicht wenn der User sich ausloggt (#261)
+- Issue #247: Menu-Panels-Items analog zu Button-Farben darstellen (#258)
+- Issue #248: Muted-Colors für Badges anbieten (#260)
+- Issue #262: luxTooltipIfTruncated erkennt mehrzeilig gekürzten Text (line-clamp) nicht (#263)
+
+## Version 21.6.0
+
+### Issues
+
+- Issue #128: Eigene Paginator Komponente im Lux Components Design (#243)
+- Issue #189: lux-menu-panel soll auch rechteckige Icons anzeigen können (#239)
+- Issue #237: Umstellung Anrede und Dialoge (#255)
+- Issue #240: `[luxRequired]="true"` überschreibt Reactive-Form-Validatoren in `lux-input-ac` (#254)
+- Issue #241: Tooltip-Unterstützung für `lux-select-ac` mit Filter (#253)
+- Issue #242: Lookup-autocomplete-ac Text zurücksetzen (#244)
+- Issue #245: Link zu LuxBrandLogo im lux-app-header (#246)
+- Issue #250: LuxValidators.email implementiert (#256)
+- Issue #251: Neue luxTooltipIfTruncated-Direktive implementiert (#257)
+
+## Version 21.5.0
+
+### Issues
+
+- Issue #167: lux-tabs: Notification soll in andern Farben darstellbar sein (#231)
+- Issue #168: Neue Komponente Timepicker (#236)
+- Issue #205: lux-list: Erweiterung der Tastaturnavigation für komplexe List-Items (#233)
+- Issue #227: Neue Utility-Klassen aus Camara-Components übernehmen (#235)
+- Issue #232: Lux-Table Property "luxColWidthsPercent" wird mit LUX Components 21 ignoriert oder rechnet falsch (#234)
+
+## Version 21.4.0
+
+### Issues
+
+- Issue #15: LuxRequired funktioniert für die Chips nicht wenn keine Reactive Forms benutzt werden (#208)
+- Issue #18: lux-checkbox-container: Erweiterung (#219)
+- Issue #70: lux-table: Fehler beim sortieren nach Spalte mit Checkbox (#207)
+- Issue #127: Erweiterung des Tenant-Logo um Fehlerbehandlung (#229)
+- Issue #154: Lux-Stepper überarbeiten (#228)
+- Issue #182: Lux-Card: Card-Actions werden bei mobiler Ansicht nicht übereinander angezeigt (#209)
+- Issue #190: lux-message-box: die Paginator-Background-Color auf Transparent setzen (#211)
+- Issue #193: lux-menu: Custom-Trigger wird nach dem schließen des Menu-Panels nicht fokussiert (#210)
+- Issue #196: DateTimePicker Bug beim selektieren des ersten Tages eines Monats (#212)
+- Issue #197: Performance-Problem bei einer großen Menge von Objekten im Autocomplete (#206)
+- Issue #198: Chips disabled erlaubt weiterhin Eingaben (#221)
+- Issue #199: Berechnung der verbleibenden Sessiondauer anhand von Timestamp (#199)
+- Issue #201: Scrollbar in einzeiligen Snackbars wenn in Edge geöffnet (#213)
+- Issue #202: Layout-Bruch in LUX-Menu Einträgen mit Icons in Firefox (#214)
+- Issue #203: lux-message-box im ausklappbaren Bereich von lux-card (#215)
+- Issue #216: lux-card: Card nur mit Actions aber ohne Header und Content hat einen zu großen oberen Abstand (#218)
+- Issue #217: LuxTable - LuxNoDataText Anzeigefehler bei Signals (#220)
+- Issue #223: lux-accordion - Panel-Ränder nicht sichtbar (#224)
+- Issue #225: lux-filter-form - Unterschiedlicher Abstand nach unten (#226)
 
 ## Version 21.3.1
 

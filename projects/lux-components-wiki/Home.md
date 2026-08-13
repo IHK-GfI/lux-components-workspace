@@ -27,7 +27,7 @@ Das [DeepWiki](https://deepwiki.com/IHK-GfI/lux-components-workspace) bietet ein
 
 Die Demo kann auch lokal ausgeführt werden:
 
-- LUX-Components via Git herunterladen.
+- LUX-Components per Git herunterladen.
 - In das entsprechende Verzeichnis wechseln.
 - `npm install` ausführen.
 - `ng serve` ausführen.

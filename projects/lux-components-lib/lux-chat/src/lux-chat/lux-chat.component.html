@@ -1,43 +1,7 @@
 <div class="lux-chat">
     <!-- Chat header -->
     <div class="lux-chat-header">
-        <p class="lux-chat-header-title" tabindex="0" (click.keydown)="onTitleClicked()">
-            <span class="lux-chat-header-title-text">
-                {{luxChatTitle()}}
-            </span>
-            
-            @if(luxChatSubTitle()){
-                <br/>
-                <span class="lux-chat-header-sub-title">
-                    {{luxChatSubTitle()}}
-                </span>
-            }
-        </p>
-
-        
-        @if(showFullscreenButton() || showCloseButton()){
-            <div class="lux-flex lux-gap-4">
-                @if(showFullscreenButton()){
-                    <lux-button
-                        luxColor="primary"
-                        [luxIconButton]="true"
-                        [luxIconName]="_chatFullscreen ? 'lux-interface-arrows-shrink-1' : 'lux-interface-arrows-expand-1'"
-                        (luxClicked)="onFullscreenChatClicked()"
-                        [luxAriaLabel]="'luxc.chat.button_fullscreen.arialabel' | transloco"
-                    ></lux-button>
-                }
-
-                @if(showCloseButton()){
-                    <lux-button
-                        luxColor="primary"
-                        [luxIconButton]="true"
-                        luxIconName="lux-interface-delete-1"
-                        (luxClicked)="onCloseChatClicked()"
-                        [luxAriaLabel]="'luxc.chat.button_close.arialabel' | transloco"
-                    ></lux-button>
-                }
-            </div>
-        }
+        <ng-container *ngTemplateOutlet="luxChatHeaderComponent()?.templateRef() || defaultChatHeader;"></ng-container>
     </div>
     
     <lux-divider [luxInset]="false"></lux-divider>
@@ -65,12 +29,7 @@
                     }
                 </div>
                 <div class="lux-chat-entry-card">
-                    @if(luxChatEntryComponent()){
-                        <ng-container *ngTemplateOutlet="luxChatEntryComponent()?.templateRef(); context: { $implicit: item }"></ng-container>
-                    }
-                    @else {
-                        <p class="lux-chat-entry-card-default-text">{{item.content}}</p>
-                    }
+                    <ng-container *ngTemplateOutlet="luxChatEntryComponent()?.templateRef() || defaultChatEntry; context: { $implicit: item }"></ng-container>
                 </div>
             </div>
         }
@@ -124,3 +83,42 @@
         }
     </div>
 </div>
+
+<!-- Default Header Template -->
+<ng-template #defaultChatHeader>
+    <p class="lux-chat-header-title" tabindex="0">
+        <span class="lux-chat-header-title-text">
+            {{luxChatData()?.title}}
+        </span>
+        
+        <br/>
+        <span class="lux-chat-header-sub-title">
+            {{'luxc.chat.title.created_at' | transloco}}{{luxChatData()?.createdAt | date:'dd.MM HH:mm'}}
+        </span>
+    </p>
+
+    @if(chatPopupMode()){
+        <div class="lux-flex lux-gap-4">
+            <lux-button
+                luxColor="primary"
+                [luxIconButton]="true"
+                [luxIconName]="_chatFullscreen ? 'lux-interface-arrows-shrink-1' : 'lux-interface-arrows-expand-1'"
+                (luxClicked)="onFullscreenChatClicked()"
+                [luxAriaLabel]="'luxc.chat.button_fullscreen.arialabel' | transloco"
+            ></lux-button>
+            
+            <lux-button
+                luxColor="primary"
+                [luxIconButton]="true"
+                luxIconName="lux-interface-delete-1"
+                (luxClicked)="onCloseChatClicked()"
+                [luxAriaLabel]="'luxc.chat.button_close.arialabel' | transloco"
+            ></lux-button>
+        </div>
+    }
+</ng-template>
+
+<!-- Default Entry Template -->
+<ng-template #defaultChatEntry let-item>
+    <p class="lux-chat-entry-card-default-text">{{item.content}}</p>
+</ng-template>

@@ -51,8 +51,7 @@ export class LuxChatAiComponent extends LuxChatController {
   public luxChatData!: LuxChatData;
 
   public luxAutoFocus = input<boolean>(false);
-  public showFullscreenButton = model<boolean>();
-  public showCloseButton = model<boolean>();
+  public chatPopupMode = model<boolean>();
   
   public chatClose = output<void>();
   public chatFullscreen = output<boolean>();
@@ -259,7 +258,6 @@ export class LuxChatAiComponent extends LuxChatController {
   }
 
   private checkTitleGeneration() {
-    console.log("check title generation: ", this.luxChatData.messages.length);
     if(this.luxChatData.messages.length == 3 || this.luxChatData.messages.length == 7) {
       this.doTitleGeneration();
     }

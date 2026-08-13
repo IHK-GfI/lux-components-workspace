@@ -39,7 +39,7 @@ constructor() {
       ['Der Nachname darf nicht leer sein.'],
       ['Die ID existiert nicht.'],
       ['Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam' +
-      ' nonumy eirmod tempor inviduntutlaboreetdolore magna aliquyam erat, ' +
+      ' nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, ' +
       'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.']
     ]);
   }

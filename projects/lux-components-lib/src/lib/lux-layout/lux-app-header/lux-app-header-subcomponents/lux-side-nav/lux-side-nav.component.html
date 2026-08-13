@@ -13,25 +13,26 @@
     </div>
     <div class="lux-side-nav-content lux-flex lux-flex-col" [ngStyle]="{ height: height + 'px', visibility: visibility }">
       @if (luxDashboardLink) {
-      <div class="lux-side-nav-item lux-nowrap lux-side-nav-dashboard-link lux-flex lux-place-content-center">
-        <lux-icon
-          luxIconName="lux-interface-edit-grid"
-          luxIconSize="2.5rem"
-          luxPadding="0.5625rem"
-          luxMargin="0 0 0 0.25rem"
-          class="lux-side-nav-item-icon"
-        >
-        </lux-icon>
-        <lux-link
-          class="lux-flex lux-flex-grow-1 lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
-          [luxLabel]="luxDashboardLinkTitle"
-          [luxBlank]="luxOpenLinkBlank"
-          [luxHref]="luxDashboardLink"
-        ></lux-link>
-      </div>
-      <lux-divider></lux-divider>
-      } @for (sideNavItem of directSideNavItems; track sideNavItem) {
-      <ng-container [ngTemplateOutlet]="sideNavItem.templateRef ?? null"></ng-container>
+        <div class="lux-side-nav-item lux-whitespace-nowrap lux-side-nav-dashboard-link lux-flex lux-place-content-center">
+          <lux-icon
+            luxIconName="lux-interface-edit-grid"
+            luxIconSize="2.5rem"
+            luxPadding="0.5625rem"
+            luxMargin="0 0 0 0.25rem"
+            class="lux-side-nav-item-icon"
+          >
+          </lux-icon>
+          <lux-link
+            class="lux-flex lux-flex-grow-1 lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
+            [luxLabel]="luxDashboardLinkTitle"
+            [luxBlank]="luxOpenLinkBlank"
+            [luxHref]="luxDashboardLink"
+          ></lux-link>
+        </div>
+        <lux-divider></lux-divider>
+      }
+      @for (sideNavItem of directSideNavItems; track sideNavItem) {
+        <ng-container [ngTemplateOutlet]="sideNavItem.templateRef ?? null"></ng-container>
       }
       <ng-content select="lux-side-nav-item"></ng-content>
     </div>
@@ -40,13 +41,13 @@
     </div>
   </div>
   @if (sideNavExpanded) {
-  <div
-    tabindex="0"
-    class="lux-side-nav-overlay lux-side-nav-overlay-z-index"
-    [ngStyle]="{ top: top, left: left, bottom: bottom, right: right }"
-    [@expandHideOverlay]="sideNavExpanded ? 'expanded' : 'void'"
-    (click)="close()"
-    (keydown.escape)="close()"
-  ></div>
+    <div
+      tabindex="0"
+      class="lux-side-nav-overlay lux-side-nav-overlay-z-index"
+      [ngStyle]="{ top: top, left: left, bottom: bottom, right: right }"
+      [@expandHideOverlay]="sideNavExpanded ? 'expanded' : 'void'"
+      (click)="close()"
+      (keydown.escape)="close()"
+    ></div>
   }
 </div>

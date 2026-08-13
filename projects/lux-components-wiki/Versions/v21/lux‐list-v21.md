@@ -18,6 +18,9 @@
     - [LuxListItemContentComponent](#luxlistitemcontentcomponent)
       - [Allgemein](#allgemein-3)
       - [ng-content](#ng-content-1)
+  - [Tastaturnavigation](#tastaturnavigation)
+    - [Listennavigation (Normal-Modus)](#listennavigation-normal-modus)
+    - [Bearbeiten-Modus (Edit-Modus)](#bearbeiten-modus-edit-modus)
   - [Beispiele](#beispiele)
     - [1. Liste (gefüllt)](#1-liste-gefüllt)
     - [2. Liste (leer)](#2-liste-leer)
@@ -109,6 +112,33 @@ Diese Component umfasst den eigentlichen Inhalt des Listeneintrags.
 | Name | Typ | Beschreibung                                                          |
 | ---- | --- | --------------------------------------------------------------------- |
 | any  |     | Hier kann beliebiger Inhalt via Content-Projection eingesetzt werden. |
+
+## Tastaturnavigation
+
+Die `lux-list` implementiert das ARIA-Grid-Pattern (`role="grid"`). Jede Kachel hat die Rolle `row`, der innere Karteninhalt die Rolle `gridcell`.
+
+### Listennavigation (Normal-Modus)
+
+| Taste                    | Aktion                                                                                             |
+| ------------------------ | -------------------------------------------------------------------------------------------------- |
+| `Tab`                    | Fokus auf die Liste setzen bzw. verlassen                                                          |
+| `ArrowUp` / `ArrowDown`  | Zwischen den Listeneinträgen navigieren                                                            |
+| `Home`                   | Ersten Listeneintrag fokussieren                                                                   |
+| `End`                    | Letzten Listeneintrag fokussieren                                                                  |
+| `Enter` / `Space` / `F2` | Eintrag selektieren und Bearbeiten-Modus aktivieren (nur wenn interaktive Elemente vorhanden sind) |
+
+### Bearbeiten-Modus (Edit-Modus)
+
+Enthält der aktive Listeneintrag interaktive Elemente (z. B. Formularfelder, Buttons, Links), kann der Bearbeiten-Modus aktiviert werden. Im Bearbeiten-Modus verwaltet der Browser die Tab-Reihenfolge innerhalb der Kachel.
+
+| Taste          | Aktion                                                                                                                                    |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `Tab`          | Nächstes interaktives Element innerhalb der Kachel fokussieren                                                                            |
+| `Shift+Tab`    | Vorheriges interaktives Element fokussieren; am Anfang zurück zur Zeile                                                                   |
+| `Home` / `End` | Zeile wechseln (beendet den Bearbeiten-Modus für die aktuelle Kachel).                                                                    |
+| `Escape`       | Bearbeiten-Modus beenden, Fokus zurück auf die Zeile. Ausnahme bei Elementen mit eigenem Escape-Handling (z.B. Autocomplete oder Select). |
+
+> **Hinweis:** Bei einer großen Anzahl von Listeneinträgen mit vielen interaktiven Elementen kann der Bearbeiten-Modus die Performance beeinträchtigen.
 
 ## Beispiele
 

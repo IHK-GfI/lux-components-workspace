@@ -1,21 +1,18 @@
-import { inject, Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { TranslocoService } from '@jsverse/transloco';
-import { Subscription } from 'rxjs';
 
 @Injectable()
-export class LuxPaginatorIntl extends MatPaginatorIntl implements OnDestroy {
-
+export class LuxPaginatorIntl extends MatPaginatorIntl {
   private tService = inject(TranslocoService);
-  private langSub?: Subscription;
 
   constructor() {
     super();
     this.updateLabels();
-    this.getRangeLabel = this.customRangeLabel;
+    this.getRangeLabel = (page, pageSize, length) => this.customRangeLabel(page, pageSize, length);
 
-    // Bei Sprachwechsel Labels aktualisieren
-    this.langSub = this.tService.langChanges$.subscribe(() => {
+    this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe(() => {
       this.updateLabels();
       this.changes.next();
     });
@@ -39,14 +36,12 @@ export class LuxPaginatorIntl extends MatPaginatorIntl implements OnDestroy {
     if (length === 0 || pageSize === 0) {
       return this.tService.translate('luxc.paginator.0_until_length', { length });
     }
+
     length = Math.max(length, 0);
     const startIndex = page * pageSize;
-    // If the start index exceeds the list length, do not try and fix the end index to the end.
+    // Wenn der Startindex die Listenlänge überschreitet, wird der Endindex nicht auf das Ende gesetzt.
     const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
     return this.tService.translate('luxc.paginator.page_part', { start: startIndex + 1, end: endIndex, length });
   }
 
-  ngOnDestroy(): void {
-    this.langSub?.unsubscribe();
-  }
 }

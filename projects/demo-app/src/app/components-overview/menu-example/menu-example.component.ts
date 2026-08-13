@@ -1,22 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   LuxAccordionComponent,
+  LuxDividerComponent,
   LuxFormHintComponent,
+  LuxIconRegistryService,
   LuxInputAcComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
+  LuxMenuPanelHeaderComponent,
+  LuxMenuSectionTitleComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
   LuxSelectAcComponent,
   LuxThemePalette,
-  LuxToggleAcComponent,
-  LuxDividerComponent,
-  LuxMenuPanelHeaderComponent,
-  LuxMenuSectionTitleComponent
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -48,6 +49,8 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class MenuExampleComponent {
+  private iconService = inject(LuxIconRegistryService);
+
   showOutputEvents = false;
   log = logResult;
   readonly markerTypeNew = DemoMarkerType.New;
@@ -143,7 +146,7 @@ export class MenuExampleComponent {
 
   menuItemsSections: ExampleMenuItem[] = [
     {
-      iconName: 'lux-atom',
+      iconName: 'lux-interface-arrows-bend-down-left-3',
       raised: false,
       color: 'primary',
       disabled: false,
@@ -161,7 +164,7 @@ export class MenuExampleComponent {
       selected: false
     },
     {
-      iconName: 'lux-atom',
+      iconName: 'app-ihk-189',
       raised: false,
       color: 'primary',
       disabled: false,
@@ -254,7 +257,7 @@ export class MenuExampleComponent {
 
   menuItemsLarge: ExampleLargeMenuItem[] = [
     {
-      iconName: 'lux-components',
+      iconName: 'app-box',
       color: 'primary',
       disabled: false,
       hidden: false,
@@ -267,7 +270,7 @@ export class MenuExampleComponent {
       selected: false
     },
     {
-      iconName: 'lux-components',
+      iconName: 'app-ihk-189',
       color: 'primary',
       disabled: false,
       hidden: false,
@@ -280,7 +283,7 @@ export class MenuExampleComponent {
       selected: false
     },
     {
-      iconName: 'lux-components',
+      iconName: 'app-android',
       color: 'primary',
       disabled: false,
       hidden: false,
@@ -354,13 +357,23 @@ export class MenuExampleComponent {
   menuLabel = '';
   className = '';
 
-  badgeColors: any[] = [
+  badgeColors: ExampleBadgeColorOption[] = [
     { value: 'primary', label: 'primary' },
     { value: 'warn', label: 'warn' },
     { value: 'accent', label: 'accent' }
   ];
 
-  constructor() {}
+  constructor() {
+    this.registerIcon('app-box', '/', '/assets/svg/box.svg');
+    this.registerIcon('app-android', '/', '/assets/svg/android.svg');
+    this.registerIcon('app-ihk-189', 'https://cdn.gfi.ihk.de/IHK-Logos/', '189_kurz.svg');
+  }
+
+  registerIcon(iconName: string, iconBasePath: string, iconPath: string) {
+    if (!this.iconService.getSvgIconList().some((item) => item.iconName === iconName)) {
+      this.iconService.getSvgIconList().push({ iconName, iconBasePath, iconPath });
+    }
+  }
 }
 
 interface ExampleMenuItem {
@@ -394,4 +407,9 @@ interface ExampleLargeMenuItem {
   buttonBadge?: string;
   buttonBadgeColor?: LuxThemePalette;
   selected: boolean;
+}
+
+interface ExampleBadgeColorOption {
+  value: LuxThemePalette;
+  label: string;
 }

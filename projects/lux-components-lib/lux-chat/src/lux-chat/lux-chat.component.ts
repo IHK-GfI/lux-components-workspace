@@ -7,7 +7,8 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxDividerComponent, LuxTextareaAcComponent, LuxAriaLabelDirective, LuxButtonComponent, LuxAutofocusDirective } from '@ihk-gfi/lux-components';
 import { LuxChatRelativeUntilTimestamp } from "./lux-chat-relative-until-timestamp.pipe";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LuxChatEntryComponent } from './lux-chat-entry.component';
+import { LuxChatEntryComponent } from './lux-chat-subcomponents/lux-chat-entry.component';
+import { LuxChatHeaderComponent } from './lux-chat-subcomponents/lux-chat-header.component';
 
 const HEADER_SHOW_TIME_OFFSET = 1000 * 60 * 10;
 const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
@@ -32,11 +33,8 @@ export class LuxChatComponent extends LuxChatController {
   private tService = inject(TranslocoService);
 
   public luxChatData = input<LuxChatData>();
-  public luxChatTitle = input<string>();
-  public luxChatSubTitle = input<string>();
   public luxChatUserName = input<string>();
-  public showFullscreenButton = model<boolean>();
-  public showCloseButton = model<boolean>();
+  public chatPopupMode = model<boolean>();
   public luxAutoFocus = input<boolean>(false);
 
   public chatInput = "";
@@ -48,8 +46,7 @@ export class LuxChatComponent extends LuxChatController {
   public chatFullscreen = output<boolean>();
   public _chatFullscreen = false;
 
-  public luxChatTitleClicked = output<void>();
-
+  public luxChatHeaderComponent = contentChild(LuxChatHeaderComponent);
   public luxChatEntryComponent = contentChild(LuxChatEntryComponent);
 
 
@@ -96,10 +93,6 @@ export class LuxChatComponent extends LuxChatController {
       }
     });
 
-  }
-
-  public onTitleClicked() {
-    this.luxChatTitleClicked.emit();
   }
 
   public checkShowDateSplit(item: LuxChatMessageData, index: number): boolean {

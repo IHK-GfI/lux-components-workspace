@@ -1,0 +1,3 @@
+site_name: Anwendungsdokumentation LUX-Demo (JAST)
+nav:
+  - Start: index.md

@@ -13,7 +13,7 @@
 
 ### Allgemein
 
-Komponente die zur Darstellung von HTTP-Fehlern genutzt werden kann.
+Komponente, die zur Darstellung von HTTP-Fehlern genutzt werden kann.
 
 Dafür muss der Tag lux-http-error in die eigene View eingebaut werden und der LuxHttpErrorInterceptor im AppModule eingetragen werden.
 Wahlweise ist es auch möglich, über den LuxHttpErrorInterceptor eigene Fehler zu pushen, welche dann von dem LuxHttpErrorComponent dargestellt werden.
@@ -39,7 +39,7 @@ constructor() {
       ['Der Nachname darf nicht leer sein.'],
       ['Die ID existiert nicht.'],
       ['Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam' +
-      ' nonumy eirmod tempor inviduntutlaboreetdolore magna aliquyam erat, ' +
+      ' nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, ' +
       'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.']
     ]);
   }

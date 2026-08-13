@@ -51,7 +51,7 @@ Diese Klasse ermöglicht die Konfiguration beim Sanitizing.
 | addAllowedTags  | string[] | Ein Array mit zusätzlich erlaubten Tags. D.h. Default-Tags plus die aus dem Array.            |
 | addAllowedAttrs | string[] | Ein Array mit zusätzlich erlaubten Attributen. D.h. Default-Attribute plus die aus dem Array. |
 | forbiddenTags   | string[] | Ein Array mit den verbotenen Tags.                                                            |
-| forbiddenAttrs  | string[] | Ein Array mit den Verbotenden Attributen.                                                     |
+| forbiddenAttrs  | string[] | Ein Array mit den verbotenen Attributen.                                                      |
 
 ## Beispiel
 
@@ -70,7 +70,7 @@ htmlData = `<h1>Lorem ipsum</h1>
    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
    magna aliquyam erat, sed diam voluptua.</p>
 
-<p>Schau doch mal bei der <a href="https://www.ihk-gfi.de" target="_blank">IHK-Gfi</a> vorbei. </p>`;
+<p>Schau doch mal bei der <a href="https://www.ihk-gfi.de" target="_blank">IHK-GfI</a> vorbei. </p>`;
 ```
 
 Html

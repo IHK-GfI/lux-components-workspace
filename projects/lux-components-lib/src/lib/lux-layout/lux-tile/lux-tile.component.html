@@ -5,7 +5,7 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   tabindex="0"
-  class="lux-cursor lux-tile lux-tile-mobile-view"
+  class="lux-cursor-pointer lux-tile lux-tile-mobile-view"
   [ngClass]="{ 'lux-tile-desktop-view': !mobileView, 'lux-tile-mobile': mobileView, 'lux-tile-shadow': luxShowShadow }"
   [luxBadgeNotification]="luxCounter ? '' + luxCounter : ''"
   luxBadgeColor="accent"
@@ -35,13 +35,13 @@
 </mat-card>
 
 @if (luxShowNotification !== undefined && luxShowNotification !== null) {
-<div
-  class="lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-full"
-  [ngClass]="[
-    'lux-tile-notification-icon',
-    getNotificationIconColorClass(),
-    luxCounter !== null && luxCounter !== undefined ? 'lux-badge-notification-visible' : '',
-    mobileView ? 'lux-tile-notification-mobile' : ''
-  ]"
-></div>
+  <div
+    class="lux-flex lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-full"
+    [ngClass]="[
+      'lux-tile-notification-icon',
+      getNotificationIconColorClass(),
+      luxCounter !== null && luxCounter !== undefined ? 'lux-badge-notification-visible' : '',
+      mobileView ? 'lux-tile-notification-mobile' : ''
+    ]"
+  ></div>
 }

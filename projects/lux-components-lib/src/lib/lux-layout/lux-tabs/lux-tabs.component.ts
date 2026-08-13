@@ -49,8 +49,7 @@ export class LuxTabsComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   private static readonly _DEBOUNCE_TIME: number = 50;
 
-  private static _notificationNewClass = 'lux-notification-new';
-  private static _notificationReadClass = 'lux-notification-read';
+  private static readonly _notificationReadClass = 'lux-notification-read';
 
   private subscriptions: Subscription[] = [];
 
@@ -120,7 +119,9 @@ export class LuxTabsComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
 
   getNotificationIconColorClassForTab(luxTab: LuxTabComponent): string {
-    return luxTab.luxShowNotification === true ? LuxTabsComponent._notificationNewClass : LuxTabsComponent._notificationReadClass;
+    return luxTab.luxShowNotification === true
+      ? `lux-notification-color-${luxTab.luxNotificationColor}`
+      : LuxTabsComponent._notificationReadClass;
   }
 
   /**

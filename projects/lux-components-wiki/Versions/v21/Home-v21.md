@@ -33,7 +33,7 @@ Details befinden sich auf der [Config](config-v21)-Seite.
 
 ## Layout
 
-Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu erstellen.
+Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu erstellen.
 
 - [Styling-Klassen](newlayoutclasses-v21)
 - [Liste der Austauschmöglichkeiten für die entfallenen Direktiven](replace-fxLayout-v21)
@@ -61,6 +61,7 @@ Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu er
 - [lux-select](lux‐select-v21)
 - [lux-slider](lux‐slider-v21)
 - [lux-textarea](lux‐textarea-v21)
+- [lux-timepicker](lux‐timepicker-v21)
 - [lux-toggle](lux‐toggle-v21)
 
 ### Layout
@@ -104,6 +105,7 @@ Es wird empfohlen, das Layout mit den Components aus dem [Layout](#layout) zu er
 - [lux-lookup-label](lux‐lookup‐label-v21)
 - [lux-markdown](lux‐markdown-v21)
 - [lux-message-box](lux‐message‐box-v21)
+- [lux-paginator](lux‐paginator-v21)
 - [lux-popup](lux‐popup-v21)
 - [lux-progress](lux‐progress-v21)
 - [lux-snackbar](lux‐snackbar-v21)

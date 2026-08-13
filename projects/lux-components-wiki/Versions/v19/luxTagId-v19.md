@@ -18,11 +18,11 @@ Testumgebungen zu aktivieren.
 ## Direktive LuxTagIdDirective und LuxCustomTagIdDirective
 
 Damit nicht alle Entwickler zwanghaft allen LUX-Components eine LUX-Tag-Id setzen müssen, wurde die Direktive
-`LuxTagIdDirective` und `LuxCustomTagIdDirective` eingeführt. Die `LuxTagIdDirective`-Directive versucht, die LUX-Tag-Ids automatisch zu generieren. Um eine
+`LuxTagIdDirective` und `LuxCustomTagIdDirective` eingeführt. Die `LuxTagIdDirective` versucht, die LUX-Tag-Ids automatisch zu generieren. Um eine
 Eindeutigkeit zu gewährleisten, sammelt die Direktive die LUX-Tag-Ids der Eltern ein und konkateniert diese z.B. mit
 dem Label oder Controlbinding. Wenn die Direktive einmal nicht in der Lage ist, eine LUX-Tag-Id zu generieren,
-wird eine Warnung in der Console ausgegeben. In diesen Fällen muss der Entwickler die LUX-Tag-Id manuell (z.B
-über das Attribut `luxTagId` oder mit der `LuxCustomTagIdDirective`-Directive) angeben.
+wird eine Warnung in der Konsole ausgegeben. In diesen Fällen muss der Entwickler die LUX-Tag-Id manuell (z.B
+über das Attribut `luxTagId` oder mit der `LuxCustomTagIdDirective`) angeben.
 
 ### Generierte LUX-Tag-Id
 

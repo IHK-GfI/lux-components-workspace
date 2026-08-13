@@ -21,16 +21,31 @@
 
 | Name                | Typ             | Beschreibung                                                                                                                            |
 | ------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| luxTooltipDisabled  | boolean         | Bestimmt ob der Tooltip deaktiviert ist oder nicht.                                                                                     |
-| luxTooltipHideDelay | number          | Bestimmt die zeitliche Verzögerung in ms bis der Tooltip ausgeblendet wird.                                                             |
-| luxTooltipShowDelay | number          | Bestimmt die zeitliche Verzögerung in ms bis der Tooltip eingeblendet wird.                                                             |
+| luxTooltipDisabled  | boolean         | Bestimmt, ob der Tooltip deaktiviert ist oder nicht.                                                                                    |
+| luxTooltipHideDelay | number          | Bestimmt die zeitliche Verzögerung in ms, bis der Tooltip ausgeblendet wird.                                                            |
+| luxTooltipShowDelay | number          | Bestimmt die zeitliche Verzögerung in ms, bis der Tooltip eingeblendet wird.                                                            |
 | luxTooltip          | string          | Beinhaltet den Text des Tooltips.                                                                                                       |
-| luxTooltipPosition  | TooltipPosition | Bestimmt die Position des Tooltips im Verhältnis zum Host-Element. Mögliche Werte: 'below', 'after', 'left', 'right', 'before', 'after' |
-| luxTooltipDisabled  | boolean         | Bestimmt ob der Tooltip deaktiviert ist, oder nicht.                                                                                    |
+| luxTooltipPosition  | TooltipPosition | Bestimmt die Position des Tooltips im Verhältnis zum Host-Element. Mögliche Werte: 'below', 'after', 'left', 'right', 'before', 'above' |
+| luxTooltipIfTruncated | boolean      | Aktiviert den Tooltip nur dann, wenn der Host-Text visuell gekürzt wird — horizontal (`scrollWidth > clientWidth`, z.B. `text-overflow: ellipsis`) oder vertikal (`scrollHeight > clientHeight`, z.B. `-webkit-line-clamp`).                                   |
 
 ## Beispiel
 
 ![Beispielbild 01](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/luxTooltip-v21-img-01.png)
+
+### Tooltip nur bei abgeschnittenem Text
+
+Wenn `luxTooltipIfTruncated` gesetzt ist, bleibt der Tooltip deaktiviert, solange der Text vollständig in den Host passt. Erst bei visuell abgeschnittenem Inhalt wird der Tooltip aktiviert.
+
+```html
+<div
+  luxTooltip="Langer Text für den Tooltip"
+  [luxTooltipIfTruncated]="true"
+  class="lux-truncated-demo"
+  style="display: block; width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+>
+  Langer Text für den Tooltip
+</div>
+```
 
 Html
 

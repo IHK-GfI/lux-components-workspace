@@ -1,11 +1,24 @@
-@if (tenantLogoSrc) {
-<lux-image
-  [luxImageSrc]="tenantLogoSrc"
-  [luxImageHeight]="actualLuxTenantLogoHeight"
-  class="lux-tenant-logo"
-  [luxAlt]="luxTenantLogoAlt"
-  [luxAriaLabel]="luxTenantLogoAriaLabel"
-  luxTagId="lux-tenant-logo-image"
-  (luxClicked)="onImageClicked($event)"
-></lux-image>
+@if (tenantLogoSrc && !imageLoadError) {
+  <lux-image
+    [luxImageSrc]="tenantLogoSrc"
+    [luxImageHeight]="actualLuxTenantLogoHeight"
+    class="lux-tenant-logo"
+    [luxAlt]="luxTenantLogoAlt"
+    [luxAriaLabel]="luxTenantLogoAriaLabel"
+    luxTagId="lux-tenant-logo-image"
+    (luxClicked)="onImageClicked($event)"
+    (luxImageError)="onImageError()"
+  ></lux-image>
+} @else if (imageLoadError) {
+  <div class="lux-tenant-logo lux-tenant-logo-error-container" [style.height]="actualLuxTenantLogoHeight">
+    <span
+      role="button"
+      tabindex="0"
+      (click)="onImageClicked($event)"
+      (keydown.enter)="onImageClicked($event)"
+      (keydown.space)="onImageClicked($event)"
+      class="lux-tenant-logo-error"
+      >{{ luxTenantLogoAlt }} {{ 'luxc.tenant-logo.error.not-available' | transloco }}</span
+    >
+  </div>
 }

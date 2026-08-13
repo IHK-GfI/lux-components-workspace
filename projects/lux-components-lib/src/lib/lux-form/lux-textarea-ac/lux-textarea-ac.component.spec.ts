@@ -7,9 +7,9 @@ import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxErrorCallbackFnType, ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
 import { LuxTextareaAcComponent } from './lux-textarea-ac.component';
@@ -19,7 +19,13 @@ describe('LuxTextareaAcComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxConsoleService, provideNoopAnimations(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [
+        LuxConsoleService,
+        provideNoopAnimations(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideLuxTranslocoTesting()
+      ]
     }).compileComponents();
   }));
 
@@ -421,6 +427,44 @@ describe('LuxTextareaAcComponent', () => {
       expect(labelEl.nativeElement.innerHTML.trim()).not.toContain('11/50');
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxTextareaA11yComponent>;
+    let testComponent: LuxTextareaA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxTextareaA11yComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -508,4 +552,16 @@ class LuxTextareaCounterLabelComponent {
   hint?: string;
   disabled?: boolean;
   maxLength?: number;
+}
+
+@Component({
+  template: `
+    <lux-textarea-ac luxLabel="Label" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-textarea-ac>
+  `,
+  imports: [LuxTextareaAcComponent]
+})
+class LuxTextareaA11yComponent {
+  disabled = false;
+  readonly = false;
+  required = false;
 }

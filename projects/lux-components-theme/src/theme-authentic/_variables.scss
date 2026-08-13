@@ -50,7 +50,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   --lux-theme-spacing-xxs: 2px;
   --lux-theme-spacing-xs: 4px;
+  --lux-theme-spacing-1-5: 6px;
   --lux-theme-spacing-sm: 8px;
+  --lux-theme-spacing-3: 12px;
   --lux-theme-spacing-md: 16px;
   --lux-theme-spacing-lg: 24px;
   --lux-theme-spacing-xl: 32px;
@@ -62,6 +64,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-font-size-md: 1rem;
   --lux-theme-font-size-lg: 1.125rem;
   --lux-theme-font-size-xl: 1.25rem;
+  --lux-theme-font-size-2xl: 1.5rem;
 
   // Hauptfarben
   --lux-theme-primary-color: #{palettes.$lux-primary-color};
@@ -189,6 +192,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-snackbar-white: #ffffff;
 
   // Accordion
+  --lux-theme-accordion-panel-container-elevation-shadow-width: 1px;
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
   --lux-theme-accordion-header-hover-color-on-neutral: var(--lux-theme-app-content-bg);
@@ -229,6 +233,38 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-badge-on-pink: var(--lux-theme-custom-on-pink);
   --lux-theme-badge-lightblue: var(--lux-theme-custom-lightblue);
   --lux-theme-badge-on-lightblue: var(--lux-theme-custom-on-lightblue);
+
+  // LUX-Badge Muted
+  --lux-theme-badge-muted-red: #ffedea;
+  --lux-theme-badge-muted-on-red: #93000c;
+  --lux-theme-badge-muted-stroke-red: #ffb4ab;
+  --lux-theme-badge-muted-green: #ebffe6;
+  --lux-theme-badge-muted-on-green: #00531d;
+  --lux-theme-badge-muted-stroke-green: #75dc81;
+  --lux-theme-badge-muted-purple: #f4eeff;
+  --lux-theme-badge-muted-on-purple: #4a3597;
+  --lux-theme-badge-muted-stroke-purple: #d2bbff;
+  --lux-theme-badge-muted-blue: #ffffff;
+  --lux-theme-badge-muted-on-blue: #003366;
+  --lux-theme-badge-muted-stroke-blue: #003366;
+  --lux-theme-badge-muted-gray: #f4f0ef;
+  --lux-theme-badge-muted-on-gray: #484646;
+  --lux-theme-badge-muted-stroke-gray: #c9c6c5;
+  --lux-theme-badge-muted-orange: #ffede4;
+  --lux-theme-badge-muted-on-orange: #793100;
+  --lux-theme-badge-muted-stroke-orange: #793100;
+  --lux-theme-badge-muted-black: #ffffff;
+  --lux-theme-badge-muted-on-black: #1c1b1b;
+  --lux-theme-badge-muted-stroke-black: #605e5e;
+  --lux-theme-badge-muted-yellow: #ffefd3;
+  --lux-theme-badge-muted-on-yellow: #5a4400;
+  --lux-theme-badge-muted-stroke-yellow: #f5bf00;
+  --lux-theme-badge-muted-pink: #ffecf2;
+  --lux-theme-badge-muted-on-pink: #8e0051;
+  --lux-theme-badge-muted-stroke-pink: #ffb0ce;
+  --lux-theme-badge-muted-lightblue: #e6f2ff;
+  --lux-theme-badge-muted-on-lightblue: #003366;
+  --lux-theme-badge-muted-stroke-lightblue: #91cdff;
 
   // LUX-Breadcrumb
   --lux-theme-breadcrumb-hover-color: var(--lux-theme-link-plain-hover-color);

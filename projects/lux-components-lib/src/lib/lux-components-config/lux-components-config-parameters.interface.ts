@@ -82,5 +82,6 @@ export interface LuxComponentsConfigParameters {
     url?: string;
     httpSessionTimeHeaderName?: string;
     httpSessionProlongationHeaderName?: string;
+    localStorageKeyName?: string;
   };
 }

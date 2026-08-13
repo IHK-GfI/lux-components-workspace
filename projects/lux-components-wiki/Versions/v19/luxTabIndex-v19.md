@@ -13,9 +13,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung        |
-| -------- | ------------------- |
-| selector | luxTabIndex         |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | luxTabIndex  |
 
 ### @Input
 

@@ -7,13 +7,13 @@
   luxTagIdHandler
   [luxTagId]="luxTagId"
   class="lux-card"
-  [class.lux-cursor]="!showButtons && hasCardAction && !luxDisabled"
+  [class.lux-cursor-pointer]="!showButtons && hasCardAction && !luxDisabled"
 >
   @if (customHeaderComponent) {
     <mat-card-header class="lux-card-header">
       <ng-content select="lux-card-custom-header"></ng-content>
     </mat-card-header>
-  } @else {
+  } @else if (showHeader) {
     <mat-card-header class="lux-card-header">
       @if (showIcon) {
         <div class="lux-card-icon-container">

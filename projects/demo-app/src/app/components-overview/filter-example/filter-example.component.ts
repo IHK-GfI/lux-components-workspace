@@ -20,6 +20,7 @@ import {
   LuxSelectAcComponent,
   LuxTextareaAcComponent,
   LuxThemePalette,
+  LuxTimepickerComponent,
   LuxToggleAcComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
@@ -28,7 +29,7 @@ import { ExampleBaseContentComponent } from '../../example-base/example-base-roo
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
-import { CustomFilterItemComponent } from "./custom-filter-item.component";
+import { CustomFilterItemComponent } from './custom-filter-item.component';
 
 @Component({
   selector: 'lux-filter-example',
@@ -48,6 +49,7 @@ import { CustomFilterItemComponent } from "./custom-filter-item.component";
     LuxInputAcComponent,
     LuxDatetimepickerAcComponent,
     LuxDatepickerAcComponent,
+    LuxTimepickerComponent,
     LuxAutocompleteAcComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -55,7 +57,7 @@ import { CustomFilterItemComponent } from "./custom-filter-item.component";
     ExampleBaseAdvancedOptionsComponent,
     JsonPipe,
     CustomFilterItemComponent
-]
+  ]
 })
 export class FilterExampleComponent implements OnInit, OnDestroy {
   private mediaQuery = inject(LuxMediaQueryObserverService);
@@ -132,6 +134,7 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
         },
         datepicker: '2020-07-21T00:00:00.000Z',
         datetimepicker: '2020-07-21T12:15:00.000Z',
+        combinedDateTime: '2020-07-21T14:30:00.000Z',
         singleSelect: {
           label: 'Single 4711',
           value: '4711'
@@ -173,6 +176,8 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   datepickerHidden = false;
   datetimepickerDisabled = false;
   datetimepickerHidden = false;
+  combinedDateTimeDisabled = false;
+  combinedDateTimeHidden = false;
   singleSelectDisabled = false;
   singleSelectHidden = false;
   multiSelectDisabled = false;

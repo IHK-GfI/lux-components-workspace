@@ -92,6 +92,32 @@
             [luxFilterHidden]="datetimepickerHidden"
             luxFilterItem
           ></lux-datetimepicker-ac>
+          <div class="lux-col-span-12 lt-md:lux-col-span-1">
+            <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
+              <lux-datepicker-ac
+                class="lux-flex-auto"
+                luxLabel="Datepicker"
+                luxName="filter_datepicker_combined"
+                luxControlBinding="combinedDateTime"
+                [luxFilterDisabled]="combinedDateTimeDisabled"
+                [luxFilterHidden]="combinedDateTimeHidden"
+                [luxReferenceControl]="combinedTimepicker"
+                luxFilterItem
+                #combinedDatepicker
+              ></lux-datepicker-ac>
+              <lux-timepicker
+                class="lux-flex-auto"
+                luxLabel="Timepicker"
+                luxName="filter_timepicker_combined"
+                luxControlBinding="combinedDateTime"
+                [luxFilterDisabled]="combinedDateTimeDisabled"
+                [luxFilterHidden]="combinedDateTimeHidden"
+                [luxReferenceControl]="combinedDatepicker"
+                luxFilterItem
+                #combinedTimepicker
+              ></lux-timepicker>
+            </div>
+          </div>
           <lux-select-ac
             class="lux-col-span-6 lt-md:lux-col-span-1"
             luxLabel="Single-Select"
@@ -241,6 +267,32 @@
               [luxFilterHidden]="datetimepickerHidden"
               luxFilterItem
             ></lux-datetimepicker-ac>
+            <div>
+              <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
+                <lux-datepicker-ac
+                  class="lux-flex-auto"
+                  luxLabel="Datepicker + Timepicker-Ac (Datum)"
+                  luxName="filter_datepicker_combined_ac"
+                  luxControlBinding="combinedDateTime"
+                  [luxFilterDisabled]="combinedDateTimeDisabled"
+                  [luxFilterHidden]="combinedDateTimeHidden"
+                  [luxReferenceControl]="combinedTimepickerAc"
+                  luxFilterItem
+                  #combinedDatepickerAc
+                ></lux-datepicker-ac>
+                <lux-timepicker
+                  class="lux-flex-auto"
+                  luxLabel="Datepicker + Timepicker-Ac (Uhrzeit)"
+                  luxName="filter_timepicker_combined_ac"
+                  luxControlBinding="combinedDateTime"
+                  [luxFilterDisabled]="combinedDateTimeDisabled"
+                  [luxFilterHidden]="combinedDateTimeHidden"
+                  [luxReferenceControl]="combinedDatepickerAc"
+                  luxFilterItem
+                  #combinedTimepickerAc
+                ></lux-timepicker>
+              </div>
+            </div>
             <lux-select-ac
               luxLabel="Single-Select-Ac"
               luxControlBinding="singleSelect"
@@ -410,6 +462,13 @@
       <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
         <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="datetimepickerDisabled" [luxNoLabels]="true"></lux-toggle-ac>
         <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="datetimepickerHidden" [luxNoLabels]="true"></lux-toggle-ac>
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex-auto lux-pb-3">Datepicker + Timepicker (kombiniert)</div>
+      <div class="lux-flex lt-lg:lux-flex-col gt-md:lux-gap-16">
+        <lux-toggle-ac luxLabel="luxFilterDisabled" [(luxChecked)]="combinedDateTimeDisabled" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxFilterHidden" [(luxChecked)]="combinedDateTimeHidden" [luxNoLabels]="true"></lux-toggle-ac>
       </div>
     </div>
     <div class="lux-flex lux-flex-col">

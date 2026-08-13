@@ -1,6 +1,6 @@
 <h1 class="lux-sr-only">Beispiel für den Master-Detail</h1>
 <lux-master-detail-ac
-  class="custom-master"
+  class="lux-flex lux-flex-auto"
   [luxEmptyIconDetail]="configuration.emptyIconDetail"
   [luxEmptyIconMaster]="configuration.emptyIconMaster"
   [luxEmptyIconDetailSize]="configuration.emptyIconDetailSize"
@@ -57,6 +57,15 @@
           <div class="custom-header-example">
             <div class="title">{{ master.title }}</div>
             <div class="subtitle">{{ master.subtitle }}</div>
+            <lux-input-ac
+              luxAriaLabel="Lorem ipsum"
+              luxAriaLabelSelector="input"
+              luxPlaceholder="Input"
+              class="lux-min-width-36 lux-max-width-36"
+              [luxDense]="true"
+              [luxNoLabels]="true"
+              [(luxValue)]="master.title"
+            ></lux-input-ac>
           </div>
         }
       </ng-template>

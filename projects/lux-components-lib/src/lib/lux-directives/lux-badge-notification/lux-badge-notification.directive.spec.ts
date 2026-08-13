@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxBadgeNotificationDirective } from './lux-badge-notification.directive';
 
 describe('LuxBadgeNotificationDirective', () => {

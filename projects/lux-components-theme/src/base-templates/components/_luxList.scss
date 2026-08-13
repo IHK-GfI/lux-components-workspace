@@ -78,7 +78,7 @@ lux-list {
       }
 
       &:not(.lux-list-item-selected) {
-        mat-card[class~="lux-cursor"]:not([class*="mat-elevation-z"]) {
+        mat-card[class~="lux-cursor-pointer"]:not([class*="mat-elevation-z"]) {
           @include luxfocus.lux-selectable-mixin;
 
           &:hover {

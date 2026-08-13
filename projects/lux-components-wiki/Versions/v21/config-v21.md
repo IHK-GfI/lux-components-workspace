@@ -46,7 +46,7 @@ Dieser Service sollte dann vom Entwickler genutzt werden, wenn die Konfiguration
 | DEFAULT_CONFIG (Property)                                  | LuxComponentsConfigParameters                | Statisches Readonly-Objekt, welches die Standardkonfiguration beinhaltet. Wenn keine Konfiguration übergeben wird, wird diese benutzt. Wenn die übergebene Konfiguration bestimmte Werte nicht setzt, werden diese aus der DEFAULT_CONFIG geladen. |
 | config (Property)                                          | Observable \<LuxComponentsConfigParameters\> | Gibt ein Observable zurück, welches das aktuelle/neueste Konfigurationsobjekt beinhaltet.                                                                                                                                                          |
 | currentConfig                                              | LuxComponentsConfigParameters                | Gibt direkt das aktuelle Konfigurationsobjekt zurück.                                                                                                                                                                                              |
-| isLabelUppercaseForSelector(selector: string)              | boolean                                      | Gibt wieder, ob die Labels für bestimmte Komponenten uppercase dargestellt werden sollen und ob das auch auf die Komponente mit dem übergebenen Selektor zutrifft.                                                                                 |
+| isLabelUppercaseForSelector(selector: string)              | boolean                                      | Gibt zurück, ob die Labels für bestimmte Komponenten uppercase dargestellt werden sollen und ob das auch auf die Komponente mit dem übergebenen Selektor zutrifft.                                                                                 |
 | updateConfiguration(config: LuxComponentsConfigParameters) | void                                         | Ersetzt die aktuelle Konfiguration mit der übergebenen. Auch hier wird bei fehlenden Werten die Standard-Konfiguration zu Rate gezogen.                                                                                                            |
 
 ## Classes / Interfaces
@@ -55,7 +55,7 @@ Dieser Service sollte dann vom Entwickler genutzt werden, wenn die Konfiguration
 
 | Property                            | Typ     | Beschreibung                                                                                                                                                                                |
 | ----------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| generateLuxTagIds?                  | boolean | Bestimmt, ob die LuxTagIds (und dazugehörende) Warnungen generiert werden.                                                                                                                  |
+| generateLuxTagIds?                  | boolean | Bestimmt, ob die LuxTagIds (und dazugehörenden) Warnungen generiert werden.                                                                                                                  |
 | displayLuxConsoleLogs?              | boolean | Bestimmt, ob die Ausgaben des LuxConsoleService in die Developer-Console des Browsers geschrieben werden.                                                                                   |
 | lookupServiceUrl?                   | string  | Bestimmt den Basepfad des Lookup-Services für die LookupComponents.                                                                                                                         |
 | labelConfiguration?                 | Object  | Bestimmt, ob die Labels für LuxButtons, LuxLinks, LuxMenuItems, LuxStepper, LuxSideNavItem und LuxTabs immer Uppercase dargestellt werden. Siehe [labelConfiguration](#labelconfiguration). |
@@ -69,12 +69,16 @@ Dieser Service sollte dann vom Entwickler genutzt werden, wenn die Konfiguration
 
 | Property      | Typ     | Beschreibung                                                      |
 | ------------- | ------- | ----------------------------------------------------------------- |
-| fixedDesktop? | boolean | Gibt an, ob der Footer in der Desktopansicht fixiert seien soll.  |
-| fixedMobile?  | boolean | Gibt an, ob der Footer in der mobilen Ansicht fixiert seien soll. |
+| fixedDesktop? | boolean | Gibt an, ob der Footer in der Desktopansicht fixiert sein soll.  |
+| fixedMobile?  | boolean | Gibt an, ob der Footer in der mobilen Ansicht fixiert sein soll. |
 
 Wichtig!
 
-Wenn der Footer _nicht_ fixiert ist, kann es auf Seiten mit wenig Inhalt dazu kommen, dass der Footer hoch rutscht (siehe Abbildung unten).
+D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig Inhalt trotzdem am unteren Rand angezeigt wird.
+
+Wichtig!
+
+Wenn der Footer _nicht_ fixiert ist, kann es auf Seiten mit wenig Inhalt dazu kommen, dass der Footer hochrutscht (siehe Abbildung unten).
 D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig Inhalt trotzdem am unteren Rand angezeigt wird.
 
 ![Verrutschter App-Footer](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐app‐footer-v21-img-03.png)
@@ -83,7 +87,7 @@ D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig 
 
 | Property        | Typ    | Beschreibung                                                         |
 | --------------- | ------ | -------------------------------------------------------------------- |
-| throttleTimeMs? | number | Verhindert, dass ein Button mehrfach hinter einander ausgelöst wird. |
+| throttleTimeMs? | number | Verhindert, dass ein Button mehrfach hintereinander ausgelöst wird. |
 
 #### rippleConfiguration
 
@@ -92,24 +96,24 @@ D.h. alle Seiten sollten so gebaut werden, dass der Footer auf Seiten mit wenig 
 | enterDuration | number  | Definiert die Dauer der Eingangsanimationen.                                                      |
 | exitDuration  | number  | Definiert die Dauer der Ausgangsanimationen.                                                      |
 | color?        | string  | Enthält die Farbe (beliebiger CSS-gültiger Wert) der Ripples.                                     |
-| centered?     | boolean | Bestimmt ob die Animationen vom Zentrum der Ripple-Targets ausgehen oder vom Mausklick.           |
-| radius?       | number  | Bestimmt den Radius der Animationen. Wenn 0, werden die Begrenzungen der Ripple-Targets genommen. |
+| centered?     | boolean | Bestimmt, ob die Animationen vom Zentrum der Ripple-Targets ausgehen oder vom Mausklick.           |
+| radius?       | number  | Bestimmt den Radius der Animationen. Wenn 0 ist, werden die Begrenzungen der Ripple-Targets genommen. |
 | disabled?     | boolean | Deaktiviert die LuxRipples.                                                                       |
-| unbounded?    | boolean | Bestimmt ob die Animationen über die Ripple-Targets hinausgehen oder nicht.                       |
+| unbounded?    | boolean | Bestimmt, ob die Animationen über die Ripple-Targets hinausgehen oder nicht.                       |
 
 #### labelConfiguration
 
 | Property     | Typ      | Beschreibung                                                                                                                                                                              |
 | ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | allUppercase | boolean  | Bestimmt, ob die Labels für LuxButtons, LuxLinks, LuxMenuItems, LuxStepper, LuxSideNavItem und LuxTabs immer Uppercase dargestellt werden.                                                |
-| notAppliedTo | string[] | Definiert ob alle o.g. Komponenten ihre Labels uppercase darstellen. Hier können Ausnahmen eingetragen werden. Dazu einfach den Selektor der Komponente hier eintragen. (z.B. 'lux-link') |
+| notAppliedTo | string[] | Definiert, ob alle o.g. Komponenten ihre Labels uppercase darstellen. Hier können Ausnahmen eingetragen werden. Dazu einfach den Selektor der Komponente hier eintragen. (z.B. 'lux-link') |
 
 #### viewConfiguration
 
 | Property      | Typ     | Beschreibung                                                                                                                   |
 | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | centeredView  | boolean | Bestimmt, ob der Inhalt App-Headers-Ac und des App-Footers begrenzt und zentriert angezeigt wird, default = false.             |
-| centeredWidth | string  | Definiert die Max-Width (default = 1500px) des Inhaltes des App-Header-Ac und des App-Footers, falls centeredView = true gilt. |
+| centeredWidth | string  | Definiert die Max-Width (default = 1500px) des Inhalts des App-Header-Ac und des App-Footers, falls centeredView = true gilt. |
 
 #### tenantLogoLookupServiceUrl
 
@@ -179,7 +183,7 @@ Die _assets_-Abschnitte in der _angular.json_ ergänzen:
 ]
 ```
 
-Den foldenden Code in der _styles.scss_ ergänzen:
+Den folgenden Code in der _styles.scss_ ergänzen:
 
 ```scss
 @use "@ihk-gfi/lux-components-theme/src/base-templates/common/luxfonts" as luxfonts;
@@ -247,7 +251,7 @@ $basepath: "https://[my-domain]/lux-components/icons-and-fonts/v1.11.0/";
 @include luxfonts.web-fonts($basepath);
 ```
 
-D.h. die Icons and Fonts müssen nicht mit der App ausgeliefert werden. Sie werden direkt vom CDN-Server geladen.
+D.h. die Icons und Fonts müssen nicht mit der App ausgeliefert werden. Sie werden direkt vom CDN-Server geladen.
 
 Im CDN müssen die Icons in den Unterordner _assets_ angelegt werden.
 Z.B. _`https://[my-domain].de/lux-components/icons-and-fonts/v1.11.0/assets/icons/Interface-Essentials/Validation/interface-validation-check-circle--checkmark-addition-circle-success-check-validation-add-form.svg`_
@@ -275,7 +279,7 @@ const myConfiguration: LuxComponentsConfigParameters = {
   },
   cardExpansionAnimationActive: true,
   viewConfiguration: {
-    centerdView: true,
+    centeredView: true,
     centeredWidth: '1000px',
   }
 };

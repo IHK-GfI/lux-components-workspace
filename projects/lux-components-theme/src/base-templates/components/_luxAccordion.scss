@@ -3,6 +3,11 @@
 
 // Accordion
 lux-accordion {
+  .mat-accordion {
+    display: block;
+    padding: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
+  }
+
   @include mat.expansion-overrides(
     (
       container-text-color: var(--lux-theme-dark-primary-text)
@@ -20,7 +25,7 @@ lux-accordion {
           header-description-color: var(--lux-theme-accordion-header-color-on-primary),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-primary),
           header-hover-state-layer-color: var(--lux-theme-accordion-header-hover-color-on-primary),
-          header-focus-state-layer-color: var(--lux-theme-accordion-header-focus-color-on-primary),
+          header-focus-state-layer-color: var(--lux-theme-accordion-header-focus-color-on-primary)
         )
       );
     }
@@ -36,7 +41,7 @@ lux-accordion {
           header-description-color: var(--lux-theme-accordion-header-color-on-accent),
           header-indicator-color: var(--lux-theme-accordion-header-color-on-accent),
           header-hover-state-layer-color: var(--lux-theme-accordion-header-hover-color-on-accent),
-          header-focus-state-layer-color: var(--lux-theme-accordion-header-focus-color-on-accent),
+          header-focus-state-layer-color: var(--lux-theme-accordion-header-focus-color-on-accent)
         )
       );
     }
@@ -89,7 +94,8 @@ lux-panel {
       header-disabled-state-text-color: var(--lux-theme-dark-disabled-text),
       header-hover-state-layer-color: var(--lux-theme-accordion-header-hover-color-on-neutral),
       container-shape: var(--lux-theme-app-border-radius),
-      container-elevation-shadow: 0 0 0 1px var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
+      container-elevation-shadow: 0 0 0 var(--lux-theme-accordion-panel-container-elevation-shadow-width)
+        var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant))
     )
   );
 
@@ -132,6 +138,19 @@ lux-panel {
   .lux-expansion-panel-header:not([aria-disabled="true"]) {
     &:focus-visible {
       @include luxfocus.focus-dark-mixin-inline;
+    }
+  }
+
+  // Ränder für Panels außerhalb von Accordions
+  &:not(lux-accordion lux-panel) {
+    padding-left: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
+    padding-right: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
+
+    &:first-of-type {
+      padding-top: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
+    }
+    &:last-of-type {
+      padding-bottom: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
     }
   }
 }

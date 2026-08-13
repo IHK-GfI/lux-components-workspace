@@ -147,6 +147,6 @@ Html
 
 Allgemein
 Diese Komponente zeigt eine navigierbare Reihe von Nachrichten an. Jede einzelne Nachricht besitzt einen Text und wahlweise ein Icon sowie eine Farbe (siehe LuxBackgroundColorsEnum).
-Es ist außerdem möglich mehrere Reihen von Nachrichten untereinander anzuzeigen.
+Es ist außerdem möglich, mehrere Reihen von Nachrichten untereinander anzuzeigen.
 
 [lux-http-error](lux‐http‐error-v21) nutzt diese Komponente zur Darstellung von Fehlermeldungen.

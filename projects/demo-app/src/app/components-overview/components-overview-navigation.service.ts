@@ -3,11 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { LuxThemeService } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import {
-  DemoMarkerType,
-  DemoNavigationComponentEntry,
-  getDemoMarkerLabel
-} from '../base/status-marker/status-marker.model';
+import { DemoMarkerType, DemoNavigationComponentEntry, getDemoMarkerLabel } from '../base/status-marker/status-marker.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +55,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('action', 'Menu', DemoMarkerType.Updated),
     this.create('common', 'Badge'),
     this.create('common', 'Message-Box'),
+    this.create('common', 'Paginator', DemoMarkerType.New),
     this.create('common', 'Progress'),
     this.create('common', 'Spinner'),
     this.create('common', 'Table'),
@@ -78,6 +75,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('form', 'Chips-Ac'),
     this.create('form', 'Datepicker-Ac'),
     this.create('form', 'Datetimepicker-Ac'),
+    this.create('form', 'Timepicker', DemoMarkerType.New),
     this.create('form', 'File-Input-Ac'),
     this.create('form', 'File-List'),
     this.create('form', 'File-Upload'),
@@ -95,8 +93,13 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('layout', 'Card'),
     this.create('layout', 'Checkbox-Container-Ac'),
     this.create('layout', 'Divider'),
-    this.create('layout', 'List'),
-    this.create('layout', 'Master-Detail-Ac'),
+    this.create('layout', 'List', DemoMarkerType.Updated),
+    {
+      onclick: () => this.router.navigate(['components-overview/master-detail-ac']),
+      icon: this.moduleIcons.get('layout')!,
+      label: 'Master-Detail-Ac',
+      moduleName: 'layout'
+    },
     this.create('layout', 'Stepper'),
     this.create('layout', 'Stepper-Large'),
     this.create('layout', 'Storage'),
@@ -184,13 +187,12 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
   }
 
   get filteredComponents() {
-    return this.components.filter(
-      (component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName)
-    );
+    return this.components.filter((component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName));
   }
 
   getFilteredComponents(filterValue: string) {
-    return this.filteredComponents.filter((component) => component.label.toLowerCase().includes(filterValue.toLowerCase()));
+    const newValue = filterValue ? filterValue.trim().toLowerCase() : '';
+    return this.filteredComponents.filter((component) => component.label.toLowerCase().includes(newValue));
   }
 
   getMarkerLabel(markerType?: DemoMarkerType) {

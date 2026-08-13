@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 // prettier-ignore
 export const COMPONENT_OVERVIEW_ROUTES: Routes = [
   { path: '', loadComponent: () => import('./components-overview.component').then(m => m.ComponentsOverviewComponent) },
+  { path: 'master-detail-ac', loadComponent: () => import('./master-detail-authentic-example/master-detail-authentic-example.component').then(m => m.MasterDetailAuthenticExampleComponent) },
   {
     path: 'example', loadComponent: () => import('../example-base/example-base-root/example-root.component').then(m => m.ExampleRootComponent), children: [
       { path: 'accordion', loadComponent: () => import('./accordion-example/accordion-example.component').then(m => m.AccordionExampleComponent) },
@@ -16,6 +17,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'chips-ac', loadComponent: () => import('./chip-authentic-example/chip-authentic-example.component').then(m => m.ChipAuthenticExampleComponent) },
       { path: 'datepicker-ac', loadComponent: () => import('./datepicker-authentic-example/datepicker-authentic-example.component').then(m => m.DatepickerAuthenticExampleComponent) },
       { path: 'datetimepicker-ac', loadComponent: () => import('./datetimepicker-authentic-example/datetimepicker-authentic-example.component').then(m => m.DatetimepickerAuthenticExampleComponent) },
+      { path: 'timepicker', loadComponent: () => import('./timepicker-authentic-example/timepicker-authentic-example.component').then(m => m.TimepickerAuthenticExampleComponent) },
       { path: 'divider', loadComponent: () => import('./divider-example/divider-example.component').then(m => m.DividerExampleComponent) },
       { path: 'error-page', loadComponent: () => import('./errorpage-example/errorpage-example.component').then(m => m.ErrorpageExampleComponent) },
       { path: 'http-error', loadComponent: () => import('./http-error-example/http-error-example.component').then(m => m.HttpErrorExampleComponent) },
@@ -35,6 +37,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'textarea-ac', loadComponent: () => import('./textarea-authentic-example/textarea-authentic-example.component').then(m => m.TextareaAuthenticExampleComponent) },
       { path: 'tooltip', loadComponent: () => import('./tooltip-example/tooltip-example.component').then(m => m.TooltipExampleComponent) },
       { path: 'popup', loadComponent: () => import('./popup-example/popup-example.component').then(m => m.PopupExampleComponent) },
+      { path: 'paginator', loadComponent: () => import('./paginator-example/paginator-example.component').then(m => m.PaginatorExampleComponent) },
       { path: 'lookup-combobox-ac', loadComponent: () => import('./lookup-examples/lookup-combobox-ac-example/lookup-combobox-ac-example.component').then(m => m.LookupComboboxAcExampleComponent) },
       { path: 'lookup-autocomplete-ac', loadComponent: () => import('./lookup-examples/lookup-autocomplete-ac-example/lookup-autocomplete-ac-example.component').then(m => m.LookupAutocompleteAcExampleComponent) },
       { path: 'lookup-label', loadComponent: () => import('./lookup-examples/lookup-label-example/lookup-label-example.component').then(m => m.LookupLabelExampleComponent) },
@@ -65,7 +68,6 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'input-ac', loadComponent: () => import('./input-authentic-example/input-authentic-example.component').then(m => m.InputAuthenticExampleComponent) },
       { path: 'checkbox-ac', loadComponent: () => import('./checkbox-authentic-example/checkbox-authentic-example.component').then(m => m.CheckboxAuthenticExampleComponent) },
       { path: 'tile-overview', loadComponent: () => import('./tile-authentic-example/overview-example/overview-example.component').then(m => m.OverviewExampleComponent) },
-      { path: 'master-detail-ac', loadComponent: () => import('./master-detail-authentic-example/master-detail-authentic-example.component').then(m => m.MasterDetailAuthenticExampleComponent) },
       { path: 'checkbox-container-ac', loadComponent: () => import('./checkbox-container-ac-example/checkbox-container-ac-example.component').then(m => m.CheckboxContainerAcExampleComponent) },
       { path: 'textbox', loadComponent: () => import('./textbox-example/textbox-example.component').then(m => m.TextboxExampleComponent) },
       { path: 'tenant-logo', loadComponent: () => import('./tenant-logo-example/tenant-logo-example.component').then(m => m.TenantLogoExampleComponent) },

@@ -12,68 +12,43 @@
     </lux-toggle-ac>
     <h3>Allgemeine Properties</h3>
     <div class="lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
-      <lux-input-ac
-        luxName="dialog_width"
-        luxLabel="width"
-        [(luxValue)]="dialogConfig.width"
-        [luxNoBottomLabel]="true"
-      >
+      <lux-input-ac luxName="dialog_width" luxLabel="width" [(luxValue)]="dialogConfig.width" [luxNoBottomLabel]="true"> </lux-input-ac>
+      <lux-input-ac luxName="dialog_height" luxLabel="height" [(luxValue)]="dialogConfig.height" [luxNoBottomLabel]="true"> </lux-input-ac>
+      <lux-input-ac luxName="dialog_minWidth" luxLabel="minWidth" [(luxValue)]="dialogConfig.minWidth" [luxNoBottomLabel]="true">
       </lux-input-ac>
-      <lux-input-ac
-        luxName="dialog_height"
-        luxLabel="height"
-        [(luxValue)]="dialogConfig.height"
-        [luxNoBottomLabel]="true"
-      >
+      <lux-input-ac luxName="dialog_minHeight" luxLabel="minHeight" [(luxValue)]="dialogConfig.minHeight" [luxNoBottomLabel]="true">
       </lux-input-ac>
-      <lux-input-ac
-        luxName="dialog_minWidth"
-        luxLabel="minWidth"
-        [(luxValue)]="dialogConfig.minWidth"
-        [luxNoBottomLabel]="true"
-      >
+      <lux-input-ac luxName="dialog_maxWidth" luxLabel="maxWidth" [(luxValue)]="dialogConfig.maxWidth" [luxNoBottomLabel]="true">
       </lux-input-ac>
-      <lux-input-ac
-        luxName="dialog_minHeight"
-        luxLabel="minHeight"
-        [(luxValue)]="dialogConfig.minHeight"
-        [luxNoBottomLabel]="true"
-      >
-      </lux-input-ac>
-      <lux-input-ac
-        luxName="dialog_maxWidth"
-        luxLabel="maxWidth"
-        [(luxValue)]="dialogConfig.maxWidth"
-        [luxNoBottomLabel]="true"
-      >
-      </lux-input-ac>
-      <lux-input-ac
-        luxName="dialog_maxHeight"
-        luxLabel="maxHeight"
-        [(luxValue)]="dialogConfig.maxHeight"
-        [luxNoBottomLabel]="true"
-      >
+      <lux-input-ac luxName="dialog_maxHeight" luxLabel="maxHeight" [(luxValue)]="dialogConfig.maxHeight" [luxNoBottomLabel]="true">
       </lux-input-ac>
     </div>
     @if (!useContentTemplate) {
-    <lux-input-ac
-      luxName="dialog_panelClass"
-      luxLabel="panelClass"
-      [luxValue]="dialogConfig.panelClass"
-      (luxBlur)="updatePanelClass(panelClassInput.luxValue)"
-      #panelClassInput
-    >
-      <lux-form-hint>
-        Diese Property eventuelle CSS-Klassen für den Dialog fest.<br />
-        Für das Beispiel die Werte komma-getrennt eintragen.<br /><br />
-        Um die Klassen zu prüfen, den Dialog öffnen und in den Dev-Tools nach dem Element "cdk-overlay-pane" suchen.
-      </lux-form-hint>
-    </lux-input-ac>
+      <lux-input-ac
+        luxName="dialog_panelClass"
+        luxLabel="panelClass"
+        [luxValue]="dialogConfig.panelClass"
+        (luxBlur)="updatePanelClass(panelClassInput.luxValue)"
+        #panelClassInput
+      >
+        <lux-form-hint>
+          Diese Property eventuelle CSS-Klassen für den Dialog fest.<br />
+          Für das Beispiel die Werte komma-getrennt eintragen.<br /><br />
+          Um die Klassen zu prüfen, den Dialog öffnen und in den Dev-Tools nach dem Element "cdk-overlay-pane" suchen.
+        </lux-form-hint>
+      </lux-input-ac>
     }
     <lux-toggle-ac
       luxLabel="disableClose"
       luxHint="Wenn aktiv, kann der Dialog nur über die Actions geschlossen werden."
       [(luxChecked)]="dialogConfig.disableClose"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="disableBackdropAndEscClose"
+      luxHint="Wenn aktiv, werden Backdrop-Klicks und die ESC-Taste ignoriert. Der X-Schließen-Button bleibt jedoch sichtbar."
+      [(luxChecked)]="dialogConfig.disableBackdropAndEscClose"
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
@@ -112,15 +87,16 @@
     >
     </lux-toggle-ac>
     @if (useContentTemplate) {
-    <pre class="lux-label">{{ contentTemplateString }}</pre>
-    } @if (!useContentTemplate) {
-    <lux-input-ac
-      luxName="dialog_content"
-      luxLabel="content"
-      luxHint="Über diese Eigenschaft der eigentliche Inhalt des Dialogs bestimmt."
-      [(luxValue)]="dialogConfig.content"
-    >
-    </lux-input-ac>
+      <pre class="lux-label">{{ contentTemplateString }}</pre>
+    }
+    @if (!useContentTemplate) {
+      <lux-input-ac
+        luxName="dialog_content"
+        luxLabel="content"
+        luxHint="Über diese Eigenschaft der eigentliche Inhalt des Dialogs bestimmt."
+        [(luxValue)]="dialogConfig.content"
+      >
+      </lux-input-ac>
     }
     <lux-accordion luxMode="flat" [luxMulti]="true">
       <lux-panel>

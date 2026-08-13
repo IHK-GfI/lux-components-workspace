@@ -13,17 +13,19 @@ applyTo: '**'
 - Use inject-Function instead of constructor injection where possible for better tree-shaking and simpler code.
 - Use ChangeDetectionStrategy.OnPush change detection for all new components for better performance; use ChangeDetectorRef.markForCheck() when manual checks are needed.
 - Add unit tests for all new components/services using Jasmine/Karma; place tests alongside implementation files with .spec.ts suffix.
+- **Accessibility testing**: Add axe-core tests to all components for automated accessibility checks. Use the `LuxA11yTestHelper` from `@ihk-gfi/lux-components/test-utils` in spec files (do not call `jasmine-axe`/`axe-core` directly). Example: call `LuxA11yTestHelper.addA11yMatchers()` once per spec file (e.g. in `beforeAll`), then `await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement)` in each test. See LuxButtonComponent.spec.ts for reference implementation.
 - The demo app consumes the library and themes; it uses transloco for translations, and theme CSS from dist/theme (see assets in [angular.json](angular.json)).
 - Themes are CSS variables + classes (Material Theme 3). Variables live under projects/lux-components-theme/src/<themeName>/\_variables\*.scss.
 - Update scripts are Angular schematics in projects/lux-components-update (see README).
-- Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>.
+- Update Wiki-Doku of the lux-components-lib in folder projects\lux-components-wiki\Versions\<version>. Check if all Inputs and Outputs are documented.
 - Update the demo page of the component in the folder projects\demo-app\src\app\components-overview\<component-name>.
+- Make a spell check for changed .md files (e.g. README, Wiki-Doku).
 
 ## Key workflows (Windows-friendly)
 
 - Install: npm install (Node >= 20.19; see package.json engines).
 - Run demo: npm run start:demo (checks demo conditions, then ng serve).
-- Dev watch loop: npm run start:dev (builds library + theme in watch mode, then starts demo when dist outputs exist).
+- Dev watch loop (start dev server): npm run start:dev (builds library + theme in watch mode, then starts demo when dist outputs exist).
 - Build all packages: npm run pack:all (cleans dist, then builds theme, library, updater, demo).
 - Tests: npm run test:components (lint + Karma headless for library), npm run test:all (demo/theme/updater smoke tests).
 
@@ -37,4 +39,5 @@ applyTo: '**'
 ## Integration points
 
 - Dependencies include Angular 21, Angular Material, Transloco, DOMPurify, marked, ngx-cookie-service, uuid.
+- Accessibility: axe-core and jasmine-axe are configured for automated accessibility testing in Karma. See [axe-core documentation](https://github.com/dequelabs/axe-core) for WCAG compliance details.
 - External icon + font package: @ihk-gfi/lux-components-icons-and-fonts (license notes in root README).

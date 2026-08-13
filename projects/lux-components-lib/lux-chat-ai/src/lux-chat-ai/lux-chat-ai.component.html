@@ -1,13 +1,10 @@
 @if(luxChatData){
     <lux-chat
         [luxChatData]="luxChatData"
-        [luxChatTitle]="luxChatData.title"
-        luxChatSubTitle="Erstellt am:  {{luxChatData.createdAt | date:'dd.MM HH:mm'}}"
         [luxChatUserName]="luxUserName()"
         (luxChatOutput)="onMessageEntered($event)"
         [luxAutoFocus]="luxAutoFocus()"
-        [showFullscreenButton]="showFullscreenButton()"
-        [showCloseButton]="showCloseButton()"
+        [chatPopupMode]="chatPopupMode()"
         (luxChatTitleClicked)="onChatTitleClicked()"
         #luxChat
     >

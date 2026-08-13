@@ -2,6 +2,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   DoCheck,
@@ -18,7 +19,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MAT_PAGINATOR_DEFAULT_OPTIONS, MatPaginator, MatPaginatorDefaultOptions, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import {
   MatCell,
@@ -36,6 +36,7 @@ import {
   MatRowDef,
   MatTable
 } from '@angular/material/table';
+import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { of, Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
@@ -50,7 +51,6 @@ import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
-import { LuxPaginatorIntl } from '../../lux-util/lux-paginator-intl';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxProgressComponent } from '../lux-progress/lux-progress.component';
 import { ILuxTableColumnVisibilityStore, LuxTableLocalColumnVisibilityStore } from './lux-table-column-visibility-store';
@@ -65,17 +65,9 @@ export interface LuxTableDoubleClickEventType<T> {
   rowItem: T;
 }
 
-const customPaginatorOptions: MatPaginatorDefaultOptions = {
-  formFieldAppearance: 'fill'
-};
-
 @Component({
   selector: 'lux-table',
   templateUrl: './lux-table.component.html',
-  providers: [
-    { provide: MatPaginatorIntl, useClass: LuxPaginatorIntl },
-    { provide: MAT_PAGINATOR_DEFAULT_OPTIONS, useValue: customPaginatorOptions }
-  ],
   imports: [
     LuxProgressComponent,
     NgClass,
@@ -104,7 +96,7 @@ const customPaginatorOptions: MatPaginatorDefaultOptions = {
     MatRow,
     MatFooterRowDef,
     MatFooterRow,
-    MatPaginator,
+    LuxPaginatorComponent,
     LuxTooltipDirective,
     LuxIconComponent,
     TranslocoPipe
@@ -116,6 +108,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private liveAnnouncer = inject(LiveAnnouncer);
   private tService = inject(TranslocoService);
   private defaultColumnVisibilityStore = inject(LuxTableLocalColumnVisibilityStore);
+  private cdr = inject(ChangeDetectorRef);
 
   static AUTO_PAGINATION_START = 100; // 100 Elemente bis automatisch die Pagination aktiviert wird
 
@@ -139,7 +132,6 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private columnSubscriptions: Subscription[] = [];
   private tableColumnsChangedSubscription?: Subscription;
   private sortChangedSubscription?: Subscription;
-  private paginatorPageSubscription?: Subscription;
   private selectedSubscription?: Subscription;
 
   filtered$: Subject<string> = new Subject<string>();
@@ -181,7 +173,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   @Output() luxDoubleClicked = new EventEmitter<{ event: MouseEvent; rowItem: T }>();
   @Output() luxHiddenColumnsChange = new EventEmitter<string[]>();
 
-  @ViewChild(MatPaginator, { static: true }) paginator?: MatPaginator;
+  @ViewChild(LuxPaginatorComponent, { static: true }) paginator?: LuxPaginatorComponent;
   @ViewChild(MatSort, { static: true }) sort?: MatSort;
   @ViewChild('paginator', { read: ElementRef, static: true }) paginatorElement?: ElementRef;
   @ViewChild('filter', { read: ElementRef, static: true }) filterElement?: ElementRef;
@@ -196,9 +188,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   @Input() set luxHttpDAO(httpDAO: ILuxTableHttpDao | undefined) {
     this._luxHttpDAO = httpDAO;
     if (!this.init) {
-      if (this.paginator) {
-        this.paginator.pageIndex = 0;
-      }
+      this.resetPaginatorToFirstPage();
       this.httpRequestConf.page = 0;
       this.clearSelected();
       this.emitSelectedEvent();
@@ -256,6 +246,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     data = data ? data : [];
     this.dataSource.data = data;
     if (this.dataSource) {
+      // Sofort setzen, damit die noData-Zeile bereits im ersten CD-Zyklus korrekt
+      // ausgeblendet wird, wenn Daten über Signals (z.B. rxResource) geladen werden (Issue #217).
+      // updateDataSourceAttributes() setzt totalElements nach dem setTimeout ebenfalls
+      // (dort wird auch Pagination/Sort berücksichtigt).
+      if (!this.luxHttpDAO) {
+        this.dataSource.totalElements = data.length;
+      }
       setTimeout(() => {
         this.updateDataSourceAttributes(data);
         this.handleSort();
@@ -263,6 +260,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         this.updateColumnsByMediaQuery();
         this.calculateProportions();
         this.updateSelection();
+        // markForCheck() stellt sicher, dass Konsumenten mit OnPush nach dem Timeout
+        // einen weiteren CD-Zyklus erhalten (zoneless-kompatibel).
+        this.cdr.markForCheck();
       });
     }
   }
@@ -458,9 +458,6 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     if (this.sortChangedSubscription) {
       this.sortChangedSubscription.unsubscribe();
     }
-    if (this.paginatorPageSubscription) {
-      this.paginatorPageSubscription.unsubscribe();
-    }
     if (this.selectedSubscription) {
       this.selectedSubscription.unsubscribe();
     }
@@ -498,6 +495,16 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     if (!this.luxMultiSelect) {
       this.luxDoubleClicked.emit({ event, rowItem });
     }
+  }
+
+  onPaginatorPageChange(pageEvent: LuxPageEvent): void {
+    if (!this.luxHttpDAO) {
+      return;
+    }
+
+    this.httpRequestConf.page = pageEvent.pageIndex;
+    this.httpRequestConf.pageSize = pageEvent.pageSize;
+    this.loadHttpDAOData();
   }
 
   /**
@@ -805,12 +812,17 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         this.sortChangedSubscription.unsubscribe();
       }
       this.sortChangedSubscription = this.sort.sortChange.subscribe((sort: any) => {
-        if (this.paginator) {
-          this.paginator.pageIndex = 0;
+        // If this is a server-side table with multiSelect enabled,
+        // ignore sort events on the internal selection column to avoid
+        // inconsistent selection state and duplicate entries.
+        if (sort && sort.active === 'multiSelect' && this.luxHttpDAO && this.luxMultiSelect) {
+          return;
         }
 
+        this.resetPaginatorToFirstPage();
+
         if (this.luxHttpDAO) {
-          this.httpRequestConf.page = this.paginator?.pageIndex ?? 0;
+          this.httpRequestConf.page = this.getPaginatorPageIndex();
           this.httpRequestConf.sort = sort.active;
           this.httpRequestConf.order = sort.direction;
           this.loadHttpDAOData();
@@ -846,16 +858,14 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         .subscribe((filterValue: string) => {
           filterValue = filterValue.trim();
           filterValue = filterValue.toLocaleLowerCase();
-          if (this.paginator) {
-            this.paginator.pageIndex = 0;
-          }
+          this.resetPaginatorToFirstPage();
           this.isLoadingResults = false;
           if (!this.luxHttpDAO) {
             this.dataSource.filter = filterValue;
           }
           if (this.luxHttpDAO) {
             this.httpRequestConf.filter = filterValue;
-            this.httpRequestConf.page = this.paginator?.pageIndex ?? 0;
+            this.httpRequestConf.page = this.getPaginatorPageIndex();
             this.loadHttpDAOData(filterValue);
           }
         });
@@ -870,24 +880,30 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private handlePagination() {
     if (this.luxShowPagination) {
       if (this.luxHttpDAO) {
-        if (this.paginatorPageSubscription) {
-          this.paginatorPageSubscription.unsubscribe();
-        }
-        this.paginatorPageSubscription = this.paginator!.page.subscribe(() => {
-          this.httpRequestConf.page = this.paginator!.pageIndex;
-          this.httpRequestConf.pageSize = this.paginator!.pageSize;
-          this.loadHttpDAOData();
-        });
-        this.httpRequestConf.page = this.paginator!.pageIndex;
-        this.httpRequestConf.pageSize = this.paginator!.pageSize;
+        this.httpRequestConf.page = this.getPaginatorPageIndex();
+        this.httpRequestConf.pageSize = this.getPaginatorPageSize();
       }
       if (!this.luxHttpDAO) {
-        this.dataSource.paginator = this.paginator!;
+        this.dataSource.paginator = this.paginator?.getMatPaginator() ?? null;
       }
     } else {
       this.dataSource.paginator = null;
     }
     this.calculateProportions();
+  }
+
+  private resetPaginatorToFirstPage(): void {
+    if (this.paginator) {
+      this.paginator.luxPageIndex.set(0);
+    }
+  }
+
+  private getPaginatorPageIndex(): number {
+    return this.paginator?.luxPageIndex() ?? 0;
+  }
+
+  private getPaginatorPageSize(): number {
+    return this.paginator?.getMatPaginator()?.pageSize ?? this.luxPageSize;
   }
 
   /**

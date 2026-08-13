@@ -41,6 +41,10 @@ testem.log
 projects/lux-components-update/src/**/*.js
 !projects/lux-components-update/src/**/files/**/*.js
 ToDos.md
+.claude
+.agents
+.github/skills
+skills-lock.json
 
 # System files
 .DS_Store

@@ -32,7 +32,9 @@ export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.disableClose = this.luxDialogRef?._matDialogRef?.disableClose ?? false;
+    // showCloseButton wird in der Dialog-Erzeugung vom Service gesetzt.
+    // disableClose steuert nur die Sichtbarkeit des X-Buttons in der Struktur.
+    this.disableClose = !(this.luxDialogRef?.showCloseButton ?? true);
   }
 
   ngAfterViewInit() {

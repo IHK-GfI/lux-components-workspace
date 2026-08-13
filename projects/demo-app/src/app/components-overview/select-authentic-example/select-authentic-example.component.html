@@ -7,7 +7,7 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-select-ac
         luxAutofocus
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray ? optionsPrimitive : options"
         [luxLabel]="label"
         [luxHint]="hint"
@@ -22,6 +22,7 @@
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="value"
@@ -33,15 +34,13 @@
         (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents, 'luxSelectedChange', $event)"
         #defaultSelectComp
-      >
-        <ng-template let-item>via Template {{ item | json }}</ng-template>
-      </lux-select-ac>
+      ></lux-select-ac>
       <example-value [value]="value"></example-value>
     </div>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel mit Multiselect (ohne Reactive-Form)</h3>
       <lux-select-ac
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray ? optionsPrimitive : options"
         [luxLabel]="label"
         [luxHint]="hint"
@@ -56,6 +55,7 @@
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
         [luxMultiple]="true"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [(luxSelected)]="multiselectValue"
@@ -66,15 +66,13 @@
         (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
         #multiselectComp
-      >
-        <ng-template let-item>via Template {{ item | json }}</ng-template>
-      </lux-select-ac>
+      ></lux-select-ac>
       <example-value [value]="multiselectValue"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-select-ac
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
+        luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray ? optionsPrimitive : options"
         [luxControlBinding]="controlBinding"
         [luxLabel]="label"
@@ -89,6 +87,7 @@
         [luxFilterValue]="filterValue"
         [luxFilterClearAriaLabel]="filterClearAriaLabel"
         [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn ? pickValueFn : undefined"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
@@ -99,10 +98,37 @@
         (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents, 'luxSelectedChange', $event)"
         #reactiveSelectComp
-      >
-        <ng-template let-item>via Template {{ item | json }}</ng-template>
-      </lux-select-ac>
+      ></lux-select-ac>
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Beispiel mit Options via ng-template (inkl. Tooltip)</h3>
+      <lux-select-ac
+        luxOptionLabelProp="label"
+        [luxOptions]="options"
+        luxLabel="Optionen via ng-template"
+        luxHint="Jede Option wird über ein ng-template gerendert und zeigt einen Tooltip. Der Filter lässt sich über die Optionen zuschalten."
+        [luxPlaceholder]="placeholder"
+        [luxRequired]="required"
+        [luxReadonly]="readonly"
+        [(luxDisabled)]="disabled"
+        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
+        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxEnableFilter]="enableFilter"
+        [luxFilterPlaceholder]="filterPlaceholder"
+        [luxFilterValue]="filterValue"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel"
+        [luxVisibleOptionCount]="visibleOptionCount"
+        [luxKeepOptionOrder]="keepOptionOrder"
+        [luxDense]="denseFormat"
+        [(luxSelected)]="templateValue"
+        #tooltipSelectComp
+      >
+        <ng-template let-item>
+          <span [luxTooltip]="item.label">via Template {{ item | json }}</span>
+        </ng-template>
+      </lux-select-ac>
+      <example-value [value]="templateValue"></example-value>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -204,6 +230,15 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        [(luxChecked)]="keepOptionOrder"
+        luxLabel="luxKeepOptionOrder"
+        luxHint="Behält die ursprüngliche Reihenfolge der Optionen bei. Selektierte Optionen werden nicht mehr an den Anfang der Liste sortiert."
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+    </div>
     <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
@@ -254,9 +289,6 @@
         </div>
       </lux-form-hint>
     </lux-toggle-ac>
-    <lux-toggle-ac [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
-      <lux-form-hint> Die Labels können über in die Component eingereichte Template-Tags erstellt werden. </lux-form-hint>
-    </lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="luxErrorMessage verwenden"
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
@@ -290,14 +322,14 @@
       <lux-button
         [luxStroked]="true"
         luxLabel="Werte resetten"
-        (luxClicked)="reset(defaultSelectComp, multiselectComp, reactiveSelectComp)"
+        (luxClicked)="reset(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
         class="lux-flex-none"
       >
       </lux-button>
       <lux-button
         [luxStroked]="true"
         luxLabel="Fehler anzeigen"
-        (luxClicked)="showErrors(defaultSelectComp, multiselectComp, reactiveSelectComp)"
+        (luxClicked)="showErrors(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
         class="lux-flex-none"
       >
       </lux-button>

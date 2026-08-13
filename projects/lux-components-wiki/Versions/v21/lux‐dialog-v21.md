@@ -15,6 +15,7 @@
     - [ILuxDialogAction](#iluxdialogaction)
     - [ILuxDialogConfig](#iluxdialogconfig)
     - [ILuxDialogPresetConfig](#iluxdialogpresetconfig)
+    - [Dialog-Breiten-Konstanten](#dialog-breiten-konstanten)
     - [LuxDialogRef](#luxdialogref)
   - [Beispiele](#beispiele)
     - [1. Confirm Dialog mit Defaultbutton](#1-confirm-dialog-mit-defaultbutton)
@@ -25,9 +26,9 @@
 
 ### Allgemein
 
-| Name   | Beschreibung     |
-| ------ | ---------------- |
-| name   | LuxDialogService |
+| Name | Beschreibung     |
+| ---- | ---------------- |
+| name | LuxDialogService |
 
 | Funktion                                                                                                 | Beschreibung                                                                                                                                                                                  |
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -86,10 +87,10 @@ Dieses Interface dient der Konfiguration der Aktionsschaltflächen für die LuxD
 | -------- | --------------- | ------------------------------------------------------------------------- |
 | label    | string          | Bestimmt das Label dieser Aktionsschaltfläche.                            |
 | color    | LuxThemePalette | Diese Property legt die Farbe fest ('primary', 'accent', 'warn', '')      |
-| raised   | boolean         | Bestimmt ob der Button hervorgehoben dargestellt werden soll.             |
+| raised   | boolean         | Bestimmt, ob der Button hervorgehoben dargestellt werden soll.            |
 | iconName | string          | Legt das Icon der Schaltfläche fest.                                      |
 | tagId    | string          | Einzigartige ID für die Erstellung von e2e Tests.                         |
-| disabled | boolean         | Bestimmt ob der Button deaktiviert ist.                                   |
+| disabled | boolean         | Bestimmt, ob der Button deaktiviert ist.                                  |
 | rounded  | boolean         | Legt den Button als abgerundet fest (er sollte dann kein Label besitzen). |
 
 ### ILuxDialogConfig
@@ -98,16 +99,17 @@ Dieses Interface legt die einstellbaren Optionen für die Dialoge fest (LuxDialo
 
 Es existiert ein zusätzliches Objekt DEFAULT_DIALOG_CONF mit zuvor festgelegten Standardwerten die hier ebenfalls angegeben sind.
 
-| Name         | Typ              | Beschreibung                                                                                                  |
-| ------------ | ---------------- | ------------------------------------------------------------------------------------------------------------- |
-| width        | string           | Bestimmt die Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                      |
-| height       | string           | Bestimmt die Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                        |
-| minWidth     | string           | Bestimmt die minimale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.             |
-| minHeight    | string           | Bestimmt die minimale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.               |
-| maxWidth     | string           | Bestimmt die maximale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.             |
-| maxHeight    | string           | Bestimmt die maximale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.               |
-| panelClass   | string, string[] | Über diese Property ist es möglich eine einzelne bzw. mehrere CSS-Klassen an den geöffneten Dialog zu setzen. |
-| disableClose | boolean          | Diese Property bestimmt ob der Dialog nur über die Schaltflächen schließbar ist oder nicht.                   |
+| Name                       | Typ              | Beschreibung                                                                                                                                                                                                                                                                                                                             |
+| -------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| width                      | string           | Bestimmt die Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                                                                                                                                                                 |
+| height                     | string           | Bestimmt die Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                                                                                                                                                                   |
+| minWidth                   | string           | Bestimmt die minimale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                                                                                                                                                        |
+| minHeight                  | string           | Bestimmt die minimale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                                                                                                                                                          |
+| maxWidth                   | string           | Bestimmt die maximale Breite des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden. Bleibt der Wert leer und ist `width` auf `auto` gesetzt oder nicht gesetzt, verwendet der Service automatisch `minWidth(DIALOG_WIDTH_SMALL_PX)` für Preset-Dialoge und `minWidth(DIALOG_WIDTH_LARGE_PX)` für eigene Dialog-Components. |
+| maxHeight                  | string           | Bestimmt die maximale Höhe des Dialogs. Hier können px-Werte, aber auch %-Werte gesetzt werden.                                                                                                                                                                                                                                          |
+| panelClass                 | string, string[] | Über diese Property ist es möglich eine einzelne bzw. mehrere CSS-Klassen an den geöffneten Dialog zu setzen.                                                                                                                                                                                                                            |
+| disableClose               | boolean          | Diese Property bestimmt, ob der Dialog nur über die Schaltflächen schließbar ist oder nicht.                                                                                                                                                                                                                                             |
+| disableBackdropAndEscClose | boolean          | Wenn `true`, werden Backdrop-Klicks und die ESC-Taste ignoriert – der X-Schließen-Button bleibt jedoch weiterhin sichtbar. Unterschied zu `disableClose`: `disableClose` verhindert zusätzlich den X-Button.                                                                                                                             |
 
 ### ILuxDialogPresetConfig
 
@@ -125,6 +127,22 @@ Es existiert ein zusätzliches Objekt DEFAULT_DIALOG_PRESET_CONF mit zuvor festg
 | title           | string                          | Diese Eigenschaft bestimmt den Titel des Dialogs.                                                                                                                                                                                                       |
 | content         | string                          | Diese Eigenschaft legt den Inhalt des Dialogs fest.                                                                                                                                                                                                     |
 | contentTemplate | TemplateRef \<any>              | Alternativ lässt sich zum content auch ein TemplateRef übergeben, welches kompliziertere HTML-Strukturen als einen Text enthalten kann.                                                                                                                 |
+
+### Dialog-Breiten-Konstanten
+
+Für konsistente Dialoggrößen stehen zentrale Konstanten zur Verfügung.
+
+| Name                    | Typ    | Wert    | Beschreibung                                    |
+| ----------------------- | ------ | ------- | ----------------------------------------------- |
+| DIALOG_WIDTH_SMALL_PX   | number | 400     | Kleine Standardbreite in Pixeln.                |
+| DIALOG_WIDTH_MEDIUM_PX  | number | 600     | Mittlere Standardbreite in Pixeln.              |
+| DIALOG_WIDTH_LARGE_PX   | number | 800     | Große Standardbreite in Pixeln.                 |
+| DIALOG_WIDTH_SMALL      | string | '400px' | Kleine Standardbreite als CSS-String.           |
+| DIALOG_WIDTH_MEDIUM     | string | '600px' | Mittlere Standardbreite als CSS-String.         |
+| DIALOG_WIDTH_LARGE      | string | '800px' | Große Standardbreite als CSS-String.            |
+| minWidth(width: number) | string | -       | Erzeugt eine responsive Pixelbreite als String. |
+
+Hinweis: Für responsive Dialogbreiten kann `minWidth(...)` zusammen mit den `..._PX`-Konstanten genutzt werden, z.B. `minWidth(DIALOG_WIDTH_SMALL_PX)`. Dieses Verhalten verwendet der `LuxDialogService` auch standardmäßig für `maxWidth`, wenn `width` auf `auto` steht oder nicht gesetzt ist und keine eigene `maxWidth` angegeben wurde.
 
 ### LuxDialogRef
 
@@ -152,7 +170,7 @@ Ts
 ```typescript
 dialogConfig: ILuxDialogPresetConfig = {
     title: 'Daten löschen?',
-    content: 'Ihre Date werden endgültig gelöscht. Das Löschen kann nicht rückgängig gemacht werden.',
+    content: 'Ihre Daten werden endgültig gelöscht. Das Löschen kann nicht rückgängig gemacht werden.',
     disableClose: true,
     width: 'auto',
     height: 'auto',

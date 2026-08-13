@@ -9,11 +9,11 @@ import { MatError } from '@angular/material/form-field';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxUtil } from '../../lux-util/lux-util';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxPickValueFnType } from '../lux-form-model/lux-form-selectable-base.class';
 import { LuxRadioAcComponent } from './lux-radio-ac.component';
 
@@ -466,6 +466,44 @@ describe('LuxRadioAcComponent', () => {
       expect(errorMessage.nativeElement.innerText.trim()).toEqual('* Pflichtfeld');
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxRadioA11yComponent>;
+    let testComponent: LuxRadioA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxRadioA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 declare interface Option {
@@ -647,4 +685,24 @@ class MockLuxErrorMessageComponent {
       radio: new FormControl('', { validators: Validators.required, nonNullable: true })
     });
   }
+}
+
+@Component({
+  template: `
+    <lux-radio-ac
+      luxLabel="Optionen"
+      luxOptionLabelProp="label"
+      [luxOptions]="options"
+      [luxDisabled]="disabled"
+      [luxReadonly]="readonly"
+      [luxRequired]="required"
+    ></lux-radio-ac>
+  `,
+  imports: [LuxRadioAcComponent]
+})
+class LuxRadioA11yComponent {
+  options = [{ label: 'Option A', value: 'A' }];
+  disabled = false;
+  readonly = false;
+  required = false;
 }

@@ -1,6 +1,6 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
-import { LuxFormComponentBase, LuxValidationErrors, ValidatorFnType } from './lux-form-component-base.class';
+import { LuxFormComponentBase, LuxValidationErrors } from './lux-form-component-base.class';
 
 /**
  * Basis-Klasse für FormComponents, die einen ähnlichen Grundaufbau für das Aktivieren eines Boolean-Wertes besitzen
@@ -8,7 +8,6 @@ import { LuxFormComponentBase, LuxValidationErrors, ValidatorFnType } from './lu
  */
 @Directive()
 export abstract class LuxFormCheckableBaseClass<T> extends LuxFormComponentBase<T> {
-
   @Output() luxCheckedChange = new EventEmitter<boolean>();
 
   @Input() luxTagId?: string;
@@ -38,30 +37,7 @@ export abstract class LuxFormCheckableBaseClass<T> extends LuxFormComponentBase<
     return undefined;
   }
 
-  protected override checkValidatorsContainRequired(validators: ValidatorFnType) {
-    // Fall: required = true, aber neue Validatoren werden gesetzt
-    if (this.luxRequired !== null && this.luxRequired !== undefined) {
-      if (this.luxRequired) {
-        // Sind es mehrere Validatoren, aber kein "requiredTrue"? Dann wird er ergänzt.
-        if (Array.isArray(validators) && validators.indexOf(Validators.requiredTrue) === -1) {
-          validators.push(Validators.requiredTrue);
-        } else if (validators && !Array.isArray(validators) && validators !== Validators.requiredTrue) {
-          // Ist es nur ein einzelner Validator und nicht "requiredTrue"? Dann Array erstellen und beide kombinieren.
-          validators = [validators, Validators.requiredTrue];
-        }
-      } else {
-        if (Array.isArray(validators)) {
-          validators = validators.filter((validator: ValidatorFn) => validator !== Validators.requiredTrue);
-        } else if (validators === Validators.requiredTrue) {
-          validators = undefined;
-        }
-      }
-    } else {
-      // Die Aufrufe mit "null" und "undefined" werden an dieser Stelle absichtlich nicht weiter behandelt.
-      // Todo: Mit der neuen Angular-Version sind neue Methoden wie z.B. FormControl.hasValidator hinzugekommen.
-      //       D.h. die komplizierte Behandlung von Validators.required kann vereinfacht werden.
-    }
-
-    return validators;
+  protected override getRequiredValidator(): ValidatorFn {
+    return Validators.requiredTrue;
   }
 }

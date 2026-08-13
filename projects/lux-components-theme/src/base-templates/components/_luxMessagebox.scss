@@ -39,6 +39,17 @@ lux-message-box {
       padding: var(--lux-theme-outline-width) 24px;
       border-radius: 4px;
 
+      transition: opacity 300ms ease-out;
+
+      @starting-style {
+        opacity: 0;
+      }
+
+      &.lux-message-closing {
+        opacity: 0;
+        transition: opacity 300ms ease-in;
+      }
+
       &.lux-messagebox-white {
         // da im Theme authentic der Schatten entfernt wurde, muss eine Weiße Messagebox eine Border erhalten.
         border: 1px solid var(--lux-theme-primary-color);

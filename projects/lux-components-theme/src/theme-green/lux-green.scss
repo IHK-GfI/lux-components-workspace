@@ -9,6 +9,7 @@
 @use "../base-templates/common/luxstyles";
 @use "../base-templates/common/luxbreakpoints";
 @use "../base-templates/common/luxlayout";
+@use "../base-templates/common/luxutilities";
 
 @use "../base-templates/components/luxAccordion";
 @use "../base-templates/components/luxAppContent";
@@ -52,6 +53,7 @@
 @use "../base-templates/components/luxMasterDetailAc";
 @use "../base-templates/components/luxMenu";
 @use "../base-templates/components/luxMessagebox";
+@use "../base-templates/components/luxPaginator";
 @use "../base-templates/components/luxProgressBar";
 @use "../base-templates/components/luxProgressSpinner";
 @use "../base-templates/components/luxRadioButton";
@@ -63,11 +65,13 @@
 @use "../base-templates/components/luxStepperLarge";
 @use "../base-templates/components/luxTable";
 @use "../base-templates/components/luxTabs";
+@use "../base-templates/components/luxTenantLogo";
 @use "../base-templates/components/luxTextarea";
 @use "../base-templates/components/luxTextbox";
 @use "../base-templates/components/luxTile";
 @use "../base-templates/components/luxTileAc";
 @use "../base-templates/components/luxToggle";
+@use "../base-templates/components/luxTimepicker";
 @use "../base-templates/components/luxPopup";
 @use "../base-templates/components/luxToolTip";
 @use "../base-templates/components/luxTourHint";

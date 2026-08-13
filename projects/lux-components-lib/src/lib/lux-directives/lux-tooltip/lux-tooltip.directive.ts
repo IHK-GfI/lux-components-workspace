@@ -1,5 +1,6 @@
-import { AfterViewInit, Directive, HostListener, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { MatTooltip, TooltipPosition } from '@angular/material/tooltip';
+import { LuxTooltipTruncationWatcher } from './lux-tooltip-truncation';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxLinkPlainComponent } from '../../lux-action/lux-link-plain/lux-link-plain.component';
 import { LuxLinkComponent } from '../../lux-action/lux-link/lux-link.component';
@@ -11,12 +12,13 @@ import { LuxAppHeaderActionNavItemComponent } from '../../lux-layout/lux-app-hea
   selector: '[luxTooltip]',
   exportAs: 'luxTooltip'
 })
-export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterViewInit {
+export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterViewInit, OnDestroy {
   @Input() luxTooltip = '???';
   @Input() luxTooltipHideDelay = 0;
   @Input() luxTooltipShowDelay = 0;
   @Input() luxTooltipPosition: TooltipPosition = 'above';
   @Input() luxTooltipDisabled = false;
+  @Input() luxTooltipIfTruncated = false;
 
   luxButton = inject(LuxButtonComponent, { optional: true });
   luxLink = inject(LuxLinkComponent, { optional: true });
@@ -24,6 +26,10 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
   luxActionNavAc = inject(LuxAppHeaderAcActionNavItemComponent, { optional: true });
   luxActionNav = inject(LuxAppHeaderActionNavItemComponent, { optional: true });
   luxMenu = inject(LuxMenuComponent, { optional: true });
+  private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  private truncationWatcher?: LuxTooltipTruncationWatcher;
+  private viewInitialized = false;
 
   @HostListener('longpress') _handleLongPress() {
     super.show(this.luxTooltipShowDelay);
@@ -62,7 +68,10 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
     if (this.luxMenu && this.luxMenu.defaultTriggerComponent) {
       this.luxMenu.defaultTriggerComponent.tooltipDirective = this;
     }
-      
+
+    this.viewInitialized = true;
+    this.syncTruncationWatch();
+    this.syncDisabledState();
     super.ngAfterViewInit();
   }
 
@@ -71,6 +80,38 @@ export class LuxTooltipDirective extends MatTooltip implements OnChanges, AfterV
     this.hideDelay = this.luxTooltipHideDelay;
     this.showDelay = this.luxTooltipShowDelay;
     this.position = this.luxTooltipPosition;
-    this.disabled = this.luxTooltipDisabled;
+
+    // Vor ngAfterViewInit steht das Layout noch nicht bereit, der Watcher wird erst
+    // dort gestartet. Danach reagiert diese Methode auf ein Umschalten von
+    // luxTooltipIfTruncated zur Laufzeit.
+    if (this.viewInitialized) {
+      this.syncTruncationWatch();
+    }
+    this.syncDisabledState();
+  }
+
+  override ngOnDestroy(): void {
+    this.truncationWatcher?.disconnect();
+    super.ngOnDestroy();
+  }
+
+  /** Startet bzw. stoppt die Truncation-Beobachtung passend zu luxTooltipIfTruncated. */
+  private syncTruncationWatch(): void {
+    if (this.luxTooltipIfTruncated) {
+      this.truncationWatcher ??= new LuxTooltipTruncationWatcher(this.elementRef.nativeElement, () => this.syncDisabledState());
+      this.truncationWatcher.connect();
+    } else {
+      this.truncationWatcher?.disconnect();
+    }
+  }
+
+  /**
+   * Einzige Stelle, die `disabled` setzt (Single Source of Truth). Der Tooltip ist
+   * deaktiviert, wenn er explizit deaktiviert wurde ODER wenn nur bei Kürzung
+   * angezeigt werden soll und der Text gerade vollständig passt.
+   */
+  private syncDisabledState(): void {
+    const hiddenBecauseItFits = this.luxTooltipIfTruncated && !(this.truncationWatcher?.isTruncated ?? false);
+    this.disabled = this.luxTooltipDisabled || hiddenBecauseItFits;
   }
 }

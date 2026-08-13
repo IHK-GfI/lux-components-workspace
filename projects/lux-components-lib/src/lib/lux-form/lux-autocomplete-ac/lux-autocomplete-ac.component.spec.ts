@@ -5,10 +5,10 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitF
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxAutocompleteAcComponent } from './lux-autocomplete-ac.component';
 
 interface TestOption {
@@ -653,6 +653,98 @@ describe('LuxAutocompleteAcComponent', () => {
     }));
   });
 
+  describe('luxClearable', () => {
+    describe('innerhalb eines Formulars', () => {
+      let fixture: ComponentFixture<LuxAutoCompleteClearableInFormComponent>;
+      let component: LuxAutoCompleteClearableInFormComponent;
+      let autocomplete: LuxAutocompleteAcComponent;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxAutoCompleteClearableInFormComponent);
+        fixture.detectChanges();
+        component = fixture.componentInstance;
+        autocomplete = fixture.debugElement.query(By.directive(LuxAutocompleteAcComponent)).componentInstance;
+        tick(autocomplete.luxLookupDelay);
+      }));
+
+      it('Sollte den Clear-Button anzeigen wenn ein Wert gesetzt ist', fakeAsync(() => {
+        // Vorbedingungen testen
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+
+        // Änderungen durchführen
+        component.formGroup.get('aufgaben')!.setValue(component.options[1]);
+        LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay);
+
+        // Nachbedingungen testen
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+        discardPeriodicTasks();
+      }));
+
+      it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
+        // Vorbedingungen testen
+        component.formGroup.get('aufgaben')!.setValue(component.options[1]);
+        LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay);
+
+        expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options[1]);
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+
+        // Änderungen durchführen
+        fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(autocomplete.formControl.value).toBeNull();
+        expect(autocomplete.matInput.nativeElement.value).toEqual('');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+        discardPeriodicTasks();
+      }));
+
+      it('Sollte den Clear-Button nicht anzeigen wenn luxClearable=false', fakeAsync(() => {
+        // Änderungen durchführen
+        component.clearable = false;
+        component.formGroup.get('aufgaben')!.setValue(component.options[0]);
+        LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay);
+
+        // Nachbedingungen testen
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+        discardPeriodicTasks();
+      }));
+    });
+
+    describe('außerhalb eines Formulars', () => {
+      let fixture: ComponentFixture<LuxAutoCompleteClearableOutsideFormComponent>;
+      let component: LuxAutoCompleteClearableOutsideFormComponent;
+      let autocomplete: LuxAutocompleteAcComponent;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxAutoCompleteClearableOutsideFormComponent);
+        fixture.detectChanges();
+        component = fixture.componentInstance;
+        autocomplete = fixture.debugElement.query(By.directive(LuxAutocompleteAcComponent)).componentInstance;
+        tick(autocomplete.luxLookupDelay);
+      }));
+
+      it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
+        // Vorbedingungen testen
+        component.selected = component.options[2];
+        LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay);
+
+        expect(component.selected).toEqual(component.options[2]);
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
+
+        // Änderungen durchführen
+        fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(autocomplete.luxValue).toBeNull();
+        expect(autocomplete.matInput.nativeElement.value).toEqual('');
+        expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+        discardPeriodicTasks();
+      }));
+    });
+  });
+
   describe('Single option focus handling', () => {
     let fixture: ComponentFixture<LuxAutoCompleteSingleOptionComponent>;
     let component: LuxAutoCompleteSingleOptionComponent;
@@ -676,7 +768,102 @@ describe('LuxAutocompleteAcComponent', () => {
       discardPeriodicTasks();
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxAutocompleteA11yComponent>;
+    let testComponent: LuxAutocompleteA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxAutocompleteA11yComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      tick(0);
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (mit Wert)', async () => {
+      testComponent.value = testComponent.options[0];
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-autocomplete-ac
+        luxLabel="Autocomplete"
+        [luxOptions]="options"
+        luxControlBinding="aufgaben"
+        [luxClearable]="clearable"
+      ></lux-autocomplete-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
+})
+class LuxAutoCompleteClearableInFormComponent {
+  clearable = true;
+
+  options: TestOption[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+
+  formGroup = new FormGroup({
+    aufgaben: new FormControl<TestOption | null>(null)
+  });
+}
+
+@Component({
+  template: `
+    <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxClearable]="true"></lux-autocomplete-ac>
+  `,
+  imports: [LuxAutocompleteAcComponent]
+})
+class LuxAutoCompleteClearableOutsideFormComponent {
+  selected: TestOption | null = null;
+
+  options: TestOption[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+}
 
 @Component({
   selector: 'lux-autocomplete-in-form-with-string-values-component',
@@ -934,6 +1121,30 @@ class LuxAutoCompleteSingleOptionComponent {
   formGroup = new FormGroup({
     aufgaben: new FormControl<TestOption | null>(null)
   });
+}
+
+@Component({
+  template: `
+    <lux-autocomplete-ac
+      luxLabel="Autocomplete"
+      [luxOptions]="options"
+      luxOptionLabelProp="label"
+      [luxLookupDelay]="0"
+      [luxDisabled]="disabled"
+      [luxReadonly]="readonly"
+      [luxRequired]="required"
+      [luxValue]="value"
+    ></lux-autocomplete-ac>
+  `,
+  imports: [LuxAutocompleteAcComponent]
+})
+class LuxAutocompleteA11yComponent {
+  options: TestOption[] = [{ label: 'Meine Aufgaben', value: 'A' }];
+
+  disabled = false;
+  readonly = false;
+  required = false;
+  value?: TestOption;
 }
 
 /**

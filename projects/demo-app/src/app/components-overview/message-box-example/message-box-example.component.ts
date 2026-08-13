@@ -1,21 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import {
-    ILuxMessage,
-    ILuxMessageChangeEvent,
-    ILuxMessageCloseEvent,
-    LuxAccordionComponent,
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxMessageBoxColors,
-    LuxMessageBoxComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderDescriptionComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxTextareaAcComponent,
-    LuxToggleAcComponent
+  ILuxMessage,
+  ILuxMessageChangeEvent,
+  ILuxMessageCloseEvent,
+  LuxAccordionComponent,
+  LuxButtonComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCardContentExpandedComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxMessageBoxColors,
+  LuxMessageBoxComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderDescriptionComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxSelectAcComponent,
+  LuxTextareaAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -44,11 +47,15 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    ExampleBaseOptionsActionsComponent
+    ExampleBaseOptionsActionsComponent,
+    LuxCardComponent,
+    LuxCardContentComponent,
+    LuxCardContentExpandedComponent
   ]
 })
 export class MessageBoxExampleComponent implements OnInit {
   showOutputEvents = false;
+  showInCard = false;
   log = logResult;
   messages: ILuxMessage[] = [];
   colors = LuxMessageBoxColors;

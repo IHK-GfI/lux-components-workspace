@@ -18,4 +18,6 @@ export interface ILuxStepperConfiguration {
   luxNextButtonConfig?: ILuxStepperButtonConfig;
   luxFinishButtonConfig?: ILuxStepperButtonConfig;
   luxSteps?: LuxStepComponent[];
+  luxA11YMode?: boolean;
+  luxButtonAlignLeft?: boolean;
 }

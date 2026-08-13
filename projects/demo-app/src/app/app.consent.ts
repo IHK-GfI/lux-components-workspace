@@ -15,7 +15,9 @@ const CONSENT_TRANSLATION_KEYS = {
   demoConsentDescription: 'app.consent.description.demoConsent',
   themeConsentDescription: 'app.consent.description.themeConsent',
   tableConsentDescription: 'app.consent.description.tableConsent',
-  hintConsentDescription: 'app.consent.description.hintConsent'
+  hintConsentDescription: 'app.consent.description.hintConsent',
+  sessionConsentDescription: 'app.consent.description.sessionConsent',
+  durationSessionActive: 'app.consent.duration.sessionActive'
 } as const;
 
 function createTranslations(translocoService: TranslocoService): {
@@ -24,6 +26,7 @@ function createTranslations(translocoService: TranslocoService): {
   theme: ConsentEntryTranslation;
   table: ConsentEntryTranslation;
   hint: ConsentEntryTranslation;
+  session: ConsentEntryTranslation;
 } {
   return {
     appConsent: {
@@ -50,6 +53,11 @@ function createTranslations(translocoService: TranslocoService): {
       processingCountry: translocoService.translate(CONSENT_TRANSLATION_KEYS.countryGermany),
       duration: translocoService.translate(CONSENT_TRANSLATION_KEYS.persistent),
       description: translocoService.translate(CONSENT_TRANSLATION_KEYS.hintConsentDescription)
+    },
+    session: {
+      processingCountry: translocoService.translate(CONSENT_TRANSLATION_KEYS.countryGermany),
+      duration: translocoService.translate(CONSENT_TRANSLATION_KEYS.durationSessionActive),
+      description: translocoService.translate(CONSENT_TRANSLATION_KEYS.sessionConsentDescription)
     }
   };
 }
@@ -85,6 +93,14 @@ export const appConsentProvider = {
           purpose: LuxConsentPurpose.Essential,
           duration: translations.demoConsent.duration,
           description: translations.demoConsent.description
+        },
+        {
+          type: LuxConsentStorageType.LocalStorage,
+          name: 'lux-components-session-endtime',
+          processingCountry: translations.demoConsent.processingCountry,
+          purpose: LuxConsentPurpose.Essential,
+          duration: translations.session.duration,
+          description: translations.session.description
         },
         {
           type: LuxConsentStorageType.LocalStorage,

@@ -12,10 +12,11 @@
       - [Allgemein](#allgemein-1)
       - [@Input](#input-1)
     - [LuxAppHeaderAcUserMenu](#luxappheaderacusermenu)
-    - [LuxAppHeaderAcNavMenu](#luxappheaderacnavmenu)
       - [@Input](#input-2)
-    - [LuxAppHeaderAcNavMenuItem](#luxappheaderacnavmenuitem)
+    - [LuxAppHeaderAcNavMenu](#luxappheaderacnavmenu)
       - [@Input](#input-3)
+    - [LuxAppHeaderAcNavMenuItem](#luxappheaderacnavmenuitem)
+      - [@Input](#input-4)
     - [LuxAppHeaderAcActionNavComponent](#luxappheaderacactionnavcomponent)
   - [Beispiele](#beispiele)
     - [1. Header mit User-Menu, Sprachwechsler und Navigations-Menu](#1-header-mit-user-menu-sprachwechsler-und-navigations-menu)
@@ -27,7 +28,7 @@
 
 ### Allgemein
 
-App-Header für das Theme Authentic. Der Header wird in zwei Zeilen aufgeteilt. In der oberen "Top-Bar" werden ein Icon für die jeweilige IHK und ein individuelles App-Icon angezeigt. Diese sollen mit den Links zur Hompage oder Start-Seite der App veknüpft werden. Weiterhin können hier optional eigene Action-Menüs und ein User-Menu eingefügt werden.
+App-Header für das Theme Authentic. Der Header wird in zwei Zeilen aufgeteilt. In der oberen "Top-Bar" werden ein Icon für die jeweilige IHK und ein individuelles App-Icon angezeigt. Diese sollen mit den Links zur Homepage oder Start-Seite der App verknüpft werden. Weiterhin können hier optional eigene Action-Menüs und ein User-Menu eingefügt werden.
 Darunter befindet sich Zeile in der die Nav-Bar angezeigt wird.
 
 | Name     | Beschreibung      |
@@ -300,9 +301,9 @@ Html
 
 Für das Authentic-Theme soll das individuelle AppIcon im Header gleichzeitig als favIcon der Anwendung genutzt werden.
 
-Dazu wird mit jedem Team ein eignes Icon erstellt. Der Hintergrund ist fest vorgegeben und für die Zuordung der Anwendung kann ein Buchstabenkürzel aus 2-5 Buchstaben eingesetzt werden oder es wird ein symbolisches Icon gewählt.
+Dazu wird mit jedem Team ein eigenes Icon erstellt. Der Hintergrund ist fest vorgegeben und für die Zuordnung der Anwendung kann ein Buchstabenkürzel aus 2-5 Buchstaben eingesetzt werden oder es wird ein symbolisches Icon gewählt.
 
-Anschließend wird dieses Icon als svg-Datei bereitgestellt und zustäzlich eine png- und eine ico-Datei als Fallback erzeugt.
+Anschließend wird dieses Icon als svg-Datei bereitgestellt und zusätzlich eine png- und eine ico-Datei als Fallback erzeugt.
 
 Diese werden dann wie folgt eingebunden:
 
@@ -340,7 +341,7 @@ Ts
 ```typescript
 const myConfiguration: LuxComponentsConfigParameters = {
   viewConfiguration: {
-    centerdView: true,
+    centeredView: true,
     centeredWidth: '1000px'
   }
 };

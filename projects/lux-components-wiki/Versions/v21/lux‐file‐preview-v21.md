@@ -88,7 +88,7 @@ Html
 ```html
 <form [formGroup]="form">
   <lux-file-upload
-  luxLabel="Bescheinigung "
+  luxLabel="Bescheinigung"
   luxControlBinding="file"
   [luxViewActionConfig]="viewActionConfig"
   #fileUploadComponent

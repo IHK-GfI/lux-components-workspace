@@ -181,12 +181,11 @@ describe('LuxChatComponent', () => {
   });
 
   // ---------------------------------------------------------------------------
-  // showFullscreenButton / showCloseButton
+  // chatPopupMode
   // ---------------------------------------------------------------------------
-  describe('showFullscreenButton und showCloseButton', () => {
-    it('sollte keine Header-Buttons rendern, wenn beide Inputs false sind', fakeAsync(() => {
-      fixture.componentRef.setInput('showFullscreenButton', false);
-      fixture.componentRef.setInput('showCloseButton', false);
+  describe('chatPopupMode', () => {
+    it('sollte keine Header-Buttons rendern, wenn der Input false ist', fakeAsync(() => {
+      fixture.componentRef.setInput('chatPopupMode', false);
       fixture.detectChanges();
       tick();
 
@@ -194,29 +193,8 @@ describe('LuxChatComponent', () => {
       expect(buttons.length).toBe(0);
     }));
 
-    it('sollte nur den Vollbild-Button rendern, wenn showFullscreenButton=true', fakeAsync(() => {
-      fixture.componentRef.setInput('showFullscreenButton', true);
-      fixture.componentRef.setInput('showCloseButton', false);
-      fixture.detectChanges();
-      tick();
-
-      const buttons = fixture.debugElement.queryAll(By.css('.lux-chat-header lux-button'));
-      expect(buttons.length).toBe(1);
-    }));
-
-    it('sollte nur den Schließen-Button rendern, wenn showCloseButton=true', fakeAsync(() => {
-      fixture.componentRef.setInput('showFullscreenButton', false);
-      fixture.componentRef.setInput('showCloseButton', true);
-      fixture.detectChanges();
-      tick();
-
-      const buttons = fixture.debugElement.queryAll(By.css('.lux-chat-header lux-button'));
-      expect(buttons.length).toBe(1);
-    }));
-
-    it('sollte beide Buttons rendern, wenn beide Inputs true sind', fakeAsync(() => {
-      fixture.componentRef.setInput('showFullscreenButton', true);
-      fixture.componentRef.setInput('showCloseButton', true);
+    it('sollte beide Buttons rendern, wenn der Inputs true ist', fakeAsync(() => {
+      fixture.componentRef.setInput('chatPopupMode', true);
       fixture.detectChanges();
       tick();
 

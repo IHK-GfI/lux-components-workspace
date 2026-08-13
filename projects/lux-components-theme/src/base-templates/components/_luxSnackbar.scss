@@ -20,6 +20,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "yell
   @include mat.snack-bar-overrides(
     (
       supporting-text-size: 1rem,
+      supporting-text-line-height: 1.5rem,
       supporting-text-weight: 600
     )
   );

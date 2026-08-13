@@ -2,7 +2,7 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
 import { Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, inject } from '@angular/core';
 import { LuxCardContentComponent } from '../../lux-card/lux-card-subcomponents/lux-card-content.component';
-import { LuxCardCustomHeaderComponent } from "../../lux-card/lux-card-subcomponents/lux-card-custom-header.component";
+import { LuxCardCustomHeaderComponent } from '../../lux-card/lux-card-subcomponents/lux-card-custom-header.component';
 import { LuxCardInfoComponent } from '../../lux-card/lux-card-subcomponents/lux-card-info.component';
 import { LuxCardComponent } from '../../lux-card/lux-card.component';
 import { LuxListItemCustomHeaderComponent } from './lux-list-item-custom-header.component';
@@ -21,13 +21,13 @@ export class LuxListItemComponent implements FocusableOption {
 
   @HostBinding('attr.aria-label') ariaLabel?: string;
   @HostBinding('attr.aria-selected') ariaSelected?: boolean;
-  @HostBinding('attr.role') role = 'option';
+  @HostBinding('attr.role') role = 'row';
   @HostBinding('attr.tabindex') tabindex = '-1';
 
   @Input() luxTitleTooltip?: string;
   @Input() luxSubTitleTooltip?: string;
   @Input() luxTitleLineBreak = true;
-  
+
   @Output() luxClicked = new EventEmitter<Event>();
 
   @ContentChild(LuxListItemCustomHeaderComponent) customHeaderComponent?: LuxListItemCustomHeaderComponent;

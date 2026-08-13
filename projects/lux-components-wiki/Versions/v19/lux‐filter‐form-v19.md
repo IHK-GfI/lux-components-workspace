@@ -119,7 +119,7 @@ Ein LuxFilterLoadDialogComponent zeigt die vorhandenen Filter an und bietet eine
 | ------------- | ----------------------------------------------- | ------------------------------------------------------------------------ |
 | label         | string                                          | Eine Bezeichnung (z.B. Land).                                            |
 | binding       | string                                          | Ein Binding (z.B. country).                                              |
-| component     | LuxFormComponentBase                            | Die Formularkomponete (z.B. lux-input).                                  |
+| component     | LuxFormComponentBase                            | Die Formularkomponente (z.B. lux-input).                                 |
 | value         | \<T = any>                                      | Der Wert.                                                                |
 | defaultValues | any[]                                           | Die Defaultwerte.                                                        |
 | color         | LuxThemePalette                                 | Eine Farbe.                                                              |

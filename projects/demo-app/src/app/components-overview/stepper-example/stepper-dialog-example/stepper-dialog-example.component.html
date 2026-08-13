@@ -1,0 +1,88 @@
+<lux-dialog-structure>
+  <lux-dialog-title>Stepper im Dialog</lux-dialog-title>
+  <lux-dialog-content>
+    @if (showValidationMessage) {
+      <lux-textbox #validationBox luxTitle="Fehler" luxColor="red" class="lux-max-width-92">{{ validationMessage }}</lux-textbox>
+    }
+    <!-- Stepper mit deaktivierten Navigations-Buttons; Steuerung erfolgt über die Dialog-Actions -->
+    <lux-stepper
+      [luxShowNavigationButtons]="false"
+      [luxLinear]="true"
+      [luxCurrentStepNumber]="currentStepNumber"
+      (luxCurrentStepNumberChange)="currentStepNumber = $event"
+    >
+      <lux-step [luxCompleted]="form1.valid" [luxStepControl]="form1">
+        <lux-step-header>Kontaktdaten</lux-step-header>
+        <lux-step-content [formGroup]="form1">
+          <div class="lux-flex lux-flex-col lux-gap-3 lux-max-width-80">
+            <lux-input-ac luxLabel="Name" luxName="dialog_stepper_name" luxControlBinding="name"></lux-input-ac>
+            <lux-input-ac luxLabel="E-Mail" luxName="dialog_stepper_email" luxType="email" luxControlBinding="email"></lux-input-ac>
+          </div>
+          @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track $index) {
+            <p>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+              aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+              takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+              eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+              et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            </p>
+          }
+        </lux-step-content>
+      </lux-step>
+      <lux-step [luxCompleted]="form2.valid" [luxStepControl]="form2">
+        <lux-step-header>Adresse</lux-step-header>
+        <lux-step-content [formGroup]="form2">
+          <div class="lux-flex lux-flex-col lux-gap-3 lux-max-width-80">
+            <lux-input-ac luxLabel="Straße" luxName="dialog_stepper_street" luxControlBinding="street"></lux-input-ac>
+            <lux-input-ac luxLabel="Stadt" luxName="dialog_stepper_city" luxControlBinding="city"></lux-input-ac>
+          </div>
+        </lux-step-content>
+      </lux-step>
+      <lux-step [luxCompleted]="form1.valid && form2.valid">
+        <lux-step-header>Zusammenfassung</lux-step-header>
+        <lux-step-content>
+          @if (form1.valid && form2.valid) {
+            <p><strong>Name:</strong> {{ form1.value.name }}</p>
+            <p><strong>E-Mail:</strong> {{ form1.value.email }}</p>
+            <p><strong>Straße:</strong> {{ form2.value.street }}</p>
+            <p><strong>Stadt:</strong> {{ form2.value.city }}</p>
+          } @else {
+            <p>Bitte vervollständigen Sie alle Pflichtfelder in den vorherigen Schritten.</p>
+          }
+        </lux-step-content>
+      </lux-step>
+    </lux-stepper>
+  </lux-dialog-content>
+  <lux-dialog-actions class="lux-flex lux-gap-2">
+    @if (!isFirstStep) {
+      <lux-button
+        luxLabel="Zurück"
+        luxIconName="lux-interface-arrows-left"
+        [luxStroked]="true"
+        (luxClicked)="prevStep()"
+        luxTagId="stepper.dialog.prev"
+      ></lux-button>
+    }
+    @if (!isLastStep) {
+      <lux-button
+        luxLabel="Weiter"
+        luxColor="primary"
+        [luxIconShowRight]="true"
+        [luxFlat]="true"
+        luxIconName="lux-interface-arrows-right"
+        (luxClicked)="nextStep()"
+        luxTagId="stepper.dialog.next"
+      ></lux-button>
+    }
+    @if (isLastStep) {
+      <lux-button
+        #finishButton
+        luxLabel="Abschließen"
+        luxColor="primary"
+        [luxFlat]="true"
+        (luxClicked)="finish()"
+        luxTagId="stepper.dialog.finish"
+      ></lux-button>
+    }
+  </lux-dialog-actions>
+</lux-dialog-structure>

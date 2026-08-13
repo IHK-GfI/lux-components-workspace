@@ -8,6 +8,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
   imports: [NgStyle]
 })
 export class LuxImageComponent implements OnChanges, OnInit {
+  private static readonly EXTERNAL_IMAGE_SRC_PREFIXES = ['http://', 'https://', 'blob:', 'data:'];
+
   @Input() luxImageSrc = '';
   @Input() luxImageWidth = 'auto';
   @Input() luxImageHeight = 'auto';
@@ -15,6 +17,7 @@ export class LuxImageComponent implements OnChanges, OnInit {
   @Input() luxAlt = '';
 
   @Output() luxClicked = new EventEmitter<Event>();
+  @Output() luxImageError = new EventEmitter<Event>();
 
   isObserved = false;
 
@@ -42,12 +45,13 @@ export class LuxImageComponent implements OnChanges, OnInit {
     this.luxClicked.emit(event);
   }
 
+  protected onImageError(event: Event) {
+    this.luxImageError.emit(event);
+  }
+
   private updateImageSrc() {
     if (this.luxImageSrc) {
-      // Prüfen, ob es sich um ein externes Bild handelt
-      if (this.luxImageSrc.startsWith('http')) {
-        // Externe Links werden nicht verändert.
-      } else {
+      if (!this.isExternalImageSrc()) {
         // Wenn nicht, auf den Assets-Ordner verweisen
         if (this.luxImageSrc.indexOf('asset') === -1) {
           this.luxImageSrc = 'assets/' + this.luxImageSrc;
@@ -55,6 +59,15 @@ export class LuxImageComponent implements OnChanges, OnInit {
         this.sanitizeImageSrc();
       }
     }
+  }
+
+  private isExternalImageSrc() {
+    const normalizedImageSrc = this.luxImageSrc.toLowerCase();
+
+    return (
+      this.luxImageSrc.startsWith('//') ||
+      LuxImageComponent.EXTERNAL_IMAGE_SRC_PREFIXES.some((prefix) => normalizedImageSrc.startsWith(prefix))
+    );
   }
 
   private sanitizeImageSrc() {

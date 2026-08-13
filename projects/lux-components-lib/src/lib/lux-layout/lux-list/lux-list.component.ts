@@ -1,8 +1,10 @@
-import { FocusKeyManager } from '@angular/cdk/a11y';
+import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ContentChildren,
+  ElementRef,
   EventEmitter,
   HostBinding,
   HostListener,
@@ -11,6 +13,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  PLATFORM_ID,
   QueryList
 } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -19,6 +22,26 @@ import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.component';
 
+/**
+ * Selektiert alle aktuell fokussierbaren Elemente zum Deaktivieren der Tab-Stops.
+ * Enthält [tabindex]:not([tabindex="-1"]), um auch benutzerdefinierte
+ * fokussierbare Elemente (z.B. <div tabindex="0">) zu erfassen.
+ */
+const FOCUSABLE_SELECTORS =
+  'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]):not([style*="display: none"]), mat-select:not([disabled]), mat-chip-grid:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Selektiert interaktive native Elemente sowie zuvor per disableInnerTabStops()
+ * deaktivierte Custom-Elemente ([data-lux-focusable]) für die Grid-Navigation.
+ * Native Elemente (button, input …) sind per Typ-Selektor auffindbar – unabhängig
+ * vom aktuellen tabindex-Wert. Custom fokussierbare Elemente (<div tabindex="0">)
+ * werden per Datenattribut wiederhergestellt, das disableInnerTabStops() setzt.
+ */
+const NAVIGABLE_SELECTORS =
+  'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]):not([style*="display: none"]), mat-select:not([disabled]), mat-chip-grid:not([disabled]), textarea:not([disabled]), [data-lux-focusable]:not([disabled])';
+
+const KEY_F2 = 'F2';
+
 @Component({
   selector: 'lux-list',
   templateUrl: './lux-list.component.html',
@@ -26,12 +49,27 @@ import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.com
 })
 export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   private tService = inject(TranslocoService);
+  private elementRef = inject(ElementRef);
+  private platformId = inject(PLATFORM_ID);
   private _luxSelectedPosition = 0;
 
   private previousFocusedPosition?: number;
   private clickSubscriptions: Subscription[] = [];
   private listItemsSubscription?: Subscription;
+  private tabStopObserver?: MutationObserver;
+  private tabStopObserverDebounce?: ReturnType<typeof setTimeout>;
   private keyManager: FocusKeyManager<LuxListItemComponent> = new FocusKeyManager<LuxListItemComponent>([]);
+
+  /**
+   * Gibt an, ob sich die Liste im Bearbeiten-Modus befindet.
+   *
+   * Invariante:
+   *   editMode === false  Alle Sub-Elemente aller Kacheln haben tabindex="-1".
+   *                       Die Liste ist ein einziger Tab-Stopp.
+   *   editMode === true   Alle Sub-Elemente der aktiven Kachel haben tabindex="0".
+   *                       Der Browser verwaltet die Tab-Reihenfolge innerhalb der Kachel selbst.
+   */
+  private editMode = false;
 
   @ContentChildren(LuxListItemComponent) luxItems!: QueryList<LuxListItemComponent>;
 
@@ -46,12 +84,21 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     this.label = value || this.tService.translate('luxc.list.arialabel');
   }
 
-  @HostBinding('attr.role') role = 'listbox';
+  @HostBinding('attr.role') role = 'grid';
   @HostBinding('attr.tabindex') tabindex = '0';
-  @HostBinding('attr.aria-multiselectable') ariaMulti = 'true';
   @HostBinding('attr.aria-label') label = this.tService.translate('luxc.list.arialabel');
 
   @HostListener('focus', ['$event']) onFocus(event: FocusEvent) {
+    const relatedTarget = event.relatedTarget as HTMLElement | null;
+    const activeItem = this.keyManager.activeItem;
+
+    // Im editMode: Fokus kommt aus dem aktiven Item (z.B. Shift+Tab vom ersten Element).
+    // Nur zur Zeile zurückspringen, editMode bleibt aktiv.
+    if (this.editMode && activeItem && relatedTarget && activeItem.elementRef.nativeElement.contains(relatedTarget)) {
+      this.focusNow(activeItem);
+      return;
+    }
+
     if (event.relatedTarget === null || 'lux-list-item' !== this.getTagName(event)) {
       // Wenn die Liste den Focus erhält, soll direkt das selektierte Element (bzw. das erste Element) focussiert werden.
       if (this.luxItems.length > 0) {
@@ -66,6 +113,22 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
 
   @HostListener('keydown', ['$event']) onKeydown(keyboardEvent: KeyboardEvent) {
     this.keydown(keyboardEvent);
+  }
+
+  @HostListener('focusout', ['$event']) onFocusOut(event: FocusEvent) {
+    if (this.editMode) {
+      const activeItem = this.keyManager.activeItem;
+      if (activeItem) {
+        const relatedTarget = event.relatedTarget as HTMLElement | null;
+        // Fokus wandert zum lux-list-Host selbst (z.B. Shift+Tab vom ersten interaktiven Element):
+        // Das ist eine Zwischenstation auf dem Weg zurück zur Zeile – editMode bleibt aktiv.
+        const isMovingToListHost = relatedTarget === this.elementRef.nativeElement;
+        const isLeavingActiveItem = !relatedTarget || !activeItem.elementRef.nativeElement.contains(relatedTarget);
+        if (isLeavingActiveItem && !isMovingToListHost) {
+          this.exitEditMode(false);
+        }
+      }
+    }
   }
 
   get luxSelectedPosition(): number {
@@ -103,20 +166,48 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   ngAfterViewInit() {
     // Click-Events der LuxListItems erhalten
     this.listItemsSubscription = this.luxItems.changes.subscribe(() => {
+      // Edit-Modus zurücksetzen, da der KeyManager neu erstellt wird und
+      // Item-Referenzen veralten – inkonsistente Tab-Stops wären sonst möglich.
+      if (this.editMode) {
+        this.exitEditMode(false);
+      }
       this.listenForClicks();
       this.keyManager = new FocusKeyManager<LuxListItemComponent>(this.luxItems);
-      if (this.previousFocusedPosition) {
+      if (this.previousFocusedPosition != null) {
         this.keyManager.setActiveItem(this.previousFocusedPosition);
+      }
+      if (isPlatformBrowser(this.platformId)) {
+        this.disableInnerTabStops();
       }
     });
     this.listenForClicks();
     this.keyManager = new FocusKeyManager<LuxListItemComponent>(this.luxItems);
-    if (this.luxSelectedPosition) {
+    if (this.luxSelectedPosition != null) {
       this.keyManager.setActiveItem(this.luxSelectedPosition);
+    }
+
+    // Initiales Setzen von tabindex="-1" auf alle interaktiven Elemente sowie
+    // MutationObserver für dynamische DOM-Änderungen nur im Browser-Kontext:
+    // disableInnerTabStops() greift auf nativeElement.querySelectorAll() zu –
+    // in SSR nicht benötigt (kein Tab-Fokus) und von isPlatformBrowser abgesichert.
+    // Nur childList/subtree wird beobachtet, keine Attribut-Änderungen:
+    // disableInnerTabStops() setzt tabindex- und data-lux-focusable-Attribute –
+    // würde auch attributes: true beobachtet, könnte der Observer sich selbst rekursiv auslösen.
+    if (isPlatformBrowser(this.platformId)) {
+      this.disableInnerTabStops();
+
+      this.tabStopObserver = new MutationObserver(() => {
+        clearTimeout(this.tabStopObserverDebounce);
+        this.tabStopObserverDebounce = setTimeout(() => this.disableInnerTabStops(), 0);
+      });
+      this.tabStopObserver.observe(this.elementRef.nativeElement, { childList: true, subtree: true });
     }
   }
 
   ngOnDestroy() {
+    clearTimeout(this.tabStopObserverDebounce);
+    this.tabStopObserver?.disconnect();
+
     if (this.listItemsSubscription) {
       this.listItemsSubscription.unsubscribe();
     }
@@ -130,24 +221,72 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
    * @param keyboardEvent
    */
   keydown(keyboardEvent: KeyboardEvent) {
-    if (LuxUtil.isKeySpace(keyboardEvent) || LuxUtil.isKeyEnter(keyboardEvent)) {
-      this.select(this.keyManager.activeItemIndex!);
+    if (this.editMode) {
+      if (LuxUtil.isKeyEscape(keyboardEvent) && !keyboardEvent.defaultPrevented && !this.hasOpenOverlayInActiveItem()) {
+        this.exitEditMode(true);
+        keyboardEvent.preventDefault();
+      } else {
+        const activeItem = this.keyManager.activeItem;
+        const focusIsOnRow = activeItem && (keyboardEvent.target as HTMLElement) === activeItem.elementRef.nativeElement;
+
+        if (activeItem && keyboardEvent.key === 'Tab') {
+          const focusableElements = this.getFocusableElements(activeItem);
+          if (focusIsOnRow) {
+            if (focusableElements.length > 0) {
+              // Shift+Tab auf Zeilenebene → letztes fokussierbares Element; Tab → erstes
+              this.focusNow(keyboardEvent.shiftKey ? focusableElements[focusableElements.length - 1] : focusableElements[0]);
+              keyboardEvent.preventDefault();
+            }
+          } else if (
+            !keyboardEvent.shiftKey &&
+            focusableElements.length > 0 &&
+            document.activeElement === focusableElements[focusableElements.length - 1]
+          ) {
+            // Tab auf dem letzten fokussierbaren Element → Fokus zurück auf die Zeile (symmetrisch zu Shift+Tab auf dem ersten Element)
+            this.focusNow(activeItem);
+            keyboardEvent.preventDefault();
+          }
+        } else if (focusIsOnRow) {
+          if (LuxUtil.isKeyArrowUp(keyboardEvent)) {
+            this.keyManager.setPreviousItemActive();
+            this.focusActiveItem();
+            keyboardEvent.preventDefault();
+          } else if (LuxUtil.isKeyArrowDown(keyboardEvent)) {
+            this.keyManager.setNextItemActive();
+            this.focusActiveItem();
+            keyboardEvent.preventDefault();
+          } else if (LuxUtil.isKeyHome(keyboardEvent)) {
+            this.keyManager.setFirstItemActive();
+            this.focusActiveItem();
+            keyboardEvent.preventDefault();
+          } else if (LuxUtil.isKeyEnd(keyboardEvent)) {
+            this.keyManager.setLastItemActive();
+            this.focusActiveItem();
+            keyboardEvent.preventDefault();
+          }
+        }
+      }
+      return;
+    }
+
+    if (LuxUtil.isKeySpace(keyboardEvent) || LuxUtil.isKeyEnter(keyboardEvent) || keyboardEvent.key === KEY_F2) {
+      this.selectAndEnterEditMode();
       keyboardEvent.preventDefault();
     } else if (LuxUtil.isKeyHome(keyboardEvent)) {
       this.keyManager.setFirstItemActive();
-      this.focus(this.keyManager.activeItemIndex!);
+      this.focusActiveItem();
       keyboardEvent.preventDefault();
     } else if (LuxUtil.isKeyEnd(keyboardEvent)) {
       this.keyManager.setLastItemActive();
-      this.focus(this.keyManager.activeItemIndex!);
+      this.focusActiveItem();
       keyboardEvent.preventDefault();
     } else if (LuxUtil.isKeyArrowUp(keyboardEvent)) {
       this.keyManager.setPreviousItemActive();
-      this.focus(this.keyManager.activeItemIndex!);
+      this.focusActiveItem();
       keyboardEvent.preventDefault();
     } else if (LuxUtil.isKeyArrowDown(keyboardEvent)) {
       this.keyManager.setNextItemActive();
-      this.focus(this.keyManager.activeItemIndex!);
+      this.focusActiveItem();
       keyboardEvent.preventDefault();
     } else {
       this.keyManager.onKeydown(keyboardEvent);
@@ -163,9 +302,28 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.luxItems.forEach((listItem: LuxListItemComponent, index: number) => {
       this.clickSubscriptions.push(
-        listItem.luxClicked.subscribe(() => {
-          this.focus(index);
-          this.select(index);
+        listItem.luxClicked.subscribe((event: Event) => {
+          const clickTarget = (event.target as HTMLElement).closest<HTMLElement>(NAVIGABLE_SELECTORS);
+          const isFocusableTarget = !!clickTarget && listItem.elementRef.nativeElement.contains(clickTarget);
+
+          if (isFocusableTarget) {
+            // Item selektieren, Edit-Modus betreten und geklicktes Element fokussieren
+            if (index !== this.luxSelectedPosition) {
+              this.focus(index);
+              this.select(index);
+            }
+            if (!this.editMode) {
+              this.editMode = true;
+              const activeItem = this.keyManager.activeItem;
+              if (activeItem) {
+                this.enableItemTabStops(activeItem);
+              }
+            }
+            this.focusNow(clickTarget);
+          } else if (index !== this.luxSelectedPosition) {
+            this.focus(index);
+            this.select(index);
+          }
         })
       );
     });
@@ -194,10 +352,111 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   /**
+   * Setzt tabindex="0" auf alle navigierbaren Elemente des angegebenen List-Items.
+   */
+  private enableItemTabStops(item: LuxListItemComponent): void {
+    const elements = item.elementRef.nativeElement.querySelectorAll(NAVIGABLE_SELECTORS);
+    (Array.from(elements) as HTMLElement[]).forEach((el) => {
+      el.tabIndex = 0;
+      el.removeAttribute('data-lux-focusable');
+    });
+  }
+
+  private hasOpenOverlayInActiveItem(): boolean {
+    const activeItem = this.keyManager.activeItem;
+    if (!activeItem) return false;
+
+    const el = activeItem.elementRef.nativeElement;
+    return (
+      !!el.querySelector('[aria-expanded="true"]') ||
+      !!el.querySelector('[aria-haspopup]:not([aria-expanded="false"]):not([aria-expanded])')
+    );
+  }
+
+  private focusNow(el: HTMLElement | FocusableOption | null): void {
+    if (el) {
+      el.focus();
+    }
+  }
+
+  /**
+   * Gibt alle fokussierbaren interaktiven Elemente innerhalb des List-Items zurück.
+   */
+  private getFocusableElements(listItem: LuxListItemComponent): HTMLElement[] {
+    const elements = listItem.elementRef.nativeElement.querySelectorAll(NAVIGABLE_SELECTORS);
+    return Array.from(elements) as HTMLElement[];
+  }
+
+  /**
+   * Selektiert das aktive Item und aktiviert anschließend den Bearbeiten-Modus,
+   * sofern das Item interaktive Elemente enthält.
+   * Hinweis: Die Selektion erfolgt bewusst immer – auch wenn kein Edit-Modus
+   * aktiviert wird (kein interaktiver Inhalt).
+   */
+  private selectAndEnterEditMode(): void {
+    const activeIndex = this.keyManager.activeItemIndex;
+    if (activeIndex == null || activeIndex < 0) return;
+    this.select(activeIndex);
+    const activeItem = this.keyManager.activeItem;
+    if (activeItem && this.getFocusableElements(activeItem).length > 0) {
+      this.enterEditMode();
+    }
+  }
+
+  /**
+   * Aktiviert den Bearbeiten-Modus: Setzt tabindex="0" auf alle navigierbaren Elemente
+   * der aktiven Kachel und fokussiert das Element an focusIndex (Standard: 0).
+   */
+  private enterEditMode(focusIndex = 0): void {
+    if (!this.editMode) {
+      const activeItem = this.keyManager.activeItem;
+      if (!activeItem) return;
+
+      this.editMode = true;
+      this.enableItemTabStops(activeItem);
+
+      const focusableElements = this.getFocusableElements(activeItem);
+      if (focusableElements.length > 0) {
+        const idx = focusIndex >= 0 && focusIndex < focusableElements.length ? focusIndex : 0;
+        this.focusNow(focusableElements[idx]);
+      }
+    }
+  }
+
+  /**
+   * Beendet den Bearbeiten-Modus: Setzt tabindex="-1" auf alle navigierbaren Elemente
+   * der aktiven Kachel.
+   * @param moveFocusToRow Wenn true (Standard), wird der Fokus auf die Zeilenebene verschoben.
+   */
+  private exitEditMode(moveFocusToRow = true): void {
+    if (this.editMode) {
+      const activeItem = this.keyManager.activeItem;
+      this.editMode = false;
+      this.disableInnerTabStops();
+      if (moveFocusToRow && activeItem) {
+        this.focusNow(activeItem);
+      }
+    }
+  }
+
+  /**
+   * Ruft focus(activeItemIndex) auf, sofern der Index nicht null ist.
+   */
+  private focusActiveItem(): void {
+    const idx = this.keyManager.activeItemIndex;
+    if (idx != null) {
+      this.focus(idx);
+    }
+  }
+
+  /**
    * Merkt sich die position als Fokus-Position und aktualisiert die CSS-Klassen der ListItems.
    * @param position
    */
   private focus(position: number) {
+    if (this.editMode) {
+      this.exitEditMode(false);
+    }
     this.keyManager.setActiveItem(position);
 
     this.luxFocusedPositionChange.emit(position);
@@ -238,5 +497,29 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     return tagName;
+  }
+
+  /**
+   * Setzt tabindex="-1" auf alle interaktiven Elemente innerhalb aller Kacheln.
+   * Dadurch ist die Liste ein einziger Tab-Stopp; interaktive Elemente sind nur
+   * im Bearbeiten-Modus (Enter/F2/Mausklick) per programmatischem focus() erreichbar.
+   * Der if-Guard (tabIndex !== -1) verhindert unnötige DOM-Schreibzugriffe, wenn
+   * die Elemente bereits korrekt gesetzt sind.
+   */
+  private disableInnerTabStops(): void {
+    const activeItem = this.editMode ? this.keyManager.activeItem : null;
+
+    this.luxItems?.forEach((item) => {
+      // Im Bearbeiten-Modus die aktive Kachel überspringen – ihre Tab-Stops sind bewusst aktiv.
+      if (item === activeItem) return;
+
+      const elements = item.elementRef.nativeElement.querySelectorAll(FOCUSABLE_SELECTORS);
+      (Array.from(elements) as HTMLElement[]).forEach((el) => {
+        if (el.tabIndex !== -1) {
+          el.dataset['luxFocusable'] = 'true';
+          el.tabIndex = -1;
+        }
+      });
+    });
   }
 }

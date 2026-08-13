@@ -233,13 +233,15 @@ export function addImport(tree: Tree, filePath: string, packageName: string, imp
   }
 }
 
-export function removeImport(tree: Tree, filePath: string, packageName: string, importName?: string, logMessage = true) {
+export function removeImport(tree: Tree, filePath: string, packageName: string, importName?: string, logMessage = true): boolean {
   const content = (tree.read(filePath) as Buffer).toString();
   const fileName = filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
   const sourceFile = ts.createSourceFile(`${fileName}`, content, ts.ScriptTarget.Latest, true);
   const nodes = getSourceNodes(sourceFile);
 
   const importNodes = nodes.filter((n) => n.kind === ts.SyntaxKind.ImportDeclaration);
+
+  let removed = false;
 
   if (importNodes) {
     importNodes.forEach((importNode) => {
@@ -280,6 +282,7 @@ export function removeImport(tree: Tree, filePath: string, packageName: string, 
                 const updateRecorder = tree.beginUpdate(filePath);
                 updateRecorder.remove(importNode.pos, importNode.getChildren()[importNode.getChildren().length - 1].end - importNode.pos);
                 tree.commitUpdate(updateRecorder);
+                removed = true;
                 if (logMessage) {
                   logInfo(`import ${importName} entfernt.`);
                 }
@@ -300,6 +303,7 @@ export function removeImport(tree: Tree, filePath: string, packageName: string, 
                     }
                   }
                   tree.commitUpdate(updateRecorder);
+                  removed = true;
                   if (logMessage) {
                     logInfo(`import ${importName} entfernt.`);
                   }
@@ -311,6 +315,7 @@ export function removeImport(tree: Tree, filePath: string, packageName: string, 
           const updateRecorder = tree.beginUpdate(filePath);
           updateRecorder.remove(importNode.pos, importNode.end - importNode.pos);
           tree.commitUpdate(updateRecorder);
+          removed = true;
           if (logMessage) {
             logInfo(`import ${importName} entfernt.`);
           }
@@ -318,6 +323,8 @@ export function removeImport(tree: Tree, filePath: string, packageName: string, 
       }
     });
   }
+
+  return removed;
 }
 
 export function addComponentImport(tree: Tree, filePath: string, importName: string, logMessage = true) {

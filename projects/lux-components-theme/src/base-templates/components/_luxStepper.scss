@@ -12,7 +12,7 @@ lux-stepper {
       line-color: var(--lux-theme-app-border-color),
       header-label-text-size: 1rem,
       header-selected-state-label-text-size: 1rem,
-      header-error-state-label-text-size: 1rem,
+      header-error-state-label-text-size: 1rem
     )
   );
 
@@ -30,6 +30,16 @@ lux-stepper {
   .mat-vertical-stepper-header {
     margin: 8px 8px 0 8px;
   }
+
+  .mat-horizontal-stepper-header .mat-step-icon,
+  .mat-vertical-stepper-header .mat-step-icon {
+    margin-right: 0;
+  }
+
+  lux-step-header div {
+    margin-left: 0.75rem;
+  }
+
   mat-step-header {
     margin: var(--lux-theme-outline-width);
 
@@ -44,6 +54,7 @@ lux-stepper {
 
     .mat-step-label {
       height: 100%;
+      min-width: unset;
       display: flex;
       align-items: center;
       position: relative;

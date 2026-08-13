@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxLinkComponent } from './lux-link.component';
 
 describe('LuxLinkComponent', () => {
@@ -106,6 +106,74 @@ describe('LuxLinkComponent', () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(['/mock-route']);
 
+    discardPeriodicTasks();
+  }));
+
+  it('Sollte den (internen) href per Enter-Taste aufrufen', fakeAsync(() => {
+    // Vorbedingungen testen
+    const spy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(false));
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    // Änderungen durchführen
+    component.href = '/mock-route';
+    LuxTestHelper.wait(fixture);
+
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(['/mock-route']);
+
+    discardPeriodicTasks();
+  }));
+
+  it('Sollte bei deaktiviertem Link per Enter-Taste nicht navigieren', fakeAsync(() => {
+    // Vorbedingungen testen
+    const spy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(false));
+    const clickedSpy = jasmine.createSpy('luxClicked');
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    // Änderungen durchführen
+    component.href = '/mock-route';
+    component.disabled = true;
+    LuxTestHelper.wait(fixture);
+
+    const sub = linkComponent.luxClicked.subscribe(clickedSpy);
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen: kein Navigate, kein luxClicked
+    expect(spy).toHaveBeenCalledTimes(0);
+    expect(clickedSpy).toHaveBeenCalledTimes(0);
+
+    sub.unsubscribe();
+    discardPeriodicTasks();
+  }));
+
+  it('Sollte bei deaktiviertem Link per Space-Taste nicht navigieren', fakeAsync(() => {
+    // Vorbedingungen testen
+    const spy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(false));
+    const clickedSpy = jasmine.createSpy('luxClicked');
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    // Änderungen durchführen
+    component.href = '/mock-route';
+    component.disabled = true;
+    LuxTestHelper.wait(fixture);
+
+    const sub = linkComponent.luxClicked.subscribe(clickedSpy);
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('keydown.space', new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen: kein Navigate, kein luxClicked
+    expect(spy).toHaveBeenCalledTimes(0);
+    expect(clickedSpy).toHaveBeenCalledTimes(0);
+
+    sub.unsubscribe();
     discardPeriodicTasks();
   }));
 

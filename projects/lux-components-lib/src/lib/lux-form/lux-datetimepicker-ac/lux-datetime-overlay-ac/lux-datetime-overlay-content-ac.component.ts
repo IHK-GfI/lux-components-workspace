@@ -89,11 +89,14 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
 
   initDate(value?: string) {
     if (value) {
-      this.selected = new Date(value);
-      this.hours = this.selected.getUTCHours() < 10 ? '0' + this.selected.getUTCHours() : '' + this.selected.getUTCHours();
-      this.minutes = this.selected.getUTCMinutes() < 10 ? '0' + this.selected.getUTCMinutes() : '' + this.selected.getUTCMinutes();
-      this.selected.setUTCHours(0, 0, 0, 0);
-      this.startDate = new Date(this.selected.getTime());
+      const d = new Date(value);
+      this.hours = d.getUTCHours() < 10 ? '0' + d.getUTCHours() : '' + d.getUTCHours();
+      this.minutes = d.getUTCMinutes() < 10 ? '0' + d.getUTCMinutes() : '' + d.getUTCMinutes();
+      // UTC-Datumskomponenten verwenden, damit bei UTC-Mitternacht in allen Zeitzonen
+      // der korrekte Kalendermonat angezeigt wird (z.B. 2024-04-01T00:00Z → April, nicht März).
+      // Lokales Mitternacht-Datum erstellen, damit mat-calendar (_getCellCompareValue) korrekt arbeitet.
+      this.selected = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+      this.startDate = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
     } else {
       if (this.dateTimePicker.luxStartDate) {
         this.startDate = this.dateTimePicker.luxStartDate;

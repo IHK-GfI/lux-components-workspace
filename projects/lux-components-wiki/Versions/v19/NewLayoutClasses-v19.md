@@ -97,17 +97,17 @@ Klassen für die initiale Größe von flex-items.
 | lux-flex-basis-7/10 | flex-basis: 70%;              |              |
 | lux-flex-basis-8/10 | flex-basis: 80%;              |              |
 | lux-flex-basis-9/10 | flex-basis: 90%;              |              |
-</table>
 
 ## 3. Flex-Direction
 
 Klassen für die Ausrichtung der Hauptachse in einer Flexbox
-| Klasse               | CSS-Regel                    | Beschreibung                                                          |
-| :------------------- | :--------------------------- | :-------------------------------------------------------------------- |
-| lux-flex-row         | flex-direction: row;         | Richtet die Elemente in einer Reihe aus.                              |
-| lux-flex-row-reverse | flex-direction: row-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Reihe aus.   |
-| lux-flex-col         | flex-direction: col;         | Richtete die Elemente in einer Spalte aus.                            |
-| lux-flex-col-reverse | flex-direction: col-reverse; | Richtete die Elemente in umgekehrter Reihenfolge in einer Spalte aus. |
+
+| Klasse               | CSS-Regel                    | Beschreibung                                                         |
+| :------------------- | :--------------------------- | :------------------------------------------------------------------- |
+| lux-flex-row         | flex-direction: row;         | Richtet die Elemente in einer Reihe aus.                             |
+| lux-flex-row-reverse | flex-direction: row-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Reihe aus.  |
+| lux-flex-col         | flex-direction: col;         | Richtet die Elemente in einer Spalte aus.                            |
+| lux-flex-col-reverse | flex-direction: col-reverse; | Richtet die Elemente in umgekehrter Reihenfolge in einer Spalte aus. |
 
 ## 4. Flex Wrap
 
@@ -116,7 +116,7 @@ Klassen für den Zeilenumbruch in einer flex-row.
 | Klasse                | CSS-Regel                | Beschreibung                                                                                              |
 | :-------------------- | :----------------------- | :-------------------------------------------------------------------------------------------------------- |
 | lux-flex-wrap         | flex-wrap: wrap;         | Ermöglicht den Zeilenumbruch von Flex-Items in einer Flexbox.                                             |
-| lux-flex-nowrap       | flex-wrap: nowap;        | Verhindert den Zeilenumbruch von Flex-Items in einer Flexbox. Kann zu einem Overflow in der Reihe führen. |
+| lux-flex-nowrap       | flex-wrap: nowrap;       | Verhindert den Zeilenumbruch von Flex-Items in einer Flexbox. Kann zu einem Overflow in der Reihe führen. |
 | lux-flex-wrap-reverse | flex-wrap: wrap-reverse; | Ermöglicht den Zeilenumbruch von Flex-Items in einer Flexbox, in umgekehrter Reihenfolge.                 |
 
 ## 5. Flex

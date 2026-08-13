@@ -17,9 +17,9 @@
 
 ### Allgemein
 
-| Name     | Beschreibung  |
-| -------- | ------------- |
-| selector | lux-input-ac  |
+| Name     | Beschreibung |
+| -------- | ------------ |
+| selector | lux-input-ac |
 
 ### @Input
 
@@ -32,21 +32,23 @@
 | luxValue               | \<T = string>          | Der Text-Wert des Input-Felds. Two-Way-Binding ebenfalls möglich, wenn das Input-Feld nicht innerhalb eines Reactive-Forms ist.                                                                                                                                                                                                                                              |
 | luxHideCounterLabel    | boolean                | Siehe Eigenschaft `luxMaxLength`.                                                                                                                                                                                                                                                                                                                                            |
 | luxTagId               | string                 | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                |
+| luxClearable           | boolean                | Blendet optional einen Button im Eingabefeld ein, mit dem der aktuelle Eingabewert zurückgesetzt werden kann.                                                                                                                                                                                                                                                                |
+| luxClearAriaLabel      | string                 | ARIA-Label für den Zurücksetzen-Button. Wenn leer, wird ein Standardtext verwendet.                                                                                                                                                                                                                                                                                          |
 | luxPlaceholder         | string                 | Text der als Platzhalter, solange kein anderer Wert eingetragen ist, dargestellt wird.                                                                                                                                                                                                                                                                                       |
 | luxAutocomplete        | string                 | Steuert, ob der Browser den Inhalt cachen darf.                                                                                                                                                                                                                                                                                                                              |
-| luxRequired            | boolean                | Bestimmt ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                                                    |
+| luxRequired            | boolean                | Bestimmt, ob die Component ein Pflichtfeld ist oder nicht.                                                                                                                                                                                                                                                                                                                   |
 | luxControlBinding      | string                 | Das Controlbinding (z.B. firstname) verbindet das Formularelement mit einem Wert aus dem Modell. (!) Diese Eigenschaft kann nur verwendet werden, wenn das Element innerhalb eines Formulars verwendet wird.                                                                                                                                                                 |
 | luxErrorMessage        | string                 | Fehlertext, wenn das Formularelement nicht valide ist. Der Fehlertext ersetzt den Hinweistext, wenn es einen gibt. Ersetzt den luxErrorCallback, wenn gesetzt.                                                                                                                                                                                                               |
-| luxDisabled            | boolean                | Bestimmt ob die Component deaktiviert ist oder nicht. Durch den Event-Emitter "luxDisabledChange" ist ein Two-Way-Binding möglich.                                                                                                                                                                                                                                           |
-| luxReadonly            | boolean                | Bestimmt ob sich das Feld im reinen Lese-Zustand befindet (ähnlich wie disabled, aber ohne die Auswirkungen auf Forms und andere visuelle Darstellung).                                                                                                                                                                                                                      |
+| luxDisabled            | boolean                | Bestimmt, ob die Component deaktiviert ist oder nicht. Durch den Event-Emitter "luxDisabledChange" ist ein Two-Way-Binding möglich.                                                                                                                                                                                                                                          |
+| luxReadonly            | boolean                | Bestimmt, ob sich das Feld im reinen Lese-Zustand befindet (ähnlich wie disabled, aber ohne die Auswirkungen auf Forms und andere visuelle Darstellung).                                                                                                                                                                                                                     |
 | luxErrorCallback       | LuxErrorCallbackFnType | Callback-Funktion die aufgerufen wird nachdem die Validierung der Component stattgefunden hat. Hier kann dann entsprechend aus dem übergebenen Errors-Objekt ein Fehler ausgelesen und die passende Fehlermeldung zurückgegeben werden. Liefert der Callback `undefined` zurück, wird die Defaultfehlermeldung ausgegeben.                                                   |
-| luxControlValidators   | ValidatorFnType        | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen.                                                                                                                       |
+| luxControlValidators   | ValidatorFnType        | Validator-Funktion oder ein Array von Validator-Funktionen, die für diese Component hereingereicht werden können. Diese werden nur für nicht-ReactiveForms-Components angewendet und sollen so eine Validierung für "normale" Komponenten ermöglichen. Für eine strengere E-Mail-Validierung kann z.B. `LuxValidators.email` verwendet werden.                                 |
 | luxLabel               | string                 | Property welche ein Label oberhalb der FormComponent (Ausnahme: LuxToggle und LuxCheckbox, diese stellen das Label rechts von der Schaltfläche dar) darstellt.                                                                                                                                                                                                               |
 | luxHint                | string                 | Property, welche einen Tipp/Text unterhalb der FormComponent darstellt. Alternativ kann man über das Content-Child `lux-form-hint` komplexere Hinweise (z.B. mit einem Link) darstellen.                                                                                                                                                                                     |
 | luxHintShowOnlyOnFocus | boolean                | Gibt an, ob der Hinweis (siehe luxHint) nur angezeigt wird, wenn das Element den Fokus hat.                                                                                                                                                                                                                                                                                  |
 | luxLabelLongFormat     | boolean                | Bestimmt, ob das Label mehrzeilig sein kann. Nutzung nur in Spalten empfohlen, da die Höhe des Formcontrols variieren kann. Dadurch kann die Ausrichtung an der Baseline nicht mehr gewährleistet werden.                                                                                                                                                                    |
 | luxNoLabels            | boolean                | Gibt an, ob Labels angezeigt werden sollen.                                                                                                                                                                                                                                                                                                                                  |
-| luxNoTopLabel          | boolean                | Gib an, ob das obere Label angezeigt werden soll.                                                                                                                                                                                                                                                                                                                            |
+| luxNoTopLabel          | boolean                | Gibt an, ob das obere Label angezeigt werden soll.                                                                                                                                                                                                                                                                                                                           |
 | luxNoBottomLabel       | boolean                | Gibt an, ob das untere Label (Hinweis oder Fehlermeldung) angezeigt werden soll.                                                                                                                                                                                                                                                                                             |
 | luxDense               | boolean                | Property um die Höhe der Komponente zu verringern. Diese Eigenschaft ist für den Einsatz in großen Formularen gedacht und soll nicht standardmäßig in einer Anwendung genutzt werden.                                                                                                                                                                                        |
 
@@ -108,6 +110,8 @@ Html
 Ts
 
 ```typescript
+import { LuxValidators } from '@ihk-gfi/lux-components';
+
 myGroup: FormGroup;
 
   constructor() {
@@ -116,7 +120,7 @@ myGroup: FormGroup;
         {
           firstname: new FormControl('', Validators.pattern('[a-zA-Z0-9]*')),
           lastname: new FormControl('', Validators.compose([Validators.required, Validators.minLength(3)])),
-          email: new FormControl('', Validators.compose([Validators.required, Validators.email])),
+          email: new FormControl('', Validators.compose([Validators.required, LuxValidators.email])),
           password: new FormControl(''),
         }
       ),
@@ -127,6 +131,8 @@ myGroup: FormGroup;
     this.myGroup.controls['description'].disable();
 }
 ```
+
+Hinweis: `LuxValidators.email` validiert E-Mail-Adressen strenger als `Validators.email` (passend zur serverseitigen JAST-Stack-Prüfung).
 
 Html
 

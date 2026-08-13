@@ -46,9 +46,9 @@
 | luxDisabled              | boolean                                                          | Gibt an, ob das Accordion deaktiviert ist.                                                       |
 | luxCollapsedHeaderHeight | string (z.B. `20px` oder `1em`)                                  | Gibt an, wie hoch die Panelheader im eingeklappten Zustand sind.                                 |
 | luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)                                  | Gibt an, wie hoch die Panelheader im ausgeklappten Zustand sind.                                 |
-| luxDynamicHeaderHeight   | boolean                                                          | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                     |
+| luxDynamicHeaderHeight   | boolean                                                          | Gibt an, ob die Headerhöhe automatisch berechnet werden soll.                                    |
 | luxColor                 | LuxAccordionColor (`primary` \| `accent` \| `warn` \| `neutral`) | Gibt an, welche Farbe der Header haben soll.                                                     |
-| luxTogglePosition        | LuxTogglePosition (`after` \| `before`)                          | Gibt an,ob das Toggle Icon rechts oder links angezeigt werden soll. Der Default ist rechts.      |
+| luxTogglePosition        | LuxTogglePosition (`after` \| `before`)                          | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts.     |
 
 ## Components
 
@@ -64,15 +64,15 @@ Eine `LuxPanelComponent` stellt einen ein- und ausklappbaren Bereich dar. Es gib
 
 #### @Input
 
-| Name                     | Typ                                     | Beschreibung                                                                                |
-| ------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------------- |
-| luxDisabled              | boolean                                 | Gibt an, ob das Panel deaktiviert ist.                                                      |
-| luxExpanded              | boolean                                 | Gibt an, ob das Panel aufgeklappt ist. _(Two-Way-Binding möglich)_                          |
-| luxHideToggle            | boolean                                 | Gibt an, ob das Toggle-Icon ausgeblendet werden soll.                                       |
-| luxCollapsedHeaderHeight | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im eingeklappten Zustand ist.                                  |
-| luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im ausgeklappten Zustand ist.                                  |
-| luxDynamicHeaderHeight   | boolean                                                          | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                     |
-| luxTogglePosition        | LuxTogglePosition (`after` \| `before`) | Gibt an,ob das Toggle Icon rechts oder links angezeigt werden soll. Der Default ist rechts. |
+| Name                     | Typ                                     | Beschreibung                                                                                 |
+| ------------------------ | --------------------------------------- | -------------------------------------------------------------------------------------------- |
+| luxDisabled              | boolean                                 | Gibt an, ob das Panel deaktiviert ist.                                                       |
+| luxExpanded              | boolean                                 | Gibt an, ob das Panel aufgeklappt ist. _(Two-Way-Binding möglich)_                           |
+| luxHideToggle            | boolean                                 | Gibt an, ob das Toggle-Icon ausgeblendet werden soll.                                        |
+| luxCollapsedHeaderHeight | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im eingeklappten Zustand ist.                                   |
+| luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im ausgeklappten Zustand ist.                                   |
+| luxDynamicHeaderHeight   | boolean                                 | Gibt an, ob die Headerhöhe automatisch berechnet werden soll.                                |
+| luxTogglePosition        | LuxTogglePosition (`after` \| `before`) | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts. |
 
 #### @Output
 

@@ -1,0 +1,13 @@
+<mat-paginator
+  [length]="luxLength()"
+  [pageSize]="luxPageSize()"
+  [pageSizeOptions]="luxPageSizeOptions()"
+  [pageIndex]="luxPageIndex()"
+  [showFirstLastButtons]="luxShowFirstLastButtons()"
+  [hidePageSize]="luxHidePageSize()"
+  [disabled]="luxDisabled()"
+  [class.lux-no-wrap]="luxNoWrap()"
+  [class.lux-dense]="luxDense()"
+  (page)="onPageChange($event)"
+>
+</mat-paginator>

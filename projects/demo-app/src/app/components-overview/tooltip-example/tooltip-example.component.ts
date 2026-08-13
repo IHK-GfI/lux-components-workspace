@@ -33,6 +33,9 @@ export class TooltipExampleComponent {
   positionOptions = ['left', 'right', 'above', 'below', 'before', 'after'];
 
   message = 'Tooltip';
+  resizableMessage = 'Bericht für das vierte Quartal herunterladen';
+  resizableMessageMultiline =
+    'Der konsolidierte Bericht für das vierte Quartal enthält alle Kennzahlen der Regionen Nord, Süd, Ost und West inklusive der Prognose für das kommende Geschäftsjahr.';
   disabled = false;
   hideDelay = 0;
   showDelay = 0;

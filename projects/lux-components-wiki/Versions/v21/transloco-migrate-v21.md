@@ -65,7 +65,7 @@ Falls es bei der Durchführung des LUX-Components-Update eine neuere Transloco-V
    ng g @ihk-gfi/lux-components-update:migrate-i18n-keys
    ```
 
-   Wichtig! Die Transloco-Importe (_TranslocoPipe_ bzw. __TranslocoModule_) in den TypeScript-Dateien werden nicht automatisch ergänzt. D.h. diese müssen manuell ergänzt werden.
+   Wichtig! Die Transloco-Importe (_TranslocoPipe_ bzw. _TranslocoModule_) in den TypeScript-Dateien werden nicht automatisch ergänzt. D.h. diese müssen manuell ergänzt werden.
 
     ```typescript
     import { TranslocoPipe } from '@jsverse/transloco';

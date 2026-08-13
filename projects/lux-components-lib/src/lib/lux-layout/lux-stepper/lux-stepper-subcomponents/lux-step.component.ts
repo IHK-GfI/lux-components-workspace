@@ -1,6 +1,7 @@
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { LuxStepHeaderComponent } from './lux-step-header.component';
 
 @Component({
   selector: 'lux-step',
@@ -19,12 +20,17 @@ export class LuxStepComponent {
 
   @ViewChild('header', { static: true }) headerTemplate!: TemplateRef<any>;
   @ViewChild('content', { static: true }) contentTemplate!: TemplateRef<any>;
+  @ContentChild(LuxStepHeaderComponent) luxStepHeader?: LuxStepHeaderComponent;
 
   @Input() luxIconSize = '1x';
   @Input() luxOptional = false;
   @Input() luxEditable = true;
   @Input() luxCompleted = true;
   @Input() luxStepControl?: FormGroup;
+
+  get hasHeader(): boolean {
+    return !!this.luxStepHeader;
+  }
 
   get luxIconName(): string | undefined {
     return this._luxIconName;

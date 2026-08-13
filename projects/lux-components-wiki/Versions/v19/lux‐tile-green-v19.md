@@ -33,8 +33,8 @@
 | luxTagId                     | string  | [LUX-Tag-Id](luxTagId-v19#direkte-konfiguration) für die automatischen Tests.                                                                                  |
 | luxCounter                   | number  | Zeigt eine Zahl auf der rechten, oberen Seite des Tiles an.                                                                                                    |
 | luxCounterCap                | number  | Die Obergrenze für den luxCounter. Wenn der luxCounter größer als der luxCounterCap ist, wird der luxCounterCap mit einem zusätzlichen '+'-Symbol dargestellt. |
-| luxShowNotification          | boolean | Bestimmt ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                             |
-| luxShowShadow                | boolean | Bestimmt ob ein Schatten um der Kachel angezeigt werden soll.                                                                                                  |
+| luxShowNotification          | boolean | Bestimmt, ob das Symbol für Notifikationen an der rechten, oberen Seite des Tiles dargestellt wird.                                                            |
+| luxShowShadow                | boolean | Bestimmt, ob ein Schatten um der Kachel angezeigt werden soll.                                                                                                 |
 
 ### @Output
 
@@ -44,9 +44,9 @@
 
 ## Styleguide
 
-Grundlegende Regeln zum Umgang mit Tile's sind:
+Grundlegende Regeln zum Umgang mit Tiles sind:
 
-- Die Überschriften bei den Tile's sind analog zur lux-card grundsätzlich links auszurichten.
+- Die Überschriften bei den Tiles sind analog zur lux-card grundsätzlich links auszurichten.
 
 ## Beispiele
 

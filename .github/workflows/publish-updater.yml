@@ -11,30 +11,27 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
-      -  run: |
-           npm install
-           npm run pack:updater
-           cd dist/updater
-           ls -lR
+      - run: |
+          npm install
+          npm run pack:updater
+          cd dist/updater
+          ls -lR
 
   publish-npm:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
           scope: '@ihk-gfi'
-          always-auth: true
-      - name: Update npm
-        run: npm install -g npm@latest
       - name: Publish NPM
         run: |
           npm install

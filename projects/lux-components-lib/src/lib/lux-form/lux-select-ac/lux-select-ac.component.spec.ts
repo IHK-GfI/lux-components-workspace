@@ -9,10 +9,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
-import { LuxTestHelper } from '../../lux-util/testing/lux-test-helper';
 import { LuxPickValueFnType } from '../lux-form-model/lux-form-selectable-base.class';
 import { LuxSelectAcComponent } from './lux-select-ac.component';
 
@@ -844,9 +844,93 @@ describe('LuxSelectAcComponent', () => {
       expect(optionTexts[2]).toBe('Handball');
       expect(optionTexts[3]).toBe('Stricken');
     }));
+
+    it('behält bei aktivem luxKeepOptionOrder die Ursprungsreihenfolge (renderOptionIndexes)', fakeAsync(() => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(SelectKeepOptionOrderComponent);
+      const testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const selectComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent))
+        .componentInstance as LuxSelectAcComponent;
+      expect(selectComponent.renderOptionIndexes).toEqual([0, 1, 2, 3]);
+
+      // Änderungen durchführen: mittlere Option selektieren
+      testComponent.selectedOption = testComponent.options[2];
+      fixture.detectChanges();
+      flush();
+
+      // Nachbedingungen prüfen: Reihenfolge bleibt stabil (kein Sortieren nach oben)
+      expect(selectComponent.renderOptionIndexes).toEqual([0, 1, 2, 3]);
+
+      flush();
+    }));
+
+    it('lässt bei aktivem luxKeepOptionOrder die selektierte Option nicht nach oben wandern', fakeAsync(() => {
+      // Vorbedingungen testen
+      const fixture = TestBed.createComponent(SelectKeepOptionOrderComponent);
+      const testComponent = fixture.componentInstance;
+      testComponent.selectedOption = testComponent.options[2];
+      fixture.detectChanges();
+      flush();
+
+      // Änderungen durchführen: Panel öffnen
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      // Nachbedingungen prüfen: gerenderte Reihenfolge entspricht der Ursprungsreihenfolge
+      const optionTexts = Array.from(
+        document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>
+      ).map((el) => el.textContent!.trim());
+
+      expect(optionTexts).toEqual([
+        'Meine Aufgaben',
+        'Gruppenaufgaben',
+        'Zurückgestellte Aufgaben',
+        'Vertretungsaufgaben'
+      ]);
+
+      const selectedOptions = Array.from(
+        document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>
+      ).filter((opt) => opt.classList.contains('mdc-list-item--selected'));
+      expect(selectedOptions.length).toBe(1);
+      expect(selectedOptions[0].innerText.trim()).toContain('Zurückgestellte Aufgaben');
+
+      flush();
+    }));
   });
 
   describe('mit aktivierter Filterfunktion', () => {
+    it('verwendet ng-template trotz gesetztem luxOptionLabelProp und filtert weiterhin korrekt', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectFilterWithTemplateComponent);
+      fixture.detectChanges();
+
+      const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const optionTexts = Array.from(
+        document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>
+      ).map((el) => el.textContent?.trim() ?? '');
+
+      expect(optionTexts.length).toBe(4);
+      expect(optionTexts[0]).toContain('OptionTpl: Meine Aufgaben');
+
+      const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
+      filterInput.value = 'gruppe';
+      LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
+      fixture.detectChanges();
+      flush();
+
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
+      expect(visibleOptions.length).toBe(1);
+      expect(visibleOptions[0].innerText.trim()).toContain('OptionTpl: Gruppenaufgaben');
+    }));
+
     it('rendert das Filterfeld nicht als deaktivierte mat-option', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
@@ -1057,7 +1141,10 @@ describe('LuxSelectAcComponent', () => {
       const filterInputAfterReopen = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInputAfterReopen.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInputAfterReopen, 'input');
-      LuxTestHelper.dispatchEvent(filterInputAfterReopen, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown'));
+      LuxTestHelper.dispatchEvent(
+        filterInputAfterReopen,
+        LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown')
+      );
       fixture.detectChanges();
       flush();
 
@@ -1305,6 +1392,45 @@ describe('LuxSelectAcComponent', () => {
       expect(maxHeight).toBeCloseTo(optionHeight * 2, 0);
     }));
   });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxSelectA11yComponent>;
+    let testComponent: LuxSelectA11yComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(LuxSelectA11yComponent);
+      testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+      discardPeriodicTasks();
+    }));
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
+      testComponent.disabled = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
+      testComponent.readonly = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
+      testComponent.required = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+  });
 });
 
 @Component({
@@ -1454,6 +1580,24 @@ class SelectFilterComponent {
 
 @Component({
   template: `
+    <lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" [luxEnableFilter]="true" [(luxSelected)]="selectedOption">
+      <ng-template let-option> {{ 'OptionTpl: ' + option.label }} </ng-template>
+    </lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectFilterWithTemplateComponent {
+  selectedOption: Option | null = null;
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+}
+
+@Component({
+  template: `
     <form [formGroup]="formGroup">
       <lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="task" [luxEnableFilter]="true"></lux-select-ac>
     </form>
@@ -1508,6 +1652,32 @@ class SelectFilterMultipleComponent {
 })
 class SelectVisibleOptionCountComponent {
   selectedOption: Option | null = null;
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      luxLabel="Aufgaben"
+      [luxOptions]="options"
+      luxOptionLabelProp="label"
+      [(luxSelected)]="selectedOption"
+      [luxMultiple]="false"
+      [luxKeepOptionOrder]="true"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectKeepOptionOrderComponent {
+  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+
+  selectedOption: Option | null = null;
+
   options: Option[] = [
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },
@@ -1638,7 +1808,7 @@ class SelectMultiplePickValueFnComponent {
 
 @Component({
   template: `
-    <lux-select-ac [luxOptions]="options" [(luxSelected)]="selectedOption">
+    <lux-select-ac [luxOptions]="options" [luxOptionLabelProp]="labelProp" [(luxSelected)]="selectedOption">
       <ng-template let-option>
         {{ 'Option: ' + option.value }}
       </ng-template>
@@ -1656,4 +1826,24 @@ class SelectWithTemplateComponent {
     { label: 'Zurückgestellte Aufgaben', value: 'C' },
     { label: 'Vertretungsaufgaben', value: 'D' }
   ];
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      luxLabel="Aufgaben"
+      luxOptionLabelProp="label"
+      [luxOptions]="options"
+      [luxDisabled]="disabled"
+      [luxReadonly]="readonly"
+      [luxRequired]="required"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class LuxSelectA11yComponent {
+  options = [{ label: 'Meine Aufgaben', value: 'A' }];
+  disabled = false;
+  readonly = false;
+  required = false;
 }

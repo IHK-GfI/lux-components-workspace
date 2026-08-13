@@ -1,6 +1,5 @@
 @use "@angular/material" as mat;
 @use "../common/luxSvgIcons" as luxicons;
-@use "../common/luxfocus" as luxfocus;
 
 .mat-mdc-menu-panel {
   .mat-mdc-menu-item-text {
@@ -70,6 +69,18 @@ lux-menu {
 }
 
 /* Menu-Overlay-Panel anpassen */
+.lux-menu-panel:not(.lux-menu-section-panel) {
+  .lux-menu-item-color-warn:not([disabled]) {
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-warn-text-color);
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-warn-text-color);
+  }
+
+  .lux-menu-item-color-accent:not([disabled]) {
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-accent-text-color);
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-accent-text-color);
+  }
+}
+
 .lux-menu-panel {
   @include mat.menu-overrides(
     (
@@ -139,6 +150,9 @@ lux-menu {
   }
 
   .lux-menu-item-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     align-self: center;
     vertical-align: middle;
     width: var(--lux-theme-menu-item-icon-size);
@@ -146,13 +160,25 @@ lux-menu {
 
     .lux-icon,
     mat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       height: 100%;
+      max-width: var(--lux-theme-menu-item-icon-size);
+      max-height: var(--lux-theme-menu-item-icon-size);
       font-size: var(--lux-theme-menu-item-icon-size);
     }
 
     mat-icon {
       margin: 0;
+
+      svg {
+        width: 100%;
+        height: 100%;
+        max-width: var(--lux-theme-menu-item-icon-size);
+        max-height: var(--lux-theme-menu-item-icon-size);
+      }
     }
   }
 }
@@ -247,6 +273,26 @@ lux-menu {
     padding: 4px;
   }
 
+  .lux-menu-item-color-warn:not([disabled]) {
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-warn-text-color);
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-warn-text-color);
+
+    .lux-button-label,
+    .lux-button-label-subtitle {
+      color: var(--lux-theme-button-text-warn-text-color);
+    }
+  }
+
+  .lux-menu-item-color-accent:not([disabled]) {
+    --mat-menu-item-icon-color: var(--lux-theme-button-text-accent-text-color);
+    --mat-menu-item-label-text-color: var(--lux-theme-button-text-accent-text-color);
+
+    .lux-button-label,
+    .lux-button-label-subtitle {
+      color: var(--lux-theme-button-text-accent-text-color);
+    }
+  }
+
   .lux-menu-item-selected {
     background-color: var(--lux-theme-primary-90) !important;
     text-decoration-line: underline;
@@ -286,7 +332,16 @@ lux-menu {
 
       .lux-icon,
       mat-icon {
+        max-width: var(--lux-theme-menu-item-icon-size-large);
+        max-height: var(--lux-theme-menu-item-icon-size-large);
         font-size: var(--lux-theme-menu-item-icon-size-large);
+      }
+
+      mat-icon {
+        svg {
+          max-width: var(--lux-theme-menu-item-icon-size-large);
+          max-height: var(--lux-theme-menu-item-icon-size-large);
+        }
       }
     }
   }

@@ -21,7 +21,16 @@ export class LuxDateTimePickerAcAdapter extends NativeDateAdapter {
 
     if (date) {
       const newDate = typeof date === 'string' ? new Date(date) : new Date(date.getTime());
-      newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
+
+      // Die UTC-Offset-Korrektur ist nur für Formate mit Zeitangabe (Stunde/Minute) notwendig,
+      // um UTC-Timestamps korrekt als UTC-Uhrzeit anzuzeigen (z.B. Eingabefeld "01.04.2024, 00:00").
+      // Für reine Datum-Formate wie monthYearLabel oder dateA11yLabel übergibt mat-calendar
+      // lokale Mitternacht-Dates; hier darf keine Korrektur erfolgen, da sonst das Datum
+      // in UTC+ Zeitzonen um die Differenz zurückversetzt wird (April → März).
+      const hasTimeComponent = displayFormat && 'hour' in (displayFormat as Record<string, unknown>);
+      if (hasTimeComponent) {
+        newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
+      }
 
       if (displayFormat) {
         dateAsString = newDate.toLocaleDateString(this.locale, displayFormat);

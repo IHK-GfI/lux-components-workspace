@@ -13,9 +13,9 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   ];
   mediaQueryOptions = ['xs', 'sm', 'md', 'lg', 'xl'];
   columnWidthOptions = [
-    { label: '[5%, 20%, 30%, 35%, 10%]', value: [5, 20, 30, 35, 10] },
-    { label: '[20%, 20%, 20%, 20%, 20%]', value: [20, 20, 20, 20, 20] },
-    { label: '[10%, 20%, 50%, 10%, 10%]', value: [10, 20, 50, 10, 10] }
+    { label: '[20%, 20%, 60%]', value: [20, 20, 60] },
+    { label: '[33%, 33%, 34%]', value: [33, 33, 34] },
+    { label: '[50%, 25%, 25%]', value: [50, 25, 25] }
   ];
   tableCSS: ICustomCSSConfig[] = [
     {
