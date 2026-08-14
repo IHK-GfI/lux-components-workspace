@@ -115,18 +115,53 @@
 
   <lux-card luxTitle="A11y - Visuell versteckte Labels" luxTagId="forms-a11y">
     <lux-card-content>
+      <!-- Issue #267: empfohlene Variante, luxLabel plus luxNoTopLabel -->
+      <p>
+        Alle Felder in diesem Beispiel besitzen ein luxLabel, das über luxNoTopLabel nur visuell versteckt ist. Screenreader lesen
+        den Namen weiterhin vor. Mit dem Schalter lassen sich die Labels zur Kontrolle wieder einblenden. Checkbox und Toggle fehlen
+        hier bewusst, denn ihr Label steht neben dem Bedienelement und wird nicht visuell versteckt.
+      </p>
+      <lux-toggle-ac luxLabel="Labels sichtbar anzeigen" [(luxChecked)]="showA11yLabels" [luxNoBottomLabel]="true"></lux-toggle-ac>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
-        <!-- Issue #267: zulässige Ausnahmen für visuell versteckte Labels -->
-        <lux-input-ac
-          luxLabel="Suchbegriff eingeben"
-          [luxNoTopLabel]="true"
-          luxPlaceholder="Suchen..."
-        ></lux-input-ac>
-
+        <lux-input-ac luxLabel="Suchbegriff eingeben" [luxNoTopLabel]="!showA11yLabels" luxPlaceholder="Suchen..."></lux-input-ac>
+        <lux-textarea-ac luxLabel="Anmerkung erfassen" [luxNoTopLabel]="!showA11yLabels"></lux-textarea-ac>
         <lux-select-ac
-          luxAriaLabel="Liste sortieren nach"
+          luxLabel="Liste sortieren nach"
+          [luxNoTopLabel]="!showA11yLabels"
           [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
         ></lux-select-ac>
+        <lux-autocomplete-ac luxLabel="Hobby suchen" [luxNoTopLabel]="!showA11yLabels" [luxOptions]="hobbies"></lux-autocomplete-ac>
+        <lux-datepicker-ac luxLabel="Startdatum wählen" [luxNoTopLabel]="!showA11yLabels"></lux-datepicker-ac>
+        <lux-datetimepicker-ac luxLabel="Termin wählen" [luxNoTopLabel]="!showA11yLabels"></lux-datetimepicker-ac>
+        <lux-timepicker luxLabel="Uhrzeit wählen" [luxNoTopLabel]="!showA11yLabels"></lux-timepicker>
+        <lux-file-input-ac luxLabel="Datei auswählen" [luxNoTopLabel]="!showA11yLabels"></lux-file-input-ac>
+        <lux-radio-ac luxLabel="Hobby wählen" [luxNoTopLabel]="!showA11yLabels" [luxOptions]="hobbies"></lux-radio-ac>
+        <lux-slider-ac luxLabel="Lautstärke einstellen" [luxNoTopLabel]="!showA11yLabels"></lux-slider-ac>
+        <lux-chips-ac luxLabel="Schlagwort ergänzen" [luxNoTopLabel]="!showA11yLabels" [luxInputAllowed]="true"></lux-chips-ac>
+      </div>
+
+      <h3>Ausnahme: Felder ganz ohne Labeltext</h3>
+      <!-- Issue #267: Ausnahmefälle, der zugängliche Name kommt über luxAriaLabel bzw. luxAriaLabelledby -->
+      <p>
+        Die beiden folgenden Felder besitzen kein luxLabel. Der zugängliche Name kommt über luxAriaLabel beziehungsweise
+        luxAriaLabelledby. Diese Variante ist die Ausnahme für Fälle, in denen es keinen eigenen Labeltext gibt oder der Name bereits
+        sichtbar an anderer Stelle steht, etwa als Spaltenkopf einer Tabelle. Der Schalter oben wirkt hier nicht, weil kein Label
+        existiert, das eingeblendet werden könnte. Die leere Label-Zeile wird bei diesen Feldern nicht gerendert, sie stehen also auf
+        gleicher Höhe wie Felder mit verstecktem Label.
+      </p>
+      <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
+        <div>
+          <p>Name über luxAriaLabel, hier "Liste sortieren nach":</p>
+          <lux-select-ac
+            luxAriaLabel="Liste sortieren nach"
+            [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
+          ></lux-select-ac>
+        </div>
+        <div>
+          <p>Name über luxAriaLabelledby, hier der sichtbare Text "Rechnungsnummer":</p>
+          <span id="forms-a11y-spalte-rechnungsnummer">Rechnungsnummer</span>
+          <lux-input-ac luxAriaLabelledby="forms-a11y-spalte-rechnungsnummer"></lux-input-ac>
+        </div>
       </div>
     </lux-card-content>
   </lux-card>
