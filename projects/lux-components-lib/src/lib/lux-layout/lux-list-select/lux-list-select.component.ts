@@ -8,6 +8,7 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
+import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-message-box.component';
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
@@ -27,6 +28,7 @@ import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types
     TranslocoPipe,
     LuxPaginatorComponent,
     LuxInfiniteScrollDirective,
+    LuxTagIdDirective,
     LuxMessageBoxComponent
   ],
   host: {

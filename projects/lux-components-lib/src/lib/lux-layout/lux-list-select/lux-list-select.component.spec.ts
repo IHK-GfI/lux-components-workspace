@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
+import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxListSelectComponent } from './lux-list-select.component';
@@ -331,6 +332,29 @@ describe('LuxListSelectComponent', () => {
       expect(listSelect.luxSelected()).toEqual([]);
       const firstCard = fixture.debugElement.query(By.css('.lux-list-select-card'));
       expect(firstCard.nativeElement.classList).toContain('lux-disabled');
+    });
+  });
+
+  describe('A11y', () => {
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    it('Sollte im Multi-Modus keine Barrierefreiheitsverletzungen haben', async () => {
+      host.mode = 'multi';
+      host.showPagination = true;
+      host.errorMessage = 'Bitte eine Auswahl treffen.';
+      host.showDetailButton = true;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Sollte im Single-Modus keine Barrierefreiheitsverletzungen haben', async () => {
+      host.mode = 'single';
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
   });
 });
