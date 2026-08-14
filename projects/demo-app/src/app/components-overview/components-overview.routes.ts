@@ -45,6 +45,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'app-footer', loadComponent: () => import('./app-footer-example/app-footer-example.component').then(m => m.AppFooterExampleComponent) },
       { path: 'toggle-ac', loadComponent: () => import('./toggle-authentic-example/toggle-authentic-example.component').then(m => m.ToggleAuthenticExampleComponent) },
       { path: 'list', loadComponent: () => import('./list-example/list-example.component').then(m => m.ListExampleComponent) },
+      { path: 'list-select', loadComponent: () => import('./list-select-example/list-select-example.component').then(m => m.ListSelectExampleComponent) },
       { path: 'timestamp', loadComponent: () => import('./timestamp-example/timestamp-example.component').then(m => m.TimestampExampleComponent) },
       { path: 'stepper', loadComponent: () => import('./stepper-example/stepper-example.component').then(m => m.StepperExampleComponent) },
       { path: 'stepper-large', loadComponent: () => import('./stepper-large-example/stepper-large-example.component').then(m => m.StepperLargeExampleComponent) },

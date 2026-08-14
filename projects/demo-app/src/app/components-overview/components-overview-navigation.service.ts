@@ -92,6 +92,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('layout', 'Checkbox-Container-Ac'),
     this.create('layout', 'Divider'),
     this.create('layout', 'List', DemoMarkerType.Updated),
+    this.create('layout', 'List-Select', DemoMarkerType.New),
     {
       onclick: () => this.router.navigate(['components-overview/master-detail-ac']),
       icon: this.moduleIcons.get('layout')!,

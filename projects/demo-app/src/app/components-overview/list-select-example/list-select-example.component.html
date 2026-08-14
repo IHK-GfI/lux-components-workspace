@@ -1,0 +1,57 @@
+<example-base-structure
+  exampleTitle="List-Select"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90list%E2%80%90select-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col lux-gap-3" style="max-width: 600px">
+      <h2>Adresse suchen</h2>
+      <lux-input-ac luxLabel="Suche" [luxNoTopLabel]="true" [(luxValue)]="filter">
+        <lux-input-ac-prefix>
+          <lux-icon luxIconName="lux-interface-search"></lux-icon>
+        </lux-input-ac-prefix>
+      </lux-input-ac>
+
+      <lux-list-select
+        [luxMode]="mode()"
+        [luxItems]="visibleItems()"
+        [luxTotalItems]="filtered().length"
+        [luxSelected]="selected()"
+        [luxShowPagination]="showPagination()"
+        [luxPageSize]="pageSize"
+        [(luxPageIndex)]="pageIndex"
+        [luxInfiniteScroll]="infiniteScroll()"
+        [luxMaxHeight]="maxHeight()"
+        [luxShowDetailButton]="showDetailButton()"
+        [luxDisabled]="disabled()"
+        [luxErrorMessage]="errorMessage() || null"
+        luxSelectAllLabel="Alle Adressen"
+        (luxSelectedChange)="onSelectedChange($event)"
+        (luxPageChange)="onPageChange($event)"
+        (luxScrolled)="onScrolled()"
+        (luxDetailClicked)="onDetail($event)"
+      ></lux-list-select>
+    </div>
+  </example-base-content>
+
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-select-ac
+      luxLabel="luxMode"
+      [luxOptions]="modeOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="mode"
+    ></lux-select-ac>
+    <lux-toggle-ac luxLabel="luxShowPagination" [(luxChecked)]="showPagination"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxInfiniteScroll" [(luxChecked)]="infiniteScroll"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxShowDetailButton" [(luxChecked)]="showDetailButton"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled"></lux-toggle-ac>
+    <lux-input-ac luxLabel="luxErrorMessage" [(luxValue)]="errorMessage"></lux-input-ac>
+    <lux-input-ac luxLabel="luxMaxHeight" [(luxValue)]="maxHeight"></lux-input-ac>
+  </example-base-simple-options>
+</example-base-structure>
