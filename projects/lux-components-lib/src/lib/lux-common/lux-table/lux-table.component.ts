@@ -136,6 +136,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
 
   filtered$: Subject<string> = new Subject<string>();
   currentCustomClasses: { entry: any; classes: string }[] = [];
+  hasHighlightedRows = false;
   isLoadingResults = false;
   allSelected = false;
   mediaQuery: string;
@@ -637,6 +638,10 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         this.currentCustomClasses.push({ entry, classes });
       });
     }
+    // Sobald mindestens eine Zeile eine Texthighlight-Klasse trägt, wird das Zeilen-Striping
+    // deaktiviert, damit die semantischen Farben nicht mit den alternierenden Zeilenfarben
+    // kollidieren (Issue #269).
+    this.hasHighlightedRows = this.currentCustomClasses.some((value) => value.classes.includes('lux-text-highlight-'));
   }
 
   /**
