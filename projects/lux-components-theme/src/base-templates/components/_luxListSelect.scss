@@ -1,0 +1,139 @@
+@use "../common/luxfocus";
+
+$lux-list-select-scrollbar-track: #fbfafa;
+$lux-list-select-scrollbar-thumb: #8b8b8b;
+
+lux-list-select {
+  display: block;
+
+  .lux-list-select-header {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: var(--lux-theme-spacing-md);
+  }
+
+  .lux-list-select-viewport {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: $lux-list-select-scrollbar-thumb $lux-list-select-scrollbar-track;
+
+    &::-webkit-scrollbar {
+      width: 16px;
+      background-color: $lux-list-select-scrollbar-track;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $lux-list-select-scrollbar-thumb;
+      border-radius: var(--lux-theme-radius-xxl);
+      border: 2px solid $lux-list-select-scrollbar-track;
+    }
+  }
+
+  .lux-list-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lux-theme-spacing-sm);
+    padding: 2px; // verhindert abgeschnittene Borders/Fokusringe (Figma: Padding 2)
+  }
+
+  lux-list-select-item {
+    display: block;
+  }
+
+  .lux-list-select-card {
+    display: flex;
+    align-items: center;
+    gap: var(--lux-theme-spacing-md);
+    min-height: 81px;
+    box-sizing: border-box;
+    padding: 0 20px;
+    background-color: #fff;
+    border: 2px solid var(--lux-theme-app-border-color);
+    border-radius: var(--lux-theme-radius-sm);
+    cursor: pointer;
+
+    &:hover:not(.lux-disabled) {
+      background-color: var(--lux-theme-hover-color);
+      border-color: var(--lux-theme-primary-color);
+    }
+
+    &:focus-within {
+      outline: var(--lux-theme-outline-dark);
+      outline-offset: -2px;
+    }
+
+    &.lux-selected {
+      border-color: var(--lux-theme-selected-border-color);
+    }
+
+    &.lux-disabled {
+      cursor: default;
+
+      .lux-list-select-title,
+      .lux-list-select-subtitle {
+        color: var(--lux-theme-dark-disabled-text);
+      }
+    }
+  }
+
+  .lux-list-select-headlines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lux-theme-spacing-sm);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .lux-list-select-title {
+    font-family: var(--lux-theme-app-headline-font);
+    font-size: var(--lux-theme-font-size-xl);
+    color: var(--lux-theme-dark-primary-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lux-list-select-subtitle {
+    font-size: var(--lux-theme-font-size-md);
+    color: var(--lux-theme-dark-secondary-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lux-list-select-detail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: var(--lux-theme-radius-xxl);
+    background: transparent;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: var(--lux-theme-hover-color);
+    }
+
+    &:focus-visible {
+      @include luxfocus.focus-dark-mixin;
+    }
+
+    &:disabled {
+      cursor: default;
+      color: var(--lux-theme-dark-disabled-text);
+    }
+  }
+
+  lux-paginator {
+    margin-top: var(--lux-theme-spacing-sm);
+  }
+
+  .lux-list-select-error {
+    display: block;
+    margin-top: var(--lux-theme-spacing-sm);
+  }
+}
