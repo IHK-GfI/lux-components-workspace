@@ -271,6 +271,68 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.directive(LuxInfiniteScrollDirective))).not.toBeNull();
     });
   });
+
+  describe('Fehlerzustand', () => {
+    it('Sollte bei luxErrorMessage eine gelbe Message-Box mit Warn-Icon anzeigen', () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('lux-message-box'))).toBeNull();
+
+      // Änderungen durchführen
+      host.errorMessage = 'Bitte wähle eine Adresse aus, die du übernehmen möchtest.';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const messageBox = fixture.debugElement.query(By.css('lux-message-box'));
+      expect(messageBox).not.toBeNull();
+      expect(messageBox.nativeElement.textContent).toContain('Bitte wähle eine Adresse aus');
+
+      // Änderungen durchführen
+      host.errorMessage = null;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('lux-message-box'))).toBeNull();
+    });
+  });
+
+  describe('ControlValueAccessor', () => {
+    it('Sollte writeValue die Selektion setzen und null leeren', () => {
+      // Änderungen durchführen
+      listSelect.writeValue([TEST_ITEMS[1]]);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(listSelect.isSelected(TEST_ITEMS[1])).toBeTrue();
+
+      listSelect.writeValue(null);
+      fixture.detectChanges();
+      expect(listSelect.luxSelected()).toEqual([]);
+    });
+
+    it('Sollte Selektionsänderungen an registerOnChange melden', () => {
+      // Vorbedingungen testen
+      const changeSpy = jasmine.createSpy('onChange');
+      listSelect.registerOnChange(changeSpy);
+
+      // Änderungen durchführen
+      listSelect.toggleItem(TEST_ITEMS[0]);
+
+      // Nachbedingungen prüfen
+      expect(changeSpy).toHaveBeenCalledWith([TEST_ITEMS[0]]);
+    });
+
+    it('Sollte setDisabledState die komplette Komponente deaktivieren', () => {
+      // Änderungen durchführen
+      listSelect.setDisabledState(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      listSelect.toggleItem(TEST_ITEMS[0]);
+      expect(listSelect.luxSelected()).toEqual([]);
+      const firstCard = fixture.debugElement.query(By.css('.lux-list-select-card'));
+      expect(firstCard.nativeElement.classList).toContain('lux-disabled');
+    });
+  });
 });
 
 @Component({
@@ -287,6 +349,7 @@ describe('LuxListSelectComponent', () => {
       [luxInfiniteScroll]="infiniteScroll"
       [luxMaxHeight]="maxHeight"
       [(luxPageIndex)]="pageIndex"
+      [luxErrorMessage]="errorMessage"
       (luxPageChange)="lastPageEvent = $event"
       (luxDetailClicked)="lastDetail = $event"
     />
@@ -304,4 +367,5 @@ class MockHostComponent {
   maxHeight: string | null = null;
   pageIndex = 0;
   lastPageEvent: LuxPageEvent | null = null;
+  errorMessage: string | null = null;
 }

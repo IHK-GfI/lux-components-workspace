@@ -4,7 +4,7 @@
       [luxItem]="item"
       [luxMode]="luxMode()"
       [luxSelected]="isSelected(item)"
-      [luxDisabled]="luxDisabled() || isItemDisabled(item)"
+      [luxDisabled]="componentDisabled() || isItemDisabled(item)"
       [luxLabel]="getLabel(item)"
       [luxSubLabel]="getSubLabel(item)"
       [luxShowDetailButton]="luxShowDetailButton()"
@@ -23,7 +23,7 @@
         class="lux-list-select-select-all"
         [checked]="allSelected()"
         [indeterminate]="partiallySelected()"
-        [disabled]="luxDisabled()"
+        [disabled]="componentDisabled()"
         (change)="onSelectAllChange($event.checked)"
       >
         {{ luxSelectAllLabel() ?? ('luxc.list-select.select_all' | transloco) }}
@@ -75,7 +75,11 @@
     [(luxPageIndex)]="luxPageIndex"
     [luxHidePageSize]="true"
     [luxShowFirstLastButtons]="false"
-    [luxDisabled]="luxDisabled()"
+    [luxDisabled]="componentDisabled()"
     (luxPageChange)="onPageChange($event)"
   ></lux-paginator>
+}
+
+@if (errorMessages().length > 0) {
+  <lux-message-box class="lux-list-select-error" [luxMessages]="errorMessages()"></lux-message-box>
 }

@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, contentChild, effect, inject, input, model, output, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, contentChild, effect, inject, input, model, output, signal, TemplateRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioGroup } from '@angular/material/radio';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
@@ -7,6 +8,8 @@ import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
+import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-message-box.component';
+import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
 
@@ -23,13 +26,21 @@ import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types
     LuxLabelComponent,
     TranslocoPipe,
     LuxPaginatorComponent,
-    LuxInfiniteScrollDirective
+    LuxInfiniteScrollDirective,
+    LuxMessageBoxComponent
   ],
   host: {
     class: 'lux-list-select'
-  }
+  },
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: LuxListSelectComponent,
+      multi: true
+    }
+  ]
 })
-export class LuxListSelectComponent<T = unknown> {
+export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor {
   private static nextUniqueId = 0;
 
   private tService = inject(TranslocoService);
@@ -54,6 +65,7 @@ export class LuxListSelectComponent<T = unknown> {
   readonly luxInfiniteScroll = input(false);
   readonly luxIsLoading = input(false);
   readonly luxMaxHeight = input<string | null>(null);
+  readonly luxErrorMessage = input<string | null>(null);
 
   readonly luxSelected = model<T[]>([]);
   readonly luxPageIndex = model(0);
@@ -62,6 +74,10 @@ export class LuxListSelectComponent<T = unknown> {
   readonly luxScrolled = output<void>();
 
   readonly contentTemplate = contentChild<TemplateRef<unknown>>(TemplateRef);
+
+  private onChange: (value: T[]) => void = () => {};
+  private onTouched: () => void = () => {};
+  private cvaDisabled = signal(false);
 
   protected listLabel = computed(() => this.luxLabel() ?? this.tService.translate('luxc.list-select.arialabel'));
   protected totalCount = computed(() => this.luxTotalItems() ?? this.luxItems().length);
@@ -74,6 +90,11 @@ export class LuxListSelectComponent<T = unknown> {
   protected counterLabelId = computed(() => `${this.luxTagId() ?? 'lux-list-select'}-counter-${this.uniqueId}`);
   protected paginationActive = computed(() => this.luxShowPagination());
   protected infiniteScrollActive = computed(() => this.luxInfiniteScroll() && !this.luxShowPagination());
+  protected componentDisabled = computed(() => this.luxDisabled() || this.cvaDisabled());
+  protected errorMessages = computed<ILuxMessage[]>(() => {
+    const message = this.luxErrorMessage();
+    return message ? [{ text: message, iconName: 'lux-interface-alert-warning-triangle', color: 'yellow' }] : [];
+  });
 
   constructor() {
     effect(() => {
@@ -95,7 +116,7 @@ export class LuxListSelectComponent<T = unknown> {
   }
 
   toggleItem(item: T) {
-    if (this.luxDisabled() || this.isItemDisabled(item)) {
+    if (this.componentDisabled() || this.isItemDisabled(item)) {
       return;
     }
     if (this.luxMode() === 'single') {
@@ -110,13 +131,17 @@ export class LuxListSelectComponent<T = unknown> {
         this.luxSelected.update((selected) => [...selected, item]);
       }
     }
+    this.onChange(this.luxSelected());
+    this.onTouched();
   }
 
   onSelectAllChange(checked: boolean) {
-    if (this.luxDisabled()) {
+    if (this.componentDisabled()) {
       return;
     }
     this.luxSelected.set(checked ? [...this.enabledItems()] : []);
+    this.onChange(this.luxSelected());
+    this.onTouched();
   }
 
   onPageChange(event: LuxPageEvent) {
@@ -125,6 +150,22 @@ export class LuxListSelectComponent<T = unknown> {
 
   onScrolled() {
     this.luxScrolled.emit();
+  }
+
+  writeValue(value: T[] | null): void {
+    this.luxSelected.set(Array.isArray(value) ? value : []);
+  }
+
+  registerOnChange(fn: (value: T[]) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.cvaDisabled.set(isDisabled);
   }
 
   protected getLabel(item: T): string {
