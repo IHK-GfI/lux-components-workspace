@@ -52,7 +52,7 @@
 
 Hinweis: `luxShowPagination` und `luxInfiniteScroll` schließen sich gegenseitig aus. Sind beide `true`, gibt die Komponente eine `console.error`-Meldung aus und verwendet die Paginierung.
 
-Hinweis: „Alle auswählen“ (nur im Multi-Modus) wirkt ausschließlich auf die nicht-disabled Items der aktuell in `luxItems` übergebenen Liste. Bei Paginierung oder Infinite Scrolling betrifft dies also nur die aktuell sichtbare bzw. geladene Seite, nicht alle Elemente über `luxTotalItems`.
+Hinweis: „Alle auswählen“ (nur im Multi-Modus) wirkt ausschließlich auf die nicht-disabled Items der aktuell in `luxItems` übergebenen Liste. Bei Paginierung oder Infinite Scrolling betrifft dies also nur die aktuell sichtbare bzw. geladene Seite, nicht alle Elemente über `luxTotalItems`. Eine bereits bestehende Selektion aus anderen Seiten bleibt dabei erhalten: Beim Anhaken werden die Items der aktuellen Seite zur bestehenden Selektion hinzugefügt, beim Abhaken werden nur die Items der aktuellen Seite wieder entfernt.
 
 ### Outputs
 

@@ -1,5 +1,5 @@
 <ng-template #itemsTpl>
-  @for (item of luxItems(); track $index) {
+  @for (item of luxItems(); track item) {
     <lux-list-select-item
       [luxItem]="item"
       [luxMode]="luxMode()"

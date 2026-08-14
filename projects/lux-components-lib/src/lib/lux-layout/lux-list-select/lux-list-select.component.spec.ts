@@ -22,6 +22,8 @@ const TEST_ITEMS: TestAdresse[] = [
   { label: 'Markus Fischer', subLabel: 'Schillerplatz 3, 70173 Stuttgart' }
 ];
 
+const OTHER_PAGE_ITEM: TestAdresse = { label: 'Clara Hartmann', subLabel: 'Friedrichstr. 28, 30159 Hannover' };
+
 describe('LuxListSelectComponent', () => {
   let fixture: ComponentFixture<MockHostComponent>;
   let host: MockHostComponent;
@@ -124,12 +126,15 @@ describe('LuxListSelectComponent', () => {
       expect(host.selected).toEqual([]);
     });
 
-    it('Sollte beim Wechsel von Multi auf Single die Selektion auf ein Item kappen', () => {
+    it('Sollte beim Wechsel von Multi auf Single die Selektion auf ein Item kappen und onChange melden', () => {
       // Vorbedingungen testen
       listSelect.toggleItem(TEST_ITEMS[0]);
       listSelect.toggleItem(TEST_ITEMS[1]);
       fixture.detectChanges();
       expect(host.selected.length).toBe(2);
+
+      const changeSpy = jasmine.createSpy('onChange');
+      listSelect.registerOnChange(changeSpy);
 
       // Änderungen durchführen
       host.mode = 'single';
@@ -137,6 +142,7 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen
       expect(host.selected).toEqual([TEST_ITEMS[0]]);
+      expect(changeSpy).toHaveBeenCalledWith([TEST_ITEMS[0]]);
     });
   });
 
@@ -195,6 +201,26 @@ describe('LuxListSelectComponent', () => {
       listSelect.onSelectAllChange(false);
       fixture.detectChanges();
       expect(host.selected).toEqual([]);
+    });
+
+    it('Sollte beim Alle-auswählen die Selektion anderer Seiten erhalten', () => {
+      // Vorbedingungen testen: Item einer anderen Seite ist bereits selektiert
+      host.selected = [OTHER_PAGE_ITEM];
+      fixture.detectChanges();
+
+      // Änderungen durchführen: aktuelle Seite komplett auswählen
+      listSelect.onSelectAllChange(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Item der anderen Seite bleibt erhalten, Seiten-Items kommen hinzu
+      expect(host.selected).toEqual([OTHER_PAGE_ITEM, TEST_ITEMS[0], TEST_ITEMS[1], TEST_ITEMS[3]]);
+
+      // Änderungen durchführen: aktuelle Seite wieder abwählen
+      listSelect.onSelectAllChange(false);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: nur die Seiten-Items werden entfernt, Item der anderen Seite bleibt erhalten
+      expect(host.selected).toEqual([OTHER_PAGE_ITEM]);
     });
 
     it('Sollte bei Teilauswahl den Indeterminate-State setzen', () => {
@@ -308,6 +334,22 @@ describe('LuxListSelectComponent', () => {
       listSelect.writeValue(null);
       fixture.detectChanges();
       expect(listSelect.luxSelected()).toEqual([]);
+    });
+
+    it('Sollte writeValue im Single-Modus auf ein Element kappen, ohne onChange zu rufen', () => {
+      // Vorbedingungen testen
+      host.mode = 'single';
+      fixture.detectChanges();
+      const changeSpy = jasmine.createSpy('onChange');
+      listSelect.registerOnChange(changeSpy);
+
+      // Änderungen durchführen
+      listSelect.writeValue([TEST_ITEMS[0], TEST_ITEMS[1]]);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(listSelect.luxSelected()).toEqual([TEST_ITEMS[0]]);
+      expect(changeSpy).not.toHaveBeenCalled();
     });
 
     it('Sollte Selektionsänderungen an registerOnChange melden', () => {

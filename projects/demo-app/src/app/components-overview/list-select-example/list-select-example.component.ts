@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, model, signal } from '@angular/core';
 import {
   LuxIconComponent,
   LuxInputAcComponent,
@@ -88,6 +88,14 @@ export class ListSelectExampleComponent {
     }
     return this.filtered();
   });
+
+  constructor() {
+    effect(() => {
+      this.filter();
+      this.pageIndex.set(0);
+      this.loadedCount.set(6);
+    });
+  }
 
   onPageChange(event: LuxPageEvent) {
     this.log(this.showOutputEvents(), 'luxPageChange', event);

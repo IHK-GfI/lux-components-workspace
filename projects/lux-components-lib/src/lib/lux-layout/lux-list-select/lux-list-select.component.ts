@@ -88,7 +88,11 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     const enabled = this.enabledItems();
     return enabled.length > 0 && enabled.every((item) => this.isSelected(item));
   });
-  protected partiallySelected = computed(() => this.luxSelected().length > 0 && !this.allSelected());
+  protected partiallySelected = computed(() => {
+    const enabled = this.enabledItems();
+    const selectedCount = enabled.filter((item) => this.isSelected(item)).length;
+    return selectedCount > 0 && selectedCount < enabled.length;
+  });
   protected counterLabelId = computed(() => `${this.luxTagId() ?? 'lux-list-select'}-counter-${this.uniqueId}`);
   protected paginationActive = computed(() => this.luxShowPagination());
   protected infiniteScrollActive = computed(() => this.luxInfiniteScroll() && !this.luxShowPagination());
@@ -102,6 +106,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     effect(() => {
       if (this.luxMode() === 'single' && this.luxSelected().length > 1) {
         this.luxSelected.set([this.luxSelected()[0]]);
+        this.onChange(this.luxSelected());
       }
     });
 
@@ -141,7 +146,13 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     if (this.componentDisabled()) {
       return;
     }
-    this.luxSelected.set(checked ? [...this.enabledItems()] : []);
+    const compare = this.luxCompareWith();
+    const pageItems = this.enabledItems();
+    if (checked) {
+      this.luxSelected.update((selected) => [...selected, ...pageItems.filter((item) => !selected.some((entry) => compare(entry, item)))]);
+    } else {
+      this.luxSelected.update((selected) => selected.filter((entry) => !pageItems.some((item) => compare(entry, item))));
+    }
     this.onChange(this.luxSelected());
     this.onTouched();
   }
@@ -155,7 +166,11 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   }
 
   writeValue(value: T[] | null): void {
-    this.luxSelected.set(Array.isArray(value) ? value : []);
+    let normalized = Array.isArray(value) ? value : [];
+    if (this.luxMode() === 'single' && normalized.length > 1) {
+      normalized = [normalized[0]];
+    }
+    this.luxSelected.set(normalized);
   }
 
   registerOnChange(fn: (value: T[]) => void): void {
