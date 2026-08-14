@@ -1,0 +1,56 @@
+<!--
+  Der Klick auf die gesamte Karte ist eine reine Komfort-Erweiterung der Klickfläche für Maus/Touch.
+  Die eigentliche Bedienbarkeit (Fokus, Tastatur, ARIA) liefert vollständig die enthaltene
+  mat-checkbox/mat-radio-button - die Karte selbst bietet keine zusätzliche, sonst nicht erreichbare
+  Funktionalität und wird daher bewusst nicht zusätzlich fokussierbar gemacht (kein doppelter Tab-Stopp).
+-->
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+<div
+  class="lux-list-select-card"
+  [class.lux-selected]="luxSelected()"
+  [class.lux-disabled]="luxDisabled()"
+  [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+  (click)="onCardClick($event)"
+>
+  @if (luxMode() === 'multi') {
+    <mat-checkbox
+      class="lux-list-select-control"
+      [checked]="luxSelected()"
+      [disabled]="luxDisabled()"
+      [aria-label]="luxLabel()"
+      (change)="onControlChange()"
+    ></mat-checkbox>
+  } @else {
+    <mat-radio-button
+      class="lux-list-select-control"
+      [value]="luxItem()"
+      [checked]="luxSelected()"
+      [disabled]="luxDisabled()"
+      [aria-label]="luxLabel()"
+      [disableRipple]="true"
+      color="primary"
+      (change)="onControlChange()"
+    ></mat-radio-button>
+  }
+  <div class="lux-list-select-headlines">
+    @if (luxContentTemplate()) {
+      <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
+    } @else {
+      <span class="lux-list-select-title">{{ luxLabel() }}</span>
+      @if (luxSubLabel()) {
+        <span class="lux-list-select-subtitle">{{ luxSubLabel() }}</span>
+      }
+    }
+  </div>
+  @if (luxShowDetailButton()) {
+    <button
+      type="button"
+      class="lux-list-select-detail"
+      [disabled]="luxDisabled()"
+      [attr.aria-label]="'luxc.list-select.detail_arialabel' | transloco"
+      (click)="luxDetail.emit()"
+    >
+      <lux-icon [luxIconName]="luxDetailIconName()" luxIconSize="1x"></lux-icon>
+    </button>
+  }
+</div>
