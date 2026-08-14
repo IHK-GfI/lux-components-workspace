@@ -19,6 +19,8 @@ import { ExampleFormValueComponent } from '../../../example-base/example-form-va
 import { FileExampleAdvancedOptionsComponent } from '../file-example-advanced-options/file-example-advanced-options.component';
 import { FileExampleSimpleOptionsComponent } from '../file-example-simple-options/file-example-simple-options.component';
 import { FileExampleComponent } from '../file-example.component';
+import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../../base/status-marker/status-marker.model';
 
 @Component({
   selector: 'lux-file-input-authentic-example',
@@ -37,7 +39,8 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleBaseSimpleOptionsComponent,
     FileExampleSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    FileExampleAdvancedOptionsComponent
+    FileExampleAdvancedOptionsComponent,
+    StatusMarkerComponent
   ]
 })
 export class FileInputAuthenticExampleComponent extends FileExampleComponent implements AfterViewInit {
@@ -48,6 +51,10 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
 
   placeholder = 'Placeholder';
   clearOnError = true;
+  noTopLabel = false;
+  noBottomLabel = false;
+  noLabels = false;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
 
   namePrefixAccept = '(OK) ';
   nameSuffixAccept = ` (${new Date().toLocaleDateString()})`;
