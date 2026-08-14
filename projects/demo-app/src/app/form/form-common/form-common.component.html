@@ -141,24 +141,29 @@
       </div>
 
       <h3>Ausnahme: Felder ganz ohne Labeltext</h3>
-      <!-- Issue #267: Ausnahmefälle, der zugängliche Name kommt über luxAriaLabel bzw. luxAriaLabelledby -->
+      <!-- Issue #267: Ausnahmefall, der zugängliche Name kommt über luxAriaLabel. Die leere
+           Label-Zeile bleibt bewusst erhalten, damit label-lose Felder in einer Flucht mit
+           sichtbar gelabelten Nachbarfeldern stehen. -->
       <p>
-        Die beiden folgenden Felder besitzen kein luxLabel. Der zugängliche Name kommt über luxAriaLabel beziehungsweise
-        luxAriaLabelledby. Diese Variante ist die Ausnahme für Fälle, in denen es keinen eigenen Labeltext gibt oder der Name bereits
-        sichtbar an anderer Stelle steht, etwa als Spaltenkopf einer Tabelle. Der Schalter oben wirkt hier nicht, weil kein Label
-        existiert, das eingeblendet werden könnte. Die leere Label-Zeile wird bei diesen Feldern nicht gerendert, sie stehen also auf
-        gleicher Höhe wie Felder mit verstecktem Label.
+        Das Select besitzt kein luxLabel, der zugängliche Name kommt über luxAriaLabel. Seine leere Label-Zeile bleibt bewusst
+        erhalten, dadurch steht es in einer Flucht mit dem sichtbar beschrifteten Input daneben. Wer die Zeile nicht braucht, setzt
+        zusätzlich luxNoTopLabel.
+      </p>
+      <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
+        <lux-input-ac luxLabel="Nachname"></lux-input-ac>
+        <lux-select-ac
+          luxAriaLabel="Liste sortieren nach"
+          [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
+        ></lux-select-ac>
+      </div>
+
+      <h3>Name über sichtbaren Fremdtext (luxAriaLabelledby)</h3>
+      <p>
+        luxAriaLabelledby zeigt auf bereits sichtbaren Text, hier "Rechnungsnummer". Der zugängliche Name bleibt damit automatisch
+        synchron zum sichtbaren Text, etwa bei Filterfeldern unter einem Spaltenkopf.
       </p>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
         <div>
-          <p>Name über luxAriaLabel, hier "Liste sortieren nach":</p>
-          <lux-select-ac
-            luxAriaLabel="Liste sortieren nach"
-            [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
-          ></lux-select-ac>
-        </div>
-        <div>
-          <p>Name über luxAriaLabelledby, hier der sichtbare Text "Rechnungsnummer":</p>
           <span id="forms-a11y-spalte-rechnungsnummer">Rechnungsnummer</span>
           <lux-input-ac luxAriaLabelledby="forms-a11y-spalte-rechnungsnummer"></lux-input-ac>
         </div>
