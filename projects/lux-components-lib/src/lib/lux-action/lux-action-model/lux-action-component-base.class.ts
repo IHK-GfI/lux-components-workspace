@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, EventEmitter, Input, input, Output } from '@angular/core';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 
 /**
@@ -25,7 +25,7 @@ export class LuxActionComponentBaseClass {
    * Hinweis: Wird derzeit von lux-button und lux-menu-item umgesetzt;
    * lux-link und lux-link-plain werten dieses Flag noch nicht aus.
    */
-  @Input() luxDisabledAria? = false;
+  luxDisabledAria = input<boolean | undefined>(false);
   @Input() luxRounded? = false;
   @Input() luxFlat? = false;
   @Input() luxStroked? = false;

@@ -142,7 +142,7 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   }
 
   private shouldHandleNotAllowedClick(): boolean {
-    return !!this.luxDisabledAria && !this.luxDisabled;
+    return !!this.luxDisabledAria() && !this.luxDisabled;
   }
 
   private emitClickNotAllowed(event: MouseEvent) {

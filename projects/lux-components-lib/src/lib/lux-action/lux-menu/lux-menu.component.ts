@@ -291,7 +291,7 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
   menuItemClicked(menuItem: LuxMenuItemComponent, event: Event) {
     // aria-disabled Items führen die Aktion nicht aus, bleiben aber sichtbar und
     // fokussierbar. Analog zum LuxButton wird stattdessen luxClickNotAllowed emittiert.
-    if (menuItem.luxDisabledAria && !menuItem.luxDisabled) {
+    if (menuItem.luxDisabledAria() && !menuItem.luxDisabled) {
       event.preventDefault();
       event.stopImmediatePropagation();
       menuItem.clickNotAllowed(event);
