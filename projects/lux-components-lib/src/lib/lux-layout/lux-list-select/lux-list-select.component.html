@@ -39,7 +39,7 @@
   </div>
 }
 
-<div class="lux-list-select-viewport">
+<ng-template #listTpl>
   @if (luxMode() === 'single') {
     <mat-radio-group class="lux-list-select-list" [attr.aria-label]="listLabel()">
       <ng-container [ngTemplateOutlet]="itemsTpl"></ng-container>
@@ -49,4 +49,33 @@
       <ng-container [ngTemplateOutlet]="itemsTpl"></ng-container>
     </div>
   }
-</div>
+</ng-template>
+
+@if (infiniteScrollActive()) {
+  <div
+    class="lux-list-select-viewport"
+    luxInfiniteScroll
+    [luxImmediateCallback]="false"
+    [luxIsLoading]="luxIsLoading()"
+    [style.max-height]="luxMaxHeight()"
+    (luxScrolled)="onScrolled()"
+  >
+    <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
+  </div>
+} @else {
+  <div class="lux-list-select-viewport" [style.max-height]="luxMaxHeight()">
+    <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
+  </div>
+}
+
+@if (paginationActive()) {
+  <lux-paginator
+    [luxLength]="totalCount()"
+    [luxPageSize]="luxPageSize()"
+    [(luxPageIndex)]="luxPageIndex"
+    [luxHidePageSize]="true"
+    [luxShowFirstLastButtons]="false"
+    [luxDisabled]="luxDisabled()"
+    (luxPageChange)="onPageChange($event)"
+  ></lux-paginator>
+}

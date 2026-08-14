@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
+import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxListSelectComponent } from './lux-list-select.component';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
@@ -212,6 +214,63 @@ describe('LuxListSelectComponent', () => {
       expect(selectAll().nativeElement.checked).toBeTrue();
     });
   });
+
+  describe('List-Footer', () => {
+    it('Sollte den Paginator nur bei luxShowPagination anzeigen und Seitenwechsel emittieren', () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('lux-paginator'))).toBeNull();
+
+      // Änderungen durchführen
+      host.showPagination = true;
+      host.totalItems = 100;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('lux-paginator'))).not.toBeNull();
+      const nextButton = fixture.debugElement.query(By.css('lux-paginator .mat-mdc-paginator-navigation-next'));
+      nextButton.nativeElement.click();
+      fixture.detectChanges();
+      expect(host.lastPageEvent?.pageIndex).toBe(1);
+      expect(host.pageIndex).toBe(1);
+    });
+
+    it('Sollte bei gleichzeitigem Paginator und Infinite Scroll einen Fehler loggen und die Paginierung nutzen', () => {
+      // Vorbedingungen testen
+      const errorSpy = spyOn(console, 'error');
+
+      // Änderungen durchführen
+      host.showPagination = true;
+      host.infiniteScroll = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(errorSpy).toHaveBeenCalled();
+      expect(fixture.debugElement.query(By.css('lux-paginator'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-viewport[luxinfinitescroll]'))).toBeNull();
+    });
+
+    it('Sollte luxMaxHeight als max-height am Viewport setzen', () => {
+      // Änderungen durchführen
+      host.maxHeight = '400px';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const viewport = fixture.debugElement.query(By.css('.lux-list-select-viewport'));
+      expect(viewport.nativeElement.style.maxHeight).toBe('400px');
+    });
+
+    it('Sollte die Infinite-Scroll-Direktive nur bei aktivem luxInfiniteScroll anwenden', () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.directive(LuxInfiniteScrollDirective))).toBeNull();
+
+      // Änderungen durchführen
+      host.infiniteScroll = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.directive(LuxInfiniteScrollDirective))).not.toBeNull();
+    });
+  });
 });
 
 @Component({
@@ -224,6 +283,11 @@ describe('LuxListSelectComponent', () => {
       [(luxSelected)]="selected"
       [luxShowDetailButton]="showDetailButton"
       [luxTotalItems]="totalItems"
+      [luxShowPagination]="showPagination"
+      [luxInfiniteScroll]="infiniteScroll"
+      [luxMaxHeight]="maxHeight"
+      [(luxPageIndex)]="pageIndex"
+      (luxPageChange)="lastPageEvent = $event"
       (luxDetailClicked)="lastDetail = $event"
     />
   `
@@ -235,4 +299,9 @@ class MockHostComponent {
   showDetailButton = false;
   lastDetail: TestAdresse | null = null;
   totalItems: number | null = null;
+  showPagination = false;
+  infiniteScroll = false;
+  maxHeight: string | null = null;
+  pageIndex = 0;
+  lastPageEvent: LuxPageEvent | null = null;
 }

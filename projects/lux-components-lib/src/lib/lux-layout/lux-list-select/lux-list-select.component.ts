@@ -2,9 +2,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChild, effect, inject, input, model, output, TemplateRef } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioGroup } from '@angular/material/radio';
+import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
+import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
 
@@ -12,7 +14,17 @@ import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types
   selector: 'lux-list-select',
   templateUrl: './lux-list-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxListSelectItemComponent, MatRadioGroup, NgTemplateOutlet, MatCheckbox, LuxBadgeComponent, LuxLabelComponent, TranslocoPipe],
+  imports: [
+    LuxListSelectItemComponent,
+    MatRadioGroup,
+    NgTemplateOutlet,
+    MatCheckbox,
+    LuxBadgeComponent,
+    LuxLabelComponent,
+    TranslocoPipe,
+    LuxPaginatorComponent,
+    LuxInfiniteScrollDirective
+  ],
   host: {
     class: 'lux-list-select'
   }
@@ -37,9 +49,17 @@ export class LuxListSelectComponent<T = unknown> {
   readonly luxTotalItems = input<number | null>(null);
   readonly luxSelectAllLabel = input<string | undefined>(undefined);
   readonly luxShowCounter = input(true);
+  readonly luxShowPagination = input(false);
+  readonly luxPageSize = input(5);
+  readonly luxInfiniteScroll = input(false);
+  readonly luxIsLoading = input(false);
+  readonly luxMaxHeight = input<string | null>(null);
 
   readonly luxSelected = model<T[]>([]);
+  readonly luxPageIndex = model(0);
   readonly luxDetailClicked = output<T>();
+  readonly luxPageChange = output<LuxPageEvent>();
+  readonly luxScrolled = output<void>();
 
   readonly contentTemplate = contentChild<TemplateRef<unknown>>(TemplateRef);
 
@@ -52,11 +72,19 @@ export class LuxListSelectComponent<T = unknown> {
   });
   protected partiallySelected = computed(() => this.luxSelected().length > 0 && !this.allSelected());
   protected counterLabelId = computed(() => `${this.luxTagId() ?? 'lux-list-select'}-counter-${this.uniqueId}`);
+  protected paginationActive = computed(() => this.luxShowPagination());
+  protected infiniteScrollActive = computed(() => this.luxInfiniteScroll() && !this.luxShowPagination());
 
   constructor() {
     effect(() => {
       if (this.luxMode() === 'single' && this.luxSelected().length > 1) {
         this.luxSelected.set([this.luxSelected()[0]]);
+      }
+    });
+
+    effect(() => {
+      if (this.luxShowPagination() && this.luxInfiniteScroll()) {
+        console.error('lux-list-select: luxShowPagination und luxInfiniteScroll schließen sich gegenseitig aus. Es wird die Paginierung verwendet.');
       }
     });
   }
@@ -89,6 +117,14 @@ export class LuxListSelectComponent<T = unknown> {
       return;
     }
     this.luxSelected.set(checked ? [...this.enabledItems()] : []);
+  }
+
+  onPageChange(event: LuxPageEvent) {
+    this.luxPageChange.emit(event);
+  }
+
+  onScrolled() {
+    this.luxScrolled.emit();
   }
 
   protected getLabel(item: T): string {
