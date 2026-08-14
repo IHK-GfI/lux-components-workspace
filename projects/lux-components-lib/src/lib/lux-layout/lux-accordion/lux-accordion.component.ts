@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, input, OnDestroy, ViewChild } from '@angular/core';
 import { MatAccordion, MatAccordionDisplayMode, MatAccordionTogglePosition } from '@angular/material/expansion';
 import { Subject } from 'rxjs';
 import { LuxAccordionColor, LuxAccordionColors } from '../../lux-util/lux-colors.enum';
@@ -34,8 +34,9 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
   _luxExpandedHeaderHeight?: string;
   _luxCollapsedHeaderHeight?: string;
   _luxTogglePosition?: LuxTogglePosition;
-  _luxStickyHeader?: boolean;
-  _luxStickyHeaderOffset?: string;
+
+  luxStickyHeader = input<boolean | undefined>();
+  luxStickyHeaderOffset = input<string | undefined>();
 
   @Input()
   get luxDisabled() {
@@ -101,28 +102,6 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
     this._luxTogglePosition = position;
 
     this.changed$.next('luxTogglePosition');
-  }
-
-  @Input()
-  get luxStickyHeader() {
-    return this._luxStickyHeader;
-  }
-
-  set luxStickyHeader(sticky: boolean | undefined) {
-    this._luxStickyHeader = sticky;
-
-    this.changed$.next('luxStickyHeader');
-  }
-
-  @Input()
-  get luxStickyHeaderOffset() {
-    return this._luxStickyHeaderOffset;
-  }
-
-  set luxStickyHeaderOffset(offset: string | undefined) {
-    this._luxStickyHeaderOffset = offset;
-
-    this.changed$.next('luxStickyHeaderOffset');
   }
 
   @ViewChild(MatAccordion, { static: true }) matAccordion!: MatAccordion;
