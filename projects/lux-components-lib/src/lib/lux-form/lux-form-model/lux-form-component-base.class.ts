@@ -92,6 +92,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   /**
    * Blendet das obere Label nur visuell aus (lux-sr-only). Das <label> bleibt im DOM,
    * der zugängliche Name des Controls bleibt erhalten (Issue #267).
+   * Wirkt auch ohne gesetztes luxLabel: Dann entfällt die leere Label-Zeile visuell,
+   * die sonst für die Flucht mit sichtbar gelabelten Nachbarfeldern reserviert bleibt.
    */
   @Input() luxNoTopLabel = false;
   /**

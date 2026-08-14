@@ -11,7 +11,10 @@
   (focusout)="focusout()"
 >
   <!-- Container für das Label. Bei luxNoTopLabel/luxNoLabels wird das Label nur visuell
-       versteckt (lux-sr-only), damit der zugängliche Name des Controls erhalten bleibt. -->
+       versteckt (lux-sr-only), damit der zugängliche Name des Controls erhalten bleibt.
+       Die Zeile wird bewusst auch ohne Label-Inhalt gerendert (z.B. bei einem reinen
+       luxAriaLabel), damit label-lose Felder in einer Flucht mit sichtbar gelabelten
+       Nachbarfeldern stehen. Wer die Zeile nicht braucht, setzt luxNoTopLabel. -->
   <div
     class="lux-form-control-label-authentic"
     [class.lux-sr-only]="luxNoTopLabel || luxNoLabels"

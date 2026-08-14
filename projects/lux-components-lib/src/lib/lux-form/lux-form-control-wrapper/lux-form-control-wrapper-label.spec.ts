@@ -69,14 +69,56 @@ describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
 
     expect(fixture.debugElement.query(By.css('label.lux-form-label-authentic'))).toBeNull();
   });
+
+  // Bewusste Entscheidung: Die leere Label-Zeile bleibt auch bei einem reinen aria-Namen erhalten,
+  // damit label-lose Felder in einer Flucht mit sichtbar gelabelten Nachbarfeldern stehen.
+  // Wer die Zeile nicht braucht, setzt zusätzlich luxNoTopLabel.
+  it('reserviert die leere Label-Zeile weiterhin, wenn nur luxAriaLabel gesetzt ist', () => {
+    testComponent.label = '';
+    testComponent.ariaLabel = 'Liste sortieren nach';
+    fixture.detectChanges();
+
+    const containerEl = fixture.debugElement.query(By.css('.lux-form-control-label-authentic'));
+    expect(containerEl).not.toBeNull();
+    expect(containerEl.nativeElement.classList).not.toContain('lux-sr-only');
+  });
+
+  it('reserviert die leere Label-Zeile weiterhin, wenn nur luxAriaLabelledby gesetzt ist', () => {
+    testComponent.label = '';
+    testComponent.ariaLabelledby = 'externe-label-id';
+    fixture.detectChanges();
+
+    const containerEl = fixture.debugElement.query(By.css('.lux-form-control-label-authentic'));
+    expect(containerEl).not.toBeNull();
+    expect(containerEl.nativeElement.classList).not.toContain('lux-sr-only');
+  });
+
+  it('kollabiert die Label-Zeile über luxNoTopLabel auch ohne gesetztes luxLabel', () => {
+    testComponent.label = '';
+    testComponent.ariaLabel = 'Liste sortieren nach';
+    testComponent.noTopLabel = true;
+    fixture.detectChanges();
+
+    const containerEl = fixture.debugElement.query(By.css('.lux-form-control-label-authentic'));
+    expect(containerEl.nativeElement.classList).toContain('lux-sr-only');
+    expect(fixture.debugElement.query(By.css('label.lux-form-label-authentic'))).toBeNull();
+  });
 });
 
 @Component({
   imports: [LuxInputAcComponent],
-  template: `<lux-input-ac [luxLabel]="label" [luxNoTopLabel]="noTopLabel" [luxNoLabels]="noLabels"></lux-input-ac>`
+  template: `<lux-input-ac
+    [luxLabel]="label"
+    [luxNoTopLabel]="noTopLabel"
+    [luxNoLabels]="noLabels"
+    [luxAriaLabel]="ariaLabel"
+    [luxAriaLabelledby]="ariaLabelledby"
+  ></lux-input-ac>`
 })
 class WrapperLabelTestComponent {
   label = 'Nachname';
   noTopLabel = false;
   noLabels = false;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
 }
