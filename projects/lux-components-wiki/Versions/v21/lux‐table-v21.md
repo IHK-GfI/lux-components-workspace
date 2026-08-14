@@ -591,6 +591,34 @@ Html
 </lux-table>
 ```
 
+#### Automatische Deaktivierung der alternierenden Zeilenfarben
+
+Standardmäßig trennt die lux-table ihre Zeilen durch alternierende Hintergrundfarben (Striping).
+Sobald mindestens einer Zeile über `luxClasses` eine Texthighlight-Klasse mit dem Präfix
+`lux-text-highlight-` zugewiesen ist (z. B. `lux-text-highlight-error`, `lux-text-highlight-success`,
+`lux-text-highlight-alert` oder deren `-strong`-Varianten), deaktiviert die Tabelle das Striping
+automatisch: Alle nicht markierten Zeilen erhalten einen weißen Hintergrund und werden durch eine
+horizontale Trennlinie voneinander getrennt. So bleibt eindeutig erkennbar, welche Zeilen eine
+fachliche Bedeutung tragen. Werden alle Highlight-Klassen wieder entfernt, aktiviert sich das
+Striping automatisch erneut. Eine Konfiguration durch die Anwendung ist nicht erforderlich.
+
+Ts
+
+```typescript
+tableCSS: ICustomCSSConfig[] = [
+  {
+    class: 'lux-text-highlight-error', check(element): boolean {
+      return element.weight > 5
+    }
+  }
+];
+```
+
+Hinweis für Server-Tabellen (`luxHttpDAO`): Die Erkennung arbeitet auf der jeweils geladenen Seite.
+Auf Seiten ohne markierte Zeilen bleibt das Striping aktiv, auf Seiten mit markierten Zeilen ist es
+deaktiviert. Bei Client-Tabellen wird der komplette Datenbestand geprüft, daher bleibt das Striping
+auch dann deaktiviert, wenn ein Filter gerade alle markierten Zeilen ausblendet.
+
 ### 7. Async Data
 
 ![Beispielbild 07](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐table-v21-img-07.png)
