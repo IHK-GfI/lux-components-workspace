@@ -224,6 +224,12 @@
       "arialabel": "Liste",
       "empty_label": "Keine Einträge vorhanden"
     },
+    "list-select": {
+      "arialabel": "Auswahlliste",
+      "counter": "{{selected}} von {{total}} ausgewählt",
+      "detail_arialabel": "Details anzeigen",
+      "select_all": "Alle auswählen"
+    },
     "lookup": {
       "error_message.invalid": "Der ausgewählte Wert ist ungültig."
     },
