@@ -1,7 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChild, effect, inject, input, model, output, TemplateRef } from '@angular/core';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioGroup } from '@angular/material/radio';
-import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
+import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
 
@@ -9,13 +12,16 @@ import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types
   selector: 'lux-list-select',
   templateUrl: './lux-list-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxListSelectItemComponent, MatRadioGroup, NgTemplateOutlet],
+  imports: [LuxListSelectItemComponent, MatRadioGroup, NgTemplateOutlet, MatCheckbox, LuxBadgeComponent, LuxLabelComponent, TranslocoPipe],
   host: {
     class: 'lux-list-select'
   }
 })
 export class LuxListSelectComponent<T = unknown> {
+  private static nextUniqueId = 0;
+
   private tService = inject(TranslocoService);
+  private readonly uniqueId = LuxListSelectComponent.nextUniqueId++;
 
   readonly luxMode = input<LuxListSelectMode>('multi');
   readonly luxItems = input<T[]>([]);
@@ -28,6 +34,9 @@ export class LuxListSelectComponent<T = unknown> {
   readonly luxTagId = input<string | undefined>(undefined);
   readonly luxShowDetailButton = input(false);
   readonly luxDetailIconName = input('lux-interface-arrows-expand-5');
+  readonly luxTotalItems = input<number | null>(null);
+  readonly luxSelectAllLabel = input<string | undefined>(undefined);
+  readonly luxShowCounter = input(true);
 
   readonly luxSelected = model<T[]>([]);
   readonly luxDetailClicked = output<T>();
@@ -35,6 +44,14 @@ export class LuxListSelectComponent<T = unknown> {
   readonly contentTemplate = contentChild<TemplateRef<unknown>>(TemplateRef);
 
   protected listLabel = computed(() => this.luxLabel() ?? this.tService.translate('luxc.list-select.arialabel'));
+  protected totalCount = computed(() => this.luxTotalItems() ?? this.luxItems().length);
+  protected enabledItems = computed(() => this.luxItems().filter((item) => !this.isItemDisabled(item)));
+  protected allSelected = computed(() => {
+    const enabled = this.enabledItems();
+    return enabled.length > 0 && enabled.every((item) => this.isSelected(item));
+  });
+  protected partiallySelected = computed(() => this.luxSelected().length > 0 && !this.allSelected());
+  protected counterLabelId = computed(() => `${this.luxTagId() ?? 'lux-list-select'}-counter-${this.uniqueId}`);
 
   constructor() {
     effect(() => {
@@ -65,6 +82,13 @@ export class LuxListSelectComponent<T = unknown> {
         this.luxSelected.update((selected) => [...selected, item]);
       }
     }
+  }
+
+  onSelectAllChange(checked: boolean) {
+    if (this.luxDisabled()) {
+      return;
+    }
+    this.luxSelected.set(checked ? [...this.enabledItems()] : []);
   }
 
   protected getLabel(item: T): string {

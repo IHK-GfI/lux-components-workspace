@@ -1,4 +1,4 @@
-import { Component, TemplateRef, viewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -84,13 +84,16 @@ describe('LuxListSelectComponent', () => {
     });
 
     it('Sollte im Single-Modus immer nur ein Item selektieren', () => {
+      // Vorbedingungen testen
       host.mode = 'single';
       fixture.detectChanges();
 
+      // Änderungen durchführen
       listSelect.toggleItem(TEST_ITEMS[0]);
       listSelect.toggleItem(TEST_ITEMS[1]);
       fixture.detectChanges();
 
+      // Nachbedingungen prüfen
       expect(host.selected).toEqual([TEST_ITEMS[1]]);
     });
 
@@ -150,6 +153,65 @@ describe('LuxListSelectComponent', () => {
       expect(host.lastDetail).toBe(TEST_ITEMS[1]);
     });
   });
+
+  describe('List-Header', () => {
+    it('Sollte den Zähler mit Gesamtanzahl anzeigen (luxTotalItems hat Vorrang)', () => {
+      // Vorbedingungen testen
+      const badge = fixture.debugElement.query(By.css('lux-badge'));
+      expect(badge.nativeElement.textContent).toContain('0 von 4 ausgewählt');
+
+      // Änderungen durchführen
+      listSelect.toggleItem(TEST_ITEMS[0]);
+      host.totalItems = 100;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(badge.nativeElement.textContent).toContain('1 von 100 ausgewählt');
+    });
+
+    it('Sollte die Alle-auswählen-Checkbox nur im Multi-Modus anzeigen', () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('.lux-list-select-select-all'))).not.toBeNull();
+
+      // Änderungen durchführen
+      host.mode = 'single';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('.lux-list-select-select-all'))).toBeNull();
+    });
+
+    it('Sollte über Alle-auswählen alle nicht-disabled Items selektieren und wieder abwählen', () => {
+      // Änderungen durchführen
+      listSelect.onSelectAllChange(true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen (TEST_ITEMS[2] ist disabled)
+      expect(host.selected).toEqual([TEST_ITEMS[0], TEST_ITEMS[1], TEST_ITEMS[3]]);
+
+      listSelect.onSelectAllChange(false);
+      fixture.detectChanges();
+      expect(host.selected).toEqual([]);
+    });
+
+    it('Sollte bei Teilauswahl den Indeterminate-State setzen', () => {
+      // Vorbedingungen testen
+      const selectAll = () => fixture.debugElement.query(By.css('.lux-list-select-select-all input'));
+      expect(selectAll().nativeElement.indeterminate).toBeFalse();
+
+      // Änderungen durchführen
+      listSelect.toggleItem(TEST_ITEMS[0]);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(selectAll().nativeElement.indeterminate).toBeTrue();
+
+      listSelect.onSelectAllChange(true);
+      fixture.detectChanges();
+      expect(selectAll().nativeElement.indeterminate).toBeFalse();
+      expect(selectAll().nativeElement.checked).toBeTrue();
+    });
+  });
 });
 
 @Component({
@@ -161,6 +223,7 @@ describe('LuxListSelectComponent', () => {
       [luxItems]="items"
       [(luxSelected)]="selected"
       [luxShowDetailButton]="showDetailButton"
+      [luxTotalItems]="totalItems"
       (luxDetailClicked)="lastDetail = $event"
     />
   `
@@ -171,4 +234,5 @@ class MockHostComponent {
   selected: TestAdresse[] = [];
   showDetailButton = false;
   lastDetail: TestAdresse | null = null;
+  totalItems: number | null = null;
 }

@@ -16,6 +16,29 @@
   }
 </ng-template>
 
+@if (luxMode() === 'multi' || luxShowCounter()) {
+  <div class="lux-list-select-header">
+    @if (luxMode() === 'multi') {
+      <mat-checkbox
+        class="lux-list-select-select-all"
+        [checked]="allSelected()"
+        [indeterminate]="partiallySelected()"
+        [disabled]="luxDisabled()"
+        (change)="onSelectAllChange($event.checked)"
+      >
+        {{ luxSelectAllLabel() ?? ('luxc.list-select.select_all' | transloco) }}
+      </mat-checkbox>
+    }
+    @if (luxShowCounter()) {
+      <lux-badge luxColor="lightblue" luxSize="small" [luxMuted]="true" [luxUppercase]="false">
+        <lux-label [luxId]="counterLabelId()">{{
+          'luxc.list-select.counter' | transloco: { selected: luxSelected().length, total: totalCount() }
+        }}</lux-label>
+      </lux-badge>
+    }
+  </div>
+}
+
 <div class="lux-list-select-viewport">
   @if (luxMode() === 'single') {
     <mat-radio-group class="lux-list-select-list" [attr.aria-label]="listLabel()">
