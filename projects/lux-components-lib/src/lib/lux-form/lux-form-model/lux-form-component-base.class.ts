@@ -16,7 +16,6 @@ import {
 import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -347,8 +346,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
       this.setValue(this._initialValue);
     }
 
-    // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden
-    this._formValueChangeSub = this.formControl.valueChanges.pipe(distinctUntilChanged()).subscribe((value: any) => {
+    // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden.
+    this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {
       this.notifyFormValueChanged(value);
     });
   }
