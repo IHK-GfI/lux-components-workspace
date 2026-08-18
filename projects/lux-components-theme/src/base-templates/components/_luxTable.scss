@@ -126,7 +126,7 @@ lux-table {
       // eine Trennlinie, weil die Zellen sonst keine Borders haben.
       &.lux-table-no-striping {
         .mat-mdc-row {
-          background-color: #ffffff;
+          background-color: var(--lux-theme-app-data-bg);
         }
 
         .mat-mdc-row > td {
