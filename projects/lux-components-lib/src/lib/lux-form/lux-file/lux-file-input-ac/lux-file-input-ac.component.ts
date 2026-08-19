@@ -5,6 +5,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
 import { LuxMenuComponent } from '../../../lux-action/lux-menu/lux-menu.component';
 import { LuxAriaDescribedbyDirective } from '../../../lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaLabelledbyDirective } from '../../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxFormControlWrapperComponent } from '../../lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -29,6 +31,8 @@ import { LuxFileProgressComponent } from '../lux-file-subcomponents/lux-file-pro
     LuxFileProgressComponent,
     LuxTagIdDirective,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
+    LuxAriaLabelledbyDirective,
     LuxMenuItemComponent,
     LuxMenuComponent,
     TranslocoPipe
@@ -42,9 +46,6 @@ export class LuxFileInputAcComponent extends LuxFormFileBase<ILuxFileObject | nu
 
   @Input() luxPlaceholder = '';
   @Input() luxClearOnError = true;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
 
   focused = false;
 
