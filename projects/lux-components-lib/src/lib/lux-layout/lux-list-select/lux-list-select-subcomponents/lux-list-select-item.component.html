@@ -7,7 +7,7 @@
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
 <div
   #card
-  class="lux-list-select-card"
+  class="lux-list-select-card lux-flex lux-items-center"
   role="row"
   tabindex="-1"
   [class.lux-selected]="luxSelected()"
@@ -16,7 +16,7 @@
   [attr.aria-disabled]="luxDisabled() ? 'true' : null"
   (click)="onCardClick($event)"
 >
-  <div class="lux-list-select-control-cell" role="gridcell">
+  <div class="lux-list-select-control-cell lux-flex lux-items-center" role="gridcell">
     @if (luxMode() === 'multi') {
       <mat-checkbox
         class="lux-list-select-control"
@@ -41,7 +41,7 @@
       ></mat-radio-button>
     }
   </div>
-  <div class="lux-list-select-headlines" role="gridcell">
+  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto" role="gridcell">
     @if (luxContentTemplate()) {
       <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
     } @else {
@@ -52,10 +52,10 @@
     }
   </div>
   @if (luxShowDetailButton()) {
-    <div class="lux-list-select-detail-cell" role="gridcell">
+    <div class="lux-list-select-detail-cell lux-flex lux-items-center" role="gridcell">
       <button
         type="button"
-        class="lux-list-select-detail"
+        class="lux-list-select-detail lux-flex lux-items-center lux-justify-center"
         tabindex="-1"
         [disabled]="luxDisabled()"
         [attr.aria-label]="'luxc.list-select.detail_arialabel' | transloco"

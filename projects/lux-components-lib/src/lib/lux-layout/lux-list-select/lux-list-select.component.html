@@ -21,11 +21,11 @@
 
 <div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
   @if (luxShowSearch()) {
-    <div class="lux-list-select-search">
-      <lux-icon class="lux-list-select-search-icon" luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
+    <div class="lux-list-select-search lux-flex lux-items-center lux-border-box">
+      <lux-icon class="lux-list-select-search-icon lux-flex-none" luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
       <input
         type="text"
-        class="lux-list-select-search-input"
+        class="lux-list-select-search-input lux-flex-auto"
         [attr.aria-label]="'luxc.list-select.search_arialabel' | transloco"
         [value]="luxSearchValue()"
         [disabled]="componentDisabled()"
@@ -34,7 +34,7 @@
       @if (luxSearchValue()) {
         <button
           type="button"
-          class="lux-list-select-search-clear"
+          class="lux-list-select-search-clear lux-flex lux-items-center lux-justify-center lux-flex-none"
           [attr.aria-label]="'luxc.list-select.search_clear_arialabel' | transloco"
           [disabled]="componentDisabled()"
           (click)="onSearchClear()"
@@ -46,7 +46,7 @@
   }
 
   @if (luxMode() === 'multi' || luxShowCounter()) {
-    <div class="lux-list-select-header">
+    <div class="lux-list-select-header lux-flex lux-items-center">
       @if (luxMode() === 'multi') {
         <mat-checkbox
           class="lux-list-select-select-all"
@@ -70,7 +70,7 @@
 
   <ng-template #listTpl>
     <div
-      class="lux-list-select-list"
+      class="lux-list-select-list lux-flex lux-flex-col"
       role="grid"
       tabindex="0"
       [attr.aria-label]="listLabel()"
@@ -93,7 +93,7 @@
 
   @if (infiniteScrollActive()) {
     <div
-      class="lux-list-select-viewport"
+      class="lux-list-select-viewport lux-flex-auto lux-overflow-y-auto"
       [class.lux-list-select-loading]="serverMode() && loading()"
       [attr.aria-busy]="serverMode() && loading() ? true : null"
       luxInfiniteScroll
@@ -106,7 +106,7 @@
     </div>
   } @else {
     <div
-      class="lux-list-select-viewport"
+      class="lux-list-select-viewport lux-flex-auto lux-overflow-y-auto"
       [class.lux-list-select-loading]="serverMode() && loading()"
       [attr.aria-busy]="serverMode() && loading() ? true : null"
     >

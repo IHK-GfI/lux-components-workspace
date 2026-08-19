@@ -16,11 +16,8 @@ lux-list-select {
   }
 
   .lux-list-select-search {
-    display: flex;
-    align-items: center;
     gap: var(--lux-theme-spacing-sm);
     height: 48px;
-    box-sizing: border-box;
     padding: 12px var(--lux-theme-spacing-sm);
     margin-bottom: var(--lux-theme-spacing-md);
     background-color: #fff;
@@ -33,14 +30,12 @@ lux-list-select {
   }
 
   .lux-list-select-search-icon {
-    flex: 0 0 auto;
     width: 20px;
     height: 20px;
     color: var(--lux-theme-dark-secondary-text);
   }
 
   .lux-list-select-search-input {
-    flex: 1 1 auto;
     min-width: 0;
     border: none;
     outline: none;
@@ -59,10 +54,6 @@ lux-list-select {
   }
 
   .lux-list-select-search-clear {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
     width: 24px;
     height: 24px;
     padding: 0;
@@ -86,17 +77,13 @@ lux-list-select {
   }
 
   .lux-list-select-header {
-    display: flex;
-    align-items: center;
     gap: 22px;
     margin-bottom: var(--lux-theme-spacing-md);
   }
 
   .lux-list-select-viewport {
     position: relative; // Positionierungskontext für das Loading-Overlay
-    flex: 1 1 auto; // luxMaxHeight-Umzug: Viewport schrumpft, Suchfeld/Header/Paginator behalten ihre Höhe
     min-height: 0; // sonst verhindert der Flex-Item-Default-Wert das Schrumpfen unter die Inhaltshöhe
-    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: $lux-list-select-scrollbar-thumb $lux-list-select-scrollbar-track;
 
@@ -128,8 +115,6 @@ lux-list-select {
   }
 
   .lux-list-select-list {
-    display: flex;
-    flex-direction: column;
     gap: var(--lux-theme-spacing-sm);
     padding: 2px; // verhindert abgeschnittene Borders/Fokusringe (Figma: Padding 2)
   }
@@ -139,8 +124,6 @@ lux-list-select {
   }
 
   .lux-list-select-card {
-    display: flex;
-    align-items: center;
     gap: var(--lux-theme-spacing-md);
     min-height: 81px;
     box-sizing: border-box;
@@ -177,17 +160,8 @@ lux-list-select {
     }
   }
 
-  .lux-list-select-control-cell,
-  .lux-list-select-detail-cell {
-    display: flex;
-    align-items: center; // verhindert Baseline-Zeilenbox-Artefakte der gridcell-Wrapper
-  }
-
   .lux-list-select-headlines {
-    display: flex;
-    flex-direction: column;
     gap: var(--lux-theme-spacing-sm);
-    flex: 1 1 auto;
     min-width: 0;
   }
 
@@ -209,9 +183,6 @@ lux-list-select {
   }
 
   .lux-list-select-detail {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 36px;
     height: 36px;
     padding: 0;
