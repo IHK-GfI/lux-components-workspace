@@ -21,7 +21,7 @@
 
 <div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
   @if (luxShowSearch()) {
-    <div class="lux-list-select-search lux-flex lux-items-center lux-border-box lux-flex-shrink-0">
+    <div class="lux-list-select-search lux-flex lux-items-center lux-border-box lux-flex-shrink-0 lux-gap-2 lux-mb-4">
       <lux-icon class="lux-list-select-search-icon lux-flex-none" luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
       <input
         type="text"
@@ -69,7 +69,7 @@
 
   <ng-template #listTpl>
     <div
-      class="lux-list-select-list lux-flex lux-flex-col"
+      class="lux-list-select-list lux-flex lux-flex-col lux-gap-2"
       role="grid"
       tabindex="0"
       [attr.aria-label]="listLabel()"
@@ -116,7 +116,7 @@
 
   @if (paginationActive()) {
     <lux-paginator
-      class="lux-flex-shrink-0"
+      class="lux-flex-shrink-0 lux-mt-3"
       [luxLength]="totalCount()"
       [luxPageSize]="luxPageSize()"
       [(luxPageIndex)]="luxPageIndex"
@@ -128,6 +128,6 @@
   }
 
   @if (errorMessages().length > 0) {
-    <lux-message-box class="lux-list-select-error lux-flex-shrink-0" [luxMessages]="errorMessages()"></lux-message-box>
+    <lux-message-box class="lux-list-select-error lux-flex-shrink-0 lux-mt-3" [luxMessages]="errorMessages()"></lux-message-box>
   }
 </div>

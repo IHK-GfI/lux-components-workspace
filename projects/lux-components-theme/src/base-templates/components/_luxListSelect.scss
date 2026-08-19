@@ -16,10 +16,8 @@ lux-list-select {
   }
 
   .lux-list-select-search {
-    gap: var(--lux-theme-spacing-sm);
     height: 48px;
     padding: 12px var(--lux-theme-spacing-sm);
-    margin-bottom: var(--lux-theme-spacing-md);
     background-color: #fff;
     border: 1px solid var(--lux-theme-form-border-color);
     border-radius: var(--lux-theme-radius-sm);
@@ -115,7 +113,6 @@ lux-list-select {
   }
 
   .lux-list-select-list {
-    gap: var(--lux-theme-spacing-sm);
     padding: 2px; // verhindert abgeschnittene Borders/Fokusringe (Figma: Padding 2)
   }
 
@@ -124,7 +121,6 @@ lux-list-select {
   }
 
   .lux-list-select-card {
-    gap: var(--lux-theme-spacing-md);
     min-height: 81px;
     box-sizing: border-box;
     padding: 0 20px;
@@ -161,7 +157,6 @@ lux-list-select {
   }
 
   .lux-list-select-headlines {
-    gap: var(--lux-theme-spacing-sm);
     min-width: 0;
   }
 
@@ -205,12 +200,7 @@ lux-list-select {
     }
   }
 
-  lux-paginator {
-    margin-top: var(--lux-theme-spacing-sm);
-  }
-
   .lux-list-select-error {
     display: block;
-    margin-top: var(--lux-theme-spacing-sm);
   }
 }

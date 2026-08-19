@@ -7,7 +7,7 @@
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
 <div
   #card
-  class="lux-list-select-card lux-flex lux-items-center"
+  class="lux-list-select-card lux-flex lux-items-center lux-gap-4"
   role="row"
   tabindex="-1"
   [class.lux-selected]="luxSelected()"
@@ -41,7 +41,7 @@
       ></mat-radio-button>
     }
   </div>
-  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto" role="gridcell">
+  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto lux-gap-2" role="gridcell">
     @if (luxContentTemplate()) {
       <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
     } @else {
