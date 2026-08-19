@@ -243,6 +243,20 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-list-select-select-all'))).toBeNull();
     });
 
+    it('Sollte im Single-Modus keinen Zähler bzw. Header-Zeile anzeigen', () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('.lux-list-select-header'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('lux-badge'))).not.toBeNull();
+
+      // Änderungen durchführen
+      host.mode = 'single';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: die Header-Zeile (und damit auch der Zähler) entfällt im Single-Modus komplett
+      expect(fixture.debugElement.query(By.css('.lux-list-select-header'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('lux-badge'))).toBeNull();
+    });
+
     it('Sollte über Alle-auswählen alle nicht-disabled Items selektieren und wieder abwählen', () => {
       // Änderungen durchführen
       listSelect.onSelectAllChange(true);
@@ -509,6 +523,59 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('lux-message-box'))).toBeNull();
+    });
+
+    describe('Message-Box bei luxMaxHeight', () => {
+      // Die Karma-Testumgebung dieser Bibliothek lädt das kompilierte Theme-CSS nicht (der
+      // esbuild-basierte @angular/build:karma-Builder verwirft die in karma.conf.js konfigurierten
+      // "files" beim Zusammenführen mit den generierten Test-Bundles - ein von diesem Fix
+      // unabhängiges Infrastruktur-Thema). Für einen echten Layout-Test werden hier exakt die
+      // produktiven Regeln aus dem Theme-Partial (_luxListSelect.scss) und dem Utility-Katalog
+      // (_luxlayout.scss) nachgebildet, die für das Container/Viewport-Schrumpfverhalten relevant sind.
+      let styleEl: HTMLStyleElement;
+
+      beforeEach(() => {
+        styleEl = document.createElement('style');
+        styleEl.textContent = `
+          .lux-list-select-container { display: flex; flex-direction: column; }
+          .lux-list-select-viewport { min-height: 0; }
+          .lux-flex-auto { flex: 1 1 auto; }
+          .lux-flex-shrink-0 { flex-shrink: 0; }
+          lux-message-box { overflow: hidden; }
+        `;
+        document.head.appendChild(styleEl);
+      });
+
+      afterEach(() => {
+        styleEl.remove();
+      });
+
+      it('Sollte die Message-Box bei luxMaxHeight nicht abschneiden', () => {
+        // Vorbedingungen testen: Fehlermeldung ohne Höhenbegrenzung rendern, um den tatsächlichen
+        // Platzbedarf von Header und Message-Box zu ermitteln (Pixelwerte hängen vom geladenen Theme
+        // ab, daher keine hartkodierten Werte)
+        host.errorMessage = 'Bitte wähle eine Adresse aus, die du übernehmen möchtest.';
+        fixture.detectChanges();
+        const header = fixture.debugElement.query(By.css('.lux-list-select-header')).nativeElement as HTMLElement;
+        const messageBox = fixture.debugElement.query(By.css('.lux-list-select-error')).nativeElement as HTMLElement;
+        const messageBoxNaturalHeight = messageBox.offsetHeight;
+        expect(messageBoxNaturalHeight).toBeGreaterThan(0);
+
+        // Änderungen durchführen: luxMaxHeight knapp über dem Platzbedarf von Header + Message-Box
+        // setzen, sodass nur die Item-Liste im Viewport schrumpfen muss (keine aktive Paginierung)
+        host.maxHeight = `${header.offsetHeight + messageBoxNaturalHeight + 40}px`;
+        fixture.detectChanges();
+
+        // Nachbedingungen prüfen: Message-Box behält ihre volle natürliche Höhe und liegt vollständig im Container
+        const container = fixture.debugElement.query(By.css('.lux-list-select-container')).nativeElement as HTMLElement;
+        expect(messageBox.offsetHeight).toBe(messageBoxNaturalHeight);
+        expect(messageBox.clientHeight).not.toBeLessThan(messageBox.scrollHeight);
+
+        const containerRect = container.getBoundingClientRect();
+        const messageBoxRect = messageBox.getBoundingClientRect();
+        expect(messageBoxRect.top).toBeGreaterThanOrEqual(containerRect.top);
+        expect(messageBoxRect.bottom).toBeLessThanOrEqual(containerRect.bottom);
+      });
     });
   });
 

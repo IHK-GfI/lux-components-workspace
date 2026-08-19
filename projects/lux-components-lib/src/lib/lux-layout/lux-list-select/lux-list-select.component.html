@@ -21,7 +21,7 @@
 
 <div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
   @if (luxShowSearch()) {
-    <div class="lux-list-select-search lux-flex lux-items-center lux-border-box">
+    <div class="lux-list-select-search lux-flex lux-items-center lux-border-box lux-flex-shrink-0">
       <lux-icon class="lux-list-select-search-icon lux-flex-none" luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
       <input
         type="text"
@@ -46,19 +46,17 @@
     </div>
   }
 
-  @if (luxMode() === 'multi' || luxShowCounter()) {
-    <div class="lux-list-select-header lux-flex lux-items-center">
-      @if (luxMode() === 'multi') {
-        <mat-checkbox
-          class="lux-list-select-select-all"
-          [checked]="allSelected()"
-          [indeterminate]="partiallySelected()"
-          [disabled]="componentDisabled()"
-          (change)="onSelectAllChange($event.checked)"
-        >
-          {{ luxSelectAllLabel() ?? ('luxc.list-select.select_all' | transloco) }}
-        </mat-checkbox>
-      }
+  @if (luxMode() === 'multi') {
+    <div class="lux-list-select-header lux-flex lux-items-center lux-flex-shrink-0">
+      <mat-checkbox
+        class="lux-list-select-select-all"
+        [checked]="allSelected()"
+        [indeterminate]="partiallySelected()"
+        [disabled]="componentDisabled()"
+        (change)="onSelectAllChange($event.checked)"
+      >
+        {{ luxSelectAllLabel() ?? ('luxc.list-select.select_all' | transloco) }}
+      </mat-checkbox>
       @if (luxShowCounter()) {
         <lux-badge luxColor="lightblue" luxSize="small" [luxMuted]="true" [luxUppercase]="false">
           <lux-label [luxId]="counterLabelId()">{{
@@ -118,6 +116,7 @@
 
   @if (paginationActive()) {
     <lux-paginator
+      class="lux-flex-shrink-0"
       [luxLength]="totalCount()"
       [luxPageSize]="luxPageSize()"
       [(luxPageIndex)]="luxPageIndex"
@@ -129,6 +128,6 @@
   }
 
   @if (errorMessages().length > 0) {
-    <lux-message-box class="lux-list-select-error" [luxMessages]="errorMessages()"></lux-message-box>
+    <lux-message-box class="lux-list-select-error lux-flex-shrink-0" [luxMessages]="errorMessages()"></lux-message-box>
   }
 </div>
