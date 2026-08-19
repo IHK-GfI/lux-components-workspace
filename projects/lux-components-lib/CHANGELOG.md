@@ -49,6 +49,7 @@
 ### Issues
 
 - Issue #267: A11y: luxNoTopLabel/luxNoLabels blenden das Label nur noch visuell aus (lux-sr-only), das `<label>` bleibt im DOM und der zugängliche Name erhalten. Neu: luxAriaLabel und luxAriaLabelledby als Inputs auf allen Form-Controls. Behoben: doppelte DOM-ID in lux-select-ac. Hinweis 1: Anwendungs-Tests, die bei luxNoTopLabel auf ein fehlendes `<label>` prüfen, müssen angepasst werden. Hinweis 2: luxNoBottomLabel/luxNoLabels entfernen weiterhin bewusst Hint und Fehlermeldung aus dem DOM. Hinweis 3: lux-file-list und lux-file-upload folgen in einem separaten Issue. Hinweis 4 für fakeAsync-Tests: Die Form-Controls planen beim Initialisieren einen einmaligen setTimeout für die A11y-Prüfung ein, der in fakeAsync-Tests per tick() oder flush() abgearbeitet werden muss.
+- Issue #268: lux-menu-Items können per luxDisabledAria wahrnehmbar deaktiviert werden (sichtbar, fokussierbar, Screenreader sagen "deaktiviert" an); Klick/Enter emittiert luxClickNotAllowed statt luxClicked. Bewusst ohne Styling: aria-disabled Items sehen wie normale Items aus, die Anwendung reagiert über luxClickNotAllowed. Abgrenzung: luxDisabled (aus der Tastaturreihenfolge entfernt) vs. luxDisabledAria (wahrnehmbar deaktiviert) vs. luxHidden (ausgeblendet). Neu dafür: Direktive luxAriaDisabled, die aria-disabled zuverlässig auch an Material-Elementen setzt.
 
 ## Version 21.7.0
 
@@ -160,7 +161,7 @@
 - Issue #134: Erweiterung Button-Komponente: luxDisabledAria & ClickNotAllowed Event (#145)
 - Issue #137: Umstellung auf Angular v21 (#147)
 - Issue #157: Finalisierung Release v21: Bugfixes, Dokumentation, Updater,... (#160)
-    - [Issues](#issues-7)
+    - [Issues](#issues-8)
 
 ## Version 19.7.0
 
