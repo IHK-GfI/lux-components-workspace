@@ -2,9 +2,88 @@
 
 $lux-list-select-scrollbar-track: #fbfafa;
 $lux-list-select-scrollbar-thumb: #8b8b8b;
+// Figma: List Select / Item / Focused-State (Node 4106-31687); kein passendes Theme-Token gefunden
+// (grep nach "tint"/"focus" in beiden _variables.scss liefert nur --lux-theme-dark-focused, das eine
+// andere Farbe (Schwarz-Tint statt Blau-Tint) definiert)
+$lux-list-select-focus-bg: rgba(58, 95, 148, 0.11);
 
 lux-list-select {
   display: block;
+
+  .lux-list-select-container {
+    display: flex;
+    flex-direction: column; // luxMaxHeight wirkt hier als Gesamthöhe, Viewport nimmt den Rest ein
+  }
+
+  .lux-list-select-search {
+    display: flex;
+    align-items: center;
+    gap: var(--lux-theme-spacing-sm);
+    height: 48px;
+    box-sizing: border-box;
+    padding: 12px var(--lux-theme-spacing-sm);
+    margin-bottom: var(--lux-theme-spacing-md);
+    background-color: #fff;
+    border: 1px solid var(--lux-theme-form-border-color);
+    border-radius: var(--lux-theme-radius-sm);
+
+    &:focus-within {
+      @include luxfocus.focus-dark-mixin;
+    }
+  }
+
+  .lux-list-select-search-icon {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    color: var(--lux-theme-dark-secondary-text);
+  }
+
+  .lux-list-select-search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--lux-theme-app-content-font);
+    font-size: var(--lux-theme-font-size-md);
+    color: var(--lux-theme-dark-primary-text);
+
+    &::placeholder {
+      color: var(--lux-theme-dark-secondary-text);
+    }
+
+    &:disabled {
+      color: var(--lux-theme-dark-disabled-text);
+    }
+  }
+
+  .lux-list-select-search-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: var(--lux-theme-radius-xxl);
+    background: transparent;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: var(--lux-theme-hover-color);
+    }
+
+    &:focus-visible {
+      @include luxfocus.focus-dark-mixin;
+    }
+
+    &:disabled {
+      cursor: default;
+      color: var(--lux-theme-dark-disabled-text);
+    }
+  }
 
   .lux-list-select-header {
     display: flex;
@@ -14,6 +93,9 @@ lux-list-select {
   }
 
   .lux-list-select-viewport {
+    position: relative; // Positionierungskontext für das Loading-Overlay
+    flex: 1 1 auto; // luxMaxHeight-Umzug: Viewport schrumpft, Suchfeld/Header/Paginator behalten ihre Höhe
+    min-height: 0; // sonst verhindert der Flex-Item-Default-Wert das Schrumpfen unter die Inhaltshöhe
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: $lux-list-select-scrollbar-thumb $lux-list-select-scrollbar-track;
@@ -28,6 +110,21 @@ lux-list-select {
       border-radius: var(--lux-theme-radius-xxl);
       border: 2px solid $lux-list-select-scrollbar-track;
     }
+
+    &.lux-list-select-loading .lux-list-select-list {
+      opacity: 0.4; // Liste dezent abdunkeln, solange das Overlay lädt
+      pointer-events: none;
+    }
+  }
+
+  .lux-list-select-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.6);
+    z-index: 1;
   }
 
   .lux-list-select-list {
@@ -58,9 +155,12 @@ lux-list-select {
       border-color: var(--lux-theme-primary-color);
     }
 
-    &:focus-within {
+    // :focus-visible statt :focus-within: die Karte ist selbst fokussierbar (tabindex -1, Grid-Pattern),
+    // :focus-within würde sonst bei jedem Mausklick feuern; :focus-visible zeigt den Ring nur bei Tastaturfokus
+    &:focus-visible {
       outline: var(--lux-theme-outline-dark);
       outline-offset: -2px;
+      background-color: $lux-list-select-focus-bg;
     }
 
     &.lux-selected {
@@ -75,6 +175,12 @@ lux-list-select {
         color: var(--lux-theme-dark-disabled-text);
       }
     }
+  }
+
+  .lux-list-select-control-cell,
+  .lux-list-select-detail-cell {
+    display: flex;
+    align-items: center; // verhindert Baseline-Zeilenbox-Artefakte der gridcell-Wrapper
   }
 
   .lux-list-select-headlines {

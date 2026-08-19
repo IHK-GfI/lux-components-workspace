@@ -321,14 +321,21 @@ describe('LuxListSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-list-select-viewport[luxinfinitescroll]'))).toBeNull();
     });
 
-    it('Sollte luxMaxHeight als max-height am Viewport setzen', () => {
+    it('Sollte luxMaxHeight als max-height am Container setzen und der Viewport schrumpfen', () => {
+      // Vorbedingungen testen: ohne luxMaxHeight bestimmt der Inhalt die Höhe
+      const container = fixture.debugElement.query(By.css('.lux-list-select-container'));
+      expect(container.nativeElement.style.maxHeight).toBe('');
+      const heightWithoutLimit = container.nativeElement.getBoundingClientRect().height;
+
       // Änderungen durchführen
-      host.maxHeight = '400px';
+      host.maxHeight = '120px';
       fixture.detectChanges();
 
-      // Nachbedingungen prüfen
+      // Nachbedingungen prüfen: max-height sitzt am Container, nicht mehr am Viewport
+      expect(container.nativeElement.style.maxHeight).toBe('120px');
       const viewport = fixture.debugElement.query(By.css('.lux-list-select-viewport'));
-      expect(viewport.nativeElement.style.maxHeight).toBe('400px');
+      expect(viewport.nativeElement.style.maxHeight).toBe('');
+      expect(container.nativeElement.getBoundingClientRect().height).toBeLessThan(heightWithoutLimit);
     });
 
     it('Sollte die Infinite-Scroll-Direktive nur bei aktivem luxInfiniteScroll anwenden', () => {

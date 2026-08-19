@@ -19,7 +19,7 @@
   }
 </ng-template>
 
-<div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()">
+<div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
   @if (luxShowSearch()) {
     <div class="lux-list-select-search">
       <lux-icon class="lux-list-select-search-icon" luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
@@ -99,7 +99,6 @@
       luxInfiniteScroll
       [luxImmediateCallback]="false"
       [luxIsLoading]="effectiveIsLoading()"
-      [style.max-height]="luxMaxHeight()"
       (luxScrolled)="onScrolled()"
     >
       <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
@@ -110,7 +109,6 @@
       class="lux-list-select-viewport"
       [class.lux-list-select-loading]="serverMode() && loading()"
       [attr.aria-busy]="serverMode() && loading() ? true : null"
-      [style.max-height]="luxMaxHeight()"
     >
       <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
       <ng-container [ngTemplateOutlet]="loadingOverlayTpl"></ng-container>
