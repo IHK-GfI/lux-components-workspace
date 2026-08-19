@@ -1,16 +1,31 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, contentChild, effect, inject, input, model, output, signal, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChild,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+  TemplateRef
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioGroup } from '@angular/material/radio';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { debounce, timer } from 'rxjs';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-message-box.component';
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
+import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
 
@@ -29,7 +44,8 @@ import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types
     LuxPaginatorComponent,
     LuxInfiniteScrollDirective,
     LuxTagIdDirective,
-    LuxMessageBoxComponent
+    LuxMessageBoxComponent,
+    LuxIconComponent
   ],
   host: {
     class: 'lux-list-select'
@@ -68,9 +84,12 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   readonly luxIsLoading = input(false);
   readonly luxMaxHeight = input<string | null>(null);
   readonly luxErrorMessage = input<string | null>(null);
+  readonly luxShowSearch = input(false);
+  readonly luxSearchDelay = input(300);
 
   readonly luxSelected = model<T[]>([]);
   readonly luxPageIndex = model(0);
+  readonly luxSearchValue = model('');
   readonly luxDetailClicked = output<T>();
   readonly luxPageChange = output<LuxPageEvent>();
   readonly luxScrolled = output<void>();
@@ -81,9 +100,35 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private onTouched: () => void = () => {};
   private cvaDisabled = signal(false);
 
+  // Suchbegriff wird bei jedem Tastendruck ins Model geschrieben; die Filterung/Events reagieren
+  // erst nach Ablauf von luxSearchDelay auf die Änderung (Entkopplung von Eingabe und Filterwirkung).
+  private searchValue$ = toObservable(this.luxSearchValue);
+  protected debouncedSearch = toSignal(this.searchValue$.pipe(debounce(() => timer(this.luxSearchDelay()))), { initialValue: '' });
+
   protected listLabel = computed(() => this.luxLabel() ?? this.tService.translate('luxc.list-select.arialabel'));
-  protected totalCount = computed(() => this.luxTotalItems() ?? this.luxItems().length);
-  protected enabledItems = computed(() => this.luxItems().filter((item) => !this.isItemDisabled(item)));
+  protected filteredItems = computed(() => {
+    const items = this.luxItems();
+    if (!this.luxShowSearch()) {
+      return items;
+    }
+    const term = this.debouncedSearch().toLowerCase();
+    if (term === '') {
+      return items;
+    }
+    return items.filter(
+      (item) => this.getLabel(item).toLowerCase().includes(term) || (this.getSubLabel(item) ?? '').toLowerCase().includes(term)
+    );
+  });
+  protected displayedItems = computed(() => {
+    const filtered = this.filteredItems();
+    if (!this.paginationActive()) {
+      return filtered;
+    }
+    const start = this.luxPageIndex() * this.luxPageSize();
+    return filtered.slice(start, start + this.luxPageSize());
+  });
+  protected totalCount = computed(() => this.luxTotalItems() ?? this.filteredItems().length);
+  protected enabledItems = computed(() => this.displayedItems().filter((item) => !this.isItemDisabled(item)));
   protected allSelected = computed(() => {
     const enabled = this.enabledItems();
     return enabled.length > 0 && enabled.every((item) => this.isSelected(item));
@@ -112,8 +157,22 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
 
     effect(() => {
       if (this.luxShowPagination() && this.luxInfiniteScroll()) {
-        console.error('lux-list-select: luxShowPagination und luxInfiniteScroll schließen sich gegenseitig aus. Es wird die Paginierung verwendet.');
+        console.error(
+          'lux-list-select: luxShowPagination und luxInfiniteScroll schließen sich gegenseitig aus. Es wird die Paginierung verwendet.'
+        );
       }
+    });
+
+    let isFirstSearchRun = true;
+    effect(() => {
+      this.debouncedSearch();
+      // Der erste Effect-Lauf ist die Initialisierung und keine echte Suchänderung, ein von außen
+      // vorgegebener luxPageIndex darf dadurch nicht überschrieben werden.
+      if (isFirstSearchRun) {
+        isFirstSearchRun = false;
+        return;
+      }
+      this.luxPageIndex.set(0);
     });
   }
 
@@ -163,6 +222,14 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
 
   onScrolled() {
     this.luxScrolled.emit();
+  }
+
+  protected onSearchInput(event: Event) {
+    this.luxSearchValue.set((event.target as HTMLInputElement).value);
+  }
+
+  protected onSearchClear() {
+    this.luxSearchValue.set('');
   }
 
   writeValue(value: T[] | null): void {

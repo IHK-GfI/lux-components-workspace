@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
@@ -243,22 +243,34 @@ describe('LuxListSelectComponent', () => {
   });
 
   describe('List-Footer', () => {
-    it('Sollte den Paginator nur bei luxShowPagination anzeigen und Seitenwechsel emittieren', () => {
+    it('Sollte den Paginator nur bei luxShowPagination anzeigen, Seitenwechsel emittieren und die Liste dabei clientseitig slicen', () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.query(By.css('lux-paginator'))).toBeNull();
 
       // Änderungen durchführen
       host.showPagination = true;
-      host.totalItems = 100;
+      host.pageSize = 2;
       fixture.detectChanges();
 
-      // Nachbedingungen prüfen
+      // Nachbedingungen prüfen: Paginator sichtbar, erste Seite zeigt die ersten zwei Items
       expect(fixture.debugElement.query(By.css('lux-paginator'))).not.toBeNull();
+      let cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(2);
+      expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
+      expect(cards[1].nativeElement.textContent).toContain('Thomas Schmidt');
+
+      // Änderungen durchführen
       const nextButton = fixture.debugElement.query(By.css('lux-paginator .mat-mdc-paginator-navigation-next'));
       nextButton.nativeElement.click();
       fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Seitenwechsel emittiert, zweite Seite zeigt die nächsten zwei Items
       expect(host.lastPageEvent?.pageIndex).toBe(1);
       expect(host.pageIndex).toBe(1);
+      cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(2);
+      expect(cards[0].nativeElement.textContent).toContain('Laura Weber');
+      expect(cards[1].nativeElement.textContent).toContain('Markus Fischer');
     });
 
     it('Sollte bei gleichzeitigem Paginator und Infinite Scroll einen Fehler loggen und die Paginierung nutzen', () => {
@@ -297,6 +309,124 @@ describe('LuxListSelectComponent', () => {
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.directive(LuxInfiniteScrollDirective))).not.toBeNull();
     });
+  });
+
+  describe('Suche', () => {
+    function typeSearch(value: string) {
+      const input = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    }
+
+    it('Sollte das Suchfeld nur bei luxShowSearch anzeigen', () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search'))).toBeNull();
+
+      // Änderungen durchführen
+      host.showSearch = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search-input'))).not.toBeNull();
+    });
+
+    it('Sollte nach Ablauf der Debounce case-insensitive über Titel und Untertitel filtern', fakeAsync(() => {
+      // Vorbedingungen testen
+      host.showSearch = true;
+      fixture.detectChanges();
+
+      // Änderungen durchführen: Großschreibung prüft die Case-Insensitivität, 'MÜLLER' passt nur auf den Titel von Anna Müller
+      typeSearch('MÜLLER');
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: nur Anna Müller passt (case-insensitiv über den Titel)
+      let cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(1);
+      expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
+      const badge = fixture.debugElement.query(By.css('lux-badge'));
+      expect(badge.nativeElement.textContent).toContain('0 von 1 ausgewählt');
+
+      // Änderungen durchführen: 'münchen' passt nur über den Untertitel von Thomas Schmidt
+      typeSearch('münchen');
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: nur Thomas Schmidt passt (case-insensitiv über den Untertitel)
+      cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(1);
+      expect(cards[0].nativeElement.textContent).toContain('Thomas Schmidt');
+    }));
+
+    it('Sollte bei aktiver Paginierung die gefilterte Liste selbst slicen und bei Suchänderung auf Seite 0 springen', fakeAsync(() => {
+      // Vorbedingungen testen: Seite 1 (Index 1) ist aktiv, pageSize 2, keine Suche
+      host.showSearch = true;
+      host.showPagination = true;
+      host.pageSize = 2;
+      host.pageIndex = 1;
+      fixture.detectChanges();
+      let cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(2);
+      expect(cards[0].nativeElement.textContent).toContain('Laura Weber');
+      expect(cards[1].nativeElement.textContent).toContain('Markus Fischer');
+
+      // Änderungen durchführen: Suche nach 'er' (passt auf Anna Müller, Laura Weber, Markus Fischer)
+      typeSearch('er');
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Seite auf 0 zurückgesprungen, gefilterte Liste selbst geslict
+      expect(host.pageIndex).toBe(0);
+      cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(2);
+      expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
+      expect(cards[1].nativeElement.textContent).toContain('Laura Weber');
+    }));
+
+    it('Sollte der Löschen-Button die Suche zurücksetzen', fakeAsync(() => {
+      // Vorbedingungen testen
+      host.showSearch = true;
+      fixture.detectChanges();
+      typeSearch('Anna');
+      tick(300);
+      fixture.detectChanges();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear'))).not.toBeNull();
+      expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(1);
+
+      // Änderungen durchführen
+      fixture.debugElement.query(By.css('.lux-list-select-search-clear')).nativeElement.click();
+      fixture.detectChanges();
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.searchValue).toBe('');
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear'))).toBeNull();
+      expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(4);
+    }));
+
+    it('Sollte das Suchfeld bei deaktivierter Komponente deaktivieren', fakeAsync(() => {
+      // Vorbedingungen testen
+      host.showSearch = true;
+      fixture.detectChanges();
+      typeSearch('Anna');
+      tick(300);
+      fixture.detectChanges();
+      const searchInput = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
+      const clearButton = fixture.debugElement.query(By.css('.lux-list-select-search-clear')).nativeElement as HTMLButtonElement;
+      expect(searchInput.disabled).toBeFalse();
+      expect(clearButton.disabled).toBeFalse();
+
+      // Änderungen durchführen
+      host.disabled = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(searchInput.disabled).toBeTrue();
+      expect(clearButton.disabled).toBeTrue();
+    }));
   });
 
   describe('Fehlerzustand', () => {
@@ -412,10 +542,14 @@ describe('LuxListSelectComponent', () => {
       [luxShowDetailButton]="showDetailButton"
       [luxTotalItems]="totalItems"
       [luxShowPagination]="showPagination"
+      [luxPageSize]="pageSize"
       [luxInfiniteScroll]="infiniteScroll"
       [luxMaxHeight]="maxHeight"
       [(luxPageIndex)]="pageIndex"
       [luxErrorMessage]="errorMessage"
+      [luxDisabled]="disabled"
+      [luxShowSearch]="showSearch"
+      [(luxSearchValue)]="searchValue"
       (luxPageChange)="lastPageEvent = $event"
       (luxDetailClicked)="lastDetail = $event"
     />
@@ -429,9 +563,13 @@ class MockHostComponent {
   lastDetail: TestAdresse | null = null;
   totalItems: number | null = null;
   showPagination = false;
+  pageSize = 5;
   infiniteScroll = false;
   maxHeight: string | null = null;
   pageIndex = 0;
   lastPageEvent: LuxPageEvent | null = null;
   errorMessage: string | null = null;
+  disabled = false;
+  showSearch = false;
+  searchValue = '';
 }

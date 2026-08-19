@@ -1,5 +1,5 @@
 <ng-template #itemsTpl>
-  @for (item of luxItems(); track item) {
+  @for (item of displayedItems(); track item) {
     <lux-list-select-item
       [luxItem]="item"
       [luxMode]="luxMode()"
@@ -17,6 +17,31 @@
 </ng-template>
 
 <div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()">
+  @if (luxShowSearch()) {
+    <div class="lux-list-select-search">
+      <lux-icon class="lux-list-select-search-icon" luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
+      <input
+        type="text"
+        class="lux-list-select-search-input"
+        [attr.aria-label]="'luxc.list-select.search_arialabel' | transloco"
+        [value]="luxSearchValue()"
+        [disabled]="componentDisabled()"
+        (input)="onSearchInput($event)"
+      />
+      @if (luxSearchValue()) {
+        <button
+          type="button"
+          class="lux-list-select-search-clear"
+          [attr.aria-label]="'luxc.list-select.search_clear_arialabel' | transloco"
+          [disabled]="componentDisabled()"
+          (click)="onSearchClear()"
+        >
+          <lux-icon luxIconName="lux-interface-delete-circle" luxIconSize="1x"></lux-icon>
+        </button>
+      }
+    </div>
+  }
+
   @if (luxMode() === 'multi' || luxShowCounter()) {
     <div class="lux-list-select-header">
       @if (luxMode() === 'multi') {
