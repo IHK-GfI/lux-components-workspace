@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, model, signal } from '@angular/core';
 import {
-  LuxIconComponent,
+  ILuxListSelectHttpDao,
   LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
   LuxListSelectComponent,
   LuxListSelectMode,
   LuxSelectAcComponent,
@@ -13,12 +12,17 @@ import { ExampleBaseContentComponent } from '../../example-base/example-base-roo
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
+import { ListSelectExampleHttpDao } from './list-select-example-http-dao';
 
-interface DemoAdresse {
+export interface DemoAdresse {
   label: string;
   subLabel: string;
   disabled?: boolean;
 }
+
+// Initialer Ausschnitt für den client-seitigen Infinite-Scroll-Fall (ohne luxHttpDao) - siehe
+// visibleItems() unten sowie das Wiki-Beispiel "Infinite Scrolling" für das zugrundeliegende Muster.
+const INITIAL_LOADED_COUNT = 6;
 
 const ALLE_ADRESSEN: DemoAdresse[] = [
   { label: 'Anna Müller', subLabel: 'Berliner Str. 12, 10115 Berlin' },
@@ -40,11 +44,9 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxListSelectComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxIconComponent,
     LuxSelectAcComponent,
     LuxToggleAcComponent,
+    LuxInputAcComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent
@@ -53,9 +55,17 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
 export class ListSelectExampleComponent {
   log = logResult;
 
+  readonly alleAdressen = ALLE_ADRESSEN;
+
   readonly modeOptions: { label: string; value: LuxListSelectMode }[] = [
     { label: 'multi', value: 'multi' },
     { label: 'single', value: 'single' }
+  ];
+
+  readonly searchDelayOptions: { label: string; value: number }[] = [
+    { label: 'Kein Delay (0 ms)', value: 0 },
+    { label: 'Standard (300 ms)', value: 300 },
+    { label: 'Langsam (1000 ms)', value: 1000 }
   ];
 
   mode = model<LuxListSelectMode>('multi');
@@ -68,32 +78,42 @@ export class ListSelectExampleComponent {
   maxHeight = model('420px');
   pageSize = 5;
 
-  filter = model('');
+  showSearch = model(false);
+  searchDelay = model(300);
+  searchValue = model('');
+  useHttpDao = model(false);
+
   pageIndex = model(0);
   selected = signal<DemoAdresse[]>([]);
-  loadedCount = signal(6);
+  loadedCount = signal(INITIAL_LOADED_COUNT);
 
-  filtered = computed(() => {
-    const term = this.filter().toLowerCase();
-    return ALLE_ADRESSEN.filter((adresse) => adresse.label.toLowerCase().includes(term) || adresse.subLabel.toLowerCase().includes(term));
-  });
+  // Bei Aktivierung des Toggles wird ein neues DAO-Objekt gebunden (Server-Simulation), bei
+  // Deaktivierung liefert der Computed wieder "undefined" -> die Komponente fällt zurück auf
+  // luxItems und ihre eigene Client-Filterung/-Slicing.
+  httpDao = computed<ILuxListSelectHttpDao<DemoAdresse> | undefined>(() =>
+    this.useHttpDao() ? new ListSelectExampleHttpDao(this.alleAdressen) : undefined
+  );
 
+  // Client-Modus (kein luxHttpDao): Bei aktiver Paginierung schneidet die Komponente selbst zu,
+  // deshalb wird ihr die vollständige Liste übergeben. Bei aktivem Infinite Scrolling schneidet
+  // die Komponente dagegen NICHT selbst - die aufrufende Seite liefert weiterhin nur den bisher
+  // geladenen Ausschnitt über luxItems und erweitert ihn in onScrolled() (siehe Wiki-Beispiel
+  // "Infinite Scrolling"). Ist ein DAO gebunden, übernimmt dieser Paging/Scrolling serverseitig.
   visibleItems = computed(() => {
-    if (this.showPagination()) {
-      const start = this.pageIndex() * this.pageSize;
-      return this.filtered().slice(start, start + this.pageSize);
+    if (this.infiniteScroll() && !this.useHttpDao()) {
+      return this.alleAdressen.slice(0, this.loadedCount());
     }
-    if (this.infiniteScroll()) {
-      return this.filtered().slice(0, this.loadedCount());
-    }
-    return this.filtered();
+    return this.alleAdressen;
   });
 
   constructor() {
+    // Sucheingabe sowie ein Wechsel des Modus (Server-DAO an/aus, Infinite Scroll an/aus) setzen
+    // den client-seitig geladenen Ausschnitt auf den Initialwert zurück.
     effect(() => {
-      this.filter();
-      this.pageIndex.set(0);
-      this.loadedCount.set(6);
+      this.searchValue();
+      this.useHttpDao();
+      this.infiniteScroll();
+      this.loadedCount.set(INITIAL_LOADED_COUNT);
     });
   }
 
@@ -102,8 +122,10 @@ export class ListSelectExampleComponent {
   }
 
   onScrolled() {
-    this.log(this.showOutputEvents(), 'luxScrolled', this.loadedCount());
-    this.loadedCount.update((count) => Math.min(count + 3, this.filtered().length));
+    this.log(this.showOutputEvents(), 'luxScrolled');
+    if (!this.useHttpDao()) {
+      this.loadedCount.update((count) => Math.min(count + 3, this.alleAdressen.length));
+    }
   }
 
   onSelectedChange(selected: DemoAdresse[]) {

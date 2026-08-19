@@ -4,18 +4,14 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col lux-gap-3" style="max-width: 600px">
-      <h2>Adresse suchen</h2>
-      <lux-input-ac luxLabel="Suche" [luxNoTopLabel]="true" [(luxValue)]="filter">
-        <lux-input-ac-prefix>
-          <lux-icon luxIconName="lux-interface-search"></lux-icon>
-        </lux-input-ac-prefix>
-      </lux-input-ac>
-
       <lux-list-select
         [luxMode]="mode()"
         [luxItems]="visibleItems()"
-        [luxTotalItems]="filtered().length"
         [luxSelected]="selected()"
+        [luxShowSearch]="showSearch()"
+        [luxSearchDelay]="searchDelay()"
+        [(luxSearchValue)]="searchValue"
+        [luxHttpDao]="httpDao()"
         [luxShowPagination]="showPagination()"
         [luxPageSize]="pageSize"
         [(luxPageIndex)]="pageIndex"
@@ -47,6 +43,19 @@
       [luxPickValue]="(item) => item.value"
       [(luxSelected)]="mode"
     ></lux-select-ac>
+    <lux-toggle-ac luxLabel="luxShowSearch" [(luxChecked)]="showSearch"></lux-toggle-ac>
+    <lux-select-ac
+      luxLabel="luxSearchDelay"
+      [luxOptions]="searchDelayOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="searchDelay"
+    ></lux-select-ac>
+    <lux-toggle-ac
+      luxLabel="luxHttpDao (Server-Simulation)"
+      luxHint="1 s Latenz, filtert/paginiert serverseitig"
+      [(luxChecked)]="useHttpDao"
+    ></lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxShowPagination" [(luxChecked)]="showPagination"></lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxInfiniteScroll" [(luxChecked)]="infiniteScroll"></lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxShowDetailButton" [(luxChecked)]="showDetailButton"></lux-toggle-ac>
