@@ -5,6 +5,7 @@ import { Subject, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { LuxProgressComponent, LuxProgressModeType } from '../../lux-common/lux-progress/lux-progress.component';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
+import { LuxAriaDisabledDirective } from '../../lux-directives/lux-aria/lux-aria-disabled.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
@@ -15,7 +16,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   selector: 'lux-button',
   templateUrl: './lux-button.component.html',
   styleUrls: ['./lux-button.component.scss'],
-  imports: [MatButton, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, MatIconButton, LuxIconComponent, LuxProgressComponent],
+  imports: [MatButton, LuxAriaDisabledDirective, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, MatIconButton, LuxIconComponent, LuxProgressComponent],
   host: {
     '[class.lux-flat]': 'luxFlat',
     '[class.lux-raised]': 'luxRaised',
@@ -46,7 +47,6 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   @Input() luxSpinnerMode: LuxProgressModeType = 'indeterminate';
   @Input() luxSpinnerValue = 70;
   @Input() luxLoading = false;
-  @Input() luxDisabledAria = false;
   @Input() luxIconButton = false;
 
   @Output() luxAuxClicked = new EventEmitter<Event>();
@@ -142,7 +142,7 @@ export class LuxButtonComponent extends LuxActionComponentBaseClass implements O
   }
 
   private shouldHandleNotAllowedClick(): boolean {
-    return !!this.luxDisabledAria && !this.luxDisabled;
+    return !!this.luxDisabledAria() && !this.luxDisabled;
   }
 
   private emitClickNotAllowed(event: MouseEvent) {
