@@ -228,6 +228,8 @@
       "arialabel": "Auswahlliste",
       "counter": "{{selected}} von {{total}} ausgewählt",
       "detail_arialabel": "Details anzeigen",
+      "search_arialabel": "Suche",
+      "search_clear_arialabel": "Suche löschen",
       "select_all": "Alle auswählen"
     },
     "lookup": {
