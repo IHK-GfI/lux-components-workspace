@@ -108,45 +108,37 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private onTouched: () => void = () => {};
   private cvaDisabled = signal(false);
 
-  // Grid-Tastaturnavigation (Vorbild lux-list): Die gerenderten Item-Komponenten dienen dem
-  // FocusKeyManager als Fokus-Ziele; der Manager wird mit einem Signal konstruiert und passt
-  // sich dadurch automatisch an Filterung/Paginierung/Infinite-Scroll an (kein manuelles Neu-Erzeugen nötig).
-  // Generic bleibt bewusst <unknown> (viewChildren kann den Typparameter T der Hauptkomponente nicht
-  // herleiten); der konkrete Item-Wert wird erst beim Aufruf von toggleItem() auf T gecastet.
+  // FocusKeyManager (Vorbild lux-list) wird mit einem Signal konstruiert und passt sich dadurch
+  // automatisch an Filterung/Paginierung/Infinite-Scroll an. Generic bleibt <unknown>, da
+  // viewChildren den Typparameter T nicht herleiten kann; toggleItem() castet zurück auf T.
   private readonly items = viewChildren(LuxListSelectItemComponent);
   private readonly keyManager = new FocusKeyManager<LuxListSelectItemComponent<unknown>>(this.items, this.injector).skipPredicate(
     (item) => item.luxDisabled()
   );
 
-  // Bearbeiten-Modus (Enter/F2 auf der Karte -> Detail-Button; ESC/F2 zurück auf die Karte).
-  // Invariante wie bei lux-list: außerhalb des Edit-Modus ist die Liste ein einziger Tab-Stopp,
-  // innerhalb greift der Browser-Tab-Fokus normal auf die (temporär erreichbaren) inneren Elemente zu.
+  // Bearbeiten-Modus (Enter/F2 auf der Karte -> Detail-Button; ESC/F2 zurück). Außerhalb ist die
+  // Liste ein einziger Tab-Stopp, innerhalb greift der Browser-Tab-Fokus auf die inneren Elemente.
   protected editMode = signal(false);
-  // activeItemIndex() liest den internen Signal-Getter des FocusKeyManagers und ist dadurch
-  // reaktiv - wird an das jeweils aktive Item als luxEditMode durchgereicht (siehe Template),
-  // damit nur dessen innere Elemente im Edit-Modus einen Tab-Stopp erhalten.
+  // Reaktiver Zugriff auf den internen Zustand des FocusKeyManagers, wird an das aktive Item als
+  // luxEditMode durchgereicht, damit nur dessen innere Elemente im Edit-Modus einen Tab-Stopp erhalten.
   protected activeItemIndex = computed(() => this.keyManager.activeItemIndex);
-  // Eindeutiger name für die Radio-Buttons im Single-Modus: Ohne name greift der CDK-weite
-  // UniqueSelectionDispatcher instanzübergreifend (namenlose Radios teilen sich einen impliziten
-  // Namen), wodurch die Selektion in einer lux-list-select-Instanz die visuelle Checked-Optik
-  // einer anderen Instanz auf derselben Seite löschen würde.
+  // Ohne eigenen name teilen sich Radios instanzübergreifend den CDK-UniqueSelectionDispatcher,
+  // wodurch eine Selektion in dieser Instanz die Checked-Optik einer anderen Instanz löschen würde.
   protected radioName = computed(() => `lux-list-select-radio-${this.uniqueId}`);
 
-  // Suchbegriff wird bei jedem Tastendruck ins Model geschrieben; die Filterung/Events reagieren
-  // erst nach Ablauf von luxSearchDelay auf die Änderung (Entkopplung von Eingabe und Filterwirkung).
+  // Entkoppelt Eingabe und Filterwirkung: Filterung/Events reagieren erst nach luxSearchDelay.
   private searchValue$ = toObservable(this.luxSearchValue);
   protected debouncedSearch = toSignal(this.searchValue$.pipe(debounce(() => timer(this.luxSearchDelay()))), { initialValue: '' });
 
-  // DAO-Server-Modus (Hausmuster lux-table): Ist ein DAO gesetzt, werden luxItems und die interne
-  // Client-Filterung/-Slicing ignoriert, die angezeigten Daten kommen ausschließlich vom Server.
+  // DAO-Server-Modus (Hausmuster lux-table): Ist ein DAO gesetzt, kommen die angezeigten Daten
+  // ausschließlich vom Server, luxItems und die Client-Filterung/-Slicing werden ignoriert.
   private loadTrigger$ = new Subject<{ page: number; filter: string; append: boolean }>();
   protected loading = signal(false);
   protected daoItems = signal<T[]>([]);
   protected daoTotalCount = signal(0);
   protected serverMode = computed(() => !!this.luxHttpDao());
-  // Zuletzt für einen (nicht-anhängenden) Load angefragte Seite - verhindert, dass der
-  // luxPageIndex-Effect unten einen Load erneut auslöst, der bereits synchron durch einen
-  // Paginator-Klick (onPageChange) oder einen anderen Effect (Suche/DAO-Wechsel) angestoßen wurde.
+  // Verhindert, dass der luxPageIndex-Effect einen Load erneut auslöst, der bereits synchron
+  // durch onPageChange oder einen anderen Effect (Suche/DAO-Wechsel) angestoßen wurde.
   private lastRequestedPage: number | null = null;
 
   protected listLabel = computed(() => this.luxLabel() ?? this.tService.translate('luxc.list-select.arialabel'));
@@ -196,13 +188,10 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   });
 
   constructor() {
-    // Bereinigt den FocusKeyManager, sobald das bisher aktive Item durch Suche/Seitenwechsel/
-    // DAO-Reload aus der (neuen) items()-Liste verschwindet - dessen Komponenteninstanz ist dann
-    // bereits zerstört. Ohne diese Bereinigung würde onGridFocus/toggleActiveItem auf die
-    // zerstörte Instanz zugreifen (NG0951) bzw. still ein Item der vorherigen Liste selektieren.
-    // Vorbild lux-list: dort übernimmt das der luxItems.changes-Handler (Edit-Modus verlassen,
-    // Manager neu erzeugen); hier reicht das Zurücksetzen auf "kein aktives Item" (-1), da der
-    // Signal-basierte FocusKeyManager sich selbst mit der neuen Liste synchronisiert.
+    // Setzt das aktive Item zurück, sobald es durch Suche/Seitenwechsel/DAO-Reload aus der
+    // items()-Liste verschwindet und damit zerstört ist - sonst würden onGridFocus/toggleActiveItem
+    // auf die zerstörte Instanz zugreifen (NG0951). Der Signal-basierte FocusKeyManager synchronisiert
+    // sich danach selbst mit der neuen Liste, ein Neu-Erzeugen wie bei lux-list ist nicht nötig.
     effect(() => {
       const currentItems = this.items();
       const active = this.keyManager.activeItem;
@@ -230,22 +219,19 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     let isFirstSearchRun = true;
     effect(() => {
       const search = this.debouncedSearch();
-      // Der erste Effect-Lauf ist die Initialisierung und keine echte Suchänderung, ein von außen
-      // vorgegebener luxPageIndex darf dadurch nicht überschrieben werden.
+      // Erster Lauf ist die Initialisierung, kein von außen vorgegebener luxPageIndex darf überschrieben werden.
       if (isFirstSearchRun) {
         isFirstSearchRun = false;
         return;
       }
       this.luxPageIndex.set(0);
-      // luxHttpDao() untracked lesen: DAO-Wechsel selbst wird bereits vom eigenen Effect behandelt,
-      // dieser Effect soll ausschließlich auf Suchänderungen reagieren.
+      // untracked: DAO-Wechsel wird bereits vom eigenen Effect behandelt, dieser Effect soll nur auf Suche reagieren.
       if (untracked(() => this.luxHttpDao())) {
         this.triggerLoad(0, search, false);
       }
     });
 
-    // DAO-Server-Modus: Wechsel/Setzen des DAO resettet die bisher geladenen Daten und lädt Seite 0
-    // mit dem aktuell gültigen Suchbegriff neu.
+    // Wechsel/Setzen des DAO resettet die bisher geladenen Daten und lädt Seite 0 neu.
     effect(() => {
       const dao = this.luxHttpDao();
       if (!dao) {
@@ -256,11 +242,9 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       this.triggerLoad(0, untracked(() => this.debouncedSearch()), false);
     });
 
-    // Server-Modus: Lädt auch dann nach, wenn luxPageIndex programmatisch (z.B. per Host-Binding)
-    // statt per Paginator-Klick geändert wird. isFirstPageRun übergeht den initialen Lauf (Seite 0
-    // wird bereits vom DAO-Wechsel-Effect oben geladen). Der Abgleich mit lastRequestedPage
-    // verhindert einen doppelten Load, wenn derselbe Seitenwechsel bereits synchron durch
-    // onPageChange (Paginator-Klick) oder einen der beiden Effects oberhalb ausgelöst wurde.
+    // Lädt auch bei programmatischer luxPageIndex-Änderung (nicht nur Paginator-Klick) nach.
+    // lastRequestedPage verhindert einen doppelten Load, wenn derselbe Seitenwechsel bereits
+    // synchron durch onPageChange oder einen der Effects oberhalb ausgelöst wurde.
     let isFirstPageRun = true;
     effect(() => {
       const page = this.luxPageIndex();
@@ -278,8 +262,8 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       this.triggerLoad(page, untracked(() => this.debouncedSearch()), false);
     });
 
-    // Trigger-Stream für DAO-Requests: switchMap verwirft veraltete Requests (Race-Schutz), catchError
-    // im inneren Stream sorgt dafür, dass der Trigger-Stream bei Fehlern lebendig bleibt.
+    // switchMap verwirft veraltete Requests (Race-Schutz), catchError im inneren Stream hält den
+    // Trigger-Stream bei Fehlern am Leben.
     this.loadTrigger$
       .pipe(
         switchMap((trigger) => {
@@ -305,11 +289,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       .subscribe();
   }
 
-  /**
-   * Einziger Ort, der tatsächlich einen DAO-Load anstößt (Suche, DAO-Wechsel, Paginator-Klick,
-   * programmatische luxPageIndex-Änderung). Merkt sich die angefragte Seite in lastRequestedPage,
-   * damit der luxPageIndex-Effect denselben Seitenwechsel nicht ein zweites Mal auslöst.
-   */
+  /** Einziger Ort, der einen DAO-Load anstößt; merkt sich die Seite in lastRequestedPage gegen doppelte Loads durch den luxPageIndex-Effect. */
   private triggerLoad(page: number, filter: string, append: boolean): void {
     this.lastRequestedPage = page;
     this.loadTrigger$.next({ page, filter, append });
@@ -341,10 +321,9 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   }
 
   /**
-   * Fokus-Handler des Grid-Containers (Vorbild lux-list): Beim Betreten des Containers von außen
-   * wird das zuletzt aktive (oder mangels Vorgeschichte das erste) Item fokussiert. Kommt der Fokus
-   * dagegen aus dem aktiven Item selbst (z.B. Shift+Tab vom Detail-Button im Edit-Modus zurück auf
-   * den Container), springt der Fokus lediglich auf die Karte zurück - der Edit-Modus bleibt aktiv.
+   * Fokus-Handler des Grid-Containers (Vorbild lux-list): Beim Betreten von außen wird das zuletzt
+   * aktive (oder mangels Vorgeschichte das erste) Item fokussiert; kommt der Fokus aus dem aktiven
+   * Item selbst zurück, springt er nur auf die Karte zurück, der Edit-Modus bleibt aktiv.
    */
   protected onGridFocus(event: FocusEvent): void {
     const relatedTarget = event.relatedTarget as Node | null;
@@ -355,11 +334,9 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       return;
     }
 
-    // Fokus kommt aus dem Grid selbst zurück (z.B. Shift+Tab von der aktiven Karte auf den
-    // tabindex=0-Container, da die Karte selbst tabindex=-1 hat): Außerhalb des Edit-Modus nichts
-    // tun, der Fokus bleibt auf dem Container - der nächste Shift+Tab verlässt das Grid regulär.
-    // Ohne diese Prüfung würde active.focus() unten den Fokus sofort auf die Karte zurückwerfen
-    // und eine Shift+Tab-Endlosschleife erzeugen (das Grid wäre dann rückwärts nicht verlassbar).
+    // Fokus kommt vom Grid-Container selbst zurück (Shift+Tab von der Karte, die tabindex=-1 hat):
+    // außerhalb des Edit-Modus nichts tun, sonst würde active.focus() unten eine
+    // Shift+Tab-Endlosschleife erzeugen und das Grid wäre rückwärts nicht verlassbar.
     if (!this.editMode() && relatedTarget && (event.currentTarget as HTMLElement).contains(relatedTarget)) {
       return;
     }
@@ -371,10 +348,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     }
   }
 
-  /**
-   * Beendet den Edit-Modus, wenn der Fokus die aktive Karte verlässt, ohne dass er zum
-   * Grid-Container selbst wandert (der Container-Fall wird bereits von onGridFocus behandelt).
-   */
+  /** Beendet den Edit-Modus, wenn der Fokus die aktive Karte verlässt, ohne zum Grid-Container zu wandern (siehe onGridFocus). */
   protected onGridFocusOut(event: FocusEvent): void {
     if (!this.editMode()) {
       return;
@@ -391,11 +365,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     }
   }
 
-  /**
-   * Tastatur-Handler des Grid-Containers. Außerhalb des Edit-Modus: Pfeiltasten/Home/End navigieren
-   * über den FocusKeyManager, Space/Enter/F2 selektieren bzw. betreten den Edit-Modus. Innerhalb des
-   * Edit-Modus behandelt handleEditModeKeydown die Tab-Zyklus- und ESC/F2-Logik (1:1 nach lux-list).
-   */
+  /** Tastatur-Handler des Grid-Containers; im Edit-Modus delegiert er an handleEditModeKeydown. */
   protected onGridKeydown(event: KeyboardEvent): void {
     if (this.editMode()) {
       this.handleEditModeKeydown(event);
@@ -430,12 +400,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     }
   }
 
-  /**
-   * Wird beim Klick auf ein Item ausgelöst und synchronisiert lediglich den internen
-   * FocusKeyManager-Zustand (updateActiveItem - ohne DOM-Fokus zu verändern), damit
-   * anschließende Pfeiltasten-Navigation beim geklickten Item weitermacht. Disabled Items werden
-   * dabei nicht als aktives Item übernommen (updateActiveItem umgeht sonst das skipPredicate).
-   */
+  /** Synchronisiert bei Klick den FocusKeyManager-Zustand ohne DOM-Fokus zu ändern; disabled Items werden nicht übernommen, da updateActiveItem das skipPredicate umgeht. */
   protected onItemActivated(index: number): void {
     const item = this.items()[index];
     if (item?.luxDisabled()) {
@@ -444,11 +409,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     this.keyManager.updateActiveItem(index);
   }
 
-  /**
-   * Betritt den Edit-Modus auf dem aktiven Item (Enter bei sichtbarem Detail-Button, F2) und
-   * fokussiert dessen erstes inneres Element. Ohne fokussierbare innere Elemente passiert nichts
-   * (analog zu lux-list: kein Edit-Modus ohne interaktiven Inhalt).
-   */
+  /** Betritt den Edit-Modus auf dem aktiven Item und fokussiert dessen erstes inneres Element; ohne fokussierbare Elemente passiert nichts. */
   private enterEditMode(): void {
     const active = this.keyManager.activeItem;
     if (!active) {
@@ -477,12 +438,9 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   }
 
   /**
-   * Tab-Zyklus- und ESC/F2-Logik im Edit-Modus, 1:1 nach lux-list: Tab/Shift+Tab von der Karte
-   * springt zum ersten/letzten inneren Element, Tab vom letzten inneren Element zurück zur Karte
-   * (Edit-Modus bleibt aktiv). ESC/F2 verlassen den Edit-Modus vollständig. Kehrt der Fokus per
-   * Tab auf die Karte zurück (z.B. Shift+Tab vom Detail-Button), bleiben Space/Pfeiltasten/Home/End
-   * auf Zeilenebene nutzbar - lux-list bricht den Edit-Modus dabei implizit über focusActiveItem()
-   * ab, sobald tatsächlich navigiert wird (siehe lux-list.component.ts focus()).
+   * Tab-Zyklus- und ESC/F2-Logik im Edit-Modus (1:1 nach lux-list): Tab/Shift+Tab von der Karte
+   * springt zum ersten/letzten inneren Element, Tab vom letzten Element zurück zur Karte (Edit-Modus
+   * bleibt aktiv), ESC/F2 verlassen ihn vollständig.
    */
   private handleEditModeKeydown(event: KeyboardEvent): void {
     if (LuxUtil.isKeyEscape(event)) {
@@ -545,10 +503,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     }
   }
 
-  /**
-   * Toggelt die Selektion des aktuell im FocusKeyManager aktiven Items (Space, bzw. Enter ohne
-   * sichtbaren Detail-Button).
-   */
+  /** Toggelt die Selektion des aktuell im FocusKeyManager aktiven Items. */
   private toggleActiveItem(): void {
     const active = this.keyManager.activeItem;
     if (active) {
@@ -574,9 +529,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   onPageChange(event: LuxPageEvent) {
     this.luxPageChange.emit(event);
     if (this.luxHttpDao()) {
-      // Löst den Load synchron mit dem Klick aus (statt auf den luxPageIndex-Effect zu warten) und
-      // merkt sich die Seite über triggerLoad, damit dieser Effect für denselben Seitenwechsel
-      // keinen zweiten Load anstößt.
+      // Löst den Load synchron mit dem Klick aus, triggerLoad merkt die Seite gegen einen doppelten Load durch den luxPageIndex-Effect.
       this.triggerLoad(event.pageIndex, this.debouncedSearch(), false);
     }
   }
