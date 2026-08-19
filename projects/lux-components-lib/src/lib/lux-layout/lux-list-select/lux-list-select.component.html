@@ -1,5 +1,5 @@
 <ng-template #itemsTpl>
-  @for (item of displayedItems(); track item) {
+  @for (item of displayedItems(); track item; let i = $index) {
     <lux-list-select-item
       [luxItem]="item"
       [luxMode]="luxMode()"
@@ -10,8 +10,11 @@
       [luxShowDetailButton]="luxShowDetailButton()"
       [luxDetailIconName]="luxDetailIconName()"
       [luxContentTemplate]="contentTemplate() ?? null"
+      [luxRadioName]="radioName()"
+      [luxEditMode]="editMode() && i === activeItemIndex()"
       (luxToggleSelected)="toggleItem(item)"
       (luxDetail)="luxDetailClicked.emit(item)"
+      (click)="onItemActivated(i)"
     />
   }
 </ng-template>
@@ -66,15 +69,18 @@
   }
 
   <ng-template #listTpl>
-    @if (luxMode() === 'single') {
-      <mat-radio-group class="lux-list-select-list" [attr.aria-label]="listLabel()">
-        <ng-container [ngTemplateOutlet]="itemsTpl"></ng-container>
-      </mat-radio-group>
-    } @else {
-      <div class="lux-list-select-list" role="group" [attr.aria-label]="listLabel()">
-        <ng-container [ngTemplateOutlet]="itemsTpl"></ng-container>
-      </div>
-    }
+    <div
+      class="lux-list-select-list"
+      role="grid"
+      tabindex="0"
+      [attr.aria-label]="listLabel()"
+      [attr.aria-multiselectable]="luxMode() === 'multi' ? true : null"
+      (focus)="onGridFocus($event)"
+      (focusout)="onGridFocusOut($event)"
+      (keydown)="onGridKeydown($event)"
+    >
+      <ng-container [ngTemplateOutlet]="itemsTpl"></ng-container>
+    </div>
   </ng-template>
 
   <ng-template #loadingOverlayTpl>

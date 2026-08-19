@@ -1,9 +1,11 @@
+import { DOWN_ARROW, END, ESCAPE, HOME, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
-import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -675,6 +677,310 @@ describe('LuxListSelectComponent', () => {
     });
   });
 
+  describe('Grid-Tastaturnavigation', () => {
+    function gridContainer(): HTMLElement {
+      return fixture.debugElement.query(By.css('.lux-list-select-list')).nativeElement as HTMLElement;
+    }
+
+    function cards() {
+      return fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+    }
+
+    it('Sollte die Liste als grid mit einem Tab-Stopp rendern und Items als row', () => {
+      // Vorbedingungen testen
+      host.showDetailButton = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Container ist der einzige Tab-Stopp des Grids
+      const container = gridContainer();
+      expect(container.getAttribute('role')).toBe('grid');
+      expect(container.getAttribute('tabindex')).toBe('0');
+
+      // Nachbedingungen prüfen: Karten sind rows ohne eigenen Tab-Stopp
+      cards().forEach((card) => {
+        expect(card.nativeElement.getAttribute('role')).toBe('row');
+        expect(card.nativeElement.getAttribute('tabindex')).toBe('-1');
+      });
+
+      // Nachbedingungen prüfen: Checkboxen der Karten sind kein eigener Tab-Stopp mehr (die
+      // "Alle auswählen"-Checkbox im Header ist bewusst ausgenommen, sie liegt außerhalb des Grids)
+      fixture.debugElement.queryAll(By.css('.lux-list-select-card mat-checkbox')).forEach((checkbox) => {
+        expect((checkbox.componentInstance as MatCheckbox).tabIndex).toBe(-1);
+      });
+      fixture.debugElement.queryAll(By.css('.lux-list-select-detail')).forEach((button) => {
+        expect(button.nativeElement.tabIndex).toBe(-1);
+      });
+    });
+
+    it('Sollte im Single-Modus die Radio-Buttons ohne eigenen Tab-Stopp rendern', () => {
+      // Änderungen durchführen
+      host.mode = 'single';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const radios = fixture.debugElement.queryAll(By.css('.lux-list-select-card mat-radio-button'));
+      expect(radios.length).toBe(4);
+      radios.forEach((radio) => {
+        expect(radio.nativeElement.querySelector('input')?.tabIndex).toBe(-1);
+      });
+    });
+
+    it('Sollte beim Fokussieren des Containers das erste Item fokussieren und mit Pfeiltasten zwischen den Items navigieren', () => {
+      // Änderungen durchführen: Container erhält den Fokus (z.B. via Tab von außen)
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: erstes Item ist fokussiert
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+
+      // Änderungen durchführen: ArrowDown navigiert zum nächsten Item
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(document.activeElement).toBe(cards()[1].nativeElement);
+
+      // Änderungen durchführen: ArrowUp navigiert zurück
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', UP_ARROW);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+    });
+
+    it('Sollte mit Home/End zum ersten und letzten Item navigieren', () => {
+      // Änderungen durchführen
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', END);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(document.activeElement).toBe(cards()[3].nativeElement);
+
+      // Änderungen durchführen
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', HOME);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+    });
+
+    it('Sollte mit Space die Selektion des fokussierten Items toggeln', () => {
+      // Änderungen durchführen
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', SPACE);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.selected).toEqual([TEST_ITEMS[0]]);
+
+      // Änderungen durchführen: erneutes Space deselektiert wieder
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', SPACE);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.selected).toEqual([]);
+    });
+
+    it('Sollte mit F2 in den Detail-Button und mit Escape zurück auf die Karte wechseln', () => {
+      // Vorbedingungen testen
+      host.showDetailButton = true;
+      fixture.detectChanges();
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+
+      // Änderungen durchführen: F2 betritt den Edit-Modus und fokussiert den Detail-Button
+      gridContainer().dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail'));
+      expect(document.activeElement).toBe(detailButtons[0].nativeElement);
+
+      // Änderungen durchführen: Escape verlässt den Edit-Modus wieder
+      LuxTestHelper.dispatchKeyboardEvent(detailButtons[0].nativeElement, 'keydown', ESCAPE);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+    });
+
+    it('Sollte disabled-Items beim Fokussieren überspringen', () => {
+      // Vorbedingungen testen: TEST_ITEMS[2] (Index 2) ist disabled
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+
+      // Änderungen durchführen: von Item 0 aus zweimal ArrowDown - Item 2 (disabled) wird übersprungen
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(document.activeElement).toBe(cards()[3].nativeElement);
+    });
+
+    it('Sollte nach einer Listenänderung nicht auf ein zerstörtes Item zeigen (Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: Suche aktivieren, erstes Item (Anna Müller) fokussieren
+      host.showSearch = true;
+      fixture.detectChanges();
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+
+      // Änderungen durchführen: Suche filtert auf ein anderes Item - das fokussierte Item
+      // (Anna Müller) verschwindet aus der Liste, seine Komponenteninstanz wird zerstört
+      const input = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
+      input.value = 'Schmidt';
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      tick(300);
+      fixture.detectChanges();
+      expect(cards().length).toBe(1);
+
+      // Änderungen durchführen: erneutes Fokussieren des Grids darf nicht auf die zerstörte
+      // Instanz zugreifen (NG0951)
+      expect(() => {
+        LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      // Nachbedingungen prüfen: Fokus liegt auf dem ersten (einzigen) sichtbaren Item
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+
+      // Änderungen durchführen: Space darf nicht das alte, nicht mehr sichtbare Item (Anna
+      // Müller) selektieren, sondern das jetzt aktive (Thomas Schmidt)
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', SPACE);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.selected).toEqual([TEST_ITEMS[1]]);
+    }));
+
+    it('Sollte Pfeiltasten und Space nutzen können, wenn im Edit-Modus der Fokus per Tab auf die Karte zurückkehrt (Review-Finding)', () => {
+      // Vorbedingungen testen: Edit-Modus auf Item 0 betreten (Fokus auf Detail-Button)
+      host.showDetailButton = true;
+      fixture.detectChanges();
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      gridContainer().dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
+      fixture.detectChanges();
+      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail'));
+      expect(document.activeElement).toBe(detailButtons[0].nativeElement);
+
+      // Änderungen durchführen: Shift+Tab vom Detail-Button verlässt strukturell die Karte und
+      // landet (da alle anderen Elemente tabindex=-1 sind) beim Grid-Container selbst - simuliert
+      // durch ein natives focus-Event mit relatedTarget=Detail-Button (echte Tab-Traversierung
+      // lässt sich per dispatchEvent nicht auslösen). onGridFocus springt daraufhin zur Karte
+      // zurück, der Edit-Modus bleibt (strukturell) aktiv.
+      const focusEvent = new FocusEvent('focus', { relatedTarget: detailButtons[0].nativeElement });
+      gridContainer().dispatchEvent(focusEvent);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+
+      // Änderungen durchführen: ArrowDown muss trotz (strukturell) aktivem Edit-Modus zum
+      // nächsten Item navigieren. Dispatch als natives KeyboardEvent auf der Karte (nicht dem
+      // Container, und nicht über LuxTestHelper.dispatchKeyboardEvent - dessen target-Property
+      // ist fest auf den optionalen 4. Parameter gebunden): im echten Browser bubbelt das Event
+      // vom tatsächlich fokussierten Element (der Karte) nach oben, event.target ist daher die
+      // Karte, was die focusIsOnRow-Prüfung im Edit-Modus benötigt.
+      cards()[0].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[1].nativeElement);
+
+      // Änderungen durchführen: Space muss das jetzt aktive Item (Index 1) toggeln
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', SPACE);
+      fixture.detectChanges();
+      expect(host.selected).toEqual([TEST_ITEMS[1]]);
+    });
+
+    it('Sollte einen Klick auf ein disabled-Item nicht als aktives Item im FocusKeyManager übernehmen (Review-Finding)', () => {
+      // Vorbedingungen testen: Item 0 fokussieren
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+
+      // Änderungen durchführen: Klick auf das disabled Item (Index 2) darf es nicht als aktives
+      // Item im FocusKeyManager übernehmen
+      cards()[2].nativeElement.click();
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: ArrowDown navigiert weiterhin von Item 0 aus zu Item 1 - nicht
+      // vom (fälschlich aktivierten) disabled Item 2 aus zu Item 3
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[1].nativeElement);
+    });
+
+    it('Sollte im Single-Modus jeder Instanz einen eindeutigen Radio-Group-Namen zuweisen (Review-Finding: UniqueSelectionDispatcher)', () => {
+      // Vorbedingungen testen: zweite, unabhängige Instanz erzeugen
+      host.mode = 'single';
+      fixture.detectChanges();
+      const fixture2 = TestBed.createComponent(MockHostComponent);
+      fixture2.componentInstance.mode = 'single';
+      fixture2.detectChanges();
+
+      // Nachbedingungen prüfen: beide Instanzen vergeben ein name-Attribut, aber unterschiedliche
+      // (sonst löschen sich namenlose Standalone-Radios instanzübergreifend die Checked-Optik)
+      const nameA = (fixture.debugElement.query(By.css('.lux-list-select-card mat-radio-button input')).nativeElement as HTMLInputElement)
+        .name;
+      const nameB = (
+        fixture2.debugElement.query(By.css('.lux-list-select-card mat-radio-button input')).nativeElement as HTMLInputElement
+      ).name;
+      expect(nameA).toBeTruthy();
+      expect(nameB).toBeTruthy();
+      expect(nameA).not.toBe(nameB);
+
+      fixture2.destroy();
+    });
+
+    it('Sollte interaktive Elemente aus luxContentTemplate in die Tab-Stopp-Verwaltung und den Tab-Zyklus einbeziehen (Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: eigene Host-Komponente mit interaktivem Link im luxContentTemplate
+      const fixtureCT = TestBed.createComponent(MockHostWithContentTemplateComponent);
+      fixtureCT.detectChanges();
+      tick();
+      const container = fixtureCT.debugElement.query(By.css('.lux-list-select-list')).nativeElement as HTMLElement;
+      const link = fixtureCT.debugElement.query(By.css('.mock-content-link')).nativeElement as HTMLElement;
+      const detailButton = fixtureCT.debugElement.query(By.css('.lux-list-select-detail')).nativeElement as HTMLElement;
+      const card = fixtureCT.debugElement.query(By.css('.lux-list-select-card')).nativeElement as HTMLElement;
+      expect(link.tabIndex).toBe(-1);
+
+      // Änderungen durchführen: Grid fokussieren, F2 betritt den Edit-Modus
+      LuxTestHelper.dispatchFakeEvent(container, 'focus', true);
+      fixtureCT.detectChanges();
+      container.dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
+      fixtureCT.detectChanges();
+      tick();
+
+      // Nachbedingungen prüfen: im Edit-Modus sind beide inneren Elemente reguläre Tab-Stopps -
+      // der Browser regelt die Reihenfolge zwischen ihnen selbst; der Fokus landet auf dem
+      // ersten inneren Element (Link, da er in der Kartenreihenfolge vor dem Detail-Button liegt)
+      expect(link.tabIndex).toBe(0);
+      expect(detailButton.tabIndex).toBe(0);
+      expect(document.activeElement).toBe(link);
+
+      // Änderungen durchführen: Tab vom letzten fokussierbaren Element (Detail-Button) springt
+      // zurück zur Karte (Tab-Zyklus-Grenze berücksichtigt jetzt auch den projizierten Link)
+      detailButton.focus();
+      detailButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+      fixtureCT.detectChanges();
+      expect(document.activeElement).toBe(card);
+
+      // Änderungen durchführen: F2 verlässt den Edit-Modus wieder
+      card.dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
+      fixtureCT.detectChanges();
+      tick();
+
+      // Nachbedingungen prüfen: außerhalb des Edit-Modus ist der Link wieder kein Tab-Stopp
+      expect(link.tabIndex).toBe(-1);
+
+      fixtureCT.destroy();
+    }));
+  });
+
   describe('A11y', () => {
     beforeAll(() => {
       LuxA11yTestHelper.addA11yMatchers();
@@ -744,4 +1050,20 @@ class MockHostComponent {
   searchValue = '';
   httpDao: ILuxListSelectHttpDao<TestAdresse> | undefined = undefined;
   scrolledCount = 0;
+}
+
+@Component({
+  selector: 'lux-mock-host-content-template',
+  imports: [LuxListSelectComponent],
+  template: `
+    <lux-list-select [luxMode]="'multi'" [luxItems]="items" [(luxSelected)]="selected" [luxShowDetailButton]="true">
+      <ng-template let-item>
+        <a href="#" class="mock-content-link">{{ item.label }}</a>
+      </ng-template>
+    </lux-list-select>
+  `
+})
+class MockHostWithContentTemplateComponent {
+  items = TEST_ITEMS;
+  selected: TestAdresse[] = [];
 }

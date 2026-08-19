@@ -1,3 +1,4 @@
+import { FocusKeyManager } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -7,16 +8,17 @@ import {
   effect,
   inject,
   input,
+  Injector,
   model,
   output,
   signal,
   TemplateRef,
-  untracked
+  untracked,
+  viewChildren
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatRadioGroup } from '@angular/material/radio';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { catchError, debounce, EMPTY, finalize, Subject, switchMap, tap, timer } from 'rxjs';
@@ -28,6 +30,7 @@ import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-mes
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxProgressComponent } from '../../lux-common/lux-progress/lux-progress.component';
+import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
@@ -38,7 +41,6 @@ import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxListSelectItemComponent,
-    MatRadioGroup,
     NgTemplateOutlet,
     MatCheckbox,
     LuxBadgeComponent,
@@ -66,6 +68,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private static nextUniqueId = 0;
 
   private tService = inject(TranslocoService);
+  private readonly injector = inject(Injector);
   private readonly uniqueId = LuxListSelectComponent.nextUniqueId++;
 
   readonly luxMode = input<LuxListSelectMode>('multi');
@@ -104,6 +107,30 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private onChange: (value: T[]) => void = () => {};
   private onTouched: () => void = () => {};
   private cvaDisabled = signal(false);
+
+  // Grid-Tastaturnavigation (Vorbild lux-list): Die gerenderten Item-Komponenten dienen dem
+  // FocusKeyManager als Fokus-Ziele; der Manager wird mit einem Signal konstruiert und passt
+  // sich dadurch automatisch an Filterung/Paginierung/Infinite-Scroll an (kein manuelles Neu-Erzeugen nötig).
+  // Generic bleibt bewusst <unknown> (viewChildren kann den Typparameter T der Hauptkomponente nicht
+  // herleiten); der konkrete Item-Wert wird erst beim Aufruf von toggleItem() auf T gecastet.
+  private readonly items = viewChildren(LuxListSelectItemComponent);
+  private readonly keyManager = new FocusKeyManager<LuxListSelectItemComponent<unknown>>(this.items, this.injector).skipPredicate(
+    (item) => item.luxDisabled()
+  );
+
+  // Bearbeiten-Modus (Enter/F2 auf der Karte -> Detail-Button; ESC/F2 zurück auf die Karte).
+  // Invariante wie bei lux-list: außerhalb des Edit-Modus ist die Liste ein einziger Tab-Stopp,
+  // innerhalb greift der Browser-Tab-Fokus normal auf die (temporär erreichbaren) inneren Elemente zu.
+  protected editMode = signal(false);
+  // activeItemIndex() liest den internen Signal-Getter des FocusKeyManagers und ist dadurch
+  // reaktiv - wird an das jeweils aktive Item als luxEditMode durchgereicht (siehe Template),
+  // damit nur dessen innere Elemente im Edit-Modus einen Tab-Stopp erhalten.
+  protected activeItemIndex = computed(() => this.keyManager.activeItemIndex);
+  // Eindeutiger name für die Radio-Buttons im Single-Modus: Ohne name greift der CDK-weite
+  // UniqueSelectionDispatcher instanzübergreifend (namenlose Radios teilen sich einen impliziten
+  // Namen), wodurch die Selektion in einer lux-list-select-Instanz die visuelle Checked-Optik
+  // einer anderen Instanz auf derselben Seite löschen würde.
+  protected radioName = computed(() => `lux-list-select-radio-${this.uniqueId}`);
 
   // Suchbegriff wird bei jedem Tastendruck ins Model geschrieben; die Filterung/Events reagieren
   // erst nach Ablauf von luxSearchDelay auf die Änderung (Entkopplung von Eingabe und Filterwirkung).
@@ -165,6 +192,22 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   });
 
   constructor() {
+    // Bereinigt den FocusKeyManager, sobald das bisher aktive Item durch Suche/Seitenwechsel/
+    // DAO-Reload aus der (neuen) items()-Liste verschwindet - dessen Komponenteninstanz ist dann
+    // bereits zerstört. Ohne diese Bereinigung würde onGridFocus/toggleActiveItem auf die
+    // zerstörte Instanz zugreifen (NG0951) bzw. still ein Item der vorherigen Liste selektieren.
+    // Vorbild lux-list: dort übernimmt das der luxItems.changes-Handler (Edit-Modus verlassen,
+    // Manager neu erzeugen); hier reicht das Zurücksetzen auf "kein aktives Item" (-1), da der
+    // Signal-basierte FocusKeyManager sich selbst mit der neuen Liste synchronisiert.
+    effect(() => {
+      const currentItems = this.items();
+      const active = this.keyManager.activeItem;
+      if (active && !currentItems.includes(active)) {
+        this.editMode.set(false);
+        this.keyManager.updateActiveItem(-1);
+      }
+    });
+
     effect(() => {
       if (this.luxMode() === 'single' && this.luxSelected().length > 1) {
         this.luxSelected.set([this.luxSelected()[0]]);
@@ -259,6 +302,213 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     }
     this.onChange(this.luxSelected());
     this.onTouched();
+  }
+
+  /**
+   * Fokus-Handler des Grid-Containers (Vorbild lux-list): Beim Betreten des Containers von außen
+   * wird das zuletzt aktive (oder mangels Vorgeschichte das erste) Item fokussiert. Kommt der Fokus
+   * dagegen aus dem aktiven Item selbst (z.B. Shift+Tab vom Detail-Button im Edit-Modus zurück auf
+   * den Container), springt der Fokus lediglich auf die Karte zurück - der Edit-Modus bleibt aktiv.
+   */
+  protected onGridFocus(event: FocusEvent): void {
+    const relatedTarget = event.relatedTarget as Node | null;
+    const active = this.keyManager.activeItem;
+
+    if (this.editMode() && active?.contains(relatedTarget)) {
+      active.focus();
+      return;
+    }
+
+    if (active) {
+      active.focus();
+    } else {
+      this.keyManager.setFirstItemActive();
+    }
+  }
+
+  /**
+   * Beendet den Edit-Modus, wenn der Fokus die aktive Karte verlässt, ohne dass er zum
+   * Grid-Container selbst wandert (der Container-Fall wird bereits von onGridFocus behandelt).
+   */
+  protected onGridFocusOut(event: FocusEvent): void {
+    if (!this.editMode()) {
+      return;
+    }
+    const active = this.keyManager.activeItem;
+    if (!active) {
+      return;
+    }
+    const relatedTarget = event.relatedTarget as Node | null;
+    const isMovingToGrid = relatedTarget === event.currentTarget;
+    const isLeavingActiveItem = !active.contains(relatedTarget);
+    if (isLeavingActiveItem && !isMovingToGrid) {
+      this.exitEditMode(false);
+    }
+  }
+
+  /**
+   * Tastatur-Handler des Grid-Containers. Außerhalb des Edit-Modus: Pfeiltasten/Home/End navigieren
+   * über den FocusKeyManager, Space/Enter/F2 selektieren bzw. betreten den Edit-Modus. Innerhalb des
+   * Edit-Modus behandelt handleEditModeKeydown die Tab-Zyklus- und ESC/F2-Logik (1:1 nach lux-list).
+   */
+  protected onGridKeydown(event: KeyboardEvent): void {
+    if (this.editMode()) {
+      this.handleEditModeKeydown(event);
+      return;
+    }
+
+    if (LuxUtil.isKeySpace(event)) {
+      this.toggleActiveItem();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyEnter(event)) {
+      if (this.luxShowDetailButton()) {
+        this.enterEditMode();
+      } else {
+        this.toggleActiveItem();
+      }
+      event.preventDefault();
+    } else if (event.key === 'F2') {
+      this.enterEditMode();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyArrowUp(event)) {
+      this.keyManager.setPreviousItemActive();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyArrowDown(event)) {
+      this.keyManager.setNextItemActive();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyHome(event)) {
+      this.keyManager.setFirstItemActive();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyEnd(event)) {
+      this.keyManager.setLastItemActive();
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * Wird beim Klick auf ein Item ausgelöst und synchronisiert lediglich den internen
+   * FocusKeyManager-Zustand (updateActiveItem - ohne DOM-Fokus zu verändern), damit
+   * anschließende Pfeiltasten-Navigation beim geklickten Item weitermacht. Disabled Items werden
+   * dabei nicht als aktives Item übernommen (updateActiveItem umgeht sonst das skipPredicate).
+   */
+  protected onItemActivated(index: number): void {
+    const item = this.items()[index];
+    if (item?.luxDisabled()) {
+      return;
+    }
+    this.keyManager.updateActiveItem(index);
+  }
+
+  /**
+   * Betritt den Edit-Modus auf dem aktiven Item (Enter bei sichtbarem Detail-Button, F2) und
+   * fokussiert dessen erstes inneres Element. Ohne fokussierbare innere Elemente passiert nichts
+   * (analog zu lux-list: kein Edit-Modus ohne interaktiven Inhalt).
+   */
+  private enterEditMode(): void {
+    const active = this.keyManager.activeItem;
+    if (!active) {
+      return;
+    }
+    const focusable = active.getFocusableElements();
+    if (focusable.length === 0) {
+      return;
+    }
+    this.editMode.set(true);
+    focusable[0].focus();
+  }
+
+  /**
+   * Beendet den Edit-Modus.
+   * @param moveFocusToRow Wenn true (Standard bei ESC/F2), wird der Fokus auf die Karte zurückgesetzt.
+   */
+  private exitEditMode(moveFocusToRow: boolean): void {
+    if (!this.editMode()) {
+      return;
+    }
+    this.editMode.set(false);
+    if (moveFocusToRow) {
+      this.keyManager.activeItem?.focus();
+    }
+  }
+
+  /**
+   * Tab-Zyklus- und ESC/F2-Logik im Edit-Modus, 1:1 nach lux-list: Tab/Shift+Tab von der Karte
+   * springt zum ersten/letzten inneren Element, Tab vom letzten inneren Element zurück zur Karte
+   * (Edit-Modus bleibt aktiv). ESC/F2 verlassen den Edit-Modus vollständig. Kehrt der Fokus per
+   * Tab auf die Karte zurück (z.B. Shift+Tab vom Detail-Button), bleiben Space/Pfeiltasten/Home/End
+   * auf Zeilenebene nutzbar - lux-list bricht den Edit-Modus dabei implizit über focusActiveItem()
+   * ab, sobald tatsächlich navigiert wird (siehe lux-list.component.ts focus()).
+   */
+  private handleEditModeKeydown(event: KeyboardEvent): void {
+    if (LuxUtil.isKeyEscape(event)) {
+      this.exitEditMode(true);
+      event.preventDefault();
+      return;
+    }
+    if (event.key === 'F2') {
+      this.exitEditMode(true);
+      event.preventDefault();
+      return;
+    }
+
+    const active = this.keyManager.activeItem;
+    if (!active) {
+      return;
+    }
+    const focusIsOnRow = (event.target as HTMLElement) === active.cardElementRef;
+
+    if (event.key === 'Tab') {
+      const focusableElements = active.getFocusableElements();
+      if (focusIsOnRow) {
+        if (focusableElements.length > 0) {
+          (event.shiftKey ? focusableElements[focusableElements.length - 1] : focusableElements[0]).focus();
+          event.preventDefault();
+        }
+      } else if (
+        !event.shiftKey &&
+        focusableElements.length > 0 &&
+        document.activeElement === focusableElements[focusableElements.length - 1]
+      ) {
+        active.focus();
+        event.preventDefault();
+      }
+      return;
+    }
+
+    if (!focusIsOnRow) {
+      return;
+    }
+    if (LuxUtil.isKeySpace(event)) {
+      this.toggleActiveItem();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyArrowUp(event)) {
+      this.editMode.set(false);
+      this.keyManager.setPreviousItemActive();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyArrowDown(event)) {
+      this.editMode.set(false);
+      this.keyManager.setNextItemActive();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyHome(event)) {
+      this.editMode.set(false);
+      this.keyManager.setFirstItemActive();
+      event.preventDefault();
+    } else if (LuxUtil.isKeyEnd(event)) {
+      this.editMode.set(false);
+      this.keyManager.setLastItemActive();
+      event.preventDefault();
+    }
+  }
+
+  /**
+   * Toggelt die Selektion des aktuell im FocusKeyManager aktiven Items (Space, bzw. Enter ohne
+   * sichtbaren Detail-Button).
+   */
+  private toggleActiveItem(): void {
+    const active = this.keyManager.activeItem;
+    if (active) {
+      this.toggleItem(active.luxItem() as T);
+    }
   }
 
   onSelectAllChange(checked: boolean) {

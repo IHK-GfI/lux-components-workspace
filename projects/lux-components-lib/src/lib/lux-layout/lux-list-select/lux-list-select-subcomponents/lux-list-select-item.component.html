@@ -1,38 +1,47 @@
 <!--
   Der Klick auf die gesamte Karte ist eine reine Komfort-Erweiterung der Klickfläche für Maus/Touch.
-  Die eigentliche Bedienbarkeit (Fokus, Tastatur, ARIA) liefert vollständig die enthaltene
-  mat-checkbox/mat-radio-button - die Karte selbst bietet keine zusätzliche, sonst nicht erreichbare
-  Funktionalität und wird daher bewusst nicht zusätzlich fokussierbar gemacht (kein doppelter Tab-Stopp).
+  Die eigentliche Bedienbarkeit (Fokus, Tastatur, ARIA) liefert das Grid-Pattern: Die Karte selbst
+  ist role="row" und wird programmatisch über den FocusKeyManager der Hauptkomponente fokussiert
+  (Pfeiltasten/Home/End sowie beim (Wieder-)Betreten des Grids).
 -->
-<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
 <div
+  #card
   class="lux-list-select-card"
+  role="row"
+  tabindex="-1"
   [class.lux-selected]="luxSelected()"
   [class.lux-disabled]="luxDisabled()"
+  [attr.aria-selected]="luxSelected()"
   [attr.aria-disabled]="luxDisabled() ? 'true' : null"
   (click)="onCardClick($event)"
 >
-  @if (luxMode() === 'multi') {
-    <mat-checkbox
-      class="lux-list-select-control"
-      [checked]="luxSelected()"
-      [disabled]="luxDisabled()"
-      [aria-label]="luxLabel()"
-      (change)="onControlChange()"
-    ></mat-checkbox>
-  } @else {
-    <mat-radio-button
-      class="lux-list-select-control"
-      [value]="luxItem()"
-      [checked]="luxSelected()"
-      [disabled]="luxDisabled()"
-      [aria-label]="luxLabel()"
-      [disableRipple]="true"
-      color="primary"
-      (change)="onControlChange()"
-    ></mat-radio-button>
-  }
-  <div class="lux-list-select-headlines">
+  <div class="lux-list-select-control-cell" role="gridcell">
+    @if (luxMode() === 'multi') {
+      <mat-checkbox
+        class="lux-list-select-control"
+        [checked]="luxSelected()"
+        [disabled]="luxDisabled()"
+        [tabIndex]="-1"
+        [aria-label]="luxLabel()"
+        (change)="onControlChange()"
+      ></mat-checkbox>
+    } @else {
+      <mat-radio-button
+        class="lux-list-select-control"
+        [value]="luxItem()"
+        [checked]="luxSelected()"
+        [disabled]="luxDisabled()"
+        [tabIndex]="-1"
+        [name]="luxRadioName()"
+        [aria-label]="luxLabel()"
+        [disableRipple]="true"
+        color="primary"
+        (change)="onControlChange()"
+      ></mat-radio-button>
+    }
+  </div>
+  <div class="lux-list-select-headlines" role="gridcell">
     @if (luxContentTemplate()) {
       <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
     } @else {
@@ -43,14 +52,17 @@
     }
   </div>
   @if (luxShowDetailButton()) {
-    <button
-      type="button"
-      class="lux-list-select-detail"
-      [disabled]="luxDisabled()"
-      [attr.aria-label]="'luxc.list-select.detail_arialabel' | transloco"
-      (click)="luxDetail.emit()"
-    >
-      <lux-icon [luxIconName]="luxDetailIconName()" luxIconSize="1x"></lux-icon>
-    </button>
+    <div class="lux-list-select-detail-cell" role="gridcell">
+      <button
+        type="button"
+        class="lux-list-select-detail"
+        tabindex="-1"
+        [disabled]="luxDisabled()"
+        [attr.aria-label]="'luxc.list-select.detail_arialabel' | transloco"
+        (click)="luxDetail.emit()"
+      >
+        <lux-icon [luxIconName]="luxDetailIconName()" luxIconSize="1x"></lux-icon>
+      </button>
+    </div>
   }
 </div>
