@@ -26,6 +26,7 @@
       - [4.2 Accordion mit der Farbe warn](#42-accordion-mit-der-farbe-warn)
       - [4.3 Accordion mit der Farbe neutral](#43-accordion-mit-der-farbe-neutral)
     - [5. Accordion mit Toggle Icon links](#5-accordion-mit-toggle-icon-links)
+    - [6. Accordion mit Sticky-Headern](#6-accordion-mit-sticky-headern)
   - [Zusatzinformationen](#zusatzinformationen)
 
 ## Overview / API
@@ -49,6 +50,8 @@
 | luxDynamicHeaderHeight   | boolean                                                          | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                     |
 | luxColor                 | LuxAccordionColor (`primary` \| `accent` \| `warn` \| `neutral`) | Gibt an, welche Farbe der Header haben soll.                                                     |
 | luxTogglePosition        | LuxTogglePosition (`after` \| `before`)                          | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts.     |
+| luxStickyHeader          | boolean                                                          | Gibt an, ob die Header geöffneter Panels beim Scrollen am oberen Rand des scrollbaren Bereichs kleben bleiben, solange der jeweilige Panelinhalt sichtbar ist. |
+| luxStickyHeaderOffset    | string (z.B. `64px` oder `4em`)                                  | Gibt den Abstand des klebenden Headers zum oberen Rand an, falls dort weitere Sticky-Elemente (z.B. eine Action-Bar) kleben. Der Wert benötigt eine CSS-Einheit. |
 
 ## Components
 
@@ -73,6 +76,8 @@ Eine `LuxPanelComponent` stellt einen ein- und ausklappbaren Bereich dar. Es gib
 | luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im ausgeklappten Zustand ist.                                   |
 | luxDynamicHeaderHeight   | boolean                                 | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                 |
 | luxTogglePosition        | LuxTogglePosition (`after` \| `before`) | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts. |
+| luxStickyHeader          | boolean                                 | Gibt an, ob der Header dieses Panels im geöffneten Zustand beim Scrollen am oberen Rand des scrollbaren Bereichs kleben bleibt, solange der Panelinhalt sichtbar ist. |
+| luxStickyHeaderOffset    | string (z.B. `64px` oder `4em`)         | Gibt den Abstand des klebenden Headers zum oberen Rand an, falls dort weitere Sticky-Elemente (z.B. eine Action-Bar) kleben. Der Wert benötigt eine CSS-Einheit. |
 
 #### @Output
 
@@ -468,7 +473,30 @@ Html
 ```
 
 
+### 6. Accordion mit Sticky-Headern
+
+Bleibt der Header eines geöffneten Panels beim Scrollen sichtbar, kann der Abschnitt jederzeit erkannt und direkt wieder eingeklappt werden. Verlässt der Panelinhalt den sichtbaren Bereich, schiebt der untere Panelrand den Header automatisch hinaus; bei mehreren geöffneten Panels übernimmt der Header des nächsten Panels. Beide Properties können auch je Panel gesetzt werden; Priorität hat das Property im Panel.
+
+Html
+
+```html
+<lux-accordion [luxStickyHeader]="true" luxStickyHeaderOffset="64px" [luxMulti]="true">
+  <lux-panel>
+    <lux-panel-header-title>Antrag 4711</lux-panel-header-title>
+    <lux-panel-content>
+      <p>Langer Inhalt ...</p>
+    </lux-panel-content>
+  </lux-panel>
+</lux-accordion>
+```
+
 ## Zusatzinformationen
 
 Die `LuxAccordionComponent` bietet die Möglichkeit, mehrere `LuxPanelComponents` zusammenzufassen und zu steuern.
 Die `LuxPanelComponents` sind auch alleinstehend funktionsfähig und benötigen kein umgebenes `LuxAccordion`.
+
+**Hinweise zu `luxStickyHeader`:**
+
+- Zwischen dem Panel und dem scrollbaren Container darf kein Element mit einem anderen `overflow`-Wert als `visible` liegen, sonst kann der Header nicht kleben. Bekannter Fall: Innerhalb einer `lux-card` greift Sticky derzeit nicht (siehe Issue [#277](https://github.com/IHK-GfI/lux-components-workspace/issues/277)).
+- `luxStickyHeaderOffset` benötigt eine CSS-Länge mit Einheit. Ein Wert ohne Einheit (z.B. `50`) deaktiviert das Kleben.
+- Ein klebender Header kann per Tastatur fokussierte Inhalte am oberen Rand überdecken. Bei sehr langen Formularen im Panelinhalt sollte das beim Einsatz der Option bedacht werden.
