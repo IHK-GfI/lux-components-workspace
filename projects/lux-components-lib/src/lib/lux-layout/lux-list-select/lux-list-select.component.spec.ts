@@ -4,9 +4,16 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxListSelectComponent } from './lux-list-select.component';
+import {
+  ILuxListSelectHttpDao,
+  ILuxListSelectHttpDaoConf,
+  ILuxListSelectHttpDaoStructure
+} from './lux-list-select-model/lux-list-select-http-dao.interface';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
 
 interface TestAdresse {
@@ -23,6 +30,30 @@ const TEST_ITEMS: TestAdresse[] = [
 ];
 
 const OTHER_PAGE_ITEM: TestAdresse = { label: 'Clara Hartmann', subLabel: 'Friedrichstr. 28, 30159 Hannover' };
+
+const DAO_ITEMS: TestAdresse[] = [
+  { label: 'Anna Müller' },
+  { label: 'Thomas Schmidt' },
+  { label: 'Laura Weber' },
+  { label: 'Markus Fischer' },
+  { label: 'Clara Hartmann' }
+];
+
+class TestListSelectHttpDao implements ILuxListSelectHttpDao<TestAdresse> {
+  loadDataSpy = jasmine.createSpy('loadData');
+
+  loadData(conf: ILuxListSelectHttpDaoConf): Observable<ILuxListSelectHttpDaoStructure<TestAdresse>> {
+    this.loadDataSpy(conf);
+    let source = DAO_ITEMS;
+    if (conf.filter) {
+      const term = conf.filter.toLowerCase();
+      source = source.filter((item) => item.label.toLowerCase().includes(term));
+    }
+    const start = conf.page * conf.pageSize;
+    const items = source.slice(start, start + conf.pageSize);
+    return of({ items, totalCount: source.length }).pipe(delay(50));
+  }
+}
 
 describe('LuxListSelectComponent', () => {
   let fixture: ComponentFixture<MockHostComponent>;
@@ -452,6 +483,143 @@ describe('LuxListSelectComponent', () => {
     });
   });
 
+  describe('DAO-Server-Modus', () => {
+    function typeSearch(value: string) {
+      const input = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+    }
+
+    it('Sollte im DAO-Modus beim Init Seite 0 laden und luxItems ignorieren', fakeAsync(() => {
+      // Vorbedingungen testen
+      const dao = new TestListSelectHttpDao();
+      host.pageSize = 2;
+
+      // Änderungen durchführen
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Seite 0 mit pageSize 2 geladen, luxItems (TEST_ITEMS) wird ignoriert
+      expect(dao.loadDataSpy).toHaveBeenCalledWith({ page: 0, pageSize: 2, filter: '' });
+      const cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(2);
+      expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
+      expect(cards[1].nativeElement.textContent).toContain('Thomas Schmidt');
+    }));
+
+    it('Sollte im DAO-Modus beim Seitenwechsel die neue Seite ersetzen', fakeAsync(() => {
+      // Vorbedingungen testen
+      const dao = new TestListSelectHttpDao();
+      host.pageSize = 2;
+      host.showPagination = true;
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Änderungen durchführen
+      const nextButton = fixture.debugElement.query(By.css('lux-paginator .mat-mdc-paginator-navigation-next'));
+      nextButton.nativeElement.click();
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Seite 1 ersetzt die Seite 0 (kein Append)
+      expect(dao.loadDataSpy).toHaveBeenCalledWith({ page: 1, pageSize: 2, filter: '' });
+      const cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(2);
+      expect(cards[0].nativeElement.textContent).toContain('Laura Weber');
+      expect(cards[1].nativeElement.textContent).toContain('Markus Fischer');
+    }));
+
+    it('Sollte im DAO-Modus beim Infinite Scroll anhängen und bei vollständig geladener Menge keine weiteren Requests machen', fakeAsync(() => {
+      // Vorbedingungen testen: 5 DAO-Items, pageSize 2 -> 3 Seiten (2, 2, 1)
+      const dao = new TestListSelectHttpDao();
+      host.pageSize = 2;
+      host.infiniteScroll = true;
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+      expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(2);
+
+      // Änderungen durchführen: erstes Scroll-Ende hängt Seite 1 an
+      listSelect.onScrolled();
+      tick(50);
+      fixture.detectChanges();
+      expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(4);
+
+      // Änderungen durchführen: zweites Scroll-Ende hängt die letzte Seite an, Menge ist danach vollständig geladen
+      listSelect.onScrolled();
+      tick(50);
+      fixture.detectChanges();
+      expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(5);
+
+      // Änderungen durchführen: weiteres Scroll-Ende darf keinen weiteren Request mehr auslösen
+      listSelect.onScrolled();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(3);
+      expect(host.scrolledCount).toBe(3);
+    }));
+
+    it('Sollte im DAO-Modus bei Suchänderung mit Filter neu ab Seite 0 laden', fakeAsync(() => {
+      // Vorbedingungen testen
+      const dao = new TestListSelectHttpDao();
+      host.pageSize = 2;
+      host.showSearch = true;
+      host.showPagination = true;
+      host.pageIndex = 1;
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Änderungen durchführen
+      typeSearch('mü');
+      tick(300);
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Suche löst einen Reload ab Seite 0 mit dem Filter aus
+      expect(dao.loadDataSpy).toHaveBeenCalledWith({ page: 0, pageSize: 2, filter: 'mü' });
+      expect(host.pageIndex).toBe(0);
+      const cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(1);
+      expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
+    }));
+
+    it('Sollte während des Ladens den Ladezustand setzen', fakeAsync(() => {
+      // Vorbedingungen testen
+      const dao = new TestListSelectHttpDao();
+      host.pageSize = 2;
+      host.infiniteScroll = true;
+
+      // Änderungen durchführen
+      host.httpDao = dao;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: während des laufenden Requests ist aria-busy gesetzt
+      const viewport = fixture.debugElement.query(By.css('.lux-list-select-viewport'));
+      expect(viewport.nativeElement.getAttribute('aria-busy')).toBe('true');
+      expect(viewport.nativeElement.classList).toContain('lux-list-select-loading');
+
+      // Änderungen durchführen: Request abschließen
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Ladezustand wird zurückgesetzt
+      expect(viewport.nativeElement.getAttribute('aria-busy')).not.toBe('true');
+      expect(viewport.nativeElement.classList).not.toContain('lux-list-select-loading');
+    }));
+  });
+
   describe('ControlValueAccessor', () => {
     it('Sollte writeValue die Selektion setzen und null leeren', () => {
       // Änderungen durchführen
@@ -550,8 +718,10 @@ describe('LuxListSelectComponent', () => {
       [luxDisabled]="disabled"
       [luxShowSearch]="showSearch"
       [(luxSearchValue)]="searchValue"
+      [luxHttpDao]="httpDao"
       (luxPageChange)="lastPageEvent = $event"
       (luxDetailClicked)="lastDetail = $event"
+      (luxScrolled)="scrolledCount = scrolledCount + 1"
     />
   `
 })
@@ -572,4 +742,6 @@ class MockHostComponent {
   disabled = false;
   showSearch = false;
   searchValue = '';
+  httpDao: ILuxListSelectHttpDao<TestAdresse> | undefined = undefined;
+  scrolledCount = 0;
 }

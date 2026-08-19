@@ -77,20 +77,37 @@
     }
   </ng-template>
 
+  <ng-template #loadingOverlayTpl>
+    @if (serverMode() && loading()) {
+      <div class="lux-list-select-loading-overlay">
+        <lux-progress luxType="Spinner" luxMode="indeterminate"></lux-progress>
+      </div>
+    }
+  </ng-template>
+
   @if (infiniteScrollActive()) {
     <div
       class="lux-list-select-viewport"
+      [class.lux-list-select-loading]="serverMode() && loading()"
+      [attr.aria-busy]="serverMode() && loading() ? true : null"
       luxInfiniteScroll
       [luxImmediateCallback]="false"
-      [luxIsLoading]="luxIsLoading()"
+      [luxIsLoading]="effectiveIsLoading()"
       [style.max-height]="luxMaxHeight()"
       (luxScrolled)="onScrolled()"
     >
       <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
+      <ng-container [ngTemplateOutlet]="loadingOverlayTpl"></ng-container>
     </div>
   } @else {
-    <div class="lux-list-select-viewport" [style.max-height]="luxMaxHeight()">
+    <div
+      class="lux-list-select-viewport"
+      [class.lux-list-select-loading]="serverMode() && loading()"
+      [attr.aria-busy]="serverMode() && loading() ? true : null"
+      [style.max-height]="luxMaxHeight()"
+    >
       <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
+      <ng-container [ngTemplateOutlet]="loadingOverlayTpl"></ng-container>
     </div>
   }
 

@@ -10,15 +10,16 @@ import {
   model,
   output,
   signal,
-  TemplateRef
+  TemplateRef,
+  untracked
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioGroup } from '@angular/material/radio';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { debounce, timer } from 'rxjs';
+import { catchError, debounce, EMPTY, finalize, Subject, switchMap, tap, timer } from 'rxjs';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -26,7 +27,9 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-message-box.component';
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
+import { LuxProgressComponent } from '../../lux-common/lux-progress/lux-progress.component';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
+import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
 
 @Component({
@@ -45,7 +48,8 @@ import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types
     LuxInfiniteScrollDirective,
     LuxTagIdDirective,
     LuxMessageBoxComponent,
-    LuxIconComponent
+    LuxIconComponent,
+    LuxProgressComponent
   ],
   host: {
     class: 'lux-list-select'
@@ -86,6 +90,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   readonly luxErrorMessage = input<string | null>(null);
   readonly luxShowSearch = input(false);
   readonly luxSearchDelay = input(300);
+  readonly luxHttpDao = input<ILuxListSelectHttpDao<T> | undefined>(undefined);
 
   readonly luxSelected = model<T[]>([]);
   readonly luxPageIndex = model(0);
@@ -105,6 +110,14 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private searchValue$ = toObservable(this.luxSearchValue);
   protected debouncedSearch = toSignal(this.searchValue$.pipe(debounce(() => timer(this.luxSearchDelay()))), { initialValue: '' });
 
+  // DAO-Server-Modus (Hausmuster lux-table): Ist ein DAO gesetzt, werden luxItems und die interne
+  // Client-Filterung/-Slicing ignoriert, die angezeigten Daten kommen ausschließlich vom Server.
+  private loadTrigger$ = new Subject<{ page: number; filter: string; append: boolean }>();
+  protected loading = signal(false);
+  protected daoItems = signal<T[]>([]);
+  protected daoTotalCount = signal(0);
+  protected serverMode = computed(() => !!this.luxHttpDao());
+
   protected listLabel = computed(() => this.luxLabel() ?? this.tService.translate('luxc.list-select.arialabel'));
   protected filteredItems = computed(() => {
     const items = this.luxItems();
@@ -120,6 +133,9 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     );
   });
   protected displayedItems = computed(() => {
+    if (this.serverMode()) {
+      return this.daoItems();
+    }
     const filtered = this.filteredItems();
     if (!this.paginationActive()) {
       return filtered;
@@ -127,7 +143,8 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     const start = this.luxPageIndex() * this.luxPageSize();
     return filtered.slice(start, start + this.luxPageSize());
   });
-  protected totalCount = computed(() => this.luxTotalItems() ?? this.filteredItems().length);
+  protected totalCount = computed(() => (this.serverMode() ? this.daoTotalCount() : (this.luxTotalItems() ?? this.filteredItems().length)));
+  protected effectiveIsLoading = computed(() => (this.serverMode() ? this.loading() : this.luxIsLoading()));
   protected enabledItems = computed(() => this.displayedItems().filter((item) => !this.isItemDisabled(item)));
   protected allSelected = computed(() => {
     const enabled = this.enabledItems();
@@ -165,7 +182,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
 
     let isFirstSearchRun = true;
     effect(() => {
-      this.debouncedSearch();
+      const search = this.debouncedSearch();
       // Der erste Effect-Lauf ist die Initialisierung und keine echte Suchänderung, ein von außen
       // vorgegebener luxPageIndex darf dadurch nicht überschrieben werden.
       if (isFirstSearchRun) {
@@ -173,7 +190,50 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         return;
       }
       this.luxPageIndex.set(0);
+      // luxHttpDao() untracked lesen: DAO-Wechsel selbst wird bereits vom eigenen Effect behandelt,
+      // dieser Effect soll ausschließlich auf Suchänderungen reagieren.
+      if (untracked(() => this.luxHttpDao())) {
+        this.loadTrigger$.next({ page: 0, filter: search, append: false });
+      }
     });
+
+    // DAO-Server-Modus: Wechsel/Setzen des DAO resettet die bisher geladenen Daten und lädt Seite 0
+    // mit dem aktuell gültigen Suchbegriff neu.
+    effect(() => {
+      const dao = this.luxHttpDao();
+      if (!dao) {
+        return;
+      }
+      this.daoItems.set([]);
+      this.luxPageIndex.set(0);
+      this.loadTrigger$.next({ page: 0, filter: untracked(() => this.debouncedSearch()), append: false });
+    });
+
+    // Trigger-Stream für DAO-Requests: switchMap verwirft veraltete Requests (Race-Schutz), catchError
+    // im inneren Stream sorgt dafür, dass der Trigger-Stream bei Fehlern lebendig bleibt.
+    this.loadTrigger$
+      .pipe(
+        switchMap((trigger) => {
+          const dao = this.luxHttpDao();
+          if (!dao) {
+            return EMPTY;
+          }
+          this.loading.set(true);
+          return dao.loadData({ page: trigger.page, pageSize: this.luxPageSize(), filter: trigger.filter }).pipe(
+            tap((result) => {
+              this.daoItems.update((current) => (trigger.append ? [...current, ...result.items] : result.items));
+              this.daoTotalCount.set(result.totalCount);
+            }),
+            catchError((error) => {
+              console.error('lux-list-select: Fehler beim Laden der DAO-Daten.', error);
+              return EMPTY;
+            }),
+            finalize(() => this.loading.set(false))
+          );
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe();
   }
 
   isSelected(item: T): boolean {
@@ -218,10 +278,17 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
 
   onPageChange(event: LuxPageEvent) {
     this.luxPageChange.emit(event);
+    if (this.luxHttpDao()) {
+      this.loadTrigger$.next({ page: event.pageIndex, filter: this.debouncedSearch(), append: false });
+    }
   }
 
   onScrolled() {
     this.luxScrolled.emit();
+    if (this.luxHttpDao() && !this.loading() && this.daoItems().length < this.daoTotalCount()) {
+      const nextPage = Math.floor(this.daoItems().length / this.luxPageSize());
+      this.loadTrigger$.next({ page: nextPage, filter: this.debouncedSearch(), append: true });
+    }
   }
 
   protected onSearchInput(event: Event) {

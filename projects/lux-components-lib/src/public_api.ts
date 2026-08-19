@@ -218,6 +218,7 @@ export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-cu
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-icon.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item.component';
 export * from './lib/lux-layout/lux-list/lux-list.component';
+export * from './lib/lux-layout/lux-list-select/lux-list-select-model/lux-list-select-http-dao.interface';
 export * from './lib/lux-layout/lux-list-select/lux-list-select-model/lux-list-select-types';
 export * from './lib/lux-layout/lux-list-select/lux-list-select-subcomponents/lux-list-select-item.component';
 export * from './lib/lux-layout/lux-list-select/lux-list-select.component';
