@@ -144,6 +144,10 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected daoItems = signal<T[]>([]);
   protected daoTotalCount = signal(0);
   protected serverMode = computed(() => !!this.luxHttpDao());
+  // Zuletzt für einen (nicht-anhängenden) Load angefragte Seite - verhindert, dass der
+  // luxPageIndex-Effect unten einen Load erneut auslöst, der bereits synchron durch einen
+  // Paginator-Klick (onPageChange) oder einen anderen Effect (Suche/DAO-Wechsel) angestoßen wurde.
+  private lastRequestedPage: number | null = null;
 
   protected listLabel = computed(() => this.luxLabel() ?? this.tService.translate('luxc.list-select.arialabel'));
   protected filteredItems = computed(() => {
@@ -236,7 +240,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       // luxHttpDao() untracked lesen: DAO-Wechsel selbst wird bereits vom eigenen Effect behandelt,
       // dieser Effect soll ausschließlich auf Suchänderungen reagieren.
       if (untracked(() => this.luxHttpDao())) {
-        this.loadTrigger$.next({ page: 0, filter: search, append: false });
+        this.triggerLoad(0, search, false);
       }
     });
 
@@ -249,7 +253,29 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       }
       this.daoItems.set([]);
       this.luxPageIndex.set(0);
-      this.loadTrigger$.next({ page: 0, filter: untracked(() => this.debouncedSearch()), append: false });
+      this.triggerLoad(0, untracked(() => this.debouncedSearch()), false);
+    });
+
+    // Server-Modus: Lädt auch dann nach, wenn luxPageIndex programmatisch (z.B. per Host-Binding)
+    // statt per Paginator-Klick geändert wird. isFirstPageRun übergeht den initialen Lauf (Seite 0
+    // wird bereits vom DAO-Wechsel-Effect oben geladen). Der Abgleich mit lastRequestedPage
+    // verhindert einen doppelten Load, wenn derselbe Seitenwechsel bereits synchron durch
+    // onPageChange (Paginator-Klick) oder einen der beiden Effects oberhalb ausgelöst wurde.
+    let isFirstPageRun = true;
+    effect(() => {
+      const page = this.luxPageIndex();
+      if (!this.serverMode()) {
+        return;
+      }
+      if (isFirstPageRun) {
+        isFirstPageRun = false;
+        this.lastRequestedPage = page;
+        return;
+      }
+      if (page === this.lastRequestedPage) {
+        return;
+      }
+      this.triggerLoad(page, untracked(() => this.debouncedSearch()), false);
     });
 
     // Trigger-Stream für DAO-Requests: switchMap verwirft veraltete Requests (Race-Schutz), catchError
@@ -277,6 +303,16 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         takeUntilDestroyed()
       )
       .subscribe();
+  }
+
+  /**
+   * Einziger Ort, der tatsächlich einen DAO-Load anstößt (Suche, DAO-Wechsel, Paginator-Klick,
+   * programmatische luxPageIndex-Änderung). Merkt sich die angefragte Seite in lastRequestedPage,
+   * damit der luxPageIndex-Effect denselben Seitenwechsel nicht ein zweites Mal auslöst.
+   */
+  private triggerLoad(page: number, filter: string, append: boolean): void {
+    this.lastRequestedPage = page;
+    this.loadTrigger$.next({ page, filter, append });
   }
 
   isSelected(item: T): boolean {
@@ -316,6 +352,15 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
 
     if (this.editMode() && active?.contains(relatedTarget)) {
       active.focus();
+      return;
+    }
+
+    // Fokus kommt aus dem Grid selbst zurück (z.B. Shift+Tab von der aktiven Karte auf den
+    // tabindex=0-Container, da die Karte selbst tabindex=-1 hat): Außerhalb des Edit-Modus nichts
+    // tun, der Fokus bleibt auf dem Container - der nächste Shift+Tab verlässt das Grid regulär.
+    // Ohne diese Prüfung würde active.focus() unten den Fokus sofort auf die Karte zurückwerfen
+    // und eine Shift+Tab-Endlosschleife erzeugen (das Grid wäre dann rückwärts nicht verlassbar).
+    if (!this.editMode() && relatedTarget && (event.currentTarget as HTMLElement).contains(relatedTarget)) {
       return;
     }
 
@@ -529,7 +574,10 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   onPageChange(event: LuxPageEvent) {
     this.luxPageChange.emit(event);
     if (this.luxHttpDao()) {
-      this.loadTrigger$.next({ page: event.pageIndex, filter: this.debouncedSearch(), append: false });
+      // Löst den Load synchron mit dem Klick aus (statt auf den luxPageIndex-Effect zu warten) und
+      // merkt sich die Seite über triggerLoad, damit dieser Effect für denselben Seitenwechsel
+      // keinen zweiten Load anstößt.
+      this.triggerLoad(event.pageIndex, this.debouncedSearch(), false);
     }
   }
 

@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -54,6 +54,26 @@ class TestListSelectHttpDao implements ILuxListSelectHttpDao<TestAdresse> {
     const start = conf.page * conf.pageSize;
     const items = source.slice(start, start + conf.pageSize);
     return of({ items, totalCount: source.length }).pipe(delay(50));
+  }
+}
+
+/**
+ * DAO-Mock für den Fehlerpfad (Deferred-Finding #2): shouldFail steuert, ob loadData mit einem
+ * Fehler fehlschlägt oder normal Daten liefert - so lässt sich prüfen, dass der Trigger-Stream
+ * einen einzelnen fehlgeschlagenen Request übersteht und beim nächsten Trigger wieder lädt.
+ */
+class FailingListSelectHttpDao implements ILuxListSelectHttpDao<TestAdresse> {
+  loadDataSpy = jasmine.createSpy('loadData');
+  shouldFail = true;
+
+  loadData(conf: ILuxListSelectHttpDaoConf): Observable<ILuxListSelectHttpDaoStructure<TestAdresse>> {
+    this.loadDataSpy(conf);
+    if (this.shouldFail) {
+      return throwError(() => new Error('DAO-Fehler')).pipe(delay(50));
+    }
+    const start = conf.page * conf.pageSize;
+    const items = DAO_ITEMS.slice(start, start + conf.pageSize);
+    return of({ items, totalCount: DAO_ITEMS.length }).pipe(delay(50));
   }
 }
 
@@ -536,8 +556,37 @@ describe('LuxListSelectComponent', () => {
       tick(50);
       fixture.detectChanges();
 
-      // Nachbedingungen prüfen: Seite 1 ersetzt die Seite 0 (kein Append)
+      // Nachbedingungen prüfen: Seite 1 ersetzt die Seite 0 (kein Append), und der Klick löst -
+      // trotz des zusätzlichen luxPageIndex-Effects (Review-Finding) - genau EINEN Load aus statt
+      // zweien (Init-Load auf Seite 0 + genau ein Load auf Seite 1)
       expect(dao.loadDataSpy).toHaveBeenCalledWith({ page: 1, pageSize: 2, filter: '' });
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(2);
+      const cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
+      expect(cards.length).toBe(2);
+      expect(cards[0].nativeElement.textContent).toContain('Laura Weber');
+      expect(cards[1].nativeElement.textContent).toContain('Markus Fischer');
+    }));
+
+    it('Sollte im DAO-Modus bei programmatischer luxPageIndex-Änderung (nicht per Paginator-Klick) nachladen (Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: initialer Load auf Seite 0 ist abgeschlossen
+      const dao = new TestListSelectHttpDao();
+      host.pageSize = 2;
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+      dao.loadDataSpy.calls.reset();
+
+      // Änderungen durchführen: luxPageIndex wird programmatisch vom Host gesetzt, nicht per Klick
+      // auf den (hier gar nicht angezeigten) Paginator
+      host.pageIndex = 1;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: die neue Seite wird nachgeladen, und zwar genau einmal
+      expect(dao.loadDataSpy).toHaveBeenCalledWith({ page: 1, pageSize: 2, filter: '' });
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(1);
       const cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
       expect(cards.length).toBe(2);
       expect(cards[0].nativeElement.textContent).toContain('Laura Weber');
@@ -626,6 +675,38 @@ describe('LuxListSelectComponent', () => {
       // Nachbedingungen prüfen: Ladezustand wird zurückgesetzt
       expect(viewport.nativeElement.getAttribute('aria-busy')).not.toBe('true');
       expect(viewport.nativeElement.classList).not.toContain('lux-list-select-loading');
+    }));
+
+    it('Sollte im DAO-Modus bei einem fehlschlagenden Load einen Fehler loggen, den Ladezustand zurücksetzen und beim nächsten Trigger wieder laden (Deferred-Finding #2)', fakeAsync(() => {
+      // Vorbedingungen testen
+      const dao = new FailingListSelectHttpDao();
+      const consoleErrorSpy = spyOn(console, 'error');
+      host.pageSize = 2;
+      host.httpDao = dao;
+
+      // Änderungen durchführen: der initiale Load schlägt fehl
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Fehler wird geloggt, Ladezustand wird zurückgesetzt, Liste bleibt leer
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      const viewport = fixture.debugElement.query(By.css('.lux-list-select-viewport'));
+      expect(viewport.nativeElement.getAttribute('aria-busy')).not.toBe('true');
+      expect(viewport.nativeElement.classList).not.toContain('lux-list-select-loading');
+      expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(0);
+
+      // Änderungen durchführen: der DAO liefert beim nächsten Trigger (Seitenwechsel) wieder
+      // erfolgreich Daten - der Trigger-Stream muss den vorherigen Fehler überlebt haben
+      dao.shouldFail = false;
+      listSelect.onPageChange({ pageIndex: 1, pageSize: 2, length: 0 });
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: loadData wurde erneut gerufen und liefert nun Daten
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(2);
+      expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(2);
     }));
   });
 
@@ -902,6 +983,28 @@ describe('LuxListSelectComponent', () => {
       LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', SPACE);
       fixture.detectChanges();
       expect(host.selected).toEqual([TEST_ITEMS[1]]);
+    });
+
+    it('Sollte im Normal-Modus beim Fokus-Rücksprung aus dem Grid selbst nichts tun (Shift+Tab-Falle, Review-Finding)', () => {
+      // Vorbedingungen testen: erstes Item ist fokussiert (Container-Fokus von außen)
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+
+      // Änderungen durchführen: der Fokus "kehrt" vom aktiven Item auf den Grid-Container zurück
+      // (z.B. Shift+Tab von der Karte, deren tabindex=-1 sie aus dem normalen Tab-Fluss nimmt und
+      // den Container als nächsten rückwärtigen Tab-Stopp übrig lässt) - simuliert durch ein
+      // natives focus-Event mit relatedTarget=Karte, außerhalb des Edit-Modus.
+      const focusSpy = spyOn(cards()[0].nativeElement, 'focus').and.callThrough();
+      const focusEvent = new FocusEvent('focus', { relatedTarget: cards()[0].nativeElement });
+      gridContainer().dispatchEvent(focusEvent);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: der Fokus wird NICHT auf die Karte zurückgeworfen - sonst würde
+      // Shift+Tab in einer Endlosschleife zwischen Karte und Container hängen bleiben und das Grid
+      // wäre rückwärts nicht mehr verlassbar. Der Fokus bleibt auf dem Container, der nächste
+      // Shift+Tab verlässt das Grid regulär.
+      expect(focusSpy).not.toHaveBeenCalled();
     });
 
     it('Sollte einen Klick auf ein disabled-Item nicht als aktives Item im FocusKeyManager übernehmen (Review-Finding)', () => {
