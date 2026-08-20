@@ -1,5 +1,3 @@
-@use "../common/luxfocus";
-
 $lux-list-select-scrollbar-track: #fbfafa;
 $lux-list-select-scrollbar-thumb: #8b8b8b;
 // Figma: List Select / Item / Focused-State (Node 4106-31687); kein passendes Theme-Token gefunden
@@ -115,29 +113,6 @@ lux-list-select {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .lux-list-select-detail {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    border: none;
-    border-radius: var(--lux-theme-radius-xxl);
-    background: transparent;
-    cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background-color: var(--lux-theme-hover-color);
-    }
-
-    &:focus-visible {
-      @include luxfocus.focus-dark-mixin;
-    }
-
-    &:disabled {
-      cursor: default;
-      color: var(--lux-theme-dark-disabled-text);
-    }
   }
 
   .lux-list-select-error {

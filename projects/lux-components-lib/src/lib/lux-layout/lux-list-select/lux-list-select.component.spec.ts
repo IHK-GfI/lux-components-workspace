@@ -202,14 +202,14 @@ describe('LuxListSelectComponent', () => {
   describe('Detail-Button', () => {
     it('Sollte den Detail-Button nur bei luxShowDetailButton anzeigen und das Item emittieren', () => {
       // Vorbedingungen testen
-      expect(fixture.debugElement.query(By.css('.lux-list-select-detail'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-detail button'))).toBeNull();
 
       // Änderungen durchführen
       host.showDetailButton = true;
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail'));
+      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
       expect(detailButtons.length).toBe(4);
       detailButtons[1].nativeElement.click();
       expect(host.lastDetail).toBe(TEST_ITEMS[1]);
@@ -862,7 +862,7 @@ describe('LuxListSelectComponent', () => {
       fixture.debugElement.queryAll(By.css('.lux-list-select-card mat-checkbox')).forEach((checkbox) => {
         expect((checkbox.componentInstance as MatCheckbox).tabIndex).toBe(-1);
       });
-      fixture.debugElement.queryAll(By.css('.lux-list-select-detail')).forEach((button) => {
+      fixture.debugElement.queryAll(By.css('.lux-list-select-detail button')).forEach((button) => {
         expect(button.nativeElement.tabIndex).toBe(-1);
       });
     });
@@ -951,7 +951,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail'));
+      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
       expect(document.activeElement).toBe(detailButtons[0].nativeElement);
 
       // Änderungen durchführen: Escape verlässt den Edit-Modus wieder
@@ -1023,7 +1023,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
       gridContainer().dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
       fixture.detectChanges();
-      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail'));
+      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
       expect(document.activeElement).toBe(detailButtons[0].nativeElement);
 
       // Änderungen durchführen: Shift+Tab vom Detail-Button verlässt strukturell die Karte und
@@ -1121,7 +1121,7 @@ describe('LuxListSelectComponent', () => {
       tick();
       const container = fixtureCT.debugElement.query(By.css('.lux-list-select-list')).nativeElement as HTMLElement;
       const link = fixtureCT.debugElement.query(By.css('.mock-content-link')).nativeElement as HTMLElement;
-      const detailButton = fixtureCT.debugElement.query(By.css('.lux-list-select-detail')).nativeElement as HTMLElement;
+      const detailButton = fixtureCT.debugElement.query(By.css('.lux-list-select-detail button')).nativeElement as HTMLElement;
       const card = fixtureCT.debugElement.query(By.css('.lux-list-select-card')).nativeElement as HTMLElement;
       expect(link.tabIndex).toBe(-1);
 

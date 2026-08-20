@@ -4,7 +4,7 @@ import { afterRenderEffect, ChangeDetectionStrategy, Component, ElementRef, inje
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioButton } from '@angular/material/radio';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { LuxIconComponent } from '../../../lux-icon/lux-icon/lux-icon.component';
+import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxListSelectMode } from '../lux-list-select-model/lux-list-select-types';
 
 // Kontrollen in diesem Wrapper (Checkbox/Radio) sind dauerhaft kein eigener Tab-Stopp und daher
@@ -13,8 +13,10 @@ const CONTROL_CELL_SELECTOR = '.lux-list-select-control-cell';
 
 // Für die initiale Deaktivierung (disableInnerTabStops): findet native interaktive Elemente sowie
 // per luxContentTemplate projizierte [tabindex]-Elemente, die noch nicht auf -1 gesetzt wurden.
-const FOCUSABLE_SELECTORS =
-  'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+// Bewusst ohne :not([disabled]): auch ein deaktiviertes Element (z.B. der Detail-Button eines
+// deaktivierten Items) bekommt explizit tabindex="-1", statt sich auf den Browser-Default (0)
+// zu verlassen, den die tabIndex-IDL-Property ohne tabindex-Attribut für <button> liefert.
+const FOCUSABLE_SELECTORS = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 // Dieselben Elemente, aber auch nach dem Deaktivieren wiederauffindbar: generische
 // [tabindex]-Elemente über den data-lux-focusable-Marker, den disableInnerTabStops() setzt.
@@ -25,7 +27,7 @@ const NAVIGABLE_SELECTORS =
   selector: 'lux-list-select-item',
   templateUrl: './lux-list-select-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCheckbox, MatRadioButton, NgTemplateOutlet, LuxIconComponent, TranslocoPipe]
+  imports: [MatCheckbox, MatRadioButton, NgTemplateOutlet, LuxButtonComponent, TranslocoPipe]
 })
 export class LuxListSelectItemComponent<T = unknown> implements FocusableOption {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
@@ -58,6 +60,11 @@ export class LuxListSelectItemComponent<T = unknown> implements FocusableOption 
     // würde. Bewusst ohne MutationObserver (Vorbild lux-list): dynamische DOM-Änderungen
     // innerhalb eines unveränderten luxContentTemplate werden dadurch nicht automatisch erfasst.
     afterRenderEffect(() => {
+      // luxShowDetailButton() wird nur gelesen, um den Effect als Dependency zu registrieren:
+      // erscheint der Detail-Button erst nach der ersten Ausführung (z.B. weil luxShowDetailButton
+      // erst danach auf true wechselt), muss die Tab-Stopp-Verwaltung erneut laufen, da der innere
+      // native Button von lux-button sonst mit seinem Browser-Default-Tabindex (0) stehen bleibt.
+      this.luxShowDetailButton();
       if (this.luxEditMode()) {
         this.enableInnerTabStops();
       } else {

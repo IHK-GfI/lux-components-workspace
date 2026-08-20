@@ -53,16 +53,14 @@
   </div>
   @if (luxShowDetailButton()) {
     <div class="lux-list-select-detail-cell lux-flex lux-items-center" role="gridcell">
-      <button
-        type="button"
-        class="lux-list-select-detail lux-flex lux-items-center lux-justify-center"
-        tabindex="-1"
-        [disabled]="luxDisabled()"
-        [attr.aria-label]="'luxc.list-select.detail_arialabel' | transloco"
-        (click)="luxDetail.emit()"
-      >
-        <lux-icon [luxIconName]="luxDetailIconName()" luxIconSize="1x"></lux-icon>
-      </button>
+      <lux-button
+        class="lux-list-select-detail"
+        [luxRounded]="true"
+        [luxIconName]="luxDetailIconName()"
+        [luxLabel]="'luxc.list-select.detail_arialabel' | transloco"
+        [luxDisabled]="luxDisabled()"
+        (luxClicked)="luxDetail.emit()"
+      ></lux-button>
     </div>
   }
 </div>
