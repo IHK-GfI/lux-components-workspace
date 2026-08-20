@@ -1,6 +1,5 @@
 <ng-template #itemsTpl>
-  <!-- track $index statt track item: Server-Reloads liefern neue Objekt-Identitäten; die Items halten
-       keinen eigenen Zustand (Selektion/Edit-Modus kommen als Inputs), daher ist Index-Tracking sicher. -->
+  <!-- track $index: Items halten keinen eigenen Zustand, Index-Tracking vermeidet DOM-Neuaufbau bei neuen Objekt-Identitäten. -->
   @for (item of displayedItems(); track $index; let i = $index) {
     <lux-list-select-item
       [luxItem]="item"

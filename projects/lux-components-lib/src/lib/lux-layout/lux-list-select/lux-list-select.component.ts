@@ -117,25 +117,19 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private onTouched: () => void = () => {};
   private cvaDisabled = signal(false);
 
-  // Generic bleibt <unknown>, da viewChildren den Typparameter T nicht herleiten kann;
-  // der Keyboard-Controller castet in toggleActiveItem() zurück auf T.
+  // viewChildren kann T nicht herleiten; der Keyboard-Controller castet zurück auf T.
   private readonly items = viewChildren(LuxListSelectItemComponent);
   private readonly keyboard = new LuxListSelectKeyboardController<T>(
     this.items,
     { toggleItem: (item) => this.toggleItem(item) },
     this.injector
   );
-  // Bearbeiten-Modus und aktiver Item-Index des Keyboard-Controllers, an das Template durchgereicht
-  // (siehe lux-list-select-keyboard-controller.ts für die komplette Grid-Tastatur-/Fokuslogik).
   protected editMode = this.keyboard.editMode;
   protected activeItemIndex = this.keyboard.activeItemIndex;
-  // Ohne eigenen name teilen sich Radios instanzübergreifend den CDK-UniqueSelectionDispatcher,
-  // wodurch eine Selektion in dieser Instanz die Checked-Optik einer anderen Instanz löschen würde.
+  // Eigener name pro Instanz, sonst teilen sich Radios instanzübergreifend den CDK-UniqueSelectionDispatcher.
   protected radioName = computed(() => `lux-list-select-radio-${this.uniqueId}`);
 
-  // Entkoppelt Eingabe und Filterwirkung: Filterung/Events reagieren erst nach luxSearchDelay.
-  // share(): Anzeige-Pipeline (toSignal) und Lade-Orchestrierung (Subscription im Konstruktor)
-  // teilen sich denselben Debounce-Timer und damit denselben Emissionszeitpunkt.
+  // share(): Anzeige-Pipeline (toSignal) und Lade-Subscription im Konstruktor teilen sich denselben Debounce-Timer.
   private searchValue$ = toObservable(this.luxSearchValue);
   private debouncedSearch$ = this.searchValue$.pipe(
     debounce(() => timer(this.luxSearchDelay())),
@@ -143,10 +137,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   );
   protected debouncedSearch = toSignal(this.debouncedSearch$, { initialValue: '' });
 
-  // DAO-Server-Modus (Hausmuster lux-table-data-source): Ist ein DAO gesetzt, kommen die angezeigten
-  // Daten ausschließlich vom Server, luxItems und die Client-Filterung/-Slicing werden ignoriert.
-  // Die komplette DAO-Orchestrierung (Laden, Fehlerbehandlung, Ladezustand) steckt in der DataSource,
-  // die Wiring-Subscriptions unten stoßen sie nur an (siehe lux-list-select-data-source.ts).
+  // Ist ein DAO gesetzt, kommen die angezeigten Daten ausschließlich vom Server; luxItems und Client-Filterung/-Slicing werden ignoriert.
   private readonly dataSource = new LuxListSelectDataSource<T>(this.luxHttpDao, this.luxPageSize, this.injector);
   protected loading = this.dataSource.loading;
   protected daoItems = this.dataSource.daoItems;
@@ -201,17 +192,11 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected viewportLoading = computed(() => this.serverMode() && this.loading());
 
   constructor() {
-    // Lade-Orchestrierung bewusst als RxJS-Subscriptions statt als Effects: Subscriptions tracken
-    // keine Signale, dadurch entfallen sämtliche untracked-Klammern, und Signal-Writes sind im
-    // Subscription-Kontext unstrittig. toObservable/takeUntilDestroyed brauchen den
-    // Injection-Context, deshalb muss alles hier im Konstruktor stehen.
+    // Lade-Orchestrierung als RxJS-Subscriptions statt Effects: toObservable/takeUntilDestroyed
+    // brauchen den Injection-Context, deshalb steht alles hier im Konstruktor.
 
-    // Single-Modus kappt eine Mehrfachauswahl auf das erste Element - auch bei einem Moduswechsel
-    // zur Laufzeit, deshalb hängt die Subscription an beiden Werten. Bewusst ein computed-Paar statt
-    // combineLatest: combineLatest würde bei einer Änderung beider Signale im selben
-    // Change-Detection-Zyklus zuerst ein Zwischenpaar aus neuem Modus und ALTER Selektion liefern
-    // und damit eine gerade erst gesetzte Einzelselektion durch das alte erste Element ersetzen
-    // (Review-Finding). Der computed liefert beide Werte immer aus demselben Stand.
+    // Bewusst ein computed-Paar statt combineLatest: combineLatest würde bei gleichzeitiger Änderung
+    // beider Signale zuerst ein Zwischenpaar aus neuem Modus und alter Selektion liefern.
     toObservable(computed(() => ({ mode: this.luxMode(), selected: this.luxSelected() })))
       .pipe(takeUntilDestroyed())
       .subscribe(({ mode, selected }) => {
@@ -221,10 +206,8 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         }
       });
 
-    // Suche: die erste Emission ist der beim ersten Change-Detection-Lauf anliegende (ggf.
-    // vorbelegte) Suchwert. distinctUntilChanged schluckt dessen entprellten Nachzügler,
-    // skip(1) den Startwert selbst - nur echte Änderungen setzen die Seite zurück und laden
-    // im Server-Modus neu (sonst löst ein vorbelegter luxSearchValue einen Doppel-Load aus).
+    // skip(1) verwirft den Startwert (inkl. dessen entprelltem Nachzügler via distinctUntilChanged):
+    // ein vorbelegter luxSearchValue soll keinen Doppel-Load auslösen.
     merge(this.searchValue$.pipe(take(1)), this.debouncedSearch$)
       .pipe(distinctUntilChanged(), skip(1), takeUntilDestroyed())
       .subscribe((search) => {
@@ -234,20 +217,11 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         }
       });
 
-    // Reagiert auf luxPageSize-Änderungen zur Laufzeit: Seite zurück auf 0, im Server-Modus mit neuer
-    // Seitengröße neu laden (sonst rechnen Paginator und Infinite-Scroll-Folgeseiten mit alter Größe weiter).
-    // Die Baseline wird erst übernommen, sobald Paginierung/Infinite-Scroll/DAO tatsächlich aktiv sind
-    // ("relevant"): vorher hat luxPageSize keine sichtbare Wirkung, und eine kombinierte
-    // Erstkonfiguration (z.B. luxPageIndex zusammen mit einem von 5 abweichenden luxPageSize im
-    // selben Zyklus vorbelegt) darf nicht als Laufzeit-Wechsel missverstanden und der Seitenindex
-    // dadurch nicht fälschlich zurückgesetzt werden.
-    // Der computed bündelt die drei Werte, damit sie konsistent zum selben Change-Detection-Lauf
-    // gelesen werden; die Merker kodieren Fachsemantik und bleiben deshalb erhalten.
+    // Baseline wird erst übernommen, wenn Paginierung/Infinite-Scroll/DAO aktiv sind ("relevant"),
+    // sonst zählt eine vorbelegte Erstkonfiguration fälschlich als Laufzeit-Wechsel.
     let pageSizeBaseline: number | null = null;
-    // Merkt die zuletzt gesehene DAO-Referenz: ändert sich der DAO in derselben Emission, in der auch
-    // luxPageSize sich ändert, übernimmt die DAO-Subscription (unten) den Load bereits eigenständig
-    // (sie liest die aktuelle luxPageSize ohnehin frisch) - ein zusätzlicher Load hier wäre doppelt
-    // (Review-Finding: unkoordinierter Doppel-Load bei gleichzeitigem DAO- und Seitengrößen-Wechsel).
+    // Ändert sich DAO und luxPageSize in derselben Emission, lädt bereits die DAO-Subscription unten
+    // neu - ein zusätzlicher Load hier wäre doppelt.
     let lastSeenDao = this.luxHttpDao();
     toObservable(
       computed(() => ({
@@ -278,7 +252,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         }
       });
 
-    // Wechsel/Setzen des DAO resettet die bisher geladenen Daten und lädt Seite 0 neu.
     toObservable(this.luxHttpDao)
       .pipe(distinctUntilChanged(), takeUntilDestroyed())
       .subscribe((dao) => {
@@ -290,12 +263,8 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         this.dataSource.triggerLoad(0, this.luxSearchValue(), false);
       });
 
-    // Lädt auch bei programmatischer luxPageIndex-Änderung (nicht nur Paginator-Klick) nach.
-    // lastRequestedPage verhindert einen doppelten Load, wenn derselbe Seitenwechsel bereits
-    // synchron durch onPageChange oder eine der Subscriptions oberhalb ausgelöst wurde.
-    // serverMode gehört mit in den Stream: wird der DAO erst nachträglich gesetzt, muss die
-    // Subscription den dann aktuellen Seitenindex als Ausgangsstand übernehmen, statt den ersten
-    // späteren Seitenwechsel als Erstlauf zu verschlucken.
+    // serverMode im Stream: wird der DAO erst nachträglich gesetzt, übernimmt die Subscription den
+    // dann aktuellen Seitenindex als Ausgangsstand, statt den ersten Wechsel als Erstlauf zu verschlucken.
     let isFirstPageEmission = true;
     toObservable(computed(() => ({ page: this.luxPageIndex(), serverMode: this.serverMode() })))
       .pipe(takeUntilDestroyed())
@@ -323,17 +292,11 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     });
 
     // Muss als Letztes deklariert bleiben: die Ansage darf im Server-Modus erst nach dem
-    // eingetroffenen Ergebnis kommen, und das Server-Gate (effectiveIsLoading) greift nur, wenn
-    // die Lade-Orchestrierung oberhalb den Ladezustand vorher gesetzt hat.
-    // Screenreader-Ansage der Trefferzahl: reagiert auf den entprellten Suchterm UND auf die
-    // gefilterte Trefferzahl, damit im Server-Modus erst das eingetroffene Ergebnis (statt des alten
-    // Stands) angesagt wird. Bewusst NICHT totalCount(): im Client-Modus liefert das bei gesetztem
-    // luxTotalItems die Gesamtanzahl aller Items (z.B. 100) statt der tatsächlichen Trefferzahl der
-    // Suche - die Ansage muss sich immer auf das angezeigte Suchergebnis beziehen (Review-Finding).
-    // Der Dedup-Guard verankert sich zusätzlich am Term (nicht nur an der Nachricht): zwei
-    // unterschiedliche Suchen können zufällig dieselbe Trefferzahl liefern ("Anna" -> "Thomas", beide
-    // 1 Treffer) - ein reiner Message-Vergleich würde die zweite Ansage sonst fälschlich unterdrücken
-    // und der Nutzer bekäme kein Feedback, dass seine neue Suche überhaupt gelaufen ist (Review-Finding).
+    // eingetroffenen Ergebnis kommen (effectiveIsLoading muss bereits aktuell sein).
+    // Bewusst NICHT totalCount(): das liefert im Client-Modus bei gesetztem luxTotalItems die
+    // Gesamtanzahl aller Items statt der tatsächlichen Trefferzahl der Suche.
+    // Dedup-Guard verankert sich zusätzlich am Term: zwei unterschiedliche Suchen können zufällig
+    // dieselbe Trefferzahl liefern, ein reiner Message-Vergleich würde die zweite Ansage unterdrücken.
     let lastAnnouncement: string | null = null;
     let lastAnnouncedTerm: string | null = null;
     effect(() => {
@@ -344,9 +307,8 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         lastAnnouncedTerm = null;
         return;
       }
-      // Während des Ladens (Server-Modus) noch nicht ansagen, aber den Dedup-Zustand NICHT
-      // zurücksetzen: sonst löscht jeder Seitenwechsel/Append den zuletzt angesagten Stand und die
-      // nach Eintreffen der Daten unveränderte Trefferzahl wird fälschlich erneut angesagt (Review-Finding).
+      // Dedup-Zustand bleibt beim Laden erhalten, sonst würde die unveränderte Trefferzahl nach
+      // jedem Seitenwechsel/Append erneut angesagt.
       if (this.effectiveIsLoading()) {
         return;
       }
@@ -384,9 +346,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     this.onTouched();
   }
 
-  // Grid-Tastatur-/Fokus-Handler delegieren an den Keyboard-Controller (siehe
-  // lux-list-select-keyboard-controller.ts); Methodennamen bleiben unverändert, damit das Template
-  // unangetastet bleibt.
+  // Methodennamen bleiben unverändert, damit das Template unangetastet bleibt.
   protected onGridFocus(event: FocusEvent): void {
     this.keyboard.onGridFocus(event);
   }
@@ -421,7 +381,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   onPageChange(event: LuxPageEvent) {
     this.luxPageChange.emit(event);
     if (this.luxHttpDao()) {
-      // Löst den Load synchron mit dem Klick aus, triggerLoad merkt die Seite gegen einen doppelten Load durch den luxPageIndex-Effect.
+      // Synchron mit dem Klick; triggerLoad merkt die Seite gegen einen doppelten Load durch die luxPageIndex-Subscription.
       this.dataSource.triggerLoad(event.pageIndex, this.debouncedSearch(), false);
     }
   }

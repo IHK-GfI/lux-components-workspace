@@ -1,9 +1,4 @@
-<!--
-  Der Klick auf die gesamte Karte ist eine reine Komfort-Erweiterung der Klickfläche für Maus/Touch.
-  Die eigentliche Bedienbarkeit (Fokus, Tastatur, ARIA) liefert das Grid-Pattern: Die Karte selbst
-  ist role="row" und wird programmatisch über den FocusKeyManager der Hauptkomponente fokussiert
-  (Pfeiltasten/Home/End sowie beim (Wieder-)Betreten des Grids).
--->
+<!-- Klick auf die Karte ist reine Komfort-Erweiterung; die Tastaturbedienung läuft über role="row" und den FocusKeyManager der Hauptkomponente. -->
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
 <div
   #card
@@ -18,14 +13,7 @@
 >
   <div class="lux-list-select-control-cell lux-flex lux-items-center" role="gridcell">
     @if (luxMode() === 'multi') {
-      <!--
-        aria-label ohne "|| null": MatCheckbox verwirft einen leeren String intern selbst
-        ("ariaLabel || null" im eigenen Template) und entfernt so das Attribut.
-        aria-describedby mit $any(): MatCheckbox deklariert ariaDescribedby als nicht-nullbares
-        string (anders als aria-labelledby), reicht den Wert aber ungeprüft durch - $any() umgeht
-        die Typprüfung, damit null zur Laufzeit das Attribut entfernt (analog zu mat-radio-button
-        unten, das dank nullbarem Typ ohne $any() auskommt).
-      -->
+      <!-- aria-label bewusst ohne || null: MatCheckbox koalesziert intern selbst; aria-describedby braucht $any(), da der Material-Typ non-nullable ist. -->
       <mat-checkbox
         class="lux-list-select-control"
         [checked]="luxSelected()"

@@ -4,11 +4,9 @@ import { catchError, EMPTY, finalize, Subject, switchMap, tap } from 'rxjs';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
 
 /**
- * DAO-Orchestrierung von lux-list-select im Server-Modus (Hausmuster lux-table-data-source):
- * lädt Seiten über den übergebenen DAO nach, hält die geladenen Items/den Gesamtzähler/den
- * Ladezustand als Signale und schützt per lastRequestedPage gegen doppelt ausgelöste Loads.
- * Die Wiring-Effects (DAO-Wechsel, Suche, pageIndex) bleiben in der Host-Komponente und rufen
- * nur triggerLoad/loadMore/reset auf.
+ * DAO-Orchestrierung von lux-list-select im Server-Modus: lädt Seiten über den übergebenen DAO
+ * nach, hält Items/Gesamtzähler/Ladezustand als Signale. Die Wiring-Subscriptions (DAO-Wechsel,
+ * Suche, pageIndex) bleiben in der Host-Komponente und rufen nur triggerLoad/loadMore/reset auf.
  */
 export class LuxListSelectDataSource<T> {
   // switchMap verwirft veraltete Requests (Race-Schutz), catchError im inneren Stream hält den
@@ -23,9 +21,8 @@ export class LuxListSelectDataSource<T> {
   readonly daoItems = this.daoItemsSignal.asReadonly();
   readonly daoTotalCount = this.daoTotalCountSignal.asReadonly();
 
-  // Verhindert, dass der luxPageIndex-Effect der Host-Komponente einen Load erneut auslöst, der
-  // bereits synchron durch onPageChange oder einen anderen Effect (Suche/DAO-Wechsel) angestoßen
-  // wurde. Bewusst kein Signal: wird nur synchron/untracked von der Host-Komponente gelesen.
+  // Bewusst kein Signal: wird nur synchron von der Host-Komponente gelesen (luxPageIndex-Subscription
+  // gegen einen Load, der bereits durch onPageChange oder eine andere Subscription ausgelöst wurde).
   lastRequestedPage: number | null = null;
 
   constructor(
@@ -58,7 +55,7 @@ export class LuxListSelectDataSource<T> {
       .subscribe();
   }
 
-  /** Einziger Ort, der einen DAO-Load anstößt; merkt sich die Seite in lastRequestedPage gegen doppelte Loads durch den luxPageIndex-Effect. */
+  /** Einziger Ort, der einen DAO-Load anstößt; merkt sich die Seite in lastRequestedPage gegen doppelte Loads durch die luxPageIndex-Subscription. */
   triggerLoad(page: number, filter: string, append: boolean): void {
     this.lastRequestedPage = page;
     this.loadTrigger$.next({ page, filter, append });
