@@ -18,12 +18,22 @@
 >
   <div class="lux-list-select-control-cell lux-flex lux-items-center" role="gridcell">
     @if (luxMode() === 'multi') {
+      <!--
+        aria-label ohne "|| null": MatCheckbox verwirft einen leeren String intern selbst
+        ("ariaLabel || null" im eigenen Template) und entfernt so das Attribut.
+        aria-describedby mit $any(): MatCheckbox deklariert ariaDescribedby als nicht-nullbares
+        string (anders als aria-labelledby), reicht den Wert aber ungeprüft durch - $any() umgeht
+        die Typprüfung, damit null zur Laufzeit das Attribut entfernt (analog zu mat-radio-button
+        unten, das dank nullbarem Typ ohne $any() auskommt).
+      -->
       <mat-checkbox
         class="lux-list-select-control"
         [checked]="luxSelected()"
         [disabled]="luxDisabled()"
         [tabIndex]="-1"
         [aria-label]="luxLabel()"
+        [aria-labelledby]="luxLabel() ? null : labelId"
+        [aria-describedby]="$any(luxSubLabel() && !luxContentTemplate() ? subLabelId : null)"
         (change)="onControlChange()"
       ></mat-checkbox>
     } @else {
@@ -34,20 +44,22 @@
         [disabled]="luxDisabled()"
         [tabIndex]="-1"
         [name]="luxRadioName()"
-        [aria-label]="luxLabel()"
+        [aria-label]="luxLabel() || null"
+        [aria-labelledby]="luxLabel() ? null : labelId"
+        [aria-describedby]="luxSubLabel() && !luxContentTemplate() ? subLabelId : null"
         [disableRipple]="true"
         color="primary"
         (change)="onControlChange()"
       ></mat-radio-button>
     }
   </div>
-  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto lux-gap-2" role="gridcell">
+  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto lux-gap-2" role="gridcell" [attr.id]="labelId">
     @if (luxContentTemplate()) {
       <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
     } @else {
       <span class="lux-list-select-title">{{ luxLabel() }}</span>
       @if (luxSubLabel()) {
-        <span class="lux-list-select-subtitle">{{ luxSubLabel() }}</span>
+        <span class="lux-list-select-subtitle" [attr.id]="subLabelId">{{ luxSubLabel() }}</span>
       }
     }
   </div>
@@ -57,7 +69,7 @@
         class="lux-list-select-detail"
         [luxRounded]="true"
         [luxIconName]="luxDetailIconName()"
-        [luxLabel]="'luxc.list-select.detail_arialabel' | transloco"
+        [luxLabel]="detailAriaLabel()"
         [luxDisabled]="luxDisabled()"
         (luxClicked)="luxDetail.emit()"
       ></lux-button>

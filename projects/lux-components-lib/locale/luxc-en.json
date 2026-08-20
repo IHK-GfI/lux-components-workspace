@@ -228,6 +228,7 @@
       "arialabel": "Selection list",
       "counter": "{{selected}} of {{total}} selected",
       "detail_arialabel": "Show details",
+      "detail_item_arialabel": "Show details for {{label}}",
       "search_arialabel": "Search",
       "search_clear_arialabel": "Clear search",
       "search_results": "Results: {{count}}",

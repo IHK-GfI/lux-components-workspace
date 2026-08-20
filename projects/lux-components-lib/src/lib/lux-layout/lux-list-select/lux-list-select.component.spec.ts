@@ -1449,6 +1449,45 @@ describe('LuxListSelectComponent', () => {
     });
   });
 
+  describe('Custom-Template-A11y', () => {
+    it('Sollte die Checkbox bei leerem Label per aria-labelledby mit der Inhaltszelle verknüpfen', () => {
+      // Vorbedingungen testen: eigene Fixture des Content-Template-Hosts mit einem Item ohne auflösbares Label
+      const fixtureCT = TestBed.createComponent(MockHostWithContentTemplateComponent);
+      const hostCT = fixtureCT.componentInstance;
+      hostCT.items = [{ label: '' }, ...TEST_ITEMS.slice(1)];
+      fixtureCT.detectChanges();
+
+      // Nachbedingungen prüfen
+      const checkbox = fixtureCT.debugElement.query(By.css('lux-list-select-item mat-checkbox input')).nativeElement as HTMLInputElement;
+      const headlineCell = fixtureCT.debugElement.query(By.css('lux-list-select-item .lux-list-select-headlines')).nativeElement as HTMLElement;
+      expect(checkbox.getAttribute('aria-label')).toBeFalsy();
+      expect(checkbox.getAttribute('aria-labelledby')).toContain(headlineCell.id);
+      expect(headlineCell.id).toMatch(/^lux-list-select-item-label-\d+$/);
+
+      fixtureCT.destroy();
+    });
+
+    it('Sollte das SubLabel per aria-describedby an die Checkbox hängen', () => {
+      // Vorbedingungen testen
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const checkbox = fixture.debugElement.query(By.css('lux-list-select-item mat-checkbox input')).nativeElement as HTMLInputElement;
+      const subtitle = fixture.debugElement.query(By.css('lux-list-select-item .lux-list-select-subtitle')).nativeElement as HTMLElement;
+      expect(checkbox.getAttribute('aria-describedby')).toContain(subtitle.id);
+    });
+
+    it('Sollte das Item-Label ins Detail-Button-Arialabel aufnehmen', () => {
+      // Änderungen durchführen
+      host.showDetailButton = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const detailButton = fixture.debugElement.query(By.css('.lux-list-select-detail button')).nativeElement as HTMLButtonElement;
+      expect(detailButton.getAttribute('aria-label')).toContain(TEST_ITEMS[0].label);
+    });
+  });
+
   describe('A11y', () => {
     beforeAll(() => {
       LuxA11yTestHelper.addA11yMatchers();
