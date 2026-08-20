@@ -198,6 +198,21 @@ describe('LuxListSelectComponent', () => {
       expect(host.selected).toEqual([TEST_ITEMS[0]]);
       expect(changeSpy).toHaveBeenCalledWith([TEST_ITEMS[0]]);
     });
+
+    it('Sollte Vorauswahl über luxCompareWith auch bei fremden Objekt-Instanzen erkennen', () => {
+      // Vorbedingungen testen: luxSelected enthält eine neue Objekt-Instanz mit gleichem Label,
+      // nicht die Referenz aus TEST_ITEMS - ohne luxCompareWith würde die Default-Prüfung (===)
+      // das Item fälschlich als nicht ausgewählt behandeln
+      host.compareWith = (a, b) => a.label === b.label;
+      host.selected = [{ ...TEST_ITEMS[1] }];
+
+      // Änderungen durchführen
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const checkboxes = fixture.debugElement.queryAll(By.css('lux-list-select-item mat-checkbox input'));
+      expect((checkboxes[1].nativeElement as HTMLInputElement).checked).toBeTrue();
+    });
   });
 
   describe('Detail-Button', () => {
@@ -400,6 +415,35 @@ describe('LuxListSelectComponent', () => {
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.directive(LuxInfiniteScrollDirective))).not.toBeNull();
     });
+
+    it('Sollte luxScrolled emittieren, wenn ans Listenende gescrollt wird', fakeAsync(() => {
+      // Vorbedingungen testen: Karma lädt in dieser Testumgebung kein Theme-CSS, daher kommt
+      // auch die Utility-Klasse lux-overflow-y-auto nicht an (siehe Kommentar bei der
+      // 'Message-Box bei luxMaxHeight'-Testgruppe oben) - overflow-y und Höhe werden hier daher
+      // per Inline-Style am Viewport nachgebildet, damit dieser tatsächlich scrollbar wird
+      host.infiniteScroll = true;
+      fixture.detectChanges();
+      const viewport = fixture.debugElement.query(By.css('.lux-list-select-viewport')).nativeElement as HTMLElement;
+      viewport.style.overflowY = 'auto';
+      viewport.style.height = '80px';
+      fixture.detectChanges();
+      expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);
+
+      // Änderungen durchführen: ans Ende scrollen und wie im Vorbild
+      // lux-infinite-scroll.directive.spec.ts ein Scroll-Event auf document mit gespiegeltem
+      // target auslösen - die Direktive lauscht mit window.addEventListener('scroll', ..., true)
+      // im Capture-Modus, in Karma lässt sich ein "echtes", vom Browser aus dem Scrollen
+      // resultierendes Scroll-Event auf dem Element selbst nicht deterministisch auslösen
+      viewport.scrollTop = viewport.scrollHeight;
+      const scrollEvent = new Event('scroll');
+      spyOnProperty(scrollEvent, 'target', 'get').and.returnValue(viewport);
+      document.dispatchEvent(scrollEvent);
+      tick(LuxInfiniteScrollDirective.SCROLL_DEBOUNCE_TIME + 50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(host.scrolledCount).toBe(1);
+    }));
   });
 
   describe('Suche', () => {
@@ -1449,6 +1493,26 @@ describe('LuxListSelectComponent', () => {
     });
   });
 
+  describe('Content-Template', () => {
+    it('Sollte dem Content-Template Item und Selektionszustand als Kontext übergeben', () => {
+      // Vorbedingungen testen
+      const fixtureCT = TestBed.createComponent(MockHostWithContentTemplateComponent);
+      fixtureCT.detectChanges();
+      const firstCard = fixtureCT.debugElement.query(By.css('lux-list-select-item'));
+      expect(firstCard.nativeElement.textContent).toContain(TEST_ITEMS[0].label);
+      expect(firstCard.nativeElement.textContent).toContain('false');
+
+      // Änderungen durchführen: Selektion umschalten
+      fixtureCT.debugElement.query(By.css('lux-list-select-item .lux-list-select-card')).nativeElement.click();
+      fixtureCT.detectChanges();
+
+      // Nachbedingungen prüfen: der Kontext des Content-Templates spiegelt den neuen Selektionszustand
+      expect(firstCard.nativeElement.textContent).toContain('true');
+
+      fixtureCT.destroy();
+    });
+  });
+
   describe('Custom-Template-A11y', () => {
     it('Sollte die Checkbox bei leerem Label per aria-labelledby mit der Inhaltszelle verknüpfen', () => {
       // Vorbedingungen testen: eigene Fixture des Content-Template-Hosts mit einem Item ohne auflösbares Label
@@ -1532,6 +1596,7 @@ describe('LuxListSelectComponent', () => {
       [luxShowSearch]="showSearch"
       [(luxSearchValue)]="searchValue"
       [luxHttpDao]="httpDao"
+      [luxCompareWith]="compareWith"
       (luxPageChange)="lastPageEvent = $event"
       (luxDetailClicked)="lastDetail = $event"
       (luxScrolled)="scrolledCount = scrolledCount + 1"
@@ -1556,6 +1621,7 @@ class MockHostComponent {
   showSearch = false;
   searchValue = '';
   httpDao: ILuxListSelectHttpDao<TestAdresse> | undefined = undefined;
+  compareWith: (a: TestAdresse, b: TestAdresse) => boolean = (a, b) => a === b;
   scrolledCount = 0;
 }
 
@@ -1564,8 +1630,8 @@ class MockHostComponent {
   imports: [LuxListSelectComponent],
   template: `
     <lux-list-select [luxMode]="'multi'" [luxItems]="items" [(luxSelected)]="selected" [luxShowDetailButton]="true">
-      <ng-template let-item>
-        <a href="#" class="mock-content-link">{{ item.label }}</a>
+      <ng-template let-item let-selected="selected">
+        <a href="#" class="mock-content-link">{{ item.label }} ({{ selected }})</a>
       </ng-template>
     </lux-list-select>
   `
