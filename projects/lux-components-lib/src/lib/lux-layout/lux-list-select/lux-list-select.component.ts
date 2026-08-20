@@ -209,14 +209,20 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       }
     });
 
-    let isFirstSearchRun = true;
+    // Vergleicht gegen den zuletzt behandelten Suchwert statt nur den ersten Lauf zu überspringen:
+    // debouncedSearch startet konstruktionsbedingt mit '' und feuert einen vorbelegten luxSearchValue
+    // erst nach dem Delay nach - dieser Nachzügler darf keinen Seiten-Reset/Doppel-Load auslösen.
+    let lastHandledSearch: string | null = null;
     effect(() => {
       const search = this.debouncedSearch();
-      // Erster Lauf ist die Initialisierung, kein von außen vorgegebener luxPageIndex darf überschrieben werden.
-      if (isFirstSearchRun) {
-        isFirstSearchRun = false;
+      if (lastHandledSearch === null) {
+        lastHandledSearch = untracked(() => this.luxSearchValue());
         return;
       }
+      if (search === lastHandledSearch) {
+        return;
+      }
+      lastHandledSearch = search;
       this.luxPageIndex.set(0);
       // untracked: DAO-Wechsel wird bereits vom eigenen Effect behandelt, dieser Effect soll nur auf Suche reagieren.
       if (untracked(() => this.luxHttpDao())) {
@@ -234,7 +240,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       this.luxPageIndex.set(0);
       this.dataSource.triggerLoad(
         0,
-        untracked(() => this.debouncedSearch()),
+        untracked(() => this.luxSearchValue()),
         false
       );
     });

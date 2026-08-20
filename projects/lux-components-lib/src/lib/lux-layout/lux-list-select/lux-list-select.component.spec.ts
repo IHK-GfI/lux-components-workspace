@@ -501,6 +501,26 @@ describe('LuxListSelectComponent', () => {
       expect(searchInput.disabled).toBeTrue();
       expect(clearButton.disabled).toBeTrue();
     }));
+
+    it('Sollte bei vorbelegtem luxSearchValue den luxPageIndex nicht zurücksetzen', fakeAsync(() => {
+      // Vorbedingungen testen: eigene Instanz, deren Suchwert und Seite bereits vor der ersten
+      // Change-Detection vorbelegt sind (der gemeinsame Host aus beforeEach hat seine erste
+      // Change-Detection mit leerem Suchwert schon hinter sich)
+      const fixture2 = TestBed.createComponent(MockHostComponent);
+      const host2 = fixture2.componentInstance;
+      host2.showSearch = true;
+      host2.showPagination = true;
+      host2.searchValue = 'Anna';
+      host2.pageIndex = 1;
+      fixture2.detectChanges();
+      tick(300);
+      fixture2.detectChanges();
+
+      // Nachbedingungen prüfen: der nachträglich feuernde vorbelegte Suchwert darf die Seite nicht zurücksetzen
+      expect(host2.pageIndex).toBe(1);
+
+      fixture2.destroy();
+    }));
   });
 
   describe('Fehlerzustand', () => {
@@ -774,6 +794,32 @@ describe('LuxListSelectComponent', () => {
       // Nachbedingungen prüfen: loadData wurde erneut gerufen und liefert nun Daten
       expect(dao.loadDataSpy).toHaveBeenCalledTimes(2);
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(2);
+    }));
+
+    it('Sollte im DAO-Modus mit vorbelegtem luxSearchValue genau einmal und mit Suchterm laden', fakeAsync(() => {
+      // Vorbedingungen testen: eigene Instanz, deren Suchwert und DAO bereits vor der ersten
+      // Change-Detection vorbelegt sind (der gemeinsame Host aus beforeEach hat seine erste
+      // Change-Detection mit leerem Suchwert und ohne DAO schon hinter sich)
+      const dao = new TestListSelectHttpDao();
+      const fixture2 = TestBed.createComponent(MockHostComponent);
+      const host2 = fixture2.componentInstance;
+      host2.pageSize = 2;
+      host2.showSearch = true;
+      host2.searchValue = 'Anna';
+      host2.httpDao = dao;
+
+      // Änderungen durchführen
+      fixture2.detectChanges();
+      tick(300);
+      fixture2.detectChanges();
+      tick(50);
+      fixture2.detectChanges();
+
+      // Nachbedingungen prüfen: genau ein Load, direkt mit dem vorbelegten Suchterm
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(1);
+      expect(dao.loadDataSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: 0, filter: 'Anna' }));
+
+      fixture2.destroy();
     }));
   });
 
