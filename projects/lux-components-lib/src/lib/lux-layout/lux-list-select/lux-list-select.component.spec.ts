@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DOWN_ARROW, END, ESCAPE, HOME, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
@@ -450,6 +451,64 @@ describe('LuxListSelectComponent', () => {
       expect(cards[0].nativeElement.textContent).toContain('Thomas Schmidt');
     }));
 
+    it('Sollte die Trefferzahl nach einer Suche über den LiveAnnouncer ansagen', fakeAsync(() => {
+      const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+      const announceSpy = spyOn(liveAnnouncer, 'announce');
+      host.showSearch = true;
+      fixture.detectChanges();
+      typeSearch('Anna');
+      tick(300);
+      fixture.detectChanges();
+      expect(announceSpy).toHaveBeenCalledWith('1 Treffer', 'polite');
+    }));
+
+    it('Sollte bei einem neuen Suchterm mit zufällig gleicher Trefferzahl erneut ansagen (Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: 'Anna' und 'Thomas' treffen jeweils genau ein (unterschiedliches) Item -
+      // die aus der Trefferzahl gebaute Nachricht ist für beide Suchen identisch ('1 Treffer'), ein
+      // reiner Message-Dedup würde die zweite Ansage fälschlich unterdrücken
+      const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+      const announceSpy = spyOn(liveAnnouncer, 'announce');
+      host.showSearch = true;
+      fixture.detectChanges();
+
+      // Änderungen durchführen: erste Suche
+      typeSearch('Anna');
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(announceSpy).toHaveBeenCalledTimes(1);
+      expect(announceSpy).toHaveBeenCalledWith('1 Treffer', 'polite');
+
+      // Änderungen durchführen: zweite Suche mit anderem Term, aber gleicher Trefferzahl
+      typeSearch('Thomas');
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: die Ansage feuert erneut, obwohl die Nachricht textgleich ist
+      expect(announceSpy).toHaveBeenCalledTimes(2);
+      expect(announceSpy.calls.mostRecent().args).toEqual(['1 Treffer', 'polite']);
+    }));
+
+    it('Sollte bei gesetztem luxTotalItems die gefilterte Trefferzahl ansagen, nicht die Gesamtanzahl (Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: luxTotalItems steht auf 100 (z.B. serverseitig bekannte Gesamtanzahl),
+      // die Suche filtert aber lokal auf genau ein Item - die Ansage muss sich auf das tatsächlich
+      // angezeigte Suchergebnis beziehen, nicht auf luxTotalItems
+      const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+      const announceSpy = spyOn(liveAnnouncer, 'announce');
+      host.showSearch = true;
+      host.totalItems = 100;
+      fixture.detectChanges();
+
+      // Änderungen durchführen
+      typeSearch('Anna');
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: 1 Treffer, nicht 100
+      expect(announceSpy).toHaveBeenCalledWith('1 Treffer', 'polite');
+    }));
+
     it('Sollte bei aktiver Paginierung die gefilterte Liste selbst slicen und bei Suchänderung auf Seite 0 springen', fakeAsync(() => {
       // Vorbedingungen testen: Seite 1 (Index 1) ist aktiv, pageSize 2, keine Suche
       host.showSearch = true;
@@ -796,6 +855,70 @@ describe('LuxListSelectComponent', () => {
       const cards = fixture.debugElement.queryAll(By.css('.lux-list-select-card'));
       expect(cards.length).toBe(1);
       expect(cards[0].nativeElement.textContent).toContain('Anna Müller');
+    }));
+
+    it('Sollte im DAO-Modus die Trefferzahl erst nach Eintreffen der Serverdaten ansagen (Server-Gate, Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: initialer Load auf Seite 0 ist abgeschlossen
+      const dao = new TestListSelectHttpDao();
+      const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+      const announceSpy = spyOn(liveAnnouncer, 'announce');
+      host.pageSize = 2;
+      host.showSearch = true;
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+      announceSpy.calls.reset();
+
+      // Änderungen durchführen: Suche eintippen, Debounce ablaufen lassen - der Reload beim Server
+      // läuft jetzt, ist aber wegen des simulierten Delays noch nicht abgeschlossen
+      typeSearch('mü');
+      tick(300);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: VOR Eintreffen der Server-Antwort darf noch nicht angesagt werden
+      expect(announceSpy).not.toHaveBeenCalled();
+
+      // Änderungen durchführen: Server-Antwort (simulierter delay(50)) trifft ein
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: genau eine Ansage, mit der vom Server gelieferten Trefferzahl
+      expect(announceSpy).toHaveBeenCalledTimes(1);
+      expect(announceSpy).toHaveBeenCalledWith('1 Treffer', 'polite');
+    }));
+
+    it('Sollte im DAO-Modus bei einem Seitenwechsel während aktiver Suche nicht erneut ansagen (Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: Suche mit Treffer ist bereits angesagt worden
+      const dao = new TestListSelectHttpDao();
+      const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+      const announceSpy = spyOn(liveAnnouncer, 'announce');
+      host.pageSize = 2;
+      host.showSearch = true;
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+      announceSpy.calls.reset();
+
+      typeSearch('mü');
+      tick(300);
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+      expect(announceSpy).toHaveBeenCalledTimes(1);
+      expect(announceSpy).toHaveBeenCalledWith('1 Treffer', 'polite');
+
+      // Änderungen durchführen: Seitenwechsel bei unverändertem Suchterm (der Server liefert
+      // dieselbe Trefferzahl erneut) - während des Ladens greift das Server-Gate zwischenzeitlich
+      host.pageIndex = 1;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: keine zweite Ansage, obwohl der Effect während des Seitenwechsels
+      // erneut mit unveränderter Trefferzahl durchläuft
+      expect(announceSpy).toHaveBeenCalledTimes(1);
     }));
 
     it('Sollte während des Ladens den Ladezustand setzen', fakeAsync(() => {

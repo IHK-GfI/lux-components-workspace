@@ -1,3 +1,4 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -76,6 +77,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private static nextUniqueId = 0;
 
   private tService = inject(TranslocoService);
+  private liveAnnouncer = inject(LiveAnnouncer);
   private readonly injector = inject(Injector);
   private readonly uniqueId = LuxListSelectComponent.nextUniqueId++;
 
@@ -316,6 +318,39 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
         untracked(() => this.debouncedSearch()),
         false
       );
+    });
+
+    // Screenreader-Ansage der Trefferzahl: reagiert auf den entprellten Suchterm UND auf die
+    // gefilterte Trefferzahl, damit im Server-Modus erst das eingetroffene Ergebnis (statt des alten
+    // Stands) angesagt wird. Bewusst NICHT totalCount(): im Client-Modus liefert das bei gesetztem
+    // luxTotalItems die Gesamtanzahl aller Items (z.B. 100) statt der tatsächlichen Trefferzahl der
+    // Suche - die Ansage muss sich immer auf das angezeigte Suchergebnis beziehen (Review-Finding).
+    // Der Dedup-Guard verankert sich zusätzlich am Term (nicht nur an der Nachricht): zwei
+    // unterschiedliche Suchen können zufällig dieselbe Trefferzahl liefern ("Anna" -> "Thomas", beide
+    // 1 Treffer) - ein reiner Message-Vergleich würde die zweite Ansage sonst fälschlich unterdrücken
+    // und der Nutzer bekäme kein Feedback, dass seine neue Suche überhaupt gelaufen ist (Review-Finding).
+    let lastAnnouncement: string | null = null;
+    let lastAnnouncedTerm: string | null = null;
+    effect(() => {
+      const term = this.debouncedSearch();
+      const count = this.serverMode() ? this.daoTotalCount() : this.filteredItems().length;
+      if (!this.luxShowSearch() || term === '') {
+        lastAnnouncement = null;
+        lastAnnouncedTerm = null;
+        return;
+      }
+      // Während des Ladens (Server-Modus) noch nicht ansagen, aber den Dedup-Zustand NICHT
+      // zurücksetzen: sonst löscht jeder Seitenwechsel/Append den zuletzt angesagten Stand und die
+      // nach Eintreffen der Daten unveränderte Trefferzahl wird fälschlich erneut angesagt (Review-Finding).
+      if (this.effectiveIsLoading()) {
+        return;
+      }
+      const message = this.tService.translate('luxc.list-select.search_results', { count });
+      if (message !== lastAnnouncement || term !== lastAnnouncedTerm) {
+        lastAnnouncement = message;
+        lastAnnouncedTerm = term;
+        this.liveAnnouncer.announce(message, 'polite');
+      }
     });
   }
 

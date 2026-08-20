@@ -230,6 +230,7 @@
       "detail_arialabel": "Details anzeigen",
       "search_arialabel": "Suche",
       "search_clear_arialabel": "Suche löschen",
+      "search_results": "{{count}} Treffer",
       "select_all": "Alle auswählen"
     },
     "lookup": {
