@@ -387,7 +387,7 @@ describe('LuxListSelectComponent', () => {
 
   describe('Suche', () => {
     function typeSearch(value: string) {
-      const input = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
+      const input = fixture.debugElement.query(By.css('.lux-list-select-search input')).nativeElement as HTMLInputElement;
       input.value = value;
       input.dispatchEvent(new Event('input'));
       fixture.detectChanges();
@@ -403,7 +403,7 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-list-select-search'))).not.toBeNull();
-      expect(fixture.debugElement.query(By.css('.lux-list-select-search-input'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search input'))).not.toBeNull();
     });
 
     it('Sollte nach Ablauf der Debounce case-insensitive über Titel und Untertitel filtern', fakeAsync(() => {
@@ -466,18 +466,18 @@ describe('LuxListSelectComponent', () => {
       typeSearch('Anna');
       tick(300);
       fixture.detectChanges();
-      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear button'))).not.toBeNull();
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(1);
 
       // Änderungen durchführen
-      fixture.debugElement.query(By.css('.lux-list-select-search-clear')).nativeElement.click();
+      fixture.debugElement.query(By.css('.lux-list-select-search-clear button')).nativeElement.click();
       fixture.detectChanges();
       tick(300);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(host.searchValue).toBe('');
-      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear button'))).toBeNull();
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(4);
     }));
 
@@ -488,8 +488,8 @@ describe('LuxListSelectComponent', () => {
       typeSearch('Anna');
       tick(300);
       fixture.detectChanges();
-      const searchInput = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
-      const clearButton = fixture.debugElement.query(By.css('.lux-list-select-search-clear')).nativeElement as HTMLButtonElement;
+      const searchInput = fixture.debugElement.query(By.css('.lux-list-select-search input')).nativeElement as HTMLInputElement;
+      const clearButton = fixture.debugElement.query(By.css('.lux-list-select-search-clear button')).nativeElement as HTMLButtonElement;
       expect(searchInput.disabled).toBeFalse();
       expect(clearButton.disabled).toBeFalse();
 
@@ -581,7 +581,7 @@ describe('LuxListSelectComponent', () => {
 
   describe('DAO-Server-Modus', () => {
     function typeSearch(value: string) {
-      const input = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
+      const input = fixture.debugElement.query(By.css('.lux-list-select-search input')).nativeElement as HTMLInputElement;
       input.value = value;
       input.dispatchEvent(new Event('input'));
       fixture.detectChanges();
@@ -988,7 +988,7 @@ describe('LuxListSelectComponent', () => {
 
       // Änderungen durchführen: Suche filtert auf ein anderes Item - das fokussierte Item
       // (Anna Müller) verschwindet aus der Liste, seine Komponenteninstanz wird zerstört
-      const input = fixture.debugElement.query(By.css('.lux-list-select-search-input')).nativeElement as HTMLInputElement;
+      const input = fixture.debugElement.query(By.css('.lux-list-select-search input')).nativeElement as HTMLInputElement;
       input.value = 'Schmidt';
       input.dispatchEvent(new Event('input'));
       fixture.detectChanges();

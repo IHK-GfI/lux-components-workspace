@@ -15,65 +15,6 @@ lux-list-select {
     flex-direction: column; // luxMaxHeight wirkt hier als Gesamthöhe, Viewport nimmt den Rest ein
   }
 
-  .lux-list-select-search {
-    height: 48px;
-    padding: 12px var(--lux-theme-spacing-sm);
-    background-color: #fff;
-    border: 1px solid var(--lux-theme-form-border-color);
-    border-radius: var(--lux-theme-radius-sm);
-
-    &:focus-within {
-      @include luxfocus.focus-dark-mixin;
-    }
-  }
-
-  .lux-list-select-search-icon {
-    width: 20px;
-    height: 20px;
-    color: var(--lux-theme-dark-secondary-text);
-  }
-
-  .lux-list-select-search-input {
-    min-width: 0;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-family: var(--lux-theme-app-content-font);
-    font-size: var(--lux-theme-font-size-md);
-    color: var(--lux-theme-dark-primary-text);
-
-    &::placeholder {
-      color: var(--lux-theme-dark-secondary-text);
-    }
-
-    &:disabled {
-      color: var(--lux-theme-dark-disabled-text);
-    }
-  }
-
-  .lux-list-select-search-clear {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: none;
-    border-radius: var(--lux-theme-radius-xxl);
-    background: transparent;
-    cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background-color: var(--lux-theme-hover-color);
-    }
-
-    &:focus-visible {
-      @include luxfocus.focus-dark-mixin;
-    }
-
-    &:disabled {
-      cursor: default;
-      color: var(--lux-theme-dark-disabled-text);
-    }
-  }
-
   .lux-list-select-header {
     gap: 22px;
   }

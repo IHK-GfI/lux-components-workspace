@@ -29,6 +29,10 @@ import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-mes
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxProgressComponent } from '../../lux-common/lux-progress/lux-progress.component';
+import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
+import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
+import { LuxInputAcPrefixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
+import { LuxInputAcSuffixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
@@ -51,7 +55,11 @@ import { LuxListSelectDataSource } from './lux-list-select-data-source';
     LuxTagIdDirective,
     LuxMessageBoxComponent,
     LuxIconComponent,
-    LuxProgressComponent
+    LuxProgressComponent,
+    LuxButtonComponent,
+    LuxInputAcComponent,
+    LuxInputAcPrefixComponent,
+    LuxInputAcSuffixComponent
   ],
   host: {
     class: 'lux-list-select'
@@ -328,10 +336,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       const nextPage = Math.floor(this.daoItems().length / this.luxPageSize());
       this.dataSource.loadMore(nextPage, this.debouncedSearch());
     }
-  }
-
-  protected onSearchInput(event: Event) {
-    this.luxSearchValue.set((event.target as HTMLInputElement).value);
   }
 
   protected onSearchClear() {

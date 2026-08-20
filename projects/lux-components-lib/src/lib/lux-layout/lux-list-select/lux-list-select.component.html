@@ -21,29 +21,34 @@
 
 <div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
   @if (luxShowSearch()) {
-    <div class="lux-list-select-search lux-flex lux-items-center lux-border-box lux-flex-shrink-0 lux-gap-2 lux-mb-4">
-      <lux-icon class="lux-list-select-search-icon lux-flex-none" luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
-      <input
-        type="text"
-        class="lux-list-select-search-input lux-flex-auto"
-        autocomplete="off"
-        [attr.aria-label]="'luxc.list-select.search_arialabel' | transloco"
-        [value]="luxSearchValue()"
-        [disabled]="componentDisabled()"
-        (input)="onSearchInput($event)"
-      />
+    <lux-input-ac
+      class="lux-list-select-search lux-flex-shrink-0"
+      [luxNoLabels]="true"
+      [luxNoTopLabel]="true"
+      [luxNoBottomLabel]="true"
+      [luxHideCounterLabel]="true"
+      [luxPlaceholder]="'luxc.list-select.search_arialabel' | transloco"
+      luxAutocomplete="off"
+      [luxDisabled]="componentDisabled()"
+      [luxValue]="luxSearchValue()"
+      (luxValueChange)="luxSearchValue.set($event ?? '')"
+    >
+      <lux-input-ac-prefix class="lux-mr-2">
+        <lux-icon luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
+      </lux-input-ac-prefix>
       @if (luxSearchValue()) {
-        <button
-          type="button"
-          class="lux-list-select-search-clear lux-flex lux-items-center lux-justify-center lux-flex-none"
-          [attr.aria-label]="'luxc.list-select.search_clear_arialabel' | transloco"
-          [disabled]="componentDisabled()"
-          (click)="onSearchClear()"
-        >
-          <lux-icon luxIconName="lux-interface-delete-circle" luxIconSize="1x"></lux-icon>
-        </button>
+        <lux-input-ac-suffix>
+          <lux-button
+            class="lux-list-select-search-clear"
+            [luxRounded]="true"
+            luxIconName="lux-interface-delete-circle"
+            [luxLabel]="'luxc.list-select.search_clear_arialabel' | transloco"
+            [luxDisabled]="componentDisabled()"
+            (luxClicked)="onSearchClear()"
+          ></lux-button>
+        </lux-input-ac-suffix>
       }
-    </div>
+    </lux-input-ac>
   }
 
   @if (luxMode() === 'multi') {
