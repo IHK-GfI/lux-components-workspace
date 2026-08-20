@@ -1082,7 +1082,7 @@ describe('LuxListSelectComponent', () => {
       expect(document.activeElement).toBe(cards()[3].nativeElement);
     });
 
-    it('Sollte nach einer Listenänderung nicht auf ein zerstörtes Item zeigen (Review-Finding)', fakeAsync(() => {
+    it('Sollte nach einer Listenänderung nicht auf ein Item mit anderen Daten zeigen (Review-Finding)', fakeAsync(() => {
       // Vorbedingungen testen: Suche aktivieren, erstes Item (Anna Müller) fokussieren
       host.showSearch = true;
       fixture.detectChanges();
@@ -1118,6 +1118,61 @@ describe('LuxListSelectComponent', () => {
       // Nachbedingungen prüfen
       expect(host.selected).toEqual([TEST_ITEMS[1]]);
     }));
+
+    it('Sollte nach einer Datenänderung am aktiven Index nicht auf das falsche (neue) Item zeigen (Stale-Guard, Review-Finding)', () => {
+      // Vorbedingungen testen: Item 1 aktivieren
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[1].nativeElement);
+
+      // Änderungen durchführen: Fokus verlässt das Grid (z.B. ins Suchfeld), die Instanz an Index 1
+      // bleibt aber im FocusKeyManager aktiv gemerkt
+      (document.activeElement as HTMLElement).blur();
+      fixture.detectChanges();
+
+      // Änderungen durchführen: die Liste wird ersetzt (z.B. Filter/Server-Reload) - gleiche Länge,
+      // aber an Index 1 steht jetzt ein anderes Datenobjekt. Mit track $index wird die
+      // Komponenteninstanz an Index 1 wiederverwendet statt zerstört, der alte (instanzbasierte)
+      // Stale-Guard würde das nicht bemerken.
+      host.items = [TEST_ITEMS[0], OTHER_PAGE_ITEM, TEST_ITEMS[2], TEST_ITEMS[3]];
+      fixture.detectChanges();
+
+      // Änderungen durchführen: Grid erneut fokussieren
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Fokus landet auf Item 0 (Erst-Eintritt-Verhalten), NICHT auf Index 1,
+      // dessen Karte jetzt ein anderes Datenobjekt zeigt
+      expect(document.activeElement).toBe(cards()[0].nativeElement);
+    });
+
+    it('Sollte den aktiven Index bei einem Infinite-Scroll-Append (gleiche Referenz am aktiven Index) behalten', () => {
+      // Vorbedingungen testen: Item 1 aktivieren
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+      LuxTestHelper.dispatchKeyboardEvent(gridContainer(), 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      expect(document.activeElement).toBe(cards()[1].nativeElement);
+
+      // Änderungen durchführen: Fokus verlässt das Grid
+      (document.activeElement as HTMLElement).blur();
+      fixture.detectChanges();
+
+      // Änderungen durchführen: die Liste wächst am Ende (Infinite-Scroll-Append) - die vorderen
+      // Einträge behalten ihre Objektreferenzen, nur hinten kommt ein neues Item hinzu
+      host.items = [...TEST_ITEMS, OTHER_PAGE_ITEM];
+      fixture.detectChanges();
+
+      // Änderungen durchführen: Grid erneut fokussieren
+      LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Fokus bleibt auf Item 1 - kein Reset, da die Referenz am aktiven
+      // Index unverändert ist
+      expect(document.activeElement).toBe(cards()[1].nativeElement);
+    });
 
     it('Sollte Pfeiltasten und Space nutzen können, wenn im Edit-Modus der Fokus per Tab auf die Karte zurückkehrt (Review-Finding)', () => {
       // Vorbedingungen testen: Edit-Modus auf Item 0 betreten (Fokus auf Detail-Button)
@@ -1260,6 +1315,15 @@ describe('LuxListSelectComponent', () => {
 
       fixtureCT.destroy();
     }));
+
+    it('Sollte Item-DOM bei neuen Objekt-Identitäten wiederverwenden statt neu aufzubauen', () => {
+      fixture.detectChanges();
+      const firstItemBefore = fixture.debugElement.query(By.css('lux-list-select-item')).nativeElement;
+      host.items = host.items.map((item) => ({ ...item }));
+      fixture.detectChanges();
+      const firstItemAfter = fixture.debugElement.query(By.css('lux-list-select-item')).nativeElement;
+      expect(firstItemAfter).toBe(firstItemBefore);
+    });
   });
 
   describe('A11y', () => {

@@ -22,6 +22,14 @@ export class LuxListSelectKeyboardController<T> {
   // luxEditMode durchgereicht, damit nur dessen innere Elemente im Edit-Modus einen Tab-Stopp erhalten.
   readonly activeItemIndex = computed(() => this.keyManager.activeItemIndex);
 
+  // Merkt die Datenreferenz (luxItem()) des aktiven Items, aktualisiert bei jeder beabsichtigten
+  // Änderung des aktiven Index (siehe syncActiveItemRef()). Grundlage des Stale-Guards unten:
+  // mit track $index (statt track item) werden Item-Komponenteninstanzen bei Filter/Suche/
+  // Seitenwechsel/Server-Reload wiederverwendet statt zerstört, nur ihre Inputs wechseln - der
+  // alte instanzbasierte Guard (Instanz verschwindet aus items()) bemerkt einen reinen
+  // Datentausch am gleichen Index daher nicht mehr.
+  private activeItemDataRef: unknown = undefined;
+
   constructor(
     private readonly items: Signal<readonly LuxListSelectItemComponent<unknown>[]>,
     private readonly callbacks: { toggleItem: (item: T) => void },
@@ -31,23 +39,45 @@ export class LuxListSelectKeyboardController<T> {
       item.luxDisabled()
     );
 
-    // Setzt das aktive Item zurück, sobald es durch Suche/Seitenwechsel/DAO-Reload aus der
-    // items()-Liste verschwindet und damit zerstört ist - sonst würden onGridFocus/toggleActiveItem
-    // auf die zerstörte Instanz zugreifen (NG0951). Der Signal-basierte FocusKeyManager synchronisiert
-    // sich danach selbst mit der neuen Liste, ein Neu-Erzeugen wie bei lux-list ist nicht nötig.
+    // Setzt das aktive Item zurück, sobald
+    //  a) es durch Suche/Seitenwechsel/DAO-Reload aus der items()-Liste verschwindet und damit
+    //     zerstört ist - sonst würden onGridFocus/toggleActiveItem auf die zerstörte Instanz
+    //     zugreifen (NG0951), oder
+    //  b) die Instanz zwar noch existiert (track $index behält sie bei), ihr luxItem() aber nicht
+    //     mehr referenzgleich zur zuletzt gemerkten Datenreferenz ist - ein reiner Datentausch am
+    //     aktiven Index (Filter/Suche/Server-Reload bei gleicher Listenlänge), der sonst unbemerkt
+    //     bliebe und Space/Enter/Detail auf das falsche Item wirken ließe.
+    // Bewusst Referenzgleichheit statt luxCompareWith: Infinite-Scroll-Append behält die Referenz
+    // am aktiven Index (kein Reset), jeder andere Datentausch an dieser Stelle löst einen Reset
+    // aus, auch wenn er "eigentlich" dasselbe logische Item wäre - das ist hier in Kauf genommen,
+    // da die Komponente keine stabile ID hat, an der sich das zuverlässig unterscheiden ließe.
+    // Der Read von active.luxItem() registriert den effect zusätzlich als Abhängigen dieses
+    // Input-Signals: bleibt die items()-Query selbst unverändert (gleiche Instanzen, gleiche
+    // Reihenfolge, nur neue Inputs), ist das der einzige Trigger, der den effect erneut laufen lässt.
     // Der effect ist an den übergebenen Injector (den der Host-Komponente) gebunden und räumt sich
     // beim Zerstören der Host-Komponente selbst auf, ein explizites dispose() dieses Controllers entfällt.
     effect(
       () => {
         const currentItems = this.items();
         const active = this.keyManager.activeItem;
-        if (active && !currentItems.includes(active)) {
+        if (!active) {
+          return;
+        }
+        const isDestroyed = !currentItems.includes(active);
+        const isStale = !isDestroyed && active.luxItem() !== this.activeItemDataRef;
+        if (isDestroyed || isStale) {
           this.editModeSignal.set(false);
           this.keyManager.updateActiveItem(-1);
+          this.activeItemDataRef = undefined;
         }
       },
       { injector }
     );
+  }
+
+  /** Merkt die Datenreferenz des jetzt aktiven Items für den Stale-Guard oben; nach jeder Änderung des aktiven Index aufzurufen. */
+  private syncActiveItemRef(): void {
+    this.activeItemDataRef = this.keyManager.activeItem?.luxItem();
   }
 
   /**
@@ -75,6 +105,7 @@ export class LuxListSelectKeyboardController<T> {
       active.focus();
     } else {
       this.keyManager.setFirstItemActive();
+      this.syncActiveItemRef();
     }
   }
 
@@ -117,15 +148,19 @@ export class LuxListSelectKeyboardController<T> {
       event.preventDefault();
     } else if (LuxUtil.isKeyArrowUp(event)) {
       this.keyManager.setPreviousItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     } else if (LuxUtil.isKeyArrowDown(event)) {
       this.keyManager.setNextItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     } else if (LuxUtil.isKeyHome(event)) {
       this.keyManager.setFirstItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     } else if (LuxUtil.isKeyEnd(event)) {
       this.keyManager.setLastItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     }
   }
@@ -137,6 +172,7 @@ export class LuxListSelectKeyboardController<T> {
       return;
     }
     this.keyManager.updateActiveItem(index);
+    this.syncActiveItemRef();
   }
 
   /** Betritt den Edit-Modus auf dem aktiven Item und fokussiert dessen erstes inneres Element; ohne fokussierbare Elemente passiert nichts. */
@@ -217,18 +253,22 @@ export class LuxListSelectKeyboardController<T> {
     } else if (LuxUtil.isKeyArrowUp(event)) {
       this.editModeSignal.set(false);
       this.keyManager.setPreviousItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     } else if (LuxUtil.isKeyArrowDown(event)) {
       this.editModeSignal.set(false);
       this.keyManager.setNextItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     } else if (LuxUtil.isKeyHome(event)) {
       this.editModeSignal.set(false);
       this.keyManager.setFirstItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     } else if (LuxUtil.isKeyEnd(event)) {
       this.editModeSignal.set(false);
       this.keyManager.setLastItemActive();
+      this.syncActiveItemRef();
       event.preventDefault();
     }
   }

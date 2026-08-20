@@ -1,5 +1,7 @@
 <ng-template #itemsTpl>
-  @for (item of displayedItems(); track item; let i = $index) {
+  <!-- track $index statt track item: Server-Reloads liefern neue Objekt-Identitäten; die Items halten
+       keinen eigenen Zustand (Selektion/Edit-Modus kommen als Inputs), daher ist Index-Tracking sicher. -->
+  @for (item of displayedItems(); track $index; let i = $index) {
     <lux-list-select-item
       [luxItem]="item"
       [luxMode]="luxMode()"
