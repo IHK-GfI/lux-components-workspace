@@ -199,6 +199,28 @@ describe('LuxListSelectComponent', () => {
       expect(changeSpy).toHaveBeenCalledWith([TEST_ITEMS[0]]);
     });
 
+    it('Sollte bei gleichzeitigem Wechsel auf Single und neuer Selektion im selben Zyklus die neue Selektion behalten (Review-Finding)', () => {
+      // Vorbedingungen testen: im Multi-Modus sind zwei Items selektiert
+      listSelect.toggleItem(TEST_ITEMS[0]);
+      listSelect.toggleItem(TEST_ITEMS[1]);
+      fixture.detectChanges();
+      expect(host.selected.length).toBe(2);
+
+      const changeSpy = jasmine.createSpy('onChange');
+      listSelect.registerOnChange(changeSpy);
+
+      // Änderungen durchführen: der Parent setzt Modus UND Selektion in EINEM Zyklus - die Kappung
+      // darf dabei kein Zwischenpaar aus neuem Modus und alter Selektion zu sehen bekommen
+      host.mode = 'single';
+      host.selected = [TEST_ITEMS[3]];
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: die neue Selektion bleibt unangetastet, es wird nichts gekappt
+      expect(listSelect.luxSelected()).toEqual([TEST_ITEMS[3]]);
+      expect(host.selected).toEqual([TEST_ITEMS[3]]);
+      expect(changeSpy).not.toHaveBeenCalled();
+    });
+
     it('Sollte Vorauswahl über luxCompareWith auch bei fremden Objekt-Instanzen erkennen', () => {
       // Vorbedingungen testen: luxSelected enthält eine neue Objekt-Instanz mit gleichem Label,
       // nicht die Referenz aus TEST_ITEMS - ohne luxCompareWith würde die Default-Prüfung (===)

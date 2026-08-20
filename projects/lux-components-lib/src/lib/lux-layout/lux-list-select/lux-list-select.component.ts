@@ -13,15 +13,14 @@ import {
   output,
   signal,
   TemplateRef,
-  untracked,
   viewChildren
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { debounce, timer } from 'rxjs';
+import { debounce, distinctUntilChanged, merge, share, skip, take, timer } from 'rxjs';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -135,13 +134,19 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected radioName = computed(() => `lux-list-select-radio-${this.uniqueId}`);
 
   // Entkoppelt Eingabe und Filterwirkung: Filterung/Events reagieren erst nach luxSearchDelay.
+  // share(): Anzeige-Pipeline (toSignal) und Lade-Orchestrierung (Subscription im Konstruktor)
+  // teilen sich denselben Debounce-Timer und damit denselben Emissionszeitpunkt.
   private searchValue$ = toObservable(this.luxSearchValue);
-  protected debouncedSearch = toSignal(this.searchValue$.pipe(debounce(() => timer(this.luxSearchDelay()))), { initialValue: '' });
+  private debouncedSearch$ = this.searchValue$.pipe(
+    debounce(() => timer(this.luxSearchDelay())),
+    share()
+  );
+  protected debouncedSearch = toSignal(this.debouncedSearch$, { initialValue: '' });
 
   // DAO-Server-Modus (Hausmuster lux-table-data-source): Ist ein DAO gesetzt, kommen die angezeigten
   // Daten ausschließlich vom Server, luxItems und die Client-Filterung/-Slicing werden ignoriert.
   // Die komplette DAO-Orchestrierung (Laden, Fehlerbehandlung, Ladezustand) steckt in der DataSource,
-  // die Wiring-Effects unten stoßen sie nur an (siehe lux-list-select-data-source.ts).
+  // die Wiring-Subscriptions unten stoßen sie nur an (siehe lux-list-select-data-source.ts).
   private readonly dataSource = new LuxListSelectDataSource<T>(this.luxHttpDao, this.luxPageSize, this.injector);
   protected loading = this.dataSource.loading;
   protected daoItems = this.dataSource.daoItems;
@@ -196,12 +201,118 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected viewportLoading = computed(() => this.serverMode() && this.loading());
 
   constructor() {
-    effect(() => {
-      if (this.luxMode() === 'single' && this.luxSelected().length > 1) {
-        this.luxSelected.set([this.luxSelected()[0]]);
-        this.onChange(this.luxSelected());
-      }
-    });
+    // Lade-Orchestrierung bewusst als RxJS-Subscriptions statt als Effects: Subscriptions tracken
+    // keine Signale, dadurch entfallen sämtliche untracked-Klammern, und Signal-Writes sind im
+    // Subscription-Kontext unstrittig. toObservable/takeUntilDestroyed brauchen den
+    // Injection-Context, deshalb muss alles hier im Konstruktor stehen.
+
+    // Single-Modus kappt eine Mehrfachauswahl auf das erste Element - auch bei einem Moduswechsel
+    // zur Laufzeit, deshalb hängt die Subscription an beiden Werten. Bewusst ein computed-Paar statt
+    // combineLatest: combineLatest würde bei einer Änderung beider Signale im selben
+    // Change-Detection-Zyklus zuerst ein Zwischenpaar aus neuem Modus und ALTER Selektion liefern
+    // und damit eine gerade erst gesetzte Einzelselektion durch das alte erste Element ersetzen
+    // (Review-Finding). Der computed liefert beide Werte immer aus demselben Stand.
+    toObservable(computed(() => ({ mode: this.luxMode(), selected: this.luxSelected() })))
+      .pipe(takeUntilDestroyed())
+      .subscribe(({ mode, selected }) => {
+        if (mode === 'single' && selected.length > 1) {
+          this.luxSelected.set([selected[0]]);
+          this.onChange(this.luxSelected());
+        }
+      });
+
+    // Suche: die erste Emission ist der beim ersten Change-Detection-Lauf anliegende (ggf.
+    // vorbelegte) Suchwert. distinctUntilChanged schluckt dessen entprellten Nachzügler,
+    // skip(1) den Startwert selbst - nur echte Änderungen setzen die Seite zurück und laden
+    // im Server-Modus neu (sonst löst ein vorbelegter luxSearchValue einen Doppel-Load aus).
+    merge(this.searchValue$.pipe(take(1)), this.debouncedSearch$)
+      .pipe(distinctUntilChanged(), skip(1), takeUntilDestroyed())
+      .subscribe((search) => {
+        this.luxPageIndex.set(0);
+        if (this.luxHttpDao()) {
+          this.dataSource.triggerLoad(0, search, false);
+        }
+      });
+
+    // Reagiert auf luxPageSize-Änderungen zur Laufzeit: Seite zurück auf 0, im Server-Modus mit neuer
+    // Seitengröße neu laden (sonst rechnen Paginator und Infinite-Scroll-Folgeseiten mit alter Größe weiter).
+    // Die Baseline wird erst übernommen, sobald Paginierung/Infinite-Scroll/DAO tatsächlich aktiv sind
+    // ("relevant"): vorher hat luxPageSize keine sichtbare Wirkung, und eine kombinierte
+    // Erstkonfiguration (z.B. luxPageIndex zusammen mit einem von 5 abweichenden luxPageSize im
+    // selben Zyklus vorbelegt) darf nicht als Laufzeit-Wechsel missverstanden und der Seitenindex
+    // dadurch nicht fälschlich zurückgesetzt werden.
+    // Der computed bündelt die drei Werte, damit sie konsistent zum selben Change-Detection-Lauf
+    // gelesen werden; die Merker kodieren Fachsemantik und bleiben deshalb erhalten.
+    let pageSizeBaseline: number | null = null;
+    // Merkt die zuletzt gesehene DAO-Referenz: ändert sich der DAO in derselben Emission, in der auch
+    // luxPageSize sich ändert, übernimmt die DAO-Subscription (unten) den Load bereits eigenständig
+    // (sie liest die aktuelle luxPageSize ohnehin frisch) - ein zusätzlicher Load hier wäre doppelt
+    // (Review-Finding: unkoordinierter Doppel-Load bei gleichzeitigem DAO- und Seitengrößen-Wechsel).
+    let lastSeenDao = this.luxHttpDao();
+    toObservable(
+      computed(() => ({
+        pageSize: this.luxPageSize(),
+        dao: this.luxHttpDao(),
+        relevant: !!this.luxHttpDao() || this.luxShowPagination() || this.luxInfiniteScroll()
+      }))
+    )
+      .pipe(takeUntilDestroyed())
+      .subscribe(({ pageSize, dao, relevant }) => {
+        const daoChanged = dao !== lastSeenDao;
+        lastSeenDao = dao;
+        if (!relevant) {
+          return;
+        }
+        if (pageSizeBaseline === null) {
+          pageSizeBaseline = pageSize;
+          return;
+        }
+        if (pageSize === pageSizeBaseline) {
+          return;
+        }
+        pageSizeBaseline = pageSize;
+        this.luxPageIndex.set(0);
+        if (dao && !daoChanged) {
+          this.dataSource.reset();
+          this.dataSource.triggerLoad(0, this.debouncedSearch(), false);
+        }
+      });
+
+    // Wechsel/Setzen des DAO resettet die bisher geladenen Daten und lädt Seite 0 neu.
+    toObservable(this.luxHttpDao)
+      .pipe(distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe((dao) => {
+        if (!dao) {
+          return;
+        }
+        this.dataSource.reset();
+        this.luxPageIndex.set(0);
+        this.dataSource.triggerLoad(0, this.luxSearchValue(), false);
+      });
+
+    // Lädt auch bei programmatischer luxPageIndex-Änderung (nicht nur Paginator-Klick) nach.
+    // lastRequestedPage verhindert einen doppelten Load, wenn derselbe Seitenwechsel bereits
+    // synchron durch onPageChange oder eine der Subscriptions oberhalb ausgelöst wurde.
+    // serverMode gehört mit in den Stream: wird der DAO erst nachträglich gesetzt, muss die
+    // Subscription den dann aktuellen Seitenindex als Ausgangsstand übernehmen, statt den ersten
+    // späteren Seitenwechsel als Erstlauf zu verschlucken.
+    let isFirstPageEmission = true;
+    toObservable(computed(() => ({ page: this.luxPageIndex(), serverMode: this.serverMode() })))
+      .pipe(takeUntilDestroyed())
+      .subscribe(({ page, serverMode }) => {
+        if (!serverMode) {
+          return;
+        }
+        if (isFirstPageEmission) {
+          isFirstPageEmission = false;
+          this.dataSource.lastRequestedPage = page;
+          return;
+        }
+        if (page === this.dataSource.lastRequestedPage) {
+          return;
+        }
+        this.dataSource.triggerLoad(page, this.debouncedSearch(), false);
+      });
 
     effect(() => {
       if (this.luxShowPagination() && this.luxInfiniteScroll()) {
@@ -211,115 +322,9 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       }
     });
 
-    // Vergleicht gegen den zuletzt behandelten Suchwert statt nur den ersten Lauf zu überspringen:
-    // debouncedSearch startet konstruktionsbedingt mit '' und feuert einen vorbelegten luxSearchValue
-    // erst nach dem Delay nach - dieser Nachzügler darf keinen Seiten-Reset/Doppel-Load auslösen.
-    let lastHandledSearch: string | null = null;
-    effect(() => {
-      const search = this.debouncedSearch();
-      if (lastHandledSearch === null) {
-        lastHandledSearch = untracked(() => this.luxSearchValue());
-        return;
-      }
-      if (search === lastHandledSearch) {
-        return;
-      }
-      lastHandledSearch = search;
-      this.luxPageIndex.set(0);
-      // untracked: DAO-Wechsel wird bereits vom eigenen Effect behandelt, dieser Effect soll nur auf Suche reagieren.
-      if (untracked(() => this.luxHttpDao())) {
-        this.dataSource.triggerLoad(0, search, false);
-      }
-    });
-
-    // Reagiert auf luxPageSize-Änderungen zur Laufzeit: Seite zurück auf 0, im Server-Modus mit neuer
-    // Seitengröße neu laden (sonst rechnen Paginator und Infinite-Scroll-Folgeseiten mit alter Größe weiter).
-    // Die Baseline wird erst übernommen, sobald Paginierung/Infinite-Scroll/DAO tatsächlich aktiv sind
-    // ("relevant"): vorher hat luxPageSize keine sichtbare Wirkung, und eine kombinierte
-    // Erstkonfiguration (z.B. luxPageIndex zusammen mit einem von 5 abweichenden luxPageSize im
-    // selben Zyklus vorbelegt) darf nicht als Laufzeit-Wechsel missverstanden und der Seitenindex
-    // dadurch nicht fälschlich zurückgesetzt werden.
-    let pageSizeBaselineSet = false;
-    let lastPageSize: number | null = null;
-    // Merkt die zuletzt gesehene DAO-Referenz: ändert sich der DAO im selben Lauf, in dem auch
-    // luxPageSize sich ändert, übernimmt der DAO-Init-Effect (unten) den Load bereits eigenständig
-    // (er liest die aktuelle luxPageSize ohnehin frisch) - ein zusätzlicher Load hier wäre doppelt
-    // (Review-Finding: unkoordinierter Doppel-Load bei gleichzeitigem DAO- und Seitengrößen-Wechsel).
-    let lastSeenDao = untracked(() => this.luxHttpDao());
-    effect(() => {
-      const pageSize = this.luxPageSize();
-      const dao = this.luxHttpDao();
-      const daoChangedThisRun = dao !== lastSeenDao;
-      lastSeenDao = dao;
-      const relevant = !!dao || this.luxShowPagination() || this.luxInfiniteScroll();
-      if (!relevant) {
-        return;
-      }
-      if (!pageSizeBaselineSet) {
-        pageSizeBaselineSet = true;
-        lastPageSize = pageSize;
-        return;
-      }
-      if (pageSize === lastPageSize) {
-        return;
-      }
-      lastPageSize = pageSize;
-      this.luxPageIndex.set(0);
-      if (daoChangedThisRun) {
-        return;
-      }
-      // untracked: der DataSource-Aufruf liest luxHttpDao()/luxPageSize() synchron mit (RxJS
-      // Subject.next() feuert synchron innerhalb des laufenden Effects) - ohne untracked würde
-      // dieser Effect dadurch fälschlich auch von diesen Signalen abhängen und z.B. bei jedem
-      // DAO-Wechsel zusätzlich (doppelt) feuern.
-      untracked(() => {
-        if (dao) {
-          this.dataSource.reset();
-          this.dataSource.triggerLoad(0, this.debouncedSearch(), false);
-        }
-      });
-    });
-
-    // Wechsel/Setzen des DAO resettet die bisher geladenen Daten und lädt Seite 0 neu.
-    effect(() => {
-      const dao = this.luxHttpDao();
-      if (!dao) {
-        return;
-      }
-      // untracked: siehe Kommentar beim luxPageSize-Effect oben - ohne untracked würde dieser
-      // Effect durch den synchronen DataSource-Aufruf fälschlich auch von luxPageSize abhängen und
-      // bei jedem späteren luxPageSize-Wechsel zusätzlich (doppelt) feuern.
-      untracked(() => {
-        this.dataSource.reset();
-        this.luxPageIndex.set(0);
-        this.dataSource.triggerLoad(0, this.luxSearchValue(), false);
-      });
-    });
-
-    // Lädt auch bei programmatischer luxPageIndex-Änderung (nicht nur Paginator-Klick) nach.
-    // lastRequestedPage verhindert einen doppelten Load, wenn derselbe Seitenwechsel bereits
-    // synchron durch onPageChange oder einen der Effects oberhalb ausgelöst wurde.
-    let isFirstPageRun = true;
-    effect(() => {
-      const page = this.luxPageIndex();
-      if (!this.serverMode()) {
-        return;
-      }
-      if (isFirstPageRun) {
-        isFirstPageRun = false;
-        this.dataSource.lastRequestedPage = page;
-        return;
-      }
-      if (page === this.dataSource.lastRequestedPage) {
-        return;
-      }
-      this.dataSource.triggerLoad(
-        page,
-        untracked(() => this.debouncedSearch()),
-        false
-      );
-    });
-
+    // Muss als Letztes deklariert bleiben: die Ansage darf im Server-Modus erst nach dem
+    // eingetroffenen Ergebnis kommen, und das Server-Gate (effectiveIsLoading) greift nur, wenn
+    // die Lade-Orchestrierung oberhalb den Ladezustand vorher gesetzt hat.
     // Screenreader-Ansage der Trefferzahl: reagiert auf den entprellten Suchterm UND auf die
     // gefilterte Trefferzahl, damit im Server-Modus erst das eingetroffene Ergebnis (statt des alten
     // Stands) angesagt wird. Bewusst NICHT totalCount(): im Client-Modus liefert das bei gesetztem
