@@ -340,6 +340,22 @@ describe('LuxListSelectComponent', () => {
       expect(cards[1].nativeElement.textContent).toContain('Markus Fischer');
     });
 
+    it('Sollte bei luxPageSize-Wechsel den luxPageIndex zurücksetzen (Client-Modus)', () => {
+      // Vorbedingungen testen
+      host.showPagination = true;
+      host.pageSize = 2;
+      host.pageIndex = 2;
+      fixture.detectChanges();
+
+      // Änderungen durchführen
+      host.pageSize = 4;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: Seite zurückgesetzt, alle 4 Items passen jetzt auf eine Seite
+      expect(host.pageIndex).toBe(0);
+      expect(fixture.debugElement.queryAll(By.css('lux-list-select-item')).length).toBe(4);
+    });
+
     it('Sollte bei gleichzeitigem Paginator und Infinite Scroll einen Fehler loggen und die Paginierung nutzen', () => {
       // Vorbedingungen testen
       const errorSpy = spyOn(console, 'error');
@@ -678,6 +694,48 @@ describe('LuxListSelectComponent', () => {
       expect(cards.length).toBe(2);
       expect(cards[0].nativeElement.textContent).toContain('Laura Weber');
       expect(cards[1].nativeElement.textContent).toContain('Markus Fischer');
+    }));
+
+    it('Sollte bei luxPageSize-Wechsel im DAO-Modus Seite 0 mit neuer Größe laden', fakeAsync(() => {
+      // Vorbedingungen testen: initialer Load auf Seite 0 ist abgeschlossen
+      const dao = new TestListSelectHttpDao();
+      host.pageSize = 2;
+      host.httpDao = dao;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+      dao.loadDataSpy.calls.reset();
+
+      // Änderungen durchführen
+      host.pageSize = 10;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: genau ein Load, Seite 0 mit der neuen Seitengröße
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(1);
+      expect(dao.loadDataSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: 0, pageSize: 10 }));
+    }));
+
+    it('Sollte bei gleichzeitigem Setzen des DAO und Ändern von luxPageSize im selben Zyklus nur einmal laden (Review-Finding)', fakeAsync(() => {
+      // Vorbedingungen testen: Paginierung ist bereits aktiv, damit die luxPageSize-Baseline des
+      // luxPageSize-Effects bereits gesetzt ist (Seitengröße 5, noch ohne DAO)
+      host.showPagination = true;
+      fixture.detectChanges();
+
+      // Änderungen durchführen: DAO wird erstmals gesetzt UND luxPageSize im selben Zyklus geändert -
+      // sowohl der luxPageSize-Effect als auch der DAO-Init-Effect würden ohne Koordination je einen
+      // eigenen Load auf Seite 0 auslösen
+      const dao = new TestListSelectHttpDao();
+      host.httpDao = dao;
+      host.pageSize = 10;
+      fixture.detectChanges();
+      tick(50);
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: genau ein Load, mit der neuen Seitengröße
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(1);
+      expect(dao.loadDataSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: 0, pageSize: 10 }));
     }));
 
     it('Sollte im DAO-Modus beim Infinite Scroll anhängen und bei vollständig geladener Menge keine weiteren Requests machen', fakeAsync(() => {

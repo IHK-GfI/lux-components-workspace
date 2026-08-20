@@ -230,19 +230,68 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       }
     });
 
+    // Reagiert auf luxPageSize-Änderungen zur Laufzeit: Seite zurück auf 0, im Server-Modus mit neuer
+    // Seitengröße neu laden (sonst rechnen Paginator und Infinite-Scroll-Folgeseiten mit alter Größe weiter).
+    // Die Baseline wird erst übernommen, sobald Paginierung/Infinite-Scroll/DAO tatsächlich aktiv sind
+    // ("relevant"): vorher hat luxPageSize keine sichtbare Wirkung, und eine kombinierte
+    // Erstkonfiguration (z.B. luxPageIndex zusammen mit einem von 5 abweichenden luxPageSize im
+    // selben Zyklus vorbelegt) darf nicht als Laufzeit-Wechsel missverstanden und der Seitenindex
+    // dadurch nicht fälschlich zurückgesetzt werden.
+    let pageSizeBaselineSet = false;
+    let lastPageSize: number | null = null;
+    // Merkt die zuletzt gesehene DAO-Referenz: ändert sich der DAO im selben Lauf, in dem auch
+    // luxPageSize sich ändert, übernimmt der DAO-Init-Effect (unten) den Load bereits eigenständig
+    // (er liest die aktuelle luxPageSize ohnehin frisch) - ein zusätzlicher Load hier wäre doppelt
+    // (Review-Finding: unkoordinierter Doppel-Load bei gleichzeitigem DAO- und Seitengrößen-Wechsel).
+    let lastSeenDao = untracked(() => this.luxHttpDao());
+    effect(() => {
+      const pageSize = this.luxPageSize();
+      const dao = this.luxHttpDao();
+      const daoChangedThisRun = dao !== lastSeenDao;
+      lastSeenDao = dao;
+      const relevant = !!dao || this.luxShowPagination() || this.luxInfiniteScroll();
+      if (!relevant) {
+        return;
+      }
+      if (!pageSizeBaselineSet) {
+        pageSizeBaselineSet = true;
+        lastPageSize = pageSize;
+        return;
+      }
+      if (pageSize === lastPageSize) {
+        return;
+      }
+      lastPageSize = pageSize;
+      this.luxPageIndex.set(0);
+      if (daoChangedThisRun) {
+        return;
+      }
+      // untracked: der DataSource-Aufruf liest luxHttpDao()/luxPageSize() synchron mit (RxJS
+      // Subject.next() feuert synchron innerhalb des laufenden Effects) - ohne untracked würde
+      // dieser Effect dadurch fälschlich auch von diesen Signalen abhängen und z.B. bei jedem
+      // DAO-Wechsel zusätzlich (doppelt) feuern.
+      untracked(() => {
+        if (dao) {
+          this.dataSource.reset();
+          this.dataSource.triggerLoad(0, this.debouncedSearch(), false);
+        }
+      });
+    });
+
     // Wechsel/Setzen des DAO resettet die bisher geladenen Daten und lädt Seite 0 neu.
     effect(() => {
       const dao = this.luxHttpDao();
       if (!dao) {
         return;
       }
-      this.dataSource.reset();
-      this.luxPageIndex.set(0);
-      this.dataSource.triggerLoad(
-        0,
-        untracked(() => this.luxSearchValue()),
-        false
-      );
+      // untracked: siehe Kommentar beim luxPageSize-Effect oben - ohne untracked würde dieser
+      // Effect durch den synchronen DataSource-Aufruf fälschlich auch von luxPageSize abhängen und
+      // bei jedem späteren luxPageSize-Wechsel zusätzlich (doppelt) feuern.
+      untracked(() => {
+        this.dataSource.reset();
+        this.luxPageIndex.set(0);
+        this.dataSource.triggerLoad(0, this.luxSearchValue(), false);
+      });
     });
 
     // Lädt auch bei programmatischer luxPageIndex-Änderung (nicht nur Paginator-Klick) nach.
