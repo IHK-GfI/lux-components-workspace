@@ -191,6 +191,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     const message = this.luxErrorMessage();
     return message ? [{ text: message, iconName: 'lux-interface-alert-warning-triangle', color: 'yellow' }] : [];
   });
+  protected viewportLoading = computed(() => this.serverMode() && this.loading());
 
   constructor() {
     effect(() => {

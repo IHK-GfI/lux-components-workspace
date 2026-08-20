@@ -88,7 +88,7 @@
   </ng-template>
 
   <ng-template #loadingOverlayTpl>
-    @if (serverMode() && loading()) {
+    @if (viewportLoading()) {
       <div class="lux-list-select-loading-overlay">
         <lux-progress luxType="Spinner" luxMode="indeterminate"></lux-progress>
       </div>
@@ -98,8 +98,8 @@
   @if (infiniteScrollActive()) {
     <div
       class="lux-list-select-viewport lux-flex-auto lux-overflow-y-auto"
-      [class.lux-list-select-loading]="serverMode() && loading()"
-      [attr.aria-busy]="serverMode() && loading() ? true : null"
+      [class.lux-list-select-loading]="viewportLoading()"
+      [attr.aria-busy]="viewportLoading() ? true : null"
       luxInfiniteScroll
       [luxImmediateCallback]="false"
       [luxIsLoading]="effectiveIsLoading()"
@@ -111,8 +111,8 @@
   } @else {
     <div
       class="lux-list-select-viewport lux-flex-auto lux-overflow-y-auto"
-      [class.lux-list-select-loading]="serverMode() && loading()"
-      [attr.aria-busy]="serverMode() && loading() ? true : null"
+      [class.lux-list-select-loading]="viewportLoading()"
+      [attr.aria-busy]="viewportLoading() ? true : null"
     >
       <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
       <ng-container [ngTemplateOutlet]="loadingOverlayTpl"></ng-container>

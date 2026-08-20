@@ -1,9 +1,5 @@
 $lux-list-select-scrollbar-track: #fbfafa;
 $lux-list-select-scrollbar-thumb: #8b8b8b;
-// Figma: List Select / Item / Focused-State (Node 4106-31687); kein passendes Theme-Token gefunden
-// (grep nach "tint"/"focus" in beiden _variables.scss liefert nur --lux-theme-dark-focused, das eine
-// andere Farbe (Schwarz-Tint statt Blau-Tint) definiert)
-$lux-list-select-focus-bg: rgba(58, 95, 148, 0.11);
 
 lux-list-select {
   display: block;
@@ -77,7 +73,7 @@ lux-list-select {
     &:focus-visible {
       outline: var(--lux-theme-outline-dark);
       outline-offset: -2px;
-      background-color: $lux-list-select-focus-bg;
+      background-color: var(--lux-theme-hover-color);
     }
 
     &.lux-selected {
