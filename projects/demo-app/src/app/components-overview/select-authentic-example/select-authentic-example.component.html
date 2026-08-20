@@ -12,6 +12,9 @@
         [luxLabel]="label"
         [luxHint]="hint"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxNoTopLabel]="noTopLabel"
+        [luxNoBottomLabel]="noBottomLabel"
+        [luxNoLabels]="noLabels"
         [(luxDisabled)]="disabled"
         [luxRequired]="required"
         [luxReadonly]="readonly"
@@ -45,6 +48,9 @@
         [luxLabel]="label"
         [luxHint]="hint"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxNoTopLabel]="noTopLabel"
+        [luxNoBottomLabel]="noBottomLabel"
+        [luxNoLabels]="noLabels"
         [(luxDisabled)]="disabled"
         [luxRequired]="required"
         [luxReadonly]="readonly"
@@ -78,6 +84,9 @@
         [luxLabel]="label"
         [luxHint]="hint"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxNoTopLabel]="noTopLabel"
+        [luxNoBottomLabel]="noBottomLabel"
+        [luxNoLabels]="noLabels"
         [(luxDisabled)]="disabled"
         [luxReadonly]="readonly"
         [luxDense]="denseFormat"
@@ -153,6 +162,36 @@
       [(luxValue)]="hint"
     >
     </lux-input-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoTopLabel"
+        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+        [(luxChecked)]="noTopLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoBottomLabel"
+        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+        [(luxChecked)]="noBottomLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoLabels"
+        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+        [(luxChecked)]="noLabels"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
     <lux-toggle-ac
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"

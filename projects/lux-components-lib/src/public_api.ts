@@ -21,6 +21,7 @@ export * from './lib/lux-action/lux-menu/lux-menu.component';
  */
 export * from './lib/lux-directives/lux-aria/lux-aria-base';
 export * from './lib/lux-directives/lux-aria/lux-aria-describedby.directive';
+export * from './lib/lux-directives/lux-aria/lux-aria-disabled.directive';
 export * from './lib/lux-directives/lux-aria/lux-aria-expanded.directive';
 export * from './lib/lux-directives/lux-aria/lux-aria-haspopup.directive';
 export * from './lib/lux-directives/lux-aria/lux-aria-hidden.directive';

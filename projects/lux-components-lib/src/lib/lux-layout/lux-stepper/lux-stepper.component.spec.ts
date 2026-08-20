@@ -59,6 +59,20 @@ describe('LuxStepperComponent', () => {
     expect(stepContents[1].nativeElement.textContent).toEqual('Step 1');
   }));
 
+  it('Sollte Header und Content aus ausgelagerten #header/#content-Templates darstellen', fakeAsync(() => {
+    const externalFixture = TestBed.createComponent(MockExternalTemplateStepperComponent);
+
+    externalFixture.detectChanges();
+
+    const stepHeaders = externalFixture.debugElement.queryAll(By.css('.step-header'));
+    const stepContents = externalFixture.debugElement.queryAll(By.css('.step-content'));
+
+    expect(stepHeaders.length).toBe(1);
+    expect(stepContents.length).toBe(1);
+    expect(stepHeaders[0].nativeElement.textContent.trim()).toEqual('Person');
+    expect(stepContents[0].nativeElement.textContent.trim()).toEqual('Externer Inhalt');
+  }));
+
   it('Sollte den Stepper deaktivieren', fakeAsync(() => {
     // Vorbedingungen testen
     let stepperOverlay = fixture.debugElement.query(By.css('.lux-stepper-disabled-overlay.lux-hidden'));
@@ -490,3 +504,28 @@ class MockStepperComponent {
     });
   }
 }
+
+@Component({
+  selector: 'lux-external-step',
+  template: `
+    <ng-template #header>
+      <span class="step-header">Person</span>
+    </ng-template>
+
+    <ng-template #content>
+      <span class="step-content">Externer Inhalt</span>
+    </ng-template>
+  `,
+  providers: [{ provide: LuxStepComponent, useExisting: MockExternalStepComponent }]
+})
+class MockExternalStepComponent extends LuxStepComponent {}
+
+@Component({
+  template: `
+    <lux-stepper>
+      <lux-external-step></lux-external-step>
+    </lux-stepper>
+  `,
+  imports: [LuxStepperComponent, MockExternalStepComponent]
+})
+class MockExternalTemplateStepperComponent {}

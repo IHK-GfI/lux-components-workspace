@@ -1,38 +1,40 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.7.0](#version-2170)
+  - [Version 21.8.0](#version-2180)
     - [Issues](#issues)
-  - [Version 21.6.0](#version-2160)
+  - [Version 21.7.0](#version-2170)
     - [Issues](#issues-1)
-  - [Version 21.5.0](#version-2150)
+  - [Version 21.6.0](#version-2160)
     - [Issues](#issues-2)
-  - [Version 21.4.0](#version-2140)
+  - [Version 21.5.0](#version-2150)
     - [Issues](#issues-3)
-  - [Version 21.3.1](#version-2131)
+  - [Version 21.4.0](#version-2140)
     - [Issues](#issues-4)
-  - [Version 21.3.0](#version-2130)
+  - [Version 21.3.1](#version-2131)
     - [Issues](#issues-5)
-  - [Version 21.2.0](#version-2120)
+  - [Version 21.3.0](#version-2130)
     - [Issues](#issues-6)
-  - [Version 21.1.0](#version-2110)
+  - [Version 21.2.0](#version-2120)
     - [Issues](#issues-7)
-  - [Version 21.0.0](#version-2100)
+  - [Version 21.1.0](#version-2110)
     - [Issues](#issues-8)
-  - [Version 19.7.0](#version-1970)
+  - [Version 21.0.0](#version-2100)
     - [Issues](#issues-9)
-  - [Version 19.6.0](#version-1960)
+  - [Version 19.7.0](#version-1970)
     - [Issues](#issues-10)
-  - [Version 19.5.0](#version-1950)
+  - [Version 19.6.0](#version-1960)
     - [Issues](#issues-11)
-  - [Version 19.4.0](#version-1940)
+  - [Version 19.5.0](#version-1950)
     - [Issues](#issues-12)
-  - [Version 19.3.0](#version-1930)
+  - [Version 19.4.0](#version-1940)
     - [Issues](#issues-13)
-  - [Version 19.2.0](#version-1920)
+  - [Version 19.3.0](#version-1930)
     - [Issues](#issues-14)
-  - [Version 19.1.0](#version-1910)
+  - [Version 19.2.0](#version-1920)
     - [Issues](#issues-15)
+  - [Version 19.1.0](#version-1910)
+    - [Issues](#issues-16)
   - [Version 19.0.0](#version-1900)
     - [Technische Änderungen](#technische-änderungen)
       - [Umstellung auf Standalone-Components](#umstellung-auf-standalone-components)
@@ -40,7 +42,16 @@
       - [lux-file-list ist deprecated](#lux-file-list-ist-deprecated)
     - [Optische Änderungen](#optische-änderungen)
     - [Allgemein](#allgemein)
-    - [Issues](#issues-16)
+    - [Issues](#issues-17)
+
+## Version 21.8.0
+
+### Issues
+
+- Issue #275: Neue Optionen `luxStickyHeader` und `luxStickyHeaderOffset` für lux-panel und lux-accordion. Der Header eines geöffneten Panels bleibt beim Scrollen am oberen Rand des Scroll-Bereichs sichtbar, bis der Panel-Inhalt aus dem Sichtbereich geschoben ist.
+- Issue #274: Sicherheitsrisiko: window.open() ohne "noopener,noreferrer" bei externen Links in LuxLinkComponent (Reverse Tabnabbing). lux-link und lux-link-plain öffnen Links in neuen Tabs jetzt mit noopener,noreferrer, zusätzlich setzen die Anker bei luxBlank das rel-Attribut "noopener noreferrer".
+- Issue #267: A11y: luxNoTopLabel/luxNoLabels blenden das Label nur noch visuell aus (lux-sr-only), das `<label>` bleibt im DOM und der zugängliche Name erhalten. Neu: luxAriaLabel und luxAriaLabelledby als Inputs auf allen Form-Controls. Behoben: doppelte DOM-ID in lux-select-ac. Hinweis 1: Anwendungs-Tests, die bei luxNoTopLabel auf ein fehlendes `<label>` prüfen, müssen angepasst werden. Hinweis 2: luxNoBottomLabel/luxNoLabels entfernen weiterhin bewusst Hint und Fehlermeldung aus dem DOM. Hinweis 3: lux-file-list und lux-file-upload folgen in einem separaten Issue. Hinweis 4 für fakeAsync-Tests: Die Form-Controls planen beim Initialisieren einen einmaligen setTimeout für die A11y-Prüfung ein, der in fakeAsync-Tests per tick() oder flush() abgearbeitet werden muss.
+- Issue #268: lux-menu-Items können per luxDisabledAria wahrnehmbar deaktiviert werden (sichtbar, fokussierbar, Screenreader sagen "deaktiviert" an); Klick/Enter emittiert luxClickNotAllowed statt luxClicked. Bewusst ohne Styling: aria-disabled Items sehen wie normale Items aus, die Anwendung reagiert über luxClickNotAllowed. Abgrenzung: luxDisabled (aus der Tastaturreihenfolge entfernt) vs. luxDisabledAria (wahrnehmbar deaktiviert) vs. luxHidden (ausgeblendet). Neu dafür: Direktive luxAriaDisabled, die aria-disabled zuverlässig auch an Material-Elementen setzt.
 
 ## Version 21.7.0
 
@@ -152,7 +163,7 @@
 - Issue #134: Erweiterung Button-Komponente: luxDisabledAria & ClickNotAllowed Event (#145)
 - Issue #137: Umstellung auf Angular v21 (#147)
 - Issue #157: Finalisierung Release v21: Bugfixes, Dokumentation, Updater,... (#160)
-    - [Issues](#issues-7)
+    - [Issues](#issues-8)
 
 ## Version 19.7.0
 

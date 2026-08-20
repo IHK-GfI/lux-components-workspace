@@ -12,6 +12,9 @@
         [luxPlaceholder]="placeholder"
         [luxHint]="hint"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxNoTopLabel]="noTopLabel"
+        [luxNoBottomLabel]="noBottomLabel"
+        [luxNoLabels]="noLabels"
         [luxOptionLabelProp]="renderProperty"
         [luxErrorMessageNotAnOption]="errorMessageNotAnOption"
         [luxOptions]="getOptions()"
@@ -70,6 +73,9 @@
         [luxPlaceholder]="placeholder"
         [luxHint]="hint"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxNoTopLabel]="noTopLabel"
+        [luxNoBottomLabel]="noBottomLabel"
+        [luxNoLabels]="noLabels"
         [luxOptionLabelProp]="renderProperty"
         [luxErrorMessageNotAnOption]="errorMessageNotAnOption"
         [luxOptions]="getOptions()"
@@ -134,6 +140,36 @@
       [(luxValue)]="hint"
     >
     </lux-input-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoTopLabel"
+        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+        [(luxChecked)]="noTopLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoBottomLabel"
+        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+        [(luxChecked)]="noBottomLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoLabels"
+        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+        [(luxChecked)]="noLabels"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
     <lux-input-ac
       luxName="autocomplete_luxPlaceholder"
       luxLabel="luxPlaceholder"
