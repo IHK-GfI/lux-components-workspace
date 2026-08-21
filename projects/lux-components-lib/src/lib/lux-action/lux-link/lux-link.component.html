@@ -1,125 +1,125 @@
-@if (luxRaised && !luxRounded && !luxFlat && !luxStroked) {
+@if (luxRaised() && !luxRounded() && !luxFlat() && !luxStroked()) {
   <a
     matButton="elevated"
     role="button"
     draggable="false"
     class="lux-button lux-button-raised lux-link"
-    [attr.href]="luxDisabled || !luxHref ? null : luxHref"
-    [target]="luxBlank ? '_blank' : '_self'"
-    [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
-    [class.mat-primary]="luxColor === 'primary'"
-    [class.mat-accent]="luxColor === 'accent'"
-    [class.mat-warn]="luxColor === 'warn'"
+    [attr.href]="luxDisabled() || !luxHref() ? null : luxHref()"
+    [target]="luxBlank() ? '_blank' : '_self'"
+    [attr.rel]="luxBlank() ? 'noopener noreferrer' : null"
+    [class.mat-primary]="luxColor() === 'primary'"
+    [class.mat-accent]="luxColor() === 'accent'"
+    [class.mat-warn]="luxColor() === 'warn'"
     (click)="redirectToHref($event)"
     (auxclick)="auxClicked($event)"
     (keydown.enter)="redirectToHref($event)"
     (keydown.space)="redirectToHref($event)"
-    [attr.disabled]="luxDisabled ? true : null"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
-    [attr.aria-disabled]="luxDisabled ? 'true' : null"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-disabled': luxDisabled }"
+    [attr.disabled]="luxDisabled() ? true : null"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
+    [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-disabled': luxDisabled() }"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
+    [luxTagId]="luxTagId()"
   >
     <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
   </a>
-} @else if (!luxRaised && !luxRounded && luxFlat && !!luxColor && !luxStroked) {
+} @else if (!luxRaised() && !luxRounded() && luxFlat() && !!luxColor() && !luxStroked()) {
   <a
     matButton="filled"
     role="button"
     draggable="false"
     class="lux-button lux-button-flat lux-link"
-    [attr.href]="luxDisabled || !luxHref ? null : luxHref"
-    [target]="luxBlank ? '_blank' : '_self'"
-    [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
-    [class.mat-primary]="luxColor === 'primary'"
-    [class.mat-accent]="luxColor === 'accent'"
-    [class.mat-warn]="luxColor === 'warn'"
+    [attr.href]="luxDisabled() || !luxHref() ? null : luxHref()"
+    [target]="luxBlank() ? '_blank' : '_self'"
+    [attr.rel]="luxBlank() ? 'noopener noreferrer' : null"
+    [class.mat-primary]="luxColor() === 'primary'"
+    [class.mat-accent]="luxColor() === 'accent'"
+    [class.mat-warn]="luxColor() === 'warn'"
     (click)="redirectToHref($event)"
     (auxclick)="auxClicked($event)"
     (keydown.enter)="redirectToHref($event)"
     (keydown.space)="redirectToHref($event)"
-    [attr.disabled]="luxDisabled ? true : null"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
-    [attr.aria-disabled]="luxDisabled ? 'true' : null"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-disabled': luxDisabled }"
+    [attr.disabled]="luxDisabled() ? true : null"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
+    [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-disabled': luxDisabled() }"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
+    [luxTagId]="luxTagId()"
   >
     <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
   </a>
-} @else if (!luxRaised && !luxRounded && !luxFlat && luxStroked) {
+} @else if (!luxRaised() && !luxRounded() && !luxFlat() && luxStroked()) {
   <a
     matButton="outlined"
     role="button"
     draggable="false"
     class="lux-button lux-button-stroked lux-link"
-    [attr.href]="luxDisabled || !luxHref ? null : luxHref"
-    [target]="luxBlank ? '_blank' : '_self'"
-    [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
-    [class.mat-primary]="luxColor === 'primary'"
-    [class.mat-accent]="luxColor === 'accent'"
-    [class.mat-warn]="luxColor === 'warn'"
+    [attr.href]="luxDisabled() || !luxHref() ? null : luxHref()"
+    [target]="luxBlank() ? '_blank' : '_self'"
+    [attr.rel]="luxBlank() ? 'noopener noreferrer' : null"
+    [class.mat-primary]="luxColor() === 'primary'"
+    [class.mat-accent]="luxColor() === 'accent'"
+    [class.mat-warn]="luxColor() === 'warn'"
     (click)="redirectToHref($event)"
     (auxclick)="auxClicked($event)"
     (keydown.enter)="redirectToHref($event)"
     (keydown.space)="redirectToHref($event)"
-    [attr.disabled]="luxDisabled ? true : null"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
-    [attr.aria-disabled]="luxDisabled ? 'true' : null"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-disabled': luxDisabled }"
+    [attr.disabled]="luxDisabled() ? true : null"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
+    [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-disabled': luxDisabled() }"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
+    [luxTagId]="luxTagId()"
   >
     <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
   </a>
-} @else if (!luxRaised && luxRounded && !luxFlat && !luxStroked) {
+} @else if (!luxRaised() && luxRounded() && !luxFlat() && !luxStroked()) {
   <a
     mat-fab
     role="button"
     draggable="false"
     class="lux-button lux-button-rounded lux-link"
-    [class.mat-primary]="luxColor === 'primary'"
-    [class.mat-accent]="luxColor === 'accent'"
-    [class.mat-warn]="luxColor === 'warn'"
-    [attr.href]="luxDisabled || !luxHref ? null : luxHref"
-    [target]="luxBlank ? '_blank' : '_self'"
-    [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
+    [class.mat-primary]="luxColor() === 'primary'"
+    [class.mat-accent]="luxColor() === 'accent'"
+    [class.mat-warn]="luxColor() === 'warn'"
+    [attr.href]="luxDisabled() || !luxHref() ? null : luxHref()"
+    [target]="luxBlank() ? '_blank' : '_self'"
+    [attr.rel]="luxBlank() ? 'noopener noreferrer' : null"
     (click)="redirectToHref($event)"
     (auxclick)="auxClicked($event)"
     (keydown.enter)="redirectToHref($event)"
     (keydown.space)="redirectToHref($event)"
-    [attr.disabled]="luxDisabled ? true : null"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
-    [attr.aria-disabled]="luxDisabled ? 'true' : null"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-disabled': luxDisabled }"
+    [attr.disabled]="luxDisabled() ? true : null"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
+    [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-disabled': luxDisabled() }"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
+    [luxTagId]="luxTagId()"
   >
     <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
   </a>
-} @else if (luxRounded && luxStroked) {
+} @else if (luxRounded() && luxStroked()) {
   <a
     mat-fab
     role="button"
     draggable="false"
     class="lux-button lux-button-rounded lux-stroked lux-link"
-    [class.mat-primary]="luxColor === 'primary'"
-    [class.mat-accent]="luxColor === 'accent'"
-    [class.mat-warn]="luxColor === 'warn'"
-    [attr.href]="luxDisabled || !luxHref ? null : luxHref"
-    [target]="luxBlank ? '_blank' : '_self'"
-    [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
+    [class.mat-primary]="luxColor() === 'primary'"
+    [class.mat-accent]="luxColor() === 'accent'"
+    [class.mat-warn]="luxColor() === 'warn'"
+    [attr.href]="luxDisabled() || !luxHref() ? null : luxHref()"
+    [target]="luxBlank() ? '_blank' : '_self'"
+    [attr.rel]="luxBlank() ? 'noopener noreferrer' : null"
     (click)="redirectToHref($event)"
     (auxclick)="auxClicked($event)"
     (keydown.enter)="redirectToHref($event)"
     (keydown.space)="redirectToHref($event)"
-    [attr.disabled]="luxDisabled ? true : null"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
-    [attr.aria-disabled]="luxDisabled ? 'true' : null"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-fab-stroked-default': !luxColor, 'lux-disabled': luxDisabled }"
+    [attr.disabled]="luxDisabled() ? true : null"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
+    [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-fab-stroked-default': !luxColor(), 'lux-disabled': luxDisabled() }"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
+    [luxTagId]="luxTagId()"
   >
     <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
   </a>
@@ -129,22 +129,22 @@
     role="button"
     draggable="false"
     class="lux-button lux-button-basic lux-link"
-    [attr.href]="luxDisabled || !luxHref ? null : luxHref"
-    [target]="luxBlank ? '_blank' : '_self'"
-    [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
-    [class.mat-primary]="luxColor === 'primary'"
-    [class.mat-accent]="luxColor === 'accent'"
-    [class.mat-warn]="luxColor === 'warn'"
+    [attr.href]="luxDisabled() || !luxHref() ? null : luxHref()"
+    [target]="luxBlank() ? '_blank' : '_self'"
+    [attr.rel]="luxBlank() ? 'noopener noreferrer' : null"
+    [class.mat-primary]="luxColor() === 'primary'"
+    [class.mat-accent]="luxColor() === 'accent'"
+    [class.mat-warn]="luxColor() === 'warn'"
     (click)="redirectToHref($event)"
     (auxclick)="auxClicked($event)"
     (keydown.enter)="redirectToHref($event)"
     (keydown.space)="redirectToHref($event)"
-    [attr.disabled]="luxDisabled ? true : null"
-    [attr.aria-label]="luxLabel ? luxLabel : ''"
-    [attr.aria-disabled]="luxDisabled ? 'true' : null"
-    [ngClass]="{ 'lux-icon-button': !!luxIconName, 'lux-disabled': luxDisabled }"
+    [attr.disabled]="luxDisabled() ? true : null"
+    [attr.aria-label]="luxLabel() ? luxLabel() : ''"
+    [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+    [ngClass]="{ 'lux-icon-button': !!luxIconName(), 'lux-disabled': luxDisabled() }"
     luxTagIdHandler
-    [luxTagId]="luxTagId"
+    [luxTagId]="luxTagId()"
   >
     <ng-container *ngTemplateOutlet="luxLinkContent"></ng-container>
   </a>
@@ -152,16 +152,16 @@
 
 <ng-template #luxLinkContent>
   <div class="lux-button-content-container">
-    @if (!luxIconShowRight && luxIconName) {
-      <lux-icon [luxIconName]="luxIconName" class="lux-button-icon"></lux-icon>
+    @if (!luxIconShowRight() && luxIconName()) {
+      <lux-icon [luxIconName]="luxIconName()" class="lux-button-icon"></lux-icon>
     }
-    @if (luxLabel && !luxRounded) {
+    @if (luxLabel() && !luxRounded()) {
       <span class="lux-button-label">
-        {{ luxLabel }}
+        {{ luxLabel() }}
       </span>
     }
-    @if (luxIconShowRight && luxIconName) {
-      <lux-icon [luxIconName]="luxIconName" class="lux-button-icon"></lux-icon>
+    @if (luxIconShowRight() && luxIconName()) {
+      <lux-icon [luxIconName]="luxIconName()" class="lux-button-icon"></lux-icon>
     }
   </div>
 </ng-template>

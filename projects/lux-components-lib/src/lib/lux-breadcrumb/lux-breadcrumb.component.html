@@ -1,6 +1,6 @@
 <nav class="lux-breadcrumb" aria-label="Seitenpfad">
-  <ol class="lux-breadcrumb-container" [ngClass]="{ 'lux-breadcrumb-container-wrap': luxWrap }">
-    @for (item of luxEntries ?? []; track item) {
+  <ol class="lux-breadcrumb-container" [ngClass]="{ 'lux-breadcrumb-container-wrap': luxWrap() }">
+    @for (item of luxEntries() ?? []; track item) {
       @if (!$last) {
         <li
           class="lux-breadcrumb-item"

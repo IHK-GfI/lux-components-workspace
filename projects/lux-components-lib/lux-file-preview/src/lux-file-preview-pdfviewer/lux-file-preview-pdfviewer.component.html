@@ -6,7 +6,7 @@
     luxColor="accent"
     [luxRaised]="true"
     [luxTagId]="downloadTagId"
-    luxAriaLabel="{{ 'luxc.file-preview.download.arialabel' | transloco}}"
+    luxAriaLabel="{{ 'luxc.file-preview.download.arialabel' | transloco }}"
   ></lux-button>
   <lux-button
     class="lux-file-preview-toolbar-close-button"
@@ -14,14 +14,14 @@
     (luxClicked)="onClose()"
     [luxRaised]="true"
     [luxTagId]="closeTagId"
-    luxAriaLabel="{{ 'luxc.file-preview.close.arialabel' | transloco}}"
+    luxAriaLabel="{{ 'luxc.file-preview.close.arialabel' | transloco }}"
   ></lux-button>
 </lux-file-preview-toolbar>
 
-<div class="overlay-content" [ngStyle]="{ width: width + 'px', height: height + 'px' }">
-  @if (url) {
-  <object [data]="url" type="application/pdf" width="100%" height="98%" standby="PDF wird geladen...">
-    <p>Ihr Browser unterstützt keine PDF-Vorschau.</p>
-  </object>
+<div class="overlay-content" [ngStyle]="{ width: width() + 'px', height: height() + 'px' }">
+  @if (url()) {
+    <object [data]="url()" type="application/pdf" width="100%" height="98%" standby="PDF wird geladen...">
+      <p>Ihr Browser unterstützt keine PDF-Vorschau.</p>
+    </object>
   }
 </div>

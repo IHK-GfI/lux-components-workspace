@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -41,13 +41,13 @@ describe('LuxProgressComponent', () => {
       const blue = fixture.debugElement.query(By.css('.lux-bg-color-blue'));
       expect(blue).toBeDefined();
       // Änderungen durchführen
-      component.color = 'red';
+      component.color.set('red');
       fixture.detectChanges();
       // Nachbedingungen prüfen
       const red = fixture.debugElement.query(By.css('.lux-bg-color-red'));
       expect(red).toBeDefined();
       // Änderungen durchführen
-      component.color = 'purple';
+      component.color.set('purple');
       fixture.detectChanges();
       // Nachbedingungen prüfen
       const purple = fixture.debugElement.query(By.css('.lux-bg-color-purple'));
@@ -56,12 +56,12 @@ describe('LuxProgressComponent', () => {
 
     it('Sollte den Wert ändern (mode = determinate)', fakeAsync(() => {
       // Vorbedingungen testen
-      component.mode = 'determinate';
+      component.mode.set('determinate');
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressBar)).componentInstance;
       LuxTestHelper.wait(fixture);
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
-      component.value = 10;
+      component.value.set(10);
       LuxTestHelper.wait(fixture);
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
@@ -77,7 +77,7 @@ describe('LuxProgressComponent', () => {
       expect(progressbar).not.toBeNull();
       expect(spinner).toBeNull();
       // Änderungen durchführen
-      component.type = 'Spinner';
+      component.type.set('Spinner');
       fixture.detectChanges();
       // Nachbedingungen prüfen
       progressbar = fixture.debugElement.query(By.css('mat-progress-bar'));
@@ -88,18 +88,18 @@ describe('LuxProgressComponent', () => {
 
     it('Sollte die CSS-Klassen für Farben eintragen', fakeAsync(() => {
       // Vorbedingungen testen
-      component.type = 'Spinner';
+      component.type.set('Spinner');
       fixture.detectChanges();
       const blue = fixture.debugElement.query(By.css('.lux-bg-color-blue'));
       expect(blue).toBeDefined();
       // Änderungen durchführen
-      component.color = 'red';
+      component.color.set('red');
       fixture.detectChanges();
       // Nachbedingungen prüfen
       const red = fixture.debugElement.query(By.css('.lux-bg-color-red'));
       expect(red).toBeDefined();
       // Änderungen durchführen
-      component.color = 'purple';
+      component.color.set('purple');
       fixture.detectChanges();
       // Nachbedingungen prüfen
       const purple = fixture.debugElement.query(By.css('.lux-bg-color-purple'));
@@ -108,15 +108,15 @@ describe('LuxProgressComponent', () => {
 
     it('Sollte den Wert ändern (mode = determinate)', fakeAsync(() => {
       // Vorbedingungen testen
-      component.type = 'Spinner';
+      component.type.set('Spinner');
       fixture.detectChanges();
 
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressSpinner)).componentInstance;
-      component.mode = 'determinate';
+      component.mode.set('determinate');
       LuxTestHelper.wait(fixture);
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
-      component.value = 10;
+      component.value.set(10);
       LuxTestHelper.wait(fixture);
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
@@ -126,16 +126,14 @@ describe('LuxProgressComponent', () => {
 
 @Component({
   selector: 'lux-mock-progress-bar',
-  template: `<lux-progress [luxType]="type" [luxMode]="mode" [luxColor]="color" [luxSize]="size" [luxValue]="value"></lux-progress>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: `<lux-progress [luxType]="type()" [luxMode]="mode()" [luxColor]="color()" [luxSize]="size()" [luxValue]="value()"></lux-progress>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxProgressComponent]
 })
 class LuxMockProgressBarComponent {
-  type?: LuxProgressType;
-  mode?: LuxProgressModeType;
-  color?: LuxProgressColor;
-  size?: LuxProgressSizeType;
-  value = 0;
-
-  constructor() {}
+  type = signal<LuxProgressType | undefined>(undefined);
+  mode = signal<LuxProgressModeType | undefined>(undefined);
+  color = signal<LuxProgressColor | undefined>(undefined);
+  size = signal<LuxProgressSizeType | undefined>(undefined);
+  value = signal(0);
 }

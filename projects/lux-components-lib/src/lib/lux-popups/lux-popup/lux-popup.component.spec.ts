@@ -1,10 +1,10 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxComponentsConfigModule } from '../../lux-components-config/lux-components-config.module';
+import { provideLuxComponentsConfig } from '../../lux-components-config/lux-components-config.provider';
 import { LuxPopupTriggerDirective } from './lux-popup-trigger.directive';
 import { LuxPopupComponent } from './lux-popup.component';
 import { LuxPopupCloseReason, LuxPopupPosition } from './lux-popup.types';
@@ -17,14 +17,12 @@ describe('LuxPopupComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        importProvidersFrom([
-          LuxComponentsConfigModule.forRoot({
-            labelConfiguration: {
-              allUppercase: true,
-              notAppliedTo: []
-            }
-          })
-        ]),
+        provideLuxComponentsConfig({
+          labelConfiguration: {
+            allUppercase: true,
+            notAppliedTo: []
+          }
+        }),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()

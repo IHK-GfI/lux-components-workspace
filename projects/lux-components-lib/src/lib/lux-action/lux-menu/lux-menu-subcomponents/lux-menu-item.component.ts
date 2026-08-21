@@ -1,69 +1,48 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, input, Input, Output, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 import { LuxActionComponentBaseClass } from '../../lux-action-model/lux-action-component-base.class';
 
 @Component({
   selector: 'lux-menu-item',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ''
 })
 export class LuxMenuItemComponent extends LuxActionComponentBaseClass {
-  @Input() luxButtonTooltip = '';
-  @Input() luxMenuTooltip = '';
-  @Input() luxPrio = 0;
-  @Input() luxButtonBadge?: string;
-  @Input() luxButtonBadgeColor: LuxThemePalette = 'primary';
-  luxMenuItemSubtitle = input<string>('');
-  luxMenuItemSelected = input<boolean>(false);
+  readonly luxButtonTooltip = input<string>('');
+  readonly luxMenuTooltip = input<string>('');
+  readonly luxPrio = input<number>(0);
+  readonly luxButtonBadge = input<string | undefined>(undefined);
+  readonly luxButtonBadgeColor = input<LuxThemePalette>('primary');
+  readonly luxMenuItemSubtitle = input<string>('');
+  readonly luxMenuItemSelected = input<boolean>(false);
 
   luxClickNotAllowed = output<Event>();
-  @Output() luxHiddenChange = new EventEmitter<boolean>();
-  @Output() luxHideLabelIfExtendedChange = new EventEmitter<boolean>();
-  @Output() luxAlwaysVisibleChange = new EventEmitter<boolean>();
+  luxHiddenChange = output<boolean>();
+  luxHideLabelIfExtendedChange = output<boolean>();
+  luxAlwaysVisibleChange = output<boolean>();
 
-  _luxAlwaysVisible = true;
-  _luxHideLabelIfExtended = false;
-  _luxHidden = false;
+  readonly luxAlwaysVisible = input<boolean>(true);
+  readonly luxHideLabelIfExtended = input<boolean>(false);
+  readonly luxHidden = input<boolean>(false);
+  readonly luxClass = input<string | string[] | Set<string> | Record<string, any> | undefined>(undefined); //vgl. ngClass
 
   // Wird vom LuxMenuComponent mit dem berechneten Breitenwert belegt
   width = 0;
   // Wird vom LuxMenuComponent mit dem passenden Zustand belegt
   extended = false;
 
-  get luxAlwaysVisible() {
-    return this._luxAlwaysVisible;
-  }
-
-  @Input() set luxAlwaysVisible(value: boolean) {
-    this._luxAlwaysVisible = value;
-
-    this.luxAlwaysVisibleChange.emit(value);
-  }
-
-  get luxHideLabelIfExtended() {
-    return this._luxHideLabelIfExtended;
-  }
-
-  @Input() set luxHideLabelIfExtended(value: boolean) {
-    this._luxHideLabelIfExtended = value;
-
-    this.luxHideLabelIfExtendedChange.emit(value);
-  }
-
-  get luxHidden() {
-    return this._luxHidden;
-  }
-
-  @Input() set luxHidden(value: boolean) {
-    this._luxHidden = value;
-
-    this.luxHiddenChange.emit(value);
-  }
-
-  @Input() luxClass?: string | string[] | Set<string> | Record<string, any>; //vgl. ngClass
-
   constructor() {
     super();
+
+    effect(() => {
+      this.luxAlwaysVisibleChange.emit(this.luxAlwaysVisible());
+    });
+    effect(() => {
+      this.luxHideLabelIfExtendedChange.emit(this.luxHideLabelIfExtended());
+    });
+    effect(() => {
+      this.luxHiddenChange.emit(this.luxHidden());
+    });
   }
 
   clicked(event: Event) {

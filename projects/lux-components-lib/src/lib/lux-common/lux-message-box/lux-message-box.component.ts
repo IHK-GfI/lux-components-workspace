@@ -1,6 +1,18 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostBinding, Input, Output, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  HostBinding,
+  inject,
+  input,
+  model,
+  output,
+  viewChild
+} from '@angular/core';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -11,93 +23,83 @@ import { LuxMessageComponent } from './lux-message-box-subcomponents/lux-message
 @Component({
   selector: 'lux-message-box',
   templateUrl: './lux-message-box.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAriaLabelDirective, LuxMessageComponent, NgClass, LuxPaginatorComponent, TranslocoPipe]
 })
 export class LuxMessageBoxComponent {
   private liveAnnouncer = inject(LiveAnnouncer);
   private tService = inject(TranslocoService);
 
-  private _luxMessages: ILuxMessage[] = [];
-  private _luxMaximumDisplayed = 1;
-  private _luxIndex = 0;
-
-  displayedMessages: ILuxMessage[] = [];
-
   @HostBinding('class.mat-elevation-z4') boxShadow = true;
 
-  @ViewChild('messagebox', { static: false }) messageBoxElRef?: ElementRef;
+  readonly messageBoxElRef = viewChild<ElementRef>('messagebox');
 
-  @Output() luxMessageChanged = new EventEmitter<ILuxMessageChangeEvent>();
-  @Output() luxMessageClosed = new EventEmitter<ILuxMessageCloseEvent>();
-  @Output() luxMessageBoxClosed = new EventEmitter<void>();
-  @Output() luxMessagesChange = new EventEmitter<ILuxMessage[]>();
+  luxMessageChanged = output<ILuxMessageChangeEvent>();
+  luxMessageClosed = output<ILuxMessageCloseEvent>();
+  luxMessageBoxClosed = output<void>();
 
-  @Input() luxGrabFocus = false;
-  @Input() set luxIndex(index: number) {
-    if (index < 0) {
-      index = 0;
+  readonly luxGrabFocus = input(false);
+  readonly luxIndex = model(0);
+  readonly luxMaximumDisplayed = model(1);
+  readonly luxMessages = model<ILuxMessage[]>([]);
+
+  private readonly clampedMaximumDisplayed = computed(() => Math.max(0, this.luxMaximumDisplayed()));
+
+  private readonly totalPages = computed(() => {
+    const max = this.clampedMaximumDisplayed();
+    const length = this.luxMessages().length;
+
+    if (max <= 0) {
+      return length > 0 ? 1 : 0;
     }
-    if (index > this.luxMessages.length) {
-      index = this.luxMessages.length;
-    }
 
-    this._luxIndex = index;
-    this.updateDisplayedMessages(index);
-  }
+    return Math.ceil(length / max);
+  });
 
-  get luxIndex(): number {
-    return this._luxIndex;
-  }
+  readonly clampedIndex = computed(() => {
+    const lastPageIndex = Math.max(0, this.totalPages() - 1);
+    return Math.min(Math.max(this.luxIndex(), 0), lastPageIndex);
+  });
 
-  @Input() set luxMaximumDisplayed(max: number) {
-    if (max < 0) {
-      max = 0;
-    }
-    this._luxMaximumDisplayed = max;
+  readonly displayedMessages = computed(() => {
+    const max = this.clampedMaximumDisplayed();
+    const start = this.clampedIndex() * max;
+    const end = start + max;
+    return this.luxMessages().slice(start, end);
+  });
 
-    this.updateDisplayedMessages(this.luxIndex);
-  }
+  private previousMessages: ILuxMessage[] = [];
 
-  get luxMaximumDisplayed(): number {
-    return this._luxMaximumDisplayed;
-  }
+  constructor() {
+    effect(() => {
+      const messages = this.luxMessages();
+      const hadMessages = this.previousMessages.length > 0;
 
-  @Input() set luxMessages(messages: ILuxMessage[]) {
-    if (messages && messages.length > 0) {
-      this._luxMessages = messages;
-      this.updateDisplayedMessages(this.luxIndex);
-
-      setTimeout(() => {
-        if (this.luxGrabFocus) {
-          if (this.messageBoxElRef) {
-            this.messageBoxElRef.nativeElement.focus();
-          }
-        } else {
-          let messageText = '';
-          if (messages.length === 1) {
-            messageText += this.tService.translate('luxc.message.announce.1_message');
+      if (messages && messages.length > 0) {
+        setTimeout(() => {
+          if (this.luxGrabFocus()) {
+            this.messageBoxElRef()?.nativeElement.focus();
           } else {
-            messageText += this.tService.translate('luxc.message.announce.x_messages', { count: messages.length });
+            let messageText = '';
+            if (messages.length === 1) {
+              messageText += this.tService.translate('luxc.message.announce.1_message');
+            } else {
+              messageText += this.tService.translate('luxc.message.announce.x_messages', { count: messages.length });
+            }
+            messages.forEach((message) => (messageText += message.text + '\n'));
+            this.liveAnnouncer.announce(messageText);
           }
-          messages.forEach((message) => (messageText += message.text + '\n'));
-          this.liveAnnouncer.announce(messageText);
+        });
+      } else {
+        // Wenn es vorher Werte gab, ein Closed-Event ausgeben
+        if (hadMessages) {
+          this.luxMessageBoxClosed.emit();
         }
-      });
-    } else {
-      // Wenn es vorher Werte gab, ein Closed-Event ausgeben
-      if (this.luxMessages.length > 0) {
-        this.luxMessageBoxClosed.emit();
+        this.liveAnnouncer.announce(this.tService.translate('luxc.message.announce.0_messages'));
       }
-      this._luxMessages = [];
-      this.liveAnnouncer.announce(this.tService.translate('luxc.message.announce.0_messages'));
-    }
 
-    this.luxMessagesChange.emit(this._luxMessages);
-  }
-
-  get luxMessages(): ILuxMessage[] {
-    return this._luxMessages;
+      this.previousMessages = messages;
+    });
   }
 
   /**
@@ -108,12 +110,12 @@ export class LuxMessageBoxComponent {
    */
   messageClosed(closedMessage: ILuxMessage) {
     const eventPayload: ILuxMessageCloseEvent = {
-      index: this.luxMessages.findIndex((compareMessage: ILuxMessage) => compareMessage === closedMessage),
+      index: this.luxMessages().findIndex((compareMessage: ILuxMessage) => compareMessage === closedMessage),
       message: closedMessage
     };
     this.luxMessageClosed.emit(eventPayload);
 
-    this.luxMessages = this.luxMessages.filter((message: ILuxMessage) => message !== closedMessage);
+    this.luxMessages.update((messages) => messages.filter((message: ILuxMessage) => message !== closedMessage));
   }
 
   /**
@@ -122,15 +124,15 @@ export class LuxMessageBoxComponent {
    * @param pageEvent
    */
   pageChanged(pageEvent: LuxPageEvent) {
-    const previousDisplayedMessages = [...this.displayedMessages];
-    const previousIndex = this.luxIndex;
+    const previousDisplayedMessages = [...this.displayedMessages()];
+    const previousIndex = this.clampedIndex();
 
-    this.updateDisplayedMessages(pageEvent.pageIndex);
+    this.luxIndex.set(pageEvent.pageIndex);
 
     const messageChangePayload: ILuxMessageChangeEvent = {
       currentPage: {
-        index: this.luxIndex,
-        messages: [...this.displayedMessages]
+        index: this.clampedIndex(),
+        messages: [...this.displayedMessages()]
       },
       previousPage: {
         index: previousIndex,
@@ -139,36 +141,5 @@ export class LuxMessageBoxComponent {
     };
 
     this.luxMessageChanged.emit(messageChangePayload);
-  }
-
-  /**
-   * Aktualisiert die aktuell angezeigten Nachrichten anhand des Index.
-   * @param pageIndex
-   */
-  updateDisplayedMessages(pageIndex: number) {
-    const start = pageIndex * this.luxMaximumDisplayed;
-    const end = start + this.luxMaximumDisplayed;
-
-    // Wenn der luxIndex und der PageIndex ungleich sind, den luxIndex aktualisieren
-    if (this.luxIndex !== pageIndex) {
-      this._luxIndex = pageIndex;
-    }
-
-    // Checken, ob der Index nicht die Array-Größe sprengt
-    if (this.luxIndex > this.luxMessages.length) {
-      this._luxIndex = this.luxMessages.length;
-    }
-
-    if (this.luxIndex < 0) {
-      this._luxIndex = 0;
-    }
-
-    // Nachrichten aktualisieren
-    this.displayedMessages = this.luxMessages.slice(start, end);
-
-    // Wenn die angezeigten Nachrichten leer sind, aber noch weitere vorhanden sind, die vorherige Seite anzeigen
-    if (this.displayedMessages.length === 0 && this.luxMessages.length > 0 && this.luxIndex > 0) {
-      this.updateDisplayedMessages(this.luxIndex - 1);
-    }
   }
 }

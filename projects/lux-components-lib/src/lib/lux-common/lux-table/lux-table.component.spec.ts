@@ -56,18 +56,17 @@ describe('LuxTableComponent', () => {
 
     it('Sollte Spalten per luxShowColumnSelector und hiddenColumns ausblenden', fakeAsync(() => {
       // Vorbedingungen: Zwei Spalten sichtbar
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       let cells = document.querySelectorAll('th:not(.mat-column-noData');
       expect(cells.length).toBe(2);
 
       // luxShowColumnSelector aktivieren und Spalte c2 ausblenden
-      component.showColumnSelector = true;
+      component.showColumnSelector.set(true);
       luxTableComponent.hiddenColumns = ['c2'];
-      luxTableComponent.luxMultiSelect = false;
       LuxTestHelper.wait(fixture);
 
       cells = document.querySelectorAll('th:not(.mat-column-noData');
@@ -75,22 +74,25 @@ describe('LuxTableComponent', () => {
     }));
 
     it('Sollte ausgeblendete Spalten wieder einblenden', fakeAsync(() => {
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
 
       // Spalte c2 ausblenden
       luxTableComponent.hiddenColumns = ['c2'];
-      luxTableComponent.luxMultiSelect = false;
-      component.showColumnSelector = true;
+      component.showColumnSelector.set(true);
       LuxTestHelper.wait(fixture);
       let cells = document.querySelectorAll('th:not(.mat-column-noData)');
       expect(cells.length).toBe(1);
 
       // Spalte c2 wieder einblenden
       luxTableComponent.hiddenColumns = [];
+      // Unter OnPush löst das direkte Mutieren von hiddenColumns (ohne echtes Event der lux-select-ac)
+      // keine erneute Prüfung der View aus. onHiddenColumnsChange() ist der reguläre Weg (siehe
+      // (luxSelectedChange)-Handler im Template) und stößt intern die Neuberechnung + markForCheck() an.
+      luxTableComponent.onHiddenColumnsChange([]);
       fixture.detectChanges();
       LuxTestHelper.wait(fixture);
       cells = document.querySelectorAll('th:not(.mat-column-noData)');
@@ -98,16 +100,16 @@ describe('LuxTableComponent', () => {
     }));
 
     it('Sollte luxHiddenColumnsChange Event auslösen', fakeAsync(() => {
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       const eventSpy = jasmine.createSpy('eventSpy');
       luxTableComponent.luxHiddenColumnsChange.subscribe(eventSpy);
 
       // Spalte c2 ausblenden
-      component.showColumnSelector = true;
+      component.showColumnSelector.set(true);
       fixture.detectChanges();
       luxTableComponent.onHiddenColumnsChange(['c2']);
       LuxTestHelper.wait(fixture);
@@ -134,10 +136,10 @@ describe('LuxTableComponent', () => {
       expect(footerRow).toBeDefined();
 
       // Änderungen durchführen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -155,13 +157,13 @@ describe('LuxTableComponent', () => {
 
     it('Die Einträge filtern', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' },
         { c1: 3, c2: 'Oxygen' },
         { c1: 4, c2: new Date() }
-      ];
-      component.showFilter = true;
+      ]);
+      component.showFilter.set(true);
 
       LuxTestHelper.wait(fixture);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -189,7 +191,7 @@ describe('LuxTableComponent', () => {
 
     it('Die Paginierung korrekt durchführen', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' },
         { c1: 3, c2: 'Oxygen' },
@@ -207,9 +209,9 @@ describe('LuxTableComponent', () => {
         { c1: 4, c2: 'Paganium' },
         { c1: 4, c2: 'Paganium' },
         { c1: 4, c2: 'Paganium' }
-      ];
-      component.showPagination = true;
-      component.pageSize = 5;
+      ]);
+      component.showPagination.set(true);
+      component.pageSize.set(5);
 
       LuxTestHelper.wait(fixture, 300);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -237,13 +239,13 @@ describe('LuxTableComponent', () => {
 
     it('Die Pagination nachträglich aktivieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' },
         { c1: 3, c2: 'Oxygen' },
         { c1: 4, c2: 'Paganium' }
-      ];
-      component.pageSize = 2;
+      ]);
+      component.pageSize.set(2);
 
       LuxTestHelper.wait(fixture);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
@@ -252,7 +254,7 @@ describe('LuxTableComponent', () => {
       expect(luxTableComponent.paginator).toBeDefined();
 
       // Änderungen durchführen
-      component.showPagination = true;
+      component.showPagination.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -263,14 +265,14 @@ describe('LuxTableComponent', () => {
 
     it('Die Einträge sortieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Teta' },
         { c1: 2, c2: 'Beta' },
         { c1: 3, c2: 'Gamma' },
         { c1: 4, c2: 'Alpha' }
-      ];
-      component.c1Sortable = false;
-      component.c2Sortable = true;
+      ]);
+      component.c1Sortable.set(false);
+      component.c2Sortable.set(true);
       LuxTestHelper.wait(fixture);
 
       let col2FirstElements = document.getElementsByClassName('c2-content');
@@ -316,14 +318,14 @@ describe('LuxTableComponent', () => {
 
     it('Die Einträge mit Sonderzeichen sortieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: '1234' },
         { c1: 2, c2: '$ Asdf' },
         { c1: 3, c2: 'Hallo' },
         { c1: 4, c2: '<<' },
         { c1: 5, c2: '  ' }
-      ];
-      component.c2Sortable = true;
+      ]);
+      component.c2Sortable.set(true);
       LuxTestHelper.wait(fixture);
 
       let col2Elements = document.getElementsByClassName('c2-content');
@@ -369,18 +371,18 @@ describe('LuxTableComponent', () => {
 
     it('Die Breite korrekt setzen', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Teta' },
         { c1: 2, c2: 'Beta' },
         { c1: 3, c2: 'Gamma' },
         { c1: 4, c2: 'Alpha' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       let tableHeaders = document.querySelectorAll('.mat-mdc-header-row:not(.lux-table-header-no-data) th');
       expect(tableHeaders.length).toBe(2);
 
       // Änderungen durchführen
-      component.colWidths = ['5', '25'] as any;
+      component.colWidths.set(['5', '25'] as any);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -402,16 +404,16 @@ describe('LuxTableComponent', () => {
 
     it('Einzelne Spalten links und rechts fixieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       let stickyElements = document.querySelectorAll('.mat-mdc-row .mat-mdc-table-sticky');
       expect(stickyElements.length).toBe(0);
 
       // Änderungen durchführen
-      component.c1Sticky = true;
+      component.c1Sticky.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -419,7 +421,7 @@ describe('LuxTableComponent', () => {
       expect(stickyElements.length).toBe(2);
 
       // Änderungen durchführen
-      component.c2Sticky = true;
+      component.c2Sticky.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -429,20 +431,20 @@ describe('LuxTableComponent', () => {
 
     it('Sollte die Custom CSS-Classes einstellen', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       let rows = document.getElementsByClassName('mat-mdc-row');
       expect(rows.item(0)!.classList.toString().indexOf('my-custom-class')).toBe(-1);
       expect(rows.item(1)!.classList.toString().indexOf('my-custom-class')).toBe(-1);
 
       // Änderungen durchführen
-      component.cssClasses = {
+      component.cssClasses.set({
         class: 'my-custom-class',
         check: (element: TableItem) => element.c1 === 1 || element.c1 === 2
-      };
+      });
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -451,7 +453,7 @@ describe('LuxTableComponent', () => {
       expect(rows.item(1)!.classList.toString().indexOf('my-custom-class')).toBeGreaterThan(-1);
 
       // Änderungen durchführen
-      component.cssClasses = [
+      component.cssClasses.set([
         {
           class: 'my-custom-class',
           check: (element: TableItem) => element.c1 === 1 || element.c1 === 2
@@ -460,7 +462,7 @@ describe('LuxTableComponent', () => {
           class: 'my-custom-class-2',
           check: (element: TableItem) => element.c2 === 'Hydrogen' || element.c2 === 'Helium'
         }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -472,12 +474,12 @@ describe('LuxTableComponent', () => {
     it('Einzelne Columns sollten in speziellen MediaQueries ausgeblendet werden', fakeAsync(
       inject([LuxMediaQueryObserverService], (mediaObserver: MockMediaObserverService) => {
         // Vorbedingungen testen
-        component.dataSource = [
+        component.dataSource.set([
           { c1: 1, c2: 'Hydrogen' },
           { c1: 2, c2: 'Helium' }
-        ];
-        component.c1RespAt = ['xs', 'sm'];
-        component.c1RespBeh = 'hide';
+        ]);
+        component.c1RespAt.set(['xs', 'sm']);
+        component.c1RespBeh.set('hide');
         LuxTestHelper.wait(fixture);
         let cells = document.getElementsByClassName('mat-mdc-cell');
         expect(cells.length).toBe(4);
@@ -511,12 +513,12 @@ describe('LuxTableComponent', () => {
     it('Einzelne Columns sollten in speziellen MediaQueries verschoben werden', fakeAsync(
       inject([LuxMediaQueryObserverService], (mediaObserver: MockMediaObserverService) => {
         // Vorbedingungen testen
-        component.dataSource = [
+        component.dataSource.set([
           { c1: 1, c2: 'Hydrogen' },
           { c1: 2, c2: 'Helium' }
-        ];
-        component.c1RespAt = ['xs', 'sm'];
-        component.c1RespBeh = 'c2';
+        ]);
+        component.c1RespAt.set(['xs', 'sm']);
+        component.c1RespBeh.set('c2');
         LuxTestHelper.wait(fixture);
         let cells = document.getElementsByClassName('mat-mdc-cell');
         let movedCells = document.getElementsByClassName('lux-moved-header-title');
@@ -560,13 +562,13 @@ describe('LuxTableComponent', () => {
     it('Einzelne Columns sollten in speziellen MediaQueries verschoben werden (ohne Header)', fakeAsync(
       inject([LuxMediaQueryObserverService], (mediaObserver: MockMediaObserverService) => {
         // Vorbedingungen testen
-        component.dataSource = [
+        component.dataSource.set([
           { c1: 1, c2: 'Hydrogen' },
           { c1: 2, c2: 'Helium' }
-        ];
-        component.c1RespAt = ['xs', 'sm'];
-        component.c1RespBeh = 'c2';
-        component.hideHeaders = true;
+        ]);
+        component.c1RespAt.set(['xs', 'sm']);
+        component.c1RespBeh.set('c2');
+        component.hideHeaders.set(true);
         LuxTestHelper.wait(fixture);
         let cells = document.getElementsByClassName('mat-mdc-cell');
         let movedCells = document.getElementsByClassName('lux-moved-header-title');
@@ -615,18 +617,24 @@ describe('LuxTableComponent', () => {
         expect(respAtSpy).toHaveBeenCalledTimes(0);
 
         // Änderungen durchführen
-        component.c1RespBeh = 'hide';
+        component.c1RespBeh.set('hide');
         LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect(respAtSpy).toHaveBeenCalledTimes(1);
 
         // Änderungen durchführen
-        component.c2RespAt = 'sm';
+        component.c2RespAt.set('sm');
         LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
-        expect(respAtSpy).toHaveBeenCalledTimes(3);
+        // Da lux-table-column nun Signal-Inputs verwendet und change$ über einen effect() statt
+        // ngOnChanges auslöst, wird updateColumnsByMediaQuery() bei einer zweiten Column-Änderung
+        // (im Gegensatz zur vorherigen 1:1-Kopplung an ngOnChanges) noch einmal zusätzlich für die
+        // bereits fehlkonfigurierte erste Spalte durchlaufen. Das Endergebnis (welche Spalten als
+        // fehlkonfiguriert erkannt werden) bleibt unverändert, nur die Anzahl der (idempotenten)
+        // Neuberechnungen steigt.
+        expect(respAtSpy).toHaveBeenCalledTimes(5);
       })
     ));
 
@@ -637,7 +645,7 @@ describe('LuxTableComponent', () => {
       expect(noDataText).toEqual('Keine Daten gefunden.');
 
       // Änderungen durchführen
-      component.noDataText = 'Tetriandoch';
+      component.noDataText.set('Tetriandoch');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -656,8 +664,8 @@ describe('LuxTableComponent', () => {
       for (let i = 0; i <= 101; i++) {
         data.push({ c1: i, c2: 'Demo ' + i });
       }
-      component.dataSource = data;
-      component.autoPaginate = true;
+      component.dataSource.set(data);
+      component.autoPaginate.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -678,7 +686,7 @@ describe('LuxTableComponent', () => {
       for (let i = 0; i <= 101; i++) {
         data.push({ c1: i, c2: 'Demo ' + i });
       }
-      component.dataSource = data;
+      component.dataSource.set(data);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -690,16 +698,16 @@ describe('LuxTableComponent', () => {
 
     it('Sollte die Borders ausblenden', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       let noBorderTable = document.getElementsByClassName('lux-hide-borders');
       expect(noBorderTable.length).toBe(0);
 
       // Änderungen durchführen
-      component.hideBorders = true;
+      component.hideBorders.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -797,14 +805,14 @@ describe('LuxTableComponent', () => {
       // Änderungen durchführen.
       // Wir überschreiben hier absichtlich loadData um testen zu können, ob ein älterer (veralteter Filtertext) loadData-Response
       // der aber trotzdem später ankommt als eine neuere Response korrekt abgefangen und ignoriert wird.
-      component.httpDao.loadData = (conf: any) => {
+      component.httpDao().loadData = (conf: any) => {
         if (conf.filter === 'old_filter_text_later_arrival') {
           return of({
-            items: component.httpDao.dataSourceFix,
-            totalCount: component.httpDao.dataSourceFix.length
+            items: component.httpDao().dataSourceFix,
+            totalCount: component.httpDao().dataSourceFix.length
           }).pipe(delay(2000));
         } else if (conf.filter === 'new_filter_text_earlier_arrival') {
-          return of({ items: [component.httpDao.dataSourceFix[0]], totalCount: 1 }).pipe(delay(500));
+          return of({ items: [component.httpDao().dataSourceFix[0]], totalCount: 1 }).pipe(delay(500));
         } else {
           throw new Error('Unreachable');
         }
@@ -830,7 +838,7 @@ describe('LuxTableComponent', () => {
 
     it('Selektion muss nach dem Setzen eines neuen DAO geleert sein.', fakeAsync(() => {
       LuxTestHelper.wait(fixture);
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
       LuxTestHelper.wait(fixture);
@@ -840,12 +848,12 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      expect(component.selected.size).toBe(1);
+      expect(component.selected().size).toBe(1);
 
-      component.httpDao = new TestHttpDao();
+      component.httpDao.set(new TestHttpDao());
       LuxTestHelper.wait(fixture);
 
-      expect(component.selected.size).toEqual(0);
+      expect(component.selected().size).toEqual(0);
     }));
 
     it('HTTP-DAO Multiselect: Select-All und Counter funktionieren', fakeAsync(() => {
@@ -941,19 +949,19 @@ describe('LuxTableComponent', () => {
 
     it('Einträge korrekt selektieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       let multiselectCheckbox = document.getElementsByClassName('lux-multiselect-toggle');
       let multiselectCheckboxAll = document.getElementsByClassName('lux-multiselect-toggle-all');
       expect(multiselectCheckbox.length).toBe(0);
       expect(multiselectCheckboxAll.length).toBe(0);
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
+      component.showMultiSelect.set(true);
       LuxTestHelper.wait(fixture);
 
       const multiselectRow = document.querySelectorAll('.lux-row');
@@ -969,20 +977,20 @@ describe('LuxTableComponent', () => {
       multiselectCheckboxAll = document.getElementsByClassName('lux-multiselect-toggle-all');
       expect(multiselectCheckbox.length).toBe(2);
       expect(multiselectCheckboxAll.length).toBe(1);
-      expect(component.selected.size).toBe(2);
+      expect(component.selected().size).toBe(2);
     }));
 
     it('Alle Einträge korrekt selektieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
+      component.showMultiSelect.set(true);
       LuxTestHelper.wait(fixture);
 
       const multiselectTriggerAll = document.querySelector('.lux-footer-row');
@@ -991,28 +999,28 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      expect(component.selected.size).toBe(2);
+      expect(component.selected().size).toBe(2);
 
       // Änderungen durchführen
       (multiselectTriggerAll as HTMLElement).click();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
     }));
 
     it('Alle Einträge mit Filter korrekt selektieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
-      component.showFilter = true;
+      component.showMultiSelect.set(true);
+      component.showFilter.set(true);
       LuxTestHelper.wait(fixture);
 
       luxTableComponent.filtered$.next('he');
@@ -1024,36 +1032,36 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      expect(component.selected.size).toBe(1);
+      expect(component.selected().size).toBe(1);
 
       // Änderungen durchführen
       (multiselectTriggerAll as HTMLElement).click();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
     }));
 
     it('Filter für Multiselect-Tabelle deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
       expect(fixture.debugElement.query(By.css('.lux-table-filter.lux-hide'))).not.toBeNull();
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
-      component.showFilter = true;
+      component.showMultiSelect.set(true);
+      component.showFilter.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(fixture.debugElement.query(By.css('.lux-table-filter.lux-hide'))).toBeNull();
 
       // Änderungen durchführen
-      component.showFilter = false;
+      component.showFilter.set(false);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -1062,26 +1070,26 @@ describe('LuxTableComponent', () => {
 
     it('Alle Einträge programmatisch korrekt selektieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
+      component.showMultiSelect.set(true);
       LuxTestHelper.wait(fixture);
 
-      component.preselected = new Set([component.dataSource[0], component.dataSource[1]]);
+      component.preselected.set(new Set([component.dataSource()[0], component.dataSource()[1]]));
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(2);
 
       // Änderungen durchführen
-      component.preselected = new Set();
+      component.preselected.set(new Set());
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -1090,27 +1098,27 @@ describe('LuxTableComponent', () => {
 
     it('Alle Einträge programmatisch korrekt selektieren (mit pickValueFn)', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
-      component.pickFn = (o) => o.c2;
+      component.showMultiSelect.set(true);
+      component.pickFn.set((o) => o.c2);
       LuxTestHelper.wait(fixture);
 
-      component.preselected = new Set([component.dataSource[0], component.dataSource[1]]);
+      component.preselected.set(new Set([component.dataSource()[0], component.dataSource()[1]]));
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(2);
 
       // Änderungen durchführen
-      component.preselected = new Set();
+      component.preselected.set(new Set());
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -1119,27 +1127,27 @@ describe('LuxTableComponent', () => {
 
     it('Alle Einträge programmatisch korrekt selektieren (mit compareWithFn)', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
-      component.compareFn = (o1, o2) => o1.c1 === o2.c1;
+      component.showMultiSelect.set(true);
+      component.compareFn.set((o1, o2) => o1.c1 === o2.c1);
       LuxTestHelper.wait(fixture);
 
-      component.preselected = new Set([{ c1: 1, c2: 'Hydrogen' }]);
+      component.preselected.set(new Set([{ c1: 1, c2: 'Hydrogen' }]));
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(1);
 
       // Änderungen durchführen
-      component.preselected = new Set();
+      component.preselected.set(new Set());
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -1148,28 +1156,28 @@ describe('LuxTableComponent', () => {
 
     it('Alle Einträge programmatisch korrekt selektieren (mit compareWithFn und pickValueFn)', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
       // luxSelected von der TableComponent prüfen, da beim programmatischen Setzen kein Change-Event ausgeführt wird
       expect(luxTableComponent.luxSelected.size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
-      component.compareFn = (o1_c1, o2_c1) => o1_c1 === o2_c1;
-      component.pickFn = (o) => o.c1;
+      component.showMultiSelect.set(true);
+      component.compareFn.set((o1_c1, o2_c1) => o1_c1 === o2_c1);
+      component.pickFn.set((o) => o.c1);
       LuxTestHelper.wait(fixture);
 
-      component.preselected = new Set([{ c1: 1, c2: 'Hydrogen' }]);
+      component.preselected.set(new Set([{ c1: 1, c2: 'Hydrogen' }]));
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(luxTableComponent.luxSelected.size).toBe(1);
 
       // Änderungen durchführen
-      component.preselected = new Set();
+      component.preselected.set(new Set());
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -1178,15 +1186,15 @@ describe('LuxTableComponent', () => {
 
     it('Selektierte Einträge sortieren', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Alpha' },
         { c1: 2, c2: 'Beta' }
-      ];
+      ]);
       LuxTestHelper.wait(fixture);
-      expect(component.selected.size).toBe(0);
+      expect(component.selected().size).toBe(0);
 
       // Änderungen durchführen
-      component.showMultiSelect = true;
+      component.showMultiSelect.set(true);
       LuxTestHelper.wait(fixture);
       const multiselectRow = document.querySelectorAll('.lux-row');
 
@@ -1194,7 +1202,7 @@ describe('LuxTableComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      expect(component.selected.size).toBe(1);
+      expect(component.selected().size).toBe(1);
 
       // Änderungen durchführen body
       const sortHeader = document.querySelector('th.mat-sort-header');
@@ -1220,11 +1228,11 @@ describe('LuxTableComponent', () => {
 
     it('Die korrekte Anzahl selektierter Elemente ausgeben', fakeAsync(() => {
       // Vorbedingungen testen
-      component.dataSource = [
+      component.dataSource.set([
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
-      ];
-      component.showMultiSelect = true;
+      ]);
+      component.showMultiSelect.set(true);
       LuxTestHelper.wait(fixture);
       let selectedCount = (document.getElementsByClassName('lux-selected-count').item(0) as HTMLElement).innerText;
       expect(selectedCount).toEqual('0 / 2');
@@ -1266,7 +1274,7 @@ describe('LuxTableComponent', () => {
     }
 
     it('Setzt ohne beobachtete Events und ohne Multiselect keinen Cursor', fakeAsync(() => {
-      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       LuxTestHelper.wait(fixture);
 
       const row = getFirstRow();
@@ -1274,7 +1282,7 @@ describe('LuxTableComponent', () => {
     }));
 
     it('Setzt ohne Multiselect bei beobachtetem luxSelectedChange einen Cursor', fakeAsync(() => {
-      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       luxTableComponent.luxSelectedChange.subscribe(() => {});
       LuxTestHelper.wait(fixture);
 
@@ -1283,7 +1291,7 @@ describe('LuxTableComponent', () => {
     }));
 
     it('Setzt Cursor bei beobachtetem luxSingleClicked', fakeAsync(() => {
-      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
       luxTableComponent.luxSingleClicked.subscribe(() => {});
       LuxTestHelper.wait(fixture);
 
@@ -1292,16 +1300,16 @@ describe('LuxTableComponent', () => {
     }));
 
     it('Setzt Cursor bei Multiselect mit beobachtetem luxSelectedChange nur ohne Checkbox-Only-Click', fakeAsync(() => {
-      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
-      component.multiSelect = true;
-      component.multiSelectOnlyCheckboxClick = false;
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
+      component.multiSelect.set(true);
+      component.multiSelectOnlyCheckboxClick.set(false);
       luxTableComponent.luxSelectedChange.subscribe(() => {});
       LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
       expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
 
-      component.multiSelectOnlyCheckboxClick = true;
+      component.multiSelectOnlyCheckboxClick.set(true);
       LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
@@ -1309,15 +1317,15 @@ describe('LuxTableComponent', () => {
     }));
 
     it('Setzt bei Multiselect ohne beobachtete Events Cursor nur ohne Checkbox-Only-Click', fakeAsync(() => {
-      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
-      component.multiSelect = true;
-      component.multiSelectOnlyCheckboxClick = false;
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
+      component.multiSelect.set(true);
+      component.multiSelectOnlyCheckboxClick.set(false);
       LuxTestHelper.wait(fixture);
 
       let row = getFirstRow();
       expect(row.classList.contains('lux-cursor-pointer')).toBeTrue();
 
-      component.multiSelectOnlyCheckboxClick = true;
+      component.multiSelectOnlyCheckboxClick.set(true);
       LuxTestHelper.wait(fixture);
 
       row = getFirstRow();
@@ -1325,9 +1333,9 @@ describe('LuxTableComponent', () => {
     }));
 
     it('Setzt bei Multiselect und beobachtetem luxDoubleClicked keinen Cursor', fakeAsync(() => {
-      component.dataSource = [{ c1: 1, c2: 'Hydrogen' }];
-      component.multiSelect = true;
-      component.multiSelectOnlyCheckboxClick = false;
+      component.dataSource.set([{ c1: 1, c2: 'Hydrogen' }]);
+      component.multiSelect.set(true);
+      component.multiSelectOnlyCheckboxClick.set(false);
       luxTableComponent.luxDoubleClicked.subscribe(() => {});
       LuxTestHelper.wait(fixture);
 
@@ -1349,7 +1357,7 @@ describe('LuxTableComponent', () => {
       </lux-table-column>
     </lux-table>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnContentComponent]
 })
 class TableSignalComponent {
@@ -1358,29 +1366,29 @@ class TableSignalComponent {
 
 @Component({
   template: `
-    <div [ngStyle]="{ height: containerHeight + 'px', width: containerWidth + 'px' }">
+    <div [ngStyle]="{ height: containerHeight() + 'px', width: containerWidth() + 'px' }">
       <lux-table
-        [luxShowColumnSelector]="showColumnSelector"
+        [luxShowColumnSelector]="showColumnSelector()"
         luxColumnStorageKey="test-table"
-        [luxData]="dataSource"
-        [luxShowPagination]="showPagination"
-        [luxColWidthsPercent]="colWidths"
-        [luxShowFilter]="showFilter"
-        [luxPageSize]="pageSize"
-        [luxClasses]="cssClasses"
-        [luxNoDataText]="noDataText"
-        [luxMinWidthPx]="minWidth"
-        [luxAutoPaginate]="autoPaginate"
-        [luxHideBorders]="hideBorders"
+        [luxData]="dataSource()"
+        [luxShowPagination]="showPagination()"
+        [luxColWidthsPercent]="colWidths()"
+        [luxShowFilter]="showFilter()"
+        [luxPageSize]="pageSize()"
+        [luxClasses]="cssClasses()"
+        [luxNoDataText]="noDataText()"
+        [luxMinWidthPx]="minWidth()"
+        [luxAutoPaginate]="autoPaginate()"
+        [luxHideBorders]="hideBorders()"
       >
         <lux-table-column
           luxColumnDef="c1"
-          [luxSortable]="c1Sortable"
-          [luxSticky]="c1Sticky"
-          [luxResponsiveAt]="c1RespAt"
-          [luxResponsiveBehaviour]="c1RespBeh"
+          [luxSortable]="c1Sortable()"
+          [luxSticky]="c1Sticky()"
+          [luxResponsiveAt]="c1RespAt()"
+          [luxResponsiveBehaviour]="c1RespBeh()"
         >
-          @if (!hideHeaders) {
+          @if (!hideHeaders()) {
             <lux-table-column-header>
               <ng-template>C1</ng-template>
             </lux-table-column-header>
@@ -1396,12 +1404,12 @@ class TableSignalComponent {
         </lux-table-column>
         <lux-table-column
           luxColumnDef="c2"
-          [luxSortable]="c2Sortable"
-          [luxSticky]="c2Sticky"
-          [luxResponsiveAt]="c2RespAt"
-          [luxResponsiveBehaviour]="c2RespBeh"
+          [luxSortable]="c2Sortable()"
+          [luxSticky]="c2Sticky()"
+          [luxResponsiveAt]="c2RespAt()"
+          [luxResponsiveBehaviour]="c2RespBeh()"
         >
-          @if (!hideHeaders) {
+          @if (!hideHeaders()) {
             <lux-table-column-header>
               <ng-template>C2</ng-template>
             </lux-table-column-header>
@@ -1418,7 +1426,7 @@ class TableSignalComponent {
       </lux-table>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgStyle,
     LuxTableComponent,
@@ -1429,36 +1437,36 @@ class TableSignalComponent {
   ]
 })
 class TableComponent {
-  dataSource: TableItem[] = [];
+  dataSource = signal<TableItem[]>([]);
 
-  showPagination = false;
-  showColumnSelector = false;
-  showFilter = false;
-  colWidths?: number[];
-  pageSize?: number;
-  cssClasses?: ICustomCSSConfig | ICustomCSSConfig[];
-  noDataText = 'Keine Daten gefunden.';
-  minWidth?: number;
-  containerHeight?: number;
-  containerWidth?: number;
-  autoPaginate = false;
-  hideBorders = false;
-  hideHeaders = false;
-  c1Sortable?: boolean;
-  c1Sticky?: boolean;
-  c2Sortable?: boolean;
-  c2Sticky?: boolean;
-  c1RespAt?: string[];
-  c2RespAt?: string | string[];
-  c1RespBeh?: string;
-  c2RespBeh?: string;
+  showPagination = signal(false);
+  showColumnSelector = signal(false);
+  showFilter = signal(false);
+  colWidths = signal<number[] | undefined>(undefined);
+  pageSize = signal<number | undefined>(undefined);
+  cssClasses = signal<ICustomCSSConfig | ICustomCSSConfig[] | undefined>(undefined);
+  noDataText = signal('Keine Daten gefunden.');
+  minWidth = signal<number | undefined>(undefined);
+  containerHeight = signal<number | undefined>(undefined);
+  containerWidth = signal<number | undefined>(undefined);
+  autoPaginate = signal(false);
+  hideBorders = signal(false);
+  hideHeaders = signal(false);
+  c1Sortable = signal<boolean | undefined>(undefined);
+  c1Sticky = signal<boolean | undefined>(undefined);
+  c2Sortable = signal<boolean | undefined>(undefined);
+  c2Sticky = signal<boolean | undefined>(undefined);
+  c1RespAt = signal<string[] | undefined>(undefined);
+  c2RespAt = signal<string | string[] | undefined>(undefined);
+  c1RespBeh = signal<string | undefined>(undefined);
+  c2RespBeh = signal<string | undefined>(undefined);
 
   constructor() {}
 }
 
 @Component({
   template: `
-    <lux-table [luxData]="dataSource" [luxMultiSelect]="multiSelect" [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick">
+    <lux-table [luxData]="dataSource()" [luxMultiSelect]="multiSelect()" [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()">
       <lux-table-column luxColumnDef="c1">
         <lux-table-column-header>
           <ng-template>C1</ng-template>
@@ -1481,13 +1489,13 @@ class TableComponent {
       </lux-table-column>
     </lux-table>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnHeaderComponent, LuxTableColumnContentComponent]
 })
 class TableCursorComponent {
-  dataSource: TableItem[] = [];
-  multiSelect = false;
-  multiSelectOnlyCheckboxClick = false;
+  dataSource = signal<TableItem[]>([]);
+  multiSelect = signal(false);
+  multiSelectOnlyCheckboxClick = signal(false);
 
   constructor() {}
 }
@@ -1495,7 +1503,7 @@ class TableCursorComponent {
 @Component({
   template: `
     <lux-table
-      [luxHttpDAO]="httpDao"
+      [luxHttpDAO]="httpDao()"
       [luxShowColumnSelector]="showColumnSelector"
       luxColumnStorageKey="test-table"
       [luxShowPagination]="true"
@@ -1532,7 +1540,7 @@ class TableCursorComponent {
       </lux-table-column>
     </lux-table>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTableComponent,
     LuxTableColumnComponent,
@@ -1542,8 +1550,8 @@ class TableCursorComponent {
   ]
 })
 class HttpDaoTableComponent {
-  httpDao: TestHttpDao = new TestHttpDao();
-  selected = new Set();
+  httpDao = signal<TestHttpDao>(new TestHttpDao());
+  selected = signal(new Set());
 
   constructor() {}
 }
@@ -1551,14 +1559,14 @@ class HttpDaoTableComponent {
 @Component({
   template: `
     <lux-table
-      [luxData]="dataSource"
-      [luxShowPagination]="showPagination"
-      [luxShowFilter]="showFilter"
-      [luxMultiSelect]="showMultiSelect"
-      [luxSelected]="preselected"
-      [luxPickValue]="pickFn"
-      [luxCompareWith]="compareFn"
-      (luxSelectedChange)="selected = $event"
+      [luxData]="dataSource()"
+      [luxShowPagination]="showPagination()"
+      [luxShowFilter]="showFilter()"
+      [luxMultiSelect]="showMultiSelect()"
+      [luxSelected]="preselected()"
+      [luxPickValue]="pickFn()"
+      [luxCompareWith]="compareFn()"
+      (luxSelectedChange)="selected.set($event)"
     >
       <lux-table-column luxColumnDef="c1">
         <lux-table-column-header>
@@ -1588,7 +1596,7 @@ class HttpDaoTableComponent {
       </lux-table-column>
     </lux-table>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTableComponent,
     LuxTableColumnComponent,
@@ -1598,14 +1606,14 @@ class HttpDaoTableComponent {
   ]
 })
 class TableMultiselectComponent {
-  dataSource: TableItem[] = [];
-  selected = new Set();
-  preselected?: Set<TableItem>;
-  showPagination = false;
-  showFilter = false;
-  showMultiSelect = false;
-  pickFn = (o: any) => o;
-  compareFn = (o1: any, o2: any) => o1 === o2;
+  dataSource = signal<TableItem[]>([]);
+  selected = signal(new Set());
+  preselected = signal<Set<TableItem> | undefined>(undefined);
+  showPagination = signal(false);
+  showFilter = signal(false);
+  showMultiSelect = signal(false);
+  pickFn = signal<(o: any) => any>((o: any) => o);
+  compareFn = signal<(o1: any, o2: any) => boolean>((o1: any, o2: any) => o1 === o2);
 
   constructor() {}
 }
