@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { LuxDialogRef } from '../../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-ref.class';
 import { LuxDialogStructureComponent } from '../../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component';
 import { LuxProgressComponent } from '../../../../../lux-common/lux-progress/lux-progress.component';
@@ -29,6 +29,7 @@ export enum LuxSessionTimerDialogType {
     TranslocoPipe,
     LuxAriaLabelDirective
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lux-app-header-ac-session-timer-dialog.html'
 })
 export class LuxAppHeaderAcSessionTimerDialogComponent {

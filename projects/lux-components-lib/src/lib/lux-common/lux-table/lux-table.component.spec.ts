@@ -1,11 +1,11 @@
 // noinspection DuplicatedCode
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { MockMediaObserverService } from '../../lux-util/testing/mock-media-observer.service';
 import { ICustomCSSConfig } from './lux-table-custom-css-config.interface';
 
 import { NgStyle } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -33,7 +33,7 @@ describe('LuxTableComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),
         { provide: LuxMediaQueryObserverService, useClass: MockMediaObserverService },
@@ -1349,6 +1349,7 @@ describe('LuxTableComponent', () => {
       </lux-table-column>
     </lux-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnContentComponent]
 })
 class TableSignalComponent {
@@ -1417,6 +1418,7 @@ class TableSignalComponent {
       </lux-table>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgStyle,
     LuxTableComponent,
@@ -1479,6 +1481,7 @@ class TableComponent {
       </lux-table-column>
     </lux-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTableComponent, LuxTableColumnComponent, LuxTableColumnHeaderComponent, LuxTableColumnContentComponent]
 })
 class TableCursorComponent {
@@ -1529,6 +1532,7 @@ class TableCursorComponent {
       </lux-table-column>
     </lux-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTableComponent,
     LuxTableColumnComponent,
@@ -1584,6 +1588,7 @@ class HttpDaoTableComponent {
       </lux-table-column>
     </lux-table>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTableComponent,
     LuxTableColumnComponent,

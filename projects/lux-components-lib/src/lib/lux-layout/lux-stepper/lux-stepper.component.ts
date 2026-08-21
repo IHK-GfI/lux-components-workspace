@@ -2,10 +2,9 @@ import { CdkStepHeader, StepperSelectionEvent } from '@angular/cdk/stepper';
 import { NgClass } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ComponentFactory,
-  ComponentFactoryResolver,
   ComponentRef,
   ContentChildren,
   ElementRef,
@@ -35,12 +34,12 @@ import { LuxStepperVerticalComponent } from './lux-stepper-subcomponents/lux-ste
   selector: 'lux-stepper',
   templateUrl: './lux-stepper.component.html',
   styleUrls: ['./lux-stepper.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxStepperVerticalComponent, NgClass, LuxStepperHorizontalComponent]
 })
 export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
   stepperService = inject(LuxStepperHelperService);
   private cdr = inject(ChangeDetectorRef);
-  private cfr = inject(ComponentFactoryResolver);
   private elementRef = inject(ElementRef);
   private queryService = inject(LuxMediaQueryObserverService);
 
@@ -214,10 +213,9 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
    * Generiert die individuellen Icons für die Steps.
    */
   generateCustomIcons() {
-    const factory = this.cfr.resolveComponentFactory(LuxIconComponent);
     let index = 0;
     this.matStepLabels.forEach((stepLabel: ViewContainerRef) => {
-      this.generateCustomIconForStep(stepLabel, this.luxSteps.toArray()[index], factory);
+      this.generateCustomIconForStep(stepLabel, this.luxSteps.toArray()[index]);
       index++;
     });
   }
@@ -261,12 +259,11 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
    * Generiert die Icons für einen einzelnen Step
    * @param stepLabel
    * @param luxStep
-   * @param factory
    */
-  private generateCustomIconForStep(stepLabel: ViewContainerRef, luxStep: LuxStepComponent, factory: ComponentFactory<LuxIconComponent>) {
+  private generateCustomIconForStep(stepLabel: ViewContainerRef, luxStep: LuxStepComponent) {
     if (luxStep && luxStep.luxIconName) {
       // Das edited und normal Icon generieren
-      const componentIconEdited: ComponentRef<LuxIconComponent> = stepLabel.createComponent(factory);
+      const componentIconEdited: ComponentRef<LuxIconComponent> = stepLabel.createComponent(LuxIconComponent);
       const instanceIconEdited: LuxIconComponent = componentIconEdited.instance;
 
       instanceIconEdited.luxIconName = this.luxEditedIconName;
@@ -276,7 +273,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
       instanceIconEdited.luxPadding = '0.625rem';
       componentIconEdited.location.nativeElement.className += ' lux-stepper-edited-icon';
 
-      const componentIconNormal: ComponentRef<LuxIconComponent> = stepLabel.createComponent(factory);
+      const componentIconNormal: ComponentRef<LuxIconComponent> = stepLabel.createComponent(LuxIconComponent);
       const instanceIconNormal: LuxIconComponent = componentIconNormal.instance;
       instanceIconNormal.luxIconName = luxStep.luxIconName;
       instanceIconNormal.luxIconSize = '1.25rem';

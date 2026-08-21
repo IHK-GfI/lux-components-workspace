@@ -17,7 +17,8 @@ import {
   QueryList,
   ViewChild,
   inject,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatDivider } from '@angular/material/divider';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -41,6 +42,7 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
 @Component({
   selector: 'lux-menu',
   templateUrl: './lux-menu.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgTemplateOutlet,
     LuxButtonComponent,

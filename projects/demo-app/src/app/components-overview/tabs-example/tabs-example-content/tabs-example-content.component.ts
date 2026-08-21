@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-tabs-content',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './tabs-example-content.component.html'
 })
 export class TabsExampleContentComponent implements AfterViewInit {

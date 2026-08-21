@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxAccordionComponent,
     LuxFormHintComponent,
@@ -18,6 +18,7 @@ import { TableExampleBaseClass } from '../table-example-base.class';
 @Component({
   selector: 'table-example-advanced-options',
   templateUrl: './table-example-advanced-options.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAccordionComponent,
     LuxPanelHeaderTitleComponent,

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { LuxButtonComponent, LuxCardActionAlignType, LuxCardActionsComponent, LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent, LuxCardCustomHeaderComponent, LuxCardInfoComponent, LuxFormHintComponent, LuxIconComponent, LuxImageComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxSnackbarService, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
@@ -11,6 +11,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-card-example',
   templateUrl: './card-example.component.html',
   styleUrls: ['./card-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,

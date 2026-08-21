@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -24,7 +24,7 @@ describe('LuxFileInputAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),
         {
@@ -574,18 +574,14 @@ describe('LuxFileInputAcComponent', () => {
 
         it('Sollte den Upload-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]')).nativeElement.disabled
-          ).toBe(false);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]')).nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.uploadActionConfig.disabled = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]')).nativeElement.disabled
-          ).toBe(true);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Hochladen" i]')).nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen', fakeAsync(() => {
@@ -623,9 +619,7 @@ describe('LuxFileInputAcComponent', () => {
 
         it('Sollte den Download-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled
-          ).toBe(true);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled).toBe(true);
 
           // Änderungen durchführen
           const files = [LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')];
@@ -633,18 +627,14 @@ describe('LuxFileInputAcComponent', () => {
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled
-          ).toBe(false);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.downloadActionConfig.disabled = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled
-          ).toBe(true);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Downloaden" i]')).nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen', fakeAsync(() => {
@@ -687,9 +677,7 @@ describe('LuxFileInputAcComponent', () => {
 
         it('Sollte den Delete-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled
-          ).toBe(true);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled).toBe(true);
 
           // Änderungen durchführen
           const files = [LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')];
@@ -697,18 +685,14 @@ describe('LuxFileInputAcComponent', () => {
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled
-          ).toBe(false);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.deleteActionConfig.disabled = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(
-            fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled
-          ).toBe(true);
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Löschen" i]')).nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen', fakeAsync(() => {
@@ -747,9 +731,7 @@ describe('LuxFileInputAcComponent', () => {
 
         it('Sollte den View-Button deaktivieren', fakeAsync(() => {
           // Vorbedingungen testen
-          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(
-            true
-          );
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(true);
 
           // Änderungen durchführen
           const files = [LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')];
@@ -757,18 +739,14 @@ describe('LuxFileInputAcComponent', () => {
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(
-            false
-          );
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.viewActionConfig.disabled = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(
-            true
-          );
+          expect(fixture.debugElement.query(By.css('button[aria-label*="Anzeigen" i]')).nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen', fakeAsync(() => {
@@ -821,6 +799,7 @@ describe('LuxFileInputAcComponent', () => {
     >
     </lux-file-input-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxFileInputAcComponent]
 })
 class FileComponent {
@@ -895,6 +874,7 @@ class FileComponent {
       </lux-file-input-ac>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxFileInputAcComponent]
 })
 class FileFormComponent {

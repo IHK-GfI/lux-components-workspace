@@ -1,5 +1,5 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { updateDep } from '../../update-dependencies/index';
 import { AddTransUnitItem } from '../../utility/replace-item';
 import { Options } from '../../utility/types';

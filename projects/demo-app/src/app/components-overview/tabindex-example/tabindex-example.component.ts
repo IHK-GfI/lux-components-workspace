@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutocompleteAcComponent,
   LuxCardComponent,
@@ -24,6 +24,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'lux-tabindex-example',
   templateUrl: './tabindex-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxLinkComponent,
     LuxCardContentComponent,

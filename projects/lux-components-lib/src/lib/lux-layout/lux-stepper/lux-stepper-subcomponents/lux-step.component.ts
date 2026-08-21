@@ -1,10 +1,11 @@
-import { Component, ContentChild, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LuxStepHeaderComponent } from './lux-step-header.component';
 
 @Component({
   selector: 'lux-step',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <ng-template #header>
       <ng-content select="lux-step-header"></ng-content>

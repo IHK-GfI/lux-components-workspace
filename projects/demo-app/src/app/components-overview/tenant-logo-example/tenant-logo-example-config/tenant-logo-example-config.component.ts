@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
@@ -21,6 +21,7 @@ interface TenantLogoExampleKey {
   selector: 'app-tenant-logo-example-config',
   templateUrl: './tenant-logo-example-config.component.html',
   styleUrls: ['./tenant-logo-example-config.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, LuxFormHintComponent]
 })
 export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {

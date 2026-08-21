@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -41,6 +41,7 @@ interface InputDummyForm {
   selector: 'lux-input-ac-example',
   templateUrl: './input-authentic-example.component.html',
   styleUrls: ['./input-authentic-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxLinkPlainComponent,

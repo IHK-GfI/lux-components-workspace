@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, output } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, output, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
@@ -11,6 +11,7 @@ import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-a
 @Component({
   selector: 'lux-app-header-ac-session-timer',
   imports: [LuxButtonComponent, LuxTooltipDirective, LuxAriaLabelDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lux-app-header-ac-session-timer.html'
 })
 export class LuxAppHeaderAcSessionTimerComponent implements OnInit {

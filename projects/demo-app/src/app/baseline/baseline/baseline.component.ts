@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   ILuxFileObject,
@@ -41,6 +41,7 @@ interface DummyForm {
   selector: 'lux-baseline',
   templateUrl: './baseline.component.html',
   styleUrls: ['./baseline.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,

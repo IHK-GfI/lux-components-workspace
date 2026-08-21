@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxSanitizeConfig } from './lux-sanitize/lux-sanitize-config';
 import { LuxSanitizePipe } from './lux-sanitize/lux-sanitize.pipe';
 
@@ -6,6 +6,7 @@ import { LuxSanitizePipe } from './lux-sanitize/lux-sanitize.pipe';
   selector: 'lux-html',
   templateUrl: './lux-html.component.html',
   styleUrls: ['./lux-html.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSanitizePipe]
 })
 export class LuxHtmlComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxButtonComponent,
     LuxDatepickerAcComponent,
@@ -14,6 +14,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-timestamp-example',
   templateUrl: './timestamp-example.component.html',
   styleUrls: ['./timestamp-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxRelativeTimestampPipe,
     LuxButtonComponent,

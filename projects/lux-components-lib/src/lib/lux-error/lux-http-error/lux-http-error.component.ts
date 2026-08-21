@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
@@ -9,6 +9,7 @@ import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
   selector: 'lux-http-error',
   templateUrl: 'lux-http-error.component.html',
   styleUrls: ['lux-http-error.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxMessageBoxComponent]
 })
 export class LuxHttpErrorComponent implements OnInit, OnDestroy, AfterViewInit {

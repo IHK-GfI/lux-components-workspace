@@ -1,10 +1,11 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxHtmlComponent, LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { marked } from 'marked';
 
 @Component({
   selector: 'lux-markdown',
   templateUrl: './lux-markdown.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxHtmlComponent]
 })
 export class LuxMarkdownComponent {

@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, HostBinding, Input, OnDestroy, TemplateRef, inject } from '@angular/core';
+import { Component, ContentChild, HostBinding, Input, OnDestroy, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
   selector: 'lux-radio-ac',
   templateUrl: './lux-radio-ac.component.html',
   styleUrls: ['./lux-radio-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,

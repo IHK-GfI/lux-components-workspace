@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   ILuxFileActionConfig,
@@ -25,6 +25,7 @@ import { DemoMarkerType } from '../../../base/status-marker/status-marker.model'
 @Component({
   selector: 'lux-file-input-authentic-example',
   templateUrl: './file-input-authentic-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,

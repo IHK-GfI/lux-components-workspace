@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -30,6 +30,7 @@ import { WebFontDemoComponent } from './web-font-demo/web-font-demo.component';
     FormThreeColComponent,
     WebFontDemoComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [TableExampleDataProviderService]
 })
 export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterViewInit, OnDestroy {

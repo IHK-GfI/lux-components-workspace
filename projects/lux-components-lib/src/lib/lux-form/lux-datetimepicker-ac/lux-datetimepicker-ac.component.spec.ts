@@ -3,15 +3,15 @@
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, LOCALE_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, LOCALE_ID } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { LuxA11yTestHelper, LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxUtil } from '../../lux-util/lux-util';
@@ -27,7 +27,7 @@ describe('LuxDatetimepickerAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -740,6 +740,7 @@ describe('LuxDatetimepickerAcComponent', () => {
       (luxValueChange)="valueChanged()"
     ></lux-datetimepicker-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxDatetimepickerAcComponent]
 })
 class LuxNoFormAttributeTestComponent {
@@ -783,6 +784,7 @@ export const exampleErrorCallback = (value: any, errors: LuxValidationErrors) =>
       <lux-datetimepicker-ac luxLabel="Datum" luxControlBinding="datepicker" [luxErrorCallback]="errorCallBack"></lux-datetimepicker-ac>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxDatetimepickerAcComponent]
 })
 class LuxFormCustomValidatorComponent {
@@ -806,6 +808,7 @@ class LuxFormCustomValidatorComponent {
       {{ formControl.value }}
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxDatetimepickerAcComponent]
 })
 class LuxFormTestComponent {
