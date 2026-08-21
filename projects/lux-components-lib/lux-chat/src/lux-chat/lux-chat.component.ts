@@ -4,8 +4,14 @@ import { LuxChatMessageData } from './lux-chat-message-data';
 import { LuxChatController } from './lux-chat-controller';
 import { CommonModule } from '@angular/common';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { LuxDividerComponent, LuxTextareaAcComponent, LuxAriaLabelDirective, LuxButtonComponent, LuxAutofocusDirective } from '@ihk-gfi/lux-components';
-import { LuxChatRelativeUntilTimestamp } from "./lux-chat-relative-until-timestamp.pipe";
+import {
+  LuxDividerComponent,
+  LuxTextareaAcComponent,
+  LuxAriaLabelDirective,
+  LuxButtonComponent,
+  LuxAutofocusDirective
+} from '@ihk-gfi/lux-components';
+import { LuxChatRelativeUntilTimestamp } from './lux-chat-relative-until-timestamp.pipe';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxChatEntryComponent } from './lux-chat-subcomponents/lux-chat-entry.component';
 import { LuxChatHeaderComponent } from './lux-chat-subcomponents/lux-chat-header.component';
@@ -15,7 +21,7 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
 @Component({
   selector: 'lux-chat',
-  providers: [{ provide: LuxChatController, useExisting: LuxChatComponent}],
+  providers: [{ provide: LuxChatController, useExisting: LuxChatComponent }],
   imports: [
     CommonModule,
     LuxButtonComponent,
@@ -25,11 +31,10 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     TranslocoPipe,
     LuxChatRelativeUntilTimestamp,
     LuxAutofocusDirective
-],
+  ],
   templateUrl: './lux-chat.component.html'
 })
 export class LuxChatComponent extends LuxChatController {
-
   private tService = inject(TranslocoService);
 
   public luxChatData = input<LuxChatData>();
@@ -37,9 +42,9 @@ export class LuxChatComponent extends LuxChatController {
   public chatPopupMode = model<boolean>();
   public luxAutoFocus = input<boolean>(false);
 
-  public chatInput = "";
+  public chatInput = '';
 
-  public chatBase = viewChild<ElementRef>("chatBase");
+  public chatBase = viewChild<ElementRef>('chatBase');
 
   public luxChatOutput = output<string>();
   public chatClose = output<void>();
@@ -49,10 +54,9 @@ export class LuxChatComponent extends LuxChatController {
   public luxChatHeaderComponent = contentChild(LuxChatHeaderComponent);
   public luxChatEntryComponent = contentChild(LuxChatEntryComponent);
 
+  public locale = 'de-DE';
 
-  public locale = "de-DE";
-
-  constructor(){
+  constructor() {
     super();
 
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
@@ -64,45 +68,42 @@ export class LuxChatComponent extends LuxChatController {
       const _chatData = this.luxChatData();
       const _userName = this.luxChatUserName();
 
-      if(!_chatData?.messages) return;
+      if (!_chatData?.messages) return;
 
-      for(const message of _chatData.messages){
-        message.metadata["_isUser"] = message.user === _userName;
+      for (const message of _chatData.messages) {
+        message.metadata['_isUser'] = message.user === _userName;
       }
     });
 
     //Init Chat Data for time splits
     effect(() => {
       const _chatData = this.luxChatData();
-      if(!_chatData) return;
+      if (!_chatData) return;
 
-      _chatData.scrollHandler = () => this.scrollToBottom();
-      
       _chatData.messageAddedEvents.subscribe((message) => {
-        message.metadata["_isUser"] = message.user === this.luxChatUserName();
-        
-        const _innerChatData = this.luxChatData();
-        if(!_innerChatData) return;
+        message.metadata['_isUser'] = message.user === this.luxChatUserName();
 
-        this.updateTimeSplits(message, _innerChatData.messages.length-1);
+        const _innerChatData = this.luxChatData();
+        if (!_innerChatData) return;
+
+        this.updateTimeSplits(message, _innerChatData.messages.length - 1);
       });
 
-      for(let index=0; index < _chatData.messages.length; index++){
+      for (let index = 0; index < _chatData.messages.length; index++) {
         const message = _chatData.messages[index];
         this.updateTimeSplits(message, index);
       }
     });
-
   }
 
   public checkShowDateSplit(item: LuxChatMessageData, index: number): boolean {
     //No message previously
-    if(index <= 0) return true;
+    if (index <= 0) return true;
 
     //Previous message
     const prevItem = this.luxChatData()?.messages[index - 1];
 
-    if(!prevItem) return true;
+    if (!prevItem) return true;
 
     //Prev Entry was more than a day ago
     return this.calcDiff(prevItem.time, item.time) >= 1;
@@ -117,15 +118,15 @@ export class LuxChatComponent extends LuxChatController {
 
   public checkShowEntryHeaderTime(item: LuxChatMessageData, index: number): boolean {
     //No message previously
-    if(index <= 0) return true;
+    if (index <= 0) return true;
 
     //Previous message
     const prevItem = this.luxChatData()?.messages[index - 1];
 
-    if(!prevItem) return true;
+    if (!prevItem) return true;
 
     //Time difference is greater than [10 minutes]
-    if(item.time.getTime() > (prevItem.time.getTime() + HEADER_SHOW_TIME_OFFSET)) return true;
+    if (item.time.getTime() > prevItem.time.getTime() + HEADER_SHOW_TIME_OFFSET) return true;
 
     //Users are different
     return prevItem.user !== item.user;
@@ -135,17 +136,17 @@ export class LuxChatComponent extends LuxChatController {
     //Prevent Enter key from being processed
     event.preventDefault();
 
-    this.luxChatOutput.emit(this.chatInput)
+    this.luxChatOutput.emit(this.chatInput);
 
-    this.chatInput = "";
+    this.chatInput = '';
 
     this.scrollToBottom();
   }
 
   public onChatEnterButtonPressed(): void {
-    this.luxChatOutput.emit(this.chatInput)
+    this.luxChatOutput.emit(this.chatInput);
 
-    this.chatInput = "";
+    this.chatInput = '';
 
     this.scrollToBottom();
   }
@@ -169,12 +170,12 @@ export class LuxChatComponent extends LuxChatController {
     }, 2);
   }
 
-  private parseMatLocale(matLocale: string){
+  private parseMatLocale(matLocale: string) {
     let locale;
 
     switch (matLocale) {
       case 'de':
-        locale = 'de-De';
+        locale = 'de-DE';
         break;
       case 'en':
         locale = 'en-US';
@@ -191,9 +192,9 @@ export class LuxChatComponent extends LuxChatController {
 
   private updateTimeSplits(message: LuxChatMessageData, index: number): void {
     //Show Date split ?
-    message.metadata["_showDateSplit"] = this.checkShowDateSplit(message, index);
-    
+    message.metadata['_showDateSplit'] = this.checkShowDateSplit(message, index);
+
     //Show Entry Header Time ?
-    message.metadata["_showEntryHeaderTime"] = this.checkShowEntryHeaderTime(message, index);
+    message.metadata['_showEntryHeaderTime'] = this.checkShowEntryHeaderTime(message, index);
   }
 }

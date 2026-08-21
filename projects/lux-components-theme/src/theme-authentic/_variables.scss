@@ -404,6 +404,12 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-chat-entry-card-padding-right: var(--lux-theme-spacing-lg);
   --lux-theme-chat-entry-card-padding-bottom: var(--lux-theme-spacing-md);
   --lux-theme-chat-entry-card-padding-left: var(--lux-theme-spacing-lg);
+  --lux-theme-chat-entry-header-gap: var(--lux-theme-spacing-sm);
+  --lux-theme-chat-entry-container-margin-bottom: var(--lux-theme-spacing-sm);
+  --lux-theme-chat-entry-container-min-width: 20px;
+  --lux-theme-chat-entry-date-margin-top: var(--lux-theme-spacing-md);
+  --lux-theme-chat-entry-date-margin-bottom: var(--lux-theme-spacing-sm);
+  --lux-theme-chat-base-padding: var(--lux-theme-spacing-md);
 
   // LUX-Chat-Popup
   --lux-theme-chat-popup-container-border-radius: var(--lux-theme-radius-sm);

@@ -1,154 +1,141 @@
-
 @use "../common/luxelevations";
 
 .lux-chat {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  background-color: var(--lux-theme-chat-background-color);
+
+  .lux-chat-header {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+
+    margin: 16px 16px;
+
+    .lux-chat-header-title {
+      margin: 0;
+
+      .lux-chat-header-title-text {
+        color: var(--lux-theme-chat-header-title-text-color);
+        font-size: 1rem;
+        font-weight: var(--lux-theme-chat-header-title-text-weight);
+      }
+
+      .lux-chat-header-sub-title {
+        color: var(--lux-theme-chat-header-sub-title-text-color);
+      }
+    }
+  }
+
+  .lux-chat-header + lux-divider {
+    margin: 0 !important;
+  }
+
+  .lux-chat-base {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: var(--lux-theme-chat-base-padding);
     display: flex;
     flex-direction: column;
 
-    height: 100%;
+    .lux-chat-entry-date-split {
+      text-align: center;
+      margin-top: var(--lux-theme-chat-entry-date-margin-top);
+      margin-bottom: var(--lux-theme-chat-entry-date-margin-bottom);
 
-    background-color: var(--lux-theme-chat-background-color);
+      color: var(--lux-theme-chat-entry-date-split-text-color);
+    }
 
+    .lux-chat-entry-container {
+      min-width: var(--lux-theme-chat-entry-container-min-width);
+      max-width: max(80%, min(90%, 500px));
+      margin-bottom: var(--lux-theme-chat-entry-container-margin-bottom);
 
-    .lux-chat-header {
+      .lux-chat-entry-header {
         display: flex;
         flex-direction: row;
+        gap: var(--lux-theme-chat-entry-header-gap);
+        margin-bottom: 8px;
 
-        justify-content: space-between;
-        
-        margin: 16px 16px;
-        
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--lux-theme-chat-entry-header-text-color);
+      }
 
-        .lux-chat-header-title {
-            margin: 0;
-            
-            .lux-chat-header-title-text {
-                color: var(--lux-theme-chat-header-title-text-color);
-                font-size: 1rem;
-                font-weight: var(--lux-theme-chat-header-title-text-weight);
-            }
+      .lux-chat-entry-card {
+        padding-right: var(--lux-theme-chat-entry-card-padding-right);
+        padding-left: var(--lux-theme-chat-entry-card-padding-left);
 
-            .lux-chat-header-sub-title {
-                color: var(--lux-theme-chat-header-sub-title-text-color);
-            }
+        border-radius: var(--lux-theme-chat-entry-card-border-radius);
+
+        font-size: 1.125rem;
+        word-wrap: break-word;
+        overflow-x: hidden;
+
+        max-width: 90%;
+
+        .lux-chat-entry-card-default-text {
+          white-space: break-spaces;
         }
+      }
     }
-    
 
-    .lux-chat-header + lux-divider {
-        margin: 0 !important;
+    .lux-chat-entry-container-left {
+      .lux-chat-entry-card {
+        background-color: var(--lux-theme-chat-entry-card-incomming-background-color);
+        border-bottom-left-radius: 0;
+
+        color: var(--lux-theme-chat-entry-card-incomming-text-color);
+      }
+
+      align-self: flex-start;
     }
 
+    .lux-chat-entry-container-right {
+      .lux-chat-entry-header {
+        justify-content: end;
+      }
 
-    .lux-chat-base {
-        flex: 1;
+      .lux-chat-entry-card {
+        background-color: var(--lux-theme-chat-entry-card-outgoing-background-color);
+        border-bottom-right-radius: 0;
 
-        overflow-y: auto;
+        color: var(--lux-theme-chat-entry-card-outgoing-text-color);
+      }
 
-        padding: 16px; //TODO: Pixel ? Variable ?
-        display: flex;
-        flex-direction: column;
-        
-        
-        .lux-chat-entry-date-split {
-            text-align: center;
-            margin-top: 16px; //TODO: Pixel ? Variable ?
-            margin-bottom: 8px; //TODO: Pixel ? Variable ?
-
-            color: var(--lux-theme-chat-entry-date-split-text-color);
-        }
-
-        .lux-chat-entry-container {
-            min-width: 20px; //TODO: Pixel ? Variable ?
-            max-width: max(80%, min(90%, 500px));
-            margin-bottom: 8px; //TODO: Pixel ? Variable ?
-            
-
-            .lux-chat-entry-header {
-                display: flex;
-                flex-direction: row;
-                gap: 8px; //TODO: Pixel ? Variable ?
-                margin-bottom: 8px;
-
-                font-size: 1rem;
-                font-weight: 500;
-                color: var(--lux-theme-chat-entry-header-text-color)
-            }
-
-            .lux-chat-entry-card {
-                padding-right: var(--lux-theme-chat-entry-card-padding-right);
-                padding-left: var(--lux-theme-chat-entry-card-padding-left);
-
-                border-radius: var(--lux-theme-chat-entry-card-border-radius);
-
-                font-size: 1.125rem;
-                word-wrap: break-word;
-                overflow-x: hidden; //?
-
-                max-width: 90%;
-
-                .lux-chat-entry-card-default-text {
-                    white-space: break-spaces;
-                }
-            }
-        }
-
-        
-
-        .lux-chat-entry-container-left {
-            .lux-chat-entry-card {
-                background-color: var(--lux-theme-chat-entry-card-incomming-background-color);
-                border-bottom-left-radius: 0;
-
-                color: var(--lux-theme-chat-entry-card-incomming-text-color);
-            }
-
-            align-self: flex-start;
-        }
-        
-
-        .lux-chat-entry-container-right {
-            .lux-chat-entry-header {
-                justify-content: end;
-            }
-
-
-            .lux-chat-entry-card {
-                background-color: var(--lux-theme-chat-entry-card-outgoing-background-color);
-                border-bottom-right-radius: 0;
-
-                color: var(--lux-theme-chat-entry-card-outgoing-text-color);
-            }
-
-            align-self: flex-end;
-        }
+      align-self: flex-end;
     }
-    
+  }
 
-    .lux-chat-base + lux-divider {
-        margin: 0 !important;
+  .lux-chat-base + lux-divider {
+    margin: 0 !important;
+  }
+
+  .lux-chat-action-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 24px;
+    padding: 16px;
+    margin: auto;
+
+    width: min(calc(100% - 32px), 850px);
+
+    box-shadow: 0 -2px 20px -10px #999;
+
+    .lux-chat-action-input {
+      flex: 1 0 auto;
     }
-    
 
-    .lux-chat-action-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        gap: 24px;
-        padding: 16px;
-        margin: auto;
-
-        width: min(calc(100% - 32px), 850px);
-
-        box-shadow: 0 -2px 20px -10px #999;
-
-        .lux-chat-action-input {
-            flex: 1 0 auto;
-        }
-
-        .lux-chat-action-send {
-            margin: auto;
-        }
+    .lux-chat-action-send {
+      margin: auto;
     }
+  }
 }

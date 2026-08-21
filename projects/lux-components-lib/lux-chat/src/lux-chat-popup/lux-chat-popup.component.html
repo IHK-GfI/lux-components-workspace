@@ -1,25 +1,26 @@
 <div class="lux-chat-popup-container">
-    <div class="lux-chat-popup-content">
+  <div class="lux-chat-popup-content">
+    <button
+      mat-fab
+      (click)="onChatIconClicked()"
+      [type]="'button'"
+      class="lux-chat-popup-floating-button"
+      [attr.aria-label]="(luxChatOpened() ? 'luxc.chat-popup.button_close.arialabel' : 'luxc.chat-popup.button_open.arialabel') | transloco"
+    >
+      <lux-icon
+        [luxIconName]="luxChatOpened() ? 'lux-interface-delete-1' : 'lux-mail-chat-bubble-typing-square'"
+        luxPadding="0px"
+        luxMargin="0px"
+      ></lux-icon>
+    </button>
 
-        <button
-            mat-fab
-            (click)="onChatIconClicked()"
-            [type]="'button'"
-            class="lux-chat-popup-floating-button"
-            [attr.aria-label]="(luxChatOpened() ? 'luxc.chat-popup.button_close.arialabel' : 'luxc.chat-popup.button_open.arialabel') | transloco"
-        >
-            <lux-icon 
-                [luxIconName]="luxChatOpened() ? 'lux-interface-delete-1' : 'lux-mail-chat-bubble-typing-square'" 
-                luxPadding="0px" 
-                luxMargin="0px"
-            ></lux-icon>
-        </button>
-
-        @if(luxChatOpened()){
-            <div class="lux-chat-popup-inner-container" [ngClass]="{'lux-chat-popup-inner-container-fullscreen': (mobileView || luxFullScreen())}">
-                <ng-content></ng-content>
-            </div>
-        }
-        
-    </div>
+    @if (luxChatOpened()) {
+      <div
+        class="lux-chat-popup-inner-container"
+        [ngClass]="{ 'lux-chat-popup-inner-container-fullscreen': mobileView || luxFullScreen() }"
+      >
+        <ng-content></ng-content>
+      </div>
+    }
+  </div>
 </div>

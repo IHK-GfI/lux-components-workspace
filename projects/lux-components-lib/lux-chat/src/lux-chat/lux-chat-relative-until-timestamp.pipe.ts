@@ -7,7 +7,7 @@ export const timeDeltas = [
   { id: 'year', days: 672, dayUnit: 336 },
   { id: 'month', days: 56, dayUnit: 28 },
   { id: 'week', days: 14, dayUnit: 7 },
-  { id: 'day', days: 2, dayUnit: 1 }
+  { id: 'days', days: 2, dayUnit: 1 }
 ];
 
 export const timeDeltasRelative = [
@@ -20,7 +20,14 @@ export const timeDeltasRelative = [
 export class LuxChatRelativeUntilTimestamp implements PipeTransform {
   private tService = inject(TranslocoService);
 
-  transform(timestamp: number | Date | null, defaultText = '', prefix?: string, relativeUntilMin?: number, relativeUntilMax?: number, locale?: string): string {
+  transform(
+    timestamp: number | Date | null,
+    defaultText = '',
+    prefix?: string,
+    relativeUntilMin?: number,
+    relativeUntilMax?: number,
+    locale?: string
+  ): string {
     if (!timestamp) {
       return defaultText;
     }
@@ -32,13 +39,13 @@ export class LuxChatRelativeUntilTimestamp implements PipeTransform {
     let timeName = null;
 
     let showAsRelative = true;
-    if((relativeUntilMin || relativeUntilMin === 0) && delta <= relativeUntilMin) {
+    if ((relativeUntilMin || relativeUntilMin === 0) && delta <= relativeUntilMin) {
       showAsRelative = false;
-    } else if((relativeUntilMax || relativeUntilMax === 0) && delta > relativeUntilMax){
+    } else if ((relativeUntilMax || relativeUntilMax === 0) && delta > relativeUntilMax) {
       showAsRelative = false;
     }
 
-    if(showAsRelative){
+    if (showAsRelative) {
       for (const timeDelta of timeDeltas) {
         const tempDelta = delta < 0 ? delta * -1 : delta;
 
@@ -78,12 +85,12 @@ export class LuxChatRelativeUntilTimestamp implements PipeTransform {
     } else {
       const weekdayLong = then.toLocaleString(locale, { weekday: 'long' });
       const monthNameLong = then.toLocaleString(locale, { month: 'long' });
-      
-      timeName = weekdayLong + ", " + then.getDate() + ". " + monthNameLong;
 
-      if(then.getFullYear() < now.getFullYear()){
-        const year = then.toLocaleString(locale, { year: 'numeric' })
-        timeName += " " + year;
+      timeName = weekdayLong + ', ' + then.getDate() + '. ' + monthNameLong;
+
+      if (then.getFullYear() < now.getFullYear()) {
+        const year = then.toLocaleString(locale, { year: 'numeric' });
+        timeName += ' ' + year;
       }
     }
 
