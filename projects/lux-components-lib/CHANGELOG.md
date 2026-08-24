@@ -48,6 +48,7 @@
 
 ### Issues
 
+- Issue #269: lux-table deaktiviert die alternierenden Zeilenfarben automatisch, sobald mindestens eine Zeile eine `lux-text-highlight-*`-Klasse trägt. Die Zeilentrennung erfolgt dann über horizontale Trennlinien.
 - Issue #275: Neue Optionen `luxStickyHeader` und `luxStickyHeaderOffset` für lux-panel und lux-accordion. Der Header eines geöffneten Panels bleibt beim Scrollen am oberen Rand des Scroll-Bereichs sichtbar, bis der Panel-Inhalt aus dem Sichtbereich geschoben ist.
 - Issue #274: Sicherheitsrisiko: window.open() ohne "noopener,noreferrer" bei externen Links in LuxLinkComponent (Reverse Tabnabbing). lux-link und lux-link-plain öffnen Links in neuen Tabs jetzt mit noopener,noreferrer, zusätzlich setzen die Anker bei luxBlank das rel-Attribut "noopener noreferrer".
 - Issue #267: A11y: luxNoTopLabel/luxNoLabels blenden das Label nur noch visuell aus (lux-sr-only), das `<label>` bleibt im DOM und der zugängliche Name erhalten. Neu: luxAriaLabel und luxAriaLabelledby als Inputs auf allen Form-Controls. Behoben: doppelte DOM-ID in lux-select-ac. Hinweis 1: Anwendungs-Tests, die bei luxNoTopLabel auf ein fehlendes `<label>` prüfen, müssen angepasst werden. Hinweis 2: luxNoBottomLabel/luxNoLabels entfernen weiterhin bewusst Hint und Fehlermeldung aus dem DOM. Hinweis 3: lux-file-list und lux-file-upload folgen in einem separaten Issue. Hinweis 4 für fakeAsync-Tests: Die Form-Controls planen beim Initialisieren einen einmaligen setTimeout für die A11y-Prüfung ein, der in fakeAsync-Tests per tick() oder flush() abgearbeitet werden muss.
