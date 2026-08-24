@@ -122,19 +122,29 @@ lux-table {
       }
 
       // Die Komponente setzt lux-table-no-striping, sobald mindestens eine Zeile eine
-      // lux-text-highlight-*-Klasse trägt (Issue #269). Ohne Striping brauchen die Zeilen
-      // eine Trennlinie, weil die Zellen sonst keine Borders haben.
+      // lux-text-highlight-*-Klasse trägt (Issue #269). Die Trennlinien liegen als
+      // border-top auf der jeweils unteren Zeile, damit der Nachbar-Selektor (+) über die
+      // vorherige Zeile entscheiden kann: Weiße Nachbarzeilen trennt die Standard-Linie,
+      // an Übergängen zwischen weißen und markierten Zeilen trennt der Farbwechsel (keine
+      // Linie), zwei markierte Nachbarzeilen trennt eine Linie in ihrer Schriftfarbe
+      // (currentColor), weil die helle Standard-Border-Farbe auf den farbigen
+      // Hintergründen nicht sichtbar wäre.
       &.lux-table-no-striping {
         .mat-mdc-row {
           background-color: var(--lux-theme-app-data-bg);
         }
 
-        .mat-mdc-row > td {
-          border-bottom: 1px solid var(--lux-theme-app-border-color);
+        .mat-mdc-row + .mat-mdc-row > td {
+          border-top: 1px solid var(--lux-theme-app-border-color);
         }
 
-        tbody tr:last-of-type td {
-          border-bottom: none;
+        .mat-mdc-row + .mat-mdc-row[class*="lux-text-highlight-"] > td,
+        .mat-mdc-row[class*="lux-text-highlight-"] + .mat-mdc-row > td {
+          border-top: none;
+        }
+
+        .mat-mdc-row[class*="lux-text-highlight-"] + .mat-mdc-row[class*="lux-text-highlight-"] > td {
+          border-top: 1px solid currentColor;
         }
       }
 
@@ -147,20 +157,23 @@ lux-table {
         }
       }
 
-      // Ohne diese Kombination würden bei ausgeblendeten Rahmen (lux-hide-borders) und
-      // deaktiviertem Striping (lux-table-no-striping, Issue #269) alle nicht markierten
-      // Zeilen zu einem einzigen weißen Block verschmelzen, weil "border: unset !important"
-      // oben auch die Trennlinie aus .lux-table-no-striping entfernt. Die Selektoren hier
-      // haben durch die zusätzliche Klasse eine höhere Spezifität als .lux-hide-borders
-      // (vier statt zwei Klassen bei gleichem Element-Anteil) und gewinnen dadurch trotz
-      // gleicher !important-Stärke.
+      // Die Zeilentrennung im no-striping-Zustand ist semantisch und bleibt deshalb auch
+      // bei ausgeblendeten Rahmen (lux-hide-borders) erhalten; das "border: unset
+      // !important" oben würde sie sonst entfernen. Die Regeln spiegeln die obigen
+      // Trennlinien-Regeln mit !important; sie gewinnen trotz gleicher !important-Stärke
+      // durch ihre höhere Spezifität, untereinander gilt: je mehr Klassen, desto stärker.
       &.lux-hide-borders.lux-table-no-striping {
-        .mat-mdc-row > td {
-          border-bottom: 1px solid var(--lux-theme-app-border-color) !important;
+        .mat-mdc-row + .mat-mdc-row > td {
+          border-top: 1px solid var(--lux-theme-app-border-color) !important;
         }
 
-        tbody tr:last-of-type td {
-          border-bottom: unset !important;
+        .mat-mdc-row + .mat-mdc-row[class*="lux-text-highlight-"] > td,
+        .mat-mdc-row[class*="lux-text-highlight-"] + .mat-mdc-row > td {
+          border-top: unset !important;
+        }
+
+        .mat-mdc-row[class*="lux-text-highlight-"] + .mat-mdc-row[class*="lux-text-highlight-"] > td {
+          border-top: 1px solid currentColor !important;
         }
       }
 

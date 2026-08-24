@@ -598,7 +598,10 @@ Sobald mindestens einer Zeile über `luxClasses` eine Texthighlight-Klasse mit d
 `lux-text-highlight-` zugewiesen ist (z. B. `lux-text-highlight-error`, `lux-text-highlight-success`,
 `lux-text-highlight-alert` oder deren `-strong`-Varianten), deaktiviert die Tabelle das Striping
 automatisch: Alle nicht markierten Zeilen erhalten einen weißen Hintergrund und werden durch eine
-horizontale Trennlinie voneinander getrennt. So bleibt eindeutig erkennbar, welche Zeilen eine
+horizontale Trennlinie voneinander getrennt. An den Übergängen zwischen markierten und nicht
+markierten Zeilen entfällt die Linie, dort trennt bereits der Farbwechsel. Folgen zwei markierte
+Zeilen aufeinander, trennt sie eine Linie in ihrer Schriftfarbe, damit auch gleichfarbige
+Nachbarzeilen unterscheidbar bleiben. So bleibt eindeutig erkennbar, welche Zeilen eine
 fachliche Bedeutung tragen. Werden alle Highlight-Klassen wieder entfernt, aktiviert sich das
 Striping automatisch erneut. Eine Konfiguration durch die Anwendung ist nicht erforderlich.
 
