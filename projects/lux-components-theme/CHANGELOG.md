@@ -34,7 +34,9 @@
 
 ### Issues
 
+- Issue #264: Weitere Farbpaletten dem Theme hinzugefügt (#273)
 - Issue #267: lux-sr-only auf das clip-Muster umgestellt
+- Issue #269: lux-table deaktiviert die alternierenden Zeilenfarben bei semantischer Hervorhebung und nutzt zur Zeilentrennung horizontale Trennlinien (#280)
 
 ## Version 21.7.0
 
