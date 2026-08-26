@@ -27,7 +27,8 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     ExampleBaseSimpleOptionsComponent,
     LuxInputAcComponent,
     LuxToggleAcComponent,
-    CommonModule
+    CommonModule,
+    LuxInputAcComponent
   ],
   templateUrl: './chat-example.component.html',
   styleUrl: './chat-example.component.scss'
@@ -36,6 +37,14 @@ export class ChatExampleComponent {
   public exampleUsername = 'Nutzer C';
   public showChatPopup = false;
   public showCustomHeader = false;
+
+  public set chatTitle(chatTitle: string) {
+    this.chatData.title = chatTitle;
+  }
+
+  public get chatTitle(): string {
+    return this.chatData.title;
+  }
 
   // prettier-ignore
   public chatData: LuxChatData = new LuxChatData("Neuer Chat", new Date(), [

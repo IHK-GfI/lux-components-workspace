@@ -8,7 +8,7 @@
         <lux-chat [luxChatData]="chatData" [luxChatUserName]="exampleUsername" (luxChatOutput)="onMessageEntered($event)">
           @if (showCustomHeader) {
             <lux-chat-header>
-              <ng-template> Custom Header </ng-template>
+              <ng-template>Custom Header {{ chatTitle }} </ng-template>
             </lux-chat-header>
           }
         </lux-chat>
@@ -20,7 +20,7 @@
         <lux-chat [luxChatData]="chatData" [luxChatUserName]="exampleUsername" (luxChatOutput)="onMessageEntered($event)">
           @if (showCustomHeader) {
             <lux-chat-header>
-              <ng-template> Custom Header </ng-template>
+              <ng-template>Custom Header {{ chatTitle }} </ng-template>
             </lux-chat-header>
           }
         </lux-chat>
@@ -29,8 +29,10 @@
   </example-base-content>
 
   <example-base-simple-options>
+    <lux-input-ac luxLabel="Chat Titel" [(luxValue)]="chatTitle"></lux-input-ac>
+    <lux-input-ac luxLabel="Chat Username" [(luxValue)]="exampleUsername"></lux-input-ac>
+
     <lux-toggle-ac luxLabel="Zeige Chat in LuxChatPopup Komponente" [(luxChecked)]="showChatPopup"></lux-toggle-ac>
     <lux-toggle-ac luxLabel="Custom Chat Header anzeigen" [(luxChecked)]="showCustomHeader"></lux-toggle-ac>
-    <lux-input-ac luxLabel="Chat Username" [(luxValue)]="exampleUsername"></lux-input-ac>
   </example-base-simple-options>
 </example-base-structure>
