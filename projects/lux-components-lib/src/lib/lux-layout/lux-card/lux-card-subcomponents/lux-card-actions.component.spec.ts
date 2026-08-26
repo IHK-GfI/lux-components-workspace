@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxCardActionAlignType, LuxCardActionsComponent } from './lux-card-actions.component';
@@ -52,6 +52,7 @@ describe('LuxCardActionsComponent', () => {
       <button class="btn-b">B</button>
     </lux-card-actions>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxCardActionsComponent]
 })
 class HostComponent {

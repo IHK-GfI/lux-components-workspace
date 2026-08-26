@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
 import {
@@ -32,6 +32,7 @@ interface CheckboxValidatorDemoForm {
   selector: 'checkbox-container-ac-example',
   templateUrl: './checkbox-container-ac-example.component.html',
   styleUrls: ['./checkbox-container-ac-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxCheckboxContainerAcComponent,
     LuxToggleAcComponent,

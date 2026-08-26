@@ -1,12 +1,12 @@
 // noinspection DuplicatedCode
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, withXhr } from '@angular/common/http';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { ILuxFileListActionConfig, ILuxFilesListActionConfig } from '../lux-file-model/lux-file-list-action-config.interface';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom } from '@angular/core';
+import { Component, importProvidersFrom, ChangeDetectionStrategy } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -37,7 +37,7 @@ describe('LuxFileListComponent', () => {
           })
         ]),
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting(),
         {
@@ -376,9 +376,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.formControl.errors).toBeNull();
 
       // Versucht eine zweite Datei hinzuzufügen -> Error
-      fileComponent.selectFiles([
-        LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')
-      ]);
+      fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
       flush();
       LuxTestHelper.wait(fixture);
       expect(fileComponent.formControl.errors).not.toBeNull();
@@ -389,9 +387,7 @@ describe('LuxFileListComponent', () => {
       fixture.detectChanges();
 
       // Fügt eine zweite Datei hinzu
-      fileComponent.selectFiles([
-        LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')
-      ]);
+      fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
       flush();
       LuxTestHelper.wait(fixture);
 
@@ -889,14 +885,8 @@ describe('LuxFileListComponent', () => {
           LuxTestHelper.wait(fixture);
 
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-add button')).nativeElement.disabled).toBe(false);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[0].nativeElement
-              .disabled
-          ).toBe(false);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[1].nativeElement
-              .disabled
-          ).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[0].nativeElement.disabled).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[1].nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.uploadActionConfig.disabled = true;
@@ -905,14 +895,8 @@ describe('LuxFileListComponent', () => {
 
           // Nachbedingungen prüfen
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-add button')).nativeElement.disabled).toBe(true);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[0].nativeElement
-              .disabled
-          ).toBe(true);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[1].nativeElement
-              .disabled
-          ).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[0].nativeElement.disabled).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Hochladen"]'))[1].nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen und die Datei ersetzen', fakeAsync(() => {
@@ -1020,28 +1004,16 @@ describe('LuxFileListComponent', () => {
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
 
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[0].nativeElement
-              .disabled
-          ).toBe(false);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[1].nativeElement
-              .disabled
-          ).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[0].nativeElement.disabled).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[1].nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.downloadActionConfig.disabled = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[0].nativeElement
-              .disabled
-          ).toBe(true);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[1].nativeElement
-              .disabled
-          ).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[0].nativeElement.disabled).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[1].nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen', fakeAsync(() => {
@@ -1061,9 +1033,7 @@ describe('LuxFileListComponent', () => {
           // Änderungen durchführen
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
-          fixture.debugElement
-            .queryAll(By.css('button[aria-label="Downloaden"]'))[0]
-            .nativeElement.click();
+          fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[0].nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -1071,9 +1041,7 @@ describe('LuxFileListComponent', () => {
           expect(spy).toHaveBeenCalledWith(fileComponent.luxSelected![0]);
 
           // Änderungen durchführen
-          fixture.debugElement
-            .queryAll(By.css('button[aria-label="Downloaden"]'))[1]
-            .nativeElement.click();
+          fixture.debugElement.queryAll(By.css('button[aria-label="Downloaden"]'))[1].nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -1123,14 +1091,8 @@ describe('LuxFileListComponent', () => {
 
           // Nachbedingungen prüfen
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-clear button')).nativeElement.disabled).toBe(false);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement
-              .disabled
-          ).toBe(false);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[1].nativeElement
-              .disabled
-          ).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement.disabled).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[1].nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.deleteActionConfig.disabled = true;
@@ -1139,14 +1101,8 @@ describe('LuxFileListComponent', () => {
 
           // Nachbedingungen prüfen
           expect(fixture.debugElement.query(By.css('lux-button.lux-file-list-header-clear button')).nativeElement.disabled).toBe(true);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement
-              .disabled
-          ).toBe(true);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[1].nativeElement
-              .disabled
-          ).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement.disabled).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[1].nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen', fakeAsync(() => {
@@ -1174,9 +1130,7 @@ describe('LuxFileListComponent', () => {
           // Änderungen durchführen
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
-          fixture.debugElement
-            .queryAll(By.css('button[aria-label*="Löschen"]'))[0]
-            .nativeElement.click();
+          fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -1184,9 +1138,7 @@ describe('LuxFileListComponent', () => {
           expect(fixture.debugElement.queryAll(By.css('.lux-file-list-entry')).length).toBe(1);
 
           // Änderungen durchführen
-          fixture.debugElement
-            .queryAll(By.css('button[aria-label*="Löschen"]'))[0]
-            .nativeElement.click();
+          fixture.debugElement.queryAll(By.css('button[aria-label*="Löschen"]'))[0].nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -1229,28 +1181,16 @@ describe('LuxFileListComponent', () => {
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
 
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[0].nativeElement
-              .disabled
-          ).toBe(false);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[1].nativeElement
-              .disabled
-          ).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[0].nativeElement.disabled).toBe(false);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[1].nativeElement.disabled).toBe(false);
 
           // Änderungen durchführen
           testComponent.viewActionConfig.disabled = true;
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[0].nativeElement
-              .disabled
-          ).toBe(true);
-          expect(
-            fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[1].nativeElement
-              .disabled
-          ).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[0].nativeElement.disabled).toBe(true);
+          expect(fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[1].nativeElement.disabled).toBe(true);
         }));
 
         it('Sollte den Callback aufrufen', fakeAsync(() => {
@@ -1267,9 +1207,7 @@ describe('LuxFileListComponent', () => {
           // Änderungen durchführen
           fileComponent.selectFiles(files);
           LuxTestHelper.wait(fixture);
-          fixture.debugElement
-            .queryAll(By.css('button[aria-label*="Anzeigen"]'))[0]
-            .nativeElement.click();
+          fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[0].nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -1277,9 +1215,7 @@ describe('LuxFileListComponent', () => {
           expect(spy).toHaveBeenCalledWith(fileComponent.luxSelected![0]);
 
           // Änderungen durchführen
-          fixture.debugElement
-            .queryAll(By.css('button[aria-label*="Anzeigen"]'))[1]
-            .nativeElement.click();
+          fixture.debugElement.queryAll(By.css('button[aria-label*="Anzeigen"]'))[1].nativeElement.click();
           LuxTestHelper.wait(fixture);
 
           // Nachbedingungen prüfen
@@ -1317,6 +1253,7 @@ describe('LuxFileListComponent', () => {
     >
     </lux-file-list>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxFileListComponent]
 })
 class FileComponent {
@@ -1396,6 +1333,7 @@ class FileComponent {
       </lux-file-list>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxFileListComponent]
 })
 class FileFormComponent {

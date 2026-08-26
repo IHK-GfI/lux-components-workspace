@@ -1,8 +1,8 @@
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/testing';
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, importProvidersFrom, inject, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -41,7 +41,7 @@ describe('LuxDialogService', () => {
             }
           })
         ]),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -429,6 +429,7 @@ describe('LuxDialogService', () => {
 
 @Component({
   template: ` <ng-template #testContentTemplate><span>Hallo Welt</span></ng-template> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
 class MockDialogComponent {
@@ -457,6 +458,7 @@ class MockDialogComponent {
       </lux-dialog-actions>
     </lux-dialog-structure>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxDialogStructureComponent, LuxDialogTitleComponent, LuxDialogContentComponent, LuxDialogActionsComponent, LuxButtonComponent]
 })
 class MockCustomDialogComponent {

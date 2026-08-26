@@ -1,9 +1,9 @@
 // noinspection DuplicatedCode
 
 import { DOWN_ARROW, END, ENTER, ESCAPE, HOME, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -21,7 +21,7 @@ describe('LuxListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
+      providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
   }));
 
@@ -467,6 +467,7 @@ describe('LuxListComponent', () => {
       }
     </lux-list>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxListComponent, LuxListItemComponent, LuxListItemContentComponent, LuxListItemIconComponent, LuxIconComponent]
 })
 class MockListComponent {
@@ -511,6 +512,7 @@ class MockListComponent {
       }
     </lux-list>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxListComponent, LuxListItemComponent, LuxListItemContentComponent]
 })
 class MockListWithInteractiveComponent {

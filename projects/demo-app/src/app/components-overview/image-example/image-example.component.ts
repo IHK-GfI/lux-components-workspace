@@ -1,5 +1,5 @@
 import { isPlatformBrowser, NgClass } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxImageComponent,
@@ -15,6 +15,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-image-example',
   templateUrl: './image-example.component.html',
   styleUrls: ['./image-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxImageComponent,
     LuxToggleAcComponent,

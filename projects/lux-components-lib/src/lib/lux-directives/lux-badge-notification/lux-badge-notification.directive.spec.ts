@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -86,6 +86,7 @@ describe('LuxBadgeNotificationDirective', () => {
       Test
     </span>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxBadgeNotificationDirective]
 })
 class MockComponent {

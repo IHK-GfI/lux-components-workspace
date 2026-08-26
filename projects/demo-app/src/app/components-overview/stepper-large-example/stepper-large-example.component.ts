@@ -1,5 +1,5 @@
 import { JsonPipe, NgClass, NgStyle } from '@angular/common';
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     LuxSelectAcComponent,
@@ -22,6 +22,7 @@ import { StepperLargeExternStepExampleComponent } from './steps/stepper-large-ex
   selector: 'lux-stepper-large-example',
   templateUrl: './stepper-large-example.component.html',
   styleUrls: ['./stepper-large-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxStepperLargeStepComponent,
     LuxStepperLargeComponent,

@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxLinkComponent } from '../../lux-action/lux-link/lux-link.component';
@@ -19,6 +19,7 @@ import { LuxAppFooterLinkService } from './lux-app-footer-link.service';
 @Component({
   selector: 'lux-app-footer',
   templateUrl: './lux-app-footer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, NgClass, NgStyle, LuxLinkComponent, LuxMenuComponent, LuxMenuItemComponent, TranslocoPipe]
 })
 export class LuxAppFooterComponent implements OnInit, AfterViewInit, OnDestroy {

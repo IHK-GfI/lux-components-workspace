@@ -4,9 +4,9 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ComponentFactoryResolver,
   ContentChild,
   DoCheck,
   ElementRef,
@@ -34,10 +34,10 @@ import { LuxPropertyFromObjectPipe } from '../../lux-pipes/lux-property-from-obj
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxCardContentComponent } from '../lux-card/lux-card-subcomponents/lux-card-content.component';
-import { LuxCardCustomHeaderComponent } from "../lux-card/lux-card-subcomponents/lux-card-custom-header.component";
+import { LuxCardCustomHeaderComponent } from '../lux-card/lux-card-subcomponents/lux-card-custom-header.component';
 import { LuxCardComponent } from '../lux-card/lux-card.component';
 import { LuxListItemContentComponent } from '../lux-list/lux-list-subcomponents/lux-list-item-content.component';
-import { LuxListItemCustomHeaderComponent } from "../lux-list/lux-list-subcomponents/lux-list-item-custom-header.component";
+import { LuxListItemCustomHeaderComponent } from '../lux-list/lux-list-subcomponents/lux-list-item-custom-header.component';
 import { LuxListItemIconComponent } from '../lux-list/lux-list-subcomponents/lux-list-item-icon.component';
 import { LuxListItemComponent } from '../lux-list/lux-list-subcomponents/lux-list-item.component';
 import { LuxListComponent } from '../lux-list/lux-list.component';
@@ -61,6 +61,7 @@ import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-a
       transition('0 => 1', animate('1s'))
     ])
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     NgClass,
     LuxTagIdDirective,
@@ -81,11 +82,10 @@ import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-a
     TranslocoPipe,
     LuxCardCustomHeaderComponent,
     LuxListItemCustomHeaderComponent
-]
+  ]
 })
 export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContentInit, AfterViewInit, DoCheck, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
-  private cfr = inject(ComponentFactoryResolver);
   private liveAnnouncer = inject(LiveAnnouncer);
   private mediaObserver = inject(LuxMediaQueryObserverService);
 
@@ -280,18 +280,6 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
     this.luxScrolled.emit();
   }
 
-  onSwipeLeft() {
-    if (this.isMobile) {
-      this.onCloseMaster();
-    }
-  }
-
-  onSwipeRight() {
-    if (this.isMobile) {
-      this.onOpenMaster();
-    }
-  }
-
   /**
    * Kapselung von der übergebenen luxCompareWith-Funktion.
    * Fängt undefinierte Objekte ab und returned stattdessen false.
@@ -351,8 +339,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
               this.detailContext = { $implicit: detail };
 
               // Den Detail-Wrapper erzeugen und abfangen, wann die Nodes geladen worden sind
-              const child = this.cfr.resolveComponentFactory(LuxDetailWrapperAcComponent);
-              const childRef = this.detailViewContainerRef.createComponent(child);
+              const childRef = this.detailViewContainerRef.createComponent(LuxDetailWrapperAcComponent);
               const instance = childRef.instance;
               instance.luxDetailContext = this.detailContext;
               instance.luxDetailTemplate = this.detailView.tempRef;

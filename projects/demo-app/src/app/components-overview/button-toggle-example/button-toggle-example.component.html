@@ -50,7 +50,7 @@
           luxControlBinding="singleSelect"
           (luxSelectedChange)="onSingleChanged($event)"
         ></lux-button-toggle>
-        <example-value [value]="form.get('singleSelect')?.value"></example-value>
+        <example-value [value]="$safeNavigationMigration(form.get('singleSelect')?.value)"></example-value>
         <div>Valid: {{ form.get('singleSelect')?.valid }}</div>
       </div>
 
@@ -68,7 +68,7 @@
           luxControlBinding="multiSelect"
           (luxSelectedValuesChange)="onMultiChanged($event)"
         ></lux-button-toggle>
-        <example-value [value]="form.get('multiSelect')?.value"></example-value>
+        <example-value [value]="$safeNavigationMigration(form.get('multiSelect')?.value)"></example-value>
         <div>Valid: {{ form.get('multiSelect')?.valid }}</div>
       </div>
     </div>

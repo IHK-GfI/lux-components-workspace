@@ -1,9 +1,9 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { JsonPipe } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -32,7 +32,7 @@ describe('LuxSelectAcComponent', () => {
         LuxMediaQueryObserverService,
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -1452,6 +1452,7 @@ describe('LuxSelectAcComponent', () => {
       ></lux-select-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectInsideFormComponent {
@@ -1486,6 +1487,7 @@ class SelectInsideFormComponent {
       [luxPlaceholder]="placeholder"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectOutsideFormComponent {
@@ -1523,6 +1525,7 @@ class SelectOutsideFormComponent {
       [luxCompareWith]="compareFn"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectCustomCompareComponent {
@@ -1552,6 +1555,7 @@ class SelectCustomCompareComponent {
       [luxRequired]="false"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectStringArrayComponent {
@@ -1573,6 +1577,7 @@ class SelectStringArrayComponent {
       [luxMultiple]="false"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectFilterComponent {
@@ -1609,6 +1614,7 @@ class SelectFilterWithTemplateComponent {
       <lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="task" [luxEnableFilter]="true"></lux-select-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectFilterReactiveFormComponent {
@@ -1634,6 +1640,7 @@ class SelectFilterReactiveFormComponent {
       [(luxSelected)]="selectedOptions"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectFilterMultipleComponent {
@@ -1655,6 +1662,7 @@ class SelectFilterMultipleComponent {
       [(luxSelected)]="selectedOption"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectVisibleOptionCountComponent {
@@ -1708,6 +1716,7 @@ declare interface Option {
       [(luxSelected)]="selectedOption"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectValueHookComponent {
@@ -1738,6 +1747,7 @@ class SelectValueHookComponent {
     </form>
     {{ formGroup.value | json }}
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [JsonPipe, ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectValueHookFormComponent {
@@ -1771,6 +1781,7 @@ class SelectValueHookFormComponent {
       [luxPickValue]="hook"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectMultipleComponent {
@@ -1798,6 +1809,7 @@ class SelectMultipleComponent {
       [luxPickValue]="hook"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectMultiplePickValueFnComponent {
@@ -1821,6 +1833,7 @@ class SelectMultiplePickValueFnComponent {
       </ng-template>
     </lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSelectAcComponent]
 })
 class SelectWithTemplateComponent {

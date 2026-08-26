@@ -11,7 +11,8 @@ import {
   Output,
   QueryList,
   ViewChild,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -29,6 +30,7 @@ import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-n
   selector: 'lux-side-nav',
   templateUrl: './lux-side-nav.component.html',
   animations: [sideNavAnimation, sideNavOverlayAnimation],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgStyle, LuxAriaRoleDirective, LuxAriaLabelDirective, LuxDividerComponent, NgTemplateOutlet, LuxLinkComponent, LuxIconComponent, TranslocoPipe]
 })
 export class LuxSideNavComponent implements AfterViewInit, OnDestroy {

@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
@@ -20,6 +20,7 @@ import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry'
   selector: 'lux-lookup-combobox-ac',
   templateUrl: './lux-lookup-combobox-ac.component.html',
   styleUrls: ['./lux-lookup-combobox-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFormControlWrapperComponent,
     ReactiveFormsModule,

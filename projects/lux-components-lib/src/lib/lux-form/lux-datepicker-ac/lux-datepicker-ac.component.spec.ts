@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -21,7 +21,7 @@ describe('LuxDatepickerAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -778,6 +778,7 @@ describe('LuxDatepickerAcComponent', () => {
       (luxValueChange)="valueChanged()"
     ></lux-datepicker-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxDatepickerAcComponent]
 })
 class LuxNoFormAttributeTestComponent {
@@ -821,6 +822,7 @@ export const exampleErrorCallback = (value: any, errors: LuxValidationErrors) =>
       <lux-datepicker-ac luxLabel="Datum" luxControlBinding="datepicker" [luxErrorCallback]="errorCallBack"></lux-datepicker-ac>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxDatepickerAcComponent]
 })
 class LuxFormCustomValidatorComponent {
@@ -847,6 +849,7 @@ class LuxFormCustomValidatorComponent {
       {{ formControl.value }}
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxDatepickerAcComponent]
 })
 class LuxFormTestComponent {

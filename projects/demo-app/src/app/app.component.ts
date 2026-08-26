@@ -1,8 +1,7 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HammerModule } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   LUX_CONSENT_CONFIG,
@@ -85,7 +84,6 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
     LuxAriaLabelDirective,
     LuxTooltipDirective,
     AsyncPipe,
-    HammerModule,
     CdkScrollable,
     LuxDividerComponent,
     LuxMenuSectionTitleComponent,
@@ -94,6 +92,7 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [{ provide: LuxLookupService, useClass: MockLuxLookupService }]
 })
 export class AppComponent implements OnInit, OnDestroy {

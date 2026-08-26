@@ -1,5 +1,5 @@
 import { SchematicsException } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 
 export const TAB = '\t   ';
 

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxTextboxComponent } from "../../../../lux-common/lux-textbox/lux-textbox.component";
@@ -12,6 +12,7 @@ import { LuxDialogStructureComponent } from '../../../../lux-popups/lux-dialog/l
   selector: 'lux-lux-file-replace-dialog',
   templateUrl: './lux-file-replace-dialog.component.html',
   styleUrls: ['./lux-file-replace-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxDialogStructureComponent, LuxDialogTitleComponent, LuxDialogContentComponent, LuxDialogActionsComponent, LuxButtonComponent, LuxTextboxComponent, TranslocoPipe]
 })
 export class LuxFileReplaceDialogComponent {

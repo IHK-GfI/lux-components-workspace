@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import {
@@ -64,6 +64,7 @@ import { TextExampleComponent } from './text-example/text-example.component';
     NgTemplateOutlet,
     LuxInputAcComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '[class.authentic]': 'theme === "authentic"',
     '[class.green]': 'theme === "green"'

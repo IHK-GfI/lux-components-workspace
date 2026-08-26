@@ -12,7 +12,8 @@ import {
   OnInit,
   Output,
   QueryList,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -56,6 +57,7 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
 @Component({
   selector: 'lux-filter-form',
   templateUrl: './lux-filter-form.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAccordionComponent,
     LuxPanelComponent,

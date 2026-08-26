@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -18,7 +18,7 @@ describe('LuxSliderAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -322,6 +322,7 @@ describe('LuxSliderAcComponent', () => {
     luxTagId="slidernoform"
   >
   </lux-slider-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxSliderAcComponent]
 })
 class MockSliderNoFormComponent {
@@ -351,6 +352,7 @@ class MockSliderNoFormComponent {
     >
     </lux-slider-ac>
   </div>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxSliderAcComponent]
 })
 class MockSliderFormComponent {

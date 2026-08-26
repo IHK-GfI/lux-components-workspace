@@ -1,8 +1,9 @@
-import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { LuxBadgeNotificationColor } from '../../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 
 @Component({
   selector: 'lux-tab',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ''
 })
 export class LuxTabComponent {
