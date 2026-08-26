@@ -210,7 +210,7 @@
     >
     </lux-toggle-ac>
     @if (useCustomFilter) {
-    <pre class="lux-label"><b>customFilter</b> = {{ customFilterString }}</pre>
+    <pre tabindex="0" class="lux-label"><b>customFilter</b> = {{ customFilterString }}</pre>
     }
     <lux-toggle-ac
       luxLabel="luxErrorMessage verwenden"
@@ -229,7 +229,7 @@
     >
     </lux-input-ac>
     } @if (!useErrorMessage) {
-    <pre class="lux-label">{{ errorCallbackString }}</pre>
+    <pre tabindex="0" class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac
       [luxOptions]="validatorOptions"

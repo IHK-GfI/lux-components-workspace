@@ -39,18 +39,18 @@
 
 ### @Input
 
-| Name                     | Typ                                                              | Beschreibung                                                                                     |
-| ------------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| luxMode                  | LuxModeType (`default` \| `flat`)                                | Gibt an, ob es Abstände zwischen den Panels gibt. <br>`default` = mit Gap <br> `flat` = ohne Gap |
-| luxMulti                 | boolean                                                          | Gibt an, ob mehrere Panels aufgeklappt sein können.                                              |
-| luxHideToggle            | boolean                                                          | Gibt an, ob das Toggle-Icon ausgeblendet werden soll.                                            |
-| luxDisabled              | boolean                                                          | Gibt an, ob das Accordion deaktiviert ist.                                                       |
-| luxCollapsedHeaderHeight | string (z.B. `20px` oder `1em`)                                  | Gibt an, wie hoch die Panelheader im eingeklappten Zustand sind.                                 |
-| luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)                                  | Gibt an, wie hoch die Panelheader im ausgeklappten Zustand sind.                                 |
-| luxDynamicHeaderHeight   | boolean                                                          | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                     |
-| luxColor                 | LuxAccordionColor (`primary` \| `accent` \| `warn` \| `neutral`) | Gibt an, welche Farbe der Header haben soll.                                                     |
-| luxTogglePosition        | LuxTogglePosition (`after` \| `before`)                          | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts.     |
-| luxStickyHeader          | boolean                                                          | Gibt an, ob die Header geöffneter Panels beim Scrollen am oberen Rand des scrollbaren Bereichs kleben bleiben, solange der jeweilige Panelinhalt sichtbar ist. |
+| Name                     | Typ                                                              | Beschreibung                                                                                                                                                     |
+| ------------------------ | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxMode                  | LuxModeType (`default` \| `flat`)                                | Gibt an, ob es Abstände zwischen den Panels gibt. <br>`default` = mit Gap <br> `flat` = ohne Gap                                                                 |
+| luxMulti                 | boolean                                                          | Gibt an, ob mehrere Panels aufgeklappt sein können.                                                                                                              |
+| luxHideToggle            | boolean                                                          | Gibt an, ob das Toggle-Icon ausgeblendet werden soll.                                                                                                            |
+| luxDisabled              | boolean                                                          | Gibt an, ob das Accordion deaktiviert ist.                                                                                                                       |
+| luxCollapsedHeaderHeight | string (z.B. `20px` oder `1em`)                                  | Gibt an, wie hoch die Panelheader im eingeklappten Zustand sind.                                                                                                 |
+| luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)                                  | Gibt an, wie hoch die Panelheader im ausgeklappten Zustand sind.                                                                                                 |
+| luxDynamicHeaderHeight   | boolean                                                          | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                                                                                     |
+| luxColor                 | LuxAccordionColor (`primary` \| `accent` \| `warn` \| `neutral`) | Gibt an, welche Farbe der Header haben soll.                                                                                                                     |
+| luxTogglePosition        | LuxTogglePosition (`after` \| `before`)                          | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts.                                                                     |
+| luxStickyHeader          | boolean                                                          | Gibt an, ob die Header geöffneter Panels beim Scrollen am oberen Rand des scrollbaren Bereichs kleben bleiben, solange der jeweilige Panelinhalt sichtbar ist.   |
 | luxStickyHeaderOffset    | string (z.B. `64px` oder `4em`)                                  | Gibt den Abstand des klebenden Headers zum oberen Rand an, falls dort weitere Sticky-Elemente (z.B. eine Action-Bar) kleben. Der Wert benötigt eine CSS-Einheit. |
 
 ## Components
@@ -67,17 +67,17 @@ Eine `LuxPanelComponent` stellt einen ein- und ausklappbaren Bereich dar. Es gib
 
 #### @Input
 
-| Name                     | Typ                                     | Beschreibung                                                                                 |
-| ------------------------ | --------------------------------------- | -------------------------------------------------------------------------------------------- |
-| luxDisabled              | boolean                                 | Gibt an, ob das Panel deaktiviert ist.                                                       |
-| luxExpanded              | boolean                                 | Gibt an, ob das Panel aufgeklappt ist. _(Two-Way-Binding möglich)_                           |
-| luxHideToggle            | boolean                                 | Gibt an, ob das Toggle-Icon ausgeblendet werden soll.                                        |
-| luxCollapsedHeaderHeight | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im eingeklappten Zustand ist.                                   |
-| luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im ausgeklappten Zustand ist.                                   |
-| luxDynamicHeaderHeight   | boolean                                 | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                 |
-| luxTogglePosition        | LuxTogglePosition (`after` \| `before`) | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts. |
+| Name                     | Typ                                     | Beschreibung                                                                                                                                                          |
+| ------------------------ | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| luxDisabled              | boolean                                 | Gibt an, ob das Panel deaktiviert ist.                                                                                                                                |
+| luxExpanded              | boolean                                 | Gibt an, ob das Panel aufgeklappt ist. _(Two-Way-Binding möglich)_                                                                                                    |
+| luxHideToggle            | boolean                                 | Gibt an, ob das Toggle-Icon ausgeblendet werden soll.                                                                                                                 |
+| luxCollapsedHeaderHeight | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im eingeklappten Zustand ist.                                                                                                            |
+| luxExpandedHeaderHeight  | string (z.B. `20px` oder `1em`)         | Gibt an, wie hoch der Header im ausgeklappten Zustand ist.                                                                                                            |
+| luxDynamicHeaderHeight   | boolean                                 | Gibt an, ob die Headerhöhe automatisch berechnet werden soll                                                                                                          |
+| luxTogglePosition        | LuxTogglePosition (`after` \| `before`) | Gibt an, ob das Toggle-Icon rechts oder links angezeigt werden soll. Der Default ist rechts.                                                                          |
 | luxStickyHeader          | boolean                                 | Gibt an, ob der Header dieses Panels im geöffneten Zustand beim Scrollen am oberen Rand des scrollbaren Bereichs kleben bleibt, solange der Panelinhalt sichtbar ist. |
-| luxStickyHeaderOffset    | string (z.B. `64px` oder `4em`)         | Gibt den Abstand des klebenden Headers zum oberen Rand an, falls dort weitere Sticky-Elemente (z.B. eine Action-Bar) kleben. Der Wert benötigt eine CSS-Einheit. |
+| luxStickyHeaderOffset    | string (z.B. `64px` oder `4em`)         | Gibt den Abstand des klebenden Headers zum oberen Rand an, falls dort weitere Sticky-Elemente (z.B. eine Action-Bar) kleben. Der Wert benötigt eine CSS-Einheit.      |
 
 #### @Output
 
@@ -497,6 +497,6 @@ Die `LuxPanelComponents` sind auch alleinstehend funktionsfähig und benötigen 
 
 **Hinweise zu `luxStickyHeader`:**
 
-- Zwischen dem Panel und dem scrollbaren Container darf kein Element mit einem anderen `overflow`-Wert als `visible` liegen, sonst kann der Header nicht kleben. Bekannter Fall: Innerhalb einer `lux-card` greift Sticky derzeit nicht (siehe Issue [#277](https://github.com/IHK-GfI/lux-components-workspace/issues/277)).
+- Zwischen dem Panel und dem scrollbaren Container darf kein weiterer Scroll-Container liegen, sonst kann der Header nicht kleben. Ein Scroll-Container entsteht bei den `overflow`-Werten `auto`, `scroll` und `hidden` — nicht dagegen bei `visible` und `clip`. Eine `lux-card` schneidet ihren Inhalt deshalb mit `clip` ab und steht dem Kleben nicht im Weg; nur die Klasse `lux-card-scroll-content` macht sie wieder zum Scroll-Container.
 - `luxStickyHeaderOffset` benötigt eine CSS-Länge mit Einheit. Ein Wert ohne Einheit (z.B. `50`) deaktiviert das Kleben.
 - Ein klebender Header kann per Tastatur fokussierte Inhalte am oberen Rand überdecken. Bei sehr langen Formularen im Panelinhalt sollte das beim Einsatz der Option bedacht werden.
