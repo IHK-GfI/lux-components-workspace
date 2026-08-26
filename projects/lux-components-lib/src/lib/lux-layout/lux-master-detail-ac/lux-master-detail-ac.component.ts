@@ -7,23 +7,24 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
   DoCheck,
   ElementRef,
-  EventEmitter,
-  Input,
+  Injector,
   OnDestroy,
   OnInit,
-  Output,
-  QueryList,
-  ViewChild,
-  ViewChildren,
   ViewContainerRef,
-  inject
+  contentChild,
+  inject,
+  input,
+  model,
+  output,
+  viewChild,
+  viewChildren
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { BehaviorSubject, ReplaySubject, Subscription, tap } from 'rxjs';
+import { ReplaySubject, Subscription, tap } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -61,7 +62,7 @@ import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-a
       transition('0 => 1', animate('1s'))
     ])
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgClass,
     LuxTagIdDirective,
@@ -85,33 +86,61 @@ import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-a
   ]
 })
 export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContentInit, AfterViewInit, DoCheck, OnDestroy {
+  private injector = inject(Injector);
   private cdr = inject(ChangeDetectorRef);
   private liveAnnouncer = inject(LiveAnnouncer);
   private mediaObserver = inject(LuxMediaQueryObserverService);
 
-  @Output() luxSelectedDetailChange = new EventEmitter<T | null>();
-  @Output() luxScrolled = new EventEmitter<void>();
+  luxScrolled = output<void>();
 
-  @ContentChild(LuxMasterListAcComponent) masterSimple?: LuxMasterListAcComponent;
-  @ContentChild(LuxDetailViewAcComponent) detailView!: LuxDetailViewAcComponent;
-  @ContentChild(LuxMasterFooterAcComponent, { read: ElementRef }) masterFooter?: ElementRef;
-  @ContentChild(LuxDetailHeaderAcComponent, { read: ElementRef }) detailHeader?: ElementRef;
+  private masterSimpleQuery = contentChild(LuxMasterListAcComponent);
+  private detailViewQuery = contentChild(LuxDetailViewAcComponent);
+  private masterFooterQuery = contentChild(LuxMasterFooterAcComponent, { read: ElementRef });
+  private detailHeaderQuery = contentChild(LuxDetailHeaderAcComponent, { read: ElementRef });
 
-  @ViewChildren(LuxListComponent, { read: ElementRef, emitDistinctChangesOnly: false }) luxMasterQueryList!: QueryList<ElementRef>;
-  @ViewChildren(LuxListItemComponent) luxMasterListItemQueryList!: QueryList<LuxListItemComponent>;
-  @ViewChild(LuxMasterHeaderAcComponent, { read: ElementRef, static: true }) masterHeader?: ElementRef;
-  @ViewChild(LuxMasterHeaderAcComponent, { static: true }) masterHeaderComponent?: LuxMasterHeaderAcComponent;
-  @ViewChild(LuxListItemComponent, { read: ElementRef }) luxMasterEntryElementRef?: ElementRef;
-  @ContentChild(LuxTabsComponent) tabsComponent?: LuxTabsComponent;
-  @ViewChild('masterSpinnerCard', { read: ElementRef, static: true }) masterSpinnerCard?: ElementRef;
-  @ViewChild('detailContainer', { read: ElementRef }) detailFrame?: ElementRef;
-  @ViewChild('detailEmpty', { read: ElementRef, static: true }) detailEmpty?: ElementRef;
-  @ViewChild('detailViewContainerRef', { read: ViewContainerRef, static: true }) detailViewContainerRef!: ViewContainerRef;
-  @ViewChild('masterContainer', { read: ElementRef, static: true }) masterContainer?: ElementRef;
+  readonly luxMasterQueryList = viewChildren(LuxListComponent, { read: ElementRef });
+  readonly luxMasterListItemQueryList = viewChildren(LuxListItemComponent);
+  private masterHeaderQuery = viewChild(LuxMasterHeaderAcComponent, { read: ElementRef });
+  private masterHeaderComponentQuery = viewChild(LuxMasterHeaderAcComponent);
+  readonly luxMasterEntryElementRef = viewChild(LuxListItemComponent, { read: ElementRef });
+  private tabsComponentQuery = contentChild(LuxTabsComponent);
+  readonly masterSpinnerCard = viewChild('masterSpinnerCard', { read: ElementRef });
+  readonly detailFrame = viewChild('detailContainer', { read: ElementRef });
+  readonly detailEmpty = viewChild('detailEmpty', { read: ElementRef });
+  readonly detailViewContainerRef = viewChild.required('detailViewContainerRef', { read: ViewContainerRef });
+  private masterContainerQuery = viewChild('masterContainer', { read: ElementRef });
 
-  private _luxOpen = true;
-  private _luxMasterList = new BehaviorSubject<any[]>([]);
-  private _luxSelectedDetail: T | null = null;
+  get masterSimple(): LuxMasterListAcComponent | undefined {
+    return this.masterSimpleQuery();
+  }
+
+  get detailView(): LuxDetailViewAcComponent | undefined {
+    return this.detailViewQuery();
+  }
+
+  get masterFooter(): ElementRef | undefined {
+    return this.masterFooterQuery();
+  }
+
+  get detailHeader(): ElementRef | undefined {
+    return this.detailHeaderQuery();
+  }
+
+  get masterHeader(): ElementRef | undefined {
+    return this.masterHeaderQuery();
+  }
+
+  get masterHeaderComponent(): LuxMasterHeaderAcComponent | undefined {
+    return this.masterHeaderComponentQuery();
+  }
+
+  get tabsComponent(): LuxTabsComponent | undefined {
+    return this.tabsComponentQuery();
+  }
+
+  get masterContainer(): ElementRef | undefined {
+    return this.masterContainerQuery();
+  }
 
   private masterListLength = 0;
   private maxItemsVisible?: number;
@@ -128,61 +157,38 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   // Flag, das bestimmt, ob die Empty-Anzeigen der Masterliste anhand der Detail-Ansicht ausgerichtet werden
   alignEmptyIndicators = true;
 
-  @Input() luxEmptyIconMaster = 'lux-interface-alert-information-circle';
-  @Input() luxEmptyLabelMaster = '';
-  @Input() luxEmptyIconDetail = 'lux-interface-alert-information-circle';
-  @Input() luxEmptyLabelDetail = '';
-  @Input() luxEmptyIconMasterSize = '5x';
-  @Input() luxEmptyIconDetailSize = '5x';
-  @Input() luxMasterSpinnerDelay = 1000;
-  @Input() luxTagIdMaster?: string;
-  @Input() luxTagIdDetail?: string;
-  @Input() luxTitleLineBreak = false;
-  @Input() luxMasterListLabel = '';
-  @Input() luxMasterIsLoading = false;
-  @Input() luxCompareWith = (o1: T, o2: T) => o1 === o2;
-  @Input() luxDefaultDetailHeader = true;
-
-  get luxOpen() {
-    return this._luxOpen;
-  }
-
-  @Input()
-  set luxOpen(open) {
-    this._luxOpen = open;
-  }
-
-  /* Selected Detail Get/Set */
-  get luxSelectedDetail() {
-    return this._luxSelectedDetail;
-  }
-
-  @Input()
-  set luxSelectedDetail(value) {
-    this.updateDetail$.next(value);
-  }
-
-  /* Master List Get/Set */
-  get luxMasterList() {
-    return this._luxMasterList.getValue();
-  }
-
-  @Input()
-  set luxMasterList(value: any[]) {
-    if (this.masterListLength && value && this.masterListLength < value.length) {
-      this.announcePossibleInfiniteScrolling();
-    }
-    this._luxMasterList.next(value ? value : []);
-    this.masterListLength = value ? value.length : 0;
-  }
+  readonly luxEmptyIconMaster = input('lux-interface-alert-information-circle');
+  readonly luxEmptyLabelMaster = input('');
+  readonly luxEmptyIconDetail = input('lux-interface-alert-information-circle');
+  readonly luxEmptyLabelDetail = input('');
+  readonly luxEmptyIconMasterSize = input('5x');
+  readonly luxEmptyIconDetailSize = input('5x');
+  readonly luxMasterSpinnerDelay = input(1000);
+  readonly luxTagIdMaster = input<string | undefined>(undefined);
+  readonly luxTagIdDetail = input<string | undefined>(undefined);
+  readonly luxTitleLineBreak = input(false);
+  readonly luxMasterListLabel = input('');
+  readonly luxMasterIsLoading = input(false);
+  readonly luxCompareWith = input<(o1: T, o2: T) => boolean>((o1: T, o2: T) => o1 === o2);
+  readonly luxDefaultDetailHeader = input(true);
+  readonly luxOpen = model(true);
+  readonly luxSelectedDetail = model<T | null>(null);
+  readonly luxMasterList = input<any[]>([]);
 
   constructor() {
+    this.subscriptions.push(
+      toObservable(this.luxSelectedDetail, { injector: this.injector }).subscribe((value) => {
+        this.updateDetail$.next(value);
+      })
+    );
+
     this.isMobile = this.mediaObserver.isXS() || this.mediaObserver.isSM();
     this.isMedium = this.mediaObserver.isMD();
     this.subscriptions.push(
       this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
         this.isMobile = this.mediaObserver.isXS() || this.mediaObserver.isSM();
         this.isMedium = this.mediaObserver.isMD();
+        this.cdr.markForCheck();
       })
     );
   }
@@ -196,7 +202,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   }
 
   ngAfterViewInit() {
-    LuxUtil.assertNonNull('detailViewContainerRef', this.detailViewContainerRef);
+    LuxUtil.assertNonNull('detailViewContainerRef', this.detailViewContainerRef());
     this.showMasterHeader = this.masterHeaderComponent?.headerContentContainer.nativeElement.children.length > 0;
     this.handleDetailUpdate();
     this.handleMasterQueryList();
@@ -209,20 +215,20 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
 
   ngDoCheck() {
     // Wurde ein Element in die Masterliste gepusht oder entfernt?
-    if (this.luxMasterList && this.luxMasterList.length !== this.masterListLength) {
-      if (this.luxMasterList.length > this.masterListLength) {
+    if (this.luxMasterList() && this.luxMasterList().length !== this.masterListLength) {
+      if (this.luxMasterList().length > this.masterListLength) {
         this.announcePossibleInfiniteScrolling();
       }
 
       // Wenn ja, dass selektierte Detail neu rendern
-      this.masterListLength = this.luxMasterList.length;
-      this.luxSelectedDetail = this.luxMasterList[this.selectedPosition];
+      this.masterListLength = this.luxMasterList().length;
+      this.updateDetail$.next(this.luxMasterList()[this.selectedPosition]);
 
       this.announcePossibleInfiniteScrolling();
     }
 
     // Ausrichtung der Empty-Indikatoren der Masterliste prüfen
-    if (!this.isMobile && (!this.luxMasterList || this.luxMasterList.length === 0)) {
+    if (!this.isMobile && (!this.luxMasterList() || this.luxMasterList().length === 0)) {
       this.checkEmptyIndicatorAlignment();
     }
   }
@@ -236,7 +242,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
     if (index > -1) {
       this.selectedPosition = index;
 
-      this.updateDetail$.next(this.luxMasterList[index]);
+      this.updateDetail$.next(this.luxMasterList()[index]);
 
       if (this.isMobile) {
         this.onCloseMaster();
@@ -245,11 +251,11 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   }
 
   onOpenMaster() {
-    this.luxOpen = true;
+    this.luxOpen.set(true);
   }
 
   onCloseMaster() {
-    this.luxOpen = false;
+    this.luxOpen.set(false);
   }
 
   /**
@@ -273,7 +279,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
    * @returns boolean
    */
   isDetailInvisible(): boolean {
-    return this.isMobile && this.luxOpen;
+    return this.isMobile && this.luxOpen();
   }
 
   onInfiniteScrollingLoad() {
@@ -293,7 +299,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
     if (!o1 || !o2) {
       return false;
     }
-    return this.luxCompareWith(o1, o2);
+    return this.luxCompareWith()(o1, o2);
   }
 
   /**
@@ -303,14 +309,15 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
    */
   private handleMasterQueryList() {
     this.subscriptions.push(
-      this.luxMasterQueryList.changes.subscribe((masterListElements: QueryList<ElementRef>) => {
-        if (masterListElements.first) {
-          const { nativeElement } = masterListElements.first;
+      toObservable(this.luxMasterQueryList, { injector: this.injector }).subscribe((masterListElements: readonly ElementRef[]) => {
+        const firstElement = masterListElements[0];
+        if (firstElement) {
+          const { nativeElement } = firstElement;
           this.maxItemsVisible = Math.floor(nativeElement.offsetHeight / nativeElement.offsetHeight);
         }
         // Der Abschnitt hier fängt den Fall ab, dass z.B. das LuxMasterList-Array selbst angepasst wird (z.B. durch Array.reverse).
         // Das sorgt dafür, dass das visuell selektierte Element auch das passende zur Detail-View ist.
-        const newSelectedPosition: number = this.luxMasterList.indexOf(this.luxSelectedDetail);
+        const newSelectedPosition: number = this.luxMasterList().indexOf(this.luxSelectedDetail());
         if (newSelectedPosition !== this.selectedPosition) {
           setTimeout(() => {
             this.selectedPosition = newSelectedPosition;
@@ -328,28 +335,35 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   private handleDetailUpdate() {
     this.subscriptions.push(
       this.updateDetail$.asObservable().subscribe((detail: any) => {
+        const detailViewContainerRef = this.detailViewContainerRef();
+
         if (!detail) {
-          this.detailViewContainerRef.clear();
+          detailViewContainerRef.clear();
           this.setNewDetail(detail);
         } else {
-          if (!this.compareObjects(this.luxSelectedDetail, detail)) {
-            this.detailViewContainerRef.clear();
+          if (!this.compareObjects(this.luxSelectedDetail(), detail)) {
+            detailViewContainerRef.clear();
 
             if (detail) {
+              const detailView = this.detailView;
+              if (!detailView) {
+                return;
+              }
+
               this.detailContext = { $implicit: detail };
 
               // Den Detail-Wrapper erzeugen und abfangen, wann die Nodes geladen worden sind
-              const childRef = this.detailViewContainerRef.createComponent(LuxDetailWrapperAcComponent);
+              const childRef = detailViewContainerRef.createComponent(LuxDetailWrapperAcComponent);
               const instance = childRef.instance;
               instance.luxDetailContext = this.detailContext;
-              instance.luxDetailTemplate = this.detailView.tempRef;
+              instance.luxDetailTemplate = detailView.tempRef;
               this.subscriptions.push(
                 instance.luxDetailRendered.subscribe(() => {
                   this.setNewDetail(detail);
                 })
               );
               // Die Detailansicht nach dem Wechsel wieder nach oben scrollen lassen
-              this.detailViewContainerRef.element.nativeElement.parentNode.scrollTop = 0;
+              detailViewContainerRef.element.nativeElement.parentNode.scrollTop = 0;
 
               this.cdr.detectChanges();
             }
@@ -365,15 +379,14 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
    * @param detail
    */
   private setNewDetail(detail: any) {
-    if (!this.compareObjects(this.luxSelectedDetail, detail)) {
-      this._luxSelectedDetail = detail;
-      this.selectedPosition = this.luxMasterList.indexOf(detail);
-      this.luxSelectedDetailChange.emit(this.luxSelectedDetail);
+    if (!this.compareObjects(this.luxSelectedDetail(), detail)) {
+      this.luxSelectedDetail.set(detail);
+      this.selectedPosition = this.luxMasterList().indexOf(detail);
       // Die Master-Liste fokussieren (die Liste gibt es nur einmal, weil wir auf Changes hören, ist sie aber in einer QueryList)
-      this.luxMasterQueryList.first.nativeElement.focus();
+      this.luxMasterQueryList()[0]?.nativeElement.focus();
 
-      if (this.isMobile && this.luxMasterList.length !== 0) {
-        this.luxOpen = false;
+      if (this.isMobile && this.luxMasterList().length !== 0) {
+        this.luxOpen.set(false);
       }
       this.cdr.detectChanges();
     }
@@ -384,14 +397,13 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
    */
   private handleMasterListUpdate() {
     this.subscriptions.push(
-      this._luxMasterList
-        .asObservable()
+      toObservable(this.luxMasterList, { injector: this.injector })
         .pipe(
           // Workaround um ExpressionChanged-Fehler zu vermeiden
           delay(0),
           tap(() => {
-            if (!this.luxMasterList || this.luxMasterList.length === 0) {
-              this.luxSelectedDetail = null;
+            if (!this.luxMasterList() || this.luxMasterList().length === 0) {
+              this.updateDetail$.next(null);
             }
           })
         )

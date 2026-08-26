@@ -1,38 +1,38 @@
 <div class="lux-flex lux-place-content-end lux-items-stretch">
   <div class="lux-menu-extended lux-flex lux-flex-auto lux-place-content-end lux-items-center" #menuExtendedContainer>
     <!-- Trigger, wenn luxDisplayMenuLeft === false -->
-    @if (!luxDisplayMenuLeft) {
+    @if (!luxDisplayMenuLeft()) {
       <ng-container [ngTemplateOutlet]="menuTriggerTemplate"></ng-container>
     }
     @for (menuItem of visibleMenuItems; track menuItem) {
       <lux-button
         class="lux-menu-item"
-        [luxLabel]="menuItem.luxHideLabelIfExtended ? '' : menuItem.luxLabel"
-        [luxColor]="menuItem.luxColor"
-        [luxRaised]="menuItem.luxRaised"
-        [luxFlat]="menuItem.luxFlat"
-        [luxStroked]="menuItem.luxStroked"
-        [luxIconName]="menuItem.luxIconName"
-        [luxDisabled]="menuItem.luxDisabled"
+        [luxLabel]="menuItem.luxHideLabelIfExtended() ? '' : menuItem.luxLabel()"
+        [luxColor]="menuItem.luxColor()"
+        [luxRaised]="menuItem.luxRaised()"
+        [luxFlat]="menuItem.luxFlat()"
+        [luxStroked]="menuItem.luxStroked()"
+        [luxIconName]="menuItem.luxIconName()"
+        [luxDisabled]="menuItem.luxDisabled()"
         [luxDisabledAria]="menuItem.luxDisabledAria()"
-        [luxTagId]="menuItem.luxTagId"
-        [luxRounded]="menuItem.luxRounded"
-        [luxButtonBadge]="menuItem.luxButtonBadge"
-        [luxButtonBadgeColor]="menuItem.luxButtonBadgeColor"
+        [luxTagId]="menuItem.luxTagId()"
+        [luxRounded]="menuItem.luxRounded()"
+        [luxButtonBadge]="menuItem.luxButtonBadge()"
+        [luxButtonBadgeColor]="menuItem.luxButtonBadgeColor()"
         (luxClicked)="menuItemClicked(menuItem, $event)"
         (luxClickNotAllowed)="menuItem.clickNotAllowed($event)"
-        luxAriaLabel="{{ menuItem.luxLabel }}"
+        luxAriaLabel="{{ menuItem.luxLabel() }}"
         luxAriaLabelSelector="button"
         luxTabIndex="0"
-        [luxTooltip]="menuItem.luxButtonTooltip"
+        [luxTooltip]="menuItem.luxButtonTooltip()"
         [luxApplyToChildren]="true"
-        [ngClass]="menuItem.luxClass ?? ''"
-        [ngStyle]="{ display: !menuItem.extended || menuItem.luxHidden ? 'none' : 'inline-block' }"
+        [ngClass]="menuItem.luxClass() ?? ''"
+        [ngStyle]="{ display: !menuItem.extended || menuItem.luxHidden() ? 'none' : 'inline-block' }"
       >
       </lux-button>
     }
     <!-- Trigger, wenn luxDisplayMenuLeft === true -->
-    @if (luxDisplayMenuLeft) {
+    @if (luxDisplayMenuLeft()) {
       <ng-container [ngTemplateOutlet]="menuTriggerTemplate"></ng-container>
     }
   </div>
@@ -42,7 +42,7 @@
 <mat-menu
   [classList]="
     'lux-menu-panel ' +
-    luxClassName +
+    luxClassName() +
     (luxShowSections() ? ' lux-menu-section-panel' : '') +
     (luxMenuPanelLarge() ? ' lux-menu-panel-large' : '')
   "
@@ -52,53 +52,53 @@
   @if (!luxShowSections()) {
     <!-- Alle darin angezeigten MenuItems (Vorausgesetzt diese sind nicht als extended gekennzeichnet) -->
     @for (menuItem of menuItems; track menuItem) {
-      @if (!menuItem.extended && !menuItem.luxHidden) {
+      @if (!menuItem.extended && !menuItem.luxHidden()) {
         <button
           mat-menu-item
           [disableRipple]="true"
           class="lux-menu-item"
-          [class.with-badge]="menuItem.luxButtonBadge"
-          [luxTooltip]="menuItem.luxMenuTooltip"
-          [disabled]="menuItem.luxDisabled"
+          [class.with-badge]="menuItem.luxButtonBadge()"
+          [luxTooltip]="menuItem.luxMenuTooltip()"
+          [disabled]="menuItem.luxDisabled()"
           [luxAriaDisabled]="menuItem.luxDisabledAria() ? 'true' : undefined"
           luxTagIdHandler
           [luxTagIdStartElement]="elementRef.nativeElement"
           [luxTagIdTargetSelf]="true"
-          [luxTagId]="menuItem.luxTagId"
+          [luxTagId]="menuItem.luxTagId()"
           [ngClass]="
-            (menuItem.luxClass ?? '') +
-            (menuItem.luxColor === 'warn'
+            (menuItem.luxClass() ?? '') +
+            (menuItem.luxColor() === 'warn'
               ? ' lux-menu-item-color-warn'
-              : menuItem.luxColor === 'accent'
+              : menuItem.luxColor() === 'accent'
                 ? ' lux-menu-item-color-accent'
                 : '')
           "
           (click)="menuItemClicked(menuItem, $event)"
         >
-          @if (menuItem.luxIconName) {
+          @if (menuItem.luxIconName()) {
             <lux-icon
-              [luxIconName]="menuItem.luxIconName"
+              [luxIconName]="menuItem.luxIconName()"
               luxPadding="0"
-              [luxMargin]="menuItem.luxIconShowRight ? '0 0 0 1rem' : '0 1rem 0 0'"
+              [luxMargin]="menuItem.luxIconShowRight() ? '0 0 0 1rem' : '0 1rem 0 0'"
               luxIconSize="unset"
               class="lux-menu-item-icon"
             ></lux-icon>
           }
           <span class="lux-button-label">
-            {{ menuItem.luxLabel }}
+            {{ menuItem.luxLabel() }}
           </span>
-          @if (menuItem.luxButtonBadge) {
+          @if (menuItem.luxButtonBadge()) {
             <span class="lux-button-badge-container">
-              @if (menuItem.luxButtonBadge && !menuItem.luxDisabled) {
+              @if (menuItem.luxButtonBadge() && !menuItem.luxDisabled()) {
                 <span
                   class="lux-button-badge lux-bg-color-primary-20 lux-m-2"
                   [ngClass]="{
-                    'lux-bg-color-primary-20': menuItem.luxButtonBadgeColor === 'primary',
-                    'lux-bg-color-warn-50': menuItem.luxButtonBadgeColor === 'warn',
-                    'lux-bg-color-accent-70': menuItem.luxButtonBadgeColor === 'accent'
+                    'lux-bg-color-primary-20': menuItem.luxButtonBadgeColor() === 'primary',
+                    'lux-bg-color-warn-50': menuItem.luxButtonBadgeColor() === 'warn',
+                    'lux-bg-color-accent-70': menuItem.luxButtonBadgeColor() === 'accent'
                   }"
                 >
-                  {{ menuItem.luxButtonBadge }}
+                  {{ menuItem.luxButtonBadge() }}
                 </span>
               }
             </span>
@@ -119,7 +119,7 @@
       @if (isSectionTitle(menuItem)) {
         <span class="lux-menu-section-title">{{ menuItem.luxTitle() }}</span>
       }
-      @if (isItemMenuItem(menuItem) && !menuItem.luxHidden) {
+      @if (isItemMenuItem(menuItem) && !menuItem.luxHidden()) {
         <!-- Panel Large -->
         @if (luxMenuPanelLarge()) {
           <button
@@ -127,30 +127,30 @@
             luxTagIdHandler
             [luxTagIdStartElement]="elementRef.nativeElement"
             [luxTagIdTargetSelf]="true"
-            [luxTagId]="menuItem.luxTagId"
+            [luxTagId]="menuItem.luxTagId()"
             [disableRipple]="true"
             class="lux-menu-item"
-            [class.with-badge]="menuItem.luxButtonBadge"
-            [luxTooltip]="menuItem.luxMenuTooltip"
-            [disabled]="menuItem.luxDisabled"
+            [class.with-badge]="menuItem.luxButtonBadge()"
+            [luxTooltip]="menuItem.luxMenuTooltip()"
+            [disabled]="menuItem.luxDisabled()"
             [luxAriaDisabled]="menuItem.luxDisabledAria() ? 'true' : undefined"
             [ngClass]="
-              (menuItem.luxClass ?? '') +
-              (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : '') +
-              (menuItem.luxColor === 'warn'
+              (menuItem.luxClass() ?? '') +
+              (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled() ? ' lux-menu-item-selected' : '') +
+              (menuItem.luxColor() === 'warn'
                 ? ' lux-menu-item-color-warn'
-                : menuItem.luxColor === 'accent'
+                : menuItem.luxColor() === 'accent'
                   ? ' lux-menu-item-color-accent'
                   : '')
             "
             (click)="menuItemClicked(menuItem, $event)"
           >
             <span class="lux-menu-item-content">
-              @if (menuItem.luxIconName) {
+              @if (menuItem.luxIconName()) {
                 <lux-icon
-                  [luxIconName]="menuItem.luxIconName"
+                  [luxIconName]="menuItem.luxIconName()"
                   luxPadding="0"
-                  [luxMargin]="menuItem.luxIconShowRight ? '0 0 0 1rem' : '0 1rem 0 0'"
+                  [luxMargin]="menuItem.luxIconShowRight() ? '0 0 0 1rem' : '0 1rem 0 0'"
                   luxIconSize="unset"
                   class="lux-menu-item-icon"
                 ></lux-icon>
@@ -158,30 +158,30 @@
               <span>
                 <span
                   class="lux-button-label"
-                  [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : ''"
+                  [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled() ? ' lux-menu-item-selected' : ''"
                 >
-                  {{ menuItem.luxLabel }}
+                  {{ menuItem.luxLabel() }}
                 </span>
                 <br />
                 <span
                   class="lux-button-label-subtitle"
-                  [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : ''"
+                  [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled() ? ' lux-menu-item-selected' : ''"
                 >
                   {{ menuItem.luxMenuItemSubtitle() }}
                 </span>
               </span>
-              @if (menuItem.luxButtonBadge) {
+              @if (menuItem.luxButtonBadge()) {
                 <span class="lux-button-badge-container lux-menu-item-badge-right">
-                  @if (menuItem.luxButtonBadge && !menuItem.luxDisabled) {
+                  @if (menuItem.luxButtonBadge() && !menuItem.luxDisabled()) {
                     <span
                       class="lux-button-badge lux-bg-color-primary-20 lux-m-2"
                       [ngClass]="{
-                        'lux-bg-color-primary-20': menuItem.luxButtonBadgeColor === 'primary',
-                        'lux-bg-color-warn-50': menuItem.luxButtonBadgeColor === 'warn',
-                        'lux-bg-color-accent-70': menuItem.luxButtonBadgeColor === 'accent'
+                        'lux-bg-color-primary-20': menuItem.luxButtonBadgeColor() === 'primary',
+                        'lux-bg-color-warn-50': menuItem.luxButtonBadgeColor() === 'warn',
+                        'lux-bg-color-accent-70': menuItem.luxButtonBadgeColor() === 'accent'
                       }"
                     >
-                      {{ menuItem.luxButtonBadge }}
+                      {{ menuItem.luxButtonBadge() }}
                     </span>
                   }
                 </span>
@@ -195,52 +195,52 @@
             mat-menu-item
             [disableRipple]="true"
             class="lux-menu-item"
-            [class.with-badge]="menuItem.luxButtonBadge"
-            [luxTooltip]="menuItem.luxMenuTooltip"
-            [disabled]="menuItem.luxDisabled"
+            [class.with-badge]="menuItem.luxButtonBadge()"
+            [luxTooltip]="menuItem.luxMenuTooltip()"
+            [disabled]="menuItem.luxDisabled()"
             [luxAriaDisabled]="menuItem.luxDisabledAria() ? 'true' : undefined"
             luxTagIdHandler
             [luxTagIdStartElement]="elementRef.nativeElement"
             [luxTagIdTargetSelf]="true"
-            [luxTagId]="menuItem.luxTagId"
+            [luxTagId]="menuItem.luxTagId()"
             [ngClass]="
-              (menuItem.luxClass ?? '') +
-              (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : '') +
-              (menuItem.luxColor === 'warn'
+              (menuItem.luxClass() ?? '') +
+              (menuItem.luxMenuItemSelected() && !menuItem.luxDisabled() ? ' lux-menu-item-selected' : '') +
+              (menuItem.luxColor() === 'warn'
                 ? ' lux-menu-item-color-warn'
-                : menuItem.luxColor === 'accent'
+                : menuItem.luxColor() === 'accent'
                   ? ' lux-menu-item-color-accent'
                   : '')
             "
             (click)="menuItemClicked(menuItem, $event)"
           >
-            @if (menuItem.luxIconName) {
+            @if (menuItem.luxIconName()) {
               <lux-icon
-                [luxIconName]="menuItem.luxIconName"
+                [luxIconName]="menuItem.luxIconName()"
                 luxPadding="0"
-                [luxMargin]="menuItem.luxIconShowRight ? '0 0 0 1rem' : '0 1rem 0 0'"
+                [luxMargin]="menuItem.luxIconShowRight() ? '0 0 0 1rem' : '0 1rem 0 0'"
                 luxIconSize="unset"
                 class="lux-menu-item-icon"
               ></lux-icon>
             }
             <span
               class="lux-button-label"
-              [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled ? ' lux-menu-item-selected' : ''"
+              [ngClass]="menuItem.luxMenuItemSelected() && !menuItem.luxDisabled() ? ' lux-menu-item-selected' : ''"
             >
-              {{ menuItem.luxLabel }}
+              {{ menuItem.luxLabel() }}
             </span>
-            @if (menuItem.luxButtonBadge) {
+            @if (menuItem.luxButtonBadge()) {
               <span class="lux-button-badge-container lux-menu-item-badge-right">
-                @if (menuItem.luxButtonBadge && !menuItem.luxDisabled) {
+                @if (menuItem.luxButtonBadge() && !menuItem.luxDisabled()) {
                   <span
                     class="lux-button-badge lux-bg-color-primary-20 lux-m-2"
                     [ngClass]="{
-                      'lux-bg-color-primary-20': menuItem.luxButtonBadgeColor === 'primary',
-                      'lux-bg-color-warn-50': menuItem.luxButtonBadgeColor === 'warn',
-                      'lux-bg-color-accent-70': menuItem.luxButtonBadgeColor === 'accent'
+                      'lux-bg-color-primary-20': menuItem.luxButtonBadgeColor() === 'primary',
+                      'lux-bg-color-warn-50': menuItem.luxButtonBadgeColor() === 'warn',
+                      'lux-bg-color-accent-70': menuItem.luxButtonBadgeColor() === 'accent'
                     }"
                   >
-                    {{ menuItem.luxButtonBadge }}
+                    {{ menuItem.luxButtonBadge() }}
                   </span>
                 }
               </span>
@@ -261,7 +261,7 @@
   <div
     [matMenuTriggerFor]="menu"
     role="button"
-    luxAriaLabel="{{ luxAriaMenuTriggerLabel || ('luxc.menu.trigger.btn' | transloco) }}"
+    luxAriaLabel="{{ luxAriaMenuTriggerLabel() || ('luxc.menu.trigger.btn' | transloco) }}"
     class="lux-menu-trigger lux-color-primary-20"
     [ngClass]="{ 'lux-display-none-important': hideToggle }"
     #menuTrigger
@@ -281,14 +281,14 @@
     <lux-button
       class="lux-menu-trigger-default"
       luxTagId="lux-menu-default-trigger"
-      [luxLabel]="luxMenuLabel"
-      [luxIconName]="luxMenuIconName"
-      luxAriaLabel="{{ luxAriaMenuTriggerLabel || ('luxc.menu.trigger.btn' | transloco) }}"
+      [luxLabel]="luxMenuLabel()"
+      [luxIconName]="luxMenuIconName()"
+      luxAriaLabel="{{ luxAriaMenuTriggerLabel() || ('luxc.menu.trigger.btn' | transloco) }}"
       luxAriaLabelSelector="button"
       luxTabIndex="0"
       [luxApplyToChildren]="true"
-      [luxIconShowRight]="luxMenuTriggerIconShowRight"
-      [luxDisabled]="luxToggleDisabled"
+      [luxIconShowRight]="luxMenuTriggerIconShowRight()"
+      [luxDisabled]="luxToggleDisabled()"
       (luxClicked)="triggerdiv.click()"
       #defaultTrigger
     >

@@ -2,12 +2,12 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed } fro
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom, inject, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
-import { LuxComponentsConfigModule } from '../../lux-components-config/lux-components-config.module';
+import { provideLuxComponentsConfig } from '../../lux-components-config/lux-components-config.provider';
 import { DIALOG_WIDTH_LARGE_PX, DIALOG_WIDTH_SMALL_PX, minWidth } from './lux-dialog-model/lux-dialog-config.interface';
 import { ILuxDialogPresetConfig } from './lux-dialog-model/lux-dialog-preset-config.interface';
 import { LuxDialogRef } from './lux-dialog-model/lux-dialog-ref.class';
@@ -33,14 +33,12 @@ describe('LuxDialogService', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        importProvidersFrom([
-          LuxComponentsConfigModule.forRoot({
-            labelConfiguration: {
-              allUppercase: true,
-              notAppliedTo: []
-            }
-          })
-        ]),
+        provideLuxComponentsConfig({
+          labelConfiguration: {
+            allUppercase: true,
+            notAppliedTo: []
+          }
+        }),
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
