@@ -20,11 +20,11 @@ describe('LuxBreadcrumbComponent', () => {
   });
 
   it(`luxEntries has default value`, () => {
-    expect(component.luxEntries).toEqual([]);
+    expect(component.luxEntries()).toEqual([]);
   });
 
   it('renders all entries by default', () => {
-    component.luxEntries = [{ name: 'A' }, { name: 'B' }, { name: 'C' }];
+    fixture.componentRef.setInput('luxEntries', [{ name: 'A' }, { name: 'B' }, { name: 'C' }]);
     fixture.detectChanges();
 
     const items = fixture.nativeElement.querySelectorAll('li');
@@ -35,8 +35,8 @@ describe('LuxBreadcrumbComponent', () => {
   });
 
   it('adds wrap class when luxWrap is true', () => {
-    component.luxWrap = true;
-    component.luxEntries = [{ name: 'A' }, { name: 'B' }];
+    fixture.componentRef.setInput('luxWrap', true);
+    fixture.componentRef.setInput('luxEntries', [{ name: 'A' }, { name: 'B' }]);
     fixture.detectChanges();
 
     const container: HTMLElement | null = fixture.nativeElement.querySelector('ol.lux-breadcrumb-container');
@@ -45,8 +45,8 @@ describe('LuxBreadcrumbComponent', () => {
   });
 
   it('collapses middle entries when luxShowOnlyFirstAndLast is true', () => {
-    component.luxShowOnlyFirstAndLast = true;
-    component.luxEntries = [{ name: 'A' }, { name: 'B' }, { name: 'C' }, { name: 'D' }];
+    fixture.componentRef.setInput('luxShowOnlyFirstAndLast', true);
+    fixture.componentRef.setInput('luxEntries', [{ name: 'A' }, { name: 'B' }, { name: 'C' }, { name: 'D' }]);
     fixture.detectChanges();
 
     const items = fixture.nativeElement.querySelectorAll('li');
@@ -71,8 +71,8 @@ describe('LuxBreadcrumbComponent', () => {
   });
 
   it('emits click for the first entry in collapsed mode', () => {
-    component.luxShowOnlyFirstAndLast = true;
-    component.luxEntries = [{ name: 'A' }, { name: 'B' }, { name: 'C' }];
+    fixture.componentRef.setInput('luxShowOnlyFirstAndLast', true);
+    fixture.componentRef.setInput('luxEntries', [{ name: 'A' }, { name: 'B' }, { name: 'C' }]);
     fixture.detectChanges();
 
     const spy = spyOn(component.luxClicked, 'emit');
@@ -87,8 +87,8 @@ describe('LuxBreadcrumbComponent', () => {
   });
 
   it('emits click for a middle entry in collapsed mode', () => {
-    component.luxShowOnlyFirstAndLast = true;
-    component.luxEntries = [{ name: 'A' }, { name: 'B' }, { name: 'C' }];
+    fixture.componentRef.setInput('luxShowOnlyFirstAndLast', true);
+    fixture.componentRef.setInput('luxEntries', [{ name: 'A' }, { name: 'B' }, { name: 'C' }]);
     fixture.detectChanges();
 
     const spy = spyOn(component.luxClicked, 'emit');

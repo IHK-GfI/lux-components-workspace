@@ -5,20 +5,24 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChildren,
+  contentChildren,
   DoCheck,
   effect,
   ElementRef,
   EventEmitter,
   inject,
+  Injector,
   input,
   Input,
+  model,
   OnDestroy,
   OnInit,
   Output,
-  QueryList,
-  ViewChild
+  output,
+  untracked,
+  viewChild
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import {
@@ -69,7 +73,7 @@ export interface LuxTableDoubleClickEventType<T> {
 @Component({
   selector: 'lux-table',
   templateUrl: './lux-table.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxProgressComponent,
     NgClass,
@@ -111,18 +115,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private tService = inject(TranslocoService);
   private defaultColumnVisibilityStore = inject(LuxTableLocalColumnVisibilityStore);
   private cdr = inject(ChangeDetectorRef);
+  private injector = inject(Injector);
 
   static AUTO_PAGINATION_START = 100; // 100 Elemente bis automatisch die Pagination aktiviert wird
 
-  private _luxClasses: ICustomCSSConfig | ICustomCSSConfig[] = [];
-  private _luxShowPagination = false;
   private _dataColumnDefs: string[] = [];
-  private _luxMultiSelect = false;
-  private _luxShowFilter = false;
   private _dataSource: LuxTableDataSource<any> = new LuxTableDataSource<any>([]);
-  private _luxHttpDAO?: ILuxTableHttpDao;
-  private _luxPickValue = (o: any) => o;
-  private _luxCompareWith = (o1: any, o2: any) => o1 === o2;
+  private _luxSelected = new Set<T>();
 
   private previousWidth = 0;
   private previousHeight = 0;
@@ -152,84 +151,100 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   hiddenColumns: string[] = [];
   columnVisibilityPickValueFN = (option: { label: string; value: string }) => option.value;
 
-  luxShowColumnSelector = input<boolean>(false);
-  @Input() luxColumnStorageKey?: string;
-  @Input() luxColumnVisibilityStore: ILuxTableColumnVisibilityStore = this.defaultColumnVisibilityStore;
-  @Input() luxColWidthsPercent: number[] = [];
-  @Input() luxFilterText = 'Filter';
-  @Input() luxNoDataText = 'Keine Daten gefunden.';
-  @Input() luxPageSize = 10;
-  @Input() luxPageSizeOptions = [5, 10, 25, 50];
-  @Input() luxMinWidthPx = -1;
-  @Input() luxAutoPaginate = true;
-  @Input() luxHideBorders = false;
-  @Input() luxMultiSelectOnlyCheckboxClick = false;
-  @Input() luxMultiSelectDisabledProperty?: string;
-  @Input() luxPagerDisabled = false;
-  @Input() luxPagerTooltip = '';
-  @Input() luxPagerFirstLastButton = true;
-  @Input() luxAlignElementsTop = false;
+  readonly luxShowColumnSelector = input<boolean>(false);
+  readonly luxColumnStorageKey = input<string | undefined>(undefined);
+  readonly luxColumnVisibilityStore = input<ILuxTableColumnVisibilityStore>(this.defaultColumnVisibilityStore);
+  readonly luxColWidthsPercent = input<number[]>([]);
+  readonly luxFilterText = input('Filter');
+  readonly luxNoDataText = input('Keine Daten gefunden.');
+  readonly luxPageSize = input(10);
+  readonly luxPageSizeOptions = input([5, 10, 25, 50]);
+  readonly luxMinWidthPx = input(-1);
+  readonly luxAutoPaginate = input(true);
+  readonly luxHideBorders = input(false);
+  readonly luxMultiSelectOnlyCheckboxClick = input(false);
+  readonly luxMultiSelectDisabledProperty = input<string | undefined>(undefined);
+  readonly luxPagerDisabled = input(false);
+  readonly luxPagerTooltip = input('');
+  readonly luxPagerFirstLastButton = input(true);
+  readonly luxAlignElementsTop = input(false);
+
+  readonly luxHttpDAO = input<ILuxTableHttpDao | undefined>(undefined);
+
+  readonly luxClasses = input<ICustomCSSConfig[], ICustomCSSConfig | ICustomCSSConfig[]>([], {
+    transform: (classes) => (classes && !Array.isArray(classes) ? [classes] : (classes ?? []))
+  });
+
+  // Wird zusätzlich intern gesetzt (Auto-Pagination bei großen Datenmengen), daher als model() statt input().
+  readonly luxShowPagination = model(false);
+
+  readonly luxShowFilter = input(false);
+
+  readonly luxMultiSelect = input(false);
+
+  // luxSelected bleibt als Getter (siehe unten) der intern abgeglichene Selektions-Set-Wert;
+  // das Input-Signal muss daher unter einem anderen Property-Namen deklariert und auf den
+  // externen Binding-Namen "luxSelected" aliasiert werden.
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  readonly luxSelectedInput = input<Set<T>>(new Set<T>(), { alias: 'luxSelected' });
+
+  readonly luxPickValue = input<(o: any) => any, (o: any) => any>((o: any) => o, {
+    transform: (pickFn: (o: any) => any) => {
+      LuxUtil.assertNonNull('luxPickValue', pickFn);
+      return pickFn;
+    }
+  });
+
+  readonly luxCompareWith = input<(o1: any, o2: any) => boolean, (o1: any, o2: any) => boolean>(
+    (o1: any, o2: any) => o1 === o2,
+    {
+      transform: (compareFn: (o1: any, o2: any) => boolean) => {
+        LuxUtil.assertNonNull('luxCompareWith', compareFn);
+        return compareFn;
+      }
+    }
+  );
 
   @Output() luxSelectedChange = new EventEmitter<Set<T>>();
   @Output() luxSelectedAsArrayChange = new EventEmitter<T[]>();
   @Output() luxSingleClicked = new EventEmitter<{ event: Event; rowItem: T; rowIndex: number }>();
   @Output() luxDoubleClicked = new EventEmitter<{ event: MouseEvent; rowItem: T }>();
-  @Output() luxHiddenColumnsChange = new EventEmitter<string[]>();
+  readonly luxHiddenColumnsChange = output<string[]>();
 
-  @ViewChild(LuxPaginatorComponent, { static: true }) paginator?: LuxPaginatorComponent;
-  @ViewChild(MatSort, { static: true }) sort?: MatSort;
-  @ViewChild('paginator', { read: ElementRef, static: true }) paginatorElement?: ElementRef;
-  @ViewChild('filter', { read: ElementRef, static: true }) filterElement?: ElementRef;
-  @ViewChild('filter', { static: true }) filterComponent?: LuxInputAcComponent;
-  @ViewChild('tableContainer', { read: ElementRef, static: true }) tableContainerElement!: ElementRef;
-  @ContentChildren(LuxTableColumnComponent) tableColumns!: QueryList<LuxTableColumnComponent>;
+  private paginatorQuery = viewChild(LuxPaginatorComponent);
+  private sortQuery = viewChild(MatSort);
+  private paginatorElementQuery = viewChild('paginator', { read: ElementRef });
+  private filterElementQuery = viewChild('filter', { read: ElementRef });
+  private filterComponentQuery = viewChild<LuxInputAcComponent>('filter');
+  private tableContainerElementQuery = viewChild('tableContainer', { read: ElementRef });
+  private tableColumnsQuery = contentChildren(LuxTableColumnComponent);
 
-  get luxHttpDAO(): ILuxTableHttpDao | undefined {
-    return this._luxHttpDAO;
+  get paginator(): LuxPaginatorComponent | undefined {
+    return this.paginatorQuery();
   }
 
-  @Input() set luxHttpDAO(httpDAO: ILuxTableHttpDao | undefined) {
-    this._luxHttpDAO = httpDAO;
-    if (!this.init) {
-      this.resetPaginatorToFirstPage();
-      this.httpRequestConf.page = 0;
-      this.clearSelected();
-      this.emitSelectedEvent();
-      this.loadHttpDAOData();
-    }
+  get sort(): MatSort | undefined {
+    return this.sortQuery();
   }
 
-  get luxClasses(): ICustomCSSConfig | ICustomCSSConfig[] {
-    return this._luxClasses;
+  get paginatorElement(): ElementRef | undefined {
+    return this.paginatorElementQuery();
   }
 
-  @Input() set luxClasses(classes: ICustomCSSConfig | ICustomCSSConfig[]) {
-    if (classes && !Array.isArray(classes)) {
-      classes = [classes];
-    }
-
-    this._luxClasses = classes;
-    this.insertCustomCSSClasses();
+  get filterElement(): ElementRef | undefined {
+    return this.filterElementQuery();
   }
 
-  get luxShowPagination(): boolean {
-    return this._luxShowPagination;
+  get filterComponent(): LuxInputAcComponent | undefined {
+    return this.filterComponentQuery();
   }
 
-  @Input() set luxShowPagination(show: boolean) {
-    this._luxShowPagination = show;
-    setTimeout(() => {
-      this.handlePagination();
-    });
+  get tableContainerElement(): ElementRef | undefined {
+    return this.tableContainerElementQuery();
   }
 
-  get luxShowFilter(): boolean {
-    return this._luxShowFilter;
-  }
-
-  @Input() set luxShowFilter(show: boolean) {
-    this._luxShowFilter = show;
-    this.handleFilter();
+  get tableColumns(): LuxTableColumnComponent[] {
+    return [...this.tableColumnsQuery()];
   }
 
   get dataColumnDefs(): string[] {
@@ -244,6 +259,10 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     return this.dataSource.data;
   }
 
+  // Bleibt bewusst ein Decorator-Input: der Setter muss synchron (im selben CD-Zyklus wie
+  // die Bindung) laufen, damit die noData-Zeile bei Signal-basierten Daten (z.B. rxResource)
+  // korrekt ausgeblendet wird (Issue #217). Ein effect() auf ein input()-Signal würde
+  // asynchron laufen und dieses Timing nicht mehr garantieren.
   @Input()
   set luxData(data: any[]) {
     data = data ? data : [];
@@ -253,7 +272,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
       // ausgeblendet wird, wenn Daten über Signals (z.B. rxResource) geladen werden (Issue #217).
       // updateDataSourceAttributes() setzt totalElements nach dem setTimeout ebenfalls
       // (dort wird auch Pagination/Sort berücksichtigt).
-      if (!this.luxHttpDAO) {
+      if (!this.luxHttpDAO()) {
         this.dataSource.totalElements = data.length;
       }
       setTimeout(() => {
@@ -270,47 +289,8 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     }
   }
 
-  get luxMultiSelect(): boolean {
-    return this._luxMultiSelect;
-  }
-
-  @Input() set luxMultiSelect(multiSelect: boolean) {
-    this._luxMultiSelect = multiSelect;
-    if (this.luxMultiSelect) {
-      this.clearSelected();
-      this._dataColumnDefs.unshift('multiSelect');
-    } else {
-      this._dataColumnDefs = this._dataColumnDefs.filter((col: string) => col !== 'multiSelect');
-    }
-
-    setTimeout(() => {
-      this.calculateProportions();
-    });
-  }
-
-  private _luxSelected = new Set<T>();
-
   get luxSelected(): Set<T> {
     return this._luxSelected;
-  }
-
-  /**
-   * Die Auswahl der selektierten Elemente ist eigentlich ein Set,
-   * nimmt aber Arrays von Außen entgegen (zur Vereinfachung).
-   * @param selected
-   */
-  @Input() set luxSelected(selected: Set<T>) {
-    if (!selected && !this.luxSelected) {
-      // Nothing to do
-    } else if (selected && !this.luxSelected) {
-      this.luxSelectedIntern(selected);
-    } else if (!selected && this.luxSelected) {
-      this.luxSelectedIntern(selected);
-    } else if (selected && this.luxSelected) {
-      if (this.luxSelected.size !== selected.size || !Array.from(selected).every((value) => this.luxSelected.has(value))) {
-        this.luxSelectedIntern(selected);
-      }
-    }
   }
 
   private luxSelectedIntern(selected: Set<T>) {
@@ -324,27 +304,6 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     if (this.luxData && this.luxData.length > 0) {
       this.updateSelection();
     }
-  }
-
-  get luxPickValue() {
-    return this._luxPickValue;
-  }
-
-  // Funktion, um den zu vergleichenden Wert aus den einzelnen Objekten zu ziehen.
-  // Standardmäßig einfach das Objekt zurückgeben.
-  @Input() set luxPickValue(pickFn: (o: any) => any) {
-    LuxUtil.assertNonNull('luxPickValue', pickFn);
-    this._luxPickValue = pickFn;
-  }
-
-  get luxCompareWith() {
-    return this._luxCompareWith;
-  }
-
-  // Vergleichsfunktion; vergleicht standardmäßig einfach die Referenzen der beiden Objekte.
-  @Input() set luxCompareWith(compareFn: (o1: any, o2: any) => boolean) {
-    LuxUtil.assertNonNull('luxCompareWith', compareFn);
-    this._luxCompareWith = compareFn;
   }
 
   /**
@@ -390,14 +349,76 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
       // bei jeder Änderung innerhalb der Komponente reagieren.
       const value = this.luxShowColumnSelector();
 
-      this.updateColumnsByMediaQuery();
+      // untracked(), da updateColumnsByMediaQuery() auch die Signal-Inputs der einzelnen
+      // Columns (z.B. luxColumnDef, luxResponsiveAt) liest. Ohne untracked() würde dieser
+      // Effekt zusätzlich bei jeder Änderung eines Column-Inputs erneut auslösen (siehe
+      // Column-eigene change$-Subscription in updateColumnSubscriptions()).
+      untracked(() => this.updateColumnsByMediaQuery());
+    });
+
+    effect(() => {
+      this.luxHttpDAO();
+      if (!this.init) {
+        this.resetPaginatorToFirstPage();
+        this.httpRequestConf.page = 0;
+        this.clearSelected();
+        this.emitSelectedEvent();
+        this.loadHttpDAOData();
+      }
+    });
+
+    effect(() => {
+      this.luxClasses();
+      this.insertCustomCSSClasses();
+    });
+
+    effect(() => {
+      this.luxShowPagination();
+      setTimeout(() => {
+        this.handlePagination();
+      });
+    });
+
+    effect(() => {
+      this.luxShowFilter();
+      this.handleFilter();
+    });
+
+    effect(() => {
+      if (this.luxMultiSelect()) {
+        this.clearSelected();
+      }
+      // updateColumnsByMediaQuery() baut _dataColumnDefs komplett neu auf (inkl. multiSelect-Spalte) und
+      // läuft selbst asynchron als effect() (luxShowColumnSelector). Ein direktes unshift/filter hier würde
+      // mit diesem Rebuild racen und zu doppelten Spalten-IDs führen (siehe MatSort-Fehler bei doppelter ID).
+      // untracked(), s. Kommentar beim luxShowColumnSelector-Effekt weiter oben.
+      untracked(() => this.updateColumnsByMediaQuery());
+
+      setTimeout(() => {
+        this.calculateProportions();
+      });
+    });
+
+    effect(() => {
+      const selected = this.luxSelectedInput();
+      if (!selected && !this.luxSelected) {
+        // Nothing to do
+      } else if (selected && !this.luxSelected) {
+        this.luxSelectedIntern(selected);
+      } else if (!selected && this.luxSelected) {
+        this.luxSelectedIntern(selected);
+      } else if (selected && this.luxSelected) {
+        if (this.luxSelected.size !== selected.size || !Array.from(selected).every((value) => this.luxSelected.has(value))) {
+          this.luxSelectedIntern(selected);
+        }
+      }
     });
   }
 
   ngOnInit() {
     this.loadHiddenColumnsFromStorage();
     setTimeout(() => {
-      if (this.luxHttpDAO) {
+      if (this.luxHttpDAO()) {
         this.loadHttpDAOData();
       } else {
         this.updateDataSourceAttributes(this.luxData);
@@ -409,17 +430,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   ngAfterViewInit() {
-    if (this.tableColumns) {
+    if (this.tableColumns.length > 0) {
       // Für den Fall das Spalten wegfallen/dazu kommen
-      this.tableColumnsChangedSubscription = this.tableColumns.changes.subscribe(() => {
+      this.tableColumnsChangedSubscription = toObservable(this.tableColumnsQuery, { injector: this.injector }).subscribe(() => {
         this.updateColumnsByMediaQuery();
         this.updateColumnSubscriptions();
         this.updateColumnVisibilityOptions();
       });
-
-      // Für den Fall das sich Änderungen innerhalb der Spalten ergeben
-      this.updateColumnSubscriptions();
-      this.updateColumnVisibilityOptions();
 
       // Nach dem Init sollten einmal die Spalten aktualisiert werden
       setTimeout(() => {
@@ -427,18 +444,23 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
       });
     }
 
-    if (this.luxShowPagination) {
+    if (this.luxShowPagination()) {
       this.handlePagination();
     }
   }
 
   ngDoCheck() {
+    const tableContainerElement = this.tableContainerElementQuery();
+    if (!tableContainerElement) {
+      return;
+    }
+
     if (
-      this.tableContainerElement.nativeElement.offsetWidth !== this.previousWidth ||
-      this.tableContainerElement.nativeElement.offsetHeight !== this.previousHeight
+      tableContainerElement.nativeElement.offsetWidth !== this.previousWidth ||
+      tableContainerElement.nativeElement.offsetHeight !== this.previousHeight
     ) {
-      this.previousWidth = this.tableContainerElement.nativeElement.offsetWidth;
-      this.previousHeight = this.tableContainerElement.nativeElement.offsetHeight;
+      this.previousWidth = tableContainerElement.nativeElement.offsetWidth;
+      this.previousHeight = tableContainerElement.nativeElement.offsetHeight;
 
       this.calculateProportions();
     }
@@ -487,7 +509,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   onSingleClick(event: Event, rowItem: T, rowIndex: number) {
-    if (!this.luxMultiSelect) {
+    if (!this.luxMultiSelect()) {
       this.luxSingleClicked.emit({ event, rowItem, rowIndex });
     }
 
@@ -495,13 +517,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   onDoubleClick(event: MouseEvent, rowItem: T) {
-    if (!this.luxMultiSelect) {
+    if (!this.luxMultiSelect()) {
       this.luxDoubleClicked.emit({ event, rowItem });
     }
   }
 
   onPaginatorPageChange(pageEvent: LuxPageEvent): void {
-    if (!this.luxHttpDAO) {
+    if (!this.luxHttpDAO()) {
       return;
     }
 
@@ -517,12 +539,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * @param checkboxEvent
    */
   changeSelectedEntry(entry: any, checkboxEvent = false) {
-    if ((this.luxMultiSelectDisabledProperty && entry[this.luxMultiSelectDisabledProperty] === true) || this.luxDoubleClicked.observed) {
+    const luxMultiSelectDisabledProperty = this.luxMultiSelectDisabledProperty();
+    if ((luxMultiSelectDisabledProperty && entry[luxMultiSelectDisabledProperty] === true) || this.luxDoubleClicked.observed) {
       return;
     }
 
-    if ((!this.luxMultiSelectOnlyCheckboxClick && !checkboxEvent) || (this.luxMultiSelectOnlyCheckboxClick && checkboxEvent)) {
-      if (this.luxMultiSelect) {
+    if ((!this.luxMultiSelectOnlyCheckboxClick() && !checkboxEvent) || (this.luxMultiSelectOnlyCheckboxClick() && checkboxEvent)) {
+      if (this.luxMultiSelect()) {
         if (this.luxSelected.has(entry)) {
           this.deleteSelected(entry);
         } else {
@@ -549,7 +572,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * Voraussetzung dafür ist, das Multiselect aktiv ist und keine Http-Table vorliegt.
    */
   changeSelectedEntries() {
-    if (this.luxMultiSelect) {
+    if (this.luxMultiSelect()) {
       // Bei HTTP-Tabellen selektieren wir nur die aktuell geladenen (gefilterten) Elemente
       // und nicht alle Elemente serverseitig.
       if (this.checkFilteredAllSelected()) {
@@ -598,7 +621,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * Gibt zurück, ob irgendein Footer-Element für diese Tabelle aktuell sichtbar ist.
    */
   anyFootersAvailable() {
-    return this.luxMultiSelect || !!this.tableColumns.find((column: LuxTableColumnComponent) => !!column.footer);
+    return this.luxMultiSelect() || !!this.tableColumns.find((column: LuxTableColumnComponent) => !!column.footer());
   }
 
   /**
@@ -607,18 +630,18 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * @param data
    */
   private updateDataSourceAttributes(data: any[]) {
-    if (!this.luxHttpDAO && this.luxAutoPaginate && data && data.length > LuxTableComponent.AUTO_PAGINATION_START) {
-      this.luxShowPagination = true;
+    if (!this.luxHttpDAO() && this.luxAutoPaginate() && data && data.length > LuxTableComponent.AUTO_PAGINATION_START) {
+      this.luxShowPagination.set(true);
     }
-    if (!this.luxHttpDAO) {
-      if (this.luxShowPagination) {
+    if (!this.luxHttpDAO()) {
+      if (this.luxShowPagination()) {
         this.handlePagination();
       }
     }
-    if (!this.luxHttpDAO) {
+    if (!this.luxHttpDAO()) {
       this.dataSource.sort = this.sort ?? null;
     }
-    if (!this.luxHttpDAO) {
+    if (!this.luxHttpDAO()) {
       this.dataSource.totalElements = this.dataSource.data ? this.dataSource.data.length : 0;
     }
   }
@@ -628,11 +651,11 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * für die einzelnen Rows.
    */
   private insertCustomCSSClasses() {
-    if (this.luxClasses && this.luxData) {
+    if (this.luxClasses() && this.luxData) {
       this.currentCustomClasses = [];
       this.luxData.forEach((entry: any) => {
         let classes = '';
-        (this.luxClasses as ICustomCSSConfig[]).forEach((cssClass: ICustomCSSConfig) => {
+        this.luxClasses().forEach((cssClass: ICustomCSSConfig) => {
           if (cssClass.check(entry)) {
             classes += cssClass.class + ' ';
           }
@@ -651,8 +674,8 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * @param sort
    */
   announceSortChange(sort: Sort) {
-    const index = this.tableColumns.toArray().findIndex((tableColumn: LuxTableColumnComponent) => sort.active === tableColumn.luxColumnDef);
-    let columnDef = index > -1 ? this.tableColumns.toArray()[index].luxColumnDef : null;
+    const index = this.tableColumns.findIndex((tableColumn: LuxTableColumnComponent) => sort.active === tableColumn.luxColumnDef());
+    let columnDef = index > -1 ? this.tableColumns[index].luxColumnDef() : null;
     if (columnDef === null) {
       columnDef = sort.active === 'multiSelect' ? 'multiSelect' : null;
     }
@@ -682,24 +705,24 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * Responsive-Queries und Verhaltensweisen.
    */
   private updateColumnsByMediaQuery() {
-    if (!this.tableColumns) {
+    if (this.tableColumns.length === 0) {
       return;
     }
 
     this._dataColumnDefs = [];
 
     // wenn Multiselect, dann benötigen wir hier noch eine Spalte mehr
-    if (this.luxMultiSelect) {
+    if (this.luxMultiSelect()) {
       this._dataColumnDefs.push('multiSelect');
     }
 
     this.tableColumns.forEach((column: LuxTableColumnComponent) => {
       if (this.luxShowColumnSelector()) {
-        if (!this.hiddenColumns.includes(column.luxColumnDef)) {
-          this._dataColumnDefs.push(column.luxColumnDef);
+        if (!this.hiddenColumns.includes(column.luxColumnDef())) {
+          this._dataColumnDefs.push(column.luxColumnDef());
         }
       } else {
-        this._dataColumnDefs.push(column.luxColumnDef);
+        this._dataColumnDefs.push(column.luxColumnDef());
       }
     });
     this.movedTableColumns = [];
@@ -707,24 +730,29 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     // Zuerst die auszublendenden Spalten durchgehen
     this.tableColumns.forEach((tableColumn: LuxTableColumnComponent) => {
       if (
-        (tableColumn.luxResponsiveAt && !tableColumn.luxResponsiveBehaviour) ||
-        (!tableColumn.luxResponsiveAt && tableColumn.luxResponsiveBehaviour)
+        (tableColumn.luxResponsiveAt() && !tableColumn.luxResponsiveBehaviour()) ||
+        (!tableColumn.luxResponsiveAt() && tableColumn.luxResponsiveBehaviour())
       ) {
         this.luxConsole.error(
-          `Achtung! Die Column '${tableColumn.luxColumnDef}' hat entweder keine Media-Queries ` +
+          `Achtung! Die Column '${tableColumn.luxColumnDef()}' hat entweder keine Media-Queries ` +
             `oder kein Responsive-Verhalten zugewiesen bekommen.`
         );
-      } else if (this.doesResponsiveAtApply(tableColumn.luxResponsiveAt)) {
+      } else if (this.doesResponsiveAtApply(tableColumn.luxResponsiveAt())) {
         // Schauen, ob eine Spalte angegeben wurde, in welche sich diese hier verschieben kann
-        if (this._dataColumnDefs.find((column: string) => column === tableColumn.luxResponsiveBehaviour)) {
+        if (this._dataColumnDefs.find((column: string) => column === tableColumn.luxResponsiveBehaviour())) {
           // Wenn ja, die Spalte merken und vorerst ausblenden
           this.movedTableColumns.push(tableColumn);
-          this.hasMovedColumnsMap.set(tableColumn.luxResponsiveBehaviour, true);
+          this.hasMovedColumnsMap.set(tableColumn.luxResponsiveBehaviour(), true);
         }
 
-        this._dataColumnDefs = this.dataColumnDefs.filter((dataColumn: string) => dataColumn !== tableColumn.luxColumnDef);
+        this._dataColumnDefs = this.dataColumnDefs.filter((dataColumn: string) => dataColumn !== tableColumn.luxColumnDef());
       }
     });
+
+    // Diese Methode wird u.a. aus Subscriptions/Effects heraus aufgerufen, die außerhalb des
+    // normalen Input-Bindings laufen. Unter OnPush muss daher explizit markForCheck() aufgerufen
+    // werden, damit die View (z.B. sticky/moved/hidden Columns) neu geprüft wird.
+    this.cdr.markForCheck();
   }
 
   /**
@@ -774,9 +802,10 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * @param filteredBy
    */
   loadHttpDAOData(filteredBy?: string) {
-    if (this.luxHttpDAO) {
+    const luxHttpDAO = this.luxHttpDAO();
+    if (luxHttpDAO) {
       this.isLoadingResults = true;
-      this.luxHttpDAO
+      luxHttpDAO
         .loadData(this.httpRequestConf)
         .pipe(
           tap((data: ILuxTableHttpDaoStructure) => {
@@ -790,8 +819,8 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
               this.dataSource.totalElements = data.totalCount;
               this.luxData = data.items;
 
-              if (this.luxAutoPaginate && data.totalCount > LuxTableComponent.AUTO_PAGINATION_START) {
-                this.luxShowPagination = true;
+              if (this.luxAutoPaginate() && data.totalCount > LuxTableComponent.AUTO_PAGINATION_START) {
+                this.luxShowPagination.set(true);
               }
             } else {
               this.dataSource.totalElements = 0;
@@ -822,13 +851,13 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         // If this is a server-side table with multiSelect enabled,
         // ignore sort events on the internal selection column to avoid
         // inconsistent selection state and duplicate entries.
-        if (sort && sort.active === 'multiSelect' && this.luxHttpDAO && this.luxMultiSelect) {
+        if (sort && sort.active === 'multiSelect' && this.luxHttpDAO() && this.luxMultiSelect()) {
           return;
         }
 
         this.resetPaginatorToFirstPage();
 
-        if (this.luxHttpDAO) {
+        if (this.luxHttpDAO()) {
           this.httpRequestConf.page = this.getPaginatorPageIndex();
           this.httpRequestConf.sort = sort.active;
           this.httpRequestConf.order = sort.direction;
@@ -848,7 +877,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     if (this.filterChangedSubscription) {
       this.filterChangedSubscription.unsubscribe();
     }
-    if (this.luxShowFilter) {
+    if (this.luxShowFilter()) {
       this.filterChangedSubscription = this.filtered$
         .asObservable()
         .pipe(
@@ -867,10 +896,10 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
           filterValue = filterValue.toLocaleLowerCase();
           this.resetPaginatorToFirstPage();
           this.isLoadingResults = false;
-          if (!this.luxHttpDAO) {
+          if (!this.luxHttpDAO()) {
             this.dataSource.filter = filterValue;
           }
-          if (this.luxHttpDAO) {
+          if (this.luxHttpDAO()) {
             this.httpRequestConf.filter = filterValue;
             this.httpRequestConf.page = this.getPaginatorPageIndex();
             this.loadHttpDAOData(filterValue);
@@ -885,12 +914,12 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    * eine asynchrone Tabelle handelt eine Subscription um Pagination-Änderungen zu erhalten.
    */
   private handlePagination() {
-    if (this.luxShowPagination) {
-      if (this.luxHttpDAO) {
+    if (this.luxShowPagination()) {
+      if (this.luxHttpDAO()) {
         this.httpRequestConf.page = this.getPaginatorPageIndex();
         this.httpRequestConf.pageSize = this.getPaginatorPageSize();
       }
-      if (!this.luxHttpDAO) {
+      if (!this.luxHttpDAO()) {
         this.dataSource.paginator = this.paginator?.getMatPaginator() ?? null;
       }
     } else {
@@ -910,7 +939,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   private getPaginatorPageSize(): number {
-    return this.paginator?.getMatPaginator()?.pageSize ?? this.luxPageSize;
+    return this.paginator?.getMatPaginator()?.pageSize ?? this.luxPageSize();
   }
 
   /**
@@ -927,7 +956,8 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
         this.tableHeightCSSCalc = temp;
       }
 
-      this.tableMinWidth = this.luxMinWidthPx > -1 ? this.luxMinWidthPx + 'px' : 'unset';
+      const luxMinWidthPx = this.luxMinWidthPx();
+      this.tableMinWidth = luxMinWidthPx > -1 ? luxMinWidthPx + 'px' : 'unset';
     });
   }
 
@@ -944,17 +974,17 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
       const foundEntries: any[] = [];
       this.luxSelected.forEach((entry: any) => {
         const newEntry = this.dataSource.data.find((dataEntry: any) =>
-          this.luxCompareWith(this.luxPickValue(entry), this.luxPickValue(dataEntry))
+          this.luxCompareWith()(this.luxPickValue()(entry), this.luxPickValue()(dataEntry))
         );
 
         // Merkt sich den Entry, wenn dieser noch nicht in der Selected-Liste ist (wenn es sich um eine HTTP-Tabelle handelt)
-        if (newEntry && (!this.luxHttpDAO || (this.luxHttpDAO && !this.luxSelected.has(newEntry)))) {
+        if (newEntry && (!this.luxHttpDAO() || (this.luxHttpDAO() && !this.luxSelected.has(newEntry)))) {
           foundEntries.push(newEntry);
           this.deleteSelected(entry);
         }
       });
       // Nur bei nicht-HTTP-Tabellen die Selektion einmal leeren
-      if (!this.luxHttpDAO) {
+      if (!this.luxHttpDAO()) {
         this.clearSelected();
       }
       foundEntries.forEach((entry: boolean) => this.addSelected(entry));
@@ -984,7 +1014,8 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   private isEntryDisabled(dataEntry: any) {
-    return this.luxMultiSelectDisabledProperty && dataEntry[this.luxMultiSelectDisabledProperty] === true;
+    const luxMultiSelectDisabledProperty = this.luxMultiSelectDisabledProperty();
+    return luxMultiSelectDisabledProperty ? dataEntry[luxMultiSelectDisabledProperty] === true : false;
   }
 
   addSelected(entry: any) {
@@ -1004,8 +1035,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   // =============================================================
 
   onHiddenColumnsChange(newHiddenColumns: string[]) {
-    if (this.luxColumnStorageKey) {
-      this.luxColumnVisibilityStore.save(this.luxColumnStorageKey, [...newHiddenColumns]);
+    const luxColumnStorageKey = this.luxColumnStorageKey();
+    if (luxColumnStorageKey) {
+      this.luxColumnVisibilityStore().save(luxColumnStorageKey, [...newHiddenColumns]);
     }
 
     this.luxHiddenColumnsChange.emit([...newHiddenColumns]);
@@ -1013,8 +1045,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   private loadHiddenColumnsFromStorage() {
-    if (this.luxColumnStorageKey) {
-      const invisibleColumns = this.luxColumnVisibilityStore.load(this.luxColumnStorageKey);
+    const luxColumnStorageKey = this.luxColumnStorageKey();
+    if (luxColumnStorageKey) {
+      const invisibleColumns = this.luxColumnVisibilityStore().load(luxColumnStorageKey);
       if (Array.isArray(invisibleColumns) && invisibleColumns.length) {
         this.hiddenColumns = invisibleColumns.filter((v) => typeof v === 'string');
       }
@@ -1022,11 +1055,9 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   }
 
   private updateColumnVisibilityOptions() {
-    this.allColumnsForVisibility = this.tableColumns
-      ? this.tableColumns.map((c) => ({
-          label: c.luxConfigLabel ? c.luxConfigLabel : c.luxColumnDef,
-          value: c.luxColumnDef
-        }))
-      : [];
+    this.allColumnsForVisibility = this.tableColumns.map((c) => ({
+      label: c.luxConfigLabel() ? c.luxConfigLabel()! : c.luxColumnDef(),
+      value: c.luxColumnDef()
+    }));
   }
 }

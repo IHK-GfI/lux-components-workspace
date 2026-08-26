@@ -1,7 +1,8 @@
 import { NgComponentOutlet } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, Type, ChangeDetectionStrategy } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, effect, inject, signal, Type } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { map } from 'rxjs';
 import { LuxButtonComponent } from '../lux-action/lux-button/lux-button.component';
 import { LuxLinkPlainComponent } from '../lux-action/lux-link-plain/lux-link-plain.component';
 import { LuxTableColumnContentComponent } from '../lux-common/lux-table/lux-table-subcomponents/lux-table-column-content.component';
@@ -22,15 +23,16 @@ import LUX_CONSENT_ENTRIES from './lux-consent-entries';
 import { LuxConsentEntry, LuxConsentPurpose, LuxConsentStorageType, LuxCookieCategory } from './lux-consent.model';
 import { LuxConsentService } from './lux-consent.service';
 
+type LuxConsentSection = 'consent' | 'datenschutz' | 'impressum';
+
 @Component({
   selector: 'lux-consent-dialog',
-  standalone: true,
   templateUrl: './lux-consent-dialog.component.html',
   styleUrls: ['./lux-consent-dialog.component.scss'],
   host: {
-    '[class.mobile-view]': 'mobileView'
+    '[class.mobile-view]': 'mobileView()'
   },
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,
@@ -46,71 +48,50 @@ import { LuxConsentService } from './lux-consent.service';
     NgComponentOutlet,
     LuxDividerComponent,
     TranslocoPipe
-]
+  ]
 })
-export class LuxConsentDialogComponent implements OnInit {
-  isExpanded = false;
-  activeSection: 'consent' | 'datenschutz' | 'impressum' = 'consent';
-  impressumComponentResolved?: Type<unknown>;
-  datenschutzComponentResolved?: Type<unknown>;
-
-  private readonly destroyRef = inject(DestroyRef);
+export class LuxConsentDialogComponent {
   private readonly dialogRef = inject(LuxDialogRef);
   private readonly consentService = inject(LuxConsentService);
   private readonly mediaQueryService = inject(LuxMediaQueryObserverService);
-  consentConfig!: ILuxConsentConfig;
 
-  mobileView = this.mediaQueryService.isSmallerOrEqual('sm');
-  LuxConsentPurpose = LuxConsentPurpose;
-  LuxConsentStorageType = LuxConsentStorageType;
-  storageTypes: LuxConsentStorageType[] = Object.values(LuxConsentStorageType) as LuxConsentStorageType[];
-  tableDataByPurposeAndType: Record<string, LuxConsentEntry[]> = {};
-  combinedEntries: LuxConsentEntry[] = [];
-  hasNonEssentialEntries = false;
-  cookieCategories: LuxCookieCategory[] = LUX_CONSENT_CATEGORIES.map((category) => ({ ...category }));
+  protected readonly consentConfig: ILuxConsentConfig = this.consentService.getCurrentConfig();
 
-  ngOnInit() {
-    this.mediaQueryService
-      .getMediaQueryChangedAsObservable()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.mobileView = this.mediaQueryService.isSmallerOrEqual('sm');
-      });
+  // merge default entries with any entries provided via DI config
+  protected readonly combinedEntries: LuxConsentEntry[] = [...LUX_CONSENT_ENTRIES, ...(this.consentConfig?.entries ?? [])];
+  protected readonly hasNonEssentialEntries = this.combinedEntries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
 
-    this.consentConfig = this.consentService.getCurrentConfig();
+  protected readonly LuxConsentPurpose = LuxConsentPurpose;
+  protected readonly storageTypes: LuxConsentStorageType[] = Object.values(LuxConsentStorageType) as LuxConsentStorageType[];
 
-    this.impressumComponentResolved = this.consentConfig.impressumComponent;
-    this.datenschutzComponentResolved = this.consentConfig.datenschutzComponent;
+  private readonly tableDataByPurposeAndType: Record<string, LuxConsentEntry[]> = this.buildTableDataByPurposeAndType();
 
-    this.consentService
-      .getConsentState()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((state) => {
-        if (state) {
-          this.updateCategoriesFromState(state.purposes);
-        }
-      });
+  protected readonly cookieCategories = signal<LuxCookieCategory[]>(LUX_CONSENT_CATEGORIES.map((category) => ({ ...category })));
 
-    // merge default entries with any entries provided via DI config
-    this.combinedEntries = [...LUX_CONSENT_ENTRIES, ...(this.consentConfig?.entries ?? [])];
-    this.hasNonEssentialEntries = this.combinedEntries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
+  protected readonly mobileView = toSignal(
+    this.mediaQueryService.getMediaQueryChangedAsObservable().pipe(map(() => this.mediaQueryService.isSmallerOrEqual('sm'))),
+    { initialValue: this.mediaQueryService.isSmallerOrEqual('sm') }
+  );
 
-    this.buildTableDataByPurposeAndType();
-  }
+  private readonly consentState = toSignal(this.consentService.getConsentState(), { initialValue: null });
 
-  private buildTableDataByPurposeAndType() {
-    this.tableDataByPurposeAndType = {};
-    for (const category of this.cookieCategories) {
-      for (const type of this.storageTypes) {
-        const key = `${category.purpose}_${type}`;
-        this.tableDataByPurposeAndType[key] = this.combinedEntries.filter(
-          (cookie) => cookie.purpose === category.purpose && cookie.type === type
+  protected readonly isExpanded = signal(false);
+  protected readonly activeSection = signal<LuxConsentSection>('consent');
+  protected readonly impressumComponentResolved = signal<Type<unknown> | null>(this.consentConfig.impressumComponent ?? null);
+  protected readonly datenschutzComponentResolved = signal<Type<unknown> | null>(this.consentConfig.datenschutzComponent ?? null);
+
+  constructor() {
+    effect(() => {
+      const state = this.consentState();
+      if (state) {
+        this.cookieCategories.update((categories) =>
+          categories.map((category) => (category.disabled ? category : { ...category, enabled: state.purposes.includes(category.purpose) }))
         );
       }
-    }
+    });
   }
 
-  getEntriesForPurposeAndType(purpose: LuxConsentPurpose, type: LuxConsentStorageType): LuxConsentEntry[] {
+  protected getEntriesForPurposeAndType(purpose: LuxConsentPurpose, type: LuxConsentStorageType): LuxConsentEntry[] {
     return this.tableDataByPurposeAndType[`${purpose}_${type}`] || [];
   }
 
@@ -118,72 +99,61 @@ export class LuxConsentDialogComponent implements OnInit {
     return this.storageTypes.some((type) => this.getEntriesForPurposeAndType(purpose, type).length > 0);
   }
 
-  toggleDetails() {
-    this.isExpanded = !this.isExpanded;
+  protected toggleDetails(): void {
+    this.isExpanded.update((expanded) => !expanded);
   }
 
-  acceptAll() {
+  protected acceptAll(): void {
     this.consentService.acceptAll();
     this.dialogRef.closeDialog();
   }
 
-  declineAll() {
+  protected declineAll(): void {
     this.consentService.declineNonFunctional();
     this.dialogRef.closeDialog();
   }
 
-  acceptSelected() {
-    const selectedPurposes = this.cookieCategories.filter((cat) => cat.enabled).map((cat) => cat.purpose);
+  protected acceptSelected(): void {
+    const selectedPurposes = this.cookieCategories()
+      .filter((category) => category.enabled)
+      .map((category) => category.purpose);
 
     this.consentService.saveCustomConsent(selectedPurposes);
     this.dialogRef.closeDialog();
   }
 
-  closeDialog() {
+  protected closeDialog(): void {
     this.consentService.onCloseDialog();
     this.dialogRef.closeDialog();
   }
 
-  private updateCategoriesFromState(purposes: LuxConsentPurpose[]) {
-    this.cookieCategories.forEach((category) => {
-      if (!category.disabled) {
-        category.enabled = purposes.includes(category.purpose);
-      }
-    });
+  protected toggleCategoryEnabled(purpose: LuxConsentPurpose, isEnabled: boolean): void {
+    this.cookieCategories.update((categories) =>
+      categories.map((category) => (category.purpose === purpose && !category.disabled ? { ...category, enabled: isEnabled } : category))
+    );
   }
 
-  protected findCategoryByPurpose(purpose: LuxConsentPurpose) {
-    return this.cookieCategories.find((cat) => cat.purpose === purpose);
-  }
-
-  protected toggleCategoryEnabled(purpose: LuxConsentPurpose, isEnabled: boolean) {
-    const category = this.findCategoryByPurpose(purpose);
-    if (category && !category.disabled) {
-      category.enabled = isEnabled;
-    }
-  }
-
-  async showSection(section: 'consent' | 'impressum' | 'datenschutz') {
+  protected async showSection(section: LuxConsentSection): Promise<void> {
     if (section === 'consent') {
-      this.activeSection = 'consent';
+      this.activeSection.set('consent');
       return;
     }
 
     if (section === 'impressum') {
-      if (this.impressumComponentResolved) {
-        this.activeSection = 'impressum';
+      if (this.impressumComponentResolved()) {
+        this.activeSection.set('impressum');
         return;
       }
       if (this.consentConfig.impressumComponentLoader) {
         try {
-          this.impressumComponentResolved = await this.consentConfig.impressumComponentLoader();
-          this.activeSection = 'impressum';
+          this.impressumComponentResolved.set(await this.consentConfig.impressumComponentLoader());
+          this.activeSection.set('impressum');
         } catch (error) {
           console.error('Konnte Impressum-Komponente nicht laden.', error);
           if (this.consentConfig.impressumUrl) {
             window.open(this.consentConfig.impressumUrl, '_blank', 'noopener,noreferrer');
           } else {
-            this.activeSection = 'consent';
+            this.activeSection.set('consent');
           }
         }
         return;
@@ -194,20 +164,20 @@ export class LuxConsentDialogComponent implements OnInit {
       return;
     }
 
-    if (this.datenschutzComponentResolved) {
-      this.activeSection = 'datenschutz';
+    if (this.datenschutzComponentResolved()) {
+      this.activeSection.set('datenschutz');
       return;
     }
     if (this.consentConfig.datenschutzComponentLoader) {
       try {
-        this.datenschutzComponentResolved = await this.consentConfig.datenschutzComponentLoader();
-        this.activeSection = 'datenschutz';
+        this.datenschutzComponentResolved.set(await this.consentConfig.datenschutzComponentLoader());
+        this.activeSection.set('datenschutz');
       } catch (error) {
         console.error('Konnte Datenschutz-Komponente nicht laden.', error);
         if (this.consentConfig.datenschutzUrl) {
           window.open(this.consentConfig.datenschutzUrl, '_blank', 'noopener,noreferrer');
         } else {
-          this.activeSection = 'consent';
+          this.activeSection.set('consent');
         }
       }
       return;
@@ -215,5 +185,16 @@ export class LuxConsentDialogComponent implements OnInit {
     if (this.consentConfig.datenschutzUrl) {
       window.open(this.consentConfig.datenschutzUrl, '_blank', 'noopener,noreferrer');
     }
+  }
+
+  private buildTableDataByPurposeAndType(): Record<string, LuxConsentEntry[]> {
+    const tableData: Record<string, LuxConsentEntry[]> = {};
+    for (const category of LUX_CONSENT_CATEGORIES) {
+      for (const type of this.storageTypes) {
+        const key = `${category.purpose}_${type}`;
+        tableData[key] = this.combinedEntries.filter((cookie) => cookie.purpose === category.purpose && cookie.type === type);
+      }
+    }
+    return tableData;
   }
 }

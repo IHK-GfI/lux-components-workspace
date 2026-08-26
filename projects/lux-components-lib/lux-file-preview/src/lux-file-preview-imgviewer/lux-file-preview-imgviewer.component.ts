@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { LuxAriaLabelDirective, LuxButtonComponent } from '@ihk-gfi/lux-components';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxFilePreviewBase } from '../lux-file-preview-base/lux-file-preview-base';
@@ -8,22 +8,23 @@ import { LuxFilePreviewToolbarComponent } from '../lux-file-preview-toolbar/lux-
 @Component({
   selector: 'lux-file-preview-imgviewer',
   templateUrl: './lux-file-preview-imgviewer.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxFilePreviewToolbarComponent, LuxButtonComponent, LuxAriaLabelDirective, NgStyle, TranslocoPipe]
 })
-export class LuxFilePreviewImgViewerComponent extends LuxFilePreviewBase implements OnInit, AfterViewInit {
+export class LuxFilePreviewImgViewerComponent extends LuxFilePreviewBase implements AfterViewInit {
   private elementRef = inject(ElementRef);
 
-  @ViewChild('previewImg') previewImg?: ElementRef;
+  previewImg = viewChild<ElementRef>('previewImg');
 
-  zoomActive = false;
-  zoomWidth = 0;
+  zoomActive = signal(false);
+  zoomWidth = signal(0);
   zoomStep = 250;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      if (this.previewImg) {
-        this.zoomActive = this.previewImg && this.previewImg.nativeElement.naturalWidth - this.paddingWith > window.innerWidth;
+      const img = this.previewImg();
+      if (img) {
+        this.zoomActive.set(img.nativeElement.naturalWidth - this.paddingWith > window.innerWidth);
 
         const firstButton = (this.elementRef.nativeElement as HTMLElement).querySelector('button');
         if (firstButton) {
@@ -34,19 +35,20 @@ export class LuxFilePreviewImgViewerComponent extends LuxFilePreviewBase impleme
   }
 
   onLoad() {
-    if (this.previewImg) {
-      this.zoomActive = this.previewImg && this.previewImg.nativeElement.naturalWidth - this.paddingWith > window.innerWidth;
+    const img = this.previewImg();
+    if (img) {
+      this.zoomActive.set(img.nativeElement.naturalWidth - this.paddingWith > window.innerWidth);
     }
     this.loadingFinished();
   }
 
   onZoomIn() {
-    this.zoomWidth += this.zoomStep;
+    this.zoomWidth.update((width) => width + this.zoomStep);
     this.clearFocus();
   }
 
   onZoomOut() {
-    this.zoomWidth -= this.zoomStep;
+    this.zoomWidth.update((width) => width - this.zoomStep);
     this.clearFocus();
   }
 }

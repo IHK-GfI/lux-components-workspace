@@ -1,6 +1,7 @@
 import { NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   ElementRef,
@@ -11,8 +12,7 @@ import {
   Output,
   QueryList,
   ViewChild,
-  inject,
-  ChangeDetectionStrategy
+  inject
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -31,14 +31,23 @@ import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-n
   templateUrl: './lux-side-nav.component.html',
   animations: [sideNavAnimation, sideNavOverlayAnimation],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [NgStyle, LuxAriaRoleDirective, LuxAriaLabelDirective, LuxDividerComponent, NgTemplateOutlet, LuxLinkComponent, LuxIconComponent, TranslocoPipe]
+  imports: [
+    NgStyle,
+    LuxAriaRoleDirective,
+    LuxAriaLabelDirective,
+    LuxDividerComponent,
+    NgTemplateOutlet,
+    LuxLinkComponent,
+    LuxIconComponent,
+    TranslocoPipe
+  ]
 })
 export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   private appService = inject(LuxAppService);
 
   @Input() luxDashboardLink?: string;
   @Input() luxDashboardLinkTitle = 'LUX Dashboard';
-  @Input() luxOpenLinkBlank?: boolean;
+  @Input() luxOpenLinkBlank = false;
   @Input() luxAriaRoleNavigationLabel = '';
 
   @Output() luxSideNavExpandedChange = new EventEmitter<boolean>();

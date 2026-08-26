@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal, viewChild } from '@angular/core';
 import { LUX_FILE_PREVIEW_DATA } from './lux-file-preview-config';
 import { LuxFilePreviewData } from './lux-file-preview-data';
 import { LuxFilePreviewImgViewerComponent } from './lux-file-preview-imgviewer/lux-file-preview-imgviewer.component';
@@ -8,37 +8,41 @@ import { LuxFilePreviewPdfViewerComponent } from './lux-file-preview-pdfviewer/l
 @Component({
   selector: 'lux-file-preview',
   templateUrl: './lux-file-preview.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxFilePreviewPdfViewerComponent, LuxFilePreviewImgViewerComponent, LuxFilePreviewNotSupportedViewerComponent]
 })
-export class LuxFilePreviewComponent implements OnInit {
+export class LuxFilePreviewComponent {
   data = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
 
-  @ViewChild(LuxFilePreviewPdfViewerComponent) pdfViewer?: LuxFilePreviewPdfViewerComponent;
-  @ViewChild(LuxFilePreviewImgViewerComponent) imgViewer?: LuxFilePreviewImgViewerComponent;
-  @ViewChild(LuxFilePreviewNotSupportedViewerComponent) notSupportedViewer?: LuxFilePreviewNotSupportedViewerComponent;
+  pdfViewer = viewChild(LuxFilePreviewPdfViewerComponent);
+  imgViewer = viewChild(LuxFilePreviewImgViewerComponent);
+  notSupportedViewer = viewChild(LuxFilePreviewNotSupportedViewerComponent);
 
-  fileType: 'img' | 'pdf' | 'txt' | 'notsupported' = 'notsupported';
+  fileType = signal<'img' | 'pdf' | 'txt' | 'notsupported'>('notsupported');
 
-  ngOnInit(): void {
-    if (this.data && this.data.fileObject && this.data.fileObject.type.indexOf('image/') > -1) {
-      this.fileType = 'img';
-    } else if (this.data && this.data.fileObject && this.data.fileObject.type.indexOf('application/pdf') > -1) {
-      this.fileType = 'pdf';
-    } else if (this.data && this.data.fileObject && this.data.fileObject.type.indexOf('text/plain') > -1) {
-      this.fileType = 'txt';
-    } else {
-      this.fileType = 'notsupported';
-    }
+  constructor() {
+    effect(() => {
+      if (this.data && this.data.fileObject) {
+        if (this.data.fileObject.type.indexOf('image/') > -1) {
+          this.fileType.set('img');
+        } else if (this.data.fileObject.type.indexOf('application/pdf') > -1) {
+          this.fileType.set('pdf');
+        } else if (this.data.fileObject.type.indexOf('text/plain') > -1) {
+          this.fileType.set('txt');
+        } else {
+          this.fileType.set('notsupported');
+        }
+      }
+    });
   }
 
   onClose() {
-    if (this.pdfViewer) {
-      this.pdfViewer.onClose();
-    } else if (this.imgViewer) {
-      this.imgViewer.onClose();
-    } else if (this.notSupportedViewer) {
-      this.notSupportedViewer.onClose();
+    if (this.pdfViewer()) {
+      this.pdfViewer()?.onClose();
+    } else if (this.imgViewer()) {
+      this.imgViewer()?.onClose();
+    } else if (this.notSupportedViewer()) {
+      this.notSupportedViewer()?.onClose();
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Directive, HostListener, inject, OnDestroy, OnInit } from '@angular/core';
+import { Directive, HostListener, inject, OnDestroy, signal } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LuxUtil } from '@ihk-gfi/lux-components';
 import { LUX_FILE_PREVIEW_DATA } from '../lux-file-preview-config';
@@ -6,23 +6,23 @@ import { LuxFilePreviewData } from '../lux-file-preview-data';
 import { LuxFilePreviewRef } from '../lux-file-preview-ref';
 
 @Directive()
-export class LuxFilePreviewBase implements OnInit, OnDestroy {
+export class LuxFilePreviewBase implements OnDestroy {
   protected previewRef = inject(LuxFilePreviewRef);
   protected previewData = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
   protected sanitizer = inject(DomSanitizer);
 
-  url?: SafeResourceUrl;
-  urls: SafeResourceUrl[] = [];
+  url = signal<SafeResourceUrl | undefined>(undefined);
+  urls = signal<SafeResourceUrl[]>([]);
 
   paddingWith = 100;
   paddingHeight = 150;
 
-  height = 0;
-  width = 0;
+  height = signal(0);
+  width = signal(0);
 
-  startPhase = true;
+  startPhase = signal(true);
   startDurationMs = 250;
-  loading = true;
+  loading = signal(true);
   loadingTimer: any;
 
   downloadIconName = 'lux-interface-download-button-2';
@@ -31,21 +31,9 @@ export class LuxFilePreviewBase implements OnInit, OnDestroy {
   closeIconName = 'lux-interface-delete-1';
   closeTagId = 'file-preview-close-btn';
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeydown(keyboardEvent: KeyboardEvent) {
-    if (LuxUtil.isKeyEscape(keyboardEvent)) {
-      this.onClose();
-    }
-  }
-
-  @HostListener('window:resize')
-  windowResize() {
-    this.updateWidthAndHeight();
-  }
-
-  ngOnInit() {
+  constructor() {
     this.loadingTimer = setTimeout(() => {
-      this.startPhase = false;
+      this.startPhase.set(false);
     }, this.startDurationMs);
 
     this.updateWidthAndHeight();
@@ -64,15 +52,27 @@ export class LuxFilePreviewBase implements OnInit, OnDestroy {
         if (myBlob) {
           const fileName = this.previewData.fileObject.name;
           const file = new File([myBlob], fileName, { type: this.previewData.fileObject.type });
-          this.url = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(file) + '#page=1&toolbar=1');
-          this.urls.push(this.url);
+          this.url.set(this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(file) + '#page=1&toolbar=1'));
+          this.urls.update((urls) => [...urls, this.url()!]);
         }
       }
     });
   }
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeydown(keyboardEvent: KeyboardEvent) {
+    if (LuxUtil.isKeyEscape(keyboardEvent)) {
+      this.onClose();
+    }
+  }
+
+  @HostListener('window:resize')
+  windowResize() {
+    this.updateWidthAndHeight();
+  }
+
   ngOnDestroy() {
-    this.urls.forEach((url) => {
+    this.urls().forEach((url) => {
       window.URL.revokeObjectURL(url.toString());
     });
   }
@@ -89,7 +89,7 @@ export class LuxFilePreviewBase implements OnInit, OnDestroy {
   }
 
   loadingFinished() {
-    this.loading = false;
+    this.loading.set(false);
   }
 
   clearFocus() {
@@ -99,7 +99,7 @@ export class LuxFilePreviewBase implements OnInit, OnDestroy {
   }
 
   updateWidthAndHeight() {
-    this.width = window.innerWidth - this.paddingWith;
-    this.height = window.innerHeight - this.paddingHeight;
+    this.width.set(window.innerWidth - this.paddingWith);
+    this.height.set(window.innerHeight - this.paddingHeight);
   }
 }

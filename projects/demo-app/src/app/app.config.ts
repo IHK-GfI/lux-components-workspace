@@ -1,8 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { LuxAppHeaderAcSessionTimerService, LuxComponentsConfigModule, LuxComponentsConfigParameters } from '@ihk-gfi/lux-components';
+import { LuxAppHeaderAcSessionTimerService, LuxComponentsConfigParameters, provideLuxComponentsConfig } from '@ihk-gfi/lux-components';
 import { LangDefinition, TranslocoService } from '@jsverse/transloco';
 import { provideTranslocoLocale } from '@jsverse/transloco-locale';
 import { CookieService } from 'ngx-cookie-service';
@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimations(),
-    importProvidersFrom([LuxComponentsConfigModule.forRoot(myConfiguration)]),
+    provideLuxComponentsConfig(myConfiguration),
     provideHttpClient(),
     provideLuxTranslocoRoot(),
     provideTranslocoLocale({

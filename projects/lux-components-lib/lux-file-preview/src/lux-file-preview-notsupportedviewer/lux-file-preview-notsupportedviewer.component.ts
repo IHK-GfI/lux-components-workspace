@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxAriaLabelDirective, LuxButtonComponent } from '@ihk-gfi/lux-components';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxFilePreviewBase } from '../lux-file-preview-base/lux-file-preview-base';
@@ -7,10 +7,10 @@ import { LuxFilePreviewToolbarComponent } from '../lux-file-preview-toolbar/lux-
 @Component({
   selector: 'lux-file-preview-notsupportedviewer',
   templateUrl: './lux-file-preview-notsupportedviewer.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxFilePreviewToolbarComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
-export class LuxFilePreviewNotSupportedViewerComponent extends LuxFilePreviewBase implements OnInit {
+export class LuxFilePreviewNotSupportedViewerComponent extends LuxFilePreviewBase {
   counter = 5;
   timer: any;
 

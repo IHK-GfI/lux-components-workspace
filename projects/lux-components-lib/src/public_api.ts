@@ -69,7 +69,7 @@ export * from './lib/lux-common/lux-textbox/lux-textbox.component';
  * LUX-Config
  */
 export * from './lib/lux-components-config/lux-components-config-parameters.interface';
-export * from './lib/lux-components-config/lux-components-config.module';
+export * from './lib/lux-components-config/lux-components-config.provider';
 export * from './lib/lux-components-config/lux-components-config.service';
 
 /**

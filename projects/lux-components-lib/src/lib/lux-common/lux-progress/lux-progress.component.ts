@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -15,62 +15,31 @@ export declare type LuxProgressSizeType = 'small' | 'medium' | 'large';
 @Component({
   selector: 'lux-progress',
   templateUrl: './lux-progress.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner, TranslocoPipe]
 })
 export class LuxProgressComponent {
   readonly DEFAULT_PROGRESS_COLOR: LuxProgressColor = 'blue';
 
-  private _luxMode?: LuxProgressModeType;
-  private _luxType?: LuxProgressType;
-  private _luxColor?: LuxProgressColor;
-
   animDurationCSS = '';
-  typeCSS = '';
 
-  @Input() luxValue = 0;
-  @Input() luxAriaLabel = ''
+  readonly luxValue = input(0);
+  readonly luxAriaLabel = input('');
   // Nur für ProgressBar
-  @Input() luxSize: LuxProgressSizeType = 'medium';
-  @Input() luxTagId?: string;
+  readonly luxSize = input<LuxProgressSizeType>('medium');
+  readonly luxTagId = input<string | undefined>(undefined);
 
-  @Input()
-  set luxColor(value: LuxProgressColor | undefined) {
-    this._luxColor = LuxProgressColors.find((entry) => entry === value) ?? this.DEFAULT_PROGRESS_COLOR;
-  }
+  readonly luxColor = input<LuxProgressColor, LuxProgressColor | undefined>(this.DEFAULT_PROGRESS_COLOR, {
+    transform: (value) => LuxProgressColors.find((entry) => entry === value) ?? this.DEFAULT_PROGRESS_COLOR
+  });
 
-  get luxColor(): LuxProgressColor | undefined {
-    return this._luxColor;
-  }
+  readonly luxMode = input<LuxProgressModeType, LuxProgressModeType | undefined>('indeterminate', {
+    transform: (value) => (value === 'determinate' ? 'determinate' : 'indeterminate')
+  });
 
-  @Input() set luxMode(mode: LuxProgressModeType) {
-    this._luxMode = mode;
-  }
+  readonly luxType = input<LuxProgressType, LuxProgressType | undefined>('Progressbar', {
+    transform: (value) => (value === 'Spinner' ? 'Spinner' : 'Progressbar')
+  });
 
-  get luxMode() {
-    if (this._luxMode !== 'determinate' && this._luxMode !== 'indeterminate') {
-      return 'indeterminate';
-    }
-    return this._luxMode;
-  }
-
-  @Input() set luxType(type: LuxProgressType | undefined) {
-    this._luxType = type;
-    if (this._luxType === 'Progressbar') {
-      this.typeCSS = 'lux-progress-bar';
-    } else if (this._luxType === 'Spinner') {
-      this.typeCSS = 'lux-progress-spinner';
-    } else {
-      this.luxType = 'Progressbar';
-    }
-  }
-
-  get luxType(): LuxProgressType | undefined {
-    return this._luxType;
-  }
-
-  constructor() {
-    this.luxMode = 'indeterminate';
-    this.luxType = 'Progressbar';
-  }
+  readonly typeCSS = computed(() => (this.luxType() === 'Spinner' ? 'lux-progress-spinner' : 'lux-progress-bar'));
 }

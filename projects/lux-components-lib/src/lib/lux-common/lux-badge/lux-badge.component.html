@@ -1,16 +1,16 @@
-@if (luxColor) {
+@if (luxColor()) {
   <div
     class="lux-badge lux-mt-1 lux-mb-1 lux-ml-1 lux-mr-1 lux-pt-1 lux-pb-1 lux-pl-3 lux-pr-3"
     [ngClass]="[
-      'lux-badge-' + luxColor,
-      'lux-badge-on-' + luxColor,
-      luxUppercase ? 'lux-badge-uppercase' : '',
-      luxMuted ? 'lux-badge-muted' : '',
-      luxSize ? 'lux-badge-size-' + luxSize : ''
+      'lux-badge-' + luxColor(),
+      'lux-badge-on-' + luxColor(),
+      luxUppercase() ? 'lux-badge-uppercase' : '',
+      luxMuted() ? 'lux-badge-muted' : '',
+      luxSize() ? 'lux-badge-size-' + luxSize() : ''
     ]"
   >
-    @if (luxIconName) {
-      <lux-icon [luxIconName]="luxIconName" luxPadding="0" [luxIconSize]="ICON_SIZE" luxMargin="0 0.5rem 0 0"></lux-icon>
+    @if (luxIconName()) {
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0" [luxIconSize]="ICON_SIZE" luxMargin="0 0.5rem 0 0"></lux-icon>
     }
     <ng-content select="lux-label"></ng-content>
   </div>

@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { Router } from '@angular/router';
@@ -14,13 +14,13 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   templateUrl: './lux-link.component.html',
   styleUrls: ['./lux-link.component.scss'],
   imports: [NgClass, LuxTagIdDirective, LuxIconComponent, NgTemplateOutlet, MatButton, MatFabButton],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.lux-uppercase]': 'labelUppercase',
-    '[class.lux-flat]': 'luxFlat',
-    '[class.lux-raised]': 'luxRaised',
-    '[class.lux-rounded]': 'luxRounded',
-    '[class.lux-stroked]': 'luxStroked'
+    '[class.lux-flat]': 'luxFlat()',
+    '[class.lux-raised]': 'luxRaised()',
+    '[class.lux-rounded]': 'luxRounded()',
+    '[class.lux-stroked]': 'luxStroked()'
   }
 })
 export class LuxLinkComponent extends LuxActionComponentBaseClass {
@@ -33,8 +33,8 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
 
   public readonly iconSize: string = '2x';
 
-  @Input() luxHref = '';
-  @Input() luxBlank? = false;
+  readonly luxHref = input('');
+  readonly luxBlank = input(false);
 
   constructor() {
     super();
@@ -51,8 +51,8 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
   }
 
   isExternal(): boolean {
-    if (!this.luxHref) return false;
-    const href = this.luxHref.trim();
+    if (!this.luxHref()) return false;
+    const href = this.luxHref().trim();
     return (
       href.startsWith('http://') ||
       href.startsWith('https://') ||
@@ -63,17 +63,17 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
   }
 
   redirectToHref(event: Event) {
-    if (this.luxDisabled) {
+    if (this.luxDisabled()) {
       event.preventDefault();
       return;
     }
 
     this.luxClicked.emit(event);
 
-    if (!this.luxHref) return;
+    if (!this.luxHref()) return;
 
     event.preventDefault();
-    const href = this.luxHref.trim();
+    const href = this.luxHref().trim();
 
     if (this.isExternal()) {
       // Externe Links: Öffne im aktuellen oder neuen Fenster
@@ -99,7 +99,7 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
     let result = false;
 
     if (event instanceof MouseEvent || event instanceof KeyboardEvent) {
-      result = this.luxBlank || event.ctrlKey || event.metaKey || event.which === 2;
+      result = this.luxBlank() || event.ctrlKey || event.metaKey || event.which === 2;
     }
 
     return result;

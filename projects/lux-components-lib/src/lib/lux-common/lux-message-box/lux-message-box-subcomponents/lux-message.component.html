@@ -1,14 +1,14 @@
-@if (luxMessage) {
-<div class="lux-message-container" [ngClass]="['lux-messagebox-' + luxMessage.color, 'lux-messagebox-on-' + luxMessage.color]" luxAriaRole="listitem"
+@if (luxMessage(); as message) {
+<div class="lux-message-container" [ngClass]="['lux-messagebox-' + message.color, 'lux-messagebox-on-' + message.color]" luxAriaRole="listitem"
   [class.lux-message-closing]="closing()"
   (transitionend)="onTransitionEnd($event)"
 >
-  @if (luxMessage.iconName) {
-  <lux-icon [luxIconName]="luxMessage.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon"></lux-icon>
-  } @if (!luxMessage.iconName) {
+  @if (message.iconName) {
+  <lux-icon [luxIconName]="message.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon"></lux-icon>
+  } @if (!message.iconName) {
   <div class="lux-message-icon"></div>
   }
-  <p tabindex="0" class="lux-message-text">{{ luxMessage.text }}</p>
+  <p tabindex="0" class="lux-message-text">{{ message.text }}</p>
   <lux-button
     class="lux-close-message-btn"
     [luxRounded]="true"

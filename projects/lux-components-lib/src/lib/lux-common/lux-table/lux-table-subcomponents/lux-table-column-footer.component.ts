@@ -1,15 +1,14 @@
-import { AfterContentInit, Component, ContentChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
-import { LuxUtil } from '../../../lux-util/lux-util';
+import { ChangeDetectionStrategy, Component, TemplateRef, contentChild, effect } from '@angular/core';
 
 @Component({
   selector: 'lux-table-column-footer',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ''
 })
-export class LuxTableColumnFooterComponent<T = any> implements AfterContentInit {
-  @ContentChild(TemplateRef) tempRef!: TemplateRef<T>;
+export class LuxTableColumnFooterComponent<T = any> {
+  readonly tempRef = contentChild.required<TemplateRef<T>>(TemplateRef);
 
-  ngAfterContentInit() {
-    LuxUtil.assertNonNull(`tempRef (missing <ng-template></ng-template> in <lux-table-column-footer>)`, this.tempRef);
+  constructor() {
+    effect(() => this.tempRef());
   }
 }
