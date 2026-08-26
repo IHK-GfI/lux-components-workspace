@@ -4,9 +4,9 @@ import { TranslocoService } from '@jsverse/transloco';
 export const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 export const timeDeltas = [
-  { id: 'year', days: 672, dayUnit: 336 },
-  { id: 'month', days: 56, dayUnit: 28 },
-  { id: 'week', days: 14, dayUnit: 7 },
+  { id: 'years', days: 672, dayUnit: 336 },
+  { id: 'months', days: 56, dayUnit: 28 },
+  { id: 'weeks', days: 14, dayUnit: 7 },
   { id: 'days', days: 2, dayUnit: 1 }
 ];
 
