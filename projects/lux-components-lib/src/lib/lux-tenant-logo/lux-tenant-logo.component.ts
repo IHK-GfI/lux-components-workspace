@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigParameters } from '../lux-components-config/lux-components-config-parameters.interface';
@@ -11,6 +11,7 @@ import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observ
   selector: 'lux-tenant-logo',
   templateUrl: './lux-tenant-logo.component.html',
   styleUrls: ['./lux-tenant-logo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxImageComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxTenantLogoComponent implements OnInit, OnDestroy {

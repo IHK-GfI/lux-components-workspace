@@ -1,8 +1,9 @@
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 
 @Component({
   selector: 'lux-chip-ac-group',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ''
 })
 export class LuxChipAcGroupComponent {

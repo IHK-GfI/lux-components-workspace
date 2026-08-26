@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -127,6 +127,7 @@ describe('LuxProgressComponent', () => {
 @Component({
   selector: 'lux-mock-progress-bar',
   template: `<lux-progress [luxType]="type" [luxMode]="mode" [luxColor]="color" [luxSize]="size" [luxValue]="value"></lux-progress>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxProgressComponent]
 })
 class LuxMockProgressBarComponent {

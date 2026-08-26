@@ -1,14 +1,14 @@
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { provideLuxTranslocoTesting } from '../../../../../testing/transloco-test.provider';
 import { LuxAppHeaderAcSessionTimerComponent } from './lux-app-header-ac-session-timer';
 import {
   LuxAppHeaderAcSessionTimerService,
   LuxSessionTimerBroadcastType
 } from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
-import { Component } from '@angular/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { By } from '@angular/platform-browser';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideLuxTranslocoTesting } from '../../../../../testing/transloco-test.provider';
 
 describe('LuxAppHeaderAcSessionTimerComponent', () => {
   const sessionTimerStorageKey = 'lux-components-session-endtime';
@@ -24,7 +24,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
       imports: [MockSessionTimerComponent],
       providers: [
         LuxAppHeaderAcSessionTimerService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -295,6 +295,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
 @Component({
   template: ` <lux-app-header-ac-session-timer></lux-app-header-ac-session-timer> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAppHeaderAcSessionTimerComponent]
 })
 class MockSessionTimerComponent {}

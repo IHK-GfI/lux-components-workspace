@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxMenuComponent,
@@ -26,6 +26,7 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
   selector: 'app-table-example',
   templateUrl: './table-example.component.html',
   styleUrls: ['./table-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,

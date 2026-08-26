@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, Injectable } from '@angular/core';
+import { Component, Injectable, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -16,7 +16,7 @@ describe('LuxLookupLabelComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
         provideLuxTranslocoTesting(),
@@ -93,7 +93,7 @@ describe('Parameter-Check', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
         LuxLookupHandlerService,
@@ -204,6 +204,7 @@ describe('Parameter-Check', () => {
   template: `
     <lux-lookup-label luxLookupId="meineId" luxLookupKnr="101" [luxTableNo]="tableNo" [luxTableKey]="tableKey"> </lux-lookup-label>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupLabelComponent]
 })
 class LuxNoFormComponent {
@@ -217,6 +218,7 @@ class LuxNoFormComponent {
   template: `
     <lux-lookup-label luxLookupId="meineId" luxLookupKnr="101" [luxTableNo]="tableNo" [luxTableKey]="tableKey"> </lux-lookup-label>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupLabelComponent]
 })
 class LuxTable500212Component {

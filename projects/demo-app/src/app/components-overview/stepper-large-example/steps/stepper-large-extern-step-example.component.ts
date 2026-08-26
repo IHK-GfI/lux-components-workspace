@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxStepperLargeStepComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
@@ -8,6 +8,7 @@ import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-ex
   selector: 'lux-stepper-large-extern-step-example',
   templateUrl: './stepper-large-extern-step-example.component.html',
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExternStepExampleComponent }],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxToggleAcComponent, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExternStepExampleComponent extends LuxStepperLargeStepComponent implements OnInit, AfterViewInit {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   LuxAccordionComponent,
   LuxDividerComponent,
@@ -27,6 +27,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-menu-example',
   templateUrl: './menu-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxMenuComponent,
     LuxMenuItemComponent,

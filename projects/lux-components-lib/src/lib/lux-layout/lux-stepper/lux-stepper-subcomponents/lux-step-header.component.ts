@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigService } from '../../../lux-components-config/lux-components-config.service';
 
@@ -10,6 +10,7 @@ import { LuxComponentsConfigService } from '../../../lux-components-config/lux-c
       <ng-content></ng-content>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass]
 })
 export class LuxStepHeaderComponent implements OnInit, OnDestroy {

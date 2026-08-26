@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
@@ -24,7 +24,7 @@ describe('LuxRadioAcComponent', () => {
         LuxConsoleService,
         { provide: LuxMediaQueryObserverService, useClass: MockMediaObserver },
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -527,6 +527,7 @@ declare interface Option {
       (luxSelectedChange)="radioSelected($event)"
     ></lux-radio-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxRadioAcComponent]
 })
 class MockRadioComponent {
@@ -560,6 +561,7 @@ class MockRadioComponent {
       </ng-template>
     </lux-radio-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxRadioAcComponent]
 })
 class MockRadioWithTemplateComponent {
@@ -585,6 +587,7 @@ class MockRadioWithTemplateComponent {
       ></lux-radio-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxRadioAcComponent]
 })
 class MockRadioFormComponent {
@@ -630,6 +633,7 @@ class MockMediaObserver {
       <lux-radio-ac [luxOptions]="options" luxOptionLabelProp="label" [luxSelected]="selected" luxControlBinding="radio"></lux-radio-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxRadioAcComponent]
 })
 class MockWithoutLuxErrorMessageComponent {
@@ -664,6 +668,7 @@ class MockWithoutLuxErrorMessageComponent {
       ></lux-radio-ac>
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxRadioAcComponent]
 })
 class MockLuxErrorMessageComponent {

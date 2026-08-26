@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutofocusDirective,
   LuxBadgeNotificationSize,
@@ -22,6 +22,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   selector: 'app-tile-authentic-example',
   templateUrl: './tile-authentic-example.component.html',
   styleUrls: ['./tile-authentic-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxImageComponent,
     LuxIconComponent,

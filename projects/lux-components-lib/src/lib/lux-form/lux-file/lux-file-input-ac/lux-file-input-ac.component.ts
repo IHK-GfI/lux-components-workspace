@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -22,6 +22,7 @@ import { LuxFileProgressComponent } from '../lux-file-subcomponents/lux-file-pro
   selector: 'lux-file-input-ac',
   templateUrl: './lux-file-input-ac.component.html',
   styleUrls: ['./lux-file-input-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,

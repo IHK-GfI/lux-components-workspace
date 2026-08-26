@@ -1,5 +1,5 @@
 import { JsonPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     LuxAutocompleteAcComponent,
@@ -56,6 +56,7 @@ interface FormCommonUser {
 @Component({
   selector: 'app-form-common',
   templateUrl: './form-common.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxCardContentComponent,

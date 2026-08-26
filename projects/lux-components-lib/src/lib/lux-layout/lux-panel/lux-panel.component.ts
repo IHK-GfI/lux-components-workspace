@@ -1,4 +1,17 @@
-import { AfterViewInit, Component, computed, EventEmitter, Input, input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
 import { Subscription } from 'rxjs';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
@@ -9,6 +22,7 @@ import { LuxAccordionComponent, LuxTogglePosition } from '../lux-accordion/lux-a
   selector: 'lux-panel',
   templateUrl: './lux-panel.component.html',
   styleUrls: ['./lux-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatExpansionPanel, MatExpansionPanelHeader]
 })
 export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -14,6 +14,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'lux-html-example',
   templateUrl: './html-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxHtmlComponent,
     LuxToggleAcComponent,

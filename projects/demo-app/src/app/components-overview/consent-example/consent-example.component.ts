@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   ILuxConsentConfig,
   LuxButtonComponent,
@@ -15,6 +15,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-consent-example',
   templateUrl: './consent-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

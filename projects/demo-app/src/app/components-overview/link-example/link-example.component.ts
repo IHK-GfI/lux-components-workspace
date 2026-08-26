@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutofocusDirective,
   LuxComponentsConfigParameters,
@@ -17,6 +17,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-link-example',
   templateUrl: './link-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxLinkComponent,
     LuxToggleAcComponent,

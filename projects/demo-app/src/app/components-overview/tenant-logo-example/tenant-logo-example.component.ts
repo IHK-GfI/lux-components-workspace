@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxTenantLogoComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -11,6 +11,7 @@ import { TenantLogoExampleHeaderService } from './tenant-logo-example-header.ser
   selector: 'app-tenant-logo-example',
   templateUrl: './tenant-logo-example.component.html',
   styleUrls: ['./tenant-logo-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTenantLogoComponent,
     LuxToggleAcComponent,

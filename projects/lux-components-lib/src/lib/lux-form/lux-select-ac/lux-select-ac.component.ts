@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, Input, OnChanges, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, inject } from '@angular/core';
+import { Component, ContentChild, Input, OnChanges, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -24,6 +24,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
   selector: 'lux-select-ac',
   templateUrl: './lux-select-ac.component.html',
   styleUrls: ['./lux-select-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,

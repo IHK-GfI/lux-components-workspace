@@ -96,7 +96,7 @@
 
     <br />
     <span class="lux-chat-header-sub-title">
-      {{ 'luxc.chat.title.created_at' | transloco }}{{ luxChatData()?.createdAt | date: 'dd.MM HH:mm' }}
+      {{ 'luxc.chat.title.created_at' | transloco }}{{ $safeNavigationMigration(luxChatData()?.createdAt) | date: 'dd.MM HH:mm' }}
     </span>
   </p>
 

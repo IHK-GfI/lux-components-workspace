@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ContentChildren, Input, OnDestroy, QueryList, inject } from '@angular/core';
+import { Component, ContentChildren, Input, OnDestroy, QueryList, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
@@ -13,6 +13,7 @@ import { LuxAppHeaderAcNavMenuItemComponent } from './lux-app-header-ac-nav-menu
 @Component({
   selector: 'lux-app-header-ac-nav-menu',
   templateUrl: './lux-app-header-ac-nav-menu.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [NgClass, LuxAriaLabelDirective, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxButtonComponent, LuxMenuComponent, TranslocoPipe]
 })
 export class LuxAppHeaderAcNavMenuComponent implements OnDestroy {

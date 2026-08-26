@@ -1,6 +1,6 @@
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -82,7 +82,7 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
         LuxLookupHandlerService,
         { provide: LuxLookupService, useValue: { getLookupTable: () => of([]) } },
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -186,7 +186,13 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
           <lux-textarea-ac luxLabel="Feld" luxControlBinding="feld" id="feld"></lux-textarea-ac>
         }
         @case ('select') {
-          <lux-select-ac luxLabel="Feld" [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="feld" id="feld"></lux-select-ac>
+          <lux-select-ac
+            luxLabel="Feld"
+            [luxOptions]="options"
+            luxOptionLabelProp="label"
+            luxControlBinding="feld"
+            id="feld"
+          ></lux-select-ac>
         }
         @case ('radio') {
           <lux-radio-ac luxLabel="Feld" [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="feld" id="feld"></lux-radio-ac>
@@ -249,6 +255,7 @@ describe('LuxFormComponentBase - required-Erkennung in Reactive Forms', () => {
       }
     </form>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     LuxInputAcComponent,

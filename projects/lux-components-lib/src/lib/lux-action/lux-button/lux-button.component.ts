@@ -1,5 +1,16 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  inject
+} from '@angular/core';
 import { MatButton, MatFabButton, MatIconButton } from '@angular/material/button';
 import { Subject, Subscription } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
@@ -16,7 +27,18 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   selector: 'lux-button',
   templateUrl: './lux-button.component.html',
   styleUrls: ['./lux-button.component.scss'],
-  imports: [MatButton, LuxAriaDisabledDirective, LuxTagIdDirective, NgClass, NgTemplateOutlet, MatFabButton, MatIconButton, LuxIconComponent, LuxProgressComponent],
+  imports: [
+    MatButton,
+    LuxAriaDisabledDirective,
+    LuxTagIdDirective,
+    NgClass,
+    NgTemplateOutlet,
+    MatFabButton,
+    MatIconButton,
+    LuxIconComponent,
+    LuxProgressComponent
+  ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '[class.lux-flat]': 'luxFlat',
     '[class.lux-raised]': 'luxRaised',

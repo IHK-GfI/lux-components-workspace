@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     LuxAutofocusDirective,
@@ -33,6 +33,7 @@ interface CheckboxAgbDummyForm {
   selector: 'lux-checkbox-authentic-example',
   templateUrl: './checkbox-authentic-example.component.html',
   styleUrls: ['./checkbox-authentic-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTextboxComponent,
     LuxButtonComponent,

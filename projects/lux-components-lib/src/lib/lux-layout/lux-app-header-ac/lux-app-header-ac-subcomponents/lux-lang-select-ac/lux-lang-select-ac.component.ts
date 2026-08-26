@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
@@ -13,6 +13,7 @@ import { LuxLocaleAc } from './lux-locale-ac';
 @Component({
   selector: 'lux-lang-select-ac',
   templateUrl: './lux-lang-select-ac.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAriaLabelDirective,
     LuxTooltipDirective,

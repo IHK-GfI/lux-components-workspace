@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxConsoleService,
   LuxMenuComponent,
@@ -24,6 +24,7 @@ import { TestHttpDao } from './test-http-dao';
   selector: 'app-table-server-example',
   templateUrl: './table-server-example.component.html',
   styleUrls: ['./table-server-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,

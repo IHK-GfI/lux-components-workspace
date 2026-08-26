@@ -1,7 +1,8 @@
-import { Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'lux-master-list-ac',
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: ''
 })
 export class LuxMasterListAcComponent {

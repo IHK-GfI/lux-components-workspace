@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -10,6 +10,7 @@ import { ILuxMessage } from '../lux-message-box-model/lux-message.interface';
 @Component({
   selector: 'lux-message',
   templateUrl: './lux-message.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAriaRoleDirective, LuxButtonComponent, LuxAriaLabelDirective, LuxIconComponent, TranslocoPipe, NgClass]
 })
 export class LuxMessageComponent {

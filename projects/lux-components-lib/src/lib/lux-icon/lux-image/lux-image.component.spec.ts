@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { LuxImageComponent } from './lux-image.component';
 
@@ -131,6 +131,7 @@ describe('LuxImageComponent', () => {
 @Component({
   selector: 'lux-mock-component',
   template: ` <lux-image [luxImageSrc]="href" [luxRawSrc]="raw"></lux-image> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxImageComponent]
 })
 class MockComponent {

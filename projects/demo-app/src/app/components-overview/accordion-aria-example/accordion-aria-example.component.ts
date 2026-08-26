@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAccordionColor,
   LuxCardComponent,
@@ -36,6 +36,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   templateUrl: './accordion-aria-example.component.html',
   styleUrls: ['./accordion-aria-example.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAccordionAriaComponent,
     LuxPanelAriaHeaderDescriptionComponent,

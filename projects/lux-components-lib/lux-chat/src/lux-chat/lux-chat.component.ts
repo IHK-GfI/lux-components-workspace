@@ -1,4 +1,15 @@
-import { Component, contentChild, effect, ElementRef, inject, input, model, output, viewChild } from '@angular/core';
+import {
+  Component,
+  contentChild,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  model,
+  output,
+  viewChild,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { LuxChatData } from './lux-chat-data';
 import { LuxChatMessageData } from './lux-chat-message-data';
 import { LuxChatController } from './lux-chat-controller';
@@ -32,6 +43,7 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     LuxChatRelativeUntilTimestamp,
     LuxAutofocusDirective
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lux-chat.component.html'
 })
 export class LuxChatComponent extends LuxChatController {

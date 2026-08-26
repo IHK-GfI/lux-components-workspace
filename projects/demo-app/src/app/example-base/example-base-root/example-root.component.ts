@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import {
   LuxAlphabeticallySortedPipe,
@@ -21,6 +21,7 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
   selector: 'example-root',
   templateUrl: './example-root.component.html',
   styleUrls: ['./example-root.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAlphabeticallySortedPipe,
     LuxPanelHeaderTitleComponent,

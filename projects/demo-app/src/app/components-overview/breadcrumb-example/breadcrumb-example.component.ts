@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ILuxBreadcrumbEntry,
@@ -18,6 +18,7 @@ import { ExampleValueComponent } from '../../example-base/example-value/example-
 @Component({
   selector: 'lux-breadcrumb-example',
   templateUrl: './breadcrumb-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxBreadcrumbComponent,
     LuxLinkPlainComponent,

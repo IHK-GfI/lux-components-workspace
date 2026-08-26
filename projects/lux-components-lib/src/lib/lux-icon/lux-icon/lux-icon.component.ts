@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { Component, EventEmitter, HostBinding, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { LuxIconColor } from '../../lux-util/lux-colors.enum';
 import { LuxIconRegistryService } from './lux-icon-registry.service';
@@ -8,6 +8,7 @@ import { LuxIconRegistryService } from './lux-icon-registry.service';
   selector: 'lux-icon',
   templateUrl: './lux-icon.component.html',
   styleUrls: ['./lux-icon.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon, NgStyle, NgClass]
 })
 export class LuxIconComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutocompleteAcComponent,
@@ -39,6 +39,7 @@ interface AutocompleteForm {
   selector: 'lux-autocomplete-authentic-example',
   templateUrl: './autocomplete-authentic-example.component.html',
   styleUrls: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     ExampleBaseStructureComponent,

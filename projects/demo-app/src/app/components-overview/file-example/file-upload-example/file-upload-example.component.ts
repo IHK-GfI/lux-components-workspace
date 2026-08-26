@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   ILuxFileActionConfig,
@@ -28,6 +28,7 @@ import { FileExampleComponent } from '../file-example.component';
 @Component({
   selector: 'lux-file-upload-example',
   templateUrl: './file-upload-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxToggleAcComponent,
     LuxSelectAcComponent,

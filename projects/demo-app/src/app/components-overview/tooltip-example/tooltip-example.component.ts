@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TooltipPosition } from '@angular/material/tooltip';
 import {
   LuxButtonComponent,
@@ -16,6 +16,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-tooltip-example',
   templateUrl: './tooltip-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxTooltipDirective,
     LuxToggleAcComponent,

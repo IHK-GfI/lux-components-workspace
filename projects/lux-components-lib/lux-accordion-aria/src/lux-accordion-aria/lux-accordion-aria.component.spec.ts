@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -231,6 +231,7 @@ describe('LuxAccordionAriaComponent', () => {
     </lux-accordion-aria>
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent]
 })
 class LuxAccordionAriaTestComponent {
@@ -251,6 +252,7 @@ class LuxAccordionAriaTestComponent {
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-accordion-aria [luxTogglePosition]="'after'">
       <lux-panel-aria>
@@ -267,6 +269,7 @@ class LuxAccordionAriaCustomHeaderTestComponent {}
   selector: 'lux-nested-accordion-aria-test',
   standalone: true,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-accordion-aria>
       <lux-panel-aria>

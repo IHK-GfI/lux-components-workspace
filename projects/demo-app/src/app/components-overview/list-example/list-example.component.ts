@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAccordionComponent,
   LuxAriaLabelDirective,
@@ -46,6 +46,7 @@ interface ListItem {
   selector: 'app-list-example',
   templateUrl: './list-example.component.html',
   styleUrls: ['./list-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,

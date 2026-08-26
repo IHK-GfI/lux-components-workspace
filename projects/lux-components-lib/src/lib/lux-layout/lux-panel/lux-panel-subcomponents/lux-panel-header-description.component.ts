@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, input, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatExpansionPanelDescription } from '@angular/material/expansion';
 import { MatTooltip } from '@angular/material/tooltip';
 
@@ -13,6 +13,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     [matTooltipDisabled]="!luxTruncated()"
     ><ng-content></ng-content
   ></mat-panel-description>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatExpansionPanelDescription, MatTooltip]
 })
 export class LuxPanelHeaderDescriptionComponent implements AfterViewInit {

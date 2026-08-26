@@ -32,7 +32,7 @@
           [luxSortable]="nameConfig.sortable"
           [luxSticky]="nameConfig.sticky"
           [luxResponsiveAt]="nameConfig.responsiveAt"
-          [luxResponsiveBehaviour]="nameConfig.responsiveBehaviour?.value"
+          [luxResponsiveBehaviour]="$safeNavigationMigration(nameConfig.responsiveBehaviour?.value)"
         >
           <lux-table-column-header>
             <ng-template>Name</ng-template>
@@ -51,7 +51,7 @@
           [luxSortable]="symbolConfig.sortable"
           [luxSticky]="symbolConfig.sticky"
           [luxResponsiveAt]="symbolConfig.responsiveAt"
-          [luxResponsiveBehaviour]="symbolConfig.responsiveBehaviour?.value"
+          [luxResponsiveBehaviour]="$safeNavigationMigration(symbolConfig.responsiveBehaviour?.value)"
         >
           <lux-table-column-header>
             <ng-template>Symbol</ng-template>
@@ -70,7 +70,7 @@
           [luxSortable]="dateConfig.sortable"
           [luxSticky]="dateConfig.sticky"
           [luxResponsiveAt]="dateConfig.responsiveAt"
-          [luxResponsiveBehaviour]="dateConfig.responsiveBehaviour?.value"
+          [luxResponsiveBehaviour]="$safeNavigationMigration(dateConfig.responsiveBehaviour?.value)"
         >
           <lux-table-column-header>
             <ng-template>Datum</ng-template>

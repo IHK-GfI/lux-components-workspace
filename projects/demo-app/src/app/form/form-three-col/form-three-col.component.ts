@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     LuxAutocompleteAcComponent,
@@ -44,6 +44,7 @@ interface FormThreeColDummyForm {
 @Component({
   selector: 'app-form-three-col',
   templateUrl: './form-three-col.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxCardContentComponent,
     LuxCardComponent,

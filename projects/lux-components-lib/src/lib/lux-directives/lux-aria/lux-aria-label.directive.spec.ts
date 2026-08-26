@@ -1,7 +1,7 @@
 // noinspection DuplicatedCode
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -11,7 +11,7 @@ import { LuxAriaLabelDirective } from './lux-aria-label.directive';
 describe('LuxAriaLabelDirective', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [LuxComponentsConfigService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+      providers: [LuxComponentsConfigService, provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
   }));
 
@@ -93,6 +93,7 @@ describe('LuxAriaLabelDirective', () => {
   template: `
     <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaLabel]="ariaLabel" luxAriaLabelSelector="button"></lux-button>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent, LuxAriaLabelDirective]
 })
 class LuxWithSelectorComponent {
@@ -102,6 +103,7 @@ class LuxWithSelectorComponent {
 @Component({
   selector: 'lux-without-selector',
   template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaLabel]="ariaLabel"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxButtonComponent, LuxAriaLabelDirective]
 })
 class LuxWithoutSelectorComponent {

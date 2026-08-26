@@ -5,7 +5,8 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
@@ -16,6 +17,7 @@ import { LuxSelectFilterDirective } from './lux-select-filter.directive';
   selector: 'lux-select-panel-filter',
   templateUrl: './lux-select-panel-filter.component.html',
   styleUrls: ['./lux-select-panel-filter.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxInputAcComponent, LuxInputAcSuffixComponent, LuxButtonComponent]
 })
 export class LuxSelectPanelFilterComponent implements AfterViewInit, OnChanges {

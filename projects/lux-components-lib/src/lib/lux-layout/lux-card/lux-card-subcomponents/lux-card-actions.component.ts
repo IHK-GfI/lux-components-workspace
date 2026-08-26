@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 export type LuxCardActionAlignType = 'left' | 'right';
 
@@ -7,6 +7,7 @@ export type LuxCardActionAlignType = 'left' | 'right';
   selector: 'lux-card-actions',
   templateUrl: './lux-card-actions.component.html',
   imports: [NgClass],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'lux-flex lux-flex-auto'}
 })
 export class LuxCardActionsComponent {

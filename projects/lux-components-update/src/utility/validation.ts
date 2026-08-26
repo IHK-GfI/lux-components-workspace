@@ -1,5 +1,5 @@
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import * as semver from 'semver';
 import { getDep } from './dependencies';
 import { formattedSchematicsException, logInfo } from './logging';

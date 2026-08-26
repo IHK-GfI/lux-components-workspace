@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxFormHintComponent,
     LuxInputAcComponent,
@@ -15,6 +15,7 @@ import { ExampleBaseStructureComponent } from '../../../example-base/example-bas
   selector: 'app-lookup-label-example',
   templateUrl: './lookup-label-example.component.html',
   styleUrls: ['./lookup-label-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxLookupLabelComponent,
     LuxProgressComponent,

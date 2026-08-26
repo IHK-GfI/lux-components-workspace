@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, inject } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   ILuxError,
@@ -21,6 +21,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-errorpage-example',
   templateUrl: './errorpage-example.component.html',
   styleUrls: ['./errorpage-example.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,

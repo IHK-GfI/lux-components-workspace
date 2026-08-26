@@ -2,6 +2,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -68,6 +69,7 @@ export interface LuxTableDoubleClickEventType<T> {
 @Component({
   selector: 'lux-table',
   templateUrl: './lux-table.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxProgressComponent,
     NgClass,

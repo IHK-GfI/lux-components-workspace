@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ContentChild, ElementRef, inject, Input, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -21,6 +21,7 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
   selector: 'lux-input-ac',
   templateUrl: './lux-input-ac.component.html',
   styleUrls: ['./lux-input-ac.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,

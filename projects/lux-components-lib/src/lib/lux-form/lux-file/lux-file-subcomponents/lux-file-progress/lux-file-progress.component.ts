@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { LuxProgressComponent, LuxProgressModeType } from '../../../../lux-common/lux-progress/lux-progress.component';
 
 /**
@@ -8,6 +8,7 @@ import { LuxProgressComponent, LuxProgressModeType } from '../../../../lux-commo
   selector: 'lux-file-progress',
   templateUrl: './lux-file-progress.component.html',
   styleUrls: ['./lux-file-progress.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxProgressComponent]
 })
 export class LuxFileProgressComponent {

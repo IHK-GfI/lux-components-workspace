@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -23,7 +23,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideNoopAnimations(),
         provideLuxTranslocoTesting(),
@@ -178,6 +178,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       [luxLabel]="'Label'"
     ></lux-lookup-autocomplete-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxLookupAutocompleteAcComponent]
 })
 class LuxNoFormComponent {

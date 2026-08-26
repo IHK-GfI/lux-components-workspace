@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Input, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxFieldValues, LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
@@ -8,6 +8,7 @@ import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 
 @Component({
   selector: 'lux-lookup-label',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lux-lookup-label.component.html'
 })
 export class LuxLookupLabelComponent implements OnInit {

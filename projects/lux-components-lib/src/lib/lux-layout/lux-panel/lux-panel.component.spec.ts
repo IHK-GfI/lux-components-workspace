@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -54,7 +54,8 @@ describe('LuxPanelComponent', () => {
       <lux-panel-content>Inhalt</lux-panel-content>
     </lux-panel>
   `,
-  imports: [LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
+  imports: [LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent],
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 class LuxPanelStickyHeaderComponent {
   sticky = false;

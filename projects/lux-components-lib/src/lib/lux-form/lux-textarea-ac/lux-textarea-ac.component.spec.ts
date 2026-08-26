@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -22,7 +22,7 @@ describe('LuxTextareaAcComponent', () => {
       providers: [
         LuxConsoleService,
         provideNoopAnimations(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideLuxTranslocoTesting()
       ]
@@ -484,6 +484,7 @@ describe('LuxTextareaAcComponent', () => {
     [luxErrorCallback]="errorCb"
     (luxValueChange)="valueChanged()"
   ></lux-textarea-ac>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTextareaAcComponent]
 })
 class LuxMockTextareaComponent {
@@ -522,6 +523,7 @@ class LuxMockTextareaComponent {
       luxControlBinding="control"
     ></lux-textarea-ac>
   </form>`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, LuxTextareaAcComponent]
 })
 class LuxMockFormTextareaComponent {
@@ -546,6 +548,7 @@ class LuxMockFormTextareaComponent {
 @Component({
   selector: 'lux-textarea-counter-label',
   template: ` <lux-textarea-ac luxLabel="Label" [luxHint]="hint" [luxDisabled]="disabled" [luxMaxLength]="maxLength"> </lux-textarea-ac> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTextareaAcComponent]
 })
 class LuxTextareaCounterLabelComponent {

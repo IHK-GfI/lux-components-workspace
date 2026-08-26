@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
@@ -39,6 +39,7 @@ describe('LuxTagIdDirective', () => {
 @Component({
   selector: 'lux-mock-component',
   template: ` <lux-component luxTagIdHandler [luxTagId]="tagId"></lux-component> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxTagIdDirective]
 })
 class MockComponent {
@@ -48,6 +49,7 @@ class MockComponent {
 @Component({
   selector: 'lux-component',
   template: ` <ng-content></ng-content> `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: []
 })
 class MockLuxComponent {}

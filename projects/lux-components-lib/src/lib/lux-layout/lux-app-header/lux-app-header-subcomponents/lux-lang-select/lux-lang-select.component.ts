@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { LuxMenuItemComponent } from '../../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -8,6 +8,7 @@ import { LuxLocale } from './lux-locale';
 @Component({
   selector: 'lux-lang-select',
   templateUrl: './lux-lang-select.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxMenuComponent, LuxMenuItemComponent, TranslocoPipe]
 })
 export class LuxLangSelectComponent implements OnInit {

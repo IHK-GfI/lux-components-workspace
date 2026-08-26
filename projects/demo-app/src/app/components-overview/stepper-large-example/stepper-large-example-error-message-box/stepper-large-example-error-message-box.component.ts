@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { LuxStepperLargeStepComponent, LuxTextboxComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
@@ -7,6 +7,7 @@ import { StepperLargeExampleDataService } from '../stepper-large-example-data.se
   selector: 'lux-stepper-large-example-error-message-box',
   templateUrl: './stepper-large-example-error-message-box.component.html',
   imports: [LuxTextboxComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleErrorMessageBoxComponent }]
 })
 export class StepperLargeExampleErrorMessageBoxComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxButtonToggleComponent,
@@ -25,6 +25,7 @@ interface ButtonToggleDemoForm {
 @Component({
   selector: 'app-button-toggle-example',
   templateUrl: './button-toggle-example.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

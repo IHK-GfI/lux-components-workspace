@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { Subscription } from 'rxjs';
 import { LuxBadgeNotificationDirective } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
@@ -10,6 +10,7 @@ import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-obs
 @Component({
   selector: 'lux-tile',
   templateUrl: './lux-tile.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatCard, LuxTagIdDirective, NgClass, LuxBadgeNotificationDirective, MatCardContent, LuxTooltipDirective]
 })
 export class LuxTileComponent implements OnInit, OnDestroy {
