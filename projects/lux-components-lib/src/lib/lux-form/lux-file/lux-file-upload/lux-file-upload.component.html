@@ -110,9 +110,7 @@
           </div>
         </div>
         @if (file.size) {
-        <span class="lux-file-upload-label-file-size">{{
-          file.size > 1000 * 1024 ? (file.size / (1000 * 1024)).toFixed(1) + '&nbsp;MB' : Math.ceil(file.size / 1024) + '&nbsp;KB'
-        }}</span>
+        <span class="lux-file-upload-label-file-size" [luxTooltip]="file.size | bytesToLabel: 'B'" [luxTooltipShowDelay]="500">{{ file.size | bytesToLabel: 'MiB' : 2 : true }}</span>
         } @for (customConfig of luxCustomActionConfigs; track customConfig; let j = $index) { @if(!luxReadonly && !luxDisabled &&
         !customConfig.hidden) {
         <lux-button
