@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -31,21 +31,21 @@ describe('LuxAriaHasPopupDirective', () => {
 
       // Aria-HasPopup setzen
       let ariaHasPopup: boolean | undefined = true;
-      component.ariaHasPopup = ariaHasPopup;
+      component.ariaHasPopup.set(ariaHasPopup);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-haspopup')).toEqual('true');
 
       // Aria-HasPopup aktualisieren
       ariaHasPopup = false;
-      component.ariaHasPopup = ariaHasPopup;
+      component.ariaHasPopup.set(ariaHasPopup);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-haspopup')).toEqual('false');
 
       // Aria-HasPopup entfernen
       ariaHasPopup = undefined;
-      component.ariaHasPopup = ariaHasPopup;
+      component.ariaHasPopup.set(ariaHasPopup);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-haspopup')).toBeNull();
@@ -67,21 +67,21 @@ describe('LuxAriaHasPopupDirective', () => {
 
       // Aria-HasPopup setzen
       let ariaHasPopup: boolean | undefined = true;
-      component.ariaHasPopup = ariaHasPopup;
+      component.ariaHasPopup.set(ariaHasPopup);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-haspopup')).toEqual('true');
 
       // Aria-HasPopup aktualisieren
       ariaHasPopup = false;
-      component.ariaHasPopup = ariaHasPopup;
+      component.ariaHasPopup.set(ariaHasPopup);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-haspopup')).toEqual('false');
 
       // Aria-HasPopup entfernen
       ariaHasPopup = undefined;
-      component.ariaHasPopup = ariaHasPopup;
+      component.ariaHasPopup.set(ariaHasPopup);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-haspopup')).toBeNull();
@@ -94,23 +94,23 @@ describe('LuxAriaHasPopupDirective', () => {
   template: `
     <lux-button
       luxIconName="lux-interface-alert-alarm-bell-2"
-      [luxAriaHasPopup]="ariaHasPopup"
+      [luxAriaHasPopup]="ariaHasPopup()"
       luxAriaHasPopupSelector="button"
     ></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaHaspopupDirective]
 })
 class LuxWithSelectorComponent {
-  ariaHasPopup?: boolean | undefined;
+  readonly ariaHasPopup = signal<boolean | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaHasPopup]="ariaHasPopup"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaHasPopup]="ariaHasPopup()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaHaspopupDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaHasPopup?: boolean | undefined;
+  readonly ariaHasPopup = signal<boolean | undefined>(undefined);
 }

@@ -1,7 +1,7 @@
 // noinspection DuplicatedCode
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -30,21 +30,21 @@ describe('LuxAriaLabelDirective', () => {
 
       // Aria-Label setzen
       let ariaLabel: string | undefined = 'Nachrichten anzeigen';
-      component.ariaLabel = ariaLabel;
+      component.ariaLabel.set(ariaLabel);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-label')).toEqual(ariaLabel);
 
       // Aria-Label aktualisieren
       ariaLabel = 'Keine Nachrichten vorhanden';
-      component.ariaLabel = ariaLabel;
+      component.ariaLabel.set(ariaLabel);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-label')).toEqual(ariaLabel);
 
       // Aria-Label entfernen
       ariaLabel = undefined;
-      component.ariaLabel = ariaLabel;
+      component.ariaLabel.set(ariaLabel);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-label')).toBeNull();
@@ -66,21 +66,21 @@ describe('LuxAriaLabelDirective', () => {
 
       // Aria-Label setzen
       let ariaLabel: string | undefined = 'Nachrichten anzeigen';
-      component.ariaLabel = ariaLabel;
+      component.ariaLabel.set(ariaLabel);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-label')).toEqual(ariaLabel);
 
       // Aria-Label aktualisieren
       ariaLabel = 'Keine Nachrichten vorhanden';
-      component.ariaLabel = ariaLabel;
+      component.ariaLabel.set(ariaLabel);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-label')).toEqual(ariaLabel);
 
       // Aria-Label entfernen
       ariaLabel = undefined;
-      component.ariaLabel = ariaLabel;
+      component.ariaLabel.set(ariaLabel);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-label')).toBeNull();
@@ -91,21 +91,21 @@ describe('LuxAriaLabelDirective', () => {
 @Component({
   selector: 'lux-with-selector',
   template: `
-    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaLabel]="ariaLabel" luxAriaLabelSelector="button"></lux-button>
+    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaLabel]="ariaLabel()" luxAriaLabelSelector="button"></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaLabelDirective]
 })
 class LuxWithSelectorComponent {
-  ariaLabel?: string;
+  readonly ariaLabel = signal<string | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaLabel]="ariaLabel"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaLabel]="ariaLabel()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaLabelDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaLabel?: string;
+  readonly ariaLabel = signal<string | undefined>(undefined);
 }

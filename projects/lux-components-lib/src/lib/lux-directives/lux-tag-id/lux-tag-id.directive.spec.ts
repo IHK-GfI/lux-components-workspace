@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
@@ -27,7 +27,7 @@ describe('LuxTagIdDirective', () => {
 
   it('Sollte die Tag-ID generieren', () => {
     const spy = spyOn(console, 'warn');
-    mockComp.tagId = 'tagid-demo';
+    mockComp.tagId.set('tagid-demo');
     fixture.detectChanges();
 
     const tagId = fixture.debugElement.query(By.css('lux-component[data-luxtagid="lux-component#tagid-demo"]'));
@@ -38,18 +38,18 @@ describe('LuxTagIdDirective', () => {
 
 @Component({
   selector: 'lux-mock-component',
-  template: ` <lux-component luxTagIdHandler [luxTagId]="tagId"></lux-component> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-component luxTagIdHandler [luxTagId]="tagId()"></lux-component> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTagIdDirective]
 })
 class MockComponent {
-  tagId: string | null = null;
+  readonly tagId = signal<string | null>(null);
 }
 
 @Component({
   selector: 'lux-component',
   template: ` <ng-content></ng-content> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockLuxComponent {}

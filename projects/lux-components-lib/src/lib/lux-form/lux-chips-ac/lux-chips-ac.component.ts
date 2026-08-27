@@ -564,8 +564,7 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
         const targetElement = labelElement ?? rowElement;
         const isTruncated = targetElement.scrollWidth > targetElement.clientWidth;
 
-        tooltip.luxTooltipShowDelay = 500;
-        tooltip.luxTooltip = isTruncated ? text : '';
+        tooltip.showDelay = 500;
         tooltip.message = isTruncated ? text : '';
         tooltip.disabled = !isTruncated;
       }

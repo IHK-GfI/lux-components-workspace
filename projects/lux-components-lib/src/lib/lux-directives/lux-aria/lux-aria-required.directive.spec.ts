@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -31,21 +31,21 @@ describe('LuxAriaRequiredDirective', () => {
 
       // aria-required setzen
       let ariaRequired: boolean | undefined = true;
-      component.ariaRequired = ariaRequired;
+      component.ariaRequired.set(ariaRequired);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-required')).toEqual('true');
 
       // aria-required aktualisieren
       ariaRequired = false;
-      component.ariaRequired = ariaRequired;
+      component.ariaRequired.set(ariaRequired);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-required')).toEqual('false');
 
       // aria-required entfernen
       ariaRequired = undefined;
-      component.ariaRequired = ariaRequired;
+      component.ariaRequired.set(ariaRequired);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-required')).toBeNull();
@@ -67,21 +67,21 @@ describe('LuxAriaRequiredDirective', () => {
 
       // aria-required setzen
       let ariaRequired: boolean | undefined = true;
-      component.ariaRequired = ariaRequired;
+      component.ariaRequired.set(ariaRequired);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-required')).toEqual('true');
 
       // aria-required aktualisieren
       ariaRequired = false;
-      component.ariaRequired = ariaRequired;
+      component.ariaRequired.set(ariaRequired);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-required')).toEqual('false');
 
       // aria-required entfernen
       ariaRequired = undefined;
-      component.ariaRequired = ariaRequired;
+      component.ariaRequired.set(ariaRequired);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-required')).toBeNull();
@@ -94,23 +94,23 @@ describe('LuxAriaRequiredDirective', () => {
   template: `
     <lux-button
       luxIconName="lux-interface-alert-alarm-bell-2"
-      [luxAriaRequired]="ariaRequired"
+      [luxAriaRequired]="ariaRequired()"
       luxAriaRequiredSelector="button"
     ></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaRequiredDirective]
 })
 class LuxWithSelectorComponent {
-  ariaRequired?: boolean;
+  readonly ariaRequired = signal<boolean | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaRequired]="ariaRequired"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaRequired]="ariaRequired()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaRequiredDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaRequired?: boolean;
+  readonly ariaRequired = signal<boolean | undefined>(undefined);
 }

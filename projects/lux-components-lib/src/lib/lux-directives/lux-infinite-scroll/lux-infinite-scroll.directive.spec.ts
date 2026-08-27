@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -86,7 +86,7 @@ describe('LuxInfiniteScrollDirective', () => {
 
     it('Sollte luxScrolled nicht emitten, wenn luxImmediateCallback = false ist', fakeAsync(() => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = false;
+      mockComp.immediateCallback.set(false);
       const spy = spyOn(mockComp, 'onMockEvent');
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledTimes(0);
@@ -100,8 +100,8 @@ describe('LuxInfiniteScrollDirective', () => {
 
     it('Sollte luxScrolled nicht emitten, wenn luxImmediateCallback = true und luxIsLoading = true ist', fakeAsync(() => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = true;
-      mockComp.isLoading = true;
+      mockComp.immediateCallback.set(true);
+      mockComp.isLoading.set(true);
       const spy = spyOn(mockComp, 'onMockEvent');
       fixture.detectChanges();
       expect(spy).toHaveBeenCalledTimes(0);
@@ -115,7 +115,7 @@ describe('LuxInfiniteScrollDirective', () => {
 
     it('Sollte luxScrolled nicht emitten, wenn nach unten gescrollt wird und luxIsLoading = true ist', fakeAsync(() => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = true;
+      mockComp.immediateCallback.set(true);
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element'));
       const spy = spyOn(mockComp, 'onMockEvent');
       fixture.detectChanges();
@@ -124,7 +124,7 @@ describe('LuxInfiniteScrollDirective', () => {
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      mockComp.isLoading = true;
+      mockComp.isLoading.set(true);
       LuxTestHelper.wait(fixture, WAIT_TIME);
       scrollTo(50, el.nativeElement, fixture);
 
@@ -159,7 +159,7 @@ describe('LuxInfiniteScrollDirective', () => {
 
     it('Sollte luxScrolled nicht emitten wenn luxImmediateCallback = false ist', fakeAsync(() => {
       // Vorbedingungen testen
-      mockComp.immediateCallback = false;
+      mockComp.immediateCallback.set(false);
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element'));
       const spy = spyOn(mockComp, 'onMockEvent');
 
@@ -185,8 +185,8 @@ describe('LuxInfiniteScrollDirective', () => {
     luxInfiniteScroll
     (luxScrolled)="onMockEvent()"
     [luxScrollPercent]="1"
-    [luxImmediateCallback]="immediateCallback"
-    [luxIsLoading]="isLoading"
+    [luxImmediateCallback]="immediateCallback()"
+    [luxIsLoading]="isLoading()"
   >
     Text
     <ul>
@@ -195,14 +195,14 @@ describe('LuxInfiniteScrollDirective', () => {
       }
     </ul>
   </div>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxInfiniteScrollDirective]
 })
 class MockComponent {
   // Wird benutzt, um einen Y-Overflow und damit eine Scrollbar im Testelement zu forcieren
   testArr: string[] = [];
-  immediateCallback = true;
-  isLoading = false;
+  readonly immediateCallback = signal(true);
+  readonly isLoading = signal(false);
 
   constructor() {
     for (let i = 1; i <= 10; i++) {
@@ -219,13 +219,13 @@ class MockComponent {
     id="toggleMasterFocus-element"
     luxInfiniteScroll
     (luxScrolled)="onMockEvent()"
-    [luxImmediateCallback]="immediateCallback"
+    [luxImmediateCallback]="immediateCallback()"
   ></div>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxInfiniteScrollDirective]
 })
 class MockWithoutScrollBarAndImmediateCallbackComponent {
-  immediateCallback = true;
+  readonly immediateCallback = signal(true);
 
   public onMockEvent() {}
 }

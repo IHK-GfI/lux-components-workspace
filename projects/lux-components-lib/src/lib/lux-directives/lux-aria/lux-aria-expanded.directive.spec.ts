@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -31,21 +31,21 @@ describe('LuxAriaExpandedDirective', () => {
 
       // Aria-expanded setzen
       let ariaExpanded: boolean | undefined = true;
-      component.ariaExpanded = ariaExpanded;
+      component.ariaExpanded.set(ariaExpanded);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-expanded')).toEqual('true');
 
       // Aria-expanded aktualisieren
       ariaExpanded = false;
-      component.ariaExpanded = ariaExpanded;
+      component.ariaExpanded.set(ariaExpanded);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-expanded')).toEqual('false');
 
       // Aria-expanded entfernen
       ariaExpanded = undefined;
-      component.ariaExpanded = ariaExpanded;
+      component.ariaExpanded.set(ariaExpanded);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-expanded')).toBeNull();
@@ -67,21 +67,21 @@ describe('LuxAriaExpandedDirective', () => {
 
       // Aria-expanded setzen
       let ariaExpanded: boolean | undefined = true;
-      component.ariaExpanded = ariaExpanded;
+      component.ariaExpanded.set(ariaExpanded);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-expanded')).toEqual('true');
 
       // Aria-expanded aktualisieren
       ariaExpanded = false;
-      component.ariaExpanded = ariaExpanded;
+      component.ariaExpanded.set(ariaExpanded);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-expanded')).toEqual('false');
 
       // Aria-expanded entfernen
       ariaExpanded = undefined;
-      component.ariaExpanded = ariaExpanded;
+      component.ariaExpanded.set(ariaExpanded);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-expanded')).toBeNull();
@@ -94,23 +94,23 @@ describe('LuxAriaExpandedDirective', () => {
   template: `
     <lux-button
       luxIconName="lux-interface-alert-alarm-bell-2"
-      [luxAriaExpanded]="ariaExpanded"
+      [luxAriaExpanded]="ariaExpanded()"
       luxAriaExpandedSelector="button"
     ></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaExpandedDirective]
 })
 class LuxWithSelectorComponent {
-  ariaExpanded?: boolean | undefined;
+  readonly ariaExpanded = signal<boolean | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaExpanded]="ariaExpanded"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaExpanded]="ariaExpanded()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaExpandedDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaExpanded?: boolean | undefined;
+  readonly ariaExpanded = signal<boolean | undefined>(undefined);
 }

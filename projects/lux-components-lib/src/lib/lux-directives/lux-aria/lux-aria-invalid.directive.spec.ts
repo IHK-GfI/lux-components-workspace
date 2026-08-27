@@ -1,7 +1,7 @@
 // noinspection DuplicatedCode
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -30,21 +30,21 @@ describe('LuxAriaInvalidDirective', () => {
 
       // aria-invalid setzen
       let ariaInvalid: string | undefined = 'true';
-      component.ariaInvalid = ariaInvalid;
+      component.ariaInvalid.set(ariaInvalid);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-invalid')).toEqual(ariaInvalid);
 
       // aria-invalid aktualisieren
       ariaInvalid = 'false';
-      component.ariaInvalid = ariaInvalid;
+      component.ariaInvalid.set(ariaInvalid);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-invalid')).toEqual(ariaInvalid);
 
       // aria-invalid entfernen
       ariaInvalid = undefined;
-      component.ariaInvalid = ariaInvalid;
+      component.ariaInvalid.set(ariaInvalid);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-invalid')).toBeNull();
@@ -66,21 +66,21 @@ describe('LuxAriaInvalidDirective', () => {
 
       // aria-invalid setzen
       let ariaInvalid: string | undefined = 'true';
-      component.ariaInvalid = ariaInvalid;
+      component.ariaInvalid.set(ariaInvalid);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-invalid')).toEqual(ariaInvalid);
 
       // aria-invalid aktualisieren
       ariaInvalid = 'spelling';
-      component.ariaInvalid = ariaInvalid;
+      component.ariaInvalid.set(ariaInvalid);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-invalid')).toEqual(ariaInvalid);
 
       // aria-invalid entfernen
       ariaInvalid = undefined;
-      component.ariaInvalid = ariaInvalid;
+      component.ariaInvalid.set(ariaInvalid);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-invalid')).toBeNull();
@@ -91,21 +91,21 @@ describe('LuxAriaInvalidDirective', () => {
 @Component({
   selector: 'lux-with-selector',
   template: `
-    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaInvalid]="ariaInvalid" luxAriaInvalidSelector="button"></lux-button>
+    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaInvalid]="ariaInvalid()" luxAriaInvalidSelector="button"></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaInvalidDirective]
 })
 class LuxWithSelectorComponent {
-  ariaInvalid?: string;
+  readonly ariaInvalid = signal<string | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaInvalid]="ariaInvalid"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaInvalid]="ariaInvalid()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaInvalidDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaInvalid?: string;
+  readonly ariaInvalid = signal<string | undefined>(undefined);
 }

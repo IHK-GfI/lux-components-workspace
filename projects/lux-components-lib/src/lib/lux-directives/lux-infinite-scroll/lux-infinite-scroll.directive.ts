@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { LuxScrollPosition } from './lux-scroll-position';
@@ -15,13 +15,13 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
   private lastPosition: LuxScrollPosition = { scrollHeight: 0, scrollTop: 0, clientHeight: 0 };
 
   // Prozentzahl nach der ein scrollCallback ausgelöst wird
-  @Input() luxScrollPercent = 85;
+  readonly luxScrollPercent = input(85);
   // Direkt bei Initialisierung einen ScrollEvent emitten
-  @Input() luxImmediateCallback = true;
+  readonly luxImmediateCallback = input(true);
   // Flag, ob aktuell Daten geladen werden (aus aufrufender Komponente)
-  @Input() luxIsLoading = false;
+  readonly luxIsLoading = input(false);
   // Emitter an den sich andere Komponenten hängen können, um auf den Scroll zu reagieren
-  @Output() luxScrolled = new EventEmitter<void>();
+  readonly luxScrolled = output<void>();
 
   /**
    * Constructor
@@ -41,7 +41,7 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
 
   ngAfterViewInit() {
     // Prüfen, ob ein initiales Laden von Daten starten soll
-    if (this.hasScrollbar() && this.luxImmediateCallback && !this.luxIsLoading) {
+    if (this.hasScrollbar() && this.luxImmediateCallback() && !this.luxIsLoading()) {
       this.luxScrolled.emit();
     }
   }
@@ -75,7 +75,7 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
     };
 
     // Wenn nach unten gescrollt wird und die angegebene Prozentzahl überschritten wird
-    if (this.isUserScrollingDown(position) && this.isScrollExpectedPercent(position) && !this.luxIsLoading) {
+    if (this.isUserScrollingDown(position) && this.isScrollExpectedPercent(position) && !this.luxIsLoading()) {
       this.luxScrolled.emit();
     }
 
@@ -97,7 +97,7 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
    * @returns boolean
    */
   private isScrollExpectedPercent(position: LuxScrollPosition) {
-    return (position.scrollTop + position.clientHeight) / position.scrollHeight > this.luxScrollPercent / 100;
+    return (position.scrollTop + position.clientHeight) / position.scrollHeight > this.luxScrollPercent() / 100;
   }
 
   /**

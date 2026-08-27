@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -31,21 +31,21 @@ describe('LuxAriaHiddenDirective', () => {
 
       // Aria-Hidden setzen
       let ariaHidden: boolean | undefined = true;
-      component.ariaHidden = ariaHidden;
+      component.ariaHidden.set(ariaHidden);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-hidden')).toEqual('true');
 
       // Aria-Hidden aktualisieren
       ariaHidden = false;
-      component.ariaHidden = ariaHidden;
+      component.ariaHidden.set(ariaHidden);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-hidden')).toEqual('false');
 
       // Aria-Hidden entfernen
       ariaHidden = undefined;
-      component.ariaHidden = ariaHidden;
+      component.ariaHidden.set(ariaHidden);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-hidden')).toBeNull();
@@ -67,21 +67,21 @@ describe('LuxAriaHiddenDirective', () => {
 
       // Aria-Hidden setzen
       let ariaHidden: boolean | undefined = true;
-      component.ariaHidden = ariaHidden;
+      component.ariaHidden.set(ariaHidden);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-hidden')).toEqual('true');
 
       // Aria-Hidden aktualisieren
       ariaHidden = false;
-      component.ariaHidden = ariaHidden;
+      component.ariaHidden.set(ariaHidden);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-hidden')).toEqual('false');
 
       // Aria-Hidden entfernen
       ariaHidden = undefined;
-      component.ariaHidden = ariaHidden;
+      component.ariaHidden.set(ariaHidden);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('lux-button')).nativeElement.getAttribute('aria-hidden')).toBeNull();
@@ -92,21 +92,21 @@ describe('LuxAriaHiddenDirective', () => {
 @Component({
   selector: 'lux-with-selector',
   template: `
-    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaHidden]="ariaHidden" luxAriaHiddenSelector="button"></lux-button>
+    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaHidden]="ariaHidden()" luxAriaHiddenSelector="button"></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaHiddenDirective]
 })
 class LuxWithSelectorComponent {
-  ariaHidden?: boolean;
+  readonly ariaHidden = signal<boolean | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaHidden]="ariaHidden"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaHidden]="ariaHidden()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaHiddenDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaHidden?: boolean;
+  readonly ariaHidden = signal<boolean | undefined>(undefined);
 }

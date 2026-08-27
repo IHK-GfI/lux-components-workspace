@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -31,21 +31,21 @@ describe('LuxAriaDescribedbyDirective', () => {
 
       // describedby setzen
       let ariaDescribedby: string | undefined = 'menubar';
-      component.ariaDescribedby = ariaDescribedby;
+      component.ariaDescribedby.set(ariaDescribedby);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-describedby')).toEqual(ariaDescribedby);
 
       // describedby aktualisieren
       ariaDescribedby = 'menuitem';
-      component.ariaDescribedby = ariaDescribedby;
+      component.ariaDescribedby.set(ariaDescribedby);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-describedby')).toEqual(ariaDescribedby);
 
       // describedby entfernen
       ariaDescribedby = undefined;
-      component.ariaDescribedby = ariaDescribedby;
+      component.ariaDescribedby.set(ariaDescribedby);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-describedby')).toBeNull();
@@ -67,21 +67,21 @@ describe('LuxAriaDescribedbyDirective', () => {
 
       // describedby setzen
       let ariaDescribedby: string | undefined = 'menubar';
-      component.ariaDescribedby = ariaDescribedby;
+      component.ariaDescribedby.set(ariaDescribedby);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-describedby')).toEqual(ariaDescribedby);
 
       // describedby aktualisieren
       ariaDescribedby = 'menuitem';
-      component.ariaDescribedby = ariaDescribedby;
+      component.ariaDescribedby.set(ariaDescribedby);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-describedby')).toEqual(ariaDescribedby);
 
       // describedby entfernen
       ariaDescribedby = undefined;
-      component.ariaDescribedby = ariaDescribedby;
+      component.ariaDescribedby.set(ariaDescribedby);
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('button')).nativeElement.getAttribute('aria-describedby')).toBeNull();
@@ -94,23 +94,23 @@ describe('LuxAriaDescribedbyDirective', () => {
   template: `
     <lux-button
       luxIconName="lux-interface-alert-alarm-bell-2"
-      [luxAriaDescribedby]="ariaDescribedby"
+      [luxAriaDescribedby]="ariaDescribedby()"
       luxAriaDescribedbySelector="button"
     ></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaDescribedbyDirective]
 })
 class LuxWithSelectorComponent {
-  ariaDescribedby?: string | undefined;
+  readonly ariaDescribedby = signal<string | undefined>(undefined);
 }
 
 @Component({
   selector: 'lux-without-selector',
-  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaDescribedby]="ariaDescribedby"></lux-button> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaDescribedby]="ariaDescribedby()"></lux-button> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaDescribedbyDirective]
 })
 class LuxWithoutSelectorComponent {
-  ariaDescribedby?: string | undefined;
+  readonly ariaDescribedby = signal<string | undefined>(undefined);
 }
