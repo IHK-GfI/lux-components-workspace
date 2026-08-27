@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { Component, inject as inject_1, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject as inject_1 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LuxErrorStoreService } from './lux-error-store.service';
 
@@ -76,7 +76,7 @@ describe('LuxErrorStoreService', () => {
 
 @Component({
   template: ``,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockComponent {

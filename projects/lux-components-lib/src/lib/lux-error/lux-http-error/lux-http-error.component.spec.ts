@@ -2,13 +2,13 @@
 
 import { HttpClient, HttpRequest, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { Subscription } from 'rxjs';
 import { skip } from 'rxjs/operators';
-import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
 import { LuxHttpErrorComponent } from './lux-http-error.component';
@@ -68,7 +68,7 @@ describe('LuxHttpErrorComponent', () => {
 
     // Hier wird die Anzahl der gleichzeitig angezeigten Meldungen auf 4 erhöht,
     // damit alle Meldungen mit einer queryAll-Abfrage eingesammelt werden können.
-    component.errorComponent.messageComponent.luxMaximumDisplayed.set(4);
+    component.errorComponent().messageComponent().luxMaximumDisplayed.set(4);
     LuxTestHelper.wait(fixture);
 
     httpClient.get<any>('abc').subscribe({ next: () => {}, error: () => {} });
@@ -100,7 +100,7 @@ describe('LuxHttpErrorComponent', () => {
 
     // Hier wird die Anzahl der gleichzeitig angezeigten Meldungen auf 4 erhöht,
     // damit alle Meldungen mit einer queryAll-Abfrage eingesammelt werden können.
-    component.errorComponent.messageComponent.luxMaximumDisplayed.set(4);
+    component.errorComponent().messageComponent().luxMaximumDisplayed.set(4);
     LuxTestHelper.wait(fixture);
 
     httpClient.get<any>('abc').subscribe({ next: () => {}, error: () => {} });
@@ -253,13 +253,11 @@ describe('LuxHttpErrorComponent', () => {
 @Component({
   selector: 'lux-mock-http-error',
   template: '<lux-http-error></lux-http-error>',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxHttpErrorComponent]
 })
 class LuxMockHttpErrorComponent {
-  @ViewChild(LuxHttpErrorComponent) errorComponent!: LuxHttpErrorComponent;
-
-  constructor() {}
+  readonly errorComponent = viewChild.required(LuxHttpErrorComponent);
 }
 
 export class TestService {

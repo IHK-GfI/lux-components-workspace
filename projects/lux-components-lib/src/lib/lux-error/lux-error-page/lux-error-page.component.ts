@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -15,7 +15,7 @@ import { LuxErrorStoreService } from './lux-error-services/lux-error-store.servi
 @Component({
   selector: 'lux-error-page',
   templateUrl: './lux-error-page.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxCardComponent,
     LuxCardContentComponent,
