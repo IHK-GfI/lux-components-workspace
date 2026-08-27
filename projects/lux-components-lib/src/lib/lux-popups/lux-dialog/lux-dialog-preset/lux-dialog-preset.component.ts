@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, inject, viewChild } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxTabIndexDirective } from '../../../lux-directives/lux-tabindex/lux-tab-index.directive';
@@ -17,7 +17,7 @@ import { LuxDialogStructureComponent } from '../lux-dialog-structure/lux-dialog-
 @Component({
   selector: 'lux-dialog-preset',
   templateUrl: './lux-dialog-preset.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,
@@ -32,8 +32,8 @@ import { LuxDialogStructureComponent } from '../lux-dialog-structure/lux-dialog-
 export class LuxDialogPresetComponent implements OnInit, AfterViewInit {
   dialogRef = inject<LuxDialogRef<ILuxDialogPresetConfig>>(LuxDialogRef);
 
-  @ViewChild('confirmButton') confirmButton?: LuxButtonComponent;
-  @ViewChild('declineButton') declineButton?: LuxButtonComponent;
+  readonly confirmButton = viewChild<LuxButtonComponent>('confirmButton');
+  readonly declineButton = viewChild<LuxButtonComponent>('declineButton');
 
   data?: ILuxDialogPresetConfig;
   defaultButton?: LuxButtonComponent;
@@ -67,10 +67,10 @@ export class LuxDialogPresetComponent implements OnInit, AfterViewInit {
   private initDefaultButton() {
     switch (this.data?.defaultButton) {
       case 'confirm':
-        this.defaultButton = this.confirmButton;
+        this.defaultButton = this.confirmButton();
         break;
       case 'decline':
-        this.defaultButton = this.declineButton;
+        this.defaultButton = this.declineButton();
         break;
       default:
         this.defaultButton = undefined;

@@ -23,9 +23,9 @@
       <ng-content></ng-content>
     </div>
 
-    @if (actions) {
+    @if (actions(); as popupActions) {
       <div class="lux-popup__actions">
-        <ng-template [ngTemplateOutlet]="actions.templateRef"></ng-template>
+        <ng-template [ngTemplateOutlet]="popupActions.templateRef"></ng-template>
       </div>
     }
   </div>

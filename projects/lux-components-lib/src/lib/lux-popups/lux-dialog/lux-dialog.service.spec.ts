@@ -2,7 +2,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed } fro
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, inject, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -94,7 +94,7 @@ describe('LuxDialogService', () => {
 
     it('Sollte den Content via TemplateRef setzen', fakeAsync(() => {
       dialogRef = testComponent.dialogService.open({
-        contentTemplate: testComponent.templateRef
+        contentTemplate: testComponent.templateRef()
       });
       LuxTestHelper.wait(fixture);
 
@@ -427,13 +427,13 @@ describe('LuxDialogService', () => {
 
 @Component({
   template: ` <ng-template #testContentTemplate><span>Hallo Welt</span></ng-template> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockDialogComponent {
   dialogService = inject(LuxDialogService);
 
-  @ViewChild('testContentTemplate') templateRef!: TemplateRef<any>;
+  readonly templateRef = viewChild.required<TemplateRef<any>>('testContentTemplate');
 
   dialogConfirmed() {}
 
@@ -456,7 +456,7 @@ class MockDialogComponent {
       </lux-dialog-actions>
     </lux-dialog-structure>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxDialogStructureComponent, LuxDialogTitleComponent, LuxDialogContentComponent, LuxDialogActionsComponent, LuxButtonComponent]
 })
 class MockCustomDialogComponent {

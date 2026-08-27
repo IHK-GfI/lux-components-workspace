@@ -18,9 +18,9 @@
       <lux-icon luxIconName="lux-interface-delete-1" luxIconSize="1x"></lux-icon>
     </div>
   }
-  @if (luxDialogIcon) {
+  @if (luxDialogIcon()) {
     <lux-icon
-      [luxIconName]="luxDialogIcon"
+      [luxIconName]="luxDialogIcon()"
       luxIconSize="3x"
       luxMargin="16px"
       class="lux-color-blue lux-dialog-icon lux-flex lux-align-self-center"

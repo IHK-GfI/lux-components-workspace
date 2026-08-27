@@ -4,19 +4,18 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
-  ContentChild,
-  EventEmitter,
   NgZone,
   OnDestroy,
-  Output,
   TemplateRef,
-  ViewChild,
   ViewContainerRef,
+  contentChild,
   effect,
   inject,
   input,
-  ChangeDetectionStrategy
+  output,
+  viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxPopupActionsDirective } from './lux-popup-actions.directive';
@@ -29,7 +28,7 @@ let nextPopupId = 0;
   selector: 'lux-popup',
   templateUrl: './lux-popup.component.html',
   exportAs: 'luxPopup',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet]
 })
 export class LuxPopupComponent implements OnDestroy {
@@ -40,8 +39,8 @@ export class LuxPopupComponent implements OnDestroy {
   private document = inject(DOCUMENT);
   private scrollDispatcher = inject(ScrollDispatcher);
 
-  @ContentChild(LuxPopupActionsDirective) actions?: LuxPopupActionsDirective;
-  @ViewChild('popupTemplate', { static: true }) popupTemplate!: TemplateRef<unknown>;
+  readonly actions = contentChild(LuxPopupActionsDirective);
+  readonly popupTemplate = viewChild.required<TemplateRef<unknown>>('popupTemplate');
 
   readonly luxTitle = input<string | undefined>();
   readonly luxPersistent = input(false);
@@ -49,8 +48,8 @@ export class LuxPopupComponent implements OnDestroy {
   readonly luxMaxWidth = input(360);
   readonly luxAriaLabel = input<string | undefined>();
 
-  @Output() luxOpened = new EventEmitter<void>();
-  @Output() luxClosed = new EventEmitter<LuxPopupCloseReason>();
+  readonly luxOpened = output<void>();
+  readonly luxClosed = output<LuxPopupCloseReason>();
 
   popupId = `lux-popup-${nextPopupId++}`;
 
@@ -106,7 +105,7 @@ export class LuxPopupComponent implements OnDestroy {
     }
 
     if (!this.portal) {
-      this.portal = new TemplatePortal(this.popupTemplate, this.viewContainerRef);
+      this.portal = new TemplatePortal(this.popupTemplate(), this.viewContainerRef);
     }
 
     if (!this.overlayRef.hasAttached()) {

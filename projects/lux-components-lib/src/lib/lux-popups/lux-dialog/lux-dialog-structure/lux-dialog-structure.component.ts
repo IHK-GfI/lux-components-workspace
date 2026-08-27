@@ -1,5 +1,5 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, inject, input, viewChild } from '@angular/core';
 import { MatDialogActions, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -14,23 +14,17 @@ import { LuxDialogRef } from '../lux-dialog-model/lux-dialog-ref.class';
 @Component({
   selector: 'lux-dialog-structure',
   templateUrl: './lux-dialog-structure.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAriaLabelDirective, LuxIconComponent, MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, TranslocoPipe]
 })
 export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
   private luxDialogRef = inject<LuxDialogRef<any>>(LuxDialogRef);
 
-  @ViewChild('dialogBase', { read: ElementRef, static: true }) dialogBase!: ElementRef;
+  readonly dialogBase = viewChild.required('dialogBase', { read: ElementRef });
+
+  readonly luxDialogIcon = input<string | undefined>();
 
   disableClose!: boolean;
-
-  private _iconName = '';
-  @Input() set luxDialogIcon(name: string | undefined) {
-    if (name) this._iconName = name;
-  }
-  get luxDialogIcon() {
-    return this._iconName;
-  }
 
   ngOnInit() {
     // showCloseButton wird in der Dialog-Erzeugung vom Service gesetzt.
@@ -39,10 +33,10 @@ export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    LuxUtil.assertNonNull('dialogBase', this.dialogBase);
+    LuxUtil.assertNonNull('dialogBase', this.dialogBase());
 
     // den Fokus auf den Dialog selbst setzen (damit eine Tastatur-Steuerung von oben nach unten stattfinden kann)
-    (this.dialogBase.nativeElement as HTMLHeadingElement).focus();
+    (this.dialogBase().nativeElement as HTMLHeadingElement).focus();
   }
 
   onClose() {

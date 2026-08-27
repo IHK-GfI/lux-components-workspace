@@ -103,7 +103,7 @@ const findToggleElement = (toggleElement: any) => {
     </lux-app-header>
   `,
   providers: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent, LuxSideNavComponent, LuxAppHeaderRightNavComponent, LuxMenuItemComponent]
 })
 class MockSnackbarComponent {}
