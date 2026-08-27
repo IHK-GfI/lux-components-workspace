@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxIconComponent } from './lux-icon.component';
@@ -41,7 +41,7 @@ describe('LuxIconComponent', () => {
 
 @Component({
   template: ` <lux-icon [luxIconName]="iconName" [luxIconSize]="iconSize"></lux-icon> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent]
 })
 class LuxMockIconComponent {

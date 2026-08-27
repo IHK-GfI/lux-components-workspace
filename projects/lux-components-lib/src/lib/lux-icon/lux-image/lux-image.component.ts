@@ -1,46 +1,37 @@
 import { NgStyle } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 @Component({
   selector: 'lux-image',
   templateUrl: './lux-image.component.html',
   styleUrls: ['./lux-image.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgStyle]
 })
-export class LuxImageComponent implements OnChanges, OnInit {
+export class LuxImageComponent {
   private static readonly EXTERNAL_IMAGE_SRC_PREFIXES = ['http://', 'https://', 'blob:', 'data:'];
 
-  @Input() luxImageSrc = '';
-  @Input() luxImageWidth = 'auto';
-  @Input() luxImageHeight = 'auto';
-  @Input() luxRawSrc = false;
-  @Input() luxAlt = '';
+  readonly luxImageSrc = input('');
+  readonly luxImageWidth = input('auto');
+  readonly luxImageHeight = input('auto');
+  readonly luxRawSrc = input(false);
+  readonly luxAlt = input('');
 
-  @Output() luxClicked = new EventEmitter<Event>();
-  @Output() luxImageError = new EventEmitter<Event>();
+  // Steuert, ob das Bild klickbar/fokussierbar dargestellt wird; explizit setzen, wenn (luxClicked) gebunden wird.
+  readonly luxClickable = input(false);
 
-  isObserved = false;
+  readonly luxClicked = output<Event>();
+  readonly luxImageError = output<Event>();
 
-  constructor() {}
-
-  ngOnInit() {
-    if (this.luxClicked.observed) {
-      this.isObserved = true;
+  readonly resolvedImageSrc = computed(() => {
+    const src = this.luxImageSrc();
+    if (this.luxRawSrc() || !src || this.isExternalImageSrc(src)) {
+      return src;
     }
-  }
 
-  ngOnChanges(simpleChanges: SimpleChanges) {
-    if (simpleChanges['luxImageSrc']) {
-      if (!this.luxRawSrc) {
-        this.updateImageSrc();
-      }
-    } else if (simpleChanges['luxRawSrc']) {
-      if (!this.luxRawSrc) {
-        this.updateImageSrc();
-      }
-    }
-  }
+    const prefixed = src.indexOf('asset') === -1 ? 'assets/' + src : src;
+    return this.sanitizeImageSrc(prefixed);
+  });
 
   clicked(event: Event) {
     this.luxClicked.emit(event);
@@ -50,33 +41,19 @@ export class LuxImageComponent implements OnChanges, OnInit {
     this.luxImageError.emit(event);
   }
 
-  private updateImageSrc() {
-    if (this.luxImageSrc) {
-      if (!this.isExternalImageSrc()) {
-        // Wenn nicht, auf den Assets-Ordner verweisen
-        if (this.luxImageSrc.indexOf('asset') === -1) {
-          this.luxImageSrc = 'assets/' + this.luxImageSrc;
-        }
-        this.sanitizeImageSrc();
-      }
-    }
+  private isExternalImageSrc(src: string): boolean {
+    const normalizedImageSrc = src.toLowerCase();
+
+    return src.startsWith('//') || LuxImageComponent.EXTERNAL_IMAGE_SRC_PREFIXES.some((prefix) => normalizedImageSrc.startsWith(prefix));
   }
 
-  private isExternalImageSrc() {
-    const normalizedImageSrc = this.luxImageSrc.toLowerCase();
-
-    return (
-      this.luxImageSrc.startsWith('//') ||
-      LuxImageComponent.EXTERNAL_IMAGE_SRC_PREFIXES.some((prefix) => normalizedImageSrc.startsWith(prefix))
-    );
-  }
-
-  private sanitizeImageSrc() {
+  private sanitizeImageSrc(src: string): string {
     // Doppelte Slashes entfernen
-    this.luxImageSrc = this.luxImageSrc.replace(/\/\/+/g, '/');
+    let sanitized = src.replace(/\/\/+/g, '/');
     // Führende Slashes entfernen
-    if (this.luxImageSrc.startsWith('/')) {
-      this.luxImageSrc = this.luxImageSrc.slice(1, this.luxImageSrc.length);
+    if (sanitized.startsWith('/')) {
+      sanitized = sanitized.slice(1);
     }
+    return sanitized;
   }
 }

@@ -264,22 +264,20 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     if (luxStep && luxStep.luxIconName) {
       // Das edited und normal Icon generieren
       const componentIconEdited: ComponentRef<LuxIconComponent> = stepLabel.createComponent(LuxIconComponent);
-      const instanceIconEdited: LuxIconComponent = componentIconEdited.instance;
 
-      instanceIconEdited.luxIconName = this.luxEditedIconName;
-      instanceIconEdited.luxIconSize = '1.25rem';
-      instanceIconEdited.luxRounded = true;
-      instanceIconEdited.luxMargin = '0 0 0 0';
-      instanceIconEdited.luxPadding = '0.625rem';
+      componentIconEdited.setInput('luxIconName', this.luxEditedIconName);
+      componentIconEdited.setInput('luxIconSize', '1.25rem');
+      componentIconEdited.setInput('luxRounded', true);
+      componentIconEdited.setInput('luxMargin', '0 0 0 0');
+      componentIconEdited.setInput('luxPadding', '0.625rem');
       componentIconEdited.location.nativeElement.className += ' lux-stepper-edited-icon';
 
       const componentIconNormal: ComponentRef<LuxIconComponent> = stepLabel.createComponent(LuxIconComponent);
-      const instanceIconNormal: LuxIconComponent = componentIconNormal.instance;
-      instanceIconNormal.luxIconName = luxStep.luxIconName;
-      instanceIconNormal.luxIconSize = '1.25rem';
-      instanceIconNormal.luxRounded = true;
-      instanceIconNormal.luxMargin = '0 0 0 0';
-      instanceIconNormal.luxPadding = '0.625rem';
+      componentIconNormal.setInput('luxIconName', luxStep.luxIconName);
+      componentIconNormal.setInput('luxIconSize', '1.25rem');
+      componentIconNormal.setInput('luxRounded', true);
+      componentIconNormal.setInput('luxMargin', '0 0 0 0');
+      componentIconNormal.setInput('luxPadding', '0.625rem');
       componentIconNormal.location.nativeElement.className += ' lux-stepper-normal-icon';
     }
   }

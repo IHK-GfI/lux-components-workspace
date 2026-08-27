@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { Component, EventEmitter, HostBinding, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { LuxIconColor } from '../../lux-util/lux-colors.enum';
 import { LuxIconRegistryService } from './lux-icon-registry.service';
@@ -8,93 +8,58 @@ import { LuxIconRegistryService } from './lux-icon-registry.service';
   selector: 'lux-icon',
   templateUrl: './lux-icon.component.html',
   styleUrls: ['./lux-icon.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[style.margin]': 'luxMargin()',
+    '[class.lux-icon-rounded]': 'luxRounded()'
+  },
   imports: [MatIcon, NgStyle, NgClass]
 })
 export class LuxIconComponent {
-  private iconReg = inject(LuxIconRegistryService);
+  private readonly iconReg = inject(LuxIconRegistryService);
 
-  private _luxIconSize: string | undefined = '';
-  private _luxIconName = '';
-  private _luxPadding = '';
-  private _backgroundCSSClass = '';
-  private _fontCSSClass = 'blue';
+  readonly notFoundIconName = 'lux-interface-alert-warning-diamond';
 
-  notFoundIconName = 'lux-interface-alert-warning-diamond';
+  readonly luxColor = input<LuxIconColor | undefined>(undefined);
+  readonly luxRounded = input(false);
 
-  @HostBinding('style.margin') styleMargin = '0';
-  @HostBinding('class.lux-icon-rounded') _luxRounded = false;
-
-  @Input() luxColor?: LuxIconColor;
-
-  @Input() set luxRounded(rounded: boolean) {
-    this._luxRounded = rounded;
-  }
-  get luxRounded(): boolean {
-    return this._luxRounded;
-  }
-
-  get luxMargin(): string {
-    return this.styleMargin;
-  }
-
-  // 'standard margin Werte z.B. '5px 4px 3px 2px'
-  @Input() set luxMargin(margin: string) {
-    this.styleMargin = margin;
-  }
-
-  get luxPadding(): string {
-    return this._luxPadding;
-  }
+  // standard margin Werte z.B. '5px 4px 3px 2px'
+  readonly luxMargin = input('0');
 
   // standard padding Werte z.B. '5px 4px 3px 2px'
-  @Input() set luxPadding(padding: string) {
-    this._luxPadding = padding;
-  }
+  readonly luxPadding = input('');
 
-  get luxIconSize(): string | undefined {
-    return this._luxIconSize;
-  }
+  readonly luxIconSize = input<string | undefined, string | undefined>('', {
+    transform: (iconSizeValue) => this.normalizeIconSize(iconSizeValue)
+  });
 
-  @Input() set luxIconSize(iconSizeValue: string | undefined) {
-    this._luxIconSize = iconSizeValue;
-    if (this.luxIconSize && this.luxIconSize.length === 2 && this.luxIconSize.endsWith('x')) {
-      const size = this.luxIconSize.slice(0, 1);
-      this._luxIconSize = size + 'em';
-    } else if (this.luxIconSize) {
-      this._luxIconSize = iconSizeValue;
+  readonly luxIconName = input<string | undefined>('');
+
+  readonly luxLoad = output<Event>();
+
+  // Registriert das Icon als Seiteneffekt der Namensauflösung, da das svgIcon synchron zur Template-Auswertung benötigt wird.
+  protected readonly resolvedIconName = computed(() => this.registerIcon(this.luxIconName()));
+
+  private normalizeIconSize(iconSizeValue: string | undefined): string | undefined {
+    if (iconSizeValue && iconSizeValue.length === 2 && iconSizeValue.endsWith('x')) {
+      return iconSizeValue.slice(0, 1) + 'em';
     }
+    return iconSizeValue;
   }
 
-  get luxIconName(): string | undefined {
-    return this._luxIconName;
-  }
-
-  @Input()
-  set luxIconName(iconNameValue: string | undefined) {
-    if (!iconNameValue) {
-      this._luxIconName = '';
-      return;
+  private registerIcon(iconName: string | undefined): string {
+    if (!iconName) {
+      return '';
     }
 
-    if (iconNameValue === this._luxIconName) {
-      return;
-    }
-
-    this._luxIconName = iconNameValue;
-    this.registerIcon(iconNameValue);
-  }
-
-  @Output() luxLoad = new EventEmitter<Event>();
-
-  private registerIcon(iconName: string) {
     try {
       this.iconReg.registerIcon(iconName);
+      return iconName;
     } catch (error) {
       console.warn(
         `Das Icon "${iconName}" konnte nicht gefunden werden. Stattdessen wird das Icon "${this.notFoundIconName}" verwendet. Bitte anpassen!`
       );
-      this._luxIconName = this.notFoundIconName;
+      return this.notFoundIconName;
     }
   }
 }
