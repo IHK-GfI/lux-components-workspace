@@ -1,18 +1,20 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
-  ContentChild,
   ElementRef,
-  EventEmitter,
-  inject,
-  Input,
   OnDestroy,
-  OnInit,
-  Output,
   TemplateRef,
-  ViewChild,
-  ChangeDetectionStrategy
+  computed,
+  contentChild,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  untracked,
+  viewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
@@ -38,7 +40,7 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
   selector: 'lux-autocomplete-ac',
   templateUrl: './lux-autocomplete-ac.component.html',
   styleUrls: ['./lux-autocomplete-ac.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,
@@ -60,22 +62,23 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     TranslocoPipe
   ]
 })
-export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormComponentBase<V> implements OnInit, OnDestroy, AfterViewInit {
+export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormComponentBase<V> implements OnDestroy, AfterViewInit {
   tservice = inject(TranslocoService);
 
   private selected$: ReplaySubject<any> = new ReplaySubject<any>(1);
   private subscriptions: Subscription[] = [];
   private valueChangeSubscription?: Subscription;
 
-  filteredOptions: O[] = [];
-  displayedOptions: O[] = [];
+  readonly filteredOptions = signal<O[]>([]);
+  readonly displayedOptions = signal<O[]>([]);
+  readonly focused = signal(false);
+
   loadingRunning = false;
   activeIndex = -1;
-  focused = false;
-  _luxOptions: O[] = [];
+
   autoFillObserver = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      if (this.luxStrict && mutation.attributeName === 'class') {
+      if (this.luxStrict() && mutation.attributeName === 'class') {
         const targetElement = mutation.target as HTMLElement;
         if (targetElement.classList && targetElement.classList.contains('cdk-text-field-autofilled')) {
           this.updateFormControlValue();
@@ -85,75 +88,89 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     });
   });
 
-  @Input() luxPlaceholder = '';
-  @Input() luxOptionLabelProp = 'label';
-  @Input() luxLookupDelay = 500;
-  @Input() luxErrorMessageNotAnOption = '';
-  @Input() luxTagId?: string;
-  @Input() luxSelectAllOnClick = true;
-  @Input() luxStrict = true;
-  @Input() luxName?: string;
-  @Input() luxPickValue?: ((selected: O | null | undefined) => V) | undefined;
-  @Input() luxFilterFn?: (filterTerm: string, label: string, option: any) => boolean;
-  @Input() luxPanelWidth: string | number = '';
-  @Input() luxOptionBlockSize = 500;
-  @Input() luxClearable = false;
-  @Input() luxClearAriaLabel = '';
+  readonly luxPlaceholder = input('');
+  readonly luxOptionLabelProp = input('label');
+  readonly luxLookupDelay = input(500);
+  readonly luxErrorMessageNotAnOption = input('');
+  readonly luxTagId = input<string | undefined>(undefined);
+  readonly luxSelectAllOnClick = input(true);
+  readonly luxStrict = input(true);
+  readonly luxName = input<string | undefined>(undefined);
+  readonly luxPickValue = input<((selected: O | null | undefined) => V) | undefined>(undefined);
+  readonly luxFilterFn = input<((filterTerm: string, label: string, option: any) => boolean) | undefined>(undefined);
+  readonly luxPanelWidth = input<string | number>('');
+  readonly luxOptionBlockSize = input(500);
+  readonly luxClearable = input(false);
+  readonly luxClearAriaLabel = input('');
 
-  @Output() luxValueChange = new EventEmitter<V | null>();
-  @Output() luxOptionSelected = new EventEmitter<V | null>();
-  @Output() luxBlur = new EventEmitter<FocusEvent>();
-  @Output() luxFocus = new EventEmitter<FocusEvent>();
+  readonly luxOptions = input<O[], O[] | undefined>([], { transform: (options) => options ?? [] });
 
-  @ContentChild('labelTemplate', { read: TemplateRef }) labelTemplate?: TemplateRef<any>;
-  @ContentChild(LuxInputAcPrefixComponent) inputPrefix?: LuxInputAcPrefixComponent;
-  @ContentChild(LuxInputAcSuffixComponent) inputSuffix?: LuxInputAcSuffixComponent;
+  /**
+   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
+   * Wert liefern das Signal value() bzw. getValue().
+   */
+  readonly luxValue = input<V>(null as V);
+  readonly luxValueChange = output<V | null>();
 
-  @ViewChild('autoCompleteInput', { read: MatAutocompleteTrigger }) matAutoComplete!: MatAutocompleteTrigger;
-  @ViewChild('autoCompleteInput', { read: ElementRef }) matInput!: ElementRef;
-  @ViewChild(MatAutocomplete) matAutocompleteComponent!: MatAutocomplete;
+  readonly luxOptionSelected = output<V | null>();
+  readonly luxBlur = output<FocusEvent>();
+  readonly luxFocus = output<FocusEvent>();
 
-  get luxValue(): V {
-    return this.getValue();
-  }
+  readonly labelTemplate = contentChild('labelTemplate', { read: TemplateRef });
+  readonly inputPrefix = contentChild(LuxInputAcPrefixComponent);
+  readonly inputSuffix = contentChild(LuxInputAcSuffixComponent);
 
-  @Input() set luxValue(value: V) {
-    if (value instanceof Object && !!this.luxPickValue) {
-      this.setValue(this.luxPickValue(value as any));
-    } else {
-      this.setValue(value);
+  readonly matAutoComplete = viewChild('autoCompleteInput', { read: MatAutocompleteTrigger });
+  readonly matInput = viewChild('autoCompleteInput', { read: ElementRef });
+  readonly matAutocompleteComponent = viewChild(MatAutocomplete);
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
     }
-  }
 
-  get luxOptions(): O[] {
-    return this._luxOptions;
-  }
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
 
-  @Input()
-  set luxOptions(options: O[]) {
-    this._luxOptions = options ? options : [];
+  constructor() {
+    super();
 
-    if (this.formControl) {
-      this.updateFilterOptions();
-      this.registerNewValueChangesListener();
-    }
+    this.syncValueInputToFormControl(this.luxValue);
+
+    effect(() => {
+      this.luxOptions();
+
+      untracked(() => {
+        // Erst nachdem die View steht, ist das Input-Element für den Filter verfügbar.
+        if (this.formControl && this.matInput()) {
+          this.updateFilterOptions();
+          this.registerNewValueChangesListener();
+        }
+      });
+    });
   }
 
   override ngOnInit() {
+    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
+    // löst der Initialwert - wie bisher - noch kein luxValueChange aus.
+    this._initialValue = this.luxValue();
+
     super.ngOnInit();
 
     this.subscriptions.push(
       this.selected$.pipe(distinctUntilChanged()).subscribe((value) => {
-        if (this.luxStrict) {
+        if (this.luxStrict()) {
           if (value === '' || value === null || value === undefined) {
             this.luxOptionSelected.emit(null);
             this.luxValueChange.emit(null);
           } else {
             const selectedOption = this.getPickValueOption(value);
+            const pickValueFn = this.luxPickValue();
 
             let selected: V | null;
-            if (selectedOption instanceof Object && !!this.luxPickValue) {
-              selected = this.luxPickValue(selectedOption);
+            if (selectedOption instanceof Object && !!pickValueFn) {
+              selected = pickValueFn(selectedOption);
             } else {
               selected = selectedOption as any;
             }
@@ -185,14 +202,18 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   }
 
   ngAfterViewInit() {
+    const matAutocompleteComponent = this.matAutocompleteComponent()!;
+
     this.subscriptions.push(
-      this.matAutoComplete.panelClosingActions.pipe(debounceTime(this.luxLookupDelay)).subscribe(() => {
-        this.updateFormControlValue();
-      })
+      this.matAutoComplete()!
+        .panelClosingActions.pipe(debounceTime(this.luxLookupDelay()))
+        .subscribe(() => {
+          this.updateFormControlValue();
+        })
     );
 
     this.subscriptions.push(
-      this.matAutocompleteComponent._keyManager.change.subscribe((index) => {
+      matAutocompleteComponent._keyManager.change.subscribe((index) => {
         if (this.loadingRunning && index === -1) {
           // Workaround: Bei Änderungen an den Optionen wird der Aktivindex zurückgesetzt!
           //
@@ -206,7 +227,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
           // Siehe: _MatAutocompleteTriggerBase._subscribeToClosingActions
           // this._resetActiveItem();
           setTimeout(() => {
-            this.matAutocompleteComponent._keyManager.setActiveItem(this.activeIndex!);
+            matAutocompleteComponent._keyManager.setActiveItem(this.activeIndex!);
             this.loadingRunning = false;
           });
         }
@@ -214,25 +235,25 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     );
 
     this.subscriptions.push(
-      this.matAutocompleteComponent.opened.subscribe(() => {
+      matAutocompleteComponent.opened.subscribe(() => {
         setTimeout(() => {
-          if (this.matAutocompleteComponent.panel) {
-            this.matAutocompleteComponent.panel.nativeElement.addEventListener('scroll', this.loadOnScroll.bind(this));
+          if (matAutocompleteComponent.panel) {
+            matAutocompleteComponent.panel.nativeElement.addEventListener('scroll', this.loadOnScroll.bind(this));
           }
         });
       })
     );
 
     this.subscriptions.push(
-      this.matAutocompleteComponent.closed.subscribe(() => {
+      matAutocompleteComponent.closed.subscribe(() => {
         this.updateFilterOptions();
-        this.matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
+        matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
       })
     );
 
     this.registerNewValueChangesListener();
 
-    this.autoFillObserver.observe(this.matInput.nativeElement, {
+    this.autoFillObserver.observe(this.matInput()!.nativeElement, {
       attributes: true,
       childList: false,
       characterData: false
@@ -240,26 +261,20 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   }
 
   /**
-   * Stößt das Nachladen von Elementen an, wenn ein bestimmter Scrollwert erreicht wurde.
-   * @param event - ScrollEvent
-   */
-  private loadOnScroll(event: Event) {
-    const position = event.target as any;
-    if (position && (position.scrollTop + position.clientHeight) / position.scrollHeight > 85 / 100) {
-      this.updateDisplayedEntries();
-    }
-  }
-
-  /**
    * Läd den nächsten Block Daten aus den Entries nach.
    */
   updateDisplayedEntries() {
-    if (this.filteredOptions.length > 0) {
+    const filteredOptions = [...this.filteredOptions()];
+
+    if (filteredOptions.length > 0) {
       this.loadingRunning = true;
-      this.activeIndex = this.matAutocompleteComponent._keyManager.activeItemIndex ?? -1;
+      this.activeIndex = this.matAutocompleteComponent()?._keyManager.activeItemIndex ?? -1;
       const start = 0;
-      const end = Math.min(this.luxOptionBlockSize, this.filteredOptions.length);
-      this.displayedOptions.push(...this.filteredOptions.splice(start, end));
+      const end = Math.min(this.luxOptionBlockSize(), filteredOptions.length);
+      const nextBlock = filteredOptions.splice(start, end);
+
+      this.filteredOptions.set(filteredOptions);
+      this.displayedOptions.update((options) => [...options, ...nextBlock]);
     }
   }
 
@@ -270,7 +285,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
    */
   override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors['incorrect']) {
-      return this.luxErrorMessageNotAnOption || this.tservice.translate('luxc.autocomplete.error_message.not_an_option');
+      return this.luxErrorMessageNotAnOption() || this.tservice.translate('luxc.autocomplete.error_message.not_an_option');
     }
     return undefined;
   }
@@ -283,10 +298,10 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
    */
   displayFn(value: any): string {
     let selected;
-    if (this.luxStrict && !!this.luxPickValue) {
+    if (this.luxStrict() && !!this.luxPickValue()) {
       selected = this.getPickValueOption(value);
     } else {
-      selected = this.luxValue;
+      selected = this.getValue();
     }
     return this.getOptionLabel(selected);
   }
@@ -298,12 +313,14 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
    * @returns any[]
    */
   filter(filterTerm: any) {
-    return this.luxOptions.filter((option) => {
+    const filterFn = this.luxFilterFn();
+
+    return this.luxOptions().filter((option) => {
       const filterText = filterTerm.trim().toLowerCase();
       const optionLabel = this.getOptionLabel(option).trim().toLowerCase();
 
-      if (this.luxFilterFn) {
-        return this.luxFilterFn(filterText, optionLabel, option);
+      if (filterFn) {
+        return filterFn(filterText, optionLabel, option);
       } else {
         return optionLabel.indexOf(filterText) > -1;
       }
@@ -316,7 +333,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
    * @param clickEvent
    */
   onClick(clickEvent: any) {
-    if (this.luxSelectAllOnClick) {
+    if (this.luxSelectAllOnClick()) {
       clickEvent.target.setSelectionRange(0, clickEvent.target.value.length);
     }
   }
@@ -333,48 +350,168 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     } else if (!option) {
       return '';
     } else {
-      return option[this.luxOptionLabelProp];
+      return option[this.luxOptionLabelProp()];
     }
   }
 
   selected(selectedEvent: MatAutocompleteSelectedEvent) {
-    if (this.luxStrict && !!this.luxPickValue) {
-      this.luxValue = this.luxPickValue(selectedEvent.option.value);
+    const pickValueFn = this.luxPickValue();
+
+    if (this.luxStrict() && !!pickValueFn) {
+      this.setValue(pickValueFn(selectedEvent.option.value));
     } else {
-      this.luxValue = selectedEvent.option.value;
+      this.setValue(selectedEvent.option.value);
     }
   }
 
   onFocus(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocus.emit(e);
   }
 
   onFocusIn(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocusIn.emit(e);
   }
 
   onFocusOut(e: FocusEvent) {
     this.updateFormControlValue();
-    this.focused = false;
+    this.focused.set(false);
     this.luxFocusOut.emit(e);
   }
 
-  descripedBy() {
-    if (this.errorMessage) {
-      return this.uid + '-error';
+  protected override applyValueInput(value: V) {
+    const pickValueFn = this.luxPickValue();
+
+    this.setValue(value instanceof Object && !!pickValueFn ? pickValueFn(value as any) : value);
+  }
+
+  override notifyFormValueChanged(formValue: any) {
+    const pickValueFn = this.luxPickValue();
+    let newValue;
+
+    if (this.luxStrict()) {
+      newValue = formValue instanceof Object && !!pickValueFn ? pickValueFn(formValue) : formValue;
     } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
+      newValue = formValue;
+    }
+
+    this.selected$.next(newValue);
+
+    const matInput = this.matInput();
+    if (matInput && matInput.nativeElement && newValue) {
+      if ((typeof newValue === 'string' || newValue instanceof String) && newValue) {
+        matInput.nativeElement.value = newValue;
+      } else if (newValue[this.luxOptionLabelProp()]) {
+        matInput.nativeElement.value = newValue[this.luxOptionLabelProp()];
+      }
+    }
+  }
+
+  /**
+   * Wrapper-Klick: Fokus setzen und Panel öffnen (falls erlaubt).
+   * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
+   */
+  onWrapperClick(event: MouseEvent) {
+    if (this.luxDisabled() || this.luxReadonly()) {
+      return;
+    }
+
+    if (this.ignoreWrapperClick(event)) {
+      return;
+    }
+
+    // Fokus auf Input
+    try {
+      this.matInput()?.nativeElement?.focus();
+    } catch {
+      // Ignorieren
+    }
+
+    // Panel nur öffnen, wenn noch nicht offen
+    const matAutoComplete = this.matAutoComplete();
+    if (matAutoComplete && !matAutoComplete.panelOpen) {
+      matAutoComplete.openPanel();
+    }
+  }
+
+  showClearButton(): boolean {
+    if (!this.luxClearable() || this.luxReadonly() || this.luxDisabled()) {
+      return false;
+    }
+
+    const value = this.value();
+    return value !== null && value !== undefined && (value as unknown) !== '';
+  }
+
+  onClearMouseDown(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  clearInputValue(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const inputElement = this.matInput()?.nativeElement as HTMLInputElement | undefined;
+
+    if (this.inForm) {
+      this.formControl.setValue(null as V);
+    } else {
+      this.setValue(null as V);
+    }
+    this.matAutoComplete()?.closePanel();
+
+    try {
+      inputElement?.focus({ preventScroll: true });
+    } catch {
+      // Ignorieren
+    }
+  }
+
+  /**
+   * Durch diese Track-Funktion wird der folgende Fehler vermieden:
+   * NG0955: The provided track expression resulted in duplicated keys for a given collection.
+   *
+   * @param index
+   * @param option
+   * @returns
+   */
+  trackOption(index: number, option: O): unknown {
+    if (option === null || option === undefined) {
+      return index;
+    }
+
+    if (option instanceof Object) {
+      const pickValueFn = this.luxPickValue();
+      if (pickValueFn) {
+        const pickValue = pickValueFn(option);
+        if (pickValue !== undefined && pickValue !== null) {
+          return `${pickValue}-${index}`;
+        }
+      }
+      return option;
+    }
+
+    return `${option}-${index}`;
+  }
+
+  /**
+   * Stößt das Nachladen von Elementen an, wenn ein bestimmter Scrollwert erreicht wurde.
+   * @param event - ScrollEvent
+   */
+  private loadOnScroll(event: Event) {
+    const position = event.target as any;
+    if (position && (position.scrollTop + position.clientHeight) / position.scrollHeight > 85 / 100) {
+      this.updateDisplayedEntries();
     }
   }
 
   private handleErrors() {
     const errors = this.formControl ? this.formControl.errors : null;
     if (
-      this.luxOptions.indexOf(this.luxStrict ? this.getPickValueOption(this.luxValue as any) : (this.luxValue as any)) > -1 ||
+      this.luxOptions().indexOf(this.luxStrict() ? (this.getPickValueOption(this.getValue() as any) as O) : (this.getValue() as any)) >
+        -1 ||
       (!!errors && Object.keys(errors).length > 0 && errors['required'])
     ) {
       this.handleOtherErrors(errors);
@@ -392,7 +529,7 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   }
 
   private handleIncorrectError(errors: any) {
-    if (this.luxStrict && this.luxValue) {
+    if (this.luxStrict() && this.getValue()) {
       errors = errors ? errors : {};
       if (!errors['incorrect']) {
         errors['incorrect'] = true;
@@ -401,29 +538,11 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     }
   }
 
-  override notifyFormValueChanged(formValue: any) {
-    let newValue;
-    if (this.luxStrict) {
-      newValue = formValue instanceof Object && !!this.luxPickValue ? this.luxPickValue(formValue) : formValue;
-    } else {
-      newValue = formValue;
-    }
-
-    this.selected$.next(newValue);
-
-    if (this.matInput && this.matInput.nativeElement && newValue) {
-      if ((typeof newValue === 'string' || newValue instanceof String) && newValue) {
-        this.matInput.nativeElement.value = newValue;
-      } else if (newValue[this.luxOptionLabelProp]) {
-        this.matInput.nativeElement.value = newValue[this.luxOptionLabelProp];
-      }
-    }
-  }
-
   private getPickValueOption(value: O): O | null {
-    const pickValue = value instanceof Object && !!this.luxPickValue ? this.luxPickValue(value) : value;
-    const found = this.luxOptions.find((currentOption) => {
-      const pickOptionValue = currentOption instanceof Object && !!this.luxPickValue ? this.luxPickValue(currentOption) : currentOption;
+    const pickValueFn = this.luxPickValue();
+    const pickValue = value instanceof Object && !!pickValueFn ? pickValueFn(value) : value;
+    const found = this.luxOptions().find((currentOption) => {
+      const pickOptionValue = currentOption instanceof Object && !!pickValueFn ? pickValueFn(currentOption) : currentOption;
       return pickValue === pickOptionValue;
     });
 
@@ -431,8 +550,8 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   }
 
   private updateFilterOptions() {
-    this.filteredOptions = this.filterOptions();
-    this.displayedOptions = [];
+    this.filteredOptions.set(this.filterOptions());
+    this.displayedOptions.set([]);
     this.updateDisplayedEntries();
   }
 
@@ -446,31 +565,32 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     this.valueChangeSubscription = this.formControl.valueChanges
       .pipe(
         startWith(''),
-        debounceTime(this.luxLookupDelay),
+        debounceTime(this.luxLookupDelay()),
         map(() => {
           return this.filterOptions();
         })
       )
       .subscribe((result) => {
-        this.filteredOptions = result;
-        this.displayedOptions = [];
+        this.filteredOptions.set(result);
+        this.displayedOptions.set([]);
         this.updateDisplayedEntries();
       });
   }
 
   private filterOptions() {
-    const filterLabel = this.matInput.nativeElement.value;
-    return filterLabel ? this.filter(filterLabel) : [...this.luxOptions];
+    const filterLabel = this.matInput()?.nativeElement.value;
+    return filterLabel ? this.filter(filterLabel) : [...this.luxOptions()];
   }
 
   private updateFormControlValue() {
-    if (this.luxStrict) {
-      const filterResult = this.filter(this.matInput.nativeElement.value);
+    if (this.luxStrict()) {
+      const filterResult = this.filter(this.matInput()?.nativeElement.value ?? '');
+      const pickValueFn = this.luxPickValue();
 
-      if (filterResult.length === 1 && this.luxOptions.length > 1) {
+      if (filterResult.length === 1 && this.luxOptions().length > 1) {
         let selected;
-        if (this.luxStrict && !!this.luxPickValue) {
-          selected = this.luxPickValue(filterResult[0]);
+        if (pickValueFn) {
+          selected = pickValueFn(filterResult[0]);
         } else {
           selected = filterResult[0];
         }
@@ -481,66 +601,6 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     }
   }
 
-  /**
-   * Wrapper-Klick: Fokus setzen und Panel öffnen (falls erlaubt).
-   * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
-   */
-  onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled || this.luxReadonly) {
-      return;
-    }
-
-    if (this.ignoreWrapperClick(event)) {
-      return;
-    }
-
-    // Fokus auf Input
-    try {
-      this.matInput?.nativeElement?.focus();
-    } catch {
-      // Ignorieren
-    }
-
-    // Panel nur öffnen, wenn noch nicht offen
-    if (this.matAutoComplete && !this.matAutoComplete.panelOpen) {
-      this.matAutoComplete.openPanel();
-    }
-  }
-
-  showClearButton(): boolean {
-    if (!this.luxClearable || this.luxReadonly || this.luxDisabled) {
-      return false;
-    }
-
-    const value = this.inForm ? this.formControl?.value : this.luxValue;
-    return value !== null && value !== undefined && value !== '';
-  }
-
-  onClearMouseDown(event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  clearInputValue(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const inputElement = this.matInput?.nativeElement as HTMLInputElement | undefined;
-
-    if (this.inForm) {
-      this.formControl.setValue(null as V);
-    } else {
-      this.luxValue = null as V;
-    }
-    this.matAutoComplete?.closePanel();
-
-    try {
-      inputElement?.focus({ preventScroll: true });
-    } catch {
-      // Ignorieren
-    }
-  }
-
   private ignoreWrapperClick(event: MouseEvent): boolean {
     const target = event.target as HTMLElement | null;
     if (!target) {
@@ -548,31 +608,5 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     }
 
     return !!target.closest('mat-option, .lux-input-clear-btn-container, .lux-input-clear-btn');
-  }
-
-  /**
-   * Durch diese Track-Funktion wird der folgende Fehler vermieden:
-   * NG0955: The provided track expression resulted in duplicated keys for a given collection.
-   *
-   * @param index
-   * @param option
-   * @returns
-   */
-  trackOption(index: number, option: O): unknown {
-    if (option === null || option === undefined) {
-      return index;
-    }
-
-    if (option instanceof Object) {
-      if (this.luxPickValue) {
-        const pickValue = this.luxPickValue(option);
-        if (pickValue !== undefined && pickValue !== null) {
-          return `${pickValue}-${index}`;
-        }
-      }
-      return option;
-    }
-
-    return `${option}-${index}`;
   }
 }

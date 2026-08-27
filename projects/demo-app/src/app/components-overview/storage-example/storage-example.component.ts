@@ -74,12 +74,12 @@ export class StorageExampleComponent implements OnDestroy, DoCheck {
   }
 
   updateExisting(key: string, luxInput: LuxInputAcComponent) {
-    if (!luxInput.luxValue) {
+    if (!luxInput.value()) {
       throw Error('Null is not allowed!');
     }
 
-    this.luxStorageService.setItem(key, luxInput.luxValue, false);
-    luxInput.luxValue = '';
+    this.luxStorageService.setItem(key, luxInput.value(), false);
+    luxInput.setValue('');
   }
 
   submit() {

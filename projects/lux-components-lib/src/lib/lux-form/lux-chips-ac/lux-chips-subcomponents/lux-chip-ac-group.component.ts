@@ -1,49 +1,42 @@
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, contentChild, input, model, output } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 
 @Component({
   selector: 'lux-chip-ac-group',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ''
 })
 export class LuxChipAcGroupComponent {
-  private _luxColor: LuxThemePalette = 'primary';
+  readonly tempRef = contentChild(TemplateRef);
 
-  @ContentChild(TemplateRef) tempRef?: TemplateRef<any>;
+  readonly luxChipClicked = output<number>();
+  readonly luxChipAdded = output<string>();
+  readonly luxChipRemoved = output<number>();
 
-  @Output() luxChipClicked = new EventEmitter<number>();
-  @Output() luxChipAdded = new EventEmitter<string>();
-  @Output() luxChipRemoved = new EventEmitter<number>();
+  /**
+   * Die Labels der Gruppe. Änderungen (add/remove) erzeugen ein neues Array und werden als
+   * luxLabelsChange gemeldet - für einen Abgleich mit dem Aufrufer bietet sich [(luxLabels)] an.
+   */
+  readonly luxLabels = model<string[]>([]);
 
-  @Input() luxLabels: string[] = [];
-  @Input() luxDisabled = false;
-  @Input() luxRemovable = true;
+  /**
+   * Wird von der umgebenden lux-chips-ac-Komponente mitgesetzt, wenn dort luxDisabled wechselt.
+   */
+  readonly luxDisabled = model(false);
+  readonly luxRemovable = input(true);
 
-  get luxColor(): LuxThemePalette {
-    return this._luxColor;
-  }
-
-  @Input() set luxColor(color: LuxThemePalette) {
-    if (color !== 'primary' && color !== 'accent' && color !== 'warn') {
-      color = undefined;
-    }
-    this._luxColor = color;
-  }
-
-  constructor() {}
+  readonly luxColor = input<LuxThemePalette, LuxThemePalette>('primary', {
+    transform: (color) => (color === 'primary' || color === 'accent' || color === 'warn' ? color : undefined)
+  });
 
   add(label: string) {
-    if (!this.luxLabels) {
-      this.luxLabels = [];
-    }
-
-    this.luxLabels.push(label);
+    this.luxLabels.update((labels) => [...(labels ?? []), label]);
     this.luxChipAdded.emit(label);
   }
 
   remove(index: number) {
     this.luxChipRemoved.emit(index);
-    this.luxLabels.splice(index, 1);
+    this.luxLabels.update((labels) => labels.filter((_, i) => i !== index));
   }
 
   click(index: number) {

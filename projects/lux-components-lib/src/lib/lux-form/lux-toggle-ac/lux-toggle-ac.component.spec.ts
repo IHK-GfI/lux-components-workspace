@@ -333,7 +333,7 @@ describe('LuxToggleAcComponent', () => {
 
         // Änderungen durchführen
         // 2. Wert intern ohne Event auf false setzen (z.B. um eine Two-Way-Binding-Loop zu brechen)
-        toggleComponent.luxFormControl.setValue(false, { emitEvent: false });
+        toggleComponent.formControl.setValue(false, { emitEvent: false });
         fixture.detectChanges();
 
         // Nachbedingungen testen: Kein zusätzlicher Change-Event, da bewusst ohne emit gesetzt

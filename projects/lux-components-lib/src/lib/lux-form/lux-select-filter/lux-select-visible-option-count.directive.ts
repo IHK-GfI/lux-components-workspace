@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject } from '@angular/core';
+import { DestroyRef, Directive, OnDestroy, OnInit, effect, inject, input, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSelect } from '@angular/material/select';
 
@@ -6,14 +6,26 @@ import { MatSelect } from '@angular/material/select';
   selector: 'mat-select[luxSelectVisibleOptionCount]',
   standalone: true
 })
-export class LuxSelectVisibleOptionCountDirective implements OnInit, OnChanges, OnDestroy {
+export class LuxSelectVisibleOptionCountDirective implements OnInit, OnDestroy {
   private static readonly DEFAULT_OPTION_HEIGHT = 48;
 
   private readonly matSelect = inject(MatSelect);
   private readonly destroyRef = inject(DestroyRef);
   private panelAttachTimeout?: ReturnType<typeof setTimeout>;
 
-  @Input() luxSelectVisibleOptionCount?: number | null;
+  readonly luxSelectVisibleOptionCount = input<number | null | undefined>(undefined);
+
+  constructor() {
+    effect(() => {
+      this.luxSelectVisibleOptionCount();
+
+      untracked(() => {
+        if (this.matSelect.panelOpen) {
+          this.schedulePanelSizing();
+        }
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.matSelect.openedChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((open) => {
@@ -23,14 +35,6 @@ export class LuxSelectVisibleOptionCountDirective implements OnInit, OnChanges, 
         this.clearPanelSizing();
       }
     });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['luxSelectVisibleOptionCount'] || !this.matSelect.panelOpen) {
-      return;
-    }
-
-    this.schedulePanelSizing();
   }
 
   ngOnDestroy(): void {
@@ -73,7 +77,7 @@ export class LuxSelectVisibleOptionCountDirective implements OnInit, OnChanges, 
   }
 
   private getVisibleOptionCount(): number | undefined {
-    const count = Math.trunc(Number(this.luxSelectVisibleOptionCount));
+    const count = Math.trunc(Number(this.luxSelectVisibleOptionCount()));
     if (!Number.isFinite(count) || count <= 0) {
       return undefined;
     }

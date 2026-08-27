@@ -3,7 +3,20 @@ import { ESCAPE } from '@angular/cdk/keycodes';
 import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
-import { Component, ComponentRef, ElementRef, EventEmitter, inject, Input, NgZone, Output, ViewContainerRef, DOCUMENT, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ComponentRef,
+  DOCUMENT,
+  ElementRef,
+  EventEmitter,
+  NgZone,
+  Output,
+  ViewContainerRef,
+  inject,
+  input,
+  output
+} from '@angular/core';
 import { MAT_DATEPICKER_SCROLL_STRATEGY, MatDateSelectionModel } from '@angular/material/datepicker';
 import { MatFormField } from '@angular/material/form-field';
 import { merge, Subject } from 'rxjs';
@@ -12,9 +25,11 @@ import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 import { LuxDateFilterAcFn } from '../../lux-datepicker-ac/lux-datepicker-ac.component';
 import { LuxDatetimeOverlayContentAcComponent } from './lux-datetime-overlay-content-ac.component';
 
+const defaultDateFilterFn: LuxDateFilterAcFn = () => true;
+
 @Component({
   selector: 'lux-datetime-overlay-ac',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ''
 })
 export class LuxDatetimeOverlayAcComponent {
@@ -26,23 +41,29 @@ export class LuxDatetimeOverlayAcComponent {
   private _dir = inject(Directionality, { optional: true });
   private _formField = inject(MatFormField, { optional: true });
 
-  @Input() luxPickerInput!: HTMLInputElement;
-  @Input() luxStartView: 'month' | 'year' | 'multi-year' = 'month';
-  @Input() luxStartDate: Date | null = null;
-  @Input() luxStartTime: number[] = [];
-  @Input() luxMinDate: Date | null = null;
-  @Input() luxMaxDate: Date | null = null;
+  readonly luxPickerInput = input.required<HTMLInputElement>();
+  readonly luxStartView = input<'month' | 'year' | 'multi-year'>('month');
+  readonly luxStartDate = input<Date | null>(null);
+  readonly luxStartTime = input<number[]>([]);
+  readonly luxMinDate = input<Date | null>(null);
+  readonly luxMaxDate = input<Date | null>(null);
+  readonly selectedDate = input<string | undefined>(undefined);
 
-  @Output() luxSelected = new EventEmitter<Date>();
-  @Output() openedStream = new EventEmitter<void>();
-  @Output() closedStream = new EventEmitter<void>();
+  readonly luxCustomFilter = input<LuxDateFilterAcFn, LuxDateFilterAcFn | undefined>(defaultDateFilterFn, {
+    transform: (customFilterFn) => customFilterFn ?? defaultDateFilterFn
+  });
+
+  readonly luxSelected = output<Date>();
+
+  // openedStream/closedStream werden vom Material-Interface MatDatepickerPanel als EventEmitter
+  // erwartet (mat-datepicker-toggle [for]), deshalb hier bewusst kein output().
+  @Output() readonly openedStream = new EventEmitter<void>();
+  @Output() readonly closedStream = new EventEmitter<void>();
 
   stateChanges = new Subject<void>();
   hasBackdrop = true;
   opened = false;
   scrollStrategy: () => ScrollStrategy;
-  _selectedDate?: string;
-  _luxCustomFilter: LuxDateFilterAcFn = () => true;
 
   // Code des Interfaces "MatDatepickerPanel<MatDatepickerControl<any>, any, any>" - Start
   id = '';
@@ -52,24 +73,6 @@ export class LuxDatetimeOverlayAcComponent {
     return null as any;
   }
   // Code des Interfaces "MatDatepickerPanel<MatDatepickerControl<any>, any, any>" - Ende
-
-  get luxCustomFilter() {
-    return this._luxCustomFilter;
-  }
-
-  @Input()
-  set luxCustomFilter(customFilterFn: LuxDateFilterAcFn | undefined) {
-    this._luxCustomFilter = customFilterFn ?? (() => true);
-  }
-
-  get selectedDate() {
-    return this._selectedDate;
-  }
-
-  @Input()
-  set selectedDate(date: string | undefined) {
-    this._selectedDate = date;
-  }
 
   dateTimePortal?: ComponentPortal<LuxDatetimeOverlayContentAcComponent>;
   lastFocusedElement: Element | null = null;
@@ -99,6 +102,34 @@ export class LuxDatetimeOverlayAcComponent {
 
     this.openOverlay();
     this.opened = true;
+  }
+
+  public cancel(): void {
+    this.close();
+  }
+
+  close(): void {
+    if (!this.opened) {
+      return;
+    }
+    if (this.overlayRef && this.overlayRef.hasAttached()) {
+      this.overlayRef.detach();
+    }
+
+    if (this.dateTimePortal && this.dateTimePortal.isAttached) {
+      this.dateTimePortal.detach();
+    }
+
+    if (this.lastFocusedElement instanceof HTMLElement) {
+      this.lastFocusedElement.focus();
+    }
+
+    setTimeout(() => {
+      if (this.opened) {
+        this.opened = false;
+        this.lastFocusedElement = null;
+      }
+    });
   }
 
   private openOverlay(): void {
@@ -153,38 +184,10 @@ export class LuxDatetimeOverlayAcComponent {
     });
   }
 
-  public cancel(): void {
-    this.close();
-  }
-
-  close(): void {
-    if (!this.opened) {
-      return;
-    }
-    if (this.overlayRef && this.overlayRef.hasAttached()) {
-      this.overlayRef.detach();
-    }
-
-    if (this.dateTimePortal && this.dateTimePortal.isAttached) {
-      this.dateTimePortal.detach();
-    }
-
-    if (this.lastFocusedElement instanceof HTMLElement) {
-      this.lastFocusedElement.focus();
-    }
-
-    setTimeout(() => {
-      if (this.opened) {
-        this.opened = false;
-        this.lastFocusedElement = null;
-      }
-    });
-  }
-
   private _createOverlayPositionStrategy(): PositionStrategy {
     return this.overlay
       .position()
-      .flexibleConnectedTo(this.luxPickerInput)
+      .flexibleConnectedTo(this.luxPickerInput())
       .withTransformOriginOn('.lux-datetime-overlay-content')
       .withFlexibleDimensions(true)
       .withViewportMargin(8)

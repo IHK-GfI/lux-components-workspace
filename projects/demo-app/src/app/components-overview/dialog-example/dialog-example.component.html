@@ -28,7 +28,7 @@
         luxName="dialog_panelClass"
         luxLabel="panelClass"
         [luxValue]="dialogConfig.panelClass"
-        (luxBlur)="updatePanelClass(panelClassInput.luxValue)"
+        (luxBlur)="updatePanelClass(panelClassInput.value())"
         #panelClassInput
       >
         <lux-form-hint>

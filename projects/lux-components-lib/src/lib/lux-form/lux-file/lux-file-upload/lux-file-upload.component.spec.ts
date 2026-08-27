@@ -53,15 +53,15 @@ describe('LuxFileUploadComponent', () => {
 
     it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', fakeAsync(() => {
       // Vorbedingungen: Maximal 1 Datei erlaubt
-      fileComponent.luxMaxFileCount = 1;
-      fileComponent.luxMultiple = true;
+      testComponent.maxFileCount = 1;
+      testComponent.multiple = true;
       fixture.detectChanges();
 
       // Eine Datei hinzufügen
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
       flush();
       LuxTestHelper.wait(fixture);
-      expect(fileComponent.luxSelected!.length).toBe(1);
+      expect(fileComponent.value()!.length).toBe(1);
       expect(fileComponent.formControl.errors).toBeNull();
 
       // Versucht eine zweite Datei hinzuzufügen -> Error
@@ -72,7 +72,7 @@ describe('LuxFileUploadComponent', () => {
       expect(fileComponent.formControl.errors![LuxFileErrorCause.MaxFileCount]).toBeDefined();
 
       // MaxFileCount dynamisch erhöhen
-      fileComponent.luxMaxFileCount = 2;
+      testComponent.maxFileCount = 2;
       fixture.detectChanges();
 
       // Fügt eine zweite Datei hinzu
@@ -81,7 +81,7 @@ describe('LuxFileUploadComponent', () => {
       LuxTestHelper.wait(fixture);
 
       // Jetzt sollten zwei Dateien erlaubt sein
-      expect(fileComponent.luxSelected!.length).toBe(2);
+      expect(fileComponent.value()!.length).toBe(2);
       expect(fileComponent.formControl.errors).toBeNull();
     }));
 
@@ -134,6 +134,7 @@ class MockStorage {
       [luxUploadUrl]="uploadUrl"
       [luxSelected]="selected"
       [luxMultiple]="multiple"
+      [luxMaxFileCount]="maxFileCount"
       [luxUploadActionConfig]="uploadActionConfig"
       [luxDownloadActionConfig]="downloadActionConfig"
       [luxDeleteActionConfig]="deleteActionConfig"
@@ -158,6 +159,7 @@ class FileComponent {
   maxSizeMiB = 10;
   uploadUrl?: string;
   multiple?: boolean;
+  maxFileCount = 100;
   contentsAsBlob?: boolean;
   listOnly?: boolean;
 

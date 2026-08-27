@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -31,40 +31,50 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
   });
 
   it('liefert luxAriaLabelledby, wenn gesetzt (höchste Priorität)', () => {
-    testComponent.input.luxAriaLabelledby = 'externes-label-id';
-    testComponent.input.luxAriaLabel = 'Suche';
-    expect(testComponent.input.labelledBy()).toBe('externes-label-id');
+    testComponent.ariaLabelledby.set('externes-label-id');
+    testComponent.ariaLabel.set('Suche');
+    fixture.detectChanges();
+
+    expect(testComponent.input().labelledBy()).toBe('externes-label-id');
   });
 
   it('liefert undefined, wenn nur luxAriaLabel gesetzt ist (aria-label soll greifen)', () => {
-    testComponent.input.luxAriaLabel = 'Suche';
-    expect(testComponent.input.labelledBy()).toBeUndefined();
+    testComponent.ariaLabel.set('Suche');
+    fixture.detectChanges();
+
+    expect(testComponent.input().labelledBy()).toBeUndefined();
   });
 
   it('liefert uid + "-label", wenn nur luxLabel gesetzt ist', () => {
-    expect(testComponent.input.labelledBy()).toBe(testComponent.input.uid + '-label');
+    expect(testComponent.input().labelledBy()).toBe(testComponent.input().uid() + '-label');
   });
 
   it('liefert undefined, wenn weder Label noch Aria-Inputs gesetzt sind', () => {
-    testComponent.input.luxLabel = '';
-    expect(testComponent.input.labelledBy()).toBeUndefined();
+    testComponent.label.set('');
+    fixture.detectChanges();
+
+    expect(testComponent.input().labelledBy()).toBeUndefined();
   });
 
   it('liefert uid + "-label" bei projiziertem lux-form-label ohne luxLabel/Aria-Inputs', () => {
     const projectedFixture = TestBed.createComponent(ProjectedLabelOnlyTestComponent);
     projectedFixture.detectChanges();
-    const input = projectedFixture.componentInstance.input;
+    const input = projectedFixture.componentInstance.input();
 
-    expect(input.labelledBy()).toBe(input.uid + '-label');
+    expect(input.labelledBy()).toBe(input.uid() + '-label');
   });
 });
 
 @Component({
   imports: [LuxInputAcComponent],
-  template: `<lux-input-ac luxLabel="Nachname"></lux-input-ac>`
+  template: `<lux-input-ac [luxLabel]="label()" [luxAriaLabel]="ariaLabel()" [luxAriaLabelledby]="ariaLabelledby()"></lux-input-ac>`
 })
 class AriaBaseTestComponent {
-  @ViewChild(LuxInputAcComponent, { static: true }) input!: LuxInputAcComponent;
+  readonly input = viewChild.required(LuxInputAcComponent);
+
+  readonly label = signal('Nachname');
+  readonly ariaLabel = signal<string | undefined>(undefined);
+  readonly ariaLabelledby = signal<string | undefined>(undefined);
 }
 
 @Component({
@@ -72,7 +82,7 @@ class AriaBaseTestComponent {
   template: `<lux-input-ac><lux-form-label>Nachname</lux-form-label></lux-input-ac>`
 })
 class ProjectedLabelOnlyTestComponent {
-  @ViewChild(LuxInputAcComponent, { static: true }) input!: LuxInputAcComponent;
+  readonly input = viewChild.required(LuxInputAcComponent);
 }
 
 describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {

@@ -1,28 +1,31 @@
 <lux-dialog-structure>
   <lux-dialog-title class="file-upload-dialog-title-container file-replace-dialog-title-container">
     @if (luxDialogRef.data.multiple) {
-    <div class="file-upload-dialog-title file-replace-dialog-title">
-      {{ 'luxc.file.replace.dialog.title.multiple' | transloco }}
-    </div>
-    } @if (!luxDialogRef.data.multiple) {
-    <div class="file-upload-dialog-title file-replace-dialog-title">
-      {{ 'luxc.file.replace.dialog.title' | transloco }}
-    </div>
+      <div class="file-upload-dialog-title file-replace-dialog-title">
+        {{ 'luxc.file.replace.dialog.title.multiple' | transloco }}
+      </div>
+    }
+    @if (!luxDialogRef.data.multiple) {
+      <div class="file-upload-dialog-title file-replace-dialog-title">
+        {{ 'luxc.file.replace.dialog.title' | transloco }}
+      </div>
     }
   </lux-dialog-title>
   <lux-dialog-content class="file-upload-dialog-content-container file-replace-dialog-content-container">
     @if (luxDialogRef.data.multiple && !luxDialogRef.data.deleteProtection) {
-    <p class="file-upload-dialog-content-text file-replace-dialog-content-text">
-      {{ 'luxc.file.replace.dialog.content.multiple' | transloco }}
-    </p>
-    } @if (!luxDialogRef.data.multiple && !luxDialogRef.data.deleteProtection) {
-    <p class="file-upload-dialog-content-text file-replace-dialog-content-text">
-      {{ 'luxc.file.replace.dialog.content' | transloco }}
-    </p>
-    } @if (luxDialogRef.data.deleteProtection) {
-    <lux-textbox class="file-upload-dialog-content-delete-protection file-replace-dialog-content-delete-protection" luxColor="red"
-      >{{ 'luxc.file.replace.dialog.deleteprotection' | transloco }}</lux-textbox
-    >
+      <p class="file-upload-dialog-content-text file-replace-dialog-content-text">
+        {{ 'luxc.file.replace.dialog.content.multiple' | transloco }}
+      </p>
+    }
+    @if (!luxDialogRef.data.multiple && !luxDialogRef.data.deleteProtection) {
+      <p class="file-upload-dialog-content-text file-replace-dialog-content-text">
+        {{ 'luxc.file.replace.dialog.content' | transloco }}
+      </p>
+    }
+    @if (luxDialogRef.data.deleteProtection) {
+      <lux-textbox class="file-upload-dialog-content-delete-protection file-replace-dialog-content-delete-protection" luxColor="red">{{
+        'luxc.file.replace.dialog.deleteprotection' | transloco
+      }}</lux-textbox>
     }
   </lux-dialog-content>
   <lux-dialog-actions class="lux-flex lux-flex-wrap">

@@ -1,24 +1,21 @@
-import { Directive, ElementRef, Input, Renderer2, inject } from '@angular/core';
+import { Directive, ElementRef, Renderer2, effect, inject, input } from '@angular/core';
 
 @Directive({ selector: '[luxNameAttr]' })
 export class LuxNameDirectiveDirective {
   protected elementRef = inject(ElementRef);
   protected renderer = inject(Renderer2);
 
-  _luxNameAttr? = '';
+  readonly luxNameAttr = input<string | undefined>('');
 
-  @Input()
-  get luxNameAttr() {
-    return this._luxNameAttr;
-  }
+  constructor() {
+    effect(() => {
+      const name = this.luxNameAttr();
 
-  set luxNameAttr(name: string | undefined) {
-    this._luxNameAttr = name;
-
-    if (this._luxNameAttr) {
-      this.renderer.setAttribute(this.elementRef.nativeElement, 'name', this._luxNameAttr);
-    } else {
-      this.renderer.removeAttribute(this.elementRef.nativeElement, 'name');
-    }
+      if (name) {
+        this.renderer.setAttribute(this.elementRef.nativeElement, 'name', name);
+      } else {
+        this.renderer.removeAttribute(this.elementRef.nativeElement, 'name');
+      }
+    });
   }
 }

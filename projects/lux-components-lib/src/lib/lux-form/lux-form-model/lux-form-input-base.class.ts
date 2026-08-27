@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, input, output } from '@angular/core';
 import { LuxFormComponentBase } from './lux-form-component-base.class';
 
 /**
@@ -7,25 +7,37 @@ import { LuxFormComponentBase } from './lux-form-component-base.class';
  */
 @Directive()
 export abstract class LuxFormInputBaseClass<T = any> extends LuxFormComponentBase<T> {
-  @Output() luxValueChange = new EventEmitter<T>();
-  @Output() luxBlur = new EventEmitter<FocusEvent>();
-  @Output() luxFocus = new EventEmitter<FocusEvent>();
+  readonly luxBlur = output<FocusEvent>();
+  readonly luxFocus = output<FocusEvent>();
 
-  @Input() luxPlaceholder = '';
-  @Input() luxTagId?: string;
-  @Input() luxName?: string;
-  @Input() luxAutocomplete = 'on';
+  readonly luxPlaceholder = input('');
+  readonly luxTagId = input<string | undefined>(undefined);
+  readonly luxName = input<string | undefined>(undefined);
+  readonly luxAutocomplete = input('on');
 
-  get luxValue(): T {
-    return this.getValue();
+  /**
+   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
+   * Wert liefern das Signal value() bzw. getValue().
+   */
+  readonly luxValue = input<T>(null as T);
+  readonly luxValueChange = output<T>();
+
+  constructor() {
+    super();
+
+    this.syncValueInputToFormControl(this.luxValue);
   }
 
-  @Input() set luxValue(value: T) {
-    this.setValue(value);
+  override ngOnInit() {
+    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
+    // löst der Initialwert - wie bisher - noch kein luxValueChange aus.
+    this._initialValue = this.luxValue();
+
+    super.ngOnInit();
   }
 
   override notifyFormValueChanged(formValue: any) {
-    // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden
+    // Aktualisierungen an dem FormControl-Value sollen auch nach außen bekannt gemacht werden.
     this.luxValueChange.emit(formValue);
   }
 }

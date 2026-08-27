@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxDialogRef } from '../../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-ref.class';
@@ -11,8 +11,15 @@ import { LuxDialogStructureComponent } from '../../../../lux-popups/lux-dialog/l
   selector: 'lux-lux-file-delete-dialog',
   templateUrl: './lux-file-delete-dialog.component.html',
   styleUrls: ['./lux-file-delete-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [LuxDialogStructureComponent, LuxDialogTitleComponent, LuxDialogContentComponent, LuxDialogActionsComponent, LuxButtonComponent, TranslocoPipe]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    LuxDialogStructureComponent,
+    LuxDialogTitleComponent,
+    LuxDialogContentComponent,
+    LuxDialogActionsComponent,
+    LuxButtonComponent,
+    TranslocoPipe
+  ]
 })
 export class LuxFileDeleteDialogComponent {
   luxDialogRef = inject<LuxDialogRef<void>>(LuxDialogRef);

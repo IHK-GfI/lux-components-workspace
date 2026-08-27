@@ -370,15 +370,15 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.formElementes.forEach((formComponent) => {
         if (formComponent) {
           if (formComponent.datepickerAuthentic && formComponent.datepickerAuthentic.matDatepicker) {
-            formComponent.datepickerAuthentic.matDatepicker.close();
+            formComponent.datepickerAuthentic.matDatepicker()?.close();
           } else if (formComponent.datetimepickerAuthentic && formComponent.datetimepickerAuthentic.dateTimeOverlayComponent) {
-            formComponent.datetimepickerAuthentic.dateTimeOverlayComponent.close();
+            formComponent.datetimepickerAuthentic.dateTimeOverlayComponent()?.close();
           } else if (formComponent.timepickerAuthentic && formComponent.timepickerAuthentic.matTimepicker) {
-            formComponent.timepickerAuthentic.matTimepicker.close();
+            formComponent.timepickerAuthentic.matTimepicker()?.close();
           } else if (formComponent.selectAuthentic && formComponent.selectAuthentic.matSelect) {
-            formComponent.selectAuthentic.matSelect.close();
+            formComponent.selectAuthentic.matSelect()?.close();
           } else if (formComponent.autoCompleteAuthentic) {
-            formComponent.autoCompleteAuthentic.matAutoComplete.closePanel();
+            formComponent.autoCompleteAuthentic.matAutoComplete()?.closePanel();
           } else if (formComponent.autoCompleteLookupAuthentic && formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger) {
             formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger.closePanel();
           } else if (formComponent.selectLookupAuthentic) {
@@ -474,4 +474,3 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     return newFilter;
   }
 }
-

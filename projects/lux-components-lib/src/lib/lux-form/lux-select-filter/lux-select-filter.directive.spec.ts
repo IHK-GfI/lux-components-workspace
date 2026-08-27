@@ -9,12 +9,7 @@ import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 @Component({
   selector: 'lux-test-component',
   template: `
-    <mat-select
-      [luxSelectFilter]="enableFilter"
-      [luxFilterLabelFn]="labelFn"
-
-      (luxFilterActiveChange)="onFilterActiveChange($event)"
-    >
+    <mat-select [luxSelectFilter]="enableFilter" [luxFilterLabelFn]="labelFn" (luxFilterActiveChange)="onFilterActiveChange($event)">
       @for (item of items; track item) {
         <mat-option [value]="item">{{ item }}</mat-option>
       }
@@ -136,11 +131,7 @@ describe('LuxSelectFilterDirective', () => {
     (directive as any).matSelect._keyManager = keyManager;
     (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => firstOptionElement },
-          { _getHostElement: () => secondOptionElement }
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => firstOptionElement }, { _getHostElement: () => secondOptionElement }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -167,11 +158,7 @@ describe('LuxSelectFilterDirective', () => {
     (directive as any).matSelect._keyManager = keyManager;
     (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => firstOptionElement },
-          { _getHostElement: () => secondOptionElement }
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => firstOptionElement }, { _getHostElement: () => secondOptionElement }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
@@ -299,18 +286,17 @@ describe('LuxSelectFilterDirective', () => {
     };
     const hiddenOption = document.createElement('div');
     hiddenOption.style.display = 'none';
-    const visibleOption = { _getHostElement: () => document.createElement('div'), _selectViaInteraction: jasmine.createSpy('_selectViaInteraction') };
+    const visibleOption = {
+      _getHostElement: () => document.createElement('div'),
+      _selectViaInteraction: jasmine.createSpy('_selectViaInteraction')
+    };
     const closeSpy = jasmine.createSpy('close');
 
     spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
     (directive as any).matSelect._keyManager = keyManager;
     (directive as any).matSelect.close = closeSpy;
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => hiddenOption },
-          visibleOption
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => hiddenOption }, visibleOption] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
@@ -328,8 +314,14 @@ describe('LuxSelectFilterDirective', () => {
         keyManager.activeItemIndex = index;
       })
     };
-    const firstOption = { _getHostElement: () => document.createElement('div'), _selectViaInteraction: jasmine.createSpy('_selectViaInteraction') };
-    const secondOption = { _getHostElement: () => document.createElement('div'), _selectViaInteraction: jasmine.createSpy('_selectViaInteraction') };
+    const firstOption = {
+      _getHostElement: () => document.createElement('div'),
+      _selectViaInteraction: jasmine.createSpy('_selectViaInteraction')
+    };
+    const secondOption = {
+      _getHostElement: () => document.createElement('div'),
+      _selectViaInteraction: jasmine.createSpy('_selectViaInteraction')
+    };
     const closeSpy = jasmine.createSpy('close');
 
     spyOnProperty((directive as any).matSelect, 'panelOpen', 'get').and.returnValue(true);
@@ -361,11 +353,7 @@ describe('LuxSelectFilterDirective', () => {
     (directive as any).matSelect._keyManager = keyManager;
     (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
     (directive as any).matSelect.options = {
-      toArray: () =>
-        [
-          { _getHostElement: () => firstOptionElement },
-          { _getHostElement: () => secondOptionElement }
-        ] as any[]
+      toArray: () => [{ _getHostElement: () => firstOptionElement }, { _getHostElement: () => secondOptionElement }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
@@ -391,10 +379,7 @@ describe('LuxSelectFilterDirective', () => {
     (directive as any).matSelect._scrollOptionIntoView = jasmine.createSpy('scrollOptionIntoView');
     (directive as any).matSelect.options = {
       toArray: () =>
-        [
-          { _getHostElement: () => document.createElement('div') },
-          { _getHostElement: () => document.createElement('div') }
-        ] as any[]
+        [{ _getHostElement: () => document.createElement('div') }, { _getHostElement: () => document.createElement('div') }] as any[]
     };
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'ArrowDown' }));

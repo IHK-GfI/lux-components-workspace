@@ -42,9 +42,9 @@
         #fileinputexamplewithoutform
       >
       </lux-file-input-ac>
-      @if (!clearOnError && !fileinputexamplewithoutform.formGroup.valid && fileinputexamplewithoutform.luxSelected) {
+      @if (!clearOnError && !fileinputexamplewithoutform.formGroup.valid && fileinputexamplewithoutform.value()) {
       <div class="lux-flex lux-gap-4">
-        <p>Datei "{{ fileinputexamplewithoutform.luxSelected.name }}" behalten?</p>
+        <p>Datei "{{ fileinputexamplewithoutform.value()!.name }}" behalten?</p>
         <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithoutForm(true)"></lux-button>
         <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithoutForm(false)"></lux-button>
       </div>
@@ -87,9 +87,9 @@
           #fileinputexamplewithform
         >
         </lux-file-input-ac>
-        @if (!clearOnError && !fileinputexamplewithform.formGroup.valid && fileinputexamplewithform.luxSelected) {
+        @if (!clearOnError && !fileinputexamplewithform.formGroup.valid && fileinputexamplewithform.value()) {
         <div class="lux-flex lux-gap-4">
-          <p>Datei "{{ fileinputexamplewithform.luxSelected.name }}" behalten?</p>
+          <p>Datei "{{ fileinputexamplewithform.value()!.name }}" behalten?</p>
           <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithForm(true)"></lux-button>
           <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithForm(false)"></lux-button>
         </div>

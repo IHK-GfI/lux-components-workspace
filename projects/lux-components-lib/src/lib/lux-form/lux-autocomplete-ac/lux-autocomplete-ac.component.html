@@ -3,14 +3,14 @@
     (mousedown)="onWrapperClick($event)"
     [luxFormComponent]="this"
     [formGroup]="formGroup"
-    [luxNoLabels]="luxNoLabels"
-    [luxNoBottomLabel]="luxNoBottomLabel"
-    [luxNoTopLabel]="luxNoTopLabel"
-    [luxLabelLongFormat]="luxLabelLongFormat"
+    [luxNoLabels]="luxNoLabels()"
+    [luxNoBottomLabel]="luxNoBottomLabel()"
+    [luxNoTopLabel]="luxNoTopLabel()"
+    [luxLabelLongFormat]="luxLabelLongFormat()"
     luxTagId="luxAutocompleteWrappper"
   >
     <div class="lux-input-row-authentic">
-      @if (inputPrefix) {
+      @if (inputPrefix()) {
         <span class="lux-input-prefix-container" matPrefix>
           <ng-content select="lux-input-ac-prefix"></ng-content>
         </span>
@@ -20,25 +20,25 @@
         matInput
         autocomplete="off"
         luxTagIdHandler
-        [luxNameAttr]="luxName"
-        [luxTagId]="luxTagId"
+        [luxNameAttr]="luxName()"
+        [luxTagId]="luxTagId()"
         [formControl]="formControl"
-        [placeholder]="luxPlaceholder"
+        [placeholder]="luxPlaceholder()"
         [matAutocomplete]="auto"
-        [readonly]="luxReadonly"
-        [required]="luxRequired"
+        [readonly]="luxReadonly()"
+        [required]="luxRequired()"
         (click)="onClick($event)"
         (blur)="luxBlur.emit($event)"
         (focus)="onFocus($event)"
         (focusin)="onFocusIn($event)"
         (focusout)="onFocusOut($event)"
-        [id]="uid"
-        [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
-        [luxAriaLabel]="luxAriaLabel"
-        [luxAriaLabelledby]="luxAriaLabelledby"
+        [id]="uid()"
+        [luxAriaDescribedby]="uid() + '-error ' + uid() + '-hint'"
+        [luxAriaLabel]="luxAriaLabel()"
+        [luxAriaLabelledby]="luxAriaLabelledby()"
         #autoCompleteInput
       />
-      @if (inputSuffix) {
+      @if (inputSuffix()) {
         <span class="lux-input-suffix-container" matSuffix>
           <ng-content select="lux-input-ac-suffix"></ng-content>
         </span>
@@ -46,7 +46,7 @@
       @if (showClearButton()) {
         <span
           class="lux-input-clear-btn-container"
-          [attr.aria-disabled]="luxDisabled ? 'true' : null"
+          [attr.aria-disabled]="luxDisabled() ? 'true' : null"
           matSuffix
           (mousedown)="onClearMouseDown($event)"
         >
@@ -54,7 +54,7 @@
             class="lux-input-clear-btn"
             [luxIconButton]="true"
             luxIconName="lux-interface-delete-circle"
-            [luxLabel]="luxClearAriaLabel || ('luxc.input.clear.btn.arialabel' | transloco)"
+            [luxLabel]="luxClearAriaLabel() || ('luxc.input.clear.btn.arialabel' | transloco)"
             (luxClicked)="clearInputValue($event)"
           ></lux-button>
         </span>
@@ -62,15 +62,15 @@
       <mat-autocomplete
         #auto="matAutocomplete"
         class="lux-autocomplete-panel-ac"
-        [class.lux-dense]="luxDense"
-        [panelWidth]="luxPanelWidth"
+        [class.lux-dense]="luxDense()"
+        [panelWidth]="luxPanelWidth()"
         [disableRipple]="true"
         [displayWith]="displayFn.bind(this)"
         (optionSelected)="selected($event)"
       >
-        @for (option of displayedOptions; track trackOption($index, option)) {
+        @for (option of displayedOptions(); track trackOption($index, option)) {
           <mat-option [value]="option">
-            <ng-container *ngTemplateOutlet="labelTemplate || optionTemplate; context: { $implicit: option }"></ng-container>
+            <ng-container *ngTemplateOutlet="labelTemplate() || optionTemplate; context: { $implicit: option }"></ng-container>
           </mat-option>
         }
       </mat-autocomplete>
@@ -79,8 +79,8 @@
 }
 
 <ng-template #optionTemplate let-option>
-  @if (option[luxOptionLabelProp]) {
-    {{ option | luxRenderProperty: luxOptionLabelProp }}
+  @if (option[luxOptionLabelProp()]) {
+    {{ option | luxRenderProperty: luxOptionLabelProp() }}
   } @else {
     {{ option }}
   }

@@ -73,13 +73,15 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (!this.formComponent.luxControlBinding) {
-      throw Error(`Die Formularkomponente "${this.formComponent.luxLabel}" hat kein Binding!`);
+    const controlBinding = this.formComponent.luxControlBinding();
+
+    if (!controlBinding) {
+      throw Error(`Die Formularkomponente "${this.formComponent.luxLabel()}" hat kein Binding!`);
     }
 
     this.filterItem = new LuxFilterItem<any>(
-      this.luxFilterLabel ? this.luxFilterLabel : this.formComponent.luxLabel,
-      this.formComponent.luxControlBinding,
+      this.luxFilterLabel ? this.luxFilterLabel : this.formComponent.luxLabel(),
+      controlBinding,
       this.formComponent
     );
     this.filterItem.color = this.luxFilterColor;
@@ -161,7 +163,7 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
         filterItem.component instanceof LuxAutocompleteAcComponent ||
         filterItem.component instanceof LuxRadioAcComponent)
     ) {
-      return (value as any)[filterItem.component.luxOptionLabelProp!];
+      return (value as any)[filterItem.component.luxOptionLabelProp()];
     } else if (filterItem.component instanceof LuxLookupComponent) {
       return filterItem.component.getLabel(value);
     } else {
@@ -170,21 +172,21 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
   }
 
   renderDateFn<T>(filterItem: LuxFilterItem<T>) {
-    return (filterItem.component as any).datepickerInput.nativeElement.value;
+    return (filterItem.component as LuxDatepickerAcComponent).datepickerInput()?.nativeElement.value;
   }
   renderDateAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as any).datepickerInput.nativeElement.value;
+    return (filterItem.component as LuxDatepickerAcComponent).datepickerInput()?.nativeElement.value;
   }
 
   renderDateTimeFn<T>(filterItem: LuxFilterItem<T>) {
-    return (filterItem.component as any).dateTimePickerInputEl.nativeElement.value;
+    return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl()?.nativeElement.value;
   }
   renderDateTimeAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl.nativeElement.value;
+    return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl()?.nativeElement.value;
   }
 
   renderTimeAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxTimepickerComponent).timepickerInput?.nativeElement.value;
+    return (filterItem.component as LuxTimepickerComponent).timepickerInput()?.nativeElement.value;
   }
 
   renderToggleFn<T>(filterItem: LuxFilterItem<T>, value: any) {

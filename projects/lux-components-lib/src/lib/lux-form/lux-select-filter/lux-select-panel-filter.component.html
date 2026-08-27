@@ -6,7 +6,7 @@
     [luxNoTopLabel]="true"
     [luxNoBottomLabel]="true"
     [luxHideCounterLabel]="true"
-    [luxPlaceholder]="placeholder"
+    [luxPlaceholder]="placeholder()"
     [luxValue]="currentFilterValue"
     luxAutocomplete="off"
     (luxValueChange)="onInput($event)"
@@ -18,7 +18,7 @@
           class="lux-select-panel-filter-clear-btn"
           [luxRounded]="true"
           luxIconName="lux-interface-delete-circle"
-          [luxLabel]="clearAriaLabel"
+          [luxLabel]="clearAriaLabel()"
           (mousedown)="onClearMouseDown($event)"
           (luxClicked)="onClear($event)"
         ></lux-button>

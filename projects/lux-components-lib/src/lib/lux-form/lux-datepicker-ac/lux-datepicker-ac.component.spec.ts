@@ -44,7 +44,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Vorbedingungen testen
       let matErrorEl = fixture.debugElement.query(By.css('mat-error'));
       expect(testComponent.formControl.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
       expect(matErrorEl).toBeFalsy();
 
       // Änderungen durchführen
@@ -104,7 +104,7 @@ describe('LuxDatepickerAcComponent', () => {
     it('Sollte einen Wert nach dem Rendern besitzen', fakeAsync(() => {
       // Vorbedingungen testen
       expect(testComponent.formControl.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
 
       // Änderungen durchführen
       testComponent.formControl.setValue('06/10/2015');
@@ -116,14 +116,14 @@ describe('LuxDatepickerAcComponent', () => {
       utcNullifiedDate.setUTCHours(0);
       const datepickerEl = fixture.debugElement.query(By.css('input'));
       expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('10.06.2015');
-      expect(datepickerComponent.luxValue).toEqual(utcNullifiedDate.toISOString());
+      expect(datepickerComponent.value()).toEqual(utcNullifiedDate.toISOString());
     }));
 
     it('Sollte den Wert aktualisieren', fakeAsync(() => {
       fixture.detectChanges();
       // Vorbedingungen testen
       expect(testComponent.formControl.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
 
       // Änderungen durchführen
       testComponent.formControl.setValue('6/10/2015');
@@ -135,7 +135,7 @@ describe('LuxDatepickerAcComponent', () => {
       utcNullifiedDate.setUTCHours(0);
       let datepickerEl = fixture.debugElement.query(By.css('input'));
       expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('10.06.2015');
-      expect(datepickerComponent.luxValue).toEqual(utcNullifiedDate.toISOString());
+      expect(datepickerComponent.value()).toEqual(utcNullifiedDate.toISOString());
 
       // Änderungen durchführen
       testComponent.formControl.setValue('7/10/2015');
@@ -145,14 +145,14 @@ describe('LuxDatepickerAcComponent', () => {
       utcNullifiedDate.setUTCMonth(6);
       datepickerEl = fixture.debugElement.query(By.css('input'));
       expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('10.07.2015');
-      expect(datepickerComponent.luxValue).toEqual(utcNullifiedDate.toISOString());
+      expect(datepickerComponent.value()).toEqual(utcNullifiedDate.toISOString());
     }));
 
     it('Sollte das Datum 01.0.2020 in 01.01.2020 umwandeln und nicht in 01.12.2019', fakeAsync(() => {
       fixture.detectChanges();
       // Vorbedingungen testen
       expect(testComponent.formControl.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
 
       // Änderungen durchführen
       testComponent.formControl.setValue('01.0.2020');
@@ -164,14 +164,14 @@ describe('LuxDatepickerAcComponent', () => {
       utcNullifiedDate.setUTCHours(0);
       const datepickerEl = fixture.debugElement.query(By.css('input'));
       expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('01.01.2020');
-      expect(datepickerComponent.luxValue).toEqual(utcNullifiedDate.toISOString());
+      expect(datepickerComponent.value()).toEqual(utcNullifiedDate.toISOString());
     }));
 
     it('Sollte das Datum 01122020 in 01.12.2020 umwandeln ', fakeAsync(() => {
       fixture.detectChanges();
       // Vorbedingungen testen
       expect(testComponent.formControl.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
 
       // Änderungen durchführen
       testComponent.formControl.setValue('01122020');
@@ -183,7 +183,7 @@ describe('LuxDatepickerAcComponent', () => {
       utcNullifiedDate.setUTCHours(0);
       const datepickerEl = fixture.debugElement.query(By.css('input'));
       expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('01.12.2020');
-      expect(datepickerComponent.luxValue).toEqual(utcNullifiedDate.toISOString());
+      expect(datepickerComponent.value()).toEqual(utcNullifiedDate.toISOString());
     }));
 
     it('Sollte den korrekten mit Nullen aufgefüllten UTC-Wert ausgeben', fakeAsync(() => {
@@ -192,7 +192,7 @@ describe('LuxDatepickerAcComponent', () => {
       utcDate.setUTCHours(0);
       // Vorbedingungen testen
       expect(testComponent.formControl.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
 
       // Änderungen durchführen
       testComponent.formControl.setValue('2000-01-01T10:15:23.000+01:00');
@@ -200,7 +200,7 @@ describe('LuxDatepickerAcComponent', () => {
 
       // Nachbedingungen testen
       expect(testComponent.formControl.value).toEqual(utcDate.toISOString());
-      expect(datepickerComponent.luxValue).toEqual(utcDate.toISOString());
+      expect(datepickerComponent.value()).toEqual(utcDate.toISOString());
 
       // Änderungen durchführen
       testComponent.formControl.setValue('2000-01-02T03:59:00.000-05:00');
@@ -209,7 +209,7 @@ describe('LuxDatepickerAcComponent', () => {
 
       // Nachbedingungen testen
       expect(testComponent.formControl.value).toEqual(utcDate.toISOString());
-      expect(datepickerComponent.luxValue).toEqual(utcDate.toISOString());
+      expect(datepickerComponent.value()).toEqual(utcDate.toISOString());
     }));
 
     it('Sollte required sein', fakeAsync(() => {
@@ -233,7 +233,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
       expect(testComponent.formControl.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
       expect(datepickerComponent.formControl.value).toBeFalsy();
 
       // Änderungen durchführen
@@ -245,7 +245,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen testen
       const expectedDate = '2005-02-05T00:00:00.000Z';
       expect(testComponent.formControl.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
     }));
   });
@@ -283,7 +283,7 @@ describe('LuxDatepickerAcComponent', () => {
     it('LuxValue Simple', fakeAsync(() => {
       // Vorbedingungen testen
       expect(testComponent.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
 
       // Änderungen durchführen
       testComponent.value = '10.07.2015';
@@ -292,7 +292,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen testen
       const datepickerEl = fixture.debugElement.query(By.css('input'));
       expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('10.07.2015');
-      expect(datepickerComponent.luxValue).toEqual(testComponent.value);
+      expect(datepickerComponent.value()).toEqual(testComponent.value);
 
       flush();
     }));
@@ -441,7 +441,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen testen
       matErrorEl = fixture.debugElement.query(By.css('mat-error'));
       expect(matErrorEl).toBeDefined();
-      expect(datepickerComponent.luxRequired).toBeTruthy();
+      expect(datepickerComponent.luxRequired()).toBeTruthy();
       expect(datepickerComponent.formControl.invalid).toBeTruthy();
 
       flush();
@@ -462,8 +462,8 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen testen
       expect(inputEl.attributes['readonly']).toBeTruthy();
       expect(toggleEl.disabled).toBeTruthy();
-      expect(datepickerComponent.luxReadonly).toBeTruthy();
-      expect(datepickerComponent.matDatepicker!.disabled).toBeTruthy();
+      expect(datepickerComponent.luxReadonly()).toBeTruthy();
+      expect(datepickerComponent.matDatepicker()!.disabled).toBeTruthy();
     }));
 
     it('LuxValidators', fakeAsync(() => {
@@ -601,7 +601,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
       expect(testComponent.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
       expect(datepickerComponent.formControl.value).toBeFalsy();
 
       // Änderungen durchführen
@@ -612,7 +612,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen prüfen
       let expectedDate = '2000-06-10T00:00:00.000Z';
       expect(testComponent.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
 
       // Änderungen durchführen
@@ -623,7 +623,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen prüfen
       expectedDate = '2001-06-10T00:00:00.000Z';
       expect(testComponent.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
 
       // Änderungen durchführen
@@ -634,7 +634,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen prüfen
       expectedDate = '2002-06-10T00:00:00.000Z';
       expect(testComponent.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
 
       // Änderungen durchführen
@@ -645,7 +645,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen prüfen
       expectedDate = '2003-06-10T00:00:00.000Z';
       expect(testComponent.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
 
       // Änderungen durchführen
@@ -656,7 +656,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen prüfen
       expectedDate = '2004-06-10T00:00:00.000Z';
       expect(testComponent.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
 
       // Änderungen durchführen
@@ -667,7 +667,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen prüfen
       expectedDate = '2005-06-10T00:00:00.000Z';
       expect(testComponent.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
     }));
 
@@ -675,7 +675,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
       expect(testComponent.value).toBeFalsy();
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
       expect(datepickerComponent.formControl.value).toBeFalsy();
 
       // Änderungen durchführen
@@ -688,7 +688,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Nachbedingungen testen
       const expectedDate = '2005-02-05T00:00:00.000Z';
       expect(testComponent.value).toEqual(expectedDate);
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
     }));
 
@@ -696,7 +696,7 @@ describe('LuxDatepickerAcComponent', () => {
       // Vorbedingungen testen
       const spy = spyOn(datepickerComponent, 'notifyFormValueChanged');
       LuxTestHelper.wait(fixture);
-      expect(datepickerComponent.luxValue).toBeFalsy();
+      expect(datepickerComponent.value()).toBeFalsy();
       expect(datepickerComponent.formControl.value).toBeFalsy();
       expect(spy).toHaveBeenCalledTimes(0);
 
@@ -712,7 +712,7 @@ describe('LuxDatepickerAcComponent', () => {
 
       // Nachbedingungen prüfen
       const expectedDate = '2200-01-01T00:00:00.000Z';
-      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+      expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
       expect(spy).toHaveBeenCalledTimes(251);
     }));

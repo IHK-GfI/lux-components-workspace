@@ -105,19 +105,19 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
     if (keepFile) {
       const fileCopy = { name: '', type: '' };
       Object.assign(fileCopy, this.selected);
-      this.fileBaseWithoutComponent.luxSelected = fileCopy;
+      this.fileBaseWithoutComponent.setValue(fileCopy);
     } else {
-      this.fileBaseWithoutComponent.luxSelected = null as any;
+      this.fileBaseWithoutComponent.setValue(null);
     }
   }
 
   onKeepFileWithForm(keepFile: boolean) {
     if (keepFile) {
       const fileCopy = { name: '', type: '' };
-      Object.assign(fileCopy, this.fileBaseWithComponent.luxSelected);
-      this.fileBaseWithComponent.luxSelected = fileCopy;
+      Object.assign(fileCopy, this.fileBaseWithComponent.value());
+      this.fileBaseWithComponent.setValue(fileCopy);
     } else {
-      this.fileBaseWithComponent.luxSelected = null as any;
+      this.fileBaseWithComponent.setValue(null);
     }
   }
 

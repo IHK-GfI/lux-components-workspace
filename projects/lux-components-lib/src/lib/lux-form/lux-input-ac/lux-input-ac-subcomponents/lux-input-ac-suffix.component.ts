@@ -1,11 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'lux-input-ac-suffix',
   template: ` <ng-content></ng-content> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: []
 })
-export class LuxInputAcSuffixComponent {
-  constructor() {}
-}
+export class LuxInputAcSuffixComponent {}

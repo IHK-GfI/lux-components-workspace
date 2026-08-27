@@ -1,54 +1,54 @@
 @if (formGroup) {
-<lux-form-control-wrapper
-  (click)="!luxDisabled && !luxReadonly ? datepickerInput.focus() : null"
-  [luxFormComponent]="this"
-  [formGroup]="formGroup"
-  [luxNoLabels]="luxNoLabels"
-  [luxNoBottomLabel]="luxNoBottomLabel"
-  [luxNoTopLabel]="luxNoTopLabel"
-  [luxLabelLongFormat]="luxLabelLongFormat"
-  luxTagId="luxDatepickerWrapper"
-  #datepickerFormControl
->
-  <div class="lux-input-row-authentic">
-    <input
-      matInput
-      luxTagIdHandler
-      [luxTagId]="luxTagId"
-      [matDatepicker]="datepicker"
-      [min]="min"
-      [max]="max"
-      [matDatepickerFilter]="_luxCustomFilter"
-      [placeholder]="luxPlaceholder"
-      [required]="luxRequired"
-      [readonly]="luxReadonly"
-      [formControl]="formControl"
-      [autocomplete]="luxAutocomplete"
-      (blur)="luxBlur.emit($event)"
-      (focus)="onFocus($event)"
-      (focusin)="onFocusIn($event)"
-      (focusout)="onFocusOut($event)"
-      [id]="uid"
-      [luxAriaDescribedby]="descripedBy()"
-      [luxAriaLabel]="luxAriaLabel"
-      [luxAriaLabelledby]="luxAriaLabelledby"
-      #datepickerInput
-    />
-    @if (luxShowToggle) {
-    <mat-datepicker-toggle [disabled]="luxDisabled || luxReadonly" [for]="datepicker" [disableRipple]="true">
-      <lux-icon matDatepickerToggleIcon luxIconName="lux-interface-calendar" class="lux-datepicker-toggle-icon"></lux-icon>
-    </mat-datepicker-toggle>
-    }
-    <mat-datepicker
-      [startView]="luxStartView"
-      [startAt]="start"
-      [touchUi]="luxTouchUi"
-      [disabled]="luxDisabled || luxReadonly"
-      [panelClass]="'lux-datepicker-panel'"
-      [calendarHeaderComponent]="getHeaderByTheme()"
-      #datepicker
-    >
-    </mat-datepicker>
-  </div>
-</lux-form-control-wrapper>
+  <lux-form-control-wrapper
+    (click)="!luxDisabled() && !luxReadonly() ? datepickerInput.focus() : null"
+    [luxFormComponent]="this"
+    [formGroup]="formGroup"
+    [luxNoLabels]="luxNoLabels()"
+    [luxNoBottomLabel]="luxNoBottomLabel()"
+    [luxNoTopLabel]="luxNoTopLabel()"
+    [luxLabelLongFormat]="luxLabelLongFormat()"
+    luxTagId="luxDatepickerWrapper"
+    #datepickerFormControl
+  >
+    <div class="lux-input-row-authentic">
+      <input
+        matInput
+        luxTagIdHandler
+        [luxTagId]="luxTagId()"
+        [matDatepicker]="datepicker"
+        [min]="min()"
+        [max]="max()"
+        [matDatepickerFilter]="luxCustomFilter()"
+        [placeholder]="luxPlaceholder()"
+        [required]="luxRequired()"
+        [readonly]="luxReadonly()"
+        [formControl]="formControl"
+        [autocomplete]="luxAutocomplete()"
+        (blur)="luxBlur.emit($event)"
+        (focus)="onFocus($event)"
+        (focusin)="onFocusIn($event)"
+        (focusout)="onFocusOut($event)"
+        [id]="uid()"
+        [luxAriaDescribedby]="describedBy()"
+        [luxAriaLabel]="luxAriaLabel()"
+        [luxAriaLabelledby]="luxAriaLabelledby()"
+        #datepickerInput
+      />
+      @if (luxShowToggle()) {
+        <mat-datepicker-toggle [disabled]="luxDisabled() || luxReadonly()" [for]="datepicker" [disableRipple]="true">
+          <lux-icon matDatepickerToggleIcon luxIconName="lux-interface-calendar" class="lux-datepicker-toggle-icon"></lux-icon>
+        </mat-datepicker-toggle>
+      }
+      <mat-datepicker
+        [startView]="luxStartView()"
+        [startAt]="start()"
+        [touchUi]="touchUi()"
+        [disabled]="luxDisabled() || luxReadonly()"
+        [panelClass]="'lux-datepicker-panel'"
+        [calendarHeaderComponent]="getHeaderByTheme()"
+        #datepicker
+      >
+      </mat-datepicker>
+    </div>
+  </lux-form-control-wrapper>
 }

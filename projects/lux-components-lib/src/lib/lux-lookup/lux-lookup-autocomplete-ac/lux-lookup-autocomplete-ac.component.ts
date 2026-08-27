@@ -1,5 +1,15 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatOption } from '@angular/material/core';
@@ -134,7 +144,7 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
    * @param clickEvent
    */
   onClick(clickEvent: any) {
-    if (!this.luxReadonly && !this.luxDisabled) {
+    if (!this.luxReadonly() && !this.luxDisabled()) {
       clickEvent.target.setSelectionRange(0, clickEvent.target.value.length);
       // Beim Klick, wenn kein Wert gesetzt ist, das Panel öffnen
       if (!this.luxValue && this.matAutocompleteTrigger) {
@@ -149,7 +159,7 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
    * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
    */
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled || this.luxReadonly) {
+    if (this.luxDisabled() || this.luxReadonly()) {
       return;
     }
 
@@ -171,7 +181,7 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
   }
 
   showClearButton(): boolean {
-    if (!this.luxClearable || this.luxReadonly || this.luxDisabled) {
+    if (!this.luxClearable || this.luxReadonly() || this.luxDisabled()) {
       return false;
     }
 

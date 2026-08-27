@@ -36,7 +36,7 @@ describe('LuxTimepickerComponent', () => {
 
     const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
     expect(testComponent.formControl.value).toEqual('1970-01-01T14:15:00.000Z');
-    expect(timepickerComponent.luxValue).toEqual('1970-01-01T14:15:00.000Z');
+    expect(timepickerComponent.value()).toEqual('1970-01-01T14:15:00.000Z');
     expect(inputEl.value).toEqual('14:15');
   }));
 
@@ -57,7 +57,7 @@ describe('LuxTimepickerComponent', () => {
     LuxTestHelper.wait(fixture);
 
     expect(testComponent.timeControl.value).toEqual('2026-06-18T09:30:00.000Z');
-    expect(timepickerComponent.luxValue).toEqual('2026-06-18T09:30:00.000Z');
+    expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
   }));
 
   it('sollte die Kombination ohne Reactive-Form synchron halten', fakeAsync(() => {
@@ -83,8 +83,8 @@ describe('LuxTimepickerComponent', () => {
     LuxTestHelper.wait(fixture);
 
     expect(testComponent.combinedISO).toEqual('2026-06-18T09:30:00.000Z');
-    expect(datepickerComponent.luxValue).toEqual('2026-06-18T09:30:00.000Z');
-    expect(timepickerComponent.luxValue).toEqual('2026-06-18T09:30:00.000Z');
+    expect(datepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
+    expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
   }));
 
   it('sollte die Kombination in Reactive-Form mit gemeinsamem Control synchron halten', fakeAsync(() => {
@@ -111,8 +111,8 @@ describe('LuxTimepickerComponent', () => {
     LuxTestHelper.wait(fixture);
 
     expect(testComponent.combinedControl.value).toEqual('2026-06-18T09:30:00.000Z');
-    expect(datepickerComponent.luxValue).toEqual('2026-06-18T09:30:00.000Z');
-    expect(timepickerComponent.luxValue).toEqual('2026-06-18T09:30:00.000Z');
+    expect(datepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
+    expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
   }));
 
   describe('A11y', () => {

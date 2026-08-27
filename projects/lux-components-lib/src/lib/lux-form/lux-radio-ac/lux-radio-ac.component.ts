@@ -1,8 +1,8 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, HostBinding, Input, OnDestroy, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, computed, contentChild, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { Subscription } from 'rxjs';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -18,7 +18,10 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
   selector: 'lux-radio-ac',
   templateUrl: './lux-radio-ac.component.html',
   styleUrls: ['./lux-radio-ac.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  host: {
+    class: 'lux-pb-3'
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,
@@ -36,58 +39,49 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     LuxRenderPropertyPipe
   ]
 })
-export class LuxRadioAcComponent<O = any, V = any> extends LuxFormSelectableBase<O, V> implements OnDestroy {
+export class LuxRadioAcComponent<O = any, V = any> extends LuxFormSelectableBase<O, V> {
   private mediaObserver = inject(LuxMediaQueryObserverService);
 
-  forceVertical = false;
+  readonly forceVertical = signal(false);
 
   // Potenziell eingebettetes Template für Darstellung der Labels
-  @ContentChild(TemplateRef) tempRef?: TemplateRef<any>;
+  readonly tempRef = contentChild(TemplateRef);
 
-  @HostBinding('class.lux-pb-3') pb3 = true;
-  @Input() luxGroupName = '';
-  @Input() luxOrientationVertical = true;
+  readonly luxGroupName = input('');
+  readonly luxOrientationVertical = input(true);
 
-  focused = false;
+  readonly focused = signal(false);
 
-  private mediaSubscription$: Subscription;
+  readonly isVertical = computed(() => this.luxOrientationVertical() || this.forceVertical());
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
+
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
 
   constructor() {
     super();
 
-    this.mediaSubscription$ = this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
-      this.forceVertical = this.mediaObserver.isXS();
-    });
-    this.forceVertical = this.mediaObserver.isXS();
-  }
+    this.mediaObserver
+      .getMediaQueryChangedAsObservable()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.forceVertical.set(this.mediaObserver.isXS()));
 
-  get isVertical(): boolean {
-    return this.luxOrientationVertical || this.forceVertical;
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-    this.mediaSubscription$.unsubscribe();
+    this.forceVertical.set(this.mediaObserver.isXS());
   }
 
   onFocusIn(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocusIn.emit(e);
   }
 
   onFocusOut(e: FocusEvent) {
-    this.focused = false;
+    this.focused.set(false);
     this.luxFocusOut.emit(e);
-  }
-
-  descripedBy() {
-    if (this.errorMessage) {
-      return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
-    }
   }
 
   isDisabled(option: any): boolean {

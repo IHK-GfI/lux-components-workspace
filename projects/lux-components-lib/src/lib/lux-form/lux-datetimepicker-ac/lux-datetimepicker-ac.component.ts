@@ -1,17 +1,16 @@
 import { Platform } from '@angular/cdk/platform';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
+  computed,
+  effect,
   inject,
+  input,
   signal,
-  ChangeDetectionStrategy
+  untracked,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
@@ -52,7 +51,7 @@ export const APP_DATE_TIME_FORMATS_AC = {
     { provide: DateAdapter, useClass: LuxDateTimePickerAcAdapter, deps: [MAT_DATE_LOCALE, Platform] },
     { provide: MAT_DATE_FORMATS, useValue: APP_DATE_TIME_FORMATS_AC }
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxFormControlWrapperComponent,
@@ -68,39 +67,76 @@ export const APP_DATE_TIME_FORMATS_AC = {
     LuxTagIdDirective
   ]
 })
-export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> implements AfterViewInit {
   private dateTimeAdapter = inject<DateAdapter<Date>>(DateAdapter);
 
-  @ViewChild(LuxDatetimeOverlayAcComponent) dateTimeOverlayComponent?: LuxDatetimeOverlayAcComponent;
-  @ViewChild('dateTimePickerInput', { read: ElementRef }) dateTimePickerInputEl!: ElementRef;
+  readonly dateTimeOverlayComponent = viewChild(LuxDatetimeOverlayAcComponent);
+  readonly dateTimePickerInputEl = viewChild<ElementRef>('dateTimePickerInput');
 
-  @Input() luxStartView: LuxStartAcView = 'month';
-  @Input() luxOpened = false;
-  @Input() luxStartDate?: string;
-  @Input() luxStartTime: number[] = [];
-  @Input() luxShowToggle = true;
-  @Input() luxCustomFilter?: LuxDateFilterAcFn;
-  @Input() luxMaxDate?: string;
-  @Input() luxMinDate?: string;
+  readonly luxStartView = input<LuxStartAcView>('month');
+  readonly luxOpened = input(false);
+  readonly luxStartDate = input<string | undefined>(undefined);
+  readonly luxStartTime = input<number[]>([]);
+  readonly luxShowToggle = input(true);
+  readonly luxCustomFilter = input<LuxDateFilterAcFn | undefined>(undefined);
+  readonly luxMaxDate = input<string | undefined>(undefined);
+  readonly luxMinDate = input<string | undefined>(undefined);
 
-  luxLocale = signal<string>('de-DE');
+  // Der Standard-Wert für Autocomplete wird für den Datetimepicker ausgeschaltet.
+  override readonly luxAutocomplete = input('off');
+
+  readonly luxLocale = signal<string>('de-DE');
+
+  readonly focused = signal(false);
+
+  readonly min = computed(() => this.parseDateTimeInput(this.luxMinDate()));
+  readonly max = computed(() => this.parseDateTimeInput(this.luxMaxDate()));
+
+  readonly start = computed(() => {
+    const startDate = this.luxStartDate();
+
+    if (typeof startDate !== 'string') {
+      return null;
+    }
+
+    const startDateArr = startDate.trim().split('.');
+    if (startDateArr.length !== 3) {
+      return null;
+    }
+
+    const start = new Date(0);
+    start.setUTCFullYear(+startDateArr[2], +startDateArr[1] - 1, +startDateArr[0]);
+    return start;
+  });
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
+
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
 
   dateTimeValidator: ValidatorFn = (): ValidationErrors | null => {
     let result = null;
+
+    const min = this.min();
+    const max = this.max();
 
     if (this.dateTimeInputValue) {
       const date = this.parseDateTime(this.dateTimeInputValue);
 
       if (date === null) {
         result = { matDatepickerParse: { text: this.dateTimeInputValue } };
-      } else if (this.min && this.compareDateWithTime(this.min, date) > 0) {
-        result = { matDatepickerMin: { min: this.min, actual: this.dateTimeInputValue } };
-      } else if (this.max && this.compareDateWithTime(date, this.max) > 0) {
-        result = { matDatepickerMax: { max: this.max, actual: this.dateTimeInputValue } };
+      } else if (min && this.compareDateWithTime(min, date) > 0) {
+        result = { matDatepickerMin: { min, actual: this.dateTimeInputValue } };
+      } else if (max && this.compareDateWithTime(date, max) > 0) {
+        result = { matDatepickerMax: { max, actual: this.dateTimeInputValue } };
       }
     } else {
       if (!this.inForm) {
-        if (this.luxRequired) {
+        if (this.luxRequired()) {
           result = { required: true };
         }
       }
@@ -109,27 +145,30 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     return result;
   };
 
-  min: Date | null = null;
-  max: Date | null = null;
-  start: Date | null = null;
-  focused = false;
+  // Code des Interfaces "MatDatepickerControl" - Start
+  disabled = false;
+  dateFilter?: DateFilterFn<any>;
+  stateChanges?: Observable<void>;
+  // Code des Interfaces "MatDatepickerControl" - Ende
 
   get selectedDate(): string | undefined {
     return typeof this.formControl.value === 'string' ? this.formControl.value : undefined;
   }
 
   get dateTimeInputValue() {
-    return this.dateTimePickerInputEl?.nativeElement.value;
+    return this.dateTimePickerInputEl()?.nativeElement.value;
   }
 
   set dateTimeInputValue(newValue: string) {
-    this.dateTimePickerInputEl.nativeElement.value = newValue;
+    const inputEl = this.dateTimePickerInputEl();
+
+    if (inputEl) {
+      inputEl.nativeElement.value = newValue;
+    }
   }
 
   constructor() {
     super();
-
-    this.luxAutocomplete = 'off';
 
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
       switch (lang) {
@@ -148,57 +187,36 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
       this.dateTimeAdapter.setLocale(this.luxLocale());
 
       // Input-Feld neu formatieren
-      if (this.formControl && this.dateTimePickerInputEl) {
+      if (this.formControl && this.dateTimePickerInputEl()) {
         this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
       }
+    });
+
+    effect(() => {
+      this.luxOpened();
+
+      // Eventuell gibt es ohne das Timeout sonst Fehler, weil die OverlayComponent noch nicht gesetzt ist
+      untracked(() => setTimeout(() => this.triggerOpenClose()));
     });
   }
 
   // Code des Interfaces "MatDatepickerControl" - Start
   getStartValue() {
-    return this.luxStartDate;
+    return this.luxStartDate();
   }
+
   getThemePalette(): LuxThemePalette {
     return undefined;
   }
-  disabled = false;
-  dateFilter?: DateFilterFn<any>;
+
   getConnectedOverlayOrigin(): ElementRef {
-    return this.dateTimePickerInputEl;
+    return this.dateTimePickerInputEl()!;
   }
 
   getOverlayLabelId() {
     return null;
   }
-  stateChanges?: Observable<void>;
   // Code des Interfaces "MatDatepickerControl" - Ende
-
-  ngOnChanges(simpleChanges: SimpleChanges) {
-    if (simpleChanges['luxOpened']) {
-      // Eventuell gibt es ohne das Timeout sonst Fehler, weil die OverlayComponent noch nicht gesetzt ist
-      setTimeout(() => {
-        this.triggerOpenClose();
-      });
-    }
-
-    if (simpleChanges['luxMaxDate'] && typeof simpleChanges['luxMaxDate'].currentValue === 'string') {
-      this.max = this.parseDateTime(simpleChanges['luxMaxDate'].currentValue);
-    }
-
-    if (simpleChanges['luxMinDate'] && typeof simpleChanges['luxMinDate'].currentValue === 'string') {
-      this.min = this.parseDateTime(simpleChanges['luxMinDate'].currentValue);
-    }
-
-    if (simpleChanges['luxStartDate'] && typeof simpleChanges['luxStartDate'].currentValue === 'string') {
-      const startDateArr = simpleChanges['luxStartDate'].currentValue.trim().split('.');
-      if (startDateArr.length === 3) {
-        this.start = new Date(0);
-        this.start.setUTCFullYear(+startDateArr[2], +startDateArr[1] - 1, +startDateArr[0]);
-      } else {
-        this.start = null;
-      }
-    }
-  }
 
   ngAfterViewInit() {
     this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
@@ -216,12 +234,12 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
   }
 
   onFocus(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocus.emit(e);
   }
 
   onFocusIn(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocusIn.emit(e);
   }
 
@@ -233,18 +251,8 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
         this.dateTimeInputValue = formattedDate;
       }
     }
-    this.focused = false;
+    this.focused.set(false);
     this.luxFocusOut.emit(event);
-  }
-
-  descripedBy() {
-    if (this.errorMessage) {
-      return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
-    }
   }
 
   override errorMessageModifier(_value: any, errors: LuxValidationErrors): string | undefined {
@@ -255,7 +263,7 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     } else if (errors['matDatepickerParse']) {
       return this.tService.translate('luxc.datetimepicker.error_message.invalid');
     } else if (errors['required']) {
-      if (this.dateTimePickerInputEl && this.dateTimeInputValue) {
+      if (this.dateTimeInputValue) {
         return this.tService.translate('luxc.datetimepicker.error_message.invalid');
       } else {
         return this.tService.translate('luxc.datetimepicker.error_message.empty');
@@ -265,8 +273,8 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     return undefined;
   }
 
-  protected override setValue(value: any) {
-    if (value !== this.luxValue) {
+  override setValue(value: any) {
+    if (value !== this.getValue()) {
       if (!this.formControl) {
         this._initialValue = value;
         return;
@@ -297,23 +305,20 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
   protected override updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
     const hasValidators = (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0);
 
-    // Zum Zeitpunkt dieses synchronen Aufrufs ist inForm noch false, weil Angular @Input()-Properties
-    // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
     if (!this.inForm) {
       setTimeout(() => {
-        // Der setTimeout-Callback feuert asynchron - nach ngOnInit. Zu diesem Zeitpunkt kann inForm
-        // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
-        // Guard würde setValidators() die Validatoren des FormControls überschreiben.
+        // Der setTimeout-Callback feuert asynchron. Zu diesem Zeitpunkt kann inForm bereits true
+        // sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen Guard würde
+        // setValidators() die Validatoren des FormControls überschreiben.
         if (this.inForm) {
           return;
         }
 
-        this._luxControlValidators = validators;
         this.formControl.setValidators(validators ?? null);
         this.formControl.addValidators(this.dateTimeValidator);
 
         if (checkRequiredValidator) {
-          if (this.luxRequired) {
+          if (this.luxRequired()) {
             this.formControl.addValidators(this.getRequiredValidator());
           } else {
             this.formControl.removeValidators(this.getRequiredValidator());
@@ -325,10 +330,14 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     } else if (hasValidators) {
       this.logger.warn(
         `
-Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding}) können ausschließlich über das Formular gesetzt werden,
+Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding()}) können ausschließlich über das Formular gesetzt werden,
 aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignoriert!`
       );
     }
+  }
+
+  private parseDateTimeInput(value: string | undefined): Date | null {
+    return typeof value === 'string' ? this.parseDateTime(value) : null;
   }
 
   private compareDateWithTime(first: Date, second: Date): number {
@@ -339,13 +348,16 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
 
   private setISOValue(isoValue: string) {
     setTimeout(() => {
+      const min = this.min();
+      const max = this.max();
+
       let minOk = true;
-      if (this.min && isoValue && this.dateTimeAdapter.compareDate(new Date(isoValue), this.min) < 0) {
+      if (min && isoValue && this.dateTimeAdapter.compareDate(new Date(isoValue), min) < 0) {
         minOk = false;
       }
 
       let maxOk = true;
-      if (this.max && isoValue && this.dateTimeAdapter.compareDate(new Date(isoValue), this.max) > 0) {
+      if (max && isoValue && this.dateTimeAdapter.compareDate(new Date(isoValue), max) > 0) {
         maxOk = false;
       }
 
@@ -359,6 +371,7 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
         emitModelToViewChange: false,
         emitViewToModelChange: false
       });
+      this.value.set(isoValue as any);
 
       if (!this.dateTimeInputValue && isoValue) {
         // Per Hand dem Input-Element einen formatierten String übergeben
@@ -368,10 +381,10 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
   }
 
   private triggerOpenClose() {
-    if (this.luxOpened) {
-      this.dateTimeOverlayComponent?.open();
+    if (this.luxOpened()) {
+      this.dateTimeOverlayComponent()?.open();
     } else {
-      this.dateTimeOverlayComponent?.close();
+      this.dateTimeOverlayComponent()?.close();
     }
   }
 

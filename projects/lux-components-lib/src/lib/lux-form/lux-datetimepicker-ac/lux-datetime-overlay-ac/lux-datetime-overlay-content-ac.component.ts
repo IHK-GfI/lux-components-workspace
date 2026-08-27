@@ -1,5 +1,5 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, inject, viewChild } from '@angular/core';
 import { MatCalendar } from '@angular/material/datepicker';
 import { MatError } from '@angular/material/form-field';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -38,8 +38,8 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
   private elementRef = inject(ElementRef);
   private themeService = inject(LuxThemeService);
 
-  @ViewChild('hoursInput') hoursInputComponent!: LuxInputAcComponent;
-  @ViewChild('minutesInput') minutesInputComponent!: LuxInputAcComponent;
+  readonly hoursInputComponent = viewChild.required<LuxInputAcComponent>('hoursInput');
+  readonly minutesInputComponent = viewChild.required<LuxInputAcComponent>('minutesInput');
 
   dateTimePicker!: LuxDatetimeOverlayAcComponent;
   selected: Date | null = null;
@@ -98,38 +98,33 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
       this.selected = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
       this.startDate = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
     } else {
-      if (this.dateTimePicker.luxStartDate) {
-        this.startDate = this.dateTimePicker.luxStartDate;
-        this.selected = this.startDate;
+      const startDate = this.dateTimePicker.luxStartDate();
+      const startTime = this.dateTimePicker.luxStartTime();
+
+      if (startDate) {
+        this.startDate = startDate;
+        this.selected = startDate;
       }
 
-      if (Array.isArray(this.dateTimePicker.luxStartTime) && this.dateTimePicker.luxStartTime.length === 2) {
-        this.hours =
-          this.dateTimePicker.luxStartTime[0] < 10 ? '0' + this.dateTimePicker.luxStartTime[0] : '' + this.dateTimePicker.luxStartTime[0];
-        this.minutes =
-          this.dateTimePicker.luxStartTime[1] < 10 ? '0' + this.dateTimePicker.luxStartTime[1] : '' + this.dateTimePicker.luxStartTime[1];
+      if (Array.isArray(startTime) && startTime.length === 2) {
+        this.hours = startTime[0] < 10 ? '0' + startTime[0] : '' + startTime[0];
+        this.minutes = startTime[1] < 10 ? '0' + startTime[1] : '' + startTime[1];
       } else {
         this.hours = '';
         this.minutes = '';
       }
     }
 
-    if (this.dateTimePicker.luxMinDate) {
+    const minDate = this.dateTimePicker.luxMinDate();
+    if (minDate) {
       this.minCalendarDate = new Date(0);
-      this.minCalendarDate.setUTCFullYear(
-        this.dateTimePicker.luxMinDate.getUTCFullYear(),
-        this.dateTimePicker.luxMinDate.getUTCMonth(),
-        this.dateTimePicker.luxMinDate.getUTCDate()
-      );
+      this.minCalendarDate.setUTCFullYear(minDate.getUTCFullYear(), minDate.getUTCMonth(), minDate.getUTCDate());
     }
 
-    if (this.dateTimePicker.luxMaxDate) {
+    const maxDate = this.dateTimePicker.luxMaxDate();
+    if (maxDate) {
       this.maxCalendarDate = new Date(0);
-      this.maxCalendarDate.setUTCFullYear(
-        this.dateTimePicker.luxMaxDate.getUTCFullYear(),
-        this.dateTimePicker.luxMaxDate.getUTCMonth(),
-        this.dateTimePicker.luxMaxDate.getUTCDate()
-      );
+      this.maxCalendarDate.setUTCFullYear(maxDate.getUTCFullYear(), maxDate.getUTCMonth(), maxDate.getUTCDate());
     }
   }
 
@@ -140,7 +135,7 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
   }
 
   ngOnInit(): void {
-    this.initDate(this.dateTimePicker.selectedDate);
+    this.initDate(this.dateTimePicker.selectedDate());
   }
 
   ngAfterViewInit() {
@@ -218,13 +213,13 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
 
   selectHours() {
     setTimeout(() => {
-      this.hoursInputComponent.inputElement.nativeElement.select();
+      this.hoursInputComponent().inputElement()?.nativeElement.select();
     });
   }
 
   selectMinutes() {
     setTimeout(() => {
-      this.minutesInputComponent.inputElement.nativeElement.select();
+      this.minutesInputComponent().inputElement()?.nativeElement.select();
     });
   }
 

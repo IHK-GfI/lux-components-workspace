@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxAutofocusDirective } from '../../../../lux-directives/lux-autofocus/lux-autofocus.directive';
@@ -23,15 +23,15 @@ import { ILuxFileObject } from '../../lux-file-model/lux-file-object.interface';
     TranslocoPipe
   ],
   templateUrl: './lux-file-rename-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './lux-file-rename-dialog.component.scss'
 })
 export class LuxFileRenameDialogComponent implements AfterViewInit {
   luxDialogRef = inject<LuxDialogRef<ILuxFileObject>>(LuxDialogRef);
 
-  @ViewChild(LuxInputAcComponent, { read: LuxInputAcComponent, static: true }) input!: LuxInputAcComponent;
+  readonly input = viewChild.required(LuxInputAcComponent);
 
   ngAfterViewInit(): void {
-    this.input.inputElement.nativeElement.select();
+    this.input().inputElement()?.nativeElement.select();
   }
 }

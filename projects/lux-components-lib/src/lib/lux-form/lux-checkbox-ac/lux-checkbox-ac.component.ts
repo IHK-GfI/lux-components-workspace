@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
@@ -14,7 +14,7 @@ import { LuxFormCheckableBaseClass } from '../lux-form-model/lux-form-checkable-
 @Component({
   selector: 'lux-checkbox-ac',
   templateUrl: './lux-checkbox-ac.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,
@@ -29,26 +29,25 @@ import { LuxFormCheckableBaseClass } from '../lux-form-model/lux-form-checkable-
     LuxTagIdDirective
   ]
 })
-export class LuxCheckboxAcComponent<T = boolean> extends LuxFormCheckableBaseClass<T> implements OnInit {
-  focused = false;
+export class LuxCheckboxAcComponent<T = boolean> extends LuxFormCheckableBaseClass<T> {
+  readonly focused = signal(false);
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
+
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
 
   onFocusIn(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocusIn.emit(e);
   }
 
   onFocusOut(e: FocusEvent) {
-    this.focused = false;
+    this.focused.set(false);
     this.luxFocusOut.emit(e);
-  }
-
-  descripedBy() {
-    if (this.errorMessage) {
-      return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
-    }
   }
 }

@@ -80,7 +80,7 @@ describe('LuxSliderAcComponent', () => {
     it('Sollte den Min- und Max-Wert nicht überschreiten', fakeAsync(() => {
       // Vorbedingungen testen
       expect(component.form.get('slider')!.value).toEqual(0);
-      expect(sliderComponent.luxValue).toEqual(0);
+      expect(sliderComponent.value()).toEqual(0);
 
       // Änderungen durchführen
       component.max = 50;
@@ -91,7 +91,7 @@ describe('LuxSliderAcComponent', () => {
 
       // Nachbedingungen prüfen
       expect(component.form.get('slider')!.value).toEqual(25);
-      expect(sliderComponent.luxValue).toEqual(25);
+      expect(sliderComponent.value()).toEqual(25);
 
       // Änderungen durchführen
       component.form.get('slider')!.setValue(55);
@@ -99,14 +99,14 @@ describe('LuxSliderAcComponent', () => {
 
       // Nachbedingungen prüfen
       expect(component.form.get('slider')!.value).toEqual(50);
-      expect(sliderComponent.luxValue).toEqual(50);
+      expect(sliderComponent.value()).toEqual(50);
     }));
 
     it('Sollte deaktiviert werden (über die Property)', fakeAsync(() => {
       // Vorbedingungen testen
       let disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeNull();
-      expect(sliderComponent.luxDisabled).toBe(false);
+      expect(sliderComponent.luxDisabled()).toBe(false);
 
       // Änderungen durchführen
       component.disabled = true;
@@ -115,7 +115,7 @@ describe('LuxSliderAcComponent', () => {
       // Nachbedingungen prüfen
       disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeDefined();
-      expect(sliderComponent.luxDisabled).toBe(true);
+      expect(sliderComponent.luxDisabled()).toBe(true);
     }));
 
     it('Sollte deaktiviert werden (über die FormControl)', fakeAsync(() => {
@@ -146,7 +146,7 @@ describe('LuxSliderAcComponent', () => {
     it('Sollte den Wert setzen', fakeAsync(() => {
       // Vorbedingungen testen
       expect(component.value).toEqual(0);
-      expect(sliderComponent.luxValue).toEqual(0);
+      expect(sliderComponent.value()).toEqual(0);
 
       // Änderungen durchführen
       component.value = 50;
@@ -154,7 +154,7 @@ describe('LuxSliderAcComponent', () => {
 
       // Nachbedingungen prüfen
       expect(component.value).toEqual(50);
-      expect(sliderComponent.luxValue).toEqual(50);
+      expect(sliderComponent.value()).toEqual(50);
     }));
 
     it('Sollte den Wert und Prozent-Wert richtig emitten (bei geändertem Max/Min Wert)', fakeAsync(() => {
@@ -185,7 +185,7 @@ describe('LuxSliderAcComponent', () => {
       // Vorbedingungen testen
       let disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeNull();
-      expect(sliderComponent.luxDisabled).toBe(false);
+      expect(sliderComponent.luxDisabled()).toBe(false);
 
       // Änderungen durchführen
       component.disabled = true;
@@ -194,13 +194,13 @@ describe('LuxSliderAcComponent', () => {
       // Nachbedingungen prüfen
       disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeDefined();
-      expect(sliderComponent.luxDisabled).toBe(true);
+      expect(sliderComponent.luxDisabled()).toBe(true);
     }));
 
     it('Sollte den Min- und Max-Wert nicht überschreiten', fakeAsync(() => {
       // Vorbedingungen testen
       expect(component.value).toEqual(0);
-      expect(sliderComponent.luxValue).toEqual(0);
+      expect(sliderComponent.value()).toEqual(0);
 
       // Änderungen durchführen
       component.max = 50;
@@ -211,7 +211,7 @@ describe('LuxSliderAcComponent', () => {
 
       // Nachbedingungen prüfen
       expect(component.value).toEqual(25);
-      expect(sliderComponent.luxValue).toEqual(25);
+      expect(sliderComponent.value()).toEqual(25);
 
       // Änderungen durchführen
       component.value = 55;
@@ -219,7 +219,7 @@ describe('LuxSliderAcComponent', () => {
 
       // Nachbedingungen prüfen
       expect(component.value).toEqual(50);
-      expect(sliderComponent.luxValue).toEqual(50);
+      expect(sliderComponent.value()).toEqual(50);
     }));
 
     it('Sollte den Thumb-Label anzeigen und verstecken', fakeAsync(() => {

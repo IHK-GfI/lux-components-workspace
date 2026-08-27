@@ -1,39 +1,39 @@
 @if (formGroup) {
-<lux-form-control-wrapper
-  (click)="!luxDisabled && !luxReadonly ? textareaElement.focus() : null"
-  [luxFormComponent]="this"
-  [luxCounterLabel]="counterLabel"
-  [luxHideCounterLabel]="luxHideCounterLabel"
-  [luxNoLabels]="luxNoLabels"
-  [luxNoBottomLabel]="luxNoBottomLabel"
-  [luxNoTopLabel]="luxNoTopLabel"
-  [formGroup]="formGroup"
-  [luxLabelLongFormat]="luxLabelLongFormat"
-  luxTagId="luxTextareaWrapper"
->
-  <textarea
-    matInput
-    luxTagIdHandler
-    [luxNameAttr]="luxName"
-    [luxTagId]="luxTagId"
-    [placeholder]="luxPlaceholder"
-    [formControl]="formControl"
-    [luxMaxLengthAttr]="luxMaxLength"
-    [cdkTextareaAutosize]="true"
-    [cdkAutosizeMinRows]="luxMinRows"
-    [cdkAutosizeMaxRows]="luxMaxRows"
-    [required]="luxRequired"
-    [readonly]="luxReadonly"
-    [autocomplete]="luxAutocomplete"
-    (blur)="luxBlur.emit($event)"
-    (focus)="luxFocus.emit($event)"
-    (focusin)="luxFocusIn.emit($event)"
-    (focusout)="luxFocusOut.emit($event)"
-    [id]="uid"
-    [luxAriaDescribedby]="descripedBy()"
-    [luxAriaLabel]="luxAriaLabel"
-    [luxAriaLabelledby]="luxAriaLabelledby"
-    #textareaElement
-  ></textarea>
-</lux-form-control-wrapper>
+  <lux-form-control-wrapper
+    (click)="!luxDisabled() && !luxReadonly() ? textareaElement.focus() : null"
+    [luxFormComponent]="this"
+    [luxCounterLabel]="counterLabel()"
+    [luxHideCounterLabel]="luxHideCounterLabel()"
+    [luxNoLabels]="luxNoLabels()"
+    [luxNoBottomLabel]="luxNoBottomLabel()"
+    [luxNoTopLabel]="luxNoTopLabel()"
+    [formGroup]="formGroup"
+    [luxLabelLongFormat]="luxLabelLongFormat()"
+    luxTagId="luxTextareaWrapper"
+  >
+    <textarea
+      matInput
+      luxTagIdHandler
+      [luxNameAttr]="luxName()"
+      [luxTagId]="luxTagId()"
+      [placeholder]="luxPlaceholder()"
+      [formControl]="formControl"
+      [luxMaxLengthAttr]="luxMaxLength()"
+      [cdkTextareaAutosize]="true"
+      [cdkAutosizeMinRows]="luxMinRows()"
+      [cdkAutosizeMaxRows]="luxMaxRows()"
+      [required]="luxRequired()"
+      [readonly]="luxReadonly()"
+      [autocomplete]="luxAutocomplete()"
+      (blur)="luxBlur.emit($event)"
+      (focus)="luxFocus.emit($event)"
+      (focusin)="luxFocusIn.emit($event)"
+      (focusout)="luxFocusOut.emit($event)"
+      [id]="uid()"
+      [luxAriaDescribedby]="describedBy()"
+      [luxAriaLabel]="luxAriaLabel()"
+      [luxAriaLabelledby]="luxAriaLabelledby()"
+      #textareaElement
+    ></textarea>
+  </lux-form-control-wrapper>
 }

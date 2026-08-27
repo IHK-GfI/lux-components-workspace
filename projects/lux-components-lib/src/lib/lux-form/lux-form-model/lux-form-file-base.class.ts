@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Directive, ElementRef, EventEmitter, HostBinding, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
+import { Directive, ElementRef, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { isObservable, Observable, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -11,90 +11,89 @@ import { ILuxFileError, LuxFileErrorCause } from '../lux-file/lux-file-model/lux
 import { ILuxFileObject } from '../lux-file/lux-file-model/lux-file-object.interface';
 import { LuxFormComponentBase, LuxValidationErrors, ValidatorFnType } from './lux-form-component-base.class';
 
-@Directive()
+@Directive({
+  host: {
+    '[class.lux-file-highlight]': 'isDragActive()',
+    '(dragover)': 'onDragOver($event)',
+    '(dragleave)': 'onDragLeave($event)',
+    '(drop)': 'onDrop($event)'
+  }
+})
 export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   protected http = inject(HttpClient);
   protected liveAnnouncer = inject(LiveAnnouncer);
 
   defaultReadFileDelay = 1000;
 
-  private _luxAccept = '';
-  protected _luxCustomActionConfigs: ILuxFileActionConfig[] = [];
+  readonly progress = signal(-1);
+  readonly forceProgressIndeterminate = signal(false);
+  readonly displayClearErrorButton = signal(false);
+  readonly isDragActive = signal(false);
 
-  progress = -1;
-  forceProgressIndeterminate = false;
-  displayClearErrorButton = false;
+  readonly downloadLink = viewChild.required<ElementRef>('downloadLink');
+  readonly fileUploadInput = viewChild.required<ElementRef>('fileUpload');
 
-  @ViewChild('downloadLink', { read: ElementRef, static: true }) downloadLink!: ElementRef;
-  @ViewChild('fileUpload', { read: ElementRef, static: true }) fileUploadInput!: ElementRef;
+  readonly luxUploadReportProgress = input(false);
+  readonly luxContentsAsBlob = input(false);
+  readonly luxTagId = input<string | undefined>(undefined);
+  readonly luxMaxSizeMiB = input(10);
+  readonly luxMaxFileCount = input(100);
+  readonly luxCapture = input('');
+  readonly luxUploadUrl = input('');
+  readonly luxDnDActive = input(true);
+  readonly luxMaximumExtended = input(6);
 
-  @Output() luxSelectedChange = new EventEmitter<T>();
+  readonly luxCustomActionConfigs = input<ILuxFileActionConfig[], ILuxFileActionConfig[] | undefined>([], {
+    transform: (config) => config ?? []
+  });
 
-  @Input() luxUploadReportProgress = false;
-  @Input() luxContentsAsBlob = false;
-  @Input() luxTagId?: string;
-  @Input() luxMaxSizeMiB = 10;
-  @Input() luxMaxFileCount = 100;
-  @Input() luxCapture = '';
-  @Input() luxUploadUrl = '';
-  @Input() luxDnDActive = true;
-  @Input() luxMaximumExtended = 6;
+  readonly luxAccept = input<string, any>('', {
+    transform: (accepts) => (Array.isArray(accepts) ? accepts.join(',') : (accepts ?? ''))
+  });
 
-  @HostBinding('class.lux-file-highlight') isDragActive = false;
+  /**
+   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
+   * Wert liefern das Signal value() bzw. getValue().
+   */
+  readonly luxSelected = input<T>(null as T);
+  readonly luxSelectedChange = output<T>();
 
-  @HostListener('dragover', ['$event']) onDragOver(dragEvent: DragEvent) {
+  readonly progressMode = computed<LuxProgressModeType>(() =>
+    (this.progress() === 0 && !this.luxUploadReportProgress()) || this.forceProgressIndeterminate() ? 'indeterminate' : 'determinate'
+  );
+
+  readonly isProgressVisible = computed(() => this.progress() >= 0 || this.forceProgressIndeterminate());
+
+  constructor() {
+    super();
+
+    this.syncValueInputToFormControl(this.luxSelected);
+  }
+
+  override ngOnInit() {
+    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
+    // löst der Initialwert - wie bisher - noch kein luxSelectedChange aus.
+    this._initialValue = this.luxSelected();
+
+    super.ngOnInit();
+  }
+
+  onDragOver(dragEvent: DragEvent) {
     if (this.isDnDAllowed()) {
       this.handleDragOver(dragEvent);
     }
   }
 
-  @HostListener('dragleave', ['$event']) onDragLeave(dragEvent: DragEvent) {
+  onDragLeave(dragEvent: DragEvent) {
     if (this.isDnDAllowed()) {
       this.handleDragLeave(dragEvent);
     }
   }
 
-  @HostListener('drop', ['$event']) onDrop(dragEvent: DragEvent) {
+  onDrop(dragEvent: DragEvent) {
     if (this.isDnDAllowed()) {
       this.handleDrop(dragEvent);
     }
-  }
-
-  get luxCustomActionConfigs(): ILuxFileActionConfig[] {
-    return this._luxCustomActionConfigs;
-  }
-
-  @Input() set luxCustomActionConfigs(config: ILuxFileActionConfig[]) {
-    if (config) {
-      this._luxCustomActionConfigs = config;
-    }
-  }
-
-  get luxSelected(): T {
-    return this.getValue();
-  }
-
-  @Input() set luxSelected(selectedFiles: T) {
-    this.setValue(selectedFiles);
-  }
-
-  get luxAccept(): any {
-    return this._luxAccept;
-  }
-
-  @Input() set luxAccept(accepts: any) {
-    if (!accepts) {
-      accepts = '';
-    }
-    this._luxAccept = Array.isArray(accepts) ? accepts.join(',') : accepts;
-  }
-
-  get progressMode(): LuxProgressModeType {
-    return (this.progress === 0 && !this.luxUploadReportProgress) || this.forceProgressIndeterminate ? 'indeterminate' : 'determinate';
-  }
-
-  get isProgressVisible(): boolean {
-    return this.progress >= 0 || this.forceProgressIndeterminate;
   }
 
   /**
@@ -113,7 +112,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   downloadFile(file: ILuxFileObject | ILuxFileObject[]) {
     this.formControl.markAsTouched();
     const myFile: ILuxFileObject = Array.isArray(file) ? file[0] : file;
-    const downloadLink = this.downloadLink.nativeElement as HTMLAnchorElement;
+    const downloadLink = this.downloadLink().nativeElement as HTMLAnchorElement;
 
     // Workaround: Issue 505
     // Damit Pdf-Dateien runtergeladen werden, wird der Mime-Type
@@ -194,16 +193,17 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param files
    */
   async uploadFiles(files: ILuxFileObject[] | ILuxFileObject | null) {
-    if (!this.luxUploadUrl) {
-      this.forceProgressIndeterminate = false;
+    const uploadUrl = this.luxUploadUrl();
+    if (!uploadUrl) {
+      this.forceProgressIndeterminate.set(false);
       return Promise.resolve();
     }
 
-    if (this.luxUploadReportProgress) {
-      this.forceProgressIndeterminate = false;
+    if (this.luxUploadReportProgress()) {
+      this.forceProgressIndeterminate.set(false);
     }
 
-    this.progress = 0;
+    this.progress.set(0);
     // Ansonsten die Dateien in einem FormData-Objekt sammeln und über den httpClient hochladen
     const formData = new FormData();
     let selectedFiles = [];
@@ -221,17 +221,17 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
     await new Promise<void>((resolve, reject) => {
       const options: any = { responseType: 'blob' };
 
-      if (this.luxUploadReportProgress) {
+      if (this.luxUploadReportProgress()) {
         options.reportProgress = true;
         options.observe = 'events';
       }
 
-      this.http.post(this.luxUploadUrl, formData, options).subscribe(
+      this.http.post(uploadUrl, formData, options).subscribe(
         (event: any) => {
           // wenn wir eine determinierte Fortschrittsanzeige haben, dann muss der Fortschritt auch korrekt abgefangen werden
-          if (this.luxUploadReportProgress) {
+          if (this.luxUploadReportProgress()) {
             if (event.type === HttpEventType.UploadProgress) {
-              this.progress = Math.round((event.loaded / event.total) * 100);
+              this.progress.set(Math.round((event.loaded / event.total) * 100));
             } else if (event.type === HttpEventType.Response) {
               resolve();
             }
@@ -248,13 +248,13 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
       );
     }).then(
       () => {
-        this.progress = -1;
-        this.forceProgressIndeterminate = false;
+        this.progress.set(-1);
+        this.forceProgressIndeterminate.set(false);
         return Promise.resolve();
       },
       (error) => {
-        this.progress = -1;
-        this.forceProgressIndeterminate = false;
+        this.progress.set(-1);
+        this.forceProgressIndeterminate.set(false);
         return Promise.reject({
           cause: LuxFileErrorCause.UploadFileError,
           exception: error,
@@ -278,7 +278,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
       }
 
       // Prüfen ob Dateigröße überschritten worden ist
-      if (this.getFileSizeInMiB(file) > this.luxMaxSizeMiB) {
+      if (this.getFileSizeInMiB(file) > this.luxMaxSizeMiB()) {
         return Promise.reject({
           cause: LuxFileErrorCause.MaxSizeError,
           exception: this.getMaxSizeErrorMessage(file),
@@ -287,7 +287,8 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
       }
 
       // Prüfen ob der Dateityp "accepted" ist
-      const splitAccepted = this.luxAccept ? this.luxAccept.split(',') : [];
+      const accept = this.luxAccept();
+      const splitAccepted = accept ? accept.split(',') : [];
       const splitFileEnding = file.name.split('.');
       const fileEnding = `.${splitFileEnding[splitFileEnding.length - 1]}`;
       let isAccepted: boolean = splitAccepted.length === 0;
@@ -328,7 +329,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
         });
       }
 
-      if (this.luxContentsAsBlob) {
+      if (this.luxContentsAsBlob()) {
         // Wenn direkt die Blobs genutzt werden sollen, einfach die Datei als content merken
         newFiles.push({ name: file.name, content: file as Blob, type: file.type, size: file.size });
       } else {
@@ -372,7 +373,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param dragEvent
    */
   handleDragOver(dragEvent: DragEvent) {
-    this.isDragActive = true;
+    this.isDragActive.set(true);
     dragEvent.stopPropagation();
     dragEvent.preventDefault();
 
@@ -388,7 +389,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param dragEvent
    */
   handleDragLeave(dragEvent: DragEvent) {
-    this.isDragActive = false;
+    this.isDragActive.set(false);
 
     dragEvent.stopPropagation();
     dragEvent.preventDefault();
@@ -400,8 +401,8 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param dragEvent
    */
   handleDrop(dragEvent: DragEvent) {
-    this.forceProgressIndeterminate = true;
-    this.isDragActive = false;
+    this.forceProgressIndeterminate.set(true);
+    this.isDragActive.set(false);
     dragEvent.stopPropagation();
     dragEvent.preventDefault();
 
@@ -449,7 +450,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param error
    */
   protected setFormControlErrors(error: ILuxFileError) {
-    this.forceProgressIndeterminate = false;
+    this.forceProgressIndeterminate.set(false);
     // Vorherige definierte Fehler entfernen
     this.clearFormControlErrors();
     // Hier aktualisieren wir das Fehlerobjekt an dem zugrunde liegenden FormControl dieser Component
@@ -475,7 +476,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
     return this.tService.translate('luxc.form-file-base.error_message.max_file_size', {
       fileName: file.name,
       fileSizeInMiB: (+this.getFileSizeInMiB(file).toFixed(2)).toString(),
-      maxSizeMiB: (+this.luxMaxSizeMiB.toFixed(2)).toString()
+      maxSizeMiB: (+this.luxMaxSizeMiB().toFixed(2)).toString()
     });
   }
 
@@ -484,7 +485,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param file
    */
   protected getMaxFileCountMessage(): string {
-    return this.tService.translate('luxc.form-file-base.error_message.max_file_count', { maxFileCount: this.luxMaxFileCount.toString() });
+    return this.tService.translate('luxc.form-file-base.error_message.max_file_count', { maxFileCount: this.luxMaxFileCount().toString() });
   }
 
   /**
@@ -530,15 +531,9 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    */
   protected announceFileProcess(multiple: boolean) {
     if (multiple) {
-      this.liveAnnouncer.announce(
-        this.tService.translate('luxc.form-file-base.upload.files.announce'),
-        'assertive'
-      );
+      this.liveAnnouncer.announce(this.tService.translate('luxc.form-file-base.upload.files.announce'), 'assertive');
     } else {
-      this.liveAnnouncer.announce(
-        this.tService.translate('luxc.form-file-base.upload.file.announce'),
-        'assertive'
-      );
+      this.liveAnnouncer.announce(this.tService.translate('luxc.form-file-base.upload.file.announce'), 'assertive');
     }
   }
 
@@ -554,17 +549,14 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * @param fileName
    */
   protected announceFileRemove(fileName: string) {
-    this.liveAnnouncer.announce(
-      this.tService.translate('luxc.form-file-base.delete.one_file.announce', { fileName }),
-      'assertive'
-    );
+    this.liveAnnouncer.announce(this.tService.translate('luxc.form-file-base.delete.one_file.announce', { fileName }), 'assertive');
   }
 
   /**
    * Gibt wieder, ob Drag-and-Drop gerade aktiv und möglich ist.
    */
   private isDnDAllowed(): boolean {
-    return this.luxDnDActive && !this.luxDisabled && !this.luxReadonly;
+    return this.luxDnDActive() && !this.luxDisabled() && !this.luxReadonly();
   }
 
   noop() {}
@@ -576,7 +568,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
       return this.getMaxFileCountMessage();
     } else if (errors[LuxFileErrorCause.ReadingFileError]) {
       return this.getReadingFileErrorMessage(errors[LuxFileErrorCause.ReadingFileError].file);
-    }else if (errors[LuxFileErrorCause.UploadFileError]) {
+    } else if (errors[LuxFileErrorCause.UploadFileError]) {
       return this.getUploadFileErrorMessage(errors[LuxFileErrorCause.UploadFileError].file);
     } else if (errors[LuxFileErrorCause.FileNotAccepted]) {
       return this.getFileNotAcceptedMessage(errors[LuxFileErrorCause.FileNotAccepted].file);
@@ -588,15 +580,15 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   }
 
   protected override notifyFormValueChanged() {
-    this.luxSelectedChange.emit(this.luxSelected);
+    this.luxSelectedChange.emit(this.getValue());
 
     // Wir leeren nach jedem Value-Change das Input, da wir das FormControl bereits als SSoT besitzen
-    // und das Input durch den Browser gelegentlich sonst geblockt werden (wenn eine Datei ausgewählt worden ist)
-    this.fileUploadInput.nativeElement.value = null;
+    // und das Input durch den Browser gelegentlich sonst geblockt wird (wenn eine Datei ausgewählt worden ist).
+    this.fileUploadInput().nativeElement.value = null;
   }
 
   protected override updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
-    if (!validators && this.luxRequired) {
+    if (!validators && this.luxRequired()) {
       validators = Validators.required;
     }
 
@@ -627,15 +619,15 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
       const errorKeys: string[] = Object.keys(this.formControl.errors);
       const controlKeys: string[] = Object.values(LuxFileErrorCause);
 
-      this.displayClearErrorButton = errorKeys.filter((value) => controlKeys.includes(value)).length > 0;
-      if (this.displayClearErrorButton) {
-        this.fileUploadInput.nativeElement.value = null;
+      this.displayClearErrorButton.set(errorKeys.filter((value) => controlKeys.includes(value)).length > 0);
+      if (this.displayClearErrorButton()) {
+        this.fileUploadInput().nativeElement.value = null;
       }
     }
   }
 
   onCloseErrorMessage() {
-    this.errorMessage = undefined;
+    this.errorMessage.set(undefined);
     this.formControl.updateValueAndValidity();
   }
 }

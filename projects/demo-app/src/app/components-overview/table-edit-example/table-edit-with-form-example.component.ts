@@ -148,7 +148,7 @@ export class TableEditWithFormExampleComponent {
   }
 
   private checkIfTargetIsInEditRow(element: LuxFormComponentBase<any>, event: Event) {
-    return element.formControlWrapperComponentRef?.nativeElement.contains(event.target);
+    return element.formControlWrapperComponentRef()?.nativeElement.contains(event.target);
   }
 
   private isEnterKey(event: { event: Event; rowItem: FormGroup; rowIndex: number }) {

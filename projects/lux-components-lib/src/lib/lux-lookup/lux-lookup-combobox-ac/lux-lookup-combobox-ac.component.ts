@@ -266,7 +266,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
    */
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled || this.luxReadonly) {
+    if (this.luxDisabled() || this.luxReadonly()) {
       return;
     }
 

@@ -1,12 +1,12 @@
 @if (formGroup) {
   <lux-form-control-wrapper
-    (click)="!luxDisabled && !luxReadonly ? timepickerInput.focus() : null"
+    (click)="!luxDisabled() && !luxReadonly() ? timepickerInput.focus() : null"
     [luxFormComponent]="this"
     [formGroup]="formGroup"
-    [luxNoLabels]="luxNoLabels"
-    [luxNoBottomLabel]="luxNoBottomLabel"
-    [luxNoTopLabel]="luxNoTopLabel"
-    [luxLabelLongFormat]="luxLabelLongFormat"
+    [luxNoLabels]="luxNoLabels()"
+    [luxNoBottomLabel]="luxNoBottomLabel()"
+    [luxNoTopLabel]="luxNoTopLabel()"
+    [luxLabelLongFormat]="luxLabelLongFormat()"
     luxTagId="luxTimepickerWrapper"
     #timepickerFormControl
   >
@@ -14,32 +14,32 @@
       <input
         matInput
         luxTagIdHandler
-        [luxTagId]="luxTagId"
+        [luxTagId]="luxTagId()"
         [matTimepicker]="timepicker"
-        [matTimepickerMin]="min"
-        [matTimepickerMax]="max"
+        [matTimepickerMin]="min()"
+        [matTimepickerMax]="max()"
         [matTimepickerOpenOnClick]="false"
-        [placeholder]="luxPlaceholder"
-        [required]="luxRequired"
-        [readonly]="luxReadonly"
+        [placeholder]="luxPlaceholder()"
+        [required]="luxRequired()"
+        [readonly]="luxReadonly()"
         [formControl]="formControl"
-        [autocomplete]="luxAutocomplete"
+        [autocomplete]="luxAutocomplete()"
         (blur)="luxBlur.emit($event)"
         (focus)="onFocus($event)"
         (focusin)="onFocusIn($event)"
         (focusout)="onFocusOut($event)"
-        [id]="uid"
-        [luxAriaDescribedby]="descripedBy()"
-        [luxAriaLabel]="luxAriaLabel"
-        [luxAriaLabelledby]="luxAriaLabelledby"
+        [id]="uid()"
+        [luxAriaDescribedby]="describedBy()"
+        [luxAriaLabel]="luxAriaLabel()"
+        [luxAriaLabelledby]="luxAriaLabelledby()"
         #timepickerInput
       />
-      @if (luxShowToggle) {
-        <mat-timepicker-toggle [disabled]="luxDisabled || luxReadonly" [for]="timepicker" [disableRipple]="true">
+      @if (luxShowToggle()) {
+        <mat-timepicker-toggle [disabled]="luxDisabled() || luxReadonly()" [for]="timepicker" [disableRipple]="true">
           <lux-icon matTimepickerToggleIcon luxIconName="lux-interface-time-clock-circle" class="lux-timepicker-toggle-icon"></lux-icon>
         </mat-timepicker-toggle>
       }
-      <mat-timepicker [interval]="luxInterval" (selected)="onTimeOptionSelected($event)" #timepicker></mat-timepicker>
+      <mat-timepicker [interval]="luxInterval()" (selected)="onTimeOptionSelected($event)" #timepicker></mat-timepicker>
     </div>
   </lux-form-control-wrapper>
 }

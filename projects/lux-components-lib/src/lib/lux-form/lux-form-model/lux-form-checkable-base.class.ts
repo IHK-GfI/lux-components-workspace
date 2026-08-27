@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, input, output } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { LuxFormComponentBase, LuxValidationErrors } from './lux-form-component-base.class';
 
@@ -8,24 +8,35 @@ import { LuxFormComponentBase, LuxValidationErrors } from './lux-form-component-
  */
 @Directive()
 export abstract class LuxFormCheckableBaseClass<T> extends LuxFormComponentBase<T> {
-  @Output() luxCheckedChange = new EventEmitter<boolean>();
+  readonly luxTagId = input<string | undefined>(undefined);
 
-  @Input() luxTagId?: string;
+  /**
+   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
+   * Wert liefern das Signal value() bzw. getValue().
+   */
+  readonly luxChecked = input<T>(null as T);
+  readonly luxCheckedChange = output<boolean>();
 
-  get luxChecked() {
-    return this.getValue();
+  constructor() {
+    super();
+
+    this.syncValueInputToFormControl(this.luxChecked);
   }
 
-  @Input() set luxChecked(checked: T) {
-    this.setValue(checked);
+  override ngOnInit() {
+    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
+    // löst der Initialwert - wie bisher - noch kein luxCheckedChange aus.
+    this._initialValue = this.luxChecked();
+
+    super.ngOnInit();
   }
 
   override notifyFormValueChanged(formValue: boolean) {
-    // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden
+    // Aktualisierungen an dem FormControl-Value sollen auch nach außen bekannt gemacht werden.
     this.luxCheckedChange.emit(formValue);
 
     // Bei luxRequired = true && einem false-Wert entsprechend einen Fehler setzen
-    if (formValue === false && this.luxRequired && this.formControl.errors === null) {
+    if (formValue === false && this.luxRequired() && this.formControl.errors === null) {
       this.formControl.setErrors({ required: true });
     }
   }

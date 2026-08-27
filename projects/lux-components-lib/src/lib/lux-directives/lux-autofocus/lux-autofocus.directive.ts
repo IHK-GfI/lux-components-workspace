@@ -68,11 +68,11 @@ export class LuxAutofocusDirective implements AfterViewInit {
       // Wenn das Element ein Autocomplete ist, wird das Panel geschlossen,
       // da es sonst geöffnet wird, wenn das Element fokussiert wird.
       if (this.luxAutofocusComponent instanceof LuxAutocompleteAcComponent) {
-        this.luxAutofocusComponent.matAutoComplete.closePanel();
+        this.luxAutofocusComponent.matAutoComplete()?.closePanel();
       } else if (this.luxAutofocusComponent instanceof LuxLookupAutocompleteAcComponent) {
         this.luxAutofocusComponent.matAutocompleteTrigger?.closePanel();
       } else if (this.luxAutofocusComponent instanceof LuxChipsAcComponent) {
-        this.luxAutofocusComponent.matAutocompleteTrigger?.closePanel();
+        this.luxAutofocusComponent.matAutocompleteTrigger()?.closePanel();
       }
     });
   }

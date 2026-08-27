@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, untracked, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
-import { Subscription } from 'rxjs';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -16,11 +16,13 @@ export declare type LuxDisplayWithAcFnType = (value: number) => string;
 export declare type LuxSliderAcTickInterval = 'auto' | number;
 export declare type LuxSliderAcColor = 'primary' | 'accent' | 'warn';
 
+const defaultDisplayWithFn: LuxDisplayWithAcFnType = (value: number) => (value ? '' + value : '0');
+
 @Component({
   selector: 'lux-slider-ac',
   templateUrl: './lux-slider-ac.component.html',
   styleUrls: ['./lux-slider-ac.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,
@@ -36,116 +38,68 @@ export declare type LuxSliderAcColor = 'primary' | 'accent' | 'warn';
     LuxTabIndexDirective
   ]
 })
-export class LuxSliderAcComponent extends LuxFormComponentBase<number> implements OnInit, OnChanges, OnDestroy {
-  @ViewChild(MatSlider) matSlider?: MatSlider;
+export class LuxSliderAcComponent extends LuxFormComponentBase<number> {
+  readonly matSlider = viewChild(MatSlider);
 
-  @Output() luxChange = new EventEmitter<number>();
-  @Output() luxInput = new EventEmitter<number>();
-  @Output() luxValueChange = new EventEmitter<number>();
-  @Output() luxValuePercent = new EventEmitter<number>();
+  readonly luxChange = output<number>();
+  readonly luxInput = output<number>();
+  readonly luxValuePercent = output<number>();
 
-  @Input() luxColor: LuxSliderAcColor = 'primary';
-  @Input() luxShowThumbLabel = true;
-  @Input() luxTagId?: string;
+  readonly luxColor = input<LuxSliderAcColor>('primary');
+  readonly luxShowThumbLabel = input(true);
+  readonly luxTagId = input<string | undefined>(undefined);
+  readonly luxMax = input(100);
+  readonly luxMin = input(0);
+  readonly luxStep = input(1);
 
-  get luxValue(): number {
-    const value = this.getValue();
-    return value ?? 0;
-  }
+  readonly luxDisplayWith = input<LuxDisplayWithAcFnType, LuxDisplayWithAcFnType | undefined>(defaultDisplayWithFn, {
+    transform: (displayFn) => displayFn ?? defaultDisplayWithFn
+  });
 
-  @Input() set luxValue(value: number) {
-    if (!this.luxReadonly && !this.luxDisabled) {
-      this.setValue(value);
+  /**
+   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
+   * Wert liefern das Signal value() bzw. getValue().
+   */
+  readonly luxValue = input(0);
+  readonly luxValueChange = output<number>();
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
     }
-  }
 
-  _luxMax = 100;
-  override _luxRequired = false;
-  _luxMin = 0;
-  _luxStep = 1;
-  _luxDisplayWith: LuxDisplayWithAcFnType = (value: number) => (value ? '' + value : '0');
+    return this.formHintComponent() || this.luxHint() ? this.uid() + '-hint' : undefined;
+  });
 
-  subscription?: Subscription;
+  constructor() {
+    super();
 
-  get luxDisplayWith() {
-    return this._luxDisplayWith;
-  }
+    this.syncValueInputToFormControl(this.luxValue);
 
-  @Input()
-  set luxDisplayWith(displayFn: LuxDisplayWithAcFnType | undefined) {
-    this._luxDisplayWith = displayFn ?? ((value) => (value ? '' + value : '0'));
-  }
+    effect(() => {
+      if (this.luxRequired()) {
+        untracked(() => this.logger.error('The LuxSlider cannot be marked as required.'));
+      }
+    });
 
-  get luxMax() {
-    return this._luxMax;
-  }
-
-  @Input() set luxMax(value: number) {
-    this._luxMax = value;
-
-    if (value > 0 && value > this.luxMin) {
-      this._luxMax = value;
-    }
-  }
-
-  get luxMin() {
-    return this._luxMin;
-  }
-
-  @Input() set luxMin(value: number) {
-    this._luxMin = value;
-
-    if (value >= 0 && value < this.luxMax) {
-      this._luxMin = value;
-    }
-  }
-
-  get luxStep() {
-    return this._luxStep;
-  }
-
-  @Input() set luxStep(value: number) {
-    this._luxStep = value;
-
-    if (value <= this.luxMax - this.luxMin) {
-      this._luxStep = value;
-    }
-  }
-
-  override get luxRequired() {
-    return this._luxRequired;
-  }
-
-  @Input() override set luxRequired(value: boolean) {
-    this._luxRequired = value;
-
-    if (value) {
-      this.logger.error('The LuxSlider cannot be marked as required.');
-    }
+    effect(() => {
+      this.luxDisabled();
+      untracked(() => this.redrawSliderWorkaround());
+    });
   }
 
   override ngOnInit() {
+    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
+    // löst der Initialwert - wie bisher - noch kein luxValueChange aus.
+    this._initialValue = this.luxValue();
+
     super.ngOnInit();
 
-    this.subscription = this.formControl.statusChanges.subscribe((status: string) => {
+    this.formControl.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status: string) => {
       if (status === 'DISABLED') {
         this.redrawSliderWorkaround();
       }
     });
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  ngOnChanges(simpleChanges: SimpleChanges) {
-    if (simpleChanges['luxDisabled']) {
-      this.redrawSliderWorkaround();
-    }
   }
 
   /**
@@ -153,7 +107,7 @@ export class LuxSliderAcComponent extends LuxFormComponentBase<number> implement
    * @param value
    */
   onChange(value: number) {
-    this.luxValue = value;
+    this.setValue(value);
     this.luxChange.emit(value);
   }
 
@@ -162,33 +116,32 @@ export class LuxSliderAcComponent extends LuxFormComponentBase<number> implement
    * @param value
    */
   onInput(value: number) {
-    this.luxValue = value;
+    this.setValue(value);
     this.luxInput.emit(value);
     if (!this.formControl.touched) {
       this.formControl.markAsTouched();
     }
   }
 
-  descripedBy() {
-    if (this.errorMessage) {
-      return this.uid + '-error';
-    } else {
-      return this.formHintComponent || this.luxHint ? this.uid + '-hint' : undefined;
+  protected override applyValueInput(value: number) {
+    // Im Readonly-/Disabled-Zustand darf ein von außen gesetzter Wert nicht übernommen werden.
+    if (!this.luxReadonly() && !this.luxDisabled()) {
+      super.applyValueInput(value);
     }
   }
 
   override notifyFormValueChanged(formValue: any) {
-    if (this.luxValue < this.luxMin) {
-      setTimeout(() => {
-        this.luxValue = this.luxMin;
-      });
-    } else if (this.luxValue > this.luxMax) {
-      setTimeout(() => {
-        this.luxValue = this.luxMax;
-      });
+    const min = this.luxMin();
+    const max = this.luxMax();
+    const value = (formValue ?? 0) as number;
+
+    if (value < min) {
+      setTimeout(() => this.setValue(min));
+    } else if (value > max) {
+      setTimeout(() => this.setValue(max));
     } else {
-      this.luxValueChange.emit(formValue);
-      this.luxValuePercent.emit(((formValue - this.luxMin) * 100) / (this.luxMax - this.luxMin));
+      this.luxValueChange.emit(value);
+      this.luxValuePercent.emit(((value - min) * 100) / (max - min));
     }
   }
 
@@ -197,11 +150,14 @@ export class LuxSliderAcComponent extends LuxFormComponentBase<number> implement
    * um den Thumb herum zeichnet.
    */
   private redrawSliderWorkaround() {
-    if (this.matSlider) {
-      this.matSlider.step = this.luxStep - 1;
+    const matSlider = this.matSlider();
+
+    if (matSlider) {
+      matSlider.step = this.luxStep() - 1;
       setTimeout(() => {
-        if (this.matSlider) {
-          this.matSlider.step = this.luxStep;
+        const slider = this.matSlider();
+        if (slider) {
+          slider.step = this.luxStep();
         }
       });
     }

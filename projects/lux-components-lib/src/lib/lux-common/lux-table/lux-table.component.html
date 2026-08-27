@@ -20,7 +20,7 @@
         <lux-icon luxIconName="lux-interface-search"></lux-icon>
       </lux-input-ac-prefix>
       <lux-input-ac-suffix>
-        <lux-icon luxIconName="lux-interface-delete-circle" class="lux-reset-icon lux-color-blue" (click)="filter.luxValue = ''"></lux-icon>
+        <lux-icon luxIconName="lux-interface-delete-circle" class="lux-reset-icon lux-color-blue" (click)="filter.setValue('')"></lux-icon>
       </lux-input-ac-suffix>
     </lux-input-ac>
     @if (luxShowColumnSelector()) {
@@ -33,7 +33,7 @@
         [luxPickValue]="columnVisibilityPickValueFN"
         [luxMultiple]="true"
         [luxOptions]="allColumnsForVisibility"
-        (luxSelectedChange)="onHiddenColumnsChange($event)"
+        (luxSelectedChange)="onHiddenColumnsChange($event ?? [])"
       >
         <ng-template let-option>
           {{ option.label }}

@@ -2,11 +2,11 @@
   <lux-form-control-wrapper
     (mousedown)="onWrapperClick($event)"
     [luxFormComponent]="this"
-    [luxNoLabels]="luxNoLabels"
-    [luxNoBottomLabel]="luxNoBottomLabel"
-    [luxNoTopLabel]="luxNoTopLabel"
+    [luxNoLabels]="luxNoLabels()"
+    [luxNoBottomLabel]="luxNoBottomLabel()"
+    [luxNoTopLabel]="luxNoTopLabel()"
     [formGroup]="formGroup"
-    [luxLabelLongFormat]="luxLabelLongFormat"
+    [luxLabelLongFormat]="luxLabelLongFormat()"
     luxTagId="luxLookupAutocompleteWrapper"
   >
     <div class="lux-input-row-authentic">
@@ -19,24 +19,24 @@
         autocomplete="off"
         luxTagIdHandler
         [luxTagId]="luxTagId"
-        [required]="luxRequired"
-        [readonly]="luxReadonly"
+        [required]="luxRequired()"
+        [readonly]="luxReadonly()"
         [formControl]="formControl"
         [errorStateMatcher]="stateMatcher"
         (blur)="luxBlur.emit($event)"
         (focus)="luxFocus.emit($event)"
         (focusin)="luxFocusIn.emit($event)"
         (focusout)="luxFocusOut.emit($event)"
-        [id]="uid"
-        [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
-        [luxAriaLabel]="luxAriaLabel"
-        [luxAriaLabelledby]="luxAriaLabelledby"
+        [id]="uid()"
+        [luxAriaDescribedby]="uid() + '-error ' + uid() + '-hint'"
+        [luxAriaLabel]="luxAriaLabel()"
+        [luxAriaLabelledby]="luxAriaLabelledby()"
         #autoCompleteInput
       />
       @if (showClearButton()) {
         <span
           class="lux-input-clear-btn-container"
-          [attr.aria-disabled]="luxDisabled ? 'true' : null"
+          [attr.aria-disabled]="luxDisabled() ? 'true' : null"
           matSuffix
           (mousedown)="onClearMouseDown($event)"
         >
@@ -52,7 +52,7 @@
       <mat-autocomplete
         #auto="matAutocomplete"
         class="lux-autocomplete-panel-ac"
-        [class.lux-dense]="luxDense"
+        [class.lux-dense]="luxDense()"
         [displayWith]="displayFn.bind(this)"
         [disableRipple]="true"
         (optionSelected)="selected($event)"

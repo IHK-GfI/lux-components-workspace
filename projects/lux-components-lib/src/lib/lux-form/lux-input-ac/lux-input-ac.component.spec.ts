@@ -139,7 +139,7 @@ describe('LuxInputAcComponent', () => {
         expect(luxInput.formControl.valid).toBe(false);
         expect(luxInput.formControl.errors).not.toBeNull();
         expect(luxInput.formControl.errors!['required']).toBe(true);
-        expect(luxInput.luxRequired).toBe(true);
+        expect(luxInput.luxRequired()).toBe(true);
 
         // Änderungen durchführen
         testComponent.formGroup.get('text')!.setValue('Hallo Welt!');
@@ -234,14 +234,14 @@ describe('LuxInputAcComponent', () => {
 
         // Initial: nicht required
         LuxTestHelper.wait(fixture);
-        expect(luxInput.luxRequired).toBe(false);
+        expect(luxInput.luxRequired()).toBe(false);
 
         // Required extern hinzufügen (wie setRequiredValidatorForFormControl(true, ...))
         textControl.addValidators(Validators.required);
         textControl.updateValueAndValidity();
         LuxTestHelper.wait(fixture);
 
-        expect(luxInput.luxRequired).toBe(true);
+        expect(luxInput.luxRequired()).toBe(true);
         textControl.markAsTouched();
         textControl.updateValueAndValidity();
         LuxTestHelper.wait(fixture);
@@ -254,7 +254,7 @@ describe('LuxInputAcComponent', () => {
         textControl.updateValueAndValidity();
         LuxTestHelper.wait(fixture);
 
-        expect(luxInput.luxRequired).toBe(false);
+        expect(luxInput.luxRequired()).toBe(false);
         expect(textControl.hasError('required')).toBeFalse();
         expect(textControl.valid).toBeTrue();
       }));
@@ -525,7 +525,7 @@ describe('LuxInputAcComponent', () => {
         expect(luxInput.formControl.valid).toBe(false);
         expect(luxInput.formControl.errors).not.toBeNull();
         expect(luxInput.formControl.errors!['required']).toBe(true);
-        expect(luxInput.luxRequired).toBe(true);
+        expect(luxInput.luxRequired()).toBe(true);
 
         // Änderungen durchführen
         testComponent.formGroup.get('amount0')!.setValue(100);
@@ -746,7 +746,7 @@ describe('LuxInputAcComponent', () => {
       // Fokus aktivieren
       const formControlEl = fixture.debugElement.query(By.directive(LuxFormControlWrapperComponent))!;
       const formControlComponent = formControlEl.injector.get<LuxFormControlWrapperComponent>(LuxFormControlWrapperComponent);
-      formControlComponent.focused = true;
+      formControlComponent.focused.set(true);
       // Wert ändern
       const inputEL = fixture.debugElement.query(By.css('input'));
       LuxTestHelper.typeInElement(inputEL.nativeElement, 'Lorem ipsum');
@@ -755,7 +755,7 @@ describe('LuxInputAcComponent', () => {
       let labelEl = fixture.debugElement.query(By.css('.lux-form-control-character-counter-authentic'));
       expect(labelEl.nativeElement.innerHTML.trim()).toContain('11/50');
       // Fokus deaktivieren
-      formControlComponent.focused = false;
+      formControlComponent.focused.set(false);
       fixture.detectChanges();
       // Prüfen
       labelEl = fixture.debugElement.query(By.css('.lux-form-control-character-counter-authentic'));
@@ -770,7 +770,7 @@ describe('LuxInputAcComponent', () => {
       // Fokus aktivieren
       const formControlEl = fixture.debugElement.query(By.directive(LuxFormControlWrapperComponent))!;
       const formControlComponent = formControlEl.injector.get<LuxFormControlWrapperComponent>(LuxFormControlWrapperComponent);
-      formControlComponent.focused = true;
+      formControlComponent.focused.set(true);
       // Wert ändern
       const inputEL = fixture.debugElement.query(By.css('input'));
       LuxTestHelper.typeInElement(inputEL.nativeElement, '');
@@ -789,7 +789,7 @@ describe('LuxInputAcComponent', () => {
       // Fokus aktivieren
       const formControlEl = fixture.debugElement.query(By.directive(LuxFormControlWrapperComponent))!;
       const formControlComponent = formControlEl.injector.get<LuxFormControlWrapperComponent>(LuxFormControlWrapperComponent);
-      formControlComponent.focused = true;
+      formControlComponent.focused.set(true);
 
       // Input-Value setzen
       LuxTestHelper.typeInElement(inputEl.nativeElement, 'Lorem ipsum');
@@ -800,7 +800,7 @@ describe('LuxInputAcComponent', () => {
       expect(labelEl.nativeElement.innerHTML.trim()).toContain('11/50');
 
       // TestComponent deaktivieren und Focus zurücksetzen
-      formControlComponent.focused = false;
+      formControlComponent.focused.set(false);
       testComponent.disabled = true;
       fixture.detectChanges();
 

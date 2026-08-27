@@ -1,16 +1,16 @@
 @if (formGroup) {
-<lux-form-control-wrapper
-  (mousedown)="onWrapperClick($event)"
-  [luxFormComponent]="this"
-  [formGroup]="formGroup"
-  [luxNoLabels]="luxNoLabels"
-  [luxNoBottomLabel]="luxNoBottomLabel"
-  [luxNoTopLabel]="luxNoTopLabel"
-  [luxLabelLongFormat]="luxLabelLongFormat"
-  [ngClass]="matSelect && matSelect.panelOpen ? 'lux-panel-opened' : ''"
-  luxTagId="luxSelectWrapper"
->
-  <!--
+  <lux-form-control-wrapper
+    (mousedown)="onWrapperClick($event)"
+    [luxFormComponent]="this"
+    [formGroup]="formGroup"
+    [luxNoLabels]="luxNoLabels()"
+    [luxNoBottomLabel]="luxNoBottomLabel()"
+    [luxNoTopLabel]="luxNoTopLabel()"
+    [luxLabelLongFormat]="luxLabelLongFormat()"
+    [ngClass]="matSelect()?.panelOpen ? 'lux-panel-opened' : ''"
+    luxTagId="luxSelectWrapper"
+  >
+    <!--
     Material-Workaround: Incorrect use of <label for=FORM_ELEMENT> (Browser-Fehler in der Debug-Console)
     ------------------------------------------------------------------------------------------------------------------
     Das mat-select nutzt intern kein echtes HTML-Element wie das select und darum wird der obige Fehler geworfen.
@@ -19,29 +19,29 @@
     Wichtig: Nur das versteckte <select> trägt die uid (Ziel des Wrapper-Labels per for).
     Das mat-select darf keine eigene id="uid" bekommen, sonst entsteht eine doppelte DOM-ID.
     -->
-    <select [id]="uid" style="display: none"></select>
+    <select [id]="uid()" style="display: none"></select>
     <mat-select
       luxTagIdHandler
-      [luxTagId]="luxTagId"
-      [luxSelectFilter]="luxEnableFilter"
+      [luxTagId]="luxTagId()"
+      [luxSelectFilter]="luxEnableFilter()"
       [luxFilterLabelFn]="filterLabelFn"
-      [placeholder]="luxPlaceholder"
-      [multiple]="luxMultiple"
+      [placeholder]="luxPlaceholder()"
+      [multiple]="luxMultiple()"
       [compareWith]="compareObjects"
-      [required]="luxRequired"
+      [required]="luxRequired()"
       [disableRipple]="true"
       [formControl]="formControl"
-      [attr.aria-invalid]="formControl.invalid"
-      [attr.aria-required]="luxRequired"
-      [attr.aria-readonly]="luxReadonly"
-      [luxSelectVisibleOptionCount]="luxVisibleOptionCount"
+      [attr.aria-invalid]="invalid()"
+      [attr.aria-required]="luxRequired()"
+      [attr.aria-readonly]="luxReadonly()"
+      [luxSelectVisibleOptionCount]="luxVisibleOptionCount()"
       [panelClass]="[
-        luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
-        luxReadonly ? 'lux-display-none' : '',
-        luxEnableFilter ? 'lux-select-panel-ac-filter' : ''
+        luxMultiple() ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
+        luxReadonly() ? 'lux-display-none' : '',
+        luxEnableFilter() ? 'lux-select-panel-ac-filter' : ''
       ]"
       [luxAriaLabelledby]="labelledBy()"
-      [luxAriaLabel]="luxAriaLabel"
+      [luxAriaLabel]="luxAriaLabel()"
       [luxAriaDescribedby]="describedBy()"
       (focusin)="onFocusIn($event)"
       (focusout)="onFocusOut($event)"
@@ -49,22 +49,22 @@
       #selectFilter="luxSelectFilter"
       #select
     >
-      @if (luxEnableFilter) {
+      @if (luxEnableFilter()) {
         <lux-select-panel-filter
-          [placeholder]="luxFilterPlaceholder"
-          [filterValue]="luxFilterValue"
-          [clearAriaLabel]="luxFilterClearAriaLabel"
+          [placeholder]="luxFilterPlaceholder()"
+          [filterValue]="luxFilterValue()"
+          [clearAriaLabel]="luxFilterClearAriaLabel()"
           [filterDirective]="selectFilter"
         ></lux-select-panel-filter>
       }
-      @for (i of renderOptionIndexes; track i) {
+      @for (i of renderOptionIndexes(); track i) {
         <mat-option
-          [value]="luxPickValue ? _luxOptionsPickValue[i] : luxOptions[i]"
+          [value]="luxPickValue() ? luxOptionsPickValue()[i] : luxOptions()[i]"
           class="option-height"
-          [style.display]="!luxEnableFilter || selectFilter.isIndexVisible(i) ? '' : 'none'"
+          [style.display]="!luxEnableFilter() || selectFilter.isIndexVisible(i) ? '' : 'none'"
         >
           <ng-container
-            *ngTemplateOutlet="tempRef ? tempRef : noTemplateRefTemplate; context: { $implicit: luxOptions[i] }"
+            *ngTemplateOutlet="tempRef() ? tempRef()! : noTemplateRefTemplate; context: { $implicit: luxOptions()[i] }"
           ></ng-container>
         </mat-option>
       }
@@ -73,8 +73,8 @@
 }
 
 <ng-template #noTemplateRefTemplate let-option>
-  @if (option && luxOptionLabelProp && option[luxOptionLabelProp]) {
-    {{ option | luxRenderProperty: luxOptionLabelProp }}
+  @if (option && luxOptionLabelProp() && option[luxOptionLabelProp()]) {
+    {{ option | luxRenderProperty: luxOptionLabelProp() }}
   } @else {
     @if (!!option) {
       {{ option }}

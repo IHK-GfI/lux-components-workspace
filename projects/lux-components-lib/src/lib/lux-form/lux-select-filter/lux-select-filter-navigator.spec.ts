@@ -1,11 +1,7 @@
 import { ElementRef } from '@angular/core';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import {
-  InternalKeyManager,
-  LuxSelectFilterNavigator,
-  MatSelectInternal
-} from './lux-select-filter-navigator';
+import { InternalKeyManager, LuxSelectFilterNavigator, MatSelectInternal } from './lux-select-filter-navigator';
 
 describe('LuxSelectFilterNavigator', () => {
   function createOption(

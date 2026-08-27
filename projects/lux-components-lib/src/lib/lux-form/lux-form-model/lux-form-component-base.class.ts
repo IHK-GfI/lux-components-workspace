@@ -1,18 +1,24 @@
 import {
   ChangeDetectorRef,
-  ContentChild,
+  DestroyRef,
   Directive,
   DoCheck,
   ElementRef,
-  EventEmitter,
-  HostBinding,
-  Input,
   OnDestroy,
   OnInit,
-  Output,
-  ViewChild,
-  inject
+  computed,
+  contentChild,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  Signal,
+  signal,
+  untracked,
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -28,7 +34,11 @@ export declare type LuxValidationErrors = ValidationErrors;
 export declare type ValidatorFnType = ValidatorFn | ValidatorFn[] | null | undefined;
 export declare type LuxErrorCallbackFnType = (value: any, errors: LuxValidationErrors) => string | undefined;
 
-@Directive()
+@Directive({
+  host: {
+    '[class.lux-form-control-readonly]': 'luxReadonly()'
+  }
+})
 export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, OnDestroy {
   protected static readonly DEFAULT_CTRL_NAME: string = 'control';
 
@@ -38,16 +48,29 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
   protected latestErrors: any = null;
   protected _initialValue?: any;
-  protected _initialDisabled?: boolean;
-  protected _luxDisabled = false;
-  protected _luxReadonly = false;
-  protected _luxRequired = false;
-  protected _luxControlValidators?: ValidatorFnType;
   private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
+  private validatorsInitialized = false;
+  private readonly generatedUid = 'lux-form-control-' + uuidv4();
 
-  errorMessage: string | undefined = undefined;
+  readonly errorMessage = signal<string | undefined>(undefined);
+
+  /**
+   * Reaktive Spiegelung von formControl.touched bzw. formControl.invalid. Das FormControl
+   * selbst ist nicht signalbasiert, deshalb bekämen OnPush-Templates Änderungen an diesen
+   * beiden Zuständen sonst nicht mit. Die Synchronisation läuft über ngDoCheck().
+   */
+  readonly touched = signal(false);
+  readonly invalid = signal(false);
+
+  /**
+   * Reaktive Spiegelung von formControl.value. Anders als die Wert-Inputs (luxValue, luxChecked,
+   * luxSelected) folgt dieses Signal immer dem FormControl - auch dann, wenn der Wert
+   * ausschließlich über eine Reactive Form gesetzt wurde.
+   */
+  readonly value = signal<T>(null as T);
 
   protected controlContainer = inject(ControlContainer, { optional: true });
+  protected destroyRef = inject(DestroyRef);
   protected cdr = inject(ChangeDetectorRef);
   protected logger = inject(LuxConsoleService);
   protected configService = inject(LuxComponentsConfigService);
@@ -57,69 +80,116 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   formGroup!: FormGroup;
   formControl!: FormControl<T>;
 
-  uid = '';
+  readonly formLabelComponent = contentChild(LuxFormLabelComponent);
+  readonly formHintComponent = contentChild(LuxFormHintComponent);
 
-  @ContentChild(LuxFormLabelComponent) formLabelComponent?: LuxFormLabelComponent;
-  @ContentChild(LuxFormHintComponent) formHintComponent?: LuxFormHintComponent;
+  readonly formControlWrapperComponent = viewChild(LuxFormControlWrapperComponent);
+  readonly formControlWrapperComponentRef = viewChild(LuxFormControlWrapperComponent, { read: ElementRef });
 
-  @ViewChild(LuxFormControlWrapperComponent) formControlWrapperComponent?: LuxFormControlWrapperComponent;
-  @ViewChild(LuxFormControlWrapperComponent, { read: ElementRef }) formControlWrapperComponentRef?: ElementRef;
+  readonly luxFocusIn = output<FocusEvent>();
+  readonly luxFocusOut = output<FocusEvent>();
 
-  @HostBinding('class.lux-form-control-readonly') cssReadonly = false;
-
-  @Output() luxFocusIn = new EventEmitter<FocusEvent>();
-  @Output() luxFocusOut = new EventEmitter<FocusEvent>();
-  @Output() luxDisabledChange = new EventEmitter<boolean>();
-
-  @Input() luxId = '';
-  @Input() luxHint = '';
-  @Input() luxHintShowOnlyOnFocus = false;
-  @Input() luxLabel = '';
-  @Input() luxLabelLongFormat = false;
+  readonly luxId = input('');
+  readonly luxHint = input('');
+  readonly luxHintShowOnlyOnFocus = input(false);
+  /**
+   * Sichtbares Label des Controls. Als Model ausgelegt, damit ableitende Komponenten das Label
+   * über eigene Aliase (z.B. luxInputLabel bei lux-chips-ac) setzen können.
+   */
+  readonly luxLabel = model('');
+  readonly luxLabelLongFormat = input(false);
   /**
    * Setzt "aria-label" auf dem nativen Eingabeelement. Nur für Felder gedacht,
    * die kein sichtbares Label besitzen (z.B. Suchfeld). Hat ein Control ein
    * sichtbares Label, überschreibt ein abweichendes aria-label den sichtbaren
    * Text (WCAG 2.5.3 "Label in Name") - siehe Warnung in checkA11yName().
    */
-  @Input() luxAriaLabel?: string;
+  readonly luxAriaLabel = input<string | undefined>(undefined);
   /**
    * Setzt "aria-labelledby" auf dem nativen Eingabeelement und verweist damit
    * auf ein eigenes, externes Label-Element. Hat Vorrang vor luxAriaLabel und luxLabel.
    */
-  @Input() luxAriaLabelledby?: string;
+  readonly luxAriaLabelledby = input<string | undefined>(undefined);
   /**
    * Blendet das obere Label nur visuell aus (lux-sr-only). Das <label> bleibt im DOM,
    * der zugängliche Name des Controls bleibt erhalten (Issue #267).
    * Wirkt auch ohne gesetztes luxLabel: Dann entfällt die leere Label-Zeile visuell,
    * die sonst für die Flucht mit sichtbar gelabelten Nachbarfeldern reserviert bleibt.
    */
-  @Input() luxNoTopLabel = false;
+  readonly luxNoTopLabel = input(false);
   /**
    * Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM.
    * Achtung, bewusste Entscheidung: Damit entfällt auch die per aria-describedby
    * referenzierte Fehlermeldung. Nur einsetzen, wenn Fehler an anderer Stelle
    * wahrnehmbar gemacht werden.
    */
-  @Input() luxNoBottomLabel = false;
+  readonly luxNoBottomLabel = input(false);
   /**
    * Kombination aus luxNoTopLabel und luxNoBottomLabel: Das Label wird nur visuell
    * versteckt, der untere Bereich inklusive Fehlermeldung wird entfernt.
    * Siehe die Hinweise an den beiden Einzel-Inputs.
    */
-  @Input() luxNoLabels = false;
+  readonly luxNoLabels = input(false);
 
-  @Input() luxControlBinding?: string;
-  @Input() luxErrorMessage?: string;
-  @Input() luxErrorCallback: LuxErrorCallbackFnType = () => undefined;
-  @Input() luxDense = false;
+  readonly luxControlBinding = input<string | undefined>(undefined);
+  readonly luxErrorMessage = input<string | undefined>(undefined);
+  readonly luxErrorCallback = input<LuxErrorCallbackFnType>(() => undefined);
+  readonly luxDense = input(false);
 
-  get luxFormControl(): FormControl<T> {
-    return this.formControl;
-  }
+  readonly luxFormControl = input<FormControl<T> | undefined>(undefined);
+  readonly luxFormGroup = input<FormGroup | undefined>(undefined);
+  readonly luxControlValidators = input<ValidatorFnType>(undefined);
 
-  @Input() set luxFormControl(formControl: FormControl<T>) {
-    this.formControl = formControl;
+  readonly luxDisabled = model(false);
+  readonly luxReadonly = input(false);
+  /**
+   * Innerhalb von Reactive Forms wird dieser Zustand aus dem Required-Validator des
+   * FormControls abgeleitet und pro Change-Detection-Zyklus nachgezogen (siehe ngDoCheck).
+   */
+  readonly luxRequired = model(false);
+
+  readonly uid = computed(() => this.luxId() || this.generatedUid);
+
+  constructor() {
+    effect(() => {
+      this.luxDisabled();
+
+      untracked(() => {
+        if (this.formControl) {
+          this.handleFormDisabledState();
+        }
+      });
+    });
+
+    // Reine Validator-Änderungen dürfen den Required-Validator nicht anfassen, sonst würde ein
+    // per luxRequired gesetzter Validator beim Setzen von luxControlValidators wieder entfernt.
+    effect(() => {
+      const validators = this.luxControlValidators();
+
+      untracked(() => {
+        if (this.validatorsInitialized) {
+          this.updateValidators(validators, false);
+        }
+      });
+    });
+
+    // luxRequired-Änderungen (und die Initialisierung) beziehen den Required-Validator mit ein.
+    effect(() => {
+      const required = this.luxRequired();
+
+      untracked(() => {
+        if (this.inForm && required !== this.hasRequiredValidator(this.formControl)) {
+          this.logger.error(
+            `Attention: Use the Required-Validator instead of the ` +
+              `Property "luxRequired" for components within ReactiveForms..\n` +
+              `Affected component: ${this.luxControlBinding() ?? 'No binding found'}`
+          );
+        }
+
+        this.validatorsInitialized = true;
+        this.updateValidators(this.luxControlValidators(), true);
+      });
+    });
   }
 
   /**
@@ -129,90 +199,26 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * entfernen das Attribut dann), damit ein gesetztes luxAriaLabel greifen kann.
    */
   labelledBy(): string | undefined {
-    if (this.luxAriaLabelledby) {
-      return this.luxAriaLabelledby;
+    if (this.luxAriaLabelledby()) {
+      return this.luxAriaLabelledby();
     }
-    if (this.luxAriaLabel) {
+    if (this.luxAriaLabel()) {
       return undefined;
     }
-    return this.formLabelComponent || this.luxLabel ? this.uid + '-label' : undefined;
-  }
-
-  get luxFormGroup(): FormGroup {
-    return this.formGroup;
-  }
-
-  @Input() set luxFormGroup(formGroup: FormGroup) {
-    this.formGroup = formGroup;
-  }
-
-  get luxControlValidators(): ValidatorFnType {
-    return this._luxControlValidators;
-  }
-
-  @Input() set luxControlValidators(validators: ValidatorFnType) {
-    this._luxControlValidators = validators;
-    this.updateValidators(validators, false);
-  }
-
-  get luxDisabled(): boolean {
-    return this._luxDisabled;
-  }
-
-  @Input() set luxDisabled(disabled: boolean) {
-    this._luxDisabled = disabled;
-    this.cdr.detectChanges();
-
-    if (this.formControl) {
-      this.handleFormDisabledState();
-    } else {
-      this._initialDisabled = disabled;
-    }
-
-    this.luxDisabledChange.emit(this._luxDisabled);
-  }
-
-  get luxReadonly(): boolean {
-    return this._luxReadonly;
-  }
-
-  @Input() set luxReadonly(readonly: boolean) {
-    this._luxReadonly = readonly;
-    this.cssReadonly = readonly;
-    this.cdr.detectChanges();
-  }
-
-  get luxRequired(): boolean {
-    return this._luxRequired;
-  }
-
-  @Input() set luxRequired(required: boolean) {
-    if (this.inForm) {
-      this.logger.error(
-        `Attention: Use the Required-Validator instead of the ` +
-          `Property "luxRequired" for components within ReactiveForms..\n` +
-          `Affected component: ${this.luxControlBinding ? this.luxControlBinding : 'No binding found'}`
-      );
-    } else {
-      this._luxRequired = required;
-      this.updateValidators(this.luxControlValidators, true);
-      this.cdr.detectChanges();
-    }
+    return this.formLabelComponent() || this.luxLabel() ? this.uid() + '-label' : undefined;
   }
 
   ngOnInit() {
-    if (this.luxId) {
-      this.uid = this.luxId;
-    } else {
-      this.uid = 'lux-form-control-' + uuidv4();
-    }
-
     this.initFormControl();
+
+    // Den reaktiven Spiegel des FormControl-Werts unabhängig von den (überschreibbaren)
+    // Wert-Subscriptions der ableitenden Klassen aktuell halten.
+    this.formControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => this.value.set(value));
+
     this.initFormValueSubscription();
     this.initFormStateSubscription();
-    this.updateValidators(this.luxControlValidators, true);
 
-    // Verzögert prüfen, damit der @ContentChild formLabelComponent bereits aufgelöst ist.
+    // Verzögert prüfen, damit die contentChild-Query formLabelComponent bereits aufgelöst ist.
     this.a11yNameCheckTimeout = setTimeout(() => this.checkA11yName());
   }
 
@@ -223,10 +229,14 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
       this.updateValidatorsInForm();
     }
 
+    this.touched.set(this.formControl.touched);
+    this.invalid.set(this.formControl.invalid);
+    this.value.set(this.formControl.value);
+
     // Prüfen, ob es neue Fehlermeldungen gibt, wenn ja diese laden und speichern.
     if (this.latestErrors !== this.formControl.errors && this.formControl.touched) {
       this.latestErrors = this.formControl.errors;
-      this.errorMessage = this.fetchErrorMessage();
+      this.errorMessage.set(this.fetchErrorMessage());
     }
   }
 
@@ -262,11 +272,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     let errorMsg = undefined;
     if (errors) {
       // Gibt der Callback bereits einen User-definierten Fehler wieder? Diesen zurückgeben.
-      errorMsg = this.luxErrorMessage
-        ? this.luxErrorMessage
-        : this.luxErrorCallback
-          ? this.luxErrorCallback(value, errors || {})
-          : undefined;
+      const errorCallback = this.luxErrorCallback();
+      errorMsg = this.luxErrorMessage() ? this.luxErrorMessage() : errorCallback ? errorCallback(value, errors || {}) : undefined;
       if (errors && errorMsg) {
         return errorMsg;
       }
@@ -287,11 +294,11 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * Überträgt den Input-Wert aus disabled auf das FormControl.
    */
   protected handleFormDisabledState() {
-    if (this.luxDisabled && !this.formControl.disabled) {
+    if (this.luxDisabled() && !this.formControl.disabled) {
       this.formControl.disable();
     }
 
-    if (!this.luxDisabled && this.formControl.disabled) {
+    if (!this.luxDisabled() && this.formControl.disabled) {
       this.formControl.enable();
     }
   }
@@ -314,39 +321,41 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * Änderungen an den betroffenen Inputs werden nicht erneut geprüft.
    */
   protected checkA11yName() {
-    const hasVisibleLabel = !!this.formLabelComponent || !!this.luxLabel;
+    const hasVisibleLabel = !!this.formLabelComponent() || !!this.luxLabel();
 
-    if (!hasVisibleLabel && !this.luxAriaLabel && !this.luxAriaLabelledby) {
+    if (!hasVisibleLabel && !this.luxAriaLabel() && !this.luxAriaLabelledby()) {
       this.logger.warn(
-        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt keinen zugänglichen Namen. ` +
+        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding() ?? 'ohne Binding'}) besitzt keinen zugänglichen Namen. ` +
           `Bitte luxLabel (ggf. mit luxNoTopLabel), luxAriaLabel oder luxAriaLabelledby setzen.`
       );
     } else if (
       // Bei projiziertem <lux-form-label> ist der Text hier nicht auslesbar; um falsche Alarme zu
       // vermeiden, wird in diesem Fall keine 2.5.3-Warnung ausgegeben.
-      !!this.luxLabel &&
-      !!this.luxAriaLabel &&
-      this.luxAriaLabel !== this.luxLabel
+      !!this.luxLabel() &&
+      !!this.luxAriaLabel() &&
+      this.luxAriaLabel() !== this.luxLabel()
     ) {
       this.logger.warn(
-        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt ein sichtbares Label ` +
+        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding() ?? 'ohne Binding'}) besitzt ein sichtbares Label ` +
           `und ein davon abweichendes luxAriaLabel. Das aria-label überschreibt das sichtbare Label (WCAG 2.5.3 "Label in Name").`
       );
     }
   }
 
   /**
-   * Standard-Getter Funktion für den aktuellen Wert in dieser FormComponent.
+   * Liefert den aktuellen Wert dieser FormComponent (ersetzt den früheren luxValue-Getter).
    */
-  protected getValue(): T {
+  getValue(): T {
     return this.formControl ? this.formControl.value : this._initialValue;
   }
 
   /**
-   * Standard-Setter Funktion für den aktuellen Wert in dieser FormComponent.
+   * Setzt den aktuellen Wert dieser FormComponent (ersetzt den früheren luxValue-Setter).
    * @param value
    */
-  protected setValue(value: T) {
+  setValue(value: T) {
+    this.value.set(value);
+
     // Wenn noch kein FormControl vorhanden, den init-Wert merken und Fn beenden
     if (!this.formControl) {
       this._initialValue = value;
@@ -363,7 +372,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
   /**
    * Wird nach der Aktualisierung des Wertes aufgerufen.
-   * Hier kann z.B. valueChange.emit() ausgeführt werden.
+   * Hier kann z.B. luxValueChange.emit() ausgeführt werden.
    * @param formValue
    */
   protected notifyFormValueChanged(formValue: any) {}
@@ -395,14 +404,26 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * handelt.
    */
   protected initFormControl() {
-    this.inForm = (!!this.controlContainer || !!this.formGroup) && !!this.luxControlBinding;
+    const boundFormGroup = this.luxFormGroup();
+    const boundFormControl = this.luxFormControl();
 
-    if (this.inForm && this.luxControlBinding) {
+    if (boundFormGroup) {
+      this.formGroup = boundFormGroup;
+    }
+
+    if (boundFormControl) {
+      this.formControl = boundFormControl;
+    }
+
+    const controlBinding = this.luxControlBinding();
+    this.inForm = (!!this.controlContainer || !!this.formGroup) && !!controlBinding;
+
+    if (this.inForm && controlBinding) {
       if (!this.formGroup) {
         this.formGroup = this.controlContainer?.control as FormGroup;
       }
       if (!this.formControl) {
-        this.formControl = this.formGroup.controls[this.luxControlBinding] as FormControl<T>;
+        this.formControl = this.formGroup.controls[controlBinding] as FormControl<T>;
       }
       this.updateValidatorsInForm();
     } else {
@@ -415,11 +436,12 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
       this.formControl.setValue(this._initialValue);
     }
 
-    if (this._initialDisabled) {
+    if (this.luxDisabled()) {
       this.formControl.disable();
     }
 
-    this.luxDisabled = this.formControl.disabled;
+    this.luxDisabled.set(this.formControl.disabled);
+    this.value.set(this.formControl.value);
   }
 
   /**
@@ -431,7 +453,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
       this.setValue(this._initialValue);
     }
 
-    // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden.
+    // Aktualisierungen an dem FormControl-Value sollen auch nach außen bekannt gemacht werden.
     this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {
       this.notifyFormValueChanged(value);
     });
@@ -442,20 +464,55 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    */
   protected initFormStateSubscription() {
     this._formStatusChangeSub = this.formControl.statusChanges.subscribe((status: any) => {
-      if (status === 'DISABLED' && !this.luxDisabled) {
+      if (status === 'DISABLED' && !this.luxDisabled()) {
         // Das FormControl hat den Zustand "DISABLED", aber die Property "luxDisabled"
         // hat noch den Wert "false". D.h. der FormControl-Status und die Property
         // sind nicht mehr synchron.
-        this.luxDisabled = true;
-      } else if ((status === 'VALID' || status === 'INVALID') && this.luxDisabled) {
+        this.luxDisabled.set(true);
+      } else if ((status === 'VALID' || status === 'INVALID') && this.luxDisabled()) {
         // Das FormControl hat den Zustand "VALID" oder "INVALID" und ist aktiv,
         // aber die Property "luxDisabled" hat noch den Wert "true".
         // D.h. der FormControl-Status und die Property sind nicht mehr synchron.
-        this.luxDisabled = false;
+        this.luxDisabled.set(false);
       }
 
       this.notifyFormStatusChanged(status);
     });
+  }
+
+  /**
+   * Verbindet einen Wert-Input (luxValue, luxChecked, luxSelected) mit dem FormControl.
+   * Der erste Lauf überschreibt einen bereits vorhandenen FormControl-Wert (z.B. aus einer
+   * Reactive Form) nicht, solange von außen kein Wert gebunden wurde.
+   */
+  protected syncValueInputToFormControl(valueInput: Signal<unknown>) {
+    let initialRun = true;
+
+    effect(() => {
+      const value = valueInput();
+
+      untracked(() => {
+        // Ohne gebundenen Startwert bleibt der (z.B. aus einer Reactive Form stammende)
+        // FormControl-Wert maßgeblich.
+        if (initialRun) {
+          initialRun = false;
+
+          if (value === undefined || value === null) {
+            return;
+          }
+        }
+
+        this.applyValueInput(value as T);
+      });
+    });
+  }
+
+  /**
+   * Überträgt einen Wert aus dem Wert-Input in das FormControl. Ableitende Komponenten können
+   * hier zusätzliche Regeln ergänzen (z.B. eine Umwandlung oder einen Readonly-Schutz).
+   */
+  protected applyValueInput(value: T) {
+    this.setValue(value);
   }
 
   protected getRequiredValidator(): ValidatorFn {
@@ -472,28 +529,25 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     const hasValidators = (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0);
     const requiredValidator = this.getRequiredValidator();
     const hasRequiredValidator = !!this.formControl && this.formControl.hasValidator(requiredValidator);
-    const shouldHandleRequired = checkRequiredValidator && (this.luxRequired || hasRequiredValidator);
+    const shouldHandleRequired = checkRequiredValidator && (this.luxRequired() || hasRequiredValidator);
 
     if (!hasValidators && !shouldHandleRequired) {
       return;
     }
 
-    // Zum Zeitpunkt dieses synchronen Aufrufs ist inForm noch false, weil Angular @Input()-Properties
-    // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
     if (!this.inForm) {
       setTimeout(() => {
-        // Der setTimeout-Callback feuert asynchron - nach ngOnInit. Zu diesem Zeitpunkt kann inForm
-        // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
-        // Guard würde setValidators() die Validatoren des FormControls überschreiben.
+        // Der setTimeout-Callback feuert asynchron. Zu diesem Zeitpunkt kann inForm bereits true
+        // sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen Guard würde
+        // setValidators() die Validatoren des FormControls überschreiben.
         if (this.inForm) {
           return;
         }
 
-        this._luxControlValidators = validators;
-        this.formControl.setValidators(this.luxControlValidators ?? null);
+        this.formControl.setValidators(validators ?? null);
 
         if (checkRequiredValidator) {
-          if (this.luxRequired) {
+          if (this.luxRequired()) {
             this.formControl.addValidators(requiredValidator);
           } else {
             this.formControl.removeValidators(requiredValidator);
@@ -505,18 +559,13 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     } else if (hasValidators) {
       this.logger.warn(
         `
-Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding}) können ausschließlich über das Formular gesetzt werden,
+Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding()}) können ausschließlich über das Formular gesetzt werden,
 aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignoriert!`
       );
     }
   }
 
   private updateValidatorsInForm() {
-    const hasRequiredValidator = this.hasRequiredValidator(this.formControl);
-
-    if (this._luxRequired !== hasRequiredValidator) {
-      this._luxRequired = hasRequiredValidator;
-      this.cdr.markForCheck();
-    }
+    this.luxRequired.set(this.hasRequiredValidator(this.formControl));
   }
 }

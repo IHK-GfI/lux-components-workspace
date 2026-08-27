@@ -2,25 +2,26 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
-  ContentChildren,
   ElementRef,
-  EventEmitter,
-  Input,
   OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ChangeDetectionStrategy
+  computed,
+  contentChildren,
+  effect,
+  input,
+  output,
+  signal,
+  untracked,
+  viewChild,
+  viewChildren
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatChip, MatChipGrid, MatChipInput, MatChipRemove, MatChipRow } from '@angular/material/chips';
 import { MatOption } from '@angular/material/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
@@ -36,7 +37,7 @@ let luxChipControlUID = 0;
   selector: 'lux-chips-ac',
   templateUrl: './lux-chips-ac.component.html',
   styleUrls: ['./lux-chips-ac.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxFormControlWrapperComponent,
@@ -53,92 +54,251 @@ let luxChipControlUID = 0;
     LuxTooltipDirective
   ]
 })
-export class LuxChipsAcComponent
-  extends LuxFormComponentBase<string[] | null>
-  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
-{
+export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> implements AfterContentInit, AfterViewInit, OnDestroy {
   private subscriptions: Subscription[] = [];
-  private _luxAutocompleteOptions: string[] = [];
+  private readonly generatedChipUid = 'lux-chip-control-ac-' + luxChipControlUID++;
+  private disabledPropagationEnabled = false;
 
-  override uid: string = 'lux-chip-control-ac-' + luxChipControlUID++;
+  override readonly uid = computed(() => this.luxId() || this.generatedChipUid);
 
-  _filteredOptions: string[] = [];
-  displayedOptions: string[] = [];
+  readonly filteredOptions = signal<string[]>([]);
+  readonly displayedOptions = signal<string[]>([]);
+
   loadingRunning = false;
   activeIndex = -1;
   onInitFinished = false;
-
-  get filteredOptions() {
-    return this._filteredOptions;
-  }
-
-  set filteredOptions(newOptions: string[]) {
-    if (newOptions && Array.isArray(newOptions)) {
-      const selectedChips = this.luxNewChipGroup && Array.isArray(this.luxNewChipGroup.luxLabels) ? this.luxNewChipGroup.luxLabels : [];
-      this._filteredOptions = newOptions.filter((option) => !selectedChips.includes(option));
-    } else {
-      this._filteredOptions = [];
-    }
-
-    if (this.onInitFinished) {
-      this.displayedOptions = [];
-      this.updateDisplayedEntries();
-    }
-  }
 
   inputValue$: Subject<string> = new Subject<string>();
   newChip$: Subject<any> = new Subject<any>();
   canClose = false;
   actionRunning = false;
-  initRunning = false;
 
-  @Input() luxOrientation: LuxChipsAcOrientation = 'horizontal';
-  @Input() luxInputAllowed = false;
-  @Input() luxNewChipGroup?: LuxChipAcGroupComponent;
-  @Input() luxStrict = false;
-  @Input() override luxLabelLongFormat = false;
-  @Input() luxPlaceholder = '';
-  @Input() luxOptionBlockSize = 500;
-  @Input() luxHideBorder = false;
-  @Input() luxInputLabelAlwaysVisible = false;
+  readonly luxOrientation = input<LuxChipsAcOrientation>('horizontal');
+  readonly luxInputAllowed = input(false);
+  readonly luxNewChipGroup = input<LuxChipAcGroupComponent | undefined>(undefined);
+  readonly luxStrict = input(false);
+  readonly luxPlaceholder = input('');
+  readonly luxOptionBlockSize = input(500);
+  readonly luxHideBorder = input(false);
+  readonly luxInputLabelAlwaysVisible = input(false);
 
-  @Output() luxChipAdded = new EventEmitter<string>();
+  /**
+   * Alias für luxLabel. Das Label wird bei den Chips am Eingabefeld dargestellt.
+   */
+  readonly luxInputLabel = input<string | undefined>(undefined);
 
-  @ContentChildren(LuxChipAcComponent) luxChipComponents!: QueryList<LuxChipAcComponent>;
-  @ContentChildren(LuxChipAcGroupComponent) luxChipGroupComponents!: QueryList<LuxChipAcGroupComponent>;
-  @ViewChildren(MatChip) matChips!: QueryList<MatChip>;
-  @ViewChildren(MatChipRow, { read: ElementRef }) chipRowElements!: QueryList<ElementRef<HTMLElement>>;
-  @ViewChildren(LuxTooltipDirective) chipTooltips!: QueryList<LuxTooltipDirective>;
+  readonly luxAutocompleteOptions = input<string[], string[] | undefined>([], {
+    transform: (options) => (options ? [...options] : [])
+  });
 
-  @ViewChild('input', { read: ElementRef }) matInput!: ElementRef;
-  @ViewChild('input', { read: MatAutocompleteTrigger }) matAutocompleteTrigger?: MatAutocompleteTrigger;
-  @ViewChild('auto', { read: MatAutocomplete }) matAutocomplete?: MatAutocomplete;
-  @ViewChild(MatAutocomplete) matAutocompleteComponent?: MatAutocomplete;
-  @ViewChild('chipsContainerDiv') chipContainerDivRef!: ElementRef;
+  readonly luxChipAdded = output<string>();
 
-  override get luxDisabled(): boolean {
-    return this._luxDisabled;
+  readonly luxChipComponents = contentChildren(LuxChipAcComponent);
+  readonly luxChipGroupComponents = contentChildren(LuxChipAcGroupComponent);
+  readonly matChips = viewChildren(MatChip);
+  readonly chipRowElements = viewChildren(MatChipRow, { read: ElementRef });
+  readonly chipTooltips = viewChildren(LuxTooltipDirective);
+
+  readonly matInput = viewChild('input', { read: ElementRef });
+  readonly matAutocompleteTrigger = viewChild('input', { read: MatAutocompleteTrigger });
+  readonly matAutocomplete = viewChild('auto', { read: MatAutocomplete });
+  readonly matAutocompleteComponent = viewChild(MatAutocomplete);
+  readonly chipContainerDivRef = viewChild<ElementRef>('chipsContainerDiv');
+
+  constructor() {
+    super();
+
+    effect(() => {
+      const inputLabel = this.luxInputLabel();
+
+      if (inputLabel !== undefined) {
+        untracked(() => this.luxLabel.set(inputLabel));
+      }
+    });
+
+    effect(() => {
+      const disabled = this.luxDisabled();
+
+      untracked(() => {
+        // Den Disabled-State nicht während der Initialisierung übertragen, sonst würde ein an der
+        // Chip-Gruppe gesetztes luxDisabled direkt wieder überschrieben.
+        if (!this.disabledPropagationEnabled) {
+          this.disabledPropagationEnabled = true;
+          return;
+        }
+
+        setTimeout(() => {
+          this.luxChipGroupComponents().forEach((chipGroup) => chipGroup.luxDisabled.set(disabled));
+          this.luxChipComponents().forEach((chip) => chip.luxDisabled.set(disabled));
+        });
+      });
+    });
+
+    effect(() => {
+      const options = this.luxAutocompleteOptions();
+      untracked(() => this.setFilteredOptions(options));
+    });
+
+    effect(() => {
+      this.chipRowElements();
+      this.chipTooltips();
+
+      untracked(() => this.updateChipTooltips());
+    });
+
+    effect(() => {
+      this.luxChipComponents();
+
+      untracked(() => {
+        // Für den Fall ohne ChipGroup (einzelne lux-chip-ac Elemente) muss der interne
+        // FormControl-Wert mit der Anzahl der Chips synchronisiert werden, damit der
+        // required-Validator korrekt funktioniert.
+        // Achtung: Wenn die Komponente Teil einer ReactiveForm (`inForm === true`) ist,
+        // darf der Wert nicht hier überschrieben werden (das Formular ist die Quelle der Wahrheit).
+        if (this.formControl && !this.luxNewChipGroup() && !this.inForm) {
+          this.syncFormControlWithStandaloneChips();
+        }
+      });
+    });
+
+    this.subscriptions.push(
+      this.newChip$.subscribe((value: string) => {
+        this.add(value);
+        this.setFilteredOptions(this.luxAutocompleteOptions());
+      })
+    );
+
+    this.subscriptions.push(
+      this.inputValue$
+        .asObservable()
+        .pipe(
+          startWith(''),
+          distinctUntilChanged(),
+          map((value: string) => {
+            const options = this.luxAutocompleteOptions();
+
+            if (!value) {
+              this.setFilteredOptions([...options]);
+            } else {
+              this.setFilteredOptions(
+                options.filter((compareValue: string) => compareValue.trim().toLowerCase().indexOf(value.trim().toLowerCase()) > -1)
+              );
+            }
+          })
+        )
+        .subscribe()
+    );
   }
 
-  @Input() override set luxDisabled(disabled: boolean) {
-    super.luxDisabled = disabled;
+  get chipComponents(): readonly LuxChipAcComponent[] {
+    return this.luxChipComponents();
+  }
 
-    if (!this.initRunning) {
-      // Den Disabled-State nicht während der Initialisierung übertragen.
-      setTimeout(() => {
-        this.luxChipGroupComponents.forEach((chipGroup) => (chipGroup.luxDisabled = disabled));
-        this.luxChipComponents.forEach((chip) => (chip.luxDisabled = disabled));
-      });
+  get chipGroupComponents(): readonly LuxChipAcGroupComponent[] {
+    return this.luxChipGroupComponents();
+  }
+
+  override ngOnInit() {
+    super.ngOnInit();
+
+    this.displayedOptions.set([]);
+    this.updateDisplayedEntries();
+    this.onInitFinished = true;
+  }
+
+  ngAfterContentInit() {
+    const newChipGroup = this.luxNewChipGroup();
+
+    if (this.inForm && newChipGroup) {
+      if (this.formControl.value && Array.isArray(this.formControl.value)) {
+        newChipGroup.luxLabels.set([...this.formControl.value]);
+      } else {
+        newChipGroup.luxLabels.set([]);
+      }
+
+      this.setFilteredOptions(this.luxAutocompleteOptions());
     }
   }
 
-  get luxAutocompleteOptions(): string[] {
-    return this._luxAutocompleteOptions;
+  ngAfterViewInit() {
+    const chipContainerDivRef = this.chipContainerDivRef();
+    LuxUtil.assertNonNull('chipContainerDivRef', chipContainerDivRef);
+
+    const matAutocompleteTrigger = this.matAutocompleteTrigger();
+    if (matAutocompleteTrigger && chipContainerDivRef) {
+      matAutocompleteTrigger.connectedTo = { elementRef: chipContainerDivRef };
+      this.cdr.detectChanges();
+    }
+
+    const matAutocompleteComponent = this.matAutocompleteComponent();
+    if (matAutocompleteComponent) {
+      this.subscriptions.push(
+        matAutocompleteComponent._keyManager.change.subscribe((index) => {
+          if (this.loadingRunning && index === -1) {
+            // Workaround: Bei Änderungen an den Optionen wird der Aktivindex zurückgesetzt!
+            //
+            // Beim Nachladen werden die Optionen verändert und der Aktivindex
+            // im KeyManager wird zurückgesetzt. D.h. der nächste Klick auf die
+            // Pfeiltaste (nach unten) aktiviert nicht die nächste Option, sondern
+            // die erste Option am Anfang der Liste. Aus diesem Grund wird hier
+            // der letzte Aktivindex wiederhergestellt, damit der Benutzer dort
+            // weitermachen kann, wo er aufgehört hat.
+            //
+            // Siehe: _MatAutocompleteTriggerBase._subscribeToClosingActions
+            // this._resetActiveItem();
+            setTimeout(() => {
+              matAutocompleteComponent._keyManager.setActiveItem(this.activeIndex!);
+              this.loadingRunning = false;
+            });
+          }
+        })
+      );
+
+      this.subscriptions.push(
+        matAutocompleteComponent.opened.subscribe(() => {
+          setTimeout(() => {
+            if (matAutocompleteComponent.panel) {
+              matAutocompleteComponent.panel.nativeElement.addEventListener('scroll', this.loadOnScroll.bind(this));
+            }
+          });
+        })
+      );
+
+      this.subscriptions.push(
+        matAutocompleteComponent.closed.subscribe(() => {
+          matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
+        })
+      );
+    }
   }
 
-  @Input() set luxAutocompleteOptions(options: string[]) {
-    this._luxAutocompleteOptions = options ? [...options] : [];
-    this.filteredOptions = this.luxAutocompleteOptions;
+  /**
+   * Läd den nächsten Block Daten aus den Entries nach.
+   */
+  updateDisplayedEntries() {
+    const filteredOptions = [...this.filteredOptions()];
+
+    if (filteredOptions.length > 0) {
+      const matAutocompleteComponent = this.matAutocompleteComponent();
+
+      if (matAutocompleteComponent) {
+        this.loadingRunning = true;
+        this.activeIndex = matAutocompleteComponent._keyManager.activeItemIndex ?? -1;
+      }
+
+      const start = 0;
+      const end = Math.min(this.luxOptionBlockSize(), filteredOptions.length);
+      const nextBlock = filteredOptions.splice(start, end);
+
+      this.filteredOptions.set(filteredOptions);
+      this.displayedOptions.update((options) => [...options, ...nextBlock]);
+    }
+  }
+
+  override ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**
@@ -155,235 +315,13 @@ export class LuxChipsAcComponent
    * gesetztes luxAriaLabel greifen kann.
    */
   override labelledBy(): string | undefined {
-    const wrapperLabelSuppressed = !this.luxInputAllowed && !this.luxInputLabelAlwaysVisible;
+    const wrapperLabelSuppressed = !this.luxInputAllowed() && !this.luxInputLabelAlwaysVisible();
 
     if (wrapperLabelSuppressed) {
-      return this.luxAriaLabelledby || undefined;
+      return this.luxAriaLabelledby() || undefined;
     }
 
     return super.labelledBy();
-  }
-
-  get luxInputLabel(): string {
-    return this.luxLabel;
-  }
-
-  @Input() set luxInputLabel(label: string) {
-    this.luxLabel = label;
-  }
-
-  get chipComponents(): LuxChipAcComponent[] {
-    return this.luxChipComponents ? this.luxChipComponents.toArray() : [];
-  }
-
-  get chipGroupComponents(): LuxChipAcGroupComponent[] {
-    return this.luxChipGroupComponents ? this.luxChipGroupComponents.toArray() : [];
-  }
-
-  constructor() {
-    super();
-
-    this.subscriptions.push(
-      this.newChip$.subscribe((value: string) => {
-        this.add(value);
-        this.filteredOptions = this.luxAutocompleteOptions ? this.luxAutocompleteOptions : [];
-      })
-    );
-
-    this.subscriptions.push(
-      this.inputValue$
-        .asObservable()
-        .pipe(
-          startWith(''),
-          distinctUntilChanged(),
-          map((value: string) => {
-            if (!value) {
-              this.filteredOptions = [...this.luxAutocompleteOptions];
-            } else {
-              this.filteredOptions = this.luxAutocompleteOptions.filter(
-                (compareValue: string) => compareValue.trim().toLowerCase().indexOf(value.trim().toLowerCase()) > -1
-              );
-            }
-          })
-        )
-        .subscribe()
-    );
-  }
-
-  override ngOnInit() {
-    super.ngOnInit();
-
-    this.displayedOptions = [];
-    this.updateDisplayedEntries();
-    this.onInitFinished = true;
-  }
-
-  ngAfterContentInit() {
-    if (this.inForm && this.luxNewChipGroup) {
-      if (this.formControl.value && Array.isArray(this.formControl.value)) {
-        this.luxNewChipGroup.luxLabels = [...this.formControl.value];
-      } else {
-        this.luxNewChipGroup.luxLabels = [];
-      }
-
-      this.filteredOptions = this.luxAutocompleteOptions ? this.luxAutocompleteOptions : [];
-    }
-
-    // Für den Fall ohne ChipGroup (einzelne lux-chip-ac Elemente) muss der interne
-    // FormControl-Wert mit der Anzahl der Chips synchronisiert werden, damit der
-    // required-Validator korrekt funktioniert.
-    // Achtung: Wenn die Komponente Teil einer ReactiveForm (`inForm === true`) ist,
-    // darf der Wert nicht hier überschrieben werden (das Formular ist die Quelle der Wahrheit).
-    if (!this.luxNewChipGroup && !this.inForm) {
-      // setTimeout vermeidet ExpressionChangedAfterItHasBeenCheckedError, da
-      // syncFormControlWithStandaloneChips den FormControl-Wert nach dem
-      // Change-Detection-Durchlauf von ngAfterContentInit verändert.
-      setTimeout(() => this.syncFormControlWithStandaloneChips());
-      this.subscriptions.push(this.luxChipComponents.changes.subscribe(() => this.syncFormControlWithStandaloneChips()));
-    }
-  }
-
-  private syncFormControlWithStandaloneChips() {
-    const count = this.luxChipComponents ? this.luxChipComponents.length : 0;
-    // Bei 0 Chips setzen wir bewusst `null`, damit der FormControl-Typ
-    // `FormControl<string[] | null>` die Semantik "kein Wert" repräsentiert.
-    // Hinweis: Der Array-Inhalt dient hier nur als Präsenz-Indikator für den
-    // required-Validator. Die tatsächlichen Chip-Labels werden ausschließlich
-    // durch das Parent-Template verwaltet (deklarative lux-chip-ac-Elemente).
-    const newValue: string[] | null = count > 0 ? new Array(count).fill('') : null;
-    this.formControl.setValue(newValue, { emitEvent: false });
-    // emitEvent: false wird auch hier gesetzt, damit kein doppeltes valueChanges-Event
-    // ausgelöst wird; updateValueAndValidity wertet lediglich die Validatoren neu aus.
-    this.formControl.updateValueAndValidity({ emitEvent: false });
-  }
-
-  ngAfterViewInit() {
-    LuxUtil.assertNonNull('chipContainerDivRef', this.chipContainerDivRef);
-
-    if (this.matAutocompleteTrigger && this.chipContainerDivRef) {
-      this.matAutocompleteTrigger.connectedTo = { elementRef: this.chipContainerDivRef };
-      this.cdr.detectChanges();
-    }
-
-    if (this.matAutocompleteComponent) {
-      this.subscriptions.push(
-        this.matAutocompleteComponent._keyManager.change.subscribe((index) => {
-          if (this.loadingRunning && index === -1) {
-            // Workaround: Bei Änderungen an den Optionen wird der Aktivindex zurückgesetzt!
-            //
-            // Beim Nachladen werden die Optionen verändert und der Aktivindex
-            // im KeyManager wird zurückgesetzt. D.h. der nächste Klick auf die
-            // Pfeiltaste (nach unten) aktiviert nicht die nächste Option, sondern
-            // die erste Option am Anfang der Liste. Aus diesem Grund wird hier
-            // der letzte Aktivindex wiederhergestellt, damit der Benutzer dort
-            // weitermachen kann, wo er aufgehört hat.
-            //
-            // Siehe: _MatAutocompleteTriggerBase._subscribeToClosingActions
-            // this._resetActiveItem();
-            setTimeout(() => {
-              if (this.matAutocompleteComponent) {
-                this.matAutocompleteComponent._keyManager.setActiveItem(this.activeIndex!);
-                this.loadingRunning = false;
-              }
-            });
-          }
-        })
-      );
-
-      this.subscriptions.push(
-        this.matAutocompleteComponent.opened.subscribe(() => {
-          setTimeout(() => {
-            if (this.matAutocompleteComponent) {
-              if (this.matAutocompleteComponent.panel) {
-                this.matAutocompleteComponent.panel.nativeElement.addEventListener('scroll', this.loadOnScroll.bind(this));
-              }
-            }
-          });
-        })
-      );
-
-      this.subscriptions.push(
-        this.matAutocompleteComponent.closed.subscribe(() => {
-          if (this.matAutocompleteComponent) {
-            this.matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
-          }
-        })
-      );
-    }
-
-    if (this.chipRowElements) {
-      this.updateChipTooltips();
-      this.subscriptions.push(this.chipRowElements.changes.pipe(debounceTime(50)).subscribe(() => this.updateChipTooltips()));
-    }
-
-    if (this.chipTooltips) {
-      this.updateChipTooltips();
-      this.subscriptions.push(this.chipTooltips.changes.pipe(debounceTime(50)).subscribe(() => this.updateChipTooltips()));
-    }
-  }
-
-  private updateChipTooltips() {
-    if (!this.chipRowElements || !this.chipTooltips) {
-      return;
-    }
-
-    const rows = this.chipRowElements.toArray();
-    const tooltips = this.chipTooltips.toArray();
-    const count = Math.min(rows.length, tooltips.length);
-
-    // Tooltip-Änderungen asynchron durchführen, um ExpressionChangedAfterItHasBeenCheckedError zu vermeiden
-    Promise.resolve().then(() => {
-      // Re-check: Komponente könnte zwischenzeitlich zerstört worden sein
-      if (!this.chipRowElements || !this.chipTooltips) {
-        return;
-      }
-
-      for (let i = 0; i < count; i++) {
-        const rowElement = rows[i].nativeElement;
-        const text = rowElement.textContent?.trim() ?? '';
-        const tooltip = tooltips[i];
-        const labelElement = rowElement.querySelector<HTMLElement>('.mdc-evolution-chip__text-label, .lux-chip-label');
-        const targetElement = labelElement ?? rowElement;
-        const isTruncated = targetElement.scrollWidth > targetElement.clientWidth;
-
-        tooltip.luxTooltipShowDelay = 500;
-        tooltip.luxTooltip = isTruncated ? text : '';
-        tooltip.message = isTruncated ? text : '';
-        tooltip.disabled = !isTruncated;
-      }
-    });
-  }
-
-  /**
-   * Stößt das Nachladen von Elementen an, wenn ein bestimmter Scrollwert erreicht wurde.
-   * @param event - ScrollEvent
-   */
-  private loadOnScroll(event: Event) {
-    const position = event.target as any;
-    if (position && (position.scrollTop + position.clientHeight) / position.scrollHeight > 85 / 100) {
-      this.updateDisplayedEntries();
-    }
-  }
-
-  /**
-   * Läd den nächsten Block Daten aus den Entries nach.
-   */
-  updateDisplayedEntries() {
-    if (this.filteredOptions.length > 0) {
-      if (this.matAutocompleteComponent) {
-        this.loadingRunning = true;
-        this.activeIndex = this.matAutocompleteComponent._keyManager.activeItemIndex ?? -1;
-      }
-      const start = 0;
-      const end = Math.min(this.luxOptionBlockSize, this.filteredOptions.length);
-      this.displayedOptions.push(...this.filteredOptions.splice(start, end));
-    }
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**
@@ -397,22 +335,20 @@ export class LuxChipsAcComponent
       this.actionRunning = true;
 
       if (value && value.trim().length > 0) {
-        if (this.luxNewChipGroup) {
-          const found =
-            this.luxAutocompleteOptions && this.luxAutocompleteOptions.length > 0
-              ? !!this.luxAutocompleteOptions.find((option) => option === value)
-              : true;
-          const foundLabel = this.luxNewChipGroup.luxLabels ? !!this.luxNewChipGroup.luxLabels.find((label) => label === value) : false;
+        const newChipGroup = this.luxNewChipGroup();
 
-          if (!this.luxStrict || (found && !foundLabel)) {
-            this.luxNewChipGroup.add(value);
+        if (newChipGroup) {
+          const options = this.luxAutocompleteOptions();
+          const found = options && options.length > 0 ? !!options.find((option) => option === value) : true;
+          const labels = newChipGroup.luxLabels();
+          const foundLabel = labels ? !!labels.find((label) => label === value) : false;
 
-            if (
-              this.luxNewChipGroup.luxLabels &&
-              Array.isArray(this.luxNewChipGroup.luxLabels) &&
-              this.luxNewChipGroup.luxLabels.length > 0
-            ) {
-              this.formControl.setValue([...this.luxNewChipGroup.luxLabels]);
+          if (!this.luxStrict() || (found && !foundLabel)) {
+            newChipGroup.add(value);
+
+            const newLabels = newChipGroup.luxLabels();
+            if (newLabels && Array.isArray(newLabels) && newLabels.length > 0) {
+              this.formControl.setValue([...newLabels]);
             } else {
               this.formControl.setValue([]);
             }
@@ -423,9 +359,7 @@ export class LuxChipsAcComponent
 
         // Autocomplete-Feld in jedem Fall schließen (Delay über Timeout, damit kein visuelles Flackern entsteht)
         setTimeout(() => {
-          if (this.matAutocompleteTrigger) {
-            this.matAutocompleteTrigger.closePanel();
-          }
+          this.matAutocompleteTrigger()?.closePanel();
         });
       }
     } finally {
@@ -434,7 +368,7 @@ export class LuxChipsAcComponent
   }
 
   onFocusOut() {
-    if (this.luxNewChipGroup) {
+    if (this.luxNewChipGroup()) {
       // Verzögerung nur bei luxNewChipGroup: dort wird der Wert asynchron gesetzt
       // (add/remove löst setValue erst nach dem Event aus), sodass ein direktes
       // markAsTouched kurzzeitig einen falschen required-Fehler anzeigen würde.
@@ -452,14 +386,16 @@ export class LuxChipsAcComponent
 
       chipGroup.remove(index);
 
-      if (chipGroup === this.luxNewChipGroup) {
-        if (chipGroup.luxLabels && Array.isArray(chipGroup.luxLabels) && chipGroup.luxLabels.length > 0) {
-          this.formControl.setValue([...chipGroup.luxLabels]);
+      if (chipGroup === this.luxNewChipGroup()) {
+        const labels = chipGroup.luxLabels();
+
+        if (labels && Array.isArray(labels) && labels.length > 0) {
+          this.formControl.setValue([...labels]);
         } else {
           this.formControl.setValue([]);
         }
 
-        this.filteredOptions = this.luxAutocompleteOptions ? this.luxAutocompleteOptions : [];
+        this.setFilteredOptions(this.luxAutocompleteOptions());
       }
     } finally {
       this.actionRunning = false;
@@ -491,9 +427,7 @@ export class LuxChipsAcComponent
    * auswählen.
    */
   onAutocompleteClick() {
-    if (this.matAutocompleteTrigger) {
-      this.matAutocompleteTrigger.openPanel();
-    }
+    this.matAutocompleteTrigger()?.openPanel();
   }
 
   /**
@@ -512,17 +446,13 @@ export class LuxChipsAcComponent
    * @param input
    */
   inputAdd(input: HTMLInputElement) {
-    if (!this.matAutocomplete?.isOpen) {
+    if (!this.matAutocomplete()?.isOpen) {
+      const options = this.luxAutocompleteOptions();
+      const displayedOptions = this.displayedOptions();
+
       // Falls nur eine Option übrig ist, wird diese als Wert anstelle des Inputtextes verwendet.
-      if (
-        input.value &&
-        input.value.length > 0 &&
-        this.luxAutocompleteOptions &&
-        this.luxAutocompleteOptions.length > 1 &&
-        this.displayedOptions &&
-        this.displayedOptions.length === 1
-      ) {
-        this.newChip$.next(this.displayedOptions[0]);
+      if (input.value && input.value.length > 0 && options && options.length > 1 && displayedOptions && displayedOptions.length === 1) {
+        this.newChip$.next(displayedOptions[0]);
         input.value = '';
       } else {
         this.newChip$.next(input.value);
@@ -554,40 +484,102 @@ export class LuxChipsAcComponent
   }
 
   onArrowIcon() {
-    if (this.matAutocompleteTrigger?.panelOpen) {
-      if (this.matChips.length > 0 || this.canClose) {
-        this.matAutocompleteTrigger?.closePanel();
+    const trigger = this.matAutocompleteTrigger();
+
+    if (trigger?.panelOpen) {
+      if (this.matChips().length > 0 || this.canClose) {
+        trigger.closePanel();
       }
     } else {
-      this.matAutocompleteTrigger?.openPanel();
-    }
-  }
-
-  protected override initFormControl() {
-    try {
-      this.initRunning = true;
-      super.initFormControl();
-    } finally {
-      this.initRunning = false;
+      trigger?.openPanel();
     }
   }
 
   protected override notifyFormValueChanged(formValue: any) {
     super.notifyFormValueChanged(formValue);
 
+    const newChipGroup = this.luxNewChipGroup();
+
     // An dieser Stelle muss man die ValueChanged-Events ignorieren,
     // welche durch die add- und onChipGroupRemove-Methode ausgelöst
     // wurden. In diesen Fällen sind die luxLabels der ChipGroup
     // bereits aktualisiert worden. Um das doppelte Setzen zu
     // verhindern, wurde hier das actionRunning-Flag eingeführt.
-    if (!this.actionRunning && this.inForm && this.luxNewChipGroup) {
+    if (!this.actionRunning && this.inForm && newChipGroup) {
       if (formValue && Array.isArray(formValue)) {
-        this.luxNewChipGroup.luxLabels = [...formValue];
+        newChipGroup.luxLabels.set([...formValue]);
       } else {
-        this.luxNewChipGroup.luxLabels = [];
+        newChipGroup.luxLabels.set([]);
       }
 
-      this.filteredOptions = this.luxAutocompleteOptions ? this.luxAutocompleteOptions : [];
+      this.setFilteredOptions(this.luxAutocompleteOptions());
+    }
+  }
+
+  /**
+   * Übernimmt die neuen Optionen, filtert bereits selektierte Chips heraus und
+   * setzt die dargestellte Liste zurück.
+   */
+  private setFilteredOptions(newOptions: string[]) {
+    if (newOptions && Array.isArray(newOptions)) {
+      const newChipGroup = this.luxNewChipGroup();
+      const selectedChips = newChipGroup && Array.isArray(newChipGroup.luxLabels()) ? newChipGroup.luxLabels() : [];
+      this.filteredOptions.set(newOptions.filter((option) => !selectedChips.includes(option)));
+    } else {
+      this.filteredOptions.set([]);
+    }
+
+    if (this.onInitFinished) {
+      this.displayedOptions.set([]);
+      this.updateDisplayedEntries();
+    }
+  }
+
+  private syncFormControlWithStandaloneChips() {
+    const count = this.luxChipComponents().length;
+    // Bei 0 Chips setzen wir bewusst `null`, damit der FormControl-Typ
+    // `FormControl<string[] | null>` die Semantik "kein Wert" repräsentiert.
+    // Hinweis: Der Array-Inhalt dient hier nur als Präsenz-Indikator für den
+    // required-Validator. Die tatsächlichen Chip-Labels werden ausschließlich
+    // durch das Parent-Template verwaltet (deklarative lux-chip-ac-Elemente).
+    const newValue: string[] | null = count > 0 ? new Array(count).fill('') : null;
+    this.formControl.setValue(newValue, { emitEvent: false });
+    // emitEvent: false wird auch hier gesetzt, damit kein doppeltes valueChanges-Event
+    // ausgelöst wird; updateValueAndValidity wertet lediglich die Validatoren neu aus.
+    this.formControl.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private updateChipTooltips() {
+    const rows = this.chipRowElements();
+    const tooltips = this.chipTooltips();
+    const count = Math.min(rows.length, tooltips.length);
+
+    // Tooltip-Änderungen asynchron durchführen, um ExpressionChangedAfterItHasBeenCheckedError zu vermeiden
+    Promise.resolve().then(() => {
+      for (let i = 0; i < count; i++) {
+        const rowElement = rows[i].nativeElement as HTMLElement;
+        const text = rowElement.textContent?.trim() ?? '';
+        const tooltip = tooltips[i];
+        const labelElement = rowElement.querySelector<HTMLElement>('.mdc-evolution-chip__text-label, .lux-chip-label');
+        const targetElement = labelElement ?? rowElement;
+        const isTruncated = targetElement.scrollWidth > targetElement.clientWidth;
+
+        tooltip.luxTooltipShowDelay = 500;
+        tooltip.luxTooltip = isTruncated ? text : '';
+        tooltip.message = isTruncated ? text : '';
+        tooltip.disabled = !isTruncated;
+      }
+    });
+  }
+
+  /**
+   * Stößt das Nachladen von Elementen an, wenn ein bestimmter Scrollwert erreicht wurde.
+   * @param event - ScrollEvent
+   */
+  private loadOnScroll(event: Event) {
+    const position = event.target as any;
+    if (position && (position.scrollTop + position.clientHeight) / position.scrollHeight > 85 / 100) {
+      this.updateDisplayedEntries();
     }
   }
 }

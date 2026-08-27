@@ -42,7 +42,7 @@ export class LuxFilterSaveDialogComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       if (this.filterNameComponent) {
-        this.filterNameComponent.inputElement.nativeElement.focus();
+        this.filterNameComponent.inputElement()?.nativeElement.focus();
       }
     });
   }

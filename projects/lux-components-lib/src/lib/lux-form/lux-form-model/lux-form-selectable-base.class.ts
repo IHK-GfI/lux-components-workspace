@@ -1,8 +1,10 @@
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, computed, input, output } from '@angular/core';
 import { LuxFormComponentBase } from './lux-form-component-base.class';
 
 export declare type LuxPickValueFnType<O = any, V = any> = ((option: O) => V) | undefined;
 export declare type LuxCompareWithFnType<O = any> = ((o1: O, o2: O) => boolean) | undefined;
+
+const defaultCompareWithFn = (o1: any, o2: any) => o1 === o2;
 
 /**
  * Basis-Klasse für FormComponents, die einen ähnlichen Grundaufbau für die Auswahl von
@@ -13,57 +15,44 @@ export declare type LuxCompareWithFnType<O = any> = ((o1: O, o2: O) => boolean) 
  */
 @Directive()
 export abstract class LuxFormSelectableBase<O = any, V = any, P = any> extends LuxFormComponentBase<V> {
-  _luxOptions: any[] = [];
-  _luxOptionsPickValue: any[] = [];
-  _luxPickValue?: LuxPickValueFnType<O, P>;
-  _luxCompareWith = (o1: O, o2: O) => o1 === o2;
+  readonly luxOptionLabelProp = input<string, string | undefined>('', { transform: (labelProp) => labelProp ?? '' });
+  readonly luxTagId = input<string | undefined>(undefined);
+  readonly luxOptions = input<any[]>([]);
+  readonly luxPickValue = input<LuxPickValueFnType<O, P>>(undefined);
 
-  @Output() luxSelectedChange = new EventEmitter<any>();
-  @Input() luxOptionLabelProp? = '';
-  @Input() luxTagId?: string;
+  readonly luxCompareWith = input<(o1: O, o2: O) => boolean, LuxCompareWithFnType<O>>(defaultCompareWithFn, {
+    transform: (compareFn) => compareFn ?? defaultCompareWithFn
+  });
 
-  get luxCompareWith(): LuxCompareWithFnType | undefined {
-    return this._luxCompareWith;
+  /**
+   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
+   * Wert liefern das Signal value() bzw. getValue().
+   */
+  readonly luxSelected = input<V | null>(null);
+  readonly luxSelectedChange = output<any>();
+
+  /**
+   * Die über luxPickValue aus luxOptions abgeleiteten Werte.
+   */
+  readonly luxOptionsPickValue = computed(() => {
+    const pickValueFn = this.luxPickValue();
+    const options = this.luxOptions();
+
+    return pickValueFn && options ? options.map((option) => pickValueFn(option)) : [];
+  });
+
+  constructor() {
+    super();
+
+    this.syncValueInputToFormControl(this.luxSelected);
   }
 
-  @Input()
-  set luxCompareWith(compareFn: LuxCompareWithFnType | undefined) {
-    this._luxCompareWith = compareFn ?? ((o1: O, o2: O) => o1 === o2);
-  }
+  override ngOnInit() {
+    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
+    // löst der Initialwert - wie bisher - noch kein luxSelectedChange aus.
+    this._initialValue = this.luxSelected();
 
-  get luxSelected(): V | null {
-    return this.getValue();
-  }
-
-  @Input() set luxSelected(selected: V | null) {
-    this.setValue(selected as V);
-  }
-
-  get luxPickValue(): LuxPickValueFnType<O, P> {
-    return this._luxPickValue;
-  }
-
-  @Input() set luxPickValue(pickValueFn: LuxPickValueFnType<O, P>) {
-    this._luxPickValue = pickValueFn;
-    this._luxOptionsPickValue = [];
-
-    if (pickValueFn && this.luxOptions) {
-      this._luxOptions.forEach((option) => this._luxOptionsPickValue.push(pickValueFn(option)));
-    }
-  }
-
-  get luxOptions(): any[] {
-    return this._luxOptions;
-  }
-
-  @Input() set luxOptions(options: any[]) {
-    this._luxOptions = options;
-    this._luxOptionsPickValue = [];
-
-    const pickValueFn = this.luxPickValue;
-    if (this._luxOptions && pickValueFn) {
-      this._luxOptions.forEach((option) => this._luxOptionsPickValue.push(pickValueFn(option)));
-    }
+    super.ngOnInit();
   }
 
   override notifyFormValueChanged(formValue: any) {
@@ -76,10 +65,13 @@ export abstract class LuxFormSelectableBase<O = any, V = any, P = any> extends L
    * @param selected
    */
   private checkSelectedAndUpdate(selected: any) {
-    if (this.luxOptions && this.luxOptions.length > 0 && this.formControl) {
-      if (this.luxPickValue && selected instanceof Object && !Array.isArray(selected)) {
+    const options = this.luxOptions();
+    const pickValueFn = this.luxPickValue();
+
+    if (options && options.length > 0 && this.formControl) {
+      if (pickValueFn && selected instanceof Object && !Array.isArray(selected)) {
         // Wenn der Wert zufälligerweise noch ein Objekt sein sollte, versuchen den Key auszulesen
-        selected = this.luxPickValue(selected);
+        selected = pickValueFn(selected);
 
         // Da der Wert neu gesetzt wurde, diesen im nächsten Zyklus erst in die Werte schreiben
         setTimeout(() => {
@@ -87,10 +79,11 @@ export abstract class LuxFormSelectableBase<O = any, V = any, P = any> extends L
         });
       } else {
         // Für den Fall, dass der eingesetzte Wert sich doch noch vom FormControl-Value unterscheidet,
-        // diesen ergänzen
-        if (this.luxSelected !== selected) {
-          this.luxSelected = selected;
+        // diesen ergänzen.
+        if (this.getValue() !== selected) {
+          this.setValue(selected);
         }
+
         this.luxSelectedChange.emit(selected);
       }
     }
@@ -106,7 +99,7 @@ export abstract class LuxFormSelectableBase<O = any, V = any, P = any> extends L
     if ((!o1 && o2) || (o1 && !o2)) {
       return false;
     } else {
-      return this._luxCompareWith(o1, o2);
+      return this.luxCompareWith()(o1, o2);
     }
   };
 }

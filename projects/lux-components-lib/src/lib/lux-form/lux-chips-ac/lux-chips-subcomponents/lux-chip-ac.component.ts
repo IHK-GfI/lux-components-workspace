@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, input, model, output, viewChild } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 import { LuxUtil } from '../../../lux-util/lux-util';
 
 @Component({
   selector: 'lux-chip-ac',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template>
       <ng-content></ng-content>
@@ -14,31 +14,23 @@ import { LuxUtil } from '../../../lux-util/lux-util';
 export class LuxChipAcComponent implements AfterViewInit {
   private removeClicked = false;
 
-  private _luxColor: LuxThemePalette = 'primary';
+  readonly templateRef = viewChild.required(TemplateRef);
 
-  @ViewChild(TemplateRef, { static: true }) templateRef!: TemplateRef<any>;
+  readonly luxChipRemoved = output<number>();
+  readonly luxChipClicked = output<number>();
 
-  @Output() luxChipRemoved = new EventEmitter<number>();
-  @Output() luxChipClicked = new EventEmitter<number>();
+  /**
+   * Wird von der umgebenden lux-chips-ac-Komponente mitgesetzt, wenn dort luxDisabled wechselt.
+   */
+  readonly luxDisabled = model(false);
+  readonly luxRemovable = input(true);
 
-  @Input() luxDisabled = false;
-  @Input() luxRemovable = true;
-
-  get luxColor(): LuxThemePalette {
-    return this._luxColor;
-  }
-
-  @Input() set luxColor(color: LuxThemePalette) {
-    if (color !== 'primary' && color !== 'accent' && color !== 'warn') {
-      color = undefined;
-    }
-    this._luxColor = color;
-  }
-
-  constructor() {}
+  readonly luxColor = input<LuxThemePalette, LuxThemePalette>('primary', {
+    transform: (color) => (color === 'primary' || color === 'accent' || color === 'warn' ? color : undefined)
+  });
 
   ngAfterViewInit() {
-    LuxUtil.assertNonNull('templateRef', this.templateRef);
+    LuxUtil.assertNonNull('templateRef', this.templateRef());
   }
 
   remove(index: number) {

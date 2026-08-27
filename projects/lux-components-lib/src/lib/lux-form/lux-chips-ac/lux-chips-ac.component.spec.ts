@@ -339,7 +339,7 @@ describe('LuxChipComponent-Authentic', () => {
       const inputElement = fixture.debugElement.query(By.css('input'));
       chipsComponent.inputValue$.next('1');
       // Eigentlich muss ein "blur"-Event stattfinden, um die Options auszublenden, wir machen das im Test per Hand.
-      spyOnProperty(chipsComponent.matAutocomplete!, 'isOpen', 'get').and.returnValue(false);
+      spyOnProperty(chipsComponent.matAutocomplete()!, 'isOpen', 'get').and.returnValue(false);
 
       LuxTestHelper.typeInElementAsync('1', fixture, inputElement.nativeElement, () => {
         LuxTestHelper.dispatchEvent(inputElement.nativeElement, new Event('blur'));
@@ -669,14 +669,14 @@ describe('LuxChipComponent-Authentic', () => {
     }));
 
     it('Sollte die Optionen nachladen', fakeAsync(() => {
-      LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'Lorem');
+      LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'Lorem');
       LuxTestHelper.wait(fixture, delay);
 
       let options = fixture.nativeElement.querySelectorAll('mat-option');
       expect(options?.length).toEqual(8);
-      expect(autocomplete.luxAutocompleteOptions.length).toEqual(10);
-      expect(autocomplete.displayedOptions.length).toEqual(8);
-      expect(autocomplete.filteredOptions.length).toEqual(2);
+      expect(autocomplete.luxAutocompleteOptions().length).toEqual(10);
+      expect(autocomplete.displayedOptions().length).toEqual(8);
+      expect(autocomplete.filteredOptions().length).toEqual(2);
 
       const spy = spyOn(autocomplete, 'updateDisplayedEntries').and.callThrough();
       const panel = fixture.debugElement.query(By.css('div.mat-mdc-autocomplete-panel'));
@@ -686,21 +686,21 @@ describe('LuxChipComponent-Authentic', () => {
       LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(autocomplete.luxAutocompleteOptions.length).toEqual(10);
-      expect(autocomplete.displayedOptions.length).toEqual(10);
-      expect(autocomplete.filteredOptions.length).toEqual(0);
+      expect(autocomplete.luxAutocompleteOptions().length).toEqual(10);
+      expect(autocomplete.displayedOptions().length).toEqual(10);
+      expect(autocomplete.filteredOptions().length).toEqual(0);
 
-      autocomplete.luxAutocompleteOptions = [...autocomplete.luxAutocompleteOptions];
+      component.options = [...component.options];
       LuxTestHelper.wait(fixture);
 
-      LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'Lorem ');
+      LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'Lorem ');
       LuxTestHelper.wait(fixture, delay);
 
       options = fixture.nativeElement.querySelectorAll('mat-option');
       expect(options?.length).toEqual(8);
-      expect(autocomplete.luxAutocompleteOptions.length).toEqual(10);
-      expect(autocomplete.displayedOptions.length).toEqual(8);
-      expect(autocomplete.filteredOptions.length).toEqual(2);
+      expect(autocomplete.luxAutocompleteOptions().length).toEqual(10);
+      expect(autocomplete.displayedOptions().length).toEqual(8);
+      expect(autocomplete.filteredOptions().length).toEqual(2);
 
       discardPeriodicTasks();
     }));
@@ -777,7 +777,7 @@ class LuxScrollComponent {
       [luxStrict]="strict"
       [luxAutocompleteOptions]="[]"
     >
-      <lux-chip-ac-group [luxRemovable]="true" luxColor="primary" [luxLabels]="chips" #myChipGroup> </lux-chip-ac-group>
+      <lux-chip-ac-group [luxRemovable]="true" luxColor="primary" [(luxLabels)]="chips" #myChipGroup> </lux-chip-ac-group>
     </lux-chips-ac>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -888,7 +888,7 @@ class LuxFormRequiredValueComponent {
       <lux-chip-ac-group
         [luxRemovable]="groupRemovable"
         [luxColor]="groupColor"
-        [luxLabels]="groupLabels"
+        [(luxLabels)]="groupLabels"
         [luxDisabled]="groupDisabled"
         (luxChipRemoved)="groupChipRemoved($event)"
         (luxChipAdded)="groupChipAdded($event)"

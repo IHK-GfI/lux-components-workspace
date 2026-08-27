@@ -1,67 +1,71 @@
 @if (formGroup) {
-<lux-form-control-wrapper
-  (mousedown)="onWrapperClick($event)"
-  [luxFormComponent]="this"
-  [luxNoLabels]="luxNoLabels"
-  [luxNoBottomLabel]="luxNoBottomLabel"
-  [luxNoTopLabel]="luxNoTopLabel"
-  [formGroup]="formGroup"
-  [luxLabelLongFormat]="luxLabelLongFormat"
-  [ngClass]="matSelect && matSelect.panelOpen ? 'lux-panel-opened' : ''"
-  luxTagId="luxLookupComboboxWrapper"
->
-  <mat-select
-    luxSelectOptionHeight
-    [luxSelectFilter]="luxEnableFilter"
-    [luxFilterLabelFn]="filterLabelFn"
-    (luxFilterActiveChange)="onFilterActiveChange($event)"
-    [placeholder]="luxPlaceholder"
-    [multiple]="luxMultiple"
-    [required]="luxRequired"
-    [formControl]="formControl"
-    luxTagIdHandler
-    [luxTagId]="luxTagId"
-    [luxSelectVisibleOptionCount]="luxVisibleOptionCount"
-    [panelClass]="[luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac', luxReadonly ? 'lux-display-none' : '', luxEnableFilter ? 'lux-select-panel-ac-filter' : '']"
-    [disableRipple]="true"
-    [errorStateMatcher]="stateMatcher"
-    [compareWith]="compareByKey"
-    (focusin)="luxFocusIn.emit($event)"
-    (focusout)="luxFocusOut.emit($event)"
-    [id]="uid"
-    [luxAriaLabelledby]="labelledBy()"
-    [luxAriaLabel]="luxAriaLabel"
-    [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
-    [attr.aria-invalid]="formControl.invalid"
-    [attr.aria-required]="luxRequired"
-    [attr.aria-readonly]="luxReadonly"
-    #selectFilter="luxSelectFilter"
+  <lux-form-control-wrapper
+    (mousedown)="onWrapperClick($event)"
+    [luxFormComponent]="this"
+    [luxNoLabels]="luxNoLabels()"
+    [luxNoBottomLabel]="luxNoBottomLabel()"
+    [luxNoTopLabel]="luxNoTopLabel()"
+    [formGroup]="formGroup"
+    [luxLabelLongFormat]="luxLabelLongFormat()"
+    [ngClass]="matSelect && matSelect.panelOpen ? 'lux-panel-opened' : ''"
+    luxTagId="luxLookupComboboxWrapper"
   >
-    @if (luxEnableFilter) {
-    <lux-select-panel-filter
-      [placeholder]="luxFilterPlaceholder"
-      [filterValue]="luxFilterValue"
-      [clearAriaLabel]="luxFilterClearAriaLabel"
-      [filterDirective]="selectFilter"
-    ></lux-select-panel-filter>
-    }
-    @if (luxWithEmptyEntry && !luxMultiple) {
-    <mat-option [value]="undefined" class="option-height"></mat-option>
-    }
-    @for (entry of renderedEntries; track entry) {
-      @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
-        <mat-option
-          class="option-height"
-          [value]="entry"
-          [ngClass]="{ invalid: entry.isUngueltig }"
-          [ngStyle]="getStyles(entry.isUngueltig)"
-          [disabled]="entry.isUngueltig && disableUngueltige()"
-          [style.display]="!luxEnableFilter || selectFilter.isItemVisible(entry) ? '' : 'none'"
-        >
-          <span>{{ getLabel(entry) }}</span>
-        </mat-option>
+    <mat-select
+      luxSelectOptionHeight
+      [luxSelectFilter]="luxEnableFilter"
+      [luxFilterLabelFn]="filterLabelFn"
+      (luxFilterActiveChange)="onFilterActiveChange($event)"
+      [placeholder]="luxPlaceholder"
+      [multiple]="luxMultiple"
+      [required]="luxRequired()"
+      [formControl]="formControl"
+      luxTagIdHandler
+      [luxTagId]="luxTagId"
+      [luxSelectVisibleOptionCount]="luxVisibleOptionCount"
+      [panelClass]="[
+        luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
+        luxReadonly() ? 'lux-display-none' : '',
+        luxEnableFilter ? 'lux-select-panel-ac-filter' : ''
+      ]"
+      [disableRipple]="true"
+      [errorStateMatcher]="stateMatcher"
+      [compareWith]="compareByKey"
+      (focusin)="luxFocusIn.emit($event)"
+      (focusout)="luxFocusOut.emit($event)"
+      [id]="uid()"
+      [luxAriaLabelledby]="labelledBy()"
+      [luxAriaLabel]="luxAriaLabel()"
+      [luxAriaDescribedby]="uid() + '-error ' + uid() + '-hint'"
+      [attr.aria-invalid]="invalid()"
+      [attr.aria-required]="luxRequired()"
+      [attr.aria-readonly]="luxReadonly()"
+      #selectFilter="luxSelectFilter"
+    >
+      @if (luxEnableFilter) {
+        <lux-select-panel-filter
+          [placeholder]="luxFilterPlaceholder"
+          [filterValue]="luxFilterValue"
+          [clearAriaLabel]="luxFilterClearAriaLabel"
+          [filterDirective]="selectFilter"
+        ></lux-select-panel-filter>
       }
-    }
-  </mat-select>
-</lux-form-control-wrapper>
+      @if (luxWithEmptyEntry && !luxMultiple) {
+        <mat-option [value]="undefined" class="option-height"></mat-option>
+      }
+      @for (entry of renderedEntries; track entry) {
+        @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
+          <mat-option
+            class="option-height"
+            [value]="entry"
+            [ngClass]="{ invalid: entry.isUngueltig }"
+            [ngStyle]="getStyles(entry.isUngueltig)"
+            [disabled]="entry.isUngueltig && disableUngueltige()"
+            [style.display]="!luxEnableFilter || selectFilter.isItemVisible(entry) ? '' : 'none'"
+          >
+            <span>{{ getLabel(entry) }}</span>
+          </mat-option>
+        }
+      }
+    </mat-select>
+  </lux-form-control-wrapper>
 }

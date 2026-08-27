@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { Component, inject, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
@@ -16,7 +16,7 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
   selector: 'lux-textarea-ac',
   templateUrl: './lux-textarea-ac.component.html',
   styleUrls: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,
@@ -31,70 +31,64 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
     LuxAriaLabelledbyDirective
   ]
 })
-export class LuxTextareaAcComponent<T = string> extends LuxFormInputBaseClass<T> implements OnInit {
-
+export class LuxTextareaAcComponent<T = string> extends LuxFormInputBaseClass<T> {
   private liveAnnouncer = inject(LiveAnnouncer);
 
-  @Input() luxMaxRows = -1;
-  @Input() luxMinRows = 0;
-  @Input() luxHideCounterLabel = false;
-  @Input() set luxMaxLength(maxLength: number) {
-    this._luxMaxLength = maxLength;
-    if (this.formControl) {
-      // Erst nach ngOnInit() vorhanden
-      this.updateCounterLabel();
+  readonly luxMaxRows = input(-1);
+  readonly luxMinRows = input(0);
+  readonly luxHideCounterLabel = input(false);
+  readonly luxMaxLength = input(0);
+
+  readonly focused = signal(false);
+
+  /**
+   * Zeichenzähler, der unterhalb des Feldes angezeigt wird. Basiert auf dem luxValue-Model,
+   * das den FormControl-Wert spiegelt.
+   */
+  readonly counterLabel = computed(() => {
+    const maxLength = this.luxMaxLength();
+
+    if (maxLength <= 0) {
+      return '';
     }
-  }
-  get luxMaxLength() {
-    return this._luxMaxLength;
-  }
 
-  focused = false;
-  counterLabel = '';
-  _luxMaxLength = 0;
+    const value = this.value();
+    return (typeof value === 'string' ? value.length : 0) + '/' + maxLength;
+  });
 
-  override ngOnInit() {
-    super.ngOnInit();
-    this.updateCounterLabel();
-  }
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
 
-  override notifyFormValueChanged(formValue: any) {
-    this.updateCounterLabel();
-    super.notifyFormValueChanged(formValue);
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
+
+  constructor() {
+    super();
+
+    effect(() => {
+      const counterLabel = this.counterLabel();
+
+      if (counterLabel) {
+        untracked(() => this.liveAnnouncer.announce(counterLabel));
+      }
+    });
   }
 
   onFocus(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocus.emit(e);
   }
+
   onFocusIn(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocusIn.emit(e);
   }
-  onFocusOut(e: FocusEvent) {
-    this.focused = false;
-    this.luxFocusOut.emit(e);
-  }
-  descripedBy() {
-    if (this.errorMessage) {
-      return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
-    }
-  }
 
-  private updateCounterLabel() {
-    if (this.luxMaxLength > 0) {
-      if (typeof this.formControl.value === 'string') {
-        this.counterLabel = this.formControl.value.length + '/' + this.luxMaxLength;
-      } else {
-        this.counterLabel = '0/' + this.luxMaxLength;
-      }
-      this.liveAnnouncer.announce(this.counterLabel);
-    } else {
-      this.counterLabel = '';
-    }
+  onFocusOut(e: FocusEvent) {
+    this.focused.set(false);
+    this.luxFocusOut.emit(e);
   }
 }

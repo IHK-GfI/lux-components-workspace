@@ -1,6 +1,18 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, ElementRef, inject, Input, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  computed,
+  contentChild,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+  viewChild
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -21,7 +33,7 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
   selector: 'lux-input-ac',
   templateUrl: './lux-input-ac.component.html',
   styleUrls: ['./lux-input-ac.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFormControlWrapperComponent,
     FormsModule,
@@ -40,40 +52,58 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     LuxAriaLabelledbyDirective
   ]
 })
-export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> implements OnInit {
+export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> {
   private readonly symbolRegExp = /[,.]/;
 
   private liveAnnouncer = inject(LiveAnnouncer);
 
-  @Input() luxType = 'text';
-  @Input() luxNumberAlignLeft = false;
-  @Input() luxHideCounterLabel = false;
-  @Input() luxClearable = false;
-  @Input() luxClearAriaLabel = '';
+  readonly luxType = input('text');
+  readonly luxNumberAlignLeft = input(false);
+  readonly luxHideCounterLabel = input(false);
+  readonly luxClearable = input(false);
+  readonly luxClearAriaLabel = input('');
+  readonly luxMaxLength = input(0);
 
-  @Input() set luxMaxLength(maxLength: number) {
-    this._luxMaxLength = maxLength;
-    if (this.formControl) {
-      //erst nach ngOnInit() vorhanden
-      this.updateCounterLabel();
+  readonly inputPrefix = contentChild(LuxInputAcPrefixComponent);
+  readonly inputSuffix = contentChild(LuxInputAcSuffixComponent);
+  readonly inputElement = viewChild<ElementRef>('input');
+
+  readonly focused = signal(false);
+
+  /**
+   * Zeichenzähler, der unterhalb des Feldes angezeigt wird. Basiert auf dem luxValue-Model,
+   * das den FormControl-Wert spiegelt.
+   */
+  readonly counterLabel = computed(() => {
+    const maxLength = this.luxMaxLength();
+
+    if (maxLength <= 0 || this.luxType() !== 'text') {
+      return '';
     }
-  }
 
-  get luxMaxLength() {
-    return this._luxMaxLength;
-  }
+    const value = this.value();
+    return (typeof value === 'string' ? value.length : 0) + '/' + maxLength;
+  });
 
-  @ContentChild(LuxInputAcPrefixComponent) inputPrefix?: LuxInputAcPrefixComponent;
-  @ContentChild(LuxInputAcSuffixComponent) inputSuffix?: LuxInputAcSuffixComponent;
-  @ViewChild('input', { read: ElementRef }) inputElement!: ElementRef;
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
 
-  counterLabel = '';
-  focused = false;
-  _luxMaxLength = 0;
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
 
-  override ngOnInit() {
-    super.ngOnInit();
-    this.updateCounterLabel();
+  constructor() {
+    super();
+
+    effect(() => {
+      const counterLabel = this.counterLabel();
+
+      if (counterLabel) {
+        untracked(() => this.liveAnnouncer.announce(counterLabel));
+      }
+    });
   }
 
   /**
@@ -82,36 +112,33 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
    */
   onKeyDown(keyboardEvent: KeyboardEvent) {
     // Soll nur für number-Inputs greifen
-    if (this.inputElement) {
-      const value = this.inputElement.nativeElement.value;
+    const inputElement = this.inputElement();
+    if (inputElement) {
+      const value = inputElement.nativeElement.value;
       // Doppelte Punkt-/Komma-Setzung und E's vermeiden
-      if (
-        value &&
-        this.symbolRegExp.test(keyboardEvent.key) &&
-        (this.inputElement.nativeElement.value.match(this.symbolRegExp) || []).length > 0
-      ) {
+      if (value && this.symbolRegExp.test(keyboardEvent.key) && (value.match(this.symbolRegExp) || []).length > 0) {
         keyboardEvent.preventDefault();
       }
     }
   }
 
   onFocus(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocus.emit(e);
   }
 
   onFocusIn(e: FocusEvent) {
-    this.focused = true;
+    this.focused.set(true);
     this.luxFocusIn.emit(e);
   }
 
   onFocusOut(e: FocusEvent) {
-    this.focused = false;
+    this.focused.set(false);
     this.luxFocusOut.emit(e);
   }
 
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled || this.luxReadonly) {
+    if (this.luxDisabled() || this.luxReadonly()) {
       return;
     }
 
@@ -119,16 +146,16 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
       return;
     }
 
-    this.inputElement?.nativeElement?.focus();
+    this.inputElement()?.nativeElement?.focus();
   }
 
   showClearButton(): boolean {
-    if (!this.luxClearable || this.luxReadonly || this.luxDisabled) {
+    if (!this.luxClearable() || this.luxReadonly() || this.luxDisabled()) {
       return false;
     }
 
-    const value = this.inForm ? this.formControl?.value : this.luxValue;
-    return value !== null && value !== undefined && value !== '';
+    const value = this.value();
+    return value !== null && value !== undefined && (value as unknown) !== '';
   }
 
   onClearMouseDown(event: MouseEvent) {
@@ -140,12 +167,12 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
     event.preventDefault();
     event.stopPropagation();
 
-    const inputElement = this.inputElement?.nativeElement as HTMLInputElement | undefined;
+    const inputElement = this.inputElement()?.nativeElement as HTMLInputElement | undefined;
 
     if (this.inForm) {
       this.formControl.setValue(null as T);
     } else {
-      this.luxValue = null as T;
+      this.setValue(null as T);
     }
 
     try {
@@ -162,33 +189,5 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> im
     }
 
     return !!target.closest('.lux-input-clear-btn-container, .lux-input-clear-btn');
-  }
-
-  descripedBy() {
-    if (this.errorMessage) {
-      return this.uid + '-error';
-    } else {
-      return (this.formHintComponent || this.luxHint) && (!this.luxHintShowOnlyOnFocus || (this.luxHintShowOnlyOnFocus && this.focused))
-        ? this.uid + '-hint'
-        : undefined;
-    }
-  }
-
-  override notifyFormValueChanged(formValue: any) {
-    this.updateCounterLabel();
-    super.notifyFormValueChanged(formValue);
-  }
-
-  private updateCounterLabel() {
-    if (this.luxMaxLength > 0 && this.luxType === 'text') {
-      if (typeof this.formControl.value === 'string') {
-        this.counterLabel = this.formControl.value.length + '/' + this.luxMaxLength;
-      } else {
-        this.counterLabel = '0/' + this.luxMaxLength;
-      }
-      this.liveAnnouncer.announce(this.counterLabel);
-    } else {
-      this.counterLabel = '';
-    }
   }
 }
