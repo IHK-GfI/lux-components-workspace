@@ -1,16 +1,16 @@
 <lux-card
   role="gridcell"
-  [ngClass]="{ 'lux-list-item-selected': luxSelected }"
+  [ngClass]="{ 'lux-list-item-selected': luxSelected() }"
   class="lux-item"
-  [luxTitle]="luxTitle"
-  [luxTitleTooltip]="luxTitleTooltip"
-  [luxSubTitle]="luxSubTitle"
-  [luxSubTitleTooltip]="luxSubTitleTooltip"
-  [luxTitleLineBreak]="luxTitleLineBreak"
+  [luxTitle]="luxTitle()"
+  [luxTitleTooltip]="luxTitleTooltip()"
+  [luxSubTitle]="luxSubTitle()"
+  [luxSubTitleTooltip]="luxSubTitleTooltip()"
+  [luxTitleLineBreak]="luxTitleLineBreak()"
   [luxUseTabIndex]="false"
   (luxClicked)="clicked($event)"
 >
-  @if (customHeaderComponent) {
+  @if (customHeaderComponent()) {
     <lux-card-custom-header>
       <ng-content select="lux-list-item-custom-header"></ng-content>
     </lux-card-custom-header>

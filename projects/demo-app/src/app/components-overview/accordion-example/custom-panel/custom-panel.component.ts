@@ -21,6 +21,6 @@ export class CustomPanelComponent extends LuxPanelComponent implements AfterView
   @ViewChild(LuxPanelComponent, { static: true }) luxPanel!: LuxPanelComponent;
 
   protected override getMatExpansionPanel() {
-    return this.luxPanel.matExpansionPanel;
+    return this.luxPanel.matExpansionPanel();
   }
 }

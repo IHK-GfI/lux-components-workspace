@@ -1,19 +1,17 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ContentChildren,
-    EventEmitter,
-    forwardRef,
-    inject,
-    Input,
-    OnChanges,
-    Output,
-    QueryList,
-    TemplateRef,
-    ViewChild
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  contentChildren,
+  forwardRef,
+  inject,
+  input,
+  model,
+  output,
+  TemplateRef,
+  viewChild
 } from '@angular/core';
 import { LuxButtonComponent } from '../../../../../lux-action/lux-button/lux-button.component';
 import { LuxAriaExpandedDirective } from '../../../../../lux-directives/lux-aria/lux-aria-expanded.directive';
@@ -25,42 +23,42 @@ import { LuxIconComponent } from '../../../../../lux-icon/lux-icon/lux-icon.comp
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, LuxAriaExpandedDirective, NgTemplateOutlet, LuxButtonComponent, LuxIconComponent]
 })
-export class LuxSideNavItemComponent implements AfterViewInit, OnChanges {
+export class LuxSideNavItemComponent implements AfterViewInit {
   private cdr = inject(ChangeDetectorRef);
 
-  @ViewChild(TemplateRef) templateRef?: TemplateRef<any>;
+  readonly templateRef = viewChild(TemplateRef);
 
-  @Input() luxLabel?: string;
-  @Input() luxDisabled = false;
-  @Input() luxTagId?: string;
-  @Input() luxSelected = false;
-  @Input() luxCloseOnClick = true;
-  @Input() luxIconName?: string;
-  @Input() luxExpandable = false;
-  @Input() luxExpanded = true;
+  readonly luxLabel = input<string | undefined>();
+  readonly luxDisabled = input(false);
+  readonly luxTagId = input<string | undefined>();
+  readonly luxSelected = input(false);
+  readonly luxCloseOnClick = input(true);
+  readonly luxIconName = input<string | undefined>();
+  readonly luxExpandable = input(false);
+  readonly luxExpanded = model(true);
 
-  @Output() luxClicked = new EventEmitter<Event>();
+  readonly luxClicked = output<Event>();
 
-  @ContentChildren(forwardRef(() => LuxSideNavItemComponent)) sideNavItems!: QueryList<LuxSideNavItemComponent>;
+  readonly sideNavItems = contentChildren(forwardRef(() => LuxSideNavItemComponent));
 
-  ngOnChanges() {
-    // Bei Input Änderungen die CD anstossen
-    this.cdr.detectChanges();
+  get lastSideNavItem(): LuxSideNavItemComponent | undefined {
+    const items = this.sideNavItems();
+    return items.length > 0 ? items[items.length - 1] : undefined;
   }
 
   ngAfterViewInit() {
     // Nach Abschluss der Initialisierung die CD anstossen
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   onClick(event: Event) {
-    if (this.luxDisabled) {
+    if (this.luxDisabled()) {
       return;
     }
 
     this.luxClicked.emit(event);
-    if (this.luxExpandable) {
-      this.luxExpanded = !this.luxExpanded;
+    if (this.luxExpandable()) {
+      this.luxExpanded.update((expanded) => !expanded);
     }
   }
 }

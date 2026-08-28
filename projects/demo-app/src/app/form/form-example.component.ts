@@ -110,7 +110,7 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
 
   handleSaveClicked() {
     let formGroup: FormGroup | null;
-    switch (this.tabComponent.luxActiveTab) {
+    switch (this.tabComponent.luxActiveTab()) {
       case 0:
         formGroup = this.formCommon.myGroup;
         break;
@@ -140,7 +140,7 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   }
 
   highlightErrors() {
-    switch (this.tabComponent.luxActiveTab) {
+    switch (this.tabComponent.luxActiveTab()) {
       case 0:
         LuxUtil.showValidationErrors(this.formCommon.myGroup);
         break;

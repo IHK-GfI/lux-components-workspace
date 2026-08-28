@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'lux-app-header-action-nav-item-custom',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>'
 })
-export class LuxAppHeaderActionNavItemCustomComponent {
-  constructor() {}
-}
+export class LuxAppHeaderActionNavItemCustomComponent {}

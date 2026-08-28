@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 
-import { Component, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { LuxBadgeNotificationColor } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTabComponent } from './lux-tabs-subcomponents/lux-tab.component';
@@ -73,17 +73,17 @@ describe('LuxTabsComponent', () => {
       // Given
       let tabEl = fixture.debugElement.query(By.css('.mat-mdc-tab-disabled'));
       expect(component.animationActive).toBeFalsy();
-      expect(component.disabled).toBeFalsy();
+      expect(component.disabled()).toBeFalsy();
       expect(tabEl).toBeNull();
 
       // When
-      component.disabled = true;
+      component.disabled.set(true);
       fixture.detectChanges();
 
       // Then
       tabEl = fixture.debugElement.query(By.css('.mat-mdc-tab-disabled'));
       expect(component.animationActive).toBeFalsy();
-      expect(component.disabled).toBeTruthy();
+      expect(component.disabled()).toBeTruthy();
       expect(tabEl).not.toBeNull();
     });
 
@@ -91,18 +91,18 @@ describe('LuxTabsComponent', () => {
       // Given
       let tabEl = fixture.debugElement.query(By.css('.mat-mdc-tab-disabled'));
       expect(component.animationActive).toBeFalsy();
-      expect(component.disabled).toBeFalsy();
+      expect(component.disabled()).toBeFalsy();
       expect(tabEl).toBeNull();
 
       // When
       component.animationActive = true;
-      component.disabled = true;
+      component.disabled.set(true);
       fixture.detectChanges();
 
       // Then
       tabEl = fixture.debugElement.query(By.css('.mat-mdc-tab-disabled'));
       expect(component.animationActive).toBeTruthy();
-      expect(component.disabled).toBeTruthy();
+      expect(component.disabled()).toBeTruthy();
       expect(tabEl).not.toBeNull();
     });
   });
@@ -122,21 +122,21 @@ describe('LuxTabsComponent', () => {
       expect(component.labelAaa).not.toBeUndefined();
       expect(component.labelBbb).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
-      expect(component.lazyLoading).toBeTruthy();
-      expect(component.currentTabIndex).toEqual(0);
+      expect(component.lazyLoading()).toBeTruthy();
+      expect(component.currentTabIndex()).toEqual(0);
 
       // When
       component.animationActive = false;
-      component.lazyLoading = true;
-      component.currentTabIndex = 1;
+      component.lazyLoading.set(true);
+      component.currentTabIndex.set(1);
       fixture.detectChanges();
 
       // Then
       expect(component.labelAaa).toBeUndefined();
       expect(component.labelBbb).not.toBeUndefined();
       expect(component.animationActive).toBeFalsy();
-      expect(component.lazyLoading).toBeTruthy();
-      expect(component.currentTabIndex).toEqual(1);
+      expect(component.lazyLoading()).toBeTruthy();
+      expect(component.currentTabIndex()).toEqual(1);
     });
 
     it('luxLazyLoading=true mit Animation', () => {
@@ -144,21 +144,21 @@ describe('LuxTabsComponent', () => {
       expect(component.labelAaa).not.toBeUndefined();
       expect(component.labelBbb).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
-      expect(component.lazyLoading).toBeTruthy();
-      expect(component.currentTabIndex).toEqual(0);
+      expect(component.lazyLoading()).toBeTruthy();
+      expect(component.currentTabIndex()).toEqual(0);
 
       // When
       component.animationActive = true;
-      component.lazyLoading = true;
-      component.currentTabIndex = 1;
+      component.lazyLoading.set(true);
+      component.currentTabIndex.set(1);
       fixture.detectChanges();
 
       // Then
       expect(component.labelAaa).toBeUndefined();
       expect(component.labelBbb).not.toBeUndefined();
       expect(component.animationActive).toBeTruthy();
-      expect(component.lazyLoading).toBeTruthy();
-      expect(component.currentTabIndex).toEqual(1);
+      expect(component.lazyLoading()).toBeTruthy();
+      expect(component.currentTabIndex()).toEqual(1);
     });
 
     it('luxLazyLoading=false ohne Animation', () => {
@@ -166,21 +166,21 @@ describe('LuxTabsComponent', () => {
       expect(component.labelAaa).not.toBeUndefined();
       expect(component.labelBbb).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
-      expect(component.lazyLoading).toBeTruthy();
-      expect(component.currentTabIndex).toEqual(0);
+      expect(component.lazyLoading()).toBeTruthy();
+      expect(component.currentTabIndex()).toEqual(0);
 
       // When
       component.animationActive = false;
-      component.lazyLoading = false;
-      component.currentTabIndex = 1;
+      component.lazyLoading.set(false);
+      component.currentTabIndex.set(1);
       fixture.detectChanges();
 
       // Then
       expect(component.labelAaa).not.toBeUndefined();
       expect(component.labelBbb).not.toBeUndefined();
       expect(component.animationActive).toBeFalsy();
-      expect(component.lazyLoading).toBeFalsy();
-      expect(component.currentTabIndex).toEqual(1);
+      expect(component.lazyLoading()).toBeFalsy();
+      expect(component.currentTabIndex()).toEqual(1);
     });
 
     it('luxLazyLoading=false mit Animation', () => {
@@ -188,21 +188,21 @@ describe('LuxTabsComponent', () => {
       expect(component.labelAaa).not.toBeUndefined();
       expect(component.labelBbb).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
-      expect(component.lazyLoading).toBeTruthy();
-      expect(component.currentTabIndex).toEqual(0);
+      expect(component.lazyLoading()).toBeTruthy();
+      expect(component.currentTabIndex()).toEqual(0);
 
       // When
       component.animationActive = true;
-      component.lazyLoading = false;
-      component.currentTabIndex = 1;
+      component.lazyLoading.set(false);
+      component.currentTabIndex.set(1);
       fixture.detectChanges();
 
       // Then
       expect(component.labelAaa).not.toBeUndefined();
       expect(component.labelBbb).not.toBeUndefined();
       expect(component.animationActive).toBeTruthy();
-      expect(component.lazyLoading).toBeFalsy();
-      expect(component.currentTabIndex).toEqual(1);
+      expect(component.lazyLoading()).toBeFalsy();
+      expect(component.currentTabIndex()).toEqual(1);
     });
   });
 
@@ -232,24 +232,24 @@ describe('LuxTabsComponent', () => {
         // Given
         // When
         // Then
-        expect(component.currentTabIndex).toBeFalsy();
-        expect(component.luxTabs!.luxActiveTab).toBeUndefined();
+        expect(component.currentTabIndex()).toBeFalsy();
+        expect(component.luxTabs!.luxActiveTab()).toBeUndefined();
 
         // When
-        component.currentTabIndex = 1;
+        component.currentTabIndex.set(1);
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-          expect(component.currentTabIndex).toBe(1);
-          expect(component.luxTabs!.luxActiveTab).toBe(1);
+          expect(component.currentTabIndex()).toBe(1);
+          expect(component.luxTabs!.luxActiveTab()).toBe(1);
 
-          component.currentTabIndex = 2;
+          component.currentTabIndex.set(2);
           fixture.detectChanges();
 
           fixture.whenStable().then(() => {
             // Then
-            expect(component.currentTabIndex).toBe(2);
-            expect(component.luxTabs!.luxActiveTab).toBe(2);
+            expect(component.currentTabIndex()).toBe(2);
+            expect(component.luxTabs!.luxActiveTab()).toBe(2);
             done();
           });
         });
@@ -270,24 +270,24 @@ describe('LuxTabsComponent', () => {
         // Given
         // When
         // Then
-        expect(component.currentTabIndex).toBeFalsy();
-        expect(component.luxTabs!.luxActiveTab).toBeUndefined();
+        expect(component.currentTabIndex()).toBeFalsy();
+        expect(component.luxTabs!.luxActiveTab()).toBeUndefined();
 
         // When
-        component.currentTabIndex = 1;
+        component.currentTabIndex.set(1);
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-          expect(component.currentTabIndex).toBe(1);
-          expect(component.luxTabs!.luxActiveTab).toBe(1);
+          expect(component.currentTabIndex()).toBe(1);
+          expect(component.luxTabs!.luxActiveTab()).toBe(1);
 
-          component.currentTabIndex = 2;
+          component.currentTabIndex.set(2);
           fixture.detectChanges();
 
           fixture.whenStable().then(() => {
             // Then
-            expect(component.currentTabIndex).toBe(2);
-            expect(component.luxTabs!.luxActiveTab).toBe(2);
+            expect(component.currentTabIndex()).toBe(2);
+            expect(component.luxTabs!.luxActiveTab()).toBe(2);
             done();
           });
         });
@@ -308,8 +308,8 @@ describe('LuxTabsComponent', () => {
 
     it('Anzahl 0', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(fixture.componentInstance.tabCounter).toEqual(0);
-      expect(fixture.componentInstance.tabCounterCap).toEqual(10);
+      expect(fixture.componentInstance.tabCounter()).toEqual(0);
+      expect(fixture.componentInstance.tabCounterCap()).toEqual(10);
 
       // Nachbedingungen testen
       expect(getBadgeElement(fixture).textContent).toEqual('0');
@@ -317,11 +317,11 @@ describe('LuxTabsComponent', () => {
 
     it('Anzahl 10', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(fixture.componentInstance.tabCounter).toEqual(0);
-      expect(fixture.componentInstance.tabCounterCap).toEqual(10);
+      expect(fixture.componentInstance.tabCounter()).toEqual(0);
+      expect(fixture.componentInstance.tabCounterCap()).toEqual(10);
 
       // Änderungen durchführen
-      fixture.componentInstance.tabCounter = 10;
+      fixture.componentInstance.tabCounter.set(10);
       tick();
       fixture.detectChanges();
       flush();
@@ -332,11 +332,11 @@ describe('LuxTabsComponent', () => {
 
     it('Anzahl 10+', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(fixture.componentInstance.tabCounter).toEqual(0);
-      expect(fixture.componentInstance.tabCounterCap).toEqual(10);
+      expect(fixture.componentInstance.tabCounter()).toEqual(0);
+      expect(fixture.componentInstance.tabCounterCap()).toEqual(10);
 
       // Änderungen durchführen
-      fixture.componentInstance.tabCounter = 11;
+      fixture.componentInstance.tabCounter.set(11);
       tick();
       fixture.detectChanges();
       flush();
@@ -374,7 +374,7 @@ describe('LuxTabsComponent', () => {
 
     it('sollte Standard-Farbe "accent" verwenden', fakeAsync(() => {
       // Given
-      component.showNotification = true;
+      component.showNotification.set(true);
       fixture.detectChanges();
       flush();
 
@@ -384,8 +384,8 @@ describe('LuxTabsComponent', () => {
 
     it('sollte die gesetzte Farbe als CSS-Klasse rendern', fakeAsync(() => {
       // Given
-      component.showNotification = true;
-      component.notificationColor = 'warn';
+      component.showNotification.set(true);
+      component.notificationColor.set('warn');
       fixture.detectChanges();
       flush();
 
@@ -395,14 +395,14 @@ describe('LuxTabsComponent', () => {
 
     it('sollte die CSS-Klasse bei Farbwechsel aktualisieren', fakeAsync(() => {
       // Given
-      component.showNotification = true;
-      component.notificationColor = 'primary';
+      component.showNotification.set(true);
+      component.notificationColor.set('primary');
       fixture.detectChanges();
       flush();
       expect(getNotificationSpan(fixture, 'lux-notification-color-primary')).not.toBeNull();
 
       // When
-      component.notificationColor = 'accent';
+      component.notificationColor.set('accent');
       fixture.detectChanges();
       flush();
 
@@ -413,7 +413,7 @@ describe('LuxTabsComponent', () => {
 
     it('sollte "lux-notification-read" setzen, wenn luxShowNotification false ist', fakeAsync(() => {
       // Given
-      component.showNotification = false;
+      component.showNotification.set(false);
       fixture.detectChanges();
       flush();
 
@@ -424,7 +424,7 @@ describe('LuxTabsComponent', () => {
 
     it('sollte "lux-notification-read" setzen, wenn luxShowNotification undefined ist', fakeAsync(() => {
       // Given
-      component.showNotification = undefined;
+      component.showNotification.set(undefined);
       fixture.detectChanges();
       flush();
 
@@ -445,7 +445,7 @@ describe('LuxTabsComponent', () => {
       </lux-tab>
     </lux-tabs>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxActiveTabChangedTabsComponent {
@@ -466,7 +466,7 @@ class LuxActiveTabChangedTabsComponent {
 
 @Component({
   selector: 'lux-mock-tabs',
-  template: `<lux-tabs [luxActiveTab]="currentTabIndex" luxTagId="tabsID" (luxActiveTabChanged)="tabChanged($event)">
+  template: `<lux-tabs [luxActiveTab]="currentTabIndex()" luxTagId="tabsID" (luxActiveTabChanged)="tabChanged($event)">
     <lux-tab luxIconName="lux-interface-user-single" luxTitle="Tab-Text 0">
       <ng-template> Tab-Content 0 </ng-template>
     </lux-tab>
@@ -477,12 +477,12 @@ class LuxActiveTabChangedTabsComponent {
       <ng-template> Tab-Content 2 </ng-template>
     </lux-tab>
   </lux-tabs>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxMockTabsComponent {
   animated = false;
-  currentTabIndex?: number;
+  currentTabIndex = signal<number | undefined>(undefined);
 
   @ViewChild(LuxTabsComponent) luxTabs?: LuxTabsComponent;
   @ViewChildren(LuxTabComponent) luxTabList!: QueryList<LuxTabComponent>;
@@ -490,26 +490,26 @@ class LuxMockTabsComponent {
   constructor() {}
 
   tabChanged(tabChangeEvent: MatTabChangeEvent) {
-    this.currentTabIndex = tabChangeEvent.index;
+    this.currentTabIndex.set(tabChangeEvent.index);
   }
 }
 
 @Component({
   template: `
     <lux-tabs luxTagId="LuxTabNumberComponent123">
-      <lux-tab luxIconName="lux-ovals" luxTitle="Tabtest" [luxCounter]="tabCounter" [luxCounterCap]="tabCounterCap">
+      <lux-tab luxIconName="lux-ovals" luxTitle="Tabtest" [luxCounter]="tabCounter()" [luxCounterCap]="tabCounterCap()">
         <ng-template>
           <span>---</span>
         </ng-template>
       </lux-tab>
     </lux-tabs>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxTabNumberComponent {
-  tabCounter = 0;
-  tabCounterCap = 10;
+  tabCounter = signal(0);
+  tabCounterCap = signal(10);
 }
 
 @Component({
@@ -522,14 +522,14 @@ class LuxTabNumberComponent {
       </lux-tab>
     </lux-tabs>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxTabWithoutNumberComponent {}
 
 @Component({
   template: `
-    <lux-tabs [luxActiveTab]="currentTabIndex" [luxLazyLoading]="lazyLoading" luxTagId="LuxTabNumberComponent234">
+    <lux-tabs [luxActiveTab]="currentTabIndex()" [luxLazyLoading]="lazyLoading()" luxTagId="LuxTabNumberComponent234">
       <lux-tab luxTitle="Tab A">
         <ng-template>
           <lux-label luxId="AAA" #taba>AAA</lux-label>
@@ -542,16 +542,16 @@ class LuxTabWithoutNumberComponent {}
       </lux-tab>
     </lux-tabs>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTabsComponent, LuxTabComponent, LuxLabelComponent]
 })
 class LuxTabLazyLoadingComponent {
   @ViewChild('taba') labelAaa!: LuxLabelComponent;
   @ViewChild('tabb') labelBbb!: LuxLabelComponent;
 
-  currentTabIndex = 0;
+  currentTabIndex = signal(0);
   animationActive = false;
-  lazyLoading = true;
+  lazyLoading = signal(true);
 }
 
 @Component({
@@ -562,35 +562,35 @@ class LuxTabLazyLoadingComponent {
           <p>Lorem ipsum</p>
         </ng-template>
       </lux-tab>
-      <lux-tab luxTitle="Tab 2" [luxDisabled]="disabled">
+      <lux-tab luxTitle="Tab 2" [luxDisabled]="disabled()">
         <ng-template>
           <p>Lorem ipsum 2</p>
         </ng-template>
       </lux-tab>
     </lux-tabs>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxTabLuxDisabledComponent {
   animationActive = false;
-  disabled = false;
+  disabled = signal(false);
 }
 
 @Component({
   template: `
     <lux-tabs>
-      <lux-tab luxIconName="lux-ovals" [luxShowNotification]="showNotification" [luxNotificationColor]="notificationColor">
+      <lux-tab luxIconName="lux-ovals" [luxShowNotification]="showNotification()" [luxNotificationColor]="notificationColor()">
         <ng-template><span>Inhalt</span></ng-template>
       </lux-tab>
     </lux-tabs>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTabsComponent, LuxTabComponent]
 })
 class LuxNotificationColorComponent {
-  showNotification: boolean | undefined = undefined;
-  notificationColor: LuxBadgeNotificationColor = 'accent';
+  showNotification = signal<boolean | undefined>(undefined);
+  notificationColor = signal<LuxBadgeNotificationColor>('accent');
 }
 
 function getNotificationSpan(fixture: ComponentFixture<any>, colorClass: string): any {

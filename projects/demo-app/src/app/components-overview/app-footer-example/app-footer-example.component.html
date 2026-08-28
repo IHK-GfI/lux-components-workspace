@@ -42,14 +42,16 @@
               luxName="app-footer_cmd"
               luxLabel="cmd"
               luxHint="Diese Property ist eine ID, anhand derer der einzelne Button identifiziert werden kann."
-              [(luxValue)]="buttonInfo.cmd"
+              [luxValue]="buttonInfo.cmd"
+              (luxValueChange)="buttonInfo.cmd = $event; refreshButtonInfos()"
             >
             </lux-input-ac>
             <lux-input-ac
               luxName="app-footer_label"
               luxLabel="label"
               luxHint="Mit dieser Property wird das Label des Footer-Buttons festgelegt."
-              [(luxValue)]="buttonInfo.label"
+              [luxValue]="buttonInfo.label"
+              (luxValueChange)="buttonInfo.label = $event; refreshButtonInfos()"
             >
             </lux-input-ac>
             <lux-input-ac
@@ -58,22 +60,36 @@
               luxType="number"
               [luxNumberAlignLeft]="true"
               luxHint="Mit dieser Property wird die Priorität des Footer-Buttons festgelegt."
-              [(luxValue)]="buttonInfo.prio"
+              [luxValue]="buttonInfo.prio"
+              (luxValueChange)="buttonInfo.prio = $event; refreshButtonInfos()"
             >
             </lux-input-ac>
-            <lux-input-ac luxName="app-footer_tooltip" luxLabel="Tooltip (wenn Button)" [(luxValue)]="buttonInfo.tooltip"> </lux-input-ac>
-            <lux-input-ac luxName="app-footer_tooltip_menu" luxLabel="Tooltip (im Menu)" [(luxValue)]="buttonInfo.tooltipMenu">
+            <lux-input-ac
+              luxName="app-footer_tooltip"
+              luxLabel="Tooltip (wenn Button)"
+              [luxValue]="buttonInfo.tooltip"
+              (luxValueChange)="buttonInfo.tooltip = $event; refreshButtonInfos()"
+            >
+            </lux-input-ac>
+            <lux-input-ac
+              luxName="app-footer_tooltip_menu"
+              luxLabel="Tooltip (im Menu)"
+              [luxValue]="buttonInfo.tooltipMenu"
+              (luxValueChange)="buttonInfo.tooltipMenu = $event; refreshButtonInfos()"
+            >
             </lux-input-ac>
             <lux-input-ac
               luxName="app-footer_iconName"
               luxLabel="iconName"
               luxHint="Diese Property ermöglicht es, ein Icon für den Footer-Button einzurichten."
-              [(luxValue)]="buttonInfo.iconName"
+              [luxValue]="buttonInfo.iconName"
+              (luxValueChange)="buttonInfo.iconName = $event; refreshButtonInfos()"
             >
             </lux-input-ac>
             <lux-select-ac
               luxLabel="color"
-              [(luxSelected)]="buttonInfo.color"
+              [luxSelected]="buttonInfo.color"
+              (luxSelectedChange)="buttonInfo.color = $event; refreshButtonInfos()"
               luxHint="Mithilfe der Property wird die Farbpalette des Buttons definiert."
               [luxOptions]="['primary', 'warn', 'accent']"
             >
@@ -81,39 +97,49 @@
             <lux-toggle-ac
               luxLabel="raised"
               luxHint="Dieses Flag hebt den Button hervor."
-              [(luxChecked)]="buttonInfo.raised"
+              [luxChecked]="buttonInfo.raised"
+              (luxCheckedChange)="buttonInfo.raised = $event; refreshButtonInfos()"
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>
             <lux-toggle-ac
               luxLabel="flat"
               luxHint="Dieses Flag zeigt einen Button ohne Hervorhebung."
-              [(luxChecked)]="buttonInfo.flat"
+              [luxChecked]="buttonInfo.flat"
+              (luxCheckedChange)="buttonInfo.flat = $event; refreshButtonInfos()"
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>
             <lux-toggle-ac
               luxLabel="stroked"
               luxHint="Dieses Flag zeigt einen Button mit Umrandung."
-              [(luxChecked)]="buttonInfo.stroked"
+              [luxChecked]="buttonInfo.stroked"
+              (luxCheckedChange)="buttonInfo.stroked = $event; refreshButtonInfos()"
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>
             <lux-toggle-ac
               luxLabel="disabled"
               luxHint="Mit diesem Flag kann der Button deaktiviert werden."
-              [(luxChecked)]="buttonInfo.disabled"
+              [luxChecked]="buttonInfo.disabled"
+              (luxCheckedChange)="buttonInfo.disabled = $event; refreshButtonInfos()"
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>
             <lux-toggle-ac
               luxLabel="hidden"
               luxHint="Mit diesem Flag kann der Button ausgeblendet werden."
-              [(luxChecked)]="buttonInfo.hidden"
+              [luxChecked]="buttonInfo.hidden"
+              (luxCheckedChange)="buttonInfo.hidden = $event; refreshButtonInfos()"
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>
-            <lux-toggle-ac luxLabel="alwaysVisible" [(luxChecked)]="buttonInfo.alwaysVisible" [luxNoTopLabel]="true">
+            <lux-toggle-ac
+              luxLabel="alwaysVisible"
+              [luxChecked]="buttonInfo.alwaysVisible"
+              (luxCheckedChange)="buttonInfo.alwaysVisible = $event; refreshButtonInfos()"
+              [luxNoTopLabel]="true"
+            >
               <lux-form-hint>
                 Dieses Flag stellt sicher, das dieser Button immer außerhalb des Menus dargestellt wird, solange der Platz noch
                 ausreicht.<br />Andere Buttons, die dieses Flag nicht gesetzt haben, werden dann zuerst ausgeblendet.
@@ -163,17 +189,24 @@
               luxName="app-footer_label"
               luxLabel="label"
               luxHint="Mit dieser Property wird das Label des Link-Buttons festgelegt."
-              [(luxValue)]="linkInfo.label"
+              [luxValue]="linkInfo.label"
+              (luxValueChange)="linkInfo.label = $event; refreshLinkInfos()"
             >
             </lux-input-ac>
             <lux-input-ac
               luxName="app-footer_path"
               luxLabel="path"
               luxHint="Mit dieser Property wird der Pfad des Links bestimmt."
-              [(luxValue)]="linkInfo.path"
+              [luxValue]="linkInfo.path"
+              (luxValueChange)="linkInfo.path = $event; refreshLinkInfos()"
             >
             </lux-input-ac>
-            <lux-toggle-ac luxLabel="alwaysVisible" [(luxChecked)]="linkInfo.alwaysVisible" [luxNoTopLabel]="true">
+            <lux-toggle-ac
+              luxLabel="alwaysVisible"
+              [luxChecked]="linkInfo.alwaysVisible"
+              (luxCheckedChange)="linkInfo.alwaysVisible = $event; refreshLinkInfos()"
+              [luxNoTopLabel]="true"
+            >
               <lux-form-hint>
                 Dieses Flag stellt sicher, das dieser Link immer außerhalb des Menus dargestellt wird, solange der Platz noch ausreicht.<br />Andere
                 Links, die dieses Flag nicht gesetzt haben, werden dann zuerst ausgeblendet.
@@ -183,7 +216,8 @@
             <lux-toggle-ac
               luxLabel="blank"
               luxHint="Dieses Flag aktiviert das Öffnen des Links in einem neuen Tab (wenn externer Link)."
-              [(luxChecked)]="linkInfo.blank"
+              [luxChecked]="linkInfo.blank"
+              (luxCheckedChange)="linkInfo.blank = $event; refreshLinkInfos()"
               [luxNoTopLabel]="true"
             >
             </lux-toggle-ac>

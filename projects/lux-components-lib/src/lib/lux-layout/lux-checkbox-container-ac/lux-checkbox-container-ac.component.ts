@@ -1,16 +1,14 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'lux-checkbox-container-ac',
   templateUrl: './lux-checkbox-container-ac.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass]
 })
 export class LuxCheckboxContainerAcComponent {
-  @Input() luxLabel = '';
-  @Input() luxVertical = true;
-  @Input() luxShowRequiredMarker = false;
-
-  constructor() {}
+  readonly luxLabel = input('');
+  readonly luxVertical = input(true);
+  readonly luxShowRequiredMarker = input(false);
 }

@@ -1,4 +1,15 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostBinding,
+  inject,
+  input,
+  OnDestroy,
+  output,
+  viewChild
+} from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
@@ -9,21 +20,22 @@ import { LuxMediaQueryObserverService } from '../../../lux-util/lux-media-query-
 @Component({
   selector: 'lux-master-header-ac',
   templateUrl: './lux-master-header-ac.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAriaLabelDirective, LuxAriaExpandedDirective, LuxButtonComponent]
 })
 export class LuxMasterHeaderAcComponent implements OnDestroy {
   private mediaObserver = inject(LuxMediaQueryObserverService);
   private tService = inject(TranslocoService);
+  private cdr = inject(ChangeDetectorRef);
 
   iconName?: string = 'lux-interface-arrows-button-left';
   open?: boolean;
   subscription: Subscription;
 
-  @Input() luxToggleHidden?: boolean;
-  @Output() luxOpened = new EventEmitter<boolean>();
+  readonly luxToggleHidden = input<boolean | undefined>();
+  readonly luxOpened = output<boolean>();
 
-  @ViewChild('headerContentContainer', { read: ElementRef, static: true }) headerContentContainer!: ElementRef;
+  readonly headerContentContainer = viewChild.required('headerContentContainer', { read: ElementRef });
 
   @HostBinding('class.lux-no-toggle') isMobile?: boolean;
 
@@ -34,6 +46,7 @@ export class LuxMasterHeaderAcComponent implements OnDestroy {
     this.subscription = this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
       setTimeout(() => {
         this.isMobile = this.mediaObserver.isXS() || this.mediaObserver.isSM();
+        this.cdr.markForCheck();
       });
     });
   }

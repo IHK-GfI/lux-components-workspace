@@ -1,21 +1,21 @@
-@if (stepperComponent && stepperComponent.steps && stepperComponent.steps.length > 0) {
+@if (stepperComponent && stepperComponent.steps().length > 0) {
 <div class="lux-stepper-large-mobile-nav-container">
   <div class="lux-stepper-large-mobile-nav-close-button-container">
     <lux-button class="lux-stepper-large-mobile-nav-close-button" luxIconName="lux-close" (luxClicked)="overlayRef.close()"></lux-button>
   </div>
   <div class="lux-stepper-large-mobile-nav-header">
-    <div>Schritt {{ stepperComponent.luxCurrentStepNumber + 1 }} von {{ stepperComponent.steps.length }}</div>
+    <div>Schritt {{ stepperComponent.currentStepNumber + 1 }} von {{ stepperComponent.steps().length }}</div>
   </div>
   <div class="lux-stepper-large-nav-item-container lux-stepper-large-mobile-nav-item-container">
-    @for (step of stepperComponent.steps; track step; let i = $index) {
+    @for (step of stepperComponent.steps(); track step; let i = $index) {
     <div
       class="lux-stepper-large-nav-item lux-stepper-large-mobile-nav-item"
       [id]="'luxstepperlargenavitem' + (i + 1)"
       [ngClass]="{
-        'lux-touched': step.luxTouched,
-        'lux-active': i === stepperComponent.luxCurrentStepNumber,
-        'lux-disabled': step.luxDisabled,
-        'lux-completed': step.luxCompleted
+        'lux-touched': step.luxTouched(),
+        'lux-active': i === stepperComponent.currentStepNumber,
+        'lux-disabled': step.luxDisabled(),
+        'lux-completed': step.luxCompleted()
       }"
     >
       <div class="lux-stepper-large-nav-item-number-container lux-stepper-large-mobile-nav-item-number-container">
@@ -23,7 +23,7 @@
       </div>
       <div class="lux-stepper-large-nav-item-label-container lux-stepper-large-mobile-nav-item-label-container">
         <ng-container
-          *ngTemplateOutlet="step.luxTouched && !step.luxDisabled ? link : nolink; context: { step: step, i: i }"
+          *ngTemplateOutlet="step.luxTouched() && !step.luxDisabled() ? link : nolink; context: { step: step, i: i }"
         ></ng-container>
       </div>
     </div>
@@ -36,15 +36,15 @@
   <a
     class="lux-stepper-large-nav-item-label-link lux-stepper-large-mobile-nav-item-label-link"
     tabindex="0"
-    [ngClass]="{ 'active-link': i === stepperComponent.luxCurrentStepNumber }"
-    [attr.aria-label]="'Schritt' + (i + 1) + ' ' + step.luxTitle"
+    [ngClass]="{ 'active-link': i === stepperComponent.currentStepNumber }"
+    [attr.aria-label]="'Schritt' + (i + 1) + ' ' + step.luxTitle()"
     (click)="onNavLink(i)"
     (keydown.enter)="onNavLink(i)"
     #links
-    >{{ step.luxTitle }}</a
+    >{{ step.luxTitle() }}</a
   >
 </ng-template>
 
 <ng-template let-step="step" let-i="i" #nolink>
-  <div class="lux-stepper-large-nav-item-label lux-stepper-large-mobile-nav-item-label">{{ step.luxTitle }}</div>
+  <div class="lux-stepper-large-nav-item-label lux-stepper-large-mobile-nav-item-label">{{ step.luxTitle() }}</div>
 </ng-template>

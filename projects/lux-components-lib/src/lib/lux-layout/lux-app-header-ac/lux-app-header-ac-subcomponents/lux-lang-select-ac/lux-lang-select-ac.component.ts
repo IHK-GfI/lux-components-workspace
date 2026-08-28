@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, viewChild } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { CookieService } from 'ngx-cookie-service';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
@@ -13,7 +13,7 @@ import { LuxLocaleAc } from './lux-locale-ac';
 @Component({
   selector: 'lux-lang-select-ac',
   templateUrl: './lux-lang-select-ac.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAriaLabelDirective,
     LuxTooltipDirective,
@@ -29,11 +29,11 @@ export class LuxLangSelectAcComponent implements OnInit {
   private cookieService = inject(CookieService);
   protected translocoService = inject(TranslocoService);
 
-  @Input() luxLocaleSupported = ['de'];
-  @Input() luxLocaleBaseHref = '';
-  @Input() mobileView = false;
+  readonly luxLocaleSupported = input(['de']);
+  readonly luxLocaleBaseHref = input('');
+  readonly mobileView = input(false);
 
-  @ViewChild('customTrigger', { read: ElementRef }) customTrigger?: ElementRef;
+  readonly customTrigger = viewChild('customTrigger', { read: ElementRef });
 
   menuOpened = false;
 
@@ -50,7 +50,7 @@ export class LuxLangSelectAcComponent implements OnInit {
   localeOptions: LuxLocaleAc[] = [];
 
   ngOnInit() {
-    this.luxLocaleSupported.forEach((locale) => {
+    this.luxLocaleSupported().forEach((locale) => {
       const foundLocale = this.allSupportedLocaleArr.find((item) => item.code === locale);
       if (foundLocale) {
         this.localeOptions.push(foundLocale);
@@ -94,8 +94,9 @@ export class LuxLangSelectAcComponent implements OnInit {
   }
   onMenuClosed() {
     this.menuOpened = false;
-    if (this.customTrigger) {
-      this.customTrigger.nativeElement.children[0].focus();
+    const customTrigger = this.customTrigger();
+    if (customTrigger) {
+      customTrigger.nativeElement.children[0].focus();
     }
   }
 }

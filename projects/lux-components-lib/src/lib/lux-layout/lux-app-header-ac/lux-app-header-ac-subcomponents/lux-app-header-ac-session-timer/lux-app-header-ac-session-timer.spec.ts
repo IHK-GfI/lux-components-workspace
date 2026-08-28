@@ -295,7 +295,7 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
 @Component({
   template: ` <lux-app-header-ac-session-timer></lux-app-header-ac-session-timer> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderAcSessionTimerComponent]
 })
 class MockSessionTimerComponent {}

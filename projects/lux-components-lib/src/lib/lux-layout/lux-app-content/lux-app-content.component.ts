@@ -1,4 +1,14 @@
-import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostBinding,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  inject,
+  input
+} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { LuxThemeService } from '../../lux-theme/lux-theme.service';
@@ -9,7 +19,7 @@ import { LuxAppFooterFixedService } from '../lux-app-footer/lux-app-footer-fixed
   selector: 'lux-app-content',
   templateUrl: './lux-app-content.component.html',
   styleUrls: ['./lux-app-content.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet]
 })
 export class LuxAppContentComponent implements OnInit, OnDestroy {
@@ -18,7 +28,7 @@ export class LuxAppContentComponent implements OnInit, OnDestroy {
   private footerService = inject(LuxAppFooterFixedService);
   themeService = inject(LuxThemeService);
 
-  @Input() luxAriaRoleMainLabel = '';
+  readonly luxAriaRoleMainLabel = input('');
 
   @HostListener('window:resize') windowResize() {
     this.appService.onResize();
@@ -54,9 +64,9 @@ export class LuxAppContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.luxAriaRoleMainLabel) {
+    if (this.luxAriaRoleMainLabel()) {
       this.role = 'main';
-      this.label = this.luxAriaRoleMainLabel;
+      this.label = this.luxAriaRoleMainLabel();
     }
   }
 

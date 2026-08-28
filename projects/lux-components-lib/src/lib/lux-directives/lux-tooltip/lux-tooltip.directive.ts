@@ -76,13 +76,11 @@ export class LuxTooltipDirective extends MatTooltip implements AfterViewInit, On
     if (this.luxLinkPlain) {
       this.luxLinkPlain.tooltipDirective = this;
     }
-    if (this.luxActionNavAc && this.luxActionNavAc.buttonComponent) {
-      
-      this.luxActionNavAc.buttonComponent.tooltipDirective = this;
+    if (this.luxActionNavAc && this.luxActionNavAc.buttonComponent()) {
+      this.luxActionNavAc.buttonComponent()!.tooltipDirective = this;
     }
-    if (this.luxActionNav && this.luxActionNav.buttonComponent) {
-      
-      this.luxActionNav.buttonComponent.tooltipDirective = this;
+    if (this.luxActionNav && this.luxActionNav.buttonComponent()) {
+      this.luxActionNav.buttonComponent()!.tooltipDirective = this;
     }
     if (this.luxMenu && this.luxMenu.defaultTriggerComponent) {
       this.luxMenu.defaultTriggerComponent.tooltipDirective = this;

@@ -1,32 +1,21 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, input, OnInit, output, TemplateRef } from '@angular/core';
 import { LuxUtil } from '../../../lux-util/lux-util';
 
 @Component({
   selector: 'lux-detail-wrapper-ac',
-  template: '<ng-container *ngTemplateOutlet="luxDetailTemplate; context: luxDetailContext"></ng-container>',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: '<ng-container *ngTemplateOutlet="luxDetailTemplate(); context: luxDetailContext()"></ng-container>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet]
 })
 export class LuxDetailWrapperAcComponent implements OnInit, AfterViewInit {
-  private _luxDetailTemplate!: TemplateRef<any>;
+  readonly luxDetailContext = input<any>();
+  readonly luxDetailTemplate = input<TemplateRef<any> | undefined>();
 
-  @Output() luxDetailRendered = new EventEmitter<void>();
-
-  @Input() luxDetailContext: any;
-
-  @Input() set luxDetailTemplate(ref: TemplateRef<any>) {
-    this._luxDetailTemplate = ref;
-  }
-
-  get luxDetailTemplate(): TemplateRef<any> {
-    return this._luxDetailTemplate;
-  }
-
-  constructor() {}
+  readonly luxDetailRendered = output<void>();
 
   ngOnInit() {
-    LuxUtil.assertNonNull('_luxDetailTemplate', this._luxDetailTemplate);
+    LuxUtil.assertNonNull('luxDetailTemplate', this.luxDetailTemplate());
   }
 
   ngAfterViewInit() {

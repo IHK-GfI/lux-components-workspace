@@ -6,16 +6,17 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentRef,
-  ContentChildren,
+  computed,
+  contentChildren,
+  effect,
   ElementRef,
-  EventEmitter,
-  Input,
+  inject,
+  input,
+  model,
   OnDestroy,
   OnInit,
-  Output,
-  QueryList,
-  ViewContainerRef,
-  inject
+  output,
+  ViewContainerRef
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
@@ -34,7 +35,7 @@ import { LuxStepperVerticalComponent } from './lux-stepper-subcomponents/lux-ste
   selector: 'lux-stepper',
   templateUrl: './lux-stepper.component.html',
   styleUrls: ['./lux-stepper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxStepperVerticalComponent, NgClass, LuxStepperHorizontalComponent]
 })
 export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
@@ -54,57 +55,108 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     color: 'primary'
   };
 
-  @ContentChildren(LuxStepComponent) luxSteps!: QueryList<LuxStepComponent>;
+  readonly luxSteps = contentChildren(LuxStepComponent);
 
-  @Output() luxFinishButtonClicked = new EventEmitter<void>();
-  @Output() luxStepChanged = new EventEmitter<StepperSelectionEvent>();
-  @Output() luxCurrentStepNumberChange = new EventEmitter<number>();
-  @Output() luxCheckValidation = new EventEmitter<number>();
-  @Output() luxStepClicked = new EventEmitter<number>();
+  readonly luxFinishButtonClicked = output<void>();
+  readonly luxStepChanged = output<StepperSelectionEvent>();
+  readonly luxCheckValidation = output<number>();
+  readonly luxStepClicked = output<number>();
+
+  readonly luxCurrentStepNumber = model(0);
+  readonly luxUseCustomIcons = input(false);
+  readonly luxEditedIconName = input('lux-interface-edit-pencil');
+  readonly luxVerticalStepper = input(false);
+  readonly luxLinear = input(true);
+  readonly luxDisabled = input(false);
+  readonly luxShowNavigationButtons = input(true);
+  readonly luxHorizontalStepAnimationActive = input(true);
+  readonly luxPreviousButtonConfig = input<ILuxStepperButtonConfig | undefined>();
+  readonly luxNextButtonConfig = input<ILuxStepperButtonConfig | undefined>();
+  readonly luxFinishButtonConfig = input<ILuxStepperButtonConfig | undefined>();
+  readonly luxA11YMode = input(false);
+  readonly luxButtonAlignLeft = input(false);
+
+  readonly stepperConfiguration = computed<ILuxStepperConfiguration>(() => ({
+    luxCurrentStepNumber: this.luxCurrentStepNumber(),
+    luxUseCustomIcons: this.luxUseCustomIcons(),
+    luxEditedIconName: this.luxEditedIconName(),
+    luxVerticalStepper: this.luxVerticalStepper(),
+    luxLinear: this.luxLinear(),
+    luxDisabled: this.luxDisabled(),
+    luxShowNavigationButtons: this.luxShowNavigationButtons(),
+    luxHorizontalStepAnimationActive: this.luxHorizontalStepAnimationActive(),
+    luxPreviousButtonConfig: this.luxPreviousButtonConfig() ?? this._DEFAULT_PREV_BTN_CONF,
+    luxNextButtonConfig: this.luxNextButtonConfig() ?? this._DEFAULT_NEXT_BTN_CONF,
+    luxFinishButtonConfig: this.luxFinishButtonConfig() ?? this._DEFAULT_FIN_BTN_CONF,
+    luxSteps: [...this.luxSteps()],
+    luxA11YMode: this.luxA11YMode(),
+    luxButtonAlignLeft: this.luxButtonAlignLeft()
+  }));
 
   matStepper!: MatStepper;
   matStepLabels!: ViewContainerRef[];
   matStepHeaders!: CdkStepHeader[];
 
-  stepperConfiguration: ILuxStepperConfiguration = {
-    luxCurrentStepNumber: 0,
-    luxShowNavigationButtons: true,
-    luxHorizontalStepAnimationActive: true,
-    luxEditedIconName: 'lux-interface-edit-pencil'
-  };
-
   private subscriptions: Subscription[] = [];
   mobileView?: boolean;
   subscription?: Subscription;
+
   constructor() {
-    // Die Default-Konfiguration präventiv als Startwert setzen
-    this.luxPreviousButtonConfig = this._DEFAULT_PREV_BTN_CONF;
-    this.luxNextButtonConfig = this._DEFAULT_NEXT_BTN_CONF;
-    this.luxFinishButtonConfig = this._DEFAULT_FIN_BTN_CONF;
     // Den Stepper im Helper-Service bekannt machen
     this.stepperService.registerStepper(this);
+
+    // Out-of-Bound-Steps abfangen (z.B. wenn luxCurrentStepNumber von außen gesetzt wird oder
+    // sich die Anzahl der Steps ändert).
+    effect(() => {
+      const steps = this.luxSteps();
+      const current = this.luxCurrentStepNumber();
+      if (steps.length === 0) {
+        return;
+      }
+      const clamped = Math.min(Math.max(current, 0), steps.length - 1);
+      if (clamped !== current) {
+        this.luxCurrentStepNumber.set(clamped);
+      }
+    });
+
+    // Icons neu generieren, wenn sich der Icon-Modus oder der Name des "edited"-Icons ändert.
+    let isFirstIconsRun = true;
+    effect(() => {
+      this.luxUseCustomIcons();
+      this.luxEditedIconName();
+      if (isFirstIconsRun) {
+        isFirstIconsRun = false;
+        return;
+      }
+      this.updateIcons();
+    });
+
+    // Rollen-Attribute korrigieren, wenn sich die Ausrichtung (horizontal/vertikal) ändert.
+    let isFirstVerticalRun = true;
+    effect(() => {
+      const vertical = this.luxVerticalStepper();
+      if (isFirstVerticalRun) {
+        isFirstVerticalRun = false;
+        return;
+      }
+      if (!vertical) {
+        setTimeout(() => {
+          this.fixRoleAttributes();
+        });
+      }
+    });
   }
+
   ngOnInit() {
     this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
       this.mobileView = query === 'xs' || query === 'sm';
+      this.cdr.markForCheck();
     });
   }
 
   ngAfterViewInit() {
-    // Änderungen an den steps sollten auch dem Konfigurationsobjekt bekannt gemacht werden
-    this.subscriptions.push(
-      this.luxSteps.changes.subscribe(() => {
-        this.stepperConfiguration.luxSteps = this.luxSteps.toArray();
-        this.cdr.detectChanges();
-        this.updateIcons();
-      })
-    );
-    // Initial die aktuellen steps in die Konfiguration schreiben
-    this.stepperConfiguration.luxSteps = this.luxSteps.toArray();
-    this.cdr.detectChanges();
-
     // Falls initial bereits bestimmt wurde, dass individuelle Icons genutzt werden, diese generieren
-    if (this.stepperConfiguration.luxUseCustomIcons) {
+    if (this.luxUseCustomIcons()) {
       this.generateCustomIcons();
     }
 
@@ -128,9 +180,9 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
         .pipe(skip(1))
         .subscribe((next: boolean | null) => {
           // Voraussetzung: Stepper nicht deaktiviert
-          if (!this.stepperConfiguration.luxDisabled) {
+          if (!this.luxDisabled()) {
             if (next === true) {
-              const indexBeforeNext = this.stepperConfiguration.luxCurrentStepNumber ?? 0;
+              const indexBeforeNext = this.luxCurrentStepNumber();
               this.checkValidation();
               this.matStepper.next();
               // Navigation wurde blockiert (z.B. linearer Stepper, Step ungültig) → Event emittieren.
@@ -154,24 +206,24 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     // Änderungen an den Icons jedes einzelnen Steps führt zu Neugenerierung aller individuellen Icons
     // ==> Material erlaubt leider nur alle Icons identisch zu ändern, nicht für jeden Step einzeln, deshalb
     // generieren wir selbst die Icons.
-    this.luxSteps.toArray().forEach((luxStep: LuxStepComponent) => {
+    this.luxSteps().forEach((luxStep: LuxStepComponent) => {
       this.subscriptions.push(
         luxStep.getIconChangeObsv().subscribe((iconChange: boolean) => {
-          if (this.stepperConfiguration.luxUseCustomIcons && iconChange) {
+          if (this.luxUseCustomIcons() && iconChange) {
             this.updateIcons();
           }
         })
       );
     });
 
-    this.setFocusedCSS(this.luxCurrentStepNumber);
+    this.setFocusedCSS(this.luxCurrentStepNumber());
     this.cdr.detectChanges();
   }
 
   fixRoleAttributes() {
     // Workaround: Der Stepper setzt die Rolle "tablist" auf den Header, was nicht korrekt ist.
     // Für den vertikalen Stepper wurde keine einfacher Workaround gefunden.
-    if (!this.luxVerticalStepper) {
+    if (!this.luxVerticalStepper()) {
       if (this.elementRef && this.elementRef.nativeElement) {
         const stepperElements = this.elementRef.nativeElement.getElementsByClassName('mat-stepper-horizontal');
         if (stepperElements.length > 0) {
@@ -198,7 +250,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
    * @param selectionEvent
    */
   onStepChanged(selectionEvent: StepperSelectionEvent) {
-    this.luxCurrentStepNumber = selectionEvent.selectedIndex;
+    this.luxCurrentStepNumber.set(selectionEvent.selectedIndex);
     this.luxStepChanged.emit(selectionEvent);
 
     const matStepHeaders: NodeListOf<any> = this.elementRef.nativeElement.querySelectorAll('mat-step-header');
@@ -215,7 +267,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
   generateCustomIcons() {
     let index = 0;
     this.matStepLabels.forEach((stepLabel: ViewContainerRef) => {
-      this.generateCustomIconForStep(stepLabel, this.luxSteps.toArray()[index]);
+      this.generateCustomIconForStep(stepLabel, this.luxSteps()[index]);
       index++;
     });
   }
@@ -233,7 +285,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
    * Stößt die Validierungsprüfung für den aktuell sichtbaren Step und dessen StepControl (wenn vorhanden) an.
    */
   checkValidation() {
-    const stepControl = this.luxSteps.toArray()[this.stepperConfiguration.luxCurrentStepNumber ?? 0].luxStepControl;
+    const stepControl = this.luxSteps()[this.luxCurrentStepNumber()].luxStepControl();
     if (stepControl) {
       LuxUtil.showValidationErrors(stepControl);
     }
@@ -246,7 +298,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     // bereits auf den neuen Step aktualisiert, wenn dieser Handler feuert.
     // Nur wenn der aktuelle Index NICHT dem geklickten Index entspricht, wurde die Navigation blockiert
     // (z.B. linearer Stepper, ungültiger Step) → dann validieren und Event emittieren.
-    const currentIndex = this.stepperConfiguration.luxCurrentStepNumber ?? 0;
+    const currentIndex = this.luxCurrentStepNumber();
     if (currentIndex !== event) {
       this.checkValidation();
       // Das Event könnte interessant sein, wenn die Property "luxCompleted" verwendet wird und kein Formular.
@@ -261,11 +313,11 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
    * @param luxStep
    */
   private generateCustomIconForStep(stepLabel: ViewContainerRef, luxStep: LuxStepComponent) {
-    if (luxStep && luxStep.luxIconName) {
+    if (luxStep && luxStep.luxIconName()) {
       // Das edited und normal Icon generieren
       const componentIconEdited: ComponentRef<LuxIconComponent> = stepLabel.createComponent(LuxIconComponent);
 
-      componentIconEdited.setInput('luxIconName', this.luxEditedIconName);
+      componentIconEdited.setInput('luxIconName', this.luxEditedIconName());
       componentIconEdited.setInput('luxIconSize', '1.25rem');
       componentIconEdited.setInput('luxRounded', true);
       componentIconEdited.setInput('luxMargin', '0 0 0 0');
@@ -273,7 +325,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
       componentIconEdited.location.nativeElement.className += ' lux-stepper-edited-icon';
 
       const componentIconNormal: ComponentRef<LuxIconComponent> = stepLabel.createComponent(LuxIconComponent);
-      componentIconNormal.setInput('luxIconName', luxStep.luxIconName);
+      componentIconNormal.setInput('luxIconName', luxStep.luxIconName());
       componentIconNormal.setInput('luxIconSize', '1.25rem');
       componentIconNormal.setInput('luxRounded', true);
       componentIconNormal.setInput('luxMargin', '0 0 0 0');
@@ -289,7 +341,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
   private updateIcons() {
     if (this.matStepLabels) {
       this.clearCustomIcons();
-      if (this.stepperConfiguration.luxUseCustomIcons) {
+      if (this.luxUseCustomIcons()) {
         this.generateCustomIcons();
       }
     }
@@ -300,141 +352,5 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     if (matStepHeaders.item(index).className.indexOf('lux-step-header-touched') === -1) {
       matStepHeaders.item(index).className += ' lux-step-header-touched';
     }
-  }
-
-  /**** Getter/Setter luxCurrentStepNumber ****/
-  get luxCurrentStepNumber() {
-    return this.stepperConfiguration.luxCurrentStepNumber ?? 0;
-  }
-
-  @Input() set luxCurrentStepNumber(step: number) {
-    if (step !== this.luxCurrentStepNumber) {
-      setTimeout(() => {
-        // OutOfBound-Steps abfangen
-        step = step < 0 ? 0 : step;
-        step = step >= this.luxSteps.length ? this.luxSteps.length - 1 : step;
-
-        this.stepperConfiguration.luxCurrentStepNumber = step;
-        this.luxCurrentStepNumberChange.emit(this.stepperConfiguration.luxCurrentStepNumber);
-      });
-    }
-  }
-
-  /**** Getter/Setter luxUseCustomIcons ****/
-  get luxUseCustomIcons() {
-    return this.stepperConfiguration.luxUseCustomIcons ?? false;
-  }
-
-  @Input() set luxUseCustomIcons(use: boolean) {
-    this.stepperConfiguration.luxUseCustomIcons = use;
-    setTimeout(() => {
-      this.updateIcons();
-    });
-  }
-
-  /**** Getter/Setter luxEditedIconName ****/
-  get luxEditedIconName() {
-    return this.stepperConfiguration.luxEditedIconName ?? '';
-  }
-
-  @Input() set luxEditedIconName(iconName: string) {
-    this.stepperConfiguration.luxEditedIconName = iconName;
-    this.updateIcons();
-  }
-
-  /**** Getter/Setter luxVerticalStepper ****/
-  get luxVerticalStepper() {
-    return this.stepperConfiguration.luxVerticalStepper!;
-  }
-
-  @Input() set luxVerticalStepper(vertical: boolean) {
-    this.stepperConfiguration.luxVerticalStepper = vertical;
-
-    if (!vertical) {
-      setTimeout(() => {
-        this.fixRoleAttributes();
-      });
-    }
-  }
-
-  /**** Getter/Setter luxLinear ****/
-  get luxLinear() {
-    return this.stepperConfiguration.luxLinear ?? true;
-  }
-
-  @Input() set luxLinear(linear: boolean) {
-    this.stepperConfiguration.luxLinear = linear;
-  }
-
-  /**** Getter/Setter luxDisabled ****/
-  get luxDisabled() {
-    return this.stepperConfiguration.luxDisabled ?? false;
-  }
-
-  @Input() set luxDisabled(disabled: boolean) {
-    this.stepperConfiguration.luxDisabled = disabled;
-  }
-
-  /**** Getter/Setter luxShowNavigationButtons ****/
-  get luxShowNavigationButtons() {
-    return this.stepperConfiguration.luxShowNavigationButtons ?? true;
-  }
-
-  @Input() set luxShowNavigationButtons(showNavButtons: boolean) {
-    this.stepperConfiguration.luxShowNavigationButtons = showNavButtons;
-  }
-
-  /**** Getter/Setter luxHorizontalStepAnimationActive ****/
-  get luxHorizontalStepAnimationActive() {
-    return this.stepperConfiguration.luxHorizontalStepAnimationActive ?? false;
-  }
-
-  @Input() set luxHorizontalStepAnimationActive(animationActive: boolean) {
-    this.stepperConfiguration.luxHorizontalStepAnimationActive = animationActive;
-  }
-
-  /**** Getter/Setter luxPreviousButtonConfig ****/
-  get luxPreviousButtonConfig() {
-    return this.stepperConfiguration.luxPreviousButtonConfig!;
-  }
-
-  @Input() set luxPreviousButtonConfig(config: ILuxStepperButtonConfig | undefined) {
-    this.stepperConfiguration.luxPreviousButtonConfig = config ? config : this._DEFAULT_PREV_BTN_CONF;
-  }
-
-  /**** Getter/Setter luxNextButtonConfig ****/
-  get luxNextButtonConfig(): ILuxStepperButtonConfig | undefined {
-    return this.stepperConfiguration.luxNextButtonConfig!;
-  }
-
-  @Input() set luxNextButtonConfig(config: ILuxStepperButtonConfig | undefined) {
-    this.stepperConfiguration.luxNextButtonConfig = config ? config : this._DEFAULT_NEXT_BTN_CONF;
-  }
-
-  /**** Getter/Setter luxFinishButtonConfig ****/
-  get luxFinishButtonConfig() {
-    return this.stepperConfiguration.luxFinishButtonConfig!;
-  }
-
-  @Input() set luxFinishButtonConfig(config: ILuxStepperButtonConfig | undefined) {
-    this.stepperConfiguration.luxFinishButtonConfig = config ? config : this._DEFAULT_FIN_BTN_CONF;
-  }
-
-  /**** Getter/Setter luxA11YMode ****/
-  get luxA11YMode() {
-    return this.stepperConfiguration.luxA11YMode ?? false;
-  }
-
-  @Input() set luxA11YMode(a11yMode: boolean) {
-    this.stepperConfiguration.luxA11YMode = a11yMode;
-  }
-
-  /**** Getter/Setter luxButtonAlignLeft ****/
-  get luxButtonAlignLeft() {
-    return this.stepperConfiguration.luxButtonAlignLeft ?? false;
-  }
-
-  @Input() set luxButtonAlignLeft(alignLeft: boolean) {
-    this.stepperConfiguration.luxButtonAlignLeft = alignLeft;
   }
 }

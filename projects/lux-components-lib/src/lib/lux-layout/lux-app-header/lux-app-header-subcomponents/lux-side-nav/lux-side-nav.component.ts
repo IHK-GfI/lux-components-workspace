@@ -3,16 +3,16 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChildren,
+  contentChildren,
+  effect,
   ElementRef,
-  EventEmitter,
   HostListener,
-  Input,
+  inject,
+  input,
   OnDestroy,
-  Output,
-  QueryList,
-  ViewChild,
-  inject
+  output,
+  signal,
+  viewChild
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
@@ -30,7 +30,7 @@ import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-n
   selector: 'lux-side-nav',
   templateUrl: './lux-side-nav.component.html',
   animations: [sideNavAnimation, sideNavOverlayAnimation],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgStyle,
     LuxAriaRoleDirective,
@@ -45,19 +45,19 @@ import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-n
 export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   private appService = inject(LuxAppService);
 
-  @Input() luxDashboardLink?: string;
-  @Input() luxDashboardLinkTitle = 'LUX Dashboard';
-  @Input() luxOpenLinkBlank = false;
-  @Input() luxAriaRoleNavigationLabel = '';
+  readonly luxDashboardLink = input<string | undefined>();
+  readonly luxDashboardLinkTitle = input('LUX Dashboard');
+  readonly luxOpenLinkBlank = input(false);
+  readonly luxAriaRoleNavigationLabel = input('');
 
-  @Output() luxSideNavExpandedChange = new EventEmitter<boolean>();
+  readonly luxSideNavExpandedChange = output<boolean>();
 
-  @ContentChildren(LuxSideNavItemComponent, { descendants: true }) sideNavItems!: QueryList<LuxSideNavItemComponent>;
-  @ContentChildren(LuxSideNavItemComponent, { descendants: false }) directSideNavItems!: QueryList<LuxSideNavItemComponent>;
+  readonly sideNavItems = contentChildren(LuxSideNavItemComponent, { descendants: true });
+  readonly directSideNavItems = contentChildren(LuxSideNavItemComponent, { descendants: false });
 
-  @ViewChild('sideNav', { read: ElementRef, static: true }) sideNavEl!: ElementRef;
-  @ViewChild('sideNavHeader', { read: ElementRef, static: true }) sideNavHeaderEl!: ElementRef;
-  @ViewChild('sideNavFooter', { read: ElementRef, static: true }) sideNavFooterEl!: ElementRef;
+  readonly sideNavEl = viewChild.required('sideNav', { read: ElementRef });
+  readonly sideNavHeaderEl = viewChild.required('sideNavHeader', { read: ElementRef });
+  readonly sideNavFooterEl = viewChild.required('sideNavFooter', { read: ElementRef });
 
   top?: string;
   left?: string;
@@ -67,23 +67,32 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   height?: number;
   width?: number;
   visibility = 'hidden';
-  _sideNavExpanded = false;
 
-  get sideNavExpanded(): boolean {
-    return this._sideNavExpanded;
+  private readonly _sideNavExpanded = signal(false);
+  readonly sideNavExpanded = this._sideNavExpanded.asReadonly();
+
+  private itemClickSubscriptions: { unsubscribe(): void }[] = [];
+  private isFirstSideNavItemsRun = true;
+
+  constructor() {
+    effect(() => {
+      this.sideNavItems();
+
+      // Der erste automatische Lauf entspricht der initialen Auflösung der ContentChildren
+      // (kein "echter" Wechsel wie früher bei QueryList.changes, das initial nie feuert)
+      // und wird daher übersprungen – die Erstinitialisierung übernimmt ngAfterViewInit synchron.
+      if (this.isFirstSideNavItemsRun) {
+        this.isFirstSideNavItemsRun = false;
+        return;
+      }
+
+      this.updateItemClickListeners();
+    });
   }
-
-  set sideNavExpanded(expanded: boolean) {
-    this._sideNavExpanded = expanded;
-    this.luxSideNavExpandedChange.next(this._sideNavExpanded);
-  }
-
-  private itemClickSubscriptions: Subscription[] = [];
-  private subscription?: Subscription;
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (LuxUtil.isKeyEscape(event) && this.sideNavExpanded) {
+    if (LuxUtil.isKeyEscape(event) && this.sideNavExpanded()) {
       // Escape soll nur das Menü schließen, wenn es auch geöffnet ist.
       this.toggle();
     }
@@ -95,22 +104,20 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.subscription = this.sideNavItems.changes.subscribe(() => this.updateItemClickListeners());
     this.updateItemClickListeners();
     this.calculateWidthHeight();
   }
 
   ngOnDestroy() {
-    this.subscription?.unsubscribe();
-    this.itemClickSubscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    this.itemClickSubscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   toggle() {
     this.calculateAppMenuPosition();
 
-    this.sideNavExpanded = !this.sideNavExpanded;
+    this.setSideNavExpanded(!this.sideNavExpanded());
 
-    if (this.sideNavExpanded) {
+    if (this.sideNavExpanded()) {
       this.visibility = 'visible';
       this.calculateWidthHeight();
 
@@ -138,12 +145,13 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
    * durch das versteckte Menü wandert. Das ist auch für Screenreader nötig.
    */
   updateSideNavAfterAnimationIsFinished() {
-    this.visibility = this.sideNavExpanded ? 'visible' : 'hidden';
+    this.visibility = this.sideNavExpanded() ? 'visible' : 'hidden';
 
     // Den Fokus auf den ersten Button setzen
-    if (this.sideNavExpanded && this.sideNavEl && this.sideNavEl.nativeElement) {
+    const sideNavEl = this.sideNavEl();
+    if (this.sideNavExpanded() && sideNavEl && sideNavEl.nativeElement) {
       setTimeout(() => {
-        const firstButton = (this.sideNavEl.nativeElement as HTMLElement).querySelector('button');
+        const firstButton = (sideNavEl.nativeElement as HTMLElement).querySelector('button');
         if (firstButton) {
           firstButton.focus();
         }
@@ -152,12 +160,17 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
   }
 
   open() {
-    this.sideNavExpanded = true;
+    this.setSideNavExpanded(true);
     this.calculateWidthHeight();
   }
 
   close() {
-    this.sideNavExpanded = false;
+    this.setSideNavExpanded(false);
+  }
+
+  private setSideNavExpanded(expanded: boolean) {
+    this._sideNavExpanded.set(expanded);
+    this.luxSideNavExpandedChange.emit(expanded);
   }
 
   /**
@@ -167,11 +180,11 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
    */
   private calculateWidthHeight() {
     setTimeout(() => {
-      const totalHeight = this.sideNavEl.nativeElement.offsetHeight;
-      const headerHeight = this.sideNavHeaderEl.nativeElement.offsetHeight;
-      const footerHeight = this.sideNavFooterEl.nativeElement.offsetHeight;
+      const totalHeight = this.sideNavEl().nativeElement.offsetHeight;
+      const headerHeight = this.sideNavHeaderEl().nativeElement.offsetHeight;
+      const footerHeight = this.sideNavFooterEl().nativeElement.offsetHeight;
       this.height = totalHeight - headerHeight - footerHeight;
-      this.width = this.sideNavEl.nativeElement.offsetWidth + 20 /* Sicherheitsaufschlag (Schatten, Scrollbar,...) */;
+      this.width = this.sideNavEl().nativeElement.offsetWidth + 20 /* Sicherheitsaufschlag (Schatten, Scrollbar,...) */;
     });
   }
 
@@ -180,12 +193,13 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
    * die SideNav zu schließen.
    */
   private updateItemClickListeners() {
-    this.itemClickSubscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
+    this.itemClickSubscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.itemClickSubscriptions = [];
 
-    this.sideNavItems.forEach((item: LuxSideNavItemComponent) => {
+    this.sideNavItems().forEach((item: LuxSideNavItemComponent) => {
       this.itemClickSubscriptions.push(
         item.luxClicked.subscribe(() => {
-          if (item.luxCloseOnClick) {
+          if (item.luxCloseOnClick()) {
             this.close();
           }
         })

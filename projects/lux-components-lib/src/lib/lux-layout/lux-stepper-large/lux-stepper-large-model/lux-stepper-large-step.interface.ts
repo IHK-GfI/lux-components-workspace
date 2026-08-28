@@ -1,4 +1,4 @@
-import { TemplateRef } from '@angular/core';
+import { Signal, TemplateRef, WritableSignal } from '@angular/core';
 import { LuxStepperLargeClickEvent } from './lux-stepper-large-click-event';
 
 export enum LuxVetoState {
@@ -7,10 +7,10 @@ export enum LuxVetoState {
 }
 
 export interface ILuxStepperLargeStep {
-  luxTitle: string;
-  luxTouched: boolean;
-  luxCompleted: boolean;
-  luxDisabled: boolean;
-  luxVetoFn: (clickEvent: LuxStepperLargeClickEvent) => Promise<LuxVetoState>;
-  contentTemplate: TemplateRef<any>;
+  luxTitle: Signal<string>;
+  luxTouched: WritableSignal<boolean>;
+  luxCompleted: WritableSignal<boolean>;
+  luxDisabled: Signal<boolean>;
+  luxVetoFn: Signal<(clickEvent: LuxStepperLargeClickEvent) => Promise<LuxVetoState>>;
+  contentTemplate: Signal<TemplateRef<any>>;
 }

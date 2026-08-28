@@ -3,7 +3,7 @@
 import { DOWN_ARROW, END, ENTER, ESCAPE, HOME, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -70,7 +70,7 @@ describe('LuxListComponent', () => {
     LuxTestHelper.wait(fixture);
 
     const listItems = fixture.debugElement.queryAll(By.directive(LuxListItemComponent));
-    (listItems[0].componentInstance as LuxListItemComponent).luxSelected = true;
+    (listItems[0].componentInstance as LuxListItemComponent).luxSelected.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -80,9 +80,9 @@ describe('LuxListComponent', () => {
     );
 
     // Änderungen durchführen
-    (listItems[0].componentInstance as LuxListItemComponent).luxSelected = false;
+    (listItems[0].componentInstance as LuxListItemComponent).luxSelected.set(false);
     LuxTestHelper.wait(fixture);
-    (listItems[1].componentInstance as LuxListItemComponent).luxSelected = true;
+    (listItems[1].componentInstance as LuxListItemComponent).luxSelected.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -103,7 +103,7 @@ describe('LuxListComponent', () => {
     // Änderungen durchführen
     testComponent.addListItems(5);
     LuxTestHelper.wait(fixture);
-    testComponent.selectedPosition = 0;
+    testComponent.selectedPosition.set(0);
     LuxTestHelper.wait(fixture);
     const listItems = fixture.debugElement.queryAll(By.directive(LuxListItemComponent));
 
@@ -120,7 +120,7 @@ describe('LuxListComponent', () => {
     );
 
     // Änderungen durchführen
-    testComponent.selectedPosition = 1;
+    testComponent.selectedPosition.set(1);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -452,12 +452,12 @@ describe('LuxListComponent', () => {
       luxEmptyLabel="Empty-Label"
       luxEmptyIconName="lux-interface-delete-1"
       luxEmptyIconSize="5x"
-      [luxSelectedPosition]="selectedPosition"
+      [luxSelectedPosition]="selectedPosition()"
       (luxSelectedPositionChange)="onSelected($event)"
       (luxFocusedPositionChange)="onFocused($event)"
       (luxFocusedItemChange)="onFocusedItem($event)"
     >
-      @for (item of list; track item.title; let i = $index) {
+      @for (item of list(); track item.title; let i = $index) {
         <lux-list-item [luxTitle]="item.title" [luxSubTitle]="item.subTitle" [luxSelected]="item.selected">
           <lux-list-item-icon>
             <lux-icon luxIconName="lux-interface-user-single"></lux-icon>
@@ -467,13 +467,13 @@ describe('LuxListComponent', () => {
       }
     </lux-list>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxListComponent, LuxListItemComponent, LuxListItemContentComponent, LuxListItemIconComponent, LuxIconComponent]
 })
 class MockListComponent {
-  selectedPosition?: number;
+  selectedPosition = signal<number | undefined>(undefined);
 
-  list: { title: string; subTitle: string; selected: boolean }[] = [];
+  list = signal<{ title: string; subTitle: string; selected: boolean }[]>([]);
 
   constructor() {}
 
@@ -484,13 +484,15 @@ class MockListComponent {
   onFocusedItem(event: LuxListItemComponent) {}
 
   addListItems(amount: number) {
+    const newItems: { title: string; subTitle: string; selected: boolean }[] = [];
     for (let i = 0; i < amount; i++) {
-      this.list.push({
+      newItems.push({
         title: 'Title ' + i,
         subTitle: 'SubTitle ' + i,
         selected: false
       });
     }
+    this.list.update((current) => [...current, ...newItems]);
   }
 }
 
@@ -498,11 +500,11 @@ class MockListComponent {
   selector: 'lux-mock-list-interactive',
   template: `
     <lux-list
-      [luxSelectedPosition]="selectedPosition"
+      [luxSelectedPosition]="selectedPosition()"
       (luxSelectedPositionChange)="onSelected($event)"
       (luxFocusedPositionChange)="onFocused($event)"
     >
-      @for (item of list; track item.title) {
+      @for (item of list(); track item.title) {
         <lux-list-item [luxTitle]="item.title">
           <lux-list-item-content>
             <button type="button" class="btn-a">Button A</button>
@@ -512,20 +514,22 @@ class MockListComponent {
       }
     </lux-list>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxListComponent, LuxListItemComponent, LuxListItemContentComponent]
 })
 class MockListWithInteractiveComponent {
-  selectedPosition?: number;
-  list: { title: string }[] = [];
+  selectedPosition = signal<number | undefined>(undefined);
+  list = signal<{ title: string }[]>([]);
 
   onSelected(event: number) {}
 
   onFocused(event: number) {}
 
   addListItems(amount: number) {
+    const newItems: { title: string }[] = [];
     for (let i = 0; i < amount; i++) {
-      this.list.push({ title: 'Title ' + i });
+      newItems.push({ title: 'Title ' + i });
     }
+    this.list.update((current) => [...current, ...newItems]);
   }
 }

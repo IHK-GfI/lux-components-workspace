@@ -1,31 +1,31 @@
 <div
   class="lux-app-header"
   luxAriaRole="banner"
-  luxAriaLabel="{{ luxAriaRoleHeaderLabel || ('luxc.app-header.aria.role_header.lbl' | transloco) }}"
+  luxAriaLabel="{{ luxAriaRoleHeaderLabel() || ('luxc.app-header.aria.role_header.lbl' | transloco) }}"
 >
   <!-- ausklappbares Side-Nav (linksbündig) -->
   <div class="lux-header-side-nav lux-flex lux-flex-grow-0 lux-flex-shrink-0 lux-flex-basis-auto">
     <div>
-      @if (sideNav) {
+      @if (sideNav(); as sideNavRef) {
         <lux-button
           class="lux-side-nav-trigger"
-          [ngClass]="{ 'lux-side-nav-trigger-active': sideNav.sideNavExpanded }"
-          (luxClicked)="sideNav.toggle()"
+          [ngClass]="{ 'lux-side-nav-trigger-active': sideNavRef.sideNavExpanded() }"
+          (luxClicked)="sideNavRef.toggle()"
           luxIconName="lux-interface-setting-menu-1"
           luxTagId="lux-side-nav-trigger"
-          luxAriaLabel="{{ luxAriaAppMenuButtonLabel || ('luxc.app-header.aria.appmenu.btn' | transloco) }}"
-          [luxAriaExpanded]="sideNav.sideNavExpanded"
+          luxAriaLabel="{{ luxAriaAppMenuButtonLabel() || ('luxc.app-header.aria.appmenu.btn' | transloco) }}"
+          [luxAriaExpanded]="sideNavRef.sideNavExpanded()"
         ></lux-button>
       }
 
       <span
         class="lux-whitespace-nowrap lux-header-title lux-flex lux-place-content-center lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
       >
-        @if (luxIconName && !sideNav && !mobileView) {
+        @if (luxIconName() && !sideNav() && !mobileView) {
           <lux-icon
             style="padding: 6px 5px"
-            luxAriaLabel="{{ luxAriaTitleIconLabel || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
-            [luxIconName]="luxIconName"
+            luxAriaLabel="{{ luxAriaTitleIconLabel() || ('luxc.app-header.aria.title_icon.lbl' | transloco) }}"
+            [luxIconName]="luxIconName()"
             [ngClass]="{ 'lux-cursor-pointer': hasOnClickedListener, focused: hasOnClickedListener }"
             (click)="onClicked($event)"
             (keydown.enter)="onClicked($event)"
@@ -34,12 +34,12 @@
             [attr.tabindex]="hasOnClickedListener ? '0' : null"
           ></lux-icon>
         }
-        @if (luxImageSrc && !sideNav && !mobileView) {
+        @if (luxImageSrc() && !sideNav() && !mobileView) {
           <lux-image
             style="padding: 0 5px"
-            luxAriaLabel="{{ luxAriaTitleImageLabel || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
-            [luxImageSrc]="luxImageSrc"
-            [luxImageHeight]="luxImageHeight"
+            luxAriaLabel="{{ luxAriaTitleImageLabel() || ('luxc.app-header.aria.title.image.lbl' | transloco) }}"
+            [luxImageSrc]="luxImageSrc()!"
+            [luxImageHeight]="luxImageHeight()"
             [luxImageWidth]="'auto'"
             [ngClass]="{ 'lux-cursor-pointer': hasOnClickedListener, focused: hasOnClickedListener }"
             (click)="onClicked($event)"
@@ -52,9 +52,9 @@
         <span
           class="lux-app-header-title-label"
           luxAriaLabel="{{
-            luxAriaTitleLinkLabel || ('luxc.app-header.aria.title.link.lbl' | transloco)
-              ? luxAriaTitleLinkLabel || ('luxc.app-header.aria.title.link.lbl' | transloco)
-              : luxAppTitle
+            luxAriaTitleLinkLabel() || ('luxc.app-header.aria.title.link.lbl' | transloco)
+              ? luxAriaTitleLinkLabel() || ('luxc.app-header.aria.title.link.lbl' | transloco)
+              : luxAppTitle()
           }}"
           (click)="onClicked($event)"
           (keydown.enter)="onClicked($event)"
@@ -62,33 +62,33 @@
           [attr.role]="hasOnClickedListener ? 'link' : null"
           [attr.tabindex]="hasOnClickedListener ? '0' : null"
           [ngClass]="{ 'lux-cursor-pointer': hasOnClickedListener, focused: hasOnClickedListener }"
-          >{{ mobileView ? luxAppTitleShort : luxAppTitle }}</span
+          >{{ mobileView ? luxAppTitleShort() : luxAppTitle() }}</span
         >
       </span>
     </div>
   </div>
   <!-- Action-Menu (mittig) -->
   <div class="lux-header-action">
-    @if (actionNav) {
-      <ng-container [ngTemplateOutlet]="actionNav.templateRef"></ng-container>
+    @if (actionNav(); as actionNavRef) {
+      <ng-container [ngTemplateOutlet]="actionNavRef.templateRef()"></ng-container>
     }
   </div>
   <!-- Lang-Menu (rechtsbündig) -->
-  @if (luxLocaleSupported && (luxLocaleSupported?.length ?? 0) > 1) {
+  @if (luxLocaleSupported().length > 1) {
     <div class="lux-lang-select-menu lux-header-action">
       <lux-lang-select
-        [luxLocaleSupported]="luxLocaleSupported"
-        [luxLocaleBaseHref]="luxLocaleBaseHref"
+        [luxLocaleSupported]="luxLocaleSupported()"
+        [luxLocaleBaseHref]="luxLocaleBaseHref()"
         class="lux-flex-grow-0 lux-flex-shrink-0 lux-flex-basis-auto"
       ></lux-lang-select>
     </div>
   }
   <!-- User-Menu (rechtsbündig) -->
-  @if (rightNav) {
+  @if (rightNav(); as rightNavRef) {
     <div
-      luxAriaLabel="{{ luxAriaUserMenuButtonLabel || ('luxc.app-header.aria.usermenu.btn' | transloco) }}"
+      luxAriaLabel="{{ luxAriaUserMenuButtonLabel() || ('luxc.app-header.aria.usermenu.btn' | transloco) }}"
       class="lux-header-user lux-pr-2 lux-pl-2"
-      [ngClass]="{ 'lux-show-border': !!actionNav }"
+      [ngClass]="{ 'lux-show-border': !!actionNav() }"
     >
       <lux-menu
         class="lux-header-menu"
@@ -98,7 +98,7 @@
         luxClassName="lux-right-nav-menu"
         luxTagId="app_header_menu"
       >
-        @for (menuItem of rightNav.menuItemComponents; track menuItem) {
+        @for (menuItem of rightNavRef.menuItemComponents(); track menuItem) {
           <lux-menu-item
             [luxLabel]="menuItem.luxLabel()"
             [luxIconName]="menuItem.luxIconName()"
@@ -121,10 +121,10 @@
             aria-haspopup="true"
             #customTrigger
           >
-            @if (luxUserName) {
+            @if (luxUserName()) {
               <span>
                 <span class="lux-whitespace-nowrap lux-header-username" [ngClass]="{ 'lux-display-none': mobileView }">
-                  {{ luxUserName }}
+                  {{ luxUserName() }}
                 </span>
                 <span
                   class="lux-whitespace-nowrap lux-header-user-short"
@@ -139,7 +139,7 @@
               luxIconSize="1x"
               luxIconName="lux-interface-user-single"
               luxMargin="0 0 0 8px"
-              [ngClass]="{ 'lux-display-none': luxUserName && mobileView }"
+              [ngClass]="{ 'lux-display-none': luxUserName() && mobileView }"
             >
             </lux-icon>
             <lux-icon class="lux-icon-menu-1" luxIconSize="1x" luxIconName="lux-interface-arrows-button-down" luxPadding="0" luxMargin="0">

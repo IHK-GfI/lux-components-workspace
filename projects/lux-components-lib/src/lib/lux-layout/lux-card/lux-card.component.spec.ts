@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ViewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -164,35 +164,35 @@ describe('LuxCardComponent', () => {
       let contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       let expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       let toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded).toBeFalsy();
+      expect(component.card.luxExpanded()).toBeFalsy();
       expect(contentEl).not.toBeNull();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
 
       // Änderungen durchführen
-      component.card.luxExpanded = true;
+      component.card.luxExpanded.set(true);
       fixture.detectChanges();
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded).toBeTruthy();
+      expect(component.card.luxExpanded()).toBeTruthy();
       expect(contentEl).not.toBeNull();
       expect(expandedEl).not.toBeNull();
       expect(expandedEl.nativeElement.innerHTML).toEqual('Lorem ipsum expanded');
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-up');
 
       // Änderungen durchführen
-      component.card.luxExpanded = false;
+      component.card.luxExpanded.set(false);
       LuxTestHelper.wait(fixture, 500);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded).toBeFalsy();
+      expect(component.card.luxExpanded()).toBeFalsy();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
@@ -203,7 +203,7 @@ describe('LuxCardComponent', () => {
       let contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       let expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       let toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
-      expect(component.card.luxExpanded).toBeFalsy();
+      expect(component.card.luxExpanded()).toBeFalsy();
       expect(contentEl).not.toBeNull();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
@@ -217,7 +217,7 @@ describe('LuxCardComponent', () => {
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
-      expect(component.card.luxExpanded).toBeTruthy();
+      expect(component.card.luxExpanded()).toBeTruthy();
       expect(contentEl).not.toBeNull();
       expect(expandedEl).not.toBeNull();
       expect(expandedEl.nativeElement.innerHTML).toEqual('Lorem ipsum expanded');
@@ -231,7 +231,7 @@ describe('LuxCardComponent', () => {
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded).toBeFalsy();
+      expect(component.card.luxExpanded()).toBeFalsy();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
@@ -255,8 +255,8 @@ describe('LuxCardComponent', () => {
       expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
 
       // Änderungen durchführen
-      component.title = 'Hallo';
-      component.subTitle = 'Welt';
+      component.title.set('Hallo');
+      component.subTitle.set('Welt');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -267,13 +267,13 @@ describe('LuxCardComponent', () => {
 
     it('Sollte mat-card-header nicht rendern, wenn luxTitle auf undefined gesetzt wird', fakeAsync(() => {
       // Vorbedingungen testen
-      component.title = 'Hallo';
+      component.title.set('Hallo');
       LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none-important'))).toBeNull();
       expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('Hallo');
 
       // Änderungen durchführen
-      component.title = undefined;
+      component.title.set(undefined);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -282,14 +282,14 @@ describe('LuxCardComponent', () => {
 
     it('Sollte lux-card-title nicht ausblenden, wenn luxTitle undefined aber lux-card-info gesetzt ist', fakeAsync(() => {
       // Vorbedingungen testen
-      component.title = 'Hallo';
+      component.title.set('Hallo');
       LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none-important'))).toBeNull();
       expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('Hallo');
 
       // Änderungen durchführen
-      component.testShowInfo = true;
-      component.title = undefined;
+      component.testShowInfo.set(true);
+      component.title.set(undefined);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -299,12 +299,12 @@ describe('LuxCardComponent', () => {
 
     it('Sollte mat-card-header nicht rendern, wenn luxSubTitle auf undefined gesetzt wird', fakeAsync(() => {
       // Vorbedingungen testen
-      component.subTitle = 'Hallo';
+      component.subTitle.set('Hallo');
       LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('.lux-card-subtitle.lux-display-none-important'))).toBeNull();
 
       // Änderungen durchführen
-      component.subTitle = undefined;
+      component.subTitle.set(undefined);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -313,12 +313,12 @@ describe('LuxCardComponent', () => {
 
     it('Sollte mat-card-actions ausblenden, wenn keine Actions gesetzt sind', fakeAsync(() => {
       // Vorbedingungen testen
-      component.testShowAction = true;
+      component.testShowAction.set(true);
       LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('.mat-mdc-card-actions.lux-display-none-important'))).toBeNull();
 
       // Änderungen durchführen
-      component.testShowAction = false;
+      component.testShowAction.set(false);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -327,10 +327,10 @@ describe('LuxCardComponent', () => {
 
     it('Sollte mat-card-header nicht rendern, wenn kein Header-Inhalt vorhanden ist', fakeAsync(() => {
       // Vorbedingungen testen
-      component.title = undefined;
-      component.subTitle = undefined;
-      component.testShowIcon = false;
-      component.testShowInfo = false;
+      component.title.set(undefined);
+      component.subTitle.set(undefined);
+      component.testShowIcon.set(false);
+      component.testShowInfo.set(false);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -342,7 +342,7 @@ describe('LuxCardComponent', () => {
       expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
 
       // Änderungen durchführen
-      component.title = 'Titel';
+      component.title.set('Titel');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -357,7 +357,7 @@ describe('LuxCardComponent', () => {
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      component.disabled = true;
+      component.disabled.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -374,7 +374,7 @@ describe('LuxCardComponent', () => {
       <lux-card-content> Lorem ipsum </lux-card-content>
     </lux-card>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCardComponent, LuxCardContentComponent]
 })
 class NoCardActionComponent {}
@@ -385,7 +385,7 @@ class NoCardActionComponent {}
       <lux-card-content> Lorem ipsum </lux-card-content>
     </lux-card>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCardComponent, LuxCardContentComponent]
 })
 class CardActionComponent {
@@ -399,7 +399,7 @@ class CardActionComponent {
       <lux-card-content-expanded>Lorem ipsum expanded</lux-card-content-expanded>
     </lux-card>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class ExpandedCardComponent {
@@ -413,7 +413,7 @@ class ExpandedCardComponent {
       <lux-card-content-expanded>Lorem ipsum expanded</lux-card-content-expanded>
     </lux-card>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class ExpandedClickableCardComponent {
@@ -429,7 +429,7 @@ class ExpandedClickableCardComponent {
       <lux-card-content-expanded>Lorem ipsum expanded</lux-card-content-expanded>
     </lux-card>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class LuxContentExpandedComponent {
@@ -442,11 +442,11 @@ class LuxContentExpandedComponent {
 
 @Component({
   template: `
-    <lux-card [luxTitle]="title" [luxSubTitle]="subTitle" [luxDisabled]="disabled" (luxClicked)="cardClicked()">
-      @if (testShowIcon) {
+    <lux-card [luxTitle]="title()" [luxSubTitle]="subTitle()" [luxDisabled]="disabled()" (luxClicked)="cardClicked()">
+      @if (testShowIcon()) {
         <lux-icon luxIconName="lux-interface-validation-check"></lux-icon>
       }
-      @if (testShowInfo) {
+      @if (testShowInfo()) {
         <lux-card-info>
           <span class="test-card-info">Card-Info</span>
         </lux-card-info>
@@ -454,24 +454,24 @@ class LuxContentExpandedComponent {
       <lux-card-content>
         <span class="test-card-content">Card-Content</span>
       </lux-card-content>
-      @if (testShowAction) {
+      @if (testShowAction()) {
         <lux-card-actions>
           <span class="test-card-action"></span>
         </lux-card-actions>
       }
     </lux-card>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardActionsComponent, LuxCardInfoComponent]
 })
 class MockCardComponent {
-  title?: string;
-  subTitle?: string;
-  disabled?: boolean;
+  title = signal<string | undefined>(undefined);
+  subTitle = signal<string | undefined>(undefined);
+  disabled = signal<boolean | undefined>(undefined);
 
-  testShowIcon = false;
-  testShowAction = false;
-  testShowInfo = false;
+  testShowIcon = signal(false);
+  testShowAction = signal(false);
+  testShowInfo = signal(false);
 
   cardClicked() {}
 }

@@ -29,7 +29,7 @@ export enum LuxSessionTimerDialogType {
     TranslocoPipe,
     LuxAriaLabelDirective
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lux-app-header-ac-session-timer-dialog.html'
 })
 export class LuxAppHeaderAcSessionTimerDialogComponent {

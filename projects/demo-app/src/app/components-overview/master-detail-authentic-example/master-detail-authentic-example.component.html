@@ -9,10 +9,10 @@
   [luxEmptyLabelMaster]="configuration.emptyLabelMaster"
   [luxOpen]="configuration.opened"
   [luxTitleLineBreak]="configuration.lineBreak"
-  [luxMasterIsLoading]="configuration.masterIsReloading"
-  [luxMasterList]="masterEntries"
+  [luxMasterIsLoading]="masterIsReloading()"
+  [luxMasterList]="masterEntries()"
   luxMasterListLabel="Beispielliste für Master-Detail"
-  [luxSelectedDetail]="selectedDetail"
+  [luxSelectedDetail]="selectedDetail()"
   [luxCompareWith]="compareFn"
   luxTagIdMaster="masterTagId"
   luxTagIdDetail="detailTagId"
@@ -94,7 +94,7 @@
       <lux-tabs [luxActiveTab]="0">
         <lux-tab luxTitle="Konfiguration" luxIconName="lux-interface-setting-tool-box">
           <ng-template>
-            <detail-example [masterDetailConfig]="configuration" [selectedDetail]="detail">
+            <detail-example [masterDetailConfig]="configuration" [(masterIsReloading)]="masterIsReloading" [selectedDetail]="detail">
               <lux-toggle-ac
                 [(luxChecked)]="showCustomDetailHeader"
                 luxLabel="Custom Detail-Header anzeigen"
@@ -118,20 +118,20 @@
   <lux-master-footer-ac>
     <div class="lux-flex lux-flex-col">
       <div class="lux-flex lux-gap-2 lux-content-end lux-items-center">
-        <lux-button luxLabel="#1" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail = masterEntries[0]"> </lux-button>
-        <lux-button luxLabel="#5" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail = masterEntries[4]"> </lux-button>
+        <lux-button luxLabel="#1" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail.set(masterEntries()[0])"> </lux-button>
+        <lux-button luxLabel="#5" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail.set(masterEntries()[4])"> </lux-button>
         <lux-menu luxMenuIconName="lux-interface-setting-menu-1" luxTagId="master_footer_menu">
           <lux-menu-item
             luxLabel="Liste umkehren"
             luxIconName="lux-interface-arrows-turn-backward"
-            [luxDisabled]="masterEntries.length === 0"
+            [luxDisabled]="masterEntries().length === 0"
             (luxClicked)="reverseList()"
           >
           </lux-menu-item>
           <lux-menu-item
             luxLabel="Liste leeren"
             luxIconName="lux-interface-delete-bin-5"
-            [luxDisabled]="masterEntries.length === 0"
+            [luxDisabled]="masterEntries().length === 0"
             (luxClicked)="clearList()"
           >
           </lux-menu-item>

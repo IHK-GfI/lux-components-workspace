@@ -1,18 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import {
-  AfterViewInit,
-  Directive,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ViewContainerRef
-} from '@angular/core';
+import { AfterViewInit, Directive, effect, input, output, viewChild, viewChildren, ViewContainerRef } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { Subscription } from 'rxjs';
 import { ILuxStepperConfiguration } from './lux-stepper-configuration.interface';
 
 /**
@@ -20,36 +8,47 @@ import { ILuxStepperConfiguration } from './lux-stepper-configuration.interface'
  * dem LuxStepper zur Darstellung genutzt.
  */
 @Directive()
-export class LuxStepperParent implements OnDestroy, AfterViewInit {
+export class LuxStepperParent implements AfterViewInit {
   // Diese Outputs werden bei den Klicks auf die Stepper-eigenen Navigations-Buttons ausgelöst und informieren die
   // LuxStepperComponent
-  @Output() luxFinButtonClicked = new EventEmitter<void>();
-  @Output() luxNextButtonClicked = new EventEmitter<void>();
-  @Output() luxPrevButtonClicked = new EventEmitter<void>();
+  readonly luxFinButtonClicked = output<void>();
+  readonly luxNextButtonClicked = output<void>();
+  readonly luxPrevButtonClicked = output<void>();
   // Wird beim Wechsel des Steps (über Header oder Button) aufgerufen
-  @Output() luxStepChanged = new EventEmitter<StepperSelectionEvent>();
+  readonly luxStepChanged = output<StepperSelectionEvent>();
   // über die aktuellen Elemente informiert zu halten
-  @Output() luxMatStepperLoaded = new EventEmitter<MatStepper>();
-  @Output() luxMatStepLabelsLoaded = new EventEmitter<ViewContainerRef[]>();
-  @Output() luxStepClicked = new EventEmitter<number>();
+  readonly luxMatStepperLoaded = output<MatStepper>();
+  readonly luxMatStepLabelsLoaded = output<ViewContainerRef[]>();
+  readonly luxStepClicked = output<number>();
 
-  @ViewChild('stepper', { static: true }) matStepper!: MatStepper;
-  @ViewChildren('matStepLabel', { read: ViewContainerRef }) matStepLabels!: QueryList<ViewContainerRef>;
+  readonly matStepper = viewChild.required<MatStepper>('stepper');
+  readonly matStepLabels = viewChildren('matStepLabel', { read: ViewContainerRef });
 
-  @Input() luxStepperConfig?: ILuxStepperConfiguration;
+  readonly luxStepperConfig = input<ILuxStepperConfiguration | undefined>();
 
-  subscription?: Subscription;
+  private isFirstStepLabelsRun = true;
 
-  constructor() {}
+  constructor() {
+    effect(() => {
+      const labels = this.matStepLabels();
+
+      // Der erste automatische Lauf entspricht der initialen Auflösung der ViewChildren
+      // (kein "echter" Wechsel wie früher bei QueryList.changes, das initial nie feuert)
+      // und wird daher übersprungen – die Erstinitialisierung übernimmt ngAfterViewInit synchron.
+      if (this.isFirstStepLabelsRun) {
+        this.isFirstStepLabelsRun = false;
+        return;
+      }
+
+      this.luxMatStepLabelsLoaded.emit([...labels]);
+    });
+  }
 
   ngAfterViewInit() {
     // Sobald die Component initialisiert ist, dem Parent (luxStepper) den
     // MatStepper und die MatStepLabels mitteilen
-    this.luxMatStepperLoaded.emit(this.matStepper);
-    this.luxMatStepLabelsLoaded.emit(this.matStepLabels.toArray());
-    this.subscription = this.matStepLabels.changes.subscribe(() => {
-      this.luxMatStepLabelsLoaded.emit(this.matStepLabels.toArray());
-    });
+    this.luxMatStepperLoaded.emit(this.matStepper());
+    this.luxMatStepLabelsLoaded.emit([...this.matStepLabels()]);
   }
 
   onStepClicked(event: Event) {
@@ -58,12 +57,6 @@ export class LuxStepperParent implements OnDestroy, AfterViewInit {
 
     if (stepIndex !== -1) {
       this.luxStepClicked.emit(stepIndex);
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
     }
   }
 

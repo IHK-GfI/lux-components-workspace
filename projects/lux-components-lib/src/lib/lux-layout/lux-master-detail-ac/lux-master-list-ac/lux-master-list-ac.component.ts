@@ -1,19 +1,17 @@
-import { Component, ContentChild, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, input, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'lux-master-list-ac',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ''
 })
 export class LuxMasterListAcComponent {
-  @Input() luxTitleProp?: string;
-  @Input() luxTitleTooltipProp?: string;
-  @Input() luxSubTitleProp?: string;
-  @Input() luxSubTitleTooltipProp?: string;
+  readonly luxTitleProp = input<string | undefined>();
+  readonly luxTitleTooltipProp = input<string | undefined>();
+  readonly luxSubTitleProp = input<string | undefined>();
+  readonly luxSubTitleTooltipProp = input<string | undefined>();
 
-  @ContentChild('luxSimpleContent') contentTempRef?: TemplateRef<any>;
-  @ContentChild('luxSimpleIcon') iconTempRef?: TemplateRef<any>;
-  @ContentChild('luxSimpleCustomHeader') customHeaderTempRef?: TemplateRef<any>;
-
-  constructor() {}
+  readonly contentTempRef = contentChild<TemplateRef<any>>('luxSimpleContent');
+  readonly iconTempRef = contentChild<TemplateRef<any>>('luxSimpleIcon');
+  readonly customHeaderTempRef = contentChild<TemplateRef<any>>('luxSimpleCustomHeader');
 }

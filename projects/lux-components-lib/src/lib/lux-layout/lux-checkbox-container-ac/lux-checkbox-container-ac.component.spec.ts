@@ -22,8 +22,8 @@ describe('LuxCheckboxContainerComponent', () => {
 
   describe('luxShowRequiredMarker', () => {
     it('sollte das Pflichtfeld-Sternchen nicht anzeigen, wenn luxShowRequiredMarker false ist', () => {
-      component.luxLabel = 'Test';
-      component.luxShowRequiredMarker = false;
+      fixture.componentRef.setInput('luxLabel', 'Test');
+      fixture.componentRef.setInput('luxShowRequiredMarker', false);
       fixture.detectChanges();
 
       const marker = fixture.nativeElement.querySelector('.lux-label-container span[aria-hidden]');
@@ -31,8 +31,8 @@ describe('LuxCheckboxContainerComponent', () => {
     });
 
     it('sollte das Pflichtfeld-Sternchen anzeigen, wenn luxShowRequiredMarker true ist', () => {
-      component.luxLabel = 'Test';
-      component.luxShowRequiredMarker = true;
+      fixture.componentRef.setInput('luxLabel', 'Test');
+      fixture.componentRef.setInput('luxShowRequiredMarker', true);
       fixture.detectChanges();
 
       const marker = fixture.nativeElement.querySelector('.lux-label-container span[aria-hidden]');
@@ -41,8 +41,8 @@ describe('LuxCheckboxContainerComponent', () => {
     });
 
     it('sollte das Pflichtfeld-Sternchen nicht anzeigen, wenn kein Label gesetzt ist', () => {
-      component.luxLabel = '';
-      component.luxShowRequiredMarker = true;
+      fixture.componentRef.setInput('luxLabel', '');
+      fixture.componentRef.setInput('luxShowRequiredMarker', true);
       fixture.detectChanges();
 
       const labelContainer = fixture.nativeElement.querySelector('.lux-label-container');

@@ -4,30 +4,30 @@
   (keydown.enter)="clicked()"
   (keydown.space)="clicked()"
   luxTagIdHandler
-  [luxTagId]="luxTagId"
+  [luxTagId]="luxTagId()"
   tabindex="0"
   class="lux-cursor-pointer lux-tile-ac"
-  [luxBadgeNotification]="getBadgeContent()"
-  [luxBadgeColor]="luxNotificationColor"
+  [luxBadgeNotification]="luxBadgeContent()"
+  [luxBadgeColor]="luxNotificationColor()"
   luxBadgePosition="above after"
-  [luxBadgeSize]="luxNotificationSize"
-  [luxBadgeCap]="luxCounterCap"
+  [luxBadgeSize]="luxNotificationSize()"
+  [luxBadgeCap]="luxCounterCap()"
   role="link"
-  [attr.aria-label]="luxLabel"
-  [attr.aria-description]="luxSubTitle"
+  [attr.aria-label]="luxLabel()"
+  [attr.aria-description]="luxSubTitle()"
 >
   <mat-card-header class="lux-tile-header">
     <mat-card-title class="lux-tile-title">
       <span
-        [class.lux-hyphenate]="!luxLabelTruncateAfterOneLine"
-        [style.display]="luxLabelTruncateAfterOneLine && !luxLabelTruncateAfterTwoLines ? 'block' : null"
-        [class.lux-crop]="luxLabelTruncateAfterOneLine"
-        [class.lux-crop-2-lines]="luxLabelTruncateAfterTwoLines"
-        luxTooltip="{{ luxLabel }}"
+        [class.lux-hyphenate]="!luxLabelTruncateAfterOneLine()"
+        [style.display]="luxLabelTruncateAfterOneLine() && !luxLabelTruncateAfterTwoLines() ? 'block' : null"
+        [class.lux-crop]="luxLabelTruncateAfterOneLine()"
+        [class.lux-crop-2-lines]="luxLabelTruncateAfterTwoLines()"
+        luxTooltip="{{ luxLabel() }}"
         [luxTooltipShowDelay]="500"
-        [luxTooltipDisabled]="!luxLabelTruncateAfterOneLine && !luxLabelTruncateAfterTwoLines"
-        [attr.aria-label]="luxLabel"
-        >{{ luxLabel }}</span
+        [luxTooltipDisabled]="!luxLabelTruncateAfterOneLine() && !luxLabelTruncateAfterTwoLines()"
+        [attr.aria-label]="luxLabel()"
+        >{{ luxLabel() }}</span
       >
     </mat-card-title>
     <div class="lux-tile-icon-container">
@@ -36,15 +36,15 @@
     </div>
     <mat-card-subtitle class="lux-tile-subtitle"
       ><span
-        [class.lux-hyphenate]="!luxSubTitleTruncateAfterOneLine"
-        [style.display]="luxSubTitleTruncateAfterOneLine && !luxSubTitleTruncateAfterTwoLines ? 'block' : null"
-        [class.lux-crop]="luxSubTitleTruncateAfterOneLine"
-        [class.lux-crop-2-lines]="luxSubTitleTruncateAfterTwoLines"
-        luxTooltip="{{ luxSubTitle }}"
+        [class.lux-hyphenate]="!luxSubTitleTruncateAfterOneLine()"
+        [style.display]="luxSubTitleTruncateAfterOneLine() && !luxSubTitleTruncateAfterTwoLines() ? 'block' : null"
+        [class.lux-crop]="luxSubTitleTruncateAfterOneLine()"
+        [class.lux-crop-2-lines]="luxSubTitleTruncateAfterTwoLines()"
+        luxTooltip="{{ luxSubTitle() }}"
         [luxTooltipShowDelay]="500"
-        [luxTooltipDisabled]="!luxSubTitleTruncateAfterOneLine && !luxSubTitleTruncateAfterTwoLines"
-        [attr.aria-label]="luxLabel"
-        >{{ luxSubTitle }}</span
+        [luxTooltipDisabled]="!luxSubTitleTruncateAfterOneLine() && !luxSubTitleTruncateAfterTwoLines()"
+        [attr.aria-label]="luxLabel()"
+        >{{ luxSubTitle() }}</span
       ></mat-card-subtitle
     >
   </mat-card-header>

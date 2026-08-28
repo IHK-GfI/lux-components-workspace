@@ -1,11 +1,11 @@
 <!-- Vertikaler Stepper, die Konfiguration stammt aus dem LuxStepper und wird hier angewandt -->
 <mat-vertical-stepper
-  [linear]="$safeNavigationMigration(luxStepperConfig?.luxLinear)"
-  [selectedIndex]="$safeNavigationMigration(luxStepperConfig?.luxCurrentStepNumber)"
+  [linear]="$safeNavigationMigration(luxStepperConfig()?.luxLinear)"
+  [selectedIndex]="$safeNavigationMigration(luxStepperConfig()?.luxCurrentStepNumber)"
   [ngClass]="{
-    'lux-ignore-mat-step-icons': $safeNavigationMigration(luxStepperConfig?.luxUseCustomIcons),
-    'lux-pointer-events-none': $safeNavigationMigration(luxStepperConfig?.luxDisabled),
-    'lux-linear-stepper': $safeNavigationMigration(luxStepperConfig?.luxLinear)
+    'lux-ignore-mat-step-icons': $safeNavigationMigration(luxStepperConfig()?.luxUseCustomIcons),
+    'lux-pointer-events-none': $safeNavigationMigration(luxStepperConfig()?.luxDisabled),
+    'lux-linear-stepper': $safeNavigationMigration(luxStepperConfig()?.luxLinear)
   }"
   [disableRipple]="true"
   (selectionChange)="luxStepChanged.emit($event)"
@@ -13,8 +13,8 @@
   (keydown.enter)="onStepClicked($event)"
   #stepper
 >
-  @for (luxStep of luxStepperConfig?.luxSteps; track luxStep; let i = $index) {
-    <mat-step [completed]="luxStep.isCompleted()" [optional]="luxStep.luxOptional" [editable]="luxStep.luxEditable">
+  @for (luxStep of luxStepperConfig()?.luxSteps; track luxStep; let i = $index) {
+    <mat-step [completed]="luxStep.isCompleted()" [optional]="luxStep.luxOptional()" [editable]="luxStep.luxEditable()">
       <!-- Header des Steps -->
       <ng-template matStepLabel>
         <div class="lux-flex lux-place-content-start lux-items-center">
@@ -27,11 +27,11 @@
       <!-- Content des Steps, wenn Animationen aktiviert sind -->
       <ng-container *ngTemplateOutlet="luxStep.contentTemplate"></ng-container>
       <!-- Nav-Buttons, wenn aktiviert -->
-      @if (luxStepperConfig?.luxShowNavigationButtons) {
+      @if (luxStepperConfig()?.luxShowNavigationButtons) {
         <lux-stepper-nav-buttons
           [luxIndex]="i"
           [luxStep]="luxStep"
-          [luxStepperConfig]="luxStepperConfig"
+          [luxStepperConfig]="luxStepperConfig()"
           (luxPrevClick)="luxPrevButtonClicked.emit()"
           (luxNextClick)="luxNextButtonClicked.emit()"
           (luxFinClick)="luxFinButtonClicked.emit()"

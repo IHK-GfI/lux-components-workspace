@@ -49,16 +49,16 @@ export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeSt
   }
 
   ngOnInit(): void {
-    this.luxTitle = 'Konfiguration: Abschließen-Button';
-    this.luxVetoFn = this.createVetoPromise;
+    this.luxTitle.set('Konfiguration: Abschließen-Button');
+    this.luxVetoFn.set(this.createVetoPromise.bind(this));
 
     this.form.get('alignIconWithLabel')!.disable();
 
-    this.luxCompleted = this.form.valid;
+    this.luxCompleted.set(this.form.valid);
 
     this.subscriptions.push(
       this.form.statusChanges.subscribe(() => {
-        this.luxCompleted = this.form.valid;
+        this.luxCompleted.set(this.form.valid);
       })
     );
     this.subscriptions.push(
@@ -78,21 +78,21 @@ export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeSt
       // - Die Daten aus dem Step in seine Datenstruktur übertragen.
       // - Über die resolve-Methode zurückmelden, ob zum nächsten Schritt navigiert werden darf.
       setTimeout(() => {
-        if (!event.newStep.luxTouched) {
+        if (!event.newStep.luxTouched()) {
           // Prüfen, ob das Formular valide ist.
           if (this.form.valid) {
             // Hier werden die Daten aus dem Formular in den Datenservice übertragen.
             this.dataService.finButtonConfig = this.form.value;
 
             // Als letztes wird der Step als valide gekennzeichnet.
-            this.luxCompleted = true;
+            this.luxCompleted.set(true);
           } else {
             // Das Formular ist noch nicht valide und deswegen wird der Step
             // als noch nicht fertig gekennzeichnet.
-            this.luxCompleted = false;
+            this.luxCompleted.set(false);
           }
           if (this.dataService.luxStepValidationActive) {
-            resolve(this.luxCompleted ? LuxVetoState.navigationAccepted : LuxVetoState.navigationRejected);
+            resolve(this.luxCompleted() ? LuxVetoState.navigationAccepted : LuxVetoState.navigationRejected);
           } else {
             resolve(LuxVetoState.navigationAccepted);
           }

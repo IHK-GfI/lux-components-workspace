@@ -1,17 +1,15 @@
-import { AfterContentInit, Component, ContentChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, contentChild, TemplateRef } from '@angular/core';
 import { LuxUtil } from '../../../lux-util/lux-util';
 
 @Component({
   selector: 'lux-detail-view-ac',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: ''
 })
 export class LuxDetailViewAcComponent implements AfterContentInit {
-  @ContentChild(TemplateRef) tempRef!: TemplateRef<any>;
-
-  constructor() {}
+  readonly tempRef = contentChild.required(TemplateRef);
 
   ngAfterContentInit() {
-    LuxUtil.assertNonNull('tempRef', this.tempRef);
+    LuxUtil.assertNonNull('tempRef', this.tempRef());
   }
 }

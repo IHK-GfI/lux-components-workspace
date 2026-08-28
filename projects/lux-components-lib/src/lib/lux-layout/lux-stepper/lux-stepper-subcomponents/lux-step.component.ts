@@ -1,11 +1,12 @@
-import { Component, ContentChild, Input, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChild, effect, input, TemplateRef, viewChild } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, startWith, switchMap } from 'rxjs';
 import { LuxStepHeaderComponent } from './lux-step-header.component';
 
 @Component({
   selector: 'lux-step',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template #header>
       <ng-content select="lux-step-header"></ng-content>
@@ -17,49 +18,59 @@ import { LuxStepHeaderComponent } from './lux-step-header.component';
 })
 export class LuxStepComponent {
   private _iconChange = new BehaviorSubject<boolean>(false);
-  private _luxIconName?: string = undefined;
 
-  @ViewChild('header', { static: true }) defaultHeaderTemplate!: TemplateRef<any>;
-  @ViewChild('content', { static: true }) defaultContentTemplate!: TemplateRef<any>;
-  @ContentChild(LuxStepHeaderComponent) luxStepHeader?: LuxStepHeaderComponent;
-  @ContentChild('header', { descendants: true, read: TemplateRef }) projectedHeaderTemplate?: TemplateRef<any>;
-  @ContentChild('content', { descendants: true, read: TemplateRef }) projectedContentTemplate?: TemplateRef<any>;
+  readonly defaultHeaderTemplate = viewChild.required<TemplateRef<any>>('header');
+  readonly defaultContentTemplate = viewChild.required<TemplateRef<any>>('content');
+  readonly luxStepHeader = contentChild(LuxStepHeaderComponent);
+  readonly projectedHeaderTemplate = contentChild('header', { descendants: true, read: TemplateRef });
+  readonly projectedContentTemplate = contentChild('content', { descendants: true, read: TemplateRef });
 
-  @Input() luxIconSize = '1x';
-  @Input() luxOptional = false;
-  @Input() luxEditable = true;
-  @Input() luxCompleted = true;
-  @Input() luxStepControl?: FormGroup;
+  readonly luxIconSize = input('1x');
+  readonly luxOptional = input(false);
+  readonly luxEditable = input(true);
+  readonly luxCompleted = input(true);
+  readonly luxStepControl = input<FormGroup | undefined>();
+  readonly luxIconName = input<string | undefined>();
+
+  /**
+   * FormGroup.valid ist eine reine (nicht-reaktive) Getter-Eigenschaft. Ein direktes Lesen in
+   * isCompleted() würde von Angular nicht als Signal-Abhängigkeit erkannt werden - Konsumenten wie
+   * lux-stepper-nav-buttons (OnPush) würden dann nie neu geprüft, wenn sich die Formular-Validität
+   * durch Nutzereingaben ändert. Über statusChanges wird die Validität in ein Signal überführt.
+   */
+  private readonly stepControlValid = toSignal(
+    toObservable(this.luxStepControl).pipe(
+      switchMap((stepControl) => (stepControl ? stepControl.statusChanges.pipe(startWith(stepControl.status), map(() => stepControl.valid)) : of(undefined)))
+    ),
+    { initialValue: undefined }
+  );
+
+  constructor() {
+    effect(() => {
+      this.luxIconName();
+      this._iconChange.next(true);
+    });
+  }
 
   get headerTemplate(): TemplateRef<any> {
-    return this.projectedHeaderTemplate ?? this.defaultHeaderTemplate;
+    return this.projectedHeaderTemplate() ?? this.defaultHeaderTemplate();
   }
 
   get contentTemplate(): TemplateRef<any> {
-    return this.projectedContentTemplate ?? this.defaultContentTemplate;
+    return this.projectedContentTemplate() ?? this.defaultContentTemplate();
   }
 
   get hasHeader(): boolean {
     return (
-      !!this.luxStepHeader || !!this.projectedHeaderTemplate || (this.constructor !== LuxStepComponent && !!this.defaultHeaderTemplate)
+      !!this.luxStepHeader() ||
+      !!this.projectedHeaderTemplate() ||
+      (this.constructor !== LuxStepComponent && !!this.defaultHeaderTemplate())
     );
-  }
-
-  get luxIconName(): string | undefined {
-    return this._luxIconName;
-  }
-
-  @Input()
-  set luxIconName(iconName: string | undefined) {
-    this._luxIconName = iconName;
-    this._iconChange.next(true);
   }
 
   getIconChangeObsv(): Observable<boolean> {
     return this._iconChange.asObservable();
   }
-
-  constructor() {}
 
   /**
    * Gibt an, ob der Step als abgeschlossen gilt.
@@ -70,9 +81,10 @@ export class LuxStepComponent {
    *  3. Der Wert luxOptional ist true
    */
   isCompleted() {
-    if (this.luxStepControl) {
-      return this.luxStepControl.valid;
+    const stepControl = this.luxStepControl();
+    if (stepControl) {
+      return this.stepControlValid() ?? stepControl.valid;
     }
-    return this.luxCompleted || this.luxOptional;
+    return this.luxCompleted() || this.luxOptional();
   }
 }

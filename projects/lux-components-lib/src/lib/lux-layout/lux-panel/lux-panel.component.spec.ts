@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -22,8 +22,8 @@ describe('LuxPanelComponent', () => {
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
 
       // Änderungen durchführen
-      fixture.componentInstance.sticky = true;
-      fixture.componentInstance.offset = '64px';
+      fixture.componentInstance.sticky.set(true);
+      fixture.componentInstance.offset.set('64px');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -31,14 +31,14 @@ describe('LuxPanelComponent', () => {
       expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('64px');
 
       // Änderungen durchführen
-      fixture.componentInstance.sticky = false;
+      fixture.componentInstance.sticky.set(false);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
 
       // Änderungen durchführen
-      fixture.componentInstance.offset = undefined;
+      fixture.componentInstance.offset.set(undefined);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
@@ -49,15 +49,15 @@ describe('LuxPanelComponent', () => {
 
 @Component({
   template: `
-    <lux-panel [luxExpanded]="true" [luxStickyHeader]="sticky" [luxStickyHeaderOffset]="offset">
+    <lux-panel [luxExpanded]="true" [luxStickyHeader]="sticky()" [luxStickyHeaderOffset]="offset()">
       <lux-panel-header-title>Titel 1</lux-panel-header-title>
       <lux-panel-content>Inhalt</lux-panel-content>
     </lux-panel>
   `,
   imports: [LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent],
-  changeDetection: ChangeDetectionStrategy.Eager
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 class LuxPanelStickyHeaderComponent {
-  sticky = false;
-  offset?: string;
+  sticky = signal(false);
+  offset = signal<string | undefined>(undefined);
 }

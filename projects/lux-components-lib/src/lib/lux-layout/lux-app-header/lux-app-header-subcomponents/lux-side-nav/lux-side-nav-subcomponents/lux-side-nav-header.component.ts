@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'lux-side-nav-header',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<div class="lux-side-nav-header-content"><ng-content></ng-content></div>'
 })
-export class LuxSideNavHeaderComponent {
-  constructor() {}
-}
+export class LuxSideNavHeaderComponent {}

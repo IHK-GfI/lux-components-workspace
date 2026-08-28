@@ -33,7 +33,7 @@ class MockLuxStepperLargeMobileOverlayRef {}
 
 class MockLuxStepperLargeComponent {
   stepperComponent = {
-    luxCurrentStepNumber: 0,
-    luxSteps: []
+    currentStepNumber: 0,
+    steps: () => []
   };
 }

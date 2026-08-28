@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import {
@@ -101,7 +101,6 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
     emptyLabelMaster: string;
     opened: boolean;
     lineBreak: boolean;
-    masterIsReloading: boolean;
     ignoreScrollLoading: boolean;
     alignEmptyElements: boolean;
     showCustomCardHeader: boolean;
@@ -114,7 +113,6 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
     emptyLabelMaster: 'Keine Daten!',
     opened: true,
     lineBreak: false,
-    masterIsReloading: false,
     ignoreScrollLoading: false,
     alignEmptyElements: true,
     showCustomCardHeader: true
@@ -124,8 +122,9 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
   scrollSteps = 5;
   // Enthält alle list-item Einträge immer vor
   allMasterEntries: any[];
-  masterEntries: any[] = [];
-  selectedDetail: any;
+  masterEntries = signal<any[]>([]);
+  masterIsReloading = signal(false);
+  selectedDetail = signal<any>(undefined);
   showCustomDetailHeader = false;
   theme = this.themeService.getTheme().name;
 
@@ -133,7 +132,7 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
     this.allMasterEntries = this.dataService.createExampleData(20);
     const temp = this.allMasterEntries.slice(0, 10);
 
-    this.masterEntries = this.masterEntries.concat(temp);
+    this.masterEntries.update((entries) => entries.concat(temp));
 
     this.themeService
       .getThemeAsObservable()
@@ -172,9 +171,11 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
       })
     );
 
-    of(this.masterEntries[1])
+    of(this.masterEntries()[1])
       .pipe(take(1), delay(2000))
-      .subscribe((v) => (this.selectedDetail = v));
+      .subscribe((v) => {
+        this.selectedDetail.set(v);
+      });
   }
 
   ngOnDestroy(): void {
@@ -185,11 +186,7 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
    * Funktion zum Nachladen von Master-Einträgen (von Infinite-Scrolling)
    */
   onLoadListTest() {
-    if (
-      this.configuration.ignoreScrollLoading ||
-      this.configuration.masterIsReloading ||
-      this.masterEntries.length === this.allMasterEntries.length
-    ) {
+    if (this.configuration.ignoreScrollLoading || this.masterIsReloading() || this.masterEntries().length === this.allMasterEntries.length) {
       return;
     }
 
@@ -198,12 +195,12 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
         take(1),
         delay(0),
         tap(() => {
-          this.configuration.masterIsReloading = true;
+          this.masterIsReloading.set(true);
         }),
         delay(1500)
       )
       .subscribe(() => {
-        const start = this.masterEntries.length;
+        const start = this.masterEntries().length;
         let end = start + this.scrollSteps;
         if (end > this.allMasterEntries.length) {
           end = this.allMasterEntries.length;
@@ -211,9 +208,9 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
 
         const temp = this.allMasterEntries.slice(start, end);
         if (temp && temp.length > 0) {
-          this.masterEntries = this.masterEntries.concat(temp);
+          this.masterEntries.update((entries) => entries.concat(temp));
         }
-        this.configuration.masterIsReloading = false;
+        this.masterIsReloading.set(false);
       });
   }
 
@@ -223,10 +220,10 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
 
   changeFilter(event: any) {
     if (!event.value) {
-      this.masterEntries = this.allMasterEntries;
+      this.masterEntries.set(this.allMasterEntries);
       this.configuration.ignoreScrollLoading = false;
     } else {
-      this.masterEntries = this.allMasterEntries.filter((entry) => entry.timestamp < event.value);
+      this.masterEntries.set(this.allMasterEntries.filter((entry) => entry.timestamp < event.value));
       this.configuration.ignoreScrollLoading = true;
     }
   }
@@ -241,23 +238,23 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
   }
 
   clearList() {
-    this.masterEntries = [];
-    this.selectedDetail = -1;
+    this.masterEntries.set([]);
+    this.selectedDetail.set(-1);
   }
 
   fillList() {
-    this.masterEntries = this.allMasterEntries;
+    this.masterEntries.set(this.allMasterEntries);
   }
 
   reverseList() {
-    this.masterEntries = this.masterEntries.reverse();
+    this.masterEntries.update((entries) => entries.slice().reverse());
   }
 
   fillListFirstTenItems() {
-    this.masterEntries = this.allMasterEntries.slice(0, 10);
+    this.masterEntries.set(this.allMasterEntries.slice(0, 10));
   }
 
   fillListLastTenItems() {
-    this.masterEntries = this.allMasterEntries.slice(this.allMasterEntries.length - 10, this.allMasterEntries.length);
+    this.masterEntries.set(this.allMasterEntries.slice(this.allMasterEntries.length - 10, this.allMasterEntries.length));
   }
 }

@@ -38,7 +38,7 @@ describe('LuxAppHeaderAcComponent', () => {
     <lux-app-header-ac luxAppTitle="MyClickTitle" luxAppIconSrc="assets/svg/demoAppLogo.svg" (luxAppLogoClicked)="onClicked()">
     </lux-app-header-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderAcComponent]
 })
 class MockIconsClickedAppHeaderAcComponent {

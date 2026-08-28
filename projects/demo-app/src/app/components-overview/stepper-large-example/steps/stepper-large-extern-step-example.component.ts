@@ -21,8 +21,8 @@ export class StepperLargeExternStepExampleComponent extends LuxStepperLargeStepC
   subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
-    if (!this.luxTitle) {
-      this.luxTitle = 'Lorem ipsum 4711';
+    if (!this.luxTitle()) {
+      this.luxTitle.set('Lorem ipsum 4711');
     }
 
     this.subscriptions.push(

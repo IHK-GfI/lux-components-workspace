@@ -5,7 +5,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, wait
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -79,7 +79,7 @@ describe('LuxStepperComponent', () => {
     expect(stepperOverlay).not.toBeNull();
 
     // Änderungen durchführen
-    component.disabled = true;
+    component.disabled.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -110,7 +110,7 @@ describe('LuxStepperComponent', () => {
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
-    component.linear = true;
+    component.linear.set(true);
     LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
@@ -128,9 +128,9 @@ describe('LuxStepperComponent', () => {
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
-    component.linear = true;
-    component.step0Form = undefined;
-    component.step0Completed = false;
+    component.linear.set(true);
+    component.step0Form.set(undefined);
+    component.step0Completed.set(false);
     LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
@@ -142,7 +142,7 @@ describe('LuxStepperComponent', () => {
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
-    component.step0Completed = true;
+    component.step0Completed.set(true);
     LuxTestHelper.wait(fixture);
 
     stepHeaders[1].nativeElement.click();
@@ -161,9 +161,9 @@ describe('LuxStepperComponent', () => {
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
-    component.linear = true;
-    component.step0Form = undefined;
-    component.step0Optional = true;
+    component.linear.set(true);
+    component.step0Form.set(undefined);
+    component.step0Optional.set(true);
     LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
@@ -183,10 +183,10 @@ describe('LuxStepperComponent', () => {
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
-    component.linear = true;
-    component.step0Form = undefined;
-    component.step0Editable = false;
-    component.step0Completed = true;
+    component.linear.set(true);
+    component.step0Form.set(undefined);
+    component.step0Editable.set(false);
+    component.step0Completed.set(true);
     LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
@@ -214,7 +214,7 @@ describe('LuxStepperComponent', () => {
     expect(matStepIcons.length).toBe(0);
 
     // Änderungen durchführen
-    component.customIcons = true;
+    component.customIcons.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -231,9 +231,9 @@ describe('LuxStepperComponent', () => {
     expect(navButtons[2].nativeElement.textContent.trim()).toEqual('Test fertig');
 
     // Änderungen durchführen
-    component.prevConfig.label = 'Test prev';
-    component.nextConf.label = 'Test next';
-    component.finConf.label = 'Test fin';
+    component.prevConfig.update((cfg) => ({ ...cfg, label: 'Test prev' }));
+    component.nextConf.update((cfg) => ({ ...cfg, label: 'Test next' }));
+    component.finConf.update((cfg) => ({ ...cfg, label: 'Test fin' }));
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -248,7 +248,7 @@ describe('LuxStepperComponent', () => {
     expect(navButtons.length).toBe(3);
 
     // Änderungen durchführen
-    component.showNavButtons = false;
+    component.showNavButtons.set(false);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -257,8 +257,8 @@ describe('LuxStepperComponent', () => {
   }));
 
   it('Sollte den Next-Button im linearen Modus ohne A11Y deaktivieren', fakeAsync(() => {
-    component.linear = true;
-    component.a11yMode = false;
+    component.linear.set(true);
+    component.a11yMode.set(false);
     LuxTestHelper.wait(fixture);
 
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
@@ -266,8 +266,8 @@ describe('LuxStepperComponent', () => {
   }));
 
   it('Sollte den Next-Button im A11Y-Modus aktiviert lassen', fakeAsync(() => {
-    component.linear = true;
-    component.a11yMode = true;
+    component.linear.set(true);
+    component.a11yMode.set(true);
     LuxTestHelper.wait(fixture);
 
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
@@ -275,7 +275,7 @@ describe('LuxStepperComponent', () => {
   }));
 
   it('Sollte die Navigations-Buttons linksbündig darstellen', fakeAsync(() => {
-    component.buttonAlignLeft = true;
+    component.buttonAlignLeft.set(true);
     LuxTestHelper.wait(fixture);
 
     const navButtonContainer = fixture.debugElement.query(By.css('lux-stepper-nav-buttons > div'));
@@ -290,7 +290,7 @@ describe('LuxStepperComponent', () => {
     expect(stepperVertical).toBeNull();
 
     // Änderungen durchführen
-    component.vertical = true;
+    component.vertical.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -306,7 +306,7 @@ describe('LuxStepperComponent', () => {
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
-    component.currentStep = 1;
+    component.currentStep.set(1);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
@@ -333,7 +333,7 @@ describe('LuxStepperComponent', () => {
   }));
 
   it('Sollte luxCheckValidation emitten, wenn Header-Navigation blockiert wird', fakeAsync(() => {
-    component.linear = true;
+    component.linear.set(true);
     LuxTestHelper.wait(fixture);
 
     const spy = spyOn(component, 'checkValidation');
@@ -349,8 +349,8 @@ describe('LuxStepperComponent', () => {
 
   it('Sollte luxCheckValidation emitten, wenn Next-Button-Navigation blockiert wird (A11Y-Modus)', fakeAsync(() => {
     // Vorbedingungen: linear=true, step0 nicht abgeschlossen, A11Y-Modus damit Button klickbar bleibt
-    component.linear = true;
-    component.a11yMode = true;
+    component.linear.set(true);
+    component.a11yMode.set(true);
     LuxTestHelper.wait(fixture);
 
     const spy = spyOn(component, 'checkValidation');
@@ -394,29 +394,29 @@ describe('LuxStepperComponent', () => {
 @Component({
   template: `
     <lux-stepper
-      [luxDisabled]="disabled"
+      [luxDisabled]="disabled()"
       [(luxCurrentStepNumber)]="currentStep"
-      [luxUseCustomIcons]="customIcons"
-      [luxVerticalStepper]="vertical"
-      [luxLinear]="linear"
-      [luxA11YMode]="a11yMode"
-      [luxButtonAlignLeft]="buttonAlignLeft"
-      [luxHorizontalStepAnimationActive]="horAnimation"
-      [luxShowNavigationButtons]="showNavButtons"
-      [luxEditedIconName]="editedIconName"
-      [luxPreviousButtonConfig]="prevConfig"
-      [luxNextButtonConfig]="nextConf"
-      [luxFinishButtonConfig]="finConf"
+      [luxUseCustomIcons]="customIcons()"
+      [luxVerticalStepper]="vertical()"
+      [luxLinear]="linear()"
+      [luxA11YMode]="a11yMode()"
+      [luxButtonAlignLeft]="buttonAlignLeft()"
+      [luxHorizontalStepAnimationActive]="horAnimation()"
+      [luxShowNavigationButtons]="showNavButtons()"
+      [luxEditedIconName]="editedIconName()"
+      [luxPreviousButtonConfig]="prevConfig()"
+      [luxNextButtonConfig]="nextConf()"
+      [luxFinishButtonConfig]="finConf()"
       (luxStepChanged)="stepChange($event)"
       (luxCheckValidation)="checkValidation($event)"
       (luxFinishButtonClicked)="finClicked()"
     >
       <lux-step
-        [luxCompleted]="step0Completed"
-        [luxOptional]="step0Optional"
-        [luxStepControl]="step0Form"
-        [luxEditable]="step0Editable"
-        [luxIconName]="step0Icon"
+        [luxCompleted]="step0Completed()"
+        [luxOptional]="step0Optional()"
+        [luxStepControl]="step0Form()"
+        [luxEditable]="step0Editable()"
+        [luxIconName]="step0Icon()"
       >
         <lux-step-header>
           <span class="step-header step-0-header">Step 0</span>
@@ -429,11 +429,11 @@ describe('LuxStepperComponent', () => {
         </lux-step-content>
       </lux-step>
       <lux-step
-        [luxCompleted]="step1Completed"
-        [luxOptional]="step1Optional"
-        [luxStepControl]="step1Form"
-        [luxEditable]="step1Editable"
-        [luxIconName]="step1Icon"
+        [luxCompleted]="step1Completed()"
+        [luxOptional]="step1Optional()"
+        [luxStepControl]="step1Form()"
+        [luxEditable]="step1Editable()"
+        [luxIconName]="step1Icon()"
       >
         <lux-step-header>
           <span class="step-header step-1-header">Step 1</span>
@@ -447,44 +447,44 @@ describe('LuxStepperComponent', () => {
       </lux-step>
     </lux-stepper>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxStepperComponent, LuxStepComponent, LuxStepHeaderComponent, LuxStepContentComponent]
 })
 class MockStepperComponent {
-  disabled = false;
-  currentStep = 0;
-  customIcons = false;
-  vertical = false;
-  linear = false;
-  a11yMode = false;
-  buttonAlignLeft = false;
-  horAnimation = true;
-  showNavButtons = true;
-  editedIconName?: string;
+  disabled = signal(false);
+  currentStep = signal(0);
+  customIcons = signal(false);
+  vertical = signal(false);
+  linear = signal(false);
+  a11yMode = signal(false);
+  buttonAlignLeft = signal(false);
+  horAnimation = signal(true);
+  showNavButtons = signal(true);
+  editedIconName = signal<string | undefined>(undefined);
 
-  prevConfig: ILuxStepperButtonConfig = {
+  prevConfig = signal<ILuxStepperButtonConfig>({
     label: 'Test zurück'
-  };
+  });
 
-  nextConf: ILuxStepperButtonConfig = {
+  nextConf = signal<ILuxStepperButtonConfig>({
     label: 'Test vorwärts'
-  };
+  });
 
-  finConf: ILuxStepperButtonConfig = {
+  finConf = signal<ILuxStepperButtonConfig>({
     label: 'Test fertig'
-  };
+  });
 
-  step0Optional = false;
-  step0Editable = true;
-  step0Completed = false;
-  step0Form?: FormGroup;
-  step0Icon = 'lux-interface-user-single';
+  step0Optional = signal(false);
+  step0Editable = signal(true);
+  step0Completed = signal(false);
+  step0Form = signal<FormGroup | undefined>(undefined);
+  step0Icon = signal('lux-interface-user-single');
 
-  step1Optional = false;
-  step1Editable = true;
-  step1Completed = false;
-  step1Form?: FormGroup;
-  step1Icon = 'lux-file-signature';
+  step1Optional = signal(false);
+  step1Editable = signal(true);
+  step1Completed = signal(false);
+  step1Form = signal<FormGroup | undefined>(undefined);
+  step1Icon = signal('lux-file-signature');
 
   form;
 
@@ -517,6 +517,7 @@ class MockStepperComponent {
       <span class="step-content">Externer Inhalt</span>
     </ng-template>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: LuxStepComponent, useExisting: MockExternalStepComponent }]
 })
 class MockExternalStepComponent extends LuxStepComponent {}
@@ -527,6 +528,7 @@ class MockExternalStepComponent extends LuxStepComponent {}
       <lux-external-step></lux-external-step>
     </lux-stepper>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxStepperComponent, MockExternalStepComponent]
 })
 class MockExternalTemplateStepperComponent {}

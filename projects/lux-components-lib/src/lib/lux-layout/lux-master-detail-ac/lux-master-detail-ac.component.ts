@@ -24,7 +24,7 @@ import {
 import { toObservable } from '@angular/core/rxjs-interop';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { ReplaySubject, Subscription, tap } from 'rxjs';
+import { ReplaySubject, tap } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -145,7 +145,12 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   private masterListLength = 0;
   private maxItemsVisible?: number;
   private updateDetail$ = new ReplaySubject<any>(1);
-  private subscriptions: Subscription[] = [];
+  private subscriptions: { unsubscribe(): void }[] = [];
+  // Hält fest, welches Detail aktuell tatsächlich gerendert ist. Getrennt von luxSelectedDetail(),
+  // weil dessen Wert bei einer VON AUSSEN gesetzten Selektion bereits aktualisiert ist, BEVOR
+  // handleDetailUpdate() die Änderung verarbeitet - ein Vergleich gegen luxSelectedDetail() würde
+  // in diesem Fall immer "keine Änderung" ergeben und die Detail-Ansicht bliebe leer.
+  private renderedDetail: any = undefined;
 
   isMobile: boolean;
   isMedium: boolean;
@@ -203,7 +208,7 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
 
   ngAfterViewInit() {
     LuxUtil.assertNonNull('detailViewContainerRef', this.detailViewContainerRef());
-    this.showMasterHeader = this.masterHeaderComponent?.headerContentContainer.nativeElement.children.length > 0;
+    this.showMasterHeader = this.masterHeaderComponent?.headerContentContainer().nativeElement.children.length > 0;
     this.handleDetailUpdate();
     this.handleMasterQueryList();
     this.cdr.detectChanges();
@@ -335,61 +340,69 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   private handleDetailUpdate() {
     this.subscriptions.push(
       this.updateDetail$.asObservable().subscribe((detail: any) => {
+        // Gegen das zuletzt tatsächlich GERENDERTE Detail vergleichen, nicht gegen luxSelectedDetail() -
+        // siehe Kommentar bei der Deklaration von renderedDetail.
+        if (this.compareObjects(this.renderedDetail, detail)) {
+          return;
+        }
+        this.renderedDetail = detail;
+
         const detailViewContainerRef = this.detailViewContainerRef();
 
         if (!detail) {
           detailViewContainerRef.clear();
           this.setNewDetail(detail);
         } else {
-          if (!this.compareObjects(this.luxSelectedDetail(), detail)) {
-            detailViewContainerRef.clear();
+          detailViewContainerRef.clear();
 
-            if (detail) {
-              const detailView = this.detailView;
-              if (!detailView) {
-                return;
-              }
-
-              this.detailContext = { $implicit: detail };
-
-              // Den Detail-Wrapper erzeugen und abfangen, wann die Nodes geladen worden sind
-              const childRef = detailViewContainerRef.createComponent(LuxDetailWrapperAcComponent);
-              const instance = childRef.instance;
-              instance.luxDetailContext = this.detailContext;
-              instance.luxDetailTemplate = detailView.tempRef;
-              this.subscriptions.push(
-                instance.luxDetailRendered.subscribe(() => {
-                  this.setNewDetail(detail);
-                })
-              );
-              // Die Detailansicht nach dem Wechsel wieder nach oben scrollen lassen
-              detailViewContainerRef.element.nativeElement.parentNode.scrollTop = 0;
-
-              this.cdr.detectChanges();
-            }
+          const detailView = this.detailView;
+          if (!detailView) {
+            return;
           }
+
+          this.detailContext = { $implicit: detail };
+
+          // Den Detail-Wrapper erzeugen und abfangen, wann die Nodes geladen worden sind
+          const childRef = detailViewContainerRef.createComponent(LuxDetailWrapperAcComponent);
+          const instance = childRef.instance;
+          childRef.setInput('luxDetailContext', this.detailContext);
+          childRef.setInput('luxDetailTemplate', detailView.tempRef());
+          this.subscriptions.push(
+            instance.luxDetailRendered.subscribe(() => {
+              this.setNewDetail(detail);
+            })
+          );
+          // Die Detailansicht nach dem Wechsel wieder nach oben scrollen lassen
+          detailViewContainerRef.element.nativeElement.parentNode.scrollTop = 0;
+
+          this.cdr.detectChanges();
         }
       })
     );
   }
 
   /**
-   * Wird aufgerufen, nachdem ein neues Detail-Template gerendert wurde und aktualisiert
-   * luxSelectedDetail dementsprechend.
+   * Wird aufgerufen, nachdem ein neues Detail-Template gerendert wurde (oder die Detail-Ansicht
+   * geleert wurde) und aktualisiert luxSelectedDetail sowie die abhängige Position/Fokussierung
+   * entsprechend. handleDetailUpdate() ruft dies nur bei einer tatsächlich NEUEN Auswahl auf (siehe
+   * renderedDetail dort) - die eigentliche Positions-/Fokus-Logik muss daher hier immer laufen.
+   * Nur das luxSelectedDetail.set() selbst bleibt bedingt, um bei einer von außen gesetzten
+   * Selektion (bei der luxSelectedDetail() bereits den neuen Wert hat) keinen redundanten,
+   * unnötigen Signal-Write auszulösen.
    * @param detail
    */
   private setNewDetail(detail: any) {
     if (!this.compareObjects(this.luxSelectedDetail(), detail)) {
       this.luxSelectedDetail.set(detail);
-      this.selectedPosition = this.luxMasterList().indexOf(detail);
-      // Die Master-Liste fokussieren (die Liste gibt es nur einmal, weil wir auf Changes hören, ist sie aber in einer QueryList)
-      this.luxMasterQueryList()[0]?.nativeElement.focus();
-
-      if (this.isMobile && this.luxMasterList().length !== 0) {
-        this.luxOpen.set(false);
-      }
-      this.cdr.detectChanges();
     }
+    this.selectedPosition = this.luxMasterList().indexOf(detail);
+    // Die Master-Liste fokussieren (die Liste gibt es nur einmal, weil wir auf Changes hören, ist sie aber in einer QueryList)
+    this.luxMasterQueryList()[0]?.nativeElement.focus();
+
+    if (this.isMobile && this.luxMasterList().length !== 0) {
+      this.luxOpen.set(false);
+    }
+    this.cdr.detectChanges();
   }
 
   /**

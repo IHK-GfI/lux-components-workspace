@@ -35,6 +35,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.alwaysVisible = true;
       testComponent.cancelBtn.alwaysVisible = true;
       testComponent.finishBtn.alwaysVisible = true;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -46,6 +47,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.alwaysVisible = false;
       testComponent.cancelBtn.alwaysVisible = false;
       testComponent.finishBtn.alwaysVisible = false;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -57,6 +59,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 3;
       testComponent.cancelBtn.prio = 2;
       testComponent.finishBtn.prio = 1;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -68,6 +71,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 1;
       testComponent.cancelBtn.prio = 2;
       testComponent.finishBtn.prio = 3;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -79,6 +83,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 2;
       testComponent.cancelBtn.prio = 1;
       testComponent.finishBtn.prio = 3;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -93,6 +98,7 @@ describe('LuxAppFooterComponent', () => {
       testComponent.nextBtn.prio = 1;
       testComponent.cancelBtn.prio = 2;
       testComponent.finishBtn.prio = 3;
+      testComponent.refresh();
       fixture.detectChanges();
 
       footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
@@ -203,7 +209,7 @@ describe('LuxAppFooterComponent', () => {
 
 @Component({
   template: ` <lux-app-footer luxVersion="0.1.2"></lux-app-footer> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppFooterComponent]
 })
 class MockAppFooterButtonOrderComponent {
@@ -227,12 +233,18 @@ class MockAppFooterButtonOrderComponent {
   constructor() {
     this.buttonService.buttonInfos = [this.nextBtn, this.cancelBtn, this.finishBtn];
   }
+
+  // Unter OnPush wird der Footer nur bei einer neuen Emission des BehaviorSubject informiert
+  // (markForCheck()) - eine reine Property-Mutation der bestehenden Button-Objekte reicht nicht.
+  refresh() {
+    this.buttonService.buttonInfos = [this.nextBtn, this.cancelBtn, this.finishBtn];
+  }
 }
 
 @Component({
   selector: 'lux-mock-app-footer-link-order',
   template: ` <lux-app-footer luxVersion="0.1.3"></lux-app-footer> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppFooterComponent]
 })
 class MockAppFooterLinkOrderComponent {

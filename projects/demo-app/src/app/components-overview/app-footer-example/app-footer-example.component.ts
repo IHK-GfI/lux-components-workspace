@@ -92,4 +92,18 @@ export class AppFooterExampleComponent implements OnDestroy {
   removeFooterLink() {
     this.linkService.removeLinkInfoAtIndex(this.linkService.linkInfos.length - 1);
   }
+
+  /**
+   * Die lux-app-footer-Komponente in der App-Shell hält eine eigene, OnPush-basierte Kopie der
+   * Button-/Link-Infos und aktualisiert sich nur, wenn buttonInfos/linkInfos neu zugewiesen wird.
+   * Da die Formulare hier oben die Objekte innerhalb des Arrays direkt mutieren (z.B. buttonInfo.label),
+   * muss nach jeder Änderung eine neue Array-Referenz gesetzt werden, damit die Footer-Leiste das mitbekommt.
+   */
+  refreshButtonInfos() {
+    this.buttonService.buttonInfos = [...this.buttonService.buttonInfos];
+  }
+
+  refreshLinkInfos() {
+    this.linkService.linkInfos = [...this.linkService.linkInfos];
+  }
 }

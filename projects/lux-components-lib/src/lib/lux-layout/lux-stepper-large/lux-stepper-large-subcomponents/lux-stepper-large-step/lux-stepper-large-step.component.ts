@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, Input, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, model, TemplateRef, viewChild } from '@angular/core';
 import { LuxUtil } from '../../../../lux-util/lux-util';
 import { LuxStepperLargeClickEvent } from '../../lux-stepper-large-model/lux-stepper-large-click-event';
 import { ILuxStepperLargeStep, LuxVetoState } from '../../lux-stepper-large-model/lux-stepper-large-step.interface';
 
 @Component({
   selector: 'lux-stepper-large-step',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template #content>
       <ng-content></ng-content>
@@ -13,18 +13,17 @@ import { ILuxStepperLargeStep, LuxVetoState } from '../../lux-stepper-large-mode
   `
 })
 export class LuxStepperLargeStepComponent implements ILuxStepperLargeStep, AfterViewInit {
-  @ViewChild('content', { static: true }) contentTemplate!: TemplateRef<any>;
+  readonly contentTemplate = viewChild.required<TemplateRef<any>>('content');
 
-  @Input() luxTitle = '';
-  @Input() luxTouched = false;
-  @Input() luxCompleted = false;
-  @Input() luxDisabled = false;
-  @Input() luxVetoFn: (clickEvent: LuxStepperLargeClickEvent) => Promise<LuxVetoState> = () =>
-    Promise.resolve(LuxVetoState.navigationAccepted);
-
-  constructor() {}
+  readonly luxTitle = model('');
+  readonly luxTouched = model(false);
+  readonly luxCompleted = model(false);
+  readonly luxDisabled = model(false);
+  readonly luxVetoFn = model<(clickEvent: LuxStepperLargeClickEvent) => Promise<LuxVetoState>>(() =>
+    Promise.resolve(LuxVetoState.navigationAccepted)
+  );
 
   ngAfterViewInit() {
-    LuxUtil.assertNonNull('contentTemplate', this.contentTemplate);
+    LuxUtil.assertNonNull('contentTemplate', this.contentTemplate());
   }
 }

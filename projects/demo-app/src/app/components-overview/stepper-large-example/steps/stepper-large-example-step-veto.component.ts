@@ -45,14 +45,14 @@ export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepCom
   vetoNoFn = (stepperEvent: LuxStepperLargeClickEvent) => this.createVetoNoPromise(stepperEvent);
 
   ngOnInit(): void {
-    this.luxTitle = 'Veto-Schritt';
-    this.luxCompleted = true;
+    this.luxTitle.set('Veto-Schritt');
+    this.luxCompleted.set(true);
 
-    this.luxVetoFn = this.myVetoFn;
+    this.luxVetoFn.set(this.myVetoFn);
   }
 
   updateVetoFun(useVetoFn: boolean) {
-    this.luxVetoFn = useVetoFn ? this.vetoYesFn : this.vetoNoFn;
+    this.luxVetoFn.set(useVetoFn ? this.vetoYesFn : this.vetoNoFn);
   }
 
   createMyVetoPromis(_event: LuxStepperLargeClickEvent): Promise<LuxVetoState> {
@@ -102,11 +102,9 @@ export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepCom
 
   logEvent(event: LuxStepperLargeClickEvent) {
     console.log(
-      `Event 'luxVetoFn': \nAktueller Schritt "${this.luxTitle}" (index = ${event.stepper.steps
-        .toArray()
-        .findIndex((step) => step === this)} - hier wird das Vetorecht geprüft) \nNächster Schritt wäre "${
-        event.newStep.luxTitle
-      }" (index = ${event.newIndex})`
+      `Event 'luxVetoFn': \nAktueller Schritt "${this.luxTitle()}" (index = ${event.stepper
+        .steps()
+        .findIndex((step) => step === this)} - hier wird das Vetorecht geprüft) \nNächster Schritt wäre "${event.newStep.luxTitle()}" (index = ${event.newIndex})`
     );
   }
 }

@@ -2,23 +2,23 @@ import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  ContentChildren,
+  computed,
+  contentChildren,
+  effect,
   ElementRef,
-  EventEmitter,
   HostBinding,
   HostListener,
   inject,
-  Input,
+  input,
   OnDestroy,
   OnInit,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  ChangeDetectionStrategy
+  output,
+  PLATFORM_ID
 } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { Subscription } from 'rxjs';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.component';
@@ -46,21 +46,23 @@ const KEY_F2 = 'F2';
 @Component({
   selector: 'lux-list',
   templateUrl: './lux-list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent, TranslocoPipe]
 })
 export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   private tService = inject(TranslocoService);
   private elementRef = inject(ElementRef);
   private platformId = inject(PLATFORM_ID);
-  private _luxSelectedPosition = 0;
+  private cdr = inject(ChangeDetectorRef);
+  private _selectedPosition: number | undefined = 0;
 
   private previousFocusedPosition?: number;
-  private clickSubscriptions: Subscription[] = [];
-  private listItemsSubscription?: Subscription;
+  private clickSubscriptions: { unsubscribe(): void }[] = [];
   private tabStopObserver?: MutationObserver;
   private tabStopObserverDebounce?: ReturnType<typeof setTimeout>;
   private keyManager: FocusKeyManager<LuxListItemComponent> = new FocusKeyManager<LuxListItemComponent>([]);
+  private isFirstItemsRun = true;
+  private previousItemsSnapshot: readonly LuxListItemComponent[] = [];
 
   /**
    * Gibt an, ob sich die Liste im Bearbeiten-Modus befindet.
@@ -73,22 +75,26 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   private editMode = false;
 
-  @ContentChildren(LuxListItemComponent) luxItems!: QueryList<LuxListItemComponent>;
+  readonly luxItems = contentChildren(LuxListItemComponent);
 
-  @Output() luxFocusedItemChange = new EventEmitter<LuxListItemComponent>();
-  @Output() luxFocusedPositionChange = new EventEmitter<number>();
-  @Output() luxSelectedPositionChange = new EventEmitter<number>();
+  readonly luxFocusedItemChange = output<LuxListItemComponent>();
+  readonly luxFocusedPositionChange = output<number>();
+  readonly luxSelectedPositionChange = output<number>();
 
-  @Input() luxEmptyIconName = 'lux-interface-alert-information-circle';
-  @Input() luxEmptyIconSize = '5x';
-  @Input() luxEmptyLabel = '';
-  @Input() set luxLabel(value: string) {
-    this.label = value || this.tService.translate('luxc.list.arialabel');
-  }
+  readonly luxEmptyIconName = input('lux-interface-alert-information-circle');
+  readonly luxEmptyIconSize = input('5x');
+  readonly luxEmptyLabel = input('');
+  readonly luxLabel = input<string | undefined>();
+  readonly luxSelectedPosition = input<number | undefined>(0);
+
+  readonly effectiveLabel = computed(() => this.luxLabel() || this.tService.translate('luxc.list.arialabel'));
 
   @HostBinding('attr.role') role = 'grid';
   @HostBinding('attr.tabindex') tabindex = '0';
-  @HostBinding('attr.aria-label') label = this.tService.translate('luxc.list.arialabel');
+
+  @HostBinding('attr.aria-label') get label() {
+    return this.effectiveLabel();
+  }
 
   @HostListener('focus', ['$event']) onFocus(event: FocusEvent) {
     const relatedTarget = event.relatedTarget as HTMLElement | null;
@@ -103,9 +109,9 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
 
     if (event.relatedTarget === null || 'lux-list-item' !== this.getTagName(event)) {
       // Wenn die Liste den Focus erhält, soll direkt das selektierte Element (bzw. das erste Element) focussiert werden.
-      if (this.luxItems.length > 0) {
-        if (this.luxSelectedPosition >= 0) {
-          this.focus(this.luxSelectedPosition);
+      if (this.luxItems().length > 0) {
+        if (this._selectedPosition != null && this._selectedPosition >= 0) {
+          this.focus(this._selectedPosition);
         } else {
           this.focus(0);
         }
@@ -133,24 +139,64 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     }
   }
 
-  get luxSelectedPosition(): number {
-    return this._luxSelectedPosition;
+  constructor() {
+    effect(() => {
+      const items = this.luxItems();
+
+      // Der erste automatische Lauf entspricht der initialen Auflösung der ContentChildren
+      // (kein "echter" Wechsel wie früher bei QueryList.changes, das initial nie feuert)
+      // und wird daher übersprungen – die Erstinitialisierung übernimmt ngAfterViewInit synchron.
+      if (this.isFirstItemsRun) {
+        this.isFirstItemsRun = false;
+        this.previousItemsSnapshot = items;
+        return;
+      }
+
+      // contentChildren() kann erneut auslösen, ohne dass sich die Menge der Content-Children
+      // tatsächlich geändert hat (z.B. wenn sich nur interner State einer Kind-Komponente wie
+      // luxSelected ändert). Ohne diesen Vergleich würde das markForCheck() am Ende dieses Effects
+      // eine neue Change-Detection auslösen, die die Query erneut auffrischt und den Effect erneut
+      // feuert – eine Endlosschleife, die den Browser-Tab dauerhaft einfriert (reproduziert z.B.
+      // durch mehrfaches Selektieren verschiedener lux-list-items in lux-master-detail-ac).
+      const itemsChanged =
+        items.length !== this.previousItemsSnapshot.length || items.some((item, index) => item !== this.previousItemsSnapshot[index]);
+      this.previousItemsSnapshot = items;
+      if (!itemsChanged) {
+        return;
+      }
+
+      if (this.editMode) {
+        this.exitEditMode(false);
+      }
+      this.listenForClicks();
+      this.keyManager = new FocusKeyManager<LuxListItemComponent>(items);
+      if (this.previousFocusedPosition != null) {
+        this.keyManager.setActiveItem(this.previousFocusedPosition);
+      }
+      if (isPlatformBrowser(this.platformId)) {
+        this.disableInnerTabStops();
+      }
+
+      // Content-Kinder ändern sich unabhängig von normalen Input-Bindings (Content-Projection).
+      // Unter OnPush muss daher explizit markForCheck() aufgerufen werden, damit z.B. isEmpty()
+      // im Template neu ausgewertet wird.
+      this.cdr.markForCheck();
+    });
+
+    effect(() => {
+      const requested = this.luxSelectedPosition();
+      if (requested === this._selectedPosition) {
+        return;
+      }
+
+      this.focus(requested);
+      this.select(requested);
+      this.scroll(requested);
+    });
   }
-
-  @Input() set luxSelectedPosition(position: number) {
-    if (position === this.luxSelectedPosition) {
-      return;
-    }
-
-    this.focus(position);
-    this.select(position);
-    this.scroll(position);
-  }
-
-  constructor() {}
 
   isEmpty() {
-    return !this.luxItems || this.luxItems.length === 0;
+    return this.luxItems().length === 0;
   }
 
   ngOnInit() {
@@ -166,26 +212,10 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // Click-Events der LuxListItems erhalten
-    this.listItemsSubscription = this.luxItems.changes.subscribe(() => {
-      // Edit-Modus zurücksetzen, da der KeyManager neu erstellt wird und
-      // Item-Referenzen veralten – inkonsistente Tab-Stops wären sonst möglich.
-      if (this.editMode) {
-        this.exitEditMode(false);
-      }
-      this.listenForClicks();
-      this.keyManager = new FocusKeyManager<LuxListItemComponent>(this.luxItems);
-      if (this.previousFocusedPosition != null) {
-        this.keyManager.setActiveItem(this.previousFocusedPosition);
-      }
-      if (isPlatformBrowser(this.platformId)) {
-        this.disableInnerTabStops();
-      }
-    });
     this.listenForClicks();
-    this.keyManager = new FocusKeyManager<LuxListItemComponent>(this.luxItems);
-    if (this.luxSelectedPosition != null) {
-      this.keyManager.setActiveItem(this.luxSelectedPosition);
+    this.keyManager = new FocusKeyManager<LuxListItemComponent>(this.luxItems());
+    if (this._selectedPosition != null) {
+      this.keyManager.setActiveItem(this._selectedPosition);
     }
 
     // Initiales Setzen von tabindex="-1" auf alle interaktiven Elemente sowie
@@ -199,6 +229,14 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
       this.disableInnerTabStops();
 
       this.tabStopObserver = new MutationObserver(() => {
+        // luxItems (contentChildren) wird nur aufgefrischt, wenn diese Komponente selbst
+        // durchlaufen wird. Wird der projizierte Inhalt (lux-list-item) von einem Vorfahren
+        // mit einer anderen ChangeDetectionStrategy (z.B. Default/Eager) asynchron befüllt
+        // (z.B. nach einem setTimeout), wird diese OnPush-Komponente sonst nie als
+        // "dirty" markiert und luxItems() bleibt dauerhaft veraltet (Liste lädt nie).
+        // Der bereits vorhandene MutationObserver dient hier als zuverlässiger, von der
+        // Angular-Traversierung unabhängiger Trigger.
+        this.cdr.markForCheck();
         clearTimeout(this.tabStopObserverDebounce);
         this.tabStopObserverDebounce = setTimeout(() => this.disableInnerTabStops(), 0);
       });
@@ -209,10 +247,6 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy() {
     clearTimeout(this.tabStopObserverDebounce);
     this.tabStopObserver?.disconnect();
-
-    if (this.listItemsSubscription) {
-      this.listItemsSubscription.unsubscribe();
-    }
 
     this.clickSubscriptions.forEach((sub) => sub.unsubscribe());
   }
@@ -302,7 +336,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     this.clickSubscriptions.forEach((sub) => sub.unsubscribe());
     this.clickSubscriptions = [];
 
-    this.luxItems.forEach((listItem: LuxListItemComponent, index: number) => {
+    this.luxItems().forEach((listItem: LuxListItemComponent, index: number) => {
       this.clickSubscriptions.push(
         listItem.luxClicked.subscribe((event: Event) => {
           const clickTarget = (event.target as HTMLElement).closest<HTMLElement>(NAVIGABLE_SELECTORS);
@@ -310,7 +344,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
 
           if (isFocusableTarget) {
             // Item selektieren, Edit-Modus betreten und geklicktes Element fokussieren
-            if (index !== this.luxSelectedPosition) {
+            if (index !== this._selectedPosition) {
               this.focus(index);
               this.select(index);
             }
@@ -322,7 +356,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
               }
             }
             this.focusNow(clickTarget);
-          } else if (index !== this.luxSelectedPosition) {
+          } else if (index !== this._selectedPosition) {
             this.focus(index);
             this.select(index);
           }
@@ -336,20 +370,18 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
    * aller luxItems, die hier bekannt sind.
    * @param position
    */
-  private select(position: number) {
-    this._luxSelectedPosition = position;
+  private select(position: number | undefined) {
+    this._selectedPosition = position;
     this.previousFocusedPosition = position;
-    this.luxSelectedPositionChange.emit(position);
+    this.luxSelectedPositionChange.emit(position!);
 
-    if (this.luxItems) {
-      this.luxItems.forEach((listItem: LuxListItemComponent) => {
-        listItem.luxSelected = false;
-      });
+    this.luxItems().forEach((listItem: LuxListItemComponent) => {
+      listItem.luxSelected.set(false);
+    });
 
-      const selectedListItem = this.findListItem(position);
-      if (selectedListItem) {
-        selectedListItem.luxSelected = true;
-      }
+    const selectedListItem = this.findListItem(position);
+    if (selectedListItem) {
+      selectedListItem.luxSelected.set(true);
     }
   }
 
@@ -455,13 +487,13 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
    * Merkt sich die position als Fokus-Position und aktualisiert die CSS-Klassen der ListItems.
    * @param position
    */
-  private focus(position: number) {
+  private focus(position: number | undefined) {
     if (this.editMode) {
       this.exitEditMode(false);
     }
-    this.keyManager.setActiveItem(position);
+    this.keyManager.setActiveItem(position!);
 
-    this.luxFocusedPositionChange.emit(position);
+    this.luxFocusedPositionChange.emit(position!);
     this.luxFocusedItemChange.emit(this.keyManager.activeItem!);
 
     this.previousFocusedPosition = position;
@@ -471,24 +503,20 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
    * Scrollt zu dem Element an der position.
    * @param position
    */
-  private scroll(position: number) {
-    if (this.luxItems) {
-      const listItem = this.keyManager.activeItem;
+  private scroll(position: number | undefined) {
+    const listItem = this.keyManager.activeItem;
 
-      if (listItem) {
-        listItem.elementRef.nativeElement.scrollIntoView(true);
-      }
+    if (listItem) {
+      listItem.elementRef.nativeElement.scrollIntoView(true);
     }
   }
 
   /**
-   * Gibt das ListItem an der position zurück bzw. "null" wenn die luxItems undefined/null sind.
+   * Gibt das ListItem an der position zurück bzw. "null" wenn es nicht gefunden wurde.
    * @param position
    */
-  private findListItem(position: number): LuxListItemComponent | null {
-    const item = this.luxItems ? this.luxItems.find((listItem: LuxListItemComponent, index: number) => index === position) : null;
-
-    return item ?? null;
+  private findListItem(position: number | undefined): LuxListItemComponent | null {
+    return this.luxItems().find((listItem: LuxListItemComponent, index: number) => index === position) ?? null;
   }
 
   private getTagName(event: FocusEvent) {
@@ -511,7 +539,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   private disableInnerTabStops(): void {
     const activeItem = this.editMode ? this.keyManager.activeItem : null;
 
-    this.luxItems?.forEach((item) => {
+    this.luxItems().forEach((item) => {
       // Im Bearbeiten-Modus die aktive Kachel überspringen – ihre Tab-Stops sind bewusst aktiv.
       if (item === activeItem) return;
 

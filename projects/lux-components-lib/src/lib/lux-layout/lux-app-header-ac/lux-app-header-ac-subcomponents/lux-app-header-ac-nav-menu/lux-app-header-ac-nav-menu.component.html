@@ -1,7 +1,7 @@
 <!-- Navigations-Menu -->
 <lux-menu
   [luxDisplayExtended]="!mobileView"
-  [luxMaximumExtended]="luxNavMenuMaximumExtended"
+  [luxMaximumExtended]="luxNavMenuMaximumExtended()"
   class="lux-header-ac-nav-menu"
   [ngClass]="{ 'lux-mobile': mobileView }"
   luxClassName="lux-header-ac-nav"
@@ -9,7 +9,7 @@
   (luxMenuClosed)="onNavMenuClosed()"
   (luxMenuOpened)="onNavMenuOpend()"
 >
-  @for (navMenuItem of menuItemComponents; track navMenuItem; let navIndex = $index) {
+  @for (navMenuItem of menuItemComponents(); track navMenuItem; let navIndex = $index) {
     <lux-menu-item
       [luxLabel]="navMenuItem.luxLabel()"
       [luxIconName]="navMenuItem.luxIconName()"
@@ -21,7 +21,7 @@
       [luxStroked]="false"
       [luxRounded]="false"
       luxColor="primary"
-      [luxClass]="navMenuItem.luxSelected ? 'nav-item-selected' : ''"
+      [luxClass]="navMenuItem.luxSelected() ? 'nav-item-selected' : ''"
       [luxPrio]="navMenuItem.luxPrio()"
       [luxButtonBadge]="navMenuItem.luxButtonBadge()"
       [luxButtonBadgeColor]="navMenuItem.luxButtonBadgeColor()"

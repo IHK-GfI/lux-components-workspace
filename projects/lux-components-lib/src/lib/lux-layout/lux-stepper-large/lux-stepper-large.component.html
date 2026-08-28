@@ -1,4 +1,4 @@
-@if (steps && steps.length > 0) {
+@if (steps().length > 0) {
 <!-- Desktop -->
 @if (!isMobile) {
 <div class="lux-stepper-large-container">
@@ -6,7 +6,7 @@
     <ng-container *ngTemplateOutlet="nav"></ng-container>
   </div>
   <div class="lux-stepper-large-content-container">
-    <div class="lux-stepper-large-content" [id]="'lux-stepper-large-content' + luxCurrentStepNumber" role="tabpanel">
+    <div class="lux-stepper-large-content" [id]="'lux-stepper-large-content' + currentStepNumber" role="tabpanel">
       <a aria-hidden="true" id="luxstepperlargecontentanchor"></a>
       <ng-container *ngTemplateOutlet="content"></ng-container>
     </div>
@@ -19,7 +19,7 @@
 <div class="lux-stepper-large-mobile-container">
   <a aria-hidden="true" id="luxstepperlargemobilecontentanchor"></a>
   <div class="lux-stepper-large-mobile-header">
-    <div class="lux-stepper-large-mobile-header-label">SCHRITT {{ luxCurrentStepNumber + 1 }} VON {{ steps.length }}</div>
+    <div class="lux-stepper-large-mobile-header-label">SCHRITT {{ currentStepNumber + 1 }} VON {{ steps().length }}</div>
     <lux-button
       class="lux-stepper-large-mobile-header-button"
       luxAriaLabel="Steppermenu"
@@ -28,7 +28,7 @@
       (luxClicked)="onOpenMobileOverlay()"
     ></lux-button>
   </div>
-  <div class="lux-stepper-large-content" [id]="'lux-stepper-large-content' + luxCurrentStepNumber" role="tabpanel">
+  <div class="lux-stepper-large-content" [id]="'lux-stepper-large-content' + currentStepNumber" role="tabpanel">
     <ng-container *ngTemplateOutlet="content"></ng-container>
   </div>
   <div class="lux-stepper-large-button-container">
@@ -41,30 +41,32 @@
 
 <!-- Templates -->
 <ng-template #nav>
-  @for (step of steps; track step; let i = $index) {
+  @for (step of steps(); track step; let i = $index) {
   <div
     class="lux-stepper-large-nav-item"
     [id]="'luxstepperlargenavitem' + (i + 1)"
-    [inert]="step.luxDisabled"
+    [inert]="step.luxDisabled()"
     [ngClass]="{
-      'lux-touched': step.luxTouched,
-      'lux-active': i === luxCurrentStepNumber,
-      'lux-disabled': step.luxDisabled,
-      'lux-completed': step.luxCompleted
+      'lux-touched': step.luxTouched(),
+      'lux-active': i === currentStepNumber,
+      'lux-disabled': step.luxDisabled(),
+      'lux-completed': step.luxCompleted()
     }"
   >
     <div class="lux-stepper-large-nav-item-number-container">
       <div class="lux-stepper-large-nav-item-number">{{ i + 1 < 10 ? '0' : '' }}{{ i + 1 }}</div>
     </div>
     <div class="lux-stepper-large-nav-item-label-container">
-      <ng-container *ngTemplateOutlet="step.luxTouched && !step.luxDisabled ? link : nolink; context: { step: step, i: i }"></ng-container>
+      <ng-container
+        *ngTemplateOutlet="step.luxTouched() && !step.luxDisabled() ? link : nolink; context: { step: step, i: i }"
+      ></ng-container>
     </div>
   </div>
   }
 </ng-template>
 
 <ng-template #content>
-  <ng-container *ngTemplateOutlet="steps.get(luxCurrentStepNumber)!.contentTemplate"></ng-container>
+  <ng-container *ngTemplateOutlet="steps()[currentStepNumber].contentTemplate()"></ng-container>
 </ng-template>
 
 <ng-template #buttons>
@@ -73,42 +75,42 @@
   } @if (!isFirstStep) {
   <lux-button
     class="lux-stepper-large-button-prev"
-    luxLabel="{{ luxPrevButtonConfig.label || ('luxc.stepper.back.btn' | transloco) }}"
-    [luxIconName]="luxPrevButtonConfig.iconName"
-    [luxIconShowRight]="luxPrevButtonConfig.iconShowRight"
-    [luxColor]="luxPrevButtonConfig.color"
+    luxLabel="{{ luxPrevButtonConfig().label || ('luxc.stepper.back.btn' | transloco) }}"
+    [luxIconName]="luxPrevButtonConfig().iconName"
+    [luxIconShowRight]="luxPrevButtonConfig().iconShowRight"
+    [luxColor]="luxPrevButtonConfig().color"
     (luxClicked)="onPrevStep()"
     [luxRaised]="true"
   ></lux-button>
   } @if (!isLastStep) {
   <lux-button
     class="lux-stepper-large-button-next"
-    luxLabel="{{ luxNextButtonConfig.label || ('luxc.stepper.next.btn' | transloco) }}"
-    [luxIconName]="luxNextButtonConfig.iconName"
-    [luxIconShowRight]="luxNextButtonConfig.iconShowRight"
-    [luxColor]="luxNextButtonConfig.color"
+    luxLabel="{{ luxNextButtonConfig().label || ('luxc.stepper.next.btn' | transloco) }}"
+    [luxIconName]="luxNextButtonConfig().iconName"
+    [luxIconShowRight]="luxNextButtonConfig().iconShowRight"
+    [luxColor]="luxNextButtonConfig().color"
     [luxRaised]="true"
     [luxDisabled]="
-      luxA11YMode ? false : luxStepValidationActive && (!steps.get(luxCurrentStepNumber) || !steps.get(luxCurrentStepNumber)!.luxCompleted)
+      luxA11YMode() ? false : luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted())
     "
-    [attr.aria-disabled]="luxStepValidationActive && (!steps.get(luxCurrentStepNumber) || !steps.get(luxCurrentStepNumber)!.luxCompleted)"
+    [attr.aria-disabled]="luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted())"
     (luxClicked)="onNextStep()"
   ></lux-button>
   } @if (isLastStep) {
   <lux-button
     class="lux-stepper-large-button-fin"
-    luxLabel="{{ luxFinButtonConfig.label || ('luxc.stepper.finish.btn' | transloco) }}"
-    [luxIconName]="luxFinButtonConfig.iconName"
-    [luxIconShowRight]="luxFinButtonConfig.iconShowRight"
-    [luxColor]="luxFinButtonConfig.color"
+    luxLabel="{{ luxFinButtonConfig().label || ('luxc.stepper.finish.btn' | transloco) }}"
+    [luxIconName]="luxFinButtonConfig().iconName"
+    [luxIconShowRight]="luxFinButtonConfig().iconShowRight"
+    [luxColor]="luxFinButtonConfig().color"
     [luxRaised]="true"
     [luxDisabled]="
-      luxA11YMode
+      luxA11YMode()
         ? false
-        : luxStepValidationActive && (!steps.get(luxCurrentStepNumber) || !steps.get(luxCurrentStepNumber)!.luxCompleted || isFinished)
+        : luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted() || isFinished)
     "
     [attr.aria-disabled]="
-      luxStepValidationActive && (!steps.get(luxCurrentStepNumber) || !steps.get(luxCurrentStepNumber)!.luxCompleted || isFinished)
+      luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted() || isFinished)
     "
     (luxClicked)="onFinStep()"
   ></lux-button>
@@ -123,20 +125,20 @@
     [ngClass]="{ 'lux-focused': cursorPos === i }"
     (keydown.arrowUp)="onNavKeyUp()"
     (keydown.arrowDown)="onNavKeyDown()"
-    [attr.aria-label]="'Schritt' + (i + 1) + ' ' + step.luxTitle"
-    [attr.tabindex]="i === luxCurrentStepNumber ? 0 : -1"
+    [attr.aria-label]="'Schritt' + (i + 1) + ' ' + step.luxTitle()"
+    [attr.tabindex]="i === currentStepNumber ? 0 : -1"
     [attr.aria-posinset]="i + 1"
-    [attr.aria-setsize]="steps.length"
-    [attr.aria-controls]="'lux-stepper-large-content' + luxCurrentStepNumber"
-    [attr.aria-selected]="i === luxCurrentStepNumber"
+    [attr.aria-setsize]="steps().length"
+    [attr.aria-controls]="'lux-stepper-large-content' + currentStepNumber"
+    [attr.aria-selected]="i === currentStepNumber"
     (click)="onNavLink(i)"
     (keydown.enter)="onNavLinkEnter(i)"
     (focusin)="onNavFocusin(i)"
     (focusout)="onNavFocusout(i)"
-    >{{ step.luxTitle }}</a
+    >{{ step.luxTitle() }}</a
   >
 </ng-template>
 
 <ng-template let-step="step" let-i="i" #nolink>
-  <div class="lux-stepper-large-nav-item-label">{{ step.luxTitle }}</div>
+  <div class="lux-stepper-large-nav-item-label">{{ step.luxTitle() }}</div>
 </ng-template>

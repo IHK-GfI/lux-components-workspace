@@ -1,22 +1,24 @@
 import { NgClass } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
-  ContentChildren,
+  DestroyRef,
   EventEmitter,
-  Input,
-  OnDestroy,
   OnInit,
   Output,
-  QueryList,
+  computed,
+  contentChild,
+  contentChildren,
   inject,
-  ChangeDetectionStrategy
+  input,
+  model,
+  output
 } from '@angular/core';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -48,50 +50,46 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
     MatCardSubtitle,
     LuxCardHeadingComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'lux-flex'
   }
 })
-export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LuxCardComponent implements OnInit, AfterViewInit {
   private componentsConfigService = inject(LuxComponentsConfigService);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
-  private configSubscription?: Subscription;
+  readonly luxTitle = input<string | undefined>();
+  readonly luxTitleTooltip = input<string | undefined>();
+  readonly luxSubTitle = input<string | undefined>();
+  readonly luxSubTitleTooltip = input<string | undefined>();
+  readonly luxIconName = input<string | undefined>();
+  readonly luxDisabled = input<boolean | undefined>();
+  readonly luxTagId = input<string | undefined>();
+  readonly luxTitleLineBreak = input(true);
+  readonly luxExpanded = model(false);
+  readonly luxUseTabIndex = input(true);
+  readonly luxHeading = input(2);
+  readonly luxExpandedLabelOpen = input('');
+  readonly luxExpandedLabelClose = input('');
 
-  @Input() luxTitle?: string;
-  @Input() luxTitleTooltip?: string;
-  @Input() luxSubTitle?: string;
-  @Input() luxSubTitleTooltip?: string;
-  @Input() luxIconName?: string;
-  @Input() luxDisabled?: boolean;
-  @Input() luxTagId?: string;
-  @Input() luxTitleLineBreak = true;
-  @Input() luxExpanded = false;
-  @Input() luxUseTabIndex = true;
-  @Input() luxHeading = 2;
-  @Input() luxExpandedLabelOpen = '';
-  @Input() luxExpandedLabelClose = '';
-
-  @Output() luxExpandedChange = new EventEmitter<boolean>();
-  @Output() luxAfterExpansion = new EventEmitter<void>();
+  readonly luxAfterExpansion = output<void>();
   @Output() luxClicked = new EventEmitter<Event>();
 
-  @ContentChildren(LuxIconComponent, { descendants: false }) iconComponents!: QueryList<LuxIconComponent>;
-  @ContentChild(LuxCardActionsComponent) actionsComponent?: LuxCardActionsComponent;
-  @ContentChild(LuxCardInfoComponent) infoComponent?: LuxCardInfoComponent;
-  @ContentChild(LuxCardContentExpandedComponent) contentExpandedComponent?: LuxCardContentExpandedComponent;
-  @ContentChild(LuxCardContentComponent) contentComponent?: LuxCardContentComponent;
-  @ContentChild(LuxCardCustomHeaderComponent) customHeaderComponent?: LuxCardCustomHeaderComponent;
+  readonly iconComponents = contentChildren(LuxIconComponent, { descendants: false });
+  readonly actionsComponent = contentChild(LuxCardActionsComponent);
+  readonly infoComponent = contentChild(LuxCardInfoComponent);
+  readonly contentExpandedComponent = contentChild(LuxCardContentExpandedComponent);
+  readonly contentComponent = contentChild(LuxCardContentComponent);
+  readonly customHeaderComponent = contentChild(LuxCardCustomHeaderComponent);
+
+  readonly effectiveTagId = computed(() => this.luxTagId() || this.luxTitle());
 
   hasCardAction?: boolean;
   animationDisabled = true;
 
   ngOnInit() {
-    if (!this.luxTagId) {
-      this.luxTagId = this.luxTitle;
-    }
-
     if (this.luxClicked.observed) {
       this.hasCardAction = true;
     }
@@ -99,26 +97,22 @@ export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     // Über die Konfiguration abfragen, ob die Animationen für Cards deaktiviert sind.
-    this.configSubscription = this.componentsConfigService.config.subscribe((config: LuxComponentsConfigParameters) => {
+    this.componentsConfigService.config.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((config: LuxComponentsConfigParameters) => {
       this.animationDisabled = !config.cardExpansionAnimationActive;
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     });
   }
 
-  ngOnDestroy() {
-    this.configSubscription?.unsubscribe();
-  }
-
   get showButtons() {
-    return !!this.actionsComponent;
+    return !!this.actionsComponent();
   }
 
   get showIcon() {
-    return this.iconComponents && this.iconComponents.length === 1;
+    return this.iconComponents().length === 1;
   }
 
   get showExpandedToggle() {
-    return !!this.contentExpandedComponent;
+    return !!this.contentExpandedComponent();
   }
 
   /**
@@ -126,23 +120,19 @@ export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
    * (Icon, Title, Subtitle, Info-Komponente).
    */
   get showHeader() {
-    return (
-      this.showIcon ||
-      !!(this.luxTitle && this.luxTitle.length > 0) ||
-      !!(this.luxSubTitle && this.luxSubTitle.length > 0) ||
-      !!this.infoComponent
-    );
+    const luxTitle = this.luxTitle();
+    const luxSubTitle = this.luxSubTitle();
+    return this.showIcon || !!(luxTitle && luxTitle.length > 0) || !!(luxSubTitle && luxSubTitle.length > 0) || !!this.infoComponent();
   }
 
   changeContentExpansion(event: any) {
     LuxUtil.stopEventPropagation(event);
 
-    this.luxExpanded = !this.luxExpanded;
-    this.luxExpandedChange.emit(this.luxExpanded);
+    this.luxExpanded.update((expanded) => !expanded);
   }
 
   clicked(event: Event) {
-    if (!this.luxDisabled && !this.showButtons) {
+    if (!this.luxDisabled() && !this.showButtons) {
       this.luxClicked.emit(event);
     }
   }
@@ -153,7 +143,7 @@ export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
    * einzeilig, so wird das Icon vertikal zum Titel ausgerichtet.
    */
   getTitleAlignment(): string {
-    if (this.luxTitleLineBreak && this.showIcon) {
+    if (this.luxTitleLineBreak() && this.showIcon) {
       return 'left top';
     }
 
@@ -164,7 +154,7 @@ export class LuxCardComponent implements OnInit, AfterViewInit, OnDestroy {
    * Gibt den Status der Animation zurück.
    */
   getAnimState(): string {
-    return this.luxExpanded ? 'expand' : 'void';
+    return this.luxExpanded() ? 'expand' : 'void';
   }
 
   /**

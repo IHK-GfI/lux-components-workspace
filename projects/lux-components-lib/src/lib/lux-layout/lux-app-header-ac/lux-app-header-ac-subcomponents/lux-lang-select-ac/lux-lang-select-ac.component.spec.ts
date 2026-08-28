@@ -24,7 +24,7 @@ describe('LuxLangSelectAcComponent', () => {
   it('should create', (done) => {
     fixture = TestBed.createComponent(LuxLangSelectAcComponent);
     component = fixture.componentInstance;
-    component.luxLocaleSupported = ['de', 'en'];
+    fixture.componentRef.setInput('luxLocaleSupported', ['de', 'en']);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       const transloco = TestBed.inject(TranslocoService);

@@ -1,8 +1,8 @@
-@switch (luxVerticalStepper) {
+@switch (luxVerticalStepper()) {
 <!-- VERTIKALER STEPPER -->
 @case (true) {
 <lux-stepper-vertical
-  [luxStepperConfig]="stepperConfiguration"
+  [luxStepperConfig]="stepperConfiguration()"
   (luxMatStepperLoaded)="matStepper = $event"
   (luxMatStepLabelsLoaded)="matStepLabels = $event"
   (luxStepChanged)="onStepChanged($event)"
@@ -17,7 +17,7 @@
 <!-- HORIZONTALER STEPPER -->
 @default {
 <lux-stepper-horizontal
-  [luxStepperConfig]="stepperConfiguration"
+  [luxStepperConfig]="stepperConfiguration()"
   (luxMatStepperLoaded)="matStepper = $event"
   (luxMatStepLabelsLoaded)="matStepLabels = $event"
   (luxStepChanged)="onStepChanged($event)"
@@ -31,4 +31,4 @@
 } }
 
 <ng-content select="lux-step"></ng-content>
-<div class="lux-stepper-disabled-overlay" [class.lux-hidden]="!luxDisabled"></div>
+<div class="lux-stepper-disabled-overlay" [class.lux-hidden]="!luxDisabled()"></div>

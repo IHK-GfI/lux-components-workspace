@@ -1,17 +1,16 @@
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  ContentChild,
+  computed,
+  contentChild,
   ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
   inject,
-  ChangeDetectionStrategy
+  input,
+  OnInit,
+  output,
+  viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -40,7 +39,7 @@ import { LuxDividerComponent } from '../lux-divider/lux-divider.component';
 @Component({
   selector: 'lux-app-header-ac',
   templateUrl: './lux-app-header-ac.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAriaRoleDirective,
     LuxAriaLabelDirective,
@@ -60,41 +59,42 @@ import { LuxDividerComponent } from '../lux-divider/lux-divider.component';
     TranslocoPipe
   ]
 })
-export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
+export class LuxAppHeaderAcComponent implements OnInit {
   private logger = inject(LuxConsoleService);
   private queryService = inject(LuxMediaQueryObserverService);
   private elementRef = inject(ElementRef);
   private appService = inject(LuxAppService);
   private configService = inject(LuxComponentsConfigService);
+  private cdr = inject(ChangeDetectorRef);
 
-  @Input() luxUserName?: string;
-  @Input() luxUserEmail?: string;
-  @Input() luxAppTitle?: string;
-  @Input() luxAppTitleShort?: string;
-  @Input() luxBrandLogoSrc?: string;
-  @Input() luxHideBrandLogo = false;
-  @Input() luxAppLogoSrc?: string;
-  @Input() luxHideAppLogo = false;
-  @Input() luxLocaleSupported = ['de'];
-  @Input() luxLocaleBaseHref = '';
-  @Input() luxHideTopBar = false;
-  @Input() luxHideNavBar = false;
-  @Input() luxAriaRoleHeaderLabel = '';
-  @Input() luxAriaUserMenuButtonLabel = '';
-  @Input() luxAriaTitleIconLabel = '';
-  @Input() luxAriaTitleImageLabel = '';
-  @Input() luxCenteredView!: boolean;
-  @Input() luxCenteredWidth!: string;
+  readonly luxUserName = input<string | undefined>();
+  readonly luxUserEmail = input<string | undefined>();
+  readonly luxAppTitle = input<string | undefined>();
+  readonly luxAppTitleShort = input<string | undefined>();
+  readonly luxBrandLogoSrc = input<string | undefined>();
+  readonly luxHideBrandLogo = input(false);
+  readonly luxAppLogoSrc = input<string | undefined>();
+  readonly luxHideAppLogo = input(false);
+  readonly luxLocaleSupported = input(['de']);
+  readonly luxLocaleBaseHref = input('');
+  readonly luxHideTopBar = input(false);
+  readonly luxHideNavBar = input(false);
+  readonly luxAriaRoleHeaderLabel = input('');
+  readonly luxAriaUserMenuButtonLabel = input('');
+  readonly luxAriaTitleIconLabel = input('');
+  readonly luxAriaTitleImageLabel = input('');
+  readonly luxCenteredView = input<boolean | undefined>();
+  readonly luxCenteredWidth = input<string | undefined>();
 
-  @Output() luxAppLogoClicked = new EventEmitter<Event>();
-  @Output() luxBrandLogoClicked = new EventEmitter<Event>();
+  readonly luxAppLogoClicked = output<Event>();
+  readonly luxBrandLogoClicked = output<Event>();
 
-  @ViewChild('customTrigger', { read: ElementRef }) customTrigger?: ElementRef;
+  readonly customTrigger = viewChild('customTrigger', { read: ElementRef });
 
-  @ContentChild(LuxTenantLogoComponent) tenantLogo?: LuxTenantLogoComponent;
-  @ContentChild(LuxAppHeaderAcNavMenuComponent) navMenu?: LuxAppHeaderAcNavMenuComponent;
-  @ContentChild(LuxAppHeaderAcUserMenuComponent) userMenu?: LuxAppHeaderAcUserMenuComponent;
-  @ContentChild(LuxAppHeaderAcActionNavComponent) actionNav?: LuxAppHeaderAcActionNavComponent;
+  readonly tenantLogo = contentChild(LuxTenantLogoComponent);
+  readonly navMenu = contentChild(LuxAppHeaderAcNavMenuComponent);
+  readonly userMenu = contentChild(LuxAppHeaderAcUserMenuComponent);
+  readonly actionNav = contentChild(LuxAppHeaderAcActionNavComponent);
 
   userNameShort?: string;
 
@@ -105,11 +105,42 @@ export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
 
   private iconBasePath = '';
 
+  readonly effectiveAppLogoSrc = computed(() => {
+    if (this.luxHideAppLogo()) {
+      return undefined;
+    }
+    return this.luxAppLogoSrc() ?? this.iconBasePath + '/assets/logos/app_logo_platzhalter.svg';
+  });
+
+  readonly effectiveBrandLogoSrc = computed(() => {
+    if (this.luxHideBrandLogo()) {
+      return undefined;
+    }
+    return this.luxBrandLogoSrc() ?? this.iconBasePath + '/assets/logos/ihk_logo_platzhalter.svg';
+  });
+
+  readonly effectiveCenteredView = computed(
+    () =>
+      this.luxCenteredView() ??
+      (this.configService.currentConfig.viewConfiguration?.centeredView
+        ? this.configService.currentConfig.viewConfiguration.centeredView
+        : LuxComponentsConfigService.DEFAULT_CONFIG.viewConfiguration.centeredView)
+  );
+
+  readonly effectiveCenteredWidth = computed(
+    () =>
+      this.luxCenteredWidth() ??
+      (this.configService.currentConfig.viewConfiguration?.centeredWidth
+        ? this.configService.currentConfig.viewConfiguration.centeredWidth
+        : LuxComponentsConfigService.DEFAULT_CONFIG.viewConfiguration.centeredWidth)
+  );
+
   constructor() {
     this.mobileView = this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm';
     this.subscriptions.push(
       this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
         this.mobileView = query === 'xs' || query === 'sm';
+        this.cdr.markForCheck();
       })
     );
     this.appService.appHeaderEl = this.elementRef.nativeElement;
@@ -120,37 +151,7 @@ export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    if (!this.luxAppLogoSrc && !this.luxHideAppLogo) {
-      this.luxAppLogoSrc = this.iconBasePath + '/assets/logos/app_logo_platzhalter.svg';
-    }
-
-    if (this.luxHideAppLogo) {
-      this.luxAppLogoSrc = undefined;
-    }
-
-    if (!this.luxBrandLogoSrc && !this.luxHideBrandLogo) {
-      this.luxBrandLogoSrc = this.iconBasePath + '/assets/logos/ihk_logo_platzhalter.svg';
-    }
-
-    if (this.luxHideBrandLogo) {
-      this.luxBrandLogoSrc = undefined;
-    }
-
-    if (!this.luxCenteredView) {
-      this.luxCenteredView = this.configService.currentConfig.viewConfiguration?.centeredView
-        ? this.configService.currentConfig.viewConfiguration.centeredView
-        : LuxComponentsConfigService.DEFAULT_CONFIG.viewConfiguration.centeredView;
-    }
-
-    if (!this.luxCenteredWidth) {
-      this.luxCenteredWidth = this.configService.currentConfig.viewConfiguration?.centeredWidth
-        ? this.configService.currentConfig.viewConfiguration.centeredWidth
-        : LuxComponentsConfigService.DEFAULT_CONFIG.viewConfiguration.centeredWidth;
-    }
-  }
-
-  ngOnChanges(simpleChanges: SimpleChanges) {
-    if (!this.luxAppTitleShort || this.luxAppTitleShort.length === 0) {
+    if (!this.luxAppTitleShort() || this.luxAppTitleShort()!.length === 0) {
       this.logger.warn('No title is set for the mobile view.');
     }
   }
@@ -161,8 +162,9 @@ export class LuxAppHeaderAcComponent implements OnInit, OnChanges {
 
   onMenuClosed() {
     this.menuOpened = false;
-    if (this.customTrigger) {
-      this.customTrigger.nativeElement.children[0].focus();
+    const customTrigger = this.customTrigger();
+    if (customTrigger) {
+      customTrigger.nativeElement.children[0].focus();
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxCardActionAlignType, LuxCardActionsComponent } from './lux-card-actions.component';
@@ -32,7 +32,7 @@ describe('LuxCardActionsComponent', () => {
   });
 
   it('sollte links ausrichten wenn luxAlign="left"', () => {
-    host.align = 'left';
+    host.align.set('left');
     fixture.detectChanges();
     const div = containerDiv();
     expect(div.classList.contains('lux-justify-start')).toBeTrue();
@@ -47,14 +47,14 @@ describe('LuxCardActionsComponent', () => {
 
 @Component({
   template: `
-    <lux-card-actions [luxAlign]="align">
+    <lux-card-actions [luxAlign]="align()">
       <button class="btn-a">A</button>
       <button class="btn-b">B</button>
     </lux-card-actions>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCardActionsComponent]
 })
 class HostComponent {
-  align: LuxCardActionAlignType = 'right';
+  align = signal<LuxCardActionAlignType>('right');
 }

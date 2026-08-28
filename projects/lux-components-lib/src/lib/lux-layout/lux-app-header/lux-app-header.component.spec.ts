@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, ViewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -93,8 +93,8 @@ describe('LuxAppHeaderComponent', () => {
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseRightNav = false;
-      testComponent.testUseSideNav = false;
+      testComponent.testUseRightNav.set(false);
+      testComponent.testUseSideNav.set(false);
       LuxTestHelper.wait(fixture);
     }));
 
@@ -107,7 +107,7 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
-      testComponent.title = 'Titel';
+      testComponent.title.set('Titel');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -119,14 +119,16 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
-      testComponent.titleShort = 'T';
+      testComponent.titleShort.set('T');
       testComponent.appHeaderComponent.mobileView = true;
+      fixture.debugElement.query(By.directive(LuxAppHeaderComponent)).injector.get(ChangeDetectorRef).markForCheck();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('T');
 
       testComponent.appHeaderComponent.mobileView = false;
+      fixture.debugElement.query(By.directive(LuxAppHeaderComponent)).injector.get(ChangeDetectorRef).markForCheck();
       LuxTestHelper.wait(fixture);
     }));
   });
@@ -138,7 +140,7 @@ describe('LuxAppHeaderComponent', () => {
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseSideNav = true;
+      testComponent.testUseSideNav.set(true);
       LuxTestHelper.wait(fixture);
     }));
 
@@ -179,14 +181,16 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item')).length).toBe(2);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].ignoreThisItem = true;
+      testComponent.sideNavItems()[0].ignoreThisItem = true;
+      testComponent.refreshSideNavItems();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item')).length).toBe(1);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[1].ignoreThisItem = true;
+      testComponent.sideNavItems()[1].ignoreThisItem = true;
+      testComponent.refreshSideNavItems();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -237,8 +241,9 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[1].nativeElement.disabled).toBe(false);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].disabled = true;
-      testComponent.sideNavItems[1].disabled = true;
+      testComponent.sideNavItems()[0].disabled = true;
+      testComponent.sideNavItems()[1].disabled = true;
+      testComponent.refreshSideNavItems();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -258,14 +263,16 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item-selected')).length).toBe(0);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].selected = true;
+      testComponent.sideNavItems()[0].selected = true;
+      testComponent.refreshSideNavItems();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.queryAll(By.css('.lux-side-nav-item-selected')).length).toBe(1);
 
       // Änderungen durchführen
-      testComponent.sideNavItems[1].selected = true;
+      testComponent.sideNavItems()[1].selected = true;
+      testComponent.refreshSideNavItems();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -286,7 +293,7 @@ describe('LuxAppHeaderComponent', () => {
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems[0]);
+      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems()[0]);
 
       // Änderungen durchführen
       fixture.debugElement.queryAll(By.css('.lux-side-nav-item button'))[1].nativeElement.click();
@@ -294,7 +301,7 @@ describe('LuxAppHeaderComponent', () => {
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(2);
-      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems[1]);
+      expect(spy).toHaveBeenCalledWith(testComponent.sideNavItems()[1]);
 
       discardPeriodicTasks();
     }));
@@ -319,7 +326,8 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-side-nav-overlay')).nativeElement.style.display).toEqual('');
 
       // Änderungen durchführen
-      testComponent.sideNavItems[0].closeOnClick = true;
+      testComponent.sideNavItems()[0].closeOnClick = true;
+      testComponent.refreshSideNavItems();
       LuxTestHelper.wait(fixture);
       fixture.debugElement.query(By.css('.lux-side-nav-item button')).nativeElement.click();
       LuxTestHelper.wait(fixture);
@@ -341,8 +349,8 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-side-nav-content lux-link'))).toBeNull();
 
       // Änderungen durchführen
-      testComponent.dashboardTitle = 'Dashboard';
-      testComponent.dashboardLink = 'https:///www.ihk-gfi.de';
+      testComponent.dashboardTitle.set('Dashboard');
+      testComponent.dashboardLink.set('https:///www.ihk-gfi.de');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -366,8 +374,8 @@ describe('LuxAppHeaderComponent', () => {
       // Vorbedingungen testen
       const spy = spyOn(window, 'open').and.callFake(() => null);
 
-      testComponent.dashboardTitle = 'Dashboard';
-      testComponent.dashboardLink = 'https:///www.ihk-gfi.de';
+      testComponent.dashboardTitle.set('Dashboard');
+      testComponent.dashboardLink.set('https:///www.ihk-gfi.de');
 
       LuxTestHelper.wait(fixture);
 
@@ -383,7 +391,7 @@ describe('LuxAppHeaderComponent', () => {
       expect(spy).toHaveBeenCalledWith('https:///www.ihk-gfi.de', '_self');
 
       // Änderungen durchführen
-      testComponent.dashboardBlank = true;
+      testComponent.dashboardBlank.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -401,8 +409,8 @@ describe('LuxAppHeaderComponent', () => {
       // Vorbedingungen testen
       const spy = spyOn(TestBed.inject(Router), 'navigate').and.returnValue(Promise.resolve(true));
 
-      testComponent.dashboardTitle = 'Dashboard';
-      testComponent.dashboardLink = '/mock-route';
+      testComponent.dashboardTitle.set('Dashboard');
+      testComponent.dashboardLink.set('/mock-route');
 
       LuxTestHelper.wait(fixture);
 
@@ -429,7 +437,7 @@ describe('LuxAppHeaderComponent', () => {
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseRightNav = true;
+      testComponent.testUseRightNav.set(true);
       LuxTestHelper.wait(fixture);
 
       overlayHelper = new LuxOverlayHelper();
@@ -438,7 +446,7 @@ describe('LuxAppHeaderComponent', () => {
     it('Sollte das User-Icon anzeigen', () => {
       expect(testComponent).toBeTruthy();
 
-      testComponent.username = '';
+      testComponent.username.set('');
       fixture.detectChanges();
 
       viewport.set('desktop');
@@ -471,7 +479,7 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-header-username'))).toBeNull();
 
       // Änderungen durchführen
-      testComponent.username = 'Gollum Smeagol';
+      testComponent.username.set('Gollum Smeagol');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -483,7 +491,7 @@ describe('LuxAppHeaderComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-header-user-short > span'))).toBeNull();
 
       // Änderungen durchführen
-      testComponent.username = 'Gollum Smeagol';
+      testComponent.username.set('Gollum Smeagol');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -532,8 +540,9 @@ describe('LuxAppHeaderComponent', () => {
       // Änderungen durchführen
       fixture.debugElement.query(By.css('.lux-right-nav-trigger')).nativeElement.click();
       LuxTestHelper.wait(fixture);
-      testComponent.rightNavItems[0].disabled = true;
-      testComponent.rightNavItems[1].disabled = true;
+      testComponent.rightNavItems()[0].disabled = true;
+      testComponent.rightNavItems()[1].disabled = true;
+      testComponent.refreshRightNavItems();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -551,7 +560,7 @@ describe('LuxAppHeaderComponent', () => {
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(MockAppHeaderComponent);
       testComponent = fixture.componentInstance;
-      testComponent.testUseActionNav = true;
+      testComponent.testUseActionNav.set(true);
       LuxTestHelper.wait(fixture);
     }));
 
@@ -582,7 +591,7 @@ describe('LuxAppHeaderComponent', () => {
 
 @Component({
   template: ` <lux-app-header (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
 class MockLabelClickedAppHeaderComponent {
@@ -598,7 +607,7 @@ class MockLabelClickedAppHeaderComponent {
       luxAppTitleShort="MyClick"
     ></lux-app-header>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
 class MockImageClickedAppHeaderComponent {
@@ -614,7 +623,7 @@ class MockImageClickedAppHeaderComponent {
       luxAppTitleShort="MyClick"
     ></lux-app-header>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
 class MockIconClickedAppHeaderComponent {
@@ -623,13 +632,17 @@ class MockIconClickedAppHeaderComponent {
 
 @Component({
   template: `
-    <lux-app-header [luxUserName]="username" [luxAppTitle]="title" [luxAppTitleShort]="titleShort">
-      @if (testUseSideNav) {
-        <lux-side-nav [luxDashboardLink]="dashboardLink" [luxDashboardLinkTitle]="dashboardTitle" [luxOpenLinkBlank]="dashboardBlank">
+    <lux-app-header [luxUserName]="username()" [luxAppTitle]="title()" [luxAppTitleShort]="titleShort()">
+      @if (testUseSideNav()) {
+        <lux-side-nav
+          [luxDashboardLink]="dashboardLink()"
+          [luxDashboardLinkTitle]="dashboardTitle()"
+          [luxOpenLinkBlank]="dashboardBlank()"
+        >
           <lux-side-nav-header>
             <span class="test-side-nav-header">SideNav-Header</span>
           </lux-side-nav-header>
-          @for (sideNavItem of sideNavItems; track sideNavItem.label) {
+          @for (sideNavItem of sideNavItems(); track sideNavItem.label) {
             <ng-container ngProjectAs="lux-side-nav-item">
               @if (!sideNavItem.ignoreThisItem) {
                 <lux-side-nav-item
@@ -648,9 +661,9 @@ class MockIconClickedAppHeaderComponent {
           </lux-side-nav-footer>
         </lux-side-nav>
       }
-      @if (testUseActionNav) {
+      @if (testUseActionNav()) {
         <lux-app-header-action-nav>
-          @for (actionNavItem of actionNavItems; track actionNavItem.label) {
+          @for (actionNavItem of actionNavItems(); track actionNavItem.label) {
             <lux-app-header-action-nav-item
               [luxIconName]="actionNavItem.iconName"
               [luxDisabled]="actionNavItem.disabled"
@@ -661,9 +674,9 @@ class MockIconClickedAppHeaderComponent {
           }
         </lux-app-header-action-nav>
       }
-      @if (testUseRightNav) {
+      @if (testUseRightNav()) {
         <lux-app-header-right-nav>
-          @for (rightNavItem of rightNavItems; track rightNavItem.label) {
+          @for (rightNavItem of rightNavItems(); track rightNavItem.label) {
             <lux-menu-item
               [luxIconName]="rightNavItem.iconName"
               [luxDisabled]="rightNavItem.disabled"
@@ -675,7 +688,7 @@ class MockIconClickedAppHeaderComponent {
       }
     </lux-app-header>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAppHeaderActionNavComponent,
     LuxAppHeaderActionNavItemComponent,
@@ -691,34 +704,43 @@ class MockIconClickedAppHeaderComponent {
 class MockAppHeaderComponent {
   @ViewChild(LuxAppHeaderComponent) appHeaderComponent!: LuxAppHeaderComponent;
 
-  username?: string;
-  title?: string;
-  titleShort?: string;
+  username = signal<string | undefined>(undefined);
+  title = signal<string | undefined>(undefined);
+  titleShort = signal<string | undefined>(undefined);
 
-  dashboardLink?: string;
-  dashboardTitle?: string;
-  dashboardBlank?: boolean;
+  dashboardLink = signal<string | undefined>(undefined);
+  dashboardTitle = signal('');
+  dashboardBlank = signal(false);
 
-  testUseSideNav?: boolean;
-  testUseRightNav?: boolean;
-  testUseActionNav?: boolean;
+  testUseSideNav = signal<boolean | undefined>(undefined);
+  testUseRightNav = signal<boolean | undefined>(undefined);
+  testUseActionNav = signal<boolean | undefined>(undefined);
 
-  sideNavItems: {
-    disabled: boolean;
-    label: string;
-    iconName: string;
-    selected: boolean;
-    closeOnClick: boolean;
-    ignoreThisItem: boolean;
-  }[] = [];
-  rightNavItems: { disabled: boolean; label: string; iconName: string }[] = [];
-  actionNavItems: { disabled: boolean; label: string; iconName: string }[] = [];
+  sideNavItems = signal<
+    {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+      selected: boolean;
+      closeOnClick: boolean;
+      ignoreThisItem: boolean;
+    }[]
+  >([]);
+  rightNavItems = signal<{ disabled: boolean; label: string; iconName: string }[]>([]);
+  actionNavItems = signal<{ disabled: boolean; label: string; iconName: string }[]>([]);
 
   createSideNavItems(amount: number) {
-    this.sideNavItems = [];
+    const items: {
+      disabled: boolean;
+      label: string;
+      iconName: string;
+      selected: boolean;
+      closeOnClick: boolean;
+      ignoreThisItem: boolean;
+    }[] = [];
 
     for (let i = 0; i < amount; i++) {
-      this.sideNavItems.push({
+      items.push({
         disabled: false,
         label: 'Label ' + i,
         iconName: 'lux-interface-validation-check',
@@ -727,30 +749,44 @@ class MockAppHeaderComponent {
         ignoreThisItem: false
       });
     }
+
+    this.sideNavItems.set(items);
   }
 
   createRightNavItems(amount: number) {
-    this.rightNavItems = [];
+    const items: { disabled: boolean; label: string; iconName: string }[] = [];
 
     for (let i = 0; i < amount; i++) {
-      this.rightNavItems.push({
+      items.push({
         disabled: false,
         label: 'Label ' + i,
         iconName: 'lux-interface-validation-check'
       });
     }
+
+    this.rightNavItems.set(items);
   }
 
   createActionNavItems(amount: number) {
-    this.actionNavItems = [];
+    const items: { disabled: boolean; label: string; iconName: string }[] = [];
 
     for (let i = 0; i < amount; i++) {
-      this.actionNavItems.push({
+      items.push({
         disabled: false,
         label: 'Label ' + i,
         iconName: 'lux-interface-validation-check'
       });
     }
+
+    this.actionNavItems.set(items);
+  }
+
+  refreshSideNavItems() {
+    this.sideNavItems.update((items) => [...items]);
+  }
+
+  refreshRightNavItems() {
+    this.rightNavItems.update((items) => [...items]);
   }
 
   onClick(navItem: any) {}

@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'lux-master-header-content-ac',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<ng-content></ng-content>`
 })
-export class LuxMasterHeaderContentAcComponent {
-  constructor() {}
-}
+export class LuxMasterHeaderContentAcComponent {}

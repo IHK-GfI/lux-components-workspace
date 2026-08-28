@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, model } from '@angular/core';
 import { LuxCardComponent, LuxCardContentComponent, LuxDividerComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 
@@ -19,11 +19,12 @@ export class DetailExampleComponent {
     emptyLabelMaster: string;
     opened: boolean;
     lineBreak: boolean;
-    masterIsReloading: boolean;
     ignoreScrollLoading: boolean;
     alignEmptyElements: boolean;
     showCustomCardHeader: boolean;
   };
+
+  readonly masterIsReloading = model(false);
 
   constructor() {}
 }

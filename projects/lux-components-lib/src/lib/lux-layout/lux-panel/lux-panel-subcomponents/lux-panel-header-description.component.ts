@@ -13,7 +13,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     [matTooltipDisabled]="!luxTruncated()"
     ><ng-content></ng-content
   ></mat-panel-description>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatExpansionPanelDescription, MatTooltip]
 })
 export class LuxPanelHeaderDescriptionComponent implements AfterViewInit {

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ContentChildren, Input, OnDestroy, QueryList, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, contentChildren, inject, input, OnDestroy } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
@@ -13,15 +13,16 @@ import { LuxAppHeaderAcNavMenuItemComponent } from './lux-app-header-ac-nav-menu
 @Component({
   selector: 'lux-app-header-ac-nav-menu',
   templateUrl: './lux-app-header-ac-nav-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, LuxAriaLabelDirective, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxButtonComponent, LuxMenuComponent, TranslocoPipe]
 })
 export class LuxAppHeaderAcNavMenuComponent implements OnDestroy {
   private queryService = inject(LuxMediaQueryObserverService);
+  private cdr = inject(ChangeDetectorRef);
 
-  @ContentChildren(LuxAppHeaderAcNavMenuItemComponent) menuItemComponents!: QueryList<LuxAppHeaderAcNavMenuItemComponent>;
+  readonly menuItemComponents = contentChildren(LuxAppHeaderAcNavMenuItemComponent);
 
-  @Input() luxNavMenuMaximumExtended = 5;
+  readonly luxNavMenuMaximumExtended = input(5);
 
   mobileView: boolean;
   subscription: Subscription;
@@ -31,6 +32,7 @@ export class LuxAppHeaderAcNavMenuComponent implements OnDestroy {
     this.mobileView = this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm';
     this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
       this.mobileView = query === 'xs' || query === 'sm';
+      this.cdr.markForCheck();
     });
   }
 
