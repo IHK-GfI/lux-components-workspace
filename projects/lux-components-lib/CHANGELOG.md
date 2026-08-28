@@ -48,10 +48,14 @@
 
 ### Issues
 
-- Issue #275: Neue Optionen `luxStickyHeader` und `luxStickyHeaderOffset` für lux-panel und lux-accordion. Der Header eines geöffneten Panels bleibt beim Scrollen am oberen Rand des Scroll-Bereichs sichtbar, bis der Panel-Inhalt aus dem Sichtbereich geschoben ist.
-- Issue #274: Sicherheitsrisiko: window.open() ohne "noopener,noreferrer" bei externen Links in LuxLinkComponent (Reverse Tabnabbing). lux-link und lux-link-plain öffnen Links in neuen Tabs jetzt mit noopener,noreferrer, zusätzlich setzen die Anker bei luxBlank das rel-Attribut "noopener noreferrer".
+- Issue #259: `lux-select-ac` behält beim Selektieren einer Option die Reihenfolge bei (#266)
 - Issue #267: A11y: luxNoTopLabel/luxNoLabels blenden das Label nur noch visuell aus (lux-sr-only), das `<label>` bleibt im DOM und der zugängliche Name erhalten. Neu: luxAriaLabel und luxAriaLabelledby als Inputs auf allen Form-Controls. Behoben: doppelte DOM-ID in lux-select-ac. Hinweis 1: Anwendungs-Tests, die bei luxNoTopLabel auf ein fehlendes `<label>` prüfen, müssen angepasst werden. Hinweis 2: luxNoBottomLabel/luxNoLabels entfernen weiterhin bewusst Hint und Fehlermeldung aus dem DOM. Hinweis 3: lux-file-list und lux-file-upload folgen in einem separaten Issue. Hinweis 4 für fakeAsync-Tests: Die Form-Controls planen beim Initialisieren einen einmaligen setTimeout für die A11y-Prüfung ein, der in fakeAsync-Tests per tick() oder flush() abgearbeitet werden muss.
 - Issue #268: lux-menu-Items können per luxDisabledAria wahrnehmbar deaktiviert werden (sichtbar, fokussierbar, Screenreader sagen "deaktiviert" an); Klick/Enter emittiert luxClickNotAllowed statt luxClicked. Bewusst ohne Styling: aria-disabled Items sehen wie normale Items aus, die Anwendung reagiert über luxClickNotAllowed. Abgrenzung: luxDisabled (aus der Tastaturreihenfolge entfernt) vs. luxDisabledAria (wahrnehmbar deaktiviert) vs. luxHidden (ausgeblendet). Neu dafür: Direktive luxAriaDisabled, die aria-disabled zuverlässig auch an Material-Elementen setzt.
+- Issue #269: lux-table deaktiviert die alternierenden Zeilenfarben automatisch, sobald mindestens eine Zeile eine `lux-text-highlight-*`-Klasse trägt. Die Zeilentrennung erfolgt dann über horizontale Trennlinien.
+- Issue #274: Sicherheitsrisiko: window.open() ohne "noopener,noreferrer" bei externen Links in LuxLinkComponent (Reverse Tabnabbing). lux-link und lux-link-plain öffnen Links in neuen Tabs jetzt mit noopener,noreferrer, zusätzlich setzen die Anker bei luxBlank das rel-Attribut "noopener noreferrer".
+- Issue #275: Neue Optionen `luxStickyHeader` und `luxStickyHeaderOffset` für lux-panel und lux-accordion. Der Header eines geöffneten Panels bleibt beim Scrollen am oberen Rand des Scroll-Bereichs sichtbar, bis der Panel-Inhalt aus dem Sichtbereich geschoben ist.
+- Issue #282: Step-Titel wird korrekt angezeigt, auch wenn Header/Content in separate Komponenten ausgelagert werden (#283)
+- Issue #284: `LuxFormComponentBase`: `distinctUntilChanged()` unterdrückt keine `valueChanges`-Events mehr nach Wertänderungen mit `emitEvent: false` (#285)
 
 ## Version 21.7.0
 
