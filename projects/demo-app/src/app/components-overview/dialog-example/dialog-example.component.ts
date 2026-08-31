@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, OnDestroy, TemplateRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, TemplateRef, inject, viewChild } from '@angular/core';
 import {
   ILuxDialogPresetConfig,
   LuxAccordionComponent,
@@ -26,7 +26,7 @@ import { DialogComponentExampleComponent } from './dialog-component-example/dial
 @Component({
   selector: 'app-dialog-example',
   templateUrl: './dialog-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxAccordionComponent,
@@ -48,7 +48,8 @@ import { DialogComponentExampleComponent } from './dialog-component-example/dial
 export class DialogExampleComponent implements OnDestroy {
   private dialogService = inject(LuxDialogService);
 
-  @ViewChild('contentTemplate', { static: true }) contentTemplate!: TemplateRef<any>;
+  readonly contentTemplate = viewChild.required<TemplateRef<any>>('contentTemplate');
+
   useContentTemplate = false;
   showOutputEvents = false;
   contentTemplateString =
@@ -175,7 +176,7 @@ export class DialogExampleComponent implements OnDestroy {
 
   useContentTemplateChange(useContentTemplate: boolean) {
     if (useContentTemplate) {
-      this.dialogConfig.contentTemplate = this.contentTemplate;
+      this.dialogConfig.contentTemplate = this.contentTemplate();
     } else {
       this.dialogConfig.contentTemplate = undefined;
     }

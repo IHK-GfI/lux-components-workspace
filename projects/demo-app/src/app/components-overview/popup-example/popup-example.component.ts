@@ -21,7 +21,7 @@ import { PopupExampleInfoPopupComponent } from './popup-example-info-popup.compo
 @Component({
   selector: 'app-popup-example',
   templateUrl: './popup-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

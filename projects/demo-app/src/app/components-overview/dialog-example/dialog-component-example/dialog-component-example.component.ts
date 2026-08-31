@@ -22,7 +22,7 @@ import { logResult } from '../../../example-base/example-base-util/example-base-
   selector: 'app-dialog-component-example',
   templateUrl: './dialog-component-example.component.html',
   styleUrls: ['./dialog-component-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDialogActionsComponent,
     LuxDialogContentComponent,

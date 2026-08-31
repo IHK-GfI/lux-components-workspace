@@ -14,7 +14,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-timestamp-example',
   templateUrl: './timestamp-example.component.html',
   styleUrls: ['./timestamp-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxRelativeTimestampPipe,
     LuxButtonComponent,

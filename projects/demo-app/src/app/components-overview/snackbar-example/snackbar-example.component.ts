@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, inject, signal } from '@angular/core';
 import { MatSnackBarDismiss } from '@angular/material/snack-bar';
 import {
   LuxButtonComponent,
@@ -19,7 +19,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-snackbar-example',
   templateUrl: './snackbar-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,
@@ -41,15 +41,18 @@ export class SnackbarExampleComponent implements OnDestroy {
   showOutputEvents = false;
 
   duration = 5000;
-  snackbarConfig: LuxSnackbarConfig = {
+  snackbarConfig: Omit<LuxSnackbarConfig, 'textColor' | 'iconColor' | 'actionColor'> = {
     text: 'Text',
-    textColor: 'white',
     iconName: 'lux-interface-alert-information-circle',
-    iconColor: 'white',
     iconSize: '2x',
-    action: 'Action',
-    actionColor: 'white'
+    action: 'Action'
   };
+
+  // Werden in openSnackbarShow() innerhalb eines setTimeout gesetzt; als Signal, damit die
+  // eigenen [(luxSelected)]-Bindings unter OnPush trotzdem aktualisiert werden.
+  readonly textColor = signal('white');
+  readonly iconColor = signal('white');
+  readonly actionColor = signal('white');
 
   ngOnDestroy(): void {
     if (this.dismissSubscription) {
@@ -67,7 +70,7 @@ export class SnackbarExampleComponent implements OnDestroy {
   }
 
   openSnackbar() {
-    this.snackbar.open(this.duration, this.snackbarConfig);
+    this.snackbar.open(this.duration, this.buildSnackbarConfig());
     this.dismissSubscription = this.snackbar.afterDismissed().subscribe(this.observeDismiss.bind(this));
     this.actionSubscription = this.snackbar.onAction().subscribe(this.observeAction.bind(this));
   }
@@ -76,10 +79,10 @@ export class SnackbarExampleComponent implements OnDestroy {
     let time = 0;
     this.colors.forEach((color) => {
       setTimeout(() => {
-        this.snackbarConfig.textColor = color;
-        this.snackbarConfig.iconColor = color;
-        this.snackbarConfig.actionColor = color;
-        this.snackbar.open(this.duration, this.snackbarConfig);
+        this.textColor.set(color);
+        this.iconColor.set(color);
+        this.actionColor.set(color);
+        this.snackbar.open(this.duration, this.buildSnackbarConfig());
       }, time);
       time += this.duration;
     });
@@ -87,6 +90,15 @@ export class SnackbarExampleComponent implements OnDestroy {
 
   dismissSnackbar() {
     this.snackbar.dismiss();
+  }
+
+  private buildSnackbarConfig(): LuxSnackbarConfig {
+    return {
+      ...this.snackbarConfig,
+      textColor: this.textColor(),
+      iconColor: this.iconColor(),
+      actionColor: this.actionColor()
+    };
   }
 
   private observeDismiss(payload: MatSnackBarDismiss) {

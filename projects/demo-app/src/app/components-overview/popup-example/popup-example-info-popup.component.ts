@@ -1,4 +1,4 @@
-import { Component, ViewChild, input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
 import { LuxPopupCloseReason, LuxPopupComponent } from '@ihk-gfi/lux-components';
 
 @Component({
@@ -6,7 +6,7 @@ import { LuxPopupCloseReason, LuxPopupComponent } from '@ihk-gfi/lux-components'
   standalone: true,
   imports: [LuxPopupComponent],
   exportAs: 'popupExampleInfoPopup',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lux-popup
       [luxTitle]="title()"
@@ -26,10 +26,10 @@ export class PopupExampleInfoPopupComponent {
   readonly minWidth = input.required<number>();
   readonly maxWidth = input.required<number>();
 
-  @ViewChild(LuxPopupComponent, { static: true }) private popupInstance!: LuxPopupComponent;
+  private readonly popupInstance = viewChild.required(LuxPopupComponent);
 
   get popup(): LuxPopupComponent {
-    return this.popupInstance;
+    return this.popupInstance();
   }
 
   onClosed(reason: LuxPopupCloseReason) {

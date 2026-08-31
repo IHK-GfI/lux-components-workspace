@@ -17,7 +17,7 @@
       luxLabel="textColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für den Text eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="snackbarConfig.textColor"
+      [(luxSelected)]="textColor"
     >
     </lux-select-ac>
     <lux-input-ac luxLabel="iconName" luxHint="Diese Property definiert das Icon der Snackbar." [(luxValue)]="snackbarConfig.iconName">
@@ -33,7 +33,7 @@
       luxLabel="iconColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für das Icon eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="snackbarConfig.iconColor"
+      [(luxSelected)]="iconColor"
     >
     </lux-select-ac>
     <lux-input-ac luxLabel="action" luxHint="Diese Property definiert die Action der Snackbar." [(luxValue)]="snackbarConfig.action">
@@ -42,7 +42,7 @@
       luxLabel="actionColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für die Action eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="snackbarConfig.actionColor"
+      [(luxSelected)]="actionColor"
     >
     </lux-select-ac>
     <lux-input-ac luxLabel="duration" luxHint="Diese Property definiert wie lange die Snackbar angezeigt wird." luxType="number" [luxNumberAlignLeft]="true" [(luxValue)]="duration">
