@@ -10,6 +10,7 @@ In diesem Update-Guide wird beschrieben, wie man die LUX-Components aktualisiere
     - [lux-table](#lux-table)
     - [lux-session-timer](#lux-session-timer)
   - [Versionen](#versionen)
+    - [Version 21.9.0](#version-2190)
     - [Version 21.8.0](#version-2180)
     - [Version 21.7.0](#version-2170)
     - [Version 21.6.0](#version-2160)
@@ -89,6 +90,40 @@ Der LUX-Session-Timer nutzt den Local Storage, um die berechnete Endzeit der akt
 ## Versionen
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. Das heißt, alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **_es darf kein Update übersprungen werden_**, da jedes Update neben der Versionsaktualisierung in der `package.json` auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+### Version 21.9.0
+
+In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+**Hinweis**: Die `lux-card` verwendet auf `.lux-card-content` jetzt `overflow: clip` statt `overflow-y: hidden`, damit `luxStickyHeader` (siehe [lux-panel](lux‐panel-v21) / [lux-accordion](lux‐accordion-v21)) auch innerhalb einer `lux-card` funktioniert. Beide Werte schneiden überstehenden Inhalt ab, aber nur `hidden` erzeugt einen Scroll-Container — und genau dieser hat die Sticky-Positionierung innerhalb der Card ausgehebelt.
+
+Zu großer Inhalt wird optisch weiterhin genauso abgeschnitten wie bisher. Da `clip` aber keinen Scroll-Container mehr erzeugt, ist abgeschnittener Inhalt jetzt auf **beiden** Achsen endgültig unerreichbar. Beides sollte nach dem Update geprüft werden:
+
+- **Zu hoher Inhalt**: `overflow-y: hidden` zeigte zwar keine Scrollleiste, war aber programmatisch scrollbar — Browser konnten fokussierte Elemente automatisch in den sichtbaren Bereich scrollen, und `scrollIntoView()` funktionierte. Mit `clip` entfällt das. Betroffen sind nur höhenbegrenzte Cards, deren Inhalt höher als die Card ist (z.B. gleich hohe Cards einer Reihe oder die Detail-Card im `lux-master-detail-ac`).
+- **Zu breiter Inhalt**: Bisher galt neben `overflow-y: hidden` automatisch `overflow-x: auto`, überbreiter Inhalt war also innerhalb der Card horizontal scrollbar. Jetzt wird er stattdessen am Card-Rand abgeschnitten. Ein Scroll-Container innerhalb der Card ist technisch nicht mit `luxStickyHeader` vereinbar, deshalb ist diese Änderung im Standardverhalten nicht vermeidbar.
+- Für `pre`-Elemente ist das Überlaufen bereits im Theme gelöst: Sie erhalten `overflow-x: auto` und scrollen dadurch in sich selbst. Die `lux-table` bringt mit `.lux-table-content` ebenfalls einen eigenen Scroll-Container mit und ist nicht betroffen.
+- **`pre`-Elemente in einer `lux-card` benötigen zusätzlich `tabindex="0"`.** Das Theme erzeugt den Scroll-Container, das für die Tastaturbedienung nötige `tabindex` lässt sich aber nur im Markup setzen. Ohne es ist der scrollbare Bereich nur mit der Maus bedienbar (Verstoß gegen WCAG 2.1.1, von Prüfwerkzeugen als "scrollable-region-focusable" gemeldet):
+
+  ```html
+  <pre tabindex="0">{{ daten | json }}</pre>
+  ```
+
+- Eigene überbreite Inhalte können auf demselben Weg behandelt werden (`overflow-x: auto` am überbreiten Element selbst — dann ebenfalls mit `tabindex="0"`, sofern das Element keinen fokussierbaren Inhalt enthält) oder mit `overflow-wrap: break-word` bzw. der Utility-Klasse `.lux-overflow-wrap-break-word` umbrechend gemacht werden.
+
+**Wichtig (Barrierefreiheit)**: Abgeschnittener Inhalt ist — anders als scrollbarer Inhalt — für Tastaturnutzer nicht mehr erreichbar. Enthält eine `lux-card` fokussierbare Elemente, die über den sichtbaren Bereich der Card hinausragen, kann der Browser diese beim Fokussieren nicht mehr in den sichtbaren Bereich scrollen. Betroffene Cards sollten deshalb entweder so angepasst werden, dass ihr Inhalt in die Card passt (siehe Punkte oben), oder mit der Klasse `lux-card-scroll-content` vom Clipping ausgenommen werden:
+
+```html
+<lux-card class="lux-card-scroll-content" luxTitle="Beispiel"> ... </lux-card>
+```
+
+Der Card-Inhalt ist damit wie bisher innerhalb der Card scrollbar. Innerhalb einer so markierten Card funktioniert `luxStickyHeader` allerdings nicht, da die Card-Content-Box dadurch wieder zum Scroll-Container wird.
+
+- LUX-Components-Updater aktualisieren:
+  - `npm update @ihk-gfi/lux-components-update`
+- LUX-Components-Updater ausführen:
+  - `ng generate @ihk-gfi/lux-components-update:update-21.9.0`
+- Wenn Probleme beim Ausführen von `npm install` mit den Abhängigkeiten (z.B. `@angular-devkit/build-angular`,...) auftreten sollten, bitte einmal den `node_modules`-Ordner und die `package-lock.json`-Datei löschen und noch einmal `npm install` ausführen.
+- Fertig!
 
 ### Version 21.8.0
 

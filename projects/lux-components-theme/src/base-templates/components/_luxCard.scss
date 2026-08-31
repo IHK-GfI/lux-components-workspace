@@ -29,6 +29,24 @@ lux-card {
     }
   }
 
+  // Opt-out aus dem Clipping des Card-Inhalts (siehe Issue #277).
+  // Der Standard "overflow: clip" schneidet zu großen Inhalt ab, ohne ihn scrollbar zu
+  // machen. Enthält eine Card fokussierbare Elemente außerhalb des sichtbaren Bereichs,
+  // können Tastaturnutzer diese dadurch nicht mehr erreichen. Über diese Klasse wird der
+  // Inhalt wieder innerhalb der Card scrollbar, sodass der Browser fokussierte Elemente in
+  // den sichtbaren Bereich scrollen kann.
+  // Achtung: Damit wird die Card-Content-Box wieder zum Scroll-Container, weshalb
+  // luxStickyHeader innerhalb einer so markierten Card nicht funktioniert.
+  // Bewusst nur über direkte Kindelemente (">"), damit die Klasse ausschließlich die
+  // markierte Card betrifft. Mit Nachfahren-Selektoren würde sie auch den Inhalt
+  // verschachtelter Cards scrollbar machen und dort luxStickyHeader unbeabsichtigt
+  // ausschalten.
+  &.lux-card-scroll-content {
+    > .lux-card > .lux-card-content {
+      overflow: auto;
+    }
+  }
+
   .lux-card {
     width: 100%;
 
@@ -88,7 +106,31 @@ lux-card {
       display: flex;
       flex-direction: column;
       padding: 0 var(--lux-theme-card-padding);
-      overflow-y: hidden;
+
+      // "clip" statt "hidden" (siehe Issue #277): Beide schneiden überstehenden Inhalt ab,
+      // aber nur "hidden" erzeugt einen Scroll-Container. Da sich "position: sticky" am
+      // nächstgelegenen Scroll-Container orientiert, blieb luxStickyHeader innerhalb einer
+      // lux-card damit wirkungslos. Mit "clip" bleibt die Sticky-Kette bis lux-app-content
+      // erhalten.
+      //
+      // Optisch wird weiterhin an derselben Stelle abgeschnitten, der Inhalt ist aber nicht
+      // mehr erreichbar - auf beiden Achsen:
+      // - vertikal war "hidden" zwar ohne Scrollleiste, aber programmatisch scrollbar
+      //   (Auto-Scroll auf Fokus, scrollIntoView). Das entfällt mit "clip".
+      // - horizontal berechnete sich neben "overflow-y: hidden" automatisch
+      //   "overflow-x: auto", überbreiter Inhalt war also scrollbar. Auch das entfällt.
+      // Ein Scroll-Container ist mit luxStickyHeader technisch nicht vereinbar, deshalb ist
+      // das im Standardverhalten nicht vermeidbar. Anwendungen, die den Inhalt scrollbar
+      // brauchen, nutzen das Opt-out "lux-card-scroll-content" (siehe oben).
+      overflow: clip;
+
+      // Notwendig zusammen mit "clip": Als Flex-Item der mat-card (flex-direction: column)
+      // gilt hier "min-height: auto". Diese automatische Mindestgröße wird nur dann zu 0,
+      // wenn das Element ein Scroll-Container ist - was beim bisherigen "hidden" der Fall
+      // war, bei "clip" aber nicht. Ohne die 0 könnten höhenbegrenzte Cards (z.B. gleich
+      // hohe Cards einer Reihe oder die Detail-Card im lux-master-detail-ac) nicht mehr
+      // schrumpfen und würden über ihre zugewiesene Höhe hinauswachsen.
+      min-height: 0;
 
       .lux-card-content-container {
         display: flex;
@@ -96,6 +138,14 @@ lux-card {
 
         // Abstand zwischen dem Inhalt und dem Expanded-Bereich der Card.
         gap: 0.75rem;
+      }
+
+      // Da "clip" auf der Card nicht scrollt, wäre breiter Inhalt in pre-Elementen
+      // ohne diese Regel nicht mehr erreichbar. Der Scroll-Container liegt deshalb im
+      // pre-Element selbst: Die Formatierung des Inhalts (white-space: pre) bleibt
+      // erhalten und die Sticky-Kette der Card wird nicht unterbrochen.
+      pre {
+        overflow-x: auto;
       }
 
       // Wenn es einen Header und Content gibt, soll oben im Content ein Padding gesetzt werden.

@@ -15,6 +15,7 @@
     - [LuxCardActionsComponent](#luxcardactionscomponent)
     - [@Input](#input-1)
   - [Styleguide](#styleguide)
+    - [Überbreiter oder zu hoher Inhalt](#überbreiter-oder-zu-hoher-inhalt)
   - [Beispiele](#beispiele)
     - [1. Simple Card](#1-simple-card)
     - [2. Card mit Actions](#2-card-mit-actions)
@@ -37,11 +38,11 @@
 | ------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | luxTitle           | string        | Titel der Card.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | luxTitleTooltip    | string        | Titel-Tooltip der Card.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| luxSubTitle        | string        | Untertitel der Card                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| luxSubTitle        | string        | Untertitel der Card                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | luxSubTitleTooltip | string        | Subtiteltooltip der Card                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | luxDisabled        | boolean       | Gibt an, ob die Card angeklickt werden kann.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | luxTagId           | string        | [LUX-Tag-Id](luxTagId-v21#direkte-konfiguration) für die automatischen Tests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| luxTitleLineBreak  | boolean       | Boolean-Flag, das bestimmt, ob die Titel und Untertitel der LuxCards beim Überschreiten der Breite mit "..." verkürzt oder mit Umbrüchen angezeigt werden.                                                                                                                                                                                                                                                                                                                                                                                                           |
+| luxTitleLineBreak  | boolean       | Boolean-Flag, das bestimmt, ob die Titel und Untertitel der LuxCards beim Überschreiten der Breite mit "..." verkürzt oder mit Umbrüchen angezeigt werden.                                                                                                                                                                                                                                                                                                                                                                                                          |
 | luxExpanded        | boolean       | Bestimmt, ob die Card aktuell ausgeklappt ist oder nicht.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | luxUseTabIndex     | boolean       | Bestimmt, ob die Card einen Tabindex setzt, wenn die Card angeklickt werden kann (siehe luxClicked).                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | luxHeading         | number (1..6) | Bestimmt, welches Überschriften-Tag (h1...h6) für den luxTitle verwendet wird. <br><br> Die Darstellung einer LUX-Card ist fest definiert und sollte überall gleich aussehen. Das man die Überschriften (h1,...h6) ändern kann, zielt nicht auf die Darstellung ab, sondern auf die Struktur der App (Stichwort: Barrierefreiheit). Eine HTML-Seite muss in ihren Überschriften vollständig korrekt strukturiert sein und dafür kann es nötig werden, dass die LUX-Cards ein anderes Überschriftenlevel benötigen, da sonst z.B. Screenreader ein Problem bekommen. |
@@ -115,6 +116,30 @@ Grundlegende Regeln zum Umgang mit Cards sind:
 - Schaltflächen, die sich auf Inhalte z.B. einer lux-card beziehen, sollen auch innerhalb der Card untergebracht sein.
 - Nebeneinander angezeigte Cards müssen die gleiche Höhe haben. Alternativ kann um die Höhe anzugleichen die Breite variiert werden, soweit sich dann nach unten kein Flatterbild entwickelt. Responsive Design beachten!
 - Vertikal untereinander angeordnete Cards sollen exakt die gleiche Breite haben. Also generell bündig. Und immer den gesamten Platz ausfüllen, den das umgebende DIV bereit hält.
+
+### Überbreiter oder zu hoher Inhalt
+
+Der Inhalt einer `lux-card` wird standardmäßig mit `overflow: clip` an den Card-Grenzen abgeschnitten. Dadurch bleibt `position: sticky` für Inhalte wie `luxStickyHeader` innerhalb einer Card funktionsfähig, weil der Card-Content keinen eigenen Scroll-Container bildet.
+
+Wenn der Card-Inhalt scrollbar sein muss, kann die Klasse `lux-card-scroll-content` verwendet werden:
+
+```html
+<lux-card class="lux-card-scroll-content" luxTitle="Beispiel">
+  <lux-card-content>
+    <!-- Scrollbarer Card-Inhalt -->
+  </lux-card-content>
+</lux-card>
+```
+
+Diese Klasse setzt den Card-Content wieder auf `overflow: auto`. Fokussierbare Inhalte können dadurch wie bisher automatisch in den sichtbaren Bereich gescrollt werden. Innerhalb einer so markierten Card funktioniert `luxStickyHeader` jedoch nicht, weil der Card-Content wieder zum Scroll-Container wird.
+
+Überbreite Inhalte können alternativ direkt am betreffenden Element scrollbar gemacht werden. Für solche Scroll-Container sollte zusätzlich `tabindex="0"` gesetzt werden, sofern sie keinen eigenen fokussierbaren Inhalt enthalten:
+
+```html
+<pre tabindex="0">Überbreiter Inhalt</pre>
+```
+
+Für Inhalte, die nicht scrollbar sein müssen, kann `overflow-wrap: break-word` oder die Utility-Klasse `.lux-overflow-wrap-break-word` verwendet werden.
 
 ## Beispiele
 
