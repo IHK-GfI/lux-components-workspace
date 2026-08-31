@@ -1,12 +1,22 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+  signal,
+  viewChild
+} from '@angular/core';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 
 @Component({
   selector: 'lux-tour-hint',
   templateUrl: './lux-tour-hint.component.html',
   styleUrls: ['./lux-tour-hint.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgStyle, NgClass]
 })
 export class LuxTourHintComponent implements OnInit, AfterViewInit {
@@ -15,10 +25,10 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   tourHintRef = inject(LuxTourHintRef);
 
   //The element which is the target of the hint or tour
-  private _luxTarget: any;
+  private readonly _luxTarget = signal<any>(undefined);
 
   set luxTarget(luxTarget: any) {
-    this._luxTarget = luxTarget;
+    this._luxTarget.set(luxTarget);
 
     //Needs a timeout or the content will not be rendered and so the bounds cannot be read corretly
     setTimeout(() => {
@@ -27,32 +37,31 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   }
 
   get luxTarget(): any {
-    return this._luxTarget;
+    return this._luxTarget();
   }
 
   //CSS Class for the arrow where to point
-  public arrowClass = 'top';
+  protected readonly arrowClass = signal('top');
 
   //Constants which are also used in scss but can't directly be read from here
   private arrowLength = 16;
   private shadowPadding = 5;
 
   //Positions of the tour-hint modal
-  public tourHintPosLeft = 0;
-  public tourHintPosTop = 0;
+  protected readonly tourHintPosLeft = signal(0);
+  protected readonly tourHintPosTop = signal(0);
 
   //Positions / Sizes of the tour-hint shadows
-  public bgTopSize = 0;
-  public bgBottomSize = 0;
-  public bgLeftSize = 0;
-  public bgRightSize = 0;
-  public bgContentHeight = 0;
+  protected readonly bgTopSize = signal(0);
+  protected readonly bgBottomSize = signal(0);
+  protected readonly bgLeftSize = signal(0);
+  protected readonly bgRightSize = signal(0);
+  protected readonly bgContentHeight = signal(0);
 
   //Style variables for the rendering of a dynamic 'Modal-Arrow'
-  public dynamicArrowStyle = {};
+  protected readonly dynamicArrowStyle = signal({});
 
-  @ViewChild('tourHintContainer', { read: ElementRef })
-  private tourHintContainer!: ElementRef;
+  private readonly tourHintContainer = viewChild('tourHintContainer', { read: ElementRef });
 
   ngOnInit(): void {
     //When resizing / min- / maximizing window update all positions
@@ -64,22 +73,23 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     //Focus after loaded so we can navigate the tour with arrow keys
     this.updateTargetAndPositions();
-    this.tourHintContainer.nativeElement.focus();
+    this.tourHintContainer()?.nativeElement.focus();
   }
 
   private updateTargetAndPositions() {
-    if (!this.luxTarget) return;
+    const target = this._luxTarget();
+    if (!target) return;
 
     //Scrolls the element into view
     //TODO: In some cases scroll 'feels' wrong and target element is not centered on screen.
-    this.luxTarget.scrollIntoView({
+    target.scrollIntoView({
       block: 'center',
       inline: 'center'
     });
 
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    const bounds = this.getSurroundingBounds(this.luxTarget);
+    const bounds = this.getSurroundingBounds(target);
 
     this.calculatePositions(windowWidth, windowHeight, bounds);
 
@@ -88,9 +98,10 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   }
 
   private calculatePositions(winWidth: number, winHeight: number, bounds: any) {
-    if (this.tourHintContainer) {
+    const tourHintContainer = this.tourHintContainer();
+    if (tourHintContainer) {
       //Calculate where the tour-hint should be shown
-      const calculatedComponentBounds = this.tourHintContainer.nativeElement.getBoundingClientRect();
+      const calculatedComponentBounds = tourHintContainer.nativeElement.getBoundingClientRect();
       const calculatedWidth = calculatedComponentBounds.width;
       const calculatedHeight = calculatedComponentBounds.height;
 
@@ -117,12 +128,15 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
       let arrowOffX = 0;
       let arrowOffY = 0;
 
+      let tourHintPosLeft = 0;
+      let tourHintPosTop = 0;
+
       if (showTop || showBottom) {
         //Top OR Bottom
-        this.tourHintPosLeft = bounds.midX - this.arrowLength * 2;
-        if (this.tourHintPosLeft < 0) this.tourHintPosLeft = 0;
+        tourHintPosLeft = bounds.midX - this.arrowLength * 2;
+        if (tourHintPosLeft < 0) tourHintPosLeft = 0;
 
-        baseOffX = this.tourHintPosLeft + neededWidth - winWidth;
+        baseOffX = tourHintPosLeft + neededWidth - winWidth;
         arrowOffX = baseOffX;
         baseOffY = 0;
         arrowOffY = 0;
@@ -134,23 +148,23 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
 
         if (showTop) {
           //Show on top
-          this.arrowClass = 'bottom';
-          this.tourHintPosTop = bounds.top - neededHeight;
+          this.arrowClass.set('bottom');
+          tourHintPosTop = bounds.top - neededHeight;
         } else {
           //Show on bottom
-          this.arrowClass = 'top';
-          this.tourHintPosTop = bounds.bottom + this.arrowLength;
+          this.arrowClass.set('top');
+          tourHintPosTop = bounds.bottom + this.arrowLength;
         }
 
-        if (this.tourHintPosTop < 0) this.tourHintPosTop = 0;
+        if (tourHintPosTop < 0) tourHintPosTop = 0;
       } else {
         //Left OR Right
-        this.tourHintPosTop = bounds.midY - this.arrowLength * 2;
-        if (this.tourHintPosTop < 0) this.tourHintPosTop = 0;
+        tourHintPosTop = bounds.midY - this.arrowLength * 2;
+        if (tourHintPosTop < 0) tourHintPosTop = 0;
 
         baseOffX = 0;
         arrowOffX = 0;
-        baseOffY = this.tourHintPosTop + neededHeight - winHeight;
+        baseOffY = tourHintPosTop + neededHeight - winHeight;
         arrowOffY = baseOffY;
 
         if (baseOffY < 0) {
@@ -160,31 +174,34 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
 
         if (showLeft) {
           //Show on left side
-          this.arrowClass = 'right';
-          this.tourHintPosLeft = bounds.left - neededWidth;
+          this.arrowClass.set('right');
+          tourHintPosLeft = bounds.left - neededWidth;
         } else {
           //Show on right side
-          this.arrowClass = 'left';
-          this.tourHintPosLeft = bounds.right + this.arrowLength;
+          this.arrowClass.set('left');
+          tourHintPosLeft = bounds.right + this.arrowLength;
         }
 
-        if (this.tourHintPosLeft < 0) this.tourHintPosLeft = 0;
+        if (tourHintPosLeft < 0) tourHintPosLeft = 0;
       }
 
-      this.dynamicArrowStyle = {
+      this.tourHintPosLeft.set(tourHintPosLeft);
+      this.tourHintPosTop.set(tourHintPosTop);
+
+      this.dynamicArrowStyle.set({
         '--baseOffsetX': -baseOffX + 'px',
         '--baseOffsetY': -baseOffY + 'px',
         '--arrowOffsetX': -arrowOffX + 'px',
         '--arrowOffsetY': -arrowOffY + 'px'
-      };
+      });
 
       //Calculate shadows for the highlight
-      this.bgTopSize = Math.max(0, bounds.top - this.shadowPadding);
-      this.bgBottomSize = Math.max(0, winHeight - (bounds.bottom + this.shadowPadding));
-      this.bgLeftSize = Math.max(0, bounds.left - this.shadowPadding);
-      this.bgRightSize = Math.max(0, winWidth - (bounds.right + this.shadowPadding));
+      this.bgTopSize.set(Math.max(0, bounds.top - this.shadowPadding));
+      this.bgBottomSize.set(Math.max(0, winHeight - (bounds.bottom + this.shadowPadding)));
+      this.bgLeftSize.set(Math.max(0, bounds.left - this.shadowPadding));
+      this.bgRightSize.set(Math.max(0, winWidth - (bounds.right + this.shadowPadding)));
 
-      this.bgContentHeight = winHeight - (this.bgTopSize + this.bgBottomSize);
+      this.bgContentHeight.set(winHeight - (this.bgTopSize() + this.bgBottomSize()));
     }
   }
 

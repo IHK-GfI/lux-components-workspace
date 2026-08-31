@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
@@ -43,14 +43,14 @@ describe('LuxFilterFormComponent', () => {
     const spy = spyOn(component, 'onFilter').and.callThrough();
 
     // Vorbedingungen testen
-    expect(component.filterComponent.filterForm.get('input')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
 
     // Änderungen durchführen
-    component.initFilter = { input: 'Not empty' };
+    component.initFilter.set({ input: 'Not empty' });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent.filterForm.valid).toBeTrue();
+    expect(component.filterComponent().filterForm.valid).toBeTrue();
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
@@ -59,15 +59,15 @@ describe('LuxFilterFormComponent', () => {
     const spy = spyOn(component, 'onFilter').and.callThrough();
 
     // Vorbedingungen testen
-    expect(component.filterComponent.filterForm.get('input')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
 
     // Änderungen durchführen
     // Validierungsfehler: Das Feld 'input' ist required und darf somit nicht leer sein.
-    component.initFilter = { input: '' };
+    component.initFilter.set({ input: '' });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent.filterForm.valid).toBeFalse();
+    expect(component.filterComponent().filterForm.valid).toBeFalse();
     expect(spy).toHaveBeenCalledTimes(0);
   });
 
@@ -76,10 +76,10 @@ describe('LuxFilterFormComponent', () => {
     const spy = spyOn(component, 'onFilter').and.callThrough();
 
     // Vorbedingungen testen
-    expect(component.filterComponent.luxFilterValues).toEqual({});
+    expect(component.filterComponent().luxFilterValues()).toEqual({});
 
     // Änderungen durchführen
-    component.initFilter = { input: 'aaa' };
+    component.initFilter.set({ input: 'aaa' });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
@@ -87,13 +87,13 @@ describe('LuxFilterFormComponent', () => {
 
     // Änderungen durchführen.
     // Hier sollen die Filterwerte ersetzt werden.
-    component.initFilter = { autocomplete: component.autoCompleteOptions[0] };
+    component.initFilter.set({ autocomplete: component.autoCompleteOptions[0] });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1); // Es bleibt bei 1, weil das Pflichtfeld "input" nicht gefüllt ist.
-    expect(component.filterComponent.filterForm.get('autocomplete')!.value).toEqual(component.autoCompleteOptions[0]);
-    expect(component.filterComponent.filterForm.get('input')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('autocomplete')!.value).toEqual(component.autoCompleteOptions[0]);
+    expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
   });
 
   it('Sollte auch mit Datepicker-Timepicker-Kombination funktionieren', () => {
@@ -101,15 +101,15 @@ describe('LuxFilterFormComponent', () => {
     const spy = spyOn(component, 'onFilter').and.callThrough();
 
     // Vorbedingungen testen
-    expect(component.filterComponent.filterForm.get('combinedDateTime')!.value).toBeUndefined();
+    expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toBeUndefined();
 
     // Änderungen durchführen
-    component.initFilter = { input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' };
+    component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' });
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent.filterForm.valid).toBeTrue();
-    expect(component.filterComponent.filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30:00.000Z');
+    expect(component.filterComponent().filterForm.valid).toBeTrue();
+    expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30:00.000Z');
     expect(component.currentFilter.combinedDateTime).toEqual('2020-07-21T14:30:00.000Z');
     expect(spy).toHaveBeenCalledTimes(1);
   });
@@ -120,12 +120,12 @@ describe('LuxFilterFormComponent', () => {
     <lux-filter-form
       (luxOnFilter)="onFilter($event)"
       [(luxFilterExpanded)]="expanded"
-      [luxFilterValues]="initFilter"
+      [luxFilterValues]="initFilter()"
       (luxOnSave)="onSave($event)"
       (luxOnLoad)="onLoad($event)"
       (luxOnReset)="onReset()"
       (luxOnDelete)="onDelete()"
-      [luxShowChips]="showFilterChips"
+      [luxShowChips]="showFilterChips()"
       [luxStoredFilters]="storedFilters"
       class="lux-ml-1 lux-mr-1 lux-mb-3"
     >
@@ -222,7 +222,7 @@ describe('LuxFilterFormComponent', () => {
       ></lux-toggle-ac>
     </lux-filter-form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFilterFormComponent,
     LuxFilterItemDirective,
@@ -237,7 +237,7 @@ describe('LuxFilterFormComponent', () => {
 class TestFilterFormComponent implements OnDestroy {
   private mediaQuery = inject(LuxMediaQueryObserverService);
 
-  @ViewChild(LuxFilterFormComponent) filterComponent!: LuxFilterFormComponent;
+  readonly filterComponent = viewChild.required(LuxFilterFormComponent);
 
   autoCompleteOptions: any[] = [
     { label: 'Auto A', value: 'a' },
@@ -257,11 +257,11 @@ class TestFilterFormComponent implements OnDestroy {
     { label: 'Multi 3', value: 3 }
   ];
 
-  initFilter: any = {};
-  currentFilter: any = this.initFilter;
+  initFilter = signal<any>({});
+  currentFilter: any = this.initFilter();
 
   expanded = false;
-  showFilterChips = true;
+  showFilterChips = signal(true);
 
   storedFilters: LuxFilter[] = [];
 
@@ -286,7 +286,7 @@ class TestFilterFormComponent implements OnDestroy {
 
   constructor() {
     this.mediaQuerySubscription = this.mediaQuery.getMediaQueryChangedAsObservable().subscribe(() => {
-      this.showFilterChips = !this.mediaQuery.isSmallerOrEqual('xs');
+      this.showFilterChips.set(!this.mediaQuery.isSmallerOrEqual('xs'));
     });
   }
 
@@ -315,7 +315,7 @@ class TestFilterFormComponent implements OnDestroy {
   onReset() {}
 
   onLoad(filterName: string) {
-    this.initFilter = this.loadFilter(filterName);
+    this.initFilter.set(this.loadFilter(filterName));
   }
 
   private saveFilter(filter: LuxFilter) {

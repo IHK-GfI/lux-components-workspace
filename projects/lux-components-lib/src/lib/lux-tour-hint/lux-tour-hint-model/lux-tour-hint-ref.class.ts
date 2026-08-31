@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { LuxTourHintComponent } from '../lux-tour-hint.component';
 import { InitializedTourHintConfig } from '../lux-tour-hint.service';
 
@@ -9,33 +9,33 @@ export type OnCloseListener = (dontShowAgain: boolean) => void;
 })
 export class LuxTourHintRef<T = any> {
   public get target(): any {
-    return this.tourStepConfigs[this.tourStep].target;
+    return this.tourStepConfigs()[this.tourStep()].target;
   }
 
   public get data(): T {
-    return this.tourStepConfigs[this.tourStep].data;
+    return this.tourStepConfigs()[this.tourStep()].data;
   }
 
   public get step(): number {
-    return this.tourStep;
+    return this.tourStep();
   }
 
   public get steps(): number {
-    return this.tourStepConfigs.length;
+    return this.tourStepConfigs().length;
   }
 
-  private _opened = false;
+  private readonly _opened = signal(false);
   public get opened(): boolean {
-    return this._opened;
+    return this._opened();
   }
 
   private tourHintContainer?: LuxTourHintComponent;
-  private tourStep = 0;
-  private tourStepConfigs: InitializedTourHintConfig[] = [];
+  private readonly tourStep = signal(0);
+  private readonly tourStepConfigs = signal<InitializedTourHintConfig[]>([]);
 
-  private _optionDontShowAgain = true;
+  private readonly _optionDontShowAgain = signal(true);
   public get optionDontShowAgain(): boolean {
-    return this._optionDontShowAgain;
+    return this._optionDontShowAgain();
   }
 
   private dontShowAgainCallback!: () => void;
@@ -51,11 +51,11 @@ export class LuxTourHintRef<T = any> {
     dontShowAgainCallback: () => void
   ) {
     this.tourHintContainer = tourHintContainer;
-    this.tourStep = 0;
-    this.tourStepConfigs = configs;
-    this._optionDontShowAgain = optionDontShowAgain;
+    this.tourStep.set(0);
+    this.tourStepConfigs.set(configs);
+    this._optionDontShowAgain.set(optionDontShowAgain);
     this.dontShowAgainCallback = dontShowAgainCallback;
-    this._opened = true;
+    this._opened.set(true);
 
     this.onCloseListeners = [];
 
@@ -70,11 +70,11 @@ export class LuxTourHintRef<T = any> {
   }
 
   public hasNext(): boolean {
-    return this.tourStep + 1 < this.tourStepConfigs.length;
+    return this.tourStep() + 1 < this.tourStepConfigs().length;
   }
 
   public hasPrevious(): boolean {
-    return this.tourStep - 1 >= 0;
+    return this.tourStep() - 1 >= 0;
   }
 
   public next() {
@@ -82,7 +82,7 @@ export class LuxTourHintRef<T = any> {
       return;
     }
 
-    this.tourStep++;
+    this.tourStep.update((step) => step + 1);
     this.updateTour();
   }
 
@@ -91,7 +91,7 @@ export class LuxTourHintRef<T = any> {
       return;
     }
 
-    this.tourStep--;
+    this.tourStep.update((step) => step - 1);
     this.updateTour();
   }
 
@@ -106,7 +106,7 @@ export class LuxTourHintRef<T = any> {
 
     this.tourHintContainer?.close();
 
-    this._opened = false;
+    this._opened.set(false);
   }
 
   public onClose(listener: OnCloseListener) {

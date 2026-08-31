@@ -116,7 +116,10 @@ export class LuxAppHeaderAcComponent implements OnInit {
     if (this.luxHideBrandLogo()) {
       return undefined;
     }
-    return this.luxBrandLogoSrc() ?? this.iconBasePath + '/assets/logos/ihk_logo_platzhalter.svg';
+    // Ein projiziertes lux-tenant-logo hat Vorrang vor dem Platzhalter-Logo, wenn kein luxBrandLogoSrc gesetzt ist -
+    // siehe Kommentar im Template. Nur wenn WEDER ein Wert gesetzt ist NOCH ein lux-tenant-logo projiziert wird,
+    // greift der Platzhalter.
+    return this.luxBrandLogoSrc() ?? (this.tenantLogo() ? undefined : this.iconBasePath + '/assets/logos/ihk_logo_platzhalter.svg');
   });
 
   readonly effectiveCenteredView = computed(

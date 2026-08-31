@@ -10,7 +10,7 @@ import { LuxTourHintRef } from '../lux-tour-hint-model/lux-tour-hint-ref.class';
   selector: 'lux-tour-hint-preset',
   templateUrl: './lux-tour-hint-preset.component.html',
   styleUrls: ['./lux-tour-hint-preset.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent, LuxCheckboxAcComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxTourHintPresetComponent {

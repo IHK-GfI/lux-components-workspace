@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
@@ -27,7 +27,7 @@ describe('LuxTenantLogoComponent', () => {
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(LuxMockTenantLogoComponent);
       //Automatische Varianten durch die Media query werden später getestet
-      fixture.componentInstance.tenantVariant = 'lang';
+      fixture.componentInstance.tenantVariant.set('lang');
       testComponent = fixture.componentInstance;
       fixture.detectChanges();
 
@@ -41,17 +41,17 @@ describe('LuxTenantLogoComponent', () => {
       const expectedTenantKey = '202';
 
       /* ___Vorbedingungen testen___ */
-      expect(fixture.componentInstance.tenantKey).toEqual(initialTenantKey);
+      expect(fixture.componentInstance.tenantKey()).toEqual(initialTenantKey);
       expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + initialTenantKey + '_lang.svg');
 
       /* ___Änderungen durchführen___ */
-      fixture.componentInstance.tenantKey = expectedTenantKey;
+      fixture.componentInstance.tenantKey.set(expectedTenantKey);
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen___ */
 
       //Input Testen
-      expect(fixture.debugElement.componentInstance.tenantKey).toEqual(expectedTenantKey);
+      expect(fixture.debugElement.componentInstance.tenantKey()).toEqual(expectedTenantKey);
 
       //Image Source Testen
       expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + expectedTenantKey + '_lang.svg');
@@ -64,18 +64,18 @@ describe('LuxTenantLogoComponent', () => {
       const expectedTenantVariant = 'kurz';
 
       /* ___Vorbedingungen testen___ */
-      expect(fixture.componentInstance.tenantKey).toEqual(tenantKey);
-      expect(fixture.componentInstance.tenantVariant).toEqual(initialTenantVariant);
+      expect(fixture.componentInstance.tenantKey()).toEqual(tenantKey);
+      expect(fixture.componentInstance.tenantVariant()).toEqual(initialTenantVariant);
       expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + tenantKey + '_' + initialTenantVariant + '.svg');
 
       /* ___Änderungen durchführen___ */
-      fixture.componentInstance.tenantVariant = expectedTenantVariant;
+      fixture.componentInstance.tenantVariant.set(expectedTenantVariant);
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen___ */
 
       //Input Testen
-      expect(fixture.debugElement.componentInstance.tenantVariant).toEqual(expectedTenantVariant);
+      expect(fixture.debugElement.componentInstance.tenantVariant()).toEqual(expectedTenantVariant);
 
       //Image Source Testen
       expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + tenantKey + '_' + expectedTenantVariant + '.svg');
@@ -102,12 +102,12 @@ describe('LuxTenantLogoComponent', () => {
       const expectedTenantKey = '202';
 
       /* ___Vorbedingungen testen___ */
-      expect(fixture.componentInstance.tenantKey).toEqual(initialTenantKey);
+      expect(fixture.componentInstance.tenantKey()).toEqual(initialTenantKey);
       expect(tenantLogoEl.nativeElement.ariaLabel).toEqual('Logo ' + initialTenantKey);
       expect(luxImageEl.nativeElement.alt).toEqual('Logo ' + initialTenantKey);
 
       /* ___Änderungen durchführen___ */
-      fixture.componentInstance.tenantKey = expectedTenantKey;
+      fixture.componentInstance.tenantKey.set(expectedTenantKey);
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen___ */
@@ -134,21 +134,21 @@ describe('LuxTenantLogoComponent', () => {
       const luxImageEl = fixture.debugElement.query(By.css('.lux-image'));
       const initialHeight = '60px';
       const expectedHeight = '100rem';
-      testComponent.tenantHeight = initialHeight;
+      testComponent.tenantHeight.set(initialHeight);
       fixture.detectChanges();
 
       /* ___Vorbedingungen testen___ */
-      expect(fixture.componentInstance.tenantHeight).toEqual(initialHeight);
-      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight).toEqual(initialHeight);
+      expect(fixture.componentInstance.tenantHeight()).toEqual(initialHeight);
+      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight()).toEqual(initialHeight);
       expect(luxImageEl.nativeElement.style.height).toEqual(initialHeight);
 
       /* ___Änderungen durchführen___ */
-      fixture.componentInstance.tenantHeight = expectedHeight;
+      fixture.componentInstance.tenantHeight.set(expectedHeight);
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen___ */
-      expect(fixture.componentInstance.tenantHeight).toEqual(expectedHeight);
-      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight).toEqual(expectedHeight);
+      expect(fixture.componentInstance.tenantHeight()).toEqual(expectedHeight);
+      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight()).toEqual(expectedHeight);
       expect(luxImageEl.nativeElement.style.height).toEqual(expectedHeight);
     }));
 
@@ -157,12 +157,12 @@ describe('LuxTenantLogoComponent', () => {
       const luxImageEl = fixture.debugElement.query(By.css('.lux-image'));
       const initialComputedHeight = '40px';
       const expectedComputedHeight = '32px';
-      testComponent.tenantHeight = '';
+      testComponent.tenantHeight.set('');
       fixture.detectChanges();
 
       /* ___Vorbedingungen testen___ */
-      expect(fixture.componentInstance.tenantHeight).toEqual('');
-      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight).toEqual(initialComputedHeight);
+      expect(fixture.componentInstance.tenantHeight()).toEqual('');
+      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight()).toEqual(initialComputedHeight);
       expect(luxImageEl.nativeElement.style.height).toEqual(initialComputedHeight);
 
       /* ___Änderungen durchführen___ */
@@ -170,8 +170,8 @@ describe('LuxTenantLogoComponent', () => {
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen___ */
-      expect(fixture.componentInstance.tenantHeight).toEqual('');
-      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight).toEqual(expectedComputedHeight);
+      expect(fixture.componentInstance.tenantHeight()).toEqual('');
+      expect(tenantLogoEl.componentInstance.actualLuxTenantLogoHeight()).toEqual(expectedComputedHeight);
       expect(luxImageEl.nativeElement.style.height).toEqual(expectedComputedHeight);
     }));
   });
@@ -194,22 +194,22 @@ describe('LuxTenantLogoComponent', () => {
       const luxImageEl = fixture.debugElement.query(By.css('.lux-image'));
       const initialVariant = 'lang';
       const expectedVariant = 'unten';
-      testComponent.tenantVariant = initialVariant;
+      testComponent.tenantVariant.set(initialVariant);
       fixture.detectChanges();
 
       /* ___Vorbedingungen testen___ */
-      expect(fixture.componentInstance.tenantVariant).toEqual(initialVariant);
-      expect(tenantLogoEl.componentInstance.luxTenantVariant).toEqual(initialVariant);
-      expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + testComponent.tenantKey + '_' + initialVariant + '.svg');
+      expect(fixture.componentInstance.tenantVariant()).toEqual(initialVariant);
+      expect(tenantLogoEl.componentInstance.luxTenantVariant()).toEqual(initialVariant);
+      expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + testComponent.tenantKey() + '_' + initialVariant + '.svg');
 
       /* ___Änderungen durchführen___ */
-      fixture.componentInstance.tenantVariant = expectedVariant;
+      fixture.componentInstance.tenantVariant.set(expectedVariant);
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen___ */
-      expect(fixture.componentInstance.tenantVariant).toEqual(expectedVariant);
-      expect(tenantLogoEl.componentInstance.luxTenantVariant).toEqual(expectedVariant);
-      expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + testComponent.tenantKey + '_' + expectedVariant + '.svg');
+      expect(fixture.componentInstance.tenantVariant()).toEqual(expectedVariant);
+      expect(tenantLogoEl.componentInstance.luxTenantVariant()).toEqual(expectedVariant);
+      expect(luxImageEl.nativeElement.src).toContain('/assets/ihk-logos/' + testComponent.tenantKey() + '_' + expectedVariant + '.svg');
     }));
 
     it('Tenant Logo Variant automatisch setzen lassen', fakeAsync(() => {
@@ -217,14 +217,14 @@ describe('LuxTenantLogoComponent', () => {
       const luxImageEl = fixture.debugElement.query(By.css('.lux-image'));
       const initialComputedVariant = 'lang';
       const expectedComputedVariant = 'kurz';
-      testComponent.tenantVariant = '';
+      testComponent.tenantVariant.set('');
       fixture.detectChanges();
 
       /* ___Vorbedingungen testen___ */
-      expect(fixture.componentInstance.tenantVariant).toEqual('');
-      expect(tenantLogoEl.componentInstance.luxTenantVariant).toEqual('');
+      expect(fixture.componentInstance.tenantVariant()).toEqual('');
+      expect(tenantLogoEl.componentInstance.luxTenantVariant()).toEqual('');
       expect(luxImageEl.nativeElement.src).toContain(
-        '/assets/ihk-logos/' + testComponent.tenantKey + '_' + initialComputedVariant + '.svg'
+        '/assets/ihk-logos/' + testComponent.tenantKey() + '_' + initialComputedVariant + '.svg'
       );
 
       /* ___Änderungen durchführen___ */
@@ -232,10 +232,10 @@ describe('LuxTenantLogoComponent', () => {
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen___ */
-      expect(fixture.componentInstance.tenantVariant).toEqual('');
-      expect(tenantLogoEl.componentInstance.luxTenantVariant).toEqual('');
+      expect(fixture.componentInstance.tenantVariant()).toEqual('');
+      expect(tenantLogoEl.componentInstance.luxTenantVariant()).toEqual('');
       expect(luxImageEl.nativeElement.src).toContain(
-        '/assets/ihk-logos/' + testComponent.tenantKey + '_' + expectedComputedVariant + '.svg'
+        '/assets/ihk-logos/' + testComponent.tenantKey() + '_' + expectedComputedVariant + '.svg'
       );
     }));
   });
@@ -257,38 +257,38 @@ describe('LuxTenantLogoComponent', () => {
       const initialVariant = 'lang';
 
       /* ___Vorbedingungen testen___ */
-      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
-      expect(tenantLogoEl.componentInstance.tenantLogoSrc).toContain(initialTenantKey + '_' + initialVariant + '.svg');
+      expect(tenantLogoEl.componentInstance.imageLoadError()).toEqual(false);
+      expect(tenantLogoEl.componentInstance.tenantLogoSrc()).toContain(initialTenantKey + '_' + initialVariant + '.svg');
 
       /* ___Fehler simulieren___ */
       tenantLogoEl.componentInstance.onImageError();
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen - Fallback auf kurz Variante___ */
-      expect(tenantLogoEl.componentInstance.hasTriedFallback).toEqual(true);
-      expect(tenantLogoEl.componentInstance.tenantLogoSrc).toContain(initialTenantKey + '_kurz.svg');
-      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+      expect(tenantLogoEl.componentInstance.hasTriedFallback()).toEqual(true);
+      expect(tenantLogoEl.componentInstance.tenantLogoSrc()).toContain(initialTenantKey + '_kurz.svg');
+      expect(tenantLogoEl.componentInstance.imageLoadError()).toEqual(false);
     }));
 
     it('Sollte Fehlermeldung anzeigen wenn auch Fallback fehlschlägt', fakeAsync(() => {
       const tenantLogoEl = fixture.debugElement.query(By.css('lux-tenant-logo'));
 
       /* ___Vorbedingungen testen___ */
-      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+      expect(tenantLogoEl.componentInstance.imageLoadError()).toEqual(false);
 
       /* ___Erster Fehler simulieren (Fallback wird versucht)___ */
       tenantLogoEl.componentInstance.onImageError();
       fixture.detectChanges();
-      expect(tenantLogoEl.componentInstance.hasTriedFallback).toEqual(true);
-      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
+      expect(tenantLogoEl.componentInstance.hasTriedFallback()).toEqual(true);
+      expect(tenantLogoEl.componentInstance.imageLoadError()).toEqual(false);
 
       /* ___Zweiter Fehler simulieren (Fallback schlägt fehl)___ */
       tenantLogoEl.componentInstance.onImageError();
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen - Fehlermeldung anzeigen___ */
-      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(true);
-      expect(tenantLogoEl.componentInstance.tenantLogoSrc).toEqual(undefined);
+      expect(tenantLogoEl.componentInstance.imageLoadError()).toEqual(true);
+      expect(tenantLogoEl.componentInstance.tenantLogoSrc()).toEqual(undefined);
       const errorDiv = fixture.debugElement.query(By.css('.lux-tenant-logo-error'));
       expect(errorDiv).toBeTruthy();
       expect(errorDiv.nativeElement.textContent).toContain('100 nicht verfügbar');
@@ -301,28 +301,32 @@ describe('LuxTenantLogoComponent', () => {
       tenantLogoEl.componentInstance.onImageError();
       tenantLogoEl.componentInstance.onImageError();
       fixture.detectChanges();
-      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(true);
+      expect(tenantLogoEl.componentInstance.imageLoadError()).toEqual(true);
 
       /* ___Tenant Key ändern (neue URL wird aufgebaut)___ */
-      fixture.componentInstance.tenantKey = '202';
+      fixture.componentInstance.tenantKey.set('202');
       fixture.detectChanges();
 
       /* ___Nachbedingungen testen - Error-Flag zurückgesetzt___ */
-      expect(tenantLogoEl.componentInstance.imageLoadError).toEqual(false);
-      expect(tenantLogoEl.componentInstance.hasTriedFallback).toEqual(false);
+      expect(tenantLogoEl.componentInstance.imageLoadError()).toEqual(false);
+      expect(tenantLogoEl.componentInstance.hasTriedFallback()).toEqual(false);
     }));
   });
 });
 
 @Component({
   template: `
-    <lux-tenant-logo [luxTenantKey]="tenantKey" [luxTenantVariant]="tenantVariant" [luxTenantLogoHeight]="tenantHeight"></lux-tenant-logo>
+    <lux-tenant-logo
+      [luxTenantKey]="tenantKey()"
+      [luxTenantVariant]="tenantVariant()"
+      [luxTenantLogoHeight]="tenantHeight()"
+    ></lux-tenant-logo>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTenantLogoComponent]
 })
 class LuxMockTenantLogoComponent {
-  tenantKey = '100';
-  tenantVariant = '';
-  tenantHeight = '60px';
+  tenantKey = signal('100');
+  tenantVariant = signal('');
+  tenantHeight = signal('60px');
 }

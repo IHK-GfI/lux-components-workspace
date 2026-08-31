@@ -10,13 +10,13 @@
         <lux-button
           luxLabel="{{ 'luxc.file-preview.filter-load-dialog.load.lbl' | transloco }}"
           [luxFlat]="true"
-          [luxColor]="luxDialogRef.data.luxButtonDialogLoad"
+          [luxColor]="luxDialogRef.data.luxButtonDialogLoad()"
           (luxClicked)="luxDialogRef.closeDialog(filter.name)"
         ></lux-button>
         <lux-button
           luxLabel="{{ 'luxc.file-preview.filter-load-dialog.delete.lbl' | transloco }}"
           [luxStroked]="true"
-          [luxColor]="luxDialogRef.data.luxButtonDialogDelete"
+          [luxColor]="luxDialogRef.data.luxButtonDialogDelete()"
           (luxClicked)="onDelete(i)"
         ></lux-button>
       </lux-card-actions>
@@ -28,7 +28,7 @@
   <lux-dialog-actions class="lux-filter-dialog-action">
     <lux-button
       luxLabel="{{ 'luxc.file-preview.filter-load-dialog.close.lbl' | transloco }}"
-      [luxColor]="luxDialogRef.data.luxButtonDialogClose"
+      [luxColor]="luxDialogRef.data.luxButtonDialogClose()"
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog(false)"
     ></lux-button>

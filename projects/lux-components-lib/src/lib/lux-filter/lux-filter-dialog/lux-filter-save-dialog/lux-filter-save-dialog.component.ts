@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject, ChangeDetectionStrategy, viewChild } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
@@ -15,7 +15,7 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
 @Component({
   selector: 'lux-filter-save-dialog',
   templateUrl: './lux-filter-save-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,
@@ -29,27 +29,25 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
 export class LuxFilterSaveDialogComponent implements OnInit, AfterViewInit {
   luxDialogRef = inject<LuxDialogRef<LuxFilterFormComponent>>(LuxDialogRef);
 
-  @ViewChild(LuxInputAcComponent) filterNameComponent!: LuxInputAcComponent;
+  readonly filterNameComponent = viewChild.required(LuxInputAcComponent);
 
   currentFilters: LuxFilter[] = [];
 
   filterName = '';
 
   ngOnInit() {
-    this.currentFilters = this.luxDialogRef.data.luxStoredFilters ?? [];
+    this.currentFilters = this.luxDialogRef.data.luxStoredFilters() ?? [];
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
-      if (this.filterNameComponent) {
-        this.filterNameComponent.inputElement()?.nativeElement.focus();
-      }
+      this.filterNameComponent().inputElement()?.nativeElement.focus();
     });
   }
 
   onSave() {
     // Damit die Fehler direkt angezeigt werden und nicht erst, wenn man das Feld verlässt.
-    this.filterNameComponent.formControl.markAsTouched();
+    this.filterNameComponent().formControl.markAsTouched();
 
     if (!this.checkIfFilterNameExists()) {
       this.luxDialogRef.closeDialog(this.filterName);
@@ -72,7 +70,7 @@ export class LuxFilterSaveDialogComponent implements OnInit, AfterViewInit {
   };
 
   private checkIfFilterNameExists() {
-    const filters = this.luxDialogRef.data.luxStoredFilters;
+    const filters = this.luxDialogRef.data.luxStoredFilters();
     return filters && filters.find((filter) => filter.name.toLowerCase().trim() === this.filterName.toLowerCase().trim());
   }
 }

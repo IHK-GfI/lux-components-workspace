@@ -1,16 +1,16 @@
 <!-- Standardmäßig wird das Lux-Filter-Form in einem Accordion dargestellt -->
-@if (!luxShowAsCard) {
+@if (!luxShowAsCard()) {
   <lux-accordion luxMode="flat">
     <lux-panel [(luxExpanded)]="luxFilterExpanded" class="filterPanel" luxCollapsedHeaderHeight="40px" luxExpandedHeaderHeight="48px">
       <lux-panel-header-title class="lux-filter-panel-header">
-        {{ luxTitle }}
+        {{ luxTitle() }}
       </lux-panel-header-title>
       <lux-panel-content class="lux-filter-panel-content">
         <ng-container *ngTemplateOutlet="filterFormTemplate"></ng-container>
       </lux-panel-content>
       <lux-panel-action class="lux-filter-panel-action">
         <div class="lux-filter-action-wrapper lux-flex lux-items-center">
-          @if (!luxHideMenu) {
+          @if (!luxHideMenu()) {
             <ng-container *ngTemplateOutlet="filterActionTemplate"></ng-container>
           }
           <ng-container *ngTemplateOutlet="filterButtonTemplate"></ng-container>
@@ -21,12 +21,12 @@
 }
 
 <!-- Template für die Darstellung des Lux-Filter-Forms in einer Lux-Card -->
-@if (luxShowAsCard) {
+@if (luxShowAsCard()) {
   <lux-card
-    luxTitle="{{ luxTitle || ('luxc.filter.title' | transloco) }}"
+    luxTitle="{{ luxTitle() || ('luxc.filter.title' | transloco) }}"
     [(luxExpanded)]="luxFilterExpanded"
-    luxExpandedLabelOpen="{{ luxExpandedLabelOpen || ('luxc.filter.expandedLabel.open' | transloco) }}"
-    luxExpandedLabelClose="{{ luxExpandedLabelClose || ('luxc.filter.expandedLabel.close' | transloco) }}"
+    luxExpandedLabelOpen="{{ luxExpandedLabelOpen() || ('luxc.filter.expandedLabel.open' | transloco) }}"
+    luxExpandedLabelClose="{{ luxExpandedLabelClose() || ('luxc.filter.expandedLabel.close' | transloco) }}"
     class="lux-filter-card"
     luxTagId="luxFilterCard"
   >
@@ -34,16 +34,16 @@
       <ng-container *ngTemplateOutlet="filterFormTemplate"></ng-container>
     </lux-card-content>
     <!-- Optional können bei der Darstellung in einer Card erweiterte Optionen als Expanded-Content der Card angezeigt werden -->
-    @if (extendedOptions) {
+    @if (extendedOptions()) {
       <lux-card-content-expanded luxTagId="luxFilterFormExtendedContent">
-        @if (luxFilterExpanded) {
+        @if (luxFilterExpanded()) {
           <ng-content select="lux-filter-form-extended"></ng-content>
         }
       </lux-card-content-expanded>
     }
     <lux-card-actions>
       <div class="lux-flex lux-items-center lux-filter-action-wrapper">
-        @if (!luxHideMenu) {
+        @if (!luxHideMenu()) {
           <ng-container *ngTemplateOutlet="filterActionTemplate"></ng-container>
         }
         <ng-container *ngTemplateOutlet="filterButtonTemplate"></ng-container>
@@ -62,12 +62,12 @@
 <!-- Filter-Button ist jetzt vom Menü getrennt -->
 <ng-template #filterButtonTemplate>
   <lux-button
-    luxLabel="{{ luxButtonFilterLabel || ('luxc.filter.filter.btn' | transloco) }}"
-    [luxColor]="luxButtonFilterColor"
-    [luxStroked]="!luxButtonFlat"
-    [luxFlat]="luxButtonFlat"
+    luxLabel="{{ luxButtonFilterLabel() || ('luxc.filter.filter.btn' | transloco) }}"
+    [luxColor]="luxButtonFilterColor()"
+    [luxStroked]="!luxButtonFlat()"
+    [luxFlat]="luxButtonFlat()"
     luxIconName="lux-interface-text-formatting-filter-1"
-    luxTooltip="{{ luxDisableShortcut ? '' : '(Shift + Enter)' }}"
+    luxTooltip="{{ luxDisableShortcut() ? '' : '(Shift + Enter)' }}"
     (luxClicked)="onFilter()"
     luxTagId="filterFormButton"
     class="lux-filter-form-button"
@@ -77,24 +77,24 @@
 <ng-template #filterActionTemplate>
   <lux-menu luxAriaMenuTriggerLabel="{{ 'luxc.menu.trigger.btn' | transloco }}" [luxDisplayExtended]="false" class="filter-menu">
     <lux-menu-item
-      luxLabel="{{ luxButtonResetLabel || ('luxc.filter.reset.btn' | transloco) }}"
+      luxLabel="{{ luxButtonResetLabel() || ('luxc.filter.reset.btn' | transloco) }}"
       [luxAlwaysVisible]="false"
-      [luxColor]="luxButtonResetColor"
+      [luxColor]="luxButtonResetColor()"
       (luxClicked)="onReset()"
     ></lux-menu-item>
-    @if (hasSaveAction) {
+    @if (luxShowSaveAction()) {
       <lux-menu-item
-        luxLabel="{{ luxButtonSaveLabel || ('luxc.filter.save.btn' | transloco) }}"
+        luxLabel="{{ luxButtonSaveLabel() || ('luxc.filter.save.btn' | transloco) }}"
         [luxAlwaysVisible]="false"
-        [luxColor]="luxButtonSaveColor"
+        [luxColor]="luxButtonSaveColor()"
         (luxClicked)="openSaveDialog()"
       ></lux-menu-item>
     }
-    @if (hasLoadAction) {
+    @if (luxShowLoadAction()) {
       <lux-menu-item
-        luxLabel="{{ luxButtonLoadLabel || ('luxc.filter.load.btn' | transloco) }}"
+        luxLabel="{{ luxButtonLoadLabel() || ('luxc.filter.load.btn' | transloco) }}"
         [luxAlwaysVisible]="false"
-        [luxColor]="luxButtonLoadColor"
+        [luxColor]="luxButtonLoadColor()"
         (luxClicked)="openLoadDialog()"
       ></lux-menu-item>
     }
@@ -115,20 +115,20 @@
 </ng-template>
 
 <!-- Chips mit den Filterfunktionen unterhalb des Filter-Formulars (optional) -->
-@if (this.filterItems.length === 0 && !luxFilterExpanded && luxShowChips && initComplete) {
-  <div class="lux-label" [ngClass]="{ 'no-filter-active': !isMobile, 'no-filter-active-sm': isMobile }">
-    {{ luxDefaultFilterMessage || ('luxc.filter.defaultFilterMessage' | transloco) }}
+@if (filterItems().length === 0 && !luxFilterExpanded() && luxShowChips() && initComplete()) {
+  <div class="lux-label" [ngClass]="{ 'no-filter-active': !isMobile(), 'no-filter-active-sm': isMobile() }">
+    {{ luxDefaultFilterMessage() || ('luxc.filter.defaultFilterMessage' | transloco) }}
   </div>
 }
-@if (this.filterItems.length > 0 && !luxFilterExpanded && luxShowChips && initComplete) {
+@if (filterItems().length > 0 && !luxFilterExpanded() && luxShowChips() && initComplete()) {
   <lux-chips-ac
     luxAriaLabel="Filterchips"
     luxAriaLabelSelector="mat-chip-grid"
-    [luxHideBorder]="luxHideChipsBorder"
+    [luxHideBorder]="luxHideChipsBorder()"
     [luxNoBottomLabel]="true"
     class="filter-item"
   >
-    @for (item of filterItems; track item) {
+    @for (item of filterItems(); track item) {
       <lux-chip-ac [luxColor]="item.color" (luxChipRemoved)="filterChipRemoved($event)">{{ item.label }}: {{ item.value }}</lux-chip-ac>
     }
   </lux-chips-ac>

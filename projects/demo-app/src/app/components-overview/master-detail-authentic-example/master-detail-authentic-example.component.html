@@ -20,7 +20,14 @@
   (luxSelectedDetailChange)="loadDetail($event)"
 >
   <lux-master-header-content-ac>
-    <lux-filter-form class="lux-flex-auto" [luxShowAsCard]="true" [luxShowChips]="false" [luxButtonFlat]="false">
+    <lux-filter-form
+      class="lux-flex-auto"
+      [luxShowAsCard]="true"
+      [luxShowChips]="false"
+      [luxButtonFlat]="false"
+      [luxShowSaveAction]="false"
+      [luxShowLoadAction]="false"
+    >
       <lux-select-ac
         luxLabel="Fälligkeit"
         [luxOptions]="options"

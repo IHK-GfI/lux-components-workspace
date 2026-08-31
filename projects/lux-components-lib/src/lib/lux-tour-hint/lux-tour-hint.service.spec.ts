@@ -308,7 +308,7 @@ describe('LuxTourHintService', () => {
   template: ` <div id="test1">Test Div</div>
     <div id="test2">Another Test Div</div>
     <div id="test3">3rd Test Div</div>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockTourHintComponent {
@@ -330,7 +330,7 @@ class MockTourHintComponent {
       <button (click)="tourHintRef.next()">Next</button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: []
 })
 class MockCustomTourHintComponent {

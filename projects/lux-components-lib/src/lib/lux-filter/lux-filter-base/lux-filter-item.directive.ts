@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChanges, inject } from '@angular/core';
+import { Directive, ElementRef, OnInit, Renderer2, effect, inject, input } from '@angular/core';
 import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
 import { LuxCheckboxAcComponent } from '../../lux-form/lux-checkbox-ac/lux-checkbox-ac.component';
 import { LuxDatepickerAcComponent } from '../../lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
@@ -19,7 +19,7 @@ import { LuxFilterItem } from './lux-filter-item';
 export declare type LuxFilterRenderFnType<T = any> = (filter: LuxFilterItem<T>, value: T) => string;
 
 @Directive({ selector: '[luxFilterItem]' })
-export class LuxFilterItemDirective implements OnInit, OnChanges {
+export class LuxFilterItemDirective implements OnInit {
   inputAuthentic = inject(LuxInputAcComponent, { optional: true });
   autoCompleteAuthentic = inject(LuxAutocompleteAcComponent, { optional: true });
   autoCompleteLookupAuthentic = inject(LuxLookupAutocompleteAcComponent, { optional: true });
@@ -37,12 +37,12 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
   formComponent!: LuxFormComponentBase;
   filterItem!: LuxFilterItem<any>;
 
-  @Input() luxFilterLabel = '';
-  @Input() luxFilterColor: LuxThemePalette = 'primary';
-  @Input() luxFilterDefaultValues = [...LuxFilterItem.DEFAULT_VALUES];
-  @Input() luxFilterRenderFn?: LuxFilterRenderFnType;
-  @Input() luxFilterHidden = false;
-  @Input() luxFilterDisabled = false;
+  readonly luxFilterLabel = input('');
+  readonly luxFilterColor = input<LuxThemePalette>('primary');
+  readonly luxFilterDefaultValues = input([...LuxFilterItem.DEFAULT_VALUES]);
+  readonly luxFilterRenderFn = input<LuxFilterRenderFnType | undefined>(undefined);
+  readonly luxFilterHidden = input(false);
+  readonly luxFilterDisabled = input(false);
 
   constructor() {
     if (this.inputAuthentic) {
@@ -70,6 +70,21 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
     } else {
       throw Error(`Die Formularkomponente ist unbekannt!`);
     }
+
+    // Erster (deferred) Effect-Lauf spiegelt nur den Initialzustand, den ngOnInit() bereits synchron anwendet - siehe [[feedback-effect-vs-lifecycle-timing]].
+    let isFirstRun = true;
+    effect(() => {
+      const hidden = this.luxFilterHidden();
+      const disabled = this.luxFilterDisabled();
+
+      if (isFirstRun) {
+        isFirstRun = false;
+        return;
+      }
+
+      this.updateHiddenState(hidden);
+      this.updateDisabledState(disabled);
+    });
   }
 
   ngOnInit(): void {
@@ -80,19 +95,20 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
     }
 
     this.filterItem = new LuxFilterItem<any>(
-      this.luxFilterLabel ? this.luxFilterLabel : this.formComponent.luxLabel(),
+      this.luxFilterLabel() ? this.luxFilterLabel() : this.formComponent.luxLabel(),
       controlBinding,
       this.formComponent
     );
-    this.filterItem.color = this.luxFilterColor;
-    this.filterItem.defaultValues = this.luxFilterDefaultValues;
-    this.filterItem.value = this.luxFilterDefaultValues[0];
+    this.filterItem.color = this.luxFilterColor();
+    this.filterItem.defaultValues = this.luxFilterDefaultValues();
+    this.filterItem.value = this.luxFilterDefaultValues()[0];
     this.filterItem.component.formControl.setValue(this.filterItem.value);
-    this.filterItem.hidden = this.luxFilterHidden;
-    this.filterItem.disabled = this.luxFilterDisabled;
+    this.filterItem.hidden = this.luxFilterHidden();
+    this.filterItem.disabled = this.luxFilterDisabled();
 
-    if (this.luxFilterRenderFn) {
-      this.filterItem.renderFn = this.luxFilterRenderFn;
+    const luxFilterRenderFn = this.luxFilterRenderFn();
+    if (luxFilterRenderFn) {
+      this.filterItem.renderFn = luxFilterRenderFn;
     } else {
       if (this.filterItem.component instanceof LuxToggleAcComponent || this.filterItem.component instanceof LuxCheckboxAcComponent) {
         this.filterItem.renderFn = this.renderToggleFn;
@@ -115,8 +131,8 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
       }
     }
 
-    this.updateHiddenState(this.luxFilterHidden);
-    this.updateDisabledState(this.luxFilterDisabled);
+    this.updateHiddenState(this.luxFilterHidden());
+    this.updateDisabledState(this.luxFilterDisabled());
   }
 
   private updateHiddenState(hidden: boolean) {
@@ -140,16 +156,6 @@ export class LuxFilterItemDirective implements OnInit, OnChanges {
         this.filterItem.component.formControl.disable();
       } else {
         this.filterItem.component.formControl.enable();
-      }
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.filterItem) {
-      if (this.filterItem.component && changes && changes['luxFilterHidden']) {
-        this.updateHiddenState(changes['luxFilterHidden'].currentValue);
-      } else if (this.filterItem.component && changes && changes['luxFilterDisabled']) {
-        this.updateDisabledState(changes['luxFilterDisabled'].currentValue);
       }
     }
   }

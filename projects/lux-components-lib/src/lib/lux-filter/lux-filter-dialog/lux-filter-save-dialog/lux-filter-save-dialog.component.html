@@ -16,14 +16,14 @@
   <lux-dialog-actions class="lux-filter-dialog-action">
     <lux-button
       luxLabel="{{ 'luxc.file-preview.filter-save-dialog.save.lbl' | transloco }}"
-      [luxColor]="luxDialogRef.data.luxButtonDialogSave"
+      [luxColor]="luxDialogRef.data.luxButtonDialogSave()"
       [luxDisabled]="!filterName"
       [luxFlat]="true"
       (luxClicked)="onSave()"
     ></lux-button>
     <lux-button
       luxLabel="{{ 'luxc.file-preview.filter-save-dialog.cancel.lbl' | transloco }}"
-      [luxColor]="luxDialogRef.data.luxButtonDialogCancel"
+      [luxColor]="luxDialogRef.data.luxButtonDialogCancel()"
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog(false)"
     ></lux-button>
