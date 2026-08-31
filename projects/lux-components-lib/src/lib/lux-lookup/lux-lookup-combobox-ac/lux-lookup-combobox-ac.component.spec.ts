@@ -4,7 +4,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -354,8 +354,8 @@ describe('LuxLookupComboboxAcComponent', () => {
 
       fixture.detectChanges();
 
-      expect(component.combobox.displayedEntries.some((e) => e.key === selectedKey)).toBeTrue();
-      expect(component.combobox.luxValue()).toEqual(component.value());
+      expect(component.combobox().displayedEntries.some((e) => e.key === selectedKey)).toBeTrue();
+      expect(component.combobox().luxValue()).toEqual(component.value());
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });
@@ -398,7 +398,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const combobox = fixture.componentInstance.combobox;
+      const combobox = fixture.componentInstance.combobox();
       expect(combobox.displayedEntries.length).toBe(10);
       expect(combobox.invisibleEntries.length).toBe(0);
     }));
@@ -902,7 +902,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       const optionHeight = options[0].getBoundingClientRect().height;
       const filterHeight = filterHost.getBoundingClientRect().height;
       const maxHeight = parseFloat(panel.style.maxHeight);
-      const combobox = fixture.componentInstance.combobox;
+      const combobox = fixture.componentInstance.combobox();
 
       expect(combobox.displayedEntries.length).toBe(5);
       expect(maxHeight).toBeCloseTo(filterHeight + optionHeight * 2, 0);
@@ -965,7 +965,7 @@ class LuxScrollComponent {
   );
   value = signal<any>(undefined);
 
-  @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
+  readonly combobox = viewChild.required(LuxLookupComboboxAcComponent);
 
   myEntries: LuxLookupTableEntry[] = [];
 
@@ -1020,7 +1020,7 @@ class LuxFilterComponent {
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterInputBindingsComponent {
-  @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
+  readonly combobox = viewChild.required(LuxLookupComboboxAcComponent);
   params = signal(
     new LuxLookupParameters({
       knr: 101,
@@ -1049,7 +1049,7 @@ class LuxFilterInputBindingsComponent {
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterInitialLoadComponent {
-  @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
+  readonly combobox = viewChild.required(LuxLookupComboboxAcComponent);
   params = signal(
     new LuxLookupParameters({
       knr: 101,
@@ -1134,7 +1134,7 @@ class LuxFilterMultipleComponent {
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxVisibleOptionCountComponent {
-  @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
+  readonly combobox = viewChild.required(LuxLookupComboboxAcComponent);
 
   params = signal(
     new LuxLookupParameters({

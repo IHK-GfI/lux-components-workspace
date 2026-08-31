@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { LuxImageComponent } from './lux-image.component';
 
@@ -19,7 +19,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('assets/png/example.png');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('assets/png/example.png');
   });
 
   it('Sollte den externen Http-Link nicht verändern', () => {
@@ -28,7 +28,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('http://png/example.png');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('http://png/example.png');
   });
 
   it('Sollte den externen Http-Link mit großem Schema nicht verändern', () => {
@@ -37,7 +37,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('HTTP://png/example.png');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('HTTP://png/example.png');
   });
 
   it('Sollte den externen Https-Link nicht verändern', () => {
@@ -46,7 +46,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('https://png/example.png');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('https://png/example.png');
   });
 
   it('Sollte den externen Blob-Link nicht verändern', () => {
@@ -55,7 +55,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('blob:https://example.org/1234-5678');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('blob:https://example.org/1234-5678');
   });
 
   it('Sollte den externen Data-Link nicht verändern', () => {
@@ -64,7 +64,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('data:image/png;base64,abc123');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('data:image/png;base64,abc123');
   });
 
   it('Sollte den protokoll-relativen Link nicht verändern', () => {
@@ -73,7 +73,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('//cdn.example.org/example.png');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('//cdn.example.org/example.png');
   });
 
   it('Sollte unbekannte URI-Schemata nicht als extern behandeln', () => {
@@ -82,7 +82,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('assets/javascript:alert(1)');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('assets/javascript:alert(1)');
   });
 
   it('Sollte mehrfache und anführende Schrägstriche entfernen', () => {
@@ -91,7 +91,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     // Then
-    expect(component.imageCmp.resolvedImageSrc()).toEqual('assets/png/example.png');
+    expect(component.imageCmp().resolvedImageSrc()).toEqual('assets/png/example.png');
   });
 
   it('Sollte den Pfad zum Bild enthalten', fakeAsync(() => {
@@ -121,7 +121,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     const imageEl = fixture.debugElement.query(By.css('.lux-image'));
-    const spy = spyOn(component.imageCmp.luxImageError, 'emit');
+    const spy = spyOn(component.imageCmp().luxImageError, 'emit');
     imageEl.nativeElement.dispatchEvent(new Event('error'));
     // Then
     expect(spy).toHaveBeenCalled();
@@ -137,5 +137,5 @@ describe('LuxImageComponent', () => {
 class MockComponent {
   href = '';
   raw = false;
-  @ViewChild(LuxImageComponent) imageCmp!: LuxImageComponent;
+  readonly imageCmp = viewChild.required(LuxImageComponent);
 }

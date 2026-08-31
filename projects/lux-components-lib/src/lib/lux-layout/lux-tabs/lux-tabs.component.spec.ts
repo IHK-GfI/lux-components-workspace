@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 
-import { ChangeDetectionStrategy, Component, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild, viewChildren } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { LuxBadgeNotificationColor } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTabComponent } from './lux-tabs-subcomponents/lux-tab.component';
@@ -119,8 +119,8 @@ describe('LuxTabsComponent', () => {
 
     it('luxLazyLoading=true ohne Animation', () => {
       // Given
-      expect(component.labelAaa).not.toBeUndefined();
-      expect(component.labelBbb).toBeUndefined();
+      expect(component.labelAaa()).not.toBeUndefined();
+      expect(component.labelBbb()).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
       expect(component.lazyLoading()).toBeTruthy();
       expect(component.currentTabIndex()).toEqual(0);
@@ -132,8 +132,8 @@ describe('LuxTabsComponent', () => {
       fixture.detectChanges();
 
       // Then
-      expect(component.labelAaa).toBeUndefined();
-      expect(component.labelBbb).not.toBeUndefined();
+      expect(component.labelAaa()).toBeUndefined();
+      expect(component.labelBbb()).not.toBeUndefined();
       expect(component.animationActive).toBeFalsy();
       expect(component.lazyLoading()).toBeTruthy();
       expect(component.currentTabIndex()).toEqual(1);
@@ -141,8 +141,8 @@ describe('LuxTabsComponent', () => {
 
     it('luxLazyLoading=true mit Animation', () => {
       // Given
-      expect(component.labelAaa).not.toBeUndefined();
-      expect(component.labelBbb).toBeUndefined();
+      expect(component.labelAaa()).not.toBeUndefined();
+      expect(component.labelBbb()).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
       expect(component.lazyLoading()).toBeTruthy();
       expect(component.currentTabIndex()).toEqual(0);
@@ -154,8 +154,8 @@ describe('LuxTabsComponent', () => {
       fixture.detectChanges();
 
       // Then
-      expect(component.labelAaa).toBeUndefined();
-      expect(component.labelBbb).not.toBeUndefined();
+      expect(component.labelAaa()).toBeUndefined();
+      expect(component.labelBbb()).not.toBeUndefined();
       expect(component.animationActive).toBeTruthy();
       expect(component.lazyLoading()).toBeTruthy();
       expect(component.currentTabIndex()).toEqual(1);
@@ -163,8 +163,8 @@ describe('LuxTabsComponent', () => {
 
     it('luxLazyLoading=false ohne Animation', () => {
       // Given
-      expect(component.labelAaa).not.toBeUndefined();
-      expect(component.labelBbb).toBeUndefined();
+      expect(component.labelAaa()).not.toBeUndefined();
+      expect(component.labelBbb()).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
       expect(component.lazyLoading()).toBeTruthy();
       expect(component.currentTabIndex()).toEqual(0);
@@ -176,8 +176,8 @@ describe('LuxTabsComponent', () => {
       fixture.detectChanges();
 
       // Then
-      expect(component.labelAaa).not.toBeUndefined();
-      expect(component.labelBbb).not.toBeUndefined();
+      expect(component.labelAaa()).not.toBeUndefined();
+      expect(component.labelBbb()).not.toBeUndefined();
       expect(component.animationActive).toBeFalsy();
       expect(component.lazyLoading()).toBeFalsy();
       expect(component.currentTabIndex()).toEqual(1);
@@ -185,8 +185,8 @@ describe('LuxTabsComponent', () => {
 
     it('luxLazyLoading=false mit Animation', () => {
       // Given
-      expect(component.labelAaa).not.toBeUndefined();
-      expect(component.labelBbb).toBeUndefined();
+      expect(component.labelAaa()).not.toBeUndefined();
+      expect(component.labelBbb()).toBeUndefined();
       expect(component.animationActive).toBeFalsy();
       expect(component.lazyLoading()).toBeTruthy();
       expect(component.currentTabIndex()).toEqual(0);
@@ -198,8 +198,8 @@ describe('LuxTabsComponent', () => {
       fixture.detectChanges();
 
       // Then
-      expect(component.labelAaa).not.toBeUndefined();
-      expect(component.labelBbb).not.toBeUndefined();
+      expect(component.labelAaa()).not.toBeUndefined();
+      expect(component.labelBbb()).not.toBeUndefined();
       expect(component.animationActive).toBeTruthy();
       expect(component.lazyLoading()).toBeFalsy();
       expect(component.currentTabIndex()).toEqual(1);
@@ -233,7 +233,7 @@ describe('LuxTabsComponent', () => {
         // When
         // Then
         expect(component.currentTabIndex()).toBeFalsy();
-        expect(component.luxTabs!.luxActiveTab()).toBeUndefined();
+        expect(component.luxTabs()!.luxActiveTab()).toBeUndefined();
 
         // When
         component.currentTabIndex.set(1);
@@ -241,7 +241,7 @@ describe('LuxTabsComponent', () => {
 
         fixture.whenStable().then(() => {
           expect(component.currentTabIndex()).toBe(1);
-          expect(component.luxTabs!.luxActiveTab()).toBe(1);
+          expect(component.luxTabs()!.luxActiveTab()).toBe(1);
 
           component.currentTabIndex.set(2);
           fixture.detectChanges();
@@ -249,7 +249,7 @@ describe('LuxTabsComponent', () => {
           fixture.whenStable().then(() => {
             // Then
             expect(component.currentTabIndex()).toBe(2);
-            expect(component.luxTabs!.luxActiveTab()).toBe(2);
+            expect(component.luxTabs()!.luxActiveTab()).toBe(2);
             done();
           });
         });
@@ -271,7 +271,7 @@ describe('LuxTabsComponent', () => {
         // When
         // Then
         expect(component.currentTabIndex()).toBeFalsy();
-        expect(component.luxTabs!.luxActiveTab()).toBeUndefined();
+        expect(component.luxTabs()!.luxActiveTab()).toBeUndefined();
 
         // When
         component.currentTabIndex.set(1);
@@ -279,7 +279,7 @@ describe('LuxTabsComponent', () => {
 
         fixture.whenStable().then(() => {
           expect(component.currentTabIndex()).toBe(1);
-          expect(component.luxTabs!.luxActiveTab()).toBe(1);
+          expect(component.luxTabs()!.luxActiveTab()).toBe(1);
 
           component.currentTabIndex.set(2);
           fixture.detectChanges();
@@ -287,7 +287,7 @@ describe('LuxTabsComponent', () => {
           fixture.whenStable().then(() => {
             // Then
             expect(component.currentTabIndex()).toBe(2);
-            expect(component.luxTabs!.luxActiveTab()).toBe(2);
+            expect(component.luxTabs()!.luxActiveTab()).toBe(2);
             done();
           });
         });
@@ -453,8 +453,8 @@ class LuxActiveTabChangedTabsComponent {
   currentTabIndex?: number;
   currentTabLabel?: string;
 
-  @ViewChild(LuxTabsComponent) luxTabs!: LuxTabsComponent;
-  @ViewChildren(LuxTabComponent) luxTabList!: QueryList<LuxTabComponent>;
+  readonly luxTabs = viewChild.required(LuxTabsComponent);
+  readonly luxTabList = viewChildren(LuxTabComponent);
 
   constructor() {}
 
@@ -484,8 +484,8 @@ class LuxMockTabsComponent {
   animated = false;
   currentTabIndex = signal<number | undefined>(undefined);
 
-  @ViewChild(LuxTabsComponent) luxTabs?: LuxTabsComponent;
-  @ViewChildren(LuxTabComponent) luxTabList!: QueryList<LuxTabComponent>;
+  readonly luxTabs = viewChild(LuxTabsComponent);
+  readonly luxTabList = viewChildren(LuxTabComponent);
 
   constructor() {}
 
@@ -546,8 +546,8 @@ class LuxTabWithoutNumberComponent {}
   imports: [LuxTabsComponent, LuxTabComponent, LuxLabelComponent]
 })
 class LuxTabLazyLoadingComponent {
-  @ViewChild('taba') labelAaa!: LuxLabelComponent;
-  @ViewChild('tabb') labelBbb!: LuxLabelComponent;
+  readonly labelAaa = viewChild<LuxLabelComponent>('taba');
+  readonly labelBbb = viewChild<LuxLabelComponent>('tabb');
 
   currentTabIndex = signal(0);
   animationActive = false;

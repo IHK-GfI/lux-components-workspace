@@ -3,7 +3,7 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { JsonPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -203,14 +203,14 @@ describe('LuxSelectAcComponent', () => {
       ] as any;
       testComponent.selectedOption = null;
       LuxTestHelper.wait(fixture);
-      expect(testComponent.select.value()).toBeNull();
+      expect(testComponent.select().value()).toBeNull();
 
       // Änderungen durchführen
       testComponent.selectedOption = testComponent.options[1];
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(testComponent.select.value()).toEqual(testComponent.options[1]);
+      expect(testComponent.select().value()).toEqual(testComponent.options[1]);
 
       flush();
     }));
@@ -447,14 +447,14 @@ describe('LuxSelectAcComponent', () => {
       ] as any;
       testComponent.selectedOption = undefined;
       LuxTestHelper.wait(fixture);
-      expect(testComponent.select.value()).toBeUndefined();
+      expect(testComponent.select().value()).toBeUndefined();
 
       // Änderungen durchführen
       testComponent.selectedOption = testComponent.options[1];
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(testComponent.select.value()).toEqual(testComponent.options[1]);
+      expect(testComponent.select().value()).toEqual(testComponent.options[1]);
 
       flush();
     }));
@@ -571,7 +571,7 @@ describe('LuxSelectAcComponent', () => {
       ] as any;
       testComponent.selectedOption = undefined;
       LuxTestHelper.wait(fixture);
-      expect(testComponent.select.value()).toBeUndefined();
+      expect(testComponent.select().value()).toBeUndefined();
 
       // Änderungen durchführen
       testComponent.selectedOption = testComponent.options[1];
@@ -579,7 +579,7 @@ describe('LuxSelectAcComponent', () => {
       flush();
 
       // Nachbedingungen prüfen
-      expect(testComponent.select.value()).toEqual(testComponent.options[1].value);
+      expect(testComponent.select().value()).toEqual(testComponent.options[1].value);
     }));
   });
 
@@ -1450,7 +1450,7 @@ describe('LuxSelectAcComponent', () => {
   imports: [ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectInsideFormComponent {
-  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+  readonly select = viewChild.required(LuxSelectAcComponent);
 
   allHobbies: Option[] = [
     { label: 'Reiten', value: 'r' },
@@ -1485,7 +1485,7 @@ class SelectInsideFormComponent {
   imports: [LuxSelectAcComponent]
 })
 class SelectOutsideFormComponent {
-  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+  readonly select = viewChild.required(LuxSelectAcComponent);
 
   label?: string;
   hint?: string;
@@ -1523,7 +1523,7 @@ class SelectOutsideFormComponent {
   imports: [LuxSelectAcComponent]
 })
 class SelectCustomCompareComponent {
-  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+  readonly select = viewChild.required(LuxSelectAcComponent);
 
   selectedOption: any = null;
 
@@ -1553,7 +1553,7 @@ class SelectCustomCompareComponent {
   imports: [LuxSelectAcComponent]
 })
 class SelectStringArrayComponent {
-  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+  readonly select = viewChild.required(LuxSelectAcComponent);
   selectedOption: any = null;
   options: (string | null | undefined)[] = ['A', 'B', 'C', 'D'];
 }
@@ -1683,7 +1683,7 @@ class SelectVisibleOptionCountComponent {
   imports: [LuxSelectAcComponent]
 })
 class SelectKeepOptionOrderComponent {
-  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+  readonly select = viewChild.required(LuxSelectAcComponent);
 
   selectedOption: Option | null = null;
 
@@ -1714,7 +1714,7 @@ declare interface Option {
   imports: [LuxSelectAcComponent]
 })
 class SelectValueHookComponent {
-  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+  readonly select = viewChild.required(LuxSelectAcComponent);
   selectedOption: any = null;
   options: Option[] = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -1745,7 +1745,7 @@ class SelectValueHookComponent {
   imports: [JsonPipe, ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectValueHookFormComponent {
-  @ViewChild(LuxSelectAcComponent) select!: LuxSelectAcComponent;
+  readonly select = viewChild.required(LuxSelectAcComponent);
 
   options: Option[] = [
     { label: 'Meine Aufgaben', value: 'A' },

@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -164,35 +164,35 @@ describe('LuxCardComponent', () => {
       let contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       let expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       let toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded()).toBeFalsy();
+      expect(component.card().luxExpanded()).toBeFalsy();
       expect(contentEl).not.toBeNull();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
 
       // Änderungen durchführen
-      component.card.luxExpanded.set(true);
+      component.card().luxExpanded.set(true);
       fixture.detectChanges();
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded()).toBeTruthy();
+      expect(component.card().luxExpanded()).toBeTruthy();
       expect(contentEl).not.toBeNull();
       expect(expandedEl).not.toBeNull();
       expect(expandedEl.nativeElement.innerHTML).toEqual('Lorem ipsum expanded');
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-up');
 
       // Änderungen durchführen
-      component.card.luxExpanded.set(false);
+      component.card().luxExpanded.set(false);
       LuxTestHelper.wait(fixture, 500);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded()).toBeFalsy();
+      expect(component.card().luxExpanded()).toBeFalsy();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
@@ -203,7 +203,7 @@ describe('LuxCardComponent', () => {
       let contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       let expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       let toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
-      expect(component.card.luxExpanded()).toBeFalsy();
+      expect(component.card().luxExpanded()).toBeFalsy();
       expect(contentEl).not.toBeNull();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
@@ -217,7 +217,7 @@ describe('LuxCardComponent', () => {
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
-      expect(component.card.luxExpanded()).toBeTruthy();
+      expect(component.card().luxExpanded()).toBeTruthy();
       expect(contentEl).not.toBeNull();
       expect(expandedEl).not.toBeNull();
       expect(expandedEl.nativeElement.innerHTML).toEqual('Lorem ipsum expanded');
@@ -231,7 +231,7 @@ describe('LuxCardComponent', () => {
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
       toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button'));
-      expect(component.card.luxExpanded()).toBeFalsy();
+      expect(component.card().luxExpanded()).toBeFalsy();
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
@@ -403,7 +403,7 @@ class CardActionComponent {
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class ExpandedCardComponent {
-  @ViewChild(LuxCardComponent) card!: LuxCardComponent;
+  readonly card = viewChild.required(LuxCardComponent);
 }
 
 @Component({
@@ -417,7 +417,7 @@ class ExpandedCardComponent {
   imports: [LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent]
 })
 class ExpandedClickableCardComponent {
-  @ViewChild(LuxCardComponent) card!: LuxCardComponent;
+  readonly card = viewChild.required(LuxCardComponent);
 
   onCardClickedTest() {}
 }
@@ -435,7 +435,7 @@ class ExpandedClickableCardComponent {
 class LuxContentExpandedComponent {
   expanded = false;
 
-  @ViewChild(LuxCardComponent) card!: LuxCardComponent;
+  readonly card = viewChild.required(LuxCardComponent);
 
   onExpanded(expanded: boolean) {}
 }

@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -120,14 +120,14 @@ describe('LuxAppHeaderComponent', () => {
 
       // Änderungen durchführen
       testComponent.titleShort.set('T');
-      testComponent.appHeaderComponent.mobileView = true;
+      testComponent.appHeaderComponent().mobileView = true;
       fixture.debugElement.query(By.directive(LuxAppHeaderComponent)).injector.get(ChangeDetectorRef).markForCheck();
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('T');
 
-      testComponent.appHeaderComponent.mobileView = false;
+      testComponent.appHeaderComponent().mobileView = false;
       fixture.debugElement.query(By.directive(LuxAppHeaderComponent)).injector.get(ChangeDetectorRef).markForCheck();
       LuxTestHelper.wait(fixture);
     }));
@@ -702,7 +702,7 @@ class MockIconClickedAppHeaderComponent {
   ]
 })
 class MockAppHeaderComponent {
-  @ViewChild(LuxAppHeaderComponent) appHeaderComponent!: LuxAppHeaderComponent;
+  readonly appHeaderComponent = viewChild.required(LuxAppHeaderComponent);
 
   username = signal<string | undefined>(undefined);
   title = signal<string | undefined>(undefined);

@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -97,7 +97,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte alle Chips deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -120,7 +120,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte alle Grouped-Chips deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -143,7 +143,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte einzelne Chips deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -167,7 +167,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte alle Grouped-Chips unlöschbar machen', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -190,7 +190,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte einzelne Chips unlöschbar machen', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -239,7 +239,7 @@ describe('LuxChipComponent-Authentic', () => {
 
       // Änderungen durchführen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       testComponent.inputAllowed = true;
       LuxTestHelper.wait(fixture);
       chipsComponent.add('test');
@@ -276,7 +276,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte Grouped-Chips bei Click auf Remove-Icon entfernen', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       LuxTestHelper.wait(fixture);
@@ -359,7 +359,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte die angeklickten Chips als Event ausgeben', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent;
+      testComponent.chipGroup = testComponent.chipGroupComponent();
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -917,7 +917,7 @@ class ChipsComponent {
   groupLabels: string[] = [];
 
   chipGroup?: LuxChipAcGroupComponent;
-  @ViewChild(LuxChipAcGroupComponent) chipGroupComponent!: LuxChipAcGroupComponent;
+  readonly chipGroupComponent = viewChild.required(LuxChipAcGroupComponent);
 
   chipAdded(newChip: string) {
     this.chips.push({
