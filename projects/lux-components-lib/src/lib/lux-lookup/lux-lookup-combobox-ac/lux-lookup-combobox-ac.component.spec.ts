@@ -4,7 +4,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -202,7 +202,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       expect(combobox.formControl.valid).toBeTruthy();
 
       // Änderungen durchführen
-      component.validators = Validators.compose([Validators.required]);
+      component.validators.set(Validators.compose([Validators.required]));
       LuxTestHelper.wait(fixture);
       combobox.formControl.markAsTouched();
       combobox.formControl.updateValueAndValidity();
@@ -219,18 +219,18 @@ describe('LuxLookupComboboxAcComponent', () => {
 
     it('Sollte den luxValue beibehalten, wenn luxRequired geändert wird', fakeAsync(() => {
       // Vorbedingungen testen
-      component.value = { value: 'test', label: 'test' };
+      component.value.set({ value: 'test', label: 'test' });
       LuxTestHelper.wait(fixture);
 
-      expect(combobox.luxValue).toEqual(component.value);
+      expect(combobox.luxValue()).toEqual(component.value());
 
       // Änderungen durchführen
-      component.required = true;
+      component.required.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      expect(combobox.luxValue).not.toBeNull();
-      expect(component.value).not.toBeNull();
+      expect(combobox.luxValue()).not.toBeNull();
+      expect(component.value()).not.toBeNull();
     }));
 
     it('Sollte die Optionen ausgeben wie sie geladen wurden', fakeAsync(() => {
@@ -253,7 +253,7 @@ describe('LuxLookupComboboxAcComponent', () => {
     }));
 
     it('Sollte die Optionen sortiert nach Kurztext ausgeben', fakeAsync(() => {
-      component.compareFn = luxLookupCompareKurzTextFn;
+      component.compareFn.set(luxLookupCompareKurzTextFn);
       fixture.detectChanges();
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
       fixture.detectChanges();
@@ -275,7 +275,7 @@ describe('LuxLookupComboboxAcComponent', () => {
     }));
 
     it('Sollte die Optionen sortiert nach Schlüssel ausgeben', fakeAsync(() => {
-      component.compareFn = luxLookupCompareKeyFn;
+      component.compareFn.set(luxLookupCompareKeyFn);
       fixture.detectChanges();
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
       fixture.detectChanges();
@@ -346,16 +346,16 @@ describe('LuxLookupComboboxAcComponent', () => {
 
       // Eintrag wählen, der initial nicht geladen ist
       const selectedKey = '1115';
-      component.value = {
+      component.value.set({
         key: '1115',
         kurzText: 'Färöer',
         langText1: 'Färöer'
-      };
+      });
 
       fixture.detectChanges();
 
       expect(component.combobox.displayedEntries.some((e) => e.key === selectedKey)).toBeTrue();
-      expect(component.combobox.luxValue).toEqual(component.value);
+      expect(component.combobox.luxValue()).toEqual(component.value());
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });
@@ -446,7 +446,7 @@ describe('LuxLookupComboboxAcComponent', () => {
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxAcComponent))
         .componentInstance as LuxLookupComboboxAcComponent;
-      const activeItem = (luxLookup.matSelect as any)?._keyManager?.activeItem;
+      const activeItem = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.key).toBe('1100');
     }));
 
@@ -473,7 +473,7 @@ describe('LuxLookupComboboxAcComponent', () => {
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxAcComponent))
         .componentInstance as LuxLookupComboboxAcComponent;
-      const activeItem = (luxLookup.matSelect as any)?._keyManager?.activeItem;
+      const activeItem = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.key).toBe('1100');
     }));
 
@@ -499,14 +499,14 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      let keyManager = (luxLookup.matSelect as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
+      let keyManager = (luxLookup.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
       expect(keyManager?.activeItem?.value?.key).toBe('1100');
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'PageUp', bubbles: true }));
       fixture.detectChanges();
       flush();
 
-      keyManager = (luxLookup.matSelect as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
+      keyManager = (luxLookup.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
       expect(keyManager?.activeItem?.value?.key).toBe('1');
     }));
 
@@ -532,14 +532,14 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      let keyManager = (luxLookup.matSelect as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
+      let keyManager = (luxLookup.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
       expect(keyManager?.activeItem?.value?.key).toBe('1100');
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
       fixture.detectChanges();
       flush();
 
-      keyManager = (luxLookup.matSelect as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
+      keyManager = (luxLookup.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: LuxLookupTableEntry } } })._keyManager;
       expect(keyManager?.activeItem?.value?.key).toBe('1');
     }));
 
@@ -565,14 +565,14 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const activeBeforeEnter = (luxLookup.matSelect as any)?._keyManager?.activeItem;
+      const activeBeforeEnter = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       const activeElement = document.activeElement as HTMLElement;
       LuxTestHelper.dispatchEvent(activeElement, LuxTestHelper.createKeyboardEvent('keydown', 13, activeElement, 'Enter'));
       fixture.detectChanges();
       flush();
 
       expect(activeBeforeEnter?.value?.key).toBe('100');
-      expect(luxLookup.matSelect?.panelOpen).toBeFalse();
+      expect(luxLookup.matSelect()?.panelOpen).toBeFalse();
 
       trigger.click();
       fixture.detectChanges();
@@ -588,7 +588,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const activeAfterReopen = (luxLookup.matSelect as any)?._keyManager?.activeItem;
+      const activeAfterReopen = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       expect(activeAfterReopen).toBeTruthy();
     }));
 
@@ -611,7 +611,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      const activeItem = (luxLookup.matSelect as any)?._keyManager?.activeItem;
+      const activeItem = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.key).toBe('1');
     }));
 
@@ -637,7 +637,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      expect((component.value as LuxLookupTableEntry)?.key).toBe('1100');
+      expect((component.value() as LuxLookupTableEntry)?.key).toBe('1100');
     }));
 
     it('zeigt wieder alle Optionen bei leerem Suchfeld', fakeAsync(() => {
@@ -724,7 +724,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       const component = fixture.componentInstance;
 
       // Reihenfolge im Value ist absichtlich nicht die Originalreihenfolge.
-      component.value = [mockResultTest[3], mockResultTest[0]];
+      component.value.set([mockResultTest[3], mockResultTest[0]]);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
@@ -803,7 +803,7 @@ describe('LuxLookupComboboxAcComponent', () => {
       flush();
 
       expect(document.activeElement).toBe(filterInput);
-      const selectedEntries = component.value as LuxLookupTableEntry[];
+      const selectedEntries = component.value() as LuxLookupTableEntry[];
       expect(selectedEntries.length).toBe(2);
       expect(selectedEntries[0].key).toBe('100');
       expect(selectedEntries[1].key).toBe('1100');
@@ -860,7 +860,7 @@ describe('LuxLookupComboboxAcComponent', () => {
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxAcComponent))
         .componentInstance as LuxLookupComboboxAcComponent;
-      const activeItem = (luxLookup.matSelect as any)?._keyManager?.activeItem;
+      const activeItem = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.key).toBe('100');
     }));
 
@@ -914,28 +914,30 @@ describe('LuxLookupComboboxAcComponent', () => {
   template: `
     <lux-lookup-combobox-ac
       luxTableNo="5"
-      [luxControlValidators]="validators"
+      [luxControlValidators]="validators()"
       [(luxValue)]="value"
-      [luxCompareFn]="compareFn"
+      [luxCompareFn]="compareFn()"
       luxLookupId="test"
       luxRenderProp="kurzText"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       [luxLabel]="'Label'"
-      [luxRequired]="required"
+      [luxRequired]="required()"
     ></lux-lookup-combobox-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxNoFormComponent {
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
-  validators?: ValidatorFnType;
-  value?: any;
-  required?: boolean;
-  compareFn?: LuxLookupCompareFn;
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
+  validators = signal<ValidatorFnType | undefined>(undefined);
+  value = signal<any>(undefined);
+  required = signal<boolean | undefined>(undefined);
+  compareFn = signal<LuxLookupCompareFn | undefined>(undefined);
 }
 
 @Component({
@@ -946,20 +948,22 @@ class LuxNoFormComponent {
       [luxEntryBlockSize]="8"
       luxLookupId="test"
       luxRenderProp="kurzText"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       [luxLabel]="'Label'"
       (luxDataLoadedAsArray)="updateEntries($event)"
     ></lux-lookup-combobox-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxScrollComponent {
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
-  value?: any;
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
+  value = signal<any>(undefined);
 
   @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
 
@@ -979,19 +983,21 @@ class LuxScrollComponent {
       [luxWithEmptyEntry]="false"
       luxLookupId="filtercombo"
       luxRenderProp="kurzText"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterComponent {
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
-  value?: LuxLookupTableEntry | null;
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
+  value = signal<LuxLookupTableEntry | null | undefined>(undefined);
 }
 
 @Component({
@@ -1006,20 +1012,22 @@ class LuxFilterComponent {
       [luxWithEmptyEntry]="false"
       luxLookupId="filtercombobindings"
       luxRenderProp="kurzText"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterInputBindingsComponent {
   @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
-  value?: LuxLookupTableEntry | null;
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
+  value = signal<LuxLookupTableEntry | null | undefined>(undefined);
 }
 
 @Component({
@@ -1033,20 +1041,22 @@ class LuxFilterInputBindingsComponent {
       [luxWithEmptyEntry]="false"
       luxLookupId="filtercomboloadall"
       luxRenderProp="kurzText"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterInitialLoadComponent {
   @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
-  value?: LuxLookupTableEntry | null;
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
+  value = signal<LuxLookupTableEntry | null | undefined>(undefined);
 }
 
 @Component({
@@ -1058,19 +1068,21 @@ class LuxFilterInitialLoadComponent {
         [luxWithEmptyEntry]="false"
         luxLookupId="filtercomboform"
         luxRenderProp="kurzText"
-        [luxParameters]="params"
+        [luxParameters]="params()"
         luxControlBinding="entry"
       ></lux-lookup-combobox-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxLookupComboboxAcComponent]
 })
 class LuxFilterReactiveFormComponent {
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
 
   form = new FormGroup({
     entry: new FormControl<LuxLookupTableEntry | null>(null)
@@ -1086,19 +1098,21 @@ class LuxFilterReactiveFormComponent {
       [luxMultiple]="true"
       luxLookupId="filtercombomulti"
       luxRenderProp="kurzText"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxFilterMultipleComponent {
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
-  value: LuxLookupTableEntry[] = [];
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
+  value = signal<LuxLookupTableEntry[]>([]);
 }
 
 @Component({
@@ -1112,22 +1126,24 @@ class LuxFilterMultipleComponent {
       [luxWithEmptyEntry]="false"
       luxLookupId="visiblecountcombo"
       luxRenderProp="kurzText"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       [luxLabel]="'Label'"
     ></lux-lookup-combobox-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupComboboxAcComponent]
 })
 class LuxVisibleOptionCountComponent {
   @ViewChild(LuxLookupComboboxAcComponent) combobox!: LuxLookupComboboxAcComponent;
 
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
 
-  value?: LuxLookupTableEntry | null;
+  value = signal<LuxLookupTableEntry | null | undefined>(undefined);
 }
 
 const mockResultTest = [

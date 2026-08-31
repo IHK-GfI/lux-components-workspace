@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnInit, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -24,7 +24,7 @@ import { LookupExampleComponent } from '../lookup-example.component';
 @Component({
   selector: 'app-lookup-combobox-ac-example',
   templateUrl: './lookup-combobox-ac-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLookupComboboxAcComponent,
     LuxToggleAcComponent,
@@ -67,7 +67,7 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
     langText1: 'Peru'
   };
 
-  @ViewChildren(LuxLookupComboboxAcComponent) lookupComboboxCmp!: QueryList<LuxLookupComboboxAcComponent>;
+  readonly lookupComboboxCmp = viewChildren(LuxLookupComboboxAcComponent);
 
   override ngOnInit() {
     super.ngOnInit();

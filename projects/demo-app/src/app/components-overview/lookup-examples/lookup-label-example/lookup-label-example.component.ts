@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import {
     LuxFormHintComponent,
     LuxInputAcComponent,
@@ -15,7 +15,7 @@ import { ExampleBaseStructureComponent } from '../../../example-base/example-bas
   selector: 'app-lookup-label-example',
   templateUrl: './lookup-label-example.component.html',
   styleUrls: ['./lookup-label-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLookupLabelComponent,
     LuxProgressComponent,
@@ -29,19 +29,16 @@ import { ExampleBaseStructureComponent } from '../../../example-base/example-bas
   ]
 })
 export class LookupLabelExampleComponent implements OnInit {
-  private cdr = inject(ChangeDetectorRef);
-
-  knr = 0;
+  knr = signal(0);
   tableKey = 4;
   tableNo = '1002';
   bezeichnung = 'kurz';
-  disabled = true;
+  disabled = signal(true);
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.disabled = false;
-      this.cdr.detectChanges();
-      this.knr = 101;
+      this.disabled.set(false);
+      this.knr.set(101);
     }, 5000);
   }
 }

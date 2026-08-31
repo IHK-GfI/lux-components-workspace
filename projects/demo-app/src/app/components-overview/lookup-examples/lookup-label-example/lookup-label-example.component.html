@@ -5,7 +5,7 @@
   <example-base-content>
     <lux-lookup-label
       [luxBezeichnung]="bezeichnung"
-      [luxLookupKnr]="knr"
+      [luxLookupKnr]="knr()"
       [luxTableNo]="tableNo"
       [luxTableKey]="'' + tableKey"
       [luxLookupId]="'label-example'"
@@ -16,11 +16,11 @@
     <lux-input-ac
       luxName="lookup-label_knr"
       luxLabel="Knr"
-      [luxDisabled]="disabled"
+      [luxDisabled]="disabled()"
       [(luxValue)]="knr"
       luxType="number"
       [luxNumberAlignLeft]="true"
-      >@if (disabled) {
+      >@if (disabled()) {
       <lux-input-ac-suffix
         ><lux-progress luxType="Spinner" luxMode="indeterminate" luxSize="small" luxTagId="knr-loading-spinner"></lux-progress
       ></lux-input-ac-suffix>

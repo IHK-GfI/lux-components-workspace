@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Directive, OnDestroy, OnInit, inject, input, output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -66,56 +66,60 @@ export const luxLookupCompareLangText2Fn: LuxLookupCompareFn = (a: LuxLookupTabl
 
 @Directive()
 export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> implements OnInit, OnDestroy {
-  
   LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige;
-  
+
   protected lookupService = inject(LuxLookupService);
   protected lookupHandler = inject(LuxLookupHandlerService);
 
   entries: LuxLookupTableEntry[] = [];
   apiPath = LuxComponentsConfigService.DEFAULT_CONFIG.lookupServiceUrl;
 
-  @Input() luxPlaceholder = '';
-  @Input() luxLookupId!: string;
-  @Input() luxTableNo!: string;
-  @Input() luxRenderProp: any;
-  @Input() luxRenderPropNoPropertyLabel = '---';
-  @Input() luxBehandlungUngueltige: LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige.ausgrauen;
-  @Input() luxParameters?: LuxLookupParameters;
-  @Input() luxCustomStyles?: object | null;
-  @Input() luxCustomInvalidStyles?: object | null;
-  @Input() luxCompareFn?: LuxLookupCompareFn;
-  @Input() luxTagId?: string;
-  @Output() luxDataLoaded = new EventEmitter<boolean>();
-  @Output() luxDataLoadedAsArray: EventEmitter<T[]> = new EventEmitter<T[]>();
-  @Output() luxValueChange = new EventEmitter<T>();
+  readonly luxPlaceholder = input('');
+  readonly luxLookupId = input('');
+  readonly luxTableNo = input('');
+  readonly luxRenderProp = input<any>();
+  readonly luxRenderPropNoPropertyLabel = input('---');
+  readonly luxBehandlungUngueltige = input(LuxBehandlungsOptionenUngueltige.ausgrauen);
+  readonly luxParameters = input<LuxLookupParameters | undefined>(undefined);
+  readonly luxCustomStyles = input<object | null | undefined>(undefined);
+  readonly luxCustomInvalidStyles = input<object | null | undefined>(undefined);
+  readonly luxCompareFn = input<LuxLookupCompareFn | undefined>(undefined);
+  readonly luxTagId = input<string | undefined>(undefined);
+
+  readonly luxDataLoaded = output<boolean>();
+  readonly luxDataLoadedAsArray = output<T[]>();
+
+  /**
+   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
+   * Wert liefern das Signal value() bzw. getValue().
+   */
+  readonly luxValue = input<T>(null as T);
+  readonly luxValueChange = output<T | null>();
 
   subscriptions: Subscription[] = [];
 
-  get luxValue(): T {
-    return this.getValue();
-  }
+  constructor() {
+    super();
 
-  @Input() set luxValue(value: T) {
-    this.setValue(value);
+    this.syncValueInputToFormControl(this.luxValue);
   }
 
   override ngOnInit() {
     super.ngOnInit();
 
-    if (!this.luxParameters) {
-      throw Error(`The lookup component with the table number ${this.luxTableNo} has no LookupParameter.`);
+    if (!this.luxParameters()) {
+      throw Error(`The lookup component with the table number ${this.luxTableNo()} has no LookupParameter.`);
     }
 
-    if (!this.luxLookupId) {
-      throw Error(`The lookup component with the table number ${this.luxTableNo} has no LookupId.`);
+    if (!this.luxLookupId()) {
+      throw Error(`The lookup component with the table number ${this.luxTableNo()} has no LookupId.`);
     }
 
-    this.lookupHandler.addLookupElement(this.luxLookupId);
+    this.lookupHandler.addLookupElement(this.luxLookupId());
 
-    const lookupElementObs = this.lookupHandler.getLookupElementObsv(this.luxLookupId);
+    const lookupElementObs = this.lookupHandler.getLookupElementObsv(this.luxLookupId());
     if (!lookupElementObs) {
-      throw Error(`Observable "${this.luxLookupId}" not found."`);
+      throw Error(`Observable "${this.luxLookupId()}" not found."`);
     }
 
     this.subscriptions.push(
@@ -128,7 +132,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
       this.configService.config.subscribe((newConfig: LuxComponentsConfigParameters) => {
         this.apiPath = newConfig.lookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.lookupServiceUrl;
 
-        this.lookupHandler.reloadData(this.luxLookupId);
+        this.lookupHandler.reloadData(this.luxLookupId());
       })
     );
   }
@@ -144,7 +148,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    * @returns boolean
    */
   isRenderPropAFunction(): boolean {
-    return typeof this.luxRenderProp === 'function';
+    return typeof this.luxRenderProp() === 'function';
   }
 
   /**
@@ -177,8 +181,8 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    */
   showUngueltige() {
     return (
-      this.luxBehandlungUngueltige === this.LuxBehandlungsOptionenUngueltige.ausgrauen ||
-      this.luxBehandlungUngueltige === this.LuxBehandlungsOptionenUngueltige.anzeigen
+      this.luxBehandlungUngueltige() === this.LuxBehandlungsOptionenUngueltige.ausgrauen ||
+      this.luxBehandlungUngueltige() === this.LuxBehandlungsOptionenUngueltige.anzeigen
     );
   }
 
@@ -187,7 +191,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    * @returns boolean
    */
   disableUngueltige() {
-    return this.luxBehandlungUngueltige === this.LuxBehandlungsOptionenUngueltige.ausgrauen;
+    return this.luxBehandlungUngueltige() === this.LuxBehandlungsOptionenUngueltige.ausgrauen;
   }
 
   /**
@@ -198,9 +202,9 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    */
   getStyles(invalid: boolean | undefined) {
     if (invalid) {
-      return this.luxCustomInvalidStyles ? this.luxCustomInvalidStyles : {};
+      return this.luxCustomInvalidStyles() ? this.luxCustomInvalidStyles() : {};
     }
-    return this.luxCustomStyles ? this.luxCustomStyles : {};
+    return this.luxCustomStyles() ? this.luxCustomStyles() : {};
   }
 
   /**
@@ -217,13 +221,14 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
 
   getLabel(entry: any): string {
     if (this.isRenderPropAFunction()) {
-      return this.luxRenderProp(entry);
+      return this.luxRenderProp()(entry);
     }
 
-    if (Object.hasOwn(entry, this.luxRenderProp as string) && entry[this.luxRenderProp as string]) {
-      return entry[this.luxRenderProp as string];
+    const renderProp = this.luxRenderProp();
+    if (Object.hasOwn(entry, renderProp as string) && entry[renderProp as string]) {
+      return entry[renderProp as string];
     } else {
-      return this.luxRenderPropNoPropertyLabel;
+      return this.luxRenderPropNoPropertyLabel();
     }
   }
 
@@ -231,11 +236,12 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    * Holt die Lookup-Table Daten vom Backend
    */
   protected fetchLookupData() {
-    if (!this.luxParameters) {
+    const parameters = this.luxParameters();
+    if (!parameters) {
       throw Error('LuxParameters not found!');
     }
 
-    const backendRequest = this.lookupService.getLookupTable(this.luxTableNo, this.luxParameters, this.apiPath);
+    const backendRequest = this.lookupService.getLookupTable(this.luxTableNo(), parameters, this.apiPath);
     this.subscriptions.push(
       backendRequest.subscribe(
         (entries: LuxLookupTableEntry[]) => {
@@ -257,8 +263,9 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
   protected setLookupData(entries: LuxLookupTableEntry[]) {
     this.entries = entries;
 
-    if (this.entries && this.luxCompareFn) {
-      this.entries.sort(this.luxCompareFn);
+    const compareFn = this.luxCompareFn();
+    if (this.entries && compareFn) {
+      this.entries.sort(compareFn);
     }
 
     if (this.entries) {

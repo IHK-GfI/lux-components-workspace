@@ -334,7 +334,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (
       (removedFilterItem.component instanceof LuxSelectAcComponent ||
         removedFilterItem.component instanceof LuxLookupComboboxAcComponent) &&
-      removedFilterItem.component.luxMultiple
+      removedFilterItem.component.luxMultiple()
     ) {
       // Fall: Multiselect
       // Kopie erstellen und nicht nur das bestehende Array manipulieren.
@@ -380,9 +380,9 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
           } else if (formComponent.autoCompleteAuthentic) {
             formComponent.autoCompleteAuthentic.matAutoComplete()?.closePanel();
           } else if (formComponent.autoCompleteLookupAuthentic && formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger) {
-            formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger.closePanel();
+            formComponent.autoCompleteLookupAuthentic.matAutocompleteTrigger()?.closePanel();
           } else if (formComponent.selectLookupAuthentic) {
-            formComponent.selectLookupAuthentic.matSelect.close();
+            formComponent.selectLookupAuthentic.matSelect()?.close();
           }
         }
       });

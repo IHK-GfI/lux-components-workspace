@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -44,7 +44,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxLookupAutocompleteAcComponent)).componentInstance;
       fixture.detectChanges();
-      tick(autocomplete.luxDebounceTime);
+      tick(autocomplete.luxDebounceTime());
     }));
 
     it('Validatoren setzen und korrekte Fehlermeldung anzeigen', fakeAsync(() => {
@@ -54,7 +54,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
       expect(autocomplete.formControl.valid).toBeTruthy();
 
       // Änderungen durchführen
-      component.validators = Validators.compose([Validators.required]);
+      component.validators.set(Validators.compose([Validators.required]));
       LuxTestHelper.wait(fixture);
       autocomplete.formControl.markAsTouched();
       autocomplete.formControl.updateValueAndValidity();
@@ -70,11 +70,11 @@ describe('LuxLookupAutocompleteAcComponent', () => {
     }));
 
     it('Sollte die Optionen ausgeben wie sie geladen wurden', fakeAsync(() => {
-      expect(autocomplete.matInput.nativeElement.value).toEqual('');
+      expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
 
       // Änderungen durchführen
-      LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'A');
-      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
+      LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
+      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
       const options = fixture.nativeElement.querySelectorAll('mat-option');
@@ -90,15 +90,15 @@ describe('LuxLookupAutocompleteAcComponent', () => {
     }));
 
     it('Sollte die Optionen sortiert nach Kurztext ausgeben', fakeAsync(() => {
-      expect(autocomplete.matInput.nativeElement.value).toEqual('');
+      expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
 
       // Änderungen durchführen
-      component.compareFn = luxLookupCompareKurzTextFn;
+      component.compareFn.set(luxLookupCompareKurzTextFn);
       fixture.detectChanges();
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
       fixture.detectChanges();
-      LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'A');
-      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
+      LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
+      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
       const options = fixture.nativeElement.querySelectorAll('mat-option');
@@ -114,15 +114,15 @@ describe('LuxLookupAutocompleteAcComponent', () => {
     }));
 
     it('Sollte die Optionen sortiert nach Schlüssel ausgeben', fakeAsync(() => {
-      expect(autocomplete.matInput.nativeElement.value).toEqual('');
+      expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
 
       // Änderungen durchführen
-      component.compareFn = luxLookupCompareKeyFn;
+      component.compareFn.set(luxLookupCompareKeyFn);
       fixture.detectChanges();
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
       fixture.detectChanges();
-      LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'A');
-      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
+      LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
+      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
       const options = fixture.nativeElement.querySelectorAll('mat-option');
@@ -139,13 +139,13 @@ describe('LuxLookupAutocompleteAcComponent', () => {
 
     describe('Clear-Button', () => {
       beforeEach(fakeAsync(() => {
-        component.clearable = true;
+        component.clearable.set(true);
         fixture.detectChanges();
       }));
 
       it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
-        LuxTestHelper.typeInElement(autocomplete.matInput.nativeElement, 'A');
-        LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime);
+        LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
+        LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
         expect(autocomplete.formControl.value as any).toEqual('A');
         expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
@@ -154,7 +154,7 @@ describe('LuxLookupAutocompleteAcComponent', () => {
         LuxTestHelper.wait(fixture);
 
         expect(autocomplete.formControl.value).toBeNull();
-        expect(autocomplete.matInput.nativeElement.value).toEqual('');
+        expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
 
         discardPeriodicTasks();
       }));
@@ -167,30 +167,32 @@ describe('LuxLookupAutocompleteAcComponent', () => {
   template: `
     <lux-lookup-autocomplete-ac
       luxTableNo="1004"
-      [luxParameters]="params"
+      [luxParameters]="params()"
       luxRenderProp="kurzText"
-      [luxCompareFn]="compareFn"
-      [luxControlValidators]="validators"
-      [luxClearable]="clearable"
-      [luxClearAriaLabel]="clearAriaLabel"
+      [luxCompareFn]="compareFn()"
+      [luxControlValidators]="validators()"
+      [luxClearable]="clearable()"
+      [luxClearAriaLabel]="clearAriaLabel()"
       [(luxValue)]="value"
       luxLookupId="test"
       [luxLabel]="'Label'"
     ></lux-lookup-autocomplete-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupAutocompleteAcComponent]
 })
 class LuxNoFormComponent {
-  params = new LuxLookupParameters({
-    knr: 101,
-    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-  });
-  validators?: ValidatorFnType;
-  value?: any;
-  compareFn?: LuxLookupCompareFn;
-  clearable = false;
-  clearAriaLabel = 'Wert leeren';
+  params = signal(
+    new LuxLookupParameters({
+      knr: 101,
+      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+    })
+  );
+  validators = signal<ValidatorFnType | undefined>(undefined);
+  value = signal<any>(undefined);
+  compareFn = signal<LuxLookupCompareFn | undefined>(undefined);
+  clearable = signal(false);
+  clearAriaLabel = signal('Wert leeren');
 }
 
 class MockLookupService {

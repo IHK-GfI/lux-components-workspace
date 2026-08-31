@@ -1,4 +1,4 @@
-import { Component, DestroyRef, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxFieldValues, LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
@@ -8,7 +8,7 @@ import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 
 @Component({
   selector: 'lux-lookup-label',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './lux-lookup-label.component.html'
 })
 export class LuxLookupLabelComponent implements OnInit {
@@ -18,77 +18,16 @@ export class LuxLookupLabelComponent implements OnInit {
   lookupHandler: LuxLookupHandlerService;
   logger: LuxConsoleService;
   lookupParameters?: LuxLookupParameters;
-  entry?: LuxLookupTableEntry;
 
-  init = false;
-  _luxLookupKnr!: number;
-  _luxTableKey!: string;
-  _luxTableNo!: string;
-  _luxFields?: LuxFieldValues[];
+  readonly entry = signal<LuxLookupTableEntry | undefined>(undefined);
 
-  @Input() luxLookupId!: string;
-  @Input() luxLookupUrl = '/lookup/';
-  @Input() luxBezeichnung = 'kurz';
-
-  @Input()
-  get luxLookupKnr(): number {
-    return this._luxLookupKnr;
-  }
-
-  set luxLookupKnr(knr: number) {
-    const changed = knr !== this._luxLookupKnr;
-
-    this._luxLookupKnr = knr;
-
-    if (this.init && changed) {
-      this.fetchLookupData();
-    }
-  }
-
-  @Input()
-  get luxTableNo(): string {
-    return this._luxTableNo;
-  }
-
-  set luxTableNo(tableNo: string) {
-    const changed = tableNo !== this._luxTableNo;
-
-    this._luxTableNo = tableNo;
-
-    if (this.init && changed) {
-      this.fetchLookupData();
-    }
-  }
-
-  @Input()
-  get luxTableKey(): string {
-    return this._luxTableKey;
-  }
-
-  set luxTableKey(key: string) {
-    const changed = key !== this._luxTableKey;
-
-    this._luxTableKey = key;
-
-    if (this.init && changed) {
-      this.fetchLookupData();
-    }
-  }
-
-  @Input()
-  get luxFields(): LuxFieldValues[] | undefined {
-    return this._luxFields;
-  }
-
-  set luxFields(fields: LuxFieldValues[] | undefined) {
-    const changed = fields !== this._luxFields;
-
-    this._luxFields = fields;
-
-    if (this.init && changed) {
-      this.fetchLookupData();
-    }
-  }
+  readonly luxLookupId = input('');
+  readonly luxLookupUrl = input('/lookup/');
+  readonly luxBezeichnung = input('kurz');
+  readonly luxLookupKnr = input<number>();
+  readonly luxTableNo = input<string>();
+  readonly luxTableKey = input<string>();
+  readonly luxFields = input<LuxFieldValues[]>();
 
   constructor() {
     const lookupService = inject(LuxLookupService);
@@ -98,52 +37,68 @@ export class LuxLookupLabelComponent implements OnInit {
     this.lookupService = lookupService;
     this.lookupHandler = lookupHandler;
     this.logger = luxConsoleLogger;
+
+    let isFirstRun = true;
+
+    effect(() => {
+      this.luxLookupKnr();
+      this.luxTableNo();
+      this.luxTableKey();
+      this.luxFields();
+
+      untracked(() => {
+        if (isFirstRun) {
+          isFirstRun = false;
+          return;
+        }
+
+        this.fetchLookupData();
+      });
+    });
   }
 
   ngOnInit() {
-    if (!this.luxLookupKnr) {
-      console.warn(`The lookup label with the table number ${this.luxLookupKnr} has no LookupKnr.`);
+    if (!this.luxLookupKnr()) {
+      console.warn(`The lookup label with the table number ${this.luxLookupKnr()} has no LookupKnr.`);
     }
 
-    if (!this.luxLookupId) {
-      console.warn(`The lookup label with the table number ${this.luxTableNo} has no LookupId.`);
+    if (!this.luxLookupId()) {
+      console.warn(`The lookup label with the table number ${this.luxTableNo()} has no LookupId.`);
     }
 
-    if (!this.luxTableNo) {
-      console.warn(`The lookup label with the LookupId ${this.luxLookupId} has no table number`);
+    if (!this.luxTableNo()) {
+      console.warn(`The lookup label with the LookupId ${this.luxLookupId()} has no table number`);
     }
 
-    if (!this.luxTableKey) {
-      console.warn(`The lookup label with the table number ${this.luxTableNo} has no table key`);
+    if (!this.luxTableKey()) {
+      console.warn(`The lookup label with the table number ${this.luxTableNo()} has no table key`);
     }
 
     this.fetchLookupData();
 
-    this.lookupHandler.addLookupElement(this.luxLookupId);
+    this.lookupHandler.addLookupElement(this.luxLookupId());
 
-    const lookupElementObs = this.lookupHandler.getLookupElementObsv(this.luxLookupId);
+    const lookupElementObs = this.lookupHandler.getLookupElementObsv(this.luxLookupId());
     if (!lookupElementObs) {
-      throw Error(`Observable "${this.luxLookupId}" not found."`);
+      throw Error(`Observable "${this.luxLookupId()}" not found."`);
     }
 
     lookupElementObs.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.fetchLookupData();
     });
-
-    this.init = true;
   }
 
   protected fetchLookupData() {
     if (this.isReadyToFetch()) {
-      const keys: string[] = [this.luxTableKey];
+      const keys: string[] = [this.luxTableKey()!];
 
-      this.lookupParameters = new LuxLookupParameters({ knr: this.luxLookupKnr, keys, fields: this.luxFields });
+      this.lookupParameters = new LuxLookupParameters({ knr: this.luxLookupKnr()!, keys, fields: this.luxFields() });
 
       this.lookupService
-        .getLookupTable(this.luxTableNo, this.lookupParameters, this.luxLookupUrl)
+        .getLookupTable(this.luxTableNo()!, this.lookupParameters, this.luxLookupUrl())
         .subscribe((entries: LuxLookupTableEntry[]) => {
           if (typeof entries !== 'undefined' && entries.length === 1) {
-            this.entry = entries[0];
+            this.entry.set(entries[0]);
           }
         });
     }
@@ -155,15 +110,16 @@ export class LuxLookupLabelComponent implements OnInit {
    */
   getBezeichnung(): string {
     let bezeichnung;
+    const entry = this.entry();
 
-    if (this.entry) {
-      if ('kurz' === this.luxBezeichnung) {
-        bezeichnung = this.entry.kurzText;
-      } else if ('lang' === this.luxBezeichnung) {
-        bezeichnung = this.entry.langText1;
+    if (entry) {
+      if ('kurz' === this.luxBezeichnung()) {
+        bezeichnung = entry.kurzText;
+      } else if ('lang' === this.luxBezeichnung()) {
+        bezeichnung = entry.langText1;
 
         if (!bezeichnung) {
-          bezeichnung = this.entry.kurzText;
+          bezeichnung = entry.kurzText;
         }
       }
     }
@@ -172,6 +128,6 @@ export class LuxLookupLabelComponent implements OnInit {
   }
 
   private isReadyToFetch(): boolean {
-    return !!this.luxLookupKnr && !!this.luxLookupId && !!this.luxTableNo && !!this.luxTableKey;
+    return !!this.luxLookupKnr() && !!this.luxLookupId() && !!this.luxTableNo() && !!this.luxTableKey();
   }
 }

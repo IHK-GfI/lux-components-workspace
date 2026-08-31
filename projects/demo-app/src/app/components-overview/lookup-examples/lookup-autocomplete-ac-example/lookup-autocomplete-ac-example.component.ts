@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnInit, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -21,7 +21,7 @@ import { LookupExampleComponent } from '../lookup-example.component';
 @Component({
   selector: 'app-lookup-autocomplete-ac-example',
   templateUrl: './lookup-autocomplete-ac-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLookupAutocompleteAcComponent,
     LuxToggleAcComponent,
@@ -41,7 +41,7 @@ import { LookupExampleComponent } from '../lookup-example.component';
   ]
 })
 export class LookupAutocompleteAcExampleComponent extends LookupExampleComponent implements OnInit {
-  @ViewChildren(LuxLookupAutocompleteAcComponent) lookupAutocompleteCmp!: QueryList<LuxLookupAutocompleteAcComponent>;
+  readonly lookupAutocompleteCmp = viewChildren(LuxLookupAutocompleteAcComponent);
 
   debounceTime = 250;
   maximumDisplayed = 50;

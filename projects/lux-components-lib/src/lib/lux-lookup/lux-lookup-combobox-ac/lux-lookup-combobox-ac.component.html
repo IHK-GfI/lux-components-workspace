@@ -7,25 +7,25 @@
     [luxNoTopLabel]="luxNoTopLabel()"
     [formGroup]="formGroup"
     [luxLabelLongFormat]="luxLabelLongFormat()"
-    [ngClass]="matSelect && matSelect.panelOpen ? 'lux-panel-opened' : ''"
+    [ngClass]="matSelect() && matSelect()!.panelOpen ? 'lux-panel-opened' : ''"
     luxTagId="luxLookupComboboxWrapper"
   >
     <mat-select
       luxSelectOptionHeight
-      [luxSelectFilter]="luxEnableFilter"
+      [luxSelectFilter]="luxEnableFilter()"
       [luxFilterLabelFn]="filterLabelFn"
       (luxFilterActiveChange)="onFilterActiveChange($event)"
-      [placeholder]="luxPlaceholder"
-      [multiple]="luxMultiple"
+      [placeholder]="luxPlaceholder()"
+      [multiple]="luxMultiple()"
       [required]="luxRequired()"
       [formControl]="formControl"
       luxTagIdHandler
-      [luxTagId]="luxTagId"
-      [luxSelectVisibleOptionCount]="luxVisibleOptionCount"
+      [luxTagId]="luxTagId()"
+      [luxSelectVisibleOptionCount]="luxVisibleOptionCount()"
       [panelClass]="[
-        luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
+        luxMultiple() ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
         luxReadonly() ? 'lux-display-none' : '',
-        luxEnableFilter ? 'lux-select-panel-ac-filter' : ''
+        luxEnableFilter() ? 'lux-select-panel-ac-filter' : ''
       ]"
       [disableRipple]="true"
       [errorStateMatcher]="stateMatcher"
@@ -41,18 +41,18 @@
       [attr.aria-readonly]="luxReadonly()"
       #selectFilter="luxSelectFilter"
     >
-      @if (luxEnableFilter) {
+      @if (luxEnableFilter()) {
         <lux-select-panel-filter
-          [placeholder]="luxFilterPlaceholder"
-          [filterValue]="luxFilterValue"
-          [clearAriaLabel]="luxFilterClearAriaLabel"
+          [placeholder]="luxFilterPlaceholder()"
+          [filterValue]="luxFilterValue()"
+          [clearAriaLabel]="luxFilterClearAriaLabel()"
           [filterDirective]="selectFilter"
         ></lux-select-panel-filter>
       }
-      @if (luxWithEmptyEntry && !luxMultiple) {
+      @if (luxWithEmptyEntry() && !luxMultiple()) {
         <mat-option [value]="undefined" class="option-height"></mat-option>
       }
-      @for (entry of renderedEntries; track entry) {
+      @for (entry of renderedEntries(); track entry) {
         @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {
           <mat-option
             class="option-height"
@@ -60,7 +60,7 @@
             [ngClass]="{ invalid: entry.isUngueltig }"
             [ngStyle]="getStyles(entry.isUngueltig)"
             [disabled]="entry.isUngueltig && disableUngueltige()"
-            [style.display]="!luxEnableFilter || selectFilter.isItemVisible(entry) ? '' : 'none'"
+            [style.display]="!luxEnableFilter() || selectFilter.isItemVisible(entry) ? '' : 'none'"
           >
             <span>{{ getLabel(entry) }}</span>
           </mat-option>

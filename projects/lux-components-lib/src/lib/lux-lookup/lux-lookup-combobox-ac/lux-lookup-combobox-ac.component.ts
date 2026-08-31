@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, Input, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, input, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
@@ -20,7 +20,7 @@ import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry'
   selector: 'lux-lookup-combobox-ac',
   templateUrl: './lux-lookup-combobox-ac.component.html',
   styleUrls: ['./lux-lookup-combobox-ac.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFormControlWrapperComponent,
     ReactiveFormsModule,
@@ -47,7 +47,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   /**
    * Aktiviert die Mehrfachauswahl (Mehrfachselektion) in der Combobox.
    */
-  @Input() luxMultiple = false;
+  readonly luxMultiple = input(false);
 
   /**
    * Größe des Nachlade-Blocks für die angezeigten Einträge.
@@ -55,44 +55,44 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    * Beim Öffnen werden initial nur so viele Einträge gerendert. Sobald der User im Panel scrollt,
    * werden weitere Einträge in Blöcken dieser Größe nachgeladen.
    */
-  @Input() luxEntryBlockSize = 25;
+  readonly luxEntryBlockSize = input(25);
 
   /**
    * Begrenzt die Anzahl der gleichzeitig sichtbaren Optionen im geöffneten Panel.
    * Werte <= 0 deaktivieren das Override und verwenden die Standardhöhe.
    */
-  @Input() luxVisibleOptionCount?: number | null;
+  readonly luxVisibleOptionCount = input<number | null | undefined>(undefined);
 
   /**
    * Steuert, ob ein zusätzlicher Leereintrag ("keine Auswahl") angeboten wird.
    *
    * Der Leereintrag wird nur im Single-Select angezeigt (also wenn {@link luxMultiple} = false).
    */
-  @Input() luxWithEmptyEntry = true;
+  readonly luxWithEmptyEntry = input(true);
 
   /**
    * Blendet ein Filterfeld im Auswahl-Panel ein und aktiviert die clientseitige Filterung
    * in den aktuell geladenen Einträgen.
    */
-  @Input() luxEnableFilter = false;
+  readonly luxEnableFilter = input(false);
 
   /**
    * Platzhalter-Text des Filtereingabefeldes im Panel.
    *
    * Wird zusätzlich als ARIA-Label am nativen Input gesetzt.
    */
-  @Input() luxFilterPlaceholder = 'Filter';
+  readonly luxFilterPlaceholder = input('Filter');
   /**
    * Aktueller Textwert des Filterfeldes.
    */
-  @Input() luxFilterValue = '';
+  readonly luxFilterValue = input('');
   /**
    * ARIA-Label für die Schaltfläche zum Löschen des Filterwertes.
    */
-  @Input() luxFilterClearAriaLabel = 'Clear filter';
+  readonly luxFilterClearAriaLabel = input('Clear filter');
 
-  @ViewChild(MatSelect) matSelect!: MatSelect;
-  @ViewChild(LuxSelectFilterDirective) filterDirective?: LuxSelectFilterDirective;
+  readonly matSelect = viewChild(MatSelect);
+  readonly filterDirective = viewChild(LuxSelectFilterDirective);
 
   stateMatcher: LuxLookupErrorStateMatcher;
   displayedEntries: LuxLookupTableEntry[] = [];
@@ -100,7 +100,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   /**
    * Einträge in der Render-Reihenfolge: selektierte zuerst, dann rest.
    */
-  renderedEntries: LuxLookupTableEntry[] = [];
+  readonly renderedEntries = signal<LuxLookupTableEntry[]>([]);
   subscription?: Subscription;
   private panelScrollHandler?: EventListener;
   private panelElement?: Element;
@@ -128,21 +128,23 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   ngAfterViewInit() {
     this.ensureInitialFilterEntriesLoaded();
 
-    this.subscription = this.matSelect.openedChange.subscribe((open: boolean) => {
+    const matSelect = this.matSelect()!;
+    this.subscription = matSelect.openedChange.subscribe((open: boolean) => {
       if (open) {
         // Selektierte Einträge nach oben sortieren
         this.refreshRenderedEntries();
 
         // Panel ist beim ersten Öffnen eventuell noch nicht initialisiert
         setTimeout(() => {
-          if (this.matSelect.panel) {
-            this.registerPanelScrollEvent(this.matSelect.panel.nativeElement);
+          if (matSelect.panel) {
+            this.registerPanelScrollEvent(matSelect.panel.nativeElement);
           }
         });
 
         // Items an Directive übergeben
-        if (this.filterDirective) {
-          this.filterDirective.setItems(this.renderedEntries);
+        const filterDirective = this.filterDirective();
+        if (filterDirective) {
+          filterDirective.setItems(this.renderedEntries());
         }
       } else {
         this.removePanelScrollEvent();
@@ -173,7 +175,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
 
     this.displayedEntries = [];
     this.invisibleEntries = [...entries];
-    this.updateDisplayedEntries(this.shouldLoadAllEntriesForActiveFilter() ? this.invisibleEntries.length : this.luxEntryBlockSize);
+    this.updateDisplayedEntries(this.shouldLoadAllEntriesForActiveFilter() ? this.invisibleEntries.length : this.luxEntryBlockSize());
     this.ensureSelectedEntriesLoaded();
     this.refreshRenderedEntries();
   }
@@ -183,7 +185,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    * @param selectChange
    */
   selected(selectChange: MatSelectChange) {
-    this.luxValue = selectChange.value;
+    this.setValue(selectChange.value);
   }
 
   /**
@@ -193,7 +195,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   onFilterActiveChange(isActive: boolean): void {
     if (isActive && this.invisibleEntries.length > 0) {
       this.updateDisplayedEntries(this.invisibleEntries.length);
-      this.filterDirective?.setItems(this.renderedEntries);
+      this.filterDirective()?.setItems(this.renderedEntries());
     }
   }
 
@@ -220,7 +222,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
 
   private loadOnScroll(event: Event) {
     // Nicht scrollen wenn Filter aktiv
-    if (this.filterDirective?.isFilterActive()) {
+    if (this.filterDirective()?.isFilterActive()) {
       return;
     }
 
@@ -233,7 +235,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   /**
    * Lädt den nächsten Block Daten aus den Entries nach.
    */
-  updateDisplayedEntries(blockSize = this.luxEntryBlockSize) {
+  updateDisplayedEntries(blockSize = this.luxEntryBlockSize()) {
     if (this.invisibleEntries.length > 0) {
       const start = 0;
       const end = Math.min(blockSize, this.invisibleEntries.length);
@@ -244,8 +246,9 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     this.refreshRenderedEntries();
 
     // Items an Directive übergeben
-    if (this.filterDirective) {
-      this.filterDirective.setItems(this.renderedEntries);
+    const filterDirective = this.filterDirective();
+    if (filterDirective) {
+      filterDirective.setItems(this.renderedEntries());
     }
   }
 
@@ -254,7 +257,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    * Wenn nicht, werden sie nachgeladen.
    */
   ensureSelectedEntriesLoaded() {
-    if (Array.isArray(this.luxValue)) {
+    if (Array.isArray(this.luxValue())) {
       this.ensureMultipleSelectedEntriesLoaded();
     } else {
       this.ensureSingleSelectedEntryLoaded();
@@ -277,26 +280,28 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     }
 
     // Fokus setzen über das zugrunde liegende MatSelect
+    const matSelect = this.matSelect();
     try {
-      this.matSelect?.focus();
+      matSelect?.focus();
     } catch {
       // Ignorieren falls nicht möglich
     }
 
     // Panel nur öffnen, wenn noch nicht offen
-    if (this.matSelect && !this.matSelect.panelOpen) {
-      this.matSelect!.open();
+    if (matSelect && !matSelect.panelOpen) {
+      matSelect.open();
     }
   }
 
   private ensureSingleSelectedEntryLoaded() {
-    if (this.luxValue && this.invisibleEntries.length > 0) {
+    const luxValue = this.luxValue() as LuxLookupTableEntry;
+    if (luxValue && this.invisibleEntries.length > 0) {
       // Prüfen, ob der selektierte Wert bereits in displayedEntries ist.
-      const selectedFound = this.displayedEntries.some((entry) => this.compareByKey(entry, this.luxValue as LuxLookupTableEntry));
+      const selectedFound = this.displayedEntries.some((entry) => this.compareByKey(entry, luxValue));
 
       if (!selectedFound) {
         // Finde den Index des selektierten Eintrags
-        const newIndex = this.invisibleEntries.findIndex((entry) => this.compareByKey(entry, this.luxValue as LuxLookupTableEntry));
+        const newIndex = this.invisibleEntries.findIndex((entry) => this.compareByKey(entry, luxValue));
         if (newIndex >= 0) {
           this.updateDisplayedEntries(newIndex + 1);
         }
@@ -305,7 +310,7 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   }
 
   private ensureMultipleSelectedEntriesLoaded() {
-    const luxValueArray = this.luxValue as LuxLookupTableEntry[];
+    const luxValueArray = this.luxValue() as LuxLookupTableEntry[];
     if (luxValueArray.length > 0 && this.invisibleEntries.length > 0) {
       if (luxValueArray.length <= LuxLookupComboboxAcComponent.SELECTED_ENTRIES_THRESHOLD) {
         // Prüfen, ob alle selektierten Werte bereits in displayedEntries sind.
@@ -350,14 +355,14 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
       }
     }
 
-    this.renderedEntries = [...selected, ...unselected];
+    this.renderedEntries.set([...selected, ...unselected]);
   }
 
   /**
    * Prüft, ob ein Eintrag selektiert ist.
    */
   private isEntrySelected(entry: LuxLookupTableEntry): boolean {
-    const currentValue = this.luxValue;
+    const currentValue = this.luxValue();
 
     if (currentValue === null || currentValue === undefined) {
       return false;
@@ -371,23 +376,23 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
   }
 
   private shouldLoadAllEntriesForActiveFilter(): boolean {
-    if (!this.luxEnableFilter) {
+    if (!this.luxEnableFilter()) {
       return false;
     }
 
-    if (this.filterDirective?.isFilterActive()) {
+    if (this.filterDirective()?.isFilterActive()) {
       return true;
     }
 
-    return (this.luxFilterValue ?? '').trim().length > 0;
+    return (this.luxFilterValue() ?? '').trim().length > 0;
   }
 
   private ensureInitialFilterEntriesLoaded(): void {
-    if (!this.luxEnableFilter) {
+    if (!this.luxEnableFilter()) {
       return;
     }
 
-    if ((this.luxFilterValue ?? '').trim().length === 0) {
+    if ((this.luxFilterValue() ?? '').trim().length === 0) {
       return;
     }
 

@@ -76,7 +76,7 @@ export class LuxAutofocusDirective implements AfterViewInit {
       if (autofocusComponent instanceof LuxAutocompleteAcComponent) {
         autofocusComponent.matAutoComplete()?.closePanel();
       } else if (autofocusComponent instanceof LuxLookupAutocompleteAcComponent) {
-        autofocusComponent.matAutocompleteTrigger?.closePanel();
+        autofocusComponent.matAutocompleteTrigger()?.closePanel();
       } else if (autofocusComponent instanceof LuxChipsAcComponent) {
         autofocusComponent.matAutocompleteTrigger()?.closePanel();
       }
