@@ -3,7 +3,7 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { JsonPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, viewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -57,7 +57,7 @@ describe('LuxSelectAcComponent', () => {
 
       expect(testComponent.formGroup.get('hobbies')!.value).toBeNull();
 
-      testComponent.formGroup.get('hobbies')!.setValue([testComponent.allHobbies[0]]);
+      testComponent.formGroup.get('hobbies')!.setValue([testComponent.allHobbies()[0]]);
       tick();
       fixture.detectChanges();
 
@@ -89,16 +89,16 @@ describe('LuxSelectAcComponent', () => {
     it('Den Wert und die Options mit leichter Verzögerung setzen', fakeAsync(() => {
       // Vorbedingungen testen
       const luxSelect = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance;
-      const mockData = [...testComponent.allHobbies];
+      const mockData = [...testComponent.allHobbies()];
 
-      testComponent.allHobbies = [];
+      testComponent.allHobbies.set([]);
       testComponent.formGroup.get('hobbies')!.setValue([mockData[0]]);
       LuxTestHelper.wait(fixture);
 
       expect(luxSelect.value()).toEqual([mockData[0]]);
 
       // Änderungen durchführen
-      testComponent.allHobbies = mockData;
+      testComponent.allHobbies.set(mockData);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -140,9 +140,9 @@ describe('LuxSelectAcComponent', () => {
     }));
 
     it('Wert über das Property setzen', fakeAsync(() => {
-      expect(fixture.componentInstance.selectedOption).toBeNull();
+      expect(fixture.componentInstance.selectedOption()).toBeNull();
 
-      fixture.componentInstance.selectedOption = testComponent.options[3];
+      fixture.componentInstance.selectedOption.set(testComponent.options()[3]);
 
       fixture.detectChanges();
       flush();
@@ -158,7 +158,7 @@ describe('LuxSelectAcComponent', () => {
     }));
 
     it('Wert über das Popup setzen', fakeAsync(() => {
-      expect(fixture.componentInstance.selectedOption).toBeNull();
+      expect(fixture.componentInstance.selectedOption()).toBeNull();
 
       trigger.click();
       fixture.detectChanges();
@@ -168,7 +168,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      expect({ label: 'Meine Aufgaben', value: 'A' }).toEqual(fixture.componentInstance.selectedOption as Option);
+      expect({ label: 'Meine Aufgaben', value: 'A' }).toEqual(fixture.componentInstance.selectedOption() as Option);
 
       discardPeriodicTasks();
     }));
@@ -180,7 +180,7 @@ describe('LuxSelectAcComponent', () => {
       expect(errorEl).toBeFalsy();
 
       // Änderungen durchführen
-      testComponent.validators = Validators.required;
+      testComponent.validators.set(Validators.required);
       LuxTestHelper.wait(fixture);
       selectComponent.formControl.markAsTouched();
       selectComponent.formControl.updateValueAndValidity();
@@ -195,22 +195,22 @@ describe('LuxSelectAcComponent', () => {
 
     it('Array als Value', fakeAsync(() => {
       // Vorbedingungen testen
-      testComponent.options = [
+      testComponent.options.set([
         { label: '0', value: ['0', '1', '2'] },
         { label: '1', value: ['3', '4', '5'] },
         { label: '2', value: ['6', '7', '8'] },
         { label: '3', value: ['9', '10', '11'] }
-      ] as any;
-      testComponent.selectedOption = null;
+      ] as any);
+      testComponent.selectedOption.set(null);
       LuxTestHelper.wait(fixture);
       expect(testComponent.select().value()).toBeNull();
 
       // Änderungen durchführen
-      testComponent.selectedOption = testComponent.options[1];
+      testComponent.selectedOption.set(testComponent.options()[1]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(testComponent.select().value()).toEqual(testComponent.options[1]);
+      expect(testComponent.select().value()).toEqual(testComponent.options()[1]);
 
       flush();
     }));
@@ -228,7 +228,7 @@ describe('LuxSelectAcComponent', () => {
       expect(changeEventSpy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      testComponent.selectedOption = testComponent.options[0];
+      testComponent.selectedOption.set(testComponent.options()[0]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -240,11 +240,11 @@ describe('LuxSelectAcComponent', () => {
     it('aktualisiert renderOptionIndexes bei asynchron geänderten Optionen', fakeAsync(() => {
       const selectComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
 
-      testComponent.options = [
+      testComponent.options.set([
         { label: 'Neue Aufgabe A', value: 'NA' },
         { label: 'Neue Aufgabe B', value: 'NB' }
-      ];
-      testComponent.selectedOption = testComponent.options[1];
+      ]);
+      testComponent.selectedOption.set(testComponent.options()[1]);
       fixture.detectChanges();
       flush();
 
@@ -268,7 +268,7 @@ describe('LuxSelectAcComponent', () => {
       expect(selectRequired).toBeNull();
 
       // Änderungen durchführen
-      testComponent.required = true;
+      testComponent.required.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -292,7 +292,7 @@ describe('LuxSelectAcComponent', () => {
       expect(readonlySelect).toBeNull();
 
       // Änderungen durchführen
-      testComponent.readonly = true;
+      testComponent.readonly.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -306,7 +306,7 @@ describe('LuxSelectAcComponent', () => {
       expect(disabledSelect).toBeNull();
 
       // Änderungen durchführen
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -320,7 +320,7 @@ describe('LuxSelectAcComponent', () => {
       expect(label.nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
-      testComponent.label = 'Label';
+      testComponent.label.set('Label');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -334,7 +334,7 @@ describe('LuxSelectAcComponent', () => {
       expect(placeholder.nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
-      testComponent.placeholder = 'Placeholder';
+      testComponent.placeholder.set('Placeholder');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -348,7 +348,7 @@ describe('LuxSelectAcComponent', () => {
       expect(hint).toBeNull();
 
       // Änderungen durchführen
-      testComponent.hint = 'Hint';
+      testComponent.hint.set('Hint');
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -372,9 +372,9 @@ describe('LuxSelectAcComponent', () => {
     }));
 
     it('Objekte anhand der Values vergleichen', fakeAsync(() => {
-      expect(fixture.componentInstance.selectedOption).toBeNull();
+      expect(fixture.componentInstance.selectedOption()).toBeNull();
 
-      fixture.componentInstance.selectedOption = { absoluteNeueProperty: 'mock', value: 'D' };
+      fixture.componentInstance.selectedOption.set({ absoluteNeueProperty: 'mock', value: 'D' });
       fixture.detectChanges();
       flush();
 
@@ -405,9 +405,9 @@ describe('LuxSelectAcComponent', () => {
     }));
 
     it('Wert über das Property setzen', fakeAsync(() => {
-      expect(fixture.componentInstance.selectedOption).toBeNull();
+      expect(fixture.componentInstance.selectedOption()).toBeNull();
 
-      fixture.componentInstance.selectedOption = testComponent.options[3];
+      fixture.componentInstance.selectedOption.set(testComponent.options()[3]);
 
       fixture.detectChanges();
       flush();
@@ -424,7 +424,7 @@ describe('LuxSelectAcComponent', () => {
     }));
 
     it('Wert über das Popup setzen', fakeAsync(() => {
-      expect(fixture.componentInstance.selectedOption).toBeNull();
+      expect(fixture.componentInstance.selectedOption()).toBeNull();
 
       trigger.click();
       fixture.detectChanges();
@@ -434,27 +434,27 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       flush();
 
-      expect('A').toEqual(fixture.componentInstance.selectedOption);
+      expect('A').toEqual(fixture.componentInstance.selectedOption());
     }));
 
     it('Array als Value', fakeAsync(() => {
       // Vorbedingungen testen
-      testComponent.options = [
+      testComponent.options.set([
         ['0', '1', '2'],
         ['3', '4', '5'],
         ['6', '7', '8'],
         ['9', '10', '11']
-      ] as any;
-      testComponent.selectedOption = undefined;
+      ] as any);
+      testComponent.selectedOption.set(undefined);
       LuxTestHelper.wait(fixture);
       expect(testComponent.select().value()).toBeUndefined();
 
       // Änderungen durchführen
-      testComponent.selectedOption = testComponent.options[1];
+      testComponent.selectedOption.set(testComponent.options()[1]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(testComponent.select().value()).toEqual(testComponent.options[1]);
+      expect(testComponent.select().value()).toEqual(testComponent.options()[1]);
 
       flush();
     }));
@@ -473,14 +473,14 @@ describe('LuxSelectAcComponent', () => {
       };
 
       // Vorbedingungen testen
-      testComponent.options.unshift(null, undefined, '');
+      testComponent.options.set([null, undefined, '', ...testComponent.options()]);
       LuxTestHelper.wait(fixture);
 
       clickTrigger();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
 
-      expect(options.length).toBe(testComponent.options.length);
+      expect(options.length).toBe(testComponent.options().length);
       expect(options.item(0).innerText.trim()).toEqual('');
       expect(options.item(1).innerText.trim()).toEqual('');
       expect(options.item(2).innerText.trim()).toEqual('');
@@ -493,7 +493,7 @@ describe('LuxSelectAcComponent', () => {
       clickOption(0);
 
       // Nachbedingungen prüfen
-      expect(testComponent.selectedOption).toBeNull();
+      expect(testComponent.selectedOption()).toBeNull();
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-value-text'))).toBeNull();
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).not.toBeNull();
 
@@ -502,7 +502,7 @@ describe('LuxSelectAcComponent', () => {
       clickOption(2);
 
       // Nachbedingungen prüfen
-      expect(testComponent.selectedOption).toBe('');
+      expect(testComponent.selectedOption()).toBe('');
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-value-text'))).not.toBeNull();
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).toBeNull();
 
@@ -511,7 +511,7 @@ describe('LuxSelectAcComponent', () => {
       clickOption(1);
 
       // Nachbedingungen prüfen
-      expect(testComponent.selectedOption).toBeUndefined();
+      expect(testComponent.selectedOption()).toBeUndefined();
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-value-text'))).toBeNull();
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).not.toBeNull();
 
@@ -520,7 +520,7 @@ describe('LuxSelectAcComponent', () => {
       clickOption(3);
 
       // Nachbedingungen prüfen
-      expect(testComponent.selectedOption).toBe('A');
+      expect(testComponent.selectedOption()).toBe('A');
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-value-text'))).not.toBeNull();
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).toBeNull();
     }));
@@ -542,44 +542,44 @@ describe('LuxSelectAcComponent', () => {
 
     it('nur Werte und keine Objekte emitten', fakeAsync(() => {
       // Vorbedingungen testen
-      testComponent.selectedOption = testComponent.options[1];
-      expect(testComponent.selectedOption).toEqual(testComponent.options[1]);
+      testComponent.selectedOption.set(testComponent.options()[1]);
+      expect(testComponent.selectedOption()).toEqual(testComponent.options()[1]);
 
       // Änderungen durchführen
       fixture.detectChanges();
       flush();
 
       // Nachbedingungen prüfen
-      expect(testComponent.selectedOption).toEqual('B');
+      expect(testComponent.selectedOption()).toEqual('B');
 
       // Änderungen durchführen
-      testComponent.selectedOption = testComponent.options[2];
+      testComponent.selectedOption.set(testComponent.options()[2]);
       fixture.detectChanges();
       flush();
 
       // Nachbedingungen prüfen
-      expect(testComponent.selectedOption).toEqual('C');
+      expect(testComponent.selectedOption()).toEqual('C');
     }));
 
     it('Array als Value', fakeAsync(() => {
       // Vorbedingungen testen
-      testComponent.options = [
+      testComponent.options.set([
         { label: '0', value: ['0', '1', '2'] },
         { label: '1', value: ['3', '4', '5'] },
         { label: '2', value: ['6', '7', '8'] },
         { label: '3', value: ['9', '10', '11'] }
-      ] as any;
-      testComponent.selectedOption = undefined;
+      ] as any);
+      testComponent.selectedOption.set(undefined);
       LuxTestHelper.wait(fixture);
       expect(testComponent.select().value()).toBeUndefined();
 
       // Änderungen durchführen
-      testComponent.selectedOption = testComponent.options[1];
+      testComponent.selectedOption.set(testComponent.options()[1]);
       LuxTestHelper.wait(fixture);
       flush();
 
       // Nachbedingungen prüfen
-      expect(testComponent.select().value()).toEqual(testComponent.options[1].value);
+      expect(testComponent.select().value()).toEqual(testComponent.options()[1].value);
     }));
   });
 
@@ -633,7 +633,7 @@ describe('LuxSelectAcComponent', () => {
 
     it('Sollte mehrere Werte selektieren können (über PopUp)', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(testComponent.selectedOptions).toEqual([]);
+      expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
       trigger.click();
@@ -655,24 +655,24 @@ describe('LuxSelectAcComponent', () => {
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
-      expect(selectText.nativeElement.textContent).toEqual(testComponent.options[0].label + ', ' + testComponent.options[1].label);
-      expect([testComponent.options[0], testComponent.options[1]]).toEqual(fixture.componentInstance.selectedOptions as any);
+      expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[0].label + ', ' + testComponent.options()[1].label);
+      expect([testComponent.options()[0], testComponent.options()[1]]).toEqual(fixture.componentInstance.selectedOptions() as any);
       discardPeriodicTasks();
     }));
 
     it('Sollte mehrere Werte selektieren können (über Value)', fakeAsync(() => {
       // Vorbedingungen testen
       const luxSelect: LuxSelectAcComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance;
-      expect(testComponent.selectedOptions).toEqual([]);
+      expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
-      testComponent.selectedOptions = [testComponent.options[0], testComponent.options[1]];
+      testComponent.selectedOptions.set([testComponent.options()[0], testComponent.options()[1]]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
-      expect(selectText.nativeElement.textContent).toEqual(testComponent.options[0].label + ', ' + testComponent.options[1].label);
-      expect(luxSelect.value()).toEqual([testComponent.options[0], testComponent.options[1]]);
+      expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[0].label + ', ' + testComponent.options()[1].label);
+      expect(luxSelect.value()).toEqual([testComponent.options()[0], testComponent.options()[1]]);
       discardPeriodicTasks();
     }));
 
@@ -683,12 +683,12 @@ describe('LuxSelectAcComponent', () => {
 
       // Vorbedingungen testen
       const luxSelect: LuxSelectAcComponent = pickFixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance;
-      expect(pickComponent.selectedOptions).toEqual([]);
+      expect(pickComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
-      pickComponent.hook = (option: Option) => option.value;
+      pickComponent.hook.set((option: Option) => option.value);
       LuxTestHelper.wait(pickFixture);
-      pickComponent.selectedOptions = [pickComponent.options[0].value, pickComponent.options[1].value];
+      pickComponent.selectedOptions.set([pickComponent.options[0].value, pickComponent.options[1].value]);
       LuxTestHelper.wait(pickFixture);
 
       // Nachbedingungen prüfen
@@ -701,32 +701,32 @@ describe('LuxSelectAcComponent', () => {
     it('Sollte mehrere Werte selektieren können (mit String-Options)', fakeAsync(() => {
       // Vorbedingungen testen
       const luxSelect: LuxSelectAcComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance;
-      expect(testComponent.selectedOptions).toEqual([]);
+      expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
-      testComponent.options = ['A', 'B', 'C', 'D'] as any;
+      testComponent.options.set(['A', 'B', 'C', 'D'] as any);
       LuxTestHelper.wait(fixture);
-      testComponent.selectedOptions = [testComponent.options[0], testComponent.options[1]];
+      testComponent.selectedOptions.set([testComponent.options()[0], testComponent.options()[1]]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
-      expect(selectText.nativeElement.textContent).toEqual(testComponent.options[0] + ', ' + testComponent.options[1]);
-      expect(luxSelect.value()).toEqual([testComponent.options[0], testComponent.options[1]]);
+      expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[0] + ', ' + testComponent.options()[1]);
+      expect(luxSelect.value()).toEqual([testComponent.options()[0], testComponent.options()[1]]);
       discardPeriodicTasks();
     }));
 
     it('Sollte falsche Werte auslassen und einen Fehler loggen', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(testComponent.selectedOptions).toEqual([]);
+      expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
-      testComponent.selectedOptions = [{ value: 'WRONG', label: 'WRONG' }, testComponent.options[1]];
+      testComponent.selectedOptions.set([{ value: 'WRONG', label: 'WRONG' }, testComponent.options()[1]]);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
-      expect(selectText.nativeElement.textContent).toEqual(testComponent.options[1].label);
+      expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[1].label);
       discardPeriodicTasks();
     }));
   });
@@ -770,7 +770,7 @@ describe('LuxSelectAcComponent', () => {
       expect(optionTexts.length).toBe(0);
 
       // Änderungen durchführen
-      testComponent.labelProp = 'label';
+      testComponent.labelProp.set('label');
       LuxTestHelper.wait(fixture);
 
       trigger.click();
@@ -826,7 +826,7 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
 
       // Auswahl in umgekehrter Reihenfolge setzen: Stricken (idx 3) + Fußball (idx 1)
-      component.formGroup.get('hobbies')!.setValue([component.allHobbies[3], component.allHobbies[1]]);
+      component.formGroup.get('hobbies')!.setValue([component.allHobbies()[3], component.allHobbies()[1]]);
       tick();
       fixture.detectChanges();
 
@@ -855,7 +855,7 @@ describe('LuxSelectAcComponent', () => {
       expect(selectComponent.renderOptionIndexes()).toEqual([0, 1, 2, 3]);
 
       // Änderungen durchführen: mittlere Option selektieren
-      testComponent.selectedOption = testComponent.options[2];
+      testComponent.selectedOption.set(testComponent.options[2]);
       fixture.detectChanges();
       flush();
 
@@ -869,7 +869,7 @@ describe('LuxSelectAcComponent', () => {
       // Vorbedingungen testen
       const fixture = TestBed.createComponent(SelectKeepOptionOrderComponent);
       const testComponent = fixture.componentInstance;
-      testComponent.selectedOption = testComponent.options[2];
+      testComponent.selectedOption.set(testComponent.options[2]);
       fixture.detectChanges();
       flush();
 
@@ -1408,26 +1408,26 @@ describe('LuxSelectAcComponent', () => {
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
-      testComponent.readonly = true;
+      testComponent.readonly.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
-      testComponent.required = true;
+      testComponent.required.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (nur luxAriaLabel, ganz ohne luxLabel)', async () => {
-      testComponent.label = '';
-      testComponent.ariaLabel = 'Liste sortieren nach';
+      testComponent.label.set('');
+      testComponent.ariaLabel.set('Liste sortieren nach');
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
@@ -1440,24 +1440,24 @@ describe('LuxSelectAcComponent', () => {
       <lux-select-ac
         luxLabel="Hobbys"
         luxControlBinding="hobbies"
-        [luxOptions]="allHobbies"
+        [luxOptions]="allHobbies()"
         luxOptionLabelProp="label"
         [luxMultiple]="true"
       ></lux-select-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectInsideFormComponent {
   readonly select = viewChild.required(LuxSelectAcComponent);
 
-  allHobbies: Option[] = [
+  allHobbies = signal<Option[]>([
     { label: 'Reiten', value: 'r' },
     { label: 'Fußball', value: 'f' },
     { label: 'Handball', value: 'h' },
     { label: 'Stricken', value: 's' }
-  ];
+  ]);
 
   formGroup = new FormGroup({
     hobbies: new FormControl<Option[] | null>(null)
@@ -1467,42 +1467,42 @@ class SelectInsideFormComponent {
 @Component({
   template: `
     <lux-select-ac
-      [luxOptions]="options"
+      [luxOptions]="options()"
       luxOptionLabelProp="label"
-      [luxControlValidators]="validators"
+      [luxControlValidators]="validators()"
       (luxSelectedChange)="selectedChange($event)"
       [(luxSelected)]="selectedOption"
       [luxMultiple]="false"
-      [luxRequired]="required"
-      [luxLabel]="label"
-      [luxHint]="hint"
-      [luxReadonly]="readonly"
-      [luxDisabled]="disabled"
-      [luxPlaceholder]="placeholder"
+      [luxRequired]="required()"
+      [luxLabel]="label()"
+      [luxHint]="hint()"
+      [luxReadonly]="readonly()"
+      [luxDisabled]="disabled()"
+      [luxPlaceholder]="placeholder()"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectOutsideFormComponent {
   readonly select = viewChild.required(LuxSelectAcComponent);
 
-  label?: string;
-  hint?: string;
-  readonly?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
+  label = signal<string | undefined>(undefined);
+  hint = signal<string | undefined>(undefined);
+  readonly = signal<boolean | undefined>(undefined);
+  disabled = signal<boolean | undefined>(undefined);
+  placeholder = signal<string | undefined>(undefined);
 
-  selectedOption: Option | null = null;
-  validators?: LuxPickValueFnType;
-  required?: boolean;
+  selectedOption = signal<Option | null>(null);
+  validators = signal<LuxPickValueFnType | undefined>(undefined);
+  required = signal<boolean | undefined>(undefined);
 
-  options = [
+  options = signal([
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },
     { label: 'Zurückgestellte Aufgaben', value: 'C' },
     { label: 'Vertretungsaufgaben', value: 'D' }
-  ];
+  ]);
 
   selectedChange(_selected: Option) {}
 }
@@ -1519,13 +1519,13 @@ class SelectOutsideFormComponent {
       [luxCompareWith]="compareFn"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectCustomCompareComponent {
   readonly select = viewChild.required(LuxSelectAcComponent);
 
-  selectedOption: any = null;
+  selectedOption = signal<any>(null);
 
   options = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -1543,19 +1543,19 @@ class SelectCustomCompareComponent {
   template: `
     <lux-select-ac
       luxLabel="Aufgaben"
-      [luxOptions]="options"
+      [luxOptions]="options()"
       [(luxSelected)]="selectedOption"
       [luxMultiple]="false"
       [luxRequired]="false"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectStringArrayComponent {
   readonly select = viewChild.required(LuxSelectAcComponent);
-  selectedOption: any = null;
-  options: (string | null | undefined)[] = ['A', 'B', 'C', 'D'];
+  selectedOption = signal<any>(null);
+  options = signal<(string | null | undefined)[]>(['A', 'B', 'C', 'D']);
 }
 
 @Component({
@@ -1571,7 +1571,7 @@ class SelectStringArrayComponent {
       [luxMultiple]="false"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectFilterComponent {
@@ -1590,6 +1590,7 @@ class SelectFilterComponent {
       <ng-template let-option> {{ 'OptionTpl: ' + option.label }} </ng-template>
     </lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectFilterWithTemplateComponent {
@@ -1608,7 +1609,7 @@ class SelectFilterWithTemplateComponent {
       <lux-select-ac [luxOptions]="options" luxOptionLabelProp="label" luxControlBinding="task" [luxEnableFilter]="true"></lux-select-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectFilterReactiveFormComponent {
@@ -1634,7 +1635,7 @@ class SelectFilterReactiveFormComponent {
       [(luxSelected)]="selectedOptions"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectFilterMultipleComponent {
@@ -1656,7 +1657,7 @@ class SelectFilterMultipleComponent {
       [(luxSelected)]="selectedOption"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectVisibleOptionCountComponent {
@@ -1680,12 +1681,13 @@ class SelectVisibleOptionCountComponent {
       [luxKeepOptionOrder]="true"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectKeepOptionOrderComponent {
   readonly select = viewChild.required(LuxSelectAcComponent);
 
-  selectedOption: Option | null = null;
+  selectedOption = signal<Option | null>(null);
 
   options: Option[] = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -1704,24 +1706,24 @@ declare interface Option {
   template: `
     <lux-select-ac
       luxLabel="Aufgaben"
-      [luxOptions]="options"
+      [luxOptions]="options()"
       [luxPickValue]="hook"
       luxOptionLabelProp="label"
       [(luxSelected)]="selectedOption"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectValueHookComponent {
   readonly select = viewChild.required(LuxSelectAcComponent);
-  selectedOption: any = null;
-  options: Option[] = [
+  selectedOption = signal<any>(null);
+  options = signal<Option[]>([
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },
     { label: 'Zurückgestellte Aufgaben', value: 'C' },
     { label: 'Vertretungsaufgaben', value: 'D' }
-  ];
+  ]);
 
   hook(option: Option) {
     return option ? option.value : option;
@@ -1741,7 +1743,7 @@ class SelectValueHookComponent {
     </form>
     {{ formGroup.value | json }}
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [JsonPipe, ReactiveFormsModule, LuxSelectAcComponent]
 })
 class SelectValueHookFormComponent {
@@ -1768,27 +1770,27 @@ class SelectValueHookFormComponent {
   template: `
     <lux-select-ac
       luxLabel="Aufgaben"
-      [luxOptions]="options"
+      [luxOptions]="options()"
       luxOptionLabelProp="label"
       [(luxSelected)]="selectedOptions"
       [luxMultiple]="true"
       [luxPickValue]="hook"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectMultipleComponent {
-  selectedOptions: Option[] = [];
+  selectedOptions = signal<Option[]>([]);
 
   hook?: LuxPickValueFnType<Option, Option>;
 
-  options: Option[] = [
+  options = signal<Option[]>([
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },
     { label: 'Zurückgestellte Aufgaben', value: 'C' },
     { label: 'Vertretungsaufgaben', value: 'D' }
-  ];
+  ]);
 }
 
 @Component({
@@ -1800,16 +1802,16 @@ class SelectMultipleComponent {
       luxOptionLabelProp="label"
       [(luxSelected)]="selectedOptions"
       [luxMultiple]="true"
-      [luxPickValue]="hook"
+      [luxPickValue]="hook()"
     ></lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectMultiplePickValueFnComponent {
-  selectedOptions: string[] = [];
+  selectedOptions = signal<string[]>([]);
 
-  hook?: LuxPickValueFnType<Option, string>;
+  hook = signal<LuxPickValueFnType<Option, string> | undefined>(undefined);
 
   options: Option[] = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -1821,18 +1823,18 @@ class SelectMultiplePickValueFnComponent {
 
 @Component({
   template: `
-    <lux-select-ac [luxOptions]="options" [luxOptionLabelProp]="labelProp" [(luxSelected)]="selectedOption">
+    <lux-select-ac [luxOptions]="options" [luxOptionLabelProp]="labelProp()" [(luxSelected)]="selectedOption">
       <ng-template let-option>
         {{ 'Option: ' + option.value }}
       </ng-template>
     </lux-select-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class SelectWithTemplateComponent {
   selectedOption: any[] = [];
-  labelProp?: string;
+  labelProp = signal<string | undefined>(undefined);
 
   options = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -1845,22 +1847,23 @@ class SelectWithTemplateComponent {
 @Component({
   template: `
     <lux-select-ac
-      [luxLabel]="label"
-      [luxAriaLabel]="ariaLabel"
+      [luxLabel]="label()"
+      [luxAriaLabel]="ariaLabel()"
       luxOptionLabelProp="label"
       [luxOptions]="options"
-      [luxDisabled]="disabled"
-      [luxReadonly]="readonly"
-      [luxRequired]="required"
+      [luxDisabled]="disabled()"
+      [luxReadonly]="readonly()"
+      [luxRequired]="required()"
     ></lux-select-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSelectAcComponent]
 })
 class LuxSelectA11yComponent {
   options = [{ label: 'Meine Aufgaben', value: 'A' }];
-  label = 'Aufgaben';
-  ariaLabel?: string;
-  disabled = false;
-  readonly = false;
-  required = false;
+  label = signal('Aufgaben');
+  ariaLabel = signal<string | undefined>(undefined);
+  disabled = signal(false);
+  readonly = signal(false);
+  required = signal(false);
 }

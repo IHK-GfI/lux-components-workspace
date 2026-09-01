@@ -544,9 +544,15 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
     // durch das Parent-Template verwaltet (deklarative lux-chip-ac-Elemente).
     const newValue: string[] | null = count > 0 ? new Array(count).fill('') : null;
     this.formControl.setValue(newValue, { emitEvent: false });
-    // emitEvent: false wird auch hier gesetzt, damit kein doppeltes valueChanges-Event
-    // ausgelöst wird; updateValueAndValidity wertet lediglich die Validatoren neu aus.
-    this.formControl.updateValueAndValidity({ emitEvent: false });
+    // Hier bewusst OHNE emitEvent: false: updateValueAndValidity() muss ein StatusChangeEvent
+    // über formControl.events feuern, damit die base-class-Subscription (siehe
+    // LuxFormComponentBase.ngOnInit) markForCheck() aufruft. Ohne das bleibt diese OnPush-
+    // Komponente nach einer rein extern (contentChildren-Query) ausgelösten Neuberechnung
+    // ungeprüft, und der required-Fehler im Wrapper zeigt einen veralteten Status an - siehe
+    // Issue #289. Der Aufruf feuert zwar auch ein (redundantes, wertgleiches) valueChanges-
+    // Event, das ist hier aber unkritisch: notifyFormValueChanged() ist in diesem Codepfad
+    // (!inForm && !luxNewChipGroup) ein No-Op.
+    this.formControl.updateValueAndValidity();
   }
 
   private updateChipTooltips() {

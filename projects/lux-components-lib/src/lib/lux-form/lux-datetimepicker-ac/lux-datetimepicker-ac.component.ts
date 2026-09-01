@@ -44,6 +44,10 @@ export const APP_DATE_TIME_FORMATS_AC = {
     monthYearA11yLabel: { year: 'numeric', month: 'long' }
   }
 };
+/**
+ * @deprecated Diese Klasse ist veraltet und sollte nicht mehr verwendet werden.
+ * Verwende stattdessen `LuxDatepickerAcComponent` in Kombination mit `LuxTimepickerComponent`.
+ */
 @Component({
   selector: 'lux-datetimepicker-ac',
   templateUrl: './lux-datetimepicker-ac.component.html',
@@ -372,6 +376,12 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
         emitViewToModelChange: false
       });
       this.value.set(isoValue as any);
+
+      // emitEvent: false löst KEIN formControl.events aus, wodurch die automatische
+      // markForCheck()-Kopplung in LuxFormComponentBase (ngOnInit) ausbleibt. Ohne diesen
+      // manuellen Aufruf würde ngDoCheck() (und damit die Fehlermeldungs-Anzeige) bei dieser
+      // OnPush-Komponente erst bei einer zufällig ausgelösten Prüfung nachziehen.
+      this.cdr.markForCheck();
 
       if (!this.dateTimeInputValue && isoValue) {
         // Per Hand dem Input-Element einen formatierten String übergeben

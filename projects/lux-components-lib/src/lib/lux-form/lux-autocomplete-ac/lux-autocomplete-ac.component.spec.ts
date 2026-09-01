@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -41,12 +41,12 @@ describe('LuxAutocompleteAcComponent', () => {
         expect(component.formGroup.get('aufgaben')!.value).toBeNull();
 
         // Änderungen durchführen
-        component.formGroup.get('aufgaben')!.setValue(component.options[1]);
+        component.formGroup.get('aufgaben')!.setValue(component.options()[1]);
         LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.autocomplete().value()).toEqual(component.options[1]);
-        expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options[1]);
+        expect(component.autocomplete().value()).toEqual(component.options()[1]);
+        expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options()[1]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('Gruppenaufgaben');
         expect(component.autocomplete().matInput()!.nativeElement.required).toBeFalsy();
         discardPeriodicTasks();
@@ -64,8 +64,8 @@ describe('LuxAutocompleteAcComponent', () => {
         removeFocus(fixture, component.autocomplete().matInput()!, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.autocomplete().value()).toEqual(component.options[3]);
-        expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options[3]);
+        expect(component.autocomplete().value()).toEqual(component.options()[3]);
+        expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options()[3]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('Vertretungsaufgaben');
         expect(component.autocomplete().matInput()!.nativeElement.required).toBeFalsy();
         discardPeriodicTasks();
@@ -85,8 +85,8 @@ describe('LuxAutocompleteAcComponent', () => {
         LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.autocomplete().value()).toEqual(component.options[0]);
-        expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options[0]);
+        expect(component.autocomplete().value()).toEqual(component.options()[0]);
+        expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options()[0]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('Meine Aufgaben');
         discardPeriodicTasks();
       }));
@@ -95,7 +95,7 @@ describe('LuxAutocompleteAcComponent', () => {
         // Vorbedingungen testen
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('');
         expect(component.formGroup.get('aufgaben')!.value).toBeNull();
-        expect(component.options[1].label).toEqual('Gruppenaufgaben');
+        expect(component.options()[1].label).toEqual('Gruppenaufgaben');
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'A');
@@ -113,7 +113,7 @@ describe('LuxAutocompleteAcComponent', () => {
           { label: 'Gruppenaufgaben 2', value: 'B' },
           { label: 'Zurückgestellte Aufgaben 2', value: 'C' }
         ];
-        component.options = testOptions;
+        component.options.set(testOptions);
         LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
@@ -240,20 +240,20 @@ describe('LuxAutocompleteAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(component.selected).toEqual('');
+        expect(component.selected()).toEqual('');
 
         // Änderungen durchführen
-        component.selected = component.options[2];
+        component.selected.set(component.options[2]);
         LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.selected).toEqual(component.options[2]);
+        expect(component.selected()).toEqual(component.options[2]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual(component.options[2].label);
       }));
 
       it('Wert über das Textfeld setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(component.selected).toEqual('');
+        expect(component.selected()).toEqual('');
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'Vertretungsaufgaben');
@@ -262,18 +262,18 @@ describe('LuxAutocompleteAcComponent', () => {
         removeFocus(fixture, component.autocomplete().matInput()!, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.selected).toEqual(component.options[3]);
+        expect(component.selected()).toEqual(component.options[3]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual(component.options[3].label);
         discardPeriodicTasks();
       }));
 
       it('Wert der keiner Option entspricht', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(component.selected).toEqual('');
-        expect(component.strict).toBeTruthy();
+        expect(component.selected()).toEqual('');
+        expect(component.strict()).toBeTruthy();
 
         // Änderungen durchführen
-        component.strict = false;
+        component.strict.set(false);
         fixture.detectChanges();
 
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'zzz');
@@ -282,15 +282,15 @@ describe('LuxAutocompleteAcComponent', () => {
         removeFocus(fixture, component.autocomplete().matInput()!, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.strict).toBeFalsy();
-        expect(component.selected).toEqual('zzz');
+        expect(component.strict()).toBeFalsy();
+        expect(component.selected()).toEqual('zzz');
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('zzz');
         discardPeriodicTasks();
       }));
 
       it('Unvollständigen Wert über das Textfeld setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(component.selected).toEqual('');
+        expect(component.selected()).toEqual('');
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'Ver');
@@ -299,7 +299,7 @@ describe('LuxAutocompleteAcComponent', () => {
         removeFocus(fixture, component.autocomplete().matInput()!, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.selected).toEqual(component.options[3]);
+        expect(component.selected()).toEqual(component.options[3]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual(component.options[3].label);
         discardPeriodicTasks();
       }));
@@ -307,7 +307,7 @@ describe('LuxAutocompleteAcComponent', () => {
       it('Wert über Popup auswählen', fakeAsync(() => {
         // Vorbedingungen testen
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('');
-        expect(component.selected).toEqual('');
+        expect(component.selected()).toEqual('');
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'meine');
@@ -319,7 +319,7 @@ describe('LuxAutocompleteAcComponent', () => {
 
         // Nachbedingungen testen
         expect(component.autocomplete().value()).toEqual(component.options[0]);
-        expect(component.selected).toEqual(component.options[0]);
+        expect(component.selected()).toEqual(component.options[0]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('Meine Aufgaben');
         discardPeriodicTasks();
       }));
@@ -338,20 +338,20 @@ describe('LuxAutocompleteAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(component.selected).toEqual('');
+        expect(component.selected()).toEqual('');
 
         // Änderungen durchführen
-        component.selected = component.options[2];
+        component.selected.set(component.options[2]);
         LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.selected).toEqual(component.options[2]);
+        expect(component.selected()).toEqual(component.options[2]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual(component.options[2]);
       }));
 
       it('Wert über das Textfeld setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(component.selected).toEqual('');
+        expect(component.selected()).toEqual('');
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'Vertretungsaufgaben');
@@ -360,7 +360,7 @@ describe('LuxAutocompleteAcComponent', () => {
         removeFocus(fixture, component.autocomplete().matInput()!, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        expect(component.selected).toEqual(component.options[3]);
+        expect(component.selected()).toEqual(component.options[3]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual(component.options[3]);
         discardPeriodicTasks();
       }));
@@ -368,7 +368,7 @@ describe('LuxAutocompleteAcComponent', () => {
       it('Wert über Popup auswählen', fakeAsync(() => {
         // Vorbedingungen testen
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('');
-        expect(component.selected).toEqual('');
+        expect(component.selected()).toEqual('');
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'meine');
@@ -380,7 +380,7 @@ describe('LuxAutocompleteAcComponent', () => {
 
         // Nachbedingungen testen
         expect(component.autocomplete().value()).toEqual(component.options[0]);
-        expect(component.selected).toEqual(component.options[0]);
+        expect(component.selected()).toEqual(component.options[0]);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('Meine Aufgaben');
         discardPeriodicTasks();
       }));
@@ -701,7 +701,7 @@ describe('LuxAutocompleteAcComponent', () => {
 
       it('Sollte den Clear-Button nicht anzeigen wenn luxClearable=false', fakeAsync(() => {
         // Änderungen durchführen
-        component.clearable = false;
+        component.clearable.set(false);
         component.formGroup.get('aufgaben')!.setValue(component.options[0]);
         LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay());
 
@@ -726,10 +726,10 @@ describe('LuxAutocompleteAcComponent', () => {
 
       it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
         // Vorbedingungen testen
-        component.selected = component.options[2];
+        component.selected.set(component.options[2]);
         LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay());
 
-        expect(component.selected).toEqual(component.options[2]);
+        expect(component.selected()).toEqual(component.options[2]);
         expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
 
         // Änderungen durchführen
@@ -791,28 +791,28 @@ describe('LuxAutocompleteAcComponent', () => {
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (mit Wert)', async () => {
-      testComponent.value = testComponent.options[0];
+      testComponent.value.set(testComponent.options[0]);
       fixture.detectChanges();
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       fixture.detectChanges();
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
-      testComponent.readonly = true;
+      testComponent.readonly.set(true);
       fixture.detectChanges();
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
-      testComponent.required = true;
+      testComponent.required.set(true);
       fixture.detectChanges();
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
@@ -827,15 +827,15 @@ describe('LuxAutocompleteAcComponent', () => {
         luxLabel="Autocomplete"
         [luxOptions]="options"
         luxControlBinding="aufgaben"
-        [luxClearable]="clearable"
+        [luxClearable]="clearable()"
       ></lux-autocomplete-ac>
     </form>
   `,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent],
-  changeDetection: ChangeDetectionStrategy.Eager
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 class LuxAutoCompleteClearableInFormComponent {
-  clearable = true;
+  clearable = signal(true);
 
   options: TestOption[] = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -854,10 +854,10 @@ class LuxAutoCompleteClearableInFormComponent {
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxClearable]="true"></lux-autocomplete-ac>
   `,
   imports: [LuxAutocompleteAcComponent],
-  changeDetection: ChangeDetectionStrategy.Eager
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 class LuxAutoCompleteClearableOutsideFormComponent {
-  selected: TestOption | null = null;
+  selected = signal<TestOption | null>(null);
 
   options: TestOption[] = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -874,7 +874,7 @@ class LuxAutoCompleteClearableOutsideFormComponent {
       <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"> </lux-autocomplete-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteInFormWithStringValuesComponent {
@@ -896,11 +896,11 @@ class LuxAutoCompleteInFormWithStringValuesComponent {
   template: `
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict"> </lux-autocomplete-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
-  selected = '';
+  selected = signal('');
   strict = true;
 
   options = ['Meine Aufgaben', 'Gruppenaufgaben', 'Zurückgestellte Aufgaben', 'Vertretungsaufgaben'];
@@ -919,7 +919,7 @@ class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
       </div>
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteWithCustomOptionTemplateComponent {
@@ -933,7 +933,7 @@ class LuxAutoCompleteWithCustomOptionTemplateComponent {
 
 @Component({
   template: ` <lux-autocomplete-ac luxLabel="Label" [luxOptions]="options" [luxOptionBlockSize]="8"></lux-autocomplete-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxScrollComponent {
@@ -955,19 +955,19 @@ class LuxScrollComponent {
   selector: 'lux-autocomplete-in-form-attribute-component',
   template: `
     <form [formGroup]="formGroup">
-      <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"> </lux-autocomplete-ac>
+      <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options()" luxControlBinding="aufgaben"> </lux-autocomplete-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteInFormAttributeComponent {
-  options: TestOption[] = [
+  options = signal<TestOption[]>([
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },
     { label: 'Zurückgestellte Aufgaben', value: 'C' },
     { label: 'Vertretungsaufgaben', value: 'D' }
-  ];
+  ]);
 
   readonly autocomplete = viewChild.required(LuxAutocompleteAcComponent);
 
@@ -983,14 +983,14 @@ class LuxAutoCompleteInFormAttributeComponent {
 @Component({
   selector: 'lux-value-attribute-component',
   template: `
-    <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict"> </lux-autocomplete-ac>
+    <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict()"> </lux-autocomplete-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxValueAttributeComponent {
-  selected: TestOption | string = '';
-  strict = true;
+  selected = signal<TestOption | string>('');
+  strict = signal(true);
 
   options: TestOption[] = [
     { label: 'Meine Aufgaben', value: 'A' },
@@ -1006,7 +1006,7 @@ class LuxValueAttributeComponent {
   template: `
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" (luxOptionSelected)="setSelected($event)"> </lux-autocomplete-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxOptionSelectedComponent {
@@ -1031,7 +1031,7 @@ class LuxOptionSelectedComponent {
     <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxOptionLabelProp="label" [luxLookupDelay]="0">
     </lux-autocomplete-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class MockAutocompleteComponent {
@@ -1057,7 +1057,7 @@ class MockAutocompleteComponent {
     >
     </lux-autocomplete-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class MockPickValueComponent {
@@ -1090,7 +1090,7 @@ class MockPickValueComponent {
 
     <lux-button luxLabel="Speichern" [luxDisabled]="!formGroup.valid"></lux-button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent, LuxButtonComponent]
 })
 class LuxAutoCompleteNotAnOptionComponent {
@@ -1121,7 +1121,7 @@ class LuxAutoCompleteNotAnOptionComponent {
       <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"></lux-autocomplete-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxAutocompleteAcComponent]
 })
 class LuxAutoCompleteSingleOptionComponent {
@@ -1141,21 +1141,22 @@ class LuxAutoCompleteSingleOptionComponent {
       [luxOptions]="options"
       luxOptionLabelProp="label"
       [luxLookupDelay]="0"
-      [luxDisabled]="disabled"
-      [luxReadonly]="readonly"
-      [luxRequired]="required"
-      [luxValue]="value"
+      [luxDisabled]="disabled()"
+      [luxReadonly]="readonly()"
+      [luxRequired]="required()"
+      [luxValue]="value()"
     ></lux-autocomplete-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]
 })
 class LuxAutocompleteA11yComponent {
   options: TestOption[] = [{ label: 'Meine Aufgaben', value: 'A' }];
 
-  disabled = false;
-  readonly = false;
-  required = false;
-  value?: TestOption;
+  disabled = signal(false);
+  readonly = signal(false);
+  required = signal(false);
+  value = signal<TestOption | undefined>(undefined);
 }
 
 /**

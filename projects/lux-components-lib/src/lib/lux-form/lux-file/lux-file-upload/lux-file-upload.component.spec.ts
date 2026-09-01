@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -53,8 +53,8 @@ describe('LuxFileUploadComponent', () => {
 
     it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', fakeAsync(() => {
       // Vorbedingungen: Maximal 1 Datei erlaubt
-      testComponent.maxFileCount = 1;
-      testComponent.multiple = true;
+      testComponent.maxFileCount.set(1);
+      testComponent.multiple.set(true);
       fixture.detectChanges();
 
       // Eine Datei hinzufügen
@@ -72,7 +72,7 @@ describe('LuxFileUploadComponent', () => {
       expect(fileComponent.formControl.errors![LuxFileErrorCause.MaxFileCount]).toBeDefined();
 
       // MaxFileCount dynamisch erhöhen
-      testComponent.maxFileCount = 2;
+      testComponent.maxFileCount.set(2);
       fixture.detectChanges();
 
       // Fügt eine zweite Datei hinzu
@@ -86,9 +86,9 @@ describe('LuxFileUploadComponent', () => {
     }));
 
     it('Sollte den Delete-Button bei luxListOnly=true anzeigen, wenn hidden=false konfiguriert ist', () => {
-      testComponent.listOnly = true;
-      testComponent.deleteActionConfig = { ...testComponent.deleteActionConfig, hidden: false };
-      testComponent.selected = [{ name: 'mockfile1.txt', type: 'text/plain' }];
+      testComponent.listOnly.set(true);
+      testComponent.deleteActionConfig.set({ ...testComponent.deleteActionConfig(), hidden: false });
+      testComponent.selected.set([{ name: 'mockfile1.txt', type: 'text/plain' }]);
 
       fixture.detectChanges();
 
@@ -97,9 +97,9 @@ describe('LuxFileUploadComponent', () => {
     });
 
     it('Sollte den Delete-Button bei hidden=true auch mit luxListOnly=true ausblenden', () => {
-      testComponent.listOnly = true;
-      testComponent.deleteActionConfig = { ...testComponent.deleteActionConfig, hidden: true };
-      testComponent.selected = [{ name: 'mockfile1.txt', type: 'text/plain' }];
+      testComponent.listOnly.set(true);
+      testComponent.deleteActionConfig.set({ ...testComponent.deleteActionConfig(), hidden: true });
+      testComponent.selected.set([{ name: 'mockfile1.txt', type: 'text/plain' }]);
 
       fixture.detectChanges();
 
@@ -127,24 +127,24 @@ class MockStorage {
       [luxRequired]="required"
       [luxReadonly]="readonly"
       [luxDisabled]="disabled"
-      [luxListOnly]="listOnly"
+      [luxListOnly]="listOnly()"
       [luxAccept]="accept"
       [luxCapture]="capture"
       [luxMaxSizeMiB]="maxSizeMiB"
       [luxUploadUrl]="uploadUrl"
-      [luxSelected]="selected"
-      [luxMultiple]="multiple"
-      [luxMaxFileCount]="maxFileCount"
+      [luxSelected]="selected()"
+      [luxMultiple]="multiple()"
+      [luxMaxFileCount]="maxFileCount()"
       [luxUploadActionConfig]="uploadActionConfig"
       [luxDownloadActionConfig]="downloadActionConfig"
-      [luxDeleteActionConfig]="deleteActionConfig"
+      [luxDeleteActionConfig]="deleteActionConfig()"
       [luxViewActionConfig]="viewActionConfig"
       [luxContentsAsBlob]="contentsAsBlob"
       (luxSelectedChange)="selectedChange($event)"
     >
     </lux-file-upload>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxFileUploadComponent]
 })
 class FileComponent {
@@ -158,12 +158,12 @@ class FileComponent {
   iconName?: string;
   maxSizeMiB = 10;
   uploadUrl?: string;
-  multiple?: boolean;
-  maxFileCount = 100;
+  multiple = signal<boolean | undefined>(undefined);
+  maxFileCount = signal(100);
   contentsAsBlob?: boolean;
-  listOnly?: boolean;
+  listOnly = signal<boolean | undefined>(undefined);
 
-  selected: ILuxFileObject[] | null = null;
+  selected = signal<ILuxFileObject[] | null>(null);
 
   uploadActionConfig: ILuxFilesListActionConfig = {
     disabled: false,
@@ -176,7 +176,7 @@ class FileComponent {
     labelHeader: 'Neue Dateien hochladen',
     onClick: () => null
   };
-  deleteActionConfig: ILuxFileListActionConfig = {
+  deleteActionConfig = signal<ILuxFileListActionConfig>({
     disabled: false,
     disabledHeader: false,
     hidden: false,
@@ -186,7 +186,7 @@ class FileComponent {
     label: 'Löschen',
     labelHeader: 'Alle Dateien entfernen',
     onClick: () => null
-  };
+  });
   viewActionConfig: ILuxFileActionConfig = {
     disabled: false,
     hidden: false,
@@ -203,7 +203,7 @@ class FileComponent {
   };
 
   selectedChange(files: ILuxFileObject[] | null) {
-    this.selected = files;
+    this.selected.set(files);
   }
 }
 

@@ -1,6 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -188,10 +188,10 @@ describe('LuxCheckboxAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.eula).toBeUndefined();
+        expect(fixture.componentInstance.eula()).toBeUndefined();
 
         // Änderungen durchführen
-        fixture.componentInstance.eula = true;
+        fixture.componentInstance.eula.set(true);
         fixture.detectChanges();
 
         // Nachbedingungen testen
@@ -201,7 +201,7 @@ describe('LuxCheckboxAcComponent', () => {
 
       it('Label anklicken', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.eula).toBeFalsy();
+        expect(fixture.componentInstance.eula()).toBeFalsy();
 
         // Änderungen durchführen
         const checkboxEl = fixture.debugElement.query(By.css('label'));
@@ -210,12 +210,12 @@ describe('LuxCheckboxAcComponent', () => {
         flush();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.eula).toBeTruthy();
+        expect(fixture.componentInstance.eula()).toBeTruthy();
       }));
 
       it('Checkbox anklicken', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.eula).toBeFalsy();
+        expect(fixture.componentInstance.eula()).toBeFalsy();
 
         // Änderungen durchführen
         const checkboxEl = fixture.debugElement.query(By.css('input'));
@@ -223,7 +223,7 @@ describe('LuxCheckboxAcComponent', () => {
         fixture.detectChanges();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.eula).toBeTruthy();
+        expect(fixture.componentInstance.eula()).toBeTruthy();
       }));
     });
 
@@ -239,10 +239,10 @@ describe('LuxCheckboxAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.disabled).toBeUndefined();
+        expect(fixture.componentInstance.disabled()).toBeUndefined();
 
         // Änderungen durchführen
-        fixture.componentInstance.disabled = true;
+        fixture.componentInstance.disabled.set(true);
         fixture.detectChanges();
 
         const checkboxEl = fixture.debugElement.query(By.css('input'));
@@ -250,7 +250,7 @@ describe('LuxCheckboxAcComponent', () => {
         fixture.detectChanges();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.disabled).toBeTruthy();
+        expect(fixture.componentInstance.disabled()).toBeTruthy();
         expect(checkboxEl.nativeElement.disabled).toBeTruthy();
       }));
     });
@@ -267,18 +267,18 @@ describe('LuxCheckboxAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.label).toEqual('');
+        expect(fixture.componentInstance.label()).toEqual('');
 
         // Änderungen durchführen
         const newLabel = 'A4711';
-        fixture.componentInstance.label = newLabel;
+        fixture.componentInstance.label.set(newLabel);
         fixture.detectChanges();
 
         const labelEl = fixture.debugElement.query(By.css('label'));
         fixture.detectChanges();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.label).toEqual(newLabel);
+        expect(fixture.componentInstance.label()).toEqual(newLabel);
         expect(labelEl.nativeElement.innerHTML.trim().indexOf(newLabel) !== -1).toBeTrue();
       }));
     });
@@ -362,7 +362,7 @@ describe('LuxCheckboxAcComponent', () => {
         expect(errorEl).toBeNull();
 
         // Änderungen durchführen
-        testComponent.validators = Validators.required;
+        testComponent.validators.set(Validators.required);
         LuxTestHelper.wait(fixture);
         checkboxComponent.formControl.markAsTouched();
         checkboxComponent.formControl.updateValueAndValidity();
@@ -396,19 +396,19 @@ describe('LuxCheckboxAcComponent', () => {
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
-      testComponent.readonly = true;
+      testComponent.readonly.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
-      testComponent.required = true;
+      testComponent.required.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
@@ -416,17 +416,17 @@ describe('LuxCheckboxAcComponent', () => {
 });
 
 @Component({
-  template: ` <lux-checkbox-ac luxLabel="Magst du Pommes?" [luxChecked]="true" [luxDisabled]="disabled"></lux-checkbox-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-checkbox-ac luxLabel="Magst du Pommes?" [luxChecked]="true" [luxDisabled]="disabled()"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxDisabledAttributeComponent {
-  disabled?: boolean;
+  disabled = signal<boolean | undefined>(undefined);
 }
 
 @Component({
   template: ` <lux-checkbox-ac luxLabel="Eula gelesen?" (luxCheckedChange)="onCheckedChange($event)"></lux-checkbox-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxCheckedChangeComponent {
@@ -439,25 +439,25 @@ class LuxCheckedChangeComponent {
 
 @Component({
   template: ` <lux-checkbox-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula"></lux-checkbox-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxCheckedAttributeComponent {
-  eula?: boolean;
+  eula = signal<boolean | undefined>(undefined);
 }
 
 @Component({
-  template: ` <lux-checkbox-ac [luxLabel]="label" [luxChecked]="false"></lux-checkbox-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-checkbox-ac [luxLabel]="label()" [luxChecked]="false"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxLabelAttributeComponent {
-  label = '';
+  label = signal('');
 }
 
 @Component({
   template: ` <lux-checkbox-ac [luxLabel]="label" [luxRequired]="true"></lux-checkbox-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxRequiredAttributeComponent {
@@ -470,7 +470,7 @@ class LuxRequiredAttributeComponent {
       <lux-checkbox-ac luxLabel="Eula gelesen?" luxControlBinding="eula" [luxRequired]="required"></lux-checkbox-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxCheckboxAcComponent]
 })
 class LuxCheckboxInFormAttributeComponent {
@@ -490,7 +490,7 @@ class LuxCheckboxInFormAttributeComponent {
       <lux-checkbox-ac luxLabel="Eula gelesen?" luxControlBinding="eula"></lux-checkbox-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxCheckboxAcComponent]
 })
 class LuxCheckboxRequiredInFormAttributeComponent {
@@ -504,23 +504,24 @@ class LuxCheckboxRequiredInFormAttributeComponent {
 }
 
 @Component({
-  template: ` <lux-checkbox-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula" [luxControlValidators]="validators"></lux-checkbox-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-checkbox-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula" [luxControlValidators]="validators()"></lux-checkbox-ac> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxValidatorsComponent {
   eula?: boolean;
-  validators?: ValidatorFnType;
+  validators = signal<ValidatorFnType | undefined>(undefined);
 }
 
 @Component({
   template: `
-    <lux-checkbox-ac luxLabel="Checkbox" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-checkbox-ac>
+    <lux-checkbox-ac luxLabel="Checkbox" [luxDisabled]="disabled()" [luxReadonly]="readonly()" [luxRequired]="required()"></lux-checkbox-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxCheckboxAcComponent]
 })
 class LuxCheckboxA11yComponent {
-  disabled = false;
-  readonly = false;
-  required = false;
+  disabled = signal(false);
+  readonly = signal(false);
+  required = signal(false);
 }

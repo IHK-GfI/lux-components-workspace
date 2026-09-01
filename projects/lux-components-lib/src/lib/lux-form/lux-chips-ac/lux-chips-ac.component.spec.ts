@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -66,8 +66,8 @@ describe('LuxChipComponent-Authentic', () => {
     }));
 
     it('Sollte das Label ausblenden, wenn kein Input erlaubt ist', fakeAsync(() => {
-      testComponent.inputAllowed = false;
-      testComponent.inputLabelAlwaysVisible = false;
+      testComponent.inputAllowed.set(false);
+      testComponent.inputLabelAlwaysVisible.set(false);
       LuxTestHelper.wait(fixture);
 
       const labelElement = fixture.debugElement.query(By.css('.lux-form-label-authentic'));
@@ -75,8 +75,8 @@ describe('LuxChipComponent-Authentic', () => {
     }));
 
     it('Sollte das Label anzeigen, wenn luxInputLabelAlwaysVisible aktiv ist', fakeAsync(() => {
-      testComponent.inputAllowed = false;
-      testComponent.inputLabelAlwaysVisible = true;
+      testComponent.inputAllowed.set(false);
+      testComponent.inputLabelAlwaysVisible.set(true);
       LuxTestHelper.wait(fixture);
 
       const labelElement = fixture.debugElement.query(By.css('.lux-form-label-authentic'));
@@ -85,8 +85,8 @@ describe('LuxChipComponent-Authentic', () => {
     }));
 
     it('Sollte das Label anzeigen, wenn luxInputAllowed aktiv ist', fakeAsync(() => {
-      testComponent.inputAllowed = true;
-      testComponent.inputLabelAlwaysVisible = false;
+      testComponent.inputAllowed.set(true);
+      testComponent.inputLabelAlwaysVisible.set(false);
       LuxTestHelper.wait(fixture);
 
       const labelElement = fixture.debugElement.query(By.css('.lux-form-label-authentic'));
@@ -97,7 +97,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte alle Chips deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -107,7 +107,7 @@ describe('LuxChipComponent-Authentic', () => {
       expect(disabledChipElements.length).toBe(0);
 
       // Änderungen durchführen
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -120,7 +120,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte alle Grouped-Chips deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -130,7 +130,7 @@ describe('LuxChipComponent-Authentic', () => {
       expect(disabledChipElements.length).toBe(0);
 
       // Änderungen durchführen
-      testComponent.groupDisabled = true;
+      testComponent.groupDisabled.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -143,7 +143,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte einzelne Chips deaktivieren', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -153,8 +153,11 @@ describe('LuxChipComponent-Authentic', () => {
       expect(disabledChipElements.length).toBe(0);
 
       // Änderungen durchführen
-      testComponent.chips[0].disabled = true;
-      testComponent.chips[1].disabled = true;
+      testComponent.chips.update((chips) => {
+        chips[0].disabled = true;
+        chips[1].disabled = true;
+        return [...chips];
+      });
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -167,7 +170,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte alle Grouped-Chips unlöschbar machen', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -177,7 +180,7 @@ describe('LuxChipComponent-Authentic', () => {
       expect(disabledChipElements.length).toBe(7);
 
       // Änderungen durchführen
-      testComponent.groupRemovable = false;
+      testComponent.groupRemovable.set(false);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -190,7 +193,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte einzelne Chips unlöschbar machen', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -200,8 +203,11 @@ describe('LuxChipComponent-Authentic', () => {
       expect(disabledChipElements.length).toBe(7);
 
       // Änderungen durchführen
-      testComponent.chips[0].removable = false;
-      testComponent.chips[1].removable = false;
+      testComponent.chips.update((chips) => {
+        chips[0].removable = false;
+        chips[1].removable = false;
+        return [...chips];
+      });
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -218,7 +224,7 @@ describe('LuxChipComponent-Authentic', () => {
       expect(chipElements.length).toBe(0);
 
       // Änderungen durchführen
-      testComponent.inputAllowed = true;
+      testComponent.inputAllowed.set(true);
       LuxTestHelper.wait(fixture);
       chipsComponent.add('test');
       LuxTestHelper.wait(fixture);
@@ -239,8 +245,8 @@ describe('LuxChipComponent-Authentic', () => {
 
       // Änderungen durchführen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
-      testComponent.inputAllowed = true;
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
+      testComponent.inputAllowed.set(true);
       LuxTestHelper.wait(fixture);
       chipsComponent.add('test');
       LuxTestHelper.wait(fixture);
@@ -276,7 +282,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte Grouped-Chips bei Click auf Remove-Icon entfernen', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       LuxTestHelper.wait(fixture);
@@ -299,9 +305,9 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte Chips über Autocomplete hinzufügen', fakeAsync(() => {
       // Vorbedingungen testen
       testComponent.addMockChips();
-      testComponent.inputAllowed = true;
-      testComponent.autocomplete = true;
-      testComponent.autocompleteOptions = ['Option 1', 'Option 2', 'Option 3'];
+      testComponent.inputAllowed.set(true);
+      testComponent.autocomplete.set(true);
+      testComponent.autocompleteOptions.set(['Option 1', 'Option 2', 'Option 3']);
       LuxTestHelper.wait(fixture);
 
       let chipElements = fixture.debugElement.queryAll(By.css('.mat-mdc-chip'));
@@ -327,9 +333,9 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte eine einzelne FilteredOption als neuen Chip ergänzen', fakeAsync(() => {
       // Vorbedingungen testen
       testComponent.addMockChips();
-      testComponent.inputAllowed = true;
-      testComponent.autocomplete = true;
-      testComponent.autocompleteOptions = ['Option 1', 'Option 2', 'Option 3'];
+      testComponent.inputAllowed.set(true);
+      testComponent.autocomplete.set(true);
+      testComponent.autocompleteOptions.set(['Option 1', 'Option 2', 'Option 3']);
       LuxTestHelper.wait(fixture);
 
       let chipElements = fixture.debugElement.queryAll(By.css('.mat-mdc-chip'));
@@ -359,7 +365,7 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte die angeklickten Chips als Event ausgeben', fakeAsync(() => {
       // Vorbedingungen testen
       LuxTestHelper.wait(fixture);
-      testComponent.chipGroup = testComponent.chipGroupComponent();
+      testComponent.chipGroup.set(testComponent.chipGroupComponent());
       LuxTestHelper.wait(fixture);
       testComponent.addMockGroupLabels();
       testComponent.addMockChips();
@@ -483,8 +489,8 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte keinen required-Fehler zeigen, wenn Chips vorhanden sind', fakeAsync(() => {
       const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
       const testComponent = localFixture.componentInstance;
-      testComponent.required = true;
-      testComponent.chips = [{ label: 'Chip #1', color: undefined, removable: true, disabled: false }];
+      testComponent.required.set(true);
+      testComponent.chips.set([{ label: 'Chip #1', color: undefined, removable: true, disabled: false }]);
       localFixture.detectChanges();
       LuxTestHelper.wait(localFixture);
 
@@ -499,8 +505,8 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte den required-Fehler zeigen, wenn keine Chips vorhanden sind', fakeAsync(() => {
       const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
       const testComponent = localFixture.componentInstance;
-      testComponent.required = true;
-      testComponent.chips = [];
+      testComponent.required.set(true);
+      testComponent.chips.set([]);
       localFixture.detectChanges();
       LuxTestHelper.wait(localFixture);
 
@@ -516,8 +522,8 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte den required-Fehler entfernen, wenn ein Chip hinzugefügt wird', fakeAsync(() => {
       const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
       const testComponent = localFixture.componentInstance;
-      testComponent.required = true;
-      testComponent.chips = [];
+      testComponent.required.set(true);
+      testComponent.chips.set([]);
       localFixture.detectChanges();
       LuxTestHelper.wait(localFixture);
 
@@ -528,7 +534,7 @@ describe('LuxChipComponent-Authentic', () => {
       let errorElement = localFixture.debugElement.query(By.css('mat-error'));
       expect(errorElement).not.toBeNull();
 
-      testComponent.chips = [{ label: 'Neuer Chip', color: undefined, removable: true, disabled: false }];
+      testComponent.chips.set([{ label: 'Neuer Chip', color: undefined, removable: true, disabled: false }]);
       LuxTestHelper.wait(localFixture);
 
       errorElement = localFixture.debugElement.query(By.css('mat-error'));
@@ -538,8 +544,8 @@ describe('LuxChipComponent-Authentic', () => {
     it('Sollte den required-Fehler anzeigen, wenn ein Chip wieder entfernt wird', fakeAsync(() => {
       const localFixture = TestBed.createComponent(LuxRequiredNoGroupComponent);
       const testComponent = localFixture.componentInstance;
-      testComponent.required = true;
-      testComponent.chips = [{ label: 'Chip #1', color: undefined, removable: true, disabled: false }];
+      testComponent.required.set(true);
+      testComponent.chips.set([{ label: 'Chip #1', color: undefined, removable: true, disabled: false }]);
       localFixture.detectChanges();
       LuxTestHelper.wait(localFixture);
 
@@ -552,7 +558,7 @@ describe('LuxChipComponent-Authentic', () => {
       expect(errorElement).toBeNull();
 
       // Chip entfernen
-      testComponent.chips = [];
+      testComponent.chips.set([]);
       LuxTestHelper.wait(localFixture);
 
       // Nachbedingung: Fehler erscheint wieder
@@ -578,7 +584,7 @@ describe('LuxChipComponent-Authentic', () => {
         const inputElement = fixture.debugElement.query(By.css('input'));
 
         // Den strikten Modus aktivieren.
-        testComponent.strict = true;
+        testComponent.strict.set(true);
         fixture.detectChanges();
 
         // Die Option "Emma" hinzufügen.
@@ -623,7 +629,7 @@ describe('LuxChipComponent-Authentic', () => {
         const inputElement = fixture.debugElement.query(By.css('input'));
 
         // Den strikten Modus aktivieren.
-        testComponent.strict = true;
+        testComponent.strict.set(true);
         fixture.detectChanges();
 
         // Die Option "Emma" hinzufügen.
@@ -690,7 +696,7 @@ describe('LuxChipComponent-Authentic', () => {
       expect(autocomplete.displayedOptions().length).toEqual(10);
       expect(autocomplete.filteredOptions().length).toEqual(0);
 
-      component.options = [...component.options];
+      component.options.set([...component.options()]);
       LuxTestHelper.wait(fixture);
 
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'Lorem ');
@@ -727,19 +733,19 @@ describe('LuxChipComponent-Authentic', () => {
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
-      testComponent.readonly = true;
+      testComponent.readonly.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
-      testComponent.required = true;
+      testComponent.required.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
@@ -748,13 +754,13 @@ describe('LuxChipComponent-Authentic', () => {
 
 @Component({
   template: `
-    <lux-chips-ac luxLabel="Label" [luxInputAllowed]="true" [luxAutocompleteOptions]="options" [luxOptionBlockSize]="8"></lux-chips-ac>
+    <lux-chips-ac luxLabel="Label" [luxInputAllowed]="true" [luxAutocompleteOptions]="options()" [luxOptionBlockSize]="8"></lux-chips-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxChipsAcComponent]
 })
 class LuxScrollComponent {
-  options: string[] = [
+  options = signal<string[]>([
     'Lorem ipsum A',
     'Lorem ipsum B',
     'Lorem ipsum C',
@@ -765,7 +771,7 @@ class LuxScrollComponent {
     'Lorem ipsum H',
     'Lorem ipsum I',
     'Lorem ipsum J'
-  ];
+  ]);
 }
 
 @Component({
@@ -774,17 +780,17 @@ class LuxScrollComponent {
       luxInputLabel="Strict"
       [luxNewChipGroup]="myChipGroup"
       [luxInputAllowed]="true"
-      [luxStrict]="strict"
+      [luxStrict]="strict()"
       [luxAutocompleteOptions]="[]"
     >
       <lux-chip-ac-group [luxRemovable]="true" luxColor="primary" [(luxLabels)]="chips" #myChipGroup> </lux-chip-ac-group>
     </lux-chips-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxStrictNoFormComponent {
-  strict = false;
+  strict = signal(false);
   chips: string[] = [];
 }
 
@@ -797,17 +803,17 @@ class LuxStrictNoFormComponent {
         [luxNewChipGroup]="myChipGroup"
         luxControlBinding="names"
         [luxInputAllowed]="true"
-        [luxStrict]="strict"
+        [luxStrict]="strict()"
       >
         <lux-chip-ac-group [luxRemovable]="true" luxColor="primary" #myChipGroup> </lux-chip-ac-group>
       </lux-chips-ac>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxStrictFormComponent {
-  strict = false;
+  strict = signal(false);
   form = new FormGroup({
     names: new FormControl()
   });
@@ -827,7 +833,7 @@ class LuxStrictFormComponent {
       </lux-chips-ac>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxFormInitValueComponent {
@@ -852,7 +858,7 @@ class LuxFormInitValueComponent {
       </lux-chips-ac>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class LuxFormRequiredValueComponent {
@@ -865,16 +871,16 @@ class LuxFormRequiredValueComponent {
 @Component({
   template: `
     <lux-chips-ac
-      [luxDisabled]="disabled"
-      [luxInputAllowed]="inputAllowed"
-      [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
+      [luxDisabled]="disabled()"
+      [luxInputAllowed]="inputAllowed()"
+      [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible()"
       [luxInputLabel]="inputLabel"
       [luxOrientation]="chipOrientation"
-      [luxNewChipGroup]="chipGroup"
+      [luxNewChipGroup]="chipGroup()"
       (luxChipAdded)="chipAdded($event)"
-      [luxAutocompleteOptions]="autocompleteOptions"
+      [luxAutocompleteOptions]="autocompleteOptions()"
     >
-      @for (chip of chips; track chip.label; let i = $index) {
+      @for (chip of chips(); track chip.label; let i = $index) {
         <lux-chip-ac
           [luxDisabled]="chip.disabled"
           [luxColor]="chip.color"
@@ -886,10 +892,10 @@ class LuxFormRequiredValueComponent {
         </lux-chip-ac>
       }
       <lux-chip-ac-group
-        [luxRemovable]="groupRemovable"
+        [luxRemovable]="groupRemovable()"
         [luxColor]="groupColor"
         [(luxLabels)]="groupLabels"
-        [luxDisabled]="groupDisabled"
+        [luxDisabled]="groupDisabled()"
         (luxChipRemoved)="groupChipRemoved($event)"
         (luxChipAdded)="groupChipAdded($event)"
         (luxChipClicked)="groupChipClicked($event)"
@@ -897,42 +903,45 @@ class LuxFormRequiredValueComponent {
       </lux-chip-ac-group>
     </lux-chips-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxChipAcComponent, LuxChipsAcComponent, LuxChipAcGroupComponent]
 })
 class ChipsComponent {
-  disabled = false;
-  inputAllowed = false;
-  inputLabelAlwaysVisible = false;
+  disabled = signal(false);
+  inputAllowed = signal(false);
+  inputLabelAlwaysVisible = signal(false);
   inputLabel = 'Neu';
   chipOrientation: LuxChipsAcOrientation = 'horizontal';
-  autocomplete = false;
-  autocompleteOptions: string[] = [];
+  autocomplete = signal(false);
+  autocompleteOptions = signal<string[]>([]);
 
-  chips: { label: string; color: LuxThemePalette; removable: boolean; disabled: boolean; selected: boolean }[] = [];
+  chips = signal<{ label: string; color: LuxThemePalette; removable: boolean; disabled: boolean; selected: boolean }[]>([]);
 
-  groupRemovable = true;
-  groupDisabled = false;
+  groupRemovable = signal(true);
+  groupDisabled = signal(false);
   groupColor: LuxThemePalette = undefined;
-  groupLabels: string[] = [];
+  groupLabels = signal<string[]>([]);
 
-  chipGroup?: LuxChipAcGroupComponent;
+  chipGroup = signal<LuxChipAcGroupComponent | undefined>(undefined);
   readonly chipGroupComponent = viewChild.required(LuxChipAcGroupComponent);
 
   chipAdded(newChip: string) {
-    this.chips.push({
-      label: newChip,
-      color: 'warn',
-      removable: true,
-      disabled: false,
-      selected: false
-    });
+    this.chips.update((chips) => [
+      ...chips,
+      {
+        label: newChip,
+        color: 'warn',
+        removable: true,
+        disabled: false,
+        selected: false
+      }
+    ]);
   }
 
   chipClicked(index: number) {}
 
   chipRemoved(chipIndex: number) {
-    this.chips = this.chips.filter((value: any, index: number) => index !== chipIndex);
+    this.chips.update((chips) => chips.filter((value: any, index: number) => index !== chipIndex));
   }
 
   groupChipRemoved(_index: number) {}
@@ -942,23 +951,23 @@ class ChipsComponent {
   groupChipClicked(_index: number) {}
 
   addMockChips() {
-    this.chips = [
+    this.chips.set([
       { label: 'Hallo Welt!', color: undefined, removable: true, disabled: false, selected: false },
       { label: 'Hello World!', color: 'primary', removable: true, disabled: false, selected: false },
       { label: 'Ciao Mundo!', color: 'warn', removable: true, disabled: false, selected: false },
       { label: 'Привет мир!', color: 'accent', removable: true, disabled: false, selected: false }
-    ];
+    ]);
   }
 
   addMockGroupLabels() {
-    this.groupLabels = ['Group Label 0', 'Group Label 1', 'Group Label 2'];
+    this.groupLabels.set(['Group Label 0', 'Group Label 1', 'Group Label 2']);
   }
 }
 
 @Component({
   template: `
-    <lux-chips-ac [luxRequired]="required">
-      @for (chip of chips; track chip.label; let i = $index) {
+    <lux-chips-ac [luxRequired]="required()">
+      @for (chip of chips(); track chip.label; let i = $index) {
         <lux-chip-ac
           [luxDisabled]="chip.disabled"
           [luxColor]="chip.color"
@@ -970,15 +979,15 @@ class ChipsComponent {
       }
     </lux-chips-ac>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxChipAcComponent, LuxChipsAcComponent]
 })
 class LuxRequiredNoGroupComponent {
-  required = false;
-  chips: { label: string; color: LuxThemePalette; removable: boolean; disabled: boolean }[] = [];
+  required = signal(false);
+  chips = signal<{ label: string; color: LuxThemePalette; removable: boolean; disabled: boolean }[]>([]);
 
   chipRemoved(chipIndex: number) {
-    this.chips = this.chips.filter((_value: unknown, index: number) => index !== chipIndex);
+    this.chips.update((chips) => chips.filter((_value: unknown, index: number) => index !== chipIndex));
   }
 }
 
@@ -999,7 +1008,7 @@ class LuxRequiredNoGroupComponent {
       </lux-chips-ac>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxChipAcComponent, LuxChipsAcComponent]
 })
 class LuxFormRequiredNoGroupInFormComponent {
@@ -1018,14 +1027,15 @@ class LuxFormRequiredNoGroupInFormComponent {
   template: `<lux-chips-ac
     luxLabel="Chips"
     [luxInputAllowed]="true"
-    [luxDisabled]="disabled"
-    [luxReadonly]="readonly"
-    [luxRequired]="required"
+    [luxDisabled]="disabled()"
+    [luxReadonly]="readonly()"
+    [luxRequired]="required()"
   ></lux-chips-ac>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxChipsAcComponent]
 })
 class LuxChipsA11yComponent {
-  disabled = false;
-  readonly = false;
-  required = false;
+  disabled = signal(false);
+  readonly = signal(false);
+  required = signal(false);
 }

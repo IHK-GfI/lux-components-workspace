@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -64,8 +64,8 @@ describe('LuxSliderAcComponent', () => {
       expect(percentSpy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      component.max = 50;
-      component.min = 25;
+      component.max.set(50);
+      component.min.set(25);
       LuxTestHelper.wait(fixture);
       component.form.get('slider')!.setValue(30);
       LuxTestHelper.wait(fixture);
@@ -83,8 +83,8 @@ describe('LuxSliderAcComponent', () => {
       expect(sliderComponent.value()).toEqual(0);
 
       // Änderungen durchführen
-      component.max = 50;
-      component.min = 25;
+      component.max.set(50);
+      component.min.set(25);
       LuxTestHelper.wait(fixture);
       component.form.get('slider')!.setValue(20);
       LuxTestHelper.wait(fixture);
@@ -109,7 +109,7 @@ describe('LuxSliderAcComponent', () => {
       expect(sliderComponent.luxDisabled()).toBe(false);
 
       // Änderungen durchführen
-      component.disabled = true;
+      component.disabled.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -145,15 +145,15 @@ describe('LuxSliderAcComponent', () => {
 
     it('Sollte den Wert setzen', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(component.value).toEqual(0);
+      expect(component.value()).toEqual(0);
       expect(sliderComponent.value()).toEqual(0);
 
       // Änderungen durchführen
-      component.value = 50;
+      component.value.set(50);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(component.value).toEqual(50);
+      expect(component.value()).toEqual(50);
       expect(sliderComponent.value()).toEqual(50);
     }));
 
@@ -168,10 +168,10 @@ describe('LuxSliderAcComponent', () => {
       expect(percentSpy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      component.max = 50;
-      component.min = 25;
+      component.max.set(50);
+      component.min.set(25);
       LuxTestHelper.wait(fixture);
-      component.value = 30;
+      component.value.set(30);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -188,7 +188,7 @@ describe('LuxSliderAcComponent', () => {
       expect(sliderComponent.luxDisabled()).toBe(false);
 
       // Änderungen durchführen
-      component.disabled = true;
+      component.disabled.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -199,26 +199,26 @@ describe('LuxSliderAcComponent', () => {
 
     it('Sollte den Min- und Max-Wert nicht überschreiten', fakeAsync(() => {
       // Vorbedingungen testen
-      expect(component.value).toEqual(0);
+      expect(component.value()).toEqual(0);
       expect(sliderComponent.value()).toEqual(0);
 
       // Änderungen durchführen
-      component.max = 50;
-      component.min = 25;
+      component.max.set(50);
+      component.min.set(25);
       LuxTestHelper.wait(fixture);
-      component.value = 20;
+      component.value.set(20);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(component.value).toEqual(25);
+      expect(component.value()).toEqual(25);
       expect(sliderComponent.value()).toEqual(25);
 
       // Änderungen durchführen
-      component.value = 55;
+      component.value.set(55);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
-      expect(component.value).toEqual(50);
+      expect(component.value()).toEqual(50);
       expect(sliderComponent.value()).toEqual(50);
     }));
 
@@ -228,7 +228,7 @@ describe('LuxSliderAcComponent', () => {
       expect(thumbLabel).toBeDefined();
 
       // Änderungen durchführen
-      component.showThumbLabel = false;
+      component.showThumbLabel.set(false);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -242,24 +242,24 @@ describe('LuxSliderAcComponent', () => {
       expect(thumbLabelText.nativeElement.textContent).toEqual('0');
 
       // Änderungen durchführen
-      component.max = 10000;
-      component.showThumbLabel = true;
-      component.displayWith = (value: number) => {
+      component.max.set(10000);
+      component.showThumbLabel.set(true);
+      component.displayWith.set((value: number) => {
         const result = value ? '' + value : '0';
         if (value && value >= 1000) {
           return Math.round(value / 1000) + 'k';
         }
         return result;
-      };
+      });
       LuxTestHelper.wait(fixture);
-      component.value = 1000;
+      component.value.set(1000);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       thumbLabelText = fixture.debugElement.query(By.css('.mdc-slider__value-indicator-text'));
       expect(thumbLabelText.nativeElement.textContent).toEqual('1k');
 
-      component.value = 5600;
+      component.value.set(5600);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -288,19 +288,19 @@ describe('LuxSliderAcComponent', () => {
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
-      testComponent.readonly = true;
+      testComponent.readonly.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
-      testComponent.required = true;
+      testComponent.required.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
@@ -310,29 +310,29 @@ describe('LuxSliderAcComponent', () => {
 @Component({
   template: `<lux-slider-ac
     luxLabel="Lorem ipsum"
-    [luxColor]="color"
-    [luxDisabled]="disabled"
-    [luxShowThumbLabel]="showThumbLabel"
+    [luxColor]="color()"
+    [luxDisabled]="disabled()"
+    [luxShowThumbLabel]="showThumbLabel()"
     [(luxValue)]="value"
-    [luxMax]="max"
-    [luxMin]="min"
-    [luxDisplayWith]="displayWith"
+    [luxMax]="max()"
+    [luxMin]="min()"
+    [luxDisplayWith]="displayWith()"
     (luxValuePercent)="percentChanged($event)"
     (luxValueChange)="valueChanged($event)"
     luxTagId="slidernoform"
   >
   </lux-slider-ac>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSliderAcComponent]
 })
 class MockSliderNoFormComponent {
-  color = 'primary';
-  disabled = false;
-  showThumbLabel = true;
-  value = 0;
-  max = 100;
-  min = 0;
-  displayWith?: LuxDisplayWithAcFnType;
+  color = signal('primary');
+  disabled = signal(false);
+  showThumbLabel = signal(true);
+  value = signal(0);
+  max = signal(100);
+  min = signal(0);
+  displayWith = signal<LuxDisplayWithAcFnType | undefined>(undefined);
 
   percentChanged(value: number) {}
 
@@ -342,9 +342,9 @@ class MockSliderNoFormComponent {
 @Component({
   template: `<div [formGroup]="form">
     <lux-slider-ac
-      [luxDisabled]="disabled"
-      [luxMax]="max"
-      [luxMin]="min"
+      [luxDisabled]="disabled()"
+      [luxMax]="max()"
+      [luxMin]="min()"
       luxControlBinding="slider"
       (luxValuePercent)="percentChanged($event)"
       (luxValueChange)="valueChanged($event)"
@@ -352,13 +352,13 @@ class MockSliderNoFormComponent {
     >
     </lux-slider-ac>
   </div>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxSliderAcComponent]
 })
 class MockSliderFormComponent {
-  disabled = false;
-  max = 100;
-  min = 0;
+  disabled = signal(false);
+  max = signal(100);
+  min = signal(0);
 
   form;
 
@@ -375,12 +375,13 @@ class MockSliderFormComponent {
 
 @Component({
   template: `
-    <lux-slider-ac luxLabel="Slider" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-slider-ac>
+    <lux-slider-ac luxLabel="Slider" [luxDisabled]="disabled()" [luxReadonly]="readonly()" [luxRequired]="required()"></lux-slider-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxSliderAcComponent]
 })
 class LuxSliderA11yComponent {
-  disabled = false;
-  readonly = false;
-  required = false;
+  disabled = signal(false);
+  readonly = signal(false);
+  required = signal(false);
 }

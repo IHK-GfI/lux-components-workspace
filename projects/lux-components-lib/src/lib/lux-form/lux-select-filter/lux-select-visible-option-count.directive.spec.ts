@@ -7,7 +7,7 @@ import { LuxSelectVisibleOptionCountDirective } from './lux-select-visible-optio
 @Component({
   template: ` <mat-select [luxSelectVisibleOptionCount]="visibleOptionCount"></mat-select> `,
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatSelectModule, LuxSelectVisibleOptionCountDirective]
 })
 class VisibleOptionCountHostComponent {

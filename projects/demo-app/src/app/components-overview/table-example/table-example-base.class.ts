@@ -1,6 +1,5 @@
-import { Directive, OnDestroy } from '@angular/core';
+import { Directive, OnDestroy, OutputRefSubscription } from '@angular/core';
 import { ICustomCSSConfig, LuxTableComponent } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { ColumnConfig } from './column-config';
 import { ResponsiveBehaviour } from './responsive-behaviour';
 
@@ -79,7 +78,7 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   symbolConfig: ColumnConfig = new ColumnConfig({ label: 'Symbol' });
   dateConfig: ColumnConfig = new ColumnConfig({ label: 'Datum', sticky: false,  responsiveAt: ['xs', 'sm', 'md'], responsiveBehaviour: ResponsiveBehaviour.COLUMN_HIDE });
   columnConfigs = [this.nameConfig, this.symbolConfig, this.dateConfig];
-  dblClickSub?: Subscription;
+  dblClickSub?: OutputRefSubscription;
   _multiSelect = true;
   _doubleClickActive = false;
   alignElementsTop = false;

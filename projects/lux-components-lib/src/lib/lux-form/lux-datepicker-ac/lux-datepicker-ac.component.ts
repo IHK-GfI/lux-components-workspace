@@ -320,6 +320,14 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
         emitViewToModelChange: this.shouldEmitDirectly
       });
       this.value.set(isoValue as any);
+
+      // Ohne shouldEmitDirectly feuert formControl.events NICHT, wodurch die automatische
+      // markForCheck()-Kopplung in LuxFormComponentBase (ngOnInit) ausbleibt. Ohne diesen
+      // manuellen Aufruf würde ngDoCheck() (und damit die Fehlermeldungs-Anzeige) bei dieser
+      // OnPush-Komponente erst bei einer zufällig ausgelösten Prüfung nachziehen.
+      if (!this.shouldEmitDirectly) {
+        this.cdr.markForCheck();
+      }
     }
 
     const datepickerInput = this.datepickerInput();

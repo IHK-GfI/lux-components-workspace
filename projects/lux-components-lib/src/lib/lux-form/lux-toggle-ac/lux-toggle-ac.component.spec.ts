@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -190,10 +190,10 @@ describe('LuxToggleAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.eula).toBeUndefined();
+        expect(fixture.componentInstance.eula()).toBeUndefined();
 
         // Änderungen durchführen
-        fixture.componentInstance.eula = true;
+        fixture.componentInstance.eula.set(true);
         fixture.detectChanges();
 
         // Nachbedingungen testen
@@ -203,7 +203,7 @@ describe('LuxToggleAcComponent', () => {
 
       it('Label anklicken', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.eula).toBeFalsy();
+        expect(fixture.componentInstance.eula()).toBeFalsy();
 
         // Änderungen durchführen
         const toggleEl = fixture.debugElement.query(By.css('label'));
@@ -212,12 +212,12 @@ describe('LuxToggleAcComponent', () => {
         flush();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.eula).toBeTruthy();
+        expect(fixture.componentInstance.eula()).toBeTruthy();
       }));
 
       it('Toggle anklicken', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.eula).toBeFalsy();
+        expect(fixture.componentInstance.eula()).toBeFalsy();
 
         // Änderungen durchführen
         const toggleEl = fixture.debugElement.query(By.css('button'));
@@ -225,7 +225,7 @@ describe('LuxToggleAcComponent', () => {
         fixture.detectChanges();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.eula).toBeTruthy();
+        expect(fixture.componentInstance.eula()).toBeTruthy();
       }));
     });
 
@@ -241,10 +241,10 @@ describe('LuxToggleAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.disabled).toBeUndefined();
+        expect(fixture.componentInstance.disabled()).toBeUndefined();
 
         // Änderungen durchführen
-        fixture.componentInstance.disabled = true;
+        fixture.componentInstance.disabled.set(true);
         fixture.detectChanges();
 
         const toggleEl = fixture.debugElement.query(By.css('button'));
@@ -252,7 +252,7 @@ describe('LuxToggleAcComponent', () => {
         fixture.detectChanges();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.disabled).toBeTruthy();
+        expect(fixture.componentInstance.disabled()).toBeTruthy();
         expect(toggleEl.nativeElement.disabled).toBeTruthy();
       }));
     });
@@ -269,18 +269,18 @@ describe('LuxToggleAcComponent', () => {
 
       it('Wert über die Component setzen', fakeAsync(() => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.label).toBeUndefined();
+        expect(fixture.componentInstance.label()).toBeUndefined();
 
         // Änderungen durchführen
         const newLabel = 'A4711';
-        fixture.componentInstance.label = newLabel;
+        fixture.componentInstance.label.set(newLabel);
         fixture.detectChanges();
 
         const labelEl = fixture.debugElement.query(By.css('label'));
         fixture.detectChanges();
 
         // Nachbedingungen testen
-        expect(fixture.componentInstance.label).toEqual(newLabel);
+        expect(fixture.componentInstance.label()).toEqual(newLabel);
         expect(labelEl.nativeElement.innerHTML.trim().indexOf(newLabel) !== -1).toBeTruthy();
       }));
     });
@@ -397,7 +397,7 @@ describe('LuxToggleAcComponent', () => {
         expect(errorEl).toBeNull();
 
         // Änderungen durchführen
-        testComponent.validators = Validators.required;
+        testComponent.validators.set(Validators.required);
         LuxTestHelper.wait(fixture);
         toggleComponent.formControl.markAsTouched();
         toggleComponent.formControl.updateValueAndValidity();
@@ -431,19 +431,19 @@ describe('LuxToggleAcComponent', () => {
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
-      testComponent.disabled = true;
+      testComponent.disabled.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
-      testComponent.readonly = true;
+      testComponent.readonly.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
-      testComponent.required = true;
+      testComponent.required.set(true);
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
@@ -451,17 +451,17 @@ describe('LuxToggleAcComponent', () => {
 });
 
 @Component({
-  template: ` <lux-toggle-ac luxLabel="Magst du Pommes?" [luxChecked]="true" [luxDisabled]="disabled"></lux-toggle-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-toggle-ac luxLabel="Magst du Pommes?" [luxChecked]="true" [luxDisabled]="disabled()"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent]
 })
 class LuxDisabledAttributeComponent {
-  disabled?: boolean;
+  disabled = signal<boolean | undefined>(undefined);
 }
 
 @Component({
   template: ` <lux-toggle-ac luxLabel="Eula gelesen?" (luxCheckedChange)="onCheckedChange($event)"></lux-toggle-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent]
 })
 class LuxCheckedChangeComponent {
@@ -474,25 +474,25 @@ class LuxCheckedChangeComponent {
 
 @Component({
   template: ` <lux-toggle-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula"></lux-toggle-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent]
 })
 class LuxCheckedAttributeComponent {
-  eula?: boolean;
+  eula = signal<boolean | undefined>(undefined);
 }
 
 @Component({
-  template: ` <lux-toggle-ac [luxLabel]="label" [luxChecked]="false"></lux-toggle-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-toggle-ac [luxLabel]="label()" [luxChecked]="false"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent]
 })
 class LuxLabelAttributeComponent {
-  label?: string;
+  label = signal<string | undefined>(undefined);
 }
 
 @Component({
   template: ` <lux-toggle-ac [luxLabel]="label" [luxRequired]="true"></lux-toggle-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent]
 })
 class LuxRequiredAttributeComponent {
@@ -505,7 +505,7 @@ class LuxRequiredAttributeComponent {
       <lux-toggle-ac luxLabel="Eula gelesen?" luxControlBinding="eula" [luxRequired]="required"></lux-toggle-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxToggleAcComponent]
 })
 class LuxToggleInFormAttributeComponent {
@@ -525,7 +525,7 @@ class LuxToggleInFormAttributeComponent {
       <lux-toggle-ac luxLabel="Eula gelesen?" luxControlBinding="eula"></lux-toggle-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, LuxToggleAcComponent]
 })
 class LuxToggleRequiredInFormAttributeComponent {
@@ -539,23 +539,29 @@ class LuxToggleRequiredInFormAttributeComponent {
 }
 
 @Component({
-  template: ` <lux-toggle-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula" [luxControlValidators]="validators"></lux-toggle-ac> `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ` <lux-toggle-ac luxLabel="Eula gelesen?" [(luxChecked)]="eula" [luxControlValidators]="validators()"></lux-toggle-ac> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent]
 })
 class LuxValidatorsComponent {
   eula?: boolean;
-  validators: ValidatorFnType;
+  validators = signal<ValidatorFnType>(undefined);
 }
 
 @Component({
   template: `
-    <lux-toggle-ac luxLabel="Eula gelesen?" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Eula gelesen?"
+      [luxDisabled]="disabled()"
+      [luxReadonly]="readonly()"
+      [luxRequired]="required()"
+    ></lux-toggle-ac>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent]
 })
 class LuxToggleA11yComponent {
-  disabled = false;
-  readonly = false;
-  required = false;
+  disabled = signal(false);
+  readonly = signal(false);
+  required = signal(false);
 }

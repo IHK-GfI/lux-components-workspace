@@ -381,7 +381,7 @@ class NoCardActionComponent {}
 
 @Component({
   template: `
-    <lux-card luxTitle="Lorem ipsum" (luxClicked)="test()">
+    <lux-card luxTitle="Lorem ipsum" [luxClickable]="true" (luxClicked)="test()">
       <lux-card-content> Lorem ipsum </lux-card-content>
     </lux-card>
   `,

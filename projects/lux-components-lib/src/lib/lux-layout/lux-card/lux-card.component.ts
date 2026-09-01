@@ -6,9 +6,6 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  EventEmitter,
-  OnInit,
-  Output,
   computed,
   contentChild,
   contentChildren,
@@ -55,7 +52,7 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
     class: 'lux-flex'
   }
 })
-export class LuxCardComponent implements OnInit, AfterViewInit {
+export class LuxCardComponent implements AfterViewInit {
   private componentsConfigService = inject(LuxComponentsConfigService);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
@@ -75,7 +72,11 @@ export class LuxCardComponent implements OnInit, AfterViewInit {
   readonly luxExpandedLabelClose = input('');
 
   readonly luxAfterExpansion = output<void>();
-  @Output() luxClicked = new EventEmitter<Event>();
+  readonly luxClicked = output<Event>();
+
+  // Ersetzt die frühere .observed-Abfrage von luxClicked (output() hat kein Äquivalent) -
+  // steuert die Klickbar-Darstellung der Card (Cursor, Tabindex).
+  readonly luxClickable = input(false);
 
   readonly iconComponents = contentChildren(LuxIconComponent, { descendants: false });
   readonly actionsComponent = contentChild(LuxCardActionsComponent);
@@ -86,14 +87,7 @@ export class LuxCardComponent implements OnInit, AfterViewInit {
 
   readonly effectiveTagId = computed(() => this.luxTagId() || this.luxTitle());
 
-  hasCardAction?: boolean;
   animationDisabled = true;
-
-  ngOnInit() {
-    if (this.luxClicked.observed) {
-      this.hasCardAction = true;
-    }
-  }
 
   ngAfterViewInit() {
     // Über die Konfiguration abfragen, ob die Animationen für Cards deaktiviert sind.

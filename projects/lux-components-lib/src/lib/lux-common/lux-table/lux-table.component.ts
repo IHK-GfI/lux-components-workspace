@@ -9,7 +9,6 @@ import {
   DoCheck,
   effect,
   ElementRef,
-  EventEmitter,
   inject,
   Injector,
   input,
@@ -17,7 +16,6 @@ import {
   model,
   OnDestroy,
   OnInit,
-  Output,
   output,
   untracked,
   viewChild
@@ -205,11 +203,21 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     }
   );
 
-  @Output() luxSelectedChange = new EventEmitter<Set<T>>();
-  @Output() luxSelectedAsArrayChange = new EventEmitter<T[]>();
-  @Output() luxSingleClicked = new EventEmitter<{ event: Event; rowItem: T; rowIndex: number }>();
-  @Output() luxDoubleClicked = new EventEmitter<{ event: MouseEvent; rowItem: T }>();
+  readonly luxSelectedChange = output<Set<T>>();
+  readonly luxSelectedAsArrayChange = output<T[]>();
+  readonly luxSingleClicked = output<{ event: Event; rowItem: T; rowIndex: number }>();
+  readonly luxDoubleClicked = output<{ event: MouseEvent; rowItem: T }>();
   readonly luxHiddenColumnsChange = output<string[]>();
+
+  // Ersetzen die frühere .observed-Abfrage der obigen Outputs (output() hat kein Äquivalent) -
+  // steuern sowohl die Cursor-Pointer-Darstellung der Row (siehe Template) als auch,
+  // im Fall von luxShowDoubleClickedCursor, das Deaktivieren der Klick-Selektion in
+  // changeSelectedEntry(), wenn extern auf Doppelklick reagiert wird.
+  // luxShowSelectedChangeCursor deckt sowohl luxSelectedChange als auch luxSelectedAsArrayChange
+  // ab, da beide Outputs stets gemeinsam bei derselben Selektionsänderung emittiert werden.
+  readonly luxShowSelectedChangeCursor = input(false);
+  readonly luxShowSingleClickedCursor = input(false);
+  readonly luxShowDoubleClickedCursor = input(false);
 
   private paginatorQuery = viewChild(LuxPaginatorComponent);
   private sortQuery = viewChild(MatSort);
@@ -540,7 +548,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
    */
   changeSelectedEntry(entry: any, checkboxEvent = false) {
     const luxMultiSelectDisabledProperty = this.luxMultiSelectDisabledProperty();
-    if ((luxMultiSelectDisabledProperty && entry[luxMultiSelectDisabledProperty] === true) || this.luxDoubleClicked.observed) {
+    if ((luxMultiSelectDisabledProperty && entry[luxMultiSelectDisabledProperty] === true) || this.luxShowDoubleClickedCursor()) {
       return;
     }
 
@@ -1008,8 +1016,8 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     if (this.lastSelectedEventData !== newDataString) {
       this.lastSelectedEventData = newDataString;
 
-      this.luxSelectedChange.next(this.luxSelected);
-      this.luxSelectedAsArrayChange.next(newData);
+      this.luxSelectedChange.emit(this.luxSelected);
+      this.luxSelectedAsArrayChange.emit(newData);
     }
   }
 

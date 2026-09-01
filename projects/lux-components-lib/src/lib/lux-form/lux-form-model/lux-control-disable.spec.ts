@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -73,7 +73,7 @@ describe('LuxControlDisable', () => {
     expect(toggleEl.disabled).toBe(false);
 
     // Änderungen durchführen
-    testComponent.disabledState = true;
+    testComponent.disabledState.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
@@ -102,7 +102,7 @@ describe('LuxControlDisable', () => {
     expect(testComponent.myForm.get('toggle')!.disabled).toBe(true);
 
     // Änderungen durchführen
-    testComponent.disabledState = false;
+    testComponent.disabledState.set(false);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
@@ -303,7 +303,7 @@ describe('LuxControlDisable', () => {
     expect(testComponent.myForm.get('toggle')!.disabled).toBe(true);
 
     // Änderungen durchführen
-    testComponent.disabledState = false;
+    testComponent.disabledState.set(false);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
@@ -360,7 +360,7 @@ describe('LuxControlDisable', () => {
     expect(toggleEl.disabled).toBe(false);
 
     // Änderungen durchführen
-    testComponent.disabledState = true;
+    testComponent.disabledState.set(true);
     LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
@@ -475,7 +475,7 @@ describe('LuxControlDisable', () => {
       <lux-toggle-ac luxLabel="toggle" luxControlBinding="toggle" [(luxDisabled)]="disabledState" id="toggle"></lux-toggle-ac>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     LuxToggleAcComponent,
@@ -493,7 +493,7 @@ describe('LuxControlDisable', () => {
 })
 class LuxControlDisableComponent {
   myForm: FormGroup;
-  disabledState = false;
+  disabledState = signal(false);
 
   options = [
     { label: 'Option #1', short: 'O1', value: '#1' },

@@ -3,11 +3,11 @@
   (click)="clicked($event)"
   (keydown.enter)="clicked($event)"
   (keydown.space)="clicked($event)"
-  [attr.tabindex]="!showButtons && hasCardAction && !luxDisabled() && luxUseTabIndex() ? '0' : null"
+  [attr.tabindex]="!showButtons && luxClickable() && !luxDisabled() && luxUseTabIndex() ? '0' : null"
   luxTagIdHandler
   [luxTagId]="effectiveTagId()"
   class="lux-card"
-  [class.lux-cursor-pointer]="!showButtons && hasCardAction && !luxDisabled()"
+  [class.lux-cursor-pointer]="!showButtons && luxClickable() && !luxDisabled()"
 >
   @if (customHeaderComponent()) {
     <mat-card-header class="lux-card-header">

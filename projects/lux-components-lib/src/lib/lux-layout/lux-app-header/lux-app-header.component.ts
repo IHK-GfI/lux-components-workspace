@@ -6,12 +6,11 @@ import {
   contentChild,
   effect,
   ElementRef,
-  EventEmitter,
   inject,
   input,
   OnDestroy,
   OnInit,
-  Output,
+  output,
   viewChild
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
@@ -80,11 +79,14 @@ export class LuxAppHeaderComponent implements OnInit, OnDestroy {
   readonly luxAriaTitleLinkLabel = input('');
   readonly luxAriaRoleHeaderLabel = input('');
 
-  @Output() luxClicked = new EventEmitter<Event>();
+  readonly luxClicked = output<Event>();
+
+  // Ersetzt die frühere .observed-Abfrage von luxClicked (output() hat kein Äquivalent) -
+  // steuert die Klickbar-Darstellung des Headers (Cursor, Rolle, Tabindex).
+  readonly luxClickable = input(false);
 
   mobileView: boolean;
   userNameShort?: string;
-  hasOnClickedListener?: boolean;
   subscriptions: Subscription[] = [];
 
   readonly customTrigger = viewChild('customTrigger', { read: ElementRef });
@@ -111,10 +113,6 @@ export class LuxAppHeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.luxClicked.observed) {
-      this.hasOnClickedListener = true;
-    }
-
     if (!this.luxAppTitleShort() || this.luxAppTitleShort()!.length === 0) {
       this.logger.warn('No title is set for the mobile view.');
     }

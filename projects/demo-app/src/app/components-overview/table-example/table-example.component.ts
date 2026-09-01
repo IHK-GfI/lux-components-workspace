@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OutputRefSubscription, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxMenuComponent,
@@ -12,7 +12,6 @@ import {
   LuxToggleAcComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -53,8 +52,8 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
 export class TableExampleComponent extends TableExampleBaseClass implements AfterViewInit, OnDestroy {
   @ViewChild('myTable') tableComponent!: LuxTableComponent;
 
-  private selectedChangeSub?: Subscription;
-  private selectedAsArrayChangeSub?: Subscription;
+  private selectedChangeSub?: OutputRefSubscription;
+  private selectedAsArrayChangeSub?: OutputRefSubscription;
 
   dataSource: any[] = [];
   showColumnSelector = true;

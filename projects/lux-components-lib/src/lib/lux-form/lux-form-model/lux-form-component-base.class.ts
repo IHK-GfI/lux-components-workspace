@@ -57,7 +57,21 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   /**
    * Reaktive Spiegelung von formControl.touched bzw. formControl.invalid. Das FormControl
    * selbst ist nicht signalbasiert, deshalb bekämen OnPush-Templates Änderungen an diesen
-   * beiden Zuständen sonst nicht mit. Die Synchronisation läuft über ngDoCheck().
+   * beiden Zuständen sonst nicht mit. Die eigentliche Synchronisation läuft weiterhin über
+   * ngDoCheck() (nicht über formControl.events direkt): formControl.events feuert synchron
+   * MIT dem auslösenden Aufruf (z.B. markAsTouched()), also potenziell BEVOR Angular in
+   * derselben Change-Detection-Runde bereits geänderte Inputs (z.B. luxErrorMessage) in diese
+   * Komponente geschrieben hat - ngDoCheck() läuft dagegen garantiert erst NACH der
+   * Input-Aktualisierung. formControl.events wird unten nur genutzt, um markForCheck()
+   * auszulösen, damit ngDoCheck() bei einem direkten FormControl-Aufruf überhaupt läuft.
+   *
+   * Achtung: Diese Kopplung greift nur, wenn formControl.events tatsächlich feuert. Ruft eine
+   * abgeleitete Komponente setValue()/updateValueAndValidity() mit { emitEvent: false } auf (z.B.
+   * um ein "stilles" internes Nachziehen ohne doppeltes valueChanges-Event umzusetzen), bleibt
+   * markForCheck() aus - die Komponente muss dann selbst this.cdr.markForCheck() aufrufen, sonst
+   * bleiben touched/invalid/errorMessage bis zur nächsten zufällig ausgelösten Prüfung veraltet.
+   * Siehe lux-chips-ac.component.ts (syncFormControlWithStandaloneChips) sowie
+   * lux-datepicker-ac.component.ts/lux-datetimepicker-ac.component.ts (setISOValue) als Beispiele.
    */
   readonly touched = signal(false);
   readonly invalid = signal(false);
@@ -217,6 +231,13 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
     this.initFormValueSubscription();
     this.initFormStateSubscription();
+
+    // formControl.events deckt u.a. TouchedChangeEvent/StatusChangeEvent/ValueChangeEvent ab und
+    // feuert per Default (emitEvent: true) auch bei direkten Aufrufen wie markAsTouched()/
+    // updateValueAndValidity() - unabhängig davon, ob diese OnPush-Komponente ohnehin gerade
+    // geprüft wird. markForCheck() sorgt dafür, dass ngDoCheck() (siehe unten) in diesem Fall
+    // überhaupt läuft, statt erst auf die nächste zufällig ausgelöste Prüfung zu warten.
+    this.formControl.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
 
     // Verzögert prüfen, damit die contentChild-Query formLabelComponent bereits aufgelöst ist.
     this.a11yNameCheckTimeout = setTimeout(() => this.checkA11yName());

@@ -21,6 +21,8 @@
         [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty"
         [luxNoDataText]="noDataText"
         [luxSelected]="bindLuxSelected ? selected : unboundSelected"
+        [luxShowSelectedChangeCursor]="bindLuxSelected || observeSelectedChange || observeSelectedAsArrayChange"
+        [luxShowDoubleClickedCursor]="doubleClickActive"
         [luxCompareWith]="compareFn"
         [luxHideBorders]="hideBorders"
         [luxAutoPaginate]="autoPagination"

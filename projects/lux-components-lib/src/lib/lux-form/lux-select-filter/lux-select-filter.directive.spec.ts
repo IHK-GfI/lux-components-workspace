@@ -16,7 +16,7 @@ import { LuxSelectFilterUtils } from './lux-select-filter.utils';
     </mat-select>
   `,
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatSelectModule, LuxSelectFilterDirective]
 })
 class TestComponent {
