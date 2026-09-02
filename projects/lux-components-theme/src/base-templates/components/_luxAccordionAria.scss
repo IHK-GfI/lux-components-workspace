@@ -58,10 +58,6 @@ lux-panel-aria {
     margin-left: 12px;
   }
 
-  .lux-panel-expanded {
-    margin: 16px 0;
-  }
-
   &:first-of-type .lux-panel-expanded {
     margin-top: 0;
   }
@@ -87,6 +83,16 @@ lux-panel-aria {
 lux-accordion-aria {
   display: block;
   padding: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
+
+  &.lux-default {
+    .lux-panel-expanded {
+      margin: 16px 0;
+    }
+
+    .lux-panel:not(.lux-panel-expanded) {
+      margin: 0;
+    }
+  }
 
   .lux-primary .lux-expansion-panel-header,
   .lux-primary .lux-expansion-panel-header.lux-panel-expanded,

@@ -1,9 +1,8 @@
-<div class="lux-panel" [class.lux-panel-mobile]="mobile">
+<div class="lux-panel" [class.lux-panel-expanded]="accordionTrigger().expanded()" [class.lux-panel-mobile]="mobile">
   <div
     class="lux-expansion-panel-header"
-    [class.lux-panel-expanded]="accordionTrigger().expanded()"
     [class.lux-dynamic-height]="effectiveDynamicHeaderHeight()"
-    [style.height]="getCurrentHeaderHeight(accordionTrigger().expanded())"
+    [style.height]="effectiveDynamicHeaderHeight() ? null : getCurrentHeaderHeight(accordionTrigger().expanded())"
   >
     <button
       ngAccordionTrigger

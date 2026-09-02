@@ -119,6 +119,19 @@ describe('LuxAccordionAriaComponent', () => {
       expect(accordion.nativeElement.classList.contains('lux-neutral')).toBe(true);
     }));
 
+    it('sollte den Abstand im flat-Modus deaktivieren', fakeAsync(() => {
+      const accordion = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent));
+
+      expect(accordion.nativeElement.classList.contains('lux-default')).toBe(true);
+      expect(accordion.nativeElement.classList.contains('lux-flat')).toBe(false);
+
+      testComponent.mode = 'flat';
+      LuxTestHelper.wait(fixture);
+
+      expect(accordion.nativeElement.classList.contains('lux-default')).toBe(false);
+      expect(accordion.nativeElement.classList.contains('lux-flat')).toBe(true);
+    }));
+
     describe('Custom Header', () => {
       it('sollte bei einem Custom Header die Toggle-Position auf before setzen', fakeAsync(() => {
         const customFixture = TestBed.createComponent(LuxAccordionAriaCustomHeaderTestComponent);
@@ -135,7 +148,13 @@ describe('LuxAccordionAriaComponent', () => {
 @Component({
   selector: 'lux-test-accordion-aria',
   template: `
-    <lux-accordion-aria [luxMulti]="multi" [luxDisabled]="disabled" [luxColor]="color" [luxTogglePosition]="togglePosition">
+    <lux-accordion-aria
+      [luxMulti]="multi"
+      [luxMode]="mode"
+      [luxDisabled]="disabled"
+      [luxColor]="color"
+      [luxTogglePosition]="togglePosition"
+    >
       <lux-panel-aria>
         <lux-panel-aria-header-title luxTagId="test-panel-1"> Test Panel 1 </lux-panel-aria-header-title>
         <lux-panel-aria-content> Content 1 </lux-panel-aria-content>
@@ -151,6 +170,7 @@ describe('LuxAccordionAriaComponent', () => {
 })
 class LuxAccordionAriaTestComponent {
   multi = false;
+  mode: 'default' | 'flat' = 'default';
   disabled = false;
   color: 'primary' | 'accent' | 'warn' | 'neutral' | undefined = 'primary';
   togglePosition: 'before' | 'after' = 'after';

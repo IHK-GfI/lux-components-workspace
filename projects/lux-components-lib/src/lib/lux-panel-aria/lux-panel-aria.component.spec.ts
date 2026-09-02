@@ -5,6 +5,7 @@ import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-a
 import { LuxPanelAriaComponent } from './lux-panel-aria.component';
 import { LuxPanelAriaContentComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-content.component';
 import { LuxPanelAriaHeaderCustomComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
+import { LuxPanelAriaHeaderDescriptionComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-description.component';
 import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
 
 describe('LuxPanelAriaComponent', () => {
@@ -75,6 +76,41 @@ describe('LuxPanelAriaComponent', () => {
     expect(header.nativeElement.classList.contains('lux-expansion-toggle-indicator-before')).toBeTrue();
   }));
 
+  it('sollte den Indikator bei luxHideToggle ausblenden', fakeAsync(() => {
+    testComponent.hideToggle = true;
+    fixture.detectChanges();
+    tick();
+
+    const indicators = fixture.debugElement.queryAll(By.css('.lux-expansion-indicator'));
+    expect(indicators.length).toBe(0);
+  }));
+
+  it('sollte bei luxDynamicHeaderHeight keine feste Header-Hoehe setzen', fakeAsync(() => {
+    testComponent.dynamicHeaderHeight = true;
+    fixture.detectChanges();
+    tick();
+
+    const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header'));
+    expect(header.nativeElement.style.height).toBe('');
+  }));
+
+  it('sollte bei luxTruncated die Header-Texte abschneiden', fakeAsync(() => {
+    testComponent.truncated = true;
+    fixture.detectChanges();
+    tick();
+
+    const title = fixture.debugElement.query(By.css('.lux-expansion-panel-header-title'));
+    const description = fixture.debugElement.query(By.css('.lux-expansion-panel-header-description'));
+
+    expect(title.nativeElement.classList.contains('lux-crop')).toBeTrue();
+    expect(title.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
+    expect(title.nativeElement.style.display).toBe('block');
+
+    expect(description.nativeElement.classList.contains('lux-crop')).toBeTrue();
+    expect(description.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
+    expect(description.nativeElement.style.display).toBe('block');
+  }));
+
   it('sollte deaktiviertes Panel nicht öffnen', fakeAsync(() => {
     testComponent.disabled = true;
     fixture.detectChanges();
@@ -111,16 +147,27 @@ describe('LuxPanelAriaComponent', () => {
 @Component({
   selector: 'lux-panel-aria-test',
   standalone: true,
-  imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent],
+  imports: [
+    LuxAccordionAriaComponent,
+    LuxPanelAriaComponent,
+    LuxPanelAriaHeaderTitleComponent,
+    LuxPanelAriaHeaderDescriptionComponent,
+    LuxPanelAriaContentComponent
+  ],
   template: `
     <lux-accordion-aria>
       <lux-panel-aria
         [luxExpanded]="expanded"
         [luxDisabled]="disabled"
+        [luxHideToggle]="hideToggle"
+        [luxDynamicHeaderHeight]="dynamicHeaderHeight"
         [luxTogglePosition]="togglePosition"
         (luxExpandedChange)="expandedEvents.push($event)"
       >
-        <lux-panel-aria-header-title>Titel</lux-panel-aria-header-title>
+        <lux-panel-aria-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip">Titel</lux-panel-aria-header-title>
+        <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip"
+          >Beschreibung</lux-panel-aria-header-description
+        >
         <lux-panel-aria-content>Content</lux-panel-aria-content>
       </lux-panel-aria>
     </lux-accordion-aria>
@@ -129,6 +176,10 @@ describe('LuxPanelAriaComponent', () => {
 class LuxPanelAriaTestComponent {
   expanded = false;
   disabled = false;
+  hideToggle = false;
+  dynamicHeaderHeight = false;
+  truncated = false;
+  truncatedTooltip = 'Tooltip';
   togglePosition: 'before' | 'after' = 'after';
   expandedEvents: boolean[] = [];
 }

@@ -5,6 +5,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { LuxPanelAriaComponent } from '../lux-panel-aria/lux-panel-aria.component';
 import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
+import { LuxModeType } from '../lux-layout/lux-accordion/lux-accordion.component';
 import { LuxAccordionColor, LuxAccordionColors } from '../lux-util/lux-colors.enum';
 
 export declare type LuxAccordionMulti = boolean;
@@ -23,7 +24,11 @@ export declare type LuxAriaTogglePosition = 'before' | 'after' | undefined;
   imports: [NgClass],
   // AccordionGroup as host directive so its ACCORDION_GROUP provider reaches projected lux-panel-aria content
   hostDirectives: [AccordionGroup],
-  host: { class: 'lux-flex lux-flex-auto' }
+  host: {
+    class: 'lux-flex lux-flex-auto',
+    '[class.lux-default]': "luxMode() === 'default'",
+    '[class.lux-flat]': "luxMode() === 'flat'"
+  }
 })
 export class LuxAccordionAriaComponent implements OnDestroy {
   private static accordionIdCounter = 0;
@@ -33,6 +38,7 @@ export class LuxAccordionAriaComponent implements OnDestroy {
   readonly id = `lux-accordion-aria-${LuxAccordionAriaComponent.accordionIdCounter++}`;
 
   luxMulti = input<LuxAccordionMulti>(false);
+  luxMode = input<LuxModeType>('default');
   luxColor = input<LuxAccordionColor | undefined>('primary');
   luxDisabled = input<boolean | undefined>(undefined);
   luxHideToggle = input<boolean | undefined>(undefined);
@@ -61,6 +67,7 @@ export class LuxAccordionAriaComponent implements OnDestroy {
 
   private readonly accordionState = computed(() => ({
     luxColor: this.luxColor(),
+    luxMode: this.luxMode(),
     luxDisabled: this.luxDisabled(),
     luxHideToggle: this.luxHideToggle(),
     luxDynamicHeaderHeight: this.luxDynamicHeaderHeight(),

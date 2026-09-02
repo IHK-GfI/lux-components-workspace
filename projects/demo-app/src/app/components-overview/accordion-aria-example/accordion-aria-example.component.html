@@ -4,11 +4,24 @@
 >
   <example-base-content>
     <div [class.border-check]="borderCheck">
-      <lux-accordion-aria [luxDisabled]="disabled" [luxMulti]="multiMode" [luxColor]="color" [luxTogglePosition]="_togglePosition">
+      <lux-accordion-aria
+        [luxDisabled]="disabled"
+        [luxHideToggle]="hideToggle"
+        [luxDynamicHeaderHeight]="dynamicHeaderHeight"
+        [luxExpandedHeaderHeight]="expandedHeaderHeight"
+        [luxCollapsedHeaderHeight]="collapsedHeaderHeight"
+        [luxMulti]="multiMode"
+        [luxMode]="displayMode"
+        [luxColor]="color"
+        [luxTogglePosition]="_togglePosition"
+      >
         <lux-panel-aria
           [luxExpanded]="expanded"
-          [luxHideToggle]="hideToggle1Panel"
+          [luxHideToggle]="hideToggle1Panel ? true : undefined"
           [luxDisabled]="disabled1Panel"
+          [luxExpandedHeaderHeight]="expandedHeaderHeight1Panel"
+          [luxCollapsedHeaderHeight]="collapsedHeaderHeight1Panel"
+          [luxDynamicHeaderHeight]="dynamicHeaderHeight1Panel"
           (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
           (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
           (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
@@ -33,8 +46,11 @@
         @for (panelConfig of panelConfigArr; track panelConfig) {
           <lux-panel-aria
             [luxExpanded]="expanded"
-            [luxHideToggle]="hideToggle1Panel"
+            [luxHideToggle]="hideToggle1Panel ? true : undefined"
             [luxDisabled]="disabled1Panel"
+            [luxExpandedHeaderHeight]="expandedHeaderHeight1Panel"
+            [luxCollapsedHeaderHeight]="collapsedHeaderHeight1Panel"
+            [luxDynamicHeaderHeight]="dynamicHeaderHeight1Panel"
             (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
             (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
             (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
@@ -55,8 +71,11 @@
         }
         <lux-panel-aria
           [luxExpanded]="expanded"
-          [luxHideToggle]="hideToggle2Panel"
+          [luxHideToggle]="hideToggle2Panel ? true : undefined"
           [luxDisabled]="disabled2Panel"
+          [luxExpandedHeaderHeight]="expandedHeaderHeight2Panel"
+          [luxCollapsedHeaderHeight]="collapsedHeaderHeight2Panel"
+          [luxDynamicHeaderHeight]="dynamicHeaderHeight2Panel"
           (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
           (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
           (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
@@ -174,21 +193,62 @@
     ></lux-toggle-ac>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac luxLabel="Deaktiviert" [(luxChecked)]="disabled" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="Multiple" [(luxChecked)]="multiMode" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="Panels expandiert" [(luxChecked)]="expanded" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="Long labels" [(luxChecked)]="isLongLabels" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="Truncated" [(luxChecked)]="truncated" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-select-ac luxLabel="Farbe" [luxOptions]="['primary', 'accent', 'warn', 'neutral']" [(luxSelected)]="color"></lux-select-ac>
-    <div>
-      <h4>Panel 1</h4>
-      <lux-toggle-ac luxLabel="Toggle verstecken" [(luxChecked)]="hideToggle1Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
-      <lux-toggle-ac luxLabel="Panel deaktivieren" [(luxChecked)]="disabled1Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
-    </div>
-    <div>
-      <h4>Panel 2</h4>
-      <lux-toggle-ac luxLabel="Toggle verstecken" [(luxChecked)]="hideToggle2Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
-      <lux-toggle-ac luxLabel="Panel deaktivieren" [(luxChecked)]="disabled2Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <div class="lux-flex lux-flex-col">
+      <div class="lux-flex lux-flex-col lux-gap-4">
+        <h3>Panel #1-{{ panelConfigArr.length }}</h3>
+        <lux-toggle-ac luxLabel="luxTruncated" [(luxChecked)]="truncated" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property bestimmt, ob der Headerinhalt abgeschnitten wird, wenn er zu lang ist. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled1Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxHideToggle" [(luxChecked)]="hideToggle1Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property ermöglicht es, das Toggle-Icons für das Panel auszublenden. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxDynamicHeaderHeight" [(luxChecked)]="dynamicHeaderHeight1Panel" [luxNoLabels]="true"></lux-toggle-ac>
+        <lux-input-ac
+          luxLabel="luxExpandedHeaderHeight"
+          [(luxValue)]="expandedHeaderHeight1Panel"
+          [luxDisabled]="dynamicHeaderHeight1Panel"
+          class="title-input"
+        >
+          <lux-form-hint> Diese Property bestimmt die Höhe des Panel-Headers im ausgeklappten Zustand. </lux-form-hint>
+        </lux-input-ac>
+        <lux-input-ac
+          luxLabel="luxCollapsedHeaderHeight"
+          [(luxValue)]="collapsedHeaderHeight1Panel"
+          [luxDisabled]="dynamicHeaderHeight1Panel"
+          class="title-input"
+        >
+          <lux-form-hint> Diese Property bestimmt die Höhe des Panel-Headers im eingeklappten Zustand. </lux-form-hint>
+        </lux-input-ac>
+      </div>
+      <div class="lux-flex lux-flex-col lux-gap-4">
+        <h3>Panel #{{ panelConfigArr.length + 1 }}</h3>
+        <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled2Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxHideToggle" [(luxChecked)]="hideToggle2Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property ermöglicht es, das Toggle-Icons für das Panel auszublenden. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxDynamicHeaderHeight" [(luxChecked)]="dynamicHeaderHeight2Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
+        <lux-input-ac
+          luxLabel="luxExpandedHeaderHeight"
+          [(luxValue)]="expandedHeaderHeight2Panel"
+          [luxDisabled]="dynamicHeaderHeight2Panel"
+          class="title-input"
+        >
+          <lux-form-hint> Diese Property bestimmt die Höhe des Panel-Headers im ausgeklappten Zustand. </lux-form-hint>
+        </lux-input-ac>
+        <lux-input-ac
+          luxLabel="luxCollapsedHeaderHeight"
+          [(luxValue)]="collapsedHeaderHeight2Panel"
+          [luxDisabled]="dynamicHeaderHeight2Panel"
+          class="title-input"
+        >
+          <lux-form-hint> Diese Property bestimmt die Höhe des Panel-Headers im eingeklappten Zustand. </lux-form-hint>
+        </lux-input-ac>
+      </div>
     </div>
   </example-base-advanced-options>
 </example-base-structure>
