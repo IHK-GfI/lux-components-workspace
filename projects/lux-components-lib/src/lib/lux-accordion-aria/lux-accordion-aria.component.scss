@@ -1,0 +1,28 @@
+/* Styling for accordion-aria component */
+
+/* Color scheme styles */
+cdk-accordion.lux-primary {
+  --lux-color-theme: var(--lux-primary, #1976d2);
+}
+
+cdk-accordion.lux-accent {
+  --lux-color-theme: var(--lux-accent, #ff4081);
+}
+
+cdk-accordion.lux-warn {
+  --lux-color-theme: var(--lux-warn, #f44336);
+}
+
+cdk-accordion.lux-neutral {
+  --lux-color-theme: var(--lux-neutral, #757575);
+}
+
+/* Default accordion styling */
+cdk-accordion {
+  display: block;
+}
+
+cdk-accordion[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}

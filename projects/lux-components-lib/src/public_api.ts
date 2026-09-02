@@ -172,6 +172,7 @@ export * from './lib/lux-tenant-logo/lux-tenant-logo.component';
  * LUX-Layout
  */
 export * from './lib/lux-layout/lux-accordion/lux-accordion.component';
+export * from './lib/lux-accordion-aria/lux-accordion-aria.component';
 export * from './lib/lux-layout/lux-app-content/lux-app-content.component';
 export * from './lib/lux-layout/lux-app-footer/lux-app-footer-button-info';
 export * from './lib/lux-layout/lux-app-footer/lux-app-footer-button.service';
@@ -232,6 +233,12 @@ export * from './lib/lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-cont
 export * from './lib/lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-header-description.component';
 export * from './lib/lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-header-title.component';
 export * from './lib/lux-layout/lux-panel/lux-panel.component';
+export * from './lib/lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-action.component';
+export * from './lib/lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-content.component';
+export * from './lib/lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
+export * from './lib/lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-description.component';
+export * from './lib/lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
+export * from './lib/lux-panel-aria/lux-panel-aria.component';
 export * from './lib/lux-layout/lux-stepper-large/lux-stepper-large-model/lux-stepper-large-button-info';
 export * from './lib/lux-layout/lux-stepper-large/lux-stepper-large-model/lux-stepper-large-click-event';
 export * from './lib/lux-layout/lux-stepper-large/lux-stepper-large-model/lux-stepper-large-selection-event';

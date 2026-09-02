@@ -1,0 +1,77 @@
+lux-panel-aria {
+  .lux-panel {
+    border-radius: var(--lux-theme-app-border-radius);
+    overflow: hidden;
+    box-shadow: 0 0 0 var(--lux-theme-accordion-panel-container-elevation-shadow-width)
+      var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant));
+  }
+
+  .lux-expansion-panel-header {
+    align-items: center;
+    display: flex;
+    min-width: 0;
+    padding: 0 24px;
+    background-color: var(--lux-theme-accordion-header-color-primary);
+  }
+
+  .lux-expansion-panel-header-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    gap: 0;
+    min-width: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .lux-expansion-panel-header-content {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .lux-expansion-panel-header-toggle:disabled {
+    cursor: default;
+  }
+
+  .lux-expansion-panel-header-actions {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    gap: 8px;
+  }
+
+  .lux-expansion-indicator {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 0;
+  }
+
+  .lux-expansion-indicator-before {
+    margin-right: 12px;
+  }
+
+  .lux-expansion-indicator-after {
+    margin-left: 12px;
+  }
+
+  .lux-panel-expanded .lux-expansion-indicator {
+    transform: rotate(270deg);
+  }
+
+  .lux-expansion-panel-content {
+    padding: 0 24px 16px;
+    letter-spacing: var(--mat-expansion-container-text-tracking, var(--mat-sys-body-large-tracking));
+  }
+
+  &.lux-panel-mobile .lux-expansion-panel-header {
+    padding: 0 12px;
+  }
+
+  &.lux-panel-mobile .lux-expansion-panel-header.lux-dynamic-height {
+    padding: 11px 12px;
+  }
+}

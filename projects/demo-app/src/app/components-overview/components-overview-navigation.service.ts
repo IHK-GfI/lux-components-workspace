@@ -88,6 +88,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('icon', 'Icon'),
     this.create('icon', 'Image'),
     this.create('layout', 'Accordion'),
+    this.create('layout', 'Accordion-Aria', DemoMarkerType.New),
     this.create('layout', 'App-Footer'),
     this.create('layout', 'Card'),
     this.create('layout', 'Checkbox-Container-Ac'),

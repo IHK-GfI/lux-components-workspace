@@ -1,0 +1,120 @@
+<example-base-structure
+  exampleTitle="Accordion (CDK/Aria-basiert)"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90accordion%E2%80%90aria-v21"
+>
+  <example-base-content>
+    <div [class.border-check]="borderCheck">
+      <!-- Beispiel-Component mit allen Input-/Output-Properties -->
+      <lux-accordion-aria [luxDisabled]="disabled" [luxMulti]="multiMode" [luxColor]="color" luxTogglePosition="before">
+        <!-- Mehrere Panels mit ihren Input-/Output-Properties -->
+        <lux-panel-aria
+          [luxExpanded]="expanded"
+          [luxHideToggle]="hideToggle1Panel"
+          [luxDisabled]="disabled1Panel"
+          (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
+          (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
+          (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+        >
+          <lux-panel-aria-header-title [luxTruncated]="truncated" luxTruncatedTooltip="tooltip"
+            >{{ 'panelConfig.title' }}
+          </lux-panel-aria-header-title>
+          <lux-panel-aria-header-description [luxTruncated]="truncated" luxTruncatedTooltip="tooltip">{{
+            'panelConfig.description'
+          }}</lux-panel-aria-header-description>
+          <lux-panel-aria-header-custom>
+            <lux-button luxIconName="lux-interface-delete-1" [luxIconButton]="true"></lux-button>
+          </lux-panel-aria-header-custom>
+          <lux-panel-aria-content>
+            <p>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+              aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            </p>
+          </lux-panel-aria-content>
+        </lux-panel-aria>
+
+        @for (panelConfig of panelConfigArr; track panelConfig) {
+          <lux-panel-aria
+            [luxExpanded]="expanded"
+            [luxHideToggle]="hideToggle1Panel"
+            [luxDisabled]="disabled1Panel"
+            (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
+            (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
+            (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+          >
+            <lux-panel-aria-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.title">{{
+              panelConfig.title
+            }}</lux-panel-aria-header-title>
+            <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.description">{{
+              panelConfig.description
+            }}</lux-panel-aria-header-description>
+            <lux-panel-aria-content>
+              <p>
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              </p>
+            </lux-panel-aria-content>
+          </lux-panel-aria>
+        }
+        <lux-panel-aria
+          [luxExpanded]="expanded"
+          [luxHideToggle]="hideToggle2Panel"
+          [luxDisabled]="disabled2Panel"
+          (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
+          (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
+          (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+        >
+          <lux-panel-aria-header-title
+            >Panel #{{ panelConfigArr.length + 1
+            }}{{
+              isLongLabels ? 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut' : ''
+            }}</lux-panel-aria-header-title
+          >
+          <lux-panel-aria-header-description>Beschreibung Panel #{{ panelConfigArr.length + 1 }}</lux-panel-aria-header-description>
+          <lux-panel-aria-content class="lux-flex">
+            <lux-card
+              luxTitle="Testkarte - Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut"
+              luxSubTitle="TEST2"
+              class="lux-mt-4"
+            >
+              <lux-card-content>
+                <h3>H3 - Lorem ipsum</h3>
+                <p>
+                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                  aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no
+                  sea takimata sanctus est Lorem ipsum dolor sit amet.
+                </p>
+              </lux-card-content>
+            </lux-card>
+          </lux-panel-aria-content>
+        </lux-panel-aria>
+      </lux-accordion-aria>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Border Check (zeigt Scrollbereich)" [(luxChecked)]="borderCheck" [luxNoTopLabel]="true"></lux-toggle-ac>
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle-ac luxLabel="Deaktiviert" [(luxChecked)]="disabled" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Multiple" [(luxChecked)]="multiMode" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Panels expandiert" [(luxChecked)]="expanded" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Long labels" [(luxChecked)]="isLongLabels" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Truncated" [(luxChecked)]="truncated" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-select-ac luxLabel="Farbe" [luxOptions]="['primary', 'accent', 'warn', 'neutral']" [(luxSelected)]="color"></lux-select-ac>
+    <div>
+      <h4>Panel 1</h4>
+      <lux-toggle-ac luxLabel="Toggle verstecken" [(luxChecked)]="hideToggle1Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
+      <lux-toggle-ac luxLabel="Panel deaktivieren" [(luxChecked)]="disabled1Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
+    </div>
+    <div>
+      <h4>Panel 2</h4>
+      <lux-toggle-ac luxLabel="Toggle verstecken" [(luxChecked)]="hideToggle2Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
+      <lux-toggle-ac luxLabel="Panel deaktivieren" [(luxChecked)]="disabled2Panel" [luxNoTopLabel]="true"></lux-toggle-ac>
+    </div>
+  </example-base-advanced-options>
+</example-base-structure>
