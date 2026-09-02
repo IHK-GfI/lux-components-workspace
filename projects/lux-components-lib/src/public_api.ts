@@ -173,6 +173,7 @@ export * from './lib/lux-tenant-logo/lux-tenant-logo.component';
  */
 export * from './lib/lux-layout/lux-accordion/lux-accordion.component';
 export * from './lib/lux-accordion-aria/lux-accordion-aria.component';
+export * from './lib/lux-accordion-aria/lux-accordion-aria-base';
 export * from './lib/lux-layout/lux-app-content/lux-app-content.component';
 export * from './lib/lux-layout/lux-app-footer/lux-app-footer-button-info';
 export * from './lib/lux-layout/lux-app-footer/lux-app-footer-button.service';

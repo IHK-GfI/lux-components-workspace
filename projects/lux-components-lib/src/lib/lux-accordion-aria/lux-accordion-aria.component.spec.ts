@@ -89,6 +89,29 @@ describe('LuxAccordionAriaComponent', () => {
       expect(openContents[0].nativeElement.textContent).toContain('Content 2');
     }));
 
+    it('sollte verschachtelte Accordions unabhängig voneinander verwalten', fakeAsync(() => {
+      const nestedFixture = TestBed.createComponent(LuxNestedAccordionAriaTestComponent);
+      nestedFixture.detectChanges();
+      tick();
+
+      const headerButtons = nestedFixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
+      headerButtons[0].nativeElement.click();
+      nestedFixture.detectChanges();
+      tick();
+
+      const innerHeaderButtons = nestedFixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
+      innerHeaderButtons[1].nativeElement.click();
+      nestedFixture.detectChanges();
+      tick();
+      innerHeaderButtons[2].nativeElement.click();
+      nestedFixture.detectChanges();
+      tick();
+
+      expect(innerHeaderButtons[0].nativeElement.getAttribute('aria-expanded')).toBe('true');
+      expect(innerHeaderButtons[1].nativeElement.getAttribute('aria-expanded')).toBe('false');
+      expect(innerHeaderButtons[2].nativeElement.getAttribute('aria-expanded')).toBe('true');
+    }));
+
     it('sollte die luxDisabled-Eigenschaft respektieren', fakeAsync(() => {
       const accordionComponent = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;
       expect(accordionComponent.luxDisabled()).toBeFalsy();
@@ -197,3 +220,29 @@ class LuxAccordionAriaTestComponent {
   `
 })
 class LuxAccordionAriaCustomHeaderTestComponent {}
+
+@Component({
+  selector: 'lux-nested-accordion-aria-test',
+  standalone: true,
+  imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent],
+  template: `
+    <lux-accordion-aria>
+      <lux-panel-aria>
+        <lux-panel-aria-header-title>Outer</lux-panel-aria-header-title>
+        <lux-panel-aria-content>
+          <lux-accordion-aria>
+            <lux-panel-aria>
+              <lux-panel-aria-header-title>Inner 1</lux-panel-aria-header-title>
+              <lux-panel-aria-content>Inner Content 1</lux-panel-aria-content>
+            </lux-panel-aria>
+            <lux-panel-aria>
+              <lux-panel-aria-header-title>Inner 2</lux-panel-aria-header-title>
+              <lux-panel-aria-content>Inner Content 2</lux-panel-aria-content>
+            </lux-panel-aria>
+          </lux-accordion-aria>
+        </lux-panel-aria-content>
+      </lux-panel-aria>
+    </lux-accordion-aria>
+  `
+})
+class LuxNestedAccordionAriaTestComponent {}

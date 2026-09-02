@@ -1,16 +1,16 @@
 import { NgClass } from '@angular/common';
 import { AccordionGroup } from '@angular/aria/accordion';
-import { Component, DestroyRef, OnDestroy, computed, contentChildren, forwardRef, inject, input } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, computed, contentChildren, inject, input } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
-import { LuxPanelAriaComponent } from '../lux-panel-aria/lux-panel-aria.component';
 import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
 import { LuxModeType } from '../lux-layout/lux-accordion/lux-accordion.component';
 import { LuxAccordionColor, LuxAccordionColors } from '../lux-util/lux-colors.enum';
+import { LuxAccordionAriaBase, LuxAccordionAriaPanel, LuxAccordionAriaTogglePosition } from './lux-accordion-aria-base';
 
 export declare type LuxAccordionMulti = boolean;
 export declare type LuxAccordionCloseOthers = boolean;
-export declare type LuxAriaTogglePosition = 'before' | 'after' | undefined;
+export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
 
 /**
  * Standalone accordion component based on Angular CDK
@@ -24,15 +24,17 @@ export declare type LuxAriaTogglePosition = 'before' | 'after' | undefined;
   imports: [NgClass],
   // AccordionGroup as host directive so its ACCORDION_GROUP provider reaches projected lux-panel-aria content
   hostDirectives: [AccordionGroup],
+  providers: [{ provide: LuxAccordionAriaBase, useExisting: LuxAccordionAriaComponent }],
   host: {
     class: 'lux-flex lux-flex-auto',
     '[class.lux-default]': "luxMode() === 'default'",
     '[class.lux-flat]': "luxMode() === 'flat'"
   }
 })
-export class LuxAccordionAriaComponent implements OnDestroy {
+export class LuxAccordionAriaComponent extends LuxAccordionAriaBase implements OnDestroy {
   private static accordionIdCounter = 0;
   private readonly destroyRef = inject(DestroyRef);
+  private readonly panels = new Set<LuxAccordionAriaPanel>();
 
   changed$ = new Subject<string>();
   readonly id = `lux-accordion-aria-${LuxAccordionAriaComponent.accordionIdCounter++}`;
@@ -48,14 +50,6 @@ export class LuxAccordionAriaComponent implements OnDestroy {
   luxTogglePosition = input<LuxAriaTogglePosition>(undefined);
 
   private readonly customHeaders = contentChildren(LuxPanelAriaHeaderCustomComponent, { descendants: true });
-
-  // AccordionGroup's own contentChildren query can't see triggers nested inside the lux-panel-aria
-  // component's own view (content queries never cross a child component's template boundary), so
-  // closing other panels when luxMulti is false must be done manually via this sibling list.
-  private readonly panels = contentChildren(
-    forwardRef(() => LuxPanelAriaComponent),
-    { descendants: true }
-  );
 
   readonly effectiveLuxTogglePosition = computed<LuxAriaTogglePosition>(() =>
     this.customHeaders().length > 0 ? 'before' : this.luxTogglePosition()
@@ -77,6 +71,7 @@ export class LuxAccordionAriaComponent implements OnDestroy {
   }));
 
   constructor() {
+    super();
     let previousState: ReturnType<typeof this.accordionState> | undefined;
 
     toObservable(this.accordionState)
@@ -104,12 +99,20 @@ export class LuxAccordionAriaComponent implements OnDestroy {
     this.changed$.complete();
   }
 
+  registerPanel(panel: LuxAccordionAriaPanel): void {
+    this.panels.add(panel);
+  }
+
+  unregisterPanel(panel: LuxAccordionAriaPanel): void {
+    this.panels.delete(panel);
+  }
+
   /** Called by a lux-panel-aria child once it expands; collapses its siblings unless luxMulti is set. */
-  notifyPanelExpanded(expandedPanel: LuxPanelAriaComponent): void {
+  notifyPanelExpanded(expandedPanel: LuxAccordionAriaPanel): void {
     if (this.luxMulti()) {
       return;
     }
-    this.panels().forEach((panel) => {
+    this.panels.forEach((panel) => {
       if (panel !== expandedPanel) {
         panel.collapse();
       }

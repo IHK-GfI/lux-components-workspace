@@ -43,6 +43,13 @@ lux-panel-aria {
     gap: 8px;
   }
 
+  .lux-dynamic-height {
+    min-height: unset;
+    height: unset;
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
   .lux-expansion-indicator {
     align-items: center;
     display: inline-flex;

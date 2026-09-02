@@ -2,9 +2,8 @@ import { AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/ari
 import { afterRenderEffect, Component, DestroyRef, computed, effect, input, output, inject, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observer.service';
-import { LuxTogglePosition } from '../lux-layout/lux-accordion/lux-accordion.component';
 import { LuxIconComponent } from '../lux-icon/lux-icon/lux-icon.component';
-import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
+import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-accordion-aria/lux-accordion-aria-base';
 
 @Component({
   selector: 'lux-panel-aria',
@@ -21,19 +20,19 @@ export class LuxPanelAriaComponent {
 
   protected mediaQuery = inject(LuxMediaQueryObserverService);
   private readonly destroyRef = inject(DestroyRef);
-  protected parent = inject(LuxAccordionAriaComponent, { optional: true, host: true, skipSelf: true });
+  protected parent = inject(LuxAccordionAriaBase, { optional: true, host: true, skipSelf: true });
   protected readonly accordionPanel = viewChild.required(AccordionPanel);
   protected readonly accordionTrigger = viewChild.required(AccordionTrigger);
 
   luxDisabled = input<boolean | undefined>(undefined);
   luxExpanded = input<boolean>(false);
   luxHideToggle = input<boolean | undefined>(undefined);
-  luxTogglePosition = input<LuxTogglePosition | undefined>(undefined);
+  luxTogglePosition = input<LuxAccordionAriaTogglePosition>(undefined);
   luxCollapsedHeaderHeight = input<string | undefined>(undefined);
   luxExpandedHeaderHeight = input<string | undefined>(undefined);
   luxDynamicHeaderHeight = input<boolean | undefined>(undefined);
 
-  protected effectiveTogglePosition = computed<'before' | 'after'>(
+  protected effectiveTogglePosition = computed<Exclude<LuxAccordionAriaTogglePosition, undefined>>(
     () => this.parent?.effectiveLuxTogglePosition() ?? this.luxTogglePosition() ?? 'after'
   );
   protected effectiveDisabled = computed(() => !!this.luxDisabled() || !!this.parent?.luxDisabled());
@@ -51,6 +50,9 @@ export class LuxPanelAriaComponent {
   mobile = false;
 
   constructor() {
+    this.parent?.registerPanel(this);
+    this.destroyRef.onDestroy(() => this.parent?.unregisterPanel(this));
+
     this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
 
     this.mediaQuery
