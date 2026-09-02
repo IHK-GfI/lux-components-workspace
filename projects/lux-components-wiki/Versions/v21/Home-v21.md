@@ -67,6 +67,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 ### Layout
 
 - [lux-accordion](lux‐accordion-v21)
+- [lux-accordion-aria](lux‐accordion-aria-v21)
 - [lux-app-content](lux‐app‐content-v21)
 - [lux-app-footer](lux‐app‐footer-v21)
 - [lux-app-header](lux‐app‐header-v21)

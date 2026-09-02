@@ -8,6 +8,7 @@ lux-panel-aria {
   .lux-expansion-panel-header {
     align-items: center;
     display: flex;
+    min-width: 0;
     padding: 0 var(--lux-theme-spacing-lg);
   }
 
@@ -22,6 +23,8 @@ lux-panel-aria {
     border: 0;
     display: flex;
     flex: 1;
+    gap: 0;
+    min-width: 0;
     padding: 0;
     text-align: left;
 
@@ -40,6 +43,16 @@ lux-panel-aria {
   .lux-expansion-panel-header-custom:has(lux-menu) {
     flex: 1 1 0;
     max-width: 100%;
+  }
+
+  .lux-expansion-panel-header-content {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .lux-expansion-panel-header-title {
+    display: flex;
+    align-items: center;
   }
 
   .lux-expansion-panel-header-description {
