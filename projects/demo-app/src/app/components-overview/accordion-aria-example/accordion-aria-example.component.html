@@ -14,6 +14,8 @@
         [luxMode]="displayMode"
         [luxColor]="color"
         [luxTogglePosition]="_togglePosition"
+        [luxStickyHeader]="stickyHeader"
+        [luxStickyHeaderOffset]="stickyHeaderOffset"
       >
         @for (panelConfig of panelConfigArr; track panelConfig; let i = $index) {
           <lux-panel-aria
@@ -66,6 +68,14 @@
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
                 aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
               </p>
+              @if (stickyLongContent) {
+                @for (index of longContentArr; track index) {
+                  <p>
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                    magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+                  </p>
+                }
+              }
             </lux-panel-aria-content>
           </lux-panel-aria>
         }
@@ -118,6 +128,26 @@
       <lux-form-hint> Diese Property bestimmt, ob mehrere Panels gleichzeitig aufklappbar sind oder nicht. </lux-form-hint>
     </lux-toggle-ac>
     <lux-toggle-ac luxLabel="Alle aufklappen" [(luxChecked)]="expanded" [luxDisabled]="!multiMode" [luxNoLabels]="true"> </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxStickyHeader" [(luxChecked)]="stickyHeader" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Diese Property lässt den Header eines geöffneten Panels beim Scrollen am oberen Rand des Scroll-Bereichs kleben, bis der
+        Panel-Inhalt aus dem Sichtbereich geschoben ist.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-input-ac
+      luxName="accordion_luxStickyHeaderOffset"
+      luxLabel="luxStickyHeaderOffset"
+      [(luxValue)]="stickyHeaderOffset"
+      class="title-input"
+    >
+      <lux-form-hint>
+        Diese Property bestimmt den Abstand des klebenden Headers zum oberen Rand (CSS-Länge, z. B. 64px), falls dort weitere
+        Sticky-Elemente kleben.
+      </lux-form-hint>
+    </lux-input-ac>
+    <lux-toggle-ac luxLabel="Langer Inhalt (Sticky-Demo)" [(luxChecked)]="stickyLongContent" [luxNoTopLabel]="true">
+      <lux-form-hint> Füllt die Panels mit langem Inhalt, damit das Sticky-Verhalten beim Scrollen sichtbar wird. </lux-form-hint>
+    </lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxNoTopLabel]="true">
       <lux-form-hint> Diese Property deaktiviert die Component. </lux-form-hint>
     </lux-toggle-ac>

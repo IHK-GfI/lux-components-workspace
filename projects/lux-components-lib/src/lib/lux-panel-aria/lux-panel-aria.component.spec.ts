@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaComponent } from './lux-panel-aria.component';
 import { LuxPanelAriaContentComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-content.component';
@@ -100,6 +101,33 @@ describe('LuxPanelAriaComponent', () => {
     expect(header.nativeElement.style.height).toBe('');
   }));
 
+  it('sollte den Header bei luxStickyHeader als sticky markieren', fakeAsync(() => {
+    testComponent.stickyHeader = true;
+    testComponent.stickyHeaderOffset = '48px';
+    fixture.detectChanges();
+    tick();
+
+    const panel = fixture.debugElement.query(By.css('.lux-panel'));
+    expect(panel.nativeElement.classList.contains('lux-panel-sticky-header')).toBeTrue();
+    expect(panel.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('48px');
+  }));
+
+  it('sollte ein sticky Panel beim Scrollen geöffnet lassen', fakeAsync(() => {
+    testComponent.stickyHeader = true;
+    testComponent.expanded = true;
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    const panelContent = fixture.debugElement.query(By.css('.lux-expansion-panel-content-wrapper')).nativeElement as HTMLElement;
+    document.documentElement.dispatchEvent(new Event('scroll'));
+    tick();
+    fixture.detectChanges();
+
+    expect(testComponent.expandedEvents).toEqual([true]);
+    expect(panelContent.hasAttribute('inert')).toBeFalse();
+  }));
+
   it('sollte bei luxTruncated Titel und Beschreibung abschneiden', fakeAsync(() => {
     testComponent.truncated = true;
     fixture.detectChanges();
@@ -169,6 +197,58 @@ describe('LuxPanelAriaComponent', () => {
   }));
 });
 
+describe('LuxPanelAriaComponent A11y', () => {
+  let fixture: ComponentFixture<LuxPanelAriaTestComponent>;
+  let testComponent: LuxPanelAriaTestComponent;
+
+  beforeAll(() => {
+    LuxA11yTestHelper.addA11yMatchers();
+  });
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        LuxAccordionAriaComponent,
+        LuxPanelAriaComponent,
+        LuxPanelAriaHeaderTitleComponent,
+        LuxPanelAriaHeaderDescriptionComponent,
+        LuxPanelAriaHeaderCustomComponent,
+        LuxPanelAriaContentComponent,
+        LuxPanelAriaTestComponent
+      ]
+    });
+
+    fixture = TestBed.createComponent(LuxPanelAriaTestComponent);
+    fixture.detectChanges();
+    testComponent = fixture.componentInstance;
+    tick();
+    fixture.detectChanges();
+  }));
+
+  it('Panel (kollabiert) hat keine Barrierefreiheitsverletzungen', async () => {
+    await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+  });
+
+  it('Panel (expandiert) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
+    const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
+    headerButton.nativeElement.click();
+    fixture.detectChanges();
+    tick();
+    flush();
+    fixture.detectChanges();
+
+    await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+  }));
+
+  it('Panel (disabled) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
+    testComponent.disabled = true;
+    fixture.detectChanges();
+    tick();
+
+    await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+  }));
+});
+
 @Component({
   selector: 'lux-panel-aria-test',
   standalone: true,
@@ -188,6 +268,8 @@ describe('LuxPanelAriaComponent', () => {
         [luxHideToggle]="hideToggle"
         [luxDynamicHeaderHeight]="dynamicHeaderHeight"
         [luxTogglePosition]="togglePosition"
+        [luxStickyHeader]="stickyHeader"
+        [luxStickyHeaderOffset]="stickyHeaderOffset"
         (luxExpandedChange)="expandedEvents.push($event)"
       >
         <lux-panel-aria-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip">Titel</lux-panel-aria-header-title>
@@ -207,6 +289,8 @@ class LuxPanelAriaTestComponent {
   disabled = false;
   hideToggle = false;
   dynamicHeaderHeight = false;
+  stickyHeader = false;
+  stickyHeaderOffset?: string;
   truncated = false;
   truncatedTooltip = 'Tooltip';
   togglePosition: 'before' | 'after' = 'after';

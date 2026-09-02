@@ -31,6 +31,8 @@ export class LuxPanelAriaComponent {
   luxCollapsedHeaderHeight = input<string | undefined>(undefined);
   luxExpandedHeaderHeight = input<string | undefined>(undefined);
   luxDynamicHeaderHeight = input<boolean | undefined>(undefined);
+  luxStickyHeader = input<boolean | undefined>();
+  luxStickyHeaderOffset = input<string | undefined>();
 
   protected effectiveTogglePosition = computed<Exclude<LuxAccordionAriaTogglePosition, undefined>>(
     () => this.parent?.effectiveLuxTogglePosition() ?? this.luxTogglePosition() ?? 'after'
@@ -38,6 +40,8 @@ export class LuxPanelAriaComponent {
   protected effectiveDisabled = computed(() => !!this.luxDisabled() || !!this.parent?.luxDisabled());
   protected effectiveHideToggle = computed(() => this.luxHideToggle() ?? this.parent?.luxHideToggle() ?? false);
   protected effectiveDynamicHeaderHeight = computed(() => this.luxDynamicHeaderHeight() ?? this.parent?.luxDynamicHeaderHeight() ?? false);
+  protected stickyHeader = computed(() => this.luxStickyHeader() ?? this.parent?.luxStickyHeader());
+  protected stickyHeaderOffset = computed(() => this.luxStickyHeaderOffset() ?? this.parent?.luxStickyHeaderOffset());
 
   headerHeightCacheActive = false;
   expandedHeaderHeightCache?: string;

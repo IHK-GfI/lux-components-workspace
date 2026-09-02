@@ -9,6 +9,8 @@ export abstract class LuxAccordionAriaBase {
   abstract readonly luxExpandedHeaderHeight: Signal<string | undefined>;
   abstract readonly luxCollapsedHeaderHeight: Signal<string | undefined>;
   abstract readonly effectiveLuxTogglePosition: Signal<LuxAccordionAriaTogglePosition>;
+  abstract readonly luxStickyHeader: Signal<boolean | undefined>;
+  abstract readonly luxStickyHeaderOffset: Signal<string | undefined>;
 
   abstract registerPanel(panel: LuxAccordionAriaPanel): void;
   abstract unregisterPanel(panel: LuxAccordionAriaPanel): void;

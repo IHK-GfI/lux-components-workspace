@@ -84,6 +84,10 @@ export class AccordionAriaExampleComponent {
   showHeaderButtons1Panel = true;
   showHeaderDatepicker2Panel = true;
   headerDate2Panel: Date | undefined = new Date();
+  stickyHeader = false;
+  stickyHeaderOffset = '';
+  stickyLongContent = false;
+  longContentArr = Array.from({ length: 15 }, (_, index) => index);
 
   set displayMode(mode: LuxModeType) {
     // Der Multimode muss auf true gesetzt werden damit immer alle Panels aufgeklappt werden. Sonst wird nur das Custom Panel aufgeklappt wenn der Multimode vorher deaktiviert wurde.

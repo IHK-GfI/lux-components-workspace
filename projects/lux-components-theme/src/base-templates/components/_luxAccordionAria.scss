@@ -43,6 +43,21 @@ lux-panel-aria {
     margin-top: 4px;
   }
 
+  .lux-panel.lux-panel-sticky-header.lux-panel-expanded {
+    overflow: visible;
+
+    .lux-expansion-panel-content-wrapper {
+      overflow: hidden;
+      border-radius: 0 0 var(--lux-theme-app-border-radius) var(--lux-theme-app-border-radius);
+    }
+
+    .lux-expansion-panel-header {
+      position: sticky;
+      top: var(--lux-panel-sticky-header-offset, 0);
+      z-index: 2;
+    }
+  }
+
   .lux-expansion-panel-header-toggle:disabled {
     cursor: default;
   }
@@ -113,7 +128,6 @@ lux-accordion-aria {
 
   .lux-primary .lux-expansion-panel-header,
   .lux-primary .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-primary .lux-expansion-panel-header-toggle,
   .lux-primary .lux-expansion-panel-header-toggle:focus-visible {
     background-color: var(--lux-theme-accordion-header-color-primary);
     color: var(--lux-theme-accordion-header-color-on-primary);
@@ -121,7 +135,6 @@ lux-accordion-aria {
 
   .lux-accent .lux-expansion-panel-header,
   .lux-accent .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-accent .lux-expansion-panel-header-toggle,
   .lux-accent .lux-expansion-panel-header-toggle:focus-visible {
     background-color: var(--lux-theme-accordion-header-color-accent);
     color: var(--lux-theme-accordion-header-color-on-accent);
@@ -129,7 +142,6 @@ lux-accordion-aria {
 
   .lux-warn .lux-expansion-panel-header,
   .lux-warn .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-warn .lux-expansion-panel-header-toggle,
   .lux-warn .lux-expansion-panel-header-toggle:focus-visible {
     background-color: var(--lux-theme-accordion-header-color-warn);
     color: var(--lux-theme-accordion-header-color-on-warn);
@@ -137,7 +149,6 @@ lux-accordion-aria {
 
   .lux-neutral .lux-expansion-panel-header,
   .lux-neutral .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-neutral .lux-expansion-panel-header-toggle,
   .lux-neutral .lux-expansion-panel-header-toggle:focus-visible {
     background-color: var(--lux-theme-accordion-header-color-neutral);
     color: var(--lux-theme-accordion-header-color-on-neutral);

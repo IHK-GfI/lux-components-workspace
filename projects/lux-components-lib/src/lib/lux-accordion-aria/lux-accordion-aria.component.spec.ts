@@ -3,7 +3,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxAccordionAriaComponent } from './lux-accordion-aria.component';
 import { LuxPanelAriaComponent } from '../lux-panel-aria/lux-panel-aria.component';
 import { LuxPanelAriaContentComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-content.component';
@@ -165,6 +165,49 @@ describe('LuxAccordionAriaComponent', () => {
         expect(accordion.effectiveLuxTogglePosition()).toBe('before');
       }));
     });
+  });
+
+  describe('A11y', () => {
+    let fixture: ComponentFixture<LuxAccordionAriaTestComponent>;
+    let testComponent: LuxAccordionAriaTestComponent;
+
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    beforeEach(fakeAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          LuxAccordionAriaComponent,
+          LuxPanelAriaComponent,
+          LuxPanelAriaHeaderTitleComponent,
+          LuxPanelAriaContentComponent,
+          LuxAccordionAriaTestComponent
+        ]
+      });
+      fixture = TestBed.createComponent(LuxAccordionAriaTestComponent);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('Accordion (kollabiert) hat keine Barrierefreiheitsverletzungen', async () => {
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Accordion (expandiert) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
+      const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
+      headerButton.nativeElement.click();
+      LuxTestHelper.wait(fixture);
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    }));
+
+    it('Accordion (disabled) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
+      testComponent.disabled = true;
+      LuxTestHelper.wait(fixture);
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    }));
   });
 });
 

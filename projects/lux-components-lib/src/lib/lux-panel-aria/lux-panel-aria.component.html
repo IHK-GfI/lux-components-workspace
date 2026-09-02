@@ -1,4 +1,10 @@
-<div class="lux-panel" [class.lux-panel-expanded]="accordionTrigger().expanded()" [class.lux-panel-mobile]="mobile">
+<div
+  class="lux-panel"
+  [class.lux-panel-expanded]="accordionTrigger().expanded()"
+  [class.lux-panel-mobile]="mobile"
+  [class.lux-panel-sticky-header]="!!stickyHeader()"
+  [style.--lux-panel-sticky-header-offset]="stickyHeaderOffset() ?? null"
+>
   <div
     class="lux-expansion-panel-header"
     [class.lux-dynamic-height]="effectiveDynamicHeaderHeight()"
@@ -6,7 +12,6 @@
   >
     <button
       ngAccordionTrigger
-      luxAutofocus
       type="button"
       [panel]="panel"
       [id]="headerId"
@@ -34,10 +39,11 @@
       <ng-content select="lux-panel-aria-header-custom"></ng-content>
     </div>
   </div>
-  <div ngAccordionPanel #panel="ngAccordionPanel" [id]="panelId">
+  <div ngAccordionPanel #panel="ngAccordionPanel" [id]="panelId" class="lux-expansion-panel-content-wrapper">
     <ng-template ngAccordionContent>
       <div class="lux-expansion-panel-content">
         <ng-content select="lux-panel-aria-content"></ng-content>
+        <ng-content></ng-content>
       </div>
       <ng-content select="lux-panel-aria-action"></ng-content>
     </ng-template>

@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { AccordionGroup } from '@angular/aria/accordion';
-import { Component, DestroyRef, OnDestroy, computed, contentChildren, inject, input } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, Signal, computed, contentChildren, inject, input } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
@@ -9,7 +9,6 @@ import { LuxAccordionColor, LuxAccordionColors } from '../lux-util/lux-colors.en
 import { LuxAccordionAriaBase, LuxAccordionAriaPanel, LuxAccordionAriaTogglePosition } from './lux-accordion-aria-base';
 
 export declare type LuxAccordionMulti = boolean;
-export declare type LuxAccordionCloseOthers = boolean;
 export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
 
 /**
@@ -23,7 +22,8 @@ export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
   standalone: true,
   imports: [NgClass],
   // AccordionGroup as host directive so its ACCORDION_GROUP provider reaches projected lux-panel-aria content
-  hostDirectives: [AccordionGroup],
+  // 'disabled' is forwarded under the luxDisabled name so the group's own state stays the single source of truth
+  hostDirectives: [{ directive: AccordionGroup, inputs: ['disabled: luxDisabled'] }],
   providers: [{ provide: LuxAccordionAriaBase, useExisting: LuxAccordionAriaComponent }],
   host: {
     class: 'lux-flex lux-flex-auto',
@@ -35,6 +35,8 @@ export class LuxAccordionAriaComponent extends LuxAccordionAriaBase implements O
   private static accordionIdCounter = 0;
   private readonly destroyRef = inject(DestroyRef);
   private readonly panels = new Set<LuxAccordionAriaPanel>();
+  // forwarded via hostDirectives inputs above, this is the single source of truth for the disabled state
+  private readonly accordionGroup = inject(AccordionGroup, { self: true });
 
   changed$ = new Subject<string>();
   readonly id = `lux-accordion-aria-${LuxAccordionAriaComponent.accordionIdCounter++}`;
@@ -42,12 +44,14 @@ export class LuxAccordionAriaComponent extends LuxAccordionAriaBase implements O
   luxMulti = input<LuxAccordionMulti>(false);
   luxMode = input<LuxModeType>('default');
   luxColor = input<LuxAccordionColor | undefined>('primary');
-  luxDisabled = input<boolean | undefined>(undefined);
+  readonly luxDisabled: Signal<boolean | undefined> = this.accordionGroup.disabled;
   luxHideToggle = input<boolean | undefined>(undefined);
   luxDynamicHeaderHeight = input<boolean | undefined>(undefined);
   luxExpandedHeaderHeight = input<string | undefined>(undefined);
   luxCollapsedHeaderHeight = input<string | undefined>(undefined);
   luxTogglePosition = input<LuxAriaTogglePosition>(undefined);
+  luxStickyHeader = input<boolean | undefined>();
+  luxStickyHeaderOffset = input<string | undefined>();
 
   private readonly customHeaders = contentChildren(LuxPanelAriaHeaderCustomComponent, { descendants: true });
 
