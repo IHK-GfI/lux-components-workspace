@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxButtonComponent,
@@ -28,7 +28,7 @@ interface DialogStep2Form {
 @Component({
   selector: 'app-stepper-dialog-example',
   templateUrl: './stepper-dialog-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,
@@ -47,16 +47,16 @@ interface DialogStep2Form {
 export class StepperDialogExampleComponent {
   luxDialogRef = inject(LuxDialogRef);
 
-  @ViewChild('validationBox', { read: ElementRef }) validationBoxRef?: ElementRef;
-  @ViewChild('finishButton', { read: LuxButtonComponent }) finishButtonRef?: LuxButtonComponent;
+  readonly validationBoxRef = viewChild('validationBox', { read: ElementRef });
+  readonly finishButtonRef = viewChild('finishButton', { read: LuxButtonComponent });
 
-  currentStepNumber = 0;
-  private validationAttempted = false;
+  readonly currentStepNumber = signal(0);
+  private readonly validationAttempted = signal(false);
   readonly validationMessage = 'Bitte füllen Sie alle Pflichtfelder aus.';
 
   get showValidationMessage(): boolean {
-    const form = this.currentStepNumber === 0 ? this.form1 : this.currentStepNumber === 1 ? this.form2 : null;
-    return this.validationAttempted && (form?.invalid ?? false);
+    const form = this.currentStepNumber() === 0 ? this.form1 : this.currentStepNumber() === 1 ? this.form2 : null;
+    return this.validationAttempted() && (form?.invalid ?? false);
   }
 
   form1 = new FormGroup<DialogStepForm>({
@@ -72,33 +72,33 @@ export class StepperDialogExampleComponent {
   readonly totalSteps = 3;
 
   get isFirstStep(): boolean {
-    return this.currentStepNumber === 0;
+    return this.currentStepNumber() === 0;
   }
 
   get isLastStep(): boolean {
-    return this.currentStepNumber === this.totalSteps - 1;
+    return this.currentStepNumber() === this.totalSteps - 1;
   }
 
   prevStep(): void {
-    this.validationAttempted = false;
-    if (this.currentStepNumber > 0) {
-      this.currentStepNumber--;
+    this.validationAttempted.set(false);
+    if (this.currentStepNumber() > 0) {
+      this.currentStepNumber.update((n) => n - 1);
     }
   }
 
   nextStep(): void {
-    const currentForm = this.currentStepNumber === 0 ? this.form1 : this.currentStepNumber === 1 ? this.form2 : null;
+    const currentForm = this.currentStepNumber() === 0 ? this.form1 : this.currentStepNumber() === 1 ? this.form2 : null;
     if (currentForm?.invalid) {
       currentForm.markAllAsTouched();
-      this.validationAttempted = true;
-      setTimeout(() => this.validationBoxRef?.nativeElement?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
+      this.validationAttempted.set(true);
+      setTimeout(() => this.validationBoxRef()?.nativeElement?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }));
       return;
     }
-    this.validationAttempted = false;
-    if (this.currentStepNumber < this.totalSteps - 1) {
-      this.currentStepNumber++;
-      if (this.currentStepNumber === this.totalSteps - 1) {
-        setTimeout(() => this.finishButtonRef?.elementRef.nativeElement.querySelector('button')?.focus());
+    this.validationAttempted.set(false);
+    if (this.currentStepNumber() < this.totalSteps - 1) {
+      this.currentStepNumber.update((n) => n + 1);
+      if (this.currentStepNumber() === this.totalSteps - 1) {
+        setTimeout(() => this.finishButtonRef()?.elementRef.nativeElement.querySelector('button')?.focus());
       }
     }
   }
@@ -106,10 +106,10 @@ export class StepperDialogExampleComponent {
   finish(): void {
     if (this.form1.invalid || this.form2.invalid) {
       if (this.form1.invalid) {
-        this.currentStepNumber = 0;
+        this.currentStepNumber.set(0);
         this.form1.markAllAsTouched();
       } else {
-        this.currentStepNumber = 1;
+        this.currentStepNumber.set(1);
         this.form2.markAllAsTouched();
       }
       return;

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { LuxAppHeaderAcSessionTimerService, LuxButtonComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
@@ -15,13 +15,13 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
     LuxToggleAcComponent,
     StatusMarkerComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './session-timer-example.component.html'
 })
 export class SessionTimerExampleComponent {
   readonly markerTypeNew = DemoMarkerType.New;
   protected timerService = inject(LuxAppHeaderAcSessionTimerService);
-  startingSeconds = 1800;
+  readonly startingSeconds = signal(1800);
 
   get canExtendSession(): boolean {
     return this.timerService.canExtendSession;
@@ -32,7 +32,7 @@ export class SessionTimerExampleComponent {
   }
 
   setTimer() {
-    this.timerService.resetTimer(this.startingSeconds);
+    this.timerService.resetTimer(this.startingSeconds());
   }
 
   toggleCanExtendSession(checked: boolean) {

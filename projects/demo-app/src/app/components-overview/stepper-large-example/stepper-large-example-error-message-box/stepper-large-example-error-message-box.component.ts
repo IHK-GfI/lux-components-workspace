@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, signal, input, ChangeDetectionStrategy } from '@angular/core';
 import { LuxStepperLargeStepComponent, LuxTextboxComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
@@ -7,21 +7,21 @@ import { StepperLargeExampleDataService } from '../stepper-large-example-data.se
   selector: 'lux-stepper-large-example-error-message-box',
   templateUrl: './stepper-large-example-error-message-box.component.html',
   imports: [LuxTextboxComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleErrorMessageBoxComponent }]
 })
 export class StepperLargeExampleErrorMessageBoxComponent implements OnInit {
   dataService = inject(StepperLargeExampleDataService);
 
-  @Input() luxTitle = '';
-  @Input() luxCompleted = true;
-  showErrorMessage = false;
+  readonly luxTitle = input('');
+  readonly luxCompleted = input(true);
+  readonly showErrorMessage = signal(false);
   subscriptions: Subscription[] = [];
 
   ngOnInit() {
     this.subscriptions.push(
       this.dataService.showErrorMessage.subscribe((value) => {
-        this.showErrorMessage = value;
+        this.showErrorMessage.set(value);
       })
     );
   }

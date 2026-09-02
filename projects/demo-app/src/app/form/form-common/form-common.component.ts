@@ -1,5 +1,5 @@
 import { JsonPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     LuxAutocompleteAcComponent,
@@ -56,7 +56,7 @@ interface FormCommonUser {
 @Component({
   selector: 'app-form-common',
   templateUrl: './form-common.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxCardContentComponent,
@@ -100,7 +100,7 @@ export class FormCommonComponent extends FormBase implements OnInit {
   chipItems2: string[] = [];
 
   // Schalter im Beispiel "A11y - Visuell versteckte Labels"
-  showA11yLabels = false;
+  readonly showA11yLabels = signal(false);
 
   constructor() {
     super();

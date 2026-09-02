@@ -6,23 +6,23 @@
     <div class="lux-tile-ac-wrapper-demo lux-m-5">
       <lux-tile-ac
         luxAutofocus
-        [luxLabel]="label"
-        [luxLabelTruncateAfterOneLine]="labelTruncateAfterOneLine"
-        [luxLabelTruncateAfterTwoLines]="labelTruncateAfterTwoLines"
-        [luxSubTitle]="subTitle"
-        [luxSubTitleTruncateAfterOneLine]="subTitleTruncateAfterOneLine"
-        [luxSubTitleTruncateAfterTwoLines]="subTitleTruncateAfterTwoLines"
-        [luxCounter]="counter"
-        [luxNotificationColor]="badgeColor"
-        [luxNotificationSize]="badgeSize"
-        [luxCounterCap]="badgeCap"
+        [luxLabel]="label()"
+        [luxLabelTruncateAfterOneLine]="labelTruncateAfterOneLine()"
+        [luxLabelTruncateAfterTwoLines]="labelTruncateAfterTwoLines()"
+        [luxSubTitle]="subTitle()"
+        [luxSubTitleTruncateAfterOneLine]="subTitleTruncateAfterOneLine()"
+        [luxSubTitleTruncateAfterTwoLines]="subTitleTruncateAfterTwoLines()"
+        [luxCounter]="counter()"
+        [luxNotificationColor]="badgeColor()"
+        [luxNotificationSize]="badgeSize()"
+        [luxCounterCap]="badgeCap()"
         [luxShowNotification]="showNotification"
         luxTagId="example-tile"
-        (luxClicked)="log(showOutputEvents, 'Tile clicked', $event)"
+        (luxClicked)="log(showOutputEvents(), 'Tile clicked', $event)"
       >
-        @if (showIcon) {
+        @if (showIcon()) {
         <lux-icon luxIconName="lux-interface-weather-sun-1"></lux-icon>
-        } @if (!showIcon) {
+        } @if (!showIcon()) {
         <lux-image luxImageSrc="assets/svg/Example.svg" luxImageWidth="50px" luxImageHeight="50px"></lux-image>
         }
       </lux-tile-ac>

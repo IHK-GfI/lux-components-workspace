@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
@@ -40,14 +40,14 @@ import { PopupExampleInfoPopupComponent } from './popup-example-info-popup.compo
   ]
 })
 export class PopupExampleComponent {
-  title = 'Kontextinformationen';
-  text = 'Die Popup-Komponente zeigt erweiterte Tooltips mit mehrzeiligen Texten an.';
-  showDelay = 500;
-  hideDelay = 120;
-  minWidth = 240;
-  maxWidth = 360;
-  position: LuxPopupPosition = 'above';
-  disabled = false;
+  readonly title = signal('Kontextinformationen');
+  readonly text = signal('Die Popup-Komponente zeigt erweiterte Tooltips mit mehrzeiligen Texten an.');
+  readonly showDelay = signal(500);
+  readonly hideDelay = signal(120);
+  readonly minWidth = signal(240);
+  readonly maxWidth = signal(360);
+  readonly position = signal<LuxPopupPosition>('above');
+  readonly disabled = signal(false);
   positionOptions: LuxPopupPosition[] = ['above', 'below', 'before', 'after', 'left', 'right'];
 
   onAction(popup: LuxPopupComponent, actionLabel: string) {

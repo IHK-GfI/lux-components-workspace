@@ -41,7 +41,7 @@ interface FormDualStreetForm {
 @Component({
   selector: 'app-form-dual-col',
   templateUrl: './form-dual-col.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxCardContentComponent,

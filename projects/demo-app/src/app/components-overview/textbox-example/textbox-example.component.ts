@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxIconComponent,
     LuxInputAcComponent,
@@ -15,7 +15,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'lux-textbox-example',
   templateUrl: './textbox-example.component.html',
   styleUrls: ['./textbox-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,
@@ -28,11 +28,13 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class TextboxExampleComponent {
-  title = 'Information';
-  content = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo itaque accusamus facere labore mollitia at aut nesciunt fugiat, sequi quos, quo quibusdam tempora provident veniam sunt distinctio. Aliquid, magnam dolore.`;
-  color: LuxTextboxColor | undefined;
-  icon = 'lux-interface-alert-information-circle';
-  heading = 2;
+  readonly title = signal('Information');
+  readonly content = signal(
+    `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo itaque accusamus facere labore mollitia at aut nesciunt fugiat, sequi quos, quo quibusdam tempora provident veniam sunt distinctio. Aliquid, magnam dolore.`
+  );
+  readonly color = signal<LuxTextboxColor | undefined>('blue');
+  readonly icon = signal('lux-interface-alert-information-circle');
+  readonly heading = signal(2);
 
   colorOptions = [
     { label: 'default', value: '' },
@@ -42,11 +44,7 @@ export class TextboxExampleComponent {
     { label: 'red', value: 'red' }
   ];
 
-  constructor() {
-    this.color = 'blue';
-  }
-
   onColorChanged(_color: { label: string; value: LuxTextboxColor }) {
-    this.color = _color.value;
+    this.color.set(_color.value);
   }
 }

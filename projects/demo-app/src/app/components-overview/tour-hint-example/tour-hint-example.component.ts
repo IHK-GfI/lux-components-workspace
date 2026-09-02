@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
     ILuxTourHintStepConfig,
     LuxButtonComponent,
@@ -20,7 +20,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'tour-hint-example',
   templateUrl: './tour-hint-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxCardActionsComponent,
@@ -121,37 +121,37 @@ export class TourHintExampleComponent {
     'Karte_2_Aktion_1'
   ];
 
-  public singleHintTarget = 'Karte_1';
-  public singleHintTitle = 'Test Titel';
-  public singleHintContent = 'Beschreibung für das Element';
-  public singleHintShowDontShowAgain = true;
+  public readonly singleHintTarget = signal('Karte_1');
+  public readonly singleHintTitle = signal('Test Titel');
+  public readonly singleHintContent = signal('Beschreibung für das Element');
+  public readonly singleHintShowDontShowAgain = signal(true);
 
-  public tourShowDontShowAgain = true;
+  public readonly tourShowDontShowAgain = signal(true);
 
   public openHint() {
     this.tourService.open(
       {
-        targetId: this.singleHintTarget,
+        targetId: this.singleHintTarget(),
         data: {
-          title: this.singleHintTitle,
-          content: this.singleHintContent
+          title: this.singleHintTitle(),
+          content: this.singleHintContent()
         }
       },
-      this.singleHintShowDontShowAgain
+      this.singleHintShowDontShowAgain()
     );
   }
 
   public startTour() {
-    this.tourService.open(this.complexTourConfigs, this.tourShowDontShowAgain);
+    this.tourService.open(this.complexTourConfigs, this.tourShowDontShowAgain());
   }
 
   public clearCaches() {
     this.tourService.clearDSACacheForConfig([
       {
-        targetId: this.singleHintTarget,
+        targetId: this.singleHintTarget(),
         data: {
-          title: this.singleHintTitle,
-          content: this.singleHintContent
+          title: this.singleHintTitle(),
+          content: this.singleHintContent()
         }
       }
     ]);

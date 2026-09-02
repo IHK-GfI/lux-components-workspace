@@ -8,55 +8,55 @@
       <lux-autocomplete-ac
         luxAutofocus
         [luxAutofocusComponent]="autocomplete"
-        [luxLabel]="label"
-        [luxPlaceholder]="placeholder"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        [luxOptionLabelProp]="renderProperty"
-        [luxErrorMessageNotAnOption]="errorMessageNotAnOption"
-        [luxOptions]="getOptions()"
-        [luxOptionBlockSize]="optionBlockSize"
-        [luxPickValue]="usePickValueFn && strict ? pickValueFn : undefined"
-        [luxFilterFn]="useFilterFn ? onFilter : undefined"
+        [luxLabel]="label()"
+        [luxPlaceholder]="placeholder()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxOptionLabelProp]="renderProperty()"
+        [luxErrorMessageNotAnOption]="errorMessageNotAnOption()"
+        [luxOptions]="selectedOptions()"
+        [luxOptionBlockSize]="optionBlockSize()"
+        [luxPickValue]="usePickValueFn() && strict() ? pickValueFn : undefined"
+        [luxFilterFn]="useFilterFn() ? onFilter : undefined"
         [(luxValue)]="value"
-        [luxSelectAllOnClick]="selectAllOnClick"
+        [luxSelectAllOnClick]="selectAllOnClick()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required"
-        [luxReadonly]="readonly"
-        [luxStrict]="strict"
-        [luxDense]="denseFormat"
-        [luxClearable]="clearable"
-        [luxLookupDelay]="delay"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxControlValidators]="controlValidators"
-        [luxPanelWidth]="luxPanelWidth"
-        [luxLabelLongFormat]="labelLongFormat"
-        (luxValueChange)="log(showOutputEvents, 'luxValueChange', $event)"
-        (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxOptionSelected)="log(showOutputEvents, 'luxOptionSelected', $event)"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxStrict]="strict()"
+        [luxDense]="denseFormat()"
+        [luxClearable]="clearable()"
+        [luxLookupDelay]="delay()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxPanelWidth]="luxPanelWidth()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxOptionSelected)="log(showOutputEvents(), 'luxOptionSelected', $event)"
         luxTagId="autocomplete-non-reactive"
         #autocomplete
       >
-        @if (showPrefix) {
+        @if (showPrefix()) {
           <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks"></lux-icon>&nbsp; </lux-input-ac-prefix>
         }
-        @if (showSuffix) {
+        @if (showSuffix()) {
           <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
         }
-        @if (useTemplatesForLabels) {
+        @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
             <div class="lux-flex">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
               <div>
-                via Template {{ option[renderProperty] }}
-                @if (useTranslocoDate) {
+                via Template {{ option[renderProperty()] }}
+                @if (useTranslocoDate()) {
                   &nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})
                 }
               </div>
@@ -69,52 +69,52 @@
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-autocomplete-ac
-        [luxLabel]="label"
-        [luxPlaceholder]="placeholder"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        [luxOptionLabelProp]="renderProperty"
-        [luxErrorMessageNotAnOption]="errorMessageNotAnOption"
-        [luxOptions]="getOptions()"
-        [luxOptionBlockSize]="optionBlockSize"
-        [luxPickValue]="usePickValueFn && strict ? pickValueFn : undefined"
-        [luxFilterFn]="useFilterFn ? onFilter : undefined"
-        [luxSelectAllOnClick]="selectAllOnClick"
+        [luxLabel]="label()"
+        [luxPlaceholder]="placeholder()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxOptionLabelProp]="renderProperty()"
+        [luxErrorMessageNotAnOption]="errorMessageNotAnOption()"
+        [luxOptions]="selectedOptions()"
+        [luxOptionBlockSize]="optionBlockSize()"
+        [luxPickValue]="usePickValueFn() && strict() ? pickValueFn : undefined"
+        [luxFilterFn]="useFilterFn() ? onFilter : undefined"
+        [luxSelectAllOnClick]="selectAllOnClick()"
         [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly"
-        [luxStrict]="strict"
-        [luxDense]="denseFormat"
-        [luxClearable]="clearable"
-        [luxLookupDelay]="delay"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxReadonly]="readonly()"
+        [luxStrict]="strict()"
+        [luxDense]="denseFormat()"
+        [luxClearable]="clearable()"
+        [luxLookupDelay]="delay()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         [luxControlBinding]="controlBinding"
-        [luxPanelWidth]="luxPanelWidth"
-        [luxLabelLongFormat]="labelLongFormat"
-        (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxValueChange)="log(showOutputEvents, 'luxValueChange', $event)"
-        (luxOptionSelected)="log(showOutputEvents, 'luxOptionSelected', $event)"
+        [luxPanelWidth]="luxPanelWidth()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxOptionSelected)="log(showOutputEvents(), 'luxOptionSelected', $event)"
         luxTagId="autocomplete-reactive"
       >
-        @if (showPrefix) {
+        @if (showPrefix()) {
           <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'"></lux-icon>&nbsp; </lux-input-ac-prefix>
         }
-        @if (showSuffix) {
+        @if (showSuffix()) {
           <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
         }
-        @if (useTemplatesForLabels) {
+        @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
             <div class="lux-flex">
               <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
               <div>
-                via Template {{ option[renderProperty] }}
-                @if (useTranslocoDate) {
+                via Template {{ option[renderProperty()] }}
+                @if (useTranslocoDate()) {
                   &nbsp;({{ option.gueltigAb | translocoDate: { dateStyle: 'full' } }})
                 }
               </div>
@@ -182,7 +182,7 @@
       (luxSelectedChange)="onRenderProperty($event)"
       [luxOptions]="renderProperties"
       luxOptionLabelProp="label"
-      [luxDisabled]="useStringValues"
+      [luxDisabled]="useStringValues()"
       luxLabel="luxOptionLabelProp"
       luxHint="Über die Property wird eingestellt, woraus der anzuzeigende Label bezogen wird."
     >
@@ -242,7 +242,7 @@
     <lux-toggle-ac
       [(luxChecked)]="usePickValueFn"
       luxLabel="luxPickValue"
-      [luxDisabled]="!strict || useStringValues"
+      [luxDisabled]="!strict() || useStringValues()"
       [luxNoTopLabel]="true"
     >
       <lux-form-hint>
@@ -312,7 +312,7 @@
         setzen.
       </lux-form-hint>
     </lux-select-ac>
-    @if (strict) {
+    @if (strict()) {
       <lux-input-ac
         luxName="autocomplete_luxErrorMessageNotAnOption"
         luxLabel="luxErrorMessageNotAnOption"
@@ -322,7 +322,7 @@
         <lux-form-hint> Die Property kann die Fehlermeldung für invalide Optionen einstellen. </lux-form-hint>
       </lux-input-ac>
     }
-    @if (useErrorMessage) {
+    @if (useErrorMessage()) {
       <lux-input-ac
         luxName="autocomplete_luxErrorMessage"
         luxLabel="luxErrorMessage"
@@ -332,7 +332,7 @@
       >
       </lux-input-ac>
     }
-    @if (!useErrorMessage) {
+    @if (!useErrorMessage()) {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-toggle-ac

@@ -7,25 +7,25 @@
       <lux-filter-form
         (luxOnFilter)="onFilter($event)"
         [(luxFilterExpanded)]="expanded"
-        [luxFilterValues]="initFilter"
+        [luxFilterValues]="initFilter()"
         (luxOnSave)="onSave($event)"
         (luxOnLoad)="onLoad($event)"
         (luxOnReset)="onReset()"
         (luxOnDelete)="onDelete($event)"
-        [luxTitle]="title"
-        [luxHideMenu]="hideMenu"
-        [luxShowChips]="showFilterChips"
-        [luxHideChipsBorder]="hideChipsBorder"
+        [luxTitle]="title()"
+        [luxHideMenu]="hideMenu()"
+        [luxShowChips]="showFilterChips()"
+        [luxHideChipsBorder]="hideChipsBorder()"
         [luxStoredFilters]="storedFilters"
         [luxShowAsCard]="false"
-        [luxButtonFlat]="buttonFlat"
-        [luxButtonFilterColor]="buttonFilterColor"
-        [luxButtonDialogSave]="buttonDialogSave"
-        [luxButtonDialogLoad]="buttonDialogLoad"
-        [luxButtonDialogDelete]="buttonDialogDelete"
-        [luxButtonDialogCancel]="buttonDialogCancel"
-        [luxButtonDialogClose]="buttonDialogClose"
-        [luxDisableShortcut]="disableShortcut"
+        [luxButtonFlat]="buttonFlat()"
+        [luxButtonFilterColor]="buttonFilterColor()"
+        [luxButtonDialogSave]="buttonDialogSave()"
+        [luxButtonDialogLoad]="buttonDialogLoad()"
+        [luxButtonDialogDelete]="buttonDialogDelete()"
+        [luxButtonDialogCancel]="buttonDialogCancel()"
+        [luxButtonDialogClose]="buttonDialogClose()"
+        [luxDisableShortcut]="disableShortcut()"
         class="lux-ml-1 lux-mr-1 lux-mb-3 lux-flex-grow-1 lux-flex-shrink-1 lux-flex-basis-auto"
       >
         <div class="lux-grid lux-grid-cols-12 lt-md:lux-grid-cols-1 lux-gap-4 lux-mt-4">
@@ -37,8 +37,8 @@
             luxTableNo="1002"
             luxRenderProp="kurzText"
             [luxParameters]="parameters"
-            [luxFilterDisabled]="autoCompleteLookupDisabled"
-            [luxFilterHidden]="autoCompleteLookupHidden"
+            [luxFilterDisabled]="autoCompleteLookupDisabled()"
+            [luxFilterHidden]="autoCompleteLookupHidden()"
             luxFilterItem
           ></lux-lookup-autocomplete-ac>
           <lux-lookup-combobox-ac
@@ -50,8 +50,8 @@
             luxTableNo="1002"
             luxRenderProp="kurzText"
             [luxParameters]="parameters"
-            [luxFilterDisabled]="selectLookupDisabled"
-            [luxFilterHidden]="selectLookupHidden"
+            [luxFilterDisabled]="selectLookupDisabled()"
+            [luxFilterHidden]="selectLookupHidden()"
             luxFilterItem
           ></lux-lookup-combobox-ac>
           <lux-input-ac
@@ -61,8 +61,8 @@
             luxAutocomplete="off"
             luxControlBinding="input"
             [luxRequired]="true"
-            [luxFilterDisabled]="inputDisabled"
-            [luxFilterHidden]="inputHidden"
+            [luxFilterDisabled]="inputDisabled()"
+            [luxFilterHidden]="inputHidden()"
             luxFilterItem
           ></lux-input-ac>
           <lux-autocomplete-ac
@@ -70,8 +70,8 @@
             class="lux-col-span-6 lt-md:lux-col-span-1"
             [luxOptions]="autoCompleteOptions"
             luxControlBinding="autocomplete"
-            [luxFilterDisabled]="autoCompleteDisabled"
-            [luxFilterHidden]="autoCompleteHidden"
+            [luxFilterDisabled]="autoCompleteDisabled()"
+            [luxFilterHidden]="autoCompleteHidden()"
             luxFilterItem
           ></lux-autocomplete-ac>
           <lux-datepicker-ac
@@ -79,8 +79,8 @@
             luxLabel="Datepicker"
             luxName="filter_datepicker"
             luxControlBinding="datepicker"
-            [luxFilterDisabled]="datepickerDisabled"
-            [luxFilterHidden]="datepickerHidden"
+            [luxFilterDisabled]="datepickerDisabled()"
+            [luxFilterHidden]="datepickerHidden()"
             luxFilterItem
           ></lux-datepicker-ac>
           <lux-datetimepicker-ac
@@ -88,8 +88,8 @@
             luxLabel="Datetimepicker"
             luxName="filter_datetimepicker"
             luxControlBinding="datetimepicker"
-            [luxFilterDisabled]="datetimepickerDisabled"
-            [luxFilterHidden]="datetimepickerHidden"
+            [luxFilterDisabled]="datetimepickerDisabled()"
+            [luxFilterHidden]="datetimepickerHidden()"
             luxFilterItem
           ></lux-datetimepicker-ac>
           <div class="lux-col-span-12 lt-md:lux-col-span-1">
@@ -99,8 +99,8 @@
                 luxLabel="Datepicker"
                 luxName="filter_datepicker_combined"
                 luxControlBinding="combinedDateTime"
-                [luxFilterDisabled]="combinedDateTimeDisabled"
-                [luxFilterHidden]="combinedDateTimeHidden"
+                [luxFilterDisabled]="combinedDateTimeDisabled()"
+                [luxFilterHidden]="combinedDateTimeHidden()"
                 [luxReferenceControl]="combinedTimepicker"
                 luxFilterItem
                 #combinedDatepicker
@@ -110,8 +110,8 @@
                 luxLabel="Timepicker"
                 luxName="filter_timepicker_combined"
                 luxControlBinding="combinedDateTime"
-                [luxFilterDisabled]="combinedDateTimeDisabled"
-                [luxFilterHidden]="combinedDateTimeHidden"
+                [luxFilterDisabled]="combinedDateTimeDisabled()"
+                [luxFilterHidden]="combinedDateTimeHidden()"
                 [luxReferenceControl]="combinedDatepicker"
                 luxFilterItem
                 #combinedTimepicker
@@ -126,8 +126,8 @@
             [luxMultiple]="false"
             [luxOptions]="singleSelectOptions"
             [luxCompareWith]="compareValueFn"
-            [luxFilterDisabled]="singleSelectDisabled"
-            [luxFilterHidden]="singleSelectHidden"
+            [luxFilterDisabled]="singleSelectDisabled()"
+            [luxFilterHidden]="singleSelectHidden()"
             luxFilterColor="accent"
             luxFilterItem
             [luxNoBottomLabel]="true"
@@ -140,8 +140,8 @@
             [luxMultiple]="true"
             [luxOptions]="multiSelectOptions"
             [luxCompareWith]="compareValueFn"
-            [luxFilterDisabled]="multiSelectDisabled"
-            [luxFilterHidden]="multiSelectHidden"
+            [luxFilterDisabled]="multiSelectDisabled()"
+            [luxFilterHidden]="multiSelectHidden()"
             luxFilterColor="accent"
             luxFilterItem
             [luxNoBottomLabel]="true"
@@ -151,8 +151,8 @@
             luxLabel="Toggle"
             luxControlBinding="toggle"
             [luxFilterRenderFn]="renderToggleFn"
-            [luxFilterDisabled]="toggleSelectDisabled"
-            [luxFilterHidden]="toggleSelectHidden"
+            [luxFilterDisabled]="toggleSelectDisabled()"
+            [luxFilterHidden]="toggleSelectHidden()"
             luxFilterColor="warn"
             luxFilterItem
             [luxNoLabels]="true"
@@ -168,41 +168,41 @@
             luxFilterItem
             [luxNoLabels]="true"
             luxFilterLabel="Radio"
-            [luxFilterDisabled]="radioSelectDisabled"
-            [luxFilterHidden]="radioSelectHidden"
+            [luxFilterDisabled]="radioSelectDisabled()"
+            [luxFilterHidden]="radioSelectHidden()"
           >
           </lux-radio-ac>
           <app-custom-filter-item
             class="lux-col-span-12 lt-md:lux-col-span-1"
-            [filterDisabled]="customDisabled"
-            [filterHidden]="customHidden"
+            [filterDisabled]="customDisabled()"
+            [filterHidden]="customHidden()"
           ></app-custom-filter-item>
         </div>
       </lux-filter-form>
       <div class="lux-highlight-section column lux-ml-2 lux-mr-2">
         <h2 class="lux-highlight-section-label">Filter</h2>
-        <pre>{{ currentFilter | json }}</pre>
+        <pre>{{ currentFilter() | json }}</pre>
       </div>
       <!-- Beispiel als Card -->
       <h2>Lux-Filter-Form in einer Card</h2>
       <lux-filter-form
-        [luxTitle]="title"
-        [luxHideMenu]="hideMenu"
-        [luxHideChipsBorder]="hideChipsBorder"
+        [luxTitle]="title()"
+        [luxHideMenu]="hideMenu()"
+        [luxHideChipsBorder]="hideChipsBorder()"
         [luxShowAsCard]="true"
-        [luxExpandedLabelOpen]="openLabel"
-        [luxExpandedLabelClose]="closeLabel"
-        [luxFilterValues]="initFilterAc"
-        [luxShowChips]="showFilterChips"
+        [luxExpandedLabelOpen]="openLabel()"
+        [luxExpandedLabelClose]="closeLabel()"
+        [luxFilterValues]="initFilterAc()"
+        [luxShowChips]="showFilterChips()"
         [luxStoredFilters]="storedFiltersAc"
-        [luxButtonFlat]="buttonFlat"
-        [luxButtonFilterColor]="buttonFilterColor"
-        [luxButtonDialogSave]="buttonDialogSave"
-        [luxButtonDialogLoad]="buttonDialogLoad"
-        [luxButtonDialogDelete]="buttonDialogDelete"
-        [luxButtonDialogCancel]="buttonDialogCancel"
-        [luxButtonDialogClose]="buttonDialogClose"
-        [luxDisableShortcut]="disableShortcut"
+        [luxButtonFlat]="buttonFlat()"
+        [luxButtonFilterColor]="buttonFilterColor()"
+        [luxButtonDialogSave]="buttonDialogSave()"
+        [luxButtonDialogLoad]="buttonDialogLoad()"
+        [luxButtonDialogDelete]="buttonDialogDelete()"
+        [luxButtonDialogCancel]="buttonDialogCancel()"
+        [luxButtonDialogClose]="buttonDialogClose()"
+        [luxDisableShortcut]="disableShortcut()"
         (luxOnSave)="onSaveAc($event)"
         (luxOnLoad)="onLoadAc($event)"
         (luxOnReset)="onReset()"
@@ -221,8 +221,8 @@
             luxLabel="Autocomplete-Ac"
             [luxOptions]="autoCompleteOptions"
             luxControlBinding="autocomplete"
-            [luxFilterDisabled]="autoCompleteDisabled"
-            [luxFilterHidden]="autoCompleteHidden"
+            [luxFilterDisabled]="autoCompleteDisabled()"
+            [luxFilterHidden]="autoCompleteHidden()"
             luxFilterItem
           ></lux-autocomplete-ac>
         </div>
@@ -235,8 +235,8 @@
               luxTableNo="1002"
               luxRenderProp="kurzText"
               [luxParameters]="parameters"
-              [luxFilterDisabled]="autoCompleteLookupDisabled"
-              [luxFilterHidden]="autoCompleteLookupHidden"
+              [luxFilterDisabled]="autoCompleteLookupDisabled()"
+              [luxFilterHidden]="autoCompleteLookupHidden()"
               luxFilterItem
             ></lux-lookup-autocomplete-ac>
             <lux-lookup-combobox-ac
@@ -247,24 +247,24 @@
               luxTableNo="1002"
               luxRenderProp="kurzText"
               [luxParameters]="parameters"
-              [luxFilterDisabled]="selectLookupDisabled"
-              [luxFilterHidden]="selectLookupHidden"
+              [luxFilterDisabled]="selectLookupDisabled()"
+              [luxFilterHidden]="selectLookupHidden()"
               luxFilterItem
             ></lux-lookup-combobox-ac>
             <lux-datepicker-ac
               luxLabel="Datepicker-Ac"
               luxName="filter_datepicker_ac"
               luxControlBinding="datepicker"
-              [luxFilterDisabled]="datepickerDisabled"
-              [luxFilterHidden]="datepickerHidden"
+              [luxFilterDisabled]="datepickerDisabled()"
+              [luxFilterHidden]="datepickerHidden()"
               luxFilterItem
             ></lux-datepicker-ac>
             <lux-datetimepicker-ac
               luxLabel="Datetimepicker-Ac"
               luxName="filter_datetimepicker_ac"
               luxControlBinding="datetimepicker"
-              [luxFilterDisabled]="datetimepickerDisabled"
-              [luxFilterHidden]="datetimepickerHidden"
+              [luxFilterDisabled]="datetimepickerDisabled()"
+              [luxFilterHidden]="datetimepickerHidden()"
               luxFilterItem
             ></lux-datetimepicker-ac>
             <div>
@@ -274,8 +274,8 @@
                   luxLabel="Datepicker + Timepicker-Ac (Datum)"
                   luxName="filter_datepicker_combined_ac"
                   luxControlBinding="combinedDateTime"
-                  [luxFilterDisabled]="combinedDateTimeDisabled"
-                  [luxFilterHidden]="combinedDateTimeHidden"
+                  [luxFilterDisabled]="combinedDateTimeDisabled()"
+                  [luxFilterHidden]="combinedDateTimeHidden()"
                   [luxReferenceControl]="combinedTimepickerAc"
                   luxFilterItem
                   #combinedDatepickerAc
@@ -285,8 +285,8 @@
                   luxLabel="Datepicker + Timepicker-Ac (Uhrzeit)"
                   luxName="filter_timepicker_combined_ac"
                   luxControlBinding="combinedDateTime"
-                  [luxFilterDisabled]="combinedDateTimeDisabled"
-                  [luxFilterHidden]="combinedDateTimeHidden"
+                  [luxFilterDisabled]="combinedDateTimeDisabled()"
+                  [luxFilterHidden]="combinedDateTimeHidden()"
                   [luxReferenceControl]="combinedDatepickerAc"
                   luxFilterItem
                   #combinedTimepickerAc
@@ -300,8 +300,8 @@
               [luxMultiple]="false"
               [luxOptions]="singleSelectOptions"
               [luxCompareWith]="compareValueFn"
-              [luxFilterDisabled]="singleSelectDisabled"
-              [luxFilterHidden]="singleSelectHidden"
+              [luxFilterDisabled]="singleSelectDisabled()"
+              [luxFilterHidden]="singleSelectHidden()"
               luxFilterColor="accent"
               luxFilterItem
               [luxNoBottomLabel]="true"
@@ -313,8 +313,8 @@
               [luxMultiple]="true"
               [luxOptions]="multiSelectOptions"
               [luxCompareWith]="compareValueFn"
-              [luxFilterDisabled]="multiSelectDisabled"
-              [luxFilterHidden]="multiSelectHidden"
+              [luxFilterDisabled]="multiSelectDisabled()"
+              [luxFilterHidden]="multiSelectHidden()"
               luxFilterColor="accent"
               luxFilterItem
               [luxNoBottomLabel]="true"
@@ -324,8 +324,8 @@
               luxName="filter_toggle_ac"
               luxControlBinding="toggle"
               [luxFilterRenderFn]="renderToggleFn"
-              [luxFilterDisabled]="toggleSelectDisabled"
-              [luxFilterHidden]="toggleSelectHidden"
+              [luxFilterDisabled]="toggleSelectDisabled()"
+              [luxFilterHidden]="toggleSelectHidden()"
               luxFilterColor="warn"
               luxFilterItem
               [luxNoTopLabel]="true"
@@ -339,8 +339,8 @@
               [luxPickValue]="radioPickValueFn"
               luxFilterItem
               luxFilterLabel="Radio"
-              [luxFilterDisabled]="radioSelectDisabled"
-              [luxFilterHidden]="radioSelectHidden"
+              [luxFilterDisabled]="radioSelectDisabled()"
+              [luxFilterHidden]="radioSelectHidden()"
             ></lux-radio-ac>
           </div>
         </lux-filter-form-extended>

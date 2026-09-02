@@ -1,4 +1,4 @@
-import { Directive, inject, OnInit } from '@angular/core';
+import { Directive, inject, signal, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import {
     LuxBehandlungsOptionenUngueltige,
@@ -35,35 +35,35 @@ export abstract class LookupExampleComponent implements OnInit {
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
     { value: Validators.email, label: 'Validators.email' }
   ];
-  useErrorMessage = true;
-  showOutputEvents = false;
-  useRenderFn = false;
+  readonly useErrorMessage = signal(true);
+  readonly showOutputEvents = signal(false);
+  readonly useRenderFn = signal(false);
   log = logResult;
   form: FormGroup<LookupDummyForm>;
   renderFnString = this.renderFn + '';
-  renderProp = 'kurzText';
-  renderPropNoPropertyLabel = '---';
-  parameters?: LuxLookupParameters;
+  readonly renderProp = signal('kurzText');
+  readonly renderPropNoPropertyLabel = signal('---');
+  readonly parameters = signal<LuxLookupParameters | undefined>(undefined);
   selected: any;
-  customStyle: object | null = null;
-  customInvalidStyle: object | null = null;
-  behandlungUngueltige: LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige.ausgrauen;
-  disabled = false;
+  readonly customStyle = signal<object | null>(null);
+  readonly customInvalidStyle = signal<object | null>(null);
+  readonly behandlungUngueltige = signal<LuxBehandlungsOptionenUngueltige>(LuxBehandlungsOptionenUngueltige.ausgrauen);
+  readonly disabled = signal(false);
   controlBinding = 'lookup';
-  readonly = false;
-  required = false;
-  tableNo = '1002';
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  placeholder = 'Placeholder';
-  controlValidators: ValidatorFn[] = [];
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  value: LuxLookupTableEntry | LuxLookupTableEntry[] | null = null;
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly tableNo = signal('1002');
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly placeholder = signal('Placeholder');
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly value = signal<LuxLookupTableEntry | LuxLookupTableEntry[] | null>(null);
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   errorCallbackString = this.errorCallback + '';
-  compareFn?: LuxLookupCompareFn;
+  readonly compareFn = signal<LuxLookupCompareFn | undefined>(undefined);
 
   constructor() {
     this.form = new FormGroup<LookupDummyForm>({
@@ -74,10 +74,12 @@ export abstract class LookupExampleComponent implements OnInit {
   abstract reloadDataIntern(): void;
 
   ngOnInit() {
-    this.parameters = new LuxLookupParameters({
-      knr: 101,
-      fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
-    });
+    this.parameters.set(
+      new LuxLookupParameters({
+        knr: 101,
+        fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+      })
+    );
   }
 
   reloadData() {
@@ -87,7 +89,7 @@ export abstract class LookupExampleComponent implements OnInit {
   }
 
   toggleCompareFn(toggle: boolean) {
-    this.compareFn = toggle ? luxLookupCompareKurzTextFn : luxLookupCompareKeyFn;
+    this.compareFn.set(toggle ? luxLookupCompareKurzTextFn : luxLookupCompareKeyFn);
 
     this.reloadData();
   }
@@ -98,29 +100,29 @@ export abstract class LookupExampleComponent implements OnInit {
 
   changeCustomStyle(event: any) {
     if (event) {
-      this.customStyle = { 'text-decoration': 'underline', color: 'green' };
+      this.customStyle.set({ 'text-decoration': 'underline', color: 'green' });
     } else {
-      this.customStyle = null;
+      this.customStyle.set(null);
     }
   }
 
   changeCustomInvalidStyle(event: any) {
     if (event) {
-      this.customInvalidStyle = { 'text-decoration': 'line-through', color: 'red' };
+      this.customInvalidStyle.set({ 'text-decoration': 'line-through', color: 'red' });
     } else {
-      this.customInvalidStyle = null;
+      this.customInvalidStyle.set(null);
     }
   }
 
   changeOptionUngueltig(event: any) {
     const found = this.options.find((option) => option.value === +event.value);
     if (found) {
-      this.behandlungUngueltige = found.label;
+      this.behandlungUngueltige.set(found.label);
     }
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 

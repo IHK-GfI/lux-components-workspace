@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutocompleteAcComponent,
   LuxCardComponent,
@@ -24,7 +24,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'lux-tabindex-example',
   templateUrl: './tabindex-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLinkComponent,
     LuxCardContentComponent,
@@ -48,9 +48,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class TabindexExampleComponent {
-  wrongTabIndex = false;
+  readonly wrongTabIndex = signal(false);
   chipItems = ['Test1', 'Test2'];
   options = [{ label: 'Test1' }, { label: 'Test2' }];
-
-  constructor() {}
 }

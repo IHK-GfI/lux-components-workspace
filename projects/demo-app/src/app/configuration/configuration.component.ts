@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import {
   LuxAppFooterButtonInfo,
@@ -8,19 +9,17 @@ import {
   LuxCardComponent,
   LuxCardContentComponent,
   LuxCheckboxContainerAcComponent,
-  LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxIconComponent,
   LuxInputAcComponent,
   LuxSelectAcComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'lux-configuration',
   templateUrl: './configuration.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxCheckboxContainerAcComponent,
@@ -33,19 +32,19 @@ import { Subscription } from 'rxjs';
     JsonPipe
   ]
 })
-export class ConfigurationComponent implements OnDestroy {
-  componentsConfigService = inject(LuxComponentsConfigService);
-  private router = inject(Router);
-  private footerService = inject(LuxAppFooterButtonService);
+export class ConfigurationComponent {
+  readonly componentsConfigService = inject(LuxComponentsConfigService);
+  private readonly router = inject(Router);
+  private readonly footerService = inject(LuxAppFooterButtonService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  configSubscription: Subscription;
+  readonly currentConfig = toSignal(this.componentsConfigService.config, {
+    initialValue: this.componentsConfigService.currentConfig
+  });
 
-  notAppliedToOptions: string[] = ['lux-link', 'lux-button', 'lux-menu-item', 'lux-side-nav-item', 'lux-tab', 'lux-step'];
-  currentConfig: LuxComponentsConfigParameters;
+  readonly notAppliedToOptions = ['lux-link', 'lux-button', 'lux-menu-item', 'lux-side-nav-item', 'lux-tab', 'lux-step'];
 
   constructor() {
-    this.currentConfig = this.componentsConfigService.currentConfig;
-
     this.footerService.pushButtonInfos(
       LuxAppFooterButtonInfo.generateInfo({
         label: 'Dokumentation',
@@ -73,19 +72,10 @@ export class ConfigurationComponent implements OnDestroy {
       })
     );
 
-    this.configSubscription = this.componentsConfigService.config.subscribe((newConfig: LuxComponentsConfigParameters) => {
-      if (this.currentConfig !== newConfig) {
-        this.currentConfig = newConfig;
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.configSubscription.unsubscribe();
-    this.footerService.clearButtonInfos();
+    this.destroyRef.onDestroy(() => this.footerService.clearButtonInfos());
   }
 
   updateConfig() {
-    this.componentsConfigService.updateConfiguration(this.currentConfig);
+    this.componentsConfigService.updateConfiguration(this.currentConfig());
   }
 }

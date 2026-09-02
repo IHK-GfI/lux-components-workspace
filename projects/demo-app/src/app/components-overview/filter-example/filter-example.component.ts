@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutocompleteAcComponent,
   LuxButtonComponent,
@@ -35,7 +35,7 @@ import { CustomFilterItemComponent } from './custom-filter-item.component';
   selector: 'lux-filter-example',
   templateUrl: './filter-example.component.html',
   styleUrls: ['./filter-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLookupComboboxAcComponent,
     LuxLookupAutocompleteAcComponent,
@@ -63,8 +63,8 @@ import { CustomFilterItemComponent } from './custom-filter-item.component';
 export class FilterExampleComponent implements OnInit, OnDestroy {
   private mediaQuery = inject(LuxMediaQueryObserverService);
 
-  @ViewChild(LuxFilterFormComponent) filterComponent!: LuxFilterFormComponent;
-  @ViewChild(LuxFilterFormExtendedComponent) filterExtendedOptionsComponent?: LuxFilterFormExtendedComponent;
+  readonly filterComponent = viewChild(LuxFilterFormComponent);
+  readonly filterExtendedOptionsComponent = viewChild(LuxFilterFormExtendedComponent);
 
   parameters = new LuxLookupParameters({
     knr: 101,
@@ -94,21 +94,21 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
     { label: 'Multi 3', value: 3 }
   ];
 
-  initFilter: any = {};
-  initFilterAc: any = {};
-  currentFilter: any = {};
-  currentFilterAc: any = {};
-  replaceFilterJson = `{
+  readonly initFilter = signal<any>({});
+  readonly initFilterAc = signal<any>({});
+  readonly currentFilter = signal<any>({});
+  readonly currentFilterAc = signal<any>({});
+  readonly replaceFilterJson = signal(`{
   "input": "Lorem ipsum",
   "datepicker": "${LuxUtil.newDateWithoutTime().toISOString()}",
   "toggle": true
-  }`;
+  }`);
 
-  title = 'Filter';
-  hideMenu = false;
-  expanded = false;
-  showFilterChips = true;
-  hideChipsBorder = false;
+  readonly title = signal('Filter');
+  readonly hideMenu = signal(false);
+  readonly expanded = signal(false);
+  readonly showFilterChips = signal(true);
+  readonly hideChipsBorder = signal(false);
 
   storedFilters: LuxFilter[] = [
     {
@@ -165,50 +165,50 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
 
   mediaQuerySubscription: Subscription;
 
-  customDisabled = false;
-  customHidden = false;
-  inputDisabled = false;
-  inputHidden = false;
-  autoCompleteDisabled = false;
-  autoCompleteHidden = false;
-  autoCompleteLookupDisabled = false;
-  autoCompleteLookupHidden = false;
-  datepickerDisabled = false;
-  datepickerHidden = false;
-  datetimepickerDisabled = false;
-  datetimepickerHidden = false;
-  combinedDateTimeDisabled = false;
-  combinedDateTimeHidden = false;
-  singleSelectDisabled = false;
-  singleSelectHidden = false;
-  multiSelectDisabled = false;
-  multiSelectHidden = false;
-  selectLookupDisabled = false;
-  selectLookupHidden = false;
-  toggleSelectDisabled = false;
-  toggleSelectHidden = false;
-  radioSelectDisabled = false;
-  radioSelectHidden = false;
+  readonly customDisabled = signal(false);
+  readonly customHidden = signal(false);
+  readonly inputDisabled = signal(false);
+  readonly inputHidden = signal(false);
+  readonly autoCompleteDisabled = signal(false);
+  readonly autoCompleteHidden = signal(false);
+  readonly autoCompleteLookupDisabled = signal(false);
+  readonly autoCompleteLookupHidden = signal(false);
+  readonly datepickerDisabled = signal(false);
+  readonly datepickerHidden = signal(false);
+  readonly datetimepickerDisabled = signal(false);
+  readonly datetimepickerHidden = signal(false);
+  readonly combinedDateTimeDisabled = signal(false);
+  readonly combinedDateTimeHidden = signal(false);
+  readonly singleSelectDisabled = signal(false);
+  readonly singleSelectHidden = signal(false);
+  readonly multiSelectDisabled = signal(false);
+  readonly multiSelectHidden = signal(false);
+  readonly selectLookupDisabled = signal(false);
+  readonly selectLookupHidden = signal(false);
+  readonly toggleSelectDisabled = signal(false);
+  readonly toggleSelectHidden = signal(false);
+  readonly radioSelectDisabled = signal(false);
+  readonly radioSelectHidden = signal(false);
 
   buttonColorOptions = ['default', 'primary', 'accent', 'warn'];
-  buttonFlat = true;
-  buttonFilterColor: LuxThemePalette = 'primary';
-  buttonDialogSave: LuxThemePalette = 'primary';
-  buttonDialogLoad: LuxThemePalette = 'primary';
-  buttonDialogDelete: LuxThemePalette = 'warn';
-  buttonDialogCancel: LuxThemePalette = 'primary';
-  buttonDialogClose: LuxThemePalette = 'primary';
+  readonly buttonFlat = signal(true);
+  readonly buttonFilterColor = signal<LuxThemePalette>('primary');
+  readonly buttonDialogSave = signal<LuxThemePalette>('primary');
+  readonly buttonDialogLoad = signal<LuxThemePalette>('primary');
+  readonly buttonDialogDelete = signal<LuxThemePalette>('warn');
+  readonly buttonDialogCancel = signal<LuxThemePalette>('primary');
+  readonly buttonDialogClose = signal<LuxThemePalette>('primary');
 
-  openLabel = '';
-  closeLabel = '';
+  readonly openLabel = signal('');
+  readonly closeLabel = signal('');
 
-  disableShortcut = false;
+  readonly disableShortcut = signal(false);
   initRunning = false;
   radioPickValueFn = (o: { label: string; value: string }) => o.value;
 
   constructor() {
     this.mediaQuerySubscription = this.mediaQuery.getMediaQueryChangedAsObservable().subscribe(() => {
-      this.showFilterChips = !this.mediaQuery.isSmallerOrEqual('xs');
+      this.showFilterChips.set(!this.mediaQuery.isSmallerOrEqual('xs'));
     });
   }
 
@@ -217,10 +217,10 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
 
     // Hier wird die setTimeout-Methode verwendet, um einen Backend-Call zu simulieren.
     setTimeout(() => {
-      this.initFilter = { input: 'Lorem ipsum' };
-      this.initFilterAc = { input: 'Lorem ipsum' };
-      this.currentFilter = this.initFilter;
-      this.currentFilterAc = this.initFilterAc;
+      this.initFilter.set({ input: 'Lorem ipsum' });
+      this.initFilterAc.set({ input: 'Lorem ipsum' });
+      this.currentFilter.set(this.initFilter());
+      this.currentFilterAc.set(this.initFilterAc());
 
       setTimeout(() => {
         this.initRunning = false;
@@ -239,7 +239,7 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   }
 
   onFilter(filter: any) {
-    this.currentFilter = filter;
+    this.currentFilter.set(filter);
 
     if (!this.initRunning) {
       console.log('Neuer Filter:', filter);
@@ -247,7 +247,7 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   }
 
   onFilterAc(filter: any) {
-    this.currentFilterAc = filter;
+    this.currentFilterAc.set(filter);
 
     if (!this.initRunning) {
       console.log('Neuer Filter:', filter);
@@ -271,16 +271,16 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   }
 
   onLoad(filterName: string) {
-    this.initFilter = this.loadFilter(filterName);
+    this.initFilter.set(this.loadFilter(filterName));
   }
 
   onLoadAc(filterName: string) {
-    this.initFilterAc = this.loadFilterAc(filterName);
+    this.initFilterAc.set(this.loadFilterAc(filterName));
   }
 
   onSetFilter() {
-    this.initFilter = JSON.parse(this.replaceFilterJson);
-    this.initFilterAc = JSON.parse(this.replaceFilterJson);
+    this.initFilter.set(JSON.parse(this.replaceFilterJson()));
+    this.initFilterAc.set(JSON.parse(this.replaceFilterJson()));
   }
 
   private saveFilter(filter: LuxFilter) {

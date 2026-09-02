@@ -1,27 +1,19 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { LuxButtonComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'example-form-disable',
   templateUrl: './example-form-disable.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxToggleAcComponent]
 })
 export class ExampleFormDisableComponent {
-  @Input() form!: FormGroup<any>;
-  @Input() controlBinding!: string;
-  @Output() disabledChange = new EventEmitter<boolean>();
+  readonly form = input.required<FormGroup<any>>();
+  readonly controlBinding = input.required<string>();
+  readonly disabled = model(false);
 
-  _disabled = false;
-
-  get disabled(): boolean {
-    return this._disabled;
-  }
-
-  @Input() set disabled(disabled: boolean) {
-    this._disabled = disabled;
-
-    this.disabledChange.emit(this._disabled);
+  setDisabled(disabled: boolean): void {
+    this.disabled.set(disabled);
   }
 }

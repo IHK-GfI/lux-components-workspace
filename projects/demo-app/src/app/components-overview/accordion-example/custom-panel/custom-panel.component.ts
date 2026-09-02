@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
 import {
   LuxPanelComponent,
   LuxPanelContentComponent,
@@ -14,13 +14,13 @@ import { logResult } from '../../../example-base/example-base-util/example-base-
   imports: [LuxPanelHeaderDescriptionComponent, LuxPanelHeaderTitleComponent, LuxPanelContentComponent, LuxPanelComponent]
 })
 export class CustomPanelComponent extends LuxPanelComponent implements AfterViewInit {
-  @Input() showOutputEvents = false;
+  readonly showOutputEvents = input(false);
 
   log = logResult;
 
-  @ViewChild(LuxPanelComponent, { static: true }) luxPanel!: LuxPanelComponent;
+  readonly luxPanel = viewChild.required(LuxPanelComponent);
 
   protected override getMatExpansionPanel() {
-    return this.luxPanel.matExpansionPanel();
+    return this.luxPanel().matExpansionPanel();
   }
 }

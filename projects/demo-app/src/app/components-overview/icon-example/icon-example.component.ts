@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxCheckboxAcComponent,
   LuxFormHintComponent,
@@ -20,7 +20,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-icon-example',
   templateUrl: './icon-example.component.html',
   styleUrls: ['./icon-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxLinkPlainComponent,
@@ -40,13 +40,13 @@ export class IconExampleComponent {
 
   colors: LuxIconColor[] = LuxIconColors;
   iconSizes: string[] = ['1x', '2x', '3x', '4x', '5x', '55px', '121px', '1.7em'];
-  iconName = 'lux-interface-favorite-like-1';
+  readonly iconName = signal('lux-interface-favorite-like-1');
   iconHint = 'Beispiele: app-box, app-ihk-189, lux-save,...';
-  iconSize = '2x';
-  rounded = false;
-  margin = '';
-  padding = '4px';
-  backgroundColor = '';
+  readonly iconSize = signal('2x');
+  readonly rounded = signal(false);
+  readonly margin = signal('');
+  readonly padding = signal('4px');
+  readonly backgroundColor = signal('');
 
   constructor() {
     this.registerIcon('app-box', '/', '/assets/svg/box.svg');

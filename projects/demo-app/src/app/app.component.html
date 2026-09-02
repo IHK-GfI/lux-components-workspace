@@ -1,5 +1,5 @@
 <div class="lux-app-container">
-  @if (this.luxAppHeader !== 'none' && themeName === 'green') {
+  @if (luxAppHeader() !== 'none' && themeName() === 'green') {
     <lux-app-header
       luxAppTitle="LUX Components"
       luxAppTitleShort="Components"
@@ -26,7 +26,7 @@
           luxIconName="lux-interface-home-3"
           (luxClicked)="goToHome()"
           luxTagId="home-side-nav-item"
-          [luxSelected]="url.endsWith('home')"
+          [luxSelected]="url().endsWith('home')"
         >
         </lux-side-nav-item>
         <lux-side-nav-item
@@ -34,7 +34,7 @@
           luxIconName="lux-interface-file-text"
           (luxClicked)="goToForm()"
           luxTagId="form-side-nav-item"
-          [luxSelected]="url.endsWith('form')"
+          [luxSelected]="url().endsWith('form')"
         >
         </lux-side-nav-item>
         <lux-side-nav-item
@@ -42,7 +42,7 @@
           luxIconName="lux-interface-text-formatting-left-align"
           (luxClicked)="goToBaseline()"
           luxTagId="baseline-side-nav-item"
-          [luxSelected]="url.endsWith('baseline')"
+          [luxSelected]="url().endsWith('baseline')"
         >
         </lux-side-nav-item>
         <lux-side-nav-item
@@ -50,7 +50,7 @@
           luxIconName="lux-interface-search"
           (luxClicked)="goToIconSearch()"
           luxTagId="icon-search-side-nav-item"
-          [luxSelected]="url.endsWith('icon-search')"
+          [luxSelected]="url().endsWith('icon-search')"
         >
         </lux-side-nav-item>
         <lux-side-nav-item
@@ -58,7 +58,7 @@
           luxIconName="lux-interface-setting-slider-horizontal"
           (luxClicked)="goToConfig()"
           luxTagId="config-side-nav-item"
-          [luxSelected]="url.endsWith('configuration')"
+          [luxSelected]="url().endsWith('configuration')"
         >
         </lux-side-nav-item>
         <lux-side-nav-item
@@ -66,7 +66,7 @@
           luxIconName="lux-interface-setting-tool-box"
           (luxClicked)="goToComponents()"
           luxTagId="cmp-side-nav-item"
-          [luxSelected]="url.includes('components-overview')"
+          [luxSelected]="url().includes('components-overview')"
         >
           @for (moduleName of navigationService.currentModuleNames; track moduleName) {
             <lux-side-nav-item
@@ -86,7 +86,7 @@
                   [luxLabel]="component.label"
                   [luxTagId]="component.label + '-side-nav-item'"
                   luxIconName="lux-interface-geometric-circle"
-                  [luxSelected]="url.endsWith('/' + component.label.toLowerCase())"
+                  [luxSelected]="url().endsWith('/' + component.label.toLowerCase())"
                   (luxClicked)="component.onclick()"
                 >
                 </lux-side-nav-item>
@@ -155,12 +155,12 @@
           </lux-app-header-action-nav-item-custom>
         </lux-app-header-action-nav-item>
       </lux-app-header-action-nav>
-      @if (luxMode === 'stand-alone') {
+      @if (luxMode() === 'stand-alone') {
         <lux-app-header-right-nav>
           <lux-menu-item
             luxIconName="lux-interface-edit-brush-1"
             luxLabel="Theme - green"
-            [luxDisabled]="themeName === 'green'"
+            [luxDisabled]="themeName() === 'green'"
             luxClass="lux-selected-item-ac"
             luxTagId="theme-green-menu-item-ac"
             (luxClicked)="onChangeTheme('green')"
@@ -177,14 +177,14 @@
       }
     </lux-app-header>
   }
-  @if (this.luxAppHeader !== 'none' && themeName !== 'green') {
+  @if (luxAppHeader() !== 'none' && themeName() !== 'green') {
     <lux-app-header-ac
       luxAppTitle="LUX Components"
       luxAppTitleShort="Components"
-      [luxUserName]="demoUserName"
-      [luxUserEmail]="demoUserEmail"
+      [luxUserName]="demoUserName()"
+      [luxUserEmail]="demoUserEmail()"
       luxAppIconName="dashboard_customize"
-      [luxBrandLogoSrc]="tenantLogoConfig === undefined ? 'https://cdn.gfi.ihk.de/IHK-Logos/189_kurz.svg' : undefined"
+      [luxBrandLogoSrc]="tenantLogoConfig() === undefined ? 'https://cdn.gfi.ihk.de/IHK-Logos/189_kurz.svg' : undefined"
       luxAppLogoSrc="assets/favicons/favicon.svg"
       luxAriaTitleIconLabel="Appicon / Link auf die Startseite"
       luxAriaTitleImageLabel="Brandlogo / Externer Link auf die IHK-GfI Homepage"
@@ -193,7 +193,7 @@
       (luxBrandLogoClicked)="goToHomepage()"
     >
       <!-- Diese Komponente wechselt sich mit dem Attribut "luxBrandLogoSrc" von "lux-app-header-ac" ab, um die Komponente "lux-tenant-logo" anzuzeigen. -->
-      @if (tenantLogoConfig) {
+      @if (tenantLogoConfig(); as tenantLogoConfig) {
         <lux-tenant-logo
           [luxTenantKey]="tenantLogoConfig.luxTenantKey"
           [luxTenantVariant]="tenantLogoConfig.luxTenantVariant"
@@ -201,7 +201,7 @@
           (luxTenantLogoClicked)="onTenantLogoClicked()"
         ></lux-tenant-logo>
       }
-      @if (luxMode === 'stand-alone') {
+      @if (luxMode() === 'stand-alone') {
         <lux-app-header-ac-user-menu luxTooltip="Usermenü" [luxUseSectionsAndHeaderPanel]="true">
           <lux-divider #menuSection></lux-divider>
           <lux-menu-section-title luxTitle="Theme" #menuSection></lux-menu-section-title>
@@ -224,7 +224,7 @@
           <lux-divider #menuSection></lux-divider>
           <lux-menu-item
             luxIconName="lux-interface-logout-circle"
-            [luxLabel]="demoLoginBtn"
+            [luxLabel]="demoLoginBtn()"
             (luxClicked)="toggleLogin()"
             luxTagId="abmelden-menu-item"
             #menuSection
@@ -240,7 +240,7 @@
           luxTagId="navItem0"
           luxButtonBadge="{{ components }}"
           luxButtonBadgeColor="primary"
-          [luxSelected]="url.includes('components-overview') && !url.includes('icon-overview')"
+          [luxSelected]="url().includes('components-overview') && !url().includes('icon-overview')"
           (luxClicked)="goToComponents()"
         >
         </lux-app-header-ac-nav-menu-item>
@@ -248,14 +248,14 @@
           luxLabel="{{ 'app.menu.iconSearch' | transloco }}"
           luxAriaLabel="Lux-Icons suchen"
           luxTagId="navItem4"
-          [luxSelected]="url.endsWith('icon-overview')"
+          [luxSelected]="url().endsWith('icon-overview')"
           (luxClicked)="goToIconSearch()"
         ></lux-app-header-ac-nav-menu-item>
         <lux-app-header-ac-nav-menu-item
           luxLabel="{{ 'app.menu.forms' | transloco }}"
           luxAriaLabel="Beispielformulare"
           luxTagId="navItem1"
-          [luxSelected]="url.endsWith('form')"
+          [luxSelected]="url().endsWith('form')"
           (luxClicked)="goToForm()"
         >
         </lux-app-header-ac-nav-menu-item>
@@ -263,7 +263,7 @@
           luxLabel="{{ 'app.menu.baseline' | transloco }}"
           luxAriaLabel="Baseline Beispiele"
           luxTagId="navItem2"
-          [luxSelected]="url.endsWith('baseline')"
+          [luxSelected]="url().endsWith('baseline')"
           (luxClicked)="goToBaseline()"
         >
         </lux-app-header-ac-nav-menu-item>
@@ -271,29 +271,29 @@
           luxLabel="{{ 'app.menu.configuration' | transloco }}"
           luxAriaLabel="Konfiguration einstellen"
           luxTagId="navItem3"
-          [luxSelected]="url.endsWith('configuration')"
+          [luxSelected]="url().endsWith('configuration')"
           (luxClicked)="goToConfig()"
         >
         </lux-app-header-ac-nav-menu-item>
-        @if (mobileView) {
+        @if (mobileView()) {
           <lux-app-header-ac-nav-menu-item
             luxLabel="{{ 'app.footer.link.impressum' | transloco }}"
             luxAriaLabel="{{ 'app.footer.link.impressum' | transloco }}"
-            [luxSelected]="url.endsWith('impressum')"
+            [luxSelected]="url().endsWith('impressum')"
             (luxClicked)="router.navigate(['impressum'])"
           >
           </lux-app-header-ac-nav-menu-item>
         }
-        @if (mobileView) {
+        @if (mobileView()) {
           <lux-app-header-ac-nav-menu-item
             luxLabel="{{ 'app.footer.link.licenseHint' | transloco }}"
             luxAriaLabel="{{ 'app.footer.link.licenseHint' | transloco }}"
-            [luxSelected]="url.endsWith('license-hint')"
+            [luxSelected]="url().endsWith('license-hint')"
             (luxClicked)="router.navigate(['license-hint'])"
           >
           </lux-app-header-ac-nav-menu-item>
         }
-        @if (mobileView) {
+        @if (mobileView()) {
           <lux-app-header-ac-nav-menu-item
             luxLabel="{{ 'app.footer.link.consent' | transloco }}"
             luxAriaLabel="{{ 'app.footer.link.consent' | transloco }}"
@@ -346,11 +346,11 @@
     </lux-app-header-ac>
   }
   <lux-app-content luxAriaRoleMainLabel="{{ 'luxc.app_content.ariarolemain' | transloco }}" cdkScrollable>
-    @if (this.luxAppFooter !== 'none' && (fixedFooterService.fixedModeAsObservable | async) === false) {
+    @if (luxAppFooter() !== 'none' && (fixedFooterService.fixedModeAsObservable | async) === false) {
       <lux-app-footer luxVersion="21.8.0"></lux-app-footer>
     }
   </lux-app-content>
-  @if (this.luxAppFooter !== 'none' && (fixedFooterService.fixedModeAsObservable | async) === true) {
+  @if (luxAppFooter() !== 'none' && (fixedFooterService.fixedModeAsObservable | async) === true) {
     <lux-app-footer luxVersion="21.8.0"></lux-app-footer>
   }
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxAccordionComponent,
     LuxButtonComponent,
@@ -9,8 +9,7 @@ import {
     LuxPanelContentComponent,
     LuxPanelHeaderTitleComponent,
     LuxSelectAcComponent,
-    LuxToggleAcComponent,
-    LuxUtil
+    LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ResponsiveBehaviour } from '../responsive-behaviour';
 import { ResponsiveBehaviourFilteredPipe } from '../responsive-behaviour-filtered.pipe';
@@ -19,7 +18,7 @@ import { TableExampleBaseClass } from '../table-example-base.class';
 @Component({
   selector: 'table-example-advanced-options',
   templateUrl: './table-example-advanced-options.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAccordionComponent,
     LuxButtonComponent,
@@ -34,14 +33,8 @@ import { TableExampleBaseClass } from '../table-example-base.class';
     ResponsiveBehaviourFilteredPipe
   ]
 })
-export class TableExampleAdvancedOptionsComponent implements OnInit {
+export class TableExampleAdvancedOptionsComponent {
   BEHAVIOURS = ResponsiveBehaviour.BEHAVIOURS;
 
-  @Input() tableExample!: TableExampleBaseClass;
-
-  constructor() {}
-
-  ngOnInit() {
-    LuxUtil.assertNonNull('tableExample', this.tableExample);
-  }
+  readonly tableExample = input.required<TableExampleBaseClass>();
 }

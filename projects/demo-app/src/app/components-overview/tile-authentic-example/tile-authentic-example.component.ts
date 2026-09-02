@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutofocusDirective,
   LuxBadgeNotificationSize,
@@ -22,7 +22,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   selector: 'app-tile-authentic-example',
   templateUrl: './tile-authentic-example.component.html',
   styleUrls: ['./tile-authentic-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxImageComponent,
     LuxIconComponent,
@@ -41,34 +41,32 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class TileAuthenticExampleComponent {
-  showIcon = true;
-  showOutputEvents = false;
+  readonly showIcon = signal(true);
+  readonly showOutputEvents = signal(false);
 
-  label = 'Wetter';
-  labelTruncateAfterOneLine = true;
-  labelTruncateAfterTwoLines = false;
-  subTitle = 'Vorschau auf die kommende Woche';
-  subTitleTruncateAfterOneLine = false;
-  subTitleTruncateAfterTwoLines = true;
+  readonly label = signal('Wetter');
+  readonly labelTruncateAfterOneLine = signal(true);
+  readonly labelTruncateAfterTwoLines = signal(false);
+  readonly subTitle = signal('Vorschau auf die kommende Woche');
+  readonly subTitleTruncateAfterOneLine = signal(false);
+  readonly subTitleTruncateAfterTwoLines = signal(true);
   log = logResult;
 
-  badgeCap = 20;
-  badgeSize: LuxBadgeNotificationSize = 'medium';
-  badgeColor = 'primary';
-  counter?: number;
-  _showNotification = false;
+  readonly badgeCap = signal(20);
+  readonly badgeSize = signal<LuxBadgeNotificationSize>('medium');
+  readonly badgeColor = signal('primary');
+  readonly counter = signal<number | undefined>(undefined);
+  private readonly _showNotification = signal(false);
 
   get showNotification() {
-    return this._showNotification;
+    return this._showNotification();
   }
 
   set showNotification(show: boolean) {
-    this._showNotification = show;
+    this._showNotification.set(show);
 
-    if (show && this.counter) {
-      this.counter = undefined;
+    if (show && this.counter()) {
+      this.counter.set(undefined);
     }
   }
-
-  constructor() {}
 }

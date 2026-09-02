@@ -14,8 +14,8 @@
           [luxOptions]="stateOptions"
           [luxOrientationVertical]="false"
           [luxNoBottomLabel]="true"
-          [(luxSelected)]="selectedState"
-          (luxSelectedChange)="switchStates()"
+          [luxSelected]="selectedState()"
+          (luxSelectedChange)="selectState($event)"
           luxLabel="Status der Form-Controls"
           ><ng-template let-option>
             {{ option.label }}
@@ -37,8 +37,8 @@
           [luxHint]="testHint"
           luxControlBinding="input"
           luxAutocomplete="off"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         ></lux-input-ac>
         <lux-input-ac
           luxType="number"
@@ -47,8 +47,8 @@
           [luxHint]="testHint"
           luxControlBinding="input"
           luxAutocomplete="off"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         >
           <lux-input-ac-prefix> EUR </lux-input-ac-prefix>
           <lux-input-ac-suffix> .00 <lux-icon luxIconName="lux-money-currency-euro"></lux-icon></lux-input-ac-suffix>
@@ -60,8 +60,8 @@
           luxControlBinding="autocomplete"
           luxOptionLabelProp="label"
           [luxOptions]="options"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         ></lux-autocomplete-ac>
         <lux-datepicker-ac
           luxLabel="Lux-Datepicker-ac"
@@ -69,8 +69,8 @@
           luxPlaceholder="Platzhalter"
           luxControlBinding="datepicker"
           [luxHint]="testHint"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         ></lux-datepicker-ac>
         <lux-datetimepicker-ac
           luxLabel="Lux-Datetimepicker-ac"
@@ -78,27 +78,27 @@
           luxPlaceholder="Platzhalter"
           luxControlBinding="datetimepicker"
           [luxHint]="testHint"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         ></lux-datetimepicker-ac>
         <lux-select-ac
           luxLabel="Lux-Select-ac"
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
           luxControlBinding="select"
-          [luxSelected]="testOption"
+          [luxSelected]="testOption()"
           luxOptionLabelProp="label"
           [luxOptions]="options"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         ></lux-select-ac>
         <lux-file-input-ac
           luxLabel="Lux-File-Input-ac"
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
           luxControlBinding="file"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         ></lux-file-input-ac>
         <lux-textarea-ac
           luxLabel="Lux-Textarea-ac"
@@ -107,8 +107,8 @@
           luxControlBinding="textarea"
           [luxMinRows]="1"
           [luxMaxRows]="-1"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
           [luxMaxLength]="100"
         ></lux-textarea-ac>
         <lux-toggle-ac
@@ -116,8 +116,8 @@
           [luxChecked]="false"
           luxHint="Hinweis"
           luxControlBinding="toggle"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
           [luxNoTopLabel]="true"
         ></lux-toggle-ac>
         <lux-checkbox-ac
@@ -125,8 +125,8 @@
           [luxChecked]="false"
           luxHint="Hinweis"
           luxControlBinding="checkbox"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
           [luxNoTopLabel]="true"
         ></lux-checkbox-ac>
         <lux-radio-ac
@@ -136,8 +136,8 @@
           [luxSelected]="options[0]"
           luxLabel="Lux-Radio-ac - vertikal"
           luxHint="Hinweis"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
           luxControlBinding="radio"
         >
           <ng-template let-option>
@@ -151,8 +151,8 @@
           [luxSelected]="options[0]"
           luxLabel="Lux-Radio-ac - horizontal"
           luxHint="Dieses ist eine Testkomponents! Normalerweise sollte eine Radio-Komponente höchstens 5 Optionen besitzen."
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
           luxControlBinding="radio"
         >
           <ng-template let-option>
@@ -163,8 +163,8 @@
           luxLabel="Lux-Slider-ac"
           luxControlBinding="slider"
           luxHint="testHint"
-          [luxDisabled]="disabledForm"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabledForm()"
+          [luxReadonly]="readonly()"
         ></lux-slider-ac>
         <lux-chips-ac
           [luxInputAllowed]="true"
@@ -172,7 +172,7 @@
           luxHint="Hinweis"
           [luxAutocompleteOptions]="chipOptions"
           [luxNewChipGroup]="groupAc"
-          [luxDisabled]="disabledForm"
+          [luxDisabled]="disabledForm()"
           class="grid-col-span-2"
         >
           <lux-chip-ac-group
@@ -190,8 +190,8 @@
           luxLabel="Lux-File-List"
           luxHint="Hinweis"
           luxControlBinding="file"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
         ></lux-file-list>
       </div>
     </lux-card-content>
@@ -201,3 +201,4 @@
     </lux-card-actions>
   </lux-card>
 </div>
+

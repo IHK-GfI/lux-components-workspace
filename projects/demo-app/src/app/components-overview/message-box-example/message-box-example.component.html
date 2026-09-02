@@ -3,7 +3,7 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90message%E2%80%90box-v21"
 >
   <example-base-content>
-    @if (showInCard) {
+    @if (showInCard()) {
       <lux-card luxTitle="Message-Box in Karte">
         <lux-card-content>
           <p>Klappe die Karte auf und zu, um zu prüfen, ob die Message-Box nach dem erneuten Ausklappen sichtbar bleibt.</p>
@@ -11,8 +11,8 @@
         <lux-card-content-expanded>
           <lux-message-box
             [(luxMessages)]="messages"
-            [luxIndex]="messageIndex"
-            [luxMaximumDisplayed]="maximumDisplayed"
+            [luxIndex]="messageIndex()"
+            [luxMaximumDisplayed]="maximumDisplayed()"
             (luxMessageClosed)="logClosed($event)"
             (luxMessageBoxClosed)="logBoxClosed()"
             (luxMessageChanged)="logChanged($event)"
@@ -23,8 +23,8 @@
     } @else {
       <lux-message-box
         [(luxMessages)]="messages"
-        [luxIndex]="messageIndex"
-        [luxMaximumDisplayed]="maximumDisplayed"
+        [luxIndex]="messageIndex()"
+        [luxMaximumDisplayed]="maximumDisplayed()"
         (luxMessageClosed)="logClosed($event)"
         (luxMessageBoxClosed)="logBoxClosed()"
         (luxMessageChanged)="logChanged($event)"
@@ -101,7 +101,7 @@
 
     <h3>Einzelne Messages</h3>
     <lux-accordion [luxMulti]="false" luxMode="flat" luxExpandedHeaderHeight="65px" luxCollapsedHeaderHeight="65px">
-      @for (message of messages; track message; let i = $index) {
+      @for (message of messages(); track message; let i = $index) {
       <lux-panel [luxHideToggle]="true">
         <lux-panel-header-title>
           <div class="lux-flex lux-flex-basis-full lux-justify-between lux-items-center lux-pt-2">

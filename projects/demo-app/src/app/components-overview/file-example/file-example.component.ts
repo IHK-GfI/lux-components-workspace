@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Directive, inject, OnInit } from '@angular/core';
+import { Directive, inject, signal, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   ILuxFileActionBaseConfig,
@@ -24,32 +24,32 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
   protected snackbar = inject(LuxSnackbarService);
   protected filePreviewService = inject(LuxFilePreviewService);
 
-  showOutputEvents = false;
+  readonly showOutputEvents = signal(false);
   realBackends: any[] = [];
-  mockBackend = false;
+  readonly mockBackend = signal(false);
   log = logResult;
   form: FormGroup<FileDummyForm>;
 
   fileComponents: LuxFormFileBase[] = [];
 
-  dndActive = true;
-  selected: T | null = null;
-  contentAsBlob = false;
-  reportProgress = false;
-  hint = 'Datei hierher ziehen oder über den Button auswählen';
-  hintShowOnlyOnFocus = false;
-  label = 'Anhänge';
-  uploadUrl = '';
+  readonly dndActive = signal(true);
+  readonly selected = signal<T | null>(null);
+  readonly contentAsBlob = signal(false);
+  readonly reportProgress = signal(false);
+  readonly hint = signal('Datei hierher ziehen oder über den Button auswählen');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly label = signal('Anhänge');
+  readonly uploadUrl = signal('');
   controlBinding = 'uploadExample';
-  disabled = false;
-  readonly = false;
-  required = false;
-  maxSize = 5;
-  maxFileCount = 5;
-  capture = '';
-  accept = '';
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly maxSize = signal(5);
+  readonly maxFileCount = signal(5);
+  readonly capture = signal('');
+  readonly accept = signal('');
   maximumExtended = 6;
-  undeletableFileNames = 'example.png';
+  readonly undeletableFileNames = signal('example.png');
 
   uploadActionConfig: U = this.initUploadActionConfig();
 
@@ -63,10 +63,10 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
     label: 'Löschen',
     labelHeader: 'Alle Dateien entfernen',
     isDeletable: (file: ILuxFileObject) => {
-      return this.undeletableFileNames.includes(file.name) === false;
+      return this.undeletableFileNames().includes(file.name) === false;
     },
     onClick: (file: ILuxFileObject) => {
-      this.log(this.showOutputEvents, 'deleteActionConfig onClick', file);
+      this.log(this.showOutputEvents(), 'deleteActionConfig onClick', file);
       this.onDelete(file);
     }
   };
@@ -105,7 +105,7 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
     hidden: false,
     iconName: 'lux-interface-download-button-2',
     label: 'Download',
-    onClick: (file) => this.log(this.showOutputEvents, 'downloadActionConfig onClick', file)
+    onClick: (file) => this.log(this.showOutputEvents(), 'downloadActionConfig onClick', file)
   };
 
   constructor() {
@@ -115,7 +115,7 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 
@@ -140,13 +140,13 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
   }
 
   onSelectedChange(files: T | null) {
-    this.selected = files;
+    this.selected.set(files);
     this.log(true, 'luxSelectedChange', files);
   }
 
   changeMockBackend(useMockBackend: boolean) {
-    this.mockBackend = useMockBackend;
-    if (this.mockBackend) {
+    this.mockBackend.set(useMockBackend);
+    if (this.mockBackend()) {
       this.realBackends = [];
       this.fileComponents.forEach((input: LuxFormFileBase<any>) => {
         this.realBackends.push(input['http']);

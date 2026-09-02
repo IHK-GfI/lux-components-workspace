@@ -44,7 +44,7 @@ interface FormThreeColDummyForm {
 @Component({
   selector: 'app-form-three-col',
   templateUrl: './form-three-col.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxCardContentComponent,
     LuxCardComponent,

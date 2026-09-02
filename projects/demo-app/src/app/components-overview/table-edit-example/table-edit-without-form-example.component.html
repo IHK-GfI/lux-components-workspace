@@ -1,5 +1,5 @@
 <p>Zum Bearbeiten einer Adresse klicken Sie auf den Edit-Button am Ende der jeweiligen Zeile.</p>
-<lux-table [luxData]="dataSource" [luxShowPagination]="true" [luxPageSize]="5" [luxPagerDisabled]="pagerDisabled" #myTable>
+<lux-table [luxData]="dataSource()" [luxShowPagination]="true" [luxPageSize]="5" [luxPagerDisabled]="pagerDisabled()" #myTable>
   <lux-table-column luxColumnDef="name">
     <lux-table-column-header>
       <ng-template><span [luxTooltip]="'Tooltip Spalte \'Name\''">Name</span></ng-template>

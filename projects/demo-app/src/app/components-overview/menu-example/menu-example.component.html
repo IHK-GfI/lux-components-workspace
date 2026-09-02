@@ -4,14 +4,14 @@
 >
   <example-base-content class="lux-flex lux-flex-col">
     <lux-menu
-      [luxMenuLabel]="menuLabel"
-      [luxMenuIconName]="iconName"
-      [luxMenuTriggerIconShowRight]="menuTriggerIconShowRight"
-      [luxDisplayExtended]="displayExtended"
-      [luxClassName]="className"
-      [luxDisplayMenuLeft]="displayMenuLeft"
-      [luxMaximumExtended]="maximumExtended"
-      (luxMenuClosed)="log(showOutputEvents, 'Menu closed', $event)"
+      [luxMenuLabel]="menuLabel()"
+      [luxMenuIconName]="iconName()"
+      [luxMenuTriggerIconShowRight]="menuTriggerIconShowRight()"
+      [luxDisplayExtended]="displayExtended()"
+      [luxClassName]="className()"
+      [luxDisplayMenuLeft]="displayMenuLeft()"
+      [luxMaximumExtended]="maximumExtended()"
+      (luxMenuClosed)="log(showOutputEvents(), 'Menu closed', $event)"
       luxTagId="demo-menu"
       #menu
     >
@@ -27,8 +27,8 @@
         [luxMenuTooltip]="item.tooltipMenu"
         [luxAlwaysVisible]="item.alwaysVisible"
         [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
-        (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (aria-disabled)', $event)"
+        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
+        (luxClickNotAllowed)="log(showOutputEvents(), 'Item click not allowed (aria-disabled)', $event)"
         [luxRounded]="item.round"
         [luxHideLabelIfExtended]="item.hideLabelIfExtended"
         [luxHidden]="item.hidden"
@@ -42,23 +42,23 @@
     </lux-menu>
     <h3>Menu Panel Gruppen</h3>
     <lux-menu
-      [luxMenuLabel]="menuLabel"
-      [luxMenuIconName]="iconName"
-      [luxMenuTriggerIconShowRight]="menuTriggerIconShowRight"
+      [luxMenuLabel]="menuLabel()"
+      [luxMenuIconName]="iconName()"
+      [luxMenuTriggerIconShowRight]="menuTriggerIconShowRight()"
       [luxDisplayExtended]="false"
-      [luxClassName]="className"
-      [luxDisplayMenuLeft]="displayMenuLeft"
-      (luxMenuClosed)="log(showOutputEvents, 'Menu closed', $event)"
+      [luxClassName]="className()"
+      [luxDisplayMenuLeft]="displayMenuLeft()"
+      (luxMenuClosed)="log(showOutputEvents(), 'Menu closed', $event)"
       luxTagId="demo-menu-sections"
       [luxShowSections]="true"
     >
       <lux-menu-panel-header
-        [luxTitle]="menuSectionHeaderTitle"
-        [luxSubtitle]="menuSectionHeaderSubtitle"
+        [luxTitle]="menuSectionHeaderTitle()"
+        [luxSubtitle]="menuSectionHeaderSubtitle()"
         #menuSection
       ></lux-menu-panel-header>
       <lux-divider #menuSection></lux-divider>
-      <lux-menu-section-title [luxTitle]="menuSectionTitle" #menuSection></lux-menu-section-title>
+      <lux-menu-section-title [luxTitle]="menuSectionTitle()" #menuSection></lux-menu-section-title>
       @for (item of menuItemsSections; track item; let i = $index) { @if (item && i < 3) {
       <lux-menu-item
         [luxIconName]="item.iconName"
@@ -67,7 +67,7 @@
         [luxLabel]="item.label"
         [luxMenuTooltip]="item.tooltipMenu"
         [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
         [luxHidden]="item.hidden"
         [luxClass]="item.class"
         [luxButtonBadge]="item.buttonBadge"
@@ -77,7 +77,7 @@
       ></lux-menu-item>
       }}
       <lux-divider #menuSection></lux-divider>
-      <lux-menu-section-title [luxTitle]="menuSectionTitle2" #menuSection></lux-menu-section-title>
+      <lux-menu-section-title [luxTitle]="menuSectionTitle2()" #menuSection></lux-menu-section-title>
       @for (item of menuItemsSections; track item; let i = $index) { @if (item && i > 2 && i < 5) {
       <lux-menu-item
         [luxIconName]="item.iconName"
@@ -86,7 +86,7 @@
         [luxLabel]="item.label"
         [luxMenuTooltip]="item.tooltipMenu"
         [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
         [luxHidden]="item.hidden"
         [luxClass]="item.class"
         [luxButtonBadge]="item.buttonBadge"
@@ -104,7 +104,7 @@
         [luxLabel]="item.label"
         [luxMenuTooltip]="item.tooltipMenu"
         [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
         [luxHidden]="item.hidden"
         [luxClass]="item.class"
         [luxButtonBadge]="item.buttonBadge"
@@ -116,18 +116,18 @@
     </lux-menu>
     <h3>Menu Panel Large</h3>
     <lux-menu
-      [luxMenuLabel]="menuLabel"
-      [luxMenuIconName]="iconName"
-      [luxMenuTriggerIconShowRight]="menuTriggerIconShowRight"
+      [luxMenuLabel]="menuLabel()"
+      [luxMenuIconName]="iconName()"
+      [luxMenuTriggerIconShowRight]="menuTriggerIconShowRight()"
       [luxDisplayExtended]="false"
-      [luxClassName]="className"
-      [luxDisplayMenuLeft]="displayMenuLeft"
-      (luxMenuClosed)="log(showOutputEvents, 'Menu closed', $event)"
+      [luxClassName]="className()"
+      [luxDisplayMenuLeft]="displayMenuLeft()"
+      (luxMenuClosed)="log(showOutputEvents(), 'Menu closed', $event)"
       luxTagId="demo-menu-sections-large"
       [luxShowSections]="true"
       [luxMenuPanelLarge]="true"
     >
-      <lux-menu-section-title [luxTitle]="menuSectionTitleLarge" #menuSection></lux-menu-section-title>
+      <lux-menu-section-title [luxTitle]="menuSectionTitleLarge()" #menuSection></lux-menu-section-title>
       @for (item of menuItemsLarge; track item; let i = $index) { @if (item && i < 3) {
       <lux-menu-item
         [luxIconName]="item.iconName"
@@ -137,7 +137,7 @@
         [luxMenuItemSubtitle]="item.subtitle"
         [luxMenuTooltip]="item.tooltipMenu"
         [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
         [luxHidden]="item.hidden"
         [luxClass]="item.class"
         [luxButtonBadge]="item.buttonBadge"
@@ -147,7 +147,7 @@
       ></lux-menu-item>
       }}
       <lux-divider #menuSection></lux-divider>
-      <lux-menu-section-title [luxTitle]="menuSectionTitleLarge2" #menuSection></lux-menu-section-title>
+      <lux-menu-section-title [luxTitle]="menuSectionTitleLarge2()" #menuSection></lux-menu-section-title>
       @for (item of menuItemsLarge; track item; let i = $index) { @if (item && i >= 3) {
       <lux-menu-item
         [luxIconName]="item.iconName"
@@ -157,7 +157,7 @@
         [luxMenuItemSubtitle]="item.subtitle"
         [luxMenuTooltip]="item.tooltipMenu"
         [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
         [luxHidden]="item.hidden"
         [luxClass]="item.class"
         [luxButtonBadge]="item.buttonBadge"
@@ -222,7 +222,7 @@
       [(luxValue)]="maximumExtended"
       luxType="number"
       [luxNumberAlignLeft]="true"
-      [luxDisabled]="!displayExtended"
+      [luxDisabled]="!displayExtended()"
     >
     </lux-input-ac>
   </example-base-simple-options>
@@ -301,7 +301,7 @@
           <lux-toggle-ac
             luxLabel="luxAlwaysVisible"
             [(luxChecked)]="item.alwaysVisible"
-            [luxDisabled]="!displayExtended"
+            [luxDisabled]="!displayExtended()"
             [luxNoTopLabel]="true"
           >
             <lux-form-hint>

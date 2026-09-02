@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   ILuxBreadcrumbEntry,
@@ -18,7 +18,7 @@ import { ExampleValueComponent } from '../../example-base/example-value/example-
 @Component({
   selector: 'lux-breadcrumb-example',
   templateUrl: './breadcrumb-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxBreadcrumbComponent,
     LuxLinkPlainComponent,
@@ -34,59 +34,59 @@ import { ExampleValueComponent } from '../../example-base/example-value/example-
   ]
 })
 export class BreadcrumbExampleComponent {
-  router = inject(Router);
+  private readonly router = inject(Router);
 
-  public entries: ILuxBreadcrumbEntry[] = [
+  readonly entries = signal<ILuxBreadcrumbEntry[]>([
     { name: 'Startseite', url: '/home' },
     { name: 'Komponenten', url: '/components-overview' },
     { name: 'lux-breadcrumb', url: '' }
-  ];
+  ]);
 
-  public enableUrl = false;
+  readonly enableUrl = signal(false);
 
-  public wrap = false;
-  public showOnlyFirstAndLast = false;
+  readonly wrap = signal(false);
+  readonly showOnlyFirstAndLast = signal(false);
 
-  public clickedEntry?: ILuxBreadcrumbEntry;
+  readonly clickedEntry = signal<ILuxBreadcrumbEntry | undefined>(undefined);
 
-  currentArea?: string = 'Übersicht';
+  readonly currentArea = signal<string | undefined>('Übersicht');
 
-  entriesExample: ILuxBreadcrumbEntry[] = [{ name: 'Übersicht', url: 'Übersicht' }];
+  readonly entriesExample = signal<ILuxBreadcrumbEntry[]>([{ name: 'Übersicht', url: 'Übersicht' }]);
 
-  updateView() {
-    this.entries = [...this.entries];
+  updateView(): void {
+    this.entries.update((entries) => [...entries]);
   }
 
-  addEntry() {
+  addEntry(): void {
     const newEntry = {
       name: '',
       url: ''
     };
-    this.entries = [...this.entries, newEntry];
+    this.entries.update((entries) => [...entries, newEntry]);
   }
 
-  onClickedEntry(entry: ILuxBreadcrumbEntry) {
-    this.clickedEntry = entry;
+  onClickedEntry(entry: ILuxBreadcrumbEntry): void {
+    this.clickedEntry.set(entry);
 
-    this.entries = this.entries.slice(0, this.entries.findIndex((e) => e.name === entry.name) + 1);
+    this.entries.update((entries) => entries.slice(0, entries.findIndex((currentEntry) => currentEntry.name === entry.name) + 1));
 
-    if (this.enableUrl && entry.url) {
+    if (this.enableUrl() && entry.url) {
       this.router.navigate([entry.url]);
     }
   }
 
-  onBreadcrumbClick(entry: ILuxBreadcrumbEntry) {
-    this.currentArea = entry.url;
-    this.entriesExample = this.entriesExample.slice(0, this.entriesExample.findIndex((e) => e.name === entry.name) + 1);
+  onBreadcrumbClick(entry: ILuxBreadcrumbEntry): void {
+    this.currentArea.set(entry.url);
+    this.entriesExample.update((entries) => entries.slice(0, entries.findIndex((currentEntry) => currentEntry.name === entry.name) + 1));
   }
 
-  onSwitchArea(area: string) {
-    this.currentArea = area;
+  onSwitchArea(area: string): void {
+    this.currentArea.set(area);
     const newEntry = {
       name: area,
       url: area
     };
 
-    this.entriesExample = [...this.entriesExample, newEntry];
+    this.entriesExample.update((entries) => [...entries, newEntry]);
   }
 }

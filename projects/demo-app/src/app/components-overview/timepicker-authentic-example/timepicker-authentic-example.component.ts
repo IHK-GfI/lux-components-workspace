@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -27,6 +27,7 @@ interface TimepickerDummyForm {
 @Component({
   selector: 'lux-timepicker-authentic-example',
   templateUrl: './timepicker-authentic-example.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxInputAcComponent,
@@ -46,32 +47,32 @@ interface TimepickerDummyForm {
   ]
 })
 export class TimepickerAuthenticExampleComponent {
-  useErrorMessage = true;
-  showOutputEvents = false;
+  readonly useErrorMessage = signal(true);
+  readonly showOutputEvents = signal(false);
   form: FormGroup<TimepickerDummyForm>;
   controlBinding = 'timepickerExample';
   controlBindingCombined = 'combinedIsoExample';
-  value = '2026-06-18T14:30:00.000Z';
-  combinedISO = '2026-06-18T14:30:00.000Z';
+  readonly value = signal('2026-06-18T14:30:00.000Z');
+  readonly combinedISO = signal('2026-06-18T14:30:00.000Z');
 
-  disabled = false;
-  readonly = false;
-  required = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  placeholder = 'Placeholder';
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  showToggle = true;
-  opened = false;
-  denseFormat = false;
-  interval = '30m';
-  minTime = '08:00';
-  maxTime = '19:00';
+  readonly placeholder = signal('Placeholder');
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly showToggle = signal(true);
+  readonly opened = signal(false);
+  readonly denseFormat = signal(false);
+  readonly interval = signal('30m');
+  readonly minTime = signal('08:00');
+  readonly maxTime = signal('19:00');
   log = logResult;
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
@@ -85,7 +86,7 @@ export class TimepickerAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
 
     const control = this.form.get(this.controlBinding);
     if (control) {

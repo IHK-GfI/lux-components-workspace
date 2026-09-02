@@ -5,9 +5,7 @@ import { LuxIconComponent, LuxTileAcComponent } from '@ihk-gfi/lux-components';
   selector: 'lux-overview-example',
   templateUrl: './overview-example.component.html',
   styleUrls: ['./overview-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent, LuxTileAcComponent]
 })
-export class OverviewExampleComponent {
-  constructor() {}
-}
+export class OverviewExampleComponent {}

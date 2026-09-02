@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -14,7 +14,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'lux-html-example',
   templateUrl: './html-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxHtmlComponent,
     LuxToggleAcComponent,
@@ -28,7 +28,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class HtmlExampleComponent {
-  htmlData = `<h1>Lorem ipsum</h1>
+  readonly htmlData = signal(`<h1>Lorem ipsum</h1>
 <p>
   <b>Lorem ipsum</b> dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
    dolore magna aliquyam erat, sed diam voluptua.<script>alert('Unsicher!!!!')</script>
@@ -40,90 +40,88 @@ export class HtmlExampleComponent {
   consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et doloremagna aliquyam erat,
   sed diam voluptua.</p>
 
-<p>Schau doch mal bei der <a href="https://www.ihk-gfi.de" target="_blank">IHK-Gfi</a> vorbei. </p>`;
+<p>Schau doch mal bei der <a href="https://www.ihk-gfi.de" target="_blank">IHK-Gfi</a> vorbei. </p>`);
 
-  flex = 'flex';
-  style = '';
-  class = '';
+  readonly flex = signal('flex');
+  readonly style = signal('');
+  readonly class = signal('');
 
-  sanitizeConfig?: LuxSanitizeConfig;
+  readonly sanitizeConfig = signal<LuxSanitizeConfig | undefined>(undefined);
 
-  _forbiddenTagsToggle = false;
-  forbiddenTags = 'a,b';
-  forbiddenAttributes = 'style,class';
+  private readonly _forbiddenTagsToggle = signal(false);
+  readonly forbiddenTags = signal('a,b');
+  readonly forbiddenAttributes = signal('style,class');
 
-  _allowedTagsToggle = false;
-  allowedTags = 'h1,p,span';
-  allowedAttributes = 'class,style';
+  private readonly _allowedTagsToggle = signal(false);
+  readonly allowedTags = signal('h1,p,span');
+  readonly allowedAttributes = signal('class,style');
 
-  _addAllowedTagsToggle = false;
-  addAllowedTags = '';
-  addAllowedAttributes = 'target';
+  private readonly _addAllowedTagsToggle = signal(false);
+  readonly addAllowedTags = signal('');
+  readonly addAllowedAttributes = signal('target');
 
   set forbiddenTagsToggle(toggle: boolean) {
-    this._forbiddenTagsToggle = toggle;
+    this._forbiddenTagsToggle.set(toggle);
 
-    if (this._forbiddenTagsToggle) {
-      this._allowedTagsToggle = false;
-      this._addAllowedTagsToggle = false;
+    if (toggle) {
+      this._allowedTagsToggle.set(false);
+      this._addAllowedTagsToggle.set(false);
     }
     this.updateTags();
   }
 
   get forbiddenTagsToggle() {
-    return this._forbiddenTagsToggle;
+    return this._forbiddenTagsToggle();
   }
 
   set allowedTagsToggle(toggle: boolean) {
-    this._allowedTagsToggle = toggle;
+    this._allowedTagsToggle.set(toggle);
 
-    if (this._allowedTagsToggle) {
-      this._forbiddenTagsToggle = false;
-      this._addAllowedTagsToggle = false;
+    if (toggle) {
+      this._forbiddenTagsToggle.set(false);
+      this._addAllowedTagsToggle.set(false);
     }
     this.updateTags();
   }
 
   get allowedTagsToggle() {
-    return this._allowedTagsToggle;
+    return this._allowedTagsToggle();
   }
 
   set addAllowedTagsToggle(toggle: boolean) {
-    this._addAllowedTagsToggle = toggle;
+    this._addAllowedTagsToggle.set(toggle);
 
-    if (this._addAllowedTagsToggle) {
-      this._forbiddenTagsToggle = false;
-      this._allowedTagsToggle = false;
+    if (toggle) {
+      this._forbiddenTagsToggle.set(false);
+      this._allowedTagsToggle.set(false);
     }
     this.updateTags();
   }
 
   get addAllowedTagsToggle() {
-    return this._addAllowedTagsToggle;
+    return this._addAllowedTagsToggle();
   }
-
-  constructor() {}
 
   updateTags() {
     const newConfig: LuxSanitizeConfig = {};
     if (this.forbiddenTagsToggle) {
-      newConfig.forbiddenTags = this.forbiddenTags.split(',');
-      newConfig.forbiddenAttrs = this.forbiddenAttributes.split(',');
+      newConfig.forbiddenTags = this.forbiddenTags().split(',');
+      newConfig.forbiddenAttrs = this.forbiddenAttributes().split(',');
     }
 
     if (this.allowedTagsToggle) {
-      newConfig.allowedTags = this.allowedTags.split(',');
-      newConfig.allowedAttrs = this.allowedAttributes.split(',');
+      newConfig.allowedTags = this.allowedTags().split(',');
+      newConfig.allowedAttrs = this.allowedAttributes().split(',');
     }
 
     if (this.addAllowedTagsToggle) {
-      newConfig.addAllowedTags = this.addAllowedTags.split(',');
-      newConfig.addAllowedAttrs = this.addAllowedAttributes.split(',');
+      newConfig.addAllowedTags = this.addAllowedTags().split(',');
+      newConfig.addAllowedAttrs = this.addAllowedAttributes().split(',');
     }
 
-    if (JSON.stringify(this.sanitizeConfig) !== JSON.stringify(newConfig)) {
-      this.sanitizeConfig = newConfig;
-      console.log(this.sanitizeConfig);
+    if (JSON.stringify(this.sanitizeConfig()) !== JSON.stringify(newConfig)) {
+      this.sanitizeConfig.set(newConfig);
+      console.log(this.sanitizeConfig());
     }
   }
 }

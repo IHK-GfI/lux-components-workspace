@@ -1,20 +1,21 @@
-import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
-    ILuxAppFooterButtonInfo,
-    LuxAccordionComponent,
-    LuxAppFooterButtonInfo,
-    LuxAppFooterButtonService,
-    LuxAppFooterLinkInfo,
-    LuxAppFooterLinkService,
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxSnackbarService,
-    LuxToggleAcComponent
+  ILuxAppFooterButtonInfo,
+  LuxAccordionComponent,
+  LuxAppFooterButtonInfo,
+  LuxAppFooterButtonService,
+  LuxAppFooterLinkInfo,
+  LuxAppFooterLinkService,
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxSelectAcComponent,
+  LuxSnackbarService,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -22,7 +23,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-footer-example',
   templateUrl: './app-footer-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxAccordionComponent,
@@ -37,25 +38,22 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     LuxToggleAcComponent
   ]
 })
-export class AppFooterExampleComponent implements OnDestroy {
-  buttonService = inject(LuxAppFooterButtonService);
-  linkService = inject(LuxAppFooterLinkService);
-  private snackbar = inject(LuxSnackbarService);
+export class AppFooterExampleComponent {
+  readonly buttonService = inject(LuxAppFooterButtonService);
+  readonly linkService = inject(LuxAppFooterLinkService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly snackbar = inject(LuxSnackbarService);
 
-  mementoLinkInfos;
-  mementoButtonInfos;
+  private readonly mementoLinkInfos = [...this.linkService.linkInfos];
+  private readonly mementoButtonInfos = [...this.buttonService.buttonInfos];
+  readonly buttonInfos = toSignal(this.buttonService.getButtonInfosAsObservable(), { initialValue: this.buttonService.buttonInfos });
+  readonly linkInfos = toSignal(this.linkService.getLinkInfosAsObservable(), { initialValue: this.linkService.linkInfos });
 
   constructor() {
-    this.mementoButtonInfos = [...this.buttonService.buttonInfos];
-    this.mementoLinkInfos = [...this.linkService.linkInfos];
-  }
-
-  /**
-   * Beim Verlassen der Component sicherheitshalber die Footer-Links und Footer-Buttons leeren.
-   */
-  ngOnDestroy() {
-    this.buttonService.buttonInfos = this.mementoButtonInfos;
-    this.linkService.linkInfos = this.mementoLinkInfos;
+    this.destroyRef.onDestroy(() => {
+      this.buttonService.buttonInfos = this.mementoButtonInfos;
+      this.linkService.linkInfos = this.mementoLinkInfos;
+    });
   }
 
   addFooterButton() {
@@ -68,10 +66,12 @@ export class AppFooterExampleComponent implements OnDestroy {
         onClick: this.buttonInfoClicked.bind(this)
       })
     );
+    this.refreshButtonInfos();
   }
 
   removeFooterButton() {
     this.buttonService.removeButtonInfoAtIndex(this.buttonService.buttonInfos.length - 1);
+    this.refreshButtonInfos();
   }
 
   buttonInfoClicked(that: ILuxAppFooterButtonInfo) {
@@ -87,18 +87,14 @@ export class AppFooterExampleComponent implements OnDestroy {
         path: '/components-overview'
       })
     );
+    this.refreshLinkInfos();
   }
 
   removeFooterLink() {
     this.linkService.removeLinkInfoAtIndex(this.linkService.linkInfos.length - 1);
+    this.refreshLinkInfos();
   }
 
-  /**
-   * Die lux-app-footer-Komponente in der App-Shell hält eine eigene, OnPush-basierte Kopie der
-   * Button-/Link-Infos und aktualisiert sich nur, wenn buttonInfos/linkInfos neu zugewiesen wird.
-   * Da die Formulare hier oben die Objekte innerhalb des Arrays direkt mutieren (z.B. buttonInfo.label),
-   * muss nach jeder Änderung eine neue Array-Referenz gesetzt werden, damit die Footer-Leiste das mitbekommt.
-   */
   refreshButtonInfos() {
     this.buttonService.buttonInfos = [...this.buttonService.buttonInfos];
   }

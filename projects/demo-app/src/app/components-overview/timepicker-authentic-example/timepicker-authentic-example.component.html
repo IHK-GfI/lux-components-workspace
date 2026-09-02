@@ -7,57 +7,57 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-timepicker
         luxAutofocus
-        [luxShowToggle]="showToggle"
-        [luxOpened]="opened"
-        [luxMinTime]="minTime"
-        [luxMaxTime]="maxTime"
-        [luxInterval]="interval"
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxMinTime]="minTime()"
+        [luxMaxTime]="maxTime()"
+        [luxInterval]="interval()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required"
-        [luxReadonly]="readonly"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
         [(luxValue)]="value"
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxDense]="denseFormat"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxValueChange)="log(showOutputEvents, 'luxValueChange', $event)"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
       >
       </lux-timepicker>
-      <example-value [value]="value" suffix="(ISO-Uhrzeit)"></example-value>
+      <example-value [value]="value()" suffix="(ISO-Uhrzeit)"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-timepicker
-        [luxShowToggle]="showToggle"
-        [luxOpened]="opened"
-        [luxMinTime]="minTime"
-        [luxMaxTime]="maxTime"
-        [luxInterval]="interval"
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxMinTime]="minTime()"
+        [luxMaxTime]="maxTime()"
+        [luxInterval]="interval()"
         [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly"
-        [luxDense]="denseFormat"
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
         [luxControlBinding]="controlBinding"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
       >
       </lux-timepicker>
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
@@ -68,14 +68,14 @@
         <lux-datepicker-ac
           class="lux-flex-auto"
           [(luxDisabled)]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
-          [luxPlaceholder]="placeholder"
-          [luxRequired]="required"
-          [luxLabel]="label"
-          [luxHint]="hint"
-          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-          [luxShowToggle]="showToggle"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxRequired]="required()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedTimepicker"
           [(luxValue)]="combinedISO"
           #combinedDatepicker
@@ -83,32 +83,32 @@
         </lux-datepicker-ac>
         <lux-timepicker
           class="lux-flex-auto"
-          [luxOpened]="opened"
-          [luxMinTime]="minTime"
-          [luxMaxTime]="maxTime"
-          [luxInterval]="interval"
+          [luxOpened]="opened()"
+          [luxMinTime]="minTime()"
+          [luxMaxTime]="maxTime()"
+          [luxInterval]="interval()"
           [(luxDisabled)]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
-          [luxPlaceholder]="placeholder"
-          [luxRequired]="required"
-          [luxLabel]="label"
-          [luxHint]="hint"
-          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-          [luxShowToggle]="showToggle"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxRequired]="required()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedDatepicker"
           [(luxValue)]="combinedISO"
-          [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-          [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-          (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-          (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-          (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-          (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
+          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+          (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+          (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+          (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
           #combinedTimepicker
         >
         </lux-timepicker>
       </div>
-      <example-value [value]="combinedISO" suffix="(kombinierter ISO-Wert)"></example-value>
+      <example-value [value]="combinedISO()" suffix="(kombinierter ISO-Wert)"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Kombination: in Reactive-Form</h3>
@@ -116,13 +116,13 @@
         <lux-datepicker-ac
           class="lux-flex-auto"
           [(luxDisabled)]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
-          [luxPlaceholder]="placeholder"
-          [luxLabel]="label"
-          [luxHint]="hint"
-          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-          [luxShowToggle]="showToggle"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedTimepickerInForm"
           [luxControlBinding]="controlBindingCombined"
           #combinedDatepickerInForm
@@ -130,26 +130,26 @@
         </lux-datepicker-ac>
         <lux-timepicker
           class="lux-flex-auto"
-          [luxOpened]="opened"
-          [luxMinTime]="minTime"
-          [luxMaxTime]="maxTime"
-          [luxInterval]="interval"
+          [luxOpened]="opened()"
+          [luxMinTime]="minTime()"
+          [luxMaxTime]="maxTime()"
+          [luxInterval]="interval()"
           [(luxDisabled)]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
-          [luxPlaceholder]="placeholder"
-          [luxLabel]="label"
-          [luxHint]="hint"
-          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-          [luxShowToggle]="showToggle"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
           [luxReferenceControl]="combinedDatepickerInForm"
           [luxControlBinding]="controlBindingCombined"
-          [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-          [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-          (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-          (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-          (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-          (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
+          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+          (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+          (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+          (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
           #combinedTimepickerInForm
         >
         </lux-timepicker>
@@ -278,7 +278,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useErrorMessage) {
+    @if (useErrorMessage()) {
       <lux-input-ac
         luxName="timepicker_luxErrorMessage"
         luxLabel="luxErrorMessage"
@@ -288,7 +288,7 @@
       >
       </lux-input-ac>
     }
-    @if (!useErrorMessage) {
+    @if (!useErrorMessage()) {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
   </example-base-advanced-options>

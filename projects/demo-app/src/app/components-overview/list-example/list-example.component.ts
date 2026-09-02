@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAccordionComponent,
   LuxAriaLabelDirective,
@@ -46,7 +46,7 @@ interface ListItem {
   selector: 'app-list-example',
   templateUrl: './list-example.component.html',
   styleUrls: ['./list-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,
@@ -81,40 +81,41 @@ interface ListItem {
 })
 export class ListExampleComponent {
   private destroyRef = inject(DestroyRef);
-  showCustomHeader = false;
-  showOutputEvents = false;
-  showInteractiveContent = false;
-  showRow1 = true;
-  showRow2 = true;
-  showRow3 = true;
+  readonly showCustomHeader = signal(false);
+  readonly showOutputEvents = signal(false);
+  readonly showInteractiveContent = signal(false);
+  readonly showRow1 = signal(true);
+  readonly showRow2 = signal(true);
+  readonly showRow3 = signal(true);
   log = logResult;
-  items: ListItem[] = [];
+  readonly items = signal<ListItem[]>([]);
   colors = LuxBadgeColors;
-  emptyLabel = 'Lade Daten...';
-  emptyIconName = 'lux-interface-page-controller-loading-3';
-  emptyIconSize = '2x';
-  selectedPosition = 0;
+  readonly emptyLabel = signal('Lade Daten...');
+  readonly emptyIconName = signal('lux-interface-page-controller-loading-3');
+  readonly emptyIconSize = signal('2x');
+  readonly selectedPosition = signal(0);
 
   constructor() {
     // setTimeout simuliert asynchrones Laden (z.B. aus einer API).
     const fillTimeout = setTimeout(() => {
       this.fill(30);
-      this.emptyLabel = 'Keine Daten vorhanden';
-      this.emptyIconName = 'lux-exclamation-mark';
-      this.emptyIconSize = '5x';
+      this.emptyLabel.set('Keine Daten vorhanden');
+      this.emptyIconName.set('lux-exclamation-mark');
+      this.emptyIconSize.set('5x');
     }, 2000);
     this.destroyRef.onDestroy(() => clearTimeout(fillTimeout));
   }
 
   clear() {
-    this.items = [];
-    this.selectedPosition = -1;
+    this.items.set([]);
+    this.selectedPosition.set(-1);
   }
 
   fill(amount: number) {
     this.clear();
+    const newItems: ListItem[] = [];
     for (let i = 0; i < amount; i++) {
-      this.items.push({
+      newItems.push({
         title: `Item #${i + 1}`,
         subTitle: `Untertitel Item #${i + 1}`,
         lineBreak: false,
@@ -123,9 +124,10 @@ export class ListExampleComponent {
         chips: ['Lorem ipsum', 'Dolor sit amet']
       });
     }
+    this.items.set(newItems);
   }
 
   click(event: any) {
-    this.log(this.showOutputEvents, 'luxClicked', event);
+    this.log(this.showOutputEvents(), 'luxClicked', event);
   }
 }

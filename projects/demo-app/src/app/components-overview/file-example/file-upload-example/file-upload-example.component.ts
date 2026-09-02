@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, signal, viewChild, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   ILuxFileActionConfig,
@@ -28,7 +28,7 @@ import { FileExampleComponent } from '../file-example.component';
 @Component({
   selector: 'lux-file-upload-example',
   templateUrl: './file-upload-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxSelectAcComponent,
@@ -49,18 +49,18 @@ import { FileExampleComponent } from '../file-example.component';
 export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig> implements OnInit, AfterViewInit {
   private tService = inject(TranslocoService);
 
-  @ViewChildren(LuxFileUploadComponent) fileUploads!: QueryList<LuxFileUploadComponent>;
-  @ViewChild('fileBaseWithoutComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithoutComponent!: LuxFileUploadComponent;
-  @ViewChild('fileBaseWithComponent', { read: LuxFileUploadComponent, static: true }) fileBaseWithComponent!: LuxFileUploadComponent;
+  readonly fileUploads = viewChildren(LuxFileUploadComponent);
+  readonly fileBaseWithoutComponent = viewChild.required('fileBaseWithoutComponent', { read: LuxFileUploadComponent });
+  readonly fileBaseWithComponent = viewChild.required('fileBaseWithComponent', { read: LuxFileUploadComponent });
 
   dialogService = inject(LuxDialogService);
-  override label = `Zum Hochladen Datei hier ablegen oder `;
-  labelLink = `Datei durchsuchen`;
-  labelLinkShort = `Datei hochladen`;
-  uploadIcon = 'lux-programming-cloud-upload';
-  deleteIcon = '';
-  multiple = true;
-  listOnly = false;
+  override readonly label = signal(`Zum Hochladen Datei hier ablegen oder `);
+  readonly labelLink = signal(`Datei durchsuchen`);
+  readonly labelLinkShort = signal(`Datei hochladen`);
+  readonly uploadIcon = signal('lux-programming-cloud-upload');
+  readonly deleteIcon = signal('');
+  readonly multiple = signal(true);
+  readonly listOnly = signal(false);
 
   customActionConfigs: ILuxFileActionConfig[] = [
     {
@@ -76,17 +76,19 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
   ];
 
   override ngOnInit() {
-    this.maxSize = 10;
-    this.capture = 'environment';
-    this.accept = '.pdf,.jpeg,.jpg,.png';
-    this.hint = `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept)} mit einer Größe bis zu ${
-      this.maxSize
-    } Megabytes hochladen.`;
+    this.maxSize.set(10);
+    this.capture.set('environment');
+    this.accept.set('.pdf,.jpeg,.jpg,.png');
+    this.hint.set(
+      `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept())} mit einer Größe bis zu ${
+        this.maxSize()
+      } Megabytes hochladen.`
+    );
     super.ngOnInit();
   }
 
   ngAfterViewInit() {
-    this.fileComponents = this.fileUploads.toArray();
+    this.fileComponents = [...this.fileUploads()];
   }
 
   toogleCustomHiddenActionConfig() {
@@ -139,7 +141,7 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
           file.name = 'example.png';
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
-          this.selected = [fileObject];
+          this.selected.set([fileObject]);
           this.form.get(this.controlBinding)!.setValue([fileObject]);
         })
       )
@@ -159,7 +161,7 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
       label: 'Hochladen',
       labelHeader: 'Neue Dateien hochladen',
       onClick: (files: ILuxFileObject[]) => {
-        this.log(this.showOutputEvents, 'uploadActionConfig onClick', files);
+        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', files);
         this.onUpload(files);
       }
     };

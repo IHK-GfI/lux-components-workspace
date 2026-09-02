@@ -4,10 +4,10 @@
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-3">
     <div class="container">
-      <lux-textbox [luxTitle]="title" [luxIcon]="icon" [luxColor]="color" [luxHeading]="heading" class="lux-pt-5">
-        @if (content) {
+      <lux-textbox [luxTitle]="title()" [luxIcon]="icon()" [luxColor]="color()" [luxHeading]="heading()" class="lux-pt-5">
+        @if (content()) {
         <p>
-          {{ content }}
+          {{ content() }}
         </p>
         }
       </lux-textbox>

@@ -8,72 +8,72 @@
       <h4>Chips (ohne Group)</h4>
       <lux-chips-ac
         luxAutofocus
-        [luxRequired]="required"
+        [luxRequired]="required()"
         [luxAutofocusComponent]="firstchipGroup"
-        [luxStrict]="strict"
-        [luxDisabled]="disabled"
-        [luxInputAllowed]="inputAllowed"
-        [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
-        [luxInputLabel]="inputLabel"
-        [luxPlaceholder]="placeholder"
-        [luxOrientation]="chipOrientation"
-        [luxAutocompleteOptions]="autocomplete ? autocompleteNoGroupOptions : []"
-        [luxOptionBlockSize]="optionBlockSize"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        [luxHideBorder]="hideBorder"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
+        [luxStrict]="strict()"
+        [luxDisabled]="disabled()"
+        [luxInputAllowed]="inputAllowed()"
+        [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible()"
+        [luxInputLabel]="inputLabel()"
+        [luxPlaceholder]="placeholder()"
+        [luxOrientation]="chipOrientation()"
+        [luxAutocompleteOptions]="autocomplete() ? autocompleteNoGroupOptions() : []"
+        [luxOptionBlockSize]="optionBlockSize()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        [luxHideBorder]="hideBorder()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
         (luxChipAdded)="chipAdded($event)"
         #firstchipGroup
       >
-        @for (chip of chips; track chip.label; let i = $index) {
-        <lux-chip-ac
-          [luxDisabled]="chip.disabled"
-          [luxColor]="chip.color"
-          [luxRemovable]="chip.removable"
-          (luxChipSelected)="log(showOutputEvents, 'Chip selected', $event)"
-          (luxChipClicked)="log(showOutputEvents, 'Chip clicked', $event)"
-          (luxChipRemoved)="chipRemoved($event)"
-        >
-          {{ chip.label }}
-        </lux-chip-ac>
+        @for (chip of chips(); track chip.label; let i = $index) {
+          <lux-chip-ac
+            [luxDisabled]="chip.disabled"
+            [luxColor]="chip.color"
+            [luxRemovable]="chip.removable"
+            (luxChipSelected)="log(showOutputEvents(), 'Chip selected', $event)"
+            (luxChipClicked)="log(showOutputEvents(), 'Chip clicked', $event)"
+            (luxChipRemoved)="chipRemoved($event)"
+          >
+            {{ chip.label }}
+          </lux-chip-ac>
         }
       </lux-chips-ac>
     </div>
     <div class="lux-flex lux-flex-col">
       <h4>Chips (mit Group)</h4>
       <lux-chips-ac
-        [luxRequired]="required"
+        [luxRequired]="required()"
         [luxControlValidators]="requiredValidatorFn"
-        [luxStrict]="strict"
-        [luxDisabled]="disabled"
-        [luxInputAllowed]="inputAllowed"
-        [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
-        [luxInputLabel]="inputLabel"
-        [luxPlaceholder]="placeholder"
-        [luxOrientation]="chipOrientation"
+        [luxStrict]="strict()"
+        [luxDisabled]="disabled()"
+        [luxInputAllowed]="inputAllowed()"
+        [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible()"
+        [luxInputLabel]="inputLabel()"
+        [luxPlaceholder]="placeholder()"
+        [luxOrientation]="chipOrientation()"
         [luxNewChipGroup]="chipGroup"
         (luxChipAdded)="chipAdded($event)"
-        [luxAutocompleteOptions]="autocomplete ? autocompleteOptions : []"
-        [luxOptionBlockSize]="optionBlockSize"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        [luxHideBorder]="hideBorder"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
+        [luxAutocompleteOptions]="autocomplete() ? autocompleteOptions() : []"
+        [luxOptionBlockSize]="optionBlockSize()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        [luxHideBorder]="hideBorder()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
       >
         <lux-chip-ac-group
-          [luxRemovable]="groupRemovable"
-          [luxColor]="groupColor"
+          [luxRemovable]="groupRemovable()"
+          [luxColor]="groupColor()"
           [luxLabels]="groupLabels"
-          [luxDisabled]="groupDisabled"
-          (luxChipRemoved)="log(showOutputEvents, '[GROUP] Chip removed', $event)"
-          (luxChipAdded)="log(showOutputEvents, '[GROUP] Chip added', $event)"
-          (luxChipClicked)="log(showOutputEvents, '[GROUP] Chip clicked', $event)"
-          (luxChipSelected)="log(showOutputEvents, '[GROUP] Chip selected', $event)"
+          [luxDisabled]="groupDisabled()"
+          (luxChipRemoved)="log(showOutputEvents(), '[GROUP] Chip removed', $event)"
+          (luxChipAdded)="log(showOutputEvents(), '[GROUP] Chip added', $event)"
+          (luxChipClicked)="log(showOutputEvents(), '[GROUP] Chip clicked', $event)"
+          (luxChipSelected)="log(showOutputEvents(), '[GROUP] Chip selected', $event)"
           #chipGroup
         >
         </lux-chip-ac-group>
@@ -83,32 +83,32 @@
       <ng-container [formGroup]="form">
         <lux-chips-ac
           [luxControlBinding]="controlBinding"
-          [luxStrict]="strict"
-          [luxDisabled]="disabled"
-          [luxInputAllowed]="inputAllowed"
-          [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible"
-          [luxInputLabel]="inputLabel"
-          [luxPlaceholder]="placeholder"
-          [luxOrientation]="chipOrientation"
+          [luxStrict]="strict()"
+          [luxDisabled]="disabled()"
+          [luxInputAllowed]="inputAllowed()"
+          [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible()"
+          [luxInputLabel]="inputLabel()"
+          [luxPlaceholder]="placeholder()"
+          [luxOrientation]="chipOrientation()"
           [luxNewChipGroup]="chipGroupForm"
-          [luxAutocompleteOptions]="autocomplete ? autocompleteOptions : []"
-          [luxOptionBlockSize]="optionBlockSize"
-          [luxLabelLongFormat]="labelLongFormat"
-          [luxDense]="denseFormat"
-          [luxHideBorder]="hideBorder"
-          [luxNoTopLabel]="noTopLabel"
-          [luxNoBottomLabel]="noBottomLabel"
-          [luxNoLabels]="noLabels"
+          [luxAutocompleteOptions]="autocomplete() ? autocompleteOptions() : []"
+          [luxOptionBlockSize]="optionBlockSize()"
+          [luxLabelLongFormat]="labelLongFormat()"
+          [luxDense]="denseFormat()"
+          [luxHideBorder]="hideBorder()"
+          [luxNoTopLabel]="noTopLabel()"
+          [luxNoBottomLabel]="noBottomLabel()"
+          [luxNoLabels]="noLabels()"
         >
           <lux-chip-ac-group
-            [luxRemovable]="groupRemovable"
-            [luxColor]="groupColor"
+            [luxRemovable]="groupRemovable()"
+            [luxColor]="groupColor()"
             [luxLabels]="groupLabels"
-            [luxDisabled]="groupDisabled"
-            (luxChipRemoved)="log(showOutputEvents, '[GROUP] Chip removed', $event)"
-            (luxChipAdded)="log(showOutputEvents, '[GROUP] Chip added', $event)"
-            (luxChipClicked)="log(showOutputEvents, '[GROUP] Chip clicked', $event)"
-            (luxChipSelected)="log(showOutputEvents, '[GROUP] Chip selected', $event)"
+            [luxDisabled]="groupDisabled()"
+            (luxChipRemoved)="log(showOutputEvents(), '[GROUP] Chip removed', $event)"
+            (luxChipAdded)="log(showOutputEvents(), '[GROUP] Chip added', $event)"
+            (luxChipClicked)="log(showOutputEvents(), '[GROUP] Chip clicked', $event)"
+            (luxChipSelected)="log(showOutputEvents(), '[GROUP] Chip selected', $event)"
             #chipGroupForm
           >
           </lux-chip-ac-group>
@@ -132,7 +132,7 @@
     </lux-input-ac>
     <lux-toggle-ac
       luxLabel="luxInputLabelAlwaysVisible"
-      [luxDisabled]="inputAllowed"
+      [luxDisabled]="inputAllowed()"
       luxHint="Zeigt das Label auch dann an, wenn kein Eingabefeld angezeigt wird."
       [(luxChecked)]="inputLabelAlwaysVisible"
       [luxNoTopLabel]="true"
@@ -183,7 +183,7 @@
     <lux-toggle-ac
       luxLabel="luxAutocompleteOptions übergeben"
       [(luxChecked)]="autocomplete"
-      [luxDisabled]="!inputAllowed"
+      [luxDisabled]="!inputAllowed()"
       [luxNoTopLabel]="true"
     >
       <lux-form-hint>
@@ -193,7 +193,7 @@
     </lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="luxStrict"
-      [luxDisabled]="!inputAllowed"
+      [luxDisabled]="!inputAllowed()"
       luxHint="Gibt an, ob nur Werte aus den vorhandenen Optionen ausgewählt werden dürfen."
       [(luxChecked)]="strict"
       [luxNoTopLabel]="true"
@@ -201,7 +201,7 @@
     </lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="luxHideBorder"
-      [luxDisabled]="inputAllowed"
+      [luxDisabled]="inputAllowed()"
       luxHint="Mit dieser Property kann die Border um die Chip-Elemente ausgeblendet werden, wenn kein Input vorhanden ist."
       [(luxChecked)]="hideBorder"
       [luxNoTopLabel]="true"
@@ -231,7 +231,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle-ac luxLabel="luxRequired" [luxChecked]="required()" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components mit Groups, die nicht in einer Reactive-Form
         sind. D.h. das luxRequired funktioniert nicht für das erste Beispiel "Chips (ohne Group)".<br />
@@ -250,42 +250,45 @@
     <div class="lux-flex lux-flex-col lux-gap-4">
       <h3>Einzelne Chips</h3>
       <lux-accordion [luxMulti]="false">
-        @for (chip of chips; track chip.label; let i = $index) {
-        <lux-panel (luxOpened)="openedPanel = i">
-          <lux-panel-header-title> Chip #{{ i + 1 }} </lux-panel-header-title>
-          @if (openedPanel === i) {
-          <lux-panel-content class="lux-flex lux-flex-col lux-mt-4">
-            <lux-input-ac
-              luxLabel="luxLabel"
-              luxHint="Bestimmt das Label des einzelnen Chips"
-              [luxValue]="chip.label"
-              (luxValueChange)="chip.label = $event"
-            >
-            </lux-input-ac>
-            <lux-select-ac
-              luxLabel="luxColor"
-              luxHint="Bestimmt die Farbe der Chips für eine LuxChipGroup."
-              [(luxSelected)]="chip.color"
-              [luxOptions]="colors"
-            >
-            </lux-select-ac>
-            <lux-toggle-ac
-              luxLabel="luxDisabled"
-              luxHint="Mit dieser Property können die Chips einer Group deaktiviert werden."
-              [(luxChecked)]="chip.disabled"
-              [luxNoTopLabel]="true"
-            >
-            </lux-toggle-ac>
-            <lux-toggle-ac
-              luxLabel="luxRemovable"
-              luxHint="Diese Property markiert die Chips in einer Group als entfernbar."
-              [(luxChecked)]="chip.removable"
-              [luxNoTopLabel]="true"
-            >
-            </lux-toggle-ac>
-          </lux-panel-content>
-          }
-        </lux-panel>
+        @for (chip of chips(); track chip.label; let i = $index) {
+          <lux-panel (luxOpened)="openedPanel.set(i)">
+            <lux-panel-header-title> Chip #{{ i + 1 }} </lux-panel-header-title>
+            @if (openedPanel() === i) {
+              <lux-panel-content class="lux-flex lux-flex-col lux-mt-4">
+                <lux-input-ac
+                  luxLabel="luxLabel"
+                  luxHint="Bestimmt das Label des einzelnen Chips"
+                  [luxValue]="chip.label"
+                  (luxValueChange)="updateChip(i, { label: $event })"
+                >
+                </lux-input-ac>
+                <lux-select-ac
+                  luxLabel="luxColor"
+                  luxHint="Bestimmt die Farbe der Chips für eine LuxChipGroup."
+                  [luxSelected]="chip.color"
+                  (luxSelectedChange)="updateChip(i, { color: $event })"
+                  [luxOptions]="colors"
+                >
+                </lux-select-ac>
+                <lux-toggle-ac
+                  luxLabel="luxDisabled"
+                  luxHint="Mit dieser Property können die Chips einer Group deaktiviert werden."
+                  [luxChecked]="chip.disabled"
+                  (luxCheckedChange)="updateChip(i, { disabled: $event })"
+                  [luxNoTopLabel]="true"
+                >
+                </lux-toggle-ac>
+                <lux-toggle-ac
+                  luxLabel="luxRemovable"
+                  luxHint="Diese Property markiert die Chips in einer Group als entfernbar."
+                  [luxChecked]="chip.removable"
+                  (luxCheckedChange)="updateChip(i, { removable: $event })"
+                  [luxNoTopLabel]="true"
+                >
+                </lux-toggle-ac>
+              </lux-panel-content>
+            }
+          </lux-panel>
         }
       </lux-accordion>
     </div>

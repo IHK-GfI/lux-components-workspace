@@ -3,29 +3,29 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90table-v21"
 >
   <example-base-content>
-    <div [ngStyle]="{ height: calculateProportions ? tableHeightPx + 'px' : 'unset' }">
+    <div [ngStyle]="{ height: calculateProportions() ? tableHeightPx() + 'px' : 'unset' }">
       <lux-table
-        [luxMinWidthPx]="minWidthPx"
-        [luxShowPagination]="pagination"
-        [luxColWidthsPercent]="columnWidthOption"
-        [luxShowFilter]="filter"
-        [luxFilterText]="filterText"
-        [luxPageSize]="pageSize"
-        [luxClasses]="cssClass"
-        [luxPageSizeOptions]="pageSizeOption"
-        [luxPagerFirstLastButton]="pagerFirstLastButton"
+        [luxMinWidthPx]="minWidthPx()"
+        [luxShowPagination]="pagination()"
+        [luxColWidthsPercent]="columnWidthOption()"
+        [luxShowFilter]="filter()"
+        [luxFilterText]="filterText()"
+        [luxPageSize]="pageSize()"
+        [luxClasses]="cssClass()"
+        [luxPageSizeOptions]="pageSizeOption()"
+        [luxPagerFirstLastButton]="pagerFirstLastButton()"
         [luxMultiSelect]="multiSelect"
-        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick"
-        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty"
-        [luxNoDataText]="noDataText"
+        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()"
+        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty()"
+        [luxNoDataText]="noDataText()"
         [luxHttpDAO]="httpDAO"
-        [luxSelected]="selected"
+        [luxSelected]="selected()"
         [luxShowSelectedChangeCursor]="true"
         (luxSelectedChange)="onSelectedChange($event)"
         (luxSelectedAsArrayChange)="onSelectedAsArrayChange($event)"
         [luxCompareWith]="compareFn"
-        [luxHideBorders]="hideBorders"
-        [luxAutoPaginate]="autoPagination"
+        [luxHideBorders]="hideBorders()"
+        [luxAutoPaginate]="autoPagination()"
         #myTable
       >
         <lux-table-column

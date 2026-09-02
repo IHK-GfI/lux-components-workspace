@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxButtonComponent,
   LuxFormHintComponent,
@@ -21,7 +21,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   selector: 'app-infinite-scrolling-example',
   templateUrl: './infinite-scrolling-example.component.html',
   styleUrls: ['./infinite-scrolling-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,
@@ -40,15 +40,14 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class InfiniteScrollingExampleComponent implements OnInit {
-  cdr = inject(ChangeDetectorRef)
-  showOutputEvents = false;
-  listItems: string[] = [];
+  readonly showOutputEvents = signal(false);
+  readonly listItems = signal<string[]>([]);
   log = logResult;
-  created = false;
+  readonly created = signal(false);
 
-  immediateCallback = true;
-  isLoading = false;
-  scrollPercent = 85;
+  readonly immediateCallback = signal(true);
+  readonly isLoading = signal(false);
+  readonly scrollPercent = signal(85);
 
   ngOnInit() {
     this.createListItems();
@@ -56,19 +55,19 @@ export class InfiniteScrollingExampleComponent implements OnInit {
   }
 
   recreateList() {
-    this.created = false;
+    this.created.set(false);
     setTimeout(() => {
-      this.created = true;
+      this.created.set(true);
     }, 500);
   }
 
   reset() {
-    this.listItems = [];
+    this.listItems.set([]);
     this.createListItems();
   }
 
   onScroll() {
-    this.log(this.showOutputEvents, 'luxScrolled');
+    this.log(this.showOutputEvents(), 'luxScrolled');
     this.createListItems();
   }
 
@@ -77,9 +76,12 @@ export class InfiniteScrollingExampleComponent implements OnInit {
   }
 
   private createListItems() {
-    for (let i = 0; i < 10; i++) {
-      this.listItems.push('Test #' + this.listItems.length);
-    }
-    this.cdr.detectChanges();
+    this.listItems.update((items) => {
+      const next = [...items];
+      for (let i = 0; i < 10; i++) {
+        next.push('Test #' + next.length);
+      }
+      return next;
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DoCheck, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DoCheck, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
@@ -20,7 +20,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-storage-example',
   templateUrl: './storage-example.component.html',
   styleUrls: ['./storage-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxMenuComponent,
     LuxMenuItemComponent,
@@ -39,33 +39,32 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 export class StorageExampleComponent implements OnDestroy, DoCheck {
   luxStorageService = inject(LuxStorageService);
 
-  key = 'Storage_Example_Key';
-  value: string | null = '';
-  sensitive = false;
+  readonly key = signal('Storage_Example_Key');
+  readonly value = signal<string | null>('');
+  readonly sensitive = signal(false);
 
   value$: Observable<string | null>;
   valueSubscription: Subscription;
-  localKeys: string[] = [];
-  storageLength = 0;
+  readonly localKeys = signal<string[]>([]);
+  readonly storageLength = signal(0);
 
   constructor() {
-    this.value$ = this.luxStorageService.getItemAsObservable(this.key);
+    this.value$ = this.luxStorageService.getItemAsObservable(this.key());
 
     this.valueSubscription = this.value$.subscribe((newValue) => {
-      this.value = newValue;
+      this.value.set(newValue);
     });
   }
 
   ngDoCheck() {
     const len = this.luxStorageService.length;
     const keys = this.luxStorageService.getKeys();
-    const keysChanged =
-      keys.length !== this.localKeys.length ||
-      keys.some((key, index) => key !== this.localKeys[index]);
+    const localKeys = this.localKeys();
+    const keysChanged = keys.length !== localKeys.length || keys.some((key, index) => key !== localKeys[index]);
 
-    if (len !== this.storageLength || keysChanged) {
-      this.storageLength = len;
-      this.localKeys = keys;
+    if (len !== this.storageLength() || keysChanged) {
+      this.storageLength.set(len);
+      this.localKeys.set(keys);
     }
   }
 
@@ -83,21 +82,21 @@ export class StorageExampleComponent implements OnDestroy, DoCheck {
   }
 
   submit() {
-    this.luxStorageService.setItem(this.key, this.value ? this.value : '', this.sensitive);
-    this.key = '';
-    this.value = '';
-    this.sensitive = false;
+    this.luxStorageService.setItem(this.key(), this.value() ? this.value()! : '', this.sensitive());
+    this.key.set('');
+    this.value.set('');
+    this.sensitive.set(false);
   }
 
   clearAll() {
     this.luxStorageService.clearAll();
-    this.value = '';
-    this.value$ = this.luxStorageService.getItemAsObservable(this.key);
+    this.value.set('');
+    this.value$ = this.luxStorageService.getItemAsObservable(this.key());
   }
 
   clearSensitiveItems() {
     this.luxStorageService.clearSensitiveItems();
-    this.value = '';
-    this.value$ = this.luxStorageService.getItemAsObservable(this.key);
+    this.value.set('');
+    this.value$ = this.luxStorageService.getItemAsObservable(this.key());
   }
 }

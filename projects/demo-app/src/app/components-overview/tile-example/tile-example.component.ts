@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -18,7 +18,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'tile-example',
   templateUrl: './tile-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxImageComponent,
     LuxIconComponent,
@@ -35,28 +35,26 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class TileExampleComponent {
-  showIcon = true;
-  showOutputEvents = false;
-  counter = undefined;
-  counterCap = 20;
-  label = 'Tile Example';
+  readonly showIcon = signal(true);
+  readonly showOutputEvents = signal(false);
+  readonly counter = signal<number | undefined>(undefined);
+  readonly counterCap = signal(20);
+  readonly label = signal('Tile Example');
   log = logResult;
-  _showNotification = false;
-  showShadow = true;
-  truncateAfterOneLine = false;
-  truncateAfterTwoLines = false;
+  private readonly _showNotification = signal(false);
+  readonly showShadow = signal(true);
+  readonly truncateAfterOneLine = signal(false);
+  readonly truncateAfterTwoLines = signal(false);
 
   get showNotification() {
-    return this._showNotification;
+    return this._showNotification();
   }
 
   set showNotification(show: boolean) {
-    this._showNotification = show;
+    this._showNotification.set(show);
 
-    if (show && this.counter) {
-      this.counter = undefined;
+    if (show && this.counter()) {
+      this.counter.set(undefined);
     }
   }
-
-  constructor() {}
 }

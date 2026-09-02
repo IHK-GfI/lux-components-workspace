@@ -1,13 +1,13 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
-    LuxBadgeNotificationDirective,
-    LuxBadgeNotificationPosition,
-    LuxBadgeNotificationSize,
-    LuxButtonComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+  LuxBadgeNotificationDirective,
+  LuxBadgeNotificationPosition,
+  LuxBadgeNotificationSize,
+  LuxButtonComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -16,7 +16,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-badge-notification-example',
   templateUrl: './badge-notification-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,
@@ -30,15 +30,13 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class BadgeNotificationExampleComponent {
-  notification = ' ';
-  color = 'default';
-  disabled = false;
-  hidden = false;
-  position: LuxBadgeNotificationPosition = 'above after';
-  size: LuxBadgeNotificationSize = 'medium';
-  overlap = true;
-  cap = 0;
-  noBorder = false;
-
-  constructor() {}
+  readonly notification = signal(' ');
+  readonly color = signal('default');
+  readonly disabled = signal(false);
+  readonly hidden = signal(false);
+  readonly position = signal<LuxBadgeNotificationPosition>('above after');
+  readonly size = signal<LuxBadgeNotificationSize>('medium');
+  readonly overlap = signal(true);
+  readonly cap = signal(0);
+  readonly noBorder = signal(false);
 }

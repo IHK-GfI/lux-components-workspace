@@ -5,7 +5,7 @@ import { LuxFilterFormComponent, LuxFilterItemDirective, LuxInputAcComponent, Lu
   selector: 'app-custom-filter-item',
   imports: [LuxInputAcComponent, LuxFilterItemDirective, LuxToggleAcComponent],
   templateUrl: './custom-filter-item.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'lux-grid lux-grid-cols-12 lt-md:lux-grid-cols-1 lux-gap-4 lux-mt-4 lux-items-center' }
 })
 export class CustomFilterItemComponent implements AfterViewInit {

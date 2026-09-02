@@ -8,7 +8,7 @@
 
   <lux-select-ac
     class=""
-    [(luxSelected)]="tenantLogoConfig.luxTenantKey"
+    [(luxSelected)]="tenantLogoConfig().luxTenantKey"
     luxOptionLabelProp="label"
     [luxPickValue]="pickValueKeyFn"
     [luxOptions]="tenantKeyArr"
@@ -16,13 +16,13 @@
     luxHint="Diese Property legt den Schlüssel für den Tenant fest, dessen Image gezeigt werden soll."
   ></lux-select-ac>
 
-  <lux-select-ac [(luxSelected)]="tenantLogoConfig.luxTenantVariant" [luxOptions]="tenantVariantArr" luxLabel="luxTenantVariant">
+  <lux-select-ac [(luxSelected)]="tenantLogoConfig().luxTenantVariant" [luxOptions]="tenantVariantArr" luxLabel="luxTenantVariant">
     <ng-template let-option>{{ option }}</ng-template>
     <lux-form-hint>
       Diese Property legt die Variante für den Tenant fest.<br />
       Wenn der Variant leer gelassen wird, wechselt die Komponente je nach Media Query die Variante
-      <span [style]="{ 'font-weight': tenantLogoConfig.luxTenantVariant ? '' : 'bold' }">automatisch</span>.
-      @if (!tenantLogoConfig.luxTenantVariant) {
+      <span [style]="{ 'font-weight': tenantLogoConfig().luxTenantVariant ? '' : 'bold' }">automatisch</span>.
+      @if (!tenantLogoConfig().luxTenantVariant) {
         <div>
           <br />
           Automatisch ausgewählt: <b>{{ actualTenantVariant }}</b>
@@ -35,7 +35,7 @@
     luxName="luxTenantLogoHeight"
     luxLabel="luxTenantLogoHeight"
     luxHint="Diese Property legt die Höhe des Tenant Logos fest."
-    [(luxValue)]="tenantLogoConfig.luxTenantLogoHeight"
+    [(luxValue)]="tenantLogoConfig().luxTenantLogoHeight"
   ></lux-input-ac>
 
   <lux-input-ac

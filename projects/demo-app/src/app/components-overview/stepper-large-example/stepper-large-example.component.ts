@@ -1,5 +1,5 @@
 import { JsonPipe, NgClass, NgStyle } from '@angular/common';
-import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     LuxSelectAcComponent,
@@ -22,7 +22,7 @@ import { StepperLargeExternStepExampleComponent } from './steps/stepper-large-ex
   selector: 'lux-stepper-large-example',
   templateUrl: './stepper-large-example.component.html',
   styleUrls: ['./stepper-large-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxStepperLargeStepComponent,
     LuxStepperLargeComponent,
@@ -45,17 +45,17 @@ export class StepperLargeExampleComponent {
   private snackbar = inject(LuxSnackbarService);
   private themeService = inject(LuxThemeService);
 
-  @ViewChild(LuxStepperLargeComponent) stepper!: LuxStepperLargeComponent;
-  @ViewChild('requiredCheck') toggle!: LuxToggleAcComponent;
+  readonly stepper = viewChild(LuxStepperLargeComponent);
+  readonly toggle = viewChild<LuxToggleAcComponent>('requiredCheck');
 
-  allowed = false;
-  stepValidationActive = true;
-  currentStepIndex = 0;
+  readonly allowed = signal(false);
+  readonly stepValidationActive = signal(true);
+  readonly currentStepIndex = signal(0);
   options: any[] = ['100%', '800px', '1000px', '1200px'];
-  maxWidth = this.options[0];
-  completed = true;
+  readonly maxWidth = signal(this.options[0]);
+  readonly completed = signal(true);
   theme = '';
-  luxA11YMode = false;
+  readonly luxA11YMode = signal(false);
   showError = false;
 
   constructor() {
@@ -67,8 +67,8 @@ export class StepperLargeExampleComponent {
       `Event 'luxStepChanged': Von \nSchritt "${event.prevStep.luxTitle}" (index = ${event.prevIndex}) nach \nSchritt "${event.currentStep.luxTitle}" (index = ${event.currentIndex})`
     );
     console.log(`Stepper-Index': ${event.stepper.luxCurrentStepNumber}`);
-    if (this.currentStepIndex == 1) {
-      this.dataService.luxStepValidationActive = this.stepValidationActive;
+    if (this.currentStepIndex() == 1) {
+      this.dataService.luxStepValidationActive = this.stepValidationActive();
     }
     this.dataService.showErrorMessage.next(false);
   }
@@ -92,7 +92,7 @@ export class StepperLargeExampleComponent {
   }
 
   onStepNotComplete() {
-    this.toggle.formControl.markAsTouched();
+    this.toggle()?.formControl.markAsTouched();
     this.showError = true;
 
     this.dataService.showErrorMessage.next(true);

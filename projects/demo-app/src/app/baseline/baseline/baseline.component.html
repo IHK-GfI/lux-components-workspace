@@ -5,17 +5,18 @@
         <lux-toggle-ac class="lux-flex lux-flex-basis-52" luxLabel="Fehler anzeigen" (luxCheckedChange)="toggleErrors($event)">
         </lux-toggle-ac>
         <div class="lux-flex lux-flex-col lux-flex-basis-52">
-          <lux-toggle-ac luxLabel="Frames anzeigen" (luxCheckedChange)="showFrames = $event"> </lux-toggle-ac>
+          <lux-toggle-ac luxLabel="Frames anzeigen" (luxCheckedChange)="showFrames.set($event)"> </lux-toggle-ac>
           <i class="lux-label">Grau -> FormComponent</i>
           <i class="lux-label">Grün -> Label</i>
           <i class="lux-label">Blau -> Content</i>
           <i class="lux-label">Rosa -> Misc</i>
         </div>
-        <lux-toggle-ac luxLabel="Als Column darstellen" (luxCheckedChange)="showAsColumn = $event" class="lux-flex lux-flex-basis-52">
+        <lux-toggle-ac luxLabel="Als Column darstellen" (luxCheckedChange)="showAsColumn.set($event)" class="lux-flex lux-flex-basis-52">
         </lux-toggle-ac>
-        <lux-toggle-ac luxLabel="Deaktivieren" (luxCheckedChange)="disabled = $event" class="lux-flex lux-flex-basis-52"> </lux-toggle-ac>
-        <lux-toggle-ac luxLabel="Readonly" (luxCheckedChange)="readonly = $event" class="lux-flex lux-flex-basis-52"> </lux-toggle-ac>
-        <lux-toggle-ac luxLabel="Denseformat anzeigen" (luxCheckedChange)="denseFormat = $event" class="lux-flex lux-flex-basis-52">
+        <lux-toggle-ac luxLabel="Deaktivieren" (luxCheckedChange)="disabled.set($event)" class="lux-flex lux-flex-basis-52">
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="Readonly" (luxCheckedChange)="readonly.set($event)" class="lux-flex lux-flex-basis-52"> </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="Denseformat anzeigen" (luxCheckedChange)="denseFormat.set($event)" class="lux-flex lux-flex-basis-52">
         </lux-toggle-ac>
       </div>
     </lux-card-content>
@@ -25,7 +26,7 @@
       <div
         class="baseline-row lux-flex"
         [ngClass]="
-          showAsColumn
+          showAsColumn()
             ? 'lux-flex-col lux-gap-6'
             : 'lux-grid xs:lux-grid-cols-1 sm:lux-grid-cols-2 md:lux-grid-cols-3 gt-md:lux-grid-cols-4 lux-gap-6'
         "
@@ -37,53 +38,53 @@
           luxLabel="Textarea"
           luxHint="Hinweis"
           luxPlaceholder="Platzhalter"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
           [luxMinRows]="1"
           [luxMaxRows]="-1"
           luxAutocomplete="false"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
         </lux-textarea-ac>
         <lux-file-input-ac
           luxLabel="Fileupload"
           luxHint="Fileupload"
           luxControlBinding="file"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
         >
         </lux-file-input-ac>
         <lux-select-ac
           [luxOptions]="['Test1', 'Test2']"
           luxPlaceholder="Select"
           luxControlBinding="select"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Select</lux-form-label>
           <lux-form-hint>Select</lux-form-hint>
         </lux-select-ac>
-        <lux-toggle-ac luxControlBinding="toggle" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxDense]="denseFormat">
+        <lux-toggle-ac luxControlBinding="toggle" [luxDisabled]="disabled()" [luxReadonly]="readonly()" [luxDense]="denseFormat()">
           <lux-form-label>Toggle</lux-form-label>
           <lux-form-hint>Toggle</lux-form-hint>
         </lux-toggle-ac>
         <lux-checkbox-ac
           luxControlBinding="checkbox"
           luxHint="Checkbox"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Checkbox</lux-form-label>
         </lux-checkbox-ac>
         <lux-datepicker-ac
           luxPlaceholder="Datepicker"
           luxControlBinding="datepicker"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Datepicker</lux-form-label>
           <lux-form-hint>Datepicker</lux-form-hint>
@@ -94,9 +95,9 @@
           luxPlaceholder="Autocomplete"
           luxControlBinding="autocomplete"
           [luxClearable]="true"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Autocomplete</lux-form-label>
           <lux-form-hint>Autocomplete</lux-form-hint>
@@ -105,8 +106,8 @@
           luxLabel="Slider"
           luxControlBinding="slider"
           luxHint="Slider"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
         ></lux-slider-ac>
         <lux-input-ac
           luxPlaceholder="Input"
@@ -114,9 +115,9 @@
           luxAutocomplete="off"
           luxErrorMessage="Es handelt sich um eine Pflichtangabe nach §1.2 Absatz 3 in der Verordnung A 38."
           [luxClearable]="true"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Input</lux-form-label>
           <lux-form-hint>Input<br />Auch gerne mehrzeilig.</lux-form-hint>
@@ -128,8 +129,8 @@
           [luxOptions]="['Test1', 'Test2']"
           luxControlBinding="radio"
           [luxOrientationVertical]="false"
-          [luxDisabled]="disabled"
-          [luxReadonly]="readonly"
+          [luxDisabled]="disabled()"
+          [luxReadonly]="readonly()"
         >
           <lux-form-label>Radio</lux-form-label>
           <lux-form-hint>Hallo Hint!<br />Bin sogar mehrzeilig!</lux-form-hint>
@@ -148,14 +149,18 @@
 
       <h3>Komponenten ohne Top- und Bottom-Label</h3>
       <h4>[luxNoLabels]="true"</h4>
-      <div class="baseline-row lux-flex" [ngClass]="showAsColumn ? 'lux-flex-col lux-gap-6' : 'lux-flex-wrap lux-gap-6'" [formGroup]="form">
+      <div
+        class="baseline-row lux-flex"
+        [ngClass]="showAsColumn() ? 'lux-flex-col lux-gap-6' : 'lux-flex-wrap lux-gap-6'"
+        [formGroup]="form"
+      >
         <lux-input-ac
           luxPlaceholder="Input"
           luxControlBinding="input"
           luxAutocomplete="off"
           [luxNoLabels]="true"
-          [luxDisabled]="disabled"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Input</lux-form-label>
           <lux-form-hint>Input<br />Auch gerne mehrzeilig.</lux-form-hint>
@@ -167,25 +172,25 @@
           luxHint="Fileupload"
           [luxNoLabels]="true"
           luxControlBinding="file"
-          [luxDisabled]="disabled"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxDense]="denseFormat()"
         ></lux-file-input-ac>
         <lux-select-ac
           [luxOptions]="['Test1', 'Test2']"
           luxPlaceholder="Select"
           luxControlBinding="select"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoLabels]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Select</lux-form-label>
           <lux-form-hint>Select</lux-form-hint>
         </lux-select-ac>
         <lux-toggle-ac
           luxControlBinding="toggle"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoLabels]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
           class="baseline-row"
         >
           <lux-form-label>Toggle</lux-form-label>
@@ -194,8 +199,8 @@
         <lux-checkbox-ac
           luxControlBinding="checkbox"
           luxHint="Checkbox"
-          [luxDisabled]="disabled"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxDense]="denseFormat()"
           [luxNoLabels]="true"
         >
           <lux-form-label>Checkbox</lux-form-label>
@@ -205,9 +210,9 @@
           luxControlBinding="textarea"
           luxLabel="Textarea"
           luxPlaceholder="Textarea"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoLabels]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-hint>Textarea</lux-form-hint>
         </lux-textarea-ac>
@@ -215,9 +220,9 @@
           [luxOptions]="['Test1', 'Test2']"
           luxControlBinding="radio"
           [luxOrientationVertical]="false"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoLabels]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Radio</lux-form-label>
           <lux-form-hint>Hallo Hint!<br />Bin sogar mehrzeilig!</lux-form-hint>
@@ -225,9 +230,9 @@
         <lux-datepicker-ac
           luxPlaceholder="Datepicker"
           luxControlBinding="datepicker"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoLabels]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Datepicker</lux-form-label>
           <lux-form-hint>Datepicker</lux-form-hint>
@@ -236,9 +241,9 @@
           [luxOptions]="['Test1', 'Test2']"
           luxPlaceholder="Autocomplete"
           luxControlBinding="autocomplete"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoLabels]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Autocomplete</lux-form-label>
           <lux-form-hint>Autocomplete</lux-form-hint>
@@ -247,21 +252,25 @@
           luxLabel="Slider"
           luxControlBinding="slider"
           luxHint="Slider"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoLabels]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         ></lux-slider-ac>
       </div>
       <h3 style="margin-top: 64px">Komponenten ohne Top-Label</h3>
       <h4>[luxNoTopLabel]="true"</h4>
-      <div class="baseline-row lux-flex" [ngClass]="showAsColumn ? 'lux-flex-col lux-gap-6' : 'lux-flex-wrap lux-gap-6'" [formGroup]="form">
+      <div
+        class="baseline-row lux-flex"
+        [ngClass]="showAsColumn() ? 'lux-flex-col lux-gap-6' : 'lux-flex-wrap lux-gap-6'"
+        [formGroup]="form"
+      >
         <lux-input-ac
           luxPlaceholder="Input"
           luxControlBinding="input"
           luxAutocomplete="off"
           [luxNoTopLabel]="true"
-          [luxDisabled]="disabled"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Input</lux-form-label>
           <lux-form-hint>Input<br />Auch gerne mehrzeilig.</lux-form-hint>
@@ -273,30 +282,30 @@
           luxHint="Fileupload"
           [luxNoTopLabel]="true"
           luxControlBinding="file"
-          [luxDisabled]="disabled"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxDense]="denseFormat()"
         ></lux-file-input-ac>
         <lux-select-ac
           [luxOptions]="['Test1', 'Test2']"
           luxPlaceholder="Select"
           luxControlBinding="select"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoTopLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Select</lux-form-label>
           <lux-form-hint>Select</lux-form-hint>
         </lux-select-ac>
-        <lux-toggle-ac luxControlBinding="toggle" [luxDisabled]="disabled" [luxNoTopLabel]="true" [luxDense]="denseFormat">
+        <lux-toggle-ac luxControlBinding="toggle" [luxDisabled]="disabled()" [luxNoTopLabel]="true" [luxDense]="denseFormat()">
           <lux-form-label>Toggle</lux-form-label>
           <lux-form-hint>Toggle</lux-form-hint>
         </lux-toggle-ac>
         <lux-checkbox-ac
           luxControlBinding="checkbox"
           luxHint="Checkbox"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoTopLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Checkbox</lux-form-label>
         </lux-checkbox-ac>
@@ -305,9 +314,9 @@
           luxControlBinding="textarea"
           luxLabel="Textarea"
           luxPlaceholder="Textarea"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoTopLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-hint>Textarea</lux-form-hint>
         </lux-textarea-ac>
@@ -315,9 +324,9 @@
           [luxOptions]="['Test1', 'Test2']"
           luxControlBinding="radio"
           [luxOrientationVertical]="false"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoTopLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Radio</lux-form-label>
           <lux-form-hint>Hallo Hint!<br />Bin sogar mehrzeilig!</lux-form-hint>
@@ -325,9 +334,9 @@
         <lux-datepicker-ac
           luxPlaceholder="Datepicker"
           luxControlBinding="datepicker"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoTopLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Datepicker</lux-form-label>
           <lux-form-hint>Datepicker</lux-form-hint>
@@ -337,9 +346,9 @@
           luxOptionLabelProp="label"
           luxPlaceholder="Autocomplete"
           luxControlBinding="autocomplete"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoTopLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Autocomplete</lux-form-label>
           <lux-form-hint>Autocomplete</lux-form-hint>
@@ -348,21 +357,25 @@
           luxLabel="Slider"
           luxControlBinding="slider"
           luxHint="Slider"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoTopLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         ></lux-slider-ac>
       </div>
       <h3 style="margin-top: 64px">Komponenten ohne Bottom-Label</h3>
       <h4>[luxNoBottomLabel]="true"</h4>
-      <div class="baseline-row lux-flex" [ngClass]="showAsColumn ? 'lux-flex-col lux-gap-6' : 'lux-flex-wrap lux-gap-6'" [formGroup]="form">
+      <div
+        class="baseline-row lux-flex"
+        [ngClass]="showAsColumn() ? 'lux-flex-col lux-gap-6' : 'lux-flex-wrap lux-gap-6'"
+        [formGroup]="form"
+      >
         <lux-input-ac
           luxPlaceholder="Input"
           luxControlBinding="input"
           luxAutocomplete="off"
           [luxNoBottomLabel]="true"
-          [luxDisabled]="disabled"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Input</lux-form-label>
           <lux-form-hint>Input<br />Auch gerne mehrzeilig.</lux-form-hint>
@@ -374,30 +387,30 @@
           luxHint="Fileupload"
           [luxNoBottomLabel]="true"
           luxControlBinding="file"
-          [luxDisabled]="disabled"
-          [luxDense]="denseFormat"
+          [luxDisabled]="disabled()"
+          [luxDense]="denseFormat()"
         ></lux-file-input-ac>
         <lux-select-ac
           [luxOptions]="['Test1', 'Test2']"
           luxPlaceholder="Select"
           luxControlBinding="select"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoBottomLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Select</lux-form-label>
           <lux-form-hint>Select</lux-form-hint>
         </lux-select-ac>
-        <lux-toggle-ac luxControlBinding="toggle" [luxDisabled]="disabled" [luxNoBottomLabel]="true" [luxDense]="denseFormat">
+        <lux-toggle-ac luxControlBinding="toggle" [luxDisabled]="disabled()" [luxNoBottomLabel]="true" [luxDense]="denseFormat()">
           <lux-form-label>Toggle</lux-form-label>
           <lux-form-hint>Toggle</lux-form-hint>
         </lux-toggle-ac>
         <lux-checkbox-ac
           luxControlBinding="checkbox"
           luxHint="Checkbox"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoBottomLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Checkbox</lux-form-label>
         </lux-checkbox-ac>
@@ -406,9 +419,9 @@
           luxControlBinding="textarea"
           luxLabel="Textarea"
           luxPlaceholder="Textarea"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoBottomLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-hint>Textarea</lux-form-hint>
         </lux-textarea-ac>
@@ -416,9 +429,9 @@
           [luxOptions]="['Test1', 'Test2']"
           luxControlBinding="radio"
           [luxOrientationVertical]="false"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoBottomLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Radio</lux-form-label>
           <lux-form-hint>Hallo Hint!<br />Bin sogar mehrzeilig!</lux-form-hint>
@@ -426,9 +439,9 @@
         <lux-datepicker-ac
           luxPlaceholder="Datepicker"
           luxControlBinding="datepicker"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoBottomLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Datepicker</lux-form-label>
           <lux-form-hint>Datepicker</lux-form-hint>
@@ -438,9 +451,9 @@
           luxOptionLabelProp="label"
           luxPlaceholder="Autocomplete"
           luxControlBinding="autocomplete"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoBottomLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         >
           <lux-form-label>Autocomplete</lux-form-label>
           <lux-form-hint>Autocomplete</lux-form-hint>
@@ -449,9 +462,9 @@
           luxLabel="Slider"
           luxControlBinding="slider"
           luxHint="Slider"
-          [luxDisabled]="disabled"
+          [luxDisabled]="disabled()"
           [luxNoBottomLabel]="true"
-          [luxDense]="denseFormat"
+          [luxDense]="denseFormat()"
         ></lux-slider-ac>
       </div>
       <br />

@@ -9,15 +9,15 @@
           @for (color of colors; track color; let i = $index) {
             <lux-link
               id="lux-button-{{ i }}"
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxRaised]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-default{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
             >
             </lux-link>
@@ -26,15 +26,15 @@
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxFlat]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-default{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
             >
             </lux-link>
@@ -45,15 +45,15 @@
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxStroked]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-default{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
             >
             </lux-link>
@@ -62,14 +62,14 @@
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
-              [luxDisabled]="disabled"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
+              [luxDisabled]="disabled()"
               luxTagId="demo-link-hover{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
             >
             </lux-link>
@@ -80,15 +80,15 @@
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxRounded]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-button-focus{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
             >
             </lux-link>
@@ -97,16 +97,16 @@
         <div class="lux-flex lux-flex-col lux-gap-4">
           @for (color of colors; track color; let i = $index) {
             <lux-link
-              [luxLabel]="label"
+              [luxLabel]="label()"
               [luxColor]="color.value"
-              [luxIconName]="iconName"
-              [luxIconShowRight]="iconShowRight"
+              [luxIconName]="iconName()"
+              [luxIconShowRight]="iconShowRight()"
               [luxRounded]="true"
               [luxStroked]="true"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               luxTagId="demo-button-rounded-stroked{{ i }}"
-              [luxHref]="href"
-              [luxBlank]="blank"
+              [luxHref]="href()"
+              [luxBlank]="blank()"
               (luxClicked)="click($event)"
             >
             </lux-link>
@@ -148,7 +148,7 @@
     </lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="Label Uppercase"
-      [(luxChecked)]="config.labelConfiguration!.allUppercase"
+      [(luxChecked)]="config().labelConfiguration!.allUppercase"
       (luxCheckedChange)="updateConfiguration()"
       [luxNoTopLabel]="true"
     >

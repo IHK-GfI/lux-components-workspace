@@ -5,23 +5,23 @@
   <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col">
     <div
       class="lux-flex lux-justify-center lux-p-4"
-      [ngStyle]="!showShadow ? { 'background-color': '#E3EBF5' } : { 'background-color': 'white' }"
+      [ngStyle]="!showShadow() ? { 'background-color': '#E3EBF5' } : { 'background-color': 'white' }"
     >
       <lux-tile
         luxAutofocus
-        [luxLabel]="label"
-        [luxCounter]="counter"
-        [luxCounterCap]="counterCap"
+        [luxLabel]="label()"
+        [luxCounter]="counter()"
+        [luxCounterCap]="counterCap()"
         [luxShowNotification]="showNotification"
         luxTagId="example-tile"
-        (luxClicked)="log(showOutputEvents, 'Tile clicked', $event)"
-        [luxShowShadow]="showShadow"
-        [luxLabelTruncateAfterOneLine]="truncateAfterOneLine"
-        [luxLabelTruncateAfterTwoLines]="truncateAfterTwoLines"
+        (luxClicked)="log(showOutputEvents(), 'Tile clicked', $event)"
+        [luxShowShadow]="showShadow()"
+        [luxLabelTruncateAfterOneLine]="truncateAfterOneLine()"
+        [luxLabelTruncateAfterTwoLines]="truncateAfterTwoLines()"
       >
-        @if (showIcon) {
+        @if (showIcon()) {
         <lux-icon luxIconName="lux-camera-video" luxIconSize="1x"></lux-icon>
-        } @if (!showIcon) {
+        } @if (!showIcon()) {
         <lux-image luxImageSrc="assets/svg/red_power_button.svg" luxImageWidth="50px" luxImageHeight="50px"></lux-image>
         }
       </lux-tile>
@@ -75,6 +75,7 @@
     <lux-input-ac
       luxLabel="luxCounterCap"
       [(luxValue)]="counterCap"
+
       [luxDisabled]="showNotification"
       luxType="number"
       [luxNumberAlignLeft]="true"

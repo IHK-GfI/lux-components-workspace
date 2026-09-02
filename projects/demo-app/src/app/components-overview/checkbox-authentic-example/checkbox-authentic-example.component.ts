@@ -1,13 +1,13 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    LuxAutofocusDirective,
-    LuxButtonComponent,
-    LuxCheckboxAcComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxTextboxComponent,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxCheckboxAcComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxTextboxComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -33,7 +33,7 @@ interface CheckboxAgbDummyForm {
   selector: 'lux-checkbox-authentic-example',
   templateUrl: './checkbox-authentic-example.component.html',
   styleUrls: ['./checkbox-authentic-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTextboxComponent,
     LuxButtonComponent,
@@ -53,41 +53,36 @@ interface CheckboxAgbDummyForm {
   ]
 })
 export class CheckboxAuthenticExampleComponent {
-  useErrorMessage = true;
-  form: FormGroup<CheckboxDummyForm>;
-  agb: FormGroup<CheckboxAgbDummyForm>;
-  exampleText =
+  readonly useErrorMessage = signal(true);
+  readonly form = new FormGroup<CheckboxDummyForm>({
+    checkboxExample: new FormControl<boolean | null>(null)
+  });
+  readonly agb = new FormGroup<CheckboxAgbDummyForm>({
+    checkbox1: new FormControl<boolean>(false, { validators: Validators.required, nonNullable: true }),
+    checkbox2: new FormControl<boolean>(false, { validators: Validators.required, nonNullable: true }),
+    checkbox3: new FormControl<boolean>(false, { validators: Validators.required, nonNullable: true })
+  });
+  readonly exampleText =
     'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.';
-  value = false;
-  controlBinding = 'checkboxExample';
-  label = 'Labeltext';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = true;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly value = signal(false);
+  readonly controlBinding = 'checkboxExample';
+  readonly label = signal('Labeltext');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(true);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  disabled = false;
-  readonly = false;
-  required = false;
-  denseFormat = false;
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  errorCallback = exampleErrorCallback;
-  emptyCallback = emptyErrorCallback;
-
-  constructor() {
-    this.form = new FormGroup<CheckboxDummyForm>({
-      checkboxExample: new FormControl<boolean | null>(null)
-    });
-    this.agb = new FormGroup<CheckboxAgbDummyForm>({
-      checkbox1: new FormControl<boolean>(false, { validators: Validators.required, nonNullable: true }),
-      checkbox2: new FormControl<boolean>(false, { validators: Validators.required, nonNullable: true }),
-      checkbox3: new FormControl<boolean>(false, { validators: Validators.required, nonNullable: true })
-    });
-  }
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly denseFormat = signal(false);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     if (required) {
       this.form.get(this.controlBinding)!.setValidators(Validators.requiredTrue);
     } else {

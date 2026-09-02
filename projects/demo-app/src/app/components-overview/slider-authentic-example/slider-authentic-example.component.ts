@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
     LuxAutofocusDirective,
@@ -32,7 +32,7 @@ interface SliderDummyForm {
 @Component({
   selector: 'lux-slider-authentic-example',
   templateUrl: './slider-authentic-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxSliderAcComponent,
@@ -52,9 +52,9 @@ interface SliderDummyForm {
   ]
 })
 export class SliderAuthenticExampleComponent {
-  useErrorMessage = true;
-  useDisplayFn = false;
-  showOutputEvents = false;
+  readonly useErrorMessage = signal(true);
+  readonly useDisplayFn = signal(false);
+  readonly showOutputEvents = signal(false);
   colorOptions = [
     { label: 'Primary', value: 'primary' },
     { label: 'Accent', value: 'accent' },
@@ -66,30 +66,30 @@ export class SliderAuthenticExampleComponent {
   ];
   form: FormGroup<SliderDummyForm>;
   log = logResult;
-  percent = 0;
-  percentReactive = 0;
-  labelLongFormat = false;
-  value = 0;
+  readonly percent = signal(0);
+  readonly percentReactive = signal(0);
+  readonly labelLongFormat = signal(false);
+  readonly value = signal(0);
   displayWithFnString: string = this.displayFn + '';
-  color: LuxSliderAcColor = 'primary';
-  showThumbLabel = true;
-  step = 1;
+  readonly color = signal<LuxSliderAcColor>('primary');
+  readonly showThumbLabel = signal(true);
+  readonly step = signal(1);
   controlBinding = 'sliderExample';
-  disabled = false;
-  readonly = false;
-  required = false;
-  denseFormat = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly denseFormat = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  max = 100;
-  min = 0;
-  controlValidators: ValidatorFn[] = [];
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly max = signal(100);
+  readonly min = signal(0);
+  readonly controlValidators = signal<ValidatorFn[]>([]);
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   errorCallbackString: string = this.errorCallback + '';
@@ -101,17 +101,17 @@ export class SliderAuthenticExampleComponent {
   }
 
   colorChanged(color: { label: string; value: LuxSliderAcColor }) {
-    this.color = color.value;
+    this.color.set(color.value);
   }
 
   percentChanged(percent: number) {
-    this.percent = percent;
-    this.log(this.showOutputEvents, 'Percent changed', percent);
+    this.percent.set(percent);
+    this.log(this.showOutputEvents(), 'Percent changed', percent);
   }
 
   percentReactiveChanged(percent: number) {
-    this.percentReactive = percent;
-    this.log(this.showOutputEvents, 'Percent (Reactive Example) changed', percent);
+    this.percentReactive.set(percent);
+    this.log(this.showOutputEvents(), 'Percent (Reactive Example) changed', percent);
   }
 
   displayFn(value: number): string {
@@ -122,7 +122,7 @@ export class SliderAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 

@@ -1,6 +1,22 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { LuxButtonComponent, LuxCardActionAlignType, LuxCardActionsComponent, LuxCardComponent, LuxCardContentComponent, LuxCardContentExpandedComponent, LuxCardCustomHeaderComponent, LuxCardInfoComponent, LuxFormHintComponent, LuxIconComponent, LuxImageComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxSnackbarService, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import {
+  LuxButtonComponent,
+  LuxCardActionAlignType,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCardContentExpandedComponent,
+  LuxCardCustomHeaderComponent,
+  LuxCardInfoComponent,
+  LuxFormHintComponent,
+  LuxIconComponent,
+  LuxImageComponent,
+  LuxInputAcComponent,
+  LuxSelectAcComponent,
+  LuxSnackbarService,
+  LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -11,7 +27,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-card-example',
   templateUrl: './card-example.component.html',
   styleUrls: ['./card-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxButtonComponent,
@@ -34,34 +50,30 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class CardExampleComponent {
-  private snackbar = inject(LuxSnackbarService);
+  private readonly snackbar = inject(LuxSnackbarService);
 
-  showCustomHeader = false;
-  showActions = true;
-  showIcon = true;
-  showInfo = true;
-  useExpandableContent = false;
-  btn2Raised = true;
-  hideCardContent = false;
-  disabled = false;
-  titleLineBreak = true;
-  title = `Testkarte - Lorem ipsum dolor sit amet, consectetur adipisici elit.`;
-  titleTooltip = ``;
-  subTitle = 'Sed eiusmod tempor incidunt ut labore et dolore magna aliqua.';
-  subTitleTooltip = ``;
-  iconName = 'lux-cogs';
-  iconShowRight = true;
-  raised = false;
-  expanded = false;
-  heading = 2;
-  headingValidator = Validators.pattern('[1-6]');
-  closeLabel = 'Weniger Inhalt Anzeigen';
-  openLabel = 'Mehr Inhalt Anzeigen';
-  actionAlignOptions: { label: string; value: LuxCardActionAlignType }[] = [
+  readonly showCustomHeader = signal(false);
+  readonly showActions = signal(true);
+  readonly showIcon = signal(true);
+  readonly showInfo = signal(true);
+  readonly useExpandableContent = signal(false);
+  readonly btn2Raised = signal(true);
+  readonly hideCardContent = signal(false);
+  readonly disabled = signal(false);
+  readonly titleLineBreak = signal(true);
+  readonly title = signal(`Testkarte - Lorem ipsum dolor sit amet, consectetur adipisici elit.`);
+  readonly titleTooltip = signal('');
+  readonly subTitle = signal('Sed eiusmod tempor incidunt ut labore et dolore magna aliqua.');
+  readonly subTitleTooltip = signal('');
+  readonly heading = signal(2);
+  readonly headingValidator = Validators.pattern('[1-6]');
+  readonly closeLabel = signal('Weniger Inhalt Anzeigen');
+  readonly openLabel = signal('Mehr Inhalt Anzeigen');
+  readonly actionAlignOptions: { label: string; value: LuxCardActionAlignType }[] = [
     { label: 'Rechts', value: 'right' },
     { label: 'Links', value: 'left' }
   ];
-  actionAlign: { label: string; value: LuxCardActionAlignType } = this.actionAlignOptions[0];
+  readonly actionAlign = signal<{ label: string; value: LuxCardActionAlignType }>(this.actionAlignOptions[0]);
 
   onCardClicked() {
     console.log('Card clicked');

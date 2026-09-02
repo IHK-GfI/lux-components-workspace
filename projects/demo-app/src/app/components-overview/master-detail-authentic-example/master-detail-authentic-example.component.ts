@@ -64,10 +64,10 @@ import { TextExampleComponent } from './text-example/text-example.component';
     NgTemplateOutlet,
     LuxInputAcComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.authentic]': 'theme === "authentic"',
-    '[class.green]': 'theme === "green"'
+    '[class.authentic]': 'theme() === "authentic"',
+    '[class.green]': 'theme() === "green"'
   }
 })
 export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy {
@@ -125,8 +125,8 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
   masterEntries = signal<any[]>([]);
   masterIsReloading = signal(false);
   selectedDetail = signal<any>(undefined);
-  showCustomDetailHeader = false;
-  theme = this.themeService.getTheme().name;
+  readonly showCustomDetailHeader = signal(false);
+  readonly theme = signal(this.themeService.getTheme().name);
 
   constructor() {
     this.allMasterEntries = this.dataService.createExampleData(20);
@@ -138,7 +138,7 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
       .getThemeAsObservable()
       .pipe(takeUntilDestroyed())
       .subscribe((theme) => {
-        this.theme = theme.name;
+        this.theme.set(theme.name);
       });
   }
 

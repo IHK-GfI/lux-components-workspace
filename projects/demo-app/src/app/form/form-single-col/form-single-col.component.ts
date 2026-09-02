@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     LuxAutocompleteAcComponent,
@@ -42,7 +42,7 @@ interface FormSingleUserForm {
 @Component({
   selector: 'app-form-single-col',
   templateUrl: './form-single-col.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxCardContentComponent,
@@ -64,7 +64,7 @@ export class FormSingleColComponent extends FormBase {
   private dataProvider = inject(TableExampleDataProviderService);
 
   myGroup: FormGroup<FormSingleDummyForm>;
-  roles: IRole[] = [];
+  readonly roles = signal<IRole[]>([]);
   countries: ICountry[] = [];
   genders: IGender[] = [];
   salutations: string[] = [];
@@ -72,7 +72,7 @@ export class FormSingleColComponent extends FormBase {
   constructor() {
     super();
 
-    this.roles = this.dataProvider.roles;
+    this.roles.set(this.dataProvider.roles);
     this.countries = this.dataProvider.countries;
     this.genders = this.dataProvider.genders;
     this.salutations = this.dataProvider.salutations;
@@ -102,10 +102,10 @@ export class FormSingleColComponent extends FormBase {
   }
 
   addRole(name: string) {
-    this.roles.push({ name });
+    this.roles.update((roles) => [...roles, { name }]);
   }
 
   removeRole(i: number) {
-    this.roles = this.roles.filter((_role, index) => index !== i);
+    this.roles.update((roles) => roles.filter((_role, index) => index !== i));
   }
 }

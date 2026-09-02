@@ -7,59 +7,59 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-slider-ac
         luxAutofocus
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxControlValidators]="controlValidators"
-        [luxColor]="color"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxControlValidators]="controlValidators()"
+        [luxColor]="color()"
         [(luxDisabled)]="disabled"
-        [luxShowThumbLabel]="showThumbLabel"
+        [luxShowThumbLabel]="showThumbLabel()"
         [(luxValue)]="value"
-        [luxMax]="max"
-        [luxMin]="min"
-        [luxStep]="step"
-        [luxReadonly]="readonly"
-        [luxDense]="denseFormat"
-        [luxDisplayWith]="useDisplayFn ? displayFn : undefined"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxValuePercent)="percentChanged($event)"
-        (luxValueChange)="log(showOutputEvents, 'Value changed', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'Value changed', $event)"
         luxTagId="slidernoform"
       >
       </lux-slider-ac>
-      <example-value [value]="value"></example-value>
+      <example-value [value]="value()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-slider-ac
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
         [luxControlBinding]="controlBinding"
-        [luxColor]="color"
+        [luxColor]="color()"
         [(luxDisabled)]="disabled"
-        [luxShowThumbLabel]="showThumbLabel"
-        [luxMax]="max"
-        [luxMin]="min"
-        [luxStep]="step"
-        [luxReadonly]="readonly"
-        [luxDense]="denseFormat"
-        [luxDisplayWith]="useDisplayFn ? displayFn : undefined"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        [luxShowThumbLabel]="showThumbLabel()"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxValuePercent)="percentReactiveChanged($event)"
         luxTagId="sliderwithform"
       >
@@ -191,7 +191,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useDisplayFn) {
+    @if (useDisplayFn()) {
     <pre class="lux-label">{{ displayWithFnString }}</pre>
     }
     <lux-toggle-ac
@@ -201,7 +201,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useErrorMessage) {
+    @if (useErrorMessage()) {
     <lux-input-ac
       luxName="slider_luxErrorMessage"
       luxLabel="luxErrorMessage"
@@ -211,7 +211,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-input-ac>
-    } @if (!useErrorMessage) {
+    } @if (!useErrorMessage()) {
     <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac

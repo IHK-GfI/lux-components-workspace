@@ -3,15 +3,15 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90progress-v21"
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
-    <div class="lux-app-data-bg lux-flex lux-flex-wrap lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
+    <div class="lux-app-data-bg lux-flex lux-flex-wrap lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor() }">
       @for (color of colors; track color; let i = $index) {
       <lux-progress
         luxType="Spinner"
         luxTagId="sp-example-default{{ i }}"
         [luxColor]="color"
-        [luxValue]="value"
-        [luxMode]="mode"
-        [luxSize]="size"
+        [luxValue]="value()"
+        [luxMode]="mode()"
+        [luxSize]="size()"
       >
       </lux-progress>
       }
@@ -34,7 +34,7 @@
     <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
     </lux-input-ac>
-    @if (mode === 'determinate') {
+    @if (mode() === 'determinate') {
     <div class="lux-flex lux-flex-col lux-gap-2">
       <lux-input-ac
         luxLabel="luxValue"

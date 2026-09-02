@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   ILuxMessage,
   ILuxMessageChangeEvent,
@@ -30,7 +30,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-message-box-example',
   templateUrl: './message-box-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxMessageBoxComponent,
     LuxButtonComponent,
@@ -55,59 +55,59 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class MessageBoxExampleComponent implements OnInit {
-  showOutputEvents = false;
-  showInCard = false;
+  readonly showOutputEvents = signal(false);
+  readonly showInCard = signal(false);
   log = logResult;
-  messages: ILuxMessage[] = [];
+  readonly messages = signal<ILuxMessage[]>([]);
   colors = LuxMessageBoxColors;
   newMessage: ILuxMessage = { text: '', iconName: '', color: 'blue' };
-  messageIndex = 1;
-  maximumDisplayed = 10;
-
-  constructor() {}
+  readonly messageIndex = signal(1);
+  readonly maximumDisplayed = signal(10);
 
   ngOnInit() {
     this.setMessages();
   }
 
   setMessages() {
-    this.messages = [];
+    const messages: ILuxMessage[] = [];
 
     LuxMessageBoxColors.forEach((color, index) => {
-      this.messages.push({
+      messages.push({
         text: 'Message #' + (index + 1),
         iconName: 'lux-interface-alert-alarm-bell-2',
         color: color
       });
     });
+
+    this.messages.set(messages);
   }
 
   add() {
-    this.messages = [...this.messages, JSON.parse(JSON.stringify(this.newMessage))];
+    this.messages.update((messages) => [...messages, JSON.parse(JSON.stringify(this.newMessage))]);
     this.newMessage = { text: '', iconName: '', color: 'blue' };
-    this.log(this.showOutputEvents, 'Messages updated', this.messages);
+    this.log(this.showOutputEvents(), 'Messages updated', this.messages());
   }
 
   remove(i: number) {
-    this.messages = this.messages.filter((_value, index) => index !== i);
+    this.messages.update((messages) => messages.filter((_value, index) => index !== i));
   }
 
   logChanged(messageChangeEvent: ILuxMessageChangeEvent) {
-    this.log(this.showOutputEvents, '[Output-Event] Message wurde geändert:', messageChangeEvent);
+    this.log(this.showOutputEvents(), '[Output-Event] Message wurde geändert:', messageChangeEvent);
   }
 
   logClosed(messageCloseEvent: ILuxMessageCloseEvent) {
-    this.log(this.showOutputEvents, '[Output-Event] Message wurde geschlossen', messageCloseEvent);
+    this.log(this.showOutputEvents(), '[Output-Event] Message wurde geschlossen', messageCloseEvent);
     if (Array.isArray(messageCloseEvent)) {
       messageCloseEvent.forEach((eventValue: ILuxMessageCloseEvent) => {
-        this.messages = this.messages.filter((compareMessage: ILuxMessage) => compareMessage !== eventValue.message);
+        this.messages.update((messages) => messages.filter((compareMessage: ILuxMessage) => compareMessage !== eventValue.message));
       });
     } else {
-      this.messages = this.messages.filter((compareMessage: ILuxMessage) => compareMessage !== messageCloseEvent.message);
+      this.messages.update((messages) => messages.filter((compareMessage: ILuxMessage) => compareMessage !== messageCloseEvent.message));
     }
   }
 
   logBoxClosed() {
-    this.log(this.showOutputEvents, '[Output-Event] MessageBox wurde geschlossen');
+    this.log(this.showOutputEvents(), '[Output-Event] MessageBox wurde geschlossen');
   }
 }

@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
 import {
@@ -13,7 +14,6 @@ import {
   luxAtLeastOneCheckboxChecked,
   luxAtLeastOneChecked
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -32,7 +32,7 @@ interface CheckboxValidatorDemoForm {
   selector: 'checkbox-container-ac-example',
   templateUrl: './checkbox-container-ac-example.component.html',
   styleUrls: ['./checkbox-container-ac-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxCheckboxContainerAcComponent,
     LuxToggleAcComponent,
@@ -49,40 +49,36 @@ interface CheckboxValidatorDemoForm {
   ]
 })
 export class CheckboxContainerAcExampleComponent {
-  private mediaQuery = inject(LuxMediaQueryObserverService);
+  private readonly mediaQuery = inject(LuxMediaQueryObserverService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  label = 'Optionales Label für den Container';
-  isVertical = true;
-  isSmall: boolean;
-  subscriptions: Subscription[] = [];
+  readonly label = signal('Optionales Label für den Container');
+  readonly isVertical = signal(true);
+  readonly isSmall = signal(this.mediaQuery.isSmaller('md'));
 
-  validatorDemoForm: FormGroup<CheckboxValidatorDemoForm>;
+  readonly validatorDemoForm = new FormGroup<CheckboxValidatorDemoForm>({
+    options: new FormGroup<CheckboxOptionsGroup>(
+      {
+        cb1: new FormControl<boolean>(false, { nonNullable: true }),
+        cb2: new FormControl<boolean>(false, { nonNullable: true }),
+        cb3: new FormControl<boolean>(false, { nonNullable: true })
+      },
+      { validators: luxAtLeastOneCheckboxChecked(['cb1', 'cb2', 'cb3']) }
+    )
+  });
 
   // Standalone-Demo (ohne Formular)
-  standalone1 = false;
-  standalone2 = false;
-  standalone3 = false;
-  standaloneSubmitted = false;
+  readonly standalone1 = signal(false);
+  readonly standalone2 = signal(false);
+  readonly standalone3 = signal(false);
+  readonly standaloneSubmitted = signal(false);
   readonly luxAtLeastOneChecked = luxAtLeastOneChecked;
 
   constructor() {
-    this.isSmall = this.mediaQuery.isSmaller('md');
-    this.subscriptions.push(
-      this.mediaQuery.getMediaQueryChangedAsObservable().subscribe(() => {
-        this.isSmall = this.mediaQuery.isSmaller('md');
-      })
-    );
-
-    this.validatorDemoForm = new FormGroup<CheckboxValidatorDemoForm>({
-      options: new FormGroup<CheckboxOptionsGroup>(
-        {
-          cb1: new FormControl<boolean>(false, { nonNullable: true }),
-          cb2: new FormControl<boolean>(false, { nonNullable: true }),
-          cb3: new FormControl<boolean>(false, { nonNullable: true })
-        },
-        { validators: luxAtLeastOneCheckboxChecked(['cb1', 'cb2', 'cb3']) }
-      )
-    });
+    this.mediaQuery
+      .getMediaQueryChangedAsObservable()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.isSmall.set(this.mediaQuery.isSmaller('md')));
   }
 
   submitValidatorDemo(): void {
@@ -91,6 +87,6 @@ export class CheckboxContainerAcExampleComponent {
   }
 
   submitStandaloneDemo(): void {
-    this.standaloneSubmitted = true;
+    this.standaloneSubmitted.set(true);
   }
 }

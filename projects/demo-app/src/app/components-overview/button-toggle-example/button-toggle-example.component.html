@@ -7,46 +7,46 @@
       <div class="lux-flex lux-flex-col lux-gap-3">
         <h3>Beispiel ohne Reactive-Form (Single-Select)</h3>
         <lux-button-toggle
-          [luxAriaLabel]="ariaLabel"
+          [luxAriaLabel]="ariaLabel()"
           [luxOptions]="singleOptions"
-          [luxDense]="dense"
-          [luxRequired]="required"
-          [luxHint]="hint"
-          [luxError]="error"
-          [luxDisabled]="disabled"
+          [luxDense]="dense()"
+          [luxRequired]="required()"
+          [luxHint]="hint()"
+          [luxError]="error()"
+          [luxDisabled]="disabled()"
           [(luxSelected)]="singleSelected"
           (luxSelectedChange)="onSingleChanged($event)"
         ></lux-button-toggle>
-        <example-value [value]="singleSelected"></example-value>
+        <example-value [value]="singleSelected()"></example-value>
       </div>
 
       <div class="lux-flex lux-flex-col lux-gap-3">
         <h3>Beispiel ohne Reactive-Form (Multi-Select)</h3>
         <lux-button-toggle
-          [luxAriaLabel]="ariaLabel"
+          [luxAriaLabel]="ariaLabel()"
           [luxOptions]="multiOptions"
           [luxMultiple]="true"
-          [luxDense]="dense"
-          [luxRequired]="required"
-          [luxHint]="hint"
-          [luxError]="error"
-          [luxDisabled]="disabled"
+          [luxDense]="dense()"
+          [luxRequired]="required()"
+          [luxHint]="hint()"
+          [luxError]="error()"
+          [luxDisabled]="disabled()"
           [(luxSelectedValues)]="multiSelected"
           (luxSelectedValuesChange)="onMultiChanged($event)"
         ></lux-button-toggle>
-        <example-value [value]="multiSelected"></example-value>
+        <example-value [value]="multiSelected()"></example-value>
       </div>
 
       <div class="lux-flex lux-flex-col lux-gap-3" [formGroup]="form">
         <h3>Beispiel in Reactive-Form (Single-Select)</h3>
         <lux-button-toggle
-          [luxAriaLabel]="ariaLabel"
+          [luxAriaLabel]="ariaLabel()"
           [luxOptions]="singleOptions"
-          [luxDense]="dense"
-          [luxRequired]="required"
-          [luxHint]="hint"
-          [luxError]="error"
-          [luxDisabled]="disabled"
+          [luxDense]="dense()"
+          [luxRequired]="required()"
+          [luxHint]="hint()"
+          [luxError]="error()"
+          [luxDisabled]="disabled()"
           luxControlBinding="singleSelect"
           (luxSelectedChange)="onSingleChanged($event)"
         ></lux-button-toggle>
@@ -57,14 +57,14 @@
       <div class="lux-flex lux-flex-col lux-gap-3" [formGroup]="form">
         <h3>Beispiel in Reactive-Form (Multi-Select)</h3>
         <lux-button-toggle
-          [luxAriaLabel]="ariaLabel"
+          [luxAriaLabel]="ariaLabel()"
           [luxOptions]="multiOptions"
           [luxMultiple]="true"
-          [luxDense]="dense"
-          [luxRequired]="required"
-          [luxHint]="hint"
-          [luxError]="error"
-          [luxDisabled]="disabled"
+          [luxDense]="dense()"
+          [luxRequired]="required()"
+          [luxHint]="hint()"
+          [luxError]="error()"
+          [luxDisabled]="disabled()"
           luxControlBinding="multiSelect"
           (luxSelectedValuesChange)="onMultiChanged($event)"
         ></lux-button-toggle>
@@ -110,7 +110,7 @@
     <lux-toggle-ac
       luxLabel="luxRequired"
       [luxNoTopLabel]="true"
-      [luxChecked]="required"
+      [luxChecked]="required()"
       (luxCheckedChange)="changeRequired($event)"
       luxHint="Aktiviert Validators.required für singleSelect und multiSelect."
     ></lux-toggle-ac>

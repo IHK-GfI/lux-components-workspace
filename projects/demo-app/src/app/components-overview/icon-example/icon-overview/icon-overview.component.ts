@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -33,7 +33,7 @@ declare interface SearchBinding {
   selector: 'icon-overview',
   templateUrl: './icon-overview.component.html',
   styleUrls: ['./icon-overview.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxCardContentComponent,
@@ -58,18 +58,18 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
   private iconReg = inject(LuxIconRegistryService);
   private clipboard = inject(Clipboard);
 
-  @ViewChild('scrollContainer') scrollContainer?: ElementRef;
+  readonly scrollContainer = viewChild<ElementRef>('scrollContainer');
 
   allIcons: LuxSvgIcon[];
   blockSize = 100;
-  codeSnippet = '';
-  copiedToClipboard = false;
-  displayedIcons: LuxSvgIcon[] = [];
+  readonly codeSnippet = signal('');
+  readonly copiedToClipboard = signal(false);
+  readonly displayedIcons = signal<LuxSvgIcon[]>([]);
   fgBgOptions = [
     { label: 'Linienfarbe', value: false },
     { label: 'Hintergrundfarbe', value: true }
   ];
-  filteredIcons: LuxSvgIcon[] = [];
+  readonly filteredIcons = signal<LuxSvgIcon[]>([]);
   iconColorOptions = [
     { label: 'Blau (primary)', value: 'blue' },
     { label: 'Grün (accent)', value: 'green' },
@@ -84,93 +84,92 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
     { label: 'Schwarz', value: 'black' }
   ];
   iconSizesOptions: string[] = ['1x', '2x', '3x', '4x', '5x'];
-  mobileView: boolean;
+  readonly mobileView = signal(false);
   searchBindingOptions: SearchBinding[] = [
     { label: 'Und', value: 'and' },
     { label: 'Oder', value: 'or' }
   ];
-  selectedSearchBinding = this.searchBindingOptions[0];
+  readonly selectedSearchBinding = signal(this.searchBindingOptions[0]);
   subscriptions: Subscription[] = [];
 
-  private _chipLabels: string[] = [];
-  private _iconClass = 'lux-color-blue';
-  private _iconColor: LuxIconColor = 'blue';
-  private _iconSize = '2x';
-  private _inputValue = '';
-  private _isBgColor = false;
-  private _previewItem?: LuxSvgIcon;
+  private readonly _chipLabels = signal<string[]>([]);
+  private readonly _iconClass = signal('lux-color-blue');
+  private readonly _iconColor = signal<LuxIconColor>('blue');
+  private readonly _iconSize = signal('2x');
+  private readonly _inputValue = signal('');
+  private readonly _isBgColor = signal(false);
+  private readonly _previewItem = signal<LuxSvgIcon | undefined>(undefined);
 
   get inputValue() {
-    return this._inputValue;
+    return this._inputValue();
   }
 
   set inputValue(input: string) {
     const newValue = input ?? '';
-    if (this._inputValue !== newValue) {
-      this._inputValue = newValue;
-      this.onIconSearch(this._inputValue);
+    if (this._inputValue() !== newValue) {
+      this._inputValue.set(newValue);
+      this.onIconSearch(newValue);
     }
   }
 
   get chipLabels() {
-    return this._chipLabels;
+    return this._chipLabels();
   }
 
   set chipLabels(labels: string[]) {
-    this._chipLabels = labels;
-    this._chipLabels.filter((item) => item.length === 0);
+    this._chipLabels.set(labels);
   }
 
   get previewItem() {
-    return this._previewItem;
+    return this._previewItem();
   }
 
   set previewItem(item: LuxSvgIcon | undefined) {
-    this._previewItem = item;
+    this._previewItem.set(item);
     this.updateCodeSnippet();
   }
 
   get iconSize() {
-    return this._iconSize;
+    return this._iconSize();
   }
 
   set iconSize(size: string) {
-    this._iconSize = size;
+    this._iconSize.set(size);
     this.updateCodeSnippet();
   }
 
   get iconColor() {
-    return this._iconColor;
+    return this._iconColor();
   }
 
   set iconColor(color: LuxIconColor) {
-    this._iconColor = color;
+    this._iconColor.set(color);
     this.updateCodeSnippet();
   }
 
   get iconClass() {
-    return this._iconClass;
+    return this._iconClass();
   }
 
   set iconClass(iClass: string) {
-    this._iconClass = iClass;
+    this._iconClass.set(iClass);
     this.updateCodeSnippet();
   }
 
   get isBgColor() {
-    return this._isBgColor;
+    return this._isBgColor();
   }
 
   set isBgColor(value: boolean) {
-    this._isBgColor = value;
+    this._isBgColor.set(value);
     this.updateCodeSnippet();
   }
 
   constructor() {
-    this.mobileView = this.mediaQuery.isSmaller('md');
+    this.mobileView.set(this.mediaQuery.isSmaller('md'));
     this.subscriptions.push(
       this.mediaQuery.getMediaQueryChangedAsObservable().subscribe(() => {
-        this.mobileView = this.mediaQuery.isSmaller('md');
+        this.mobileView.set(this.mediaQuery.isSmaller('md'));
       })
     );
 
@@ -186,10 +185,13 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
   }
 
   onScroll() {
-    if (this.filteredIcons.length > 0) {
+    const filteredIcons = this.filteredIcons();
+    if (filteredIcons.length > 0) {
       const start = 0;
-      const end = Math.min(this.blockSize, this.filteredIcons.length);
-      this.displayedIcons.push(...this.filteredIcons.splice(start, end));
+      const end = Math.min(this.blockSize, filteredIcons.length);
+      const nextBatch = filteredIcons.slice(start, end);
+      this.filteredIcons.set(filteredIcons.slice(end));
+      this.displayedIcons.update((icons) => [...icons, ...nextBatch]);
     }
   }
 
@@ -201,7 +203,7 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
 
       let resultIcons: LuxSvgIcon[] = [];
 
-      if (this.selectedSearchBinding.value === 'and') {
+      if (this.selectedSearchBinding().value === 'and') {
         for (const value of values) {
           const valueResult = this.allIcons.filter((icon) => icon.iconName.toLowerCase().includes(value));
 
@@ -232,12 +234,13 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
 
       this.updateIcons(resultIcons);
 
-      if (this.scrollContainer) {
-        this.scrollContainer.nativeElement.scrollTop = 0;
+      const scrollContainer = this.scrollContainer();
+      if (scrollContainer) {
+        scrollContainer.nativeElement.scrollTop = 0;
       }
     } else {
       this.updateIcons(this.allIcons);
-      this.chipLabels.length = 0;
+      this.chipLabels = [];
     }
   }
 
@@ -252,8 +255,8 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
   }
 
   onCopyToClipboard() {
-    this.clipboard.copy(this.codeSnippet);
-    this.copiedToClipboard = true;
+    this.clipboard.copy(this.codeSnippet());
+    this.copiedToClipboard.set(true);
   }
 
   onColorChanged(color: { label: string; value: LuxIconColor }) {
@@ -272,33 +275,33 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
   private updateCodeSnippet() {
     if (this.previewItem) {
       if (!this.isBgColor) {
-        this.codeSnippet = `
+        this.codeSnippet.set(`
 <lux-icon
   luxIconName="${this.previewItem.iconName.split('--')[0].toLowerCase()}"
   luxIconSize="${this.iconSize}"
   class="lux-color-${this.iconColor}">
-</lux-icon>`;
+</lux-icon>`);
       } else {
-        this.codeSnippet = `
+        this.codeSnippet.set(`
 <lux-icon
   luxIconName="${this.previewItem.iconName.split('--')[0].toLowerCase()}"
   luxIconSize="${this.iconSize}"
   luxColor="${this.iconColor}">
-</lux-icon>`;
+</lux-icon>`);
       }
     }
-    this.copiedToClipboard = false;
+    this.copiedToClipboard.set(false);
   }
 
   private updateIcons(icons: LuxSvgIcon[], resetDisplayedIcons = true) {
-    this.filteredIcons = [...icons];
+    this.filteredIcons.set([...icons]);
     if (resetDisplayedIcons) {
-      this.displayedIcons = [];
+      this.displayedIcons.set([]);
     }
     this.onScroll();
 
-    if (this.displayedIcons.length > 0) {
-      this.previewItem = this.displayedIcons[0];
+    if (this.displayedIcons().length > 0) {
+      this.previewItem = this.displayedIcons()[0];
     } else {
       this.previewItem = undefined;
     }

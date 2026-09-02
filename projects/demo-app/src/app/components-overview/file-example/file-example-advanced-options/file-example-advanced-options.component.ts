@@ -1,19 +1,18 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import {
     LuxAccordionComponent,
     LuxInputAcComponent,
     LuxPanelComponent,
     LuxPanelContentComponent,
     LuxPanelHeaderTitleComponent,
-    LuxToggleAcComponent,
-    LuxUtil
+    LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { FileExampleComponent } from '../file-example.component';
 
 @Component({
   selector: 'app-file-example-advanced-options',
   templateUrl: './file-example-advanced-options.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAccordionComponent,
     LuxPanelHeaderTitleComponent,
@@ -23,14 +22,7 @@ import { FileExampleComponent } from '../file-example.component';
     LuxInputAcComponent
   ]
 })
-export class FileExampleAdvancedOptionsComponent implements OnInit {
-  @Input() fileExample!: FileExampleComponent<any, any>;
-  @Input() showHeaderConfigProperties!: boolean;
-
-  constructor() {}
-
-  ngOnInit() {
-    LuxUtil.assertNonNull('fileExample', this.fileExample);
-    LuxUtil.assertNonNull('showHeaderConfigProperties', this.showHeaderConfigProperties);
-  }
+export class FileExampleAdvancedOptionsComponent {
+  readonly fileExample = input.required<FileExampleComponent<any, any>>();
+  readonly showHeaderConfigProperties = input.required<boolean>();
 }

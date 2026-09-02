@@ -9,61 +9,61 @@
         luxAutofocus
         luxName="textarea_withoutForm"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required"
-        [luxReadonly]="readonly"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
         [(luxValue)]="value"
-        [luxAutocomplete]="autocomplete"
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxMaxLength]="maxLength"
-        [luxControlValidators]="controlValidators"
-        [luxMinRows]="min"
-        [luxMaxRows]="max"
-        [luxHideCounterLabel]="hideCounterLabel"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [luxControlValidators]="controlValidators()"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
       >
       </lux-textarea-ac>
-      <example-value [value]="value"></example-value>
+      <example-value [value]="value()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-textarea-ac
         luxName="textarea_withForm"
         [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly"
-        [luxAutocomplete]="autocomplete"
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxMaxLength]="maxLength"
+        [luxReadonly]="readonly()"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
         [luxControlBinding]="controlBinding"
-        [luxMinRows]="min"
-        [luxMaxRows]="max"
-        [luxHideCounterLabel]="hideCounterLabel"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
       >
       </lux-textarea-ac>
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
@@ -130,7 +130,7 @@
       [(luxValue)]="maxLength"
     >
     </lux-input-ac>
-    @if (maxLength) {
+    @if (maxLength()) {
     <lux-toggle-ac
       luxLabel="luxHideCounterLabel"
       luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
@@ -190,7 +190,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useErrorMessage) {
+    @if (useErrorMessage()) {
     <lux-input-ac
       luxLabel="luxErrorMessage"
       luxHint="Über diese Property lässt sich eine feste Fehlermeldung
@@ -198,7 +198,7 @@
       [(luxValue)]="errorMessage"
     >
     </lux-input-ac>
-    } @if (!useErrorMessage) {
+    } @if (!useErrorMessage()) {
     <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac

@@ -4,15 +4,15 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <div class="lux-app-data-bg lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor }">
+      <div class="lux-app-data-bg lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor() }">
         @for (color of colors; track color; let i = $index) {
         <lux-progress
           luxType="Progressbar"
           luxTagId="pb-example-default{{ i }}"
           [luxColor]="color"
-          [luxValue]="value"
-          [luxMode]="mode"
-          [luxSize]="size"
+          [luxValue]="value()"
+          [luxMode]="mode()"
+          [luxSize]="size()"
         >
         </lux-progress>
         }
@@ -36,7 +36,7 @@
     <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
     </lux-input-ac>
-    @if (mode === 'determinate') {
+    @if (mode() === 'determinate') {
     <div class="lux-flex lux-flex-col lux-gap-2">
       <lux-input-ac
         class="lux-flex-auto"

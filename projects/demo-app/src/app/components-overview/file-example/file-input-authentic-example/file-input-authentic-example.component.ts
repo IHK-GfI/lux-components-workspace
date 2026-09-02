@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, signal, viewChild, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   ILuxFileActionConfig,
@@ -25,7 +25,7 @@ import { DemoMarkerType } from '../../../base/status-marker/status-marker.model'
 @Component({
   selector: 'lux-file-input-authentic-example',
   templateUrl: './file-input-authentic-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,
@@ -45,29 +45,28 @@ import { DemoMarkerType } from '../../../base/status-marker/status-marker.model'
   ]
 })
 export class FileInputAuthenticExampleComponent extends FileExampleComponent implements AfterViewInit {
-  @ViewChildren(LuxFileInputAcComponent) fileInputs!: QueryList<LuxFileInputAcComponent>;
-  @ViewChild('fileinputexamplewithoutform', { read: LuxFileInputAcComponent, static: true })
-  fileBaseWithoutComponent!: LuxFileInputAcComponent;
-  @ViewChild('fileinputexamplewithform', { read: LuxFileInputAcComponent, static: true }) fileBaseWithComponent!: LuxFileInputAcComponent;
+  readonly fileInputs = viewChildren(LuxFileInputAcComponent);
+  readonly fileBaseWithoutComponent = viewChild.required('fileinputexamplewithoutform', { read: LuxFileInputAcComponent });
+  readonly fileBaseWithComponent = viewChild.required('fileinputexamplewithform', { read: LuxFileInputAcComponent });
 
-  placeholder = 'Placeholder';
-  clearOnError = true;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly placeholder = signal('Placeholder');
+  readonly clearOnError = signal(true);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
 
-  namePrefixAccept = '(OK) ';
-  nameSuffixAccept = ` (${new Date().toLocaleDateString()})`;
+  readonly namePrefixAccept = signal('(OK) ');
+  readonly nameSuffixAccept = signal(` (${new Date().toLocaleDateString()})`);
 
-  namePrefixDecline = '(ERR) ';
-  nameSuffixDecline = ` (${new Date().toLocaleDateString()})`;
+  readonly namePrefixDecline = signal('(ERR) ');
+  readonly nameSuffixDecline = signal(` (${new Date().toLocaleDateString()})`);
 
   customActionConfigs: ILuxFileActionConfig[] = this.createCustomConfigs();
   customActionsConfigsForm: ILuxFileActionConfig[] = this.createCustomConfigs();
 
-  labelLongFormat = false;
-  denseFormat = false;
+  readonly labelLongFormat = signal(false);
+  readonly denseFormat = signal(false);
 
   protected initUploadActionConfig() {
     return {
@@ -76,7 +75,7 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
       iconName: 'lux-programming-cloud-upload',
       label: 'Hochladen',
       onClick: (file?: ILuxFileObject) => {
-        this.log(this.showOutputEvents, 'uploadActionConfig onClick', file);
+        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', file);
         this.onUpload(file);
       }
     };
@@ -92,7 +91,7 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
           file.name = 'example.png';
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
-          this.selected = fileObject;
+          this.selected.set(fileObject);
           this.form.get(this.controlBinding)!.setValue(fileObject);
         })
       )
@@ -104,25 +103,25 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
   onKeepFileWithoutForm(keepFile: boolean) {
     if (keepFile) {
       const fileCopy = { name: '', type: '' };
-      Object.assign(fileCopy, this.selected);
-      this.fileBaseWithoutComponent.setValue(fileCopy);
+      Object.assign(fileCopy, this.selected());
+      this.fileBaseWithoutComponent().setValue(fileCopy);
     } else {
-      this.fileBaseWithoutComponent.setValue(null);
+      this.fileBaseWithoutComponent().setValue(null);
     }
   }
 
   onKeepFileWithForm(keepFile: boolean) {
     if (keepFile) {
       const fileCopy = { name: '', type: '' };
-      Object.assign(fileCopy, this.fileBaseWithComponent.value());
-      this.fileBaseWithComponent.setValue(fileCopy);
+      Object.assign(fileCopy, this.fileBaseWithComponent().value());
+      this.fileBaseWithComponent().setValue(fileCopy);
     } else {
-      this.fileBaseWithComponent.setValue(null);
+      this.fileBaseWithComponent().setValue(null);
     }
   }
 
   ngAfterViewInit() {
-    this.fileComponents = this.fileInputs.toArray();
+    this.fileComponents = [...this.fileInputs()];
   }
 
   override onDelete(_event: any) {
@@ -144,8 +143,8 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
         if (fileObject) {
           customConfigAccept.disabled = true;
           customConfigDecline.disabled = false;
-          fileObject.namePrefix = this.namePrefixAccept;
-          fileObject.nameSuffix = this.nameSuffixAccept;
+          fileObject.namePrefix = this.namePrefixAccept();
+          fileObject.nameSuffix = this.nameSuffixAccept();
         }
       }
     };
@@ -160,8 +159,8 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
         if (fileObject) {
           customConfigAccept.disabled = false;
           customConfigDecline.disabled = true;
-          fileObject.namePrefix = this.namePrefixDecline;
-          fileObject.nameSuffix = this.nameSuffixDecline;
+          fileObject.namePrefix = this.namePrefixDecline();
+          fileObject.nameSuffix = this.nameSuffixDecline();
         }
       }
     };

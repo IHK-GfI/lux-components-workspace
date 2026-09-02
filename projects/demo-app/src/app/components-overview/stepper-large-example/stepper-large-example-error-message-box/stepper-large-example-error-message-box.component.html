@@ -1,6 +1,6 @@
-@if (showErrorMessage && !luxCompleted) {
+@if (showErrorMessage() && !luxCompleted()) {
 <lux-textbox
-  [luxTitle]="'Schritt ' + luxTitle + ' kann nicht abgeschlossen werden.'"
+  [luxTitle]="'Schritt ' + luxTitle() + ' kann nicht abgeschlossen werden.'"
   luxIcon="lux-interface-alert-warning-triangle"
   luxColor="red"
 >

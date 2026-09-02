@@ -7,28 +7,28 @@
       <span class="lux-mt-5"
         >Dies ist ein
         <lux-link-plain
-          [luxLabel]="label"
-          [luxDisabled]="disabled"
-          [luxIconShowRight]="iconShowRight"
+          [luxLabel]="label()"
+          [luxDisabled]="disabled()"
+          [luxIconShowRight]="iconShowRight()"
           luxIconName="lux-interface-arrows-bend-down-right-2"
           luxTagId="demo-link"
-          [luxHref]="href"
+          [luxHref]="href()"
           (luxClicked)="click($event)"
-          [luxBlank]="blank"
+          [luxBlank]="blank()"
         ></lux-link-plain>
         mit Icon im normalen Fließtext.
       </span>
       <h3>
         Dies ist ein
         <lux-link-plain
-          [luxLabel]="label"
-          [luxIconName]="iconName"
-          [luxDisabled]="disabled"
-          [luxIconShowRight]="iconShowRight"
+          [luxLabel]="label()"
+          [luxIconName]="iconName()"
+          [luxDisabled]="disabled()"
+          [luxIconShowRight]="iconShowRight()"
           luxTagId="demo-link"
-          [luxHref]="href"
+          [luxHref]="href()"
           (luxClicked)="click($event)"
-          [luxBlank]="blank"
+          [luxBlank]="blank()"
         ></lux-link-plain>
         in einer H3 mit einem Icon!
       </h3>
@@ -38,7 +38,7 @@
           <li>
             <lux-link-plain
               luxLabel="Formulare"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
@@ -49,7 +49,7 @@
           <li>
             <lux-link-plain
               luxLabel="Komponenten"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
@@ -60,7 +60,7 @@
           <li>
             <lux-link-plain
               luxLabel="Baseline"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
@@ -71,7 +71,7 @@
           <li>
             <lux-link-plain
               luxLabel="Konfiguration"
-              [luxDisabled]="disabled"
+              [luxDisabled]="disabled()"
               [luxIconShowRight]="true"
               luxTagId="demo-link"
               [luxBlank]="false"
@@ -90,11 +90,11 @@
       <span
         >Dies ist ein
         <lux-link-plain
-          [luxLabel]="label"
-          [luxDisabled]="disabled"
+          [luxLabel]="label()"
+          [luxDisabled]="disabled()"
           luxTagId="demo-link"
-          [luxHref]="href"
-          [luxBlank]="blank"
+          [luxHref]="href()"
+          [luxBlank]="blank()"
           luxCustomClass="demo-extra-class"
           [luxIconShowRight]="true"
           luxIconName="lux-programming-web"

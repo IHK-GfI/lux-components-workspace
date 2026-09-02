@@ -1,8 +1,8 @@
 <div
   class="example-base-structure lux-flex lux-flex-col-lt-md"
-  [ngClass]="{ 'lux-flex-col': !desktopView, 'example-mobile': !desktopView }"
+  [ngClass]="{ 'lux-flex-col': !desktopView(), 'example-mobile': !desktopView() }"
 >
-  @if (desktopView) {
+  @if (desktopView()) {
     <a id="overview-navigation" class="lux-sr-only">Seitennavigation</a>
     <div
       class="example-base-components-list lux-color-dark-divider lux-flex lux-flex-auto lux-flex-grow-0 lux-flex-col"
@@ -63,7 +63,7 @@
       ></lux-link-plain>
     </div>
   }
-  <div class="example-base-content" [ngClass]="{ 'lux-flex-auto': !desktopView, 'lux-flex-shrink-0': !desktopView }">
+  <div class="example-base-content" [ngClass]="{ 'lux-flex-auto': !desktopView(), 'lux-flex-shrink-0': !desktopView() }">
     <router-outlet></router-outlet>
   </div>
 </div>

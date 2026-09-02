@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import {
   ILuxConsentConfig,
   LuxButtonComponent,
@@ -15,7 +15,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-consent-example',
   templateUrl: './consent-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -28,10 +28,10 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 export class ConsentExampleComponent {
   private consentService = inject(LuxConsentService);
 
-  useComponentTargets = true;
-  useEssentialOnlyEntries = false;
-  impressumUrl = 'https://www.ihk-gfi.de/impressum-5343024';
-  datenschutzUrl = 'https://www.ihk-gfi.de/datenschutz-5342920';
+  readonly useComponentTargets = signal(true);
+  readonly useEssentialOnlyEntries = signal(false);
+  readonly impressumUrl = signal('https://www.ihk-gfi.de/impressum-5343024');
+  readonly datenschutzUrl = signal('https://www.ihk-gfi.de/datenschutz-5342920');
 
   private readonly consentEntries = [
     {
@@ -118,45 +118,37 @@ export class ConsentExampleComponent {
     }
   ];
 
-  private get activeConsentEntries() {
-    return this.useEssentialOnlyEntries ? this.essentialOnlyConsentEntries : this.consentEntries;
-  }
+  private readonly activeConsentEntries = computed(() =>
+    this.useEssentialOnlyEntries() ? this.essentialOnlyConsentEntries : this.consentEntries
+  );
 
-  private get componentConfig(): ILuxConsentConfig {
-    return {
-      cookieKey: 'lux-app-demo-consent-example',
-      impressumComponentLoader: () => import('../../abstract/impressum/impressum.component').then((m) => m.ImpressumComponent),
-      datenschutzComponentLoader: () => import('../../abstract/dse/dse.component').then((m) => m.DseComponent),
-      impressumComponentInputs: undefined,
-      datenschutzComponentInputs: undefined,
-      impressumUrl: undefined,
-      datenschutzUrl: undefined,
-      entries: this.activeConsentEntries
-    };
-  }
+  private readonly componentConfig = computed<ILuxConsentConfig>(() => ({
+    cookieKey: 'lux-app-demo-consent-example',
+    impressumComponentLoader: () => import('../../abstract/impressum/impressum.component').then((m) => m.ImpressumComponent),
+    datenschutzComponentLoader: () => import('../../abstract/dse/dse.component').then((m) => m.DseComponent),
+    impressumComponentInputs: undefined,
+    datenschutzComponentInputs: undefined,
+    impressumUrl: undefined,
+    datenschutzUrl: undefined,
+    entries: this.activeConsentEntries()
+  }));
 
-  private get urlConfig(): ILuxConsentConfig {
-    return {
-      cookieKey: 'lux-app-demo-consent-example',
-      impressumComponentLoader: undefined,
-      datenschutzComponentLoader: undefined,
-      impressumComponentInputs: undefined,
-      datenschutzComponentInputs: undefined,
-      impressumUrl: this.impressumUrl,
-      datenschutzUrl: this.datenschutzUrl,
-      entries: this.activeConsentEntries
-    };
-  }
+  private readonly urlConfig = computed<ILuxConsentConfig>(() => ({
+    cookieKey: 'lux-app-demo-consent-example',
+    impressumComponentLoader: undefined,
+    datenschutzComponentLoader: undefined,
+    impressumComponentInputs: undefined,
+    datenschutzComponentInputs: undefined,
+    impressumUrl: this.impressumUrl(),
+    datenschutzUrl: this.datenschutzUrl(),
+    entries: this.activeConsentEntries()
+  }));
 
-  get activeTargetLabel() {
-    return this.useComponentTargets ? 'Komponenten' : 'URLs';
-  }
+  readonly activeTargetLabel = computed(() => (this.useComponentTargets() ? 'Komponenten' : 'URLs'));
 
-  get activeEntriesLabel() {
-    return this.useEssentialOnlyEntries ? 'Nur essentielle Einträge' : 'Gemischte Einträge';
-  }
+  readonly activeEntriesLabel = computed(() => (this.useEssentialOnlyEntries() ? 'Nur essentielle Einträge' : 'Gemischte Einträge'));
 
   openConsent() {
-    this.consentService.open(this.useComponentTargets ? this.componentConfig : this.urlConfig);
+    this.consentService.open(this.useComponentTargets() ? this.componentConfig() : this.urlConfig());
   }
 }

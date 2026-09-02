@@ -1,5 +1,5 @@
 import { LowerCasePipe } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
@@ -27,13 +27,13 @@ import {
     LowerCasePipe
   ],
   templateUrl: './table-edit-without-form-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './table-edit-without-form-example.component.scss'
 })
 export class TableEditWithoutFormExampleComponent {
   pagerTooltip = '';
-  pagerDisabled = false;
-  dataSource: any[] = [];
+  readonly pagerDisabled = signal(false);
+  readonly dataSource = signal<any[]>([]);
 
   constructor() {
     setTimeout(() => {
@@ -75,7 +75,7 @@ export class TableEditWithoutFormExampleComponent {
       { name: 'Egon', symbol: 'e', date: new Date(2018, 6, 30), disabled: false }
     ];
 
-    this.dataSource = data;
+    this.dataSource.set(data);
   }
 
   onEdit(element: any) {
@@ -86,7 +86,7 @@ export class TableEditWithoutFormExampleComponent {
     element.editable = true;
 
     // Das Blättern deaktivieren und eine Begründung als Tooltip anzeigen.
-    this.pagerDisabled = true;
+    this.pagerDisabled.set(true);
     this.pagerTooltip = 'Es gibt noch ungespeicherte Änderungen!';
   }
 
@@ -110,12 +110,12 @@ export class TableEditWithoutFormExampleComponent {
   }
 
   private isMinOneElementEditable() {
-    return this.dataSource.find((element) => element.editable);
+    return this.dataSource().find((element) => element.editable);
   }
 
   private clearEditState() {
     if (!this.isMinOneElementEditable()) {
-      this.pagerDisabled = false;
+      this.pagerDisabled.set(false);
       this.pagerTooltip = '';
     }
   }

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, HostBinding, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   ILuxFileObject,
@@ -41,7 +41,10 @@ interface DummyForm {
   selector: 'lux-baseline',
   templateUrl: './baseline.component.html',
   styleUrls: ['./baseline.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.show-frames]': 'showFrames()'
+  },
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,
@@ -67,11 +70,11 @@ interface DummyForm {
   ]
 })
 export class BaselineComponent {
-  @HostBinding('class.show-frames') showFrames = false;
-  showAsColumn = false;
-  disabled = false;
-  readonly = false;
-  denseFormat = false;
+  readonly showFrames = signal(false);
+  readonly showAsColumn = signal(false);
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly denseFormat = signal(false);
   form: FormGroup<DummyForm>;
 
   constructor() {

@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -45,17 +45,17 @@ import { LookupExampleComponent } from '../lookup-example.component';
   ]
 })
 export class LookupComboboxAcExampleComponent extends LookupExampleComponent implements OnInit {
-  multiValue: LuxLookupTableEntry | LuxLookupTableEntry[] | null = null;
+  readonly multiValue = signal<LuxLookupTableEntry | LuxLookupTableEntry[] | null>(null);
   readonly markerTypeNew = DemoMarkerType.New;
-  entryBlockSize = 25;
-  bLuxWithEmptyEntry = true;
-  enableFilter = true;
-  filterPlaceholder = 'Filter';
-  filterValue = '';
-  filterClearAriaLabel = 'Clear filter';
-  visibleOptionCount = 0;
-  labelLongFormat = false;
-  denseFormat = false;
+  readonly entryBlockSize = signal(25);
+  readonly bLuxWithEmptyEntry = signal(true);
+  readonly enableFilter = signal(true);
+  readonly filterPlaceholder = signal('Filter');
+  readonly filterValue = signal('');
+  readonly filterClearAriaLabel = signal('Clear filter');
+  readonly visibleOptionCount = signal(0);
+  readonly labelLongFormat = signal(false);
+  readonly denseFormat = signal(false);
   value336 = {
     key: '336',
     kurzText: 'Eritrea',
@@ -81,12 +81,12 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
 
   on336And504Change(checked: boolean) {
     if (checked) {
-      this.value = this.value336;
-      this.multiValue = [this.value336, this.valuea504];
+      this.value.set(this.value336);
+      this.multiValue.set([this.value336, this.valuea504]);
       this.form.get(this.controlBinding)?.setValue(this.value336);
     } else {
-      this.value = null;
-      this.multiValue = [];
+      this.value.set(null);
+      this.multiValue.set([]);
       this.form.get(this.controlBinding)?.setValue(null);
     }
   }

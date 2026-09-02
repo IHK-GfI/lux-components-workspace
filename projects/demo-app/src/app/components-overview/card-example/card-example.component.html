@@ -4,36 +4,35 @@
 >
   <example-base-content class="lux-flex lux-flex-col lux-row-gap-8">
     <lux-card
-      [luxTitle]="title"
-      [luxTitleTooltip]="titleTooltip"
-      [luxSubTitle]="subTitle"
-      [luxSubTitleTooltip]="subTitleTooltip"
-      [luxExpanded]="expanded"
-      [luxDisabled]="disabled"
-      [luxHeading]="heading"
-      [luxTitleLineBreak]="titleLineBreak"
+      [luxTitle]="title()"
+      [luxTitleTooltip]="titleTooltip()"
+      [luxSubTitle]="subTitle()"
+      [luxSubTitleTooltip]="subTitleTooltip()"
+      [luxDisabled]="disabled()"
+      [luxHeading]="heading()"
+      [luxTitleLineBreak]="titleLineBreak()"
       [luxClickable]="true"
       (luxClicked)="onCardClicked()"
-      [luxExpandedLabelClose]="closeLabel"
-      [luxExpandedLabelOpen]="openLabel"
+      [luxExpandedLabelClose]="closeLabel()"
+      [luxExpandedLabelOpen]="openLabel()"
       luxCustomTagId="my-card-id"
       luxCustomTagIdSelector="mat-card"
     >
-      @if (showCustomHeader) {
+      @if (showCustomHeader()) {
         <lux-card-custom-header class="custom-header">
           <div class="lux-width-24"><lux-image luxAlt="Beispielbild" luxImageSrc="assets/svg/box.svg"></lux-image></div>
         </lux-card-custom-header>
       }
 
-      @if (showIcon) {
+      @if (showIcon()) {
         <lux-icon luxIconName="lux-cogs"></lux-icon>
       }
-      @if (showInfo) {
+      @if (showInfo()) {
         <lux-card-info>
           <lux-icon luxIconName="lux-interface-home-3"></lux-icon>
         </lux-card-info>
       }
-      @if (!hideCardContent) {
+      @if (!hideCardContent()) {
         <lux-card-content>
           <h3>H3 - Lorem ipsum</h3>
           <p>
@@ -43,7 +42,7 @@
           </p>
         </lux-card-content>
       }
-      @if (useExpandableContent) {
+      @if (useExpandableContent()) {
         <lux-card-content-expanded>
           <h4>H4 - Lorem ipsum</h4>
           <p>
@@ -62,10 +61,10 @@
           </p>
         </lux-card-content-expanded>
       }
-      @if (showActions) {
-        <lux-card-actions [luxAlign]="actionAlign.value">
+      @if (showActions()) {
+        <lux-card-actions [luxAlign]="actionAlign().value">
           <lux-button luxLabel="Button 1" [luxRaised]="true" luxIconName="lux-interface-user-single" luxColor="primary"></lux-button>
-          <lux-button luxLabel="Button 2" [luxRaised]="btn2Raised"></lux-button>
+          <lux-button luxLabel="Button 2" [luxRaised]="btn2Raised()"></lux-button>
         </lux-card-actions>
       }
     </lux-card>
@@ -93,7 +92,7 @@
       [luxNumberAlignLeft]="true"
       [luxControlValidators]="headingValidator"
     ></lux-input-ac>
-    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxDisabled]="showActions" [luxNoTopLabel]="true">
+    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxDisabled]="showActions()" [luxNoTopLabel]="true">
       <lux-form-hint>
         Über diese Property werden die Klick-Events der Card unterbunden.<br />
         Diese Property greift nicht, wenn Card-Actions dargestellt werden.
@@ -131,7 +130,7 @@
       luxLabel="luxAlign (Buttonausrichtung)"
       [luxOptions]="actionAlignOptions"
       [(luxSelected)]="actionAlign"
-      [luxDisabled]="!showActions"
+      [luxDisabled]="!showActions()"
     >
       <ng-template let-option>
         {{ option.label }}

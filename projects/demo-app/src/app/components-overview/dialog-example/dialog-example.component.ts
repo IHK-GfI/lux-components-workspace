@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, TemplateRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, TemplateRef, inject, signal, viewChild } from '@angular/core';
 import {
   ILuxDialogPresetConfig,
   LuxAccordionComponent,
@@ -50,8 +50,8 @@ export class DialogExampleComponent implements OnDestroy {
 
   readonly contentTemplate = viewChild.required<TemplateRef<any>>('contentTemplate');
 
-  useContentTemplate = false;
-  showOutputEvents = false;
+  readonly useContentTemplate = signal(false);
+  readonly showOutputEvents = signal(false);
   contentTemplateString =
     ' <ng-template #contentTemplate>\n' +
     '     <i>Achtung: Ihre Daten werden gelöscht.</i><br/>\n' +
@@ -94,17 +94,17 @@ export class DialogExampleComponent implements OnDestroy {
     { label: 'decline', value: 'decline' }
   ];
 
-  _defaultButton?: LuxDialogDefaultButton = undefined;
+  private readonly _defaultButton = signal<LuxDialogDefaultButton>(undefined);
 
   get defaultButton() {
-    return this._defaultButton;
+    return this._defaultButton();
   }
 
   set defaultButton(defaultButton) {
-    this._defaultButton = defaultButton;
-    this.dialogConfig.defaultButton = this._defaultButton;
+    this._defaultButton.set(defaultButton);
+    this.dialogConfig.defaultButton = defaultButton;
 
-    switch (this._defaultButton) {
+    switch (defaultButton) {
       case 'confirm':
         this.dialogConfig.confirmAction!.flat = true;
         this.dialogConfig.confirmAction!.outlined = false;
@@ -145,31 +145,31 @@ export class DialogExampleComponent implements OnDestroy {
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogClosed', result);
+        this.log(this.showOutputEvents(), 'dialogClosed', result);
       })
     );
 
     this.subscriptions.push(
       dialogRef.dialogDeclined.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogDeclined', result);
+        this.log(this.showOutputEvents(), 'dialogDeclined', result);
       })
     );
 
     this.subscriptions.push(
       dialogRef.dialogConfirmed.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogConfirmed', result);
+        this.log(this.showOutputEvents(), 'dialogConfirmed', result);
       })
     );
   }
 
   openDialogComponent() {
     const dialogRef = this.dialogService.openComponent(DialogComponentExampleComponent, this.dialogConfig, {
-      showOutputEvents: this.showOutputEvents
+      showOutputEvents: this.showOutputEvents()
     });
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {
-        this.log(this.showOutputEvents, 'dialogClosed', result);
+        this.log(this.showOutputEvents(), 'dialogClosed', result);
       })
     );
   }

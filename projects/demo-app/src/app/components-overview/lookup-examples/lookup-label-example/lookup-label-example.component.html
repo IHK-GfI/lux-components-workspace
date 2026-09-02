@@ -4,10 +4,10 @@
 >
   <example-base-content>
     <lux-lookup-label
-      [luxBezeichnung]="bezeichnung"
+      [luxBezeichnung]="bezeichnung()"
       [luxLookupKnr]="knr()"
-      [luxTableNo]="tableNo"
-      [luxTableKey]="'' + tableKey"
+      [luxTableNo]="tableNo()"
+      [luxTableKey]="'' + tableKey()"
       [luxLookupId]="'label-example'"
     >
     </lux-lookup-label>

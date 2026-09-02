@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -41,7 +41,7 @@ interface InputDummyForm {
   selector: 'lux-input-ac-example',
   templateUrl: './input-authentic-example.component.html',
   styleUrls: ['./input-authentic-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxLinkPlainComponent,
@@ -74,10 +74,10 @@ export class InputAuthenticExampleComponent {
   longHint =
     'Sit voluptas qui sed quas, sapiente ea officia nesciunt eveniet obcaecati dolorem nostrum commodi temporibus esse minus, corrupti repellat hic consequatur pariatur! Ducimus adipisci qui officia. Sit voluptas qui sed quas, sapiente ea officia nesciunt eveniet obcaecati dolorem nostrum commodi temporibus esse minus, corrupti repellat hic consequatur pariatur! Ducimus adipisci qui officia.';
 
-  showSuffix = false;
-  showPrefix = false;
-  useErrorMessage = true;
-  showOutputEvents = false;
+  readonly showSuffix = signal(false);
+  readonly showPrefix = signal(false);
+  readonly useErrorMessage = signal(true);
+  readonly showOutputEvents = signal(false);
   validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
@@ -87,33 +87,33 @@ export class InputAuthenticExampleComponent {
   autocompleteOptions = ['on', 'off'];
   form: FormGroup<InputDummyForm>;
   log = logResult;
-  value: any;
+  readonly value = signal<any>(undefined);
   controlBinding = 'inputExample';
-  disabled = false;
-  readonly = false;
-  required = false;
-  numberLeft = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly numberLeft = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  placeholder = 'Placeholder';
-  controlValidators: ValidatorFn[] = [];
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  autocomplete = 'off';
-  inputType = 'text';
+  readonly placeholder = signal('Placeholder');
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly autocomplete = signal('off');
+  readonly inputType = signal('text');
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   errorCallbackString = this.errorCallback + '';
-  maxLength = 0;
-  hideCounterLabel = false;
-  labelLongFormat = false;
-  denseFormat = false;
-  clearable = false;
-  extraValidators = false;
+  readonly maxLength = signal(0);
+  readonly hideCounterLabel = signal(false);
+  readonly labelLongFormat = signal(false);
+  readonly denseFormat = signal(false);
+  readonly clearable = signal(false);
+  readonly extraValidators = signal(false);
   exampleCompany = '';
   exampleDate = '';
   exampleStreet = '';
@@ -128,12 +128,12 @@ export class InputAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 
   changeExtraValidators(enabled: boolean) {
-    this.extraValidators = enabled;
+    this.extraValidators.set(enabled);
     const control = this.form.get(this.controlBinding);
     if (control) {
       if (enabled) {

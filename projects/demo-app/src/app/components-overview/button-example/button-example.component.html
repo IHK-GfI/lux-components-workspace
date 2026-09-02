@@ -488,7 +488,7 @@
               luxLabel="ABSCHICKEN"
               luxIconName="lux-mail-send-email"
               (luxClicked)="spinnerExampleUpdateLoading($event)"
-              [luxLoading]="spinnerExampleLoading"
+              [luxLoading]="spinnerExampleLoading()"
               (luxAuxClicked)="log(showOutputEvents, 'Aux-Button clicked', $event)"
             ></lux-button>
           </lux-card-actions>

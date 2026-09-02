@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAlphabeticallySortedPipe,
   LuxAppFooterButtonService,
@@ -18,7 +18,7 @@ import { ComponentsOverviewNavigationService } from './components-overview-navig
   selector: 'app-components',
   templateUrl: './components-overview.component.html',
   styleUrls: ['./components-overview.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAlphabeticallySortedPipe,
     LuxImageComponent,
@@ -35,7 +35,7 @@ export class ComponentsOverviewComponent implements OnInit, AfterViewInit {
   private buttonService = inject(LuxAppFooterButtonService);
   navigationService = inject(ComponentsOverviewNavigationService);
 
-  filterValue = '';
+  readonly filterValue = signal('');
 
   ngOnInit() {
     this.buttonService.buttonInfos = [];

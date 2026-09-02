@@ -3,11 +3,11 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90http%E2%80%90error-v21"
 >
   <example-base-content>
-    <lux-http-error (luxMessageBoxClosed)="disabled = true"></lux-http-error>
+    <lux-http-error (luxMessageBoxClosed)="disabled.set(true)"></lux-http-error>
   </example-base-content>
   <example-base-simple-options>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-button luxLabel="Fehler ausblenden" [luxStroked]="true" (luxClicked)="clearErrors()" [luxDisabled]="disabled"> </lux-button>
+      <lux-button luxLabel="Fehler ausblenden" [luxStroked]="true" (luxClicked)="clearErrors()" [luxDisabled]="disabled()"> </lux-button>
       <h3>Fehler einblenden</h3>
       <lux-button luxLabel="Als Map" [luxStroked]="true" (luxClicked)="createErrors()"> </lux-button>
       <lux-button luxLabel="Als String-Array" [luxStroked]="true" (luxClicked)="createErrorMessageStrings()"> </lux-button>

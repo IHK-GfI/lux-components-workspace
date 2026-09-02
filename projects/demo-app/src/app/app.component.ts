@@ -1,7 +1,7 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, inject, input, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   LUX_CONSENT_CONFIG,
@@ -48,10 +48,9 @@ import {
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { Subscription } from 'rxjs';
+import { filter, map, startWith } from 'rxjs';
 import { ComponentsOverviewNavigationService } from './components-overview/components-overview-navigation.service';
 import { MockLuxLookupService } from './components-overview/lookup-examples/mock-lookup-service';
-import { TenantLogoExampleConfigData } from './components-overview/tenant-logo-example/tenant-logo-example-config/tenant-logo-example-config-data';
 import { TenantLogoExampleHeaderService } from './components-overview/tenant-logo-example/tenant-logo-example-header.service';
 
 @Component({
@@ -92,10 +91,10 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: LuxLookupService, useClass: MockLuxLookupService }]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   router = inject(Router);
   private linkService = inject(LuxAppFooterLinkService);
   private snackbarService = inject(LuxSnackbarService);
@@ -112,51 +111,41 @@ export class AppComponent implements OnInit, OnDestroy {
   iconService = inject(LuxIconRegistryService);
   tService = inject(TranslocoService);
 
-  @ViewChild(LuxSideNavComponent) sideNavComp!: LuxSideNavComponent;
+  readonly sideNavComp = viewChild(LuxSideNavComponent);
 
-  @Input() luxAppHeader: 'normal' | 'minimal' | 'none' = 'normal';
-  @Input() luxAppFooter: 'normal' | 'minimal' | 'none' = 'normal';
-  @Input() luxMode: 'stand-alone' | 'portal' = 'stand-alone';
+  readonly luxAppHeader = input<'normal' | 'minimal' | 'none'>('normal');
+  readonly luxAppFooter = input<'normal' | 'minimal' | 'none'>('normal');
+  readonly luxMode = input<'stand-alone' | 'portal'>('stand-alone');
 
-  mobileView: boolean;
-  subscriptions: Subscription[] = [];
   window = window;
   jsonDataResult: any;
-  demoUserName = 'Susanne Sonnenschein';
-  demoUserEmail = 'susanne.sonnenschein@example.com';
-  demoLoginBtn = 'Abmelden';
-  themeName: string;
-  url = '/';
-  components: number;
-  public tenantLogoConfig?: TenantLogoExampleConfigData;
+  readonly demoUserName = signal('Susanne Sonnenschein');
+  readonly demoUserEmail = signal('susanne.sonnenschein@example.com');
+  readonly demoLoginBtn = signal('Abmelden');
+  readonly themeName = signal(this.themeService.getTheme().name);
+  readonly mobileView = toSignal(
+    this.mediaQueryService.getMediaQueryChangedAsObservable().pipe(
+      map(() => this.mediaQueryService.isHandset()),
+      startWith(this.mediaQueryService.isHandset())
+    ),
+    { initialValue: this.mediaQueryService.isHandset() }
+  );
+  readonly url = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.url)
+    ),
+    { initialValue: this.router.url }
+  );
+  readonly components = this.componentsOverviewService.filteredComponents.length;
+  readonly tenantLogoConfig = toSignal(this.tenantLogoHeaderService.tenantConfigChange, { initialValue: undefined });
 
   constructor() {
     this.themeService.loadTheme();
-    this.themeName = this.themeService.getTheme().name;
+    this.themeName.set(this.themeService.getTheme().name);
     this.router.initialNavigation();
     this.appService.appEl = this.elementRef.nativeElement;
     this.iconService.getSvgIconList().push({ iconName: 'lux-components', iconBasePath: '', iconPath: 'assets/favicons/favicon.svg' });
-
-    this.mobileView = this.mediaQueryService.isHandset();
-    this.subscriptions.push(
-      this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe(() => {
-        this.mobileView = this.mediaQueryService.isHandset();
-      })
-    );
-
-    this.components = this.componentsOverviewService.filteredComponents.length;
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.url = event.url;
-      }
-    });
-
-    this.subscriptions.push(
-      this.tenantLogoHeaderService.tenantConfigChange.subscribe((config) => {
-        this.tenantLogoConfig = config;
-      })
-    );
 
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe(() => {
       this.updateFooterLinks();
@@ -169,32 +158,26 @@ export class AppComponent implements OnInit, OnDestroy {
     this.consentService.openIfNeeded();
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach((sub) => {
-      sub.unsubscribe();
-    });
-  }
-
   onSideNavExpandedChange(expanded: boolean) {
     LuxConsoleService.LOG(`SideNav ${expanded ? 'opened' : 'closed'}`);
   }
 
   onChangeTheme(themeName: string) {
     this.themeService.setTheme(themeName);
-    this.themeName = themeName;
+    this.themeName.set(themeName);
     window.location.reload();
   }
 
   toggleLogin() {
-    if (this.demoUserName) {
-      this.demoUserName = '';
-      this.demoUserEmail = '';
-      this.demoLoginBtn = 'Anmelden';
+    if (this.demoUserName()) {
+      this.demoUserName.set('');
+      this.demoUserEmail.set('');
+      this.demoLoginBtn.set('Anmelden');
       this.consentService.clearSessionConsent();
     } else {
-      this.demoUserName = 'Susanne Sonnenschein';
-      this.demoUserEmail = 'susanne.sonnenschein@example.com';
-      this.demoLoginBtn = 'Abmelden';
+      this.demoUserName.set('Susanne Sonnenschein');
+      this.demoUserEmail.set('susanne.sonnenschein@example.com');
+      this.demoLoginBtn.set('Abmelden');
     }
   }
 
@@ -238,12 +221,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   goToImpressum() {
-    this.sideNavComp.close();
+    this.sideNavComp()?.close();
     this.router.navigate(['impressum']);
   }
 
   goToLicenseHint() {
-    this.sideNavComp.close();
+    this.sideNavComp()?.close();
     this.router.navigate(['license-hint']);
   }
 
@@ -263,8 +246,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public onTenantLogoClicked() {
-    if (this.tenantLogoConfig?.luxTenantLogoClicked) {
-      this.tenantLogoConfig.luxTenantLogoClicked();
+    const tenantLogoConfig = this.tenantLogoConfig();
+    if (tenantLogoConfig?.luxTenantLogoClicked) {
+      tenantLogoConfig.luxTenantLogoClicked();
     }
   }
 

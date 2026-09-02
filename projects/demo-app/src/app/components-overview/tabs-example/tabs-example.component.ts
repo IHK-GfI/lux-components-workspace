@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {
   LuxAccordionComponent,
@@ -41,7 +41,7 @@ interface TabConfig {
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAccordionComponent,
     LuxPanelHeaderTitleComponent,
@@ -65,15 +65,15 @@ interface TabConfig {
   ]
 })
 export class TabsExampleComponent {
-  showOutputEvents = false;
+  readonly showOutputEvents = signal(false);
   log = logResult;
 
-  activeTab = 0;
-  iconSize = '2x';
-  displayDivider = true;
-  lazyLoading = false;
-  backgroundColor = '#ffffff';
-  showBorder = false;
+  readonly activeTab = signal(0);
+  readonly iconSize = signal('2x');
+  readonly displayDivider = signal(true);
+  readonly lazyLoading = signal(false);
+  readonly backgroundColor = signal('#ffffff');
+  readonly showBorder = signal(false);
 
   notificationColors: LuxBadgeNotificationColor[] = ['primary', 'warn', 'accent', 'default'];
 
@@ -122,10 +122,10 @@ export class TabsExampleComponent {
   constructor() {}
 
   activeTabChanged(event: MatTabChangeEvent) {
-    this.log(this.showOutputEvents, 'luxActiveTabChanged', event);
+    this.log(this.showOutputEvents(), 'luxActiveTabChanged', event);
   }
 
   tabContentCreated(tab: TabConfig) {
-    this.log(this.showOutputEvents, 'Tab-Content created', tab);
+    this.log(this.showOutputEvents(), 'Tab-Content created', tab);
   }
 }

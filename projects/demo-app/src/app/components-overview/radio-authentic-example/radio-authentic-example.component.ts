@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
     LuxAutofocusDirective,
@@ -36,7 +36,7 @@ interface RadioDummyForm {
   selector: 'lux-radio-authentic-example',
   templateUrl: './radio-authentic-example.component.html',
   styleUrls: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,
@@ -58,12 +58,12 @@ interface RadioDummyForm {
   ]
 })
 export class RadioAuthenticExampleComponent {
-  useErrorMessage = true;
-  useTemplatesForLabels = false;
-  useCompareWithFn = false;
-  useValueFn = false;
-  useSimpleArray = false;
-  showOutputEvents = false;
+  readonly useErrorMessage = signal(true);
+  readonly useTemplatesForLabels = signal(false);
+  readonly useCompareWithFn = signal(false);
+  readonly useValueFn = signal(false);
+  readonly useSimpleArray = signal(false);
+  readonly showOutputEvents = signal(false);
   validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
@@ -78,23 +78,23 @@ export class RadioAuthenticExampleComponent {
   form: FormGroup<RadioDummyForm>;
   log = logResult;
   controlBinding = 'radioExample';
-  disabled = false;
-  disabledFirst = true;
-  readonly = false;
-  required = false;
-  isVertical = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly disabled = signal(false);
+  readonly disabledFirst = signal(true);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly isVertical = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  controlValidators: ValidatorFn[] = [];
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  value: any;
-  groupNameReactive = 'reactiveGroup';
-  groupNameNormal = 'normalGroup';
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly value = signal<any>(undefined);
+  readonly groupNameReactive = signal('reactiveGroup');
+  readonly groupNameNormal = signal('normalGroup');
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   pickValueFn = examplePickValueFn;
@@ -102,8 +102,8 @@ export class RadioAuthenticExampleComponent {
   pickValueFnString: string;
   compareWithFnString: string;
   errorCallbackString: string;
-  labelLongFormat = false;
-  denseFormat = false;
+  readonly labelLongFormat = signal(false);
+  readonly denseFormat = signal(false);
 
   constructor() {
     this.form = new FormGroup<RadioDummyForm>({
@@ -116,7 +116,7 @@ export class RadioAuthenticExampleComponent {
   }
 
   showErrors(...radioComponents: LuxRadioAcComponent[]) {
-    this.value = null;
+    this.value.set(null);
     this.form.get('radioExample')!.setValue(null);
 
     this.changeRequired(true);
@@ -127,7 +127,7 @@ export class RadioAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 
@@ -137,29 +137,33 @@ export class RadioAuthenticExampleComponent {
 
   changeUseSimpleArray($event: boolean) {
     this.reset();
-    this.useValueFn = $event === true ? false : this.useValueFn;
-    this.useCompareWithFn = $event === true ? false : this.useCompareWithFn;
     if ($event === true) {
-      this.disabledFirst = false;
+      this.useValueFn.set(false);
+      this.useCompareWithFn.set(false);
+      this.disabledFirst.set(false);
     }
   }
 
   changeUseValueFn($event: boolean) {
     this.reset();
-    this.useSimpleArray = $event === true ? false : this.useSimpleArray;
-    this.useCompareWithFn = $event === true ? false : this.useCompareWithFn;
+    if ($event === true) {
+      this.useSimpleArray.set(false);
+      this.useCompareWithFn.set(false);
+    }
   }
 
   changeCompareWithFn($event: boolean) {
     this.reset();
-    this.useSimpleArray = $event === true ? false : this.useSimpleArray;
-    this.useValueFn = $event === true ? false : this.useValueFn;
+    if ($event === true) {
+      this.useSimpleArray.set(false);
+      this.useValueFn.set(false);
+    }
   }
 
   reset(...radioComponents: LuxRadioAcComponent[]) {
-    this.value = undefined;
+    this.value.set(undefined);
     this.form.get(this.controlBinding)!.setValue(undefined);
-    this.disabledFirst = false;
+    this.disabledFirst.set(false);
 
     radioComponents.forEach((comp: LuxRadioAcComponent) => {
       comp.formControl.markAsUntouched();
@@ -167,7 +171,7 @@ export class RadioAuthenticExampleComponent {
   }
 
   onToggleDisabledFirst() {
-    this.options[0].disabled = this.disabledFirst;
+    this.options[0].disabled = this.disabledFirst();
   }
 
   onRefresh() {

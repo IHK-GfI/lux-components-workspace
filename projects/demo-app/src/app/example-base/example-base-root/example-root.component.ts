@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
-import { Component, ElementRef, OnDestroy, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import {
   LuxAlphabeticallySortedPipe,
@@ -13,7 +14,6 @@ import {
   LuxPanelHeaderTitleComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ComponentsOverviewNavigationService } from '../../components-overview/components-overview-navigation.service';
 
@@ -21,7 +21,7 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
   selector: 'example-root',
   templateUrl: './example-root.component.html',
   styleUrls: ['./example-root.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAlphabeticallySortedPipe,
     LuxPanelHeaderTitleComponent,
@@ -36,38 +36,26 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
     StatusMarkerComponent
   ]
 })
-export class ExampleRootComponent implements OnDestroy {
+export class ExampleRootComponent {
   private router = inject(Router);
   navigationService = inject(ComponentsOverviewNavigationService);
   private mediaQueryService = inject(LuxMediaQueryObserverService);
 
-  private routerSubscription: Subscription;
-  private subscription: Subscription;
-
-  desktopView: boolean;
-
-  @ViewChild('exampleListElement') exampleListElement!: ElementRef;
+  readonly desktopView = signal(false);
 
   constructor() {
-    this.routerSubscription = this.router.events.subscribe((event: any) => {
+    this.router.events.pipe(takeUntilDestroyed()).subscribe((event: unknown) => {
       if (event instanceof NavigationEnd) {
         LuxUtil.goToTop();
       }
     });
 
-    this.desktopView = !this.mediaQueryService.isXS() && !this.mediaQueryService.isSM();
+    this.desktopView.set(!this.mediaQueryService.isXS() && !this.mediaQueryService.isSM());
 
-    this.subscription = this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe(() => {
-      this.desktopView = !this.mediaQueryService.isXS() && !this.mediaQueryService.isSM();
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
-
-    this.subscription.unsubscribe();
+    this.mediaQueryService
+      .getMediaQueryChangedAsObservable()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.desktopView.set(!this.mediaQueryService.isXS() && !this.mediaQueryService.isSM()));
   }
 
   onPrev() {

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutocompleteAcComponent,
@@ -39,7 +39,7 @@ interface AutocompleteForm {
   selector: 'lux-autocomplete-authentic-example',
   templateUrl: './autocomplete-authentic-example.component.html',
   styleUrls: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     ExampleBaseStructureComponent,
@@ -63,78 +63,79 @@ interface AutocompleteForm {
   ]
 })
 export class AutocompleteAuthenticExampleComponent {
-  useErrorMessage = true;
-  showOutputEvents = false;
-  showPrefix = false;
-  showSuffix = false;
-  useStringValues = false;
-  denseFormat = false;
-  clearable = false;
-  longOptionLabel =
+  readonly useErrorMessage = signal(true);
+  readonly showOutputEvents = signal(false);
+  readonly showPrefix = signal(false);
+  readonly showSuffix = signal(false);
+  readonly useStringValues = signal(false);
+  readonly denseFormat = signal(false);
+  readonly clearable = signal(false);
+  readonly longOptionLabel =
     'Lorem ipsum dolor \n sit amet consectetur adipisicing elit. Nulla officiis consectetur natus id iusto asperiores cum eum sint esse in?';
-  toggleOptions = true;
-  optionBlockSize = 500;
-  options: AutocompleteAcExampleOption[] = this.createOption();
-  options2: AutocompleteAcExampleOption[] = [
+  readonly toggleOptions = signal(true);
+  readonly optionBlockSize = signal(500);
+  readonly options: AutocompleteAcExampleOption[] = this.createOption();
+  readonly options2: AutocompleteAcExampleOption[] = [
     { label: 'Meine Aufgaben 2', short: 'MA2', value: 'A2', gueltigAb: new Date(2024, 0, 1) },
     { label: 'Gruppenaufgaben 2', short: 'GA2', value: 'B2', gueltigAb: new Date(2024, 0, 1) },
     { label: 'Zurückgestellte Aufgaben 2', short: 'ZA2', value: 'C2', gueltigAb: new Date(2024, 0, 1) },
     { label: 'Vertretungsaufgaben 2', short: 'VA2', value: 'D2', gueltigAb: new Date(2024, 0, 1) }
   ];
-  stringOptions = this.options.map((o) => o.label);
-  stringOptions2 = ['Nur eine Option'];
+  readonly stringOptions = this.options.map((option) => option.label);
+  readonly stringOptions2 = ['Nur eine Option'];
+  readonly selectedOptions = computed(() => {
+    if (this.useStringValues()) return this.toggleOptions() ? this.stringOptions : this.stringOptions2;
 
-  renderProperties: RenderPropertyItem[] = [
+    return this.toggleOptions() ? this.options : this.options2;
+  });
+
+  readonly renderProperties: RenderPropertyItem[] = [
     { label: 'Bezeichnung (normal)', value: 'label' },
     { label: 'Bezeichnung (kurz)', value: 'short' },
     { label: 'Wert', value: 'value' }
   ];
-  validatorOptions = [
+  readonly validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
     { value: Validators.email, label: 'Validators.email' }
   ];
-  form: FormGroup<AutocompleteForm>;
-  log = logResult;
-  labelLongFormat = false;
-  value: AutocompleteAcExampleOption | string | null = null;
-  controlBinding = 'autocompleteExample';
-  renderProperty = 'label';
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly form = new FormGroup<AutocompleteForm>({
+    autocompleteExample: new FormControl<string | null>(null)
+  });
+  readonly log = logResult;
+  readonly labelLongFormat = signal(false);
+  readonly value = signal<AutocompleteAcExampleOption | string | null>(null);
+  readonly controlBinding = 'autocompleteExample';
+  readonly renderProperty = signal('label');
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  placeholder = 'Placeholder';
-  disabled = false;
-  readonly = false;
-  required = false;
-  strict = true;
-  selectAllOnClick = true;
-  delay = 500;
-  controlValidators: ValidatorFn[] = [];
-  errorMessageNotAnOption = 'Der eingegebene Wert ist nicht Teil der Auswahl.';
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  errorCallback = exampleErrorCallback;
-  emptyCallback = emptyErrorCallback;
-  errorCallbackString = this.errorCallback + '';
-  usePickValueFn = false;
-  pickValueFn = examplePickValueFn;
-  useFilterFn = false;
-  luxPanelWidth: string | number = '';
-  useTemplatesForLabels = false;
-  useTranslocoDate = false;
-
-  constructor() {
-    this.form = new FormGroup<AutocompleteForm>({
-      autocompleteExample: new FormControl<string | null>(null)
-    });
-  }
+  readonly placeholder = signal('Placeholder');
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly strict = signal(true);
+  readonly selectAllOnClick = signal(true);
+  readonly delay = signal(500);
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessageNotAnOption = signal('Der eingegebene Wert ist nicht Teil der Auswahl.');
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
+  readonly errorCallbackString = this.errorCallback + '';
+  readonly usePickValueFn = signal(false);
+  readonly pickValueFn = examplePickValueFn;
+  readonly useFilterFn = signal(false);
+  readonly luxPanelWidth = signal<string | number>('');
+  readonly useTemplatesForLabels = signal(false);
+  readonly useTranslocoDate = signal(false);
 
   onRenderProperty(renderProperty: RenderPropertyItem) {
-    this.renderProperty = renderProperty.value;
+    this.renderProperty.set(renderProperty.value);
   }
 
   pickValidatorValueFn(selected: any) {
@@ -155,7 +156,7 @@ export class AutocompleteAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 
@@ -179,10 +180,5 @@ export class AutocompleteAuthenticExampleComponent {
     }
 
     return options;
-  }
-
-  getOptions(): any[] {
-    if (this.useStringValues) return this.toggleOptions ? this.stringOptions : this.stringOptions2;
-    else return this.toggleOptions ? this.options : this.options2;
   }
 }

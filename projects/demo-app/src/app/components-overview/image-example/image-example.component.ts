@@ -1,5 +1,5 @@
 import { isPlatformBrowser, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxImageComponent,
@@ -15,7 +15,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-image-example',
   templateUrl: './image-example.component.html',
   styleUrls: ['./image-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxImageComponent,
     LuxToggleAcComponent,
@@ -31,22 +31,20 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 export class ImageExampleComponent implements OnDestroy, OnInit {
   private readonly platformId = inject(PLATFORM_ID);
 
-  showImageFrame = false;
-  imgSrcArr: string[] = [
+  readonly showImageFrame = signal(false);
+  readonly imgSrcArr = signal<string[]>([
     'assets/png/example.png',
     'assets/svg/android.svg',
     'assets/svg/Example.svg',
     'assets/svg/red_power_button.svg',
     'assets/svg/box.svg',
     '/fb/images/relative_image.png'
-  ];
-  imgSrc = 'assets/svg/box.svg';
-  imgWidth = '50%';
-  imgHeight = 'auto';
-  imgRawSrc = false;
+  ]);
+  readonly imgSrc = signal('assets/svg/box.svg');
+  readonly imgWidth = signal('50%');
+  readonly imgHeight = signal('auto');
+  readonly imgRawSrc = signal(false);
   blobImgSrc = '';
-
-  constructor() {}
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -63,7 +61,7 @@ export class ImageExampleComponent implements OnDestroy, OnInit {
         )
       );
 
-      this.imgSrcArr = [...this.imgSrcArr, this.blobImgSrc];
+      this.imgSrcArr.update((arr) => [...arr, this.blobImgSrc]);
     }
   }
 

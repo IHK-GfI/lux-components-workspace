@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { LuxInputAcComponent, LuxRippleDirective, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -8,7 +8,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-ripple-example',
   templateUrl: './ripple-example.component.html',
   styleUrls: ['./ripple-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxRippleDirective,
     LuxToggleAcComponent,
@@ -19,13 +19,11 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class RippleExampleComponent {
-  color = '';
-  unbounded = false;
-  centered = false;
-  radius = 0;
-  disabled = false;
-  enterDuration = 0;
-  exitDuration = 0;
-
-  constructor() {}
+  readonly color = signal('');
+  readonly unbounded = signal(false);
+  readonly centered = signal(false);
+  readonly radius = signal(0);
+  readonly disabled = signal(false);
+  readonly enterDuration = signal(0);
+  readonly exitDuration = signal(0);
 }

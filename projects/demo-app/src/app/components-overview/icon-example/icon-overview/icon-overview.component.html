@@ -1,5 +1,5 @@
 <div class="lux-flex lt-md:lux-flex-col lux-gap-4 main-container">
-  @if (mobileView) {
+  @if (mobileView()) {
     <div class="lux-flex lux-flex-basis-4/10">
       <ng-container *ngTemplateOutlet="search"></ng-container>
     </div>
@@ -31,11 +31,11 @@
               <lux-chip-ac [luxRemovable]="false">alle</lux-chip-ac>
             </lux-chips-ac>
           }
-          <div>Icons (gefiltert / gesamt): {{ filteredIcons.length + displayedIcons.length }} / {{ allIcons.length }}</div>
+          <div>Icons (gefiltert / gesamt): {{ filteredIcons().length + displayedIcons().length }} / {{ allIcons.length }}</div>
         </div>
-        @if (displayedIcons.length > 0) {
+        @if (displayedIcons().length > 0) {
           <div class="lux-flex lux-flex-wrap lux-gap-8 icon-list">
-            @for (icon of displayedIcons; track icon.iconName) {
+            @for (icon of displayedIcons(); track icon.iconName) {
               <div class="lux-flex">
                 <div
                   tabindex="0"
@@ -64,7 +64,7 @@
     </lux-card>
   </div>
 
-  @if (!mobileView) {
+  @if (!mobileView()) {
     <div class="lux-flex lux-flex-col lux-gap-4 lux-flex-basis-4/10 gt-lg:lux-flex-basis-2/10 right-container">
       <lux-card luxTitle="Suche">
         <lux-card-content>
@@ -128,12 +128,12 @@
               luxIconName="lux-clone"
               luxIconSize="1x"
               class="lux-color-blue copy-icon"
-              luxTooltip="{{ copiedToClipboard ? 'Kopiert!' : 'In die Zwischenablage kopieren.' }}"
+              luxTooltip="{{ copiedToClipboard() ? 'Kopiert!' : 'In die Zwischenablage kopieren.' }}"
               (click)="onCopyToClipboard()"
             ></lux-icon>
           </lux-card-info>
           <lux-card-content>
-            <pre class="snippet">{{ codeSnippet }}</pre>
+            <pre class="snippet">{{ codeSnippet() }}</pre>
           </lux-card-content>
         </lux-card>
       }

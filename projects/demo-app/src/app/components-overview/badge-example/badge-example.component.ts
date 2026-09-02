@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   LuxBadgeColors,
   LuxBadgeComponent,
@@ -17,7 +17,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-badge-example',
   templateUrl: './badge-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxBadgeComponent,
     LuxLabelComponent,
@@ -32,21 +32,19 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class BadgeExampleComponent {
-  colors = LuxBadgeColors;
-  iconName = 'lux-interface-arrows-left-circle-1';
-  text = 'Badge';
-  uppercase = false;
-  muted = false;
-  size: LuxBadgeSize = '';
-  backgroundColor = '';
+  readonly colors = LuxBadgeColors;
+  readonly iconName = signal('lux-interface-arrows-left-circle-1');
+  readonly text = signal('Badge');
+  readonly uppercase = signal(false);
+  readonly muted = signal(false);
+  readonly size = signal<LuxBadgeSize>('');
+  readonly backgroundColor = signal('');
 
-  sizeOptions: { label: string; value: LuxBadgeSize }[] = [
+  readonly sizeOptions: { label: string; value: LuxBadgeSize }[] = [
     { label: 'Standard (erbt vom Parent)', value: '' },
     { label: 'Small (12px)', value: 'small' },
     { label: 'Medium (16px)', value: 'medium' },
     { label: 'Large (20px)', value: 'large' }
   ];
-  sizePickValue = (option: { label: string; value: LuxBadgeSize }) => option.value;
-
-  constructor() {}
+  readonly sizePickValue = (option: { label: string; value: LuxBadgeSize }) => option.value;
 }

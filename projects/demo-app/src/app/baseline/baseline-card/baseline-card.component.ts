@@ -1,30 +1,30 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    ILuxFileObject,
-    LuxAutocompleteAcComponent,
-    LuxButtonComponent,
-    LuxCardActionsComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxCheckboxAcComponent,
-    LuxChipAcGroupComponent,
-    LuxChipsAcComponent,
-    LuxDatepickerAcComponent,
-    LuxDatetimepickerAcComponent,
-    LuxDividerComponent,
-    LuxFileInputAcComponent,
-    LuxFileListComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxSliderAcComponent,
-    LuxTextareaAcComponent,
-    LuxTextboxComponent,
-    LuxToggleAcComponent
+  ILuxFileObject,
+  LuxAutocompleteAcComponent,
+  LuxButtonComponent,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCheckboxAcComponent,
+  LuxChipAcGroupComponent,
+  LuxChipsAcComponent,
+  LuxDatepickerAcComponent,
+  LuxDatetimepickerAcComponent,
+  LuxDividerComponent,
+  LuxFileInputAcComponent,
+  LuxFileListComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxInputAcPrefixComponent,
+  LuxInputAcSuffixComponent,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxSliderAcComponent,
+  LuxTextareaAcComponent,
+  LuxTextboxComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 
 interface DummyForm {
@@ -46,7 +46,7 @@ interface DummyForm {
   selector: 'lux-baseline-card',
   templateUrl: './baseline-card.component.html',
   styleUrls: ['./baseline-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,
@@ -75,12 +75,9 @@ interface DummyForm {
   ]
 })
 export class BaselineCardComponent {
-  testHint = 'Hinweistext';
-  testOption: any = null;
-  disabledForm = false;
-  readonly = false;
-  disabled = false;
-  test = false;
+  readonly testHint = 'Hinweistext';
+  readonly testOption = signal<unknown>(null);
+  readonly disabled = signal(false);
 
   options = [
     { label: 'Option 1', value: 'A' },
@@ -105,7 +102,9 @@ export class BaselineCardComponent {
     { label: 'Disabled', value: 'disabledState' },
     { label: 'Readonly', value: 'readOnlyState' }
   ];
-  selectedState: any = this.stateOptions[0];
+  readonly selectedState = signal(this.stateOptions[0]);
+  readonly disabledForm = computed(() => this.selectedState().value === 'disabledState');
+  readonly readonly = computed(() => this.selectedState().value === 'readOnlyState');
 
   chipItems: string[] = ['Chip 0', 'Chip 1', 'Chip 2'];
   chipOptions: string[] = ['Neuer Chip 1', 'Neuer Chip 2', 'Neuer Chip 3'];
@@ -149,20 +148,7 @@ export class BaselineCardComponent {
     });
   }
 
-  switchStates() {
-    switch (this.selectedState.value) {
-      case 'disabledState':
-        this.disabledForm = true;
-        this.readonly = false;
-        break;
-      case 'readOnlyState':
-        this.disabledForm = false;
-        this.readonly = true;
-        break;
-      default:
-        this.disabledForm = false;
-        this.readonly = false;
-        break;
-    }
+  selectState(state: (typeof this.stateOptions)[number]) {
+    this.selectedState.set(state);
   }
 }

@@ -1,8 +1,8 @@
 <h1 class="lux-sr-only">Beispiel für lux-stepper-large</h1>
-<div class="example-lux-stepper-large" [ngStyle]="{ maxWidth: maxWidth }" [ngClass]="{ 'authentic-example': theme === 'authentic' }">
+<div class="example-lux-stepper-large" [ngStyle]="{ maxWidth: maxWidth() }" [ngClass]="{ 'authentic-example': theme === 'authentic' }">
   <lux-stepper-large
-    [luxStepValidationActive]="stepValidationActive"
-    [luxA11YMode]="luxA11YMode"
+    [luxStepValidationActive]="stepValidationActive()"
+    [luxA11YMode]="luxA11YMode()"
     [(luxCurrentStepNumber)]="currentStepIndex"
     [luxPrevButtonConfig]="dataService.prevButtonConfig"
     [luxNextButtonConfig]="dataService.nextButtonConfig"
@@ -12,7 +12,7 @@
     (luxOnNextStepNotComplete)="onStepNotComplete()"
     [ngClass]="{ 'authentic-example': theme === 'authentic' }"
   >
-    <lux-stepper-large-step luxTitle="Allgemein" [luxCompleted]="allowed">
+    <lux-stepper-large-step luxTitle="Allgemein" [luxCompleted]="allowed()">
       <h2 class="example-lux-stepper-large-h2">Lorem Ipsum</h2>
       <h3>Validierung</h3>
       <p>
@@ -20,7 +20,7 @@
         Weiter-Button immer aktiv und nur die Veto-Funktionen können das Navigieren zum nächsten Schritt verhindern.
       </p>
       <lux-toggle-ac luxLabel="Validierung der Schritte aktivieren" [(luxChecked)]="stepValidationActive"></lux-toggle-ac>
-      <lux-toggle-ac luxLabel="luxA11YMode aktivieren" [(luxChecked)]="luxA11YMode" [luxDisabled]="!stepValidationActive"></lux-toggle-ac>
+      <lux-toggle-ac luxLabel="luxA11YMode aktivieren" [(luxChecked)]="luxA11YMode" [luxDisabled]="!stepValidationActive()"></lux-toggle-ac>
       <p>
         Um die Barrierefreiheit zu verbessern kann anstatt den Weiter Button zu deaktivieren, das Attribut
         <code>aria-disabled</code> verwendet werden. Der Button bleibt immer aktiv, es wird jedoch bei einem Fehler im Schritt nicht weiter
@@ -59,7 +59,7 @@
         #requiredCheck
       ></lux-toggle-ac>
 
-      <lux-stepper-large-example-error-message-box class="lux-mt-5" luxTitle="Allgemein" [luxCompleted]="allowed">
+      <lux-stepper-large-example-error-message-box class="lux-mt-5" luxTitle="Allgemein" [luxCompleted]="allowed()">
       </lux-stepper-large-example-error-message-box>
     </lux-stepper-large-step>
 
@@ -69,18 +69,18 @@
 
     <app-stepper-large-example-step-veto></app-stepper-large-example-step-veto>
 
-    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 1 - Lorem ipsum dolor" [luxDisabled]="true">
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed()" luxTitle="Füllschritt 1 - Lorem ipsum dolor" [luxDisabled]="true">
     </lux-stepper-large-extern-step-example>
     <lux-stepper-large-extern-step-example
-      [luxCompleted]="completed"
+      [luxCompleted]="completed()"
       luxTitle="Füllschritt 2 - Duis autem vel eum iriure dolor in hendrerit"
       [luxDisabled]="true"
     ></lux-stepper-large-extern-step-example>
-    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 3 - Ut wisi enim ad, iriure dolor in hendrerit">
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed()" luxTitle="Füllschritt 3 - Ut wisi enim ad, iriure dolor in hendrerit">
     </lux-stepper-large-extern-step-example>
-    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 4 - Nam liber tempor">
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed()" luxTitle="Füllschritt 4 - Nam liber tempor">
     </lux-stepper-large-extern-step-example>
-    <lux-stepper-large-extern-step-example [luxCompleted]="completed" luxTitle="Füllschritt 5 - Duis autem vel ">
+    <lux-stepper-large-extern-step-example [luxCompleted]="completed()" luxTitle="Füllschritt 5 - Duis autem vel ">
     </lux-stepper-large-extern-step-example>
 
     <lux-stepper-large-step luxTitle="Zusammenfassung" [luxCompleted]="true">

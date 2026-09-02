@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxButtonComponent,
   LuxFormHintComponent,
@@ -17,7 +17,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-spinner-example',
   templateUrl: './spinner-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxProgressComponent,
     LuxButtonComponent,
@@ -33,20 +33,18 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 export class SpinnerExampleComponent {
   sizes = ['small', 'medium', 'large'];
   colors = LuxProgressColors;
-  backgroundColor = '';
+  readonly backgroundColor = signal('');
   modes: LuxProgressModeType[] = ['determinate', 'indeterminate'];
 
-  size: LuxProgressSizeType = 'medium';
-  mode: LuxProgressModeType = 'determinate';
-  value = 70;
-
-  constructor() {}
+  readonly size = signal<LuxProgressSizeType>('medium');
+  readonly mode = signal<LuxProgressModeType>('determinate');
+  readonly value = signal(70);
 
   addSpinnerProgress() {
-    this.value = this.value + 10 > 100 ? 100 : this.value + 10;
+    this.value.update((v) => (v + 10 > 100 ? 100 : v + 10));
   }
 
   subtractSpinnerProgress() {
-    this.value = this.value - 10 < 0 ? 0 : this.value - 10;
+    this.value.update((v) => (v - 10 < 0 ? 0 : v - 10));
   }
 }

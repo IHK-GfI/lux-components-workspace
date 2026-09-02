@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -37,7 +37,7 @@ interface SelectDummyForm {
 @Component({
   selector: 'lux-select-authentic-example',
   templateUrl: './select-authentic-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,
@@ -62,17 +62,17 @@ interface SelectDummyForm {
 export class SelectAuthenticExampleComponent {
   readonly markerTypeNew = DemoMarkerType.New;
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  useErrorMessage = true;
-  useCompareWithFn = false;
-  useValueFn = false;
-  useSimpleArray = false;
-  showOutputEvents = false;
-  enableFilter = true;
-  filterPlaceholder = 'Filter';
-  filterValue = '';
-  filterClearAriaLabel = 'Clear filter';
-  visibleOptionCount = 0;
-  keepOptionOrder = false;
+  readonly useErrorMessage = signal(true);
+  readonly useCompareWithFn = signal(false);
+  readonly useValueFn = signal(false);
+  readonly useSimpleArray = signal(false);
+  readonly showOutputEvents = signal(false);
+  readonly enableFilter = signal(true);
+  readonly filterPlaceholder = signal('Filter');
+  readonly filterValue = signal('');
+  readonly filterClearAriaLabel = signal('Clear filter');
+  readonly visibleOptionCount = signal(0);
+  readonly keepOptionOrder = signal(false);
   // prettier-ignore
   options: { label: string; value: number }[] = [
     { label: 'Argentinien, Bolivien, Chile, Costa Rica, Dominikanische Republik, Ecuador, El Salvador, Guatemala, Honduras, Kolumbien, Kuba, Mexiko', value: 0 },
@@ -121,24 +121,24 @@ export class SelectAuthenticExampleComponent {
   optionsPrimitive: string[] = ['Option #1', 'Option #2', 'Option #3'];
   form: FormGroup<SelectDummyForm>;
   log = logResult;
-  labelLongFormat = false;
+  readonly labelLongFormat = signal(false);
   controlBinding = 'selectExample';
-  disabled = false;
-  readonly = false;
-  required = false;
-  denseFormat = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
-  placeholder = 'Placeholder';
-  controlValidators: ValidatorFn[] = [];
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  value: any = null;
-  multiselectValue: any = null;
-  templateValue: any = null;
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly denseFormat = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
+  readonly placeholder = signal('Placeholder');
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly value = signal<any>(null);
+  readonly multiselectValue = signal<any>(null);
+  readonly templateValue = signal<any>(null);
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   pickValueFn = examplePickValueFn;
@@ -159,9 +159,9 @@ export class SelectAuthenticExampleComponent {
   }
 
   showErrors(...comps: LuxFormSelectableBase[]) {
-    this.value = null;
-    this.multiselectValue = null;
-    this.templateValue = null;
+    this.value.set(null);
+    this.multiselectValue.set(null);
+    this.templateValue.set(null);
     this.form.get(this.controlBinding)!.setValue(null);
 
     this.changeRequired(true);
@@ -172,7 +172,7 @@ export class SelectAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 
@@ -182,26 +182,32 @@ export class SelectAuthenticExampleComponent {
 
   changeUseSimpleArray(useSimpleArray: boolean) {
     this.reset();
-    this.useValueFn = useSimpleArray ? false : this.useValueFn;
-    this.useCompareWithFn = useSimpleArray ? false : this.useCompareWithFn;
+    if (useSimpleArray) {
+      this.useValueFn.set(false);
+      this.useCompareWithFn.set(false);
+    }
   }
 
   changeUseValueFn(useValueFn: boolean) {
     this.reset();
-    this.useSimpleArray = useValueFn ? false : this.useSimpleArray;
-    this.useCompareWithFn = useValueFn ? false : this.useCompareWithFn;
+    if (useValueFn) {
+      this.useSimpleArray.set(false);
+      this.useCompareWithFn.set(false);
+    }
   }
 
   changeCompareWithFn(useCompareWithfn: boolean) {
     this.reset();
-    this.useSimpleArray = useCompareWithfn ? false : this.useSimpleArray;
-    this.useValueFn = useCompareWithfn ? false : this.useValueFn;
+    if (useCompareWithfn) {
+      this.useSimpleArray.set(false);
+      this.useValueFn.set(false);
+    }
   }
 
   reset(...comps: LuxFormSelectableBase[]) {
-    this.value = undefined;
-    this.multiselectValue = undefined;
-    this.templateValue = undefined;
+    this.value.set(undefined);
+    this.multiselectValue.set(undefined);
+    this.templateValue.set(undefined);
     this.form.get(this.controlBinding)!.setValue(undefined);
 
     comps.forEach((comp: LuxFormSelectableBase) => {

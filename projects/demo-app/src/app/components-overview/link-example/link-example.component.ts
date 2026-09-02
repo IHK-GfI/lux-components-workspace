@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutofocusDirective,
   LuxComponentsConfigParameters,
@@ -17,7 +17,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-link-example',
   templateUrl: './link-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLinkComponent,
     LuxToggleAcComponent,
@@ -32,30 +32,28 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 export class LinkExampleComponent implements OnDestroy {
   private configService = inject(LuxComponentsConfigService);
 
-  showOutputEvents = false;
+  readonly showOutputEvents = signal(false);
   colors: any[] = [
     { value: '', label: 'default' },
     { value: 'primary', label: 'primary' },
     { value: 'warn', label: 'warn' },
     { value: 'accent', label: 'accent' }
   ];
-  config: LuxComponentsConfigParameters;
+  readonly config = signal<LuxComponentsConfigParameters>(this.configService.currentConfig);
   log = logResult;
-  label = 'Login';
-  iconName = 'lux-interface-login-circle';
-  iconShowRight = false;
-  disabled = false;
-  blank = true;
-  href = 'https://www.ihk-gfi.de/';
+  readonly label = signal('Login');
+  readonly iconName = signal('lux-interface-login-circle');
+  readonly iconShowRight = signal(false);
+  readonly disabled = signal(false);
+  readonly blank = signal(true);
+  readonly href = signal('https://www.ihk-gfi.de/');
   subscription: Subscription;
   modeChangeRunning = false;
 
   constructor() {
-    this.config = this.configService.currentConfig;
-
     this.subscription = this.configService.config.subscribe((config: LuxComponentsConfigParameters) => {
-      if (this.config !== config) {
-        this.config = config;
+      if (this.config() !== config) {
+        this.config.set(config);
       }
     });
   }
@@ -71,11 +69,11 @@ export class LinkExampleComponent implements OnDestroy {
   updateConfiguration() {
     // Hart das Array leeren, wir triggern die Uppercase Umstellung demo-mäßig einfach für alle entsprechenden Components.
     // Beim Zerstören der Component wird die Konfiguration sowieso wieder resettet (siehe example-base-structure.component.ts).
-    this.config.labelConfiguration!.notAppliedTo = [];
-    this.configService.updateConfiguration(this.config);
+    this.config().labelConfiguration!.notAppliedTo = [];
+    this.configService.updateConfiguration(this.config());
   }
 
   click(event: Event) {
-    this.log(this.showOutputEvents, 'luxClicked', event);
+    this.log(this.showOutputEvents(), 'luxClicked', event);
   }
 }

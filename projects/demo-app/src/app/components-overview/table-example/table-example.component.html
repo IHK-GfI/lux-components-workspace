@@ -3,33 +3,33 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90table-v21"
 >
   <example-base-content class="example-base-content">
-    <div [ngStyle]="{ height: calculateProportions ? tableHeightPx + 'px' : 'unset' }" class="lux-table-example">
+    <div [ngStyle]="{ height: calculateProportions() ? tableHeightPx() + 'px' : 'unset' }" class="lux-table-example">
       <lux-table
-        [luxMinWidthPx]="minWidthPx"
-        [luxData]="dataSource"
-        [luxShowPagination]="pagination"
-        [luxColWidthsPercent]="columnWidthOption"
-        [luxShowFilter]="filter"
-        [luxFilterText]="filterText"
-        [luxShowColumnSelector]="showColumnSelector"
+        [luxMinWidthPx]="minWidthPx()"
+        [luxData]="dataSource()"
+        [luxShowPagination]="pagination()"
+        [luxColWidthsPercent]="columnWidthOption()"
+        [luxShowFilter]="filter()"
+        [luxFilterText]="filterText()"
+        [luxShowColumnSelector]="showColumnSelector()"
         luxColumnStorageKey="lux.app.demo.table"
-        [luxPageSize]="pageSize"
-        [luxClasses]="cssClass"
-        [luxPageSizeOptions]="pageSizeOption"
+        [luxPageSize]="pageSize()"
+        [luxClasses]="cssClass()"
+        [luxPageSizeOptions]="pageSizeOption()"
         [luxMultiSelect]="multiSelect"
-        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick"
-        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty"
-        [luxNoDataText]="noDataText"
-        [luxSelected]="bindLuxSelected ? selected : unboundSelected"
-        [luxShowSelectedChangeCursor]="bindLuxSelected || observeSelectedChange || observeSelectedAsArrayChange"
+        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()"
+        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty()"
+        [luxNoDataText]="noDataText()"
+        [luxSelected]="bindLuxSelected() ? selected() : unboundSelected()"
+        [luxShowSelectedChangeCursor]="bindLuxSelected() || observeSelectedChange() || observeSelectedAsArrayChange()"
         [luxShowDoubleClickedCursor]="doubleClickActive"
         [luxCompareWith]="compareFn"
-        [luxHideBorders]="hideBorders"
-        [luxAutoPaginate]="autoPagination"
-        [luxPagerDisabled]="pagerDisabled"
-        [luxPagerTooltip]="pagerTooltip"
-        [luxPagerFirstLastButton]="pagerFirstLastButton"
-        [luxAlignElementsTop]="alignElementsTop"
+        [luxHideBorders]="hideBorders()"
+        [luxAutoPaginate]="autoPagination()"
+        [luxPagerDisabled]="pagerDisabled()"
+        [luxPagerTooltip]="pagerTooltip()"
+        [luxPagerFirstLastButton]="pagerFirstLastButton()"
+        [luxAlignElementsTop]="alignElementsTop()"
         #myTable
       >
         <lux-table-column
@@ -74,7 +74,7 @@
             <ng-template> Symbol Footer </ng-template>
           </lux-table-column-footer>
         </lux-table-column>
-        @if (!multiSelect || !multiSelectOnlyCheckboxClick) {
+        @if (!multiSelect || !multiSelectOnlyCheckboxClick()) {
           <lux-table-column
             luxColumnDef="date"
             luxConfigLabel="Datum"
@@ -181,7 +181,7 @@
       <lux-menu-item
         luxLabel="Tabelle leeren"
         luxColor="warn"
-        [luxDisabled]="dataSource.length === 0"
+        [luxDisabled]="dataSource().length === 0"
         [luxRaised]="true"
         (luxClicked)="clearData()"
         luxTagId="menu-clear"

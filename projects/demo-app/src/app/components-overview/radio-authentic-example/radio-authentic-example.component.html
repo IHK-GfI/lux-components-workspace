@@ -7,59 +7,59 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-radio-ac
         luxAutofocus
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
-        [luxOptions]="useSimpleArray ? optionsPrimitive : options"
-        [luxGroupName]="groupNameNormal"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxOptionLabelProp]="useTemplatesForLabels() ? undefined : 'label'"
+        [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
+        [luxGroupName]="groupNameNormal()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required"
-        [luxReadonly]="readonly"
-        [luxOrientationVertical]="isVertical"
-        [luxDense]="denseFormat"
-        [luxPickValue]="useValueFn ? pickValueFn : undefined"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxOrientationVertical]="isVertical()"
+        [luxDense]="denseFormat()"
+        [luxPickValue]="useValueFn() ? pickValueFn : undefined"
         [(luxSelected)]="value"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxCompareWith]="useCompareWithFn ? compareWithFn : undefined"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxSelectedChange)="log(showOutputEvents, 'luxSelectedChange', $event)"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn() ? compareWithFn : undefined"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxSelectedChange)="log(showOutputEvents(), 'luxSelectedChange', $event)"
         #defaultRadioComp
       >
         <ng-template let-item>via Template {{ item | json }}</ng-template>
       </lux-radio-ac>
-      <example-value [value]="value"></example-value>
+      <example-value [value]="value()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-radio-ac
-        [luxOptionLabelProp]="useTemplatesForLabels ? undefined : 'label'"
-        [luxOptions]="useSimpleArray ? optionsPrimitive : options"
-        [luxGroupName]="groupNameReactive"
+        [luxOptionLabelProp]="useTemplatesForLabels() ? undefined : 'label'"
+        [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
+        [luxGroupName]="groupNameReactive()"
         [luxControlBinding]="controlBinding"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
         [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly"
-        [luxOrientationVertical]="isVertical"
-        [luxDense]="denseFormat"
-        [luxPickValue]="useValueFn ? pickValueFn : undefined"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxCompareWith]="useCompareWithFn ? compareWithFn : undefined"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        [luxReadonly]="readonly()"
+        [luxOrientationVertical]="isVertical()"
+        [luxDense]="denseFormat()"
+        [luxPickValue]="useValueFn() ? pickValueFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn() ? compareWithFn : undefined"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         #reactiveRadioComp
       >
         <ng-template let-item>via Template {{ item | json }}</ng-template>
@@ -87,7 +87,7 @@
       luxLabel="Option 1"
       [(luxValue)]="options[0].label"
       (luxValueChange)="onRefresh()"
-      [luxDisabled]="useSimpleArray"
+      [luxDisabled]="useSimpleArray()"
       [luxNoBottomLabel]="true"
     ></lux-input-ac>
     <lux-input-ac
@@ -95,7 +95,7 @@
       luxLabel="Option 2"
       [(luxValue)]="options[1].label"
       (luxValueChange)="onRefresh()"
-      [luxDisabled]="useSimpleArray"
+      [luxDisabled]="useSimpleArray()"
       [luxNoBottomLabel]="true"
     ></lux-input-ac>
     <lux-input-ac
@@ -103,7 +103,7 @@
       luxLabel="Option 3"
       [(luxValue)]="options[2].label"
       (luxValueChange)="onRefresh()"
-      [luxDisabled]="useSimpleArray"
+      [luxDisabled]="useSimpleArray()"
       [luxNoBottomLabel]="true"
     ></lux-input-ac>
     <lux-input-ac
@@ -154,7 +154,7 @@
       [(luxChecked)]="disabledFirst"
       (luxCheckedChange)="onToggleDisabledFirst()"
       luxLabel="1. Option deaktivieren"
-      [luxDisabled]="useSimpleArray"
+      [luxDisabled]="useSimpleArray()"
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
@@ -244,7 +244,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useErrorMessage) {
+    @if (useErrorMessage()) {
     <lux-input-ac
       luxName="radio_luxErrorMessage"
       luxLabel="luxErrorMessage"
@@ -253,7 +253,7 @@
       [(luxValue)]="errorMessage"
     >
     </lux-input-ac>
-    } @if (!useErrorMessage) {
+    } @if (!useErrorMessage()) {
     <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-toggle-ac

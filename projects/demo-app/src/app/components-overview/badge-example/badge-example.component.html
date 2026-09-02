@@ -2,12 +2,12 @@
   exampleTitle="Badge"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90badge-v21"
 >
-  <example-base-content class="lux-flex lux-flex-col lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor }">
+  <example-base-content class="lux-flex lux-flex-col lux-gap-4" [ngStyle]="{ backgroundColor: backgroundColor() }">
     @for (color of colors; track color) {
       <div class="lux-min-height-12">
-        <lux-badge [luxIconName]="iconName" [luxColor]="color" [luxUppercase]="uppercase" [luxMuted]="muted" [luxSize]="size">
+        <lux-badge [luxIconName]="iconName()" [luxColor]="color" [luxUppercase]="uppercase()" [luxMuted]="muted()" [luxSize]="size()">
           <lux-label [luxId]="'bsp-badge-label-' + color">
-            {{ text }}
+            {{ text() }}
           </lux-label>
         </lux-badge>
       </div>

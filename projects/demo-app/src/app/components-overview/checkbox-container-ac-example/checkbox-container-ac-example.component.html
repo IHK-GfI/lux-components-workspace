@@ -4,7 +4,7 @@
 >
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
     <h2>Testkomponente</h2>
-    <lux-checkbox-container-ac [luxLabel]="label" [luxVertical]="isVertical">
+    <lux-checkbox-container-ac [luxLabel]="label()" [luxVertical]="isVertical()">
       <lux-checkbox-ac luxLabel="Lorem ipsum"></lux-checkbox-ac>
       <lux-checkbox-ac luxLabel="dolor"></lux-checkbox-ac>
       <lux-checkbox-ac luxLabel="sit amet consectetur"></lux-checkbox-ac>
@@ -12,20 +12,20 @@
       <lux-checkbox-ac luxLabel="adipisiQuo, necessitatibus earum dolorcing"></lux-checkbox-ac>
     </lux-checkbox-container-ac>
 
-    <div class="checkbox-grid lux-mt-5" [ngClass]="{ isSmall: isSmall }">
+    <div class="checkbox-grid lux-mt-5" [ngClass]="{ isSmall: isSmall() }">
       <h2>Beispiel für eine responsive Gestaltung</h2>
-      <lux-checkbox-container-ac luxLabel="Stufe" [luxVertical]="!isSmall">
+      <lux-checkbox-container-ac luxLabel="Stufe" [luxVertical]="!isSmall()">
         <lux-checkbox-ac luxLabel="Stufe 1"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="Stufe 2"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="Stufe 2+" class="col1"></lux-checkbox-ac>
       </lux-checkbox-container-ac>
-      <lux-checkbox-container-ac luxLabel="Antragsart" [luxVertical]="!isSmall">
+      <lux-checkbox-container-ac luxLabel="Antragsart" [luxVertical]="!isSmall()">
         <lux-checkbox-ac luxLabel="eUZ"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="eBS"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="mUZ"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="mBS"></lux-checkbox-ac>
       </lux-checkbox-container-ac>
-      <lux-checkbox-container-ac luxLabel="Status" [luxVertical]="!isSmall">
+      <lux-checkbox-container-ac luxLabel="Status" [luxVertical]="!isSmall()">
         <lux-checkbox-ac luxLabel="Bewilligt"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="Abgelehnt"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="Kommentiert"></lux-checkbox-ac>
@@ -72,7 +72,7 @@
         <lux-checkbox-ac luxLabel="Option B" [(luxChecked)]="standalone2"></lux-checkbox-ac>
         <lux-checkbox-ac luxLabel="Option C" [(luxChecked)]="standalone3"></lux-checkbox-ac>
       </lux-checkbox-container-ac>
-      @if (standaloneSubmitted && !luxAtLeastOneChecked([standalone1, standalone2, standalone3])) {
+      @if (standaloneSubmitted() && !luxAtLeastOneChecked([standalone1(), standalone2(), standalone3()])) {
         <div class="lux-pl-3 lux-form-error-container">
           <lux-icon
             class="lux-form-error-icon"

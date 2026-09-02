@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OutputRefSubscription, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OutputRefSubscription, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxMenuComponent,
@@ -25,7 +25,7 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
   selector: 'app-table-example',
   templateUrl: './table-example.component.html',
   styleUrls: ['./table-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,
@@ -50,13 +50,13 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
   ]
 })
 export class TableExampleComponent extends TableExampleBaseClass implements AfterViewInit, OnDestroy {
-  @ViewChild('myTable') tableComponent!: LuxTableComponent;
+  readonly tableComponent = viewChild<LuxTableComponent<any>>('myTable');
 
   private selectedChangeSub?: OutputRefSubscription;
   private selectedAsArrayChangeSub?: OutputRefSubscription;
 
-  dataSource: any[] = [];
-  showColumnSelector = true;
+  readonly dataSource = signal<any[]>([]);
+  readonly showColumnSelector = signal(true);
 
   fontExample: { example1: string; example2: string; example3: string; example4: string; content: string }[] = [
     { example1: 'unformated', example2: 'span', example3: 'div', example4: 'p', content: 'Lorem ipsum' }
@@ -71,11 +71,11 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
   }
 
   getTableComponent(): LuxTableComponent<any> {
-    return this.tableComponent;
+    return this.tableComponent()!;
   }
 
   getDataArr() {
-    return this.dataSource;
+    return this.dataSource();
   }
 
   ngAfterViewInit(): void {
@@ -92,25 +92,25 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
     this.selectedChangeSub?.unsubscribe();
     this.selectedAsArrayChangeSub?.unsubscribe();
 
-    if (!this.tableComponent) {
+    if (!this.tableComponent()) {
       return;
     }
 
-    if (this.bindLuxSelected || this.observeSelectedChange) {
-      this.selectedChangeSub = this.tableComponent.luxSelectedChange.subscribe((selected) => {
-        if (this.bindLuxSelected) {
+    if (this.bindLuxSelected() || this.observeSelectedChange()) {
+      this.selectedChangeSub = this.tableComponent()!.luxSelectedChange.subscribe((selected) => {
+        if (this.bindLuxSelected()) {
           this.onLuxSelectedBinding(selected);
-          this.selected = selected;
+          this.selected.set(selected);
         }
 
-        if (this.observeSelectedChange) {
+        if (this.observeSelectedChange()) {
           this.onSelectedChange(selected);
         }
       });
     }
 
-    if (this.observeSelectedAsArrayChange) {
-      this.selectedAsArrayChangeSub = this.tableComponent.luxSelectedAsArrayChange.subscribe((selected) => {
+    if (this.observeSelectedAsArrayChange()) {
+      this.selectedAsArrayChangeSub = this.tableComponent()!.luxSelectedAsArrayChange.subscribe((selected) => {
         this.onSelectedAsArrayChange(selected);
       });
     }
@@ -129,7 +129,7 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
   }
 
   clearData() {
-    this.dataSource = [];
+    this.dataSource.set([]);
   }
 
   loadData(simulateLargeSource: boolean) {
@@ -167,7 +167,7 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
     ];
 
     if (!simulateLargeSource) {
-      this.dataSource = data;
+      this.dataSource.set(data);
     } else {
       const largeData = [];
       for (let j = 0; j < 10; j++) {
@@ -178,7 +178,7 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
           largeData.push(newObj);
         }
       }
-      this.dataSource = largeData;
+      this.dataSource.set(largeData);
     }
   }
 }

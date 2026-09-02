@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, QueryList, ViewChild, ViewChildren, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, inject, signal, viewChild, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     ILuxFileActionConfig,
@@ -26,7 +26,7 @@ import { FileExampleComponent } from '../file-example.component';
 @Component({
   selector: 'app-file-list-example',
   templateUrl: './file-list-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxInputAcComponent,
@@ -49,19 +49,19 @@ export class FileListExampleComponent
 {
   private dialogService = inject(LuxDialogService);
 
-  @ViewChildren(LuxFileListComponent) fileLists!: QueryList<LuxFileListComponent>;
-  @ViewChild('filelistexamplewithoutform', { read: LuxFileListComponent, static: true }) fileBaseWithoutComponent!: LuxFileListComponent;
-  @ViewChild('filelistexamplewithform', { read: LuxFileListComponent, static: true }) fileBaseWithComponent!: LuxFileListComponent;
+  readonly fileLists = viewChildren(LuxFileListComponent);
+  readonly fileBaseWithoutComponent = viewChild.required('filelistexamplewithoutform', { read: LuxFileListComponent });
+  readonly fileBaseWithComponent = viewChild.required('filelistexamplewithform', { read: LuxFileListComponent });
 
-  namePrefixAccept = '(akzeptiert) ';
-  namePrefixColorAccept = '#3e8320';
-  nameSuffixAccept = ` (${new Date().toLocaleDateString()})`;
-  nameSuffixColorAccept = undefined;
+  readonly namePrefixAccept = signal('(akzeptiert) ');
+  readonly namePrefixColorAccept = signal('#3e8320');
+  readonly nameSuffixAccept = signal(` (${new Date().toLocaleDateString()})`);
+  readonly nameSuffixColorAccept = signal<string | undefined>(undefined);
 
-  namePrefixDecline = '(abgelehnt) ';
-  namePrefixColorDecline = 'red';
-  nameSuffixDecline = ` (${new Date().toLocaleDateString()})`;
-  nameSuffixColorDecline = undefined;
+  readonly namePrefixDecline = signal('(abgelehnt) ');
+  readonly namePrefixColorDecline = signal('red');
+  readonly nameSuffixDecline = signal(` (${new Date().toLocaleDateString()})`);
+  readonly nameSuffixColorDecline = signal<string | undefined>(undefined);
 
   subscriptions: Subscription[] = [];
 
@@ -87,19 +87,19 @@ export class FileListExampleComponent
 
     this.subscriptions.push(
       dialogRef.dialogDeclined.subscribe(() => {
-        fileObject.namePrefix = this.namePrefixDecline;
-        fileObject.namePrefixColor = this.namePrefixColorDecline;
-        fileObject.nameSuffix = this.nameSuffixDecline;
-        fileObject.nameSuffixColor = this.nameSuffixColorDecline;
+        fileObject.namePrefix = this.namePrefixDecline();
+        fileObject.namePrefixColor = this.namePrefixColorDecline();
+        fileObject.nameSuffix = this.nameSuffixDecline();
+        fileObject.nameSuffixColor = this.nameSuffixColorDecline();
       })
     );
 
     this.subscriptions.push(
       dialogRef.dialogConfirmed.subscribe(() => {
-        fileObject.namePrefix = this.namePrefixAccept;
-        fileObject.namePrefixColor = this.namePrefixColorAccept;
-        fileObject.nameSuffix = this.nameSuffixAccept;
-        fileObject.nameSuffixColor = this.nameSuffixColorAccept;
+        fileObject.namePrefix = this.namePrefixAccept();
+        fileObject.namePrefixColor = this.namePrefixColorAccept();
+        fileObject.nameSuffix = this.nameSuffixAccept();
+        fileObject.nameSuffixColor = this.nameSuffixColorAccept();
       })
     );
   }
@@ -117,9 +117,9 @@ export class FileListExampleComponent
     }
   ];
 
-  showPreview = true;
-  multiple = true;
-  heading = 4;
+  readonly showPreview = signal(true);
+  readonly multiple = signal(true);
+  readonly heading = signal(4);
   headingValidator = Validators.pattern('[1-6]');
 
   protected initUploadActionConfig() {
@@ -133,7 +133,7 @@ export class FileListExampleComponent
       label: 'Hochladen',
       labelHeader: 'Neue Dateien hochladen',
       onClick: (files: ILuxFileObject[]) => {
-        this.log(this.showOutputEvents, 'uploadActionConfig onClick', files);
+        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', files);
         this.onUpload(files);
       }
     };
@@ -149,7 +149,7 @@ export class FileListExampleComponent
           file.name = 'example.png';
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
-          this.selected = [
+          this.selected.set([
             fileObject,
             {
               name: 'Lorem ipsum dolor sit amet.pdf',
@@ -157,7 +157,7 @@ export class FileListExampleComponent
               type: 'application/pdf',
               size: loremIpsumPdfBase64.length
             }
-          ];
+          ]);
           this.form
             .get(this.controlBinding)!
             .setValue([
@@ -177,7 +177,7 @@ export class FileListExampleComponent
   }
 
   ngAfterViewInit() {
-    this.fileComponents = this.fileLists.toArray();
+    this.fileComponents = [...this.fileLists()];
 
     this.subscriptions.push(
       this.form

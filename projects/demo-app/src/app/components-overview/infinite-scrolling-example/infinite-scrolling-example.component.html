@@ -3,17 +3,17 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxinfinitescroll-v21"
 >
   <example-base-content>
-    @if (created) {
+    @if (created()) {
     <lux-list
       class="infinite-list"
       luxLabel="Beispielliste für unendliches Scrollen"
       luxInfiniteScroll
-      [luxImmediateCallback]="immediateCallback"
-      [luxIsLoading]="isLoading"
-      [luxScrollPercent]="scrollPercent"
+      [luxImmediateCallback]="immediateCallback()"
+      [luxIsLoading]="isLoading()"
+      [luxScrollPercent]="scrollPercent()"
       (luxScrolled)="onScroll()"
     >
-      @for (listItem of listItems; track trackByFn($index, listItem)) {
+      @for (listItem of listItems(); track trackByFn($index, listItem)) {
       <lux-list-item [luxTitle]="listItem">
         <lux-list-item-icon>
           <lux-icon [luxIconName]="'lux-interface-setting-cog'" luxIconSize="1x"></lux-icon>

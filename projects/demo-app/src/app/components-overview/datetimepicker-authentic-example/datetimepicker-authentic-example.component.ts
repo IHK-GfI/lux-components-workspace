@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
     LuxAutofocusDirective,
@@ -27,7 +27,7 @@ interface DatetimeDummyForm {
 @Component({
   selector: 'app-datetimepicker-authentic-example',
   templateUrl: './datetimepicker-authentic-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxSelectAcComponent,
@@ -47,58 +47,58 @@ interface DatetimeDummyForm {
   ]
 })
 export class DatetimepickerAuthenticExampleComponent {
-  @ViewChild('test2') dateTimeInFormComponent!: LuxDatetimepickerAcComponent;
-  useCustomFilter = false;
-  useErrorMessage = true;
-  showOutputEvents = false;
+  readonly dateTimeInFormComponent = viewChild.required<LuxDatetimepickerAcComponent>('test2');
+  readonly useCustomFilter = signal(false);
+  readonly useErrorMessage = signal(true);
+  readonly showOutputEvents = signal(false);
   form: FormGroup<DatetimeDummyForm>;
   log = logResult;
   validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' }
   ];
-  value?: string;
+  readonly value = signal<string | undefined>(undefined);
   controlBinding = 'datepickerExample';
-  disabled = false;
-  readonly = false;
-  required = false;
-  denseFormat = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly denseFormat = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  placeholder = 'Placeholder';
-  controlValidators: ValidatorFn[] = [];
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  showToggle = true;
-  opened = false;
-  labelLongFormat = false;
-  minDate = '01.01.2000, 00:00';
-  maxDate = '31.12.2100, 23:59';
-  startView: LuxStartAcView = 'month';
-  startDate = '';
-  startTime: number[] = [];
-  _startTimeAsString?: string;
+  readonly placeholder = signal('Placeholder');
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly showToggle = signal(true);
+  readonly opened = signal(false);
+  readonly labelLongFormat = signal(false);
+  readonly minDate = signal('01.01.2000, 00:00');
+  readonly maxDate = signal('31.12.2100, 23:59');
+  readonly startView = signal<LuxStartAcView>('month');
+  readonly startDate = signal('');
+  readonly startTime = signal<number[]>([]);
+  private readonly _startTimeAsString = signal<string | undefined>(undefined);
 
   get startTimeAsString(): string | undefined {
-    return this._startTimeAsString;
+    return this._startTimeAsString();
   }
 
   set startTimeAsString(startTime) {
-    this._startTimeAsString = startTime;
+    this._startTimeAsString.set(startTime);
 
     if (startTime && startTime.indexOf(':') >= 0) {
       const timeArr = startTime.trim().split(':');
       if (timeArr.length === 2) {
-        this.startTime = [+timeArr[0], +timeArr[1]];
+        this.startTime.set([+timeArr[0], +timeArr[1]]);
       } else {
-        this.startTime = [];
+        this.startTime.set([]);
       }
     } else {
-      this.startTime = [];
+      this.startTime.set([]);
     }
   }
   customFilterString = this.customFilter + '';
@@ -113,11 +113,11 @@ export class DatetimepickerAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     if (required) {
-      this.form.get(this.controlBinding)!.setValidators([Validators.required, this.dateTimeInFormComponent.dateTimeValidator]);
+      this.form.get(this.controlBinding)!.setValidators([Validators.required, this.dateTimeInFormComponent().dateTimeValidator]);
     } else {
-      this.form.get(this.controlBinding)!.setValidators(this.dateTimeInFormComponent.dateTimeValidator);
+      this.form.get(this.controlBinding)!.setValidators(this.dateTimeInFormComponent().dateTimeValidator);
     }
     this.form.get(this.controlBinding)!.updateValueAndValidity();
   }

@@ -1,11 +1,11 @@
 <p>Zum Bearbeiten einer Adresse klicken Sie auf die jeweilige Zeile.</p>
 <lux-button luxLabel="Hinzufügen" [luxStroked]="true" luxColor="primary" (luxClicked)="onAddRow($event)"></lux-button>
-<lux-table [luxData]="dataSource" [luxColWidthsPercent]="[70, 30]" [ngClass]="{ 'validation-active': validationEnabled() }" [luxShowSingleClickedCursor]="true" (luxSingleClicked)="onStartEditMode($event)" (keydown.esc)="onEscape()" [luxAlignElementsTop]="validationEnabled()">
+<lux-table [luxData]="dataSource()" [luxColWidthsPercent]="[70, 30]" [ngClass]="{ 'validation-active': validationEnabled() }" [luxShowSingleClickedCursor]="true" (luxSingleClicked)="onStartEditMode($event)" (keydown.esc)="onEscape()" [luxAlignElementsTop]="validationEnabled()">
   <lux-table-column luxColumnDef="position">
     <lux-table-column-header><ng-template>Straße</ng-template> </lux-table-column-header>
     <lux-table-column-content
       ><ng-template let-element let-index="index">
-        @if(editRow !== index) {
+        @if(editRow() !== index) {
         <div class="valuefield-container">
           <span>{{ element.get('streetName')?.value }}</span>
         </div>
@@ -32,7 +32,7 @@
     <lux-table-column-header><ng-template>Nummer</ng-template></lux-table-column-header>
     <lux-table-column-content
       ><ng-template let-element let-index="index">
-        @if(editRow !== index) {
+        @if(editRow() !== index) {
         <div class="valuefield-container">
           <span>{{ element.get('nr')?.value }}</span>
         </div>

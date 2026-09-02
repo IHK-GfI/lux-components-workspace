@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { LuxStepperLargeStepComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
@@ -8,14 +8,14 @@ import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-ex
   selector: 'lux-stepper-large-extern-step-example',
   templateUrl: './stepper-large-extern-step-example.component.html',
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExternStepExampleComponent }],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExternStepExampleComponent extends LuxStepperLargeStepComponent implements OnInit, AfterViewInit {
   private cdr = inject(ChangeDetectorRef);
   dataService = inject(StepperLargeExampleDataService);
 
-  @ViewChild('requiredCheck') toggle!: LuxToggleAcComponent;
+  readonly toggle = viewChild<LuxToggleAcComponent>('requiredCheck');
 
   showErrorMessage = false;
   subscriptions: Subscription[] = [];
@@ -28,8 +28,9 @@ export class StepperLargeExternStepExampleComponent extends LuxStepperLargeStepC
     this.subscriptions.push(
       this.dataService.showErrorMessage.subscribe((value) => {
         this.showErrorMessage = value;
-        if (this.showErrorMessage && this.toggle) {
-          this.toggle.formControl.markAsTouched();
+        const toggle = this.toggle();
+        if (this.showErrorMessage && toggle) {
+          toggle.formControl.markAsTouched();
         }
       })
     );

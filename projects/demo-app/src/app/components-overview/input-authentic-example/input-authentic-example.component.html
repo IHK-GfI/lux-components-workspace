@@ -8,37 +8,37 @@
       <lux-input-ac
         luxAutofocus
         [(luxDisabled)]="disabled"
-        [luxRequired]="required"
-        [luxReadonly]="readonly"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
         [(luxValue)]="value"
-        [luxAutocomplete]="autocomplete"
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        [luxMaxLength]="maxLength"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxControlValidators]="controlValidators"
-        [luxType]="inputType"
-        [luxNumberAlignLeft]="numberLeft"
-        [luxHideCounterLabel]="hideCounterLabel"
-        [luxClearable]="clearable"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxMaxLength]="maxLength()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxType]="inputType()"
+        [luxNumberAlignLeft]="numberLeft()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxClearable]="clearable()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
         luxTagId="input-non-reactive"
       >
-        @if (showPrefix) {
+        @if (showPrefix()) {
           <lux-input-ac-prefix> <lux-icon luxIconName="lux-interface-alert-information-circle"></lux-icon>&nbsp; </lux-input-ac-prefix>
         }
-        @if (showSuffix) {
+        @if (showSuffix()) {
           <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
         }
         <lux-form-hint
@@ -52,41 +52,41 @@
           dolor sit amet.</lux-form-hint
         >
       </lux-input-ac>
-      <example-value [value]="value"></example-value>
+      <example-value [value]="value()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-input-ac
         [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly"
-        [luxAutocomplete]="autocomplete"
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxNoTopLabel]="noTopLabel"
-        [luxNoBottomLabel]="noBottomLabel"
-        [luxNoLabels]="noLabels"
-        [luxMaxLength]="maxLength"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxReadonly]="readonly()"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxMaxLength]="maxLength()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         [luxControlBinding]="controlBinding"
-        [luxType]="inputType"
-        [luxNumberAlignLeft]="numberLeft"
-        [luxHideCounterLabel]="hideCounterLabel"
-        [luxClearable]="clearable"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        (luxFocus)="log(showOutputEvents, 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxBlur)="log(showOutputEvents, 'luxBlur', $event)"
+        [luxType]="inputType()"
+        [luxNumberAlignLeft]="numberLeft()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxClearable]="clearable()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
         luxTagId="input-reactive"
       >
-        @if (showPrefix) {
+        @if (showPrefix()) {
           <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-cogs'"></lux-icon>&nbsp; </lux-input-ac-prefix>
         }
-        @if (showSuffix) {
+        @if (showSuffix()) {
           <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
         }
         <lux-form-hint
@@ -109,14 +109,14 @@
             <lux-input-ac
               luxLabel="Firma"
               luxPlaceholder="IHK-GfI"
-              [luxDense]="denseFormat"
+              [luxDense]="denseFormat()"
               [luxValue]="exampleCompany"
               [luxRequired]="true"
             ></lux-input-ac>
             <lux-datepicker-ac
               luxLabel="Geburtsdatum"
               luxPlaceholder="01.05.2022"
-              [luxDense]="denseFormat"
+              [luxDense]="denseFormat()"
               [luxValue]="exampleDate"
               luxHint="Diese Angabe ist optional."
             >
@@ -124,27 +124,27 @@
             <lux-input-ac
               luxLabel="Straße"
               luxPlaceholder="Hörder Hafenstr."
-              [luxDense]="denseFormat"
+              [luxDense]="denseFormat()"
               [luxValue]="exampleStreet"
             ></lux-input-ac>
             <lux-input-ac
               luxLabel="Hausnummer"
               luxPlaceholder="5"
               [luxValue]="exampleNumber"
-              [luxDense]="denseFormat"
+              [luxDense]="denseFormat()"
               luxHint="Dieser Hinweis erscheint nur onFocus"
               [luxHintShowOnlyOnFocus]="true"
-              [luxAutocomplete]="autocomplete"
+              [luxAutocomplete]="autocomplete()"
             >
             </lux-input-ac>
             <lux-input-ac
               luxLabel="Postleitzahl"
               luxPlaceholder="44263"
               [luxValue]="exampleCompany"
-              [luxDense]="denseFormat"
+              [luxDense]="denseFormat()"
               luxHint="Die Postleitzahl besteht aus 5 Ziffern."
             ></lux-input-ac>
-            <lux-input-ac luxLabel="Ort" luxPlaceholder="Dortmund" [luxDense]="denseFormat" [luxValue]="exampleDate"></lux-input-ac>
+            <lux-input-ac luxLabel="Ort" luxPlaceholder="Dortmund" [luxDense]="denseFormat()" [luxValue]="exampleDate"></lux-input-ac>
           </div>
         </lux-card-content>
         <lux-card-actions class="lux-mt-4">
@@ -204,7 +204,7 @@
     <lux-toggle-ac
       luxLabel="Zeige eine Hint-Komponente"
       [luxChecked]="true"
-      (luxCheckedChange)="hint = $event === true ? '' : 'hint'"
+      (luxCheckedChange)="hint.set($event === true ? '' : 'hint')"
       [luxNoTopLabel]="true"
     ></lux-toggle-ac>
     <lux-input-ac
@@ -264,12 +264,12 @@
       luxLabel="luxMaxLength"
       luxHint="Über diese Property kann die maximale Länge angegeben werden. Vorsicht funktioniert nicht für den Type 'number'"
       luxType="number"
-      [luxDisabled]="inputType === 'number'"
+      [luxDisabled]="inputType() === 'number'"
       [luxNumberAlignLeft]="true"
       [(luxValue)]="maxLength"
     >
     </lux-input-ac>
-    @if (inputType === 'number') {
+    @if (inputType() === 'number') {
       <lux-toggle-ac
         luxLabel="luxNumberAlignLeft"
         luxHint="Mithilfe dieses Flags kann eingestellt werden, ob Zahlen links- oder rechtsbündig dargestellt werden."
@@ -278,7 +278,7 @@
       >
       </lux-toggle-ac>
     }
-    @if (inputType === 'text' && maxLength) {
+    @if (inputType() === 'text' && maxLength()) {
       <lux-toggle-ac
         luxLabel="luxHideCounterLabel"
         luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
@@ -317,7 +317,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useErrorMessage) {
+    @if (useErrorMessage()) {
       <lux-input-ac
         luxLabel="luxErrorMessage"
         luxHint="Über diese Property lässt sich eine feste Fehlermeldung
@@ -326,7 +326,7 @@
       >
       </lux-input-ac>
     }
-    @if (!useErrorMessage) {
+    @if (!useErrorMessage()) {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac

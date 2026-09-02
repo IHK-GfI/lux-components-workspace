@@ -7,116 +7,116 @@
       <h3>Beispiel ohne Reactive-Form</h3>
       <lux-lookup-combobox-ac
         luxAutofocus
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxCustomStyles]="customStyle"
-        [luxCustomInvalidStyles]="customInvalidStyle"
-        [luxRenderProp]="useRenderFn ? renderFn : renderProp"
-        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel"
-        [luxParameters]="parameters"
-        [luxBehandlungUngueltige]="behandlungUngueltige"
-        [luxTableNo]="tableNo"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required"
-        [luxReadonly]="readonly"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
         [(luxValue)]="value"
-        [luxCompareFn]="compareFn"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxControlValidators]="controlValidators"
-        [luxEntryBlockSize]="entryBlockSize"
-        [luxEnableFilter]="enableFilter"
-        [luxFilterPlaceholder]="filterPlaceholder"
-        [luxFilterValue]="filterValue"
-        [luxFilterClearAriaLabel]="filterClearAriaLabel"
-        [luxVisibleOptionCount]="visibleOptionCount"
-        [luxWithEmptyEntry]="bLuxWithEmptyEntry"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        (luxValueChange)="log(showOutputEvents, 'luxValueChange', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        [luxCompareFn]="compareFn()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxEntryBlockSize]="entryBlockSize()"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxWithEmptyEntry]="bLuxWithEmptyEntry()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         luxLookupId="normalcombobox"
         luxTagId="lkpexample1"
       >
       </lux-lookup-combobox-ac>
-      <example-value [value]="value"></example-value>
+      <example-value [value]="value()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col">
       <h3>Multiselect Beispiel</h3>
       <lux-lookup-combobox-ac
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxCustomStyles]="customStyle"
-        [luxCustomInvalidStyles]="customInvalidStyle"
-        [luxRenderProp]="useRenderFn ? renderFn : renderProp"
-        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel"
-        [luxParameters]="parameters"
-        [luxBehandlungUngueltige]="behandlungUngueltige"
-        [luxTableNo]="tableNo"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
         [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly"
-        [luxRequired]="required"
-        [luxEntryBlockSize]="entryBlockSize"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
-        [luxControlValidators]="controlValidators"
+        [luxReadonly]="readonly()"
+        [luxRequired]="required()"
+        [luxEntryBlockSize]="entryBlockSize()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
         [(luxValue)]="multiValue"
-        [luxCompareFn]="compareFn"
+        [luxCompareFn]="compareFn()"
         [luxMultiple]="true"
-        [luxEnableFilter]="enableFilter"
-        [luxFilterPlaceholder]="filterPlaceholder"
-        [luxFilterValue]="filterValue"
-        [luxFilterClearAriaLabel]="filterClearAriaLabel"
-        [luxVisibleOptionCount]="visibleOptionCount"
-        [luxWithEmptyEntry]="bLuxWithEmptyEntry"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        (luxValueChange)="log(showOutputEvents, 'luxValueChange', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxWithEmptyEntry]="bLuxWithEmptyEntry()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         luxLookupId="multicombobox"
         luxTagId="lkpexample2"
       >
       </lux-lookup-combobox-ac>
-      <example-value [value]="multiValue"></example-value>
+      <example-value [value]="multiValue()"></example-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
       <lux-lookup-combobox-ac
-        [luxPlaceholder]="placeholder"
-        [luxLabel]="label"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxCustomStyles]="customStyle"
-        [luxCustomInvalidStyles]="customInvalidStyle"
-        [luxRenderProp]="useRenderFn ? renderFn : renderProp"
-        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel"
-        [luxParameters]="parameters"
-        [luxBehandlungUngueltige]="behandlungUngueltige"
-        [luxTableNo]="tableNo"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
         [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly"
-        [luxEntryBlockSize]="entryBlockSize"
-        [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
-        [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxReadonly]="readonly()"
+        [luxEntryBlockSize]="entryBlockSize()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         [luxControlBinding]="controlBinding"
-        [luxWithEmptyEntry]="bLuxWithEmptyEntry"
-        [luxEnableFilter]="enableFilter"
-        [luxFilterPlaceholder]="filterPlaceholder"
-        [luxFilterValue]="filterValue"
-        [luxFilterClearAriaLabel]="filterClearAriaLabel"
-        [luxVisibleOptionCount]="visibleOptionCount"
-        [luxLabelLongFormat]="labelLongFormat"
-        [luxDense]="denseFormat"
-        [luxCompareFn]="compareFn"
-        (luxValueChange)="log(showOutputEvents, 'luxValueChange', $event)"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+        [luxWithEmptyEntry]="bLuxWithEmptyEntry()"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        [luxCompareFn]="compareFn()"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         luxLookupId="reactivecombobox"
         luxTagId="lkpexample3"
       >
@@ -171,7 +171,7 @@
       </lux-toggle-ac>
       <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
     </div>
-    @if (enableFilter) {
+    @if (enableFilter()) {
       <div class="lux-flex lux-items-center lux-gap-2">
         <lux-input-ac
           class="lux-flex-auto"
@@ -261,10 +261,10 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useRenderFn) {
+    @if (useRenderFn()) {
       <pre class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
     }
-    @if (!useRenderFn) {
+    @if (!useRenderFn()) {
       <lux-input-ac
         [(luxValue)]="renderProp"
         luxName="lookup-combobox_luxRenderProp"
@@ -273,7 +273,7 @@
       >
       </lux-input-ac>
     }
-    @if (!useRenderFn) {
+    @if (!useRenderFn()) {
       <lux-input-ac
         [(luxValue)]="renderPropNoPropertyLabel"
         luxName="lookup_autocomplete_luxRenderPropNoPropertyLabel"
@@ -303,7 +303,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (customStyle) {
+    @if (customStyle()) {
       <pre class="lux-label"><b>customStyles</b> = {{ customStyle | json }}</pre>
     }
     <lux-toggle-ac
@@ -313,7 +313,7 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (customInvalidStyle) {
+    @if (customInvalidStyle()) {
       <pre class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle | json }}</pre>
     }
 
@@ -337,10 +337,10 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (!useErrorMessage) {
+    @if (!useErrorMessage()) {
       <pre class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
     }
-    @if (useErrorMessage) {
+    @if (useErrorMessage()) {
       <lux-input-ac
         luxName="lookup-combobox_luxErrorMessage"
         luxLabel="luxErrorMessage"

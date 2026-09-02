@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, input, model } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LuxCardComponent, LuxCardContentComponent } from '@ihk-gfi/lux-components';
 import { DseContentService } from './dse-content.service';
@@ -13,26 +13,22 @@ import { DseContentService } from './dse-content.service';
 export class DseComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private dseContent = inject(DseContentService);
-  private cdr = inject(ChangeDetectorRef);
 
-  @Input() fullWidth = false;
-
-  @Input()
-  public content?: string;
+  readonly fullWidth = input(false);
+  readonly content = model<string>();
 
   async ngOnInit() {
-    if (!this.content) {
-      this.content = this.route.snapshot.data['content'];
+    if (!this.content()) {
+      this.content.set(this.route.snapshot.data['content']);
     }
 
-    if (!this.content) {
-      this.content = await this.dseContent.load();
+    if (!this.content()) {
+      this.content.set(await this.dseContent.load());
     }
 
-    if (typeof this.content === 'string' && this.content.includes('<html') && this.content.includes('</html')) {
-      this.content = 'In der lokalen Demo wird kein Datenschutzhinweis angezeigt.';
+    const content = this.content();
+    if (typeof content === 'string' && content.includes('<html') && content.includes('</html')) {
+      this.content.set('In der lokalen Demo wird kein Datenschutzhinweis angezeigt.');
     }
-
-    this.cdr.markForCheck();
   }
 }

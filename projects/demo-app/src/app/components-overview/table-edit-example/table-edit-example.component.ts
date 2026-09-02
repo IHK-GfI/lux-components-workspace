@@ -11,7 +11,7 @@ import { TableEditWithoutFormExampleComponent } from './table-edit-without-form-
   selector: 'app-table-edit-example',
   templateUrl: './table-edit-example.component.html',
   styleUrls: ['./table-edit-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

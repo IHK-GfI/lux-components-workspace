@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -11,6 +11,8 @@ import {
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { TranslocoService } from '@jsverse/transloco';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -24,8 +26,6 @@ import {
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 
 interface DatepickerDummyForm {
   datepickerExample: FormControl<string | null>;
@@ -34,7 +34,7 @@ interface DatepickerDummyForm {
 @Component({
   selector: 'lux-datepicker-authentic-example',
   templateUrl: './datepicker-authentic-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxSelectAcComponent,
@@ -55,55 +55,50 @@ interface DatepickerDummyForm {
 })
 export class DatepickerAuthenticExampleComponent {
   private tService = inject(TranslocoService);
-  private cdr = inject(ChangeDetectorRef);
 
-  useCustomFilter = false;
-  useErrorMessage = true;
-  showOutputEvents = false;
-  form: FormGroup<DatepickerDummyForm>;
+  readonly useCustomFilter = signal(false);
+  readonly useErrorMessage = signal(true);
+  readonly showOutputEvents = signal(false);
+  readonly form = new FormGroup<DatepickerDummyForm>({
+    datepickerExample: new FormControl<string | null>(new Date(2020, 5, 28, 14, 15) as any)
+  });
   log = logResult;
-  validatorOptions = [
+  readonly validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' }
   ];
-  value = '2020-05-28T14:15:00.000Z';
-  controlBinding = 'datepickerExample';
-  disabled = false;
-  readonly = false;
-  required = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly value = signal('2020-05-28T14:15:00.000Z');
+  readonly controlBinding = 'datepickerExample';
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  placeholder = 'Placeholder';
-  controlValidators: ValidatorFn[] = [];
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  showToggle = true;
-  opened = false;
-  startDate: string | null = null;
-  minDate: string | null = null;
-  maxDate: string | null = null;
-  startView: LuxStartAcView = 'month';
-  touchUi = false;
-  labelLongFormat = false;
-  denseFormat = false;
-  customFilterString = this.weekendFilterFn + '';
-  errorCallback = exampleErrorCallback;
-  emptyCallback = emptyErrorCallback;
-  errorCallbackString = this.errorCallback + '';
-  customFilter?: LuxDateFilterAcFn;
-
-  constructor() {
-    this.form = new FormGroup<DatepickerDummyForm>({
-      datepickerExample: new FormControl<string | null>(new Date(2020, 5, 28, 14, 15) as any) // Das FormControl wandelt das Date-Objekt in einen String um -> ['2021-09-07T23:00:00.000Z']
-    });
-  }
+  readonly placeholder = signal('Placeholder');
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly showToggle = signal(true);
+  readonly opened = signal(false);
+  readonly startDate = signal<string | null>(null);
+  readonly minDate = signal<string | null>(null);
+  readonly maxDate = signal<string | null>(null);
+  readonly startView = signal<LuxStartAcView>('month');
+  readonly touchUi = signal(false);
+  readonly labelLongFormat = signal(false);
+  readonly denseFormat = signal(false);
+  readonly customFilterString = this.weekendFilterFn + '';
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
+  readonly errorCallbackString = this.errorCallback + '';
+  readonly customFilter = computed<LuxDateFilterAcFn | undefined>(() => (this.useCustomFilter() ? this.weekendFilterFn : undefined));
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 
@@ -115,10 +110,5 @@ export class DatepickerAuthenticExampleComponent {
     const day = d ? d.getDay() : 0;
     // Samstage und Sonntage als Auswahl unterbinden
     return day !== 0 && day !== 6;
-  }
-
-  toggleCustomFilter() {
-    this.customFilter = this.customFilter ? undefined : this.weekendFilterFn;
-    this.cdr.detectChanges();
   }
 }

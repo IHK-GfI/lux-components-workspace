@@ -11,7 +11,7 @@ import {
 @Component({
   selector: 'app-stepper-large-example-step-veto',
   templateUrl: './stepper-large-example-step-veto.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleStepVetoComponent }]
 })
 export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepComponent implements OnInit {

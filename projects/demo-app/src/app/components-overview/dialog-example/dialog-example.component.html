@@ -23,7 +23,7 @@
       <lux-input-ac luxName="dialog_maxHeight" luxLabel="maxHeight" [(luxValue)]="dialogConfig.maxHeight" [luxNoBottomLabel]="true">
       </lux-input-ac>
     </div>
-    @if (!useContentTemplate) {
+    @if (!useContentTemplate()) {
       <lux-input-ac
         luxName="dialog_panelClass"
         luxLabel="panelClass"
@@ -86,10 +86,10 @@
       [luxNoTopLabel]="true"
     >
     </lux-toggle-ac>
-    @if (useContentTemplate) {
+    @if (useContentTemplate()) {
       <pre class="lux-label">{{ contentTemplateString }}</pre>
     }
-    @if (!useContentTemplate) {
+    @if (!useContentTemplate()) {
       <lux-input-ac
         luxName="dialog_content"
         luxLabel="content"

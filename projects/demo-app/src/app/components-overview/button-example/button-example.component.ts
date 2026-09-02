@@ -1,12 +1,12 @@
 import { NgStyle, NgTemplateOutlet } from '@angular/common';
-import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
   LuxCardActionsComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -16,9 +16,8 @@ import {
   LuxThemePalette,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -29,7 +28,7 @@ type ErrorBoxType = 'default' | 'gradient' | 'loading';
 @Component({
   selector: 'app-button-example',
   templateUrl: './button-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxToggleAcComponent,
@@ -49,11 +48,11 @@ type ErrorBoxType = 'default' | 'gradient' | 'loading';
     StatusMarkerComponent
   ]
 })
-export class ButtonExampleComponent implements OnDestroy {
+export class ButtonExampleComponent {
   private configService = inject(LuxComponentsConfigService);
+  readonly config = toSignal(this.configService.config, { initialValue: this.configService.currentConfig });
 
   showOutputEvents = false;
-  config: LuxComponentsConfigParameters;
   log = logResult;
 
   colors: any[] = [
@@ -77,46 +76,32 @@ export class ButtonExampleComponent implements OnDestroy {
   backgroundColor = '';
   buttonBadge = '';
   buttonBadgeColor: LuxThemePalette = 'primary';
-  subscription: Subscription;
   spinnerModes = ['determinate', 'indeterminate'];
   spinnerMode: LuxProgressModeType = 'determinate';
   readonly markerTypeUpdated = DemoMarkerType.Updated;
   spinnerValue = 70;
-  spinnerExampleLoading = false;
-  spinnerExampleFirstname = '';
-  spinnerExampleLastname = '';
+  readonly spinnerExampleLoading = signal(false);
+  readonly spinnerExampleFirstname = signal('');
+  readonly spinnerExampleLastname = signal('');
   errorBoxDefault = false;
   errorBoxGradient = false;
   errorBoxLoading = false;
 
   get allUpperCase() {
-    return this.config.labelConfiguration!.allUppercase;
+    return this.config().labelConfiguration!.allUppercase;
   }
 
   set allUpperCase(value: boolean) {
-    this.config.labelConfiguration!.allUppercase = value;
+    this.config().labelConfiguration!.allUppercase = value;
     this.updateConfiguration();
-  }
-
-  constructor() {
-    const configService = this.configService;
-
-    this.config = configService.currentConfig;
-
-    this.subscription = this.configService.config.subscribe((config: LuxComponentsConfigParameters) => {
-      this.config = config;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   updateConfiguration() {
     // Hart das Array leeren, wir triggern die Uppercase Umstellung demo-mäßig einfach für alle entsprechenden Components.
     // Beim Zerstören der Component wird die Konfiguration sowieso wieder resettet (siehe example-base-structure.component.ts).
-    this.config.labelConfiguration!.notAppliedTo = [];
-    this.configService.updateConfiguration(this.config);
+    const config = this.config();
+    config.labelConfiguration!.notAppliedTo = [];
+    this.configService.updateConfiguration(config);
   }
 
   onBadgeColorChanged(badgeColor: { label: string; value: LuxThemePalette }) {
@@ -132,19 +117,19 @@ export class ButtonExampleComponent implements OnDestroy {
   }
 
   spinnerExampleUpdateLoading(event: Event) {
-    this.spinnerExampleLoading = true;
+    this.spinnerExampleLoading.set(true);
     setTimeout(() => {
-      this.spinnerExampleLoading = false;
-      this.spinnerExampleFirstname = '';
-      this.spinnerExampleLastname = '';
+      this.spinnerExampleLoading.set(false);
+      this.spinnerExampleFirstname.set('');
+      this.spinnerExampleLastname.set('');
     }, 4000);
     this.log(this.showOutputEvents, 'Button clicked', event);
   }
 
   spinnerExampleClear(event: Event) {
-    this.spinnerExampleFirstname = '';
-    this.spinnerExampleLastname = '';
-    this.spinnerExampleLoading = false;
+    this.spinnerExampleFirstname.set('');
+    this.spinnerExampleLastname.set('');
+    this.spinnerExampleLoading.set(false);
     this.log(this.showOutputEvents, 'Button clicked', event);
   }
 

@@ -8,19 +8,19 @@
     }
     <!-- Beispiel-Component mit allen Input-/Output-Properties -->
     <lux-stepper
-      [luxDisabled]="disabled"
-      [luxShowNavigationButtons]="showNavigationButtons"
-      [luxLinear]="linear"
-      [luxNextButtonConfig]="useCustomButtonConfig ? computedNextButtonConfig : undefined"
-      [luxPreviousButtonConfig]="useCustomButtonConfig ? computedPreviousButtonConfig : undefined"
-      [luxFinishButtonConfig]="useCustomButtonConfig ? computedFinishButtonConfig : undefined"
-      [luxUseCustomIcons]="useCustomIcons"
-      [luxCurrentStepNumber]="currentStepNumber"
-      [luxEditedIconName]="editedIconName"
-      [luxHorizontalStepAnimationActive]="horizontalAnimation"
-      [luxVerticalStepper]="verticalStepper"
-      [luxA11YMode]="a11yMode"
-      [luxButtonAlignLeft]="buttonAlignLeft"
+      [luxDisabled]="disabled()"
+      [luxShowNavigationButtons]="showNavigationButtons()"
+      [luxLinear]="linear()"
+      [luxNextButtonConfig]="useCustomButtonConfig() ? computedNextButtonConfig : undefined"
+      [luxPreviousButtonConfig]="useCustomButtonConfig() ? computedPreviousButtonConfig : undefined"
+      [luxFinishButtonConfig]="useCustomButtonConfig() ? computedFinishButtonConfig : undefined"
+      [luxUseCustomIcons]="useCustomIcons()"
+      [luxCurrentStepNumber]="currentStepNumber()"
+      [luxEditedIconName]="editedIconName()"
+      [luxHorizontalStepAnimationActive]="horizontalAnimation()"
+      [luxVerticalStepper]="verticalStepper()"
+      [luxA11YMode]="a11yMode()"
+      [luxButtonAlignLeft]="buttonAlignLeft()"
       (luxFinishButtonClicked)="finishClicked()"
       (luxCurrentStepNumberChange)="stepNumberChanged($event)"
       (luxCheckValidation)="checkValidation($event)"
@@ -38,7 +38,7 @@
             [luxCompleted]="step.completed"
             [luxStepControl]="step.useStepControl ? step.stepControl : undefined"
           >
-            @if (!noHeaderLabels) {
+            @if (!noHeaderLabels()) {
               <lux-step-header> Step #{{ i }} </lux-step-header>
             }
             <lux-step-content>
@@ -61,9 +61,9 @@
           </lux-step>
         }
       }
-      @if (newStepsVisible) {
+      @if (newStepsVisible()) {
         <lux-step luxIconName="lux-card" [luxStepControl]="newStepsForm1">
-          @if (!noHeaderLabels) {
+          @if (!noHeaderLabels()) {
             <lux-step-header> Step #3 </lux-step-header>
           }
           <lux-step-content [formGroup]="newStepsForm1">
@@ -84,9 +84,9 @@
           </lux-step-content>
         </lux-step>
       }
-      @if (newStepsVisible) {
+      @if (newStepsVisible()) {
         <lux-step luxIconName="lux-money-atm-card-1" [luxStepControl]="newStepsForm2">
-          @if (!noHeaderLabels) {
+          @if (!noHeaderLabels()) {
             <lux-step-header> Step #4 </lux-step-header>
           }
           <lux-step-content [formGroup]="newStepsForm2">
@@ -107,7 +107,7 @@
 
       <!-- Abschluss-Step des Steppers -->
       <lux-step luxIconName="lux-interface-validation-check" [luxCompleted]="steps[0].stepControl.valid && steps[1].stepControl.valid">
-        @if (!noHeaderLabels) {
+        @if (!noHeaderLabels()) {
           <lux-step-header> Fin </lux-step-header>
         }
         <lux-step-content>
@@ -188,7 +188,7 @@
     <lux-input-ac
       luxLabel="luxEditedIconName"
       luxHint="Diese Property bestimmt das Icon für abgeschlossen editierte Steps."
-      [luxDisabled]="!useCustomIcons"
+      [luxDisabled]="!useCustomIcons()"
       [(luxValue)]="editedIconName"
     >
     </lux-input-ac>
@@ -211,7 +211,7 @@
     <lux-toggle-ac
       luxLabel="luxHorizontalStepAnimationActive"
       luxHint="Diese Property bestimmt ob die Animationen für horizontale Stepper aktiviert sind oder nicht."
-      [luxDisabled]="verticalStepper"
+      [luxDisabled]="verticalStepper()"
       [(luxChecked)]="horizontalAnimation"
       [luxNoTopLabel]="true"
     >
@@ -235,7 +235,7 @@
       luxLabel="2 Schritte dynamisch hinzufügen"
       luxHint="In diesem Beispiel werden zwei zusätzliche Schritte mit Formularen hinzugefügt. Diese sind allerdings nicht mehr editierbar, sobald sie einmal abgeschlossen wurden."
       [(luxChecked)]="newStepsVisible"
-      [luxDisabled]="currentStepNumber === 4"
+      [luxDisabled]="currentStepNumber() === 4"
       (luxCheckedChange)="onNewStepsChanged($event)"
       [luxNoTopLabel]="true"
     >
@@ -328,12 +328,12 @@
       <lux-toggle-ac
         luxLabel="Custom-Configs nutzen"
         luxHint="Wenn aktiv, werden dem Stepper eigene Konfigurationen für die Navigations-Buttons übergeben."
-        [luxDisabled]="!showNavigationButtons"
+        [luxDisabled]="!showNavigationButtons()"
         [(luxChecked)]="useCustomButtonConfig"
         [luxNoTopLabel]="true"
       >
       </lux-toggle-ac>
-      <lux-accordion class="lux-mt-5 lux-mb-5" luxMode="flat" [luxMulti]="false" [luxDisabled]="!useCustomButtonConfig">
+      <lux-accordion class="lux-mt-5 lux-mb-5" luxMode="flat" [luxMulti]="false" [luxDisabled]="!useCustomButtonConfig()">
         <lux-panel>
           <lux-panel-header-title> previousButtonConfig </lux-panel-header-title>
           <lux-panel-content>
@@ -378,7 +378,7 @@
     <lux-select-ac
       luxLabel="Button-Variante"
       luxHint="Bestimmt die Darstellungsart der Navigations-Buttons (Standard, Flat oder Stroked)."
-      [luxDisabled]="!showNavigationButtons"
+      [luxDisabled]="!showNavigationButtons()"
       [(luxSelected)]="configurationObject.variant"
       [luxOptions]="['default', 'flat', 'stroked']"
     >

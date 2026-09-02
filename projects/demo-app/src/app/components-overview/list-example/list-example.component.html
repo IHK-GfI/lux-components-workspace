@@ -6,15 +6,15 @@
     <lux-list
       class="custom-list"
       luxLabel="Meine Beispielliste"
-      [luxEmptyLabel]="emptyLabel"
-      [luxEmptyIconName]="emptyIconName"
-      [luxEmptyIconSize]="emptyIconSize"
+      [luxEmptyLabel]="emptyLabel()"
+      [luxEmptyIconName]="emptyIconName()"
+      [luxEmptyIconSize]="emptyIconSize()"
       [(luxSelectedPosition)]="selectedPosition"
-      (luxFocusedItemChange)="log(showOutputEvents, 'luxFocusedItemChange', $event)"
-      (luxFocusedPositionChange)="log(showOutputEvents, 'luxFocusedPositionChange', $event)"
-      (luxSelectedPositionChange)="log(showOutputEvents, 'luxSelectedPositionChange', $event)"
+      (luxFocusedItemChange)="log(showOutputEvents(), 'luxFocusedItemChange', $event)"
+      (luxFocusedPositionChange)="log(showOutputEvents(), 'luxFocusedPositionChange', $event)"
+      (luxSelectedPositionChange)="log(showOutputEvents(), 'luxSelectedPositionChange', $event)"
     >
-      @for (item of items; track item; let i = $index) {
+      @for (item of items(); track item; let i = $index) {
         <lux-list-item
           [luxTitle]="item.title"
           [luxSubTitle]="item.subTitle"
@@ -22,7 +22,7 @@
           [luxSelected]="item.selected"
           (luxClicked)="click($event)"
         >
-          @if (showCustomHeader) {
+          @if (showCustomHeader()) {
             <lux-list-item-custom-header>
               <div class="custom-header">
                 <lux-icon luxIconName="lux-interface-arrows-button-right-duoble"></lux-icon>
@@ -38,21 +38,21 @@
             <lux-icon [luxIconName]="item.iconName" class="{{ 'lux-color-' + colors[i % colors.length] }}"></lux-icon>
           </lux-list-item-icon>
           <lux-list-item-content>
-            @if (!showInteractiveContent) {
+            @if (!showInteractiveContent()) {
               Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim
               ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure
               reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident,
               sunt in culpa qui officia deserunt mollit anim id est laborum.
             } @else {
               <div class="lux-flex lux-flex-col lux-gap-2 lux-mt-2">
-                @if (showRow1) {
+                @if (showRow1()) {
                   <div class="lux-flex lux-gap-2 lux-flex-wrap lux-items-center">
                     <lux-chips-ac [luxHideBorder]="true" [luxNoLabels]="true" [luxInputAllowed]="false" [luxNewChipGroup]="group">
                       <lux-chip-ac-group [luxLabels]="item.chips" luxColor="primary" [luxRemovable]="true" #group> </lux-chip-ac-group>
                     </lux-chips-ac>
                   </div>
                 }
-                @if (showRow2) {
+                @if (showRow2()) {
                   <div class="lux-flex lux-gap-2 lux-flex-wrap lux-items-center">
                     <lux-input-ac
                       luxAriaLabel="Lorem ipsum"
@@ -93,26 +93,26 @@
                     ></lux-radio-ac>
                   </div>
                 }
-                @if (showRow3) {
+                @if (showRow3()) {
                   <div class="lux-flex lux-gap-4 lux-flex-wrap lux-items-center">
                     <lux-button
                       luxLabel="Bearbeiten"
                       luxColor="primary"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents, 'Bearbeiten geklickt', item.title)"
+                      (luxClicked)="log(showOutputEvents(), 'Bearbeiten geklickt', item.title)"
                     ></lux-button>
                     <lux-link
                       luxHref="#"
                       luxLabel="Löschen"
                       luxColor="warn"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents, 'Löschen geklickt', item.title)"
+                      (luxClicked)="log(showOutputEvents(), 'Löschen geklickt', item.title)"
                     ></lux-link>
                     <lux-link-plain
                       luxHref="#"
                       luxLabel="Link-Plain"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents, 'Link-Plain geklickt', item.title)"
+                      (luxClicked)="log(showOutputEvents(), 'Link-Plain geklickt', item.title)"
                     ></lux-link-plain>
                   </div>
                 }
@@ -149,19 +149,19 @@
       luxLabel="Zeige Zeile 1 (mit Chips)"
       [(luxChecked)]="showRow1"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent"
+      [luxDisabled]="!showInteractiveContent()"
     ></lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="Zeige Zeile 2 (mit Formularelementen)"
       [(luxChecked)]="showRow2"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent"
+      [luxDisabled]="!showInteractiveContent()"
     ></lux-toggle-ac>
     <lux-toggle-ac
       luxLabel="Zeige Zeile 3 (mit Buttons)"
       [(luxChecked)]="showRow3"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent"
+      [luxDisabled]="!showInteractiveContent()"
     ></lux-toggle-ac>
     <div class="lux-flex lux-items-center">
       <lux-toggle-ac luxLabel="luxListItemCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true"> </lux-toggle-ac>
@@ -197,10 +197,10 @@
     >
     </lux-input-ac>
   </example-base-simple-options>
-  @if (items.length > 0) {
+  @if (items().length > 0) {
     <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
       <lux-accordion [luxMulti]="false" [luxMode]="'flat'">
-        @for (item of items; track item) {
+        @for (item of items(); track item) {
           <lux-panel>
             <lux-panel-header-title>
               {{ item.title }}
@@ -248,7 +248,7 @@
   }
   <example-base-options-actions>
     <div class="lux-simple-form row">
-      <lux-button luxLabel="Leeren" luxColor="warn" [luxStroked]="true" [luxDisabled]="items.length === 0" (luxClicked)="clear()">
+      <lux-button luxLabel="Leeren" luxColor="warn" [luxStroked]="true" [luxDisabled]="items().length === 0" (luxClicked)="clear()">
       </lux-button>
       <lux-button luxLabel="Füllen" luxColor="primary" [luxFlat]="true" (luxClicked)="fill(30)"> </lux-button>
     </div>

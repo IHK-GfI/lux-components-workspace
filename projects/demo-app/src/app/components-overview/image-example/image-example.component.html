@@ -4,11 +4,11 @@
 >
   <example-base-content [exampleCentered]="true">
     <lux-image
-      [ngClass]="{ 'show-frame': showImageFrame }"
-      [luxImageSrc]="imgSrc"
-      [luxImageWidth]="imgWidth"
-      [luxImageHeight]="imgHeight"
-      [luxRawSrc]="imgRawSrc"
+      [ngClass]="{ 'show-frame': showImageFrame() }"
+      [luxImageSrc]="imgSrc()"
+      [luxImageWidth]="imgWidth()"
+      [luxImageHeight]="imgHeight()"
+      [luxRawSrc]="imgRawSrc()"
     >
     </lux-image>
   </example-base-content>
@@ -22,7 +22,7 @@
 
     <lux-select-ac
       [(luxSelected)]="imgSrc"
-      [luxOptions]="imgSrcArr"
+      [luxOptions]="imgSrcArr()"
       luxLabel="luxImageSrc"
       luxHint="Diese Property bestimmt den Pfad zum Bild."
     >

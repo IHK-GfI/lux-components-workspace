@@ -4,10 +4,10 @@
 >
   <example-base-content [exampleCentered]="false">
     <lux-markdown
-      [luxData]="markdownData"
-      [luxSanitizeConfig]="sanitizeConfig"
-      [luxStyle]="style"
-      [luxClass]="class"
+      [luxData]="markdownData()"
+      [luxSanitizeConfig]="sanitizeConfig()"
+      [luxStyle]="style()"
+      [luxClass]="class()"
       luxName="markdown_data"
     ></lux-markdown>
   </example-base-content>

@@ -6,20 +6,20 @@
     <h3>Beispiel mit Angular Router</h3>
     <lux-breadcrumb
       luxAutofocus
-      [luxEntries]="entries"
-      [luxWrap]="wrap"
-      [luxShowOnlyFirstAndLast]="showOnlyFirstAndLast"
+      [luxEntries]="entries()"
+      [luxWrap]="wrap()"
+      [luxShowOnlyFirstAndLast]="showOnlyFirstAndLast()"
       (luxClicked)="onClickedEntry($event)"
     ></lux-breadcrumb>
-    @if (clickedEntry) {
-      <example-value [value]="clickedEntry"></example-value>
+    @if (clickedEntry()) {
+      <example-value [value]="clickedEntry()"></example-value>
     }
     <lux-divider [luxInset]="true"></lux-divider>
     <h3>Beispiel mit manueller Navigation</h3>
-    @if (entriesExample.length > 1) {
-      <lux-breadcrumb [luxEntries]="entriesExample" (luxClicked)="onBreadcrumbClick($event)"></lux-breadcrumb>
+    @if (entriesExample().length > 1) {
+      <lux-breadcrumb [luxEntries]="entriesExample()" (luxClicked)="onBreadcrumbClick($event)"></lux-breadcrumb>
     }
-    @if (currentArea === 'Übersicht') {
+    @if (currentArea() === 'Übersicht') {
       <div>
         <h4>Übersicht</h4>
         <ul>
@@ -28,7 +28,7 @@
         </ul>
       </div>
     }
-    @if (currentArea === 'Berufliche Bildung') {
+    @if (currentArea() === 'Berufliche Bildung') {
       <div>
         <h4>Berufliche Bildung</h4>
         <p>
@@ -44,7 +44,7 @@
         </ul>
       </div>
     }
-    @if (currentArea === 'Ausbildung') {
+    @if (currentArea() === 'Ausbildung') {
       <div>
         <h4>Ausbildung</h4>
         <p>
@@ -80,7 +80,7 @@
       [(luxChecked)]="showOnlyFirstAndLast"
       [luxNoTopLabel]="true"
     ></lux-toggle-ac>
-    @for (item of entries; track item.name; let i = $index) {
+    @for (item of entries(); track item.name; let i = $index) {
       <div>
         <h3>Breadcrumb Eintrag #{{ i + 1 }}</h3>
         <lux-input-ac [(luxValue)]="item.name" luxLabel="Name" (luxValueChange)="updateView()"></lux-input-ac>

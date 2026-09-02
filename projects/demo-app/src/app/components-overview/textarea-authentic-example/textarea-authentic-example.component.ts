@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
     LuxAutofocusDirective,
@@ -31,7 +31,7 @@ interface TextareaDummyForm {
 @Component({
   selector: 'lux-textarea-authentic-example',
   templateUrl: './textarea-authentic-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxTextareaAcComponent,
@@ -51,8 +51,8 @@ interface TextareaDummyForm {
   ]
 })
 export class TextareaAuthenticExampleComponent {
-  useErrorMessage = true;
-  showOutputEvents = false;
+  readonly useErrorMessage = signal(true);
+  readonly showOutputEvents = signal(false);
   validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
@@ -61,31 +61,31 @@ export class TextareaAuthenticExampleComponent {
   autocompleteOptions = ['on', 'off', 'name'];
   form: FormGroup<TextareaDummyForm>;
   log = logResult;
-  value: string | null = null;
+  readonly value = signal<string | null>(null);
   controlBinding = 'textareaExample';
-  disabled = false;
-  readonly = false;
-  required = false;
-  label = 'Label';
-  hint = 'Optionaler Zusatztext';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = false;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly label = signal('Label');
+  readonly hint = signal('Optionaler Zusatztext');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(false);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  placeholder = 'Placeholder';
-  controlValidators: ValidatorFn[] = [];
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
-  autocomplete = 'off';
-  max = -1;
-  min = 1;
+  readonly placeholder = signal('Placeholder');
+  readonly controlValidators = signal<ValidatorFn[]>([]);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
+  readonly autocomplete = signal('off');
+  readonly max = signal(-1);
+  readonly min = signal(1);
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   errorCallbackString = this.errorCallback + '';
-  maxLength = 0;
-  hideCounterLabel = false;
-  labelLongFormat = false;
-  denseFormat = false;
+  readonly maxLength = signal(0);
+  readonly hideCounterLabel = signal(false);
+  readonly labelLongFormat = signal(false);
+  readonly denseFormat = signal(false);
 
   constructor() {
     this.form = new FormGroup<TextareaDummyForm>({
@@ -94,7 +94,7 @@ export class TextareaAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
   }
 

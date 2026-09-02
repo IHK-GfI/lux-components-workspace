@@ -1,16 +1,16 @@
-import { Component, Input, ChangeDetectionStrategy, model } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, model } from '@angular/core';
 import { LuxCardComponent, LuxCardContentComponent, LuxDividerComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 
 @Component({
   selector: 'detail-example',
   templateUrl: './detail-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxDividerComponent, LuxCardContentComponent, LuxCardComponent, LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, StatusMarkerComponent]
 })
 export class DetailExampleComponent {
-  @Input() selectedDetail?: any;
-  @Input() masterDetailConfig?: {
+  readonly selectedDetail = input<any>();
+  readonly masterDetailConfig = input<{
     emptyIconDetail: string;
     emptyIconMaster: string;
     emptyIconDetailSize: string;
@@ -22,9 +22,7 @@ export class DetailExampleComponent {
     ignoreScrollLoading: boolean;
     alignEmptyElements: boolean;
     showCustomCardHeader: boolean;
-  };
+  }>();
 
   readonly masterIsReloading = model(false);
-
-  constructor() {}
 }

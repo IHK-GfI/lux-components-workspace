@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, viewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxConsoleService,
   LuxMenuComponent,
@@ -24,7 +24,7 @@ import { TestHttpDao } from './test-http-dao';
   selector: 'app-table-server-example',
   templateUrl: './table-server-example.component.html',
   styleUrls: ['./table-server-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTableColumnContentComponent,
     LuxTableColumnHeaderComponent,
@@ -48,7 +48,7 @@ import { TestHttpDao } from './test-http-dao';
 export class TableServerExampleComponent extends TableExampleBaseClass {
   private logger = inject(LuxConsoleService);
 
-  @ViewChild('myTable') tableComponent!: LuxTableComponent;
+  readonly tableComponent = viewChild<LuxTableComponent<any>>('myTable');
 
   httpDAO: TestHttpDao;
   reloadCount = 0;
@@ -64,7 +64,7 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
   }
 
   getTableComponent(): LuxTableComponent<any> {
-    return this.tableComponent;
+    return this.tableComponent()!;
   }
 
   onSelectedChange(selected: Set<any>) {

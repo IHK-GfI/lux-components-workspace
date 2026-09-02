@@ -7,10 +7,10 @@
         class="lux-text-highlight-alert"
         tabindex="0"
         [luxPopupTriggerFor]="infoPopup.popup"
-        [luxPopupPosition]="position"
-        [luxPopupShowDelay]="showDelay"
-        [luxPopupHideDelay]="hideDelay"
-        [luxPopupDisabled]="disabled"
+        [luxPopupPosition]="position()"
+        [luxPopupShowDelay]="showDelay()"
+        [luxPopupHideDelay]="hideDelay()"
+        [luxPopupDisabled]="disabled()"
       >
         voluptua </span
       >. At vero eos et accusam et justo duo dolores et ea rebum.
@@ -21,18 +21,18 @@
       [luxStroked]="true"
       luxColor="primary"
       [luxPopupTriggerFor]="infoPopup.popup"
-      [luxPopupPosition]="position"
-      [luxPopupShowDelay]="showDelay"
-      [luxPopupHideDelay]="hideDelay"
-      [luxPopupDisabled]="disabled"
+      [luxPopupPosition]="position()"
+      [luxPopupShowDelay]="showDelay()"
+      [luxPopupHideDelay]="hideDelay()"
+      [luxPopupDisabled]="disabled()"
     ></lux-button>
 
     <app-popup-example-info-popup
       #infoPopup="popupExampleInfoPopup"
-      [title]="title"
-      [text]="text"
-      [minWidth]="minWidth"
-      [maxWidth]="maxWidth"
+      [title]="title()"
+      [text]="text()"
+      [minWidth]="minWidth()"
+      [maxWidth]="maxWidth()"
     ></app-popup-example-info-popup>
 
     <lux-button
@@ -42,19 +42,19 @@
       [luxStroked]="false"
       [luxRounded]="true"
       [luxPopupTriggerFor]="actionPopup"
-      [luxPopupPosition]="position"
-      [luxPopupDisabled]="disabled"
+      [luxPopupPosition]="position()"
+      [luxPopupDisabled]="disabled()"
     ></lux-button>
 
     <lux-popup
       #actionPopup
-      [luxTitle]="title"
+      [luxTitle]="title()"
       [luxPersistent]="true"
-      [luxMinWidth]="minWidth"
-      [luxMaxWidth]="maxWidth"
+      [luxMinWidth]="minWidth()"
+      [luxMaxWidth]="maxWidth()"
       (luxClosed)="onClosed($event)"
     >
-      <p>{{ text }}</p>
+      <p>{{ text() }}</p>
       <ng-template luxPopupActions>
         <lux-button luxLabel="Verstanden" luxColor="primary" (luxClicked)="onAction(actionPopup, 'Verstanden')"></lux-button>
         <lux-link luxLabel="Mehr erfahren" (luxClicked)="onAction(actionPopup, 'Mehr erfahren')"></lux-link>

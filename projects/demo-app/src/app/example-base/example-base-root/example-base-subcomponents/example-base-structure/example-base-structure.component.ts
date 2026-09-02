@@ -1,5 +1,6 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, contentChild, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import {
   LuxAppFooterButtonInfo,
@@ -13,7 +14,6 @@ import {
   LuxTabComponent,
   LuxTabsComponent
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../example-base-options/example-base-simple-options.component';
@@ -22,7 +22,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../example-base-options/examp
   selector: 'example-base-structure',
   templateUrl: './example-base-structure.component.html',
   styleUrls: ['./example-base-structure.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxCardActionsComponent,
     LuxCardContentComponent,
@@ -41,32 +41,31 @@ export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
 
   private initialConfig: LuxComponentsConfigParameters;
 
-  @Input() exampleTitle = 'ToDo';
-  @Input() exampleIconName = '';
-  @Input() exampleDocumentationHref = '';
+  readonly exampleTitle = input('ToDo');
+  readonly exampleIconName = input('');
+  readonly exampleDocumentationHref = input('');
 
-  @ContentChild(ExampleBaseContentComponent) contentComponent?: ExampleBaseContentComponent;
-  @ContentChild(ExampleBaseSimpleOptionsComponent) simpleOptionsComponent?: ExampleBaseSimpleOptionsComponent;
-  @ContentChild(ExampleBaseAdvancedOptionsComponent) advancedOptionsComponent?: ExampleBaseAdvancedOptionsComponent;
+  readonly contentComponent = contentChild(ExampleBaseContentComponent);
+  readonly simpleOptionsComponent = contentChild(ExampleBaseSimpleOptionsComponent);
+  readonly advancedOptionsComponent = contentChild(ExampleBaseAdvancedOptionsComponent);
 
-  subscription: Subscription;
-
-  isGtSm: boolean;
+  readonly isGtSm = signal(false);
 
   constructor() {
     this.initialConfig = this.configService.currentConfig;
 
-    this.subscription = this.configService.config.subscribe((config: LuxComponentsConfigParameters) => {
+    this.configService.config.pipe(takeUntilDestroyed()).subscribe((config: LuxComponentsConfigParameters) => {
       if (this.initialConfig !== config) {
         this.initialConfig = config;
       }
     });
 
-    this.isGtSm = !this.mediaQueryService.isXS() && !this.mediaQueryService.isSM();
+    this.isGtSm.set(!this.mediaQueryService.isXS() && !this.mediaQueryService.isSM());
 
-    this.subscription = this.mediaQueryService.getMediaQueryChangedAsObservable().subscribe(() => {
-      this.isGtSm = !this.mediaQueryService.isXS() && !this.mediaQueryService.isSM();
-    });
+    this.mediaQueryService
+      .getMediaQueryChangedAsObservable()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.isGtSm.set(!this.mediaQueryService.isXS() && !this.mediaQueryService.isSM()));
   }
 
   ngOnInit() {
@@ -80,7 +79,7 @@ export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
         raised: false,
         alwaysVisible: false,
         onClick: () => {
-          window.open(this.exampleDocumentationHref, '_blank');
+          window.open(this.exampleDocumentationHref(), '_blank');
         }
       }),
       LuxAppFooterButtonInfo.generateInfo({
@@ -99,15 +98,13 @@ export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
   }
 
   onTabChanged(): void {
-    this.simpleOptionsComponent?.markForCheck();
-    this.advancedOptionsComponent?.markForCheck();
+    this.simpleOptionsComponent()?.markForCheck();
+    this.advancedOptionsComponent()?.markForCheck();
   }
 
   ngOnDestroy() {
     this.footerService.clearButtonInfos();
     // Falls das Beispiel mit der Konfiguration herum spielt, sollte diese beim Verlassen wieder resettet werden.
     this.configService.updateConfiguration(this.initialConfig);
-
-    this.subscription.unsubscribe();
   }
 }

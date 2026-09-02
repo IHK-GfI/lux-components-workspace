@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxButtonToggleComponent,
@@ -25,7 +25,7 @@ interface ButtonToggleDemoForm {
 @Component({
   selector: 'app-button-toggle-example',
   templateUrl: './button-toggle-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -39,48 +39,48 @@ interface ButtonToggleDemoForm {
   ]
 })
 export class ButtonToggleExampleComponent {
-  showOutputEvents = false;
+  readonly showOutputEvents = signal(false);
 
-  ariaLabel?: string;
-  hint = 'Bitte treffen Sie eine Auswahl.';
-  error = '';
-  disabled = false;
-  dense = false;
+  readonly ariaLabel = signal<string | undefined>(undefined);
+  readonly hint = signal('Bitte treffen Sie eine Auswahl.');
+  readonly error = signal('');
+  readonly disabled = signal(false);
+  readonly dense = signal(false);
 
-  singleSelected: ButtonToggleValue | undefined = undefined;
-  multiSelected: ButtonToggleValue[] = [];
-  required = false;
+  readonly singleSelected = signal<ButtonToggleValue | undefined>(undefined);
+  readonly multiSelected = signal<ButtonToggleValue[]>([]);
+  readonly required = signal(false);
 
-  form = new FormGroup<ButtonToggleDemoForm>({
+  readonly form = new FormGroup<ButtonToggleDemoForm>({
     singleSelect: new FormControl<ButtonToggleValue | null>(null),
     multiSelect: new FormControl<ButtonToggleValue[] | null>(null)
   });
 
-  singleOptions: LuxButtonToggleOption<ButtonToggleValue>[] = [
+  readonly singleOptions: LuxButtonToggleOption<ButtonToggleValue>[] = [
     { label: 'Übersicht', value: { key: 'overview' } },
     { label: 'Details', value: { key: 'details' } },
     { label: 'Aktivität', value: { key: 'activity' } }
   ];
 
-  multiOptions: LuxButtonToggleOption<ButtonToggleValue>[] = [
+  readonly multiOptions: LuxButtonToggleOption<ButtonToggleValue>[] = [
     { label: 'Übersicht', value: { key: 'overview' } },
     { label: 'Details', value: { key: 'details' } },
     { label: 'Aktivität', value: { key: 'activity' } },
     { label: 'Archiv', value: { key: 'archive' }, disabled: true }
   ];
 
-  log = logResult;
+  readonly log = logResult;
 
   onSingleChanged(value: ButtonToggleValue | undefined) {
-    this.log(this.showOutputEvents, 'luxSelectedChange', value);
+    this.log(this.showOutputEvents(), 'luxSelectedChange', value);
   }
 
   onMultiChanged(values: ButtonToggleValue[]) {
-    this.log(this.showOutputEvents, 'luxSelectedValuesChange', values);
+    this.log(this.showOutputEvents(), 'luxSelectedValuesChange', values);
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
 
     ['singleSelect', 'multiSelect'].forEach((controlName) => {
       const control = this.form.get(controlName);

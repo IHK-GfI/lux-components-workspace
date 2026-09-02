@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -30,7 +30,7 @@ import { WebFontDemoComponent } from './web-font-demo/web-font-demo.component';
     FormThreeColComponent,
     WebFontDemoComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableExampleDataProviderService]
 })
 export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterViewInit, OnDestroy {
@@ -38,11 +38,11 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   private buttonService = inject(LuxAppFooterButtonService);
   private snackbar = inject(LuxSnackbarService);
 
-  @ViewChild(FormCommonComponent) formCommon!: FormCommonComponent;
-  @ViewChild(FormSingleColComponent) formSingle!: FormSingleColComponent;
-  @ViewChild(FormDualColComponent) formDuo!: FormDualColComponent;
-  @ViewChild(FormThreeColComponent) formThree!: FormThreeColComponent;
-  @ViewChild(LuxTabsComponent) tabComponent!: LuxTabsComponent;
+  readonly formCommon = viewChild.required(FormCommonComponent);
+  readonly formSingle = viewChild.required(FormSingleColComponent);
+  readonly formDuo = viewChild.required(FormDualColComponent);
+  readonly formThree = viewChild.required(FormThreeColComponent);
+  readonly tabComponent = viewChild.required(LuxTabsComponent);
 
   btnShowErrors = LuxAppFooterButtonInfo.generateInfo({
     cmd: 'btnShowErrors',
@@ -105,23 +105,28 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   }
 
   hasUnsavedData(): boolean {
-    return this.formCommon.myGroup.dirty || this.formSingle.myGroup.dirty || this.formDuo.myGroup.dirty || this.formThree.myGroup.dirty;
+    return (
+      this.formCommon().myGroup.dirty ||
+      this.formSingle().myGroup.dirty ||
+      this.formDuo().myGroup.dirty ||
+      this.formThree().myGroup.dirty
+    );
   }
 
   handleSaveClicked() {
     let formGroup: FormGroup | null;
-    switch (this.tabComponent.luxActiveTab()) {
+    switch (this.tabComponent().luxActiveTab()) {
       case 0:
-        formGroup = this.formCommon.myGroup;
+        formGroup = this.formCommon().myGroup;
         break;
       case 1:
-        formGroup = this.formSingle.myGroup;
+        formGroup = this.formSingle().myGroup;
         break;
       case 2:
-        formGroup = this.formDuo.myGroup;
+        formGroup = this.formDuo().myGroup;
         break;
       case 3:
-        formGroup = this.formThree.myGroup;
+        formGroup = this.formThree().myGroup;
         break;
       default:
         formGroup = null;
@@ -140,18 +145,18 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   }
 
   highlightErrors() {
-    switch (this.tabComponent.luxActiveTab()) {
+    switch (this.tabComponent().luxActiveTab()) {
       case 0:
-        LuxUtil.showValidationErrors(this.formCommon.myGroup);
+        LuxUtil.showValidationErrors(this.formCommon().myGroup);
         break;
       case 1:
-        LuxUtil.showValidationErrors(this.formSingle.myGroup);
+        LuxUtil.showValidationErrors(this.formSingle().myGroup);
         break;
       case 2:
-        LuxUtil.showValidationErrors(this.formDuo.myGroup);
+        LuxUtil.showValidationErrors(this.formDuo().myGroup);
         break;
       case 3:
-        LuxUtil.showValidationErrors(this.formThree.myGroup);
+        LuxUtil.showValidationErrors(this.formThree().myGroup);
         break;
       default:
         break;

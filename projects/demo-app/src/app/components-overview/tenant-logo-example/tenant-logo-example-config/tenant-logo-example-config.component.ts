@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
@@ -21,7 +21,7 @@ interface TenantLogoExampleKey {
   selector: 'app-tenant-logo-example-config',
   templateUrl: './tenant-logo-example-config.component.html',
   styleUrls: ['./tenant-logo-example-config.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, LuxFormHintComponent]
 })
 export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
@@ -30,11 +30,9 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
 
   pickValueKeyFn = (option: TenantLogoExampleKey) => option.value;
 
-  @Input()
-  public title!: string;
+  readonly title = input.required<string>();
 
-  @Input()
-  public tenantLogoConfig!: TenantLogoExampleConfigData;
+  readonly tenantLogoConfig = input.required<TenantLogoExampleConfigData>();
 
   public tenantKeyArr: TenantLogoExampleKey[] = [
     { label: '100', value: '100' },
@@ -45,22 +43,22 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
 
   public tenantVariantArr: string[] = ['', 'lang', 'kurz', 'unten'];
 
-  public apiPath = '';
+  readonly apiPath = signal('');
   public actualTenantVariant?: string = '';
-  private mediaQuery?: string;
+  private readonly mediaQuery = signal<string | undefined>(undefined);
 
   private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
     this.subscriptions.push(
       this.componentsConfigService.config.subscribe((newConfig: LuxComponentsConfigParameters) => {
-        this.apiPath = newConfig.tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl;
+        this.apiPath.set(newConfig.tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl);
       })
     );
 
     this.subscriptions.push(
       this.queryObserver.getMediaQueryChangedAsObservable().subscribe((mediaQuery: string) => {
-        this.mediaQuery = mediaQuery;
+        this.mediaQuery.set(mediaQuery);
       })
     );
   }
@@ -73,21 +71,21 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
 
   public onShowLogoClickedEvents(toggle: boolean) {
     if (toggle) {
-      this.tenantLogoConfig.luxTenantLogoClicked = () => {
-        console.log('Logo [' + this.tenantLogoConfig.luxTenantKey + '_' + this.actualTenantVariant + '] clicked!');
+      this.tenantLogoConfig().luxTenantLogoClicked = () => {
+        console.log('Logo [' + this.tenantLogoConfig().luxTenantKey + '_' + this.actualTenantVariant + '] clicked!');
       };
     } else {
-      this.tenantLogoConfig.luxTenantLogoClicked = () => {
+      this.tenantLogoConfig().luxTenantLogoClicked = () => {
         /* Do nothing */
       };
     }
   }
 
   public get logoTenantSrc(): string | undefined {
-    if (!this.apiPath) return;
-    if (!this.mediaQuery) return;
+    if (!this.apiPath()) return;
+    if (!this.mediaQuery()) return;
 
-    this.actualTenantVariant = this.tenantLogoConfig.luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(this.mediaQuery);
-    return LuxTenantLogoComponent.buildTenantLogoUrl(this.apiPath, this.tenantLogoConfig.luxTenantKey, this.actualTenantVariant);
+    this.actualTenantVariant = this.tenantLogoConfig().luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(this.mediaQuery()!);
+    return LuxTenantLogoComponent.buildTenantLogoUrl(this.apiPath(), this.tenantLogoConfig().luxTenantKey, this.actualTenantVariant);
   }
 }

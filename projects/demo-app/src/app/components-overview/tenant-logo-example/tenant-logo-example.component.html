@@ -3,7 +3,7 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90button-v21"
 >
   <example-base-content>
-    @if (localTenantLogoConfig && !useTenantLogoForHeader) {
+    @if (localTenantLogoConfig && !useTenantLogoForHeader()) {
       <lux-tenant-logo
         [luxTenantKey]="localTenantLogoConfig.luxTenantKey"
         [luxTenantVariant]="localTenantLogoConfig.luxTenantVariant"
@@ -23,7 +23,7 @@
       [luxNoTopLabel]="true"
     ></lux-toggle-ac>
 
-    @if (useTenantLogoForHeader) {
+    @if (useTenantLogoForHeader()) {
       <app-tenant-logo-example-config
         title="Header-Beispiel Konfiguration"
         [tenantLogoConfig]="headerTenantLogoConfig"

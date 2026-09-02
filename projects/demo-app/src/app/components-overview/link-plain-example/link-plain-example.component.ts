@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   LuxComponentsConfigParameters,
@@ -18,7 +18,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   selector: 'app-link-plain-example',
   templateUrl: './link-plain-example.component.html',
   styleUrls: ['./link-plain-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLinkPlainComponent,
     LuxToggleAcComponent,
@@ -35,7 +35,7 @@ export class LinkPlainExampleComponent implements OnDestroy {
 
   // region Helper-Properties für das Beispiel
 
-  showOutputEvents = false;
+  readonly showOutputEvents = signal(false);
   config: LuxComponentsConfigParameters;
   log = logResult;
 
@@ -43,12 +43,12 @@ export class LinkPlainExampleComponent implements OnDestroy {
 
   // region Properties der Component
 
-  label = 'Beispiel-Link';
-  iconName = 'lux-interface-link';
-  iconShowRight = true;
-  disabled = false;
-  blank = true;
-  href = 'https://www.ihk-gfi.de/';
+  readonly label = signal('Beispiel-Link');
+  readonly iconName = signal('lux-interface-link');
+  readonly iconShowRight = signal(true);
+  readonly disabled = signal(false);
+  readonly blank = signal(true);
+  readonly href = signal('https://www.ihk-gfi.de/');
 
   // endregion
 
@@ -78,6 +78,6 @@ export class LinkPlainExampleComponent implements OnDestroy {
   }
 
   click(event: Event) {
-    this.log(this.showOutputEvents, 'luxClicked', event);
+    this.log(this.showOutputEvents(), 'luxClicked', event);
   }
 }

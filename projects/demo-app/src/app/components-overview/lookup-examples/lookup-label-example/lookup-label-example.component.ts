@@ -29,11 +29,11 @@ import { ExampleBaseStructureComponent } from '../../../example-base/example-bas
   ]
 })
 export class LookupLabelExampleComponent implements OnInit {
-  knr = signal(0);
-  tableKey = 4;
-  tableNo = '1002';
-  bezeichnung = 'kurz';
-  disabled = signal(true);
+  readonly knr = signal(0);
+  readonly tableKey = signal(4);
+  readonly tableNo = signal('1002');
+  readonly bezeichnung = signal('kurz');
+  readonly disabled = signal(true);
 
   ngOnInit(): void {
     setTimeout(() => {

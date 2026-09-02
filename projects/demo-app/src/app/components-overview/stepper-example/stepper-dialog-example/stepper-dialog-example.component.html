@@ -8,8 +8,7 @@
     <lux-stepper
       [luxShowNavigationButtons]="false"
       [luxLinear]="true"
-      [luxCurrentStepNumber]="currentStepNumber"
-      (luxCurrentStepNumberChange)="currentStepNumber = $event"
+      [(luxCurrentStepNumber)]="currentStepNumber"
     >
       <lux-step [luxCompleted]="form1.valid" [luxStepControl]="form1">
         <lux-step-header>Kontaktdaten</lux-step-header>

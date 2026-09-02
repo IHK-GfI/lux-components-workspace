@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { LuxButtonComponent, LuxHttpErrorComponent, LuxHttpErrorInterceptor } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -15,7 +15,7 @@ interface Error {
   selector: 'app-http-error-example',
   templateUrl: 'http-error-example.component.html',
   styleUrls: ['http-error-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxHttpErrorComponent,
     LuxButtonComponent,
@@ -40,28 +40,26 @@ export class HttpErrorExampleComponent {
     ])
   };
 
-  disabled = true;
-
-  constructor() {}
+  readonly disabled = signal(true);
 
   createErrors() {
     LuxHttpErrorInterceptor.dataStream.next(this.sampleErrorStructure.errors);
-    this.disabled = false;
+    this.disabled.set(false);
   }
 
   createErrorMessageStrings() {
     LuxHttpErrorInterceptor.dataStream.next(['An error has occured.', "Content couldn't be loaded."]);
-    this.disabled = false;
+    this.disabled.set(false);
   }
 
   createErrorToStringObjects() {
     LuxHttpErrorInterceptor.dataStream.next([{ toString: () => 'Permission denied.' }, { toString: () => 'An error has occured.' }]);
-    this.disabled = false;
+    this.disabled.set(false);
   }
 
   clearErrors() {
     LuxHttpErrorInterceptor.dataStream.next(null);
-    this.disabled = true;
+    this.disabled.set(true);
   }
 
   private mapErrors(args: [string, string][]): Errors {

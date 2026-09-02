@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LuxAutofocusDirective, LuxFormHintComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
@@ -19,7 +19,7 @@ interface ToggleDummyForm {
   selector: 'lux-toggle-authentic-example',
   templateUrl: './toggle-authentic-example.component.html',
   styleUrls: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleAcComponent,
     LuxInputAcComponent,
@@ -36,22 +36,22 @@ interface ToggleDummyForm {
   ]
 })
 export class ToggleAuthenticExampleComponent {
-  useErrorMessage = true;
+  readonly useErrorMessage = signal(true);
   form: FormGroup<ToggleDummyForm>;
-  value = false;
+  readonly value = signal(false);
   controlBinding = 'toggleExample';
-  label = 'Label';
-  hint = 'Hint';
-  hintShowOnlyOnFocus = false;
-  noTopLabel = true;
-  noBottomLabel = false;
-  noLabels = false;
+  readonly label = signal('Label');
+  readonly hint = signal('Hint');
+  readonly hintShowOnlyOnFocus = signal(false);
+  readonly noTopLabel = signal(true);
+  readonly noBottomLabel = signal(false);
+  readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  disabled = false;
-  readonly = false;
-  required = false;
-  denseFormat = false;
-  errorMessage = 'Das Feld enthält keinen gültigen Wert';
+  readonly disabled = signal(false);
+  readonly readonly = signal(false);
+  readonly required = signal(false);
+  readonly denseFormat = signal(false);
+  readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
 
@@ -62,7 +62,7 @@ export class ToggleAuthenticExampleComponent {
   }
 
   changeRequired(required: boolean) {
-    this.required = required;
+    this.required.set(required);
     if (required) {
       this.form.get(this.controlBinding)!.setValidators(Validators.requiredTrue);
     } else {

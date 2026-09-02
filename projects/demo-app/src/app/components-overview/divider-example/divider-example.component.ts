@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { LuxDividerComponent, LuxFormHintComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -8,7 +8,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'app-divider-example',
   templateUrl: './divider-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxDividerComponent,
     LuxToggleAcComponent,
@@ -20,8 +20,6 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class DividerExampleComponent {
-  inset = false;
-  vertical = false;
-
-  constructor() {}
+  readonly inset = signal(false);
+  readonly vertical = signal(false);
 }

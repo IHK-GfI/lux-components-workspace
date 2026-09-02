@@ -7,7 +7,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxIconComponent, LuxTileAcComponent, LuxAutofocusDirective, TranslocoModule]
 })
 export class HomeComponent {

@@ -38,9 +38,9 @@ export class SnackbarExampleComponent implements OnDestroy {
   actionSubscription: Subscription | null = null;
   colors: string[] = LuxSnackbarColors;
 
-  showOutputEvents = false;
+  readonly showOutputEvents = signal(false);
 
-  duration = 5000;
+  readonly duration = signal(5000);
   snackbarConfig: Omit<LuxSnackbarConfig, 'textColor' | 'iconColor' | 'actionColor'> = {
     text: 'Text',
     iconName: 'lux-interface-alert-information-circle',
@@ -64,13 +64,13 @@ export class SnackbarExampleComponent implements OnDestroy {
   }
 
   openSnackbarText() {
-    this.snackbar.openText(this.snackbarConfig.text ?? '---', this.duration, this.snackbarConfig.action);
+    this.snackbar.openText(this.snackbarConfig.text ?? '---', this.duration(), this.snackbarConfig.action);
     this.dismissSubscription = this.snackbar.afterDismissed().subscribe(this.observeDismiss.bind(this));
     this.actionSubscription = this.snackbar.onAction().subscribe(this.observeAction.bind(this));
   }
 
   openSnackbar() {
-    this.snackbar.open(this.duration, this.buildSnackbarConfig());
+    this.snackbar.open(this.duration(), this.buildSnackbarConfig());
     this.dismissSubscription = this.snackbar.afterDismissed().subscribe(this.observeDismiss.bind(this));
     this.actionSubscription = this.snackbar.onAction().subscribe(this.observeAction.bind(this));
   }
@@ -82,9 +82,9 @@ export class SnackbarExampleComponent implements OnDestroy {
         this.textColor.set(color);
         this.iconColor.set(color);
         this.actionColor.set(color);
-        this.snackbar.open(this.duration, this.buildSnackbarConfig());
+        this.snackbar.open(this.duration(), this.buildSnackbarConfig());
       }, time);
-      time += this.duration;
+      time += this.duration();
     });
   }
 
@@ -102,7 +102,7 @@ export class SnackbarExampleComponent implements OnDestroy {
   }
 
   private observeDismiss(payload: MatSnackBarDismiss) {
-    logResult(this.showOutputEvents, 'afterDismissed', payload);
+    logResult(this.showOutputEvents(), 'afterDismissed', payload);
 
     // Subscriptions auflösen, da eine neue Snackbar neue Observables bedeuten sollte
     // (siehe lux-snackbar.service.ts -> _openedSnackBarRef)
@@ -115,6 +115,6 @@ export class SnackbarExampleComponent implements OnDestroy {
   }
 
   private observeAction() {
-    logResult(this.showOutputEvents, 'onAction');
+    logResult(this.showOutputEvents(), 'onAction');
   }
 }

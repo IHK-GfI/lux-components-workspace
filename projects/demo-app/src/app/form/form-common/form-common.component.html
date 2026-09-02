@@ -123,21 +123,21 @@
       </p>
       <lux-toggle-ac luxLabel="Labels sichtbar anzeigen" [(luxChecked)]="showA11yLabels" [luxNoBottomLabel]="true"></lux-toggle-ac>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
-        <lux-input-ac luxLabel="Suchbegriff eingeben" [luxNoTopLabel]="!showA11yLabels" luxPlaceholder="Suchen..."></lux-input-ac>
-        <lux-textarea-ac luxLabel="Anmerkung erfassen" [luxNoTopLabel]="!showA11yLabels"></lux-textarea-ac>
+        <lux-input-ac luxLabel="Suchbegriff eingeben" [luxNoTopLabel]="!showA11yLabels()" luxPlaceholder="Suchen..."></lux-input-ac>
+        <lux-textarea-ac luxLabel="Anmerkung erfassen" [luxNoTopLabel]="!showA11yLabels()"></lux-textarea-ac>
         <lux-select-ac
           luxLabel="Liste sortieren nach"
-          [luxNoTopLabel]="!showA11yLabels"
+          [luxNoTopLabel]="!showA11yLabels()"
           [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
         ></lux-select-ac>
-        <lux-autocomplete-ac luxLabel="Hobby suchen" [luxNoTopLabel]="!showA11yLabels" [luxOptions]="hobbies"></lux-autocomplete-ac>
-        <lux-datepicker-ac luxLabel="Startdatum wählen" [luxNoTopLabel]="!showA11yLabels"></lux-datepicker-ac>
-        <lux-datetimepicker-ac luxLabel="Termin wählen" [luxNoTopLabel]="!showA11yLabels"></lux-datetimepicker-ac>
-        <lux-timepicker luxLabel="Uhrzeit wählen" [luxNoTopLabel]="!showA11yLabels"></lux-timepicker>
-        <lux-file-input-ac luxLabel="Datei auswählen" [luxNoTopLabel]="!showA11yLabels"></lux-file-input-ac>
-        <lux-radio-ac luxLabel="Hobby wählen" [luxNoTopLabel]="!showA11yLabels" [luxOptions]="hobbies"></lux-radio-ac>
-        <lux-slider-ac luxLabel="Lautstärke einstellen" [luxNoTopLabel]="!showA11yLabels"></lux-slider-ac>
-        <lux-chips-ac luxLabel="Schlagwort ergänzen" [luxNoTopLabel]="!showA11yLabels" [luxInputAllowed]="true"></lux-chips-ac>
+        <lux-autocomplete-ac luxLabel="Hobby suchen" [luxNoTopLabel]="!showA11yLabels()" [luxOptions]="hobbies"></lux-autocomplete-ac>
+        <lux-datepicker-ac luxLabel="Startdatum wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-datepicker-ac>
+        <lux-datetimepicker-ac luxLabel="Termin wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-datetimepicker-ac>
+        <lux-timepicker luxLabel="Uhrzeit wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-timepicker>
+        <lux-file-input-ac luxLabel="Datei auswählen" [luxNoTopLabel]="!showA11yLabels()"></lux-file-input-ac>
+        <lux-radio-ac luxLabel="Hobby wählen" [luxNoTopLabel]="!showA11yLabels()" [luxOptions]="hobbies"></lux-radio-ac>
+        <lux-slider-ac luxLabel="Lautstärke einstellen" [luxNoTopLabel]="!showA11yLabels()"></lux-slider-ac>
+        <lux-chips-ac luxLabel="Schlagwort ergänzen" [luxNoTopLabel]="!showA11yLabels()" [luxInputAllowed]="true"></lux-chips-ac>
       </div>
 
       <h3>Ausnahme: Felder ganz ohne Labeltext</h3>
