@@ -15,35 +15,7 @@
         [luxColor]="color"
         [luxTogglePosition]="_togglePosition"
       >
-        <lux-panel-aria
-          [luxExpanded]="expanded"
-          [luxHideToggle]="hideToggle1Panel ? true : undefined"
-          [luxDisabled]="disabled1Panel"
-          [luxExpandedHeaderHeight]="expandedHeaderHeight1Panel"
-          [luxCollapsedHeaderHeight]="collapsedHeaderHeight1Panel"
-          [luxDynamicHeaderHeight]="dynamicHeaderHeight1Panel"
-          (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
-          (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
-          (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
-        >
-          <lux-panel-aria-header-title [luxTruncated]="truncated" luxTruncatedTooltip="tooltip"
-            >{{ 'panelConfig.title' }}
-          </lux-panel-aria-header-title>
-          <lux-panel-aria-header-description [luxTruncated]="truncated" luxTruncatedTooltip="tooltip">{{
-            'panelConfig.description'
-          }}</lux-panel-aria-header-description>
-          <lux-panel-aria-header-custom>
-            <lux-button luxIconName="lux-interface-delete-1" [luxIconButton]="true"></lux-button>
-          </lux-panel-aria-header-custom>
-          <lux-panel-aria-content>
-            <p>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-              aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-            </p>
-          </lux-panel-aria-content>
-        </lux-panel-aria>
-
-        @for (panelConfig of panelConfigArr; track panelConfig) {
+        @for (panelConfig of panelConfigArr; track panelConfig; let i = $index) {
           <lux-panel-aria
             [luxExpanded]="expanded"
             [luxHideToggle]="hideToggle1Panel ? true : undefined"
@@ -61,6 +33,34 @@
             <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.description">{{
               panelConfig.description
             }}</lux-panel-aria-header-description>
+            @if (i === 0 && showHeaderButtons1Panel) {
+              <lux-panel-aria-header-custom>
+                <lux-button
+                  luxLabel="Speichern"
+                  [luxIconButton]="true"
+                  luxIconName="lux-save"
+                  (luxClicked)="log(showOutputEvents, 'SpeichernClicked', $event)"
+                ></lux-button>
+                <lux-button
+                  luxLabel="Löschen"
+                  [luxIconButton]="true"
+                  luxIconName="lux-interface-delete-bin-2"
+                  (luxClicked)="log(showOutputEvents, 'LöschenClicked', $event)"
+                ></lux-button>
+              </lux-panel-aria-header-custom>
+            }
+            @if (i === 1 && showHeaderDatepicker2Panel) {
+              <lux-panel-aria-header-custom>
+                <lux-datepicker-ac
+                  luxLabel="Datum"
+                  luxAriaLabel="Datum"
+                  [luxNoTopLabel]="true"
+                  [luxNoBottomLabel]="true"
+                  [(luxValue)]="headerDate2Panel"
+                  (luxValueChange)="log(showOutputEvents, 'DatepickerValueChange', $event)"
+                ></lux-datepicker-ac>
+              </lux-panel-aria-header-custom>
+            }
             <lux-panel-aria-content>
               <p>
                 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
@@ -199,6 +199,9 @@
         <lux-toggle-ac luxLabel="luxTruncated" [(luxChecked)]="truncated" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property bestimmt, ob der Headerinhalt abgeschnitten wird, wenn er zu lang ist. </lux-form-hint>
         </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="Beispiel-Buttons im Header (Panel #1)" [(luxChecked)]="showHeaderButtons1Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property blendet die Beispiel-Buttons im Header des ersten Panels ein/aus. </lux-form-hint>
+        </lux-toggle-ac>
         <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled1Panel" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>
         </lux-toggle-ac>
@@ -225,6 +228,9 @@
       </div>
       <div class="lux-flex lux-flex-col lux-gap-4">
         <h3>Panel #{{ panelConfigArr.length + 1 }}</h3>
+        <lux-toggle-ac luxLabel="Beispiel-Datepicker im Header" [(luxChecked)]="showHeaderDatepicker2Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property blendet den Beispiel-Datepicker im Header des Panels ein/aus. </lux-form-hint>
+        </lux-toggle-ac>
         <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled2Panel" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>
         </lux-toggle-ac>

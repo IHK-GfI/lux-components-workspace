@@ -30,7 +30,7 @@
         </span>
       }
     </button>
-    <div class="lux-expansion-panel-header-actions">
+    <div class="lux-expansion-panel-header-custom" [style.display]="effectiveDisabled() ? 'none' : null">
       <ng-content select="lux-panel-aria-header-custom"></ng-content>
     </div>
   </div>

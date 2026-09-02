@@ -10,7 +10,7 @@ lux-panel-aria {
     align-items: center;
     display: flex;
     min-width: 0;
-    padding: 0 24px;
+    padding: 0 var(--lux-theme-spacing-lg);
     background-color: var(--lux-theme-accordion-header-color-primary);
   }
 
@@ -36,15 +36,9 @@ lux-panel-aria {
     cursor: default;
   }
 
-  .lux-expansion-panel-header-actions {
-    align-items: center;
-    display: flex;
-    flex-shrink: 0;
-    gap: 8px;
-  }
-
   .lux-dynamic-height {
-    min-height: unset;
+    box-sizing: border-box;
+    min-height: 4em;
     height: unset;
     padding-top: 11px;
     padding-bottom: 11px;
@@ -58,15 +52,19 @@ lux-panel-aria {
   }
 
   .lux-expansion-indicator-before {
-    margin-right: 12px;
+    margin-right: var(--lux-theme-spacing-3);
   }
 
   .lux-expansion-indicator-after {
-    margin-left: 12px;
+    margin-left: var(--lux-theme-spacing-3);
   }
 
-  &:first-of-type .lux-panel-expanded {
+  &:first-of-type .lux-panel.lux-panel-expanded {
     margin-top: 0;
+  }
+
+  &:last-of-type .lux-panel.lux-panel-expanded {
+    margin-bottom: 0;
   }
 
   .lux-panel-expanded .lux-expansion-indicator {
@@ -74,16 +72,16 @@ lux-panel-aria {
   }
 
   .lux-expansion-panel-content {
-    padding: 0 24px 16px;
+    padding: 0 var(--lux-theme-spacing-lg) var(--lux-theme-spacing-md);
     letter-spacing: var(--mat-expansion-container-text-tracking, var(--mat-sys-body-large-tracking));
   }
 
   &.lux-panel-mobile .lux-expansion-panel-header {
-    padding: 0 12px;
+    padding: 0 var(--lux-theme-spacing-3);
   }
 
   &.lux-panel-mobile .lux-expansion-panel-header.lux-dynamic-height {
-    padding: 11px 12px;
+    padding: 11px var(--lux-theme-spacing-3);
   }
 }
 
@@ -93,7 +91,7 @@ lux-accordion-aria {
 
   &.lux-default {
     .lux-panel-expanded {
-      margin: 16px 0;
+      margin: var(--lux-theme-spacing-md) 0;
     }
 
     .lux-panel:not(.lux-panel-expanded) {

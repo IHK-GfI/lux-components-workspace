@@ -14,7 +14,13 @@ describe('LuxPanelAriaComponent', () => {
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent, LuxPanelAriaTestComponent]
+      imports: [
+        LuxPanelAriaComponent,
+        LuxPanelAriaHeaderTitleComponent,
+        LuxPanelAriaContentComponent,
+        LuxPanelAriaHeaderCustomComponent,
+        LuxPanelAriaTestComponent
+      ]
     });
 
     fixture = TestBed.createComponent(LuxPanelAriaTestComponent);
@@ -126,6 +132,23 @@ describe('LuxPanelAriaComponent', () => {
     expect(content).toBeNull();
   }));
 
+  it('sollte den Custom-Header-Inhalt bei luxDisabled ausblenden', fakeAsync(() => {
+    const actions = fixture.debugElement.query(By.css('.lux-expansion-panel-header-custom'));
+    expect(actions.nativeElement.style.display).toBe('');
+
+    testComponent.disabled = true;
+    fixture.detectChanges();
+    tick();
+
+    expect(actions.nativeElement.style.display).toBe('none');
+
+    testComponent.disabled = false;
+    fixture.detectChanges();
+    tick();
+
+    expect(actions.nativeElement.style.display).toBe('');
+  }));
+
   it('sollte auch nicht-geslotteten Inhalt im Content-Bereich anzeigen', fakeAsync(() => {
     const plainFixture = TestBed.createComponent(LuxPanelAriaPlainContentTestComponent);
     plainFixture.detectChanges();
@@ -152,6 +175,7 @@ describe('LuxPanelAriaComponent', () => {
     LuxPanelAriaComponent,
     LuxPanelAriaHeaderTitleComponent,
     LuxPanelAriaHeaderDescriptionComponent,
+    LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
   template: `
@@ -168,6 +192,9 @@ describe('LuxPanelAriaComponent', () => {
         <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip"
           >Beschreibung</lux-panel-aria-header-description
         >
+        <lux-panel-aria-header-custom>
+          <button type="button">Aktion</button>
+        </lux-panel-aria-header-custom>
         <lux-panel-aria-content>Content</lux-panel-aria-content>
       </lux-panel-aria>
     </lux-accordion-aria>

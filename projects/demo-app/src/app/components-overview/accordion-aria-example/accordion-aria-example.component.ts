@@ -16,7 +16,9 @@ import {
   LuxInputAcComponent,
   LuxModeType,
   LuxPanelAriaHeaderCustomComponent,
-  LuxAriaTogglePosition
+  LuxAriaTogglePosition,
+  LuxDatepickerAcComponent,
+  LuxAriaLabelDirective
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -47,7 +49,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxButtonComponent,
     LuxFormHintComponent,
     LuxRadioAcComponent,
-    LuxInputAcComponent
+    LuxInputAcComponent,
+    LuxDatepickerAcComponent,
+    LuxAriaLabelDirective
   ]
 })
 export class AccordionAriaExampleComponent {
@@ -64,11 +68,11 @@ export class AccordionAriaExampleComponent {
   expandedHeaderHeight = '4em';
   collapsedHeaderHeight = '4em';
   dynamicHeaderHeight = false;
-  expandedHeaderHeight1Panel = '4em';
-  collapsedHeaderHeight1Panel = '4em';
+  expandedHeaderHeight1Panel: string | undefined = undefined;
+  collapsedHeaderHeight1Panel: string | undefined = undefined;
   dynamicHeaderHeight1Panel = false;
-  expandedHeaderHeight2Panel = '4em';
-  collapsedHeaderHeight2Panel = '4em';
+  expandedHeaderHeight2Panel: string | undefined = undefined;
+  collapsedHeaderHeight2Panel: string | undefined = undefined;
   dynamicHeaderHeight2Panel = false;
   _displayMode: LuxModeType = 'default';
   colorOptions = ['primary', 'accent', 'warn', 'neutral'];
@@ -77,6 +81,9 @@ export class AccordionAriaExampleComponent {
   _togglePosition: LuxAriaTogglePosition = 'after';
   truncated = false;
   borderCheck = false;
+  showHeaderButtons1Panel = true;
+  showHeaderDatepicker2Panel = true;
+  headerDate2Panel: Date | undefined = new Date();
 
   set displayMode(mode: LuxModeType) {
     // Der Multimode muss auf true gesetzt werden damit immer alle Panels aufgeklappt werden. Sonst wird nur das Custom Panel aufgeklappt wenn der Multimode vorher deaktiviert wurde.
