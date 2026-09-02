@@ -111,6 +111,16 @@ export class LuxPanelAriaComponent {
     this.accordionTrigger().collapse();
   }
 
+  protected toggleFromKeyboard(event: KeyboardEvent): void {
+    if (event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Spacebar') {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.accordionTrigger().toggle();
+  }
+
   protected getCurrentHeaderHeight(expanded: boolean) {
     return expanded ? this.getExpandedHeaderHeight() : this.getCollapsedHeaderHeight();
   }

@@ -74,6 +74,38 @@ describe('LuxPanelAriaComponent', () => {
     expect(testComponent.expandedEvents).toContain(false);
   }));
 
+  it('sollte bei Enter expandieren und schließen', fakeAsync(() => {
+    const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
+
+    headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+    fixture.detectChanges();
+    tick();
+
+    expect(testComponent.expandedEvents).toContain(true);
+
+    headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+    fixture.detectChanges();
+    tick();
+
+    expect(testComponent.expandedEvents).toContain(false);
+  }));
+
+  it('sollte bei Leertaste expandieren und schließen', fakeAsync(() => {
+    const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
+
+    headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: ' ' }));
+    fixture.detectChanges();
+    tick();
+
+    expect(testComponent.expandedEvents).toContain(true);
+
+    headerButton.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: ' ' }));
+    fixture.detectChanges();
+    tick();
+
+    expect(testComponent.expandedEvents).toContain(false);
+  }));
+
   it('sollte Toggle-Position before rendern', fakeAsync(() => {
     testComponent.togglePosition = 'before';
     fixture.detectChanges();
@@ -139,12 +171,12 @@ describe('LuxPanelAriaComponent', () => {
     expect(title.nativeElement.classList.contains('lux-crop')).toBeTrue();
     expect(title.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
     expect(title.nativeElement.style.display).toBe('block');
-    expect(title.nativeElement.getAttribute('tabindex')).toBe('0');
+    expect(title.nativeElement.hasAttribute('tabindex')).toBeFalse();
 
     expect(description.nativeElement.classList.contains('lux-crop')).toBeTrue();
     expect(description.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
     expect(description.nativeElement.style.display).toBe('block');
-    expect(description.nativeElement.getAttribute('tabindex')).toBe('0');
+    expect(description.nativeElement.hasAttribute('tabindex')).toBeFalse();
   }));
 
   it('sollte deaktiviertes Panel nicht öffnen', fakeAsync(() => {
@@ -178,6 +210,16 @@ describe('LuxPanelAriaComponent', () => {
 
     expect(actions.nativeElement.style.display).toBe('');
   }));
+
+  it('sollte Tastatureingaben in Custom-Header-Actions nicht verhindern', () => {
+    const actionButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-custom button'));
+    const keydownEvent = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' });
+
+    const eventWasNotPrevented = actionButton.nativeElement.dispatchEvent(keydownEvent);
+
+    expect(eventWasNotPrevented).toBeTrue();
+    expect(keydownEvent.defaultPrevented).toBeFalse();
+  });
 
   it('sollte auch nicht-geslotteten Inhalt im Content-Bereich anzeigen', fakeAsync(() => {
     const plainFixture = TestBed.createComponent(LuxPanelAriaPlainContentTestComponent);

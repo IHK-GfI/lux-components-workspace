@@ -11,7 +11,11 @@ lux-panel-aria {
     display: flex;
     min-width: 0;
     padding: 0 var(--lux-theme-spacing-lg);
-    background-color: var(--lux-theme-accordion-header-color-primary);
+  }
+
+  .lux-expansion-panel-header:has(.lux-expansion-panel-header-toggle:focus-visible) {
+    outline: var(--lux-theme-outline-dark);
+    outline-offset: calc(var(--lux-theme-outline-width) * -1);
   }
 
   .lux-expansion-panel-header-toggle {
@@ -25,6 +29,10 @@ lux-panel-aria {
     min-width: 0;
     padding: 0;
     text-align: left;
+  }
+
+  .lux-expansion-panel-header-toggle:focus-visible {
+    outline: none;
   }
 
   .lux-expansion-panel-header-content {
@@ -70,13 +78,6 @@ lux-panel-aria {
     padding-bottom: 11px;
   }
 
-  .lux-expansion-indicator {
-    align-items: center;
-    display: inline-flex;
-    justify-content: center;
-    line-height: 0;
-  }
-
   .lux-expansion-indicator-before {
     margin-right: var(--lux-theme-spacing-3);
   }
@@ -91,10 +92,6 @@ lux-panel-aria {
 
   &:last-of-type .lux-panel.lux-panel-expanded {
     margin-bottom: 0;
-  }
-
-  .lux-panel-expanded .lux-expansion-indicator {
-    transform: rotate(270deg);
   }
 
   .lux-expansion-panel-content {
@@ -126,42 +123,58 @@ lux-accordion-aria {
     }
   }
 
-  .lux-primary .lux-expansion-panel-header,
-  .lux-primary .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-primary .lux-expansion-panel-header-toggle:focus-visible {
-    background-color: var(--lux-theme-accordion-header-color-primary);
-    color: var(--lux-theme-accordion-header-color-on-primary);
+  .lux-primary {
+    // .lux-panel:focus-visible {
+    //   outline: var(--lux-theme-outline-dark);
+    //   outline-offset: calc(var(--lux-theme-outline-width) * -1);
+    // }
+
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded {
+      background-color: var(--lux-theme-accordion-header-color-primary);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-primary);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-primary);
+        }
+      }
+    }
   }
 
-  .lux-accent .lux-expansion-panel-header,
-  .lux-accent .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-accent .lux-expansion-panel-header-toggle:focus-visible {
-    background-color: var(--lux-theme-accordion-header-color-accent);
-    color: var(--lux-theme-accordion-header-color-on-accent);
+  .lux-accent {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded,
+    .lux-expansion-panel-header-toggle:focus-visible {
+      background-color: var(--lux-theme-accordion-header-color-accent);
+      color: var(--lux-theme-accordion-header-color-on-accent);
+    }
   }
 
-  .lux-warn .lux-expansion-panel-header,
-  .lux-warn .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-warn .lux-expansion-panel-header-toggle:focus-visible {
-    background-color: var(--lux-theme-accordion-header-color-warn);
-    color: var(--lux-theme-accordion-header-color-on-warn);
+  .lux-warn {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded,
+    .lux-expansion-panel-header-toggle:focus-visible {
+      background-color: var(--lux-theme-accordion-header-color-warn);
+      color: var(--lux-theme-accordion-header-color-on-warn);
+    }
   }
 
-  .lux-neutral .lux-expansion-panel-header,
-  .lux-neutral .lux-expansion-panel-header.lux-panel-expanded,
-  .lux-neutral .lux-expansion-panel-header-toggle:focus-visible {
-    background-color: var(--lux-theme-accordion-header-color-neutral);
-    color: var(--lux-theme-accordion-header-color-on-neutral);
+  .lux-neutral {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded,
+    .lux-expansion-panel-header-toggle:focus-visible {
+      background-color: var(--lux-theme-accordion-header-color-neutral);
+      color: var(--lux-theme-accordion-header-color-on-neutral);
+    }
   }
 
   .lux-expansion-panel-header,
   .lux-expansion-panel-header-toggle {
     border-radius: var(--lux-theme-app-border-radius);
-  }
-
-  .lux-expansion-panel-header .lux-expansion-indicator,
-  .lux-expansion-panel-header .lux-expansion-indicator lux-icon {
-    color: inherit;
   }
 
   [disabled] {

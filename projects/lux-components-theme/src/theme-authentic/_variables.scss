@@ -215,6 +215,16 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-accordion-header-hover-color-on-warn: var(--mat-sys-error-container);
   --lux-theme-accordion-header-focus-color-on-warn: var(--mat-sys-error-container);
 
+  // Accordion-Aria
+  --lux-theme-accordion-header-text-color-primary: var(--lux-theme-accordion-header-color-on-primary);
+  --lux-theme-accordion-header-text-color-accent: var(--lux-theme-accordion-header-color-on-accent);
+  --lux-theme-accordion-header-text-color-warn: var(--lux-theme-accordion-header-color-on-warn);
+  --lux-theme-accordion-header-text-color-neutral: var(--lux-theme-accordion-header-color-on-neutral);
+  --lux-theme-accordion-header-description-color-primary: var(--lux-theme-accordion-header-color-on-primary);
+  --lux-theme-accordion-header-description-color-accent: var(--lux-theme-accordion-header-color-on-accent);
+  --lux-theme-accordion-header-description-color-warn: var(--lux-theme-accordion-header-color-on-warn);
+  --lux-theme-accordion-header-description-color-neutral: var(--lux-theme-accordion-header-color-on-neutral);
+
   // LUX-Badge
   --lux-theme-badge-red: var(--lux-theme-custom-red);
   --lux-theme-badge-on-red: var(--lux-theme-custom-on-red);
