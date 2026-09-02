@@ -100,7 +100,7 @@ describe('LuxPanelAriaComponent', () => {
     expect(header.nativeElement.style.height).toBe('');
   }));
 
-  it('sollte bei luxTruncated die Header-Texte abschneiden', fakeAsync(() => {
+  it('sollte bei luxTruncated Titel und Beschreibung abschneiden', fakeAsync(() => {
     testComponent.truncated = true;
     fixture.detectChanges();
     tick();
@@ -111,10 +111,12 @@ describe('LuxPanelAriaComponent', () => {
     expect(title.nativeElement.classList.contains('lux-crop')).toBeTrue();
     expect(title.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
     expect(title.nativeElement.style.display).toBe('block');
+    expect(title.nativeElement.getAttribute('tabindex')).toBe('0');
 
     expect(description.nativeElement.classList.contains('lux-crop')).toBeTrue();
     expect(description.nativeElement.classList.contains('lux-hyphenate')).toBeFalse();
     expect(description.nativeElement.style.display).toBe('block');
+    expect(description.nativeElement.getAttribute('tabindex')).toBe('0');
   }));
 
   it('sollte deaktiviertes Panel nicht öffnen', fakeAsync(() => {

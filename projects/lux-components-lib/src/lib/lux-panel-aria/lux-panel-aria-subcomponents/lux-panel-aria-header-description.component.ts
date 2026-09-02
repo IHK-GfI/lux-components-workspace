@@ -8,6 +8,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     class="lux-expansion-panel-header-description lux-text-base"
     [class.lux-crop]="luxTruncated()"
     [class.lux-hyphenate]="!luxTruncated()"
+    tabindex="0"
     [style.display]="luxTruncated() ? 'block' : null"
     matTooltip="{{ luxTruncatedTooltip() }}"
     [matTooltipShowDelay]="500"

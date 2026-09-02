@@ -202,6 +202,9 @@
         <lux-toggle-ac luxLabel="Beispiel-Buttons im Header (Panel #1)" [(luxChecked)]="showHeaderButtons1Panel" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property blendet die Beispiel-Buttons im Header des ersten Panels ein/aus. </lux-form-hint>
         </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="Beispiel-Datepicker im Header" [(luxChecked)]="showHeaderDatepicker2Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property blendet den Beispiel-Datepicker im Header des Panels ein/aus. </lux-form-hint>
+        </lux-toggle-ac>
         <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled1Panel" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>
         </lux-toggle-ac>
@@ -228,9 +231,6 @@
       </div>
       <div class="lux-flex lux-flex-col lux-gap-4">
         <h3>Panel #{{ panelConfigArr.length + 1 }}</h3>
-        <lux-toggle-ac luxLabel="Beispiel-Datepicker im Header" [(luxChecked)]="showHeaderDatepicker2Panel" [luxNoTopLabel]="true">
-          <lux-form-hint> Diese Property blendet den Beispiel-Datepicker im Header des Panels ein/aus. </lux-form-hint>
-        </lux-toggle-ac>
         <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled2Panel" [luxNoTopLabel]="true">
           <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>
         </lux-toggle-ac>
