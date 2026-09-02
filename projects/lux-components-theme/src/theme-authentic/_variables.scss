@@ -224,7 +224,6 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-accordion-header-description-color-accent: var(--lux-theme-accordion-header-color-on-accent);
   --lux-theme-accordion-header-description-color-warn: var(--lux-theme-accordion-header-color-on-warn);
   --lux-theme-accordion-header-description-color-neutral: var(--lux-theme-accordion-header-color-on-neutral);
-  --lux-theme-accordion-header-description-font: "Blogger Sans";
 
   // LUX-Badge
   --lux-theme-badge-red: var(--lux-theme-custom-red);
@@ -407,10 +406,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-chat-entry-date-split-text-color: var(--lux-theme-dark-secondary-text);
   --lux-theme-chat-entry-header-text-color: var(--lux-theme-dark-secondary-text);
   --lux-theme-chat-entry-card-border-radius: var(--lux-theme-radius-lg);
-  --lux-theme-chat-entry-card-incomming-background-color: #F4F0EF;
-  --lux-theme-chat-entry-card-incomming-text-color: #1C1B1B;
-  --lux-theme-chat-entry-card-outgoing-background-color: #3A5F94;
-  --lux-theme-chat-entry-card-outgoing-text-color: #FFFFFF;
+  --lux-theme-chat-entry-card-incomming-background-color: #f4f0ef;
+  --lux-theme-chat-entry-card-incomming-text-color: #1c1b1b;
+  --lux-theme-chat-entry-card-outgoing-background-color: #3a5f94;
+  --lux-theme-chat-entry-card-outgoing-text-color: #ffffff;
   --lux-theme-chat-entry-card-padding-top: var(--lux-theme-spacing-md);
   --lux-theme-chat-entry-card-padding-right: var(--lux-theme-spacing-lg);
   --lux-theme-chat-entry-card-padding-bottom: var(--lux-theme-spacing-md);

@@ -1,7 +1,6 @@
 lux-panel-aria {
   .lux-panel {
     border-radius: var(--lux-theme-app-border-radius);
-    overflow: hidden;
     box-shadow: 0 0 0 var(--lux-theme-accordion-panel-container-elevation-shadow-width)
       var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant));
   }
@@ -9,7 +8,6 @@ lux-panel-aria {
   .lux-expansion-panel-header {
     align-items: center;
     display: flex;
-    min-width: 0;
     padding: 0 var(--lux-theme-spacing-lg);
   }
 
@@ -22,13 +20,14 @@ lux-panel-aria {
     align-items: center;
     background: transparent;
     border: 0;
-    cursor: pointer;
     display: flex;
     flex: 1;
-    gap: 0;
-    min-width: 0;
     padding: 0;
     text-align: left;
+
+    &:not([aria-disabled="true"]) {
+      cursor: pointer;
+    }
   }
 
   .lux-expansion-panel-header-toggle:focus-visible {
@@ -40,24 +39,11 @@ lux-panel-aria {
   // in sein Trigger-Icon kollabieren, bevor der Titel/die Beschreibung Platz abgeben muss.
   .lux-expansion-panel-header-custom:has(lux-menu) {
     flex: 1 1 0;
-    min-width: 0;
-    max-width: 16rem;
-  }
-
-  .lux-expansion-panel-header-content {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .lux-expansion-panel-header-title {
-    display: flex;
-    align-items: center;
+    max-width: 100%;
   }
 
   .lux-expansion-panel-header-description {
-    display: flex;
-    font-family: var(--lux-theme-accordion-header-description-font);
-    margin-top: 4px;
+    font-family: var(--lux-theme-app-headline-font);
   }
 
   // Auf-/Zuklapp-Animation nach dem Vorbild von Material (mat-expansion-panel): die
@@ -227,10 +213,5 @@ lux-accordion-aria {
   .lux-expansion-panel-header,
   .lux-expansion-panel-header-toggle {
     border-radius: var(--lux-theme-app-border-radius);
-  }
-
-  [disabled] {
-    opacity: 0.5;
-    pointer-events: none;
   }
 }

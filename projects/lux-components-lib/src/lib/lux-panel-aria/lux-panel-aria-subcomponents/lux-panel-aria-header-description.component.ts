@@ -5,7 +5,7 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'lux-panel-aria-header-description',
   template: `<span
     #panelDescription
-    class="lux-expansion-panel-header-description lux-text-base"
+    class="lux-expansion-panel-header-description lux-text-base lux-mt-2 lux-flex"
     [class.lux-crop]="luxTruncated()"
     [class.lux-hyphenate]="!luxTruncated()"
     [style.display]="luxTruncated() ? 'block' : null"
