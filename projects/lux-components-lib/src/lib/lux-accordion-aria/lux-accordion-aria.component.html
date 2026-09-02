@@ -1,13 +1,11 @@
-<cdk-accordion
-  class="lux-width-full"
-  [multi]="luxMulti()"
-  [attr.disabled]="luxDisabled() ? '' : null"
+<div
+  class="lux-width-full lux-block"
   [ngClass]="{
-    'lux-primary': luxColor() === 'primary',
-    'lux-accent': luxColor() === 'accent',
-    'lux-warn': luxColor() === 'warn',
-    'lux-neutral': luxColor() === 'neutral'
+    'lux-primary': resolvedLuxColor() === 'primary',
+    'lux-accent': resolvedLuxColor() === 'accent',
+    'lux-warn': resolvedLuxColor() === 'warn',
+    'lux-neutral': resolvedLuxColor() === 'neutral'
   }"
 >
   <ng-content></ng-content>
-</cdk-accordion>
+</div>

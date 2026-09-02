@@ -1,66 +1,47 @@
-<div
-  cdkAccordionItem
-  #accordionItem="cdkAccordionItem"
-  class="lux-panel lux-accordion-item"
-  [class.lux-panel-mobile]="mobile"
-  [class.lux-panel-expanded]="accordionItem.expanded"
-  [class.lux-panel-disabled]="!!luxDisabled()"
-  [expanded]="luxExpanded()"
-  [disabled]="!!luxDisabled()"
-  (opened)="onOpened()"
-  (closed)="onClosed()"
->
+<div class="lux-panel" [class.lux-panel-mobile]="mobile">
   <div
     class="lux-expansion-panel-header"
-    [class.lux-dynamic-height]="!!luxDynamicHeaderHeight()"
-    [style.min-height]="getCurrentHeaderHeight(accordionItem.expanded)"
-    [style.height]="luxDynamicHeaderHeight() ? 'auto' : getCurrentHeaderHeight(accordionItem.expanded)"
+    [class.lux-panel-expanded]="accordionTrigger().expanded()"
+    [class.lux-dynamic-height]="effectiveDynamicHeaderHeight()"
+    [style.height]="getCurrentHeaderHeight(accordionTrigger().expanded())"
   >
     <button
+      ngAccordionTrigger
+      luxAutofocus
       type="button"
+      [panel]="panel"
+      [id]="headerId"
+      [disabled]="effectiveDisabled()"
       class="lux-expansion-panel-header-toggle"
-      [class.mat-expansion-toggle-indicator-before]="resolvedTogglePosition() === 'before'"
-      [disabled]="!!luxDisabled()"
-      [attr.id]="headerId"
-      [attr.aria-controls]="contentId"
-      [attr.aria-expanded]="accordionItem.expanded"
-      [attr.aria-disabled]="!!luxDisabled()"
-      (click)="onHeaderClick(accordionItem)"
+      [class.lux-expansion-toggle-indicator-before]="effectiveTogglePosition() === 'before'"
+      (click)="panel.toggle()"
     >
-      @if (!luxHideToggle() && resolvedTogglePosition() === 'before') {
-        <span class="lux-expansion-indicator lux-expansion-indicator-before" aria-hidden="true">
-          <lux-icon luxIconName="lux-interface-arrows-button-down" luxIconSize="12px" class="lux-color-black"></lux-icon>
+      @if (effectiveTogglePosition() === 'before' && !effectiveHideToggle()) {
+        <span class="lux-expansion-indicator lux-expansion-indicator-before">
+          <lux-icon luxIconName="lux-interface-arrows-button-right" luxIconSize="1x"></lux-icon>
         </span>
       }
-
-      <span class="lux-expansion-panel-header-content lux-flex lux-flex-col lux-gap-1">
+      <span class="lux-expansion-panel-header-content lux-flex lux-flex-col">
         <ng-content select="lux-panel-aria-header-title"></ng-content>
         <ng-content select="lux-panel-aria-header-description"></ng-content>
       </span>
-
-      @if (!luxHideToggle() && resolvedTogglePosition() !== 'before') {
-        <span class="lux-expansion-indicator lux-expansion-indicator-after" aria-hidden="true">
-          <lux-icon luxIconName="lux-interface-arrows-button-down" luxIconSize="12px" class="lux-color-blue"></lux-icon>
+      @if (effectiveTogglePosition() === 'after' && !effectiveHideToggle()) {
+        <span class="lux-expansion-indicator lux-expansion-indicator-after">
+          <lux-icon luxIconName="lux-interface-arrows-button-right" luxIconSize="1x"></lux-icon>
         </span>
       }
     </button>
-
-    <div class="lux-expansion-panel-header-custom">
+    <div class="lux-expansion-panel-header-actions">
       <ng-content select="lux-panel-aria-header-custom"></ng-content>
     </div>
   </div>
-
-  <div
-    class="lux-expansion-panel-content lux-leading-normal"
-    [attr.id]="contentId"
-    [attr.aria-labelledby]="headerId"
-    [attr.aria-hidden]="!accordionItem.expanded"
-    role="region"
-    [style.display]="accordionItem.expanded ? 'block' : 'none'"
-    [style.visibility]="accordionItem.expanded ? 'visible' : 'hidden'"
-  >
-    <ng-content select="lux-panel-aria-content"></ng-content>
-    <ng-content></ng-content>
-    <ng-content select="lux-panel-aria-action"></ng-content>
+  <div ngAccordionPanel #panel="ngAccordionPanel" [id]="panelId">
+    <ng-template ngAccordionContent>
+      <div class="lux-expansion-panel-content">
+        <ng-content select="lux-panel-aria-content"></ng-content>
+        <ng-content></ng-content>
+      </div>
+      <ng-content select="lux-panel-aria-action"></ng-content>
+    </ng-template>
   </div>
 </div>

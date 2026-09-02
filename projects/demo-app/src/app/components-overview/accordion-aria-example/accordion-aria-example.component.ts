@@ -10,18 +10,18 @@ import {
   LuxPanelAriaHeaderTitleComponent,
   LuxSelectAcComponent,
   LuxToggleAcComponent,
-  LuxButtonComponent
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxRadioAcComponent,
+  LuxInputAcComponent,
+  LuxModeType,
+  LuxPanelAriaHeaderCustomComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
-import { LuxPanelAriaHeaderCustomComponent } from '../../../../../lux-components-lib/src/public_api';
-
-interface PanelConfig {
-  title: string;
-  description: string;
-}
+import { logResult } from '../../example-base/example-base-util/example-base-helper';
 
 @Component({
   selector: 'app-accordion-aria-example',
@@ -43,33 +43,117 @@ interface PanelConfig {
     LuxCardComponent,
     LuxCardContentComponent,
     LuxPanelAriaHeaderCustomComponent,
-    LuxButtonComponent
+    LuxButtonComponent,
+    LuxFormHintComponent,
+    LuxRadioAcComponent,
+    LuxInputAcComponent
   ]
 })
 export class AccordionAriaExampleComponent {
   showOutputEvents = false;
+  log = logResult;
+  displayModes = ['flat', 'default'];
   disabled = false;
-  multiMode = false;
-  expanded = false;
+  disabled1Panel = false;
+  disabled2Panel = false;
+  hideToggle = false;
+  hideToggle1Panel = false;
+  hideToggle2Panel = false;
+  expanded = true;
+  expandedHeaderHeight = '4em';
+  collapsedHeaderHeight = '4em';
+  dynamicHeaderHeight = false;
+  expandedHeaderHeight1Panel = '4em';
+  collapsedHeaderHeight1Panel = '4em';
+  dynamicHeaderHeight1Panel = false;
+  expandedHeaderHeight2Panel = '4em';
+  collapsedHeaderHeight2Panel = '4em';
+  dynamicHeaderHeight2Panel = false;
+  _displayMode: LuxModeType = 'default';
+  colorOptions = ['primary', 'accent', 'warn', 'neutral'];
   color: LuxAccordionColor = 'primary';
-  isLongLabels = false;
+  togglePositions = ['after', 'before'];
+  _togglePosition: 'after' | 'before' = 'after';
   truncated = false;
   borderCheck = false;
 
-  hideToggle1Panel = false;
-  disabled1Panel = false;
+  set displayMode(mode: LuxModeType) {
+    // Der Multimode muss auf true gesetzt werden damit immer alle Panels aufgeklappt werden. Sonst wird nur das Custom Panel aufgeklappt wenn der Multimode vorher deaktiviert wurde.
+    this.multiMode = true;
+    this.expanded = false;
+    this._displayMode = mode;
+    setTimeout(() => (this.expanded = true));
+  }
 
-  hideToggle2Panel = false;
-  disabled2Panel = false;
+  get displayMode() {
+    return this._displayMode;
+  }
 
-  panelConfigArr: PanelConfig[] = [
-    { title: 'Panel #1', description: 'Beschreibung Panel #1' },
+  set togglePosition(position: 'after' | 'before') {
+    this._togglePosition = position;
+  }
+
+  get togglePosition() {
+    return this._togglePosition;
+  }
+
+  onColorChanged(_color: LuxAccordionColor) {
+    this.color = _color;
+  }
+
+  panelConfigShortLabelArr: { title: string; description: string }[] = [
+    { title: 'Panel #1 - Hauptüberschrift im Panel', description: 'Optionale zusätzliche Beschreibung' },
     { title: 'Panel #2', description: 'Beschreibung Panel #2' }
   ];
-
-  log(show: boolean, ...args: any[]) {
-    if (show) {
-      console.log(...args);
+  panelConfigLongLabelArr: { title: string; description: string }[] = [
+    {
+      title:
+        'Panel #1 - Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus',
+      description:
+        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus'
+    },
+    {
+      title:
+        'Panel #2 - Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus',
+      description:
+        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus'
     }
+  ];
+
+  panelConfigArr: { title: string; description: string }[] = this.panelConfigShortLabelArr;
+
+  _multiMode = true;
+
+  get multiMode() {
+    return this._multiMode;
+  }
+
+  set multiMode(multiMode: boolean) {
+    this._multiMode = multiMode;
+
+    if (!multiMode) {
+      this.expanded = false;
+    }
+  }
+
+  get isLongLabels() {
+    return this.panelConfigArr === this.panelConfigLongLabelArr;
+  }
+
+  constructor() {}
+
+  onChangeLabels(longLabels: boolean) {
+    this.panelConfigArr = longLabels ? this.panelConfigLongLabelArr : this.panelConfigShortLabelArr;
+
+    if (longLabels) {
+      this.dynamicHeaderHeight = true;
+      this.dynamicHeaderHeight1Panel = true;
+      this.dynamicHeaderHeight2Panel = true;
+    }
+  }
+
+  onChangeDynamicHeaderHeight(value: boolean) {
+    this.dynamicHeaderHeight1Panel = value;
+    this.dynamicHeaderHeight2Panel = value;
   }
 }

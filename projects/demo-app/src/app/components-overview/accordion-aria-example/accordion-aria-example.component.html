@@ -1,12 +1,10 @@
 <example-base-structure
-  exampleTitle="Accordion (CDK/Aria-basiert)"
+  exampleTitle="Accordion (Angular Aria-basiert)"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90accordion%E2%80%90aria-v21"
 >
   <example-base-content>
     <div [class.border-check]="borderCheck">
-      <!-- Beispiel-Component mit allen Input-/Output-Properties -->
-      <lux-accordion-aria [luxDisabled]="disabled" [luxMulti]="multiMode" [luxColor]="color" luxTogglePosition="before">
-        <!-- Mehrere Panels mit ihren Input-/Output-Properties -->
+      <lux-accordion-aria [luxDisabled]="disabled" [luxMulti]="multiMode" [luxColor]="color" [luxTogglePosition]="_togglePosition">
         <lux-panel-aria
           [luxExpanded]="expanded"
           [luxHideToggle]="hideToggle1Panel"
@@ -97,7 +95,83 @@
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     ></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="Border Check (zeigt Scrollbereich)" [(luxChecked)]="borderCheck" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxMulti" [(luxChecked)]="multiMode" [luxNoTopLabel]="true">
+      <lux-form-hint> Diese Property bestimmt, ob mehrere Panels gleichzeitig aufklappbar sind oder nicht. </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Alle aufklappen" [(luxChecked)]="expanded" [luxDisabled]="!multiMode" [luxNoLabels]="true"> </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxNoTopLabel]="true">
+      <lux-form-hint> Diese Property deaktiviert die Component. </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxHideToggle" [(luxChecked)]="hideToggle" [luxNoTopLabel]="true">
+      <lux-form-hint> Diese Property ermöglicht es, die Toggle-Icons für alle Panels auszublenden. </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-radio-ac luxLabel="luxMode" [luxOptions]="displayModes" [(luxSelected)]="displayMode" [luxOrientationVertical]="false">
+      <lux-form-hint>
+        Diese Property bestimmt die Darstellung der ausgeklappten Panels.<br />
+        luxMode: 'flat' => Kein Abstand zwischen den Panels<br />
+        luxMode: 'default' => Leichter Abstand zwischen den Panels
+      </lux-form-hint>
+    </lux-radio-ac>
+    <lux-radio-ac
+      luxLabel="luxTogglePosition"
+      luxGroupName="togglePositionGroup"
+      [luxOptions]="togglePositions"
+      [(luxSelected)]="togglePosition"
+      [luxOrientationVertical]="false"
+    >
+      <lux-form-hint>
+        Diese Property bestimmt die Position des Toggle-Icons. <br />
+        Wenn ein Panel einen Custom Header hat, ist die Position immer auf der linken Seite.<br />
+        luxTogglePosition: 'before' => Toggle-Icon wird auf der linken Seite angezeigt<br />
+        luxTogglePosition: 'after' => Toggle-Icon wird auf der rechten Seite angezeigt
+      </lux-form-hint>
+    </lux-radio-ac>
+    <lux-select-ac
+      luxLabel="luxColor"
+      luxHint="Setzt die Farbe des lux-Accordions"
+      [luxOptions]="colorOptions"
+      [(luxSelected)]="color"
+      (luxSelectedChange)="onColorChanged($event)"
+    ></lux-select-ac>
+    <lux-toggle-ac luxLabel="activateLongLabels" (luxCheckedChange)="onChangeLabels($event)" [luxNoTopLabel]="true">
+      <lux-form-hint
+        ><span class="lux-text-highlight-alert"
+          >Wenn lange Labels verwendet werden und <i>luxTruncated</i> deaktiviert ist, kann der Inhalt über den Header hinausgehen. Die
+          Headergröße kann über <i>luxExpandedHeaderHeight</i> und <i>luxCollapsedHeaderHeight</i> angepasst werden. Alternativ kann die
+          <i>luxDynamicHeaderHeight</i> verwendet werden, um die Headerhöhe dynamisch anzupassen.</span
+        ></lux-form-hint
+      >
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="luxDynamicHeaderHeight"
+      [(luxChecked)]="dynamicHeaderHeight"
+      (luxCheckedChange)="onChangeDynamicHeaderHeight($event)"
+      [luxNoLabels]="true"
+    ></lux-toggle-ac>
+    <lux-input-ac
+      luxName="accordion_luxExpandedHeaderHeight"
+      luxLabel="luxExpandedHeaderHeight"
+      [(luxValue)]="expandedHeaderHeight"
+      [luxDisabled]="dynamicHeaderHeight"
+      class="title-input"
+    >
+      <lux-form-hint> Diese Property bestimmt die Höhe aller Panel-Header im ausgeklappten Zustand. </lux-form-hint>
+    </lux-input-ac>
+    <lux-input-ac
+      luxName="accordion_luxCollapsedHeaderHeight"
+      luxLabel="luxCollapsedHeaderHeight"
+      [(luxValue)]="collapsedHeaderHeight"
+      [luxDisabled]="dynamicHeaderHeight"
+      class="title-input"
+    >
+      <lux-form-hint> Diese Property bestimmt die Höhe aller Panel-Header im eingeklappten Zustand. </lux-form-hint>
+    </lux-input-ac>
+    <lux-toggle-ac
+      luxLabel="Border prüfen"
+      luxHint="Bitte aktivieren und prüfen, dass alle Ränder (roter Vergleichsrand und Panelränder) sichtbar sind. Es empfiehlt sich, einen großen Zoomfaktor zu verwenden."
+      [(luxChecked)]="borderCheck"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac luxLabel="Deaktiviert" [(luxChecked)]="disabled" [luxNoTopLabel]="true"></lux-toggle-ac>

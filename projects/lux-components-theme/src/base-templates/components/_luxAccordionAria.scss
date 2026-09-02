@@ -1,0 +1,137 @@
+lux-panel-aria {
+  .lux-panel {
+    border-radius: var(--lux-theme-app-border-radius);
+    overflow: hidden;
+    box-shadow: 0 0 0 var(--lux-theme-accordion-panel-container-elevation-shadow-width)
+      var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant));
+  }
+
+  .lux-expansion-panel-header {
+    align-items: center;
+    display: flex;
+    min-width: 0;
+    padding: 0 24px;
+    background-color: var(--lux-theme-accordion-header-color-primary);
+  }
+
+  .lux-expansion-panel-header-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    gap: 0;
+    min-width: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .lux-expansion-panel-header-content {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .lux-expansion-panel-header-toggle:disabled {
+    cursor: default;
+  }
+
+  .lux-expansion-panel-header-actions {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    gap: 8px;
+  }
+
+  .lux-expansion-indicator {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 0;
+  }
+
+  .lux-expansion-indicator-before {
+    margin-right: 12px;
+  }
+
+  .lux-expansion-indicator-after {
+    margin-left: 12px;
+  }
+
+  .lux-panel-expanded {
+    margin: 16px 0;
+  }
+
+  &:first-of-type .lux-panel-expanded {
+    margin-top: 0;
+  }
+
+  .lux-panel-expanded .lux-expansion-indicator {
+    transform: rotate(270deg);
+  }
+
+  .lux-expansion-panel-content {
+    padding: 0 24px 16px;
+    letter-spacing: var(--mat-expansion-container-text-tracking, var(--mat-sys-body-large-tracking));
+  }
+
+  &.lux-panel-mobile .lux-expansion-panel-header {
+    padding: 0 12px;
+  }
+
+  &.lux-panel-mobile .lux-expansion-panel-header.lux-dynamic-height {
+    padding: 11px 12px;
+  }
+}
+
+lux-accordion-aria {
+  display: block;
+  padding: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
+
+  .lux-primary .lux-expansion-panel-header,
+  .lux-primary .lux-expansion-panel-header.lux-panel-expanded,
+  .lux-primary .lux-expansion-panel-header-toggle,
+  .lux-primary .lux-expansion-panel-header-toggle:focus-visible {
+    background-color: var(--lux-theme-accordion-header-color-primary);
+    color: var(--lux-theme-accordion-header-color-on-primary);
+  }
+
+  .lux-accent .lux-expansion-panel-header,
+  .lux-accent .lux-expansion-panel-header.lux-panel-expanded,
+  .lux-accent .lux-expansion-panel-header-toggle,
+  .lux-accent .lux-expansion-panel-header-toggle:focus-visible {
+    background-color: var(--lux-theme-accordion-header-color-accent);
+    color: var(--lux-theme-accordion-header-color-on-accent);
+  }
+
+  .lux-warn .lux-expansion-panel-header,
+  .lux-warn .lux-expansion-panel-header.lux-panel-expanded,
+  .lux-warn .lux-expansion-panel-header-toggle,
+  .lux-warn .lux-expansion-panel-header-toggle:focus-visible {
+    background-color: var(--lux-theme-accordion-header-color-warn);
+    color: var(--lux-theme-accordion-header-color-on-warn);
+  }
+
+  .lux-neutral .lux-expansion-panel-header,
+  .lux-neutral .lux-expansion-panel-header.lux-panel-expanded,
+  .lux-neutral .lux-expansion-panel-header-toggle,
+  .lux-neutral .lux-expansion-panel-header-toggle:focus-visible {
+    background-color: var(--lux-theme-accordion-header-color-neutral);
+    color: var(--lux-theme-accordion-header-color-on-neutral);
+  }
+
+  .lux-expansion-panel-header,
+  .lux-expansion-panel-header-toggle {
+    border-radius: var(--lux-theme-app-border-radius);
+  }
+
+  .lux-expansion-panel-header .lux-expansion-indicator,
+  .lux-expansion-panel-header .lux-expansion-indicator lux-icon {
+    color: inherit;
+  }
+
+  [disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
