@@ -72,25 +72,22 @@ describe('LuxAccordionAriaComponent', () => {
       expect(accordionComponent.luxMulti()).toBe(true);
     }));
 
-    // it('sollte bei luxMulti=false nur ein Panel gleichzeitig geöffnet lassen', fakeAsync(() => {
-    //   const headerButtons = fixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
+    it('sollte bei luxMulti=false nur ein Panel gleichzeitig geöffnet lassen', fakeAsync(() => {
+      const headerButtons = fixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
 
-    //   expect(fixture.debugElement.queryAll(By.css('.lux-expansion-panel-content')).length).toBe(0);
+      headerButtons[0].nativeElement.click();
+      fixture.detectChanges();
+      tick();
 
-    //   headerButtons[0].nativeElement.click();
-    //   fixture.detectChanges();
-    //   tick();
+      headerButtons[1].nativeElement.click();
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
 
-    //   expect(fixture.debugElement.queryAll(By.css('.lux-expansion-panel-content')).length).toBe(1);
-
-    //   headerButtons[1].nativeElement.click();
-    //   fixture.detectChanges();
-    //   tick();
-
-    //   const openContents = fixture.debugElement.queryAll(By.css('.lux-expansion-panel-content'));
-    //   expect(openContents.length).toBe(1);
-    //   expect(openContents[0].nativeElement.textContent).toContain('Content 2');
-    // }));
+      const openContents = fixture.debugElement.queryAll(By.css('.lux-expansion-panel-content'));
+      expect(openContents.length).toBe(1);
+      expect(openContents[0].nativeElement.textContent).toContain('Content 2');
+    }));
 
     it('sollte die luxDisabled-Eigenschaft respektieren', fakeAsync(() => {
       const accordionComponent = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;

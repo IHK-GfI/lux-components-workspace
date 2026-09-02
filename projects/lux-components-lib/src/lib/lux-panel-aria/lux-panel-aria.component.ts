@@ -1,5 +1,5 @@
 import { AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/aria/accordion';
-import { Component, DestroyRef, computed, effect, input, output, inject, viewChild } from '@angular/core';
+import { afterRenderEffect, Component, DestroyRef, computed, effect, input, output, inject, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observer.service';
 import { LuxTogglePosition } from '../lux-layout/lux-accordion/lux-accordion.component';
@@ -78,9 +78,31 @@ export class LuxPanelAriaComponent {
       const expanded = this.accordionTrigger().expanded();
       if (previousExpanded !== undefined && previousExpanded !== expanded) {
         this.onExpandedChange(expanded);
+        if (expanded) {
+          this.parent?.notifyPanelExpanded(this);
+        }
       }
       previousExpanded = expanded;
     });
+
+    afterRenderEffect(() => {
+      const expanded = this.luxExpanded();
+      const trigger = this.accordionTrigger();
+
+      untracked(() => {
+        if (trigger.expanded() !== expanded) {
+          if (expanded) {
+            trigger.expand();
+          } else {
+            trigger.collapse();
+          }
+        }
+      });
+    });
+  }
+
+  collapse(): void {
+    this.accordionTrigger().collapse();
   }
 
   protected getCurrentHeaderHeight(expanded: boolean) {

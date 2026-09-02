@@ -15,7 +15,8 @@ import {
   LuxRadioAcComponent,
   LuxInputAcComponent,
   LuxModeType,
-  LuxPanelAriaHeaderCustomComponent
+  LuxPanelAriaHeaderCustomComponent,
+  LuxAriaTogglePosition
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -73,7 +74,7 @@ export class AccordionAriaExampleComponent {
   colorOptions = ['primary', 'accent', 'warn', 'neutral'];
   color: LuxAccordionColor = 'primary';
   togglePositions = ['after', 'before'];
-  _togglePosition: 'after' | 'before' = 'after';
+  _togglePosition: LuxAriaTogglePosition = 'after';
   truncated = false;
   borderCheck = false;
 
@@ -94,7 +95,7 @@ export class AccordionAriaExampleComponent {
   }
 
   get togglePosition() {
-    return this._togglePosition;
+    return this._togglePosition ?? 'after';
   }
 
   onColorChanged(_color: LuxAccordionColor) {
