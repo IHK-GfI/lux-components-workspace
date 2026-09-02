@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   LuxAccordionAriaComponent,
   LuxAccordionColor,
@@ -18,7 +18,10 @@ import {
   LuxPanelAriaHeaderCustomComponent,
   LuxAriaTogglePosition,
   LuxDatepickerAcComponent,
-  LuxAriaLabelDirective
+  LuxAriaLabelDirective,
+  LuxMenuComponent,
+  LuxMenuItemComponent,
+  LuxSnackbarService
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -51,7 +54,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxRadioAcComponent,
     LuxInputAcComponent,
     LuxDatepickerAcComponent,
-    LuxAriaLabelDirective
+    LuxAriaLabelDirective,
+    LuxMenuComponent,
+    LuxMenuItemComponent
   ]
 })
 export class AccordionAriaExampleComponent {
@@ -61,9 +66,14 @@ export class AccordionAriaExampleComponent {
   disabled = false;
   disabled1Panel = false;
   disabled2Panel = false;
+  disabled3Panel = false;
   hideToggle = false;
   hideToggle1Panel = false;
   hideToggle2Panel = false;
+  hideToggle3Panel = false;
+  hideLabelIfExtended3Panel = false;
+  showHeaderMenu4Panel = true;
+  hideAllCustomHeaders = false;
   expanded = true;
   expandedHeaderHeight = '4em';
   collapsedHeaderHeight = '4em';
@@ -74,6 +84,7 @@ export class AccordionAriaExampleComponent {
   expandedHeaderHeight2Panel: string | undefined = undefined;
   collapsedHeaderHeight2Panel: string | undefined = undefined;
   dynamicHeaderHeight2Panel = false;
+  dynamicHeaderHeight3Panel = false;
   _displayMode: LuxModeType = 'default';
   colorOptions = ['primary', 'accent', 'warn', 'neutral'];
   color: LuxAccordionColor = 'primary';
@@ -152,7 +163,16 @@ export class AccordionAriaExampleComponent {
     return this.panelConfigArr === this.panelConfigLongLabelArr;
   }
 
+  private snackbar = inject(LuxSnackbarService);
+
   constructor() {}
+
+  onPanelClickNotAllowed() {
+    this.snackbar.open(3000, {
+      text: 'Panel ist deaktiviert und kann nicht geöffnet werden. Deaktivierte Panels bitte ausblenden.',
+      iconName: 'lux-info'
+    });
+  }
 
   onChangeLabels(longLabels: boolean) {
     this.panelConfigArr = longLabels ? this.panelConfigLongLabelArr : this.panelConfigShortLabelArr;
@@ -161,11 +181,13 @@ export class AccordionAriaExampleComponent {
       this.dynamicHeaderHeight = true;
       this.dynamicHeaderHeight1Panel = true;
       this.dynamicHeaderHeight2Panel = true;
+      this.dynamicHeaderHeight3Panel = true;
     }
   }
 
   onChangeDynamicHeaderHeight(value: boolean) {
     this.dynamicHeaderHeight1Panel = value;
     this.dynamicHeaderHeight2Panel = value;
+    this.dynamicHeaderHeight3Panel = value;
   }
 }

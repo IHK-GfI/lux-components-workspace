@@ -35,6 +35,15 @@ lux-panel-aria {
     outline: none;
   }
 
+  // Ein Menü (z.B. mit luxDisplayExtended) im Custom-Header soll den verfügbaren Platz
+  // beanspruchen dürfen (damit die extended Buttons erscheinen), aber zuerst schrumpfen bzw.
+  // in sein Trigger-Icon kollabieren, bevor der Titel/die Beschreibung Platz abgeben muss.
+  .lux-expansion-panel-header-custom:has(lux-menu) {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 16rem;
+  }
+
   .lux-expansion-panel-header-content {
     flex: 1 1 auto;
     min-width: 0;
@@ -47,8 +56,32 @@ lux-panel-aria {
 
   .lux-expansion-panel-header-description {
     display: flex;
-    font-family: "Blogger Sans";
+    font-family: var(--lux-theme-accordion-header-description-font);
     margin-top: 4px;
+  }
+
+  // Auf-/Zuklapp-Animation nach dem Vorbild von Material (mat-expansion-panel): die
+  // Content-Höhe wird über eine Grid-Row animiert (0fr <-> 1fr), statt abrupt ein-/auszublenden.
+  .lux-expansion-panel-content-wrapper {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lux-panel.lux-panel-expanded > .lux-expansion-panel-content-wrapper {
+    grid-template-rows: 1fr;
+  }
+
+  .lux-expansion-panel-content {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lux-expansion-panel-content-wrapper {
+      transition: none;
+    }
   }
 
   .lux-panel.lux-panel-sticky-header.lux-panel-expanded {
@@ -124,11 +157,6 @@ lux-accordion-aria {
   }
 
   .lux-primary {
-    // .lux-panel:focus-visible {
-    //   outline: var(--lux-theme-outline-dark);
-    //   outline-offset: calc(var(--lux-theme-outline-width) * -1);
-    // }
-
     .lux-expansion-panel-header,
     .lux-expansion-panel-header.lux-panel-expanded {
       background-color: var(--lux-theme-accordion-header-color-primary);
@@ -147,28 +175,52 @@ lux-accordion-aria {
 
   .lux-accent {
     .lux-expansion-panel-header,
-    .lux-expansion-panel-header.lux-panel-expanded,
-    .lux-expansion-panel-header-toggle:focus-visible {
+    .lux-expansion-panel-header.lux-panel-expanded {
       background-color: var(--lux-theme-accordion-header-color-accent);
-      color: var(--lux-theme-accordion-header-color-on-accent);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-accent);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-accent);
+        }
+      }
     }
   }
 
   .lux-warn {
     .lux-expansion-panel-header,
-    .lux-expansion-panel-header.lux-panel-expanded,
-    .lux-expansion-panel-header-toggle:focus-visible {
+    .lux-expansion-panel-header.lux-panel-expanded {
       background-color: var(--lux-theme-accordion-header-color-warn);
-      color: var(--lux-theme-accordion-header-color-on-warn);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-warn);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-warn);
+        }
+      }
     }
   }
 
   .lux-neutral {
     .lux-expansion-panel-header,
-    .lux-expansion-panel-header.lux-panel-expanded,
-    .lux-expansion-panel-header-toggle:focus-visible {
+    .lux-expansion-panel-header.lux-panel-expanded {
       background-color: var(--lux-theme-accordion-header-color-neutral);
-      color: var(--lux-theme-accordion-header-color-on-neutral);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-neutral);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-neutral);
+        }
+      }
     }
   }
 

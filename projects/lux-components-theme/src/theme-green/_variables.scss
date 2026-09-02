@@ -216,6 +216,17 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-accordion-header-hover-color-on-warn: #ffcacf;
   --lux-theme-accordion-header-focus-color-on-warn: #ffcacf;
 
+  // Accordion-Aria
+  --lux-theme-accordion-header-text-color-primary: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-text-color-accent: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-text-color-warn: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-text-color-neutral: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-primary: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-accent: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-warn: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-neutral: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-font: "Arial";
+
   // LUX-Badge
   --lux-theme-badge-red: var(--lux-theme-custom-red);
   --lux-theme-badge-on-red: var(--lux-theme-custom-on-red);

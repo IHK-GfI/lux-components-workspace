@@ -1,8 +1,9 @@
 import { AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/aria/accordion';
 import { afterRenderEffect, Component, DestroyRef, computed, effect, input, output, inject, untracked, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observer.service';
 import { LuxIconComponent } from '../lux-icon/lux-icon/lux-icon.component';
+import { LuxThemeService } from '../lux-theme/lux-theme.service';
 import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-accordion-aria/lux-accordion-aria-base';
 
 @Component({
@@ -20,9 +21,23 @@ export class LuxPanelAriaComponent {
 
   protected mediaQuery = inject(LuxMediaQueryObserverService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly themeService = inject(LuxThemeService);
   protected parent = inject(LuxAccordionAriaBase, { optional: true, host: true, skipSelf: true });
   protected readonly accordionPanel = viewChild.required(AccordionPanel);
   protected readonly accordionTrigger = viewChild.required(AccordionTrigger);
+
+  private readonly theme = toSignal(this.themeService.getThemeAsObservable(), { initialValue: this.themeService.getTheme() });
+
+  // Im Green-Theme werden Plus-/Minus- statt Pfeil-Icons für den Toggle-Indikator verwendet.
+  protected toggleIconName = computed(() => {
+    const expanded = this.accordionTrigger().expanded();
+
+    if (this.theme().name === 'green') {
+      return expanded ? 'lux-interface-remove-1' : 'lux-interface-add-1';
+    }
+
+    return expanded ? 'lux-interface-arrows-button-down' : 'lux-interface-arrows-button-up';
+  });
 
   luxDisabled = input<boolean | undefined>(undefined);
   luxExpanded = input<boolean>(false);
@@ -50,6 +65,7 @@ export class LuxPanelAriaComponent {
   luxOpened = output<void>();
   luxClosed = output<void>();
   luxExpandedChange = output<boolean>();
+  luxClickNotAllowed = output<Event>();
 
   mobile = false;
 
@@ -111,6 +127,15 @@ export class LuxPanelAriaComponent {
     this.accordionTrigger().collapse();
   }
 
+  protected onHeaderClick(event: Event): void {
+    if (this.effectiveDisabled()) {
+      this.luxClickNotAllowed.emit(event);
+      return;
+    }
+
+    this.accordionTrigger().toggle();
+  }
+
   protected toggleFromKeyboard(event: KeyboardEvent): void {
     if (event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Spacebar') {
       return;
@@ -118,7 +143,7 @@ export class LuxPanelAriaComponent {
 
     event.preventDefault();
     event.stopPropagation();
-    this.accordionTrigger().toggle();
+    this.onHeaderClick(event);
   }
 
   protected getCurrentHeaderHeight(expanded: boolean) {

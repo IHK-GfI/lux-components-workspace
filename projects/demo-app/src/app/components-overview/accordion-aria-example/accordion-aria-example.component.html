@@ -28,6 +28,7 @@
             (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
             (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
             (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+            (luxClickNotAllowed)="onPanelClickNotAllowed()"
           >
             <lux-panel-aria-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.title">{{
               panelConfig.title
@@ -35,7 +36,7 @@
             <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="panelConfig.description">{{
               panelConfig.description
             }}</lux-panel-aria-header-description>
-            @if (i === 0 && showHeaderButtons1Panel) {
+            @if (i === 0 && showHeaderButtons1Panel && !hideAllCustomHeaders) {
               <lux-panel-aria-header-custom>
                 <lux-button
                   luxLabel="Speichern"
@@ -51,7 +52,7 @@
                 ></lux-button>
               </lux-panel-aria-header-custom>
             }
-            @if (i === 1 && showHeaderDatepicker2Panel) {
+            @if (i === 1 && showHeaderDatepicker2Panel && !hideAllCustomHeaders) {
               <lux-panel-aria-header-custom>
                 <lux-datepicker-ac
                   luxLabel="Datum"
@@ -89,6 +90,7 @@
           (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
           (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
           (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+          (luxClickNotAllowed)="onPanelClickNotAllowed()"
         >
           <lux-panel-aria-header-title
             >Panel #{{ panelConfigArr.length + 1
@@ -112,6 +114,57 @@
                 </p>
               </lux-card-content>
             </lux-card>
+          </lux-panel-aria-content>
+        </lux-panel-aria>
+        <lux-panel-aria
+          [luxExpanded]="expanded"
+          [luxHideToggle]="hideToggle3Panel ? true : undefined"
+          [luxDisabled]="disabled3Panel"
+          [luxDynamicHeaderHeight]="dynamicHeaderHeight3Panel"
+          (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
+          (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
+          (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
+          (luxClickNotAllowed)="onPanelClickNotAllowed()"
+        >
+          <lux-panel-aria-header-title
+            >Panel #{{ panelConfigArr.length + 2
+            }}{{
+              isLongLabels ? 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut' : ''
+            }}</lux-panel-aria-header-title
+          >
+          <lux-panel-aria-header-description>Beschreibung Panel #{{ panelConfigArr.length + 2 }}</lux-panel-aria-header-description>
+          @if (showHeaderMenu4Panel && !hideAllCustomHeaders) {
+            <lux-panel-aria-header-custom>
+              <lux-menu
+                luxMenuIconName="lux-interface-setting-menu-1"
+                luxTagId="accordion_panel3_menu"
+                [luxDisplayExtended]="true"
+                [luxMaximumExtended]="2"
+              >
+                <lux-menu-item
+                  luxLabel="Speichern"
+                  luxIconName="lux-save"
+                  [luxHideLabelIfExtended]="hideLabelIfExtended3Panel"
+                  (luxClicked)="log(showOutputEvents, 'MenuSpeichernClicked', $event)"
+                  luxTagId="accordion_panel3_menu_speichern"
+                >
+                </lux-menu-item>
+                <lux-menu-item
+                  luxLabel="Löschen"
+                  luxIconName="lux-interface-delete-bin-2"
+                  [luxHideLabelIfExtended]="hideLabelIfExtended3Panel"
+                  (luxClicked)="log(showOutputEvents, 'MenuLöschenClicked', $event)"
+                  luxTagId="accordion_panel3_menu_loeschen"
+                >
+                </lux-menu-item>
+              </lux-menu>
+            </lux-panel-aria-header-custom>
+          }
+          <lux-panel-aria-content>
+            <p>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+              aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            </p>
           </lux-panel-aria-content>
         </lux-panel-aria>
       </lux-accordion-aria>
@@ -154,6 +207,7 @@
     <lux-toggle-ac luxLabel="luxHideToggle" [(luxChecked)]="hideToggle" [luxNoTopLabel]="true">
       <lux-form-hint> Diese Property ermöglicht es, die Toggle-Icons für alle Panels auszublenden. </lux-form-hint>
     </lux-toggle-ac>
+
     <lux-radio-ac luxLabel="luxMode" [luxOptions]="displayModes" [(luxSelected)]="displayMode" [luxOrientationVertical]="false">
       <lux-form-hint>
         Diese Property bestimmt die Darstellung der ausgeklappten Panels.<br />
@@ -161,6 +215,12 @@
         luxMode: 'default' => Leichter Abstand zwischen den Panels
       </lux-form-hint>
     </lux-radio-ac>
+    <lux-toggle-ac luxLabel="Alle Custom-Header ausblenden" [(luxChecked)]="hideAllCustomHeaders" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Blendet die Custom-Header-Inhalte (Buttons, Datepicker, Menü) in allen Panels gleichzeitig aus, unabhängig von den Einzel-Toggles in
+        den erweiterten Optionen.
+      </lux-form-hint>
+    </lux-toggle-ac>
     <lux-radio-ac
       luxLabel="luxTogglePosition"
       luxGroupName="togglePositionGroup"
@@ -284,6 +344,28 @@
         >
           <lux-form-hint> Diese Property bestimmt die Höhe des Panel-Headers im eingeklappten Zustand. </lux-form-hint>
         </lux-input-ac>
+      </div>
+      <div class="lux-flex lux-flex-col lux-gap-4">
+        <h3>Panel #{{ panelConfigArr.length + 2 }}</h3>
+        <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled3Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property deaktiviert das Panel. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxHideToggle" [(luxChecked)]="hideToggle3Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property ermöglicht es, das Toggle-Icons für das Panel auszublenden. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="Menü im Header anzeigen" [(luxChecked)]="showHeaderMenu4Panel" [luxNoTopLabel]="true">
+          <lux-form-hint> Diese Property blendet das Menü im Custom-Header des Panels ein/aus. </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac
+          luxLabel="luxHideLabelIfExtended (Menü-Buttons)"
+          [(luxChecked)]="hideLabelIfExtended3Panel"
+          [luxDisabled]="!showHeaderMenu4Panel"
+          [luxNoTopLabel]="true"
+        >
+          <lux-form-hint>
+            Diese Property blendet das Label der Buttons aus, die außerhalb des Menüs angezeigt werden (nur Icon).
+          </lux-form-hint>
+        </lux-toggle-ac>
       </div>
     </div>
   </example-base-advanced-options>

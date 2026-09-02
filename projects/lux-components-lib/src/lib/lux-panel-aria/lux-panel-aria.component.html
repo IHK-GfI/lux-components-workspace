@@ -18,16 +18,12 @@
       [disabled]="effectiveDisabled()"
       class="lux-expansion-panel-header-toggle"
       [class.lux-expansion-toggle-indicator-before]="effectiveTogglePosition() === 'before'"
-      (click)="panel.toggle()"
+      (click)="onHeaderClick($event)"
       (keydown)="toggleFromKeyboard($event)"
     >
       @if (effectiveTogglePosition() === 'before' && !effectiveHideToggle()) {
         <span class="lux-expansion-indicator lux-expansion-indicator-before">
-          <lux-icon
-            [luxIconName]="accordionTrigger().expanded() ? 'lux-interface-arrows-button-down' : 'lux-interface-arrows-button-up'"
-            class="lux-color-blue"
-            luxIconSize="1x"
-          ></lux-icon>
+          <lux-icon [luxIconName]="toggleIconName()" class="lux-color-blue" luxIconSize="1x"></lux-icon>
         </span>
       }
       <span class="lux-expansion-panel-header-content lux-flex lux-flex-col">
@@ -36,11 +32,7 @@
       </span>
       @if (effectiveTogglePosition() === 'after' && !effectiveHideToggle()) {
         <span class="lux-expansion-indicator lux-expansion-indicator-after">
-          <lux-icon
-            [luxIconName]="accordionTrigger().expanded() ? 'lux-interface-arrows-button-down' : 'lux-interface-arrows-button-up'"
-            class="lux-color-blue"
-            luxIconSize="1x"
-          ></lux-icon>
+          <lux-icon [luxIconName]="toggleIconName()" class="lux-color-blue" luxIconSize="1x"></lux-icon>
         </span>
       }
     </button>
