@@ -138,6 +138,23 @@
         (luxClicked)="openStepperDialog()"
         luxTagId="stepper.openDialog"
       ></lux-button>
+      <section class="lux-mt-6">
+        <h3>Stepper mit ausgelagertem Step</h3>
+        <p>
+          Dieses Beispiel zeigt den unterstützten Fall, in dem ein Step von <code>LuxStepComponent</code> erbt und Header sowie Content per
+          <code>#header</code> und <code>#content</code> bereitstellt.
+        </p>
+
+        <lux-stepper [luxLinear]="false">
+          <app-stepper-external-step-example></app-stepper-external-step-example>
+          <lux-step>
+            <lux-step-header>Zusammenfassung</lux-step-header>
+            <lux-step-content>
+              <p>Der Titel des ausgelagerten Steps wird wieder im Header des Steppers angezeigt.</p>
+            </lux-step-content>
+          </lux-step>
+        </lux-stepper>
+      </section>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

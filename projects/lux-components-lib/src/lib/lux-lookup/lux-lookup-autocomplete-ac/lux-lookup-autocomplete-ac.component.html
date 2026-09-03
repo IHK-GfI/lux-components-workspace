@@ -29,6 +29,8 @@
         (focusout)="luxFocusOut.emit($event)"
         [id]="uid"
         [luxAriaDescribedby]="uid + '-error ' + uid + '-hint'"
+        [luxAriaLabel]="luxAriaLabel"
+        [luxAriaLabelledby]="luxAriaLabelledby"
         #autoCompleteInput
       />
       @if (showClearButton()) {

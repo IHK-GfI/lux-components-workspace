@@ -29,6 +29,8 @@
       (focusin)="onFocusIn($event)"
       (focusout)="onFocusOut($event)"
       [luxAriaDescribedby]="descripedBy()"
+      [luxAriaLabel]="luxAriaLabel"
+      [luxAriaLabelledby]="luxAriaLabelledby"
       [attr.aria-disabled]="luxDisabled ? 'true' : null"
       #visibleInput
     />

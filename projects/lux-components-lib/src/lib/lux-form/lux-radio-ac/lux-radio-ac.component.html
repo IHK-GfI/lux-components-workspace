@@ -19,7 +19,8 @@
     [required]="luxRequired"
     (focusin)="onFocusIn($event)"
     (focusout)="onFocusOut($event)"
-    [luxAriaLabelledby]="uid + '-label'"
+    [luxAriaLabelledby]="labelledBy()"
+    [luxAriaLabel]="luxAriaLabel"
     [attr.aria-disabled]="luxDisabled ? 'true' : null"
     [id]="uid"
   >

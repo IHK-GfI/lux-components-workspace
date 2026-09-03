@@ -9,6 +9,8 @@ import {
     LuxSliderAcComponent,
     LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -44,7 +46,8 @@ interface SliderDummyForm {
     ExampleFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
-    ExampleBaseAdvancedOptionsComponent
+    ExampleBaseAdvancedOptionsComponent,
+    StatusMarkerComponent
   ]
 })
 export class SliderAuthenticExampleComponent {
@@ -78,6 +81,10 @@ export class SliderAuthenticExampleComponent {
   label = 'Label';
   hint = 'Optionaler Zusatztext';
   hintShowOnlyOnFocus = false;
+  noTopLabel = false;
+  noBottomLabel = false;
+  noLabels = false;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   errorMessage = 'Das Feld enthält keinen gültigen Wert';
   max = 100;
   min = 0;

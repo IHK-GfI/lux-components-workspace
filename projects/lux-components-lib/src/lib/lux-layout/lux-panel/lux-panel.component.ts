@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, computed, EventEmitter, Input, input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { MatExpansionPanel, MatExpansionPanelHeader } from '@angular/material/expansion';
 import { Subscription } from 'rxjs';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
@@ -25,6 +25,12 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() luxExpanded = false;
   @Input() luxHideToggle?: boolean;
   @Input() luxTogglePosition?: LuxTogglePosition;
+  luxStickyHeader = input<boolean | undefined>();
+  luxStickyHeaderOffset = input<string | undefined>();
+
+  // Panel-Wert hat Priorität, sonst greift der Wert des umgebenden Accordions.
+  stickyHeader = computed(() => this.luxStickyHeader() ?? this.parent?.luxStickyHeader());
+  stickyHeaderOffset = computed(() => this.luxStickyHeaderOffset() ?? this.parent?.luxStickyHeaderOffset());
 
   @Input() luxCollapsedHeaderHeight?: string;
   @Input() luxExpandedHeaderHeight?: string;
@@ -93,7 +99,6 @@ export class LuxPanelComponent implements OnInit, AfterViewInit, OnDestroy {
           this.luxTogglePosition = this.parent.luxTogglePosition;
         }
       }
-
       // Um eine zyklische Abhängigkeit mit dem lux-accordion zu vermeiden,
       // wurde hier ein Event verwendet.
       this.subscriptions.push(

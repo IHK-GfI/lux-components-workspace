@@ -1124,6 +1124,12 @@ describe('LuxInputAcComponent', () => {
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (luxNoTopLabel, Label nur visuell versteckt)', async () => {
+      testComponent.noTopLabel = true;
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
   });
 });
 
@@ -1359,11 +1365,20 @@ class LuxInputCounterLabelComponent {
 }
 
 @Component({
-  template: ` <lux-input-ac luxLabel="Label" [luxDisabled]="disabled" [luxReadonly]="readonly" [luxRequired]="required"></lux-input-ac> `,
+  template: `
+    <lux-input-ac
+      luxLabel="Label"
+      [luxDisabled]="disabled"
+      [luxReadonly]="readonly"
+      [luxRequired]="required"
+      [luxNoTopLabel]="noTopLabel"
+    ></lux-input-ac>
+  `,
   imports: [LuxInputAcComponent]
 })
 class LuxInputA11yComponent {
   disabled = false;
   readonly = false;
   required = false;
+  noTopLabel = false;
 }

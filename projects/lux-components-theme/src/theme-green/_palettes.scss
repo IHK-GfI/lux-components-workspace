@@ -120,6 +120,110 @@ $luxPalettes: (
   )
 );
 
+// Custom Paletten für die neuen Farben
+$luxCustomPalettes: (
+  orange: (
+    0: #000000,
+    5: #1f0c00,
+    10: #2f1500,
+    15: #411b00,
+    20: #532200,
+    25: #662900,
+    30: #793100,
+    35: #8b3900,
+    40: #9e4300,
+    50: #c55500,
+    60: #ed6900,
+    70: #ff8d46,
+    80: #ffb68d,
+    90: #ffdbc8,
+    95: #ffede4,
+    98: #fff8f4,
+    99: #fffbfa,
+    100: #ffffff
+  ),
+  yellow: (
+    0: #000000,
+    5: #181000,
+    10: #251a00,
+    15: #312400,
+    20: #3e2e00,
+    25: #4c3900,
+    30: #5a4400,
+    35: #684f00,
+    40: #765b00,
+    50: #947200,
+    60: #b48b00,
+    70: #d4a400,
+    80: #f5bf00,
+    90: #ffdf9f,
+    95: #ffefd3,
+    98: #fff9ee,
+    99: #fffcf7,
+    100: #ffffff
+  ),
+  pink: (
+    0: #000000,
+    5: #2d0016,
+    10: #400021,
+    15: #52002c,
+    20: #650038,
+    25: #790044,
+    30: #8e0051,
+    35: #a3005e,
+    40: #b8006c,
+    50: #e50087,
+    60: #ff45a0,
+    70: #ff82b7,
+    80: #ffb0ce,
+    90: #ffd8e6,
+    95: #ffecf2,
+    98: #fff7fa,
+    99: #fffbfc,
+    100: #ffffff
+  ),
+  purple: (
+    0: #000000,
+    5: #000050,
+    10: #080863,
+    15: #1e136f,
+    20: #2e1e7c,
+    25: #3c2a89,
+    30: #4a3597,
+    35: #5841a4,
+    40: #664db2,
+    50: #8165ce,
+    60: #9d7eea,
+    70: #b99aff,
+    80: #d2bbff,
+    90: #e9ddff,
+    95: #f4eeff,
+    98: #fbf8ff,
+    99: #fdfbff,
+    100: #ffffff
+  ),
+  lightblue: (
+    0: #000000,
+    5: #001321,
+    10: #001e31,
+    15: #002940,
+    20: #003450,
+    25: #003f60,
+    30: #004b70,
+    35: #005882,
+    40: #006493,
+    50: #007eb8,
+    60: #0099de,
+    70: #33b5ff,
+    80: #91cdff,
+    90: #cce5ff,
+    95: #e6f2ff,
+    98: #f5faff,
+    99: #fafcff,
+    100: #ffffff
+  )
+);
+
 // Gradienten mit den neuen gemappten Farben
 $app-gradient: linear-gradient(90deg, #ffffff 0%, map.get(map.get($luxPalettes, "primary"), 98) 100%);
 $app-gradient-reverse: linear-gradient(270deg, #ffffff 0%, map.get(map.get($luxPalettes, "primary"), 98) 100%);
@@ -138,14 +242,21 @@ $lux-palette_secondary: map.merge(map.get($luxPalettes, secondary), $_rest);
 $lux-palette_neutral: map.merge(map.get($luxPalettes, neutral), $_rest);
 $lux-palette_neutral_variant: map.merge(map.get($luxPalettes, neutral-variant), $_rest);
 
+$lux-palette_custom_orange: map.get($luxCustomPalettes, orange);
+$lux-palette_custom_yellow: map.get($luxCustomPalettes, yellow);
+$lux-palette_custom_pink: map.get($luxCustomPalettes, pink);
+$lux-palette_custom_purple: map.get($luxCustomPalettes, purple);
+$lux-palette_custom_lightblue: map.get($luxCustomPalettes, lightblue);
+
 $lux-primary-color: map.get(map.get($luxPalettes, "primary"), 20);
 $lux-accent-color: map.get(map.get($luxPalettes, "tertiary"), 20);
 $lux-warn-color: map.get(map.get($luxPalettes, "error"), 20);
 
-$paletten: $lux-palette_primary, $lux-palette_accent, $lux-palette_warn, $lux-palette_secondary, $lux-palette_neutral,
-  $lux-palette_neutral_variant;
+$paletten:
+  $lux-palette_primary, $lux-palette_accent, $lux-palette_warn, $lux-palette_secondary, $lux-palette_neutral, $lux-palette_neutral_variant;
 $paletteNamen: primary, secondary, tertiary, neutral, neutral-variant, error;
 $sizes: 0, 10, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;
+$customPaletteSizes: 0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;
 
 // CSS-Klassen für die Farbpaletten
 @mixin lux-theme-palette-classes($paletteName, $paletteMap, $sizes) {
@@ -180,3 +291,8 @@ $sizes: 0, 10, 20, 25, 30, 35, 40, 50, 60, 70, 80, 90, 95, 98, 99, 100;
 @include lux-theme-palette-classes("accent", $lux-palette_accent, $sizes);
 @include lux-theme-palette-classes("neutral", $lux-palette_neutral, $sizes);
 @include lux-theme-palette-classes("warn", $lux-palette_warn, $sizes);
+@include lux-theme-palette-classes("custom-orange", $lux-palette_custom_orange, $customPaletteSizes);
+@include lux-theme-palette-classes("custom-yellow", $lux-palette_custom_yellow, $customPaletteSizes);
+@include lux-theme-palette-classes("custom-pink", $lux-palette_custom_pink, $customPaletteSizes);
+@include lux-theme-palette-classes("custom-purple", $lux-palette_custom_purple, $customPaletteSizes);
+@include lux-theme-palette-classes("custom-lightblue", $lux-palette_custom_lightblue, $customPaletteSizes);

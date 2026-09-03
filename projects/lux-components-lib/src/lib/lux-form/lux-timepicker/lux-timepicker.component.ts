@@ -6,6 +6,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MatInput } from '@angular/material/input';
 import { MatTimepicker, MatTimepickerInput, MatTimepickerSelected, MatTimepickerToggle } from '@angular/material/timepicker';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
@@ -47,6 +49,8 @@ export const APP_TIME_FORMATS = {
     MatTimepickerInput,
     MatTimepickerToggle,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
+    LuxAriaLabelledbyDirective,
     LuxTagIdDirective
   ]
 })
@@ -64,9 +68,6 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> im
   @Input() luxInterval: string | number | null = '30m';
   @Input() luxMinTime: string | null = null;
   @Input() luxMaxTime: string | null = null;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxReferenceControl?: LuxReferenceControl;
 
   @ViewChild(MatTimepicker) matTimepicker?: MatTimepicker<any>;

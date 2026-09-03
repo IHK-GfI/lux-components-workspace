@@ -5,6 +5,7 @@ import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxAriaRequiredDirective } from '../../lux-directives/lux-aria/lux-aria-required.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
@@ -28,6 +29,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     LuxAriaInvalidDirective,
     LuxAriaRequiredDirective,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
     LuxAriaLabelledbyDirective,
     LuxTagIdDirective,
     LuxRenderPropertyPipe
@@ -44,9 +46,6 @@ export class LuxRadioAcComponent<O = any, V = any> extends LuxFormSelectableBase
   @HostBinding('class.lux-pb-3') pb3 = true;
   @Input() luxGroupName = '';
   @Input() luxOrientationVertical = true;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
 
   focused = false;
 

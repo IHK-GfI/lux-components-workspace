@@ -1,6 +1,9 @@
 export class LuxChatMessageData {
-    
-    public metadata: any = {};
+  public metadata: any = {};
 
-    constructor(public user: string, public content: string, public time: Date){}
+  constructor(
+    public user: string,
+    public content: string,
+    public time: Date
+  ) {}
 }

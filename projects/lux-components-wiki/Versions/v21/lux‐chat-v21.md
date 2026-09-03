@@ -13,7 +13,6 @@
   - [Beispiele](#beispiele)
     - [1. Einfacher Chat](#1-einfacher-chat)
 
-
 ## Overview / API
 
 ### Allgemein
@@ -42,13 +41,12 @@
 
 Enthält alle Daten über einen Chatverlauf.
 
-| Name      | Typ                  | Beschreibung                            |
-| --------- | -------------------- | --------------------------------------- |
-| title     | string               | Titel des Chats.                        |
-| createdAt | Date                 | Datum, wann der Chat erstellt wurde.    |
-| messages  | LuxChatMessageData[] | Nachrichten Array.                      |
-| metadata  | any                  | Metadaten für zusätliche Informationen. |
-
+| Name      | Typ                  | Beschreibung                             |
+| --------- | -------------------- | ---------------------------------------- |
+| title     | string               | Titel des Chats.                         |
+| createdAt | Date                 | Datum, wann der Chat erstellt wurde.     |
+| messages  | LuxChatMessageData[] | Nachrichten Array.                       |
+| metadata  | any                  | Metadaten für zusätzliche Informationen. |
 
 | Name                                          | Beschreibung                                                                                                                                                  |
 | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -56,14 +54,14 @@ Enthält alle Daten über einen Chatverlauf.
 
 ### LuxChatMessageData
 
-Enhält alle Daten über eine Chatnachricht
+Enthält alle Daten über eine Chatnachricht
 
 | Name     | Typ    | Beschreibung                                    |
 | -------- | ------ | ----------------------------------------------- |
 | user     | string | Nutzername der diese Nachricht geschrieben hat. |
 | content  | string | Inhalt der Nachricht.                           |
 | time     | Date   | Zeit wann diese Nachricht geschrieben wurde.    |
-| metadata | any    | Metadaten für zusätliche Informationen.         |
+| metadata | any    | Metadaten für zusätzliche Informationen.        |
 
 ## Beispiele
 
@@ -71,7 +69,7 @@ Enhält alle Daten über eine Chatnachricht
 
 Ts
 
-```typecript
+```typescript
 chatData: LuxChatData = new LuxChatData("Neuer Chat", new Date(), []);
 
 public onMessageEntered(input: string) {
@@ -82,9 +80,5 @@ public onMessageEntered(input: string) {
 Html
 
 ```html
-<lux-chat
-  [luxChatData]="chatData"
-  [luxChatUserName]="'Max'"
-  (luxChatOutput)="onMessageEntered($event)"
-></lux-checkbox-ac>
+<lux-chat [luxChatData]="chatData" [luxChatUserName]="'Max'" (luxChatOutput)="onMessageEntered($event)"></lux-chat>
 ```

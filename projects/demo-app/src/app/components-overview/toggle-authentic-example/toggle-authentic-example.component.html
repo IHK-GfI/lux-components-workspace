@@ -17,6 +17,9 @@
         [luxDense]="denseFormat"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
         [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxNoTopLabel]="noTopLabel"
+        [luxNoBottomLabel]="noBottomLabel"
+        [luxNoLabels]="noLabels"
       >
       </lux-toggle-ac>
       <example-value [value]="value"></example-value>
@@ -33,6 +36,9 @@
         [luxControlBinding]="controlBinding"
         [luxErrorMessage]="useErrorMessage ? errorMessage : undefined"
         [luxErrorCallback]="useErrorMessage ? emptyCallback : errorCallback"
+        [luxNoTopLabel]="noTopLabel"
+        [luxNoBottomLabel]="noBottomLabel"
+        [luxNoLabels]="noLabels"
       >
       </lux-toggle-ac>
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
@@ -53,6 +59,36 @@
       [(luxValue)]="hint"
     >
     </lux-input-ac>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoTopLabel"
+        luxHint="Hat bei dieser Komponente keine sichtbare Auswirkung, da das Label neben dem Bedienelement steht. Es entfällt nur die leere obere Label-Zeile."
+        [(luxChecked)]="noTopLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoBottomLabel"
+        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+        [(luxChecked)]="noBottomLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle-ac
+        class="lux-flex-auto"
+        luxLabel="luxNoLabels"
+        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+        [(luxChecked)]="noLabels"
+        [luxNoTopLabel]="true"
+      ></lux-toggle-ac>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
     <lux-toggle-ac
       luxName="toggle_luxHintShowOnlyOnFocus"
       luxLabel="luxHintShowOnlyOnFocus"

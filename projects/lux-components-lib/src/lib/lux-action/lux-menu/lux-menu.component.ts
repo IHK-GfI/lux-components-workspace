@@ -23,6 +23,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
+import { LuxAriaDisabledDirective } from '../../lux-directives/lux-aria/lux-aria-disabled.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
@@ -44,6 +45,7 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     NgTemplateOutlet,
     LuxButtonComponent,
     LuxTabIndexDirective,
+    LuxAriaDisabledDirective,
     LuxAriaLabelDirective,
     LuxTooltipDirective,
     NgClass,
@@ -287,6 +289,14 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
    * @param event
    */
   menuItemClicked(menuItem: LuxMenuItemComponent, event: Event) {
+    // aria-disabled Items führen die Aktion nicht aus, bleiben aber sichtbar und
+    // fokussierbar. Analog zum LuxButton wird stattdessen luxClickNotAllowed emittiert.
+    if (menuItem.luxDisabledAria() && !menuItem.luxDisabled) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      menuItem.clickNotAllowed(event);
+      return;
+    }
     menuItem.clicked(event);
   }
 

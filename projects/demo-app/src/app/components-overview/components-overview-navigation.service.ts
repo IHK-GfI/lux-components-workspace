@@ -34,7 +34,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['breadcrumb', 'lux-interface-cursor-arrow-1'],
     ['session-timer', 'lux-interface-time-reset'],
     ['chat', 'lux-ovals'],
-    ['chat-ai', 'lux-ovals'],
+    ['chat-ai', 'lux-ovals']
   ]);
 
   private create(moduleName: string, label: string, markerType?: DemoMarkerType): DemoNavigationComponentEntry {
@@ -120,7 +120,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('breadcrumb', 'Breadcrumb'),
     this.create('session-timer', 'Session-Timer', DemoMarkerType.Updated),
     this.create('chat', 'Chat', DemoMarkerType.New),
-    this.create('chat', 'Chat-AI', DemoMarkerType.New),
+    this.create('chat', 'Chat-AI', DemoMarkerType.New)
   ];
 
   sortedComponents: DemoNavigationComponentEntry[] = [];
@@ -143,7 +143,7 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['session-timer', false],
     ['tenant-logo', false],
     ['tour-hint', false],
-    ['chat', false],
+    ['chat', false]
   ]);
   currentModuleNames: string[] = [];
   selectedComponent: DemoNavigationComponentEntry | null = null;

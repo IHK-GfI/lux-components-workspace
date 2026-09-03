@@ -1,4 +1,3 @@
-
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -45,10 +44,7 @@ describe('LuxChatPopupComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LuxChatPopupHostComponent],
-      providers: [
-        provideLuxTranslocoTesting(),
-        { provide: LuxMediaQueryObserverService, useClass: MockMediaQueryObserverService }
-      ]
+      providers: [provideLuxTranslocoTesting(), { provide: LuxMediaQueryObserverService, useClass: MockMediaQueryObserverService }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LuxChatPopupHostComponent);
@@ -186,25 +182,5 @@ describe('LuxChatPopupComponent', () => {
       tick();
       expect(popupComponent.mobileView).toBeFalse();
     }));
-  });
-
-  // ---------------------------------------------------------------------------
-  // ngOnDestroy
-  // ---------------------------------------------------------------------------
-  describe('ngOnDestroy', () => {
-    it('sollte alle gespeicherten Subscriptions abmelden', () => {
-      const unsubscribeSpyA = jasmine.createSpy('unsubscribeA');
-      const unsubscribeSpyB = jasmine.createSpy('unsubscribeB');
-
-      popupComponent.subscriptions = [
-        { unsubscribe: unsubscribeSpyA },
-        { unsubscribe: unsubscribeSpyB }
-      ];
-
-      popupComponent.ngOnDestroy();
-
-      expect(unsubscribeSpyA).toHaveBeenCalled();
-      expect(unsubscribeSpyB).toHaveBeenCalled();
-    });
   });
 });

@@ -23,7 +23,10 @@
     class="lux-slider-ac"
     [luxAriaDescribedby]="descripedBy()"
     [luxAriaInvalid]="'' + formControl.invalid"
-    [luxAriaLabel]="luxLabel"
+    [luxAriaLabel]="luxAriaLabel ?? luxLabel"
+    luxAriaLabelSelector="input"
+    [luxAriaLabelledby]="luxAriaLabelledby"
+    luxAriaLabelledbySelector="input"
     tabIndex="-1"
     #ngSlider
     ><input

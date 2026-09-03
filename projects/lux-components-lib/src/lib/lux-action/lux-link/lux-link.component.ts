@@ -76,13 +76,18 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
 
     if (this.isExternal()) {
       // Externe Links: Öffne im aktuellen oder neuen Fenster
-      window.open(href, this.isOpenInNewTab(event) ? '_blank' : '_self');
+      if (this.isOpenInNewTab(event)) {
+        // noopener,noreferrer verhindert Reverse Tabnabbing (Zugriff der Zielseite auf window.opener)
+        window.open(href, '_blank', 'noopener,noreferrer');
+      } else {
+        window.open(href, '_self');
+      }
     } else {
       // Interne Links: Nutze Angular Router
       if (this.isOpenInNewTab(event)) {
         const newRelativeUrl = this.router.createUrlTree([href]);
         const baseUrl = window.location.href.replace(this.router.url, '');
-        window.open(baseUrl + newRelativeUrl, '_blank');
+        window.open(baseUrl + newRelativeUrl, '_blank', 'noopener,noreferrer');
       } else {
         this.router.navigate([href]).then(() => {});
       }

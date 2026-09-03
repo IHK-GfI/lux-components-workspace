@@ -99,9 +99,6 @@ export class LuxChipsAcComponent
   @Input() luxOptionBlockSize = 500;
   @Input() luxHideBorder = false;
   @Input() luxInputLabelAlwaysVisible = false;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
 
   @Output() luxChipAdded = new EventEmitter<string>();
 
@@ -140,6 +137,29 @@ export class LuxChipsAcComponent
   @Input() set luxAutocompleteOptions(options: string[]) {
     this._luxAutocompleteOptions = options ? [...options] : [];
     this.filteredOptions = this.luxAutocompleteOptions;
+  }
+
+  /**
+   * Liefert den Wert für "aria-labelledby" der Chips-Komponente.
+   *
+   * Der Wrapper (lux-form-control-wrapper) rendert das Label mit der ID "uid-label"
+   * nur dann, wenn "luxIgnoreDefaultLabel" false ist. Im Template wird dieser Wert
+   * mit "!luxInputAllowed && !luxInputLabelAlwaysVisible" berechnet - das ist die
+   * Standardkonfiguration (kein Eingabefeld, Label nicht dauerhaft sichtbar). In
+   * diesem Fall gibt es kein "<label id='uid-label'>" im DOM, obwohl die geerbte
+   * labelledBy()-Implementierung bei gesetztem luxLabel dennoch auf "uid-label"
+   * verweisen würde - ein toter Verweis. Deshalb wird hier in diesem Fall entweder
+   * das explizit gesetzte luxAriaLabelledby zurückgegeben oder undefined, damit ein
+   * gesetztes luxAriaLabel greifen kann.
+   */
+  override labelledBy(): string | undefined {
+    const wrapperLabelSuppressed = !this.luxInputAllowed && !this.luxInputLabelAlwaysVisible;
+
+    if (wrapperLabelSuppressed) {
+      return this.luxAriaLabelledby || undefined;
+    }
+
+    return super.labelledBy();
   }
 
   get luxInputLabel(): string {

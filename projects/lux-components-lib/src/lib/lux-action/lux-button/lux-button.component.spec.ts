@@ -178,6 +178,17 @@ describe('LuxButtonComponent', () => {
       expect(buttonEl.nativeElement.getAttribute('aria-disabled')).toBe('true');
     }));
 
+    it('setzt aria-disabled auch bei initial aktivem luxDisabledAria', fakeAsync(() => {
+      // Regression: Das MatButton-Host-Binding für aria-disabled hat einen initial
+      // gesetzten Wert im ersten Change-Detection-Zyklus wieder entfernt.
+      const initialFixture = TestBed.createComponent(MockButtonComponent);
+      initialFixture.componentInstance.disabledAria = true;
+      initialFixture.detectChanges();
+
+      const buttonEl = initialFixture.debugElement.query(By.css('button'));
+      expect(buttonEl.nativeElement.getAttribute('aria-disabled')).toBe('true');
+    }));
+
     it('emittiert luxClickNotAllowed und kein luxClicked', fakeAsync(() => {
       const onClickSpy = spyOn(fixture.componentInstance, 'onClick');
       const onClickNotAllowedSpy = spyOn(fixture.componentInstance, 'onClickNotAllowed');

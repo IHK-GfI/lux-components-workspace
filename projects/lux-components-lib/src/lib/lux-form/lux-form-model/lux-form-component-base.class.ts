@@ -16,7 +16,6 @@ import {
 import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -44,6 +43,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected _luxReadonly = false;
   protected _luxRequired = false;
   protected _luxControlValidators?: ValidatorFnType;
+  private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
 
   errorMessage: string | undefined = undefined;
 
@@ -76,6 +76,38 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   @Input() luxHintShowOnlyOnFocus = false;
   @Input() luxLabel = '';
   @Input() luxLabelLongFormat = false;
+  /**
+   * Setzt "aria-label" auf dem nativen Eingabeelement. Nur für Felder gedacht,
+   * die kein sichtbares Label besitzen (z.B. Suchfeld). Hat ein Control ein
+   * sichtbares Label, überschreibt ein abweichendes aria-label den sichtbaren
+   * Text (WCAG 2.5.3 "Label in Name") - siehe Warnung in checkA11yName().
+   */
+  @Input() luxAriaLabel?: string;
+  /**
+   * Setzt "aria-labelledby" auf dem nativen Eingabeelement und verweist damit
+   * auf ein eigenes, externes Label-Element. Hat Vorrang vor luxAriaLabel und luxLabel.
+   */
+  @Input() luxAriaLabelledby?: string;
+  /**
+   * Blendet das obere Label nur visuell aus (lux-sr-only). Das <label> bleibt im DOM,
+   * der zugängliche Name des Controls bleibt erhalten (Issue #267).
+   * Wirkt auch ohne gesetztes luxLabel: Dann entfällt die leere Label-Zeile visuell,
+   * die sonst für die Flucht mit sichtbar gelabelten Nachbarfeldern reserviert bleibt.
+   */
+  @Input() luxNoTopLabel = false;
+  /**
+   * Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM.
+   * Achtung, bewusste Entscheidung: Damit entfällt auch die per aria-describedby
+   * referenzierte Fehlermeldung. Nur einsetzen, wenn Fehler an anderer Stelle
+   * wahrnehmbar gemacht werden.
+   */
+  @Input() luxNoBottomLabel = false;
+  /**
+   * Kombination aus luxNoTopLabel und luxNoBottomLabel: Das Label wird nur visuell
+   * versteckt, der untere Bereich inklusive Fehlermeldung wird entfernt.
+   * Siehe die Hinweise an den beiden Einzel-Inputs.
+   */
+  @Input() luxNoLabels = false;
 
   @Input() luxControlBinding?: string;
   @Input() luxErrorMessage?: string;
@@ -88,6 +120,22 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
   @Input() set luxFormControl(formControl: FormControl<T>) {
     this.formControl = formControl;
+  }
+
+  /**
+   * Liefert den Wert für "aria-labelledby" gemäß der Namenskaskade:
+   * luxAriaLabelledby vor luxAriaLabel vor luxLabel (uid + '-label').
+   * undefined bedeutet: kein aria-labelledby setzen (die Aria-Direktiven
+   * entfernen das Attribut dann), damit ein gesetztes luxAriaLabel greifen kann.
+   */
+  labelledBy(): string | undefined {
+    if (this.luxAriaLabelledby) {
+      return this.luxAriaLabelledby;
+    }
+    if (this.luxAriaLabel) {
+      return undefined;
+    }
+    return this.formLabelComponent || this.luxLabel ? this.uid + '-label' : undefined;
   }
 
   get luxFormGroup(): FormGroup {
@@ -163,6 +211,9 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     this.initFormValueSubscription();
     this.initFormStateSubscription();
     this.updateValidators(this.luxControlValidators, true);
+
+    // Verzögert prüfen, damit der @ContentChild formLabelComponent bereits aufgelöst ist.
+    this.a11yNameCheckTimeout = setTimeout(() => this.checkA11yName());
   }
 
   ngDoCheck() {
@@ -190,6 +241,10 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
     if (this._configSubscription) {
       this._configSubscription.unsubscribe();
+    }
+
+    if (this.a11yNameCheckTimeout) {
+      clearTimeout(this.a11yNameCheckTimeout);
     }
   }
 
@@ -249,6 +304,35 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    */
   protected errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     return undefined;
+  }
+
+  /**
+   * Prüft, ob das Control einen zugänglichen Namen besitzt bzw. ob ein
+   * abweichendes luxAriaLabel ein sichtbares Label überschreibt (WCAG 2.5.3),
+   * und gibt andernfalls eine Warnung aus (nur im Debug-Modus sichtbar).
+   * Die Prüfung läuft einmalig bei der Initialisierung; spätere dynamische
+   * Änderungen an den betroffenen Inputs werden nicht erneut geprüft.
+   */
+  protected checkA11yName() {
+    const hasVisibleLabel = !!this.formLabelComponent || !!this.luxLabel;
+
+    if (!hasVisibleLabel && !this.luxAriaLabel && !this.luxAriaLabelledby) {
+      this.logger.warn(
+        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt keinen zugänglichen Namen. ` +
+          `Bitte luxLabel (ggf. mit luxNoTopLabel), luxAriaLabel oder luxAriaLabelledby setzen.`
+      );
+    } else if (
+      // Bei projiziertem <lux-form-label> ist der Text hier nicht auslesbar; um falsche Alarme zu
+      // vermeiden, wird in diesem Fall keine 2.5.3-Warnung ausgegeben.
+      !!this.luxLabel &&
+      !!this.luxAriaLabel &&
+      this.luxAriaLabel !== this.luxLabel
+    ) {
+      this.logger.warn(
+        `A11y: Das Formularelement (luxControlBinding=${this.luxControlBinding ?? 'ohne Binding'}) besitzt ein sichtbares Label ` +
+          `und ein davon abweichendes luxAriaLabel. Das aria-label überschreibt das sichtbare Label (WCAG 2.5.3 "Label in Name").`
+      );
+    }
   }
 
   /**
@@ -347,8 +431,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
       this.setValue(this._initialValue);
     }
 
-    // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden
-    this._formValueChangeSub = this.formControl.valueChanges.pipe(distinctUntilChanged()).subscribe((value: any) => {
+    // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden.
+    this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {
       this.notifyFormValueChanged(value);
     });
   }
@@ -398,7 +482,7 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
     if (!this.inForm) {
       setTimeout(() => {
-        // Der setTimeout-Callback feuert asynchron – nach ngOnInit. Zu diesem Zeitpunkt kann inForm
+        // Der setTimeout-Callback feuert asynchron - nach ngOnInit. Zu diesem Zeitpunkt kann inForm
         // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
         // Guard würde setValidators() die Validatoren des FormControls überschreiben.
         if (this.inForm) {

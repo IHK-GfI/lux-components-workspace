@@ -35,6 +35,8 @@
           (focusin)="onFocusIn($event)"
           (focusout)="onFocusOut($event)"
           [luxAriaDescribedby]="descripedBy()"
+          [luxAriaLabel]="luxAriaLabel"
+          [luxAriaLabelledby]="luxAriaLabelledby"
           [id]="uid"
           #input
         />
@@ -62,6 +64,8 @@
           (focusout)="onFocusOut($event)"
           (keydown)="onKeyDown($event)"
           [luxAriaDescribedby]="descripedBy()"
+          [luxAriaLabel]="luxAriaLabel"
+          [luxAriaLabelledby]="luxAriaLabelledby"
           [id]="uid"
           #input
         />

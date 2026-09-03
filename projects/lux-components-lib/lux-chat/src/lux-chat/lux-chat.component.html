@@ -1,124 +1,127 @@
 <div class="lux-chat">
-    <!-- Chat header -->
-    <div class="lux-chat-header">
-        <ng-container *ngTemplateOutlet="luxChatHeaderComponent()?.templateRef() || defaultChatHeader;"></ng-container>
-    </div>
-    
-    <lux-divider [luxInset]="false"></lux-divider>
+  <!-- Chat header -->
+  <div class="lux-chat-header">
+    <ng-container *ngTemplateOutlet="luxChatHeaderComponent()?.templateRef() || defaultChatHeader"></ng-container>
+  </div>
 
-    <!-- Chat base -->
-    <div class="lux-chat-base" tabindex="0" #chatBase>
-        @for (item of luxChatData()?.messages; track $index){
-            @if(item.metadata["_showDateSplit"]){
-                <div class="lux-chat-entry-date-split">
-                    {{ item.time | luxChatRelativeUntilTimestamp:undefined:undefined:-2:0:locale }}
-                </div>
+  <lux-divider class="lux-chat-header-divider" [luxInset]="false"></lux-divider>
+
+  <!-- Chat base -->
+  <div class="lux-chat-base" tabindex="0" #chatBase>
+    @for (item of luxChatData()?.messages; track $index) {
+      @if (item.metadata['_showDateSplit']) {
+        <div class="lux-chat-entry-date-split">
+          {{ item.time | luxChatRelativeUntilTimestamp: undefined : undefined : -2 : 0 : locale }}
+        </div>
+      }
+
+      <div
+        [ngClass]="{
+          'lux-chat-entry-container': true,
+          'lux-chat-entry-container-left': !item.metadata._isUser,
+          'lux-chat-entry-container-right': item.metadata._isUser
+        }"
+      >
+        <div class="lux-chat-entry-header">
+          @if (item.metadata['_showEntryHeaderTime']) {
+            @if (item.user !== luxChatUserName()) {
+              <span>{{ item.user }}</span>
             }
+            <span>{{ item.time | date: 'HH:mm' }}</span>
+          }
+        </div>
+        <div class="lux-chat-entry-card">
+          <ng-container
+            *ngTemplateOutlet="luxChatEntryComponent()?.templateRef() || defaultChatEntry; context: { $implicit: item }"
+          ></ng-container>
+        </div>
+      </div>
+    }
+  </div>
 
-            <div [ngClass]="{
-                'lux-chat-entry-container': true,
-                'lux-chat-entry-container-left': !item.metadata._isUser,
-                'lux-chat-entry-container-right': item.metadata._isUser,
-            }">
-                <div class="lux-chat-entry-header">
-                    @if(item.metadata["_showEntryHeaderTime"]){
-                        @if(item.user !== luxChatUserName()){
-                            <span>{{item.user}}</span>
-                        }
-                        <span>{{item.time | date:'HH:mm'}}</span>
-                    }
-                </div>
-                <div class="lux-chat-entry-card">
-                    <ng-container *ngTemplateOutlet="luxChatEntryComponent()?.templateRef() || defaultChatEntry; context: { $implicit: item }"></ng-container>
-                </div>
-            </div>
-        }
-    </div>
+  <!-- Chat action -->
+  <div class="lux-chat-action-container">
+    @if (luxAutoFocus()) {
+      <lux-textarea-ac
+        class="lux-chat-action-input"
+        luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco }}"
+        luxAriaLabelSelector="textarea"
+        luxTagId="chatInput"
+        [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
+        [(luxValue)]="chatInput"
+        luxAutocomplete="off"
+        [luxNoTopLabel]="true"
+        [luxNoBottomLabel]="true"
+        [luxMaxRows]="4"
+        (keydown.enter)="onChatEntered($event)"
+        luxAutofocus
+      ></lux-textarea-ac>
+    } @else {
+      <lux-textarea-ac
+        class="lux-chat-action-input"
+        luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco }}"
+        luxAriaLabelSelector="textarea"
+        luxTagId="chatInput"
+        [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
+        [(luxValue)]="chatInput"
+        luxAutocomplete="off"
+        [luxNoTopLabel]="true"
+        [luxNoBottomLabel]="true"
+        [luxMaxRows]="4"
+        (keydown.enter)="onChatEntered($event)"
+      ></lux-textarea-ac>
+    }
 
-    <!-- Chat action -->
-    <div class="lux-chat-action-container">
-        @if(luxAutoFocus()){
-            <lux-textarea-ac 
-                class="lux-chat-action-input"
-                luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
-                luxAriaLabelSelector="textarea"
-                luxTagId="chatInput" 
-                [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
-                [(luxValue)]="chatInput" 
-                luxAutocomplete="off" 
-                [luxNoTopLabel]="true" 
-                [luxNoBottomLabel]="true"
-                [luxMaxRows]="4"
-                (keydown.enter)="onChatEntered($event)"
-                luxAutofocus
-            ></lux-textarea-ac>
-        }
-        @else {
-            <lux-textarea-ac 
-                class="lux-chat-action-input"
-                luxAriaLabel="{{ 'luxc.chat.input.arialabel' | transloco}}"
-                luxAriaLabelSelector="textarea"
-                luxTagId="chatInput" 
-                [luxPlaceholder]="'luxc.chat.input.placeholder.default' | transloco"
-                [(luxValue)]="chatInput" 
-                luxAutocomplete="off" 
-                [luxNoTopLabel]="true" 
-                [luxNoBottomLabel]="true"
-                [luxMaxRows]="4"
-                (keydown.enter)="onChatEntered($event)"
-            ></lux-textarea-ac>
-        }
-
-        @if(chatInput){
-            <lux-button
-                luxTagId="lux-chat-ai-input-button-send"
-                class="lux-chat-action-send"
-                [luxIconButton]="true"
-                [luxRaised]="true"
-                [luxRounded]="true"
-                luxIconName="lux-mail-send-email"
-                luxColor="primary"
-                (luxClicked)="onChatEnterButtonPressed()"
-            ></lux-button>
-        }
-    </div>
+    @if (chatInput) {
+      <lux-button
+        luxTagId="lux-chat-ai-input-button-send"
+        class="lux-chat-action-send"
+        [luxIconButton]="true"
+        [luxRaised]="true"
+        [luxRounded]="true"
+        luxIconName="lux-mail-send-email"
+        luxColor="primary"
+        (luxClicked)="onChatEnterButtonPressed()"
+      ></lux-button>
+    }
+  </div>
 </div>
 
 <!-- Default Header Template -->
 <ng-template #defaultChatHeader>
-    <p class="lux-chat-header-title" tabindex="0">
-        <span class="lux-chat-header-title-text">
-            {{luxChatData()?.title}}
-        </span>
-        
-        <br/>
-        <span class="lux-chat-header-sub-title">
-            {{'luxc.chat.title.created_at' | transloco}}{{luxChatData()?.createdAt | date:'dd.MM HH:mm'}}
-        </span>
-    </p>
+  <p class="lux-chat-header-title" tabindex="0">
+    <span class="lux-chat-header-title-text">
+      {{ luxChatData()?.title }}
+    </span>
 
-    @if(chatPopupMode()){
-        <div class="lux-flex lux-gap-4">
-            <lux-button
-                luxColor="primary"
-                [luxIconButton]="true"
-                [luxIconName]="_chatFullscreen ? 'lux-interface-arrows-shrink-1' : 'lux-interface-arrows-expand-1'"
-                (luxClicked)="onFullscreenChatClicked()"
-                [luxAriaLabel]="'luxc.chat.button_fullscreen.arialabel' | transloco"
-            ></lux-button>
-            
-            <lux-button
-                luxColor="primary"
-                [luxIconButton]="true"
-                luxIconName="lux-interface-delete-1"
-                (luxClicked)="onCloseChatClicked()"
-                [luxAriaLabel]="'luxc.chat.button_close.arialabel' | transloco"
-            ></lux-button>
-        </div>
-    }
+    <br />
+    <span class="lux-chat-header-sub-title">
+      {{ 'luxc.chat.title.created_at' | transloco }}{{ luxChatData()?.createdAt | date: 'dd.MM HH:mm' }}
+    </span>
+  </p>
+
+  @if (chatPopupMode()) {
+    <div class="lux-flex lux-gap-4">
+      <lux-button
+        luxColor="primary"
+        [luxIconButton]="true"
+        [luxIconName]="_chatFullscreen ? 'lux-interface-arrows-shrink-1' : 'lux-interface-arrows-expand-1'"
+        (luxClicked)="onFullscreenChatClicked()"
+        [luxAriaLabel]="'luxc.chat.button_fullscreen.arialabel' | transloco"
+      ></lux-button>
+
+      <lux-button
+        luxColor="primary"
+        [luxIconButton]="true"
+        luxIconName="lux-interface-delete-1"
+        (luxClicked)="onCloseChatClicked()"
+        [luxAriaLabel]="'luxc.chat.button_close.arialabel' | transloco"
+      ></lux-button>
+    </div>
+  }
 </ng-template>
 
 <!-- Default Entry Template -->
 <ng-template #defaultChatEntry let-item>
-    <p class="lux-chat-entry-card-default-text">{{item.content}}</p>
+  <p class="lux-chat-entry-card-default-text">{{ item.content }}</p>
 </ng-template>

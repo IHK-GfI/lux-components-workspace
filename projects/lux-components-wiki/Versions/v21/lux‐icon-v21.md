@@ -109,19 +109,20 @@ Html
 
 Html
 
+Die Linienfarbe wird über CSS-Klassen gesetzt, z.B. `lux-color-blue`.
+
 ```html
 <div class="lux-flex lux-flex-wrap lux-gap-4">
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: red"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: green"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: purple"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: blue"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: gray"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: orange"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: brown"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: black"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: yellow"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: pink"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" style="color: lightblue"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-red"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-green"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-purple"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-blue"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-gray"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-orange"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-black"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-yellow"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-pink"></lux-icon>
+  <lux-icon luxIconName="lux-interface-favorite-like-1" class="lux-color-lightblue"></lux-icon>
 </div>
 ```
 
@@ -139,7 +140,6 @@ Html
   <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="blue"></lux-icon>
   <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="gray"></lux-icon>
   <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="orange"></lux-icon>
-  <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="brown"></lux-icon>
   <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="black"></lux-icon>
   <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="yellow"></lux-icon>
   <lux-icon luxIconName="lux-interface-favorite-like-1" luxColor="pink"></lux-icon>

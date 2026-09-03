@@ -74,6 +74,10 @@ export class AccordionExampleComponent {
   _togglePosition: LuxTogglePosition = 'after';
   truncated = false;
   borderCheck = false;
+  stickyHeader = false;
+  stickyHeaderOffset = '';
+  stickyLongContent = false;
+  longContentArr = Array.from({ length: 15 }, (_, i) => i);
 
   set displayMode(mode: LuxModeType) {
     // Der Multimode muss auf true gesetzt werden damit immer alle Panels aufgeklappt werden. Sonst wird nur das Custom Panel aufgeklappt wenn der Multimode vorher deaktiviert wurde.
