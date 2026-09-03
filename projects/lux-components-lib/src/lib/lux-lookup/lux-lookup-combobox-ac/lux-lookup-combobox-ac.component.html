@@ -47,10 +47,10 @@
           [filterValue]="luxFilterValue()"
           [clearAriaLabel]="luxFilterClearAriaLabel()"
           [filterDirective]="selectFilter"
-        ></lux-select-panel-filter>
+        />
       }
       @if (luxWithEmptyEntry() && !luxMultiple()) {
-        <mat-option [value]="undefined" class="option-height"></mat-option>
+        <mat-option [value]="undefined" class="option-height" />
       }
       @for (entry of renderedEntries(); track entry) {
         @if (!entry.isUngueltig || (entry.isUngueltig && showUngueltige())) {

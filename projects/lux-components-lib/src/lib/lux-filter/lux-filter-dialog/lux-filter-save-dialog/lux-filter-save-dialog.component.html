@@ -10,7 +10,7 @@
         [luxErrorCallback]="filterErrorCallback"
         luxAutocomplete="off"
         (keydown.enter)="onSave()"
-      ></lux-input-ac>
+      />
     </div>
   </lux-dialog-content>
   <lux-dialog-actions class="lux-filter-dialog-action">
@@ -20,12 +20,12 @@
       [luxDisabled]="!filterName"
       [luxFlat]="true"
       (luxClicked)="onSave()"
-    ></lux-button>
+    />
     <lux-button
       luxLabel="{{ 'luxc.file-preview.filter-save-dialog.cancel.lbl' | transloco }}"
       [luxColor]="luxDialogRef.data.luxButtonDialogCancel()"
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog(false)"
-    ></lux-button>
+    />
   </lux-dialog-actions>
 </lux-dialog-structure>

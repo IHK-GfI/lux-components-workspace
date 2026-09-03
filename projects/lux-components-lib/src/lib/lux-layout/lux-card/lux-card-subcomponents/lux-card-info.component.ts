@@ -3,8 +3,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 @Component({
   selector: 'lux-card-info',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>'
+  template: '<ng-content />'
 })
-export class LuxCardInfoComponent {
-  constructor() {}
-}
+export class LuxCardInfoComponent {}

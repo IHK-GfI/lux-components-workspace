@@ -36,10 +36,10 @@
       />
       @if (luxShowToggle()) {
         <mat-timepicker-toggle [disabled]="luxDisabled() || luxReadonly()" [for]="timepicker" [disableRipple]="true">
-          <lux-icon matTimepickerToggleIcon luxIconName="lux-interface-time-clock-circle" class="lux-timepicker-toggle-icon"></lux-icon>
+          <lux-icon matTimepickerToggleIcon luxIconName="lux-interface-time-clock-circle" class="lux-timepicker-toggle-icon" />
         </mat-timepicker-toggle>
       }
-      <mat-timepicker [interval]="luxInterval()" (selected)="onTimeOptionSelected($event)" #timepicker></mat-timepicker>
+      <mat-timepicker [interval]="luxInterval()" (selected)="onTimeOptionSelected($event)" #timepicker />
     </div>
   </lux-form-control-wrapper>
 }

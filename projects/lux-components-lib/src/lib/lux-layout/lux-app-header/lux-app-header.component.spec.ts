@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -120,15 +120,13 @@ describe('LuxAppHeaderComponent', () => {
 
       // Änderungen durchführen
       testComponent.titleShort.set('T');
-      testComponent.appHeaderComponent().mobileView = true;
-      fixture.debugElement.query(By.directive(LuxAppHeaderComponent)).injector.get(ChangeDetectorRef).markForCheck();
+      testComponent.appHeaderComponent().mobileView.set(true);
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.lux-header-title')).nativeElement.textContent.trim()).toEqual('T');
 
-      testComponent.appHeaderComponent().mobileView = false;
-      fixture.debugElement.query(By.directive(LuxAppHeaderComponent)).injector.get(ChangeDetectorRef).markForCheck();
+      testComponent.appHeaderComponent().mobileView.set(false);
       LuxTestHelper.wait(fixture);
     }));
   });

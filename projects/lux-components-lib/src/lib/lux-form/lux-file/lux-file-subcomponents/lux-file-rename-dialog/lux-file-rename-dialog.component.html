@@ -12,7 +12,7 @@
       (keydown.enter)="luxDialogRef.closeDialog(filename.luxValue)"
       luxAutofocus
       #filename
-    ></lux-input-ac>
+    />
   </lux-dialog-content>
 
   <lux-dialog-actions class="lux-flex lux-flex-wrap">
@@ -22,12 +22,12 @@
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog()"
       class="lux-mr-4"
-    ></lux-button>
+    />
     <lux-button
       luxLabel="{{ 'luxc.file.rename.dialog.rename.lbl' | transloco }}"
       luxColor="primary"
       [luxFlat]="true"
       (luxClicked)="luxDialogRef.closeDialog(filename.luxValue)"
-    ></lux-button>
+    />
   </lux-dialog-actions>
 </lux-dialog-structure>

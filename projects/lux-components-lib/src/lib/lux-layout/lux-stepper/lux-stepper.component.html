@@ -10,9 +10,8 @@
   (luxPrevButtonClicked)="stepperService.previousStep(this)"
   (luxNextButtonClicked)="stepperService.nextStep(this)"
   (luxStepClicked)="onStepClicked($event)"
-  [ngClass]="{ 'lux-stepper-mobile': mobileView }"
->
-</lux-stepper-vertical>
+  [ngClass]="{ 'lux-stepper-mobile': mobileView() }"
+/>
 }
 <!-- HORIZONTALER STEPPER -->
 @default {
@@ -25,10 +24,9 @@
   (luxPrevButtonClicked)="stepperService.previousStep(this)"
   (luxNextButtonClicked)="stepperService.nextStep(this)"
   (luxStepClicked)="onStepClicked($event)"
-  [ngClass]="{ 'lux-stepper-mobile': mobileView }"
->
-</lux-stepper-horizontal>
+  [ngClass]="{ 'lux-stepper-mobile': mobileView() }"
+/>
 } }
 
-<ng-content select="lux-step"></ng-content>
+<ng-content select="lux-step" />
 <div class="lux-stepper-disabled-overlay" [class.lux-hidden]="!luxDisabled()"></div>

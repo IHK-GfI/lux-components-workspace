@@ -5,6 +5,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>'
 })
-export class LuxFilterFormExtendedComponent {
-  constructor() {}
-}
+export class LuxFilterFormExtendedComponent {}

@@ -7,7 +7,13 @@
           <div formGroupName="customer" class="lux-grid lux-grid-cols-1 lux-gap-4">
             <lux-input-ac luxName="first-name" luxLabel="Vorname" luxControlBinding="name"></lux-input-ac>
             <lux-input-ac luxName="given-name" luxLabel="Nachname" luxControlBinding="surname"></lux-input-ac>
-            <lux-radio-ac [luxOrientationVertical]="false" [luxOptions]="genders" luxControlBinding="gender" luxLabel="Geschlecht">
+            <lux-radio-ac
+              [luxOrientationVertical]="false"
+              [luxOptions]="genders"
+              [luxPickValue]="pickGenderValue"
+              luxControlBinding="gender"
+              luxLabel="Geschlecht"
+            >
               <ng-template let-option>
                 {{ option.name }}
               </ng-template>

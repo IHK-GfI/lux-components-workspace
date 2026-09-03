@@ -18,12 +18,13 @@ export interface InitializedTourHintConfig {
   providedIn: 'root'
 })
 export class LuxTourHintService {
-  private appRef = inject(ApplicationRef);
-  private injector = inject(EnvironmentInjector);
-  private tourHintRef = inject(LuxTourHintRef);
-  private storage = inject(LuxStorageService);
-  private consentService = inject(LuxConsentService);
   public tourContainer?: ComponentRef<LuxTourHintComponent>;
+
+  private readonly appRef = inject(ApplicationRef);
+  private readonly injector = inject(EnvironmentInjector);
+  private readonly tourHintRef = inject(LuxTourHintRef);
+  private readonly storage = inject(LuxStorageService);
+  private readonly consentService = inject(LuxConsentService);
 
   constructor() {
     window.addEventListener('popstate', () => {

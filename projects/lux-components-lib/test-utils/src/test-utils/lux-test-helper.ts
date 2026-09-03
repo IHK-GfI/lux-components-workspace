@@ -87,8 +87,6 @@ export class LuxTestHelper {
     }
   }
 
-  /** Steuerung und triggern von Overlays implementieren */
-
   /**
    * Inserts data into an input field, that has to update asynchronous before calling a callback-function
    * Allows to use RxJs Interval-Timers within the Target-Components.

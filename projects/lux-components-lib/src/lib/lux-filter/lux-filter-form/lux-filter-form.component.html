@@ -71,7 +71,7 @@
     (luxClicked)="onFilter()"
     luxTagId="filterFormButton"
     class="lux-filter-form-button"
-  ></lux-button>
+  />
 </ng-template>
 <!-- die Menü-Leiste mit den Filterfunktionen ist in beiden Darstellungen gleich -->
 <ng-template #filterActionTemplate>
@@ -81,14 +81,14 @@
       [luxAlwaysVisible]="false"
       [luxColor]="luxButtonResetColor()"
       (luxClicked)="onReset()"
-    ></lux-menu-item>
+    />
     @if (luxShowSaveAction()) {
       <lux-menu-item
         luxLabel="{{ luxButtonSaveLabel() || ('luxc.filter.save.btn' | transloco) }}"
         [luxAlwaysVisible]="false"
         [luxColor]="luxButtonSaveColor()"
         (luxClicked)="openSaveDialog()"
-      ></lux-menu-item>
+      />
     }
     @if (luxShowLoadAction()) {
       <lux-menu-item
@@ -96,7 +96,7 @@
         [luxAlwaysVisible]="false"
         [luxColor]="luxButtonLoadColor()"
         (luxClicked)="openLoadDialog()"
-      ></lux-menu-item>
+      />
     }
 
     <lux-menu-trigger>
@@ -108,8 +108,7 @@
         luxIconName="lux-interface-setting-cog"
         class="lux-filter-menu-trigger"
         luxTagId="filter-menu-trigger"
-      >
-      </lux-button>
+      />
     </lux-menu-trigger>
   </lux-menu>
 </ng-template>

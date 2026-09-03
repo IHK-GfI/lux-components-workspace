@@ -66,14 +66,6 @@ export const luxLookupCompareLangText2Fn: LuxLookupCompareFn = (a: LuxLookupTabl
 
 @Directive()
 export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> implements OnInit, OnDestroy {
-  LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige;
-
-  protected lookupService = inject(LuxLookupService);
-  protected lookupHandler = inject(LuxLookupHandlerService);
-
-  entries: LuxLookupTableEntry[] = [];
-  apiPath = LuxComponentsConfigService.DEFAULT_CONFIG.lookupServiceUrl;
-
   readonly luxPlaceholder = input('');
   readonly luxLookupId = input('');
   readonly luxTableNo = input('');
@@ -85,18 +77,22 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
   readonly luxCustomInvalidStyles = input<object | null | undefined>(undefined);
   readonly luxCompareFn = input<LuxLookupCompareFn | undefined>(undefined);
   readonly luxTagId = input<string | undefined>(undefined);
-
-  readonly luxDataLoaded = output<boolean>();
-  readonly luxDataLoadedAsArray = output<T[]>();
-
   /**
    * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
    * Wert liefern das Signal value() bzw. getValue().
    */
   readonly luxValue = input<T>(null as T);
+
+  readonly luxDataLoaded = output<boolean>();
+  readonly luxDataLoadedAsArray = output<T[]>();
   readonly luxValueChange = output<T | null>();
 
+  entries: LuxLookupTableEntry[] = [];
+  apiPath = LuxComponentsConfigService.DEFAULT_CONFIG.lookupServiceUrl;
   subscriptions: Subscription[] = [];
+
+  protected lookupService = inject(LuxLookupService);
+  protected lookupHandler = inject(LuxLookupHandlerService);
 
   constructor() {
     super();
@@ -181,8 +177,8 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    */
   showUngueltige() {
     return (
-      this.luxBehandlungUngueltige() === this.LuxBehandlungsOptionenUngueltige.ausgrauen ||
-      this.luxBehandlungUngueltige() === this.LuxBehandlungsOptionenUngueltige.anzeigen
+      this.luxBehandlungUngueltige() === LuxBehandlungsOptionenUngueltige.ausgrauen ||
+      this.luxBehandlungUngueltige() === LuxBehandlungsOptionenUngueltige.anzeigen
     );
   }
 
@@ -191,7 +187,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    * @returns boolean
    */
   disableUngueltige() {
-    return this.luxBehandlungUngueltige() === this.LuxBehandlungsOptionenUngueltige.ausgrauen;
+    return this.luxBehandlungUngueltige() === LuxBehandlungsOptionenUngueltige.ausgrauen;
   }
 
   /**
@@ -230,6 +226,10 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
     } else {
       return this.luxRenderPropNoPropertyLabel();
     }
+  }
+
+  override notifyFormValueChanged(formValue: any) {
+    this.luxValueChange.emit(formValue);
   }
 
   /**
@@ -275,9 +275,5 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
         entry.isUngueltig = this.isUngueltig(entry);
       });
     }
-  }
-
-  override notifyFormValueChanged(formValue: any) {
-    this.luxValueChange.emit(formValue);
   }
 }

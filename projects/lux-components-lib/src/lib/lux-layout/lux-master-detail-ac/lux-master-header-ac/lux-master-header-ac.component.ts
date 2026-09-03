@@ -1,15 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  HostBinding,
-  inject,
-  input,
-  OnDestroy,
-  output,
-  viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, OnDestroy, output, signal, viewChild } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
@@ -21,32 +10,33 @@ import { LuxMediaQueryObserverService } from '../../../lux-util/lux-media-query-
   selector: 'lux-master-header-ac',
   templateUrl: './lux-master-header-ac.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.lux-no-toggle]': 'isMobile()'
+  },
   imports: [LuxAriaLabelDirective, LuxAriaExpandedDirective, LuxButtonComponent]
 })
 export class LuxMasterHeaderAcComponent implements OnDestroy {
-  private mediaObserver = inject(LuxMediaQueryObserverService);
-  private tService = inject(TranslocoService);
-  private cdr = inject(ChangeDetectorRef);
-
-  iconName?: string = 'lux-interface-arrows-button-left';
-  open?: boolean;
-  subscription: Subscription;
-
   readonly luxToggleHidden = input<boolean | undefined>();
   readonly luxOpened = output<boolean>();
 
   readonly headerContentContainer = viewChild.required('headerContentContainer', { read: ElementRef });
 
-  @HostBinding('class.lux-no-toggle') isMobile?: boolean;
+  readonly iconName = signal('lux-interface-arrows-button-left');
+  open?: boolean;
+  subscription: Subscription;
+
+  readonly isMobile = signal(false);
+
+  private mediaObserver = inject(LuxMediaQueryObserverService);
+  private tService = inject(TranslocoService);
 
   constructor() {
-    this.isMobile = this.mediaObserver.isXS() || this.mediaObserver.isSM();
+    this.isMobile.set(this.mediaObserver.isXS() || this.mediaObserver.isSM());
     this.open = true;
 
     this.subscription = this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
       setTimeout(() => {
-        this.isMobile = this.mediaObserver.isXS() || this.mediaObserver.isSM();
-        this.cdr.markForCheck();
+        this.isMobile.set(this.mediaObserver.isXS() || this.mediaObserver.isSM());
       });
     });
   }
@@ -64,11 +54,11 @@ export class LuxMasterHeaderAcComponent implements OnDestroy {
   }
 
   clicked(that: LuxButtonComponent) {
-    if (this.iconName === 'lux-interface-arrows-button-left') {
-      this.iconName = 'lux-interface-arrows-button-right';
+    if (this.iconName() === 'lux-interface-arrows-button-left') {
+      this.iconName.set('lux-interface-arrows-button-right');
       this.open = false;
     } else {
-      this.iconName = 'lux-interface-arrows-button-left';
+      this.iconName.set('lux-interface-arrows-button-left');
       this.open = true;
     }
 

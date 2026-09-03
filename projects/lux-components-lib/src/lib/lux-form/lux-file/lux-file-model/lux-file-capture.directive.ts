@@ -2,10 +2,10 @@ import { Directive, ElementRef, Renderer2, effect, inject, input } from '@angula
 
 @Directive({ selector: '[luxFileCapture]' })
 export class LuxFileCaptureDirective {
+  readonly luxFileCapture = input('');
+
   protected elementRef = inject(ElementRef);
   protected renderer = inject(Renderer2);
-
-  readonly luxFileCapture = input('');
 
   constructor() {
     effect(() => {

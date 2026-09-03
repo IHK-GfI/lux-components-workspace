@@ -9,7 +9,7 @@ import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-ar
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxMaxLengthDirective } from '../lux-form-control/lux-form-directives/lux-maxlength/lux-max-length.directive';
-import { LuxNameDirectiveDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
+import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
 import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.class';
 
 @Component({
@@ -23,7 +23,7 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
     ReactiveFormsModule,
     MatInput,
     CdkTextareaAutosize,
-    LuxNameDirectiveDirective,
+    LuxNameDirective,
     LuxMaxLengthDirective,
     LuxTagIdDirective,
     LuxAriaDescribedbyDirective,
@@ -32,14 +32,14 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
   ]
 })
 export class LuxTextareaAcComponent<T = string> extends LuxFormInputBaseClass<T> {
-  private liveAnnouncer = inject(LiveAnnouncer);
-
   readonly luxMaxRows = input(-1);
   readonly luxMinRows = input(0);
   readonly luxHideCounterLabel = input(false);
   readonly luxMaxLength = input(0);
 
   readonly focused = signal(false);
+
+  private liveAnnouncer = inject(LiveAnnouncer);
 
   /**
    * Zeichenzähler, der unterhalb des Feldes angezeigt wird. Basiert auf dem luxValue-Model,

@@ -1,30 +1,33 @@
 import { JsonPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    LuxAutocompleteAcComponent,
-    LuxAutofocusDirective,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxCheckboxAcComponent,
-    LuxChipAcComponent,
-    LuxChipAcGroupComponent,
-    LuxChipsAcComponent,
-    LuxConsoleService,
-    LuxDatepickerAcComponent,
-    LuxDatetimepickerAcComponent,
-    LuxFileInputAcComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxSliderAcComponent,
-    LuxTextareaAcComponent,
-    LuxTimepickerComponent,
-    LuxToggleAcComponent
+  LuxAutocompleteAcComponent,
+  LuxAutofocusDirective,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxCheckboxAcComponent,
+  LuxChipAcComponent,
+  LuxChipAcGroupComponent,
+  LuxChipsAcComponent,
+  LuxConsoleService,
+  LuxDatepickerAcComponent,
+  LuxDatetimepickerAcComponent,
+  LuxFileInputAcComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxInputAcPrefixComponent,
+  LuxInputAcSuffixComponent,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxSliderAcComponent,
+  LuxTextareaAcComponent,
+  LuxTimepickerComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { debounceTime } from 'rxjs';
+import { FormExampleSnapshot, FormExampleStateService } from '../form-example-state.service';
 import { FormBase } from '../model/form-base.class';
 
 interface FormCommonOption {
@@ -44,6 +47,7 @@ interface FormCommonDummy {
   radio: FormControl<FormCommonOption | null>;
   datepicker: FormControl<string | null>;
   autocomplete: FormControl<string>;
+  comment: FormControl<string | null>;
 }
 
 interface FormCommonUser {
@@ -51,6 +55,11 @@ interface FormCommonUser {
   lastname: FormControl<string>;
   email: FormControl<string>;
   password: FormControl<string>;
+}
+
+interface FormCommonState extends FormExampleSnapshot<ReturnType<FormGroup<FormCommonDummy>['getRawValue']>> {
+  chipItems: string[];
+  chipItems2: string[];
 }
 
 @Component({
@@ -87,6 +96,8 @@ interface FormCommonUser {
 })
 export class FormCommonComponent extends FormBase implements OnInit {
   private logger = inject(LuxConsoleService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   myGroup!: FormGroup<FormCommonDummy>;
 
@@ -101,6 +112,7 @@ export class FormCommonComponent extends FormBase implements OnInit {
 
   // Schalter im Beispiel "A11y - Visuell versteckte Labels"
   readonly showA11yLabels = signal(false);
+  readonly pickHobbyValue = (hobby: FormCommonOption) => hobby.value;
 
   constructor() {
     super();
@@ -129,9 +141,29 @@ export class FormCommonComponent extends FormBase implements OnInit {
       chipsFix: new FormControl<string[] | null>([...this.chipItems2]),
       radio: new FormControl<FormCommonOption | null>(this.hobbies[2]),
       datepicker: new FormControl<string | null>(new Date(2018, 11, 1).toISOString()),
-      autocomplete: new FormControl<string>(this.chipItems2[1], { validators: Validators.required, nonNullable: true })
+      autocomplete: new FormControl<string>(this.chipItems2[1], { validators: Validators.required, nonNullable: true }),
+      comment: new FormControl<string | null>(null)
     });
     this.myGroup.get('description')?.disable();
+
+    const snapshot = this.state.get<FormCommonState>('common');
+    if (snapshot) {
+      this.chipItems = snapshot.chipItems;
+      this.chipItems2 = snapshot.chipItems2;
+      this.myGroup.patchValue(
+        {
+          ...snapshot.rawValue,
+          radio: this.findHobby(snapshot.rawValue.radio)
+        },
+        { emitEvent: false }
+      );
+      if (snapshot.dirty) {
+        this.myGroup.markAsDirty({ emitEvent: false });
+      }
+    }
+
+    this.myGroup.valueChanges.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.saveState());
+    this.destroyRef.onDestroy(() => this.saveState());
   }
 
   hasUnsavedData(): boolean {
@@ -145,5 +177,22 @@ export class FormCommonComponent extends FormBase implements OnInit {
   chipItemClicked(index: number) {
     this.logger.log(index);
     this.logger.log(this.myGroup.value);
+  }
+
+  onChipItemsChange(): void {
+    this.saveState();
+  }
+
+  private findHobby(hobby: FormCommonOption | null): FormCommonOption | null {
+    return hobby ? (this.hobbies.find((option) => option.value === hobby.value) ?? null) : null;
+  }
+
+  private saveState(): void {
+    this.state.save<FormCommonState>('common', {
+      rawValue: this.myGroup.getRawValue(),
+      dirty: this.myGroup.dirty,
+      chipItems: this.chipItems,
+      chipItems2: this.chipItems2
+    });
   }
 }

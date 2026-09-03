@@ -9,7 +9,7 @@ import { LuxDialogTitleComponent } from '../../../../lux-popups/lux-dialog/lux-d
 import { LuxDialogStructureComponent } from '../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component';
 
 @Component({
-  selector: 'lux-lux-file-replace-dialog',
+  selector: 'lux-file-replace-dialog',
   templateUrl: './lux-file-replace-dialog.component.html',
   styleUrls: ['./lux-file-replace-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

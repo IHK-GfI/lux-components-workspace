@@ -20,8 +20,6 @@ export const luxFormControlSelektor = 'lux-form-control-wrapper';
   imports: [NgClass, NgTemplateOutlet, MatError, MatHint, LuxIconComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxFormControlWrapperComponent {
-  readonly focused = signal(false);
-
   /**
    * Die zugrunde liegende FormComponent
    */
@@ -47,6 +45,8 @@ export class LuxFormControlWrapperComponent {
    * Dient dazu, bei einer Component den Misc-Container auszublenden.
    */
   readonly luxNoBottomLabel = input(false);
+
+  readonly focused = signal(false);
 
   /**
    * Gibt wieder, ob der Fehler für diese FormComponent dargestellt werden soll.

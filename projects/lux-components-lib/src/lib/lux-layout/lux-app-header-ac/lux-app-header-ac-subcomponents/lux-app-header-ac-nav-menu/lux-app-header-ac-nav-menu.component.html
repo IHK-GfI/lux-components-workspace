@@ -1,15 +1,15 @@
 <!-- Navigations-Menu -->
 <lux-menu
-  [luxDisplayExtended]="!mobileView"
+  [luxDisplayExtended]="!mobileView()"
   [luxMaximumExtended]="luxNavMenuMaximumExtended()"
   class="lux-header-ac-nav-menu"
-  [ngClass]="{ 'lux-mobile': mobileView }"
+  [ngClass]="{ 'lux-mobile': mobileView() }"
   luxClassName="lux-header-ac-nav"
   luxTagId="app_header_nav_menu"
   (luxMenuClosed)="onNavMenuClosed()"
   (luxMenuOpened)="onNavMenuOpend()"
 >
-  @for (navMenuItem of menuItemComponents(); track navMenuItem; let navIndex = $index) {
+  @for (navMenuItem of menuItemComponents(); track navMenuItem) {
     <lux-menu-item
       [luxLabel]="navMenuItem.luxLabel()"
       [luxIconName]="navMenuItem.luxIconName()"
@@ -27,8 +27,7 @@
       [luxButtonBadgeColor]="navMenuItem.luxButtonBadgeColor()"
       class="nav-item"
       (luxClicked)="navMenuItemClicked(navMenuItem, $event)"
-    >
-    </lux-menu-item>
+    />
   }
   <lux-menu-trigger>
     <lux-button
@@ -36,12 +35,11 @@
       luxIconName="lux-interface-setting-menu-1"
       luxColor="primary"
       class="nav-menu-trigger-ac"
-      [ngClass]="{ 'lux-mobile': mobileView, 'menu-opened': navMenuOpened }"
+      [ngClass]="{ 'lux-mobile': mobileView(), 'menu-opened': navMenuOpened }"
       luxAriaLabel="{{ 'luxc.app-header.user.menu.trigger' | transloco }}"
       aria-haspopup="true"
       #customTrigger
       luxTagId="lux-nav-menu-trigger-ac"
-    >
-    </lux-button>
+    />
   </lux-menu-trigger>
 </lux-menu>

@@ -26,14 +26,13 @@ import { LuxLocaleAc } from './lux-locale-ac';
   ]
 })
 export class LuxLangSelectAcComponent implements OnInit {
-  private cookieService = inject(CookieService);
-  protected translocoService = inject(TranslocoService);
-
   readonly luxLocaleSupported = input(['de']);
   readonly luxLocaleBaseHref = input('');
   readonly mobileView = input(false);
 
   readonly customTrigger = viewChild('customTrigger', { read: ElementRef });
+
+  protected translocoService = inject(TranslocoService);
 
   menuOpened = false;
 
@@ -48,6 +47,8 @@ export class LuxLangSelectAcComponent implements OnInit {
   ];
 
   localeOptions: LuxLocaleAc[] = [];
+
+  private cookieService = inject(CookieService);
 
   ngOnInit() {
     this.luxLocaleSupported().forEach((locale) => {

@@ -8,7 +8,7 @@ import { ILuxStepperLargeStep, LuxVetoState } from '../../lux-stepper-large-mode
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template #content>
-      <ng-content></ng-content>
+      <ng-content />
     </ng-template>
   `
 })

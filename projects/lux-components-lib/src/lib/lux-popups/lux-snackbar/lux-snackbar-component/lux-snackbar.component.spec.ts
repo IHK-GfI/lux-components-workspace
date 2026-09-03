@@ -96,7 +96,7 @@ const findToggleElement = (toggleElement: any) => {
 @Component({
   template: `
     <lux-app-header>
-      <lux-side-nav></lux-side-nav>
+      <lux-side-nav />
       <lux-app-header-right-nav>
         <lux-menu-item luxLabel="Test"></lux-menu-item>
       </lux-app-header-right-nav>

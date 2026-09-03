@@ -1,17 +1,17 @@
 @if (steps().length > 0) {
 <!-- Desktop -->
-@if (!isMobile) {
+@if (!isMobile()) {
 <div class="lux-stepper-large-container">
   <div class="lux-stepper-large-nav-container" role="tablist" aria-orientation="vertical">
-    <ng-container *ngTemplateOutlet="nav"></ng-container>
+    <ng-container *ngTemplateOutlet="nav" />
   </div>
   <div class="lux-stepper-large-content-container">
     <div class="lux-stepper-large-content" [id]="'lux-stepper-large-content' + currentStepNumber" role="tabpanel">
       <a aria-hidden="true" id="luxstepperlargecontentanchor"></a>
-      <ng-container *ngTemplateOutlet="content"></ng-container>
+      <ng-container *ngTemplateOutlet="content" />
     </div>
     <div class="lux-stepper-large-button-container">
-      <ng-container *ngTemplateOutlet="buttons"></ng-container>
+      <ng-container *ngTemplateOutlet="buttons" />
     </div>
   </div>
 </div>
@@ -26,13 +26,13 @@
       luxColor="primary"
       luxIconName="lux-tasks"
       (luxClicked)="onOpenMobileOverlay()"
-    ></lux-button>
+    />
   </div>
   <div class="lux-stepper-large-content" [id]="'lux-stepper-large-content' + currentStepNumber" role="tabpanel">
-    <ng-container *ngTemplateOutlet="content"></ng-container>
+    <ng-container *ngTemplateOutlet="content" />
   </div>
   <div class="lux-stepper-large-button-container">
-    <ng-container *ngTemplateOutlet="buttons"></ng-container>
+    <ng-container *ngTemplateOutlet="buttons" />
   </div>
 </div>
 } }
@@ -59,20 +59,20 @@
     <div class="lux-stepper-large-nav-item-label-container">
       <ng-container
         *ngTemplateOutlet="step.luxTouched() && !step.luxDisabled() ? link : nolink; context: { step: step, i: i }"
-      ></ng-container>
+      />
     </div>
   </div>
   }
 </ng-template>
 
 <ng-template #content>
-  <ng-container *ngTemplateOutlet="steps()[currentStepNumber].contentTemplate()"></ng-container>
+  <ng-container *ngTemplateOutlet="steps()[currentStepNumber].contentTemplate()" />
 </ng-template>
 
 <ng-template #buttons>
-  @if (isFirstStep) {
+  @if (isFirstStep()) {
   <div></div>
-  } @if (!isFirstStep) {
+  } @if (!isFirstStep()) {
   <lux-button
     class="lux-stepper-large-button-prev"
     luxLabel="{{ luxPrevButtonConfig().label || ('luxc.stepper.back.btn' | transloco) }}"
@@ -81,8 +81,8 @@
     [luxColor]="luxPrevButtonConfig().color"
     (luxClicked)="onPrevStep()"
     [luxRaised]="true"
-  ></lux-button>
-  } @if (!isLastStep) {
+  />
+  } @if (!isLastStep()) {
   <lux-button
     class="lux-stepper-large-button-next"
     luxLabel="{{ luxNextButtonConfig().label || ('luxc.stepper.next.btn' | transloco) }}"
@@ -95,8 +95,8 @@
     "
     [attr.aria-disabled]="luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted())"
     (luxClicked)="onNextStep()"
-  ></lux-button>
-  } @if (isLastStep) {
+  />
+  } @if (isLastStep()) {
   <lux-button
     class="lux-stepper-large-button-fin"
     luxLabel="{{ luxFinButtonConfig().label || ('luxc.stepper.finish.btn' | transloco) }}"
@@ -107,13 +107,13 @@
     [luxDisabled]="
       luxA11YMode()
         ? false
-        : luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted() || isFinished)
+        : luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted() || isFinished())
     "
     [attr.aria-disabled]="
-      luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted() || isFinished)
+      luxStepValidationActive() && (!steps()[currentStepNumber] || !steps()[currentStepNumber].luxCompleted() || isFinished())
     "
     (luxClicked)="onFinStep()"
-  ></lux-button>
+  />
   }
 </ng-template>
 
@@ -122,7 +122,7 @@
     class="lux-stepper-large-nav-item-label-link"
     role="tab"
     [id]="'lux-stepper-large-nav-item-label-link-' + i"
-    [ngClass]="{ 'lux-focused': cursorPos === i }"
+    [ngClass]="{ 'lux-focused': cursorPos() === i }"
     (keydown.arrowUp)="onNavKeyUp()"
     (keydown.arrowDown)="onNavKeyDown()"
     [attr.aria-label]="'Schritt' + (i + 1) + ' ' + step.luxTitle()"

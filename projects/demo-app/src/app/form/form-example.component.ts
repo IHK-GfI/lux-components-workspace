@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@ihk-gfi/lux-components';
 import { FormCommonComponent } from './form-common/form-common.component';
 import { FormDualColComponent } from './form-dual-col/form-dual-col.component';
+import { FormExampleStateKey, FormExampleStateService } from './form-example-state.service';
 import { FormSingleColComponent } from './form-single-col/form-single-col.component';
 import { FormThreeColComponent } from './form-three-col/form-three-col.component';
 import { TableExampleDataProviderService } from './table-example-data-provider.service';
@@ -37,6 +38,7 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   private router = inject(Router);
   private buttonService = inject(LuxAppFooterButtonService);
   private snackbar = inject(LuxSnackbarService);
+  private readonly state = inject(FormExampleStateService);
 
   readonly formCommon = viewChild.required(FormCommonComponent);
   readonly formSingle = viewChild.required(FormSingleColComponent);
@@ -106,35 +108,41 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
 
   hasUnsavedData(): boolean {
     return (
-      this.formCommon().myGroup.dirty ||
-      this.formSingle().myGroup.dirty ||
-      this.formDuo().myGroup.dirty ||
-      this.formThree().myGroup.dirty
+      this.formCommon().myGroup.dirty || this.formSingle().myGroup.dirty || this.formDuo().myGroup.dirty || this.formThree().myGroup.dirty
     );
   }
 
   handleSaveClicked() {
     let formGroup: FormGroup | null;
+    let stateKey: FormExampleStateKey | null;
     switch (this.tabComponent().luxActiveTab()) {
       case 0:
         formGroup = this.formCommon().myGroup;
+        stateKey = 'common';
         break;
       case 1:
         formGroup = this.formSingle().myGroup;
+        stateKey = 'single';
         break;
       case 2:
         formGroup = this.formDuo().myGroup;
+        stateKey = 'dual';
         break;
       case 3:
         formGroup = this.formThree().myGroup;
+        stateKey = 'three';
         break;
       default:
         formGroup = null;
+        stateKey = null;
         break;
     }
 
     if (formGroup && formGroup.valid) {
       formGroup.markAsPristine();
+      if (stateKey) {
+        this.state.markPristine(stateKey);
+      }
 
       this.snackbar.open(2000, {
         text: 'Daten gespeichert!'

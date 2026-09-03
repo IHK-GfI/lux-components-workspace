@@ -31,8 +31,7 @@
           (luxClicked)="clearFiles($event)"
           luxAriaLabel="{{ deleteConfig.labelHeader || ('luxc.file-list.delete_title.lbl' | transloco) }}"
           luxAriaLabelSelector="button"
-        >
-        </lux-button>
+        />
       }
       @if (!uploadConfig.hiddenHeader) {
         <lux-button
@@ -44,8 +43,7 @@
           luxColor="primary"
           luxAriaLabel="{{ uploadConfig.labelHeader || ('luxc.file-list.upload_title.lbl' | transloco) }}"
           luxAriaLabelSelector="button"
-        >
-        </lux-button>
+        />
       }
     </lux-card-info>
   }
@@ -60,7 +58,7 @@
     >
       @if (!selectedFiles || selectedFiles.length === 0) {
         <div class="lux-file-icon-hint lux-place-content-center lux-items-center">
-          <lux-divider></lux-divider>
+          <lux-divider />
           @if (uploadConfig.iconName) {
             <lux-icon
               class="lux-file-icon lux-color-blue"
@@ -68,15 +66,14 @@
               [luxIconName]="uploadConfig.iconName"
               [luxPadding]="'8px 0 0 0'"
               [luxMargin]="'0'"
-            >
-            </lux-icon>
+            />
           }
           @if (formHintComponent() || luxHint()) {
             <mat-hint [id]="uid() + '-misc'" class="lux-file-hint lux-flex lux-mt-3">
               @if (luxHint()) {
                 {{ luxHint() }}
               } @else {
-                <ng-container *ngTemplateOutlet="formHintComponent()?.templateRef() ?? null"></ng-container>
+                <ng-container *ngTemplateOutlet="formHintComponent()?.templateRef() ?? null" />
               }
             </mat-hint>
           }
@@ -85,15 +82,15 @@
         <div class="lux-file-list-entries" [attr.aria-disabled]="luxDisabled() ? 'true' : null">
           <!-- Mehrere Dateien ausgewählt -->
           @if (isArray(selectedFiles)) {
-            <lux-divider></lux-divider>
+            <lux-divider />
             @for (selectedFile of selectedFiles; track selectedFile; let i = $index) {
-              <ng-container *ngTemplateOutlet="fileListEntryTemplate; context: { selectedFile: selectedFile, index: i }"> </ng-container>
+              <ng-container *ngTemplateOutlet="fileListEntryTemplate; context: { selectedFile: selectedFile, index: i }" />
             }
           }
           <!-- Nur eine Datei ausgewählt -->
           @if (!isArray(selectedFiles)) {
-            <lux-divider></lux-divider>
-            <ng-container *ngTemplateOutlet="fileListEntryTemplate; context: { selectedFile: selectedFiles, index: 0 }"> </ng-container>
+            <lux-divider />
+            <ng-container *ngTemplateOutlet="fileListEntryTemplate; context: { selectedFile: selectedFiles, index: 0 }" />
           }
         </div>
       }
@@ -101,7 +98,7 @@
   </lux-card-content>
   @if (errorMessage() && touched() && !forceProgressIndeterminate()) {
     <lux-card-actions class="lux-file-actions lux-error">
-      <lux-icon class="lux-alert-icon" luxIconName="lux-interface-alert-warning-triangle" luxIconSize="0.75rem"></lux-icon>
+      <lux-icon class="lux-alert-icon" luxIconName="lux-interface-alert-warning-triangle" luxIconSize="0.75rem" />
       <mat-error [id]="uid() + '-misc'" class="lux-file-list-error-message">
         {{ errorMessage() }}
       </mat-error>
@@ -115,7 +112,7 @@
           [tabIndex]="0"
           (keydown.enter)="onCloseErrorMessage()"
           (click)="onCloseErrorMessage()"
-        ></lux-icon>
+        />
       }
     </lux-card-actions>
   }
@@ -134,8 +131,7 @@
             [luxIconName]="fileIcons()[index]"
             luxIconSize="2x"
             aria-hidden="true"
-          >
-          </lux-icon>
+          />
         }
         @case (true) {
           <img class="lux-file-list-entry-img" alt="Icon" aria-hidden="true" />
@@ -190,8 +186,7 @@
           luxColor="primary"
           (luxClicked)="viewFile(selectedFile)"
           [luxHidden]="!!viewConfig.hidden"
-        >
-        </lux-menu-item>
+        />
         <lux-menu-item
           luxTagId="lux-file-list-entry-download"
           [luxIconName]="downloadConfig.iconName"
@@ -203,8 +198,7 @@
           luxColor="primary"
           (luxClicked)="downloadFile(selectedFile)"
           [luxHidden]="!!downloadConfig.hidden"
-        >
-        </lux-menu-item>
+        />
         <lux-menu-item
           luxTagId="lux-file-list-entry-remove"
           [luxIconName]="deleteConfig.iconName"
@@ -221,8 +215,7 @@
           luxColor="primary"
           (luxClicked)="removeFile(index)"
           [luxHidden]="!!deleteConfig.hidden"
-        >
-        </lux-menu-item>
+        />
         <lux-menu-item
           luxTagId="lux-file-list-entry-upload"
           [luxIconName]="uploadConfig.iconName"
@@ -234,8 +227,7 @@
           luxColor="primary"
           (luxClicked)="fileUploadSingle.click()"
           [luxHidden]="!!uploadConfig.hidden"
-        >
-        </lux-menu-item>
+        />
         @for (customConfig of luxCustomActionConfigs(); track customConfig; let i = $index) {
           <lux-menu-item
             luxTagId="lux-file-list-entry-custom{{ i }}"
@@ -248,15 +240,14 @@
             luxColor="primary"
             (luxClicked)="customConfig.onClick ? customConfig.onClick(selectedFile) : noop()"
             [luxHidden]="!!customConfig.hidden"
-          >
-          </lux-menu-item>
+          />
         }
       </lux-menu>
     </div>
   </div>
   @if (selectedFiles?.length) {
     @if (index !== selectedFiles.length - 1) {
-      <lux-divider></lux-divider>
+      <lux-divider />
     }
   }
 </ng-template>
@@ -287,5 +278,5 @@
 
 <!-- Ladeanzeige für den File-Upload -->
 @if (isProgressVisible()) {
-  <lux-file-progress [luxMode]="progressMode()" [luxProgress]="progress()"> </lux-file-progress>
+  <lux-file-progress [luxMode]="progressMode()" [luxProgress]="progress()" />
 }

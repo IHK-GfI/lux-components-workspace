@@ -28,8 +28,8 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
 import { LuxReferenceControl } from '../lux-form-model/lux-reference-control.interface';
 import { LuxTimepickerAdapter } from './lux-timepicker-adapter';
 
-const ON_UPDATE_WRONG_MODE_MSG = `Das Timepicker-FormControl sollte auf "updateOn: blur" gesetzt werden, 
-wenn ein referenziertes Datepicker-FormControl verwendet wird, um unerwartete Verhalten zu vermeiden. 
+const ON_UPDATE_WRONG_MODE_MSG = `Das Timepicker-FormControl sollte auf "updateOn: blur" gesetzt werden,
+wenn ein referenziertes Datepicker-FormControl verwendet wird, um unerwartete Verhalten zu vermeiden.
 Z.B. new FormControl<...>(..., { updateOn: 'blur' })"`;
 
 export const APP_TIME_FORMATS = {
@@ -67,13 +67,6 @@ export const APP_TIME_FORMATS = {
   ]
 })
 export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
-  private dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
-  private previousISO?: string;
-
-  lastValue: Date | null = null;
-
-  readonly focused = signal(false);
-
   readonly luxOpened = input(false);
   readonly luxShowToggle = input(true);
   readonly luxInterval = input<string | number | null>('30m');
@@ -87,19 +80,11 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
   readonly matTimepicker = viewChild(MatTimepicker);
   readonly timepickerInput = viewChild<ElementRef>('timepickerInput');
 
+  lastValue: Date | null = null;
+
+  readonly focused = signal(false);
+
   readonly luxLocale = signal<string>('de-DE');
-
-  readonly min = computed(() => this.parseTime(this.luxMinTime()));
-  readonly max = computed(() => this.parseTime(this.luxMaxTime()));
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
 
   get timeInputValue() {
     return this.timepickerInput()?.nativeElement.value;
@@ -116,6 +101,22 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
   get shouldEmitDirectly() {
     return !!this.luxReferenceControl() && this.inForm;
   }
+
+  private dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
+  private previousISO?: string;
+  private valueChangesRunning = false;
+
+  readonly min = computed(() => this.parseTime(this.luxMinTime()));
+  readonly max = computed(() => this.parseTime(this.luxMaxTime()));
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
+
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
 
   constructor() {
     super();
@@ -203,6 +204,16 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
     this.matTimepicker()?.close();
   }
 
+  override setValue(value: any) {
+    if (value !== this.getValue()) {
+      if (!this.formControl) {
+        this._initialValue = value;
+        return;
+      }
+      this.formControl.setValue(value);
+    }
+  }
+
   private parseTime(value: string | null): Date | null {
     return typeof value === 'string' ? this.dateAdapter.parse(value, {}) : null;
   }
@@ -245,18 +256,6 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
       });
     }
   }
-
-  override setValue(value: any) {
-    if (value !== this.getValue()) {
-      if (!this.formControl) {
-        this._initialValue = value;
-        return;
-      }
-      this.formControl.setValue(value);
-    }
-  }
-
-  private valueChangesRunning = false;
 
   protected override initFormValueSubscription() {
     this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {

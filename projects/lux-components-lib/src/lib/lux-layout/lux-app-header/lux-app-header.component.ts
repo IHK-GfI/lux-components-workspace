@@ -1,16 +1,16 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  computed,
   contentChild,
-  effect,
   ElementRef,
   inject,
   input,
   OnDestroy,
   OnInit,
   output,
+  signal,
   viewChild
 } from '@angular/core';
 import { MatButton } from '@angular/material/button';
@@ -54,16 +54,10 @@ import { LuxSideNavComponent } from './lux-app-header-subcomponents/lux-side-nav
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.lux-header-mobile]': 'mobileView'
+    '[class.lux-header-mobile]': 'mobileView()'
   }
 })
 export class LuxAppHeaderComponent implements OnInit, OnDestroy {
-  private queryService = inject(LuxMediaQueryObserverService);
-  private logger = inject(LuxConsoleService);
-  private elementRef = inject(ElementRef);
-  private appService = inject(LuxAppService);
-  private cdr = inject(ChangeDetectorRef);
-
   readonly luxLocaleSupported = input(['de']);
   readonly luxLocaleBaseHref = input('');
   readonly luxUserName = input<string | undefined>();
@@ -79,37 +73,36 @@ export class LuxAppHeaderComponent implements OnInit, OnDestroy {
   readonly luxAriaTitleLinkLabel = input('');
   readonly luxAriaRoleHeaderLabel = input('');
 
-  readonly luxClicked = output<Event>();
-
   // Ersetzt die frühere .observed-Abfrage von luxClicked (output() hat kein Äquivalent) -
   // steuert die Klickbar-Darstellung des Headers (Cursor, Rolle, Tabindex).
   readonly luxClickable = input(false);
 
-  mobileView: boolean;
-  userNameShort?: string;
-  subscriptions: Subscription[] = [];
+  readonly luxClicked = output<Event>();
 
   readonly customTrigger = viewChild('customTrigger', { read: ElementRef });
-
   readonly actionNav = contentChild(LuxAppHeaderActionNavComponent);
   readonly rightNav = contentChild(LuxAppHeaderRightNavComponent);
   readonly sideNav = contentChild(LuxSideNavComponent);
 
+  readonly mobileView = signal(false);
+
+  private readonly queryService = inject(LuxMediaQueryObserverService);
+  private readonly logger = inject(LuxConsoleService);
+  private readonly elementRef = inject(ElementRef);
+  private readonly appService = inject(LuxAppService);
+  private subscriptions: Subscription[] = [];
+
+  readonly userNameShort = computed(() => this.generateUserNameShort());
+
   constructor() {
     this.appService.appHeaderEl = this.elementRef.nativeElement;
 
-    this.mobileView = this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm';
+    this.mobileView.set(this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm');
     this.subscriptions.push(
       this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.mobileView = query === 'xs' || query === 'sm';
-        this.cdr.markForCheck();
+        this.mobileView.set(query === 'xs' || query === 'sm');
       })
     );
-
-    effect(() => {
-      this.luxUserName();
-      this.userNameShort = this.generateUserNameShort();
-    });
   }
 
   ngOnInit() {

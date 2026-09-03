@@ -32,6 +32,20 @@ export abstract class LuxFormSelectableBase<O = any, V = any, P = any> extends L
   readonly luxSelectedChange = output<any>();
 
   /**
+   * Kapselung von der übergebenen luxCompareWith-Funktion.
+   * Fängt undefinierte Objekte ab und returned stattdessen false.
+   * @param o1
+   * @param o2
+   */
+  compareObjects = (o1: O, o2: O) => {
+    if ((!o1 && o2) || (o1 && !o2)) {
+      return false;
+    } else {
+      return this.luxCompareWith()(o1, o2);
+    }
+  };
+
+  /**
    * Die über luxPickValue aus luxOptions abgeleiteten Werte.
    */
   readonly luxOptionsPickValue = computed(() => {
@@ -88,18 +102,4 @@ export abstract class LuxFormSelectableBase<O = any, V = any, P = any> extends L
       }
     }
   }
-
-  /**
-   * Kapselung von der übergebenen luxCompareWith-Funktion.
-   * Fängt undefinierte Objekte ab und returned stattdessen false.
-   * @param o1
-   * @param o2
-   */
-  compareObjects = (o1: O, o2: O) => {
-    if ((!o1 && o2) || (o1 && !o2)) {
-      return false;
-    } else {
-      return this.luxCompareWith()(o1, o2);
-    }
-  };
 }

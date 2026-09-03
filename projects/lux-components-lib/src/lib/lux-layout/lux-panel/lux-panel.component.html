@@ -6,7 +6,7 @@
   (opened)="onOpened()"
   (closed)="onClosed()"
   class="lux-panel"
-  [class.lux-panel-mobile]="mobile"
+  [class.lux-panel-mobile]="mobile()"
   [class.lux-panel-sticky-header]="!!stickyHeader()"
   [style.--lux-panel-sticky-header-offset]="stickyHeaderOffset() ?? null"
 >
@@ -16,9 +16,9 @@
     [expandedHeight]="effectiveExpandedHeaderHeight() ?? '4em'"
     [collapsedHeight]="effectiveCollapsedHeaderHeight() ?? '4em'"
   >
-    <ng-content select="lux-panel-header-title"></ng-content>
-    <ng-content select="lux-panel-header-description"></ng-content>
+    <ng-content select="lux-panel-header-title" />
+    <ng-content select="lux-panel-header-description" />
   </mat-expansion-panel-header>
-  <ng-content select="lux-panel-content"></ng-content>
-  <ng-content select="lux-panel-action"></ng-content>
+  <ng-content select="lux-panel-content" />
+  <ng-content select="lux-panel-action" />
 </mat-expansion-panel>

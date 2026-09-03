@@ -39,11 +39,11 @@
         >
           <ng-container
             *ngTemplateOutlet="tempRef() && !luxOptionLabelProp() ? tempRef()! : noTemplateRefTemplate; context: { $implicit: option }"
-          ></ng-container>
+          />
         </mat-radio-button>
       }
     </mat-radio-group>
-    <ng-content select="lux-form-hint"></ng-content>
+    <ng-content select="lux-form-hint" />
   </lux-form-control-wrapper>
 }
 

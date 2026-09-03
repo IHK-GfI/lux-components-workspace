@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  computed,
   effect,
   inject,
   input,
@@ -108,28 +107,9 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
   ]
 })
 export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements AfterViewChecked {
-  private dialogService = inject(LuxDialogService);
-
-  readonly fileIcons = signal<string[]>([]);
-
-  rowWidth = 0;
-  readonly iconActionBarWidth = signal(50);
-
-  readonly fileEntries = viewChildren('fileEntry', { read: ElementRef });
-  readonly fileUploadSingleInput = viewChild.required<ElementRef>('fileUploadSingle');
-  readonly fileCard = viewChild(LuxCardComponent, { read: ElementRef });
-
   readonly luxShowPreview = input(true);
   readonly luxMultiple = input(true);
   readonly luxHeading = input(2);
-
-  dialogReplaceConfig: ILuxDialogConfig = {
-    disableClose: false,
-    width: minWidth(DIALOG_WIDTH_SMALL_PX),
-    height: 'auto',
-    panelClass: ['file-dialog', 'file-replace-dialog']
-  };
-
   readonly luxUploadActionConfig = input<ILuxFilesListActionConfig, ILuxFilesListActionConfig | undefined>(defaultUploadActionConfig, {
     transform: (config) => config ?? defaultUploadActionConfig
   });
@@ -144,6 +124,21 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     transform: (config) => config ?? defaultDownloadActionConfig
   });
 
+  readonly fileEntries = viewChildren('fileEntry', { read: ElementRef });
+  readonly fileUploadSingleInput = viewChild.required<ElementRef>('fileUploadSingle');
+
+  readonly fileIcons = signal<string[]>([]);
+  rowWidth = 0;
+  readonly iconActionBarWidth = signal(50);
+  dialogReplaceConfig: ILuxDialogConfig = {
+    disableClose: false,
+    width: minWidth(DIALOG_WIDTH_SMALL_PX),
+    height: 'auto',
+    panelClass: ['file-dialog', 'file-replace-dialog']
+  };
+
+  private dialogService = inject(LuxDialogService);
+
   constructor() {
     super();
 
@@ -155,12 +150,8 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     });
   }
 
-  private updateIconAndImage() {
-    this.setFileIcons();
-
-    if (this.luxShowPreview()) {
-      this.setImgSrc();
-    }
+  ngAfterViewChecked(): void {
+    this.resizeIconActionBar();
   }
 
   shouldDisplayPreviewImg(index: number): boolean {
@@ -366,6 +357,32 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     }, this.defaultReadFileDelay);
   }
 
+  useArray(): boolean {
+    return true;
+  }
+
+  isArray(object: any): boolean {
+    return object && Array.isArray(object);
+  }
+
+  hasOnlyDeleteProtectedFiles(): boolean {
+    return (
+      !!this.getValue() &&
+      this.getValue()!.length > 0 &&
+      this.getValue()!.every((file) =>
+        this.luxDeleteActionConfig().isDeletable ? !this.luxDeleteActionConfig().isDeletable!(file) : false
+      )
+    );
+  }
+
+  private updateIconAndImage() {
+    this.setFileIcons();
+
+    if (this.luxShowPreview()) {
+      this.setImgSrc();
+    }
+  }
+
   private updateFilesIntern(files: FileList | File[], selectedFilesArray: any[], replaceableFilesMap: Map<number, File>) {
     // Begrenzung der maximalen Anzahl an Dateien
     const selected = this.getValue();
@@ -405,10 +422,6 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
       },
       (error) => this.setFormControlErrors(error)
     );
-  }
-
-  useArray(): boolean {
-    return true;
   }
 
   /**
@@ -472,24 +485,6 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     });
 
     this.fileIcons.set(fileIcons);
-  }
-
-  ngAfterViewChecked(): void {
-    this.resizeIconActionBar();
-  }
-
-  isArray(object: any): boolean {
-    return object && Array.isArray(object);
-  }
-
-  hasOnlyDeleteProtectedFiles(): boolean {
-    return (
-      !!this.getValue() &&
-      this.getValue()!.length > 0 &&
-      this.getValue()!.every((file) =>
-        this.luxDeleteActionConfig().isDeletable ? !this.luxDeleteActionConfig().isDeletable!(file) : false
-      )
-    );
   }
 
   private resizeIconActionBar() {

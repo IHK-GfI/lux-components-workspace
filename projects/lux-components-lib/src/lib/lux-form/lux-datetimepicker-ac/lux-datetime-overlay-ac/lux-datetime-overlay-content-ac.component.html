@@ -10,10 +10,10 @@
         [minDate]="minCalendarDate"
         [maxDate]="maxCalendarDate"
         [headerComponent]="getHeaderByTheme()"
-      ></mat-calendar>
-      <lux-divider [luxInset]="true"></lux-divider>
+      />
+      <lux-divider [luxInset]="true" />
       <div class="lux-datetime-time-container lux-mt-3">
-        <lux-icon luxIconName="lux-interface-time-clock-circle" luxIconSize="2x" class="lux-datetime-icon lux-color-blue"></lux-icon>
+        <lux-icon luxIconName="lux-interface-time-clock-circle" luxIconSize="2x" class="lux-datetime-icon lux-color-blue" />
         <div class="lux-flex lux-place-content-center lux-items-center">
           <lux-input-ac
             luxLabel=""
@@ -32,7 +32,7 @@
             [luxNoLabels]="true"
             luxTagId="lux-datetimepicker-hours"
             #hoursInput
-          ></lux-input-ac>
+          />
           <div style="text-align: center; flex: 1 1 15px; box-sizing: border-box; max-width: 15px; min-width: 15px">:</div>
           <lux-input-ac
             luxLabel=""
@@ -51,7 +51,7 @@
             [luxNoLabels]="true"
             luxTagId="lux-datetimepicker-minutes"
             #minutesInput
-          ></lux-input-ac>
+          />
         </div>
       </div>
       <div class="lux-datetime-error-message-container lux-pt-2">
@@ -64,7 +64,7 @@
       </div>
     </lux-card-content>
     <lux-card-actions>
-      <lux-button luxLabel="OK" luxColor="primary" [luxFlat]="true" (luxClicked)="onOk()" class="lux-mb-3"></lux-button>
+      <lux-button luxLabel="OK" luxColor="primary" [luxFlat]="true" (luxClicked)="onOk()" class="lux-mb-3" />
     </lux-card-actions>
   </lux-card>
 </div>

@@ -3,8 +3,8 @@
   <lux-dialog-title>{{ data.title }}</lux-dialog-title>
   <lux-dialog-content>
     @if (data.contentTemplate) {
-    <ng-container *ngTemplateOutlet="data.contentTemplate"></ng-container>
-    } @if (data.content && !data.contentTemplate) {
+    <ng-container *ngTemplateOutlet="data.contentTemplate" />
+    } @else if (data.content) {
     {{ data.content }}
     }
   </lux-dialog-content>
@@ -25,8 +25,7 @@
       [luxRounded]="data.confirmAction.rounded"
       (luxClicked)="onConfirmClick()"
       #confirmButton
-    >
-    </lux-button>
+    />
     } @if (data.declineAction) {
     <lux-button
       class="lux-dialog-preset-decline"
@@ -43,8 +42,7 @@
       [luxRounded]="data.declineAction.rounded"
       (luxClicked)="onDeclineClick()"
       #declineButton
-    >
-    </lux-button>
+    />
     }
   </lux-dialog-actions>
 </lux-dialog-structure>

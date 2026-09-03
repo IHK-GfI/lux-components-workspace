@@ -27,9 +27,6 @@ import { LuxAccordionComponent, LuxTogglePosition } from '../lux-accordion/lux-a
   imports: [MatExpansionPanel, MatExpansionPanelHeader]
 })
 export class LuxPanelComponent implements AfterViewInit, OnDestroy {
-  protected parent = inject(LuxAccordionComponent, { optional: true, host: true, skipSelf: true });
-  protected mediaQuery = inject(LuxMediaQueryObserverService);
-
   readonly luxDisabled = input<boolean | undefined>();
   readonly luxExpanded = model(false);
   readonly luxHideToggle = input<boolean | undefined>();
@@ -40,41 +37,44 @@ export class LuxPanelComponent implements AfterViewInit, OnDestroy {
   readonly luxExpandedHeaderHeight = input<string | undefined>();
   readonly luxDynamicHeaderHeight = input<boolean | undefined>();
 
-  // Panel-Wert hat Priorität, sonst greift der Wert des umgebenden Accordions.
-  stickyHeader = computed(() => this.luxStickyHeader() ?? this.parent?.luxStickyHeader());
-  stickyHeaderOffset = computed(() => this.luxStickyHeaderOffset() ?? this.parent?.luxStickyHeaderOffset());
+  readonly luxOpened = output<void>();
+  readonly luxClosed = output<void>();
 
-  // Diese Properties übernehmen zusätzlich das Verhalten des alten changed$-Subjects: eine
-  // nachträgliche Änderung am Accordion überschreibt den aktuell wirksamen Panel-Wert wieder
-  // bedingungslos (unabhängig davon, ob das Panel selbst einen eigenen Wert gebunden hat) -
-  // bis das Panel seinerseits wieder einen eigenen Wert bindet. Siehe syncFromParentOnChange().
-  effectiveHideToggle = this.syncFromParentOnChange(this.luxHideToggle, () => this.parent?.luxHideToggle());
-  effectiveDisabled = this.syncFromParentOnChange(this.luxDisabled, () => this.parent?.luxDisabled());
-  effectiveTogglePosition = this.syncFromParentOnChange(this.luxTogglePosition, () => this.parent?.luxTogglePosition() ?? 'after');
-  effectiveDynamicHeaderHeight = this.syncFromParentOnChange(this.luxDynamicHeaderHeight, () => this.parent?.luxDynamicHeaderHeight());
+  readonly matExpansionPanel = viewChild.required(MatExpansionPanel);
+
+  readonly mobile = signal(false);
+
+  protected parent = inject(LuxAccordionComponent, { optional: true, host: true, skipSelf: true });
+  protected mediaQuery = inject(LuxMediaQueryObserverService);
+  private subscriptions: Subscription[] = [];
   private readonly syncedExpandedHeaderHeight = this.syncFromParentOnChange(this.luxExpandedHeaderHeight, () =>
     this.parent?.luxExpandedHeaderHeight()
   );
   private readonly syncedCollapsedHeaderHeight = this.syncFromParentOnChange(this.luxCollapsedHeaderHeight, () =>
     this.parent?.luxCollapsedHeaderHeight()
   );
-  effectiveExpandedHeaderHeight = computed(() => (this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedExpandedHeaderHeight()));
-  effectiveCollapsedHeaderHeight = computed(() => (this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedCollapsedHeaderHeight()));
 
-  readonly luxOpened = output<void>();
-  readonly luxClosed = output<void>();
+  // Panel-Wert hat Priorität, sonst greift der Wert des umgebenden Accordions.
+  readonly stickyHeader = computed(() => this.luxStickyHeader() ?? this.parent?.luxStickyHeader());
+  readonly stickyHeaderOffset = computed(() => this.luxStickyHeaderOffset() ?? this.parent?.luxStickyHeaderOffset());
 
-  readonly matExpansionPanel = viewChild.required(MatExpansionPanel);
-
-  subscriptions: Subscription[] = [];
-  mobile: boolean;
+  // Diese Properties übernehmen zusätzlich das Verhalten des alten changed$-Subjects: eine
+  // nachträgliche Änderung am Accordion überschreibt den aktuell wirksamen Panel-Wert wieder
+  // bedingungslos (unabhängig davon, ob das Panel selbst einen eigenen Wert gebunden hat) -
+  // bis das Panel seinerseits wieder einen eigenen Wert bindet. Siehe syncFromParentOnChange().
+  readonly effectiveHideToggle = this.syncFromParentOnChange(this.luxHideToggle, () => this.parent?.luxHideToggle());
+  readonly effectiveDisabled = this.syncFromParentOnChange(this.luxDisabled, () => this.parent?.luxDisabled());
+  readonly effectiveTogglePosition = this.syncFromParentOnChange(this.luxTogglePosition, () => this.parent?.luxTogglePosition() ?? 'after');
+  readonly effectiveDynamicHeaderHeight = this.syncFromParentOnChange(this.luxDynamicHeaderHeight, () => this.parent?.luxDynamicHeaderHeight());
+  readonly effectiveExpandedHeaderHeight = computed(() => (this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedExpandedHeaderHeight()));
+  readonly effectiveCollapsedHeaderHeight = computed(() => (this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedCollapsedHeaderHeight()));
 
   constructor() {
-    this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
+    this.mobile.set(this.mediaQuery.isSmallerOrEqual('sm'));
 
     this.subscriptions.push(
       this.mediaQuery.getMediaQueryChangedAsObservable().subscribe(() => {
-        this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
+        this.mobile.set(this.mediaQuery.isSmallerOrEqual('sm'));
       })
     );
   }
@@ -91,6 +91,22 @@ export class LuxPanelComponent implements AfterViewInit, OnDestroy {
         this.getMatExpansionPanel().accordion = this.parent.matAccordion();
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptions) {
+      this.subscriptions.forEach((sub: Subscription) => sub.unsubscribe());
+    }
+  }
+
+  onOpened() {
+    this.luxOpened.emit();
+    this.luxExpanded.set(true);
+  }
+
+  onClosed() {
+    this.luxClosed.emit();
+    this.luxExpanded.set(false);
   }
 
   protected getMatExpansionPanel() {
@@ -138,21 +154,5 @@ export class LuxPanelComponent implements AfterViewInit, OnDestroy {
       const overrideValue = override();
       return overrideValue !== undefined ? overrideValue.value : (own() ?? parent());
     });
-  }
-
-  ngOnDestroy() {
-    if (this.subscriptions) {
-      this.subscriptions.forEach((sub: Subscription) => sub.unsubscribe());
-    }
-  }
-
-  onOpened() {
-    this.luxOpened.emit();
-    this.luxExpanded.set(true);
-  }
-
-  onClosed() {
-    this.luxClosed.emit();
-    this.luxExpanded.set(false);
   }
 }

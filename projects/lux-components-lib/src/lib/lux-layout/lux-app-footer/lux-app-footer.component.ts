@@ -2,7 +2,6 @@ import { NgClass, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   computed,
   ElementRef,
@@ -10,6 +9,7 @@ import {
   input,
   OnDestroy,
   OnInit,
+  signal,
   viewChild
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -35,20 +35,25 @@ import { LuxAppFooterLinkService } from './lux-app-footer-link.service';
   imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, NgClass, NgStyle, LuxLinkComponent, LuxMenuComponent, LuxMenuItemComponent, TranslocoPipe]
 })
 export class LuxAppFooterComponent implements OnInit, AfterViewInit, OnDestroy {
-  buttonService = inject(LuxAppFooterButtonService);
-  private linkService = inject(LuxAppFooterLinkService);
-  private mediaObserver = inject(LuxMediaQueryObserverService);
-  private elementRef = inject(ElementRef);
-  private appService = inject(LuxAppService);
-  private cdr = inject(ChangeDetectorRef);
-  private configService = inject(LuxComponentsConfigService);
-
-  readonly buttonMenu = viewChild.required<LuxMenuComponent>('buttonMenu');
-
   readonly luxVersion = input<string | undefined>();
   readonly luxAriaRoleFooterLabel = input('');
   readonly luxCenteredView = input<boolean | undefined>();
   readonly luxCenteredWidth = input<string | undefined>();
+
+  readonly buttonMenu = viewChild.required<LuxMenuComponent>('buttonMenu');
+
+  buttonService = inject(LuxAppFooterButtonService);
+
+  readonly desktopView = signal(false);
+  readonly buttonInfos = signal<LuxAppFooterButtonInfo[]>([]);
+  readonly linkInfos = signal<LuxAppFooterLinkInfo[]>([]);
+
+  private linkService = inject(LuxAppFooterLinkService);
+  private mediaObserver = inject(LuxMediaQueryObserverService);
+  private elementRef = inject(ElementRef);
+  private appService = inject(LuxAppService);
+  private configService = inject(LuxComponentsConfigService);
+  private subscriptions: Subscription[] = [];
 
   readonly effectiveCenteredView = computed(
     () =>
@@ -66,35 +71,27 @@ export class LuxAppFooterComponent implements OnInit, AfterViewInit, OnDestroy {
         : LuxComponentsConfigService.DEFAULT_CONFIG.viewConfiguration.centeredWidth)
   );
 
-  desktopView?: boolean;
-  buttonInfos: LuxAppFooterButtonInfo[] = [];
-  linkInfos: LuxAppFooterLinkInfo[] = [];
-  subscriptions: Subscription[] = [];
-
   constructor() {
     this.appService.appFooterEl = this.elementRef.nativeElement;
   }
 
   ngOnInit() {
-    this.desktopView = this.mediaObserver.isSM() || this.mediaObserver.isMD() || this.mediaObserver.isLG() || this.mediaObserver.isXL();
+    this.desktopView.set(this.mediaObserver.isSM() || this.mediaObserver.isMD() || this.mediaObserver.isLG() || this.mediaObserver.isXL());
     this.subscriptions.push(
       this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
-        this.desktopView = this.mediaObserver.isSM() || this.mediaObserver.isMD() || this.mediaObserver.isLG() || this.mediaObserver.isXL();
-        this.cdr.markForCheck();
+        this.desktopView.set(this.mediaObserver.isSM() || this.mediaObserver.isMD() || this.mediaObserver.isLG() || this.mediaObserver.isXL());
       })
     );
 
     this.subscriptions.push(
       this.buttonService.getButtonInfosAsObservable().subscribe((buttonInfos) => {
-        this.buttonInfos = buttonInfos;
-        this.cdr.markForCheck();
+        this.buttonInfos.set(buttonInfos);
       })
     );
 
     this.subscriptions.push(
       this.linkService.getLinkInfosAsObservable().subscribe((linkInfos) => {
-        this.linkInfos = linkInfos;
-        this.cdr.markForCheck();
+        this.linkInfos.set(linkInfos);
       })
     );
   }

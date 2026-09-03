@@ -14,6 +14,10 @@ import { LuxAriaLabelDirective } from '../../../lux-directives/lux-aria/lux-aria
   imports: [LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxDatepickerAcCustomHeaderComponent<D> implements OnDestroy {
+  get periodLabel() {
+    return this._dateAdapter.format(this._calendar.activeDate, this._dateFormats.display.monthYearLabel);
+  }
+
   private _calendar = inject<MatCalendar<D>>(MatCalendar);
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter);
   private _dateFormats = inject<MatDateFormats>(MAT_DATE_FORMATS);
@@ -32,9 +36,6 @@ export class LuxDatepickerAcCustomHeaderComponent<D> implements OnDestroy {
     this._destroyed.complete();
   }
 
-  get periodLabel() {
-    return this._dateAdapter.format(this._calendar.activeDate, this._dateFormats.display.monthYearLabel);
-  }
   previousClicked(mode: 'month' | 'year') {
     this._calendar.activeDate =
       mode === 'month'

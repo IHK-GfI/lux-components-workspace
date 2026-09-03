@@ -4,8 +4,8 @@
   (transitionend)="onTransitionEnd($event)"
 >
   @if (message.iconName) {
-  <lux-icon [luxIconName]="message.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon"></lux-icon>
-  } @if (!message.iconName) {
+  <lux-icon [luxIconName]="message.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon" />
+  } @else {
   <div class="lux-message-icon"></div>
   }
   <p tabindex="0" class="lux-message-text">{{ message.text }}</p>
@@ -16,7 +16,6 @@
     luxTagId="lux-message-box-close-btn"
     (luxClicked)="close()"
     luxAriaLabel="{{ 'luxc.message.btn.close.arialabel' | transloco }}"
-  >
-  </lux-button>
+  />
 </div>
 }

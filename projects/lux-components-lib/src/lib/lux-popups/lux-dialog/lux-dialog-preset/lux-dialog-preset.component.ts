@@ -30,13 +30,13 @@ import { LuxDialogStructureComponent } from '../lux-dialog-structure/lux-dialog-
   ]
 })
 export class LuxDialogPresetComponent implements OnInit, AfterViewInit {
-  dialogRef = inject<LuxDialogRef<ILuxDialogPresetConfig>>(LuxDialogRef);
-
   readonly confirmButton = viewChild<LuxButtonComponent>('confirmButton');
   readonly declineButton = viewChild<LuxButtonComponent>('declineButton');
 
   data?: ILuxDialogPresetConfig;
   defaultButton?: LuxButtonComponent;
+
+  private readonly dialogRef = inject<LuxDialogRef<ILuxDialogPresetConfig>>(LuxDialogRef);
 
   ngOnInit() {
     this.data = this.dialogRef.data;

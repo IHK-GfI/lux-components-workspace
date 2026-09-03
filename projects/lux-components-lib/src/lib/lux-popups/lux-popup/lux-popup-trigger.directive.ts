@@ -1,35 +1,48 @@
-import { Directive, ElementRef, HostBinding, HostListener, OnDestroy, effect, inject, input } from '@angular/core';
+import { Directive, ElementRef, OnDestroy, effect, inject, input, signal } from '@angular/core';
 import { LuxPopupComponent } from './lux-popup.component';
 import { LuxPopupCloseReason, LuxPopupPosition } from './lux-popup.types';
 
 @Directive({
   selector: '[luxPopupTriggerFor]',
-  exportAs: 'luxPopupTrigger'
+  exportAs: 'luxPopupTrigger',
+  host: {
+    '[attr.aria-haspopup]': 'ariaHasPopup',
+    '[attr.aria-controls]': 'ariaControls()',
+    '[attr.aria-expanded]': 'ariaExpanded()',
+    '(mouseenter)': 'handleMouseEnter()',
+    '(mouseleave)': 'handleMouseLeave()',
+    '(focusin)': 'handleFocusIn()',
+    '(focusout)': 'handleFocusOut($event)',
+    '(click)': 'handleClick($event)',
+    '(longpress)': 'handleLongPress()',
+    '(touchend)': 'handleTouchEnd()'
+  }
 })
 export class LuxPopupTriggerDirective implements OnDestroy {
-  private popup?: LuxPopupComponent;
-  private showTimeoutId?: number;
-  private hideTimeoutId?: number;
-  private activePopup?: LuxPopupComponent;
   readonly luxPopupTriggerFor = input<LuxPopupComponent | undefined>(undefined);
   readonly luxPopupPosition = input<LuxPopupPosition>('above');
   readonly luxPopupShowDelay = input(500);
   readonly luxPopupHideDelay = input(120);
   readonly luxPopupDisabled = input(false);
 
-  @HostBinding('attr.aria-haspopup')
+  public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  ariaControls = signal<string | undefined>(undefined);
+  ariaExpanded = signal<'true' | 'false' | undefined>(undefined);
+
+  private popup = signal<LuxPopupComponent | undefined>(undefined);
+  private showTimeoutId?: number;
+  private hideTimeoutId?: number;
+  private activePopup?: LuxPopupComponent;
+
   get ariaHasPopup() {
-    if (!this.popup) {
+    const popup = this.popup();
+    if (!popup) {
       return undefined;
     }
 
-    return this.popup.luxPersistent() ? 'dialog' : 'true';
+    return popup.luxPersistent() ? 'dialog' : 'true';
   }
-
-  @HostBinding('attr.aria-controls') ariaControls?: string;
-  @HostBinding('attr.aria-expanded') ariaExpanded?: 'true' | 'false';
-
-  public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
     this.setupPopupBindingEffect();
@@ -37,36 +50,39 @@ export class LuxPopupTriggerDirective implements OnDestroy {
   }
 
   open() {
-    if (!this.popup || this.luxPopupDisabled()) {
+    const popup = this.popup();
+    if (!popup || this.luxPopupDisabled()) {
       return;
     }
 
-    if (!this.popup.isOpenFor(this)) {
-      this.popup.open(this);
+    if (!popup.isOpenFor(this)) {
+      popup.open(this);
     }
   }
 
   close(reason: LuxPopupCloseReason = 'program') {
-    if (!this.popup || !this.popup.isOpenFor(this)) {
+    const popup = this.popup();
+    if (!popup || !popup.isOpenFor(this)) {
       return;
     }
 
-    this.popup.close(reason);
+    popup.close(reason);
   }
 
   toggle() {
-    if (!this.popup || this.luxPopupDisabled()) {
+    const popup = this.popup();
+    if (!popup || this.luxPopupDisabled()) {
       return;
     }
 
-    this.popup.toggle(this);
+    popup.toggle(this);
   }
 
   onPopupOpened(component: LuxPopupComponent) {
-    if (this.popup !== component) {
-      this.popup = component;
+    if (this.popup() !== component) {
+      this.popup.set(component);
     }
-    this.ariaControls = component.popupId;
+    this.ariaControls.set(component.popupId);
     this.activePopup = component;
     this.applyAriaExpanded(component, true);
   }
@@ -77,7 +93,6 @@ export class LuxPopupTriggerDirective implements OnDestroy {
     this.activePopup = undefined;
   }
 
-  @HostListener('mouseenter')
   handleMouseEnter() {
     if (this.shouldIgnorePointerInteraction()) {
       return;
@@ -86,7 +101,6 @@ export class LuxPopupTriggerDirective implements OnDestroy {
     this.scheduleShow();
   }
 
-  @HostListener('mouseleave')
   handleMouseLeave() {
     if (this.shouldIgnorePointerInteraction()) {
       return;
@@ -95,22 +109,22 @@ export class LuxPopupTriggerDirective implements OnDestroy {
     this.scheduleHide('pointer-leave');
   }
 
-  @HostListener('focusin')
   handleFocusIn() {
-    if (this.luxPopupDisabled() || !this.popup) {
+    const popup = this.popup();
+    if (this.luxPopupDisabled() || !popup) {
       return;
     }
 
-    if (this.popup.luxPersistent()) {
+    if (popup.luxPersistent()) {
       return;
     }
 
     this.scheduleShow();
   }
 
-  @HostListener('focusout', ['$event'])
   handleFocusOut(event: FocusEvent) {
-    if (!this.popup || this.popup.luxPersistent()) {
+    const popup = this.popup();
+    if (!popup || popup.luxPersistent()) {
       return;
     }
 
@@ -121,13 +135,13 @@ export class LuxPopupTriggerDirective implements OnDestroy {
     this.scheduleHide('trigger-blur');
   }
 
-  @HostListener('click', ['$event'])
   handleClick(event: Event) {
-    if (!this.popup || this.luxPopupDisabled()) {
+    const popup = this.popup();
+    if (!popup || this.luxPopupDisabled()) {
       return;
     }
 
-    if (!this.popup.luxPersistent()) {
+    if (!popup.luxPersistent()) {
       return;
     }
 
@@ -136,7 +150,6 @@ export class LuxPopupTriggerDirective implements OnDestroy {
     this.toggle();
   }
 
-  @HostListener('longpress')
   handleLongPress() {
     if (this.shouldIgnorePointerInteraction()) {
       return;
@@ -145,7 +158,6 @@ export class LuxPopupTriggerDirective implements OnDestroy {
     this.open();
   }
 
-  @HostListener('touchend')
   handleTouchEnd() {
     if (this.shouldIgnorePointerInteraction()) {
       return;
@@ -156,17 +168,20 @@ export class LuxPopupTriggerDirective implements OnDestroy {
 
   ngOnDestroy() {
     this.clearTimers();
-    if (this.popup?.isOpenFor(this)) {
-      this.popup.close('program');
+    const popup = this.popup();
+    if (popup?.isOpenFor(this)) {
+      popup.close('program');
     }
   }
 
   private shouldIgnorePointerInteraction(): boolean {
-    return this.luxPopupDisabled() || !this.popup || this.popup.luxPersistent();
+    const popup = this.popup();
+    return this.luxPopupDisabled() || !popup || popup.luxPersistent();
   }
 
   private scheduleShow() {
-    if (!this.popup || this.popup.luxPersistent()) {
+    const popup = this.popup();
+    if (!popup || popup.luxPersistent()) {
       return;
     }
 
@@ -183,13 +198,14 @@ export class LuxPopupTriggerDirective implements OnDestroy {
   }
 
   private scheduleHide(reason: LuxPopupCloseReason) {
-    if (!this.popup || this.popup.luxPersistent()) {
+    const popup = this.popup();
+    if (!popup || popup.luxPersistent()) {
       return;
     }
 
     this.clearShowTimeout();
     this.clearHideTimeout();
-    if (!this.popup.isOpenFor(this)) {
+    if (!popup.isOpenFor(this)) {
       return;
     }
 
@@ -221,19 +237,19 @@ export class LuxPopupTriggerDirective implements OnDestroy {
 
   private applyAriaExpanded(component: LuxPopupComponent | undefined, isOpen: boolean) {
     if (!component || !component.luxPersistent()) {
-      this.ariaExpanded = undefined;
+      this.ariaExpanded.set(undefined);
       return;
     }
 
-    this.ariaExpanded = isOpen ? 'true' : 'false';
+    this.ariaExpanded.set(isOpen ? 'true' : 'false');
   }
 
   private setupPopupBindingEffect() {
     effect(() => {
       const popup = this.luxPopupTriggerFor();
-      const previousPopup = this.popup;
+      const previousPopup = this.popup();
 
-      this.popup = popup;
+      this.popup.set(popup);
 
       if (previousPopup && previousPopup !== popup && previousPopup.isOpenFor(this)) {
         previousPopup.close('program');
@@ -241,7 +257,7 @@ export class LuxPopupTriggerDirective implements OnDestroy {
         this.close('program');
       }
 
-      this.ariaControls = popup?.popupId;
+      this.ariaControls.set(popup?.popupId);
       this.applyAriaExpanded(popup, false);
     });
   }
@@ -253,7 +269,7 @@ export class LuxPopupTriggerDirective implements OnDestroy {
       }
 
       this.close('program');
-      this.applyAriaExpanded(this.activePopup ?? this.popup, false);
+      this.applyAriaExpanded(this.activePopup ?? this.popup(), false);
     });
   }
 }

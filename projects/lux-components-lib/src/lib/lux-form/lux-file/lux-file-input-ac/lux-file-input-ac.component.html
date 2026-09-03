@@ -58,8 +58,7 @@
             luxColor="primary"
             (luxClicked)="viewFile(value()!)"
             [luxHidden]="!!viewConfig.hidden"
-          >
-          </lux-menu-item>
+          />
           <lux-menu-item
             luxTagId="lux-file-download"
             [luxIconName]="downloadConfig.iconName"
@@ -71,8 +70,7 @@
             luxColor="primary"
             (luxClicked)="downloadFile(value()!)"
             [luxHidden]="!!downloadConfig.hidden"
-          >
-          </lux-menu-item>
+          />
           <lux-menu-item
             luxTagId="lux-file-remove"
             [luxIconName]="deleteConfig.iconName"
@@ -84,8 +82,7 @@
             luxColor="primary"
             (luxClicked)="clearFile()"
             [luxHidden]="!!deleteConfig.hidden"
-          >
-          </lux-menu-item>
+          />
           <lux-menu-item
             luxTagId="lux-file-upload"
             [luxIconName]="uploadConfig.iconName"
@@ -97,8 +94,7 @@
             luxColor="primary"
             (luxClicked)="fileUpload.click()"
             [luxHidden]="!!uploadConfig.hidden"
-          >
-          </lux-menu-item>
+          />
           @for (customConfig of luxCustomActionConfigs(); track customConfig; let i = $index) {
             <lux-menu-item
               luxTagId="lux-file-list-entry-custom{{ i }}"
@@ -111,8 +107,7 @@
               luxColor="primary"
               (luxClicked)="customConfig.onClick ? customConfig.onClick(value()!) : noop()"
               [luxHidden]="!!customConfig.hidden"
-            >
-            </lux-menu-item>
+            />
           }
         </lux-menu>
       </div>
@@ -137,5 +132,5 @@
 
 <!-- Ladeanzeige für den File-Upload -->
 @if (isProgressVisible()) {
-  <lux-file-progress [luxMode]="progressMode()" [luxProgress]="progress()"> </lux-file-progress>
+  <lux-file-progress [luxMode]="progressMode()" [luxProgress]="progress()" />
 }

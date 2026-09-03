@@ -13,8 +13,7 @@
       [luxStroked]="luxStepperConfig()?.luxPreviousButtonConfig?.stroked ?? false"
       (luxClicked)="luxPrevClick.emit()"
       luxTagId="luxStepper.previousStep"
-    >
-    </lux-button>
+    />
   }
   <!-- Next-Button -->
   @if (luxIndex() < (luxStepperConfig()?.luxSteps?.length ?? 0) - 1) {
@@ -27,8 +26,7 @@
       (luxClicked)="luxNextClick.emit()"
       [luxDisabled]="!luxStepperConfig()?.luxA11YMode && !luxStep().isCompleted() && luxStepperConfig()?.luxLinear === true"
       luxTagId="luxStepper.nextStep"
-    >
-    </lux-button>
+    />
   }
   <!-- Finish-Button -->
   @if (luxIndex() === (luxStepperConfig()?.luxSteps?.length ?? 0) - 1) {
@@ -41,7 +39,6 @@
       (luxClicked)="luxFinClick.emit()"
       [luxDisabled]="!luxStepperConfig()?.luxA11YMode && !luxStep().isCompleted() && luxStepperConfig()?.luxLinear === true"
       luxTagId="luxStepper.finished"
-    >
-    </lux-button>
+    />
   }
 </div>

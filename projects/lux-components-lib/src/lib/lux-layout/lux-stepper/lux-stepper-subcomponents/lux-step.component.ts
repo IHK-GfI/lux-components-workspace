@@ -17,7 +17,12 @@ import { LuxStepHeaderComponent } from './lux-step-header.component';
   `
 })
 export class LuxStepComponent {
-  private _iconChange = new BehaviorSubject<boolean>(false);
+  readonly luxIconSize = input('1x');
+  readonly luxOptional = input(false);
+  readonly luxEditable = input(true);
+  readonly luxCompleted = input(true);
+  readonly luxStepControl = input<FormGroup | undefined>();
+  readonly luxIconName = input<string | undefined>();
 
   readonly defaultHeaderTemplate = viewChild.required<TemplateRef<any>>('header');
   readonly defaultContentTemplate = viewChild.required<TemplateRef<any>>('content');
@@ -25,12 +30,23 @@ export class LuxStepComponent {
   readonly projectedHeaderTemplate = contentChild('header', { descendants: true, read: TemplateRef });
   readonly projectedContentTemplate = contentChild('content', { descendants: true, read: TemplateRef });
 
-  readonly luxIconSize = input('1x');
-  readonly luxOptional = input(false);
-  readonly luxEditable = input(true);
-  readonly luxCompleted = input(true);
-  readonly luxStepControl = input<FormGroup | undefined>();
-  readonly luxIconName = input<string | undefined>();
+  get headerTemplate(): TemplateRef<any> {
+    return this.projectedHeaderTemplate() ?? this.defaultHeaderTemplate();
+  }
+
+  get contentTemplate(): TemplateRef<any> {
+    return this.projectedContentTemplate() ?? this.defaultContentTemplate();
+  }
+
+  get hasHeader(): boolean {
+    return (
+      !!this.luxStepHeader() ||
+      !!this.projectedHeaderTemplate() ||
+      (this.constructor !== LuxStepComponent && !!this.defaultHeaderTemplate())
+    );
+  }
+
+  private _iconChange = new BehaviorSubject<boolean>(false);
 
   /**
    * FormGroup.valid ist eine reine (nicht-reaktive) Getter-Eigenschaft. Ein direktes Lesen in
@@ -50,22 +66,6 @@ export class LuxStepComponent {
       this.luxIconName();
       this._iconChange.next(true);
     });
-  }
-
-  get headerTemplate(): TemplateRef<any> {
-    return this.projectedHeaderTemplate() ?? this.defaultHeaderTemplate();
-  }
-
-  get contentTemplate(): TemplateRef<any> {
-    return this.projectedContentTemplate() ?? this.defaultContentTemplate();
-  }
-
-  get hasHeader(): boolean {
-    return (
-      !!this.luxStepHeader() ||
-      !!this.projectedHeaderTemplate() ||
-      (this.constructor !== LuxStepComponent && !!this.defaultHeaderTemplate())
-    );
   }
 
   getIconChangeObsv(): Observable<boolean> {

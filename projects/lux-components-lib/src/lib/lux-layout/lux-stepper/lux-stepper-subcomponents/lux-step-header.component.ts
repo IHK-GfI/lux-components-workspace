@@ -1,13 +1,13 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigService } from '../../../lux-components-config/lux-components-config.service';
 
 @Component({
   selector: 'lux-step-header',
   template: `
-    <div [ngClass]="{ 'lux-uppercase': labelUppercase }">
-      <ng-content></ng-content>
+    <div [ngClass]="{ 'lux-uppercase': labelUppercase() }">
+      <ng-content />
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,16 +15,14 @@ import { LuxComponentsConfigService } from '../../../lux-components-config/lux-c
 })
 export class LuxStepHeaderComponent implements OnInit, OnDestroy {
   componentsConfigService = inject(LuxComponentsConfigService);
-  private cdr = inject(ChangeDetectorRef);
+
+  readonly labelUppercase = signal(false);
 
   private configSubscription?: Subscription;
 
-  labelUppercase?: boolean;
-
   ngOnInit() {
     this.configSubscription = this.componentsConfigService.config.subscribe(() => {
-      this.labelUppercase = this.componentsConfigService.isLabelUppercaseForSelector('lux-step');
-      this.cdr.markForCheck();
+      this.labelUppercase.set(this.componentsConfigService.isLabelUppercaseForSelector('lux-step'));
     });
   }
 

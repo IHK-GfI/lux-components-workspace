@@ -1,7 +1,6 @@
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   computed,
   contentChild,
@@ -10,6 +9,7 @@ import {
   input,
   OnInit,
   output,
+  signal,
   viewChild
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -60,13 +60,6 @@ import { LuxDividerComponent } from '../lux-divider/lux-divider.component';
   ]
 })
 export class LuxAppHeaderAcComponent implements OnInit {
-  private logger = inject(LuxConsoleService);
-  private queryService = inject(LuxMediaQueryObserverService);
-  private elementRef = inject(ElementRef);
-  private appService = inject(LuxAppService);
-  private configService = inject(LuxComponentsConfigService);
-  private cdr = inject(ChangeDetectorRef);
-
   readonly luxUserName = input<string | undefined>();
   readonly luxUserEmail = input<string | undefined>();
   readonly luxAppTitle = input<string | undefined>();
@@ -96,13 +89,16 @@ export class LuxAppHeaderAcComponent implements OnInit {
   readonly userMenu = contentChild(LuxAppHeaderAcUserMenuComponent);
   readonly actionNav = contentChild(LuxAppHeaderAcActionNavComponent);
 
-  userNameShort?: string;
-
-  mobileView: boolean;
-  subscriptions: Subscription[] = [];
+  readonly mobileView = signal(false);
 
   menuOpened = false;
 
+  private readonly logger = inject(LuxConsoleService);
+  private readonly queryService = inject(LuxMediaQueryObserverService);
+  private readonly elementRef = inject(ElementRef);
+  private readonly appService = inject(LuxAppService);
+  private readonly configService = inject(LuxComponentsConfigService);
+  private subscriptions: Subscription[] = [];
   private iconBasePath = '';
 
   readonly effectiveAppLogoSrc = computed(() => {
@@ -139,11 +135,10 @@ export class LuxAppHeaderAcComponent implements OnInit {
   );
 
   constructor() {
-    this.mobileView = this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm';
+    this.mobileView.set(this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm');
     this.subscriptions.push(
       this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.mobileView = query === 'xs' || query === 'sm';
-        this.cdr.markForCheck();
+        this.mobileView.set(query === 'xs' || query === 'sm');
       })
     );
     this.appService.appHeaderEl = this.elementRef.nativeElement;

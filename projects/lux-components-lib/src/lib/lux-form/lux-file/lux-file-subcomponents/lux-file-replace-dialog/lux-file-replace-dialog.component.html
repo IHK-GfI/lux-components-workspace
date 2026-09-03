@@ -35,13 +35,13 @@
       [luxStroked]="true"
       (luxClicked)="luxDialogRef.closeDialog(false)"
       class="lux-mr-4"
-    ></lux-button>
+    />
     <lux-button
       luxLabel="{{ 'luxc.file.replace.dialog.replace.lbl' | transloco }}"
       [luxDisabled]="luxDialogRef.data.deleteProtection"
       luxColor="primary"
       [luxFlat]="true"
       (luxClicked)="luxDialogRef.closeDialog(true)"
-    ></lux-button>
+    />
   </lux-dialog-actions>
 </lux-dialog-structure>

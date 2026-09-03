@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnDestroy, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { MatCard, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
-import { Subscription } from 'rxjs';
 import {
   LuxBadgeNotificationColor,
   LuxBadgeNotificationDirective,
@@ -8,7 +7,6 @@ import {
 } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
-import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 
 @Component({
   selector: 'lux-tile-ac',
@@ -17,9 +15,7 @@ import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-obs
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'lux-flex' }
 })
-export class LuxTileAcComponent implements OnInit, OnDestroy {
-  private queryService = inject(LuxMediaQueryObserverService);
-
+export class LuxTileAcComponent {
   readonly luxLabel = input<string | undefined>();
   readonly luxLabelTruncateAfterOneLine = input(false);
   readonly luxLabelTruncateAfterTwoLines = input(false);
@@ -33,6 +29,8 @@ export class LuxTileAcComponent implements OnInit, OnDestroy {
   readonly luxNotificationColor = input<LuxBadgeNotificationColor>('primary');
   readonly luxNotificationSize = input<LuxBadgeNotificationSize>('medium');
 
+  readonly luxClicked = output<void>();
+
   readonly luxBadgeContent = computed(() => {
     const counter = this.luxCounter();
     if (!counter) {
@@ -40,23 +38,6 @@ export class LuxTileAcComponent implements OnInit, OnDestroy {
     }
     return '' + counter;
   });
-
-  readonly luxClicked = output<void>();
-
-  mobileView?: boolean;
-  subscription?: Subscription;
-
-  ngOnInit() {
-    this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-      this.mobileView = query === 'xs' || query === 'sm';
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
 
   clicked() {
     this.luxClicked.emit();

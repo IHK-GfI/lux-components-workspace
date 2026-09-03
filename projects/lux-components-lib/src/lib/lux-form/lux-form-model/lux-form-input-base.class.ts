@@ -7,9 +7,6 @@ import { LuxFormComponentBase } from './lux-form-component-base.class';
  */
 @Directive()
 export abstract class LuxFormInputBaseClass<T = any> extends LuxFormComponentBase<T> {
-  readonly luxBlur = output<FocusEvent>();
-  readonly luxFocus = output<FocusEvent>();
-
   readonly luxPlaceholder = input('');
   readonly luxTagId = input<string | undefined>(undefined);
   readonly luxName = input<string | undefined>(undefined);
@@ -20,6 +17,9 @@ export abstract class LuxFormInputBaseClass<T = any> extends LuxFormComponentBas
    * Wert liefern das Signal value() bzw. getValue().
    */
   readonly luxValue = input<T>(null as T);
+
+  readonly luxBlur = output<FocusEvent>();
+  readonly luxFocus = output<FocusEvent>();
   readonly luxValueChange = output<T>();
 
   constructor() {

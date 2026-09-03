@@ -72,11 +72,6 @@ export const APP_DATE_TIME_FORMATS_AC = {
   ]
 })
 export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> implements AfterViewInit {
-  private dateTimeAdapter = inject<DateAdapter<Date>>(DateAdapter);
-
-  readonly dateTimeOverlayComponent = viewChild(LuxDatetimeOverlayAcComponent);
-  readonly dateTimePickerInputEl = viewChild<ElementRef>('dateTimePickerInput');
-
   readonly luxStartView = input<LuxStartAcView>('month');
   readonly luxOpened = input(false);
   readonly luxStartDate = input<string | undefined>(undefined);
@@ -89,38 +84,12 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
   // Der Standard-Wert für Autocomplete wird für den Datetimepicker ausgeschaltet.
   override readonly luxAutocomplete = input('off');
 
+  readonly dateTimeOverlayComponent = viewChild(LuxDatetimeOverlayAcComponent);
+  readonly dateTimePickerInputEl = viewChild<ElementRef>('dateTimePickerInput');
+
   readonly luxLocale = signal<string>('de-DE');
 
   readonly focused = signal(false);
-
-  readonly min = computed(() => this.parseDateTimeInput(this.luxMinDate()));
-  readonly max = computed(() => this.parseDateTimeInput(this.luxMaxDate()));
-
-  readonly start = computed(() => {
-    const startDate = this.luxStartDate();
-
-    if (typeof startDate !== 'string') {
-      return null;
-    }
-
-    const startDateArr = startDate.trim().split('.');
-    if (startDateArr.length !== 3) {
-      return null;
-    }
-
-    const start = new Date(0);
-    start.setUTCFullYear(+startDateArr[2], +startDateArr[1] - 1, +startDateArr[0]);
-    return start;
-  });
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
 
   dateTimeValidator: ValidatorFn = (): ValidationErrors | null => {
     let result = null;
@@ -171,6 +140,37 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     }
   }
 
+  private dateTimeAdapter = inject<DateAdapter<Date>>(DateAdapter);
+
+  readonly min = computed(() => this.parseDateTimeInput(this.luxMinDate()));
+  readonly max = computed(() => this.parseDateTimeInput(this.luxMaxDate()));
+
+  readonly start = computed(() => {
+    const startDate = this.luxStartDate();
+
+    if (typeof startDate !== 'string') {
+      return null;
+    }
+
+    const startDateArr = startDate.trim().split('.');
+    if (startDateArr.length !== 3) {
+      return null;
+    }
+
+    const start = new Date(0);
+    start.setUTCFullYear(+startDateArr[2], +startDateArr[1] - 1, +startDateArr[0]);
+    return start;
+  });
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
+
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
+
   constructor() {
     super();
 
@@ -204,6 +204,11 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     });
   }
 
+  ngAfterViewInit() {
+    this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
+    this.formControl.addValidators(this.dateTimeValidator);
+  }
+
   // Code des Interfaces "MatDatepickerControl" - Start
   getStartValue() {
     return this.luxStartDate();
@@ -221,11 +226,6 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     return null;
   }
   // Code des Interfaces "MatDatepickerControl" - Ende
-
-  ngAfterViewInit() {
-    this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
-    this.formControl.addValidators(this.dateTimeValidator);
-  }
 
   onOk(date: Date) {
     const selected = new Date(date.getTime());

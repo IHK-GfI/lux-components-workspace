@@ -18,13 +18,13 @@ import { LuxDialogRef } from '../lux-dialog-model/lux-dialog-ref.class';
   imports: [LuxAriaLabelDirective, LuxIconComponent, MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, TranslocoPipe]
 })
 export class LuxDialogStructureComponent implements OnInit, AfterViewInit {
-  private luxDialogRef = inject<LuxDialogRef<any>>(LuxDialogRef);
+  readonly luxDialogIcon = input<string | undefined>();
 
   readonly dialogBase = viewChild.required('dialogBase', { read: ElementRef });
 
-  readonly luxDialogIcon = input<string | undefined>();
-
   disableClose!: boolean;
+
+  private readonly luxDialogRef = inject<LuxDialogRef<any>>(LuxDialogRef);
 
   ngOnInit() {
     // showCloseButton wird in der Dialog-Erzeugung vom Service gesetzt.

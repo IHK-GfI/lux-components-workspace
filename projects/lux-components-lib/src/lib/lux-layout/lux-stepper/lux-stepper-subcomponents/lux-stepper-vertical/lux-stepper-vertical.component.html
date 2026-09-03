@@ -18,14 +18,14 @@
       <!-- Header des Steps -->
       <ng-template matStepLabel>
         <div class="lux-flex lux-place-content-start lux-items-center">
-          <ng-template #matStepLabel></ng-template>
+          <ng-template #matStepLabel />
           @if (luxStep.hasHeader) {
-            <ng-container *ngTemplateOutlet="luxStep.headerTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="luxStep.headerTemplate" />
           }
         </div>
       </ng-template>
       <!-- Content des Steps, wenn Animationen aktiviert sind -->
-      <ng-container *ngTemplateOutlet="luxStep.contentTemplate"></ng-container>
+      <ng-container *ngTemplateOutlet="luxStep.contentTemplate" />
       <!-- Nav-Buttons, wenn aktiviert -->
       @if (luxStepperConfig()?.luxShowNavigationButtons) {
         <lux-stepper-nav-buttons
@@ -35,23 +35,22 @@
           (luxPrevClick)="luxPrevButtonClicked.emit()"
           (luxNextClick)="luxNextButtonClicked.emit()"
           (luxFinClick)="luxFinButtonClicked.emit()"
-        >
-        </lux-stepper-nav-buttons>
+        />
       }
     </mat-step>
   }
 
   <!-- Überschreiben der default Material-Icons -->
   <ng-template matStepperIcon="edit">
-    <lux-icon luxIconName="lux-interface-edit-pencil" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-edit-pencil" luxIconSize="1.25rem" />
   </ng-template>
   <ng-template matStepperIcon="done">
-    <lux-icon luxIconName="lux-interface-validation-check" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-validation-check" luxIconSize="1.25rem" />
   </ng-template>
   <ng-template matStepperIcon="error">
-    <lux-icon luxIconName="lux-interface-delete-1" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-delete-1" luxIconSize="1.25rem" />
   </ng-template>
   <ng-template matStepperIcon="home">
-    <lux-icon luxIconName="lux-interface-home-3" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-home-3" luxIconSize="1.25rem" />
   </ng-template>
 </mat-vertical-stepper>

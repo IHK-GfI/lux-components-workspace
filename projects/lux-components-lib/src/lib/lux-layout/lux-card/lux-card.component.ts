@@ -53,10 +53,6 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
   }
 })
 export class LuxCardComponent implements AfterViewInit {
-  private componentsConfigService = inject(LuxComponentsConfigService);
-  private cdr = inject(ChangeDetectorRef);
-  private destroyRef = inject(DestroyRef);
-
   readonly luxTitle = input<string | undefined>();
   readonly luxTitleTooltip = input<string | undefined>();
   readonly luxSubTitle = input<string | undefined>();
@@ -65,18 +61,17 @@ export class LuxCardComponent implements AfterViewInit {
   readonly luxDisabled = input<boolean | undefined>();
   readonly luxTagId = input<string | undefined>();
   readonly luxTitleLineBreak = input(true);
-  readonly luxExpanded = model(false);
   readonly luxUseTabIndex = input(true);
   readonly luxHeading = input(2);
   readonly luxExpandedLabelOpen = input('');
   readonly luxExpandedLabelClose = input('');
-
-  readonly luxAfterExpansion = output<void>();
-  readonly luxClicked = output<Event>();
-
   // Ersetzt die frühere .observed-Abfrage von luxClicked (output() hat kein Äquivalent) -
   // steuert die Klickbar-Darstellung der Card (Cursor, Tabindex).
   readonly luxClickable = input(false);
+  readonly luxExpanded = model(false);
+
+  readonly luxAfterExpansion = output<void>();
+  readonly luxClicked = output<Event>();
 
   readonly iconComponents = contentChildren(LuxIconComponent, { descendants: false });
   readonly actionsComponent = contentChild(LuxCardActionsComponent);
@@ -85,17 +80,7 @@ export class LuxCardComponent implements AfterViewInit {
   readonly contentComponent = contentChild(LuxCardContentComponent);
   readonly customHeaderComponent = contentChild(LuxCardCustomHeaderComponent);
 
-  readonly effectiveTagId = computed(() => this.luxTagId() || this.luxTitle());
-
   animationDisabled = true;
-
-  ngAfterViewInit() {
-    // Über die Konfiguration abfragen, ob die Animationen für Cards deaktiviert sind.
-    this.componentsConfigService.config.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((config: LuxComponentsConfigParameters) => {
-      this.animationDisabled = !config.cardExpansionAnimationActive;
-      this.cdr.markForCheck();
-    });
-  }
 
   get showButtons() {
     return !!this.actionsComponent();
@@ -117,6 +102,20 @@ export class LuxCardComponent implements AfterViewInit {
     const luxTitle = this.luxTitle();
     const luxSubTitle = this.luxSubTitle();
     return this.showIcon || !!(luxTitle && luxTitle.length > 0) || !!(luxSubTitle && luxSubTitle.length > 0) || !!this.infoComponent();
+  }
+
+  private componentsConfigService = inject(LuxComponentsConfigService);
+  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+
+  readonly effectiveTagId = computed(() => this.luxTagId() || this.luxTitle());
+
+  ngAfterViewInit() {
+    // Über die Konfiguration abfragen, ob die Animationen für Cards deaktiviert sind.
+    this.componentsConfigService.config.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((config: LuxComponentsConfigParameters) => {
+      this.animationDisabled = !config.cardExpansionAnimationActive;
+      this.cdr.markForCheck();
+    });
   }
 
   changeContentExpansion(event: any) {

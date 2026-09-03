@@ -208,7 +208,7 @@ describe('LuxAppFooterComponent', () => {
 });
 
 @Component({
-  template: ` <lux-app-footer luxVersion="0.1.2"></lux-app-footer> `,
+  template: ` <lux-app-footer luxVersion="0.1.2" /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppFooterComponent]
 })
@@ -243,7 +243,7 @@ class MockAppFooterButtonOrderComponent {
 
 @Component({
   selector: 'lux-mock-app-footer-link-order',
-  template: ` <lux-app-footer luxVersion="0.1.3"></lux-app-footer> `,
+  template: ` <lux-app-footer luxVersion="0.1.3" /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppFooterComponent]
 })

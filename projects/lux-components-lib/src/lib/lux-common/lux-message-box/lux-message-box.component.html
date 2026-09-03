@@ -2,7 +2,7 @@
   <div luxAriaLabel="{{ 'luxc.message.container.arialabel' | transloco }}" class="lux-message-box-content" tabindex="0" #messagebox>
     <div role="list">
       @for (displayedMessage of displayedMessages(); track displayedMessage) {
-        <lux-message class="lux-message-box" [luxMessage]="displayedMessage" (luxMessageClosed)="messageClosed($event)"> </lux-message>
+        <lux-message class="lux-message-box" [luxMessage]="displayedMessage" (luxMessageClosed)="messageClosed($event)" />
       }
     </div>
     <div
@@ -16,7 +16,7 @@
         [luxHidePageSize]="true"
         [luxPageIndex]="clampedIndex()"
         (luxPageChange)="pageChanged($event)"
-      ></lux-paginator>
+      />
     </div>
   </div>
 }

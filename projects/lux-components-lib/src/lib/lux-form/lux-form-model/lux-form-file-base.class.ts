@@ -20,19 +20,6 @@ import { LuxFormComponentBase, LuxValidationErrors, ValidatorFnType } from './lu
   }
 })
 export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
-  protected http = inject(HttpClient);
-  protected liveAnnouncer = inject(LiveAnnouncer);
-
-  defaultReadFileDelay = 1000;
-
-  readonly progress = signal(-1);
-  readonly forceProgressIndeterminate = signal(false);
-  readonly displayClearErrorButton = signal(false);
-  readonly isDragActive = signal(false);
-
-  readonly downloadLink = viewChild.required<ElementRef>('downloadLink');
-  readonly fileUploadInput = viewChild.required<ElementRef>('fileUpload');
-
   readonly luxUploadReportProgress = input(false);
   readonly luxContentsAsBlob = input(false);
   readonly luxTagId = input<string | undefined>(undefined);
@@ -56,7 +43,21 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
    * Wert liefern das Signal value() bzw. getValue().
    */
   readonly luxSelected = input<T>(null as T);
+
   readonly luxSelectedChange = output<T>();
+
+  readonly downloadLink = viewChild.required<ElementRef>('downloadLink');
+  readonly fileUploadInput = viewChild.required<ElementRef>('fileUpload');
+
+  defaultReadFileDelay = 1000;
+
+  readonly progress = signal(-1);
+  readonly forceProgressIndeterminate = signal(false);
+  readonly displayClearErrorButton = signal(false);
+  readonly isDragActive = signal(false);
+
+  protected http = inject(HttpClient);
+  protected liveAnnouncer = inject(LiveAnnouncer);
 
   readonly progressMode = computed<LuxProgressModeType>(() =>
     (this.progress() === 0 && !this.luxUploadReportProgress()) || this.forceProgressIndeterminate() ? 'indeterminate' : 'determinate'
@@ -425,6 +426,17 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
 
   abstract handleViewFileClick(file: ILuxFileObject): void;
 
+  onCloseErrorMessage() {
+    this.errorMessage.set(undefined);
+    this.formControl.updateValueAndValidity();
+  }
+
+  /**
+   * No-op-Callback für Templates, die optional einen benutzerdefinierten Klick-Handler
+   * (`customConfig.onClick`) aufrufen und andernfalls nichts tun sollen.
+   */
+  noop() {}
+
   /**
    * Entfernt die in dieser Component gesetzten Fehlermeldungen.
    */
@@ -559,8 +571,6 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
     return this.luxDnDActive() && !this.luxDisabled() && !this.luxReadonly();
   }
 
-  noop() {}
-
   protected override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {
     if (errors[LuxFileErrorCause.MaxSizeError]) {
       return this.getMaxSizeErrorMessage(errors[LuxFileErrorCause.MaxSizeError].file);
@@ -624,10 +634,5 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
         this.fileUploadInput().nativeElement.value = null;
       }
     }
-  }
-
-  onCloseErrorMessage() {
-    this.errorMessage.set(undefined);
-    this.formControl.updateValueAndValidity();
   }
 }

@@ -51,7 +51,7 @@
                 (click)="chip.remove(i)"
                 (keydown.enter)="chip.remove(i)"
                 (keydown.space)="chip.remove(i)"
-              ></lux-icon>
+              />
             }
           </mat-chip-row>
         </div>
@@ -80,7 +80,7 @@
             >
               <ng-container
                 *ngTemplateOutlet="chipGroup.tempRef() ? chipGroup.tempRef()! : noTemplateRef; context: { $implicit: label }"
-              ></ng-container>
+              />
               @if (chipGroup.luxRemovable()) {
                 <lux-icon
                   class="lux-chip-icon"
@@ -94,7 +94,7 @@
                   (click)="onChipGroupRemove(chipGroup, i)"
                   (keydown.enter)="onChipGroupRemove(chipGroup, i)"
                   (keydown.space)="onChipGroupRemove(chipGroup, i)"
-                ></lux-icon>
+                />
               }
             </mat-chip-row>
           </div>

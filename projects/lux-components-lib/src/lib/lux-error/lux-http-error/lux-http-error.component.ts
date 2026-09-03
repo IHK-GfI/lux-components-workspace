@@ -13,23 +13,22 @@ import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
   imports: [LuxMessageBoxComponent]
 })
 export class LuxHttpErrorComponent implements AfterViewInit {
-  private readonly destroyRef = inject(DestroyRef);
+  readonly luxMessageBoxClosed = output<void>();
 
   readonly messageComponent = viewChild.required(LuxMessageBoxComponent);
 
-  readonly luxMessageBoxClosed = output<void>();
-
   readonly errors = signal<ILuxMessage[]>([]);
+
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     // Beim Ansteuern einer neuen Route, die aktuellen Fehler resetten.
-    inject(Router)
-      .events.pipe(takeUntilDestroyed())
-      .subscribe((event) => {
-        if (event instanceof NavigationStart) {
-          LuxHttpErrorInterceptor.dataStream.next([]);
-        }
-      });
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        LuxHttpErrorInterceptor.dataStream.next([]);
+      }
+    });
   }
 
   ngAfterViewInit() {

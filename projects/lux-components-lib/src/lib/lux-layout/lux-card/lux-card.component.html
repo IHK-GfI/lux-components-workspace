@@ -11,13 +11,13 @@
 >
   @if (customHeaderComponent()) {
     <mat-card-header class="lux-card-header">
-      <ng-content select="lux-card-custom-header"></ng-content>
+      <ng-content select="lux-card-custom-header" />
     </mat-card-header>
   } @else if (showHeader) {
     <mat-card-header class="lux-card-header">
       @if (showIcon) {
         <div class="lux-card-icon-container">
-          <ng-content select="lux-icon"></ng-content>
+          <ng-content select="lux-icon" />
         </div>
       }
       <mat-card-title class="lux-card-title">
@@ -30,7 +30,7 @@
             'lux-crop': !luxTitleLineBreak(),
             'lux-display-none-important': (!luxTitle() || luxTitle()!.length === 0) && !infoComponent()
           }"
-        ></lux-card-heading>
+        />
       </mat-card-title>
       <mat-card-subtitle
         title="{{ luxSubTitleTooltip() ? luxSubTitleTooltip() : luxTitleLineBreak() ? '' : luxSubTitle() }}"
@@ -45,7 +45,7 @@
       </mat-card-subtitle>
       @if (infoComponent()) {
         <div class="lux-card-info-container" [class.lux-title]="luxTitle() || showIcon" [class.lux-subtitle]="luxSubTitle()">
-          <ng-content select="lux-card-info"></ng-content>
+          <ng-content select="lux-card-info" />
         </div>
       }
     </mat-card-header>
@@ -53,7 +53,7 @@
 
   <mat-card-content class="lux-card-content" [class.lux-card-no-actions]="!showButtons">
     <div class="lux-card-content-container" [class.lux-card-with-content-and-header]="contentComponent() && showHeader">
-      <ng-content select="lux-card-content"></ng-content>
+      <ng-content select="lux-card-content" />
       @if (showExpandedToggle) {
         <lux-button
           luxColor="primary"
@@ -68,18 +68,18 @@
           [luxThrottleTime]="250"
           luxTagId="expandedButton"
           class="lux-expanded-button"
-        ></lux-button>
+        />
       }
     </div>
 
     @if (luxExpanded() && contentExpandedComponent()) {
       <div class="lux-card-content-expanded lux-mt-4" [@expansionAnim]="{ value: getAnimState(), params: { duration: getAnimDuration() } }">
-        <ng-content select="lux-card-content-expanded"></ng-content>
+        <ng-content select="lux-card-content-expanded" />
       </div>
     }
   </mat-card-content>
 
   <mat-card-actions class="lux-card-actions" [ngClass]="{ 'lux-display-none-important': !showButtons }" #luxActionButtons>
-    <ng-content select="lux-card-actions"></ng-content>
+    <ng-content select="lux-card-actions" />
   </mat-card-actions>
 </mat-card>

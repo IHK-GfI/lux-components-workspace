@@ -2,10 +2,10 @@ import { Directive, ElementRef, Renderer2, effect, inject, input } from '@angula
 
 @Directive({ selector: '[luxMaxLengthAttr]' })
 export class LuxMaxLengthDirective {
+  readonly luxMaxLengthAttr = input(0);
+
   protected elementRef = inject(ElementRef);
   protected renderer = inject(Renderer2);
-
-  readonly luxMaxLengthAttr = input(0);
 
   constructor() {
     effect(() => {

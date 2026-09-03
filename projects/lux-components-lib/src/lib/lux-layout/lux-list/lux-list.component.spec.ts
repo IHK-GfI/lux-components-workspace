@@ -460,7 +460,7 @@ describe('LuxListComponent', () => {
       @for (item of list(); track item.title; let i = $index) {
         <lux-list-item [luxTitle]="item.title" [luxSubTitle]="item.subTitle" [luxSelected]="item.selected">
           <lux-list-item-icon>
-            <lux-icon luxIconName="lux-interface-user-single"></lux-icon>
+            <lux-icon luxIconName="lux-interface-user-single" />
           </lux-list-item-icon>
           <lux-list-item-content> Item-Content #{{ i }} </lux-list-item-content>
         </lux-list-item>
@@ -474,8 +474,6 @@ class MockListComponent {
   selectedPosition = signal<number | undefined>(undefined);
 
   list = signal<{ title: string; subTitle: string; selected: boolean }[]>([]);
-
-  constructor() {}
 
   onSelected(event: number) {}
 

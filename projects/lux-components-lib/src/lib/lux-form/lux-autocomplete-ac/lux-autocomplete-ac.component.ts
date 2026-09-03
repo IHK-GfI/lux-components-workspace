@@ -31,7 +31,7 @@ import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-ar
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
-import { LuxNameDirectiveDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
+import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
 import { LuxFormComponentBase, LuxValidationErrors } from '../lux-form-model/lux-form-component-base.class';
 import { LuxInputAcPrefixComponent } from '../lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
 import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
@@ -48,7 +48,7 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     MatPrefix,
     MatInput,
     MatAutocompleteTrigger,
-    LuxNameDirectiveDirective,
+    LuxNameDirective,
     MatSuffix,
     MatAutocomplete,
     MatOption,
@@ -63,31 +63,6 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
   ]
 })
 export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormComponentBase<V> implements OnDestroy, AfterViewInit {
-  tservice = inject(TranslocoService);
-
-  private selected$: ReplaySubject<any> = new ReplaySubject<any>(1);
-  private subscriptions: Subscription[] = [];
-  private valueChangeSubscription?: Subscription;
-
-  readonly filteredOptions = signal<O[]>([]);
-  readonly displayedOptions = signal<O[]>([]);
-  readonly focused = signal(false);
-
-  loadingRunning = false;
-  activeIndex = -1;
-
-  autoFillObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (this.luxStrict() && mutation.attributeName === 'class') {
-        const targetElement = mutation.target as HTMLElement;
-        if (targetElement.classList && targetElement.classList.contains('cdk-text-field-autofilled')) {
-          this.updateFormControlValue();
-          this.formControl.markAsTouched();
-        }
-      }
-    });
-  });
-
   readonly luxPlaceholder = input('');
   readonly luxOptionLabelProp = input('label');
   readonly luxLookupDelay = input(500);
@@ -123,6 +98,31 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   readonly matAutoComplete = viewChild('autoCompleteInput', { read: MatAutocompleteTrigger });
   readonly matInput = viewChild('autoCompleteInput', { read: ElementRef });
   readonly matAutocompleteComponent = viewChild(MatAutocomplete);
+
+  tservice = inject(TranslocoService);
+
+  readonly filteredOptions = signal<O[]>([]);
+  readonly displayedOptions = signal<O[]>([]);
+  readonly focused = signal(false);
+
+  loadingRunning = false;
+  activeIndex = -1;
+
+  autoFillObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (this.luxStrict() && mutation.attributeName === 'class') {
+        const targetElement = mutation.target as HTMLElement;
+        if (targetElement.classList && targetElement.classList.contains('cdk-text-field-autofilled')) {
+          this.updateFormControlValue();
+          this.formControl.markAsTouched();
+        }
+      }
+    });
+  });
+
+  private selected$: ReplaySubject<any> = new ReplaySubject<any>(1);
+  private subscriptions: Subscription[] = [];
+  private valueChangeSubscription?: Subscription;
 
   readonly describedBy = computed(() => {
     if (this.errorMessage()) {
@@ -188,19 +188,6 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     );
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-    this.valueChangeSubscription?.unsubscribe();
-
-    try {
-      this.autoFillObserver.disconnect();
-    } catch (error) {
-      // Nothing to do
-    }
-  }
-
   ngAfterViewInit() {
     const matAutocompleteComponent = this.matAutocompleteComponent()!;
 
@@ -258,6 +245,19 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
       childList: false,
       characterData: false
     });
+  }
+
+  override ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.valueChangeSubscription?.unsubscribe();
+
+    try {
+      this.autoFillObserver.disconnect();
+    } catch (error) {
+      // Nothing to do
+    }
   }
 
   /**
@@ -380,12 +380,6 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     this.luxFocusOut.emit(e);
   }
 
-  protected override applyValueInput(value: V) {
-    const pickValueFn = this.luxPickValue();
-
-    this.setValue(value instanceof Object && !!pickValueFn ? pickValueFn(value as any) : value);
-  }
-
   override notifyFormValueChanged(formValue: any) {
     const pickValueFn = this.luxPickValue();
     let newValue;
@@ -494,6 +488,12 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
     }
 
     return `${option}-${index}`;
+  }
+
+  protected override applyValueInput(value: V) {
+    const pickValueFn = this.luxPickValue();
+
+    this.setValue(value instanceof Object && !!pickValueFn ? pickValueFn(value as any) : value);
   }
 
   /**

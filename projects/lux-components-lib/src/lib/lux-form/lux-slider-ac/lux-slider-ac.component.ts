@@ -39,12 +39,6 @@ const defaultDisplayWithFn: LuxDisplayWithAcFnType = (value: number) => (value ?
   ]
 })
 export class LuxSliderAcComponent extends LuxFormComponentBase<number> {
-  readonly matSlider = viewChild(MatSlider);
-
-  readonly luxChange = output<number>();
-  readonly luxInput = output<number>();
-  readonly luxValuePercent = output<number>();
-
   readonly luxColor = input<LuxSliderAcColor>('primary');
   readonly luxShowThumbLabel = input(true);
   readonly luxTagId = input<string | undefined>(undefined);
@@ -61,7 +55,13 @@ export class LuxSliderAcComponent extends LuxFormComponentBase<number> {
    * Wert liefern das Signal value() bzw. getValue().
    */
   readonly luxValue = input(0);
+
+  readonly luxChange = output<number>();
+  readonly luxInput = output<number>();
+  readonly luxValuePercent = output<number>();
   readonly luxValueChange = output<number>();
+
+  readonly matSlider = viewChild(MatSlider);
 
   readonly describedBy = computed(() => {
     if (this.errorMessage()) {
@@ -123,13 +123,6 @@ export class LuxSliderAcComponent extends LuxFormComponentBase<number> {
     }
   }
 
-  protected override applyValueInput(value: number) {
-    // Im Readonly-/Disabled-Zustand darf ein von außen gesetzter Wert nicht übernommen werden.
-    if (!this.luxReadonly() && !this.luxDisabled()) {
-      super.applyValueInput(value);
-    }
-  }
-
   override notifyFormValueChanged(formValue: any) {
     const min = this.luxMin();
     const max = this.luxMax();
@@ -142,6 +135,13 @@ export class LuxSliderAcComponent extends LuxFormComponentBase<number> {
     } else {
       this.luxValueChange.emit(value);
       this.luxValuePercent.emit(((value - min) * 100) / (max - min));
+    }
+  }
+
+  protected override applyValueInput(value: number) {
+    // Im Readonly-/Disabled-Zustand darf ein von außen gesetzter Wert nicht übernommen werden.
+    if (!this.luxReadonly() && !this.luxDisabled()) {
+      super.applyValueInput(value);
     }
   }
 

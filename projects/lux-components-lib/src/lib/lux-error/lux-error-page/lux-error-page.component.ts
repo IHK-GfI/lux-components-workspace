@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -28,21 +28,21 @@ import { LuxErrorStoreService } from './lux-error-services/lux-error-store.servi
   ]
 })
 export class LuxErrorPageComponent {
-  private router = inject(Router);
-  private errorStore = inject(LuxErrorStoreService);
+  protected readonly error: Signal<ILuxError | null>;
+  protected readonly errorConfig: Signal<ILuxErrorPageConfig>;
 
-  get error(): ILuxError | null {
-    return this.errorStore.error;
-  }
+  private readonly router = inject(Router);
+  private readonly errorStore = inject(LuxErrorStoreService);
 
-  get errorConfig(): ILuxErrorPageConfig {
-    return this.errorStore.config;
+  constructor() {
+    this.error = this.errorStore.error;
+    this.errorConfig = this.errorStore.config;
   }
 
   /**
    * Navigiert über den Router zum eingetragenen Home-Pfad
    */
-  clickHomeRedirect() {
-    this.router.navigate([this.errorConfig.homeRedirectUrl]);
+  protected clickHomeRedirect(): void {
+    this.router.navigate([this.errorConfig().homeRedirectUrl]);
   }
 }

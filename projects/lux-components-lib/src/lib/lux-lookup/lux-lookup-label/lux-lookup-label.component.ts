@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, effect, inject, input, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxFieldValues, LuxLookupParameters } from '../lux-lookup-model/lux-lookup-parameters';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
 import { LuxLookupHandlerService } from '../lux-lookup-service/lux-lookup-handler.service';
@@ -12,15 +11,6 @@ import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
   templateUrl: './lux-lookup-label.component.html'
 })
 export class LuxLookupLabelComponent implements OnInit {
-  private readonly destroyRef = inject(DestroyRef);
-
-  lookupService: LuxLookupService;
-  lookupHandler: LuxLookupHandlerService;
-  logger: LuxConsoleService;
-  lookupParameters?: LuxLookupParameters;
-
-  readonly entry = signal<LuxLookupTableEntry | undefined>(undefined);
-
   readonly luxLookupId = input('');
   readonly luxLookupUrl = input('/lookup/');
   readonly luxBezeichnung = input('kurz');
@@ -29,15 +19,35 @@ export class LuxLookupLabelComponent implements OnInit {
   readonly luxTableKey = input<string>();
   readonly luxFields = input<LuxFieldValues[]>();
 
+  readonly entry = signal<LuxLookupTableEntry | undefined>(undefined);
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly lookupService = inject(LuxLookupService);
+  private readonly lookupHandler = inject(LuxLookupHandlerService);
+
+  /**
+   * Liefert die Bezeichnung (Kurz- oder Langbezeichnung) des Entries für den Key zur Tabelle.
+   */
+  readonly bezeichnung = computed(() => {
+    const entry = this.entry();
+    let bezeichnung;
+
+    if (entry) {
+      if ('kurz' === this.luxBezeichnung()) {
+        bezeichnung = entry.kurzText;
+      } else if ('lang' === this.luxBezeichnung()) {
+        bezeichnung = entry.langText1;
+
+        if (!bezeichnung) {
+          bezeichnung = entry.kurzText;
+        }
+      }
+    }
+
+    return bezeichnung ?? '';
+  });
+
   constructor() {
-    const lookupService = inject(LuxLookupService);
-    const lookupHandler = inject(LuxLookupHandlerService);
-    const luxConsoleLogger = inject(LuxConsoleService);
-
-    this.lookupService = lookupService;
-    this.lookupHandler = lookupHandler;
-    this.logger = luxConsoleLogger;
-
     let isFirstRun = true;
 
     effect(() => {
@@ -91,40 +101,16 @@ export class LuxLookupLabelComponent implements OnInit {
   protected fetchLookupData() {
     if (this.isReadyToFetch()) {
       const keys: string[] = [this.luxTableKey()!];
-
-      this.lookupParameters = new LuxLookupParameters({ knr: this.luxLookupKnr()!, keys, fields: this.luxFields() });
+      const lookupParameters = new LuxLookupParameters({ knr: this.luxLookupKnr()!, keys, fields: this.luxFields() });
 
       this.lookupService
-        .getLookupTable(this.luxTableNo()!, this.lookupParameters, this.luxLookupUrl())
+        .getLookupTable(this.luxTableNo()!, lookupParameters, this.luxLookupUrl())
         .subscribe((entries: LuxLookupTableEntry[]) => {
           if (typeof entries !== 'undefined' && entries.length === 1) {
             this.entry.set(entries[0]);
           }
         });
     }
-  }
-
-  /**
-   * liefert die Bezeichnung (Kurz- oder Langbezeichnung) des Entries für den Key zur Tabelle.
-   * @returns string
-   */
-  getBezeichnung(): string {
-    let bezeichnung;
-    const entry = this.entry();
-
-    if (entry) {
-      if ('kurz' === this.luxBezeichnung()) {
-        bezeichnung = entry.kurzText;
-      } else if ('lang' === this.luxBezeichnung()) {
-        bezeichnung = entry.langText1;
-
-        if (!bezeichnung) {
-          bezeichnung = entry.kurzText;
-        }
-      }
-    }
-
-    return bezeichnung ?? '';
   }
 
   private isReadyToFetch(): boolean {

@@ -1,11 +1,11 @@
 import { Directive, ElementRef, Renderer2, effect, inject, input } from '@angular/core';
 
 @Directive({ selector: '[luxNameAttr]' })
-export class LuxNameDirectiveDirective {
+export class LuxNameDirective {
+  readonly luxNameAttr = input<string | undefined>('');
+
   protected elementRef = inject(ElementRef);
   protected renderer = inject(Renderer2);
-
-  readonly luxNameAttr = input<string | undefined>('');
 
   constructor() {
     effect(() => {

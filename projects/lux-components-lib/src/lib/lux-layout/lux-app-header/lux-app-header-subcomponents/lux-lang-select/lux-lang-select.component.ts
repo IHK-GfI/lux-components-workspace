@@ -12,9 +12,6 @@ import { LuxLocale } from './lux-locale';
   imports: [LuxMenuComponent, LuxMenuItemComponent, TranslocoPipe]
 })
 export class LuxLangSelectComponent implements OnInit {
-  private cookieService = inject(CookieService);
-  protected translocoService = inject(TranslocoService);
-
   readonly luxLocaleSupported = input(['de']);
   readonly luxLocaleBaseHref = input('');
 
@@ -28,6 +25,9 @@ export class LuxLangSelectComponent implements OnInit {
   ];
 
   localeOptions: LuxLocale[] = [];
+
+  private cookieService = inject(CookieService);
+  protected translocoService = inject(TranslocoService);
 
   ngOnInit() {
     this.luxLocaleSupported().forEach((locale) => {
@@ -51,5 +51,4 @@ export class LuxLangSelectComponent implements OnInit {
     this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
     this.translocoService.setActiveLang(locale.code);
   }
-
 }

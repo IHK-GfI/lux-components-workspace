@@ -11,7 +11,7 @@ import { LuxInputAcComponent } from '../../../lux-input-ac/lux-input-ac.componen
 import { ILuxFileObject } from '../../lux-file-model/lux-file-object.interface';
 
 @Component({
-  selector: 'lux-lux-file-rename-dialog',
+  selector: 'lux-file-rename-dialog',
   imports: [
     LuxInputAcComponent,
     LuxDialogStructureComponent,
@@ -27,9 +27,9 @@ import { ILuxFileObject } from '../../lux-file-model/lux-file-object.interface';
   styleUrl: './lux-file-rename-dialog.component.scss'
 })
 export class LuxFileRenameDialogComponent implements AfterViewInit {
-  luxDialogRef = inject<LuxDialogRef<ILuxFileObject>>(LuxDialogRef);
-
   readonly input = viewChild.required(LuxInputAcComponent);
+
+  luxDialogRef = inject<LuxDialogRef<ILuxFileObject>>(LuxDialogRef);
 
   ngAfterViewInit(): void {
     this.input().inputElement()?.nativeElement.select();

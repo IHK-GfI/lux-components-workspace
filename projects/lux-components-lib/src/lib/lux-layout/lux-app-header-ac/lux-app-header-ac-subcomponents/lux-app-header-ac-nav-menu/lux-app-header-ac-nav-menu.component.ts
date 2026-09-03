@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, contentChildren, inject, input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChildren, inject, input, OnDestroy, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
@@ -17,22 +17,21 @@ import { LuxAppHeaderAcNavMenuItemComponent } from './lux-app-header-ac-nav-menu
   imports: [NgClass, LuxAriaLabelDirective, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxButtonComponent, LuxMenuComponent, TranslocoPipe]
 })
 export class LuxAppHeaderAcNavMenuComponent implements OnDestroy {
-  private queryService = inject(LuxMediaQueryObserverService);
-  private cdr = inject(ChangeDetectorRef);
+  readonly luxNavMenuMaximumExtended = input(5);
 
   readonly menuItemComponents = contentChildren(LuxAppHeaderAcNavMenuItemComponent);
 
-  readonly luxNavMenuMaximumExtended = input(5);
+  readonly mobileView = signal(false);
 
-  mobileView: boolean;
-  subscription: Subscription;
   navMenuOpened = false;
 
+  private readonly queryService = inject(LuxMediaQueryObserverService);
+  private readonly subscription: Subscription;
+
   constructor() {
-    this.mobileView = this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm';
+    this.mobileView.set(this.queryService.activeMediaQuery === 'xs' || this.queryService.activeMediaQuery === 'sm');
     this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-      this.mobileView = query === 'xs' || query === 'sm';
-      this.cdr.markForCheck();
+      this.mobileView.set(query === 'xs' || query === 'sm');
     });
   }
 

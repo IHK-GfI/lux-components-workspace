@@ -452,7 +452,7 @@ class MockDialogComponent {
         <span class="mock-dialog-content">Content</span>
       </lux-dialog-content>
       <lux-dialog-actions>
-        <lux-button class="mock-dialog-action-ok" luxLabel="OK" (luxClicked)="dialogRef.closeDialog(true)"></lux-button>
+        <lux-button class="mock-dialog-action-ok" luxLabel="OK" (luxClicked)="dialogRef.closeDialog(true)" />
       </lux-dialog-actions>
     </lux-dialog-structure>
   `,

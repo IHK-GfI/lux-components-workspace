@@ -65,16 +65,8 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
   ]
 })
 export class LuxFileInputAcComponent extends LuxFormFileBase<ILuxFileObject | null> implements AfterViewInit {
-  readonly visibleInput = viewChild.required<ElementRef>('visibleInput');
-
-  readonly luxBlur = output<FocusEvent>();
-  readonly luxFocus = output<FocusEvent>();
-
   readonly luxPlaceholder = input('');
   readonly luxClearOnError = input(true);
-
-  readonly focused = signal(false);
-
   readonly luxUploadActionConfig = input<ILuxFileActionConfig, ILuxFileActionConfig | undefined>(defaultUploadActionConfig, {
     transform: (config) => config ?? defaultUploadActionConfig
   });
@@ -87,6 +79,13 @@ export class LuxFileInputAcComponent extends LuxFormFileBase<ILuxFileObject | nu
   readonly luxDownloadActionConfig = input<ILuxFileActionConfig, ILuxFileActionConfig | undefined>(defaultDownloadActionConfig, {
     transform: (config) => config ?? defaultDownloadActionConfig
   });
+
+  readonly luxBlur = output<FocusEvent>();
+  readonly luxFocus = output<FocusEvent>();
+
+  readonly visibleInput = viewChild.required<ElementRef>('visibleInput');
+
+  readonly focused = signal(false);
 
   readonly describedBy = computed(() => {
     if (this.errorMessage()) {

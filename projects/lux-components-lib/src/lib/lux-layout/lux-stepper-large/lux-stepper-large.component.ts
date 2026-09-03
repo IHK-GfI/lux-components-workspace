@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, ChangeDetectionStrategy, Component, contentChildren, effect, inject, input, OnDestroy, OnInit, output } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, contentChildren, effect, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -28,40 +28,37 @@ import { LuxStepperLargeStepComponent } from './lux-stepper-large-subcomponents/
   imports: [NgTemplateOutlet, LuxAriaLabelDirective, NgClass, LuxButtonComponent, TranslocoPipe]
 })
 export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDestroy {
-  private mobileOverlayService = inject(LuxStepperLargeMobileOverlayService);
-  private queryService = inject(LuxMediaQueryObserverService);
-  private liveAnnouncer = inject(LiveAnnouncer);
-  private snackbar = inject(LuxSnackbarService);
-  private tService = inject(TranslocoService);
-
-  readonly steps = contentChildren(LuxStepperLargeStepComponent);
-
   readonly luxStepValidationActive = input(true);
   readonly luxA11YMode = input(true);
   readonly luxPrevButtonConfig = input<LuxStepperLargeButtonInfo>(LUX_STEPPER_LARGE_DEFAULT_PREV_BTN_CONF);
   readonly luxNextButtonConfig = input<LuxStepperLargeButtonInfo>(LUX_STEPPER_LARGE_DEFAULT_NEXT_BTN_CONF);
   readonly luxFinButtonConfig = input<LuxStepperLargeButtonInfo>(LUX_STEPPER_LARGE_DEFAULT_FIN_BTN_CONF);
+  readonly luxCurrentStepNumber = input(0);
 
   readonly luxStepperFinished = output<void>();
   readonly luxStepChanged = output<LuxStepperLargeSelectionEvent>();
   readonly luxCurrentStepNumberChange = output<number>();
   readonly luxOnNextStepNotComplete = output<number>();
 
-  readonly luxCurrentStepNumber = input(0);
-
-  private _currentStepNumber = 0;
+  readonly steps = contentChildren(LuxStepperLargeStepComponent);
 
   get currentStepNumber(): number {
-    return this._currentStepNumber;
+    return this._currentStepNumber();
   }
 
-  isMobile = false;
-  isFirstStep = true;
-  isLastStep = false;
-  isFinished = false;
-  cursorPos = -1;
+  readonly isMobile = signal(false);
+  readonly isFirstStep = signal(true);
+  readonly isLastStep = signal(false);
+  readonly isFinished = signal(false);
+  readonly cursorPos = signal(-1);
 
-  subscriptions: Subscription[] = [];
+  private mobileOverlayService = inject(LuxStepperLargeMobileOverlayService);
+  private queryService = inject(LuxMediaQueryObserverService);
+  private liveAnnouncer = inject(LiveAnnouncer);
+  private snackbar = inject(LuxSnackbarService);
+  private tService = inject(TranslocoService);
+  private readonly _currentStepNumber = signal(0);
+  private subscriptions: Subscription[] = [];
 
   constructor() {
     effect(() => {
@@ -73,18 +70,18 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
   ngOnInit() {
     this.subscriptions.push(
       this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.isMobile = query === 'xs' || query === 'sm';
+        this.isMobile.set(query === 'xs' || query === 'sm');
       })
     );
   }
 
   ngAfterContentInit() {
     const steps = this.steps();
-    if (this._currentStepNumber >= 0 && this._currentStepNumber < steps.length) {
-      steps[this._currentStepNumber].luxTouched.set(true);
+    if (this._currentStepNumber() >= 0 && this._currentStepNumber() < steps.length) {
+      steps[this._currentStepNumber()].luxTouched.set(true);
     }
 
-    this.isLastStep = this._currentStepNumber === steps.length - 1;
+    this.isLastStep.set(this._currentStepNumber() === steps.length - 1);
   }
 
   ngOnDestroy() {
@@ -92,7 +89,7 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
   }
 
   onPrevStep() {
-    const newIndex = this.getPrevIndex(this._currentStepNumber);
+    const newIndex = this.getPrevIndex(this._currentStepNumber());
 
     const event: LuxStepperLargeClickEvent = {
       stepper: this,
@@ -100,7 +97,7 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
       newStep: this.steps()[newIndex],
       source: 'prev_button'
     };
-    const vetoPromise = this.steps()[this._currentStepNumber].luxVetoFn()(event);
+    const vetoPromise = this.steps()[this._currentStepNumber()].luxVetoFn()(event);
 
     vetoPromise
       .then((veto) => {
@@ -112,11 +109,11 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
   }
 
   onNextStep() {
-    if (this.luxStepValidationActive() && this.luxA11YMode() && !this.steps()[this._currentStepNumber].luxCompleted()) {
-      this.luxOnNextStepNotComplete.emit(this._currentStepNumber);
+    if (this.luxStepValidationActive() && this.luxA11YMode() && !this.steps()[this._currentStepNumber()].luxCompleted()) {
+      this.luxOnNextStepNotComplete.emit(this._currentStepNumber());
     }
 
-    const newIndex = this.getNextIndex(this._currentStepNumber);
+    const newIndex = this.getNextIndex(this._currentStepNumber());
 
     const event: LuxStepperLargeClickEvent = {
       stepper: this,
@@ -124,10 +121,10 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
       newStep: this.steps()[newIndex],
       source: 'next_button'
     };
-    const vetoPromise = this.steps()[this._currentStepNumber].luxVetoFn()(event);
+    const vetoPromise = this.steps()[this._currentStepNumber()].luxVetoFn()(event);
 
-    if (this.luxStepValidationActive() && this._currentStepNumber < newIndex && newIndex < this.steps().length) {
-      for (let i = this._currentStepNumber; i < newIndex; i++) {
+    if (this.luxStepValidationActive() && this._currentStepNumber() < newIndex && newIndex < this.steps().length) {
+      for (let i = this._currentStepNumber(); i < newIndex; i++) {
         if (this.steps()[i].luxCompleted() === false) {
           return;
         }
@@ -144,18 +141,18 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
   }
 
   onFinStep() {
-    if (this.luxStepValidationActive() && this.luxA11YMode() && !this.steps()[this._currentStepNumber].luxCompleted()) {
-      this.luxOnNextStepNotComplete.emit(this._currentStepNumber);
+    if (this.luxStepValidationActive() && this.luxA11YMode() && !this.steps()[this._currentStepNumber()].luxCompleted()) {
+      this.luxOnNextStepNotComplete.emit(this._currentStepNumber());
       return;
     }
 
     const event: LuxStepperLargeClickEvent = {
       stepper: this,
-      newIndex: this._currentStepNumber,
-      newStep: this.steps()[this._currentStepNumber],
+      newIndex: this._currentStepNumber(),
+      newStep: this.steps()[this._currentStepNumber()],
       source: 'fin_button'
     };
-    const vetoPromise = this.steps()[this._currentStepNumber].luxVetoFn()(event);
+    const vetoPromise = this.steps()[this._currentStepNumber()].luxVetoFn()(event);
 
     vetoPromise
       .then((veto) => {
@@ -181,34 +178,34 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
   }
 
   onNavFocusin(index: number) {
-    if (index === this._currentStepNumber) {
+    if (index === this._currentStepNumber()) {
       // Dieser Timeout ist nötig, um einen ExpressionChangedAfterItHasBeenCheckedError zu vermeiden.
       // Details:
-      // Ohne Timeout würde die Cursorposition zweimal (alter Eintrag verliert den Fokus "this.cursorPos = -1" und
-      // neuer Eintrag erhält den Fokus "this.cursorPos = index") innerhalb eines Zyklus geändert werden,
+      // Ohne Timeout würde die Cursorposition zweimal (alter Eintrag verliert den Fokus "this.cursorPos.set(-1)" und
+      // neuer Eintrag erhält den Fokus "this.cursorPos.set(index)") innerhalb eines Zyklus geändert werden,
       // was zu dem ExpressionChangedAfterItHasBeenCheckedError führt.
       // Dieser Fehler wurde entdeckt, als man in einer Veto-Methode einen Dialog geöffnet hat.
       setTimeout(() => {
-        this.cursorPos = index;
+        this.cursorPos.set(index);
       });
     }
   }
 
   onNavFocusout(index: number) {
-    if (index === this._currentStepNumber) {
-      this.cursorPos = -1;
+    if (index === this._currentStepNumber()) {
+      this.cursorPos.set(-1);
     }
   }
 
   onNavLinkEnter(stepIndex: number) {
-    const newIndex = stepIndex === this.cursorPos ? stepIndex : this.cursorPos;
+    const newIndex = stepIndex === this.cursorPos() ? stepIndex : this.cursorPos();
     this.onNavLink(newIndex);
     this.liveAnnouncer.announce('Schritt ausgewählt');
   }
 
   onNavLink(stepIndex: number) {
-    if (this.luxStepValidationActive() && this._currentStepNumber <= stepIndex) {
-      for (let i = this._currentStepNumber; i < stepIndex; i++) {
+    if (this.luxStepValidationActive() && this._currentStepNumber() <= stepIndex) {
+      for (let i = this._currentStepNumber(); i < stepIndex; i++) {
         if (this.steps()[i].luxCompleted() === false) {
           this.snackbar.open(0, {
             text: this.tService.translate(`luxc.stepper-large.error_message.steps_not_completed`, { i: i + 1 }),
@@ -227,14 +224,14 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
       newStep: this.steps()[stepIndex],
       source: 'nav'
     };
-    const vetoPromise = this.steps()[this._currentStepNumber].luxVetoFn()(event);
+    const vetoPromise = this.steps()[this._currentStepNumber()].luxVetoFn()(event);
 
     vetoPromise
       .then((veto) => {
         if (veto === LuxVetoState.navigationAccepted) {
           this.steps()[stepIndex].luxTouched.set(true);
           this.trySetCurrentStepNumber(stepIndex);
-          this.cursorPos = -1;
+          this.cursorPos.set(-1);
         }
       })
       .catch((err) => console.error(err));
@@ -246,28 +243,28 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
 
   onResetStepper() {
     this.trySetCurrentStepNumber(0);
-    this.isFinished = false;
+    this.isFinished.set(false);
   }
 
   onNavKeyUp() {
-    if (this.cursorPos === -1) {
-      this.cursorPos = this._currentStepNumber;
+    if (this.cursorPos() === -1) {
+      this.cursorPos.set(this._currentStepNumber());
     }
 
-    if (this.cursorPos > 0) {
-      this.cursorPos = this.getPrevIndex(this.cursorPos);
-      this.liveAnnouncer.announce('Schritt' + (this.cursorPos + 1) + ' ' + this.steps()[this.cursorPos].luxTitle());
+    if (this.cursorPos() > 0) {
+      this.cursorPos.set(this.getPrevIndex(this.cursorPos()));
+      this.liveAnnouncer.announce('Schritt' + (this.cursorPos() + 1) + ' ' + this.steps()[this.cursorPos()].luxTitle());
     }
   }
 
   onNavKeyDown() {
-    if (this.cursorPos === -1) {
-      this.cursorPos = this._currentStepNumber;
+    if (this.cursorPos() === -1) {
+      this.cursorPos.set(this._currentStepNumber());
     }
 
-    if (this.cursorPos < this.steps().length) {
-      this.cursorPos = this.getNextIndex(this.cursorPos);
-      this.liveAnnouncer.announce('Schritt' + (this.cursorPos + 1) + ' ' + this.steps()[this.cursorPos].luxTitle());
+    if (this.cursorPos() < this.steps().length) {
+      this.cursorPos.set(this.getNextIndex(this.cursorPos()));
+      this.liveAnnouncer.announce('Schritt' + (this.cursorPos() + 1) + ' ' + this.steps()[this.cursorPos()].luxTitle());
     }
   }
 
@@ -290,7 +287,7 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
   }
 
   private finishStepper() {
-    this.isFinished = true;
+    this.isFinished.set(true);
     this.luxStepperFinished.emit();
   }
 
@@ -318,7 +315,7 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
    * Ein Sprung wird nur akzeptiert, wenn der Ziel-Step bereits besucht ("touched") wurde.
    */
   private trySetCurrentStepNumber(stepNumber: number) {
-    if (stepNumber === this._currentStepNumber) {
+    if (stepNumber === this._currentStepNumber()) {
       return;
     }
 
@@ -326,22 +323,22 @@ export class LuxStepperLargeComponent implements OnInit, AfterContentInit, OnDes
     const targetStep = steps[stepNumber];
 
     if (stepNumber >= 0 && stepNumber < steps.length && targetStep && targetStep.luxTouched()) {
-      const prevStepIndex = this._currentStepNumber;
+      const prevStepIndex = this._currentStepNumber();
       const prevStep = steps[prevStepIndex];
-      this._currentStepNumber = stepNumber;
-      this.isFirstStep = stepNumber === 0;
-      this.isLastStep = stepNumber === steps.length - 1;
+      this._currentStepNumber.set(stepNumber);
+      this.isFirstStep.set(stepNumber === 0);
+      this.isLastStep.set(stepNumber === steps.length - 1);
 
-      this.luxCurrentStepNumberChange.emit(this._currentStepNumber);
+      this.luxCurrentStepNumberChange.emit(this._currentStepNumber());
       this.luxStepChanged.emit({
         stepper: this,
         prevIndex: prevStepIndex,
         prevStep: prevStep,
-        currentIndex: this._currentStepNumber,
+        currentIndex: this._currentStepNumber(),
         currentStep: targetStep
       });
-      LuxUtil.goTo('luxstepperlargenavitem' + (this._currentStepNumber + 1));
-      if (this.isMobile) {
+      LuxUtil.goTo('luxstepperlargenavitem' + (this._currentStepNumber() + 1));
+      if (this.isMobile()) {
         LuxUtil.goTo('luxstepperlargemobilecontentanchor');
       } else {
         LuxUtil.goTo('luxstepperlargecontentanchor');

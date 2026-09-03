@@ -41,7 +41,7 @@
   </div>
   <!-- Container für das FormControl -->
   <div class="lux-form-control-container-authentic" [ngClass]="{ 'lux-no-input-row': luxNoInputRow() }">
-    <ng-content></ng-content>
+    <ng-content />
   </div>
 
   <!-- Container für das Hint und den Error und den Counter -->
@@ -56,7 +56,7 @@
               luxIconSize="0.875rem"
               luxPadding="1px"
               luxMargin="0px 2px 0px 0px"
-            ></lux-icon>
+            />
             <mat-error [id]="luxFormComponent().uid() + '-error'">
               {{ luxFormComponent().errorMessage() }}
             </mat-error>
@@ -68,7 +68,7 @@
                 [tabIndex]="0"
                 (keydown.enter)="onCloseErrorMessage()"
                 (click)="onCloseErrorMessage()"
-              ></lux-icon>
+              />
             }
           </div>
         }

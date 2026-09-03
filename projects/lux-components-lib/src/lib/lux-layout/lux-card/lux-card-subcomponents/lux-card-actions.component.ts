@@ -11,8 +11,5 @@ export type LuxCardActionAlignType = 'left' | 'right';
   host: { class: 'lux-flex lux-flex-auto'}
 })
 export class LuxCardActionsComponent {
-
-  luxAlign = input<LuxCardActionAlignType>('right');
-
-  constructor() {}
+  readonly luxAlign = input<LuxCardActionAlignType>('right');
 }

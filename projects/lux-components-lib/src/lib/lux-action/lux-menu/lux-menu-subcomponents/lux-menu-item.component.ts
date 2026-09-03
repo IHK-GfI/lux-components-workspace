@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
 import { LuxActionComponentBaseClass } from '../../lux-action-model/lux-action-component-base.class';
 
@@ -15,21 +15,20 @@ export class LuxMenuItemComponent extends LuxActionComponentBaseClass {
   readonly luxButtonBadgeColor = input<LuxThemePalette>('primary');
   readonly luxMenuItemSubtitle = input<string>('');
   readonly luxMenuItemSelected = input<boolean>(false);
+  readonly luxAlwaysVisible = input<boolean>(true);
+  readonly luxHideLabelIfExtended = input<boolean>(false);
+  readonly luxHidden = input<boolean>(false);
+  readonly luxClass = input<string | string[] | Set<string> | Record<string, any> | undefined>(undefined); //vgl. ngClass
 
   luxClickNotAllowed = output<Event>();
   luxHiddenChange = output<boolean>();
   luxHideLabelIfExtendedChange = output<boolean>();
   luxAlwaysVisibleChange = output<boolean>();
 
-  readonly luxAlwaysVisible = input<boolean>(true);
-  readonly luxHideLabelIfExtended = input<boolean>(false);
-  readonly luxHidden = input<boolean>(false);
-  readonly luxClass = input<string | string[] | Set<string> | Record<string, any> | undefined>(undefined); //vgl. ngClass
-
   // Wird vom LuxMenuComponent mit dem berechneten Breitenwert belegt
-  width = 0;
+  width = signal(0);
   // Wird vom LuxMenuComponent mit dem passenden Zustand belegt
-  extended = false;
+  extended = signal(false);
 
   constructor() {
     super();

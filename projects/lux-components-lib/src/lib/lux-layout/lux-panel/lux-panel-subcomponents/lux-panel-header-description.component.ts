@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, input, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, viewChild } from '@angular/core';
 import { MatExpansionPanelDescription } from '@angular/material/expansion';
 import { MatTooltip } from '@angular/material/tooltip';
 
@@ -11,18 +11,16 @@ import { MatTooltip } from '@angular/material/tooltip';
     matTooltip="{{ luxTruncatedTooltip() }}"
     [matTooltipShowDelay]="500"
     [matTooltipDisabled]="!luxTruncated()"
-    ><ng-content></ng-content
-  ></mat-panel-description>`,
+    ><ng-content
+  /></mat-panel-description>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatExpansionPanelDescription, MatTooltip]
 })
 export class LuxPanelHeaderDescriptionComponent implements AfterViewInit {
-  luxTruncated = input<boolean>(false);
-  luxTruncatedTooltip = input<string>('');
+  readonly luxTruncated = input<boolean>(false);
+  readonly luxTruncatedTooltip = input<string>('');
 
-  matPanelDescription = viewChild(MatExpansionPanelDescription, { read: ElementRef });
-
-  constructor() {}
+  readonly matPanelDescription = viewChild(MatExpansionPanelDescription, { read: ElementRef });
 
   ngAfterViewInit(): void {
     if (this.luxTruncated() && !this.luxTruncatedTooltip()) {

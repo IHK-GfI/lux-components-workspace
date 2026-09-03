@@ -11,7 +11,7 @@
   }"
 >
   @if (luxIcon()) {
-  <lux-icon luxIconName="{{ luxIcon() }}" class="lux-textbox-icon"></lux-icon>
+  <lux-icon luxIconName="{{ luxIcon() }}" class="lux-textbox-icon" />
   } @if (luxTitle()) { @switch (luxHeading()) { @case (1) {
   <h1 class="lux-textbox-title" title="{{ luxTitle() }}">
     {{ luxTitle() }}
@@ -20,10 +20,6 @@
   <h2 class="lux-textbox-title" title="{{ luxTitle() }}">
     {{ luxTitle() }}
   </h2>
-  } @default {
-  <h3 class="lux-textbox-title" title="{{ luxTitle() }}">
-    {{ luxTitle() }}
-  </h3>
   } @case (4) {
   <h4 class="lux-textbox-title" title="{{ luxTitle() }}">
     {{ luxTitle() }}
@@ -36,8 +32,12 @@
   <h6 class="lux-textbox-title" title="{{ luxTitle() }}">
     {{ luxTitle() }}
   </h6>
+  } @default {
+  <h3 class="lux-textbox-title" title="{{ luxTitle() }}">
+    {{ luxTitle() }}
+  </h3>
   } } }
   <div class="lux-textbox-content">
-    <ng-content></ng-content>
+    <ng-content />
   </div>
 </div>

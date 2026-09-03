@@ -24,10 +24,6 @@ import { LuxIconComponent } from '../../../../../lux-icon/lux-icon/lux-icon.comp
   imports: [NgClass, LuxAriaExpandedDirective, NgTemplateOutlet, LuxButtonComponent, LuxIconComponent]
 })
 export class LuxSideNavItemComponent implements AfterViewInit {
-  private cdr = inject(ChangeDetectorRef);
-
-  readonly templateRef = viewChild(TemplateRef);
-
   readonly luxLabel = input<string | undefined>();
   readonly luxDisabled = input(false);
   readonly luxTagId = input<string | undefined>();
@@ -39,12 +35,15 @@ export class LuxSideNavItemComponent implements AfterViewInit {
 
   readonly luxClicked = output<Event>();
 
+  readonly templateRef = viewChild(TemplateRef);
   readonly sideNavItems = contentChildren(forwardRef(() => LuxSideNavItemComponent));
 
   get lastSideNavItem(): LuxSideNavItemComponent | undefined {
     const items = this.sideNavItems();
     return items.length > 0 ? items[items.length - 1] : undefined;
   }
+
+  private cdr = inject(ChangeDetectorRef);
 
   ngAfterViewInit() {
     // Nach Abschluss der Initialisierung die CD anstossen

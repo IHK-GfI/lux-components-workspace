@@ -9,6 +9,8 @@ import { ILuxStepperConfiguration } from './lux-stepper-configuration.interface'
  */
 @Directive()
 export class LuxStepperParent implements AfterViewInit {
+  readonly luxStepperConfig = input<ILuxStepperConfiguration | undefined>();
+
   // Diese Outputs werden bei den Klicks auf die Stepper-eigenen Navigations-Buttons ausgelöst und informieren die
   // LuxStepperComponent
   readonly luxFinButtonClicked = output<void>();
@@ -23,8 +25,6 @@ export class LuxStepperParent implements AfterViewInit {
 
   readonly matStepper = viewChild.required<MatStepper>('stepper');
   readonly matStepLabels = viewChildren('matStepLabel', { read: ViewContainerRef });
-
-  readonly luxStepperConfig = input<ILuxStepperConfiguration | undefined>();
 
   private isFirstStepLabelsRun = true;
 

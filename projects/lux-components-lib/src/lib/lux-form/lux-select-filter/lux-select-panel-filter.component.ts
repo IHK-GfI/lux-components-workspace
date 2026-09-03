@@ -30,11 +30,11 @@ export class LuxSelectPanelFilterComponent implements AfterViewInit {
 
   readonly filterInputComponent = viewChild<LuxInputAcComponent<string>>('filterInput');
 
-  readonly filterInput = computed(() => this.filterInputComponent()?.inputElement() as ElementRef<HTMLInputElement> | undefined);
-
   get currentFilterValue(): string {
     return this.filterDirective()?.filterValue ?? this.filterValue();
   }
+
+  readonly filterInput = computed(() => this.filterInputComponent()?.inputElement() as ElementRef<HTMLInputElement> | undefined);
 
   constructor() {
     effect(() => {

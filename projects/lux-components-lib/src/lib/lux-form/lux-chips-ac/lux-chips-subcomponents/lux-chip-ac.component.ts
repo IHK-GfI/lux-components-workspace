@@ -7,18 +7,11 @@ import { LuxUtil } from '../../../lux-util/lux-util';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template>
-      <ng-content></ng-content>
+      <ng-content />
     </ng-template>
   `
 })
 export class LuxChipAcComponent implements AfterViewInit {
-  private removeClicked = false;
-
-  readonly templateRef = viewChild.required(TemplateRef);
-
-  readonly luxChipRemoved = output<number>();
-  readonly luxChipClicked = output<number>();
-
   /**
    * Wird von der umgebenden lux-chips-ac-Komponente mitgesetzt, wenn dort luxDisabled wechselt.
    */
@@ -28,6 +21,13 @@ export class LuxChipAcComponent implements AfterViewInit {
   readonly luxColor = input<LuxThemePalette, LuxThemePalette>('primary', {
     transform: (color) => (color === 'primary' || color === 'accent' || color === 'warn' ? color : undefined)
   });
+
+  readonly luxChipRemoved = output<number>();
+  readonly luxChipClicked = output<number>();
+
+  readonly templateRef = viewChild.required(TemplateRef);
+
+  private removeClicked = false;
 
   ngAfterViewInit() {
     LuxUtil.assertNonNull('templateRef', this.templateRef());

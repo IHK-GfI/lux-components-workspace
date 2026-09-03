@@ -456,8 +456,6 @@ class LuxActiveTabChangedTabsComponent {
   readonly luxTabs = viewChild.required(LuxTabsComponent);
   readonly luxTabList = viewChildren(LuxTabComponent);
 
-  constructor() {}
-
   tabChanged(tabChangeEvent: MatTabChangeEvent) {
     this.currentTabIndex = tabChangeEvent.index;
     this.currentTabLabel = tabChangeEvent.tab.textLabel;
@@ -486,8 +484,6 @@ class LuxMockTabsComponent {
 
   readonly luxTabs = viewChild(LuxTabsComponent);
   readonly luxTabList = viewChildren(LuxTabComponent);
-
-  constructor() {}
 
   tabChanged(tabChangeEvent: MatTabChangeEvent) {
     this.currentTabIndex.set(tabChangeEvent.index);

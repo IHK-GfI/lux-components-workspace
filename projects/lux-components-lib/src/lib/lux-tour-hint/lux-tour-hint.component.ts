@@ -10,7 +10,6 @@ import {
   signal,
   viewChild
 } from '@angular/core';
-import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
 
 @Component({
   selector: 'lux-tour-hint',
@@ -20,17 +19,12 @@ import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';
   imports: [NgStyle, NgClass]
 })
 export class LuxTourHintComponent implements OnInit, AfterViewInit {
-  private cdr = inject(ChangeDetectorRef);
-  private element = inject(ElementRef);
-  tourHintRef = inject(LuxTourHintRef);
-
-  //The element which is the target of the hint or tour
-  private readonly _luxTarget = signal<any>(undefined);
+  private readonly tourHintContainer = viewChild('tourHintContainer', { read: ElementRef });
 
   set luxTarget(luxTarget: any) {
     this._luxTarget.set(luxTarget);
 
-    //Needs a timeout or the content will not be rendered and so the bounds cannot be read corretly
+    //Needs a timeout or the content will not be rendered and so the bounds cannot be read correctly
     setTimeout(() => {
       this.updateTargetAndPositions();
     });
@@ -40,18 +34,9 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
     return this._luxTarget();
   }
 
-  //CSS Class for the arrow where to point
   protected readonly arrowClass = signal('top');
-
-  //Constants which are also used in scss but can't directly be read from here
-  private arrowLength = 16;
-  private shadowPadding = 5;
-
-  //Positions of the tour-hint modal
   protected readonly tourHintPosLeft = signal(0);
   protected readonly tourHintPosTop = signal(0);
-
-  //Positions / Sizes of the tour-hint shadows
   protected readonly bgTopSize = signal(0);
   protected readonly bgBottomSize = signal(0);
   protected readonly bgLeftSize = signal(0);
@@ -61,7 +46,13 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   //Style variables for the rendering of a dynamic 'Modal-Arrow'
   protected readonly dynamicArrowStyle = signal({});
 
-  private readonly tourHintContainer = viewChild('tourHintContainer', { read: ElementRef });
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly element = inject(ElementRef);
+  private readonly _luxTarget = signal<any>(undefined);
+
+  //Constants which are also used in scss but can't directly be read from here
+  private readonly arrowLength = 16;
+  private readonly shadowPadding = 5;
 
   ngOnInit(): void {
     //When resizing / min- / maximizing window update all positions
@@ -80,7 +71,6 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
     const target = this._luxTarget();
     if (!target) return;
 
-    //Scrolls the element into view
     //TODO: In some cases scroll 'feels' wrong and target element is not centered on screen.
     target.scrollIntoView({
       block: 'center',
@@ -93,14 +83,13 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
 
     this.calculatePositions(windowWidth, windowHeight, bounds);
 
-    //Css variables, positions and styles were changesd so we need to rerender
+    //Css variables, positions and styles were changed so we need to rerender
     this.cdr.detectChanges();
   }
 
   private calculatePositions(winWidth: number, winHeight: number, bounds: any) {
     const tourHintContainer = this.tourHintContainer();
     if (tourHintContainer) {
-      //Calculate where the tour-hint should be shown
       const calculatedComponentBounds = tourHintContainer.nativeElement.getBoundingClientRect();
       const calculatedWidth = calculatedComponentBounds.width;
       const calculatedHeight = calculatedComponentBounds.height;

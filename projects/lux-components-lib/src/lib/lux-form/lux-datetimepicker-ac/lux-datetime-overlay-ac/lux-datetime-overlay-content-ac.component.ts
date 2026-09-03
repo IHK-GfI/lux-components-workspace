@@ -35,9 +35,6 @@ import { LuxDatetimeOverlayAcComponent } from './lux-datetime-overlay-ac.compone
   ]
 })
 export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewInit {
-  private elementRef = inject(ElementRef);
-  private themeService = inject(LuxThemeService);
-
   readonly hoursInputComponent = viewChild.required<LuxInputAcComponent>('hoursInput');
   readonly minutesInputComponent = viewChild.required<LuxInputAcComponent>('minutesInput');
 
@@ -87,6 +84,26 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
     this._minutes = newMinutes;
   }
 
+  private elementRef = inject(ElementRef);
+  private themeService = inject(LuxThemeService);
+
+  constructor() {
+    if (this.themeService.getTheme().name === 'green') {
+      this.customHeader = LuxDatepickerAcCustomHeaderComponent;
+    }
+  }
+
+  ngOnInit(): void {
+    this.initDate(this.dateTimePicker.selectedDate());
+  }
+
+  ngAfterViewInit() {
+    const activeCell = this.elementRef.nativeElement.querySelector('.mat-calendar-body-active');
+    if (activeCell) {
+      activeCell.focus();
+    }
+  }
+
   initDate(value?: string) {
     if (value) {
       const d = new Date(value);
@@ -125,23 +142,6 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
     if (maxDate) {
       this.maxCalendarDate = new Date(0);
       this.maxCalendarDate.setUTCFullYear(maxDate.getUTCFullYear(), maxDate.getUTCMonth(), maxDate.getUTCDate());
-    }
-  }
-
-  constructor() {
-    if (this.themeService.getTheme().name === 'green') {
-      this.customHeader = LuxDatepickerAcCustomHeaderComponent;
-    }
-  }
-
-  ngOnInit(): void {
-    this.initDate(this.dateTimePicker.selectedDate());
-  }
-
-  ngAfterViewInit() {
-    const activeCell = this.elementRef.nativeElement.querySelector('.mat-calendar-body-active');
-    if (activeCell) {
-      activeCell.focus();
     }
   }
 

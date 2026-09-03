@@ -14,12 +14,14 @@ export class LuxStorageService implements OnDestroy {
 
   private itemSources = new Map<string, BehaviorSubject<string | null>>();
 
+  private readonly onStorageEventBound = this.onStorageEvent.bind(this);
+
   constructor() {
-    addEventListener('storage', this.onStorageEvent.bind(this));
+    addEventListener('storage', this.onStorageEventBound);
   }
 
   ngOnDestroy(): void {
-    removeEventListener('storage', this.onStorageEvent);
+    removeEventListener('storage', this.onStorageEventBound);
   }
 
   private onStorageEvent(event: StorageEvent) {

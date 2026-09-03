@@ -73,18 +73,6 @@ const defaultDateFilterFn: LuxDateFilterAcFn = () => true;
   ]
 })
 export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> {
-  private dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
-  private mediaObserver = inject(LuxMediaQueryObserverService);
-  private themeService = inject(LuxThemeService);
-
-  private previousISO?: string;
-  private valueChangesRunning = false;
-
-  lastValue: Date | null = null;
-
-  readonly focused = signal(false);
-  readonly smallScreen = signal(false);
-
   readonly luxStartView = input<LuxStartAcView>('month');
   readonly luxTouchUi = input(false);
   readonly luxOpened = input(false);
@@ -104,7 +92,35 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   readonly matDatepicker = viewChild(MatDatepicker);
   readonly datepickerInput = viewChild<ElementRef>('datepickerInput');
 
+  lastValue: Date | null = null;
+
+  readonly focused = signal(false);
+  readonly smallScreen = signal(false);
+
   readonly luxLocale = signal<string>('de-DE');
+
+  get dateInputValue() {
+    return this.datepickerInput()?.nativeElement.value;
+  }
+
+  set dateInputValue(newValue: string) {
+    const datepickerInput = this.datepickerInput();
+
+    if (datepickerInput) {
+      datepickerInput.nativeElement.value = newValue;
+    }
+  }
+
+  get shouldEmitDirectly() {
+    return !!this.luxReferenceControl() && this.inForm;
+  }
+
+  private dateAdapter = inject<DateAdapter<Date>>(DateAdapter);
+  private mediaObserver = inject(LuxMediaQueryObserverService);
+  private themeService = inject(LuxThemeService);
+
+  private previousISO?: string;
+  private valueChangesRunning = false;
 
   readonly min = computed(() => this.parseDate(this.luxMinDate()));
   readonly max = computed(() => this.parseDate(this.luxMaxDate()));
@@ -123,22 +139,6 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
     const hasHint = !!this.formHintComponent() || !!this.luxHint();
     return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
   });
-
-  get dateInputValue() {
-    return this.datepickerInput()?.nativeElement.value;
-  }
-
-  set dateInputValue(newValue: string) {
-    const datepickerInput = this.datepickerInput();
-
-    if (datepickerInput) {
-      datepickerInput.nativeElement.value = newValue;
-    }
-  }
-
-  get shouldEmitDirectly() {
-    return !!this.luxReferenceControl() && this.inForm;
-  }
 
   constructor() {
     super();

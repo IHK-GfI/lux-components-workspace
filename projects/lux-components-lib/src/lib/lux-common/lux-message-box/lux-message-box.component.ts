@@ -6,11 +6,11 @@ import {
   computed,
   effect,
   ElementRef,
-  HostBinding,
   inject,
   input,
   model,
   output,
+  signal,
   viewChild
 } from '@angular/core';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
@@ -24,24 +24,28 @@ import { LuxMessageComponent } from './lux-message-box-subcomponents/lux-message
   selector: 'lux-message-box',
   templateUrl: './lux-message-box.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.mat-elevation-z4]': 'boxShadow()'
+  },
   imports: [LuxAriaLabelDirective, LuxMessageComponent, NgClass, LuxPaginatorComponent, TranslocoPipe]
 })
 export class LuxMessageBoxComponent {
-  private liveAnnouncer = inject(LiveAnnouncer);
-  private tService = inject(TranslocoService);
-
-  @HostBinding('class.mat-elevation-z4') boxShadow = true;
-
-  readonly messageBoxElRef = viewChild<ElementRef>('messagebox');
+  readonly luxGrabFocus = input(false);
+  readonly luxIndex = model(0);
+  readonly luxMaximumDisplayed = model(1);
+  readonly luxMessages = model<ILuxMessage[]>([]);
 
   luxMessageChanged = output<ILuxMessageChangeEvent>();
   luxMessageClosed = output<ILuxMessageCloseEvent>();
   luxMessageBoxClosed = output<void>();
 
-  readonly luxGrabFocus = input(false);
-  readonly luxIndex = model(0);
-  readonly luxMaximumDisplayed = model(1);
-  readonly luxMessages = model<ILuxMessage[]>([]);
+  readonly messageBoxElRef = viewChild<ElementRef>('messagebox');
+
+  boxShadow = signal(true);
+
+  private readonly liveAnnouncer = inject(LiveAnnouncer);
+  private readonly tService = inject(TranslocoService);
+  private previousMessages: ILuxMessage[] = [];
 
   private readonly clampedMaximumDisplayed = computed(() => Math.max(0, this.luxMaximumDisplayed()));
 
@@ -67,8 +71,6 @@ export class LuxMessageBoxComponent {
     const end = start + max;
     return this.luxMessages().slice(start, end);
   });
-
-  private previousMessages: ILuxMessage[] = [];
 
   constructor() {
     effect(() => {

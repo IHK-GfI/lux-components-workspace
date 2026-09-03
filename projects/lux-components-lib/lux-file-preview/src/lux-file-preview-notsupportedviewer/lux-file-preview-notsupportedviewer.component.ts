@@ -10,15 +10,4 @@ import { LuxFilePreviewToolbarComponent } from '../lux-file-preview-toolbar/lux-
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxFilePreviewToolbarComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
-export class LuxFilePreviewNotSupportedViewerComponent extends LuxFilePreviewBase {
-  counter = 5;
-  timer: any;
-
-  override onDownload() {
-    super.onDownload();
-  }
-
-  override onClose() {
-    super.onClose();
-  }
-}
+export class LuxFilePreviewNotSupportedViewerComponent extends LuxFilePreviewBase {}

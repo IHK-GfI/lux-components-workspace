@@ -9,8 +9,8 @@ import { LuxMenuSectionTitleComponent } from '../../../lux-action/lux-menu/lux-m
   template: ''
 })
 export class LuxAppHeaderAcUserMenuComponent {
+  readonly luxUseSectionsAndHeaderPanel = input<boolean>(false);
+
   readonly menuItemComponents = contentChildren(LuxMenuItemComponent);
   readonly menuSectionComponents = contentChildren<LuxMenuItemComponent | LuxDividerComponent | LuxMenuSectionTitleComponent>('menuSection');
-
-  readonly luxUseSectionsAndHeaderPanel = input<boolean>(false);
 }

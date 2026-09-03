@@ -86,10 +86,23 @@ import { LuxMasterListAcComponent } from './lux-master-list-ac/lux-master-list-a
   ]
 })
 export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContentInit, AfterViewInit, DoCheck, OnDestroy {
-  private injector = inject(Injector);
-  private cdr = inject(ChangeDetectorRef);
-  private liveAnnouncer = inject(LiveAnnouncer);
-  private mediaObserver = inject(LuxMediaQueryObserverService);
+  readonly luxEmptyIconMaster = input('lux-interface-alert-information-circle');
+  readonly luxEmptyLabelMaster = input('');
+  readonly luxEmptyIconDetail = input('lux-interface-alert-information-circle');
+  readonly luxEmptyLabelDetail = input('');
+  readonly luxEmptyIconMasterSize = input('5x');
+  readonly luxEmptyIconDetailSize = input('5x');
+  readonly luxMasterSpinnerDelay = input(1000);
+  readonly luxTagIdMaster = input<string | undefined>(undefined);
+  readonly luxTagIdDetail = input<string | undefined>(undefined);
+  readonly luxTitleLineBreak = input(false);
+  readonly luxMasterListLabel = input('');
+  readonly luxMasterIsLoading = input(false);
+  readonly luxCompareWith = input<(o1: T, o2: T) => boolean>((o1: T, o2: T) => o1 === o2);
+  readonly luxDefaultDetailHeader = input(true);
+  readonly luxOpen = model(true);
+  readonly luxSelectedDetail = model<T | null>(null);
+  readonly luxMasterList = input<any[]>([]);
 
   luxScrolled = output<void>();
 
@@ -97,7 +110,6 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   private detailViewQuery = contentChild(LuxDetailViewAcComponent);
   private masterFooterQuery = contentChild(LuxMasterFooterAcComponent, { read: ElementRef });
   private detailHeaderQuery = contentChild(LuxDetailHeaderAcComponent, { read: ElementRef });
-
   readonly luxMasterQueryList = viewChildren(LuxListComponent, { read: ElementRef });
   readonly luxMasterListItemQueryList = viewChildren(LuxListItemComponent);
   private masterHeaderQuery = viewChild(LuxMasterHeaderAcComponent, { read: ElementRef });
@@ -142,16 +154,6 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
     return this.masterContainerQuery();
   }
 
-  private masterListLength = 0;
-  private maxItemsVisible?: number;
-  private updateDetail$ = new ReplaySubject<any>(1);
-  private subscriptions: { unsubscribe(): void }[] = [];
-  // Hält fest, welches Detail aktuell tatsächlich gerendert ist. Getrennt von luxSelectedDetail(),
-  // weil dessen Wert bei einer VON AUSSEN gesetzten Selektion bereits aktualisiert ist, BEVOR
-  // handleDetailUpdate() die Änderung verarbeitet - ein Vergleich gegen luxSelectedDetail() würde
-  // in diesem Fall immer "keine Änderung" ergeben und die Detail-Ansicht bliebe leer.
-  private renderedDetail: any = undefined;
-
   isMobile: boolean;
   isMedium: boolean;
   detailContext = { $implicit: {} };
@@ -162,23 +164,19 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
   // Flag, das bestimmt, ob die Empty-Anzeigen der Masterliste anhand der Detail-Ansicht ausgerichtet werden
   alignEmptyIndicators = true;
 
-  readonly luxEmptyIconMaster = input('lux-interface-alert-information-circle');
-  readonly luxEmptyLabelMaster = input('');
-  readonly luxEmptyIconDetail = input('lux-interface-alert-information-circle');
-  readonly luxEmptyLabelDetail = input('');
-  readonly luxEmptyIconMasterSize = input('5x');
-  readonly luxEmptyIconDetailSize = input('5x');
-  readonly luxMasterSpinnerDelay = input(1000);
-  readonly luxTagIdMaster = input<string | undefined>(undefined);
-  readonly luxTagIdDetail = input<string | undefined>(undefined);
-  readonly luxTitleLineBreak = input(false);
-  readonly luxMasterListLabel = input('');
-  readonly luxMasterIsLoading = input(false);
-  readonly luxCompareWith = input<(o1: T, o2: T) => boolean>((o1: T, o2: T) => o1 === o2);
-  readonly luxDefaultDetailHeader = input(true);
-  readonly luxOpen = model(true);
-  readonly luxSelectedDetail = model<T | null>(null);
-  readonly luxMasterList = input<any[]>([]);
+  private injector = inject(Injector);
+  private cdr = inject(ChangeDetectorRef);
+  private liveAnnouncer = inject(LiveAnnouncer);
+  private mediaObserver = inject(LuxMediaQueryObserverService);
+  private masterListLength = 0;
+  private maxItemsVisible?: number;
+  private updateDetail$ = new ReplaySubject<any>(1);
+  private subscriptions: { unsubscribe(): void }[] = [];
+  // Hält fest, welches Detail aktuell tatsächlich gerendert ist. Getrennt von luxSelectedDetail(),
+  // weil dessen Wert bei einer VON AUSSEN gesetzten Selektion bereits aktualisiert ist, BEVOR
+  // handleDetailUpdate() die Änderung verarbeitet - ein Vergleich gegen luxSelectedDetail() würde
+  // in diesem Fall immer "keine Änderung" ergeben und die Detail-Ansicht bliebe leer.
+  private renderedDetail: any = undefined;
 
   constructor() {
     this.subscriptions.push(
@@ -202,22 +200,6 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
     this.handleMasterListUpdate();
   }
 
-  ngAfterContentInit() {
-    LuxUtil.assertNonNull('detailView', this.detailView);
-  }
-
-  ngAfterViewInit() {
-    LuxUtil.assertNonNull('detailViewContainerRef', this.detailViewContainerRef());
-    this.showMasterHeader = this.masterHeaderComponent?.headerContentContainer().nativeElement.children.length > 0;
-    this.handleDetailUpdate();
-    this.handleMasterQueryList();
-    this.cdr.detectChanges();
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
   ngDoCheck() {
     // Wurde ein Element in die Masterliste gepusht oder entfernt?
     if (this.luxMasterList() && this.luxMasterList().length !== this.masterListLength) {
@@ -236,6 +218,22 @@ export class LuxMasterDetailAcComponent<T = any> implements OnInit, AfterContent
     if (!this.isMobile && (!this.luxMasterList() || this.luxMasterList().length === 0)) {
       this.checkEmptyIndicatorAlignment();
     }
+  }
+
+  ngAfterContentInit() {
+    LuxUtil.assertNonNull('detailView', this.detailView);
+  }
+
+  ngAfterViewInit() {
+    LuxUtil.assertNonNull('detailViewContainerRef', this.detailViewContainerRef());
+    this.showMasterHeader = this.masterHeaderComponent?.headerContentContainer().nativeElement.children.length > 0;
+    this.handleDetailUpdate();
+    this.handleMasterQueryList();
+    this.cdr.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**

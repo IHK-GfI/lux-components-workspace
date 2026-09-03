@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, effect, ElementRef, HostListener, inject, input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, effect, ElementRef, inject, input, OnDestroy } from '@angular/core';
 import { MatTooltip, TooltipPosition } from '@angular/material/tooltip';
 import { LuxTooltipTruncationWatcher } from './lux-tooltip-truncation';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -10,7 +10,11 @@ import { LuxAppHeaderActionNavItemComponent } from '../../lux-layout/lux-app-hea
 
 @Directive({
   selector: '[luxTooltip]',
-  exportAs: 'luxTooltip'
+  exportAs: 'luxTooltip',
+  host: {
+    '(longpress)': '_handleLongPress()',
+    '(document:keydown.escape)': '_handleEscape()'
+  }
 })
 export class LuxTooltipDirective extends MatTooltip implements AfterViewInit, OnDestroy {
   readonly luxTooltip = input('???');
@@ -31,11 +35,11 @@ export class LuxTooltipDirective extends MatTooltip implements AfterViewInit, On
   private truncationWatcher?: LuxTooltipTruncationWatcher;
   private viewInitialized = false;
 
-  @HostListener('longpress') _handleLongPress() {
+  _handleLongPress() {
     super.show(this.luxTooltipShowDelay());
   }
 
-  @HostListener('document:keydown.escape') _handleEscape() {
+  _handleEscape() {
     super.hide(0);
   }
 

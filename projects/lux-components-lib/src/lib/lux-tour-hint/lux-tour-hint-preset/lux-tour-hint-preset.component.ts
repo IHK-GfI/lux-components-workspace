@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -14,11 +14,11 @@ import { LuxTourHintRef } from '../lux-tour-hint-model/lux-tour-hint-ref.class';
   imports: [LuxIconComponent, LuxCheckboxAcComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxTourHintPresetComponent {
-  tourRef = inject(LuxTourHintRef);
+  protected readonly tourRef = inject(LuxTourHintRef);
 
-  public dontShowAgainChecked = false;
+  protected readonly dontShowAgainChecked = signal(false);
 
   public close() {
-    this.tourRef.close(this.dontShowAgainChecked);
+    this.tourRef.close(this.dontShowAgainChecked());
   }
 }

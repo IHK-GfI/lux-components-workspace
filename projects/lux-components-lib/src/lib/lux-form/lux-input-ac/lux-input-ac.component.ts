@@ -24,7 +24,7 @@ import { LuxTagIdDirective } from '../../../lib/lux-directives/lux-tag-id/lux-ta
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxMaxLengthDirective } from '../lux-form-control/lux-form-directives/lux-maxlength/lux-max-length.directive';
-import { LuxNameDirectiveDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
+import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
 import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.class';
 import { LuxInputAcPrefixComponent } from '../lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
 import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
@@ -40,7 +40,7 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     ReactiveFormsModule,
     MatPrefix,
     MatInput,
-    LuxNameDirectiveDirective,
+    LuxNameDirective,
     LuxMaxLengthDirective,
     NgClass,
     MatSuffix,
@@ -53,10 +53,6 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
   ]
 })
 export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> {
-  private readonly symbolRegExp = /[,.]/;
-
-  private liveAnnouncer = inject(LiveAnnouncer);
-
   readonly luxType = input('text');
   readonly luxNumberAlignLeft = input(false);
   readonly luxHideCounterLabel = input(false);
@@ -69,6 +65,10 @@ export class LuxInputAcComponent<T = string> extends LuxFormInputBaseClass<T> {
   readonly inputElement = viewChild<ElementRef>('input');
 
   readonly focused = signal(false);
+
+  private readonly symbolRegExp = /[,.]/;
+
+  private liveAnnouncer = inject(LiveAnnouncer);
 
   /**
    * Zeichenzähler, der unterhalb des Feldes angezeigt wird. Basiert auf dem luxValue-Model,

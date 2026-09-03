@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, OnDestroy, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { Subscription } from 'rxjs';
 import { LuxBadgeNotificationDirective } from '../../lux-directives/lux-badge-notification/lux-badge-notification.directive';
@@ -14,10 +14,8 @@ import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-obs
   imports: [MatCard, LuxTagIdDirective, NgClass, LuxBadgeNotificationDirective, MatCardContent, LuxTooltipDirective]
 })
 export class LuxTileComponent implements OnInit, OnDestroy {
-  private queryService = inject(LuxMediaQueryObserverService);
-
-  private static _notificationNewClass = 'lux-notification-new';
-  private static _notificationReadClass = 'lux-notification-read';
+  private static readonly notificationNewClass = 'lux-notification-new';
+  private static readonly notificationReadClass = 'lux-notification-read';
 
   readonly luxLabel = input<string | undefined>();
   readonly luxLabelTruncateAfterOneLine = input(false);
@@ -30,12 +28,18 @@ export class LuxTileComponent implements OnInit, OnDestroy {
 
   readonly luxClicked = output<void>();
 
-  mobileView?: boolean;
-  subscription?: Subscription;
+  readonly mobileView = signal(false);
+
+  private queryService = inject(LuxMediaQueryObserverService);
+  private subscription?: Subscription;
+
+  readonly notificationIconColorClass = computed(() =>
+    this.luxShowNotification() ? LuxTileComponent.notificationNewClass : LuxTileComponent.notificationReadClass
+  );
 
   ngOnInit() {
     this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-      this.mobileView = query === 'xs' || query === 'sm';
+      this.mobileView.set(query === 'xs' || query === 'sm');
     });
   }
 
@@ -47,9 +51,5 @@ export class LuxTileComponent implements OnInit, OnDestroy {
 
   clicked() {
     this.luxClicked.emit();
-  }
-
-  getNotificationIconColorClass(): string {
-    return this.luxShowNotification() ? LuxTileComponent._notificationNewClass : LuxTileComponent._notificationReadClass;
   }
 }

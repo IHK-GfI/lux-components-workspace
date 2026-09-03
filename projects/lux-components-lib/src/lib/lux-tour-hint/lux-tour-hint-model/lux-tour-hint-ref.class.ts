@@ -24,22 +24,20 @@ export class LuxTourHintRef<T = any> {
     return this.tourStepConfigs().length;
   }
 
-  private readonly _opened = signal(false);
   public get opened(): boolean {
     return this._opened();
   }
 
-  private tourHintContainer?: LuxTourHintComponent;
-  private readonly tourStep = signal(0);
-  private readonly tourStepConfigs = signal<InitializedTourHintConfig[]>([]);
-
-  private readonly _optionDontShowAgain = signal(true);
   public get optionDontShowAgain(): boolean {
     return this._optionDontShowAgain();
   }
 
+  private readonly _opened = signal(false);
+  private readonly tourStep = signal(0);
+  private readonly tourStepConfigs = signal<InitializedTourHintConfig[]>([]);
+  private readonly _optionDontShowAgain = signal(true);
+  private tourHintContainer?: LuxTourHintComponent;
   private dontShowAgainCallback!: () => void;
-
   private onCloseListeners: OnCloseListener[] = [];
 
   constructor() {}

@@ -14,7 +14,7 @@
     <div class="lux-input-row-authentic">
       @if (inputPrefix()) {
         <span class="lux-input-prefix-container" [attr.aria-disabled]="luxDisabled() ? 'true' : null" matPrefix>
-          <ng-content select="lux-input-ac-prefix"></ng-content>
+          <ng-content select="lux-input-ac-prefix" />
         </span>
       }
       @if (luxType() !== 'number') {
@@ -72,7 +72,7 @@
       }
       @if (inputSuffix()) {
         <span class="lux-input-suffix-container" [attr.aria-disabled]="luxDisabled() ? 'true' : null" matSuffix>
-          <ng-content select="lux-input-ac-suffix"></ng-content>
+          <ng-content select="lux-input-ac-suffix" />
         </span>
       }
       @if (showClearButton()) {
@@ -88,7 +88,7 @@
             luxIconName="lux-interface-delete-circle"
             [luxLabel]="luxClearAriaLabel() || ('luxc.input.clear.btn.arialabel' | transloco)"
             (luxClicked)="clearInputValue($event)"
-          ></lux-button>
+          />
         </span>
       }
     </div>

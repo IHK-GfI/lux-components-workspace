@@ -33,7 +33,7 @@ export class LuxImageComponent {
     return this.sanitizeImageSrc(prefixed);
   });
 
-  clicked(event: Event) {
+  protected clicked(event: Event) {
     this.luxClicked.emit(event);
   }
 

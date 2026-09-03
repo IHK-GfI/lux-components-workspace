@@ -1,6 +1,6 @@
 import { FocusableOption } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, contentChild, inject, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, contentChild, inject, input, model, output } from '@angular/core';
 import { LuxCardContentComponent } from '../../lux-card/lux-card-subcomponents/lux-card-content.component';
 import { LuxCardCustomHeaderComponent } from '../../lux-card/lux-card-subcomponents/lux-card-custom-header.component';
 import { LuxCardInfoComponent } from '../../lux-card/lux-card-subcomponents/lux-card-info.component';
@@ -11,14 +11,15 @@ import { LuxListItemCustomHeaderComponent } from './lux-list-item-custom-header.
   selector: 'lux-list-item',
   templateUrl: './lux-list-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[attr.role]': 'role',
+    '[attr.tabindex]': 'tabindex',
+    '[attr.aria-label]': 'ariaLabel',
+    '[attr.aria-selected]': 'ariaSelected'
+  },
   imports: [LuxCardComponent, NgClass, LuxCardInfoComponent, LuxCardContentComponent, LuxCardCustomHeaderComponent]
 })
 export class LuxListItemComponent implements FocusableOption {
-  elementRef = inject(ElementRef);
-
-  @HostBinding('attr.role') role = 'row';
-  @HostBinding('attr.tabindex') tabindex = '-1';
-
   readonly luxTitle = input('');
   readonly luxSubTitle = input('');
   readonly luxTitleTooltip = input<string | undefined>();
@@ -30,11 +31,16 @@ export class LuxListItemComponent implements FocusableOption {
 
   readonly customHeaderComponent = contentChild(LuxListItemCustomHeaderComponent);
 
-  @HostBinding('attr.aria-label') get ariaLabel() {
+  elementRef = inject(ElementRef);
+
+  role = 'row';
+  tabindex = '-1';
+
+  get ariaLabel() {
     return this.getLabel();
   }
 
-  @HostBinding('attr.aria-selected') get ariaSelected() {
+  get ariaSelected() {
     return this.luxSelected();
   }
 

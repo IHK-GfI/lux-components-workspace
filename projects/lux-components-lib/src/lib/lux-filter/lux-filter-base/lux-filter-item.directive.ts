@@ -20,6 +20,13 @@ export declare type LuxFilterRenderFnType<T = any> = (filter: LuxFilterItem<T>, 
 
 @Directive({ selector: '[luxFilterItem]' })
 export class LuxFilterItemDirective implements OnInit {
+  readonly luxFilterLabel = input('');
+  readonly luxFilterColor = input<LuxThemePalette>('primary');
+  readonly luxFilterDefaultValues = input([...LuxFilterItem.DEFAULT_VALUES]);
+  readonly luxFilterRenderFn = input<LuxFilterRenderFnType | undefined>(undefined);
+  readonly luxFilterHidden = input(false);
+  readonly luxFilterDisabled = input(false);
+
   inputAuthentic = inject(LuxInputAcComponent, { optional: true });
   autoCompleteAuthentic = inject(LuxAutocompleteAcComponent, { optional: true });
   autoCompleteLookupAuthentic = inject(LuxLookupAutocompleteAcComponent, { optional: true });
@@ -31,18 +38,11 @@ export class LuxFilterItemDirective implements OnInit {
   selectAuthentic = inject(LuxSelectAcComponent, { optional: true });
   selectLookupAuthentic = inject(LuxLookupComboboxAcComponent, { optional: true });
   radioAuthentic = inject(LuxRadioAcComponent, { optional: true });
-  private elRef = inject(ElementRef);
-  private renderer = inject(Renderer2);
-
   formComponent!: LuxFormComponentBase;
   filterItem!: LuxFilterItem<any>;
 
-  readonly luxFilterLabel = input('');
-  readonly luxFilterColor = input<LuxThemePalette>('primary');
-  readonly luxFilterDefaultValues = input([...LuxFilterItem.DEFAULT_VALUES]);
-  readonly luxFilterRenderFn = input<LuxFilterRenderFnType | undefined>(undefined);
-  readonly luxFilterHidden = input(false);
-  readonly luxFilterDisabled = input(false);
+  private elRef = inject(ElementRef);
+  private renderer = inject(Renderer2);
 
   constructor() {
     if (this.inputAuthentic) {
@@ -135,6 +135,43 @@ export class LuxFilterItemDirective implements OnInit {
     this.updateDisabledState(this.luxFilterDisabled());
   }
 
+  renderLabelFn<T>(filterItem: LuxFilterItem<T>, value: T) {
+    if (typeof value === 'string') {
+      return value;
+    } else if (
+      typeof value === 'object' &&
+      (filterItem.component instanceof LuxFormSelectableBase ||
+        filterItem.component instanceof LuxAutocompleteAcComponent ||
+        filterItem.component instanceof LuxRadioAcComponent)
+    ) {
+      return (value as any)[filterItem.component.luxOptionLabelProp()];
+    } else if (filterItem.component instanceof LuxLookupComponent) {
+      return filterItem.component.getLabel(value);
+    } else {
+      return value;
+    }
+  }
+
+  renderDateAcFn(filterItem: LuxFilterItem, value: any) {
+    return (filterItem.component as LuxDatepickerAcComponent).datepickerInput()?.nativeElement.value;
+  }
+
+  renderDateTimeAcFn(filterItem: LuxFilterItem, value: any) {
+    return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl()?.nativeElement.value;
+  }
+
+  renderTimeAcFn(filterItem: LuxFilterItem, value: any) {
+    return (filterItem.component as LuxTimepickerComponent).timepickerInput()?.nativeElement.value;
+  }
+
+  renderToggleFn<T>(filterItem: LuxFilterItem<T>, value: any) {
+    return value ? 'an' : 'aus';
+  }
+
+  renderIdentityFn<T>(filterItem: LuxFilterItem<T>, value: any) {
+    return value;
+  }
+
   private updateHiddenState(hidden: boolean) {
     if (this.filterItem) {
       // Wenn ein Filterelement ausgeblendet wird, wird es zusätzlich deaktiviert,
@@ -158,48 +195,5 @@ export class LuxFilterItemDirective implements OnInit {
         this.filterItem.component.formControl.enable();
       }
     }
-  }
-
-  renderLabelFn<T>(filterItem: LuxFilterItem<T>, value: T) {
-    if (typeof value === 'string') {
-      return value;
-    } else if (
-      typeof value === 'object' &&
-      (filterItem.component instanceof LuxFormSelectableBase ||
-        filterItem.component instanceof LuxAutocompleteAcComponent ||
-        filterItem.component instanceof LuxRadioAcComponent)
-    ) {
-      return (value as any)[filterItem.component.luxOptionLabelProp()];
-    } else if (filterItem.component instanceof LuxLookupComponent) {
-      return filterItem.component.getLabel(value);
-    } else {
-      return value;
-    }
-  }
-
-  renderDateFn<T>(filterItem: LuxFilterItem<T>) {
-    return (filterItem.component as LuxDatepickerAcComponent).datepickerInput()?.nativeElement.value;
-  }
-  renderDateAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxDatepickerAcComponent).datepickerInput()?.nativeElement.value;
-  }
-
-  renderDateTimeFn<T>(filterItem: LuxFilterItem<T>) {
-    return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl()?.nativeElement.value;
-  }
-  renderDateTimeAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl()?.nativeElement.value;
-  }
-
-  renderTimeAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxTimepickerComponent).timepickerInput()?.nativeElement.value;
-  }
-
-  renderToggleFn<T>(filterItem: LuxFilterItem<T>, value: any) {
-    return value ? 'an' : 'aus';
-  }
-
-  renderIdentityFn<T>(filterItem: LuxFilterItem<T>, value: any) {
-    return value;
   }
 }

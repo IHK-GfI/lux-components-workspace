@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LuxButtonComponent } from '../../../../lux-action/lux-button/lux-button.component';
 import { LuxAppHeaderAcSessionTimerService } from './lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
@@ -15,28 +15,26 @@ import { LuxAriaLabelDirective } from '../../../../lux-directives/lux-aria/lux-a
   templateUrl: './lux-app-header-ac-session-timer.html'
 })
 export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
+  luxLogoutEvent = output<void>();
+  luxTimeoutEvent = output<void>();
+
   private readonly luxSessionTimerService = inject(LuxAppHeaderAcSessionTimerService);
   private readonly mediaQueryService = inject(LuxMediaQueryObserverService);
   private readonly tService = inject(TranslocoService);
   private readonly liveAnnouncer = inject(LiveAnnouncer);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly cdr = inject(ChangeDetectorRef);
 
-  private luxLoading = false;
-  private mobileView: boolean;
-
-  luxLogoutEvent = output<void>();
-  luxTimeoutEvent = output<void>();
+  private readonly luxLoading = signal(false);
+  private readonly mobileView = signal(false);
 
   constructor() {
-    this.mobileView = this.mediaQueryService.activeMediaQuery === 'xs';
+    this.mobileView.set(this.mediaQueryService.activeMediaQuery === 'xs');
 
     this.mediaQueryService
       .getMediaQueryChangedAsObservable()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((query: string) => {
-        this.mobileView = query === 'xs';
-        this.cdr.markForCheck();
+        this.mobileView.set(query === 'xs');
       });
   }
 
@@ -51,11 +49,11 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
   }
 
   protected isMobileView(): boolean {
-    return this.mobileView;
+    return this.mobileView();
   }
 
   protected isLuxLoading(): boolean {
-    return this.luxLoading;
+    return this.luxLoading();
   }
 
   protected showSessionTimer(): boolean {
@@ -74,21 +72,18 @@ export class LuxAppHeaderAcSessionTimerComponent implements OnInit {
     }
 
     //Bei Langsamen Antworten soll die UI direkt anzeigen dass die Verlängerung läuft, damit der Nutzer weiß dass etwas passiert.
-    this.luxLoading = true;
+    this.luxLoading.set(true);
 
     extendSessionTimer$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.luxLoading = true;
-        this.cdr.markForCheck();
+        this.luxLoading.set(true);
       },
       complete: () => {
-        this.luxLoading = false;
-        this.cdr.markForCheck();
+        this.luxLoading.set(false);
       },
       error: (err) => {
         console.error('LuxAppHeaderAcSessionTimerComponent: Error while extending session timer: ', err);
-        this.luxLoading = false;
-        this.cdr.markForCheck();
+        this.luxLoading.set(false);
         this.luxSessionTimerService.logoutUser();
       }
     });

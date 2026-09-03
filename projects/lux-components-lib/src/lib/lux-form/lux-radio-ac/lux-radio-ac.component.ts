@@ -40,17 +40,16 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
   ]
 })
 export class LuxRadioAcComponent<O = any, V = any> extends LuxFormSelectableBase<O, V> {
-  private mediaObserver = inject(LuxMediaQueryObserverService);
-
-  readonly forceVertical = signal(false);
+  readonly luxGroupName = input('');
+  readonly luxOrientationVertical = input(true);
 
   // Potenziell eingebettetes Template für Darstellung der Labels
   readonly tempRef = contentChild(TemplateRef);
 
-  readonly luxGroupName = input('');
-  readonly luxOrientationVertical = input(true);
-
+  readonly forceVertical = signal(false);
   readonly focused = signal(false);
+
+  private mediaObserver = inject(LuxMediaQueryObserverService);
 
   readonly isVertical = computed(() => this.luxOrientationVertical() || this.forceVertical());
 

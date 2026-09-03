@@ -23,6 +23,7 @@
             luxControlBinding="hobbies"
             [luxOptions]="hobbies"
             luxOptionLabelProp="label"
+            [luxPickValue]="pickHobbyValue"
             [luxMultiple]="true"
           ></lux-select-ac>
           <lux-input-ac luxName="form-common_Spende" luxLabel="Spende" luxControlBinding="donation" luxType="number">
@@ -56,7 +57,8 @@
               [luxRemovable]="false"
               luxColor="primary"
               (luxChipClicked)="chipItemClicked($event)"
-              [luxLabels]="chipItems"
+              [(luxLabels)]="chipItems"
+              (luxLabelsChange)="onChipItemsChange()"
               #chipGroup
             >
               <ng-template let-chipItem>
@@ -67,7 +69,8 @@
               [luxRemovable]="true"
               luxColor="accent"
               (luxChipClicked)="chipItemClicked($event)"
-              [luxLabels]="chipItems2"
+              [(luxLabels)]="chipItems2"
+              (luxLabelsChange)="onChipItemsChange()"
               #chipGroup2
             >
               <ng-template let-chipItem>
@@ -102,6 +105,7 @@
           <lux-textarea-ac
             luxLabel="Textarea"
             luxPlaceholder="Bitte hinterlasse hier einen Kommentar..."
+            luxControlBinding="comment"
             [luxMaxLength]="300"
             [luxMinRows]="2"
             [luxMaxRows]="3"
@@ -117,9 +121,9 @@
     <lux-card-content>
       <!-- Issue #267: empfohlene Variante, luxLabel plus luxNoTopLabel -->
       <p>
-        Alle Felder in diesem Beispiel besitzen ein luxLabel, das über luxNoTopLabel nur visuell versteckt ist. Screenreader lesen
-        den Namen weiterhin vor. Mit dem Schalter lassen sich die Labels zur Kontrolle wieder einblenden. Checkbox und Toggle fehlen
-        hier bewusst, denn ihr Label steht neben dem Bedienelement und wird nicht visuell versteckt.
+        Alle Felder in diesem Beispiel besitzen ein luxLabel, das über luxNoTopLabel nur visuell versteckt ist. Screenreader lesen den Namen
+        weiterhin vor. Mit dem Schalter lassen sich die Labels zur Kontrolle wieder einblenden. Checkbox und Toggle fehlen hier bewusst,
+        denn ihr Label steht neben dem Bedienelement und wird nicht visuell versteckt.
       </p>
       <lux-toggle-ac luxLabel="Labels sichtbar anzeigen" [(luxChecked)]="showA11yLabels" [luxNoBottomLabel]="true"></lux-toggle-ac>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
@@ -135,7 +139,12 @@
         <lux-datetimepicker-ac luxLabel="Termin wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-datetimepicker-ac>
         <lux-timepicker luxLabel="Uhrzeit wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-timepicker>
         <lux-file-input-ac luxLabel="Datei auswählen" [luxNoTopLabel]="!showA11yLabels()"></lux-file-input-ac>
-        <lux-radio-ac luxLabel="Hobby wählen" [luxNoTopLabel]="!showA11yLabels()" [luxOptions]="hobbies"></lux-radio-ac>
+        <lux-radio-ac
+          luxLabel="Hobby wählen"
+          [luxNoTopLabel]="!showA11yLabels()"
+          [luxOptions]="hobbies"
+          luxOptionLabelProp="label"
+        ></lux-radio-ac>
         <lux-slider-ac luxLabel="Lautstärke einstellen" [luxNoTopLabel]="!showA11yLabels()"></lux-slider-ac>
         <lux-chips-ac luxLabel="Schlagwort ergänzen" [luxNoTopLabel]="!showA11yLabels()" [luxInputAllowed]="true"></lux-chips-ac>
       </div>
@@ -145,9 +154,9 @@
            Label-Zeile bleibt bewusst erhalten, damit label-lose Felder in einer Flucht mit
            sichtbar gelabelten Nachbarfeldern stehen. -->
       <p>
-        Das Select besitzt kein luxLabel, der zugängliche Name kommt über luxAriaLabel. Seine leere Label-Zeile bleibt bewusst
-        erhalten, dadurch steht es in einer Flucht mit dem sichtbar beschrifteten Input daneben. Wer die Zeile nicht braucht, setzt
-        zusätzlich luxNoTopLabel.
+        Das Select besitzt kein luxLabel, der zugängliche Name kommt über luxAriaLabel. Seine leere Label-Zeile bleibt bewusst erhalten,
+        dadurch steht es in einer Flucht mit dem sichtbar beschrifteten Input daneben. Wer die Zeile nicht braucht, setzt zusätzlich
+        luxNoTopLabel.
       </p>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
         <lux-input-ac luxLabel="Nachname"></lux-input-ac>
@@ -159,8 +168,8 @@
 
       <h3>Name über sichtbaren Fremdtext (luxAriaLabelledby)</h3>
       <p>
-        luxAriaLabelledby zeigt auf bereits sichtbaren Text, hier "Rechnungsnummer". Der zugängliche Name bleibt damit automatisch
-        synchron zum sichtbaren Text, etwa bei Filterfeldern unter einem Spaltenkopf.
+        luxAriaLabelledby zeigt auf bereits sichtbaren Text, hier "Rechnungsnummer". Der zugängliche Name bleibt damit automatisch synchron
+        zum sichtbaren Text, etwa bei Filterfeldern unter einem Spaltenkopf.
       </p>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
         <div>

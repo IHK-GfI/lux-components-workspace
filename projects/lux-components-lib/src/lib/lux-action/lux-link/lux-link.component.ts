@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   imports: [NgClass, LuxTagIdDirective, LuxIconComponent, NgTemplateOutlet, MatButton, MatFabButton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.lux-uppercase]': 'labelUppercase',
+    '[class.lux-uppercase]': 'labelUppercase()',
     '[class.lux-flat]': 'luxFlat()',
     '[class.lux-raised]': 'luxRaised()',
     '[class.lux-rounded]': 'luxRounded()',
@@ -24,17 +24,15 @@ import { LuxActionComponentBaseClass } from '../lux-action-model/lux-action-comp
   }
 })
 export class LuxLinkComponent extends LuxActionComponentBaseClass {
-  private router = inject(Router);
-  cdr = inject(ChangeDetectorRef);
-  elementRef = inject(ElementRef);
-  componentsConfigService = inject(LuxComponentsConfigService);
-  tooltipDirective?: LuxTooltipDirective;
-  labelUppercase!: boolean;
-
-  public readonly iconSize: string = '2x';
-
   readonly luxHref = input('');
   readonly luxBlank = input(false);
+
+  readonly elementRef = inject(ElementRef);
+  readonly componentsConfigService = inject(LuxComponentsConfigService);
+  tooltipDirective?: LuxTooltipDirective;
+  labelUppercase = signal(false);
+
+  private readonly router = inject(Router);
 
   constructor() {
     super();
@@ -117,6 +115,6 @@ export class LuxLinkComponent extends LuxActionComponentBaseClass {
       selector = 'lux-link';
     }
 
-    this.labelUppercase = this.componentsConfigService.isLabelUppercaseForSelector(selector);
+    this.labelUppercase.set(this.componentsConfigService.isLabelUppercaseForSelector(selector));
   }
 }

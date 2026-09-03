@@ -1,15 +1,15 @@
 @if (luxTarget) {
-<div
-  class="tour-hint"
-  [ngStyle]="dynamicArrowStyle()"
-  [style.left.px]="tourHintPosLeft()"
-  [style.top.px]="tourHintPosTop()"
-  tabindex="0"
-  #tourHintContainer
->
-  <div class="arrow" [ngClass]="arrowClass()"></div>
-  <ng-content></ng-content>
-</div>
+  <div
+    class="tour-hint"
+    [ngStyle]="dynamicArrowStyle()"
+    [style.left.px]="tourHintPosLeft()"
+    [style.top.px]="tourHintPosTop()"
+    tabindex="0"
+    #tourHintContainer
+  >
+    <div class="arrow" [ngClass]="arrowClass()"></div>
+    <ng-content />
+  </div>
 }
 
 <div

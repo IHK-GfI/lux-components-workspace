@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy, input, output, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { Subscription } from 'rxjs';
 import { LuxComponentsConfigService } from '../lux-components-config/lux-components-config.service';
 import { LuxAriaLabelDirective } from '../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxImageComponent } from '../lux-icon/lux-image/lux-image.component';
@@ -13,10 +13,7 @@ import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observ
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxImageComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
-export class LuxTenantLogoComponent implements OnInit, OnDestroy {
-  private componentsConfigService = inject(LuxComponentsConfigService);
-  private queryObserver = inject(LuxMediaQueryObserverService);
-
+export class LuxTenantLogoComponent {
   /*
    * Statische Methoden, die beschreiben, wie (z.B.) die Url aufgebaut wird und sich diese je nach Media Query verändert
    * Kann eventuell durch konfigurierbare Breakpoints ersetzt werden in der Zukunft.
@@ -50,11 +47,19 @@ export class LuxTenantLogoComponent implements OnInit, OnDestroy {
 
   readonly luxTenantLogoClicked = output<Event>();
 
-  private readonly apiPath = signal<string | undefined>(undefined);
-  private readonly mediaQuery = signal<string | undefined>(undefined);
+  private readonly componentsConfigService = inject(LuxComponentsConfigService);
+  private readonly queryObserver = inject(LuxMediaQueryObserverService);
+  private readonly config = toSignal(this.componentsConfigService.config, { initialValue: this.componentsConfigService.currentConfig });
+  private readonly mediaQuery = toSignal(this.queryObserver.getMediaQueryChangedAsObservable(), {
+    initialValue: this.queryObserver.activeMediaQuery
+  });
 
   /** Zählt Ladefehler pro angefragter Logo-Identität (apiPath/Key/Variant) - wird bei neuer Identität implizit ignoriert, siehe currentAttempt(). */
   private readonly errorState = signal<{ key: string; attempt: number } | undefined>(undefined);
+
+  private readonly apiPath = computed(
+    () => this.config().tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl
+  );
 
   private readonly resolvedVariant = computed(() => {
     const mediaQuery = this.mediaQuery();
@@ -103,26 +108,6 @@ export class LuxTenantLogoComponent implements OnInit, OnDestroy {
 
   protected readonly luxTenantLogoAriaLabel = computed(() => 'Logo ' + this.luxTenantKey());
   protected readonly luxTenantLogoAlt = computed(() => 'Logo ' + this.luxTenantKey());
-
-  private subscriptions: Subscription[] = [];
-
-  ngOnInit(): void {
-    this.subscriptions.push(
-      this.componentsConfigService.config.subscribe((newConfig) => {
-        this.apiPath.set(newConfig.tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl);
-      })
-    );
-
-    this.subscriptions.push(
-      this.queryObserver.getMediaQueryChangedAsObservable().subscribe((mediaQuery) => {
-        this.mediaQuery.set(mediaQuery);
-      })
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
 
   public onImageClicked(event: any): void {
     this.luxTenantLogoClicked.emit(event);

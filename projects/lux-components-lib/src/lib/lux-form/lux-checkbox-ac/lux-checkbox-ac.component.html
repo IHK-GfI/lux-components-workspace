@@ -39,7 +39,7 @@
             &nbsp;{{ luxLabel() }}&nbsp;
           } @else {
             <!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
-            <ng-container *ngTemplateOutlet="formLabelComponent()?.templateRef() ?? null"></ng-container>
+            <ng-container *ngTemplateOutlet="formLabelComponent()?.templateRef() ?? null" />
           }
           {{ luxRequired() ? '&nbsp;*' : '' }}
         </span>

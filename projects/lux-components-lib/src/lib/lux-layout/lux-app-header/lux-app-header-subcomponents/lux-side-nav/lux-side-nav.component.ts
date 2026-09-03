@@ -6,12 +6,12 @@ import {
   contentChildren,
   effect,
   ElementRef,
-  HostListener,
   inject,
   input,
   OnDestroy,
   output,
   signal,
+  Signal,
   viewChild
 } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -31,6 +31,10 @@ import { LuxSideNavItemComponent } from './lux-side-nav-subcomponents/lux-side-n
   templateUrl: './lux-side-nav.component.html',
   animations: [sideNavAnimation, sideNavOverlayAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(window:keyup)': 'keyEvent($event)',
+    '(window:resize)': 'windowResize()'
+  },
   imports: [
     NgStyle,
     LuxAriaRoleDirective,
@@ -90,19 +94,6 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  @HostListener('window:keyup', ['$event'])
-  keyEvent(event: KeyboardEvent) {
-    if (LuxUtil.isKeyEscape(event) && this.sideNavExpanded()) {
-      // Escape soll nur das Menü schließen, wenn es auch geöffnet ist.
-      this.toggle();
-    }
-  }
-
-  @HostListener('window:resize') windowResize() {
-    this.calculateWidthHeight();
-    this.calculateAppMenuPosition();
-  }
-
   ngAfterViewInit() {
     this.updateItemClickListeners();
     this.calculateWidthHeight();
@@ -110,6 +101,18 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.itemClickSubscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  keyEvent(event: KeyboardEvent) {
+    if (LuxUtil.isKeyEscape(event) && this.sideNavExpanded()) {
+      // Escape soll nur das Menü schließen, wenn es auch geöffnet ist.
+      this.toggle();
+    }
+  }
+
+  windowResize() {
+    this.calculateWidthHeight();
+    this.calculateAppMenuPosition();
   }
 
   toggle() {
@@ -131,13 +134,6 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
         }
       });
     }
-  }
-
-  private calculateAppMenuPosition() {
-    this.top = this.appService.getAppTop() + 'px';
-    this.left = this.appService.getAppLeft() + 'px';
-    this.bottom = this.appService.getAppBottom() + 'px';
-    this.right = this.appService.getAppRight() + 'px';
   }
 
   /**
@@ -166,6 +162,13 @@ export class LuxSideNavComponent implements AfterViewInit, OnDestroy {
 
   close() {
     this.setSideNavExpanded(false);
+  }
+
+  private calculateAppMenuPosition() {
+    this.top = this.appService.getAppTop() + 'px';
+    this.left = this.appService.getAppLeft() + 'px';
+    this.bottom = this.appService.getAppBottom() + 'px';
+    this.right = this.appService.getAppRight() + 'px';
   }
 
   private setSideNavExpanded(expanded: boolean) {

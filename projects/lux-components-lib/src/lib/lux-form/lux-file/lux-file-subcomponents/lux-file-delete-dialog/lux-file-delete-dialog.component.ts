@@ -8,7 +8,7 @@ import { LuxDialogTitleComponent } from '../../../../lux-popups/lux-dialog/lux-d
 import { LuxDialogStructureComponent } from '../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component';
 
 @Component({
-  selector: 'lux-lux-file-delete-dialog',
+  selector: 'lux-file-delete-dialog',
   templateUrl: './lux-file-delete-dialog.component.html',
   styleUrls: ['./lux-file-delete-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

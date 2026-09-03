@@ -260,7 +260,7 @@ class TestFilterFormComponent implements OnDestroy {
   initFilter = signal<any>({});
   currentFilter: any = this.initFilter();
 
-  expanded = false;
+  expanded = signal(false);
   showFilterChips = signal(true);
 
   storedFilters: LuxFilter[] = [];

@@ -35,8 +35,7 @@ describe('LuxAppHeaderAcComponent', () => {
 
 @Component({
   template: `
-    <lux-app-header-ac luxAppTitle="MyClickTitle" luxAppIconSrc="assets/svg/demoAppLogo.svg" (luxAppLogoClicked)="onClicked()">
-    </lux-app-header-ac>
+    <lux-app-header-ac luxAppTitle="MyClickTitle" luxAppIconSrc="assets/svg/demoAppLogo.svg" (luxAppLogoClicked)="onClicked()" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderAcComponent]

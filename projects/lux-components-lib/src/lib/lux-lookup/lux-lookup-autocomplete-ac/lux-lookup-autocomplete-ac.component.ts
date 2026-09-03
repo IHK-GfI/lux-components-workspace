@@ -45,12 +45,6 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
   extends LuxLookupComponent<T>
   implements OnInit, AfterViewInit
 {
-  readonly filtered = signal<LuxLookupTableEntry[]>([]);
-  readonly entriesCount = signal(0);
-  readonly latestSearchValue = signal<string | undefined>(undefined);
-
-  stateMatcher: LuxLookupErrorStateMatcher;
-
   readonly luxDebounceTime = input(250);
   readonly luxMaximumDisplayed = input(50);
   readonly luxClearable = input(false);
@@ -63,14 +57,16 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
   readonly matAutocomplete = viewChild(MatAutocomplete);
   readonly matAutocompleteTrigger = viewChild(MatAutocompleteTrigger);
 
+  readonly filtered = signal<LuxLookupTableEntry[]>([]);
+  readonly entriesCount = signal(0);
+  readonly latestSearchValue = signal<string | undefined>(undefined);
+
+  stateMatcher: LuxLookupErrorStateMatcher;
+
   constructor() {
     super();
 
-    this.stateMatcher = new LuxAutocompleteErrorStateMatcherAc(this, this.entries);
-  }
-
-  ngAfterViewInit() {
-    this.cdr.detectChanges();
+    this.stateMatcher = new LuxAutocompleteErrorStateMatcherAc(this);
   }
 
   override ngOnInit() {
@@ -93,11 +89,8 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     );
   }
 
-  protected override setLookupData(entries: LuxLookupTableEntry[]) {
-    super.setLookupData(entries);
-
-    const searchValue = typeof this.formControl.value === 'string' ? this.formControl.value : this.displayFn(this.formControl.value as any);
-    this.filtered.set(this.findFilteredOptions(searchValue));
+  ngAfterViewInit() {
+    this.cdr.detectChanges();
   }
 
   /**
@@ -173,6 +166,13 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     }
   }
 
+  protected override setLookupData(entries: LuxLookupTableEntry[]) {
+    super.setLookupData(entries);
+
+    const searchValue = typeof this.formControl.value === 'string' ? this.formControl.value : this.displayFn(this.formControl.value as any);
+    this.filtered.set(this.findFilteredOptions(searchValue));
+  }
+
   showClearButton(): boolean {
     if (!this.luxClearable() || this.luxReadonly() || this.luxDisabled()) {
       return false;
@@ -207,15 +207,6 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
     }
   }
 
-  private ignoreWrapperClick(event: MouseEvent): boolean {
-    const target = event.target as HTMLElement | null;
-    if (!target) {
-      return false;
-    }
-
-    return !!target.closest('mat-option, .lux-input-clear-btn-container, .lux-input-clear-btn');
-  }
-
   /**
    * Setzt den aktuellen Value-Wert auf den ausgewählten Wert.
    * @param MatAutocompleteSelectedEvent event
@@ -240,6 +231,15 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
       return this.tService.translate(`luxc.lookup-autocomplete.error_message.not_available`);
     }
     return undefined;
+  }
+
+  private ignoreWrapperClick(event: MouseEvent): boolean {
+    const target = event.target as HTMLElement | null;
+    if (!target) {
+      return false;
+    }
+
+    return !!target.closest('mat-option, .lux-input-clear-btn-container, .lux-input-clear-btn');
   }
 
   private findFilteredOptions(searchValue: string): LuxLookupTableEntry[] {

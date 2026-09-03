@@ -1,20 +1,23 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    LuxAutocompleteAcComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxChipAcComponent,
-    LuxChipsAcComponent,
-    LuxDatepickerAcComponent,
-    LuxIconComponent,
-    LuxInputAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+  LuxAutocompleteAcComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxChipAcComponent,
+  LuxChipsAcComponent,
+  LuxDatepickerAcComponent,
+  LuxIconComponent,
+  LuxInputAcComponent,
+  LuxInputAcSuffixComponent,
+  LuxRadioAcComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { debounceTime } from 'rxjs';
+import { FormExampleSnapshot, FormExampleStateService } from '../form-example-state.service';
 import { ICountry } from '../model/country.interface';
 import { FormBase } from '../model/form-base.class';
 import { IGender } from '../model/gender.interface';
@@ -37,6 +40,10 @@ interface FormSingleUserForm {
   age: FormControl<number | null>;
   country: FormControl<string | null>;
   deactivated: FormControl<string>;
+}
+
+interface FormSingleState extends FormExampleSnapshot<ReturnType<FormGroup<FormSingleDummyForm>['getRawValue']>> {
+  roles: IRole[];
 }
 
 @Component({
@@ -62,12 +69,15 @@ interface FormSingleUserForm {
 })
 export class FormSingleColComponent extends FormBase {
   private dataProvider = inject(TableExampleDataProviderService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   myGroup: FormGroup<FormSingleDummyForm>;
   readonly roles = signal<IRole[]>([]);
   countries: ICountry[] = [];
   genders: IGender[] = [];
   salutations: string[] = [];
+  readonly pickGenderValue = (gender: IGender) => gender.short;
 
   constructor() {
     super();
@@ -95,6 +105,18 @@ export class FormSingleColComponent extends FormBase {
       roles: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
       eula: new FormControl<boolean>(false, { validators: Validators.requiredTrue, nonNullable: true })
     });
+
+    const snapshot = this.state.get<FormSingleState>('single');
+    if (snapshot) {
+      this.myGroup.patchValue(snapshot.rawValue, { emitEvent: false });
+      this.roles.set(snapshot.roles);
+      if (snapshot.dirty) {
+        this.myGroup.markAsDirty({ emitEvent: false });
+      }
+    }
+
+    this.myGroup.valueChanges.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.saveState());
+    this.destroyRef.onDestroy(() => this.saveState());
   }
 
   hasUnsavedData(): boolean {
@@ -103,9 +125,19 @@ export class FormSingleColComponent extends FormBase {
 
   addRole(name: string) {
     this.roles.update((roles) => [...roles, { name }]);
+    this.saveState();
   }
 
   removeRole(i: number) {
     this.roles.update((roles) => roles.filter((_role, index) => index !== i));
+    this.saveState();
+  }
+
+  private saveState(): void {
+    this.state.save<FormSingleState>('single', {
+      rawValue: this.myGroup.getRawValue(),
+      dirty: this.myGroup.dirty,
+      roles: this.roles()
+    });
   }
 }

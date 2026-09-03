@@ -12,7 +12,7 @@
     [luxClass]="item.code === translocoService.getActiveLang() ? 'lux-selected-item-ac' : ''"
     [luxDisabled]="item.code === translocoService.getActiveLang()"
     (luxClicked)="onLocaleChanged(item)"
-  ></lux-menu-item>
+  />
   }
   <lux-menu-trigger>
     <lux-button
@@ -22,12 +22,11 @@
       class="lang-select-trigger-ac"
       luxAriaLabel="{{ 'luxc.app-header.lang.select.trigger' | transloco }}"
       aria-haspopup="true"
-      luxTagId="lang-select-trigger-btn"
       [ngClass]="{ 'menu-opened': menuOpened, 'lang-select-trigger-mobile': mobileView() }"
       luxTagId="lang-select-trigger-btn"
       luxTooltip="{{ 'luxc.app-header.lang.select.trigger' | transloco }}"
       [luxTooltipShowDelay]="1500"
       #customTrigger
-    ></lux-button>
+    />
   </lux-menu-trigger>
 </lux-menu>

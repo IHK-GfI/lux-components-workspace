@@ -57,13 +57,6 @@ import { LuxSelectVisibleOptionCountDirective } from '../lux-select-filter/lux-s
   ]
 })
 export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> {
-  private liveAnnouncer = inject(LiveAnnouncer);
-
-  // Potenziell eingebettetes Template für Darstellung der Labels
-  readonly tempRef = contentChild(TemplateRef);
-  readonly matOptions = viewChildren(MatOption);
-  readonly matSelect = viewChild('select', { read: MatSelect });
-
   /**
    * Platzhalter-Text, der angezeigt wird, wenn kein Wert ausgewählt ist.
    */
@@ -106,6 +99,11 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
    */
   readonly luxKeepOptionOrder = input(false);
 
+  // Potenziell eingebettetes Template für Darstellung der Labels
+  readonly tempRef = contentChild(TemplateRef);
+  readonly matOptions = viewChildren(MatOption);
+  readonly matSelect = viewChild('select', { read: MatSelect });
+
   readonly displayedViewValue = signal<string | undefined>(undefined);
   readonly focused = signal(false);
 
@@ -116,15 +114,6 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
    * während der Auswahl nicht springt.
    */
   readonly renderOptionIndexes = signal<number[]>([]);
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
 
   /**
    * Label-Extractor für Filter-Directive.
@@ -142,6 +131,17 @@ export class LuxSelectAcComponent<O = any, V = any, P = any> extends LuxFormSele
 
     return '' + option;
   };
+
+  private liveAnnouncer = inject(LiveAnnouncer);
+
+  readonly describedBy = computed(() => {
+    if (this.errorMessage()) {
+      return this.uid() + '-error';
+    }
+
+    const hasHint = !!this.formHintComponent() || !!this.luxHint();
+    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
+  });
 
   constructor() {
     super();

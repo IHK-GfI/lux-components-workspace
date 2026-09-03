@@ -27,13 +27,19 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
   ]
 })
 export class LuxFilterSaveDialogComponent implements OnInit, AfterViewInit {
-  luxDialogRef = inject<LuxDialogRef<LuxFilterFormComponent>>(LuxDialogRef);
-
   readonly filterNameComponent = viewChild.required(LuxInputAcComponent);
 
+  luxDialogRef = inject<LuxDialogRef<LuxFilterFormComponent>>(LuxDialogRef);
   currentFilters: LuxFilter[] = [];
-
   filterName = '';
+  filterErrorCallback = (value: any, errors: LuxValidationErrors) => {
+    if (errors['forbiddenName']) {
+      return 'Der Name existiert bereits.';
+    } else if (errors['required']) {
+      return 'Pflichtfeld';
+    }
+    return 'Es ist ein Fehler aufgetreten.';
+  };
 
   ngOnInit() {
     this.currentFilters = this.luxDialogRef.data.luxStoredFilters() ?? [];
@@ -59,15 +65,6 @@ export class LuxFilterSaveDialogComponent implements OnInit, AfterViewInit {
       return this.checkIfFilterNameExists() ? { forbiddenName: { value: control.value } } : null;
     };
   }
-
-  filterErrorCallback = (value: any, errors: LuxValidationErrors) => {
-    if (errors['forbiddenName']) {
-      return 'Der Name existiert bereits.';
-    } else if (errors['required']) {
-      return 'Pflichtfeld';
-    }
-    return 'Es ist ein Fehler aufgetreten.';
-  };
 
   private checkIfFilterNameExists() {
     const filters = this.luxDialogRef.data.luxStoredFilters();

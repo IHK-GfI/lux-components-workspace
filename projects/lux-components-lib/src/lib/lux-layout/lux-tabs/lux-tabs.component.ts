@@ -2,7 +2,6 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   contentChildren,
   ElementRef,
@@ -12,6 +11,7 @@ import {
   OnDestroy,
   OnInit,
   output,
+  signal,
   viewChild
 } from '@angular/core';
 import { MatTab, MatTabChangeEvent, MatTabGroup, MatTabLabel } from '@angular/material/tabs';
@@ -44,19 +44,9 @@ import { LuxTabComponent } from './lux-tabs-subcomponents/lux-tab.component';
   ]
 })
 export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
-  componentsConfigService = inject(LuxComponentsConfigService);
-  private queryService = inject(LuxMediaQueryObserverService);
-  private cdr = inject(ChangeDetectorRef);
-
   private static readonly _DEBOUNCE_TIME: number = 50;
 
   private static readonly _notificationReadClass = 'lux-notification-read';
-
-  private subscriptions: Subscription[] = [];
-
-  tabChange$: ReplaySubject<MatTabChangeEvent> = new ReplaySubject<MatTabChangeEvent>(1);
-  labelUppercase?: boolean;
-  smallDevice?: boolean;
 
   readonly luxActiveTab = model(0);
   readonly luxIconSize = input('2x');
@@ -69,6 +59,16 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly luxTabs = contentChildren(LuxTabComponent);
   readonly tabHeader = viewChild.required('matTabs', { read: ElementRef });
+
+  componentsConfigService = inject(LuxComponentsConfigService);
+
+  readonly tabChange$: ReplaySubject<MatTabChangeEvent> = new ReplaySubject<MatTabChangeEvent>(1);
+  readonly labelUppercase = signal(false);
+  readonly smallDevice = signal(false);
+
+  private queryService = inject(LuxMediaQueryObserverService);
+
+  private subscriptions: Subscription[] = [];
 
   ngOnInit() {
     this.subscriptions.push(
@@ -84,15 +84,13 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscriptions.push(
       this.componentsConfigService.config.subscribe(() => {
-        this.labelUppercase = this.componentsConfigService.isLabelUppercaseForSelector('lux-tab');
-        this.cdr.markForCheck();
+        this.labelUppercase.set(this.componentsConfigService.isLabelUppercaseForSelector('lux-tab'));
       })
     );
 
     this.subscriptions.push(
       this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-        this.smallDevice = query === 'xs' || query === 'sm';
-        this.cdr.markForCheck();
+        this.smallDevice.set(query === 'xs' || query === 'sm');
       })
     );
   }
@@ -100,12 +98,6 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.rerenderTabs();
     this.callOnTabActivated();
-  }
-
-  private callOnTabActivated() {
-    setTimeout(() => {
-      this.luxTabs()[this.luxActiveTab()]?.onTabActivated();
-    });
   }
 
   ngOnDestroy() {
@@ -133,5 +125,11 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       });
     }
+  }
+
+  private callOnTabActivated() {
+    setTimeout(() => {
+      this.luxTabs()[this.luxActiveTab()]?.onTabActivated();
+    });
   }
 }

@@ -9,11 +9,11 @@ import { MatSelect } from '@angular/material/select';
 export class LuxSelectVisibleOptionCountDirective implements OnInit, OnDestroy {
   private static readonly DEFAULT_OPTION_HEIGHT = 48;
 
+  readonly luxSelectVisibleOptionCount = input<number | null | undefined>(undefined);
+
   private readonly matSelect = inject(MatSelect);
   private readonly destroyRef = inject(DestroyRef);
   private panelAttachTimeout?: ReturnType<typeof setTimeout>;
-
-  readonly luxSelectVisibleOptionCount = input<number | null | undefined>(undefined);
 
   constructor() {
     effect(() => {

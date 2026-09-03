@@ -12,13 +12,13 @@ import { LuxFilePreviewPdfViewerComponent } from './lux-file-preview-pdfviewer/l
   imports: [LuxFilePreviewPdfViewerComponent, LuxFilePreviewImgViewerComponent, LuxFilePreviewNotSupportedViewerComponent]
 })
 export class LuxFilePreviewComponent {
-  data = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
-
-  pdfViewer = viewChild(LuxFilePreviewPdfViewerComponent);
-  imgViewer = viewChild(LuxFilePreviewImgViewerComponent);
-  notSupportedViewer = viewChild(LuxFilePreviewNotSupportedViewerComponent);
+  readonly pdfViewer = viewChild(LuxFilePreviewPdfViewerComponent);
+  readonly imgViewer = viewChild(LuxFilePreviewImgViewerComponent);
+  readonly notSupportedViewer = viewChild(LuxFilePreviewNotSupportedViewerComponent);
 
   fileType = signal<'img' | 'pdf' | 'txt' | 'notsupported'>('notsupported');
+
+  private readonly data = inject<LuxFilePreviewData>(LUX_FILE_PREVIEW_DATA);
 
   constructor() {
     effect(() => {

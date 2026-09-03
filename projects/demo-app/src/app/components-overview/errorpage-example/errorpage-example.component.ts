@@ -46,7 +46,7 @@ export class ErrorpageExampleComponent implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
 
   constructor() {
-    this.errorPageConfig = this.errorStore.config;
+    this.errorPageConfig = this.errorStore.config();
     this.configForm = new FormGroup({});
     Object.keys(this.errorPageConfig).forEach((key: string) => {
       this.configForm.setControl(key, new FormControl((this.errorPageConfig as any)[key]));
@@ -63,7 +63,7 @@ export class ErrorpageExampleComponent implements AfterViewInit {
   openErrorpage() {
     history?.pushState(null, '', 'components-overview/example/error-page');
     this.errorService.navigateToErrorPage({ errorId: this.errorId(), errorMessage: this.errorMessage() });
-    this.logger.log(this.errorStore.lastErrors);
+    this.logger.log(this.errorStore.lastErrors());
   }
 
   updateErrorConfig() {

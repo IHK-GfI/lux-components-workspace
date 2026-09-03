@@ -1,5 +1,5 @@
 import { NgComponentOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, signal, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, Signal, signal, Type, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { map } from 'rxjs';
@@ -51,36 +51,41 @@ type LuxConsentSection = 'consent' | 'datenschutz' | 'impressum';
   ]
 })
 export class LuxConsentDialogComponent {
-  private readonly dialogRef = inject(LuxDialogRef);
-  private readonly consentService = inject(LuxConsentService);
-  private readonly mediaQueryService = inject(LuxMediaQueryObserverService);
-
-  protected readonly consentConfig: ILuxConsentConfig = this.consentService.getCurrentConfig();
-
-  // merge default entries with any entries provided via DI config
-  protected readonly combinedEntries: LuxConsentEntry[] = [...LUX_CONSENT_ENTRIES, ...(this.consentConfig?.entries ?? [])];
-  protected readonly hasNonEssentialEntries = this.combinedEntries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
-
   protected readonly LuxConsentPurpose = LuxConsentPurpose;
   protected readonly storageTypes: LuxConsentStorageType[] = Object.values(LuxConsentStorageType) as LuxConsentStorageType[];
 
-  private readonly tableDataByPurposeAndType: Record<string, LuxConsentEntry[]> = this.buildTableDataByPurposeAndType();
+  // Von der Injizierung des LuxConsentService abhängig, daher im Constructor befüllt statt inline initialisiert.
+  protected readonly consentConfig: ILuxConsentConfig;
+  // Von consentConfig abhängige, im Constructor zusammengeführte Default- und DI-Config-Einträge.
+  protected readonly combinedEntries: LuxConsentEntry[];
+  protected readonly hasNonEssentialEntries: boolean;
+  protected readonly mobileView: Signal<boolean>;
+  protected readonly impressumComponentResolved: WritableSignal<Type<unknown> | null>;
+  protected readonly datenschutzComponentResolved: WritableSignal<Type<unknown> | null>;
 
   protected readonly cookieCategories = signal<LuxCookieCategory[]>(LUX_CONSENT_CATEGORIES.map((category) => ({ ...category })));
-
-  protected readonly mobileView = toSignal(
-    this.mediaQueryService.getMediaQueryChangedAsObservable().pipe(map(() => this.mediaQueryService.isSmallerOrEqual('sm'))),
-    { initialValue: this.mediaQueryService.isSmallerOrEqual('sm') }
-  );
-
-  private readonly consentState = toSignal(this.consentService.getConsentState(), { initialValue: null });
-
   protected readonly isExpanded = signal(false);
   protected readonly activeSection = signal<LuxConsentSection>('consent');
-  protected readonly impressumComponentResolved = signal<Type<unknown> | null>(this.consentConfig.impressumComponent ?? null);
-  protected readonly datenschutzComponentResolved = signal<Type<unknown> | null>(this.consentConfig.datenschutzComponent ?? null);
+
+  private readonly dialogRef = inject(LuxDialogRef);
+  private readonly consentService = inject(LuxConsentService);
+  private readonly mediaQueryService = inject(LuxMediaQueryObserverService);
+  private readonly consentState = toSignal(this.consentService.getConsentState(), { initialValue: null });
+  private readonly tableDataByPurposeAndType: Record<string, LuxConsentEntry[]>;
 
   constructor() {
+    this.consentConfig = this.consentService.getCurrentConfig();
+    // merge default entries with any entries provided via DI config
+    this.combinedEntries = [...LUX_CONSENT_ENTRIES, ...(this.consentConfig?.entries ?? [])];
+    this.hasNonEssentialEntries = this.combinedEntries.some((entry) => entry.purpose !== LuxConsentPurpose.Essential);
+    this.tableDataByPurposeAndType = this.buildTableDataByPurposeAndType();
+    this.mobileView = toSignal(
+      this.mediaQueryService.getMediaQueryChangedAsObservable().pipe(map(() => this.mediaQueryService.isSmallerOrEqual('sm'))),
+      { initialValue: this.mediaQueryService.isSmallerOrEqual('sm') }
+    );
+    this.impressumComponentResolved = signal(this.consentConfig.impressumComponent ?? null);
+    this.datenschutzComponentResolved = signal(this.consentConfig.datenschutzComponent ?? null);
+
     effect(() => {
       const state = this.consentState();
       if (state) {

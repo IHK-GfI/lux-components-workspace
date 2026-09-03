@@ -18,13 +18,13 @@
       }"
     >
       <div class="lux-file-upload-drop-label-container" [attr.aria-disabled]="disabled ? 'true' : null">
-        <lux-icon class="lux-file-upload-icon" [luxIconName]="luxUploadIcon()" luxIconSize="2x" luxPadding="0" luxMargin="0"></lux-icon>
+        <lux-icon class="lux-file-upload-icon" [luxIconName]="luxUploadIcon()" luxIconSize="2x" luxPadding="0" luxMargin="0" />
         <div class="lux-file-upload-label-container">
           <div
             class="lux-file-upload-label"
             [attr.data-label]="isMobile() ? luxLabelLink() + '&nbsp;&nbsp;' : luxLabel() + ' ' + luxLabelLink() + '&nbsp;&nbsp;'"
           >
-            <ng-container *ngTemplateOutlet="isMobile() ? mobileLabelTemplate : desktopLabelTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="isMobile() ? mobileLabelTemplate : desktopLabelTemplate" />
           </div>
         </div>
       </div>
@@ -34,8 +34,7 @@
           color="primary"
           mode="indeterminate"
           luxAriaLabel="{{ ariaLabelProgress || ('luxc.progress.arialabel' | transloco) }}"
-        >
-        </mat-progress-bar>
+        />
       }
       @if (!forceProgressIndeterminate()) {
         <div class="lux-file-upload-drop-container-no-progress"></div>
@@ -47,7 +46,7 @@
       @if (luxHint()) {
         {{ luxHint() }}
       } @else {
-        <ng-container *ngTemplateOutlet="formHintComponent()?.templateRef() ?? null"></ng-container>
+        <ng-container *ngTemplateOutlet="formHintComponent()?.templateRef() ?? null" />
       }
     </mat-hint>
   } @else if (!errorMessage()) {
@@ -60,7 +59,7 @@
         luxIconName="lux-interface-alert-warning-triangle"
         luxIconSize="0.75rem"
         luxPadding="1px"
-      ></lux-icon>
+      />
       <mat-error [id]="uid() + '-misc'">
         {{ errorMessage() }}
       </mat-error>
@@ -74,7 +73,7 @@
         luxIconSize="2x"
         luxPadding="0"
         luxMargin="0"
-      ></lux-icon>
+      />
       <mat-error [id]="uid() + '-misc'" class="lux-file-upload-error-message">
         {{ errorMessage() }}
       </mat-error>
@@ -84,7 +83,7 @@
         class="lux-file-upload-error-button"
         luxIconName="lux-interface-delete-1"
         (luxClicked)="onCloseErrorMessage()"
-      ></lux-button>
+      />
     </div>
   }
 
@@ -103,8 +102,7 @@
             [luxIconName]="fileIcons()[i]"
             [luxIconSize]="theme() === 'green' ? '2x' : '1.125rem'"
             aria-hidden="true"
-          >
-          </lux-icon>
+          />
           <div class="lux-file-upload-view-item-label-container">
             <div class="lux-file-upload-view-label">
               @if (file.namePrefix) {
@@ -114,7 +112,7 @@
               }
               <span class="lux-file-upload-label-text">
                 @if (!luxViewActionConfig().hidden && !disabled) {
-                  <lux-link-plain [luxLabel]="file.name" (luxClicked)="viewFile(file)"></lux-link-plain>
+                  <lux-link-plain [luxLabel]="file.name" (luxClicked)="viewFile(file)" />
                 } @else {
                   {{ file.name }}
                 }
@@ -140,7 +138,7 @@
                 [luxIconName]="customConfig.iconName"
                 [luxDisabled]="customConfig.disabled || disabled"
                 (luxClicked)="customConfig.onClick ? customConfig.onClick(file) : noop()"
-              ></lux-button>
+              />
             }
           }
           @if (!readonly && !disabled && !deleteConfig.hidden) {
@@ -151,7 +149,7 @@
               class="lux-file-upload-view-item-button lux-file-upload-view-item-delete-button"
               [luxDisabled]="deleteConfig.disabled || disabled || (deleteConfig.isDeletable ? !deleteConfig.isDeletable(file) : false)"
               (luxClicked)="openDeleteDialog(i)"
-            ></lux-button>
+            />
           }
         </div>
       </div>
@@ -186,7 +184,7 @@
       class="lux-file-upload-link"
       [luxLabel]="(luxLabelLink() || ('luxc.file.upload.label.link' | transloco)) + (luxRequired() ? '&nbsp;*' : '')"
       [luxDisabled]="luxDisabled()"
-    ></lux-link-plain>
+    />
   }
 </ng-template>
 
@@ -201,6 +199,6 @@
       class="lux-file-upload-link"
       [luxLabel]="(luxLabelLink() || ('luxc.file.upload.label.link' | transloco)) + (luxRequired() ? '&nbsp;*' : '')"
       [luxDisabled]="luxDisabled()"
-    ></lux-link-plain>
+    />
   }
 </ng-template>

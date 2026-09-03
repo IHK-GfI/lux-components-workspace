@@ -6,14 +6,14 @@
         {{ 'luxc.consent.description' | transloco }}
       </p>
 
-      <lux-divider></lux-divider>
+      <lux-divider />
 
       @if (activeSection() === 'datenschutz' && datenschutzComponentResolved()) {
-        <ng-container *ngComponentOutlet="datenschutzComponentResolved(); inputs: consentConfig.datenschutzComponentInputs"></ng-container>
+        <ng-container *ngComponentOutlet="datenschutzComponentResolved(); inputs: consentConfig.datenschutzComponentInputs" />
       }
 
       @if (activeSection() === 'impressum' && impressumComponentResolved()) {
-        <ng-container *ngComponentOutlet="impressumComponentResolved(); inputs: consentConfig.impressumComponentInputs"></ng-container>
+        <ng-container *ngComponentOutlet="impressumComponentResolved(); inputs: consentConfig.impressumComponentInputs" />
       }
 
       @if (activeSection() === 'consent' && !isExpanded()) {
@@ -35,7 +35,7 @@
                   [luxHint]="category.hint | transloco"
                   [luxChecked]="category.enabled"
                   (luxCheckedChange)="toggleCategoryEnabled(category.purpose, $event)"
-                ></lux-toggle-ac>
+                />
               }
             }
           }
@@ -63,8 +63,7 @@
                         [luxDisabled]="category.disabled"
                         [luxTagId]="'cookie-' + category.purpose"
                         (luxCheckedChange)="toggleCategoryEnabled(category.purpose, $event)"
-                      >
-                      </lux-toggle-ac>
+                      />
                     }
                   }
                 }
@@ -76,7 +75,7 @@
               @for (category of cookieCategories(); track $index) {
                 @if (hasConfiguredEntriesForCategory(category.purpose)) {
                   @if ($index !== 0) {
-                    <lux-divider class="lux-pt-4"></lux-divider>
+                    <lux-divider class="lux-pt-4" />
                   }
                   <div class="purpose-section">
                     <h4 class="purpose-title">{{ category.name | transloco }}</h4>
@@ -137,28 +136,28 @@
       }
     </div>
 
-    <lux-divider></lux-divider>
+    <lux-divider />
 
     <div class="lux-flex lux-gap-5 lux-mt-3 lux-justify-start lt-sm:lux-flex-col lt-sm:lux-mt-1">
       @if (activeSection() !== 'consent') {
-        <lux-link-plain [luxLabel]="'luxc.consent.link_back' | transloco" (luxClicked)="showSection('consent')"></lux-link-plain>
+        <lux-link-plain [luxLabel]="'luxc.consent.link_back' | transloco" (luxClicked)="showSection('consent')" />
       }
       @if (activeSection() === 'consent' && isExpanded()) {
         <lux-link-plain
           [luxLabel]="'luxc.consent.hide_details' | transloco"
           [luxIconShowRight]="false"
           (luxClicked)="toggleDetails()"
-        ></lux-link-plain>
+        />
       }
       @if (activeSection() === 'consent' && !isExpanded()) {
         <lux-link-plain
           [luxLabel]="'luxc.consent.show_details' | transloco"
           [luxIconShowRight]="false"
           (luxClicked)="toggleDetails()"
-        ></lux-link-plain>
+        />
       }
-      <lux-link-plain [luxLabel]="'luxc.consent.link_datenschutz' | transloco" (luxClicked)="showSection('datenschutz')"></lux-link-plain>
-      <lux-link-plain [luxLabel]="'luxc.consent.link_impressum' | transloco" (luxClicked)="showSection('impressum')"></lux-link-plain>
+      <lux-link-plain [luxLabel]="'luxc.consent.link_datenschutz' | transloco" (luxClicked)="showSection('datenschutz')" />
+      <lux-link-plain [luxLabel]="'luxc.consent.link_impressum' | transloco" (luxClicked)="showSection('impressum')" />
     </div>
   </lux-dialog-content>
   <lux-dialog-actions class="lux-consent-dialog-actions">
@@ -169,24 +168,21 @@
         [luxFlat]="true"
         luxColor="primary"
         (luxClicked)="declineAll()"
-      >
-      </lux-button>
+      />
       <lux-button
         [luxLabel]="'luxc.consent.button_accept_selected' | transloco"
         luxTagId="accept-selected"
         [luxFlat]="true"
         luxColor="primary"
         (luxClicked)="acceptSelected()"
-      >
-      </lux-button>
+      />
       <lux-button
         [luxLabel]="'luxc.consent.button_accept_all' | transloco"
         luxTagId="accept-all"
         [luxFlat]="true"
         luxColor="primary"
         (luxClicked)="acceptAll()"
-      >
-      </lux-button>
+      />
     } @else {
       <lux-button
         [luxLabel]="'luxc.consent.button_close' | transloco"
@@ -194,8 +190,7 @@
         [luxFlat]="true"
         luxColor="primary"
         (luxClicked)="closeDialog()"
-      >
-      </lux-button>
+      />
     }
   </lux-dialog-actions>
 </lux-dialog-structure>

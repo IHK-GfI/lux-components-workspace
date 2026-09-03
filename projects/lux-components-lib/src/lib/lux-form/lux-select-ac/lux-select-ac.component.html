@@ -55,7 +55,7 @@
           [filterValue]="luxFilterValue()"
           [clearAriaLabel]="luxFilterClearAriaLabel()"
           [filterDirective]="selectFilter"
-        ></lux-select-panel-filter>
+        />
       }
       @for (i of renderOptionIndexes(); track i) {
         <mat-option
@@ -65,7 +65,7 @@
         >
           <ng-container
             *ngTemplateOutlet="tempRef() ? tempRef()! : noTemplateRefTemplate; context: { $implicit: luxOptions()[i] }"
-          ></ng-container>
+          />
         </mat-option>
       }
     </mat-select>

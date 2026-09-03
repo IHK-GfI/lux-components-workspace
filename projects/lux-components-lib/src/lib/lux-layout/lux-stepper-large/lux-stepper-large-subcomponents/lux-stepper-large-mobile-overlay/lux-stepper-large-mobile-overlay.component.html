@@ -1,7 +1,7 @@
 @if (stepperComponent && stepperComponent.steps().length > 0) {
 <div class="lux-stepper-large-mobile-nav-container">
   <div class="lux-stepper-large-mobile-nav-close-button-container">
-    <lux-button class="lux-stepper-large-mobile-nav-close-button" luxIconName="lux-close" (luxClicked)="overlayRef.close()"></lux-button>
+    <lux-button class="lux-stepper-large-mobile-nav-close-button" luxIconName="lux-close" (luxClicked)="overlayRef.close()" />
   </div>
   <div class="lux-stepper-large-mobile-nav-header">
     <div>Schritt {{ stepperComponent.currentStepNumber + 1 }} von {{ stepperComponent.steps().length }}</div>
@@ -24,7 +24,7 @@
       <div class="lux-stepper-large-nav-item-label-container lux-stepper-large-mobile-nav-item-label-container">
         <ng-container
           *ngTemplateOutlet="step.luxTouched() && !step.luxDisabled() ? link : nolink; context: { step: step, i: i }"
-        ></ng-container>
+        />
       </div>
     </div>
     }

@@ -55,24 +55,6 @@ let luxChipControlUID = 0;
   ]
 })
 export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> implements AfterContentInit, AfterViewInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
-  private readonly generatedChipUid = 'lux-chip-control-ac-' + luxChipControlUID++;
-  private disabledPropagationEnabled = false;
-
-  override readonly uid = computed(() => this.luxId() || this.generatedChipUid);
-
-  readonly filteredOptions = signal<string[]>([]);
-  readonly displayedOptions = signal<string[]>([]);
-
-  loadingRunning = false;
-  activeIndex = -1;
-  onInitFinished = false;
-
-  inputValue$: Subject<string> = new Subject<string>();
-  newChip$: Subject<any> = new Subject<any>();
-  canClose = false;
-  actionRunning = false;
-
   readonly luxOrientation = input<LuxChipsAcOrientation>('horizontal');
   readonly luxInputAllowed = input(false);
   readonly luxNewChipGroup = input<LuxChipAcGroupComponent | undefined>(undefined);
@@ -104,6 +86,32 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
   readonly matAutocomplete = viewChild('auto', { read: MatAutocomplete });
   readonly matAutocompleteComponent = viewChild(MatAutocomplete);
   readonly chipContainerDivRef = viewChild<ElementRef>('chipsContainerDiv');
+
+  readonly filteredOptions = signal<string[]>([]);
+  readonly displayedOptions = signal<string[]>([]);
+
+  loadingRunning = false;
+  activeIndex = -1;
+  onInitFinished = false;
+
+  inputValue$: Subject<string> = new Subject<string>();
+  newChip$: Subject<any> = new Subject<any>();
+  canClose = false;
+  actionRunning = false;
+
+  get chipComponents(): readonly LuxChipAcComponent[] {
+    return this.luxChipComponents();
+  }
+
+  get chipGroupComponents(): readonly LuxChipAcGroupComponent[] {
+    return this.luxChipGroupComponents();
+  }
+
+  private subscriptions: Subscription[] = [];
+  private readonly generatedChipUid = 'lux-chip-control-ac-' + luxChipControlUID++;
+  private disabledPropagationEnabled = false;
+
+  override readonly uid = computed(() => this.luxId() || this.generatedChipUid);
 
   constructor() {
     super();
@@ -190,14 +198,6 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
     );
   }
 
-  get chipComponents(): readonly LuxChipAcComponent[] {
-    return this.luxChipComponents();
-  }
-
-  get chipGroupComponents(): readonly LuxChipAcGroupComponent[] {
-    return this.luxChipGroupComponents();
-  }
-
   override ngOnInit() {
     super.ngOnInit();
 
@@ -272,6 +272,12 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
     }
   }
 
+  override ngOnDestroy() {
+    super.ngOnDestroy();
+
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
   /**
    * Läd den nächsten Block Daten aus den Entries nach.
    */
@@ -293,12 +299,6 @@ export class LuxChipsAcComponent extends LuxFormComponentBase<string[] | null> i
       this.filteredOptions.set(filteredOptions);
       this.displayedOptions.update((options) => [...options, ...nextBlock]);
     }
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**

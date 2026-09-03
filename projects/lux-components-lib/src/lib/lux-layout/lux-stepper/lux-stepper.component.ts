@@ -16,6 +16,7 @@ import {
   OnDestroy,
   OnInit,
   output,
+  signal,
   ViewContainerRef
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
@@ -39,29 +40,6 @@ import { LuxStepperVerticalComponent } from './lux-stepper-subcomponents/lux-ste
   imports: [LuxStepperVerticalComponent, NgClass, LuxStepperHorizontalComponent]
 })
 export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
-  stepperService = inject(LuxStepperHelperService);
-  private cdr = inject(ChangeDetectorRef);
-  private elementRef = inject(ElementRef);
-  private queryService = inject(LuxMediaQueryObserverService);
-
-  private readonly _DEFAULT_PREV_BTN_CONF: ILuxStepperButtonConfig = {
-    label: ''
-  };
-  private readonly _DEFAULT_NEXT_BTN_CONF: ILuxStepperButtonConfig = {
-    label: ''
-  };
-  private readonly _DEFAULT_FIN_BTN_CONF: ILuxStepperButtonConfig = {
-    label: '',
-    color: 'primary'
-  };
-
-  readonly luxSteps = contentChildren(LuxStepComponent);
-
-  readonly luxFinishButtonClicked = output<void>();
-  readonly luxStepChanged = output<StepperSelectionEvent>();
-  readonly luxCheckValidation = output<number>();
-  readonly luxStepClicked = output<number>();
-
   readonly luxCurrentStepNumber = model(0);
   readonly luxUseCustomIcons = input(false);
   readonly luxEditedIconName = input('lux-interface-edit-pencil');
@@ -75,6 +53,35 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
   readonly luxFinishButtonConfig = input<ILuxStepperButtonConfig | undefined>();
   readonly luxA11YMode = input(false);
   readonly luxButtonAlignLeft = input(false);
+
+  readonly luxFinishButtonClicked = output<void>();
+  readonly luxStepChanged = output<StepperSelectionEvent>();
+  readonly luxCheckValidation = output<number>();
+  readonly luxStepClicked = output<number>();
+
+  readonly luxSteps = contentChildren(LuxStepComponent);
+
+  stepperService = inject(LuxStepperHelperService);
+  matStepper!: MatStepper;
+  matStepLabels!: ViewContainerRef[];
+  matStepHeaders!: CdkStepHeader[];
+  readonly mobileView = signal<boolean | undefined>(undefined);
+
+  private cdr = inject(ChangeDetectorRef);
+  private elementRef = inject(ElementRef);
+  private queryService = inject(LuxMediaQueryObserverService);
+  private readonly _DEFAULT_PREV_BTN_CONF: ILuxStepperButtonConfig = {
+    label: ''
+  };
+  private readonly _DEFAULT_NEXT_BTN_CONF: ILuxStepperButtonConfig = {
+    label: ''
+  };
+  private readonly _DEFAULT_FIN_BTN_CONF: ILuxStepperButtonConfig = {
+    label: '',
+    color: 'primary'
+  };
+  private subscriptions: Subscription[] = [];
+  private subscription?: Subscription;
 
   readonly stepperConfiguration = computed<ILuxStepperConfiguration>(() => ({
     luxCurrentStepNumber: this.luxCurrentStepNumber(),
@@ -92,14 +99,6 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     luxA11YMode: this.luxA11YMode(),
     luxButtonAlignLeft: this.luxButtonAlignLeft()
   }));
-
-  matStepper!: MatStepper;
-  matStepLabels!: ViewContainerRef[];
-  matStepHeaders!: CdkStepHeader[];
-
-  private subscriptions: Subscription[] = [];
-  mobileView?: boolean;
-  subscription?: Subscription;
 
   constructor() {
     // Den Stepper im Helper-Service bekannt machen
@@ -149,8 +148,7 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngOnInit() {
     this.subscription = this.queryService.getMediaQueryChangedAsObservable().subscribe((query) => {
-      this.mobileView = query === 'xs' || query === 'sm';
-      this.cdr.markForCheck();
+      this.mobileView.set(query === 'xs' || query === 'sm');
     });
   }
 
@@ -220,6 +218,13 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     this.cdr.detectChanges();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   fixRoleAttributes() {
     // Workaround: Der Stepper setzt die Rolle "tablist" auf den Header, was nicht korrekt ist.
     // Für den vertikalen Stepper wurde keine einfacher Workaround gefunden.
@@ -235,13 +240,6 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
           headerElements[0].setAttribute('role', 'tablist');
         }
       }
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-    if (this.subscription) {
-      this.subscription.unsubscribe();
     }
   }
 

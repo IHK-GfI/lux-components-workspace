@@ -3,7 +3,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  HostListener,
   OnDestroy,
   OnInit,
   computed,
@@ -60,6 +59,9 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
   selector: 'lux-filter-form',
   templateUrl: './lux-filter-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.shift.enter)': 'onShiftEnter()'
+  },
   imports: [
     LuxAccordionComponent,
     LuxPanelComponent,
@@ -87,20 +89,6 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
   ]
 })
 export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy {
-  private dialogService = inject(LuxDialogService);
-  private cdr = inject(ChangeDetectorRef);
-  private mediaQuery = inject(LuxMediaQueryObserverService);
-
-  dialogConfig: ILuxDialogConfig = {
-    width: minWidth(DIALOG_WIDTH_SMALL_PX),
-    height: 'auto',
-    panelClass: []
-  };
-
-  formElementes: LuxFilterItemDirective[] = [];
-  readonly formElementesQL = contentChildren(LuxFilterItemDirective, { descendants: true });
-  readonly extendedOptions = contentChild(LuxFilterFormExtendedComponent);
-
   readonly luxTitle = input('');
   readonly luxButtonRaised = input(false);
   readonly luxButtonFlat = input(false);
@@ -132,22 +120,34 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   readonly luxFilterExpanded = model(false);
   readonly luxFilterValues = input<any>({});
 
-  private readonly filterValuesSnapshot = computed(() => JSON.parse(JSON.stringify(this.luxFilterValues())));
-  private lastAppliedFilterValues: any = undefined;
-
   readonly luxOnSave = output<LuxFilter>();
   readonly luxOnLoad = output<string>();
   readonly luxOnFilter = output<string>();
   readonly luxOnDelete = output<LuxFilter>();
   readonly luxOnReset = output<void>();
 
+  readonly formElementesQL = contentChildren(LuxFilterItemDirective, { descendants: true });
+  readonly extendedOptions = contentChild(LuxFilterFormExtendedComponent);
+
+  dialogConfig: ILuxDialogConfig = {
+    width: minWidth(DIALOG_WIDTH_SMALL_PX),
+    height: 'auto',
+    panelClass: []
+  };
+  formElementes: LuxFilterItemDirective[] = [];
   filterForm: FormGroup;
   subscriptions: Subscription[] = [];
   readonly filterItems = signal<LuxFilterItem<any>[]>([]);
   readonly initComplete = signal(false);
   initFilterValue = null;
-
   readonly isMobile = signal(false);
+
+  private dialogService = inject(LuxDialogService);
+  private cdr = inject(ChangeDetectorRef);
+  private mediaQuery = inject(LuxMediaQueryObserverService);
+  private lastAppliedFilterValues: any = undefined;
+
+  private readonly filterValuesSnapshot = computed(() => JSON.parse(JSON.stringify(this.luxFilterValues())));
 
   constructor() {
     this.filterForm = new FormGroup({});
@@ -177,43 +177,6 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.isMobile.set(query === 'xs' || query === 'sm');
       })
     );
-  }
-
-  private updateFilterChips() {
-    if (this.initComplete()) {
-      const newFilterItems: LuxFilterItem<any>[] = [];
-
-      this.formElementes.forEach((formItem) => {
-        if (formItem.filterItem && formItem.filterItem.binding && this.filterForm.get(formItem.filterItem.binding)) {
-          const value = this.filterForm.get(formItem.filterItem.binding)!.value;
-
-          if (
-            !formItem.filterItem.component.formControl.disabled &&
-            formItem.filterItem.defaultValues.findIndex((defaultValue) => defaultValue === value) === -1
-          ) {
-            if (Array.isArray(value)) {
-              let i = 0;
-              value.forEach((selected) => {
-                const newFilterItem = new LuxFilterItem(
-                  formItem.filterItem.label,
-                  formItem.filterItem.binding,
-                  formItem.filterItem.component
-                );
-                Object.assign(newFilterItem, formItem.filterItem);
-                newFilterItem.value = newFilterItem.renderFn(newFilterItem, selected);
-                newFilterItem.multiValueIndex = i++;
-                newFilterItems.push(newFilterItem);
-              });
-            } else {
-              formItem.filterItem.value = formItem.filterItem.renderFn(formItem.filterItem, value);
-              newFilterItems.push(formItem.filterItem);
-            }
-          }
-        }
-      });
-
-      this.filterItems.set(newFilterItems);
-    }
   }
 
   ngAfterViewInit(): void {
@@ -324,7 +287,6 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.onFilter();
   }
 
-  @HostListener('document:keydown.shift.enter')
   onShiftEnter() {
     // Alle eventuell noch offenen Popups/Panels der Formularelemente schließen.
     //
@@ -445,5 +407,42 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
     return newFilter;
+  }
+
+  private updateFilterChips() {
+    if (this.initComplete()) {
+      const newFilterItems: LuxFilterItem<any>[] = [];
+
+      this.formElementes.forEach((formItem) => {
+        if (formItem.filterItem && formItem.filterItem.binding && this.filterForm.get(formItem.filterItem.binding)) {
+          const value = this.filterForm.get(formItem.filterItem.binding)!.value;
+
+          if (
+            !formItem.filterItem.component.formControl.disabled &&
+            formItem.filterItem.defaultValues.findIndex((defaultValue) => defaultValue === value) === -1
+          ) {
+            if (Array.isArray(value)) {
+              let i = 0;
+              value.forEach((selected) => {
+                const newFilterItem = new LuxFilterItem(
+                  formItem.filterItem.label,
+                  formItem.filterItem.binding,
+                  formItem.filterItem.component
+                );
+                Object.assign(newFilterItem, formItem.filterItem);
+                newFilterItem.value = newFilterItem.renderFn(newFilterItem, selected);
+                newFilterItem.multiValueIndex = i++;
+                newFilterItems.push(newFilterItem);
+              });
+            } else {
+              formItem.filterItem.value = formItem.filterItem.renderFn(formItem.filterItem, value);
+              newFilterItems.push(formItem.filterItem);
+            }
+          }
+        }
+      });
+
+      this.filterItems.set(newFilterItems);
+    }
   }
 }

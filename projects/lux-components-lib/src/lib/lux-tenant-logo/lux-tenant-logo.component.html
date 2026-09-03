@@ -9,7 +9,7 @@
     [luxClickable]="true"
     (luxClicked)="onImageClicked($event)"
     (luxImageError)="onImageError()"
-  ></lux-image>
+  />
 } @else if (imageLoadError()) {
   <div class="lux-tenant-logo lux-tenant-logo-error-container" [style.height]="actualLuxTenantLogoHeight()">
     <span

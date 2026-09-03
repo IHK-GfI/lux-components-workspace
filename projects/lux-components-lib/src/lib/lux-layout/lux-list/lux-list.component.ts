@@ -9,8 +9,6 @@ import {
   contentChildren,
   effect,
   ElementRef,
-  HostBinding,
-  HostListener,
   inject,
   input,
   OnDestroy,
@@ -47,9 +45,36 @@ const KEY_F2 = 'F2';
   selector: 'lux-list',
   templateUrl: './lux-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[attr.role]': 'role',
+    '[attr.tabindex]': 'tabindex',
+    '[attr.aria-label]': 'label',
+    '(focus)': 'onFocus($event)',
+    '(keydown)': 'onKeydown($event)',
+    '(focusout)': 'onFocusOut($event)'
+  },
   imports: [LuxIconComponent, TranslocoPipe]
 })
 export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
+  readonly luxEmptyIconName = input('lux-interface-alert-information-circle');
+  readonly luxEmptyIconSize = input('5x');
+  readonly luxEmptyLabel = input('');
+  readonly luxLabel = input<string | undefined>();
+  readonly luxSelectedPosition = input<number | undefined>(0);
+
+  readonly luxFocusedItemChange = output<LuxListItemComponent>();
+  readonly luxFocusedPositionChange = output<number>();
+  readonly luxSelectedPositionChange = output<number>();
+
+  readonly luxItems = contentChildren(LuxListItemComponent);
+
+  role = 'grid';
+  tabindex = '0';
+
+  get label() {
+    return this.effectiveLabel();
+  }
+
   private tService = inject(TranslocoService);
   private elementRef = inject(ElementRef);
   private platformId = inject(PLATFORM_ID);
@@ -75,69 +100,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   private editMode = false;
 
-  readonly luxItems = contentChildren(LuxListItemComponent);
-
-  readonly luxFocusedItemChange = output<LuxListItemComponent>();
-  readonly luxFocusedPositionChange = output<number>();
-  readonly luxSelectedPositionChange = output<number>();
-
-  readonly luxEmptyIconName = input('lux-interface-alert-information-circle');
-  readonly luxEmptyIconSize = input('5x');
-  readonly luxEmptyLabel = input('');
-  readonly luxLabel = input<string | undefined>();
-  readonly luxSelectedPosition = input<number | undefined>(0);
-
   readonly effectiveLabel = computed(() => this.luxLabel() || this.tService.translate('luxc.list.arialabel'));
-
-  @HostBinding('attr.role') role = 'grid';
-  @HostBinding('attr.tabindex') tabindex = '0';
-
-  @HostBinding('attr.aria-label') get label() {
-    return this.effectiveLabel();
-  }
-
-  @HostListener('focus', ['$event']) onFocus(event: FocusEvent) {
-    const relatedTarget = event.relatedTarget as HTMLElement | null;
-    const activeItem = this.keyManager.activeItem;
-
-    // Im editMode: Fokus kommt aus dem aktiven Item (z.B. Shift+Tab vom ersten Element).
-    // Nur zur Zeile zurückspringen, editMode bleibt aktiv.
-    if (this.editMode && activeItem && relatedTarget && activeItem.elementRef.nativeElement.contains(relatedTarget)) {
-      this.focusNow(activeItem);
-      return;
-    }
-
-    if (event.relatedTarget === null || 'lux-list-item' !== this.getTagName(event)) {
-      // Wenn die Liste den Focus erhält, soll direkt das selektierte Element (bzw. das erste Element) focussiert werden.
-      if (this.luxItems().length > 0) {
-        if (this._selectedPosition != null && this._selectedPosition >= 0) {
-          this.focus(this._selectedPosition);
-        } else {
-          this.focus(0);
-        }
-      }
-    }
-  }
-
-  @HostListener('keydown', ['$event']) onKeydown(keyboardEvent: KeyboardEvent) {
-    this.keydown(keyboardEvent);
-  }
-
-  @HostListener('focusout', ['$event']) onFocusOut(event: FocusEvent) {
-    if (this.editMode) {
-      const activeItem = this.keyManager.activeItem;
-      if (activeItem) {
-        const relatedTarget = event.relatedTarget as HTMLElement | null;
-        // Fokus wandert zum lux-list-Host selbst (z.B. Shift+Tab vom ersten interaktiven Element):
-        // Das ist eine Zwischenstation auf dem Weg zurück zur Zeile – editMode bleibt aktiv.
-        const isMovingToListHost = relatedTarget === this.elementRef.nativeElement;
-        const isLeavingActiveItem = !relatedTarget || !activeItem.elementRef.nativeElement.contains(relatedTarget);
-        if (isLeavingActiveItem && !isMovingToListHost) {
-          this.exitEditMode(false);
-        }
-      }
-    }
-  }
 
   constructor() {
     effect(() => {
@@ -195,10 +158,6 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
-  isEmpty() {
-    return this.luxItems().length === 0;
-  }
-
   ngOnInit() {
     const defaultLabel = this.tService.translate('luxc.list.arialabel');
     if (this.label === defaultLabel) {
@@ -249,6 +208,53 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     this.tabStopObserver?.disconnect();
 
     this.clickSubscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  onFocus(event: FocusEvent) {
+    const relatedTarget = event.relatedTarget as HTMLElement | null;
+    const activeItem = this.keyManager.activeItem;
+
+    // Im editMode: Fokus kommt aus dem aktiven Item (z.B. Shift+Tab vom ersten Element).
+    // Nur zur Zeile zurückspringen, editMode bleibt aktiv.
+    if (this.editMode && activeItem && relatedTarget && activeItem.elementRef.nativeElement.contains(relatedTarget)) {
+      this.focusNow(activeItem);
+      return;
+    }
+
+    if (event.relatedTarget === null || 'lux-list-item' !== this.getTagName(event)) {
+      // Wenn die Liste den Focus erhält, soll direkt das selektierte Element (bzw. das erste Element) focussiert werden.
+      if (this.luxItems().length > 0) {
+        if (this._selectedPosition != null && this._selectedPosition >= 0) {
+          this.focus(this._selectedPosition);
+        } else {
+          this.focus(0);
+        }
+      }
+    }
+  }
+
+  onKeydown(keyboardEvent: KeyboardEvent) {
+    this.keydown(keyboardEvent);
+  }
+
+  onFocusOut(event: FocusEvent) {
+    if (this.editMode) {
+      const activeItem = this.keyManager.activeItem;
+      if (activeItem) {
+        const relatedTarget = event.relatedTarget as HTMLElement | null;
+        // Fokus wandert zum lux-list-Host selbst (z.B. Shift+Tab vom ersten interaktiven Element):
+        // Das ist eine Zwischenstation auf dem Weg zurück zur Zeile – editMode bleibt aktiv.
+        const isMovingToListHost = relatedTarget === this.elementRef.nativeElement;
+        const isLeavingActiveItem = !relatedTarget || !activeItem.elementRef.nativeElement.contains(relatedTarget);
+        if (isLeavingActiveItem && !isMovingToListHost) {
+          this.exitEditMode(false);
+        }
+      }
+    }
+  }
+
+  isEmpty() {
+    return this.luxItems().length === 0;
   }
 
   /**

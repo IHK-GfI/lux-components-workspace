@@ -8,9 +8,7 @@ import {
   Component,
   ComponentRef,
   DOCUMENT,
-  ElementRef,
   EventEmitter,
-  NgZone,
   Output,
   ViewContainerRef,
   inject,
@@ -18,7 +16,6 @@ import {
   output
 } from '@angular/core';
 import { MAT_DATEPICKER_SCROLL_STRATEGY, MatDateSelectionModel } from '@angular/material/datepicker';
-import { MatFormField } from '@angular/material/form-field';
 import { merge, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
@@ -33,14 +30,6 @@ const defaultDateFilterFn: LuxDateFilterAcFn = () => true;
   template: ''
 })
 export class LuxDatetimeOverlayAcComponent {
-  private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
-  private ngZone = inject(NgZone);
-  private overlay = inject(Overlay);
-  private viewContainerRef = inject(ViewContainerRef);
-  private document = inject(DOCUMENT, { optional: true });
-  private _dir = inject(Directionality, { optional: true });
-  private _formField = inject(MatFormField, { optional: true });
-
   readonly luxPickerInput = input.required<HTMLInputElement>();
   readonly luxStartView = input<'month' | 'year' | 'multi-year'>('month');
   readonly luxStartDate = input<Date | null>(null);
@@ -69,9 +58,6 @@ export class LuxDatetimeOverlayAcComponent {
   id = '';
   disabled = false;
   color: LuxThemePalette = 'primary';
-  registerInput(input: any): MatDateSelectionModel<any> {
-    return null as any;
-  }
   // Code des Interfaces "MatDatepickerPanel<MatDatepickerControl<any>, any, any>" - Ende
 
   dateTimePortal?: ComponentPortal<LuxDatetimeOverlayContentAcComponent>;
@@ -80,10 +66,20 @@ export class LuxDatetimeOverlayAcComponent {
   overlayComponentRef?: ComponentRef<LuxDatetimeOverlayContentAcComponent> | null;
   datepickerInput: any;
 
+  private overlay = inject(Overlay);
+  private viewContainerRef = inject(ViewContainerRef);
+  private document = inject(DOCUMENT, { optional: true });
+  private _dir = inject(Directionality, { optional: true });
+
   constructor() {
     const scrollStrategy = inject(MAT_DATEPICKER_SCROLL_STRATEGY);
 
     this.scrollStrategy = scrollStrategy;
+  }
+
+  // Code des Interfaces "MatDatepickerPanel<MatDatepickerControl<any>, any, any>"
+  registerInput(input: any): MatDateSelectionModel<any> {
+    return null as any;
   }
 
   onOk(date: Date) {

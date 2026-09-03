@@ -1,6 +1,6 @@
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { NgClass } from '@angular/common';
 @Component({
   selector: 'lux-card-heading',
   imports: [NgClass],
@@ -24,8 +24,8 @@ import { NgClass } from '@angular/common';
   `
 })
 export class LuxCardHeadingComponent {
-  luxLevel = input<number>(2);
-  luxText = input<string | undefined>('');
-  luxTitle = input<string | undefined>('');
-  luxClass = input<any>(undefined);
+  readonly luxLevel = input<number>(2);
+  readonly luxText = input<string | undefined>('');
+  readonly luxTitle = input<string | undefined>('');
+  readonly luxClass = input<any>(undefined);
 }

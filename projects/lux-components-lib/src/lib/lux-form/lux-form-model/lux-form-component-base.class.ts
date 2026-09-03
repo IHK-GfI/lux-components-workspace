@@ -42,67 +42,6 @@ export declare type LuxErrorCallbackFnType = (value: any, errors: LuxValidationE
 export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, OnDestroy {
   protected static readonly DEFAULT_CTRL_NAME: string = 'control';
 
-  protected _formValueChangeSub?: Subscription;
-  protected _formStatusChangeSub?: Subscription;
-  protected _configSubscription?: Subscription;
-
-  protected latestErrors: any = null;
-  protected _initialValue?: any;
-  private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
-  private validatorsInitialized = false;
-  private readonly generatedUid = 'lux-form-control-' + uuidv4();
-
-  readonly errorMessage = signal<string | undefined>(undefined);
-
-  /**
-   * Reaktive Spiegelung von formControl.touched bzw. formControl.invalid. Das FormControl
-   * selbst ist nicht signalbasiert, deshalb bekämen OnPush-Templates Änderungen an diesen
-   * beiden Zuständen sonst nicht mit. Die eigentliche Synchronisation läuft weiterhin über
-   * ngDoCheck() (nicht über formControl.events direkt): formControl.events feuert synchron
-   * MIT dem auslösenden Aufruf (z.B. markAsTouched()), also potenziell BEVOR Angular in
-   * derselben Change-Detection-Runde bereits geänderte Inputs (z.B. luxErrorMessage) in diese
-   * Komponente geschrieben hat - ngDoCheck() läuft dagegen garantiert erst NACH der
-   * Input-Aktualisierung. formControl.events wird unten nur genutzt, um markForCheck()
-   * auszulösen, damit ngDoCheck() bei einem direkten FormControl-Aufruf überhaupt läuft.
-   *
-   * Achtung: Diese Kopplung greift nur, wenn formControl.events tatsächlich feuert. Ruft eine
-   * abgeleitete Komponente setValue()/updateValueAndValidity() mit { emitEvent: false } auf (z.B.
-   * um ein "stilles" internes Nachziehen ohne doppeltes valueChanges-Event umzusetzen), bleibt
-   * markForCheck() aus - die Komponente muss dann selbst this.cdr.markForCheck() aufrufen, sonst
-   * bleiben touched/invalid/errorMessage bis zur nächsten zufällig ausgelösten Prüfung veraltet.
-   * Siehe lux-chips-ac.component.ts (syncFormControlWithStandaloneChips) sowie
-   * lux-datepicker-ac.component.ts/lux-datetimepicker-ac.component.ts (setISOValue) als Beispiele.
-   */
-  readonly touched = signal(false);
-  readonly invalid = signal(false);
-
-  /**
-   * Reaktive Spiegelung von formControl.value. Anders als die Wert-Inputs (luxValue, luxChecked,
-   * luxSelected) folgt dieses Signal immer dem FormControl - auch dann, wenn der Wert
-   * ausschließlich über eine Reactive Form gesetzt wurde.
-   */
-  readonly value = signal<T>(null as T);
-
-  protected controlContainer = inject(ControlContainer, { optional: true });
-  protected destroyRef = inject(DestroyRef);
-  protected cdr = inject(ChangeDetectorRef);
-  protected logger = inject(LuxConsoleService);
-  protected configService = inject(LuxComponentsConfigService);
-  protected tService = inject(TranslocoService);
-
-  inForm = false;
-  formGroup!: FormGroup;
-  formControl!: FormControl<T>;
-
-  readonly formLabelComponent = contentChild(LuxFormLabelComponent);
-  readonly formHintComponent = contentChild(LuxFormHintComponent);
-
-  readonly formControlWrapperComponent = viewChild(LuxFormControlWrapperComponent);
-  readonly formControlWrapperComponentRef = viewChild(LuxFormControlWrapperComponent, { read: ElementRef });
-
-  readonly luxFocusIn = output<FocusEvent>();
-  readonly luxFocusOut = output<FocusEvent>();
-
   readonly luxId = input('');
   readonly luxHint = input('');
   readonly luxHintShowOnlyOnFocus = input(false);
@@ -162,6 +101,67 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    */
   readonly luxRequired = model(false);
 
+  readonly luxFocusIn = output<FocusEvent>();
+  readonly luxFocusOut = output<FocusEvent>();
+
+  readonly formLabelComponent = contentChild(LuxFormLabelComponent);
+  readonly formHintComponent = contentChild(LuxFormHintComponent);
+
+  readonly formControlWrapperComponent = viewChild(LuxFormControlWrapperComponent);
+  readonly formControlWrapperComponentRef = viewChild(LuxFormControlWrapperComponent, { read: ElementRef });
+
+  readonly errorMessage = signal<string | undefined>(undefined);
+
+  /**
+   * Reaktive Spiegelung von formControl.touched bzw. formControl.invalid. Das FormControl
+   * selbst ist nicht signalbasiert, deshalb bekämen OnPush-Templates Änderungen an diesen
+   * beiden Zuständen sonst nicht mit. Die eigentliche Synchronisation läuft weiterhin über
+   * ngDoCheck() (nicht über formControl.events direkt): formControl.events feuert synchron
+   * MIT dem auslösenden Aufruf (z.B. markAsTouched()), also potenziell BEVOR Angular in
+   * derselben Change-Detection-Runde bereits geänderte Inputs (z.B. luxErrorMessage) in diese
+   * Komponente geschrieben hat - ngDoCheck() läuft dagegen garantiert erst NACH der
+   * Input-Aktualisierung. formControl.events wird unten nur genutzt, um markForCheck()
+   * auszulösen, damit ngDoCheck() bei einem direkten FormControl-Aufruf überhaupt läuft.
+   *
+   * Achtung: Diese Kopplung greift nur, wenn formControl.events tatsächlich feuert. Ruft eine
+   * abgeleitete Komponente setValue()/updateValueAndValidity() mit { emitEvent: false } auf (z.B.
+   * um ein "stilles" internes Nachziehen ohne doppeltes valueChanges-Event umzusetzen), bleibt
+   * markForCheck() aus - die Komponente muss dann selbst this.cdr.markForCheck() aufrufen, sonst
+   * bleiben touched/invalid/errorMessage bis zur nächsten zufällig ausgelösten Prüfung veraltet.
+   * Siehe lux-chips-ac.component.ts (syncFormControlWithStandaloneChips) sowie
+   * lux-datepicker-ac.component.ts/lux-datetimepicker-ac.component.ts (setISOValue) als Beispiele.
+   */
+  readonly touched = signal(false);
+  readonly invalid = signal(false);
+
+  /**
+   * Reaktive Spiegelung von formControl.value. Anders als die Wert-Inputs (luxValue, luxChecked,
+   * luxSelected) folgt dieses Signal immer dem FormControl - auch dann, wenn der Wert
+   * ausschließlich über eine Reactive Form gesetzt wurde.
+   */
+  readonly value = signal<T>(null as T);
+
+  inForm = false;
+  formGroup!: FormGroup;
+  formControl!: FormControl<T>;
+
+  protected _formValueChangeSub?: Subscription;
+  protected _formStatusChangeSub?: Subscription;
+  protected _configSubscription?: Subscription;
+
+  protected latestErrors: any = null;
+  protected _initialValue?: any;
+  private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
+  private validatorsInitialized = false;
+  private readonly generatedUid = 'lux-form-control-' + uuidv4();
+
+  protected controlContainer = inject(ControlContainer, { optional: true });
+  protected destroyRef = inject(DestroyRef);
+  protected cdr = inject(ChangeDetectorRef);
+  protected logger = inject(LuxConsoleService);
+  protected configService = inject(LuxComponentsConfigService);
+  protected tService = inject(TranslocoService);
+
   readonly uid = computed(() => this.luxId() || this.generatedUid);
 
   constructor() {
@@ -204,22 +204,6 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
         this.updateValidators(this.luxControlValidators(), true);
       });
     });
-  }
-
-  /**
-   * Liefert den Wert für "aria-labelledby" gemäß der Namenskaskade:
-   * luxAriaLabelledby vor luxAriaLabel vor luxLabel (uid + '-label').
-   * undefined bedeutet: kein aria-labelledby setzen (die Aria-Direktiven
-   * entfernen das Attribut dann), damit ein gesetztes luxAriaLabel greifen kann.
-   */
-  labelledBy(): string | undefined {
-    if (this.luxAriaLabelledby()) {
-      return this.luxAriaLabelledby();
-    }
-    if (this.luxAriaLabel()) {
-      return undefined;
-    }
-    return this.formLabelComponent() || this.luxLabel() ? this.uid() + '-label' : undefined;
   }
 
   ngOnInit() {
@@ -277,6 +261,50 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     if (this.a11yNameCheckTimeout) {
       clearTimeout(this.a11yNameCheckTimeout);
     }
+  }
+
+  /**
+   * Liefert den Wert für "aria-labelledby" gemäß der Namenskaskade:
+   * luxAriaLabelledby vor luxAriaLabel vor luxLabel (uid + '-label').
+   * undefined bedeutet: kein aria-labelledby setzen (die Aria-Direktiven
+   * entfernen das Attribut dann), damit ein gesetztes luxAriaLabel greifen kann.
+   */
+  labelledBy(): string | undefined {
+    if (this.luxAriaLabelledby()) {
+      return this.luxAriaLabelledby();
+    }
+    if (this.luxAriaLabel()) {
+      return undefined;
+    }
+    return this.formLabelComponent() || this.luxLabel() ? this.uid() + '-label' : undefined;
+  }
+
+  /**
+   * Liefert den aktuellen Wert dieser FormComponent (ersetzt den früheren luxValue-Getter).
+   */
+  getValue(): T {
+    return this.formControl ? this.formControl.value : this._initialValue;
+  }
+
+  /**
+   * Setzt den aktuellen Wert dieser FormComponent (ersetzt den früheren luxValue-Setter).
+   * @param value
+   */
+  setValue(value: T) {
+    this.value.set(value);
+
+    // Wenn noch kein FormControl vorhanden, den init-Wert merken und Fn beenden
+    if (!this.formControl) {
+      this._initialValue = value;
+      return;
+    }
+
+    // Wenn der Wert bereits in dem FormControl bekannt ist, die Fn beenden
+    if (value === this.formControl.value) {
+      return;
+    }
+    // Den Wert im FormControl merken
+    this.formControl.setValue(value);
   }
 
   /**
@@ -361,34 +389,6 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
           `und ein davon abweichendes luxAriaLabel. Das aria-label überschreibt das sichtbare Label (WCAG 2.5.3 "Label in Name").`
       );
     }
-  }
-
-  /**
-   * Liefert den aktuellen Wert dieser FormComponent (ersetzt den früheren luxValue-Getter).
-   */
-  getValue(): T {
-    return this.formControl ? this.formControl.value : this._initialValue;
-  }
-
-  /**
-   * Setzt den aktuellen Wert dieser FormComponent (ersetzt den früheren luxValue-Setter).
-   * @param value
-   */
-  setValue(value: T) {
-    this.value.set(value);
-
-    // Wenn noch kein FormControl vorhanden, den init-Wert merken und Fn beenden
-    if (!this.formControl) {
-      this._initialValue = value;
-      return;
-    }
-
-    // Wenn der Wert bereits in dem FormControl bekannt ist, die Fn beenden
-    if (value === this.formControl.value) {
-      return;
-    }
-    // Den Wert im FormControl merken
-    this.formControl.setValue(value);
   }
 
   /**

@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { LuxIconColor } from '../../lux-util/lux-colors.enum';
 import { LuxIconRegistryService } from './lux-icon-registry.service';
@@ -16,10 +16,6 @@ import { LuxIconRegistryService } from './lux-icon-registry.service';
   imports: [MatIcon, NgStyle, NgClass]
 })
 export class LuxIconComponent {
-  private readonly iconReg = inject(LuxIconRegistryService);
-
-  readonly notFoundIconName = 'lux-interface-alert-warning-diamond';
-
   readonly luxColor = input<LuxIconColor | undefined>(undefined);
   readonly luxRounded = input(false);
 
@@ -35,7 +31,8 @@ export class LuxIconComponent {
 
   readonly luxIconName = input<string | undefined>('');
 
-  readonly luxLoad = output<Event>();
+  private readonly iconReg = inject(LuxIconRegistryService);
+  private readonly notFoundIconName = 'lux-interface-alert-warning-diamond';
 
   // Registriert das Icon als Seiteneffekt der Namensauflösung, da das svgIcon synchron zur Template-Auswertung benötigt wird.
   protected readonly resolvedIconName = computed(() => this.registerIcon(this.luxIconName()));

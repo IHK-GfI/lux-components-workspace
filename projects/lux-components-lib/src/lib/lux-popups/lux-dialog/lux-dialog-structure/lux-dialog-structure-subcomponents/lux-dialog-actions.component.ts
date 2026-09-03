@@ -3,8 +3,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 @Component({
   selector: 'lux-dialog-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>'
+  template: '<ng-content />'
 })
-export class LuxDialogActionsComponent {
-  constructor() {}
-}
+export class LuxDialogActionsComponent {}

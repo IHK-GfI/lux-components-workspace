@@ -525,7 +525,7 @@ class MockExternalStepComponent extends LuxStepComponent {}
 @Component({
   template: `
     <lux-stepper>
-      <lux-external-step></lux-external-step>
+      <lux-external-step />
     </lux-stepper>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

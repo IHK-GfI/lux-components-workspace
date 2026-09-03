@@ -102,9 +102,6 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
    */
   readonly renderedEntries = signal<LuxLookupTableEntry[]>([]);
   subscription?: Subscription;
-  private panelScrollHandler?: EventListener;
-  private panelElement?: Element;
-
   /**
    * Label-Extractor für Filter-Directive.
    * Wird als Arrow-Function definiert um this-Kontext zu erhalten.
@@ -115,14 +112,12 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     return `${key} ${label}`;
   };
 
+  private panelScrollHandler?: EventListener;
+  private panelElement?: Element;
+
   constructor() {
     super();
     this.stateMatcher = new LuxLookupErrorStateMatcher(this);
-  }
-
-  override notifyFormValueChanged(formValue: any): void {
-    super.notifyFormValueChanged(formValue);
-    this.ensureSelectedEntriesLoaded();
   }
 
   ngAfterViewInit() {
@@ -180,6 +175,11 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     this.refreshRenderedEntries();
   }
 
+  override notifyFormValueChanged(formValue: any): void {
+    super.notifyFormValueChanged(formValue);
+    this.ensureSelectedEntriesLoaded();
+  }
+
   /**
    * Setzt den aktuellen Value-Wert auf den ausgewählten Wert.
    * @param selectChange
@@ -196,39 +196,6 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     if (isActive && this.invisibleEntries.length > 0) {
       this.updateDisplayedEntries(this.invisibleEntries.length);
       this.filterDirective()?.setItems(this.renderedEntries());
-    }
-  }
-
-  /**
-   * Fügt beim öffnen des Selects einen Scroll-Listener hinzu.
-   * @param panelElement
-   */
-  private registerPanelScrollEvent(panelElement: Element) {
-    if (this.panelElement !== panelElement) {
-      this.removePanelScrollEvent();
-      this.panelElement = panelElement;
-      this.panelScrollHandler = (event: Event) => this.loadOnScroll(event);
-      this.panelElement.addEventListener('scroll', this.panelScrollHandler);
-    }
-  }
-
-  private removePanelScrollEvent() {
-    if (this.panelElement && this.panelScrollHandler) {
-      this.panelElement.removeEventListener('scroll', this.panelScrollHandler);
-      this.panelElement = undefined;
-      this.panelScrollHandler = undefined;
-    }
-  }
-
-  private loadOnScroll(event: Event) {
-    // Nicht scrollen wenn Filter aktiv
-    if (this.filterDirective()?.isFilterActive()) {
-      return;
-    }
-
-    const position = event.target as any;
-    if (position && (position.scrollTop + position.clientHeight) / position.scrollHeight > 85 / 100) {
-      this.updateDisplayedEntries();
     }
   }
 
@@ -290,6 +257,39 @@ export class LuxLookupComboboxAcComponent<T = LuxLookupTableEntry> extends LuxLo
     // Panel nur öffnen, wenn noch nicht offen
     if (matSelect && !matSelect.panelOpen) {
       matSelect.open();
+    }
+  }
+
+  /**
+   * Fügt beim öffnen des Selects einen Scroll-Listener hinzu.
+   * @param panelElement
+   */
+  private registerPanelScrollEvent(panelElement: Element) {
+    if (this.panelElement !== panelElement) {
+      this.removePanelScrollEvent();
+      this.panelElement = panelElement;
+      this.panelScrollHandler = (event: Event) => this.loadOnScroll(event);
+      this.panelElement.addEventListener('scroll', this.panelScrollHandler);
+    }
+  }
+
+  private removePanelScrollEvent() {
+    if (this.panelElement && this.panelScrollHandler) {
+      this.panelElement.removeEventListener('scroll', this.panelScrollHandler);
+      this.panelElement = undefined;
+      this.panelScrollHandler = undefined;
+    }
+  }
+
+  private loadOnScroll(event: Event) {
+    // Nicht scrollen wenn Filter aktiv
+    if (this.filterDirective()?.isFilterActive()) {
+      return;
+    }
+
+    const position = event.target as any;
+    if (position && (position.scrollTop + position.clientHeight) / position.scrollHeight > 85 / 100) {
+      this.updateDisplayedEntries();
     }
   }
 

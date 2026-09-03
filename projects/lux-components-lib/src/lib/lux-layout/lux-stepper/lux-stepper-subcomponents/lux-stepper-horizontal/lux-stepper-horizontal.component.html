@@ -20,32 +20,32 @@
       <!-- Header des Steps -->
       <ng-template matStepLabel>
         <div class="lux-flex lux-place-content-start lux-items-center">
-          <ng-template #matStepLabel></ng-template>
+          <ng-template #matStepLabel />
           @if (luxStep.hasHeader) {
-            <ng-container *ngTemplateOutlet="luxStep.headerTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="luxStep.headerTemplate" />
           }
         </div>
       </ng-template>
       <!-- Content des Steps, wenn Animationen aktiviert sind -->
       @if (luxStepperConfig()?.luxHorizontalStepAnimationActive) {
-        <ng-container *ngTemplateOutlet="luxStep.contentTemplate"></ng-container>
-        <ng-container *ngTemplateOutlet="navButtonsTemplate; context: { index: i, step: luxStep }"></ng-container>
+        <ng-container *ngTemplateOutlet="luxStep.contentTemplate" />
+        <ng-container *ngTemplateOutlet="navButtonsTemplate; context: { index: i, step: luxStep }" />
       }
     </mat-step>
   }
 
   <!-- Überschreiben der default Material-Icons -->
   <ng-template matStepperIcon="edit">
-    <lux-icon luxIconName="lux-interface-edit-pencil" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-edit-pencil" luxIconSize="1.25rem" />
   </ng-template>
   <ng-template matStepperIcon="done">
-    <lux-icon luxIconName="lux-interface-validation-check" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-validation-check" luxIconSize="1.25rem" />
   </ng-template>
   <ng-template matStepperIcon="error">
-    <lux-icon luxIconName="lux-interface-delete-1" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-delete-1" luxIconSize="1.25rem" />
   </ng-template>
   <ng-template matStepperIcon="home">
-    <lux-icon luxIconName="lux-interface-home-3" luxIconSize="1.25rem"></lux-icon>
+    <lux-icon luxIconName="lux-interface-home-3" luxIconSize="1.25rem" />
   </ng-template>
 </mat-horizontal-stepper>
 
@@ -54,13 +54,13 @@
   @for (luxStep of luxStepperConfig()?.luxSteps; track luxStep; let i = $index) {
     @if (matStepper()) {
       <section class="lux-stepper-content-section" [class.lux-display-none]="i !== matStepper().selectedIndex">
-        <ng-container *ngTemplateOutlet="luxStep.contentTemplate ? luxStep.contentTemplate : noDataTemplate"></ng-container>
-        <ng-container *ngTemplateOutlet="navButtonsTemplate; context: { index: i, step: luxStep }"></ng-container>
+        <ng-container *ngTemplateOutlet="luxStep.contentTemplate ? luxStep.contentTemplate : noDataTemplate" />
+        <ng-container *ngTemplateOutlet="navButtonsTemplate; context: { index: i, step: luxStep }" />
       </section>
     }
   }
 }
-<ng-template #noDataTemplate></ng-template>
+<ng-template #noDataTemplate />
 
 <!-- Nav-Buttons in separatem Template (da 2 mal hier verwendet) -->
 <ng-template #navButtonsTemplate let-i="index" let-step="step">
@@ -72,7 +72,6 @@
       (luxPrevClick)="luxPrevButtonClicked.emit()"
       (luxNextClick)="luxNextButtonClicked.emit()"
       (luxFinClick)="luxFinButtonClicked.emit()"
-    >
-    </lux-stepper-nav-buttons>
+    />
   }
 </ng-template>

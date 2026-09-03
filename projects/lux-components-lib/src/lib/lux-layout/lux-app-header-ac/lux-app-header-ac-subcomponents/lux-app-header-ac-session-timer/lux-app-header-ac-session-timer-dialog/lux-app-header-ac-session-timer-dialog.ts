@@ -33,10 +33,11 @@ export enum LuxSessionTimerDialogType {
   templateUrl: './lux-app-header-ac-session-timer-dialog.html'
 })
 export class LuxAppHeaderAcSessionTimerDialogComponent {
+  readonly currentStep = signal<LuxSessionTimerDialogType>(LuxSessionTimerDialogType.INFO);
+
   private readonly timerService = inject(LuxAppHeaderAcSessionTimerService);
   private readonly luxDialogRef = inject(LuxDialogRef<any>);
   private readonly destroyRef = inject(DestroyRef);
-  currentStep = signal<LuxSessionTimerDialogType>(LuxSessionTimerDialogType.INFO);
 
   extendSession() {
     const extendSessionTimer$ = this.timerService?.extendSessionTimer();

@@ -7,12 +7,6 @@ import { LuxThemePalette } from '../../../lux-util/lux-colors.enum';
   template: ''
 })
 export class LuxChipAcGroupComponent {
-  readonly tempRef = contentChild(TemplateRef);
-
-  readonly luxChipClicked = output<number>();
-  readonly luxChipAdded = output<string>();
-  readonly luxChipRemoved = output<number>();
-
   /**
    * Die Labels der Gruppe. Änderungen (add/remove) erzeugen ein neues Array und werden als
    * luxLabelsChange gemeldet - für einen Abgleich mit dem Aufrufer bietet sich [(luxLabels)] an.
@@ -28,6 +22,12 @@ export class LuxChipAcGroupComponent {
   readonly luxColor = input<LuxThemePalette, LuxThemePalette>('primary', {
     transform: (color) => (color === 'primary' || color === 'accent' || color === 'warn' ? color : undefined)
   });
+
+  readonly luxChipClicked = output<number>();
+  readonly luxChipAdded = output<string>();
+  readonly luxChipRemoved = output<number>();
+
+  readonly tempRef = contentChild(TemplateRef);
 
   add(label: string) {
     this.luxLabels.update((labels) => [...(labels ?? []), label]);
