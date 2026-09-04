@@ -41,10 +41,11 @@ export class TileExampleComponent {
   readonly counterCap = signal(20);
   readonly label = signal('Tile Example');
   log = logResult;
-  private readonly _showNotification = signal(false);
   readonly showShadow = signal(true);
   readonly truncateAfterOneLine = signal(false);
   readonly truncateAfterTwoLines = signal(false);
+
+  private readonly _showNotification = signal(false);
 
   get showNotification() {
     return this._showNotification();

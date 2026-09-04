@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -10,7 +10,6 @@ import {
   LuxStartAcView,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
-import { TranslocoService } from '@jsverse/transloco';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -54,15 +53,13 @@ interface DatepickerDummyForm {
   ]
 })
 export class DatepickerAuthenticExampleComponent {
-  private tService = inject(TranslocoService);
-
   readonly useCustomFilter = signal(false);
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
   readonly form = new FormGroup<DatepickerDummyForm>({
     datepickerExample: new FormControl<string | null>(new Date(2020, 5, 28, 14, 15) as any)
   });
-  log = logResult;
+  readonly log = logResult;
   readonly validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' }

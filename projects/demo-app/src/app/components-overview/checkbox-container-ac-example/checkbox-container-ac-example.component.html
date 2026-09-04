@@ -5,31 +5,31 @@
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
     <h2>Testkomponente</h2>
     <lux-checkbox-container-ac [luxLabel]="label()" [luxVertical]="isVertical()">
-      <lux-checkbox-ac luxLabel="Lorem ipsum"></lux-checkbox-ac>
-      <lux-checkbox-ac luxLabel="dolor"></lux-checkbox-ac>
-      <lux-checkbox-ac luxLabel="sit amet consectetur"></lux-checkbox-ac>
-      <lux-checkbox-ac luxLabel="adipisicing"></lux-checkbox-ac>
-      <lux-checkbox-ac luxLabel="adipisiQuo, necessitatibus earum dolorcing"></lux-checkbox-ac>
+      <lux-checkbox-ac luxLabel="Lorem ipsum"/>
+      <lux-checkbox-ac luxLabel="dolor"/>
+      <lux-checkbox-ac luxLabel="sit amet consectetur"/>
+      <lux-checkbox-ac luxLabel="adipisicing"/>
+      <lux-checkbox-ac luxLabel="adipisiQuo, necessitatibus earum dolorcing"/>
     </lux-checkbox-container-ac>
 
     <div class="checkbox-grid lux-mt-5" [ngClass]="{ isSmall: isSmall() }">
       <h2>Beispiel für eine responsive Gestaltung</h2>
       <lux-checkbox-container-ac luxLabel="Stufe" [luxVertical]="!isSmall()">
-        <lux-checkbox-ac luxLabel="Stufe 1"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="Stufe 2"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="Stufe 2+" class="col1"></lux-checkbox-ac>
+        <lux-checkbox-ac luxLabel="Stufe 1"/>
+        <lux-checkbox-ac luxLabel="Stufe 2"/>
+        <lux-checkbox-ac luxLabel="Stufe 2+" class="col1"/>
       </lux-checkbox-container-ac>
       <lux-checkbox-container-ac luxLabel="Antragsart" [luxVertical]="!isSmall()">
-        <lux-checkbox-ac luxLabel="eUZ"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="eBS"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="mUZ"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="mBS"></lux-checkbox-ac>
+        <lux-checkbox-ac luxLabel="eUZ"/>
+        <lux-checkbox-ac luxLabel="eBS"/>
+        <lux-checkbox-ac luxLabel="mUZ"/>
+        <lux-checkbox-ac luxLabel="mBS"/>
       </lux-checkbox-container-ac>
       <lux-checkbox-container-ac luxLabel="Status" [luxVertical]="!isSmall()">
-        <lux-checkbox-ac luxLabel="Bewilligt"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="Abgelehnt"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="Kommentiert"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="Ungültig erklärt"></lux-checkbox-ac>
+        <lux-checkbox-ac luxLabel="Bewilligt"/>
+        <lux-checkbox-ac luxLabel="Abgelehnt"/>
+        <lux-checkbox-ac luxLabel="Kommentiert"/>
+        <lux-checkbox-ac luxLabel="Ungültig erklärt"/>
       </lux-checkbox-container-ac>
       <p>
         In diesem Beispiel werden die Checkbox-Container in einem css-Grid angeordnet. Dieses zeigt die Container in der Desktop-Ansicht in
@@ -42,9 +42,9 @@
       <div>
         <div formGroupName="options">
           <lux-checkbox-container-ac luxLabel="Lorem ipsum" [luxShowRequiredMarker]="true">
-            <lux-checkbox-ac luxLabel="Option 1" luxControlBinding="cb1"></lux-checkbox-ac>
-            <lux-checkbox-ac luxLabel="Option 2" luxControlBinding="cb2"></lux-checkbox-ac>
-            <lux-checkbox-ac luxLabel="Option 3" luxControlBinding="cb3"></lux-checkbox-ac>
+            <lux-checkbox-ac luxLabel="Option 1" luxControlBinding="cb1"/>
+            <lux-checkbox-ac luxLabel="Option 2" luxControlBinding="cb2"/>
+            <lux-checkbox-ac luxLabel="Option 3" luxControlBinding="cb3"/>
           </lux-checkbox-container-ac>
         </div>
         @if (validatorDemoForm.get('options')?.hasError('luxAtLeastOneCheckboxChecked') && validatorDemoForm.get('options')?.touched) {
@@ -55,22 +55,22 @@
               luxIconSize="0.875rem"
               luxPadding="1px"
               luxMargin="0px 2px 0px 0px"
-            ></lux-icon>
+            />
             <mat-error class="lux-form-error-label">Es muss mindestens eine Option ausgewählt werden.</mat-error>
           </div>
         }
       </div>
       <div>
-        <lux-button luxLabel="Absenden" (luxClicked)="submitValidatorDemo()"></lux-button>
+        <lux-button luxLabel="Absenden" (luxClicked)="submitValidatorDemo()"/>
       </div>
     </form>
 
     <h2>Beispiel ohne Reactive-Form</h2>
     <div>
       <lux-checkbox-container-ac luxLabel="Lorem ipsum" [luxShowRequiredMarker]="true">
-        <lux-checkbox-ac luxLabel="Option A" [(luxChecked)]="standalone1"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="Option B" [(luxChecked)]="standalone2"></lux-checkbox-ac>
-        <lux-checkbox-ac luxLabel="Option C" [(luxChecked)]="standalone3"></lux-checkbox-ac>
+        <lux-checkbox-ac luxLabel="Option A" [(luxChecked)]="standalone1"/>
+        <lux-checkbox-ac luxLabel="Option B" [(luxChecked)]="standalone2"/>
+        <lux-checkbox-ac luxLabel="Option C" [(luxChecked)]="standalone3"/>
       </lux-checkbox-container-ac>
       @if (standaloneSubmitted() && !luxAtLeastOneChecked([standalone1(), standalone2(), standalone3()])) {
         <div class="lux-pl-3 lux-form-error-container">
@@ -80,25 +80,23 @@
             luxIconSize="0.875rem"
             luxPadding="1px"
             luxMargin="0px 2px 0px 0px"
-          ></lux-icon>
+          />
           <mat-error class="lux-form-error-label">Es muss mindestens eine Option ausgewählt werden.</mat-error>
         </div>
       }
     </div>
     <div class="lux-pb-2">
-      <lux-button luxLabel="Absenden" (luxClicked)="submitStandaloneDemo()"></lux-button>
+      <lux-button luxLabel="Absenden" (luxClicked)="submitStandaloneDemo()"/>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label">
-    </lux-input-ac>
+    <lux-input-ac luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label"/>
     <lux-toggle-ac
       luxLabel="luxVertical"
       luxHint="Erlaubt es, zwischen vertikaler oder horizontaler Ausrichtung zu wechseln"
       [(luxChecked)]="isVertical"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <p class="lux-text-highlight-alert">
       Vorsicht: Checkboxen innerhalb eines <code>lux-checkbox-container-ac</code> zeigen weder einen Hinweis noch eine Fehlermeldung an, da
       der Error-Container aus Platzgründen ausgeblendet wird.

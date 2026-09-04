@@ -48,17 +48,20 @@ interface DatetimeDummyForm {
 })
 export class DatetimepickerAuthenticExampleComponent {
   readonly dateTimeInFormComponent = viewChild.required<LuxDatetimepickerAcComponent>('test2');
+
   readonly useCustomFilter = signal(false);
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
-  form: FormGroup<DatetimeDummyForm>;
-  log = logResult;
-  validatorOptions = [
+  readonly form = new FormGroup<DatetimeDummyForm>({
+    datepickerExample: new FormControl<string | null>(null)
+  });
+  readonly log = logResult;
+  readonly validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' }
   ];
   readonly value = signal<string | undefined>(undefined);
-  controlBinding = 'datepickerExample';
+  readonly controlBinding = 'datepickerExample';
   readonly disabled = signal(false);
   readonly readonly = signal(false);
   readonly required = signal(false);
@@ -81,6 +84,11 @@ export class DatetimepickerAuthenticExampleComponent {
   readonly startView = signal<LuxStartAcView>('month');
   readonly startDate = signal('');
   readonly startTime = signal<number[]>([]);
+  readonly customFilterString = this.customFilter + '';
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
+  readonly errorCallbackString = this.errorCallback + '';
+
   private readonly _startTimeAsString = signal<string | undefined>(undefined);
 
   get startTimeAsString(): string | undefined {
@@ -100,16 +108,6 @@ export class DatetimepickerAuthenticExampleComponent {
     } else {
       this.startTime.set([]);
     }
-  }
-  customFilterString = this.customFilter + '';
-  errorCallback = exampleErrorCallback;
-  emptyCallback = emptyErrorCallback;
-  errorCallbackString = this.errorCallback + '';
-
-  constructor() {
-    this.form = new FormGroup<DatetimeDummyForm>({
-      datepickerExample: new FormControl<string | null>(null)
-    });
   }
 
   changeRequired(required: boolean) {

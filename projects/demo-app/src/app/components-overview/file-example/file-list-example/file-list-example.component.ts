@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, inject, signal, viewChild, viewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, inject, signal, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     ILuxFileActionConfig,
@@ -47,11 +47,7 @@ export class FileListExampleComponent
   extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig>
   implements AfterViewInit, OnDestroy
 {
-  private dialogService = inject(LuxDialogService);
-
   readonly fileLists = viewChildren(LuxFileListComponent);
-  readonly fileBaseWithoutComponent = viewChild.required('filelistexamplewithoutform', { read: LuxFileListComponent });
-  readonly fileBaseWithComponent = viewChild.required('filelistexamplewithform', { read: LuxFileListComponent });
 
   readonly namePrefixAccept = signal('(akzeptiert) ');
   readonly namePrefixColorAccept = signal('#3e8320');
@@ -64,6 +60,43 @@ export class FileListExampleComponent
   readonly nameSuffixColorDecline = signal<string | undefined>(undefined);
 
   subscriptions: Subscription[] = [];
+
+  customActionConfigs: ILuxFileActionConfig[] = [
+    {
+      disabled: false,
+      hidden: false,
+      iconName: 'lux-interface-edit-write-2',
+      label: 'Dialog öffnen',
+      prio: 15,
+      onClick: (fileObject: ILuxFileObject) => {
+        this.openDialog(fileObject);
+      }
+    }
+  ];
+
+  readonly showPreview = signal(true);
+  readonly multiple = signal(true);
+  readonly heading = signal(4);
+  headingValidator = Validators.pattern('[1-6]');
+
+  private dialogService = inject(LuxDialogService);
+
+  ngAfterViewInit() {
+    this.fileComponents = [...this.fileLists()];
+
+    this.subscriptions.push(
+      this.form
+        .get(this.controlBinding)!
+        .valueChanges.pipe(skip(1), distinctUntilChanged())
+        .subscribe((value) => {
+          console.log('formValueChanged', value);
+        })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
 
   openDialog(fileObject: ILuxFileObject) {
     const dialogRef = this.dialogService.open({
@@ -104,41 +137,6 @@ export class FileListExampleComponent
     );
   }
 
-  customActionConfigs: ILuxFileActionConfig[] = [
-    {
-      disabled: false,
-      hidden: false,
-      iconName: 'lux-interface-edit-write-2',
-      label: 'Dialog öffnen',
-      prio: 15,
-      onClick: (fileObject: ILuxFileObject) => {
-        this.openDialog(fileObject);
-      }
-    }
-  ];
-
-  readonly showPreview = signal(true);
-  readonly multiple = signal(true);
-  readonly heading = signal(4);
-  headingValidator = Validators.pattern('[1-6]');
-
-  protected initUploadActionConfig() {
-    return {
-      disabled: false,
-      disabledHeader: false,
-      hidden: false,
-      hiddenHeader: false,
-      iconName: 'lux-programming-cloud-upload',
-      iconNameHeader: 'lux-programming-cloud-upload',
-      label: 'Hochladen',
-      labelHeader: 'Neue Dateien hochladen',
-      onClick: (files: ILuxFileObject[]) => {
-        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', files);
-        this.onUpload(files);
-      }
-    };
-  }
-
   initSelected() {
     this.http
       .get('assets/png/example.png', { responseType: 'blob' })
@@ -176,21 +174,21 @@ export class FileListExampleComponent
       });
   }
 
-  ngAfterViewInit() {
-    this.fileComponents = [...this.fileLists()];
-
-    this.subscriptions.push(
-      this.form
-        .get(this.controlBinding)!
-        .valueChanges.pipe(skip(1), distinctUntilChanged())
-        .subscribe((value) => {
-          console.log('formValueChanged', value);
-        })
-    );
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  protected initUploadActionConfig() {
+    return {
+      disabled: false,
+      disabledHeader: false,
+      hidden: false,
+      hiddenHeader: false,
+      iconName: 'lux-programming-cloud-upload',
+      iconNameHeader: 'lux-programming-cloud-upload',
+      label: 'Hochladen',
+      labelHeader: 'Neue Dateien hochladen',
+      onClick: (files: ILuxFileObject[]) => {
+        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', files);
+        this.onUpload(files);
+      }
+    };
   }
 }
 

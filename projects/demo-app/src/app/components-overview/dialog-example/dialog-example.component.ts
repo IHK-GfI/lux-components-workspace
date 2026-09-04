@@ -46,8 +46,6 @@ import { DialogComponentExampleComponent } from './dialog-component-example/dial
   ]
 })
 export class DialogExampleComponent implements OnDestroy {
-  private dialogService = inject(LuxDialogService);
-
   readonly contentTemplate = viewChild.required<TemplateRef<any>>('contentTemplate');
 
   readonly useContentTemplate = signal(false);
@@ -94,8 +92,6 @@ export class DialogExampleComponent implements OnDestroy {
     { label: 'decline', value: 'decline' }
   ];
 
-  private readonly _defaultButton = signal<LuxDialogDefaultButton>(undefined);
-
   get defaultButton() {
     return this._defaultButton();
   }
@@ -134,6 +130,8 @@ export class DialogExampleComponent implements OnDestroy {
     }
   }
 
+  private dialogService = inject(LuxDialogService);
+  private readonly _defaultButton = signal<LuxDialogDefaultButton>(undefined);
   private subscriptions: Subscription[] = [];
 
   ngOnDestroy(): void {

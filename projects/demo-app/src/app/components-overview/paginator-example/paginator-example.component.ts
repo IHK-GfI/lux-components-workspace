@@ -45,33 +45,32 @@ export class PaginatorExampleComponent {
     { label: '[10, 20, 30, 40]', value: [10, 20, 30, 40] },
     { label: '[25, 50, 75, 100, 200]', value: [25, 50, 75, 100, 200] }
   ];
+  private lastSelectedPageSizeOptions: number[] | null = null;
 
   // Paginator State
-  pageIndex = model(0);
-  pageSize = model(5);
-  pageSizeOptions = model(this.pageSizeOptionValues);
-  selectedPageSizeOption = model(this.pageSizeOptionValues[0].value);
-  showFirstLastButtons = model(true);
-  hidePageSize = model(false);
-  disabled = model(false);
-  denseFormat = model(true);
-  selectedRangeLabelOption = model(this.rangeLabelOptions[0].value);
-  noWrap = model(false);
-  itemsPerPageLabel = model('');
-  nextPageLabel = model('');
-  previousPageLabel = model('');
-  firstPageLabel = model('');
-  lastPageLabel = model('');
+  readonly pageIndex = model(0);
+  readonly pageSize = model(5);
+  readonly pageSizeOptions = model(this.pageSizeOptionValues);
+  readonly selectedPageSizeOption = model(this.pageSizeOptionValues[0].value);
+  readonly showFirstLastButtons = model(true);
+  readonly hidePageSize = model(false);
+  readonly disabled = model(false);
+  readonly denseFormat = model(true);
+  readonly selectedRangeLabelOption = model(this.rangeLabelOptions[0].value);
+  readonly noWrap = model(false);
+  readonly itemsPerPageLabel = model('');
+  readonly nextPageLabel = model('');
+  readonly previousPageLabel = model('');
+  readonly firstPageLabel = model('');
+  readonly lastPageLabel = model('');
 
-  showOutputEvents = model(false);
+  readonly showOutputEvents = model(false);
 
   // Computed Signals
-  length = computed(() => this.loremContent.length);
-  maxPageIndex = computed(() => this.calculateMaxPageIndex());
-  visibleItems = computed(() => this.getVisibleItems(this.loremContent, this.pageIndex(), this.pageSize()));
-  rangeLabel = computed<LuxRangeLabelFn | undefined>(() => this.resolveRangeLabel(this.selectedRangeLabelOption()));
-
-  private lastSelectedPageSizeOptions: number[] | null = null;
+  readonly length = computed(() => this.loremContent.length);
+  readonly maxPageIndex = computed(() => this.calculateMaxPageIndex());
+  readonly visibleItems = computed(() => this.getVisibleItems(this.loremContent, this.pageIndex(), this.pageSize()));
+  readonly rangeLabel = computed<LuxRangeLabelFn | undefined>(() => this.resolveRangeLabel(this.selectedRangeLabelOption()));
 
   constructor() {
     this.setupPageSizeOptionsEffect();

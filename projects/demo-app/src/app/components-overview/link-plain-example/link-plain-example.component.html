@@ -14,8 +14,7 @@
           luxTagId="demo-link"
           [luxHref]="href()"
           (luxClicked)="click($event)"
-          [luxBlank]="blank()"
-        ></lux-link-plain>
+          [luxBlank]="blank()" />
         mit Icon im normalen Fließtext.
       </span>
       <h3>
@@ -28,8 +27,7 @@
           luxTagId="demo-link"
           [luxHref]="href()"
           (luxClicked)="click($event)"
-          [luxBlank]="blank()"
-        ></lux-link-plain>
+          [luxBlank]="blank()" />
         in einer H3 mit einem Icon!
       </h3>
       <div>
@@ -43,8 +41,7 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/form"
-              (luxClicked)="click($event)"
-            ></lux-link-plain>
+              (luxClicked)="click($event)" />
           </li>
           <li>
             <lux-link-plain
@@ -54,8 +51,7 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/components-overview"
-              (luxClicked)="click($event)"
-            ></lux-link-plain>
+              (luxClicked)="click($event)" />
           </li>
           <li>
             <lux-link-plain
@@ -65,8 +61,7 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/baseline"
-              (luxClicked)="click($event)"
-            ></lux-link-plain>
+              (luxClicked)="click($event)" />
           </li>
           <li>
             <lux-link-plain
@@ -76,8 +71,7 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/configuration"
-              (luxClicked)="click($event)"
-            ></lux-link-plain>
+              (luxClicked)="click($event)" />
           </li>
         </ul>
       </div>
@@ -97,8 +91,7 @@
           [luxBlank]="blank()"
           luxCustomClass="demo-extra-class"
           [luxIconShowRight]="true"
-          luxIconName="lux-programming-web"
-        ></lux-link-plain>
+          luxIconName="lux-programming-web" />
         im Fließtext mit einer Custom-Style-Class.
       </span>
     </div>
@@ -109,7 +102,7 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    />
     <lux-input-ac luxName="link_luxHref" [(luxValue)]="href" luxLabel="luxHref">
       <lux-form-hint>
         Bestimmt die URL, zu der der Link routet.<br />
@@ -120,11 +113,9 @@
       [(luxChecked)]="blank"
       luxLabel="luxBlank"
       luxHint="Diese Property bestimmt ob (externe) Links in einem neuen Tab geöffnet werden."
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+      [luxNoTopLabel]="true" />
 
-    <lux-input-ac [(luxValue)]="label" luxLabel="luxLabel" luxHint="Bestimmt den Text, der für den Link angezeigt wird."></lux-input-ac>
+    <lux-input-ac [(luxValue)]="label" luxLabel="luxLabel" luxHint="Bestimmt den Text, der für den Link angezeigt wird." />
     <lux-input-ac luxName="button_luxIconName" [(luxValue)]="iconName" luxLabel="luxIconName">
       <lux-form-hint>
         Diese Property definiert das Icon, welches in dem Button (linksbündig, wenn zusätzlich auch noch
@@ -135,7 +126,6 @@
       <lux-form-hint> Diese Property definiert, ob das Icon links oder rechts vom Label-Text angezeigt wird. </lux-form-hint>
     </lux-toggle-ac>
 
-    <lux-toggle-ac [(luxChecked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Link." [luxNoTopLabel]="true">
-    </lux-toggle-ac>
+    <lux-toggle-ac [(luxChecked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Link." [luxNoTopLabel]="true" />
   </example-base-simple-options>
 </example-base-structure>

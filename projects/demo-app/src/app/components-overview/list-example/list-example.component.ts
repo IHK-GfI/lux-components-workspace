@@ -80,7 +80,6 @@ interface ListItem {
   ]
 })
 export class ListExampleComponent {
-  private destroyRef = inject(DestroyRef);
   readonly showCustomHeader = signal(false);
   readonly showOutputEvents = signal(false);
   readonly showInteractiveContent = signal(false);
@@ -94,6 +93,8 @@ export class ListExampleComponent {
   readonly emptyIconName = signal('lux-interface-page-controller-loading-3');
   readonly emptyIconSize = signal('2x');
   readonly selectedPosition = signal(0);
+
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     // setTimeout simuliert asynchrones Laden (z.B. aus einer API).

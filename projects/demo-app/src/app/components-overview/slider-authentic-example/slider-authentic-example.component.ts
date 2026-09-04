@@ -55,26 +55,26 @@ export class SliderAuthenticExampleComponent {
   readonly useErrorMessage = signal(true);
   readonly useDisplayFn = signal(false);
   readonly showOutputEvents = signal(false);
-  colorOptions = [
+  readonly colorOptions = [
     { label: 'Primary', value: 'primary' },
     { label: 'Accent', value: 'accent' },
     { label: 'Warn', value: 'warn' }
   ];
-  validatorOptions = [
+  readonly validatorOptions = [
     { value: Validators.max(100), label: 'Validators.max(100)' },
     { value: Validators.min(25), label: 'Validators.min(25)' }
   ];
-  form: FormGroup<SliderDummyForm>;
+  readonly form: FormGroup<SliderDummyForm>;
   log = logResult;
   readonly percent = signal(0);
   readonly percentReactive = signal(0);
   readonly labelLongFormat = signal(false);
   readonly value = signal(0);
-  displayWithFnString: string = this.displayFn + '';
+  readonly displayWithFnString: string = this.displayFn + '';
   readonly color = signal<LuxSliderAcColor>('primary');
   readonly showThumbLabel = signal(true);
   readonly step = signal(1);
-  controlBinding = 'sliderExample';
+  readonly controlBinding = 'sliderExample';
   readonly disabled = signal(false);
   readonly readonly = signal(false);
   readonly required = signal(false);
@@ -90,9 +90,9 @@ export class SliderAuthenticExampleComponent {
   readonly max = signal(100);
   readonly min = signal(0);
   readonly controlValidators = signal<ValidatorFn[]>([]);
-  errorCallback = exampleErrorCallback;
-  emptyCallback = emptyErrorCallback;
-  errorCallbackString: string = this.errorCallback + '';
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
+  readonly errorCallbackString: string = this.errorCallback + '';
 
   constructor() {
     this.form = new FormGroup<SliderDummyForm>({

@@ -29,8 +29,6 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class ImageExampleComponent implements OnDestroy, OnInit {
-  private readonly platformId = inject(PLATFORM_ID);
-
   readonly showImageFrame = signal(false);
   readonly imgSrcArr = signal<string[]>([
     'assets/png/example.png',
@@ -45,6 +43,8 @@ export class ImageExampleComponent implements OnDestroy, OnInit {
   readonly imgHeight = signal('auto');
   readonly imgRawSrc = signal(false);
   blobImgSrc = '';
+
+  private readonly platformId = inject(PLATFORM_ID);
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {

@@ -11,11 +11,11 @@ import { DseContentService } from './dse-content.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DseComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private dseContent = inject(DseContentService);
-
   readonly fullWidth = input(false);
   readonly content = model<string>();
+
+  private route = inject(ActivatedRoute);
+  private dseContent = inject(DseContentService);
 
   async ngOnInit() {
     if (!this.content()) {

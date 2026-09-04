@@ -10,9 +10,7 @@
           [luxPadding]="padding()"
           [luxMargin]="margin()"
           [luxRounded]="rounded()"
-          [luxColor]="color"
-        >
-        </lux-icon>
+          [luxColor]="color" />
         }
       </div>
       <div class="icon-row">
@@ -23,9 +21,7 @@
           [luxPadding]="padding()"
           [luxMargin]="margin()"
           [luxRounded]="rounded()"
-          class="{{ 'lux-color-' + colors[i % colors.length] }}"
-        >
-        </lux-icon>
+          class="{{ 'lux-color-' + colors[i % colors.length] }}" />
         }
       </div>
     </div>
@@ -39,9 +35,7 @@
           [luxPadding]="padding()"
           [luxMargin]="margin()"
           [luxRounded]="rounded()"
-          [luxColor]="color"
-        >
-        </lux-icon>
+          [luxColor]="color" />
         }
       </div>
       <div class="icon-row">
@@ -52,15 +46,13 @@
           [luxPadding]="padding()"
           [luxMargin]="margin()"
           [luxRounded]="rounded()"
-          class="{{ 'lux-color-' + colors[i % colors.length] }}"
-        >
-        </lux-icon>
+          class="{{ 'lux-color-' + colors[i % colors.length] }}" />
         }
       </div>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac [(luxValue)]="iconName" luxLabel="luxIconName" [luxHint]="iconHint"> </lux-input-ac>
+    <lux-input-ac [(luxValue)]="iconName" luxLabel="luxIconName" [luxHint]="iconHint" />
     <lux-select-ac [(luxSelected)]="iconSize" [luxOptions]="iconSizes" luxLabel="luxIconSize">
       <lux-form-hint>
         Über diese Property kann die Größe des Icons festgelegt werden.<br />
@@ -83,8 +75,7 @@
       luxLabel="Zur Iconsuche"
       luxHref="/icon-overview"
       luxIconName="lux-interface-arrows-button-right"
-      [luxIconShowRight]="true"
-    ></lux-link-plain>
+      [luxIconShowRight]="true" />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac [(luxValue)]="margin" luxLabel="luxMargin">

@@ -41,13 +41,13 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 export class AppFooterExampleComponent {
   readonly buttonService = inject(LuxAppFooterButtonService);
   readonly linkService = inject(LuxAppFooterLinkService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly snackbar = inject(LuxSnackbarService);
-
-  private readonly mementoLinkInfos = [...this.linkService.linkInfos];
-  private readonly mementoButtonInfos = [...this.buttonService.buttonInfos];
   readonly buttonInfos = toSignal(this.buttonService.getButtonInfosAsObservable(), { initialValue: this.buttonService.buttonInfos });
   readonly linkInfos = toSignal(this.linkService.getLinkInfosAsObservable(), { initialValue: this.linkService.linkInfos });
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly snackbar = inject(LuxSnackbarService);
+  private readonly mementoLinkInfos = [...this.linkService.linkInfos];
+  private readonly mementoButtonInfos = [...this.buttonService.buttonInfos];
 
   constructor() {
     this.destroyRef.onDestroy(() => {

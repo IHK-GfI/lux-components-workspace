@@ -1,7 +1,7 @@
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { LuxAutofocusDirective, LuxIconComponent, LuxTileAcComponent } from '@ihk-gfi/lux-components';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +12,6 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 })
 export class HomeComponent {
   private router = inject(Router);
-  tService = inject(TranslocoService);
 
   goTo(target: string) {
     switch (target) {

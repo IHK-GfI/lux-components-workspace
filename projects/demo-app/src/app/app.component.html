@@ -72,14 +72,14 @@
             <lux-side-nav-item
               [luxLabel]="'lux-' + moduleName"
               [luxExpandable]="true"
-              [luxExpanded]="navigationService.currentModules.get(moduleName)!"
+              [luxExpanded]="navigationService.currentModules().get(moduleName)!"
               [luxCloseOnClick]="false"
               luxIconName="lux-programming-module-puzzle"
               [luxTagId]="'lux-' + moduleName + '-module'"
               (luxClicked)="onModuleClicked(moduleName)"
             >
               @for (
-                component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted;
+                component of navigationService.sortedComponentEntries().get(moduleName)! | luxAlphabeticallySorted;
                 track component.label
               ) {
                 <lux-side-nav-item
@@ -238,7 +238,7 @@
           luxLabel="{{ 'app.menu.components' | transloco }}"
           luxAriaLabel="Komponentenübersicht"
           luxTagId="navItem0"
-          luxButtonBadge="{{ components }}"
+          luxButtonBadge="{{ components() }}"
           luxButtonBadgeColor="primary"
           [luxSelected]="url().includes('components-overview') && !url().includes('icon-overview')"
           (luxClicked)="goToComponents()"

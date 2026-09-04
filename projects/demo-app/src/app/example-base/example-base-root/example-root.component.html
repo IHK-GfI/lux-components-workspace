@@ -27,7 +27,7 @@
             ><span class="lux-color-primary-20">lux-{{ moduleName }}</span></lux-panel-header-title
           >
           <lux-panel-content>
-            @for (component of navigationService.sortedComponentEntries.get(moduleName)! | luxAlphabeticallySorted; track component) {
+            @for (component of navigationService.sortedComponentEntries().get(moduleName)! | luxAlphabeticallySorted; track component) {
               <div
                 tabindex="0"
                 role="button"
@@ -37,7 +37,7 @@
                 class="lux-flex lux-items-center lux-gap-2 example-component-list-item lux-color-primary-20"
                 [ngClass]="{
                   'example-component-list-item-selected':
-                    navigationService.selectedComponent && navigationService.selectedComponent.label === component.label
+                    navigationService.selectedComponent() && navigationService.selectedComponent()!.label === component.label
                 }"
               >
                 <div class="example-component-list-item-label">

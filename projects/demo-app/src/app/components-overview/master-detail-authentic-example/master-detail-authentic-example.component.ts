@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import {
@@ -71,12 +71,6 @@ import { TextExampleComponent } from './text-example/text-example.component';
   }
 })
 export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy {
-  private dataService = inject(MasterDetailExampleDataService);
-  private router = inject(Router);
-  private footerService = inject(LuxAppFooterButtonService);
-  private logger = inject(LuxConsoleService);
-  private themeService = inject(LuxThemeService);
-
   options = [
     { value: null, label: 'Kein Filter' },
     { value: Date.now() + MasterDetailExampleDataService.DAY * 3, label: 'Nächste 3 Tage' },
@@ -84,13 +78,6 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
     { value: Date.now() + MasterDetailExampleDataService.DAY * 14, label: 'Nächste 14 Tage' },
     { value: Date.now() + MasterDetailExampleDataService.MONTH, label: 'Nächsten Monat' }
   ];
-
-  masterHeaderOptions = [
-    { value: 'card', label: 'Filter in einer Card' },
-    { value: 'accordion', label: 'Filter in einem Accordion' },
-    { value: 'empty', label: 'Leerer Master-Header' }
-  ];
-  masterHeaderOption = 'card';
 
   configuration: {
     emptyIconDetail: string;
@@ -122,11 +109,17 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
   scrollSteps = 5;
   // Enthält alle list-item Einträge immer vor
   allMasterEntries: any[];
-  masterEntries = signal<any[]>([]);
-  masterIsReloading = signal(false);
-  selectedDetail = signal<any>(undefined);
+  readonly masterEntries = signal<any[]>([]);
+  readonly masterIsReloading = signal(false);
+  readonly selectedDetail = signal<any>(undefined);
   readonly showCustomDetailHeader = signal(false);
-  readonly theme = signal(this.themeService.getTheme().name);
+  readonly theme: WritableSignal<string>;
+
+  private readonly dataService = inject(MasterDetailExampleDataService);
+  private readonly router = inject(Router);
+  private readonly footerService = inject(LuxAppFooterButtonService);
+  private readonly logger = inject(LuxConsoleService);
+  private readonly themeService = inject(LuxThemeService);
 
   constructor() {
     this.allMasterEntries = this.dataService.createExampleData(20);
@@ -134,6 +127,7 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
 
     this.masterEntries.update((entries) => entries.concat(temp));
 
+    this.theme = signal(this.themeService.getTheme().name);
     this.themeService
       .getThemeAsObservable()
       .pipe(takeUntilDestroyed())

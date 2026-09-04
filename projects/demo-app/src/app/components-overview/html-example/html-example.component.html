@@ -5,8 +5,7 @@
       [luxSanitizeConfig]="sanitizeConfig()"
       [luxStyle]="style()"
       [luxClass]="class()"
-      luxName="html_data"
-    ></lux-html>
+      luxName="html_data" />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-textarea-ac luxLabel="Html-Daten" [(luxValue)]="htmlData">
@@ -24,7 +23,7 @@
       <lux-form-hint> Beliebige CSS-Classen (z.B. lux-mt-3) </lux-form-hint>
     </lux-input-ac>
 
-    <lux-toggle-ac luxLabel="Folgendes verbieten" [(luxChecked)]="forbiddenTagsToggle" [luxNoLabels]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Folgendes verbieten" [(luxChecked)]="forbiddenTagsToggle" [luxNoLabels]="true" />
     <lux-input-ac
       luxLabel="Verbotene Tags"
       luxName="htmls_forbiddenTags"
@@ -41,7 +40,7 @@
       (luxValueChange)="updateTags()"
       ><lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint></lux-input-ac
     >
-    <lux-toggle-ac luxLabel="Nur folgendes erlauben" [(luxChecked)]="allowedTagsToggle" [luxNoLabels]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Nur folgendes erlauben" [(luxChecked)]="allowedTagsToggle" [luxNoLabels]="true" />
     <lux-input-ac
       luxLabel="Erlaubte Tags"
       luxName="htmls_allowedTags"
@@ -58,7 +57,7 @@
       (luxValueChange)="updateTags()"
       ><lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint></lux-input-ac
     >
-    <lux-toggle-ac luxLabel="Zusätzlich erlauben" [(luxChecked)]="addAllowedTagsToggle" [luxNoLabels]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Zusätzlich erlauben" [(luxChecked)]="addAllowedTagsToggle" [luxNoLabels]="true" />
     <lux-input-ac
       luxLabel="Zusätzlich erlaubte Tags"
       luxName="htmls_addAllowedTags"

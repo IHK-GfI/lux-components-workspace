@@ -119,8 +119,6 @@ export class TabsExampleComponent {
     }
   ];
 
-  constructor() {}
-
   activeTabChanged(event: MatTabChangeEvent) {
     this.log(this.showOutputEvents(), 'luxActiveTabChanged', event);
   }

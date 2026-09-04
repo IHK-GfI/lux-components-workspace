@@ -11,12 +11,13 @@ import { StepperLargeExampleDataService } from '../stepper-large-example-data.se
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleErrorMessageBoxComponent }]
 })
 export class StepperLargeExampleErrorMessageBoxComponent implements OnInit {
-  dataService = inject(StepperLargeExampleDataService);
-
   readonly luxTitle = input('');
   readonly luxCompleted = input(true);
+
   readonly showErrorMessage = signal(false);
   subscriptions: Subscription[] = [];
+
+  private dataService = inject(StepperLargeExampleDataService);
 
   ngOnInit() {
     this.subscriptions.push(

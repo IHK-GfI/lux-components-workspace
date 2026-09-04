@@ -5,22 +5,22 @@
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     Bei einer verbleibenden Session-Zeit von 2 minuten wird ein Dialog geöffnet, mit dem die Session verlängert oder beendet werden kann.
     Mit dem Button kann der Dialog manuell geöffnet werden.
-    <lux-button luxLabel="Dialog öffnen" [luxFlat]="true" luxColor="primary" (luxClicked)="timerService.openDialog()"></lux-button>
+    <lux-button luxLabel="Dialog öffnen" [luxFlat]="true" luxColor="primary" (luxClicked)="timerService.openDialog()" />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
         luxLabel="Session darf verlängert werden"
         luxColor="primary"
         [luxChecked]="canExtendSession"
         (luxCheckedChange)="toggleCanExtendSession($event)"
-      ></lux-toggle-ac>
-      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      />
+      <app-status-marker [markerType]="markerTypeNew" />
     </div>
     <div class="lux-mt-3"></div>
-    <lux-input-ac luxLabel="Startzeit der Session in Sekunden" [(luxValue)]="startingSeconds"></lux-input-ac>
-    <lux-button luxLabel="Zeit setzen" [luxFlat]="true" luxColor="primary" (luxClicked)="setTimer()"></lux-button>
+    <lux-input-ac luxLabel="Startzeit der Session in Sekunden" [(luxValue)]="startingSeconds" />
+    <lux-button luxLabel="Zeit setzen" [luxFlat]="true" luxColor="primary" (luxClicked)="setTimer()" />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-button luxLabel="Timer zurücksetzen" [luxFlat]="true" luxColor="primary" (luxClicked)="timerService.clearTimer()"></lux-button>
-      <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+      <lux-button luxLabel="Timer zurücksetzen" [luxFlat]="true" luxColor="primary" (luxClicked)="timerService.clearTimer()" />
+      <app-status-marker [markerType]="markerTypeNew" />
     </div>
   </example-base-simple-options>
 </example-base-structure>

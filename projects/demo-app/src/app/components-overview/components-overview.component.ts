@@ -32,10 +32,11 @@ import { ComponentsOverviewNavigationService } from './components-overview-navig
   ]
 })
 export class ComponentsOverviewComponent implements OnInit, AfterViewInit {
-  private buttonService = inject(LuxAppFooterButtonService);
   navigationService = inject(ComponentsOverviewNavigationService);
 
   readonly filterValue = signal('');
+
+  private buttonService = inject(LuxAppFooterButtonService);
 
   ngOnInit() {
     this.buttonService.buttonInfos = [];

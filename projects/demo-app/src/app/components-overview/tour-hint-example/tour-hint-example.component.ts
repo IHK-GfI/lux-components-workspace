@@ -38,6 +38,24 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class TourHintExampleComponent {
+  public singleHintTargetOptions: string[] = [
+    'Karte_1',
+    'Input_1',
+    'Input_2_Und_3',
+    'Karte_1_Aktionen',
+    'Karte_1_Aktion_1',
+    'Karte_1_Aktion_2',
+    'Karte_2',
+    'Karte_2_Aktion_1'
+  ];
+
+  public readonly singleHintTarget = signal('Karte_1');
+  public readonly singleHintTitle = signal('Test Titel');
+  public readonly singleHintContent = signal('Beschreibung für das Element');
+  public readonly singleHintShowDontShowAgain = signal(true);
+
+  public readonly tourShowDontShowAgain = signal(true);
+
   private tourService = inject(LuxTourHintService);
 
   private complexTourConfigs: ILuxTourHintStepConfig[] = [
@@ -109,24 +127,6 @@ export class TourHintExampleComponent {
       }
     }
   ];
-
-  public singleHintTargetOptions: string[] = [
-    'Karte_1',
-    'Input_1',
-    'Input_2_Und_3',
-    'Karte_1_Aktionen',
-    'Karte_1_Aktion_1',
-    'Karte_1_Aktion_2',
-    'Karte_2',
-    'Karte_2_Aktion_1'
-  ];
-
-  public readonly singleHintTarget = signal('Karte_1');
-  public readonly singleHintTitle = signal('Test Titel');
-  public readonly singleHintContent = signal('Beschreibung für das Element');
-  public readonly singleHintShowDontShowAgain = signal(true);
-
-  public readonly tourShowDontShowAgain = signal(true);
 
   public openHint() {
     this.tourService.open(

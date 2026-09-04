@@ -68,16 +68,16 @@ interface FormSingleState extends FormExampleSnapshot<ReturnType<FormGroup<FormS
   ]
 })
 export class FormSingleColComponent extends FormBase {
-  private dataProvider = inject(TableExampleDataProviderService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly state = inject(FormExampleStateService);
-
   myGroup: FormGroup<FormSingleDummyForm>;
   readonly roles = signal<IRole[]>([]);
   countries: ICountry[] = [];
   genders: IGender[] = [];
   salutations: string[] = [];
   readonly pickGenderValue = (gender: IGender) => gender.short;
+
+  private dataProvider = inject(TableExampleDataProviderService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   constructor() {
     super();

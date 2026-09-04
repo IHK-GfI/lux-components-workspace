@@ -1,6 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
     LuxAutofocusDirective,
     LuxButtonComponent,
@@ -64,20 +64,15 @@ export class RadioAuthenticExampleComponent {
   readonly useValueFn = signal(false);
   readonly useSimpleArray = signal(false);
   readonly showOutputEvents = signal(false);
-  validatorOptions = [
-    { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
-    { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
-    { value: Validators.email, label: 'Validators.email' }
-  ];
   options: { label: string; value: number; disabled?: boolean }[] = [
     { label: 'Option #1', value: 1, disabled: true },
     { label: 'Option #2', value: 2 },
     { label: 'Option #3', value: 3 }
   ];
-  optionsPrimitive: string[] = ['Option #1', 'Option #2', 'Option #3'];
-  form: FormGroup<RadioDummyForm>;
+  readonly optionsPrimitive: string[] = ['Option #1', 'Option #2', 'Option #3'];
+  readonly form: FormGroup<RadioDummyForm>;
   log = logResult;
-  controlBinding = 'radioExample';
+  readonly controlBinding = 'radioExample';
   readonly disabled = signal(false);
   readonly disabledFirst = signal(true);
   readonly readonly = signal(false);
@@ -90,18 +85,17 @@ export class RadioAuthenticExampleComponent {
   readonly noBottomLabel = signal(false);
   readonly noLabels = signal(false);
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  readonly controlValidators = signal<ValidatorFn[]>([]);
   readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
   readonly value = signal<any>(undefined);
   readonly groupNameReactive = signal('reactiveGroup');
   readonly groupNameNormal = signal('normalGroup');
-  errorCallback = exampleErrorCallback;
-  emptyCallback = emptyErrorCallback;
-  pickValueFn = examplePickValueFn;
-  compareWithFn = exampleCompareWithFn;
-  pickValueFnString: string;
-  compareWithFnString: string;
-  errorCallbackString: string;
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
+  readonly pickValueFn = examplePickValueFn;
+  readonly compareWithFn = exampleCompareWithFn;
+  readonly pickValueFnString: string;
+  readonly compareWithFnString: string;
+  readonly errorCallbackString: string;
   readonly labelLongFormat = signal(false);
   readonly denseFormat = signal(false);
 
@@ -129,10 +123,6 @@ export class RadioAuthenticExampleComponent {
   changeRequired(required: boolean) {
     this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
-  }
-
-  pickValidatorValueFn(selected: any) {
-    return selected.value;
   }
 
   changeUseSimpleArray($event: boolean) {

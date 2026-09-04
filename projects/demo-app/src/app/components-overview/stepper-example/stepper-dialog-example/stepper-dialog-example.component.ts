@@ -45,31 +45,28 @@ interface DialogStep2Form {
   ]
 })
 export class StepperDialogExampleComponent {
-  luxDialogRef = inject(LuxDialogRef);
-
   readonly validationBoxRef = viewChild('validationBox', { read: ElementRef });
   readonly finishButtonRef = viewChild('finishButton', { read: LuxButtonComponent });
 
   readonly currentStepNumber = signal(0);
-  private readonly validationAttempted = signal(false);
   readonly validationMessage = 'Bitte füllen Sie alle Pflichtfelder aus.';
+  readonly form1 = new FormGroup<DialogStepForm>({
+    name: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
+    email: new FormControl<string>('', { validators: [Validators.required, Validators.email], nonNullable: true })
+  });
+  readonly form2 = new FormGroup<DialogStep2Form>({
+    street: new FormControl<string | null>(''),
+    city: new FormControl<string | null>('')
+  });
+  readonly totalSteps = 3;
+
+  private readonly validationAttempted = signal(false);
+  private readonly luxDialogRef = inject(LuxDialogRef);
 
   get showValidationMessage(): boolean {
     const form = this.currentStepNumber() === 0 ? this.form1 : this.currentStepNumber() === 1 ? this.form2 : null;
     return this.validationAttempted() && (form?.invalid ?? false);
   }
-
-  form1 = new FormGroup<DialogStepForm>({
-    name: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-    email: new FormControl<string>('', { validators: [Validators.required, Validators.email], nonNullable: true })
-  });
-
-  form2 = new FormGroup<DialogStep2Form>({
-    street: new FormControl<string | null>(''),
-    city: new FormControl<string | null>('')
-  });
-
-  readonly totalSteps = 3;
 
   get isFirstStep(): boolean {
     return this.currentStepNumber() === 0;

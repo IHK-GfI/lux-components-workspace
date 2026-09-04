@@ -36,8 +36,6 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class IconExampleComponent {
-  private iconService = inject(LuxIconRegistryService);
-
   colors: LuxIconColor[] = LuxIconColors;
   iconSizes: string[] = ['1x', '2x', '3x', '4x', '5x', '55px', '121px', '1.7em'];
   readonly iconName = signal('lux-interface-favorite-like-1');
@@ -47,6 +45,8 @@ export class IconExampleComponent {
   readonly margin = signal('');
   readonly padding = signal('4px');
   readonly backgroundColor = signal('');
+
+  private iconService = inject(LuxIconRegistryService);
 
   constructor() {
     this.registerIcon('app-box', '/', '/assets/svg/box.svg');

@@ -34,15 +34,16 @@ import {
 })
 export class ConfigurationComponent {
   readonly componentsConfigService = inject(LuxComponentsConfigService);
-  private readonly router = inject(Router);
-  private readonly footerService = inject(LuxAppFooterButtonService);
-  private readonly destroyRef = inject(DestroyRef);
 
   readonly currentConfig = toSignal(this.componentsConfigService.config, {
     initialValue: this.componentsConfigService.currentConfig
   });
 
   readonly notAppliedToOptions = ['lux-link', 'lux-button', 'lux-menu-item', 'lux-side-nav-item', 'lux-tab', 'lux-step'];
+
+  private readonly router = inject(Router);
+  private readonly footerService = inject(LuxAppFooterButtonService);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     this.footerService.pushButtonInfos(

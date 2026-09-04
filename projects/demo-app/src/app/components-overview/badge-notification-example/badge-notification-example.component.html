@@ -29,7 +29,7 @@
           [luxBadgeCap]="cap()"
           [luxBadgePosition]="position()"
           [luxBadgeSize]="size()"
-        ></lux-icon>
+        />
       </div>
       <lux-button
         [luxBadgeNotification]="notification()"
@@ -43,8 +43,7 @@
         [luxBadgeSize]="size()"
         luxLabel="Lux-Button"
         [luxRaised]="true"
-      >
-      </lux-button>
+      />
       <lux-button
         [luxBadgeNotification]="notification()"
         [luxBadgeColor]="color()"
@@ -58,8 +57,7 @@
         luxLabel="Lux-Button"
         [luxRaised]="true"
         luxColor="primary"
-      >
-      </lux-button>
+      />
       <lux-button
         [luxBadgeNotification]="notification()"
         [luxBadgeColor]="color()"
@@ -73,8 +71,7 @@
         luxLabel="Lux-Button"
         [luxRaised]="true"
         luxColor="warn"
-      >
-      </lux-button>
+      />
       <lux-button
         [luxBadgeNotification]="notification()"
         [luxBadgeColor]="color()"
@@ -88,8 +85,7 @@
         luxLabel="Lux-Button"
         [luxRaised]="true"
         luxColor="accent"
-      >
-      </lux-button>
+      />
       <lux-button
         [luxRounded]="true"
         [luxBadgeNotification]="notification()"
@@ -104,8 +100,7 @@
         luxLabel="Lux-Button"
         luxIconName="lux-interface-alert-alarm-bell-2"
         luxColor="primary"
-      >
-      </lux-button>
+      />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -114,63 +109,54 @@
       luxName="badge-notification_luxBadgeNotification"
       luxLabel="luxBadgeNotification"
       luxHint="Diese Property definiert den Text-Inhalt der Badge-Notification"
-    >
-    </lux-input-ac>
+    />
     <lux-select-ac
       [(luxSelected)]="color"
       luxLabel="luxBadgeColor"
       luxHint="Diese Property definiert die Farbe der Notification"
       [luxOptions]="['primary', 'warn', 'accent', 'default']"
-    >
-    </lux-select-ac>
+    />
     <lux-select-ac
       [(luxSelected)]="position"
       luxLabel="luxBadgePosition"
       luxHint="Diese Property definiert die Position der Notification"
       [luxOptions]="['above after', 'above before', 'below before', 'below after']"
-    >
-    </lux-select-ac>
+    />
     <lux-select-ac
       [(luxSelected)]="size"
       luxLabel="luxBadgeSize"
       luxHint="Diese Property definiert die Größe der Notification"
       [luxOptions]="['small', 'medium', 'large']"
-    >
-    </lux-select-ac>
+    />
     <lux-input-ac
       [(luxValue)]="cap"
       luxName="badge-notification_luxBadgeCap"
       luxLabel="luxBadgeCap"
       luxHint="Diese Property legt fest, ob eine Maximalzahl nicht überschritten werden darf (Vorausgesetzt das der Inhalt eine Zahl ist)."
-    >
-    </lux-input-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="noBorder"
       luxLabel="luxBadgeNoBorder"
       luxHint="Dieses Flag bestimmt, ob die Border transparent ist."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="disabled"
       luxLabel="luxBadgeDisabled"
       luxHint="Dieses Flag bestimmt ob die Notification deaktiviert ist oder nicht."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="hidden"
       luxLabel="luxBadgeHidden"
       luxHint="Dieses Flag bestimmt ob die Notification versteckt ist oder nicht."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="overlap"
       luxLabel="luxBadgeOverlap"
       luxHint="Dieses Flag bestimmt ob die Notification hinter dem Quellelement liegt oder nicht."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
   </example-base-simple-options>
 </example-base-structure>

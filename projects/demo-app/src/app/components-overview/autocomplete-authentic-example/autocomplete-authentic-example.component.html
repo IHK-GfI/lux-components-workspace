@@ -45,7 +45,7 @@
         #autocomplete
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks"></lux-icon>&nbsp; </lux-input-ac-prefix>
+          <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks"/>&nbsp; </lux-input-ac-prefix>
         }
         @if (showSuffix()) {
           <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
@@ -53,7 +53,7 @@
         @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
             <div class="lux-flex">
-              <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
+              <div><lux-icon luxIconName="lux-tasks"/></div>
               <div>
                 via Template {{ option[renderProperty()] }}
                 @if (useTranslocoDate()) {
@@ -64,7 +64,7 @@
           </ng-template>
         }
       </lux-autocomplete-ac>
-      <example-value [value]="value"></example-value>
+      <example-value [value]="value()"/>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
@@ -103,7 +103,7 @@
         luxTagId="autocomplete-reactive"
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'"></lux-icon>&nbsp; </lux-input-ac-prefix>
+          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'"/>&nbsp; </lux-input-ac-prefix>
         }
         @if (showSuffix()) {
           <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
@@ -111,7 +111,7 @@
         @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
             <div class="lux-flex">
-              <div><lux-icon luxIconName="lux-tasks"></lux-icon></div>
+              <div><lux-icon luxIconName="lux-tasks"/></div>
               <div>
                 via Template {{ option[renderProperty()] }}
                 @if (useTranslocoDate()) {
@@ -122,7 +122,7 @@
           </ng-template>
         }
       </lux-autocomplete-ac>
-      <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+      <example-form-value [form]="form" [controlBinding]="controlBinding"/>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -131,15 +131,13 @@
       luxLabel="luxLabel"
       luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
       [(luxValue)]="label"
-    >
-    </lux-input-ac>
+    />
     <lux-input-ac
       luxName="autocomplete_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(luxValue)]="hint"
-    >
-    </lux-input-ac>
+    />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
         class="lux-flex-auto"
@@ -147,8 +145,8 @@
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
         [(luxChecked)]="noTopLabel"
         [luxNoTopLabel]="true"
-      ></lux-toggle-ac>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+      />
+      <app-status-marker [markerType]="markerTypeUpdated"/>
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -157,8 +155,8 @@
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
         [(luxChecked)]="noBottomLabel"
         [luxNoTopLabel]="true"
-      ></lux-toggle-ac>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+      />
+      <app-status-marker [markerType]="markerTypeUpdated"/>
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -167,16 +165,15 @@
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
         [(luxChecked)]="noLabels"
         [luxNoTopLabel]="true"
-      ></lux-toggle-ac>
-      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+      />
+      <app-status-marker [markerType]="markerTypeUpdated"/>
     </div>
     <lux-input-ac
       luxName="autocomplete_luxPlaceholder"
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
       [(luxValue)]="placeholder"
-    >
-    </lux-input-ac>
+    />
     <lux-select-ac
       [luxSelected]="renderProperties[0]"
       (luxSelectedChange)="onRenderProperty($event)"
@@ -185,41 +182,37 @@
       [luxDisabled]="useStringValues()"
       luxLabel="luxOptionLabelProp"
       luxHint="Über die Property wird eingestellt, woraus der anzuzeigende Label bezogen wird."
-    >
-    </lux-select-ac>
+    />
     <lux-toggle-ac
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    />
     <lux-toggle-ac
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
       [(luxChecked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="useStringValues"
       luxLabel="String-Werte verwenden"
       luxHint="Anstatt Objekte, String-Werte verwenden"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="clearable"
       luxLabel="luxClearable"
       luxHint="Zeigt einen optionalen Button zum Zurücksetzen des Eingabewerts an."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
@@ -231,11 +224,10 @@
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac [(luxChecked)]="strict" luxLabel="luxStrict" [luxNoTopLabel]="true">
       <lux-form-hint>
-        Dieses Flag aktiviert den strikten Modus dieser Component´.<br />
+        Dieses Flag aktiviert den strikten Modus dieser Component.<br />
         Das bedeutet, dass nur Eingaben die einer Option entsprechen als valide gelten.
       </lux-form-hint>
     </lux-toggle-ac>
@@ -265,16 +257,14 @@
       luxLabel="Präfix einblenden"
       luxHint="Blendet einen 'lux-input-prefix' ein."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="showSuffix"
       luxLabel="Suffix einblenden"
       luxHint="Blendet einen 'lux-input-suffix' ein."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
-    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+    />
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"/>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac
@@ -285,15 +275,13 @@
       [(luxValue)]="delay"
       luxType="number"
       [luxNumberAlignLeft]="true"
-    >
-    </lux-input-ac>
+    />
     <lux-input-ac
       luxName="autocomplete_luxPanelWidth"
       luxLabel="luxPanelWidth"
       luxHint="Über diese Property kann die Optionpanelbreite angepasst werden"
       [(luxValue)]="luxPanelWidth"
-    >
-    </lux-input-ac>
+    />
     <lux-input-ac luxLabel="luxOptionBlockSize" [(luxValue)]="optionBlockSize" luxType="number" [luxNumberAlignLeft]="true">
       <lux-form-hint> Lädt die Optionen in der eingestellten Blockgröße nach, wenn gescrollt wird. </lux-form-hint>
     </lux-input-ac>
@@ -329,10 +317,8 @@
         luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
         [(luxValue)]="errorMessage"
-      >
-      </lux-input-ac>
-    }
-    @if (!useErrorMessage()) {
+      />
+    } @else {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-toggle-ac
@@ -340,16 +326,14 @@
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
       [(luxChecked)]="useErrorMessage"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       [(luxChecked)]="selectAllOnClick"
       luxLabel="luxSelectAllOnClick"
       luxHint="Mit diesem Flag kann aktiviert werden, dass beim Klick auf das Feld der
                   gesamte Eingabewert direkt selektiert wird."
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
       <lux-form-hint> Die Labels können über in die Component eingereichte Template-Tags erstellt werden. </lux-form-hint>
     </lux-toggle-ac>
@@ -357,16 +341,14 @@
       [(luxChecked)]="useTranslocoDate"
       luxLabel="translocoDate in Template verwenden"
       luxHint="Steuert, ob das Datum über die translocoDate-Pipe im Label-Template angezeigt wird."
-      [luxDisabled]="!useTemplatesForLabels"
+      [luxDisabled]="!useTemplatesForLabels()"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+    />
     <lux-toggle-ac
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"
       [(luxChecked)]="labelLongFormat"
-    >
-    </lux-toggle-ac>
+    />
   </example-base-advanced-options>
 </example-base-structure>

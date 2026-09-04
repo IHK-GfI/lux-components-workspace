@@ -50,8 +50,6 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class MenuExampleComponent {
-  private iconService = inject(LuxIconRegistryService);
-
   readonly showOutputEvents = signal(false);
   log = logResult;
   readonly markerTypeNew = DemoMarkerType.New;
@@ -358,11 +356,7 @@ export class MenuExampleComponent {
   readonly menuLabel = signal('');
   readonly className = signal('');
 
-  badgeColors: ExampleBadgeColorOption[] = [
-    { value: 'primary', label: 'primary' },
-    { value: 'warn', label: 'warn' },
-    { value: 'accent', label: 'accent' }
-  ];
+  private readonly iconService = inject(LuxIconRegistryService);
 
   constructor() {
     this.registerIcon('app-box', '/', '/assets/svg/box.svg');
@@ -409,9 +403,4 @@ interface ExampleLargeMenuItem {
   buttonBadge?: string;
   buttonBadgeColor?: LuxThemePalette;
   selected: boolean;
-}
-
-interface ExampleBadgeColorOption {
-  value: LuxThemePalette;
-  label: string;
 }

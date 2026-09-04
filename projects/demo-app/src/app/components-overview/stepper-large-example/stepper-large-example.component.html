@@ -4,9 +4,9 @@
     [luxStepValidationActive]="stepValidationActive()"
     [luxA11YMode]="luxA11YMode()"
     [(luxCurrentStepNumber)]="currentStepIndex"
-    [luxPrevButtonConfig]="dataService.prevButtonConfig"
-    [luxNextButtonConfig]="dataService.nextButtonConfig"
-    [luxFinButtonConfig]="dataService.finButtonConfig"
+    [luxPrevButtonConfig]="dataService.prevButtonConfig()"
+    [luxNextButtonConfig]="dataService.nextButtonConfig()"
+    [luxFinButtonConfig]="dataService.finButtonConfig()"
     (luxStepChanged)="onStepChanged($event)"
     (luxStepperFinished)="onFinish()"
     (luxOnNextStepNotComplete)="onStepNotComplete()"
@@ -93,7 +93,7 @@
         facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
         aliquam erat volutpat.
       </p>
-      <pre>{{ dataService.prevButtonConfig | json }}</pre>
+      <pre>{{ dataService.prevButtonConfig() | json }}</pre>
 
       <h3>Konfiguration: Weiter-Button</h3>
       <p>
@@ -102,7 +102,7 @@
         vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla
         facilisi.
       </p>
-      <pre>{{ dataService.nextButtonConfig | json }}</pre>
+      <pre>{{ dataService.nextButtonConfig() | json }}</pre>
 
       <h3>Konfiguration: Abschließen-Button</h3>
       <p>
@@ -111,7 +111,7 @@
         volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
         consequat.
       </p>
-      <pre>{{ dataService.finButtonConfig | json }}</pre>
+      <pre>{{ dataService.finButtonConfig() | json }}</pre>
     </lux-stepper-large-step>
   </lux-stepper-large>
 </div>

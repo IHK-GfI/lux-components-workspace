@@ -1,6 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -74,7 +74,7 @@ export class SelectAuthenticExampleComponent {
   readonly visibleOptionCount = signal(0);
   readonly keepOptionOrder = signal(false);
   // prettier-ignore
-  options: { label: string; value: number }[] = [
+  readonly options: { label: string; value: number }[] = [
     { label: 'Argentinien, Bolivien, Chile, Costa Rica, Dominikanische Republik, Ecuador, El Salvador, Guatemala, Honduras, Kolumbien, Kuba, Mexiko', value: 0 },
     { label: 'Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghanistan', value: 1 },
     { label: 'Albanien', value: 2 },
@@ -118,11 +118,11 @@ export class SelectAuthenticExampleComponent {
     { label: 'Weihnachtsinsel', value: 40 },
     { label: 'Zypern', value: 41 }
   ];
-  optionsPrimitive: string[] = ['Option #1', 'Option #2', 'Option #3'];
-  form: FormGroup<SelectDummyForm>;
+  readonly optionsPrimitive: string[] = ['Option #1', 'Option #2', 'Option #3'];
+  readonly form: FormGroup<SelectDummyForm>;
   log = logResult;
   readonly labelLongFormat = signal(false);
-  controlBinding = 'selectExample';
+  readonly controlBinding = 'selectExample';
   readonly disabled = signal(false);
   readonly readonly = signal(false);
   readonly required = signal(false);
@@ -134,19 +134,18 @@ export class SelectAuthenticExampleComponent {
   readonly noBottomLabel = signal(false);
   readonly noLabels = signal(false);
   readonly placeholder = signal('Placeholder');
-  readonly controlValidators = signal<ValidatorFn[]>([]);
   readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
   readonly value = signal<any>(null);
   readonly multiselectValue = signal<any>(null);
   readonly templateValue = signal<any>(null);
-  errorCallback = exampleErrorCallback;
-  emptyCallback = emptyErrorCallback;
-  pickValueFn = examplePickValueFn;
-  compareWithFn = exampleCompareWithFn;
-  pickValueFnString: string;
-  compareWithFnString: string;
-  errorCallbackString: string;
-  defaultCompareWith = (o1: any, o2: any) => o1 === o2;
+  readonly errorCallback = exampleErrorCallback;
+  readonly emptyCallback = emptyErrorCallback;
+  readonly pickValueFn = examplePickValueFn;
+  readonly compareWithFn = exampleCompareWithFn;
+  readonly pickValueFnString: string;
+  readonly compareWithFnString: string;
+  readonly errorCallbackString: string;
+  readonly defaultCompareWith = (o1: any, o2: any) => o1 === o2;
 
   constructor() {
     this.form = new FormGroup<SelectDummyForm>({
@@ -174,10 +173,6 @@ export class SelectAuthenticExampleComponent {
   changeRequired(required: boolean) {
     this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
-  }
-
-  pickValidatorValueFn(selected: any) {
-    return selected.value;
   }
 
   changeUseSimpleArray(useSimpleArray: boolean) {

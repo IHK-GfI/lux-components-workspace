@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -41,8 +41,6 @@ import { LookupExampleComponent } from '../lookup-example.component';
   ]
 })
 export class LookupAutocompleteAcExampleComponent extends LookupExampleComponent implements OnInit {
-  readonly lookupAutocompleteCmp = viewChildren(LuxLookupAutocompleteAcComponent);
-
   readonly debounceTime = signal(250);
   readonly maximumDisplayed = signal(50);
   readonly labelLongFormat = signal(false);

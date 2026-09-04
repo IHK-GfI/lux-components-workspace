@@ -32,16 +32,14 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class SnackbarExampleComponent implements OnDestroy {
-  private snackbar = inject(LuxSnackbarService);
-
   dismissSubscription: Subscription | null = null;
   actionSubscription: Subscription | null = null;
-  colors: string[] = LuxSnackbarColors;
+  readonly colors: string[] = LuxSnackbarColors;
 
   readonly showOutputEvents = signal(false);
 
   readonly duration = signal(5000);
-  snackbarConfig: Omit<LuxSnackbarConfig, 'textColor' | 'iconColor' | 'actionColor'> = {
+  readonly snackbarConfig: Omit<LuxSnackbarConfig, 'textColor' | 'iconColor' | 'actionColor'> = {
     text: 'Text',
     iconName: 'lux-interface-alert-information-circle',
     iconSize: '2x',
@@ -53,6 +51,8 @@ export class SnackbarExampleComponent implements OnDestroy {
   readonly textColor = signal('white');
   readonly iconColor = signal('white');
   readonly actionColor = signal('white');
+
+  private readonly snackbar = inject(LuxSnackbarService);
 
   ngOnDestroy(): void {
     if (this.dismissSubscription) {

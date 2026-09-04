@@ -63,15 +63,15 @@ type FormThreeColState = FormExampleSnapshot<ReturnType<FormGroup<FormThreeColDu
   ]
 })
 export class FormThreeColComponent extends FormBase {
-  private dataProvider = inject(TableExampleDataProviderService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly state = inject(FormExampleStateService);
-
   myGroup: FormGroup<FormThreeColDummyForm>;
   countries: ICountry[] = [];
   types: ICompanyType[] = [];
   genders: IGender[] = [];
   readonly pickGenderValue = (gender: IGender) => gender.short;
+
+  private dataProvider = inject(TableExampleDataProviderService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   constructor() {
     super();

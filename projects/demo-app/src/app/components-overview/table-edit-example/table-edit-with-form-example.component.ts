@@ -40,13 +40,12 @@ interface TableForm {
   styleUrl: './table-edit-with-form-example.component.scss'
 })
 export class TableEditWithFormExampleComponent {
-  validationEnabled = input<boolean>(false);
+  readonly validationEnabled = input<boolean>(false);
 
   addressInitData = [
     { streetName: 'Hauptstraße', nr: '24' },
     { streetName: 'Hörder Hafenstraße', nr: '5' }
   ];
-  initAdressData = false;
 
   readonly editRow = signal(-1);
   myTableForm!: FormGroup<TableForm>;

@@ -18,9 +18,7 @@
               luxTagId="demo-link-default{{ i }}"
               [luxHref]="href()"
               [luxBlank]="blank()"
-              (luxClicked)="click($event)"
-            >
-            </lux-link>
+              (luxClicked)="click($event)" />
           }
         </div>
         <div class="lux-flex lux-flex-col lux-gap-4">
@@ -35,9 +33,7 @@
               luxTagId="demo-link-default{{ i }}"
               [luxHref]="href()"
               [luxBlank]="blank()"
-              (luxClicked)="click($event)"
-            >
-            </lux-link>
+              (luxClicked)="click($event)" />
           }
         </div>
       </div>
@@ -54,9 +50,7 @@
               luxTagId="demo-link-default{{ i }}"
               [luxHref]="href()"
               [luxBlank]="blank()"
-              (luxClicked)="click($event)"
-            >
-            </lux-link>
+              (luxClicked)="click($event)" />
           }
         </div>
         <div class="lux-flex lux-flex-col lux-gap-4">
@@ -70,9 +64,7 @@
               luxTagId="demo-link-hover{{ i }}"
               [luxHref]="href()"
               [luxBlank]="blank()"
-              (luxClicked)="click($event)"
-            >
-            </lux-link>
+              (luxClicked)="click($event)" />
           }
         </div>
       </div>
@@ -89,9 +81,7 @@
               luxTagId="demo-button-focus{{ i }}"
               [luxHref]="href()"
               [luxBlank]="blank()"
-              (luxClicked)="click($event)"
-            >
-            </lux-link>
+              (luxClicked)="click($event)" />
           }
         </div>
         <div class="lux-flex lux-flex-col lux-gap-4">
@@ -107,9 +97,7 @@
               luxTagId="demo-button-rounded-stroked{{ i }}"
               [luxHref]="href()"
               [luxBlank]="blank()"
-              (luxClicked)="click($event)"
-            >
-            </lux-link>
+              (luxClicked)="click($event)" />
           }
         </div>
       </div>
@@ -121,7 +109,7 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    />
     <lux-input-ac luxName="link_luxHref" [(luxValue)]="href" luxLabel="luxHref">
       <lux-form-hint>
         Bestimmt die URL, zu der der Link routet.<br />
@@ -132,20 +120,17 @@
       [(luxChecked)]="blank"
       luxLabel="luxBlank"
       luxHint="Diese Property bestimmt ob (externe) Links in einem neuen Tab geöffnet werden."
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+      [luxNoTopLabel]="true" />
 
-    <lux-input-ac [(luxValue)]="label" luxLabel="luxLabel" luxHint="Bestimmt den Text, der für den Link angezeigt wird."></lux-input-ac>
+    <lux-input-ac [(luxValue)]="label" luxLabel="luxLabel" luxHint="Bestimmt den Text, der für den Link angezeigt wird." />
     <lux-input-ac luxName="button_luxIconName" [(luxValue)]="iconName" luxLabel="luxIconName">
       <lux-form-hint>
         Diese Property definiert das Icon, welches in dem Button (linksbündig, wenn zusätzlich auch noch
         <i>luxLabel</i> gesetzt ist).<br />
       </lux-form-hint>
     </lux-input-ac>
-    <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true"></lux-toggle-ac>
-    <lux-toggle-ac [(luxChecked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Link." [luxNoTopLabel]="true">
-    </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true" />
+    <lux-toggle-ac [(luxChecked)]="disabled" luxLabel="luxDisabled" luxHint="Diese Property deaktiviert den Link." [luxNoTopLabel]="true" />
     <lux-toggle-ac
       luxLabel="Label Uppercase"
       [(luxChecked)]="config().labelConfiguration!.allUppercase"

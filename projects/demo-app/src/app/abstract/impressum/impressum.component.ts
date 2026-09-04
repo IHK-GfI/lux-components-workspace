@@ -11,11 +11,11 @@ import { ImpressumContentService } from './impressum-content.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImpressumComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private impressumContent = inject(ImpressumContentService);
-
   readonly fullWidth = input(false);
   readonly content = model<string>();
+
+  private route = inject(ActivatedRoute);
+  private impressumContent = inject(ImpressumContentService);
 
   async ngOnInit() {
     if (!this.content()) {

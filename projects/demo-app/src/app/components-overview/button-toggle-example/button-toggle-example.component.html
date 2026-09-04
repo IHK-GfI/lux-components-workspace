@@ -16,8 +16,8 @@
           [luxDisabled]="disabled()"
           [(luxSelected)]="singleSelected"
           (luxSelectedChange)="onSingleChanged($event)"
-        ></lux-button-toggle>
-        <example-value [value]="singleSelected()"></example-value>
+        />
+        <example-value [value]="singleSelected()"/>
       </div>
 
       <div class="lux-flex lux-flex-col lux-gap-3">
@@ -33,8 +33,8 @@
           [luxDisabled]="disabled()"
           [(luxSelectedValues)]="multiSelected"
           (luxSelectedValuesChange)="onMultiChanged($event)"
-        ></lux-button-toggle>
-        <example-value [value]="multiSelected()"></example-value>
+        />
+        <example-value [value]="multiSelected()"/>
       </div>
 
       <div class="lux-flex lux-flex-col lux-gap-3" [formGroup]="form">
@@ -49,8 +49,8 @@
           [luxDisabled]="disabled()"
           luxControlBinding="singleSelect"
           (luxSelectedChange)="onSingleChanged($event)"
-        ></lux-button-toggle>
-        <example-value [value]="$safeNavigationMigration(form.get('singleSelect')?.value)"></example-value>
+        />
+        <example-value [value]="$safeNavigationMigration(form.get('singleSelect')?.value)"/>
         <div>Valid: {{ form.get('singleSelect')?.valid }}</div>
       </div>
 
@@ -67,8 +67,8 @@
           [luxDisabled]="disabled()"
           luxControlBinding="multiSelect"
           (luxSelectedValuesChange)="onMultiChanged($event)"
-        ></lux-button-toggle>
-        <example-value [value]="$safeNavigationMigration(form.get('multiSelect')?.value)"></example-value>
+        />
+        <example-value [value]="$safeNavigationMigration(form.get('multiSelect')?.value)"/>
         <div>Valid: {{ form.get('multiSelect')?.valid }}</div>
       </div>
     </div>
@@ -80,28 +80,28 @@
       luxLabel="luxAriaLabel"
       [(luxValue)]="ariaLabel"
       luxHint="Beschreibt den Zweck der Gruppe für Screenreader."
-    ></lux-input-ac>
+    />
 
     <lux-input-ac
       luxName="buttonToggle_luxHint"
       luxLabel="luxHint"
       [(luxValue)]="hint"
       luxHint="Hint-Text unterhalb des Button-Toggle (solange kein Fehler angezeigt wird)."
-    ></lux-input-ac>
+    />
 
     <lux-input-ac
       luxName="buttonToggle_luxError"
       luxLabel="luxError"
       [(luxValue)]="error"
       luxHint="Error-Text, der bei invalidem Zustand (z. B. required) angezeigt wird."
-    ></lux-input-ac>
+    />
 
     <lux-toggle-ac
       luxLabel="luxDense"
       [luxNoTopLabel]="true"
       [(luxChecked)]="dense"
       luxHint="Reduziert die Höhe der Button-Toggle-Komponente."
-    ></lux-toggle-ac>
+    />
 
     <lux-toggle-ac luxLabel="luxDisabled" [luxNoTopLabel]="true" [(luxChecked)]="disabled" luxHint="Deaktiviert die gesamte Toggle-Gruppe.">
       <lux-form-hint>Für die Multi-Select-Demo ist die Option „Archiv“ zusätzlich segmentweise deaktiviert.</lux-form-hint>
@@ -113,13 +113,13 @@
       [luxChecked]="required()"
       (luxCheckedChange)="changeRequired($event)"
       luxHint="Aktiviert Validators.required für singleSelect und multiSelect."
-    ></lux-toggle-ac>
+    />
 
     <lux-toggle-ac
       luxLabel="Output-Events loggen"
       [luxNoTopLabel]="true"
       [(luxChecked)]="showOutputEvents"
       luxHint="(Console --> F12/CMD+ALT+I)"
-    ></lux-toggle-ac>
+    />
   </example-base-simple-options>
 </example-base-structure>

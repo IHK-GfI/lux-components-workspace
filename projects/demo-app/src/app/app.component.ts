@@ -1,6 +1,18 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, inject, input, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  Signal,
+  WritableSignal,
+  computed,
+  inject,
+  input,
+  signal,
+  viewChild
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import {
@@ -95,41 +107,25 @@ import { TenantLogoExampleHeaderService } from './components-overview/tenant-log
   providers: [{ provide: LuxLookupService, useClass: MockLuxLookupService }]
 })
 export class AppComponent implements OnInit {
+  readonly luxAppHeader = input<'normal' | 'minimal' | 'none'>('normal');
+  readonly luxAppFooter = input<'normal' | 'minimal' | 'none'>('normal');
+  readonly luxMode = input<'stand-alone' | 'portal'>('stand-alone');
+
+  readonly sideNavComp = viewChild(LuxSideNavComponent);
+
   router = inject(Router);
-  private linkService = inject(LuxAppFooterLinkService);
-  private snackbarService = inject(LuxSnackbarService);
   navigationService = inject(ComponentsOverviewNavigationService);
-  private themeService = inject(LuxThemeService);
-  private elementRef = inject(ElementRef);
-  private appService = inject(LuxAppService);
-  private mediaQueryService = inject(LuxMediaQueryObserverService);
-  private readonly consentConfig = inject(LUX_CONSENT_CONFIG);
-  private consentService = inject(LuxConsentService);
   componentsOverviewService = inject(ComponentsOverviewNavigationService);
   tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
   fixedFooterService = inject(LuxAppFooterFixedService);
   iconService = inject(LuxIconRegistryService);
   tService = inject(TranslocoService);
 
-  readonly sideNavComp = viewChild(LuxSideNavComponent);
-
-  readonly luxAppHeader = input<'normal' | 'minimal' | 'none'>('normal');
-  readonly luxAppFooter = input<'normal' | 'minimal' | 'none'>('normal');
-  readonly luxMode = input<'stand-alone' | 'portal'>('stand-alone');
-
-  window = window;
-  jsonDataResult: any;
   readonly demoUserName = signal('Susanne Sonnenschein');
   readonly demoUserEmail = signal('susanne.sonnenschein@example.com');
   readonly demoLoginBtn = signal('Abmelden');
-  readonly themeName = signal(this.themeService.getTheme().name);
-  readonly mobileView = toSignal(
-    this.mediaQueryService.getMediaQueryChangedAsObservable().pipe(
-      map(() => this.mediaQueryService.isHandset()),
-      startWith(this.mediaQueryService.isHandset())
-    ),
-    { initialValue: this.mediaQueryService.isHandset() }
-  );
+  readonly themeName: WritableSignal<string>;
+  readonly mobileView: Signal<boolean>;
   readonly url = toSignal(
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd),
@@ -137,12 +133,28 @@ export class AppComponent implements OnInit {
     ),
     { initialValue: this.router.url }
   );
-  readonly components = this.componentsOverviewService.filteredComponents.length;
+  readonly components = computed(() => this.componentsOverviewService.filteredComponents().length);
   readonly tenantLogoConfig = toSignal(this.tenantLogoHeaderService.tenantConfigChange, { initialValue: undefined });
+
+  private linkService = inject(LuxAppFooterLinkService);
+  private snackbarService = inject(LuxSnackbarService);
+  private themeService = inject(LuxThemeService);
+  private elementRef = inject(ElementRef);
+  private appService = inject(LuxAppService);
+  private mediaQueryService = inject(LuxMediaQueryObserverService);
+  private readonly consentConfig = inject(LUX_CONSENT_CONFIG);
+  private consentService = inject(LuxConsentService);
 
   constructor() {
     this.themeService.loadTheme();
-    this.themeName.set(this.themeService.getTheme().name);
+    this.themeName = signal(this.themeService.getTheme().name);
+    this.mobileView = toSignal(
+      this.mediaQueryService.getMediaQueryChangedAsObservable().pipe(
+        map(() => this.mediaQueryService.isHandset()),
+        startWith(this.mediaQueryService.isHandset())
+      ),
+      { initialValue: this.mediaQueryService.isHandset() }
+    );
     this.router.initialNavigation();
     this.appService.appEl = this.elementRef.nativeElement;
     this.iconService.getSvgIconList().push({ iconName: 'lux-components', iconBasePath: '', iconPath: 'assets/favicons/favicon.svg' });
@@ -242,7 +254,7 @@ export class AppComponent implements OnInit {
 
   onModuleClicked(moduleName: string) {
     // den expanded zustand im service merken
-    this.navigationService.currentModules.set(moduleName, !this.navigationService.currentModules.get(moduleName));
+    this.navigationService.toggleModule(moduleName);
   }
 
   public onTenantLogoClicked() {
@@ -250,15 +262,6 @@ export class AppComponent implements OnInit {
     if (tenantLogoConfig?.luxTenantLogoClicked) {
       tenantLogoConfig.luxTenantLogoClicked();
     }
-  }
-
-  private updateFooterLinks() {
-    this.linkService.linkInfos = [
-      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.dataProtection'), 'datenschutz', true),
-      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.impressum'), 'impressum'),
-      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.licenseHint'), 'license-hint'),
-      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.consent'), '', true, false, () => this.onOpenConsent())
-    ];
   }
 
   timeout() {
@@ -273,5 +276,14 @@ export class AppComponent implements OnInit {
     this.snackbarService.open(4000, {
       text: 'Logout wurde ausgelöst'
     });
+  }
+
+  private updateFooterLinks() {
+    this.linkService.linkInfos = [
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.dataProtection'), 'datenschutz', true),
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.impressum'), 'impressum'),
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.licenseHint'), 'license-hint'),
+      new LuxAppFooterLinkInfo(this.tService.translate('app.footer.link.consent'), '', true, false, () => this.onOpenConsent())
+    ];
   }
 }

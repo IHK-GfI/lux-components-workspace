@@ -69,11 +69,6 @@ interface InputDummyForm {
   ]
 })
 export class InputAuthenticExampleComponent {
-  longLabel =
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Error, laudantium sequi quo mollitia id magnam voluptatum suscipit assumenda perspiciatis ab! Sit voluptas qui sed quas, sapiente ea officia nesciunt eveniet obcaecati dolorem nostrum commodi temporibus esse minus, corrupti repellat hic consequatur pariatur!';
-  longHint =
-    'Sit voluptas qui sed quas, sapiente ea officia nesciunt eveniet obcaecati dolorem nostrum commodi temporibus esse minus, corrupti repellat hic consequatur pariatur! Ducimus adipisci qui officia. Sit voluptas qui sed quas, sapiente ea officia nesciunt eveniet obcaecati dolorem nostrum commodi temporibus esse minus, corrupti repellat hic consequatur pariatur! Ducimus adipisci qui officia.';
-
   readonly showSuffix = signal(false);
   readonly showPrefix = signal(false);
   readonly useErrorMessage = signal(true);

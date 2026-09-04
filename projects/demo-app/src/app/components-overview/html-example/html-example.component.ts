@@ -48,15 +48,12 @@ export class HtmlExampleComponent {
 
   readonly sanitizeConfig = signal<LuxSanitizeConfig | undefined>(undefined);
 
-  private readonly _forbiddenTagsToggle = signal(false);
   readonly forbiddenTags = signal('a,b');
   readonly forbiddenAttributes = signal('style,class');
 
-  private readonly _allowedTagsToggle = signal(false);
   readonly allowedTags = signal('h1,p,span');
   readonly allowedAttributes = signal('class,style');
 
-  private readonly _addAllowedTagsToggle = signal(false);
   readonly addAllowedTags = signal('');
   readonly addAllowedAttributes = signal('target');
 
@@ -101,6 +98,10 @@ export class HtmlExampleComponent {
   get addAllowedTagsToggle() {
     return this._addAllowedTagsToggle();
   }
+
+  private readonly _forbiddenTagsToggle = signal(false);
+  private readonly _allowedTagsToggle = signal(false);
+  private readonly _addAllowedTagsToggle = signal(false);
 
   updateTags() {
     const newConfig: LuxSanitizeConfig = {};

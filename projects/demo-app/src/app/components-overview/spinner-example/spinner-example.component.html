@@ -12,8 +12,7 @@
         [luxValue]="value()"
         [luxMode]="mode()"
         [luxSize]="size()"
-      >
-      </lux-progress>
+      />
       }
     </div>
   </example-base-content>
@@ -29,8 +28,7 @@
       [(luxSelected)]="mode"
       luxLabel="luxMode"
       luxHint="Die Property bestimmt ob der Spinner im Modus 'determinate' (= endlich) oder 'indeterminate' (= endlos) ist."
-    >
-    </lux-select-ac>
+     />
     <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
     </lux-input-ac>
@@ -42,11 +40,10 @@
         luxType="number"
         [luxNumberAlignLeft]="true"
         [(luxValue)]="value"
-      >
-      </lux-input-ac>
+       />
       <div class="lux-flex lux-flex-warp lux-gap-2">
-        <lux-button luxLabel="+10" (luxClicked)="addSpinnerProgress()" [luxRaised]="true" luxColor="primary"></lux-button>
-        <lux-button luxLabel="-10" (luxClicked)="subtractSpinnerProgress()" [luxRaised]="true" luxColor="primary"></lux-button>
+        <lux-button luxLabel="+10" (luxClicked)="addSpinnerProgress()" [luxRaised]="true" luxColor="primary" />
+        <lux-button luxLabel="-10" (luxClicked)="subtractSpinnerProgress()" [luxRaised]="true" luxColor="primary" />
       </div>
     </div>
     }

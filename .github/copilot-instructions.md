@@ -10,6 +10,19 @@ applyTo: '**'
 - Core library exports are centralized in [projects/lux-components-lib/src/public_api.ts](projects/lux-components-lib/src/public_api.ts); ng-packagr entry is [projects/lux-components-lib/ng-package.json](projects/lux-components-lib/ng-package.json).
 - Use DestroyRef + takeUntilDestroyed for automatic cleanup of subscriptions in components/services.
 - Use Signal-based APIs for reactive state management in components/services; see Angular docs for best practices.
+- Use self-closing tag for elements without children.
+- Structured order of class members:
+  - static properties
+  - input()/model() signals
+  - output() signals
+  - viewChild()/contentChild() signals
+  - other public properties/signals
+  - private properties/signals
+  - computed() properties
+  - constructor()
+  - lifecycle hooks (in execution order: ngOnInit, ngAfterViewInit, ngOnDestroy, ...)
+  - public methods
+  - private methods
 - Use inject-Function instead of constructor injection where possible for better tree-shaking and simpler code.
 - Use ChangeDetectionStrategy.OnPush change detection for all new components for better performance; use ChangeDetectorRef.markForCheck() when manual checks are needed.
 - Add unit tests for all new components/services using Jasmine/Karma; place tests alongside implementation files with .spec.ts suffix.

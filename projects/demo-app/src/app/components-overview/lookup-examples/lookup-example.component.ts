@@ -23,8 +23,6 @@ interface LookupDummyForm {
 
 @Directive()
 export abstract class LookupExampleComponent implements OnInit {
-  protected lookupHandler = inject(LuxLookupHandlerService);
-
   options = [
     { label: LuxBehandlungsOptionenUngueltige.ausgrauen, value: 0 },
     { label: LuxBehandlungsOptionenUngueltige.anzeigen, value: 1 },
@@ -44,7 +42,6 @@ export abstract class LookupExampleComponent implements OnInit {
   readonly renderProp = signal('kurzText');
   readonly renderPropNoPropertyLabel = signal('---');
   readonly parameters = signal<LuxLookupParameters | undefined>(undefined);
-  selected: any;
   readonly customStyle = signal<object | null>(null);
   readonly customInvalidStyle = signal<object | null>(null);
   readonly behandlungUngueltige = signal<LuxBehandlungsOptionenUngueltige>(LuxBehandlungsOptionenUngueltige.ausgrauen);
@@ -65,13 +62,13 @@ export abstract class LookupExampleComponent implements OnInit {
   errorCallbackString = this.errorCallback + '';
   readonly compareFn = signal<LuxLookupCompareFn | undefined>(undefined);
 
+  protected lookupHandler = inject(LuxLookupHandlerService);
+
   constructor() {
     this.form = new FormGroup<LookupDummyForm>({
       lookup: new FormControl<LuxLookupTableEntry | LuxLookupTableEntry[] | null>(null)
     });
   }
-
-  abstract reloadDataIntern(): void;
 
   ngOnInit() {
     this.parameters.set(
@@ -129,4 +126,6 @@ export abstract class LookupExampleComponent implements OnInit {
   pickValidatorValueFn(selected: any) {
     return selected.value;
   }
+
+  abstract reloadDataIntern(): void;
 }

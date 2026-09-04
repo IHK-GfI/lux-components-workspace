@@ -1,7 +1,7 @@
 <div class="lux-flex lt-md:lux-flex-col lux-gap-4 main-container">
   @if (mobileView()) {
     <div class="lux-flex lux-flex-basis-4/10">
-      <ng-container *ngTemplateOutlet="search"></ng-container>
+      <ng-container *ngTemplateOutlet="search" />
     </div>
   }
 
@@ -47,8 +47,7 @@
                   <lux-icon
                     [luxIconName]="icon.iconName.split('--')[0].toLocaleLowerCase()"
                     class="lux-color-blue"
-                    luxIconSize="2x"
-                  ></lux-icon>
+                    luxIconSize="2x" />
                   <p class="icon-name">{{ icon.iconName.split('--')[0].toLocaleLowerCase() }}</p>
                 </div>
               </div>
@@ -56,7 +55,7 @@
           </div>
         } @else {
           <div class="lux-flex lux-flex-col lux-gap-3 lux-content-start lux-items-center">
-            <lux-icon luxIconName="lux-interface-block" luxIconSize="4x" class="lux-color-blue"></lux-icon>
+            <lux-icon luxIconName="lux-interface-block" luxIconSize="4x" class="lux-color-blue" />
             <h3>Sorry, keine passenden Icons gefunden!</h3>
           </div>
         }
@@ -68,7 +67,7 @@
     <div class="lux-flex lux-flex-col lux-gap-4 lux-flex-basis-4/10 gt-lg:lux-flex-basis-2/10 right-container">
       <lux-card luxTitle="Suche">
         <lux-card-content>
-          <ng-container *ngTemplateOutlet="search"></ng-container>
+          <ng-container *ngTemplateOutlet="search" />
         </lux-card-content>
       </lux-card>
       @if (previewItem) {
@@ -79,16 +78,13 @@
                 <lux-icon
                   luxIconName="{{ previewItem.iconName.split('--')[0].toLowerCase() }}"
                   [luxIconSize]="iconSize"
-                  [class]="iconClass"
-                >
-                </lux-icon>
+                  [class]="iconClass" />
               }
               @if (previewItem && isBgColor) {
                 <lux-icon
                   luxIconName="{{ previewItem.iconName.split('--')[0].toLowerCase() }}"
                   [luxIconSize]="iconSize"
-                  [luxColor]="iconColor"
-                ></lux-icon>
+                  [luxColor]="iconColor" />
               }
               @if (!previewItem) {
                 <p>Für die Vorschau ein Icon anklicken.</p>
@@ -98,16 +94,14 @@
               luxLabel="Icongröße"
               [(luxSelected)]="iconSize"
               [luxOptions]="iconSizesOptions"
-              [luxNoBottomLabel]="true"
-            ></lux-select-ac>
+              [luxNoBottomLabel]="true" />
             <lux-select-ac
               luxLabel="Farbwert"
               [luxOptions]="iconColorOptions"
               [luxSelected]="iconColorOptions[0]"
               luxOptionLabelProp="label"
               (luxSelectedChange)="onColorChanged($event)"
-              [luxNoBottomLabel]="true"
-            ></lux-select-ac>
+              [luxNoBottomLabel]="true" />
             <lux-radio-ac
               luxTagId="Farbe"
               luxAriaLabel="Farbe"
@@ -116,8 +110,7 @@
               luxOptionLabelProp="label"
               [luxSelected]="fgBgOptions[0]"
               [luxOrientationVertical]="false"
-              (luxSelectedChange)="onBgChanged($event)"
-            ></lux-radio-ac>
+              (luxSelectedChange)="onBgChanged($event)" />
           </lux-card-content>
         </lux-card>
       }
@@ -129,8 +122,7 @@
               luxIconSize="1x"
               class="lux-color-blue copy-icon"
               luxTooltip="{{ copiedToClipboard() ? 'Kopiert!' : 'In die Zwischenablage kopieren.' }}"
-              (click)="onCopyToClipboard()"
-            ></lux-icon>
+              (click)="onCopyToClipboard()" />
           </lux-card-info>
           <lux-card-content>
             <pre class="snippet">{{ codeSnippet() }}</pre>
@@ -156,7 +148,7 @@
       luxHint="Suchbegriffe auf Englisch eingeben. Z.B. arrow, desktop,..."
     >
       <lux-input-ac-prefix class="lux-mr-3" luxTagId="searchInput">
-        <lux-icon luxIconName="lux-interface-search"></lux-icon>
+        <lux-icon luxIconName="lux-interface-search" />
       </lux-input-ac-prefix>
     </lux-input-ac>
     <lux-radio-ac
@@ -169,7 +161,6 @@
       [luxOptions]="searchBindingOptions"
       [(luxSelected)]="selectedSearchBinding"
       [luxOrientationVertical]="false"
-      (luxSelectedChange)="onSearchBindingChanged()"
-    ></lux-radio-ac>
+      (luxSelectedChange)="onSearchBindingChanged()" />
   </div>
 </ng-template>

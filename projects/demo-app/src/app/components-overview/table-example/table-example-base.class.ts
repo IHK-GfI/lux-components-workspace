@@ -79,9 +79,14 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   dateConfig: ColumnConfig = new ColumnConfig({ label: 'Datum', sticky: false,  responsiveAt: ['xs', 'sm', 'md'], responsiveBehaviour: ResponsiveBehaviour.COLUMN_HIDE });
   columnConfigs = [this.nameConfig, this.symbolConfig, this.dateConfig];
   dblClickSub?: OutputRefSubscription;
+  readonly alignElementsTop = signal(false);
+
   private readonly _multiSelect = signal(true);
   private readonly _doubleClickActive = signal(false);
-  readonly alignElementsTop = signal(false);
+
+  ngOnDestroy(): void {
+    this.dblClickSub?.unsubscribe();
+  }
 
   get doubleClickActive() {
     return this._doubleClickActive();
@@ -118,10 +123,6 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   abstract getDataArr(): any[];
 
   abstract refreshSelectionBindings(): void;
-
-  ngOnDestroy(): void {
-    this.dblClickSub?.unsubscribe();
-  }
 
   compareFn(o1: any, o2: any) {
     return o1.name === o2.name;

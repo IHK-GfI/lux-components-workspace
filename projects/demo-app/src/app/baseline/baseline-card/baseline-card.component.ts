@@ -103,12 +103,13 @@ export class BaselineCardComponent {
     { label: 'Readonly', value: 'readOnlyState' }
   ];
   readonly selectedState = signal(this.stateOptions[0]);
-  readonly disabledForm = computed(() => this.selectedState().value === 'disabledState');
-  readonly readonly = computed(() => this.selectedState().value === 'readOnlyState');
 
   chipItems: string[] = ['Chip 0', 'Chip 1', 'Chip 2'];
   chipOptions: string[] = ['Neuer Chip 1', 'Neuer Chip 2', 'Neuer Chip 3'];
   form: FormGroup;
+
+  readonly disabledForm = computed(() => this.selectedState().value === 'disabledState');
+  readonly readonly = computed(() => this.selectedState().value === 'readOnlyState');
 
   constructor() {
     this.form = new FormGroup<DummyForm>({

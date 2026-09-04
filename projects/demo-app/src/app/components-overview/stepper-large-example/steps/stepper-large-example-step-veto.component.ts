@@ -2,7 +2,6 @@ import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/cor
 import {
     ILuxDialogPresetConfig,
     LuxDialogService,
-    LuxSnackbarService,
     LuxStepperLargeClickEvent,
     LuxStepperLargeStepComponent,
     LuxVetoState
@@ -15,9 +14,6 @@ import {
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExampleStepVetoComponent }]
 })
 export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepComponent implements OnInit {
-  private dialogService = inject(LuxDialogService);
-  private snackbar = inject(LuxSnackbarService);
-
   dialogConfig: ILuxDialogPresetConfig = {
     title: 'Lorem ipsum?',
     content:
@@ -43,6 +39,8 @@ export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepCom
   myVetoFn = (stepperEvent: LuxStepperLargeClickEvent) => this.createMyVetoPromis(stepperEvent);
   vetoYesFn = (stepperEvent: LuxStepperLargeClickEvent) => this.createVetoYesPromise(stepperEvent);
   vetoNoFn = (stepperEvent: LuxStepperLargeClickEvent) => this.createVetoNoPromise(stepperEvent);
+
+  private dialogService = inject(LuxDialogService);
 
   ngOnInit(): void {
     this.luxTitle.set('Veto-Schritt');

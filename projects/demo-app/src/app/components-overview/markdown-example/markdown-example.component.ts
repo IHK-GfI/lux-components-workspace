@@ -1,4 +1,4 @@
-import { Component, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -29,22 +29,17 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class MarkdownExampleComponent {
-  readonly markdownComponent = viewChild(LuxMarkdownComponent);
-
   readonly style = signal('');
   readonly class = signal('');
 
   readonly sanitizeConfig = signal<LuxSanitizeConfig | undefined>(undefined);
 
-  private readonly _forbiddenTagsToggle = signal(false);
   readonly forbiddenTags = signal('a,b');
   readonly forbiddenAttributes = signal('style,class');
 
-  private readonly _allowedTagsToggle = signal(false);
   readonly allowedTags = signal('h1,p,span');
   readonly allowedAttributes = signal('class,style');
 
-  private readonly _addAllowedTagsToggle = signal(false);
   readonly addAllowedTags = signal('');
   readonly addAllowedAttributes = signal('target');
 
@@ -74,6 +69,10 @@ Target-Attribut. Das Target-Attribut ist im Standard deaktiviert, kann über den
  - B1
  - B2
 - C`);
+
+  private readonly _forbiddenTagsToggle = signal(false);
+  private readonly _allowedTagsToggle = signal(false);
+  private readonly _addAllowedTagsToggle = signal(false);
 
   set forbiddenTagsToggle(toggle: boolean) {
     this._forbiddenTagsToggle.set(toggle);

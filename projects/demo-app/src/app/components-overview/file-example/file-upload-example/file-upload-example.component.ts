@@ -47,13 +47,10 @@ import { FileExampleComponent } from '../file-example.component';
   ]
 })
 export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig> implements OnInit, AfterViewInit {
-  private tService = inject(TranslocoService);
-
   readonly fileUploads = viewChildren(LuxFileUploadComponent);
   readonly fileBaseWithoutComponent = viewChild.required('fileBaseWithoutComponent', { read: LuxFileUploadComponent });
   readonly fileBaseWithComponent = viewChild.required('fileBaseWithComponent', { read: LuxFileUploadComponent });
 
-  dialogService = inject(LuxDialogService);
   override readonly label = signal(`Zum Hochladen Datei hier ablegen oder `);
   readonly labelLink = signal(`Datei durchsuchen`);
   readonly labelLinkShort = signal(`Datei hochladen`);
@@ -74,6 +71,9 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
       }
     }
   ];
+
+  private tService = inject(TranslocoService);
+  private dialogService = inject(LuxDialogService);
 
   override ngOnInit() {
     this.maxSize.set(10);
@@ -150,6 +150,20 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
       });
   }
 
+  openDialog(fileObject: ILuxFileObject) {
+    const dialogRef = this.dialogService.openComponent(LuxFileRenameDialogComponent,{
+      disableClose: false,
+      width: 'auto',
+      height: 'auto',
+    }, fileObject);
+
+    dialogRef.dialogClosed.subscribe((newFileName: any) => {
+      if (typeof newFileName === 'string' && newFileName.length > 0) {
+        fileObject.name = newFileName;
+      }
+    });
+  }
+
   protected initUploadActionConfig() {
     return {
       disabled: false,
@@ -165,19 +179,5 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
         this.onUpload(files);
       }
     };
-  }
-
-  openDialog(fileObject: ILuxFileObject) {
-    const dialogRef = this.dialogService.openComponent(LuxFileRenameDialogComponent,{
-      disableClose: false,
-      width: 'auto',
-      height: 'auto',
-    }, fileObject);
-
-    dialogRef.dialogClosed.subscribe((newFileName: any) => {
-      if (typeof newFileName === 'string' && newFileName.length > 0) {
-        fileObject.name = newFileName;
-      }
-    });
   }
 }

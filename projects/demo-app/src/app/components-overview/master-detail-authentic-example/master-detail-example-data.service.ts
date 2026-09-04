@@ -5,8 +5,6 @@ export class MasterDetailExampleDataService {
   public static readonly DAY: number = 1000 * 60 * 60 * 24;
   public static readonly MONTH: number = MasterDetailExampleDataService.DAY * 31;
 
-  constructor() {}
-
   createExampleData(amount: number) {
     const now = Date.now();
     const data = [];

@@ -16,7 +16,7 @@
       @for (listItem of listItems(); track trackByFn($index, listItem)) {
       <lux-list-item [luxTitle]="listItem">
         <lux-list-item-icon>
-          <lux-icon [luxIconName]="'lux-interface-setting-cog'" luxIconSize="1x"></lux-icon>
+          <lux-icon [luxIconName]="'lux-interface-setting-cog'" luxIconSize="1x" />
         </lux-list-item-icon>
         <lux-list-item-content> Content </lux-list-item-content>
       </lux-list-item>
@@ -30,7 +30,7 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    />
     <lux-toggle-ac luxLabel="luxImmediateCallback" [(luxChecked)]="immediateCallback" [luxNoTopLabel]="true">
       <lux-form-hint>
         Bestimmt ob bei Initiierung ein luxScrolled-Event abgegeben wird.<br />
@@ -41,23 +41,19 @@
       luxLabel="luxIsLoading"
       luxHint="Teilt der Component mit, ob gerade Daten geladen werden. Wenn true, werden keine luxScrolled-Events emittet."
       [(luxChecked)]="isLoading"
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+      [luxNoTopLabel]="true" />
     <lux-input-ac
       luxType="number"
       [luxNumberAlignLeft]="true"
       luxName="infinite-scrolling_luxScrollPercent"
       luxLabel="luxScrollPercent"
       luxHint="Bestimmt die Prozentzahl in der Scrollbar, ab der das luxScrolled-Event emitted wird."
-      [(luxValue)]="scrollPercent"
-    >
-    </lux-input-ac>
+      [(luxValue)]="scrollPercent" />
   </example-base-simple-options>
   <example-base-options-actions>
     <div class="lux-simple-form row">
-      <lux-button luxLabel="Neu generieren" [luxStroked]="true" (luxClicked)="recreateList()" luxTagId="menu-item-regenerate"> </lux-button>
-      <lux-button luxLabel="Reset" [luxStroked]="true" (luxClicked)="reset()" luxTagId="menu-item-reset"> </lux-button>
+      <lux-button luxLabel="Neu generieren" [luxStroked]="true" (luxClicked)="recreateList()" luxTagId="menu-item-regenerate" />
+      <lux-button luxLabel="Reset" [luxStroked]="true" (luxClicked)="reset()" luxTagId="menu-item-reset" />
     </div>
   </example-base-options-actions>
 </example-base-structure>

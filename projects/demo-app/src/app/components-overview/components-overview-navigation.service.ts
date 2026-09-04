@@ -1,20 +1,14 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Injectable, Signal, WritableSignal, computed, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { LuxThemeService } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { DemoMarkerType, DemoNavigationComponentEntry, getDemoMarkerLabel } from '../base/status-marker/status-marker.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ComponentsOverviewNavigationService implements OnDestroy {
-  private themeService = inject(LuxThemeService);
-  private router = inject(Router);
-
-  private currentUrl: string | null = null;
-  private themeName: string;
-
+export class ComponentsOverviewNavigationService {
   moduleIcons: Map<string, string> = new Map<string, string>([
     ['action', 'lux-interface-cursor-arrow-1'],
     ['common', 'lux-image-photo-composition-oval'],
@@ -35,17 +29,56 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     ['session-timer', 'lux-interface-time-reset']
   ]);
 
-  private create(moduleName: string, label: string, markerType?: DemoMarkerType): DemoNavigationComponentEntry {
-    return {
-      onclick: () => this.goTo(label.toLowerCase()),
-      icon: this.moduleIcons.get(moduleName)!,
-      label,
-      moduleName,
-      markerType
-    };
-  }
+  readonly currentModuleNames: string[] = [
+    'action',
+    'breadcrumb',
+    'common',
+    'directive',
+    'error',
+    'filter',
+    'form',
+    'html',
+    'icon',
+    'layout',
+    'lookup',
+    'markdown',
+    'pipes',
+    'popup',
+    'session-timer',
+    'tenant-logo',
+    'tour-hint'
+  ];
 
-  components: DemoNavigationComponentEntry[] = [
+  readonly currentModules: WritableSignal<Map<string, boolean>> = signal(new Map(this.currentModuleNames.map((moduleName) => [moduleName, false])));
+
+  readonly filteredComponents: Signal<DemoNavigationComponentEntry[]> = computed(() =>
+    this.components.filter((component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName()))
+  );
+
+  readonly sortedComponentEntries: Signal<Map<string, DemoNavigationComponentEntry[]>> = computed(() => {
+    const entries = new Map<string, DemoNavigationComponentEntry[]>();
+    this.currentModuleNames.forEach((moduleName: string) => {
+      entries.set(
+        moduleName,
+        this.filteredComponents().filter((component) => component.moduleName === moduleName)
+      );
+    });
+    return entries;
+  });
+
+  readonly sortedComponents: Signal<DemoNavigationComponentEntry[]> = computed(() =>
+    Array.from(this.sortedComponentEntries().values()).flat()
+  );
+
+  readonly selectedComponent: Signal<DemoNavigationComponentEntry | null> = computed(() => {
+    const lastPath = this.lastUrlSegment().toLowerCase();
+    return this.components.find((component) => component.label.toLowerCase() === lastPath) ?? null;
+  });
+
+  private readonly themeService = inject(LuxThemeService);
+  private readonly router = inject(Router);
+
+  private readonly components: DemoNavigationComponentEntry[] = [
     this.create('action', 'Button', DemoMarkerType.Updated),
     this.create('action', 'Button-Toggle', DemoMarkerType.New),
     this.create('action', 'Link'),
@@ -119,75 +152,36 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
     this.create('session-timer', 'Session-Timer', DemoMarkerType.Updated)
   ];
 
-  sortedComponents: DemoNavigationComponentEntry[] = [];
-  sortedComponentEntries: Map<string, DemoNavigationComponentEntry[]> = new Map<string, DemoNavigationComponentEntry[]>();
-  currentModules: Map<string, boolean> = new Map<string, boolean>([
-    ['action', false],
-    ['breadcrumb', false],
-    ['common', false],
-    ['directive', false],
-    ['error', false],
-    ['filter', false],
-    ['form', false],
-    ['html', false],
-    ['icon', false],
-    ['layout', false],
-    ['lookup', false],
-    ['markdown', false],
-    ['pipes', false],
-    ['popup', false],
-    ['session-timer', false],
-    ['tenant-logo', false],
-    ['tour-hint', false]
-  ]);
-  currentModuleNames: string[] = [];
-  selectedComponent: DemoNavigationComponentEntry | null = null;
-  subscriptions: Subscription[] = [];
+  private readonly themeName: Signal<string> = computed(() => this.themeSignal().name);
+
+  private readonly themeSignal = toSignal(this.themeService.getThemeAsObservable(), { initialValue: this.themeService.getTheme() });
+
+  private readonly lastUrlSegment = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => {
+        const urlPaths = event.url.split('/');
+        return urlPaths[urlPaths.length - 1] ?? '';
+      })
+    ),
+    { initialValue: '' }
+  );
 
   constructor() {
-    this.themeName = this.themeService.getTheme().name;
-    this.subscriptions.push(
-      this.themeService.getThemeAsObservable().subscribe((theme) => {
-        this.themeName = theme.name;
-        this.sortComponentEntriesByModule();
-      })
-    );
-
-    this.currentModuleNames = Array.from(this.currentModules.keys());
-    this.sortComponentEntriesByModule();
-
-    this.subscriptions.push(
-      this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((url: NavigationEnd) => {
-        this.currentUrl = url.url;
-        const urlPaths = this.currentUrl.split('/');
-        const lastPath = urlPaths && urlPaths[urlPaths.length - 1] ? urlPaths[urlPaths.length - 1] : '';
-        for (const component of this.components) {
-          if (lastPath.toLowerCase() === component.label.toLowerCase()) {
-            this.selectedComponent = component;
-            // Alle Modules als expanded=false markieren, Ausnahme: das Modul des aktuellen Beispiels
-            this.currentModules.forEach((_expanded: boolean, moduleName: string) =>
-              this.currentModules.set(moduleName, moduleName === component.moduleName)
-            );
-            break;
-          } else {
-            this.selectedComponent = null;
-          }
-        }
-      })
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
-
-  get filteredComponents() {
-    return this.components.filter((component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName));
+    // Modul des aktuell ausgewählten Beispiels automatisch aufklappen, alle anderen zuklappen.
+    // Läuft bewusst als Effect statt als computed(), da currentModules zusätzlich manuell
+    // (auf-/zuklappen per Klick) beschreibbar bleiben muss.
+    effect(() => {
+      const selected = this.selectedComponent();
+      const expandedByModule = new Map<string, boolean>();
+      this.currentModuleNames.forEach((moduleName: string) => expandedByModule.set(moduleName, selected ? moduleName === selected.moduleName : false));
+      this.currentModules.set(expandedByModule);
+    });
   }
 
   getFilteredComponents(filterValue: string) {
     const newValue = filterValue ? filterValue.trim().toLowerCase() : '';
-    return this.filteredComponents.filter((component) => component.label.toLowerCase().includes(newValue));
+    return this.filteredComponents().filter((component) => component.label.toLowerCase().includes(newValue));
   }
 
   getMarkerLabel(markerType?: DemoMarkerType) {
@@ -199,40 +193,42 @@ export class ComponentsOverviewNavigationService implements OnDestroy {
   }
 
   onExpandAll() {
-    this.currentModules.forEach((_expanded: boolean, moduleName: string) => this.currentModules.set(moduleName, true));
+    this.currentModules.update((current) => new Map(Array.from(current.keys(), (moduleName) => [moduleName, true])));
   }
 
   onCollapseAll() {
-    this.currentModules.forEach((_expanded: boolean, moduleName: string) => this.currentModules.set(moduleName, false));
+    this.currentModules.update((current) => new Map(Array.from(current.keys(), (moduleName) => [moduleName, false])));
+  }
+
+  toggleModule(moduleName: string) {
+    this.currentModules.update((current) => {
+      const next = new Map(current);
+      next.set(moduleName, !next.get(moduleName));
+      return next;
+    });
   }
 
   navigateToPrevComponent() {
-    const currentComponent = this.selectedComponent;
-    const currentIndex = this.sortedComponents.findIndex((component) => component.label === currentComponent?.label);
-    this.sortedComponents[currentIndex > 0 ? currentIndex - 1 : this.sortedComponents.length - 1].onclick();
+    const currentComponent = this.selectedComponent();
+    const sortedComponents = this.sortedComponents();
+    const currentIndex = sortedComponents.findIndex((component) => component.label === currentComponent?.label);
+    sortedComponents[currentIndex > 0 ? currentIndex - 1 : sortedComponents.length - 1].onclick();
   }
 
   navigateToNextComponent() {
-    const currentComponent = this.selectedComponent;
-    const currentIndex = this.sortedComponents.findIndex((component) => component.label === currentComponent?.label);
-    this.sortedComponents[currentIndex < this.sortedComponents.length - 1 ? currentIndex + 1 : 0].onclick();
+    const currentComponent = this.selectedComponent();
+    const sortedComponents = this.sortedComponents();
+    const currentIndex = sortedComponents.findIndex((component) => component.label === currentComponent?.label);
+    sortedComponents[currentIndex < sortedComponents.length - 1 ? currentIndex + 1 : 0].onclick();
   }
 
-  sortComponentEntriesByModule() {
-    this.currentModuleNames.forEach((moduleName: string) => {
-      this.sortedComponentEntries.set(
-        moduleName,
-        this.components.filter(
-          (component) =>
-            component.moduleName === moduleName &&
-            (!component.themes || !!component.themes.find((theme: string) => theme === this.themeName))
-        )
-      );
-
-      const components = this.sortedComponentEntries.get(moduleName);
-      if (components) {
-        this.sortedComponents.push(...components);
-      }
-    });
+  private create(moduleName: string, label: string, markerType?: DemoMarkerType): DemoNavigationComponentEntry {
+    return {
+      onclick: () => this.goTo(label.toLowerCase()),
+      icon: this.moduleIcons.get(moduleName)!,
+      label,
+      moduleName,
+      markerType
+    };
   }
 }

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, WritableSignal, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatError } from '@angular/material/form-field';
@@ -49,12 +49,9 @@ interface CheckboxValidatorDemoForm {
   ]
 })
 export class CheckboxContainerAcExampleComponent {
-  private readonly mediaQuery = inject(LuxMediaQueryObserverService);
-  private readonly destroyRef = inject(DestroyRef);
-
   readonly label = signal('Optionales Label für den Container');
   readonly isVertical = signal(true);
-  readonly isSmall = signal(this.mediaQuery.isSmaller('md'));
+  readonly isSmall: WritableSignal<boolean>;
 
   readonly validatorDemoForm = new FormGroup<CheckboxValidatorDemoForm>({
     options: new FormGroup<CheckboxOptionsGroup>(
@@ -74,7 +71,12 @@ export class CheckboxContainerAcExampleComponent {
   readonly standaloneSubmitted = signal(false);
   readonly luxAtLeastOneChecked = luxAtLeastOneChecked;
 
+  private readonly mediaQuery = inject(LuxMediaQueryObserverService);
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor() {
+    this.isSmall = signal(this.mediaQuery.isSmaller('md'));
+
     this.mediaQuery
       .getMediaQueryChangedAsObservable()
       .pipe(takeUntilDestroyed(this.destroyRef))

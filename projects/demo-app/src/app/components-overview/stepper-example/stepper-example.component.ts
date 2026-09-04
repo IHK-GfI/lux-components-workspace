@@ -84,21 +84,14 @@ interface StepperForm2DummyForm {
   ]
 })
 export class StepperExampleComponent implements OnDestroy {
-  private stepperService = inject(LuxStepperHelperService);
-  private buttonService = inject(LuxAppFooterButtonService);
-  private snackbar = inject(LuxSnackbarService);
-  private router = inject(Router);
-  private dialogService = inject(LuxDialogService);
-  private destroyRef = inject(DestroyRef);
-
   readonly stepperComponent = viewChild.required(LuxStepperComponent);
   readonly newStepsVisible = signal(false);
-  newStepsForm1: FormGroup<StepperForm1DummyForm>;
-  newStepsForm2: FormGroup<StepperForm2DummyForm>;
+  readonly newStepsForm1: FormGroup<StepperForm1DummyForm>;
+  readonly newStepsForm2: FormGroup<StepperForm2DummyForm>;
   readonly showOutputEvents = signal(false);
   readonly useCustomButtonConfig = signal(false);
   log = logResult;
-  steps: any[] = [
+  readonly steps: any[] = [
     {
       iconName: 'lux-interface-bookmark',
       iconSize: '1x',
@@ -132,17 +125,17 @@ export class StepperExampleComponent implements OnDestroy {
       hide: false
     }
   ];
-  previousButtonConfig: IStepperButtonConfigWithVariant = {
+  readonly previousButtonConfig: IStepperButtonConfigWithVariant = {
     label: '',
     iconName: 'lux-interface-arrows-left',
     color: 'primary'
   };
-  nextButtonConfig: IStepperButtonConfigWithVariant = {
+  readonly nextButtonConfig: IStepperButtonConfigWithVariant = {
     label: '',
     iconName: 'lux-interface-arrows-right',
     color: 'primary'
   };
-  finishButtonConfig: IStepperButtonConfigWithVariant = {
+  readonly finishButtonConfig: IStepperButtonConfigWithVariant = {
     label: '',
     iconName: 'lux-interface-validation-check',
     color: 'primary'
@@ -160,6 +153,13 @@ export class StepperExampleComponent implements OnDestroy {
   readonly noHeaderLabels = signal(false);
   readonly validationAttempted = signal(false);
   readonly validationMessage = 'Bitte füllen Sie alle Pflichtfelder aus.';
+
+  private readonly stepperService = inject(LuxStepperHelperService);
+  private readonly buttonService = inject(LuxAppFooterButtonService);
+  private readonly snackbar = inject(LuxSnackbarService);
+  private readonly router = inject(Router);
+  private readonly dialogService = inject(LuxDialogService);
+  private readonly destroyRef = inject(DestroyRef);
 
   get showValidationMessage(): boolean {
     let currentForm =
@@ -196,20 +196,6 @@ export class StepperExampleComponent implements OnDestroy {
     };
   }
 
-  openStepperDialog(): void {
-    const dialogRef = this.dialogService.openComponent(StepperDialogExampleComponent, {
-      minWidth: '90vw',
-      maxWidth: '90vw',
-      minHeight: '60vh',
-      maxHeight: '95vh',
-      disableClose: false,
-      disableBackdropAndEscClose: true
-    });
-    dialogRef.dialogClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
-      this.log(this.showOutputEvents(), 'Stepper-Dialog geschlossen', result);
-    });
-  }
-
   constructor() {
     this.newStepsForm1 = new FormGroup<StepperForm1DummyForm>({
       street: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
@@ -226,6 +212,20 @@ export class StepperExampleComponent implements OnDestroy {
   ngOnDestroy() {
     // sicherheitshalber beim Verlassen der Component unsere neuen Footer-Buttons entfernen.
     this.clearButtonInfos();
+  }
+
+  openStepperDialog(): void {
+    const dialogRef = this.dialogService.openComponent(StepperDialogExampleComponent, {
+      minWidth: '90vw',
+      maxWidth: '90vw',
+      minHeight: '60vh',
+      maxHeight: '95vh',
+      disableClose: false,
+      disableBackdropAndEscClose: true
+    });
+    dialogRef.dialogClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
+      this.log(this.showOutputEvents(), 'Stepper-Dialog geschlossen', result);
+    });
   }
 
   /**
@@ -318,6 +318,11 @@ export class StepperExampleComponent implements OnDestroy {
       this.buttonService.getButtonInfoByCMD('next')!.disabled = false;
       this.buttonService.getButtonInfoByCMD('finish')!.disabled = true;
     }
+    // Neue Array-Referenz setzen, damit der BehaviorSubject im Service erneut emittiert und der
+    // (OnPush) Footer die geänderten "disabled"-Werte tatsächlich mitbekommt (siehe getButtonInfoByCMD:
+    // liefert nur eine Referenz auf ein Objekt im bestehenden Array, eine reine Property-Mutation löst
+    // im Service keine neue Emission aus).
+    this.buttonService.buttonInfos = [...this.buttonService.buttonInfos];
   }
 
   /**

@@ -25,6 +25,8 @@ interface Error {
   ]
 })
 export class HttpErrorExampleComponent {
+  readonly disabled = signal(true);
+
   private sampleErrorStructure = {
     status: '400',
     errors: this.mapErrors([
@@ -39,8 +41,6 @@ export class HttpErrorExampleComponent {
       ]
     ])
   };
-
-  readonly disabled = signal(true);
 
   createErrors() {
     LuxHttpErrorInterceptor.dataStream.next(this.sampleErrorStructure.errors);

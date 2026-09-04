@@ -59,7 +59,7 @@ export class MessageBoxExampleComponent implements OnInit {
   readonly showInCard = signal(false);
   log = logResult;
   readonly messages = signal<ILuxMessage[]>([]);
-  colors = LuxMessageBoxColors;
+  readonly colors = LuxMessageBoxColors;
   newMessage: ILuxMessage = { text: '', iconName: '', color: 'blue' };
   readonly messageIndex = signal(1);
   readonly maximumDisplayed = signal(10);

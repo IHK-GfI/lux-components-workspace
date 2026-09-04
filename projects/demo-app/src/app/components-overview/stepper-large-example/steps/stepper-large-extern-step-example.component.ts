@@ -12,13 +12,13 @@ import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-ex
   imports: [LuxToggleAcComponent, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExternStepExampleComponent extends LuxStepperLargeStepComponent implements OnInit, AfterViewInit {
-  private cdr = inject(ChangeDetectorRef);
-  dataService = inject(StepperLargeExampleDataService);
-
   readonly toggle = viewChild<LuxToggleAcComponent>('requiredCheck');
 
   showErrorMessage = false;
   subscriptions: Subscription[] = [];
+
+  private cdr = inject(ChangeDetectorRef);
+  private dataService = inject(StepperLargeExampleDataService);
 
   ngOnInit(): void {
     if (!this.luxTitle()) {

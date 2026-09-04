@@ -22,8 +22,6 @@ import { TenantLogoExampleHeaderService } from './tenant-logo-example-header.ser
   ]
 })
 export class TenantLogoExampleComponent {
-  private tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
-
   private readonly tenantRef = viewChild('exampleLogo', { read: ElementRef });
 
   readonly useTenantLogoForHeader = signal(false);
@@ -41,6 +39,8 @@ export class TenantLogoExampleComponent {
     luxTenantLogoHeight: '50px',
     luxTenantLogoClicked: undefined
   };
+
+  private tenantLogoHeaderService = inject(TenantLogoExampleHeaderService);
 
   public onChangeUseTenantLogoForHeader(toggle: boolean) {
     this.useTenantLogoForHeader.set(toggle);

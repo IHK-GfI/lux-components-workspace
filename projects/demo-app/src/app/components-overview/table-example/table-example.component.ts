@@ -52,9 +52,6 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
 export class TableExampleComponent extends TableExampleBaseClass implements AfterViewInit, OnDestroy {
   readonly tableComponent = viewChild<LuxTableComponent<any>>('myTable');
 
-  private selectedChangeSub?: OutputRefSubscription;
-  private selectedAsArrayChangeSub?: OutputRefSubscription;
-
   readonly dataSource = signal<any[]>([]);
   readonly showColumnSelector = signal(true);
 
@@ -62,20 +59,15 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
     { example1: 'unformated', example2: 'span', example3: 'div', example4: 'p', content: 'Lorem ipsum' }
   ];
 
+  private selectedChangeSub?: OutputRefSubscription;
+  private selectedAsArrayChangeSub?: OutputRefSubscription;
+
   constructor() {
     super();
 
     setTimeout(() => {
       this.loadData(false);
     });
-  }
-
-  getTableComponent(): LuxTableComponent<any> {
-    return this.tableComponent()!;
-  }
-
-  getDataArr() {
-    return this.dataSource();
   }
 
   ngAfterViewInit(): void {
@@ -86,6 +78,14 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
     this.selectedChangeSub?.unsubscribe();
     this.selectedAsArrayChangeSub?.unsubscribe();
     super.ngOnDestroy();
+  }
+
+  getTableComponent(): LuxTableComponent<any> {
+    return this.tableComponent()!;
+  }
+
+  getDataArr() {
+    return this.dataSource();
   }
 
   override refreshSelectionBindings() {

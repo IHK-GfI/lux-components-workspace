@@ -95,10 +95,6 @@ interface FormCommonState extends FormExampleSnapshot<ReturnType<FormGroup<FormC
   ]
 })
 export class FormCommonComponent extends FormBase implements OnInit {
-  private logger = inject(LuxConsoleService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly state = inject(FormExampleStateService);
-
   myGroup!: FormGroup<FormCommonDummy>;
 
   hobbies: FormCommonOption[] = [
@@ -113,6 +109,10 @@ export class FormCommonComponent extends FormBase implements OnInit {
   // Schalter im Beispiel "A11y - Visuell versteckte Labels"
   readonly showA11yLabels = signal(false);
   readonly pickHobbyValue = (hobby: FormCommonOption) => hobby.value;
+
+  private logger = inject(LuxConsoleService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   constructor() {
     super();

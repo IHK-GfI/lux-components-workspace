@@ -3,7 +3,6 @@ import { LuxPopupCloseReason, LuxPopupComponent } from '@ihk-gfi/lux-components'
 
 @Component({
   selector: 'app-popup-example-info-popup',
-  standalone: true,
   imports: [LuxPopupComponent],
   exportAs: 'popupExampleInfoPopup',
   changeDetection: ChangeDetectionStrategy.OnPush,

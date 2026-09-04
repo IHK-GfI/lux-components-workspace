@@ -31,8 +31,7 @@
         [luxLastPageLabel]="toOptionalLabel(lastPageLabel())"
         [luxGetRangeLabel]="rangeLabel()"
         (luxPageChange)="onPageChange($event)"
-      >
-      </lux-paginator>
+       />
     </div>
   </example-base-content>
 
@@ -42,8 +41,7 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+     />
 
     <lux-input-ac
       luxName="paginator_pageIndex"
@@ -52,8 +50,7 @@
       luxType="number"
       [luxNumberAlignLeft]="true"
       [(luxValue)]="pageIndex"
-    >
-    </lux-input-ac>
+     />
 
     <lux-select-ac
       luxLabel="luxPageSizeOptions"
@@ -62,14 +59,13 @@
       [luxPickValue]="(item) => item.value"
       luxHint="Auswahl der Seitengroessen-Arrays (aus dem Table-Beispiel)"
       [(luxSelected)]="selectedPageSizeOption"
-    >
-    </lux-select-ac>
+     />
 
-    <lux-toggle-ac luxLabel="luxShowFirstLastButtons" [(luxChecked)]="showFirstLastButtons" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxHidePageSize" [(luxChecked)]="hidePageSize" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxDense" [(luxChecked)]="denseFormat" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxNoWrap" [(luxChecked)]="noWrap" [luxNoLabels]="true"> </lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxShowFirstLastButtons" [(luxChecked)]="showFirstLastButtons" [luxNoLabels]="true" />
+    <lux-toggle-ac luxLabel="luxHidePageSize" [(luxChecked)]="hidePageSize" [luxNoLabels]="true" />
+    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxNoLabels]="true" />
+    <lux-toggle-ac luxLabel="luxDense" [(luxChecked)]="denseFormat" [luxNoLabels]="true" />
+    <lux-toggle-ac luxLabel="luxNoWrap" [(luxChecked)]="noWrap" [luxNoLabels]="true" />
   </example-base-simple-options>
   <example-base-advanced-options>
     <div class="lux-flex lux-flex-col lux-gap-4">
@@ -79,8 +75,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="itemsPerPageLabel"
-      >
-      </lux-input-ac>
+       />
 
       <lux-input-ac
         luxName="paginator_nextPageLabel"
@@ -88,8 +83,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="nextPageLabel"
-      >
-      </lux-input-ac>
+       />
 
       <lux-input-ac
         luxName="paginator_previousPageLabel"
@@ -97,8 +91,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="previousPageLabel"
-      >
-      </lux-input-ac>
+       />
 
       <lux-input-ac
         luxName="paginator_firstPageLabel"
@@ -106,8 +99,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="firstPageLabel"
-      >
-      </lux-input-ac>
+       />
 
       <lux-input-ac
         luxName="paginator_lastPageLabel"
@@ -115,8 +107,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="lastPageLabel"
-      >
-      </lux-input-ac>
+       />
 
       <lux-select-ac
         luxLabel="luxGetRangeLabel"
@@ -125,8 +116,7 @@
         luxOptionLabelProp="label"
         luxHint="Wählt ein vordefiniertes Bereichslabel für den Paginator aus"
         [(luxSelected)]="selectedRangeLabelOption"
-      >
-      </lux-select-ac>
+       />
     </div>
   </example-base-advanced-options>
 </example-base-structure>

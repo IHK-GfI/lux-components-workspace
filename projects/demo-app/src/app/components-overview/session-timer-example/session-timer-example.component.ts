@@ -20,15 +20,12 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
 })
 export class SessionTimerExampleComponent {
   readonly markerTypeNew = DemoMarkerType.New;
-  protected timerService = inject(LuxAppHeaderAcSessionTimerService);
   readonly startingSeconds = signal(1800);
+
+  protected readonly timerService = inject(LuxAppHeaderAcSessionTimerService);
 
   get canExtendSession(): boolean {
     return this.timerService.canExtendSession;
-  }
-
-  get canExtendSessionButtonLabel(): string {
-    return this.canExtendSession ? 'canExtendSession auf false setzen' : 'canExtendSession auf true setzen';
   }
 
   setTimer() {

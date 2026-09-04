@@ -40,14 +40,10 @@ import { StepperLargeExternStepExampleComponent } from './steps/stepper-large-ex
   ]
 })
 export class StepperLargeExampleComponent {
-  dataService = inject(StepperLargeExampleDataService);
-  private router = inject(Router);
-  private snackbar = inject(LuxSnackbarService);
-  private themeService = inject(LuxThemeService);
-
   readonly stepper = viewChild(LuxStepperLargeComponent);
   readonly toggle = viewChild<LuxToggleAcComponent>('requiredCheck');
 
+  dataService = inject(StepperLargeExampleDataService);
   readonly allowed = signal(false);
   readonly stepValidationActive = signal(true);
   readonly currentStepIndex = signal(0);
@@ -56,7 +52,10 @@ export class StepperLargeExampleComponent {
   readonly completed = signal(true);
   theme = '';
   readonly luxA11YMode = signal(false);
-  showError = false;
+
+  private router = inject(Router);
+  private snackbar = inject(LuxSnackbarService);
+  private themeService = inject(LuxThemeService);
 
   constructor() {
     this.theme = this.themeService.getTheme().name;
@@ -93,7 +92,6 @@ export class StepperLargeExampleComponent {
 
   onStepNotComplete() {
     this.toggle()?.formControl.markAsTouched();
-    this.showError = true;
 
     this.dataService.showErrorMessage.next(true);
   }

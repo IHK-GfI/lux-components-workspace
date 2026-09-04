@@ -1,5 +1,5 @@
 import { NgStyle, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   LuxAutofocusDirective,
@@ -7,6 +7,7 @@ import {
   LuxCardActionsComponent,
   LuxCardComponent,
   LuxCardContentComponent,
+  LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
   LuxInputAcComponent,
@@ -49,43 +50,46 @@ type ErrorBoxType = 'default' | 'gradient' | 'loading';
   ]
 })
 export class ButtonExampleComponent {
-  private configService = inject(LuxComponentsConfigService);
-  readonly config = toSignal(this.configService.config, { initialValue: this.configService.currentConfig });
-
-  showOutputEvents = false;
-  log = logResult;
-
-  colors: any[] = [
+  readonly colors: any[] = [
     { value: '', label: 'default' },
     { value: 'primary', label: 'primary' },
     { value: 'warn', label: 'warn' },
     { value: 'accent', label: 'accent' }
   ];
-
-  badgeColors: any[] = [
+  readonly badgeColors: any[] = [
     { value: 'primary', label: 'primary' },
     { value: 'warn', label: 'warn' },
     { value: 'accent', label: 'accent' }
   ];
-
-  label = 'Button';
-  iconName = 'lux-interface-delete-1';
-  iconShowRight = false;
-  disabled = false;
-  disabledAria = false;
-  backgroundColor = '';
-  buttonBadge = '';
-  buttonBadgeColor: LuxThemePalette = 'primary';
-  spinnerModes = ['determinate', 'indeterminate'];
-  spinnerMode: LuxProgressModeType = 'determinate';
+  readonly spinnerModes = ['determinate', 'indeterminate'];
   readonly markerTypeUpdated = DemoMarkerType.Updated;
-  spinnerValue = 70;
+  readonly log = logResult;
+
+  readonly config: Signal<LuxComponentsConfigParameters>;
+
+  readonly showOutputEvents = signal(false);
+  readonly label = signal('Button');
+  readonly iconName = signal('lux-interface-delete-1');
+  readonly iconShowRight = signal(false);
+  readonly disabled = signal(false);
+  readonly disabledAria = signal(false);
+  readonly backgroundColor = signal('');
+  readonly buttonBadge = signal('');
+  readonly buttonBadgeColor = signal<LuxThemePalette>('primary');
+  readonly spinnerMode = signal<LuxProgressModeType>('determinate');
+  readonly spinnerValue = signal(70);
   readonly spinnerExampleLoading = signal(false);
   readonly spinnerExampleFirstname = signal('');
   readonly spinnerExampleLastname = signal('');
-  errorBoxDefault = false;
-  errorBoxGradient = false;
-  errorBoxLoading = false;
+  readonly errorBoxDefault = signal(false);
+  readonly errorBoxGradient = signal(false);
+  readonly errorBoxLoading = signal(false);
+
+  private readonly configService = inject(LuxComponentsConfigService);
+
+  constructor() {
+    this.config = toSignal(this.configService.config, { initialValue: this.configService.currentConfig });
+  }
 
   get allUpperCase() {
     return this.config().labelConfiguration!.allUppercase;
@@ -105,15 +109,15 @@ export class ButtonExampleComponent {
   }
 
   onBadgeColorChanged(badgeColor: { label: string; value: LuxThemePalette }) {
-    this.buttonBadgeColor = badgeColor.value;
+    this.buttonBadgeColor.set(badgeColor.value);
   }
 
   addBarProgress() {
-    this.spinnerValue = this.spinnerValue + 10 > 100 ? 100 : this.spinnerValue + 10;
+    this.spinnerValue.update((value) => (value + 10 > 100 ? 100 : value + 10));
   }
 
   subtractBarProgress() {
-    this.spinnerValue = this.spinnerValue - 10 < 0 ? 0 : this.spinnerValue - 10;
+    this.spinnerValue.update((value) => (value - 10 < 0 ? 0 : value - 10));
   }
 
   spinnerExampleUpdateLoading(event: Event) {
@@ -123,24 +127,24 @@ export class ButtonExampleComponent {
       this.spinnerExampleFirstname.set('');
       this.spinnerExampleLastname.set('');
     }, 4000);
-    this.log(this.showOutputEvents, 'Button clicked', event);
+    this.log(this.showOutputEvents(), 'Button clicked', event);
   }
 
   spinnerExampleClear(event: Event) {
     this.spinnerExampleFirstname.set('');
     this.spinnerExampleLastname.set('');
     this.spinnerExampleLoading.set(false);
-    this.log(this.showOutputEvents, 'Button clicked', event);
+    this.log(this.showOutputEvents(), 'Button clicked', event);
   }
 
   onButtonClick(box: ErrorBoxType, aux: boolean, event: Event) {
-    this.log(this.showOutputEvents, `${aux ? 'Aux-' : ''}Button clicked`, event);
+    this.log(this.showOutputEvents(), `${aux ? 'Aux-' : ''}Button clicked`, event);
     this.resetBoxVisibility();
     this.updateBoxVisibility(box, false);
   }
 
   onClickNotAllowed(box: ErrorBoxType, event: Event) {
-    this.log(this.showOutputEvents, 'Click not allowed button clicked', event);
+    this.log(this.showOutputEvents(), 'Click not allowed button clicked', event);
     this.resetBoxVisibility();
     this.updateBoxVisibility(box, true);
   }
@@ -148,20 +152,20 @@ export class ButtonExampleComponent {
   private updateBoxVisibility(box: ErrorBoxType, visible: boolean) {
     switch (box) {
       case 'default':
-        this.errorBoxDefault = visible;
+        this.errorBoxDefault.set(visible);
         break;
       case 'gradient':
-        this.errorBoxGradient = visible;
+        this.errorBoxGradient.set(visible);
         break;
       case 'loading':
-        this.errorBoxLoading = visible;
+        this.errorBoxLoading.set(visible);
         break;
     }
   }
 
   private resetBoxVisibility() {
-    this.errorBoxDefault = false;
-    this.errorBoxGradient = false;
-    this.errorBoxLoading = false;
+    this.errorBoxDefault.set(false);
+    this.errorBoxGradient.set(false);
+    this.errorBoxLoading.set(false);
   }
 }

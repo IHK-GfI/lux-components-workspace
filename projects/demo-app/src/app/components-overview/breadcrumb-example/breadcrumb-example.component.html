@@ -10,20 +10,20 @@
       [luxWrap]="wrap()"
       [luxShowOnlyFirstAndLast]="showOnlyFirstAndLast()"
       (luxClicked)="onClickedEntry($event)"
-    ></lux-breadcrumb>
+    />
     @if (clickedEntry()) {
-      <example-value [value]="clickedEntry()"></example-value>
+      <example-value [value]="clickedEntry()"/>
     }
-    <lux-divider [luxInset]="true"></lux-divider>
+    <lux-divider [luxInset]="true"/>
     <h3>Beispiel mit manueller Navigation</h3>
     @if (entriesExample().length > 1) {
-      <lux-breadcrumb [luxEntries]="entriesExample()" (luxClicked)="onBreadcrumbClick($event)"></lux-breadcrumb>
+      <lux-breadcrumb [luxEntries]="entriesExample()" (luxClicked)="onBreadcrumbClick($event)"/>
     }
     @if (currentArea() === 'Übersicht') {
       <div>
         <h4>Übersicht</h4>
         <ul>
-          <li><lux-link-plain luxLabel="Berufliche Bildung" (luxClicked)="onSwitchArea('Berufliche Bildung')"></lux-link-plain></li>
+          <li><lux-link-plain luxLabel="Berufliche Bildung" (luxClicked)="onSwitchArea('Berufliche Bildung')"/></li>
           <li>...</li>
         </ul>
       </div>
@@ -40,7 +40,7 @@
         </p>
         Verweise:
         <ul>
-          <li><lux-link-plain luxLabel="Zur Ausbildung" (luxClicked)="onSwitchArea('Ausbildung')"></lux-link-plain></li>
+          <li><lux-link-plain luxLabel="Zur Ausbildung" (luxClicked)="onSwitchArea('Ausbildung')"/></li>
         </ul>
       </div>
     }
@@ -73,18 +73,18 @@
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>Diese Konfiguration bezieht sich nur auf das Beispiel mit dem Angular Router</h3>
-    <lux-toggle-ac luxLabel="Url aktivieren" [(luxChecked)]="enableUrl" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="Mehrzeilig (Umbruch)" [(luxChecked)]="wrap" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="Url aktivieren" [(luxChecked)]="enableUrl" [luxNoTopLabel]="true"/>
+    <lux-toggle-ac luxLabel="Mehrzeilig (Umbruch)" [(luxChecked)]="wrap" [luxNoTopLabel]="true"/>
     <lux-toggle-ac
       luxLabel="Nur erster & letzter Eintrag (Zwischenlinks als ... )"
       [(luxChecked)]="showOnlyFirstAndLast"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    />
     @for (item of entries(); track item.name; let i = $index) {
       <div>
         <h3>Breadcrumb Eintrag #{{ i + 1 }}</h3>
-        <lux-input-ac [(luxValue)]="item.name" luxLabel="Name" (luxValueChange)="updateView()"></lux-input-ac>
-        <lux-input-ac [(luxValue)]="item.url" luxLabel="Url" (luxValueChange)="updateView()"></lux-input-ac>
+        <lux-input-ac [(luxValue)]="item.name" luxLabel="Name" (luxValueChange)="updateView()"/>
+        <lux-input-ac [(luxValue)]="item.url" luxLabel="Url" (luxValueChange)="updateView()"/>
       </div>
     }
     <lux-button
@@ -93,6 +93,6 @@
       [luxRounded]="true"
       luxColor="primary"
       (luxClicked)="addEntry()"
-    ></lux-button>
+    />
   </example-base-simple-options>
 </example-base-structure>

@@ -18,7 +18,7 @@
         luxColor="primary"
         [luxFlat]="true"
         (luxClicked)="openConsent()"
-      ></lux-button>
+      />
     </div>
   </example-base-content>
 
@@ -29,7 +29,7 @@
       [luxNoTopLabel]="true"
       [luxChecked]="useComponentTargets()"
       (luxCheckedChange)="useComponentTargets.set($event)"
-    ></lux-toggle-ac>
+    />
 
     <lux-input-ac
       luxName="consent-impressum-url"
@@ -38,7 +38,7 @@
       [luxValue]="impressumUrl()"
       (luxValueChange)="impressumUrl.set($event)"
       [luxDisabled]="useComponentTargets()"
-    ></lux-input-ac>
+    />
 
     <lux-input-ac
       luxName="consent-datenschutz-url"
@@ -47,7 +47,7 @@
       [luxValue]="datenschutzUrl()"
       (luxValueChange)="datenschutzUrl.set($event)"
       [luxDisabled]="useComponentTargets()"
-    ></lux-input-ac>
+    />
 
     <lux-toggle-ac
       luxLabel="Nur essentielle LuxConsentEntry-Einträge verwenden"
@@ -55,6 +55,6 @@
       [luxNoTopLabel]="true"
       [luxChecked]="useEssentialOnlyEntries()"
       (luxCheckedChange)="useEssentialOnlyEntries.set($event)"
-    ></lux-toggle-ac>
+    />
   </example-base-simple-options>
 </example-base-structure>

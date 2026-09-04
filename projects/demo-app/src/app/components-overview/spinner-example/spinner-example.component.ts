@@ -31,10 +31,10 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class SpinnerExampleComponent {
-  sizes = ['small', 'medium', 'large'];
-  colors = LuxProgressColors;
+  readonly sizes = ['small', 'medium', 'large'];
+  readonly colors = LuxProgressColors;
   readonly backgroundColor = signal('');
-  modes: LuxProgressModeType[] = ['determinate', 'indeterminate'];
+  readonly modes: LuxProgressModeType[] = ['determinate', 'indeterminate'];
 
   readonly size = signal<LuxProgressSizeType>('medium');
   readonly mode = signal<LuxProgressModeType>('determinate');

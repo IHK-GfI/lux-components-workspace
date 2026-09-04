@@ -25,14 +25,11 @@ interface TenantLogoExampleKey {
   imports: [LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, LuxFormHintComponent]
 })
 export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
-  private componentsConfigService = inject(LuxComponentsConfigService);
-  private queryObserver = inject(LuxMediaQueryObserverService);
-
-  pickValueKeyFn = (option: TenantLogoExampleKey) => option.value;
-
   readonly title = input.required<string>();
 
   readonly tenantLogoConfig = input.required<TenantLogoExampleConfigData>();
+
+  pickValueKeyFn = (option: TenantLogoExampleKey) => option.value;
 
   public tenantKeyArr: TenantLogoExampleKey[] = [
     { label: '100', value: '100' },
@@ -44,9 +41,10 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
   public tenantVariantArr: string[] = ['', 'lang', 'kurz', 'unten'];
 
   readonly apiPath = signal('');
-  public actualTenantVariant?: string = '';
-  private readonly mediaQuery = signal<string | undefined>(undefined);
 
+  private componentsConfigService = inject(LuxComponentsConfigService);
+  private queryObserver = inject(LuxMediaQueryObserverService);
+  private readonly mediaQuery = signal<string | undefined>(undefined);
   private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
@@ -81,11 +79,17 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
     }
   }
 
+  public get actualTenantVariant(): string {
+    const mediaQuery = this.mediaQuery();
+    if (!mediaQuery) return '';
+
+    return this.tenantLogoConfig().luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(mediaQuery);
+  }
+
   public get logoTenantSrc(): string | undefined {
     if (!this.apiPath()) return;
     if (!this.mediaQuery()) return;
 
-    this.actualTenantVariant = this.tenantLogoConfig().luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(this.mediaQuery()!);
     return LuxTenantLogoComponent.buildTenantLogoUrl(this.apiPath(), this.tenantLogoConfig().luxTenantKey, this.actualTenantVariant);
   }
 }

@@ -30,8 +30,6 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class LinkExampleComponent implements OnDestroy {
-  private configService = inject(LuxComponentsConfigService);
-
   readonly showOutputEvents = signal(false);
   colors: any[] = [
     { value: '', label: 'default' },
@@ -39,7 +37,7 @@ export class LinkExampleComponent implements OnDestroy {
     { value: 'warn', label: 'warn' },
     { value: 'accent', label: 'accent' }
   ];
-  readonly config = signal<LuxComponentsConfigParameters>(this.configService.currentConfig);
+  readonly config = signal<LuxComponentsConfigParameters>(inject(LuxComponentsConfigService).currentConfig);
   log = logResult;
   readonly label = signal('Login');
   readonly iconName = signal('lux-interface-login-circle');
@@ -48,7 +46,8 @@ export class LinkExampleComponent implements OnDestroy {
   readonly blank = signal(true);
   readonly href = signal('https://www.ihk-gfi.de/');
   subscription: Subscription;
-  modeChangeRunning = false;
+
+  private configService = inject(LuxComponentsConfigService);
 
   constructor() {
     this.subscription = this.configService.config.subscribe((config: LuxComponentsConfigParameters) => {

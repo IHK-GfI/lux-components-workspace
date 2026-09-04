@@ -68,17 +68,8 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
   readonly labelLongFormat = signal(false);
   readonly denseFormat = signal(false);
 
-  protected initUploadActionConfig() {
-    return {
-      disabled: false,
-      hidden: false,
-      iconName: 'lux-programming-cloud-upload',
-      label: 'Hochladen',
-      onClick: (file?: ILuxFileObject) => {
-        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', file);
-        this.onUpload(file);
-      }
-    };
+  ngAfterViewInit() {
+    this.fileComponents = [...this.fileInputs()];
   }
 
   initSelected() {
@@ -120,16 +111,25 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
     }
   }
 
-  ngAfterViewInit() {
-    this.fileComponents = [...this.fileInputs()];
-  }
-
   override onDelete(_event: any) {
     this.customActionConfigs.forEach((config) => (config.disabled = true));
   }
 
   override onUpload(_event: any) {
     this.customActionConfigs.forEach((config) => (config.disabled = false));
+  }
+
+  protected initUploadActionConfig() {
+    return {
+      disabled: false,
+      hidden: false,
+      iconName: 'lux-programming-cloud-upload',
+      label: 'Hochladen',
+      onClick: (file?: ILuxFileObject) => {
+        this.log(this.showOutputEvents(), 'uploadActionConfig onClick', file);
+        this.onUpload(file);
+      }
+    };
   }
 
   private createCustomConfigs(): ILuxFileActionConfig[] {

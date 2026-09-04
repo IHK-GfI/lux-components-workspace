@@ -54,10 +54,6 @@ declare interface SearchBinding {
   ]
 })
 export class IconOverviewComponent implements OnInit, OnDestroy {
-  private mediaQuery = inject(LuxMediaQueryObserverService);
-  private iconReg = inject(LuxIconRegistryService);
-  private clipboard = inject(Clipboard);
-
   readonly scrollContainer = viewChild<ElementRef>('scrollContainer');
 
   allIcons: LuxSvgIcon[];
@@ -91,14 +87,6 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
   ];
   readonly selectedSearchBinding = signal(this.searchBindingOptions[0]);
   subscriptions: Subscription[] = [];
-
-  private readonly _chipLabels = signal<string[]>([]);
-  private readonly _iconClass = signal('lux-color-blue');
-  private readonly _iconColor = signal<LuxIconColor>('blue');
-  private readonly _iconSize = signal('2x');
-  private readonly _inputValue = signal('');
-  private readonly _isBgColor = signal(false);
-  private readonly _previewItem = signal<LuxSvgIcon | undefined>(undefined);
 
   get inputValue() {
     return this._inputValue();
@@ -164,6 +152,18 @@ export class IconOverviewComponent implements OnInit, OnDestroy {
     this._isBgColor.set(value);
     this.updateCodeSnippet();
   }
+
+  private mediaQuery = inject(LuxMediaQueryObserverService);
+  private iconReg = inject(LuxIconRegistryService);
+  private clipboard = inject(Clipboard);
+
+  private readonly _chipLabels = signal<string[]>([]);
+  private readonly _iconClass = signal('lux-color-blue');
+  private readonly _iconColor = signal<LuxIconColor>('blue');
+  private readonly _iconSize = signal('2x');
+  private readonly _inputValue = signal('');
+  private readonly _isBgColor = signal(false);
+  private readonly _previewItem = signal<LuxSvgIcon | undefined>(undefined);
 
   constructor() {
     this.mobileView.set(this.mediaQuery.isSmaller('md'));

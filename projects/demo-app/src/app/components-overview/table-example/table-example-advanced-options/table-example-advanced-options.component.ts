@@ -34,7 +34,7 @@ import { TableExampleBaseClass } from '../table-example-base.class';
   ]
 })
 export class TableExampleAdvancedOptionsComponent {
-  BEHAVIOURS = ResponsiveBehaviour.BEHAVIOURS;
-
   readonly tableExample = input.required<TableExampleBaseClass>();
+
+  BEHAVIOURS = ResponsiveBehaviour.BEHAVIOURS;
 }

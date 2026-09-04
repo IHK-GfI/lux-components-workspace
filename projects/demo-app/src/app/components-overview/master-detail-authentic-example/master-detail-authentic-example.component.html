@@ -35,8 +35,7 @@
         luxOptionLabelProp="label"
         [luxDense]="true"
         (luxSelectedChange)="changeFilter($event)"
-      >
-      </lux-select-ac>
+      />
       <lux-filter-form-extended>
         <p>
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. A suscipit cumque explicabo debitis, sint culpa quia quis odio excepturi
@@ -57,7 +56,7 @@
       <ng-template #luxSimpleCustomHeader let-master>
         @if (master.urgent) {
           <div class="custom-header-example urgent">
-            <div class="title urgent">{{ master.title }} <ng-container *ngTemplateOutlet="urgent"></ng-container></div>
+            <div class="title urgent">{{ master.title }} <ng-container *ngTemplateOutlet="urgent" /></div>
             <div class="subtitle urgent">{{ master.subtitle }}</div>
           </div>
         } @else {
@@ -72,13 +71,13 @@
               [luxDense]="true"
               [luxNoLabels]="true"
               [(luxValue)]="master.title"
-            ></lux-input-ac>
+            />
           </div>
         }
       </ng-template>
     }
     <ng-template #luxSimpleIcon let-master>
-      <lux-icon [luxIconName]="master.icon" luxIconSize="1x"></lux-icon>
+      <lux-icon [luxIconName]="master.icon" luxIconSize="1x" />
     </ng-template>
     <ng-template #luxSimpleContent let-master>
       {{ master.content }}
@@ -106,13 +105,13 @@
                 [(luxChecked)]="showCustomDetailHeader"
                 luxLabel="Custom Detail-Header anzeigen"
                 [luxNoLabels]="true"
-              ></lux-toggle-ac>
+              />
             </detail-example>
           </ng-template>
         </lux-tab>
         <lux-tab luxTitle="Scroll-Example" luxIconName="lux-amount-down-asc" class="example-tab-content">
           <ng-template>
-            <text-example [title]="detail.title"></text-example>
+            <text-example [title]="detail.title" />
           </ng-template>
         </lux-tab>
         <lux-tab luxTitle="Deaktiviert" luxIconName="lux-interface-block" [luxDisabled]="true" class="example-tab-content">
@@ -125,36 +124,32 @@
   <lux-master-footer-ac>
     <div class="lux-flex lux-flex-col">
       <div class="lux-flex lux-gap-2 lux-content-end lux-items-center">
-        <lux-button luxLabel="#1" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail.set(masterEntries()[0])"> </lux-button>
-        <lux-button luxLabel="#5" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail.set(masterEntries()[4])"> </lux-button>
+        <lux-button luxLabel="#1" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail.set(masterEntries()[0])" />
+        <lux-button luxLabel="#5" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail.set(masterEntries()[4])" />
         <lux-menu luxMenuIconName="lux-interface-setting-menu-1" luxTagId="master_footer_menu">
           <lux-menu-item
             luxLabel="Liste umkehren"
             luxIconName="lux-interface-arrows-turn-backward"
             [luxDisabled]="masterEntries().length === 0"
             (luxClicked)="reverseList()"
-          >
-          </lux-menu-item>
+          />
           <lux-menu-item
             luxLabel="Liste leeren"
             luxIconName="lux-interface-delete-bin-5"
             [luxDisabled]="masterEntries().length === 0"
             (luxClicked)="clearList()"
-          >
-          </lux-menu-item>
-          <lux-menu-item luxLabel="Liste füllen" luxIconName="lux-interface-edit-layer-add-2" (luxClicked)="fillList()"> </lux-menu-item>
+          />
+          <lux-menu-item luxLabel="Liste füllen" luxIconName="lux-interface-edit-layer-add-2" (luxClicked)="fillList()" />
           <lux-menu-item
             luxLabel="Liste füllen (erste 10 Elemente)"
             luxIconName="lux-interface-edit-layer-add-2"
             (luxClicked)="fillListFirstTenItems()"
-          >
-          </lux-menu-item>
+          />
           <lux-menu-item
             luxLabel="Liste füllen (letzte 10 Elemente)"
             luxIconName="lux-interface-edit-layer-add-2"
             (luxClicked)="fillListLastTenItems()"
-          >
-          </lux-menu-item>
+          />
         </lux-menu>
       </div>
     </div>

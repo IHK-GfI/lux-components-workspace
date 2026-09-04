@@ -34,13 +34,6 @@ import { ExampleBaseSimpleOptionsComponent } from '../example-base-options/examp
   ]
 })
 export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
-  private router = inject(Router);
-  private footerService = inject(LuxAppFooterButtonService);
-  private configService = inject(LuxComponentsConfigService);
-  private mediaQueryService = inject(LuxMediaQueryObserverService);
-
-  private initialConfig: LuxComponentsConfigParameters;
-
   readonly exampleTitle = input('ToDo');
   readonly exampleIconName = input('');
   readonly exampleDocumentationHref = input('');
@@ -50,6 +43,13 @@ export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
   readonly advancedOptionsComponent = contentChild(ExampleBaseAdvancedOptionsComponent);
 
   readonly isGtSm = signal(false);
+
+  private router = inject(Router);
+  private footerService = inject(LuxAppFooterButtonService);
+  private configService = inject(LuxComponentsConfigService);
+  private mediaQueryService = inject(LuxMediaQueryObserverService);
+
+  private initialConfig: LuxComponentsConfigParameters;
 
   constructor() {
     this.initialConfig = this.configService.currentConfig;
@@ -97,14 +97,14 @@ export class ExampleBaseStructureComponent implements OnInit, OnDestroy {
     );
   }
 
-  onTabChanged(): void {
-    this.simpleOptionsComponent()?.markForCheck();
-    this.advancedOptionsComponent()?.markForCheck();
-  }
-
   ngOnDestroy() {
     this.footerService.clearButtonInfos();
     // Falls das Beispiel mit der Konfiguration herum spielt, sollte diese beim Verlassen wieder resettet werden.
     this.configService.updateConfiguration(this.initialConfig);
+  }
+
+  onTabChanged(): void {
+    this.simpleOptionsComponent()?.markForCheck();
+    this.advancedOptionsComponent()?.markForCheck();
   }
 }

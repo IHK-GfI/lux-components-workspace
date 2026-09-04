@@ -29,22 +29,21 @@ interface StepperLargeNextButtonDummyForm {
   imports: [LuxToggleAcComponent, LuxInputAcComponent, ReactiveFormsModule, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExampleStepNextButtonComponent extends LuxStepperLargeStepComponent implements OnInit, OnDestroy {
-  dataService = inject(StepperLargeExampleDataService);
-
   form: FormGroup<StepperLargeNextButtonDummyForm>;
-  showErrorMessage = false;
-
   subscriptions: Subscription[] = [];
+
+  private dataService = inject(StepperLargeExampleDataService);
 
   constructor() {
     super();
 
+    const nextButtonConfig = this.dataService.nextButtonConfig();
     this.form = new FormGroup<StepperLargeNextButtonDummyForm>({
-      label: new FormControl<string>(this.dataService.nextButtonConfig.label ? this.dataService.nextButtonConfig.label : 'Weiter', { validators: Validators.required, nonNullable: true }),
-      iconName: new FormControl<string | undefined>(this.dataService.nextButtonConfig.iconName, { nonNullable: true }),
-      color: new FormControl<LuxThemePalette | undefined>(this.dataService.nextButtonConfig.color, { nonNullable: true }),
-      iconShowRight: new FormControl<boolean | undefined>(this.dataService.nextButtonConfig.iconShowRight, { nonNullable: true }),
-      alignIconWithLabel: new FormControl<boolean | undefined>(this.dataService.nextButtonConfig.alignIconWithLabel, { nonNullable: true })
+      label: new FormControl<string>(nextButtonConfig.label ? nextButtonConfig.label : 'Weiter', { validators: Validators.required, nonNullable: true }),
+      iconName: new FormControl<string | undefined>(nextButtonConfig.iconName, { nonNullable: true }),
+      color: new FormControl<LuxThemePalette | undefined>(nextButtonConfig.color, { nonNullable: true }),
+      iconShowRight: new FormControl<boolean | undefined>(nextButtonConfig.iconShowRight, { nonNullable: true }),
+      alignIconWithLabel: new FormControl<boolean | undefined>(nextButtonConfig.alignIconWithLabel, { nonNullable: true })
     });
   }
 
@@ -59,11 +58,6 @@ export class StepperLargeExampleStepNextButtonComponent extends LuxStepperLargeS
     this.subscriptions.push(
       this.form.statusChanges.subscribe(() => {
         this.luxCompleted.set(this.form.valid);
-      })
-    );
-    this.subscriptions.push(
-      this.dataService.showErrorMessage.subscribe((value) => {
-        this.showErrorMessage = value;
       })
     );
   }
@@ -82,7 +76,7 @@ export class StepperLargeExampleStepNextButtonComponent extends LuxStepperLargeS
           // Prüfen, ob das Formular valide ist.
           if (this.form.valid) {
             // Hier werden die Daten aus dem Formular in den Datenservice übertragen.
-            this.dataService.nextButtonConfig = this.form.value;
+            this.dataService.nextButtonConfig.set(this.form.value);
 
             // Als Letztes wird der Step als valide gekennzeichnet.
             this.luxCompleted.set(true);

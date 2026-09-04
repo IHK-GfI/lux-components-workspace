@@ -25,17 +25,17 @@
           @if (showCustomHeader()) {
             <lux-list-item-custom-header>
               <div class="custom-header">
-                <lux-icon luxIconName="lux-interface-arrows-button-right-duoble"></lux-icon>
+                <lux-icon luxIconName="lux-interface-arrows-button-right-duoble" />
                 <div class="custom-header-content">
                   <div>{{ item.title }} (Custom-Header)</div>
                   <div>{{ item.subTitle }}</div>
                 </div>
-                <lux-icon luxIconName="lux-interface-arrows-button-left-double"></lux-icon>
+                <lux-icon luxIconName="lux-interface-arrows-button-left-double" />
               </div>
             </lux-list-item-custom-header>
           }
           <lux-list-item-icon>
-            <lux-icon [luxIconName]="item.iconName" class="{{ 'lux-color-' + colors[i % colors.length] }}"></lux-icon>
+            <lux-icon [luxIconName]="item.iconName" class="{{ 'lux-color-' + colors[i % colors.length] }}" />
           </lux-list-item-icon>
           <lux-list-item-content>
             @if (!showInteractiveContent()) {
@@ -48,7 +48,7 @@
                 @if (showRow1()) {
                   <div class="lux-flex lux-gap-2 lux-flex-wrap lux-items-center">
                     <lux-chips-ac [luxHideBorder]="true" [luxNoLabels]="true" [luxInputAllowed]="false" [luxNewChipGroup]="group">
-                      <lux-chip-ac-group [luxLabels]="item.chips" luxColor="primary" [luxRemovable]="true" #group> </lux-chip-ac-group>
+                      <lux-chip-ac-group [luxLabels]="item.chips" luxColor="primary" [luxRemovable]="true" #group />
                     </lux-chips-ac>
                   </div>
                 }
@@ -61,8 +61,7 @@
                       class="lux-min-width-36 lux-max-width-36"
                       [luxDense]="true"
                       [luxNoLabels]="true"
-                      [(luxValue)]="item.title"
-                    ></lux-input-ac>
+                      [(luxValue)]="item.title" />
                     <lux-autocomplete-ac
                       luxAriaLabel="Lorem ipsum"
                       luxAriaLabelSelector="input"
@@ -70,8 +69,7 @@
                       class="lux-min-width-36 lux-max-width-36"
                       [luxDense]="true"
                       [luxNoLabels]="true"
-                      [luxOptions]="['Label 1', 'Label 2']"
-                    ></lux-autocomplete-ac>
+                      [luxOptions]="['Label 1', 'Label 2']" />
                     <lux-select-ac
                       luxAriaLabel="Lorem ipsum"
                       luxAriaLabelSelector="[role='combobox']"
@@ -79,18 +77,16 @@
                       class="lux-min-width-36 lux-max-width-36"
                       [luxOptions]="['Option 1', 'Option 2', 'Option 3']"
                       [luxDense]="true"
-                      [luxNoLabels]="true"
-                    ></lux-select-ac>
-                    <lux-checkbox-ac luxLabel="Checkbox" [luxDense]="true" [luxNoLabels]="true"></lux-checkbox-ac>
-                    <lux-toggle-ac luxLabel="Toggle" [luxDense]="true" [luxNoLabels]="true"></lux-toggle-ac>
+                      [luxNoLabels]="true" />
+                    <lux-checkbox-ac luxLabel="Checkbox" [luxDense]="true" [luxNoLabels]="true" />
+                    <lux-toggle-ac luxLabel="Toggle" [luxDense]="true" [luxNoLabels]="true" />
                     <lux-radio-ac
                       luxAriaLabel="Lorem ipsum"
                       [luxOptions]="['A', 'B', 'C']"
                       [luxGroupName]="'radio-' + i"
                       [luxDense]="true"
                       [luxNoLabels]="true"
-                      [luxOrientationVertical]="false"
-                    ></lux-radio-ac>
+                      [luxOrientationVertical]="false" />
                   </div>
                 }
                 @if (showRow3()) {
@@ -99,21 +95,18 @@
                       luxLabel="Bearbeiten"
                       luxColor="primary"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents(), 'Bearbeiten geklickt', item.title)"
-                    ></lux-button>
+                      (luxClicked)="log(showOutputEvents(), 'Bearbeiten geklickt', item.title)" />
                     <lux-link
                       luxHref="#"
                       luxLabel="Löschen"
                       luxColor="warn"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents(), 'Löschen geklickt', item.title)"
-                    ></lux-link>
+                      (luxClicked)="log(showOutputEvents(), 'Löschen geklickt', item.title)" />
                     <lux-link-plain
                       luxHref="#"
                       luxLabel="Link-Plain"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents(), 'Link-Plain geklickt', item.title)"
-                    ></lux-link-plain>
+                      (luxClicked)="log(showOutputEvents(), 'Link-Plain geklickt', item.title)" />
                   </div>
                 }
               </div>
@@ -129,7 +122,7 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
         luxLabel="Interaktive Elemente in List-Items anzeigen (Grid-Navigation)"
@@ -143,59 +136,48 @@
           ></lux-form-hint
         ></lux-toggle-ac
       >
-      <app-status-marker></app-status-marker>
+      <app-status-marker />
     </div>
     <lux-toggle-ac
       luxLabel="Zeige Zeile 1 (mit Chips)"
       [(luxChecked)]="showRow1"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent()"
-    ></lux-toggle-ac>
+      [luxDisabled]="!showInteractiveContent()" />
     <lux-toggle-ac
       luxLabel="Zeige Zeile 2 (mit Formularelementen)"
       [(luxChecked)]="showRow2"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent()"
-    ></lux-toggle-ac>
+      [luxDisabled]="!showInteractiveContent()" />
     <lux-toggle-ac
       luxLabel="Zeige Zeile 3 (mit Buttons)"
       [(luxChecked)]="showRow3"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent()"
-    ></lux-toggle-ac>
+      [luxDisabled]="!showInteractiveContent()" />
     <div class="lux-flex lux-items-center">
-      <lux-toggle-ac luxLabel="luxListItemCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true"> </lux-toggle-ac>
-      <app-status-marker></app-status-marker>
+      <lux-toggle-ac luxLabel="luxListItemCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true" />
+      <app-status-marker />
     </div>
     <lux-input-ac
       [(luxValue)]="emptyLabel"
       luxName="list_luxEmptyLabel"
       luxLabel="luxEmptyLabel"
-      luxHint="Diese Property stellt das Label ein, welches bei einer leeren Liste angezeigt werden soll."
-    >
-    </lux-input-ac>
+      luxHint="Diese Property stellt das Label ein, welches bei einer leeren Liste angezeigt werden soll." />
     <lux-input-ac
       [(luxValue)]="emptyIconName"
       luxName="list_luxEmptyIconName"
       luxLabel="luxEmptyIconName"
-      luxHint="Über diese Property wird das Icon bestimmt, das in einer leeren Liste angezeigt werden soll."
-    >
-    </lux-input-ac>
+      luxHint="Über diese Property wird das Icon bestimmt, das in einer leeren Liste angezeigt werden soll." />
     <lux-select-ac
       [(luxSelected)]="emptyIconSize"
       [luxOptions]="['1x', '2x', '3x', '4x', '5x']"
       luxLabel="luxEmptyIconSize"
-      luxHint="Über diese Property wird die Größe es luxEmptyIcons bestimmt."
-    >
-    </lux-select-ac>
+      luxHint="Über diese Property wird die Größe es luxEmptyIcons bestimmt." />
     <lux-input-ac
       [(luxValue)]="selectedPosition"
       luxName="list_luxSelectedPosition"
       luxLabel="luxSelectedPosition"
       luxHint="Diese Property bestimmt welches ListItem selektiert werden soll."
-      luxType="number"
-    >
-    </lux-input-ac>
+      luxType="number" />
   </example-base-simple-options>
   @if (items().length > 0) {
     <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
@@ -210,16 +192,12 @@
                 [(luxValue)]="item.title"
                 luxName="list_luxTitle"
                 luxLabel="luxTitle"
-                luxHint="Diese Property bestimmt den Titel des Items."
-              >
-              </lux-input-ac>
+                luxHint="Diese Property bestimmt den Titel des Items." />
               <lux-input-ac
                 [(luxValue)]="item.subTitle"
                 luxName="list_luxSubTitle"
                 luxLabel="luxSubTitle"
-                luxHint="Diese Property bestimmt den Untertitel (grau) des Items."
-              >
-              </lux-input-ac>
+                luxHint="Diese Property bestimmt den Untertitel (grau) des Items." />
               <lux-input-ac luxName="list_luxIconName" [(luxValue)]="item.iconName" luxLabel="luxIconName">
                 <lux-form-hint>
                   Der Name des Icons für dieses Item.<br />
@@ -231,9 +209,7 @@
                 luxLabel="luxTitleLineBreak"
                 luxHint="Dieses Flag bestimmt ob die Titel-Zeilen umgebrochen oder mit '...' abgekürzt werden."
                 [(luxChecked)]="item.lineBreak"
-                [luxNoTopLabel]="true"
-              >
-              </lux-toggle-ac>
+                [luxNoTopLabel]="true" />
               <lux-toggle-ac luxLabel="luxSelected" [(luxChecked)]="item.selected" [luxNoTopLabel]="true">
                 <lux-form-hint>
                   Mithilfe dieses Flags kann das Item hervorgehoben dargestellt werden.<br />
@@ -248,9 +224,8 @@
   }
   <example-base-options-actions>
     <div class="lux-simple-form row">
-      <lux-button luxLabel="Leeren" luxColor="warn" [luxStroked]="true" [luxDisabled]="items().length === 0" (luxClicked)="clear()">
-      </lux-button>
-      <lux-button luxLabel="Füllen" luxColor="primary" [luxFlat]="true" (luxClicked)="fill(30)"> </lux-button>
+      <lux-button luxLabel="Leeren" luxColor="warn" [luxStroked]="true" [luxDisabled]="items().length === 0" (luxClicked)="clear()" />
+      <lux-button luxLabel="Füllen" luxColor="primary" [luxFlat]="true" (luxClicked)="fill(30)" />
     </div>
   </example-base-options-actions>
 </example-base-structure>

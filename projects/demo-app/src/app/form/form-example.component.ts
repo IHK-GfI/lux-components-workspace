@@ -35,11 +35,6 @@ import { WebFontDemoComponent } from './web-font-demo/web-font-demo.component';
   providers: [TableExampleDataProviderService]
 })
 export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterViewInit, OnDestroy {
-  private router = inject(Router);
-  private buttonService = inject(LuxAppFooterButtonService);
-  private snackbar = inject(LuxSnackbarService);
-  private readonly state = inject(FormExampleStateService);
-
   readonly formCommon = viewChild.required(FormCommonComponent);
   readonly formSingle = viewChild.required(FormSingleColComponent);
   readonly formDuo = viewChild.required(FormDualColComponent);
@@ -66,6 +61,11 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
     alwaysVisible: false,
     onClick: this.handleSaveClicked.bind(this)
   });
+
+  private router = inject(Router);
+  private buttonService = inject(LuxAppFooterButtonService);
+  private snackbar = inject(LuxSnackbarService);
+  private readonly state = inject(FormExampleStateService);
 
   ngOnInit(): void {
     this.buttonService.buttonInfos = [

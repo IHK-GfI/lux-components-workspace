@@ -1,5 +1,4 @@
 import { Component, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
@@ -30,9 +29,6 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class LinkPlainExampleComponent implements OnDestroy {
-  private configService = inject(LuxComponentsConfigService);
-  private router = inject(Router);
-
   // region Helper-Properties für das Beispiel
 
   readonly showOutputEvents = signal(false);
@@ -53,6 +49,8 @@ export class LinkPlainExampleComponent implements OnDestroy {
   // endregion
 
   subscription: Subscription;
+
+  private configService = inject(LuxComponentsConfigService);
 
   constructor() {
     this.config = this.configService.currentConfig;

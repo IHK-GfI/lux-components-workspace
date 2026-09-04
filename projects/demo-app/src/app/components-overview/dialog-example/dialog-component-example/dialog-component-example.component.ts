@@ -5,7 +5,6 @@ import {
   LuxButtonComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxConsoleService,
   LuxDialogActionsComponent,
   LuxDialogContentComponent,
   LuxDialogRef,
@@ -39,8 +38,6 @@ import { logResult } from '../../../example-base/example-base-util/example-base-
 })
 export class DialogComponentExampleComponent {
   luxDialogRef = inject<LuxDialogRef<{ showOutputEvents: boolean }>>(LuxDialogRef);
-  consoleLogger = inject(LuxConsoleService);
-  private dialogService = inject(LuxDialogService);
   log = logResult;
 
   dialogConfig: ILuxDialogPresetConfig = {
@@ -56,6 +53,8 @@ export class DialogComponentExampleComponent {
       color: 'primary'
     }
   };
+
+  private dialogService = inject(LuxDialogService);
 
   openInfoDialog() {
     const dialogRef = this.dialogService.open({ ...this.dialogConfig, disableClose: this.luxDialogRef._matDialogRef.disableClose });

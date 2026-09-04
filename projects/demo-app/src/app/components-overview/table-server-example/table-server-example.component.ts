@@ -46,12 +46,12 @@ import { TestHttpDao } from './test-http-dao';
   ]
 })
 export class TableServerExampleComponent extends TableExampleBaseClass {
-  private logger = inject(LuxConsoleService);
-
   readonly tableComponent = viewChild<LuxTableComponent<any>>('myTable');
 
   httpDAO: TestHttpDao;
   reloadCount = 0;
+
+  private logger = inject(LuxConsoleService);
 
   constructor() {
     super();

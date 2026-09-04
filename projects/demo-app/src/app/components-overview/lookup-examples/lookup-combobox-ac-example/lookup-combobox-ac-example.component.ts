@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   LuxAutofocusDirective,
@@ -56,18 +56,6 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
   readonly visibleOptionCount = signal(0);
   readonly labelLongFormat = signal(false);
   readonly denseFormat = signal(false);
-  value336 = {
-    key: '336',
-    kurzText: 'Eritrea',
-    langText1: 'Eritrea'
-  };
-  valuea504 = {
-    key: '504',
-    kurzText: 'Peru',
-    langText1: 'Peru'
-  };
-
-  readonly lookupComboboxCmp = viewChildren(LuxLookupComboboxAcComponent);
 
   override ngOnInit() {
     super.ngOnInit();
@@ -77,17 +65,5 @@ export class LookupComboboxAcExampleComponent extends LookupExampleComponent imp
     this.lookupHandler.reloadData('normalcombobox');
     this.lookupHandler.reloadData('multicombobox');
     this.lookupHandler.reloadData('reactivecombobox');
-  }
-
-  on336And504Change(checked: boolean) {
-    if (checked) {
-      this.value.set(this.value336);
-      this.multiValue.set([this.value336, this.valuea504]);
-      this.form.get(this.controlBinding)?.setValue(this.value336);
-    } else {
-      this.value.set(null);
-      this.multiValue.set([]);
-      this.form.get(this.controlBinding)?.setValue(null);
-    }
   }
 }

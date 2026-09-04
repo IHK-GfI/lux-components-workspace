@@ -20,10 +20,6 @@ interface FileDummyForm {
 
 @Directive()
 export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBaseConfig = any> implements OnInit {
-  protected http = inject(HttpClient);
-  protected snackbar = inject(LuxSnackbarService);
-  protected filePreviewService = inject(LuxFilePreviewService);
-
   readonly showOutputEvents = signal(false);
   realBackends: any[] = [];
   readonly mockBackend = signal(false);
@@ -108,10 +104,18 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
     onClick: (file) => this.log(this.showOutputEvents(), 'downloadActionConfig onClick', file)
   };
 
+  protected http = inject(HttpClient);
+  protected snackbar = inject(LuxSnackbarService);
+  protected filePreviewService = inject(LuxFilePreviewService);
+
   constructor() {
     this.form = new FormGroup({
       uploadExample: new FormControl<ILuxFileObject[] | null>(null)
     });
+  }
+
+  ngOnInit() {
+    this.initSelected();
   }
 
   changeRequired(required: boolean) {
@@ -122,14 +126,6 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
   pickValidatorValueFn(selected: any) {
     return selected.value;
   }
-
-  ngOnInit() {
-    this.initSelected();
-  }
-
-  protected abstract initSelected(): void;
-
-  protected abstract initUploadActionConfig(): U;
 
   onDelete(_file: ILuxFileObject) {
     // Do nothing
@@ -160,4 +156,8 @@ export abstract class FileExampleComponent<T = any, U extends ILuxFileActionBase
       });
     }
   }
+
+  protected abstract initSelected(): void;
+
+  protected abstract initUploadActionConfig(): U;
 }

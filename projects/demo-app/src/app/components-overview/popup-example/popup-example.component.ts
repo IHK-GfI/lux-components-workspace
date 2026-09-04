@@ -48,7 +48,7 @@ export class PopupExampleComponent {
   readonly maxWidth = signal(360);
   readonly position = signal<LuxPopupPosition>('above');
   readonly disabled = signal(false);
-  positionOptions: LuxPopupPosition[] = ['above', 'below', 'before', 'after', 'left', 'right'];
+  readonly positionOptions: LuxPopupPosition[] = ['above', 'below', 'before', 'after', 'left', 'right'];
 
   onAction(popup: LuxPopupComponent, actionLabel: string) {
     console.log(`Action "${actionLabel}" clicked!`);

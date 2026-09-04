@@ -59,13 +59,13 @@ interface FormDualStreetForm {
   ]
 })
 export class FormDualColComponent extends FormBase {
-  private dataProvider = inject(TableExampleDataProviderService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly state = inject(FormExampleStateService);
-
   myGroup: FormGroup<FormDualDummyForm>;
   streetsFormArray: FormArray<FormGroup<FormDualStreetForm>>;
   countries: ICountry[] = [];
+
+  private dataProvider = inject(TableExampleDataProviderService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   constructor() {
     super();

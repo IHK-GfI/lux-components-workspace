@@ -26,12 +26,12 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class ConsentExampleComponent {
-  private consentService = inject(LuxConsentService);
-
   readonly useComponentTargets = signal(true);
   readonly useEssentialOnlyEntries = signal(false);
   readonly impressumUrl = signal('https://www.ihk-gfi.de/impressum-5343024');
   readonly datenschutzUrl = signal('https://www.ihk-gfi.de/datenschutz-5342920');
+
+  private readonly consentService = inject(LuxConsentService);
 
   private readonly consentEntries = [
     {

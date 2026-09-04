@@ -14,8 +14,8 @@
         <lux-step-header>Kontaktdaten</lux-step-header>
         <lux-step-content [formGroup]="form1">
           <div class="lux-flex lux-flex-col lux-gap-3 lux-max-width-80">
-            <lux-input-ac luxLabel="Name" luxName="dialog_stepper_name" luxControlBinding="name"></lux-input-ac>
-            <lux-input-ac luxLabel="E-Mail" luxName="dialog_stepper_email" luxType="email" luxControlBinding="email"></lux-input-ac>
+            <lux-input-ac luxLabel="Name" luxName="dialog_stepper_name" luxControlBinding="name" />
+            <lux-input-ac luxLabel="E-Mail" luxName="dialog_stepper_email" luxType="email" luxControlBinding="email" />
           </div>
           @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track $index) {
             <p>
@@ -32,8 +32,8 @@
         <lux-step-header>Adresse</lux-step-header>
         <lux-step-content [formGroup]="form2">
           <div class="lux-flex lux-flex-col lux-gap-3 lux-max-width-80">
-            <lux-input-ac luxLabel="Straße" luxName="dialog_stepper_street" luxControlBinding="street"></lux-input-ac>
-            <lux-input-ac luxLabel="Stadt" luxName="dialog_stepper_city" luxControlBinding="city"></lux-input-ac>
+            <lux-input-ac luxLabel="Straße" luxName="dialog_stepper_street" luxControlBinding="street" />
+            <lux-input-ac luxLabel="Stadt" luxName="dialog_stepper_city" luxControlBinding="city" />
           </div>
         </lux-step-content>
       </lux-step>
@@ -60,7 +60,7 @@
         [luxStroked]="true"
         (luxClicked)="prevStep()"
         luxTagId="stepper.dialog.prev"
-      ></lux-button>
+      />
     }
     @if (!isLastStep) {
       <lux-button
@@ -71,7 +71,7 @@
         luxIconName="lux-interface-arrows-right"
         (luxClicked)="nextStep()"
         luxTagId="stepper.dialog.next"
-      ></lux-button>
+      />
     }
     @if (isLastStep) {
       <lux-button
@@ -81,7 +81,7 @@
         [luxFlat]="true"
         (luxClicked)="finish()"
         luxTagId="stepper.dialog.finish"
-      ></lux-button>
+      />
     }
   </lux-dialog-actions>
 </lux-dialog-structure>

@@ -8,9 +8,7 @@
       [luxLookupKnr]="knr()"
       [luxTableNo]="tableNo()"
       [luxTableKey]="'' + tableKey()"
-      [luxLookupId]="'label-example'"
-    >
-    </lux-lookup-label>
+      [luxLookupId]="'label-example'" />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac
@@ -21,9 +19,9 @@
       luxType="number"
       [luxNumberAlignLeft]="true"
       >@if (disabled()) {
-      <lux-input-ac-suffix
-        ><lux-progress luxType="Spinner" luxMode="indeterminate" luxSize="small" luxTagId="knr-loading-spinner"></lux-progress
-      ></lux-input-ac-suffix>
+      <lux-input-ac-suffix>
+        <lux-progress luxType="Spinner" luxMode="indeterminate" luxSize="small" luxTagId="knr-loading-spinner" />
+      </lux-input-ac-suffix>
       }
     </lux-input-ac>
     <lux-input-ac
@@ -49,8 +47,6 @@
       luxLabel="luxBezeichnung"
       [(luxSelected)]="bezeichnung"
       [luxOptions]="['kurz', 'lang']"
-      luxHint="Diese Property bestimmt welche Bezeichnung benutzt wird, um den Schlüsseltabelleneintrag darzustellen."
-    >
-    </lux-select-ac>
+      luxHint="Diese Property bestimmt welche Bezeichnung benutzt wird, um den Schlüsseltabelleneintrag darzustellen." />
   </example-base-simple-options>
 </example-base-structure>

@@ -37,11 +37,12 @@ import { ComponentsOverviewNavigationService } from '../../components-overview/c
   ]
 })
 export class ExampleRootComponent {
-  private router = inject(Router);
   navigationService = inject(ComponentsOverviewNavigationService);
-  private mediaQueryService = inject(LuxMediaQueryObserverService);
 
   readonly desktopView = signal(false);
+
+  private router = inject(Router);
+  private mediaQueryService = inject(LuxMediaQueryObserverService);
 
   constructor() {
     this.router.events.pipe(takeUntilDestroyed()).subscribe((event: unknown) => {

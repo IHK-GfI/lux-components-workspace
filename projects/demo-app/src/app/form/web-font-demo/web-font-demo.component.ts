@@ -6,6 +6,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./web-font-demo.component.scss']
 })
-export class WebFontDemoComponent {
-  constructor() {}
-}
+export class WebFontDemoComponent {}

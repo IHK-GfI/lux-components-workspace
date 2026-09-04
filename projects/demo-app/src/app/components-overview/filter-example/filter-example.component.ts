@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAutocompleteAcComponent,
   LuxButtonComponent,
@@ -61,11 +61,6 @@ import { CustomFilterItemComponent } from './custom-filter-item.component';
   ]
 })
 export class FilterExampleComponent implements OnInit, OnDestroy {
-  private mediaQuery = inject(LuxMediaQueryObserverService);
-
-  readonly filterComponent = viewChild(LuxFilterFormComponent);
-  readonly filterExtendedOptionsComponent = viewChild(LuxFilterFormExtendedComponent);
-
   parameters = new LuxLookupParameters({
     knr: 101,
     fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
@@ -205,6 +200,9 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   readonly disableShortcut = signal(false);
   initRunning = false;
   radioPickValueFn = (o: { label: string; value: string }) => o.value;
+  compareValueFn = (o1: any, o2: any) => o1.value === o2.value;
+
+  private mediaQuery = inject(LuxMediaQueryObserverService);
 
   constructor() {
     this.mediaQuerySubscription = this.mediaQuery.getMediaQueryChangedAsObservable().subscribe(() => {
@@ -231,8 +229,6 @@ export class FilterExampleComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.mediaQuerySubscription.unsubscribe();
   }
-
-  compareValueFn = (o1: any, o2: any) => o1.value === o2.value;
 
   renderToggleFn(_filterItem: LuxFilterItem<boolean>, value: boolean) {
     return value ? 'aktiviert' : 'deaktiviert';
