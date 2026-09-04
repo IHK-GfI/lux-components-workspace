@@ -45,7 +45,7 @@
         #autocomplete
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks"/>&nbsp; </lux-input-ac-prefix>
+          <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks" />&nbsp; </lux-input-ac-prefix>
         }
         @if (showSuffix()) {
           <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
@@ -53,7 +53,7 @@
         @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
             <div class="lux-flex">
-              <div><lux-icon luxIconName="lux-tasks"/></div>
+              <div><lux-icon luxIconName="lux-tasks" /></div>
               <div>
                 via Template {{ option[renderProperty()] }}
                 @if (useTranslocoDate()) {
@@ -64,7 +64,7 @@
           </ng-template>
         }
       </lux-autocomplete-ac>
-      <example-value [value]="value()"/>
+      <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
@@ -103,7 +103,7 @@
         luxTagId="autocomplete-reactive"
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'"/>&nbsp; </lux-input-ac-prefix>
+          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'" />&nbsp; </lux-input-ac-prefix>
         }
         @if (showSuffix()) {
           <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
@@ -111,7 +111,7 @@
         @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
             <div class="lux-flex">
-              <div><lux-icon luxIconName="lux-tasks"/></div>
+              <div><lux-icon luxIconName="lux-tasks" /></div>
               <div>
                 via Template {{ option[renderProperty()] }}
                 @if (useTranslocoDate()) {
@@ -122,7 +122,7 @@
           </ng-template>
         }
       </lux-autocomplete-ac>
-      <example-form-value [form]="form" [controlBinding]="controlBinding"/>
+      <example-form-value [form]="form" [controlBinding]="controlBinding" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -146,7 +146,7 @@
         [(luxChecked)]="noTopLabel"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -156,7 +156,7 @@
         [(luxChecked)]="noBottomLabel"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -166,7 +166,7 @@
         [(luxChecked)]="noLabels"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-input-ac
       luxName="autocomplete_luxPlaceholder"
@@ -264,7 +264,7 @@
       luxHint="Blendet einen 'lux-input-suffix' ein."
       [luxNoTopLabel]="true"
     />
-    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"/>
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac

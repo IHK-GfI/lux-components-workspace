@@ -67,5 +67,4 @@ describe('LuxSelectFilterUtils', () => {
       document.body.removeChild(host);
     });
   });
-
 });

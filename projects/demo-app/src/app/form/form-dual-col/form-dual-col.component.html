@@ -35,33 +35,33 @@
 
             <div formArrayName="streets" class="lux-mt-4 lux-col-span-3">
               @for (street of streetsFormArray.controls; track street; let i = $index) {
-              <div class="lux-grid lux-grid-cols-5 lux-gap-4" [formGroupName]="i">
-                <lux-input-ac
-                  luxName="street-address"
-                  luxLabel="Straße"
-                  luxType="text"
-                  luxControlBinding="streetName"
-                  class="lux-col-span-3"
-                ></lux-input-ac>
-                <lux-input-ac
-                  luxName="form-dual-Nr"
-                  luxLabel="Nr"
-                  luxType="number"
-                  [luxNumberAlignLeft]="true"
-                  luxControlBinding="nr"
-                ></lux-input-ac>
-                <lux-button
-                  luxIconName="lux-interface-delete-bin-5"
-                  luxLabel="Straße entfernen"
-                  (luxClicked)="removeStreet(i)"
-                  luxTagId="btnRemoveStreet"
-                  [luxDisabled]="!myGroup.enabled"
-                  [luxRounded]="true"
-                  luxColor="warn"
-                  class="lux-justify-self-end lux-align-self-center"
-                >
-                </lux-button>
-              </div>
+                <div class="lux-grid lux-grid-cols-5 lux-gap-4" [formGroupName]="i">
+                  <lux-input-ac
+                    luxName="street-address"
+                    luxLabel="Straße"
+                    luxType="text"
+                    luxControlBinding="streetName"
+                    class="lux-col-span-3"
+                  ></lux-input-ac>
+                  <lux-input-ac
+                    luxName="form-dual-Nr"
+                    luxLabel="Nr"
+                    luxType="number"
+                    [luxNumberAlignLeft]="true"
+                    luxControlBinding="nr"
+                  ></lux-input-ac>
+                  <lux-button
+                    luxIconName="lux-interface-delete-bin-5"
+                    luxLabel="Straße entfernen"
+                    (luxClicked)="removeStreet(i)"
+                    luxTagId="btnRemoveStreet"
+                    [luxDisabled]="!myGroup.enabled"
+                    [luxRounded]="true"
+                    luxColor="warn"
+                    class="lux-justify-self-end lux-align-self-center"
+                  >
+                  </lux-button>
+                </div>
               }
               <div class="lux-grid lux-grid-cols-5 lux-gap-4">
                 <lux-button

@@ -86,6 +86,8 @@ lux-layout-form-row {
 .demo-active-item.green ::ng-deep {
   .lux-form-control-container-authentic {
     border-color: #2e8533;
-    box-shadow: 0 0 0 2px #2e8533, 0 0 4px 2px #2e8533;
+    box-shadow:
+      0 0 0 2px #2e8533,
+      0 0 4px 2px #2e8533;
   }
 }

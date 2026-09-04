@@ -33,7 +33,8 @@
         [luxUploadReportProgress]="reportProgress()"
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
-        (luxSelectedChange)="onSelectedChange($event)" />
+        (luxSelectedChange)="onSelectedChange($event)"
+      />
     </div>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel in Reactive-Form</h3>
@@ -63,7 +64,8 @@
           [luxContentsAsBlob]="contentAsBlob()"
           [luxUploadReportProgress]="reportProgress()"
           (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
-          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)" />
+          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        />
         <example-form-value [form]="form" [controlBinding]="controlBinding" [showValue]="false" />
       </div>
     </div>
@@ -90,65 +92,51 @@
       [(luxChecked)]="showPreview"
       luxLabel="luxShowPreview"
       luxHint="Diese Eigenschaft definiert, ob einzelne Bilder in einer Vorschau angezeigt werden sollen."
-      [luxNoTopLabel]="true" />
-    <lux-input-ac
-      luxLabel="luxHeading"
-      luxHint="Gültige Werte sind 1-6"
-      [(luxValue)]="heading"
-      [luxControlValidators]="headingValidator" />
+      [luxNoTopLabel]="true"
+    />
+    <lux-input-ac luxLabel="luxHeading" luxHint="Gültige Werte sind 1-6" [(luxValue)]="heading" [luxControlValidators]="headingValidator" />
     <app-file-example-simple-options [fileExample]="this" class="lux-flex lux-flex-col lux-gap-4" />
     <lux-input-ac
       luxLabel="Unlöschbare Dateien"
       luxHint="Komma-separierte Liste von Dateinamen, die nicht gelöscht werden können."
-      [(luxValue)]="undeletableFileNames" />
+      [(luxValue)]="undeletableFileNames"
+    />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <app-file-example-advanced-options [fileExample]="this" [showHeaderConfigProperties]="true" />
     <h4>Dialogaktion "Akzeptieren"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac
-        luxLabel="Präfix"
-        luxName="filelist_prefix_accept"
-        [(luxValue)]="namePrefixAccept"
-        [luxNoBottomLabel]="true" />
+      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_accept" [(luxValue)]="namePrefixAccept" [luxNoBottomLabel]="true" />
       <lux-input-ac
         luxLabel="Präfixfarbe"
         luxName="filelist_prefix_color_accept"
         [(luxValue)]="namePrefixColorAccept"
-        [luxNoBottomLabel]="true" />
-      <lux-input-ac
-        luxLabel="Suffix"
-        luxName="filelist_suffix_accept"
-        [(luxValue)]="nameSuffixAccept"
-        [luxNoBottomLabel]="true" />
+        [luxNoBottomLabel]="true"
+      />
+      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_accept" [(luxValue)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
       <lux-input-ac
         luxLabel="Suffixfarbe"
         luxName="filelist_suffix_color_accept"
         [(luxValue)]="nameSuffixColorAccept"
-        [luxNoBottomLabel]="true" />
+        [luxNoBottomLabel]="true"
+      />
     </div>
     <h4>Dialogaktion "Ablehnen"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac
-        luxLabel="Präfix"
-        luxName="filelist_prefix_decline"
-        [(luxValue)]="namePrefixDecline"
-        [luxNoBottomLabel]="true" />
+      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_decline" [(luxValue)]="namePrefixDecline" [luxNoBottomLabel]="true" />
       <lux-input-ac
         luxLabel="Präfixfarbe"
         luxName="filelist_prefix_color_decline"
         [(luxValue)]="namePrefixColorDecline"
-        [luxNoBottomLabel]="true" />
-      <lux-input-ac
-        luxLabel="Suffix"
-        luxName="filelist_suffix_decline"
-        [(luxValue)]="nameSuffixDecline"
-        [luxNoBottomLabel]="true" />
+        [luxNoBottomLabel]="true"
+      />
+      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_decline" [(luxValue)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
       <lux-input-ac
         luxLabel="Suffixfarbe"
         luxName="filelist_suffix_color_decline"
         [(luxValue)]="nameSuffixColorDecline"
-        [luxNoBottomLabel]="true" />
+        [luxNoBottomLabel]="true"
+      />
     </div>
   </example-base-advanced-options>
 </example-base-structure>

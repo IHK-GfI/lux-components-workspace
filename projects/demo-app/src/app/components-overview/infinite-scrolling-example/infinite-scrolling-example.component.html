@@ -4,24 +4,24 @@
 >
   <example-base-content>
     @if (created()) {
-    <lux-list
-      class="infinite-list"
-      luxLabel="Beispielliste für unendliches Scrollen"
-      luxInfiniteScroll
-      [luxImmediateCallback]="immediateCallback()"
-      [luxIsLoading]="isLoading()"
-      [luxScrollPercent]="scrollPercent()"
-      (luxScrolled)="onScroll()"
-    >
-      @for (listItem of listItems(); track trackByFn($index, listItem)) {
-      <lux-list-item [luxTitle]="listItem">
-        <lux-list-item-icon>
-          <lux-icon [luxIconName]="'lux-interface-setting-cog'" luxIconSize="1x" />
-        </lux-list-item-icon>
-        <lux-list-item-content> Content </lux-list-item-content>
-      </lux-list-item>
-      }
-    </lux-list>
+      <lux-list
+        class="infinite-list"
+        luxLabel="Beispielliste für unendliches Scrollen"
+        luxInfiniteScroll
+        [luxImmediateCallback]="immediateCallback()"
+        [luxIsLoading]="isLoading()"
+        [luxScrollPercent]="scrollPercent()"
+        (luxScrolled)="onScroll()"
+      >
+        @for (listItem of listItems(); track trackByFn($index, listItem)) {
+          <lux-list-item [luxTitle]="listItem">
+            <lux-list-item-icon>
+              <lux-icon [luxIconName]="'lux-interface-setting-cog'" luxIconSize="1x" />
+            </lux-list-item-icon>
+            <lux-list-item-content> Content </lux-list-item-content>
+          </lux-list-item>
+        }
+      </lux-list>
     }
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -41,14 +41,16 @@
       luxLabel="luxIsLoading"
       luxHint="Teilt der Component mit, ob gerade Daten geladen werden. Wenn true, werden keine luxScrolled-Events emittet."
       [(luxChecked)]="isLoading"
-      [luxNoTopLabel]="true" />
+      [luxNoTopLabel]="true"
+    />
     <lux-input-ac
       luxType="number"
       [luxNumberAlignLeft]="true"
       luxName="infinite-scrolling_luxScrollPercent"
       luxLabel="luxScrollPercent"
       luxHint="Bestimmt die Prozentzahl in der Scrollbar, ab der das luxScrolled-Event emitted wird."
-      [(luxValue)]="scrollPercent" />
+      [(luxValue)]="scrollPercent"
+    />
   </example-base-simple-options>
   <example-base-options-actions>
     <div class="lux-simple-form row">

@@ -22,7 +22,7 @@ lux-lookup-combobox-ac {
 }
 
 lux-lookup-combobox-ac {
- @media (prefers-contrast: more) {
+  @media (prefers-contrast: more) {
     .mat-mdc-select:focus {
       @include luxfocus.focus-dark-mixin;
     }

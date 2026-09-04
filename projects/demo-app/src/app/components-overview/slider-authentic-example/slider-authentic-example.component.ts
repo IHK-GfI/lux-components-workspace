@@ -1,13 +1,13 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
-    LuxAutofocusDirective,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxSliderAcColor,
-    LuxSliderAcComponent,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxSelectAcComponent,
+  LuxSliderAcColor,
+  LuxSliderAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -16,10 +16,10 @@ import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import {
-    emptyErrorCallback,
-    exampleErrorCallback,
-    logResult,
-    setRequiredValidatorForFormControl
+  emptyErrorCallback,
+  exampleErrorCallback,
+  logResult,
+  setRequiredValidatorForFormControl
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';

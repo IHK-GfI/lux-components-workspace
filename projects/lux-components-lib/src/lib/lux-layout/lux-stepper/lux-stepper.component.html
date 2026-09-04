@@ -1,32 +1,33 @@
 @switch (luxVerticalStepper()) {
-<!-- VERTIKALER STEPPER -->
-@case (true) {
-<lux-stepper-vertical
-  [luxStepperConfig]="stepperConfiguration()"
-  (luxMatStepperLoaded)="matStepper = $event"
-  (luxMatStepLabelsLoaded)="matStepLabels = $event"
-  (luxStepChanged)="onStepChanged($event)"
-  (luxFinButtonClicked)="luxFinishButtonClicked.emit($event)"
-  (luxPrevButtonClicked)="stepperService.previousStep(this)"
-  (luxNextButtonClicked)="stepperService.nextStep(this)"
-  (luxStepClicked)="onStepClicked($event)"
-  [ngClass]="{ 'lux-stepper-mobile': mobileView() }"
-/>
+  <!-- VERTIKALER STEPPER -->
+  @case (true) {
+    <lux-stepper-vertical
+      [luxStepperConfig]="stepperConfiguration()"
+      (luxMatStepperLoaded)="matStepper = $event"
+      (luxMatStepLabelsLoaded)="matStepLabels = $event"
+      (luxStepChanged)="onStepChanged($event)"
+      (luxFinButtonClicked)="luxFinishButtonClicked.emit($event)"
+      (luxPrevButtonClicked)="stepperService.previousStep(this)"
+      (luxNextButtonClicked)="stepperService.nextStep(this)"
+      (luxStepClicked)="onStepClicked($event)"
+      [ngClass]="{ 'lux-stepper-mobile': mobileView() }"
+    />
+  }
+  <!-- HORIZONTALER STEPPER -->
+  @default {
+    <lux-stepper-horizontal
+      [luxStepperConfig]="stepperConfiguration()"
+      (luxMatStepperLoaded)="matStepper = $event"
+      (luxMatStepLabelsLoaded)="matStepLabels = $event"
+      (luxStepChanged)="onStepChanged($event)"
+      (luxFinButtonClicked)="luxFinishButtonClicked.emit($event)"
+      (luxPrevButtonClicked)="stepperService.previousStep(this)"
+      (luxNextButtonClicked)="stepperService.nextStep(this)"
+      (luxStepClicked)="onStepClicked($event)"
+      [ngClass]="{ 'lux-stepper-mobile': mobileView() }"
+    />
+  }
 }
-<!-- HORIZONTALER STEPPER -->
-@default {
-<lux-stepper-horizontal
-  [luxStepperConfig]="stepperConfiguration()"
-  (luxMatStepperLoaded)="matStepper = $event"
-  (luxMatStepLabelsLoaded)="matStepLabels = $event"
-  (luxStepChanged)="onStepChanged($event)"
-  (luxFinButtonClicked)="luxFinishButtonClicked.emit($event)"
-  (luxPrevButtonClicked)="stepperService.previousStep(this)"
-  (luxNextButtonClicked)="stepperService.nextStep(this)"
-  (luxStepClicked)="onStepClicked($event)"
-  [ngClass]="{ 'lux-stepper-mobile': mobileView() }"
-/>
-} }
 
 <ng-content select="lux-step" />
 <div class="lux-stepper-disabled-overlay" [class.lux-hidden]="!luxDisabled()"></div>

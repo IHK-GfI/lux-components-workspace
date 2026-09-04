@@ -1,16 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, inject, signal, viewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-    ILuxFileActionConfig,
-    ILuxFileObject,
-    ILuxFilesListActionConfig,
-    LuxAutofocusDirective,
-    LuxDialogService,
-    LuxFileListComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxToggleAcComponent,
-    LuxUtil
+  ILuxFileActionConfig,
+  ILuxFileObject,
+  ILuxFilesListActionConfig,
+  LuxAutofocusDirective,
+  LuxDialogService,
+  LuxFileListComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxToggleAcComponent,
+  LuxUtil
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, map, skip, take } from 'rxjs/operators';
@@ -156,17 +156,15 @@ export class FileListExampleComponent
               size: loremIpsumPdfBase64.length
             }
           ]);
-          this.form
-            .get(this.controlBinding)!
-            .setValue([
-              fileObject,
-              {
-                name: 'Lorem ipsum dolor sit amet.pdf',
-                content: loremIpsumPdfBlob,
-                type: 'application/pdf',
-                size: loremIpsumPdfBase64.length
-              }
-            ]);
+          this.form.get(this.controlBinding)!.setValue([
+            fileObject,
+            {
+              name: 'Lorem ipsum dolor sit amet.pdf',
+              content: loremIpsumPdfBlob,
+              type: 'application/pdf',
+              size: loremIpsumPdfBase64.length
+            }
+          ]);
         })
       )
       .subscribe(() => {

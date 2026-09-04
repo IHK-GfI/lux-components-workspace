@@ -91,7 +91,11 @@ describe('LuxAriaInvalidDirective', () => {
 @Component({
   selector: 'lux-with-selector',
   template: `
-    <lux-button luxIconName="lux-interface-alert-alarm-bell-2" [luxAriaInvalid]="ariaInvalid()" luxAriaInvalidSelector="button"></lux-button>
+    <lux-button
+      luxIconName="lux-interface-alert-alarm-bell-2"
+      [luxAriaInvalid]="ariaInvalid()"
+      luxAriaInvalidSelector="button"
+    ></lux-button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxButtonComponent, LuxAriaInvalidDirective]

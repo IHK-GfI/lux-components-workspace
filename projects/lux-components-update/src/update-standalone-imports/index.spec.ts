@@ -34,7 +34,6 @@ describe('updateStandAloneImports', () => {
 
   describe('[Rule] updateStandAloneImports', () => {
     it('Sollte die Regel updateStandAloneimports ausführen', (done) => {
-
       callRule(updateStandAloneImports(testOptions), appTree, context).subscribe({
         next: (success) => {
           expect(success).toBeDefined();
@@ -45,4 +44,3 @@ describe('updateStandAloneImports', () => {
     });
   });
 });
-

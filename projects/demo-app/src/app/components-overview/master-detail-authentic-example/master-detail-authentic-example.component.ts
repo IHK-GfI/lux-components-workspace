@@ -180,7 +180,11 @@ export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy 
    * Funktion zum Nachladen von Master-Einträgen (von Infinite-Scrolling)
    */
   onLoadListTest() {
-    if (this.configuration.ignoreScrollLoading || this.masterIsReloading() || this.masterEntries().length === this.allMasterEntries.length) {
+    if (
+      this.configuration.ignoreScrollLoading ||
+      this.masterIsReloading() ||
+      this.masterEntries().length === this.allMasterEntries.length
+    ) {
       return;
     }
 

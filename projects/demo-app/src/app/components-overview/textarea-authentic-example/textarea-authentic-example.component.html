@@ -131,13 +131,13 @@
     >
     </lux-input-ac>
     @if (maxLength()) {
-    <lux-toggle-ac
-      luxLabel="luxHideCounterLabel"
-      luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
-      [(luxChecked)]="hideCounterLabel"
-      [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
+      <lux-toggle-ac
+        luxLabel="luxHideCounterLabel"
+        luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
+        [(luxChecked)]="hideCounterLabel"
+        [luxNoTopLabel]="true"
+      >
+      </lux-toggle-ac>
     }
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
     <lux-toggle-ac
@@ -191,15 +191,16 @@
     >
     </lux-toggle-ac>
     @if (useErrorMessage()) {
-    <lux-input-ac
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <lux-input-ac
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-    >
-    </lux-input-ac>
-    } @if (!useErrorMessage()) {
-    <pre class="lux-label">{{ errorCallbackString }}</pre>
+        [(luxValue)]="errorMessage"
+      >
+      </lux-input-ac>
+    }
+    @if (!useErrorMessage()) {
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac
       [luxOptions]="validatorOptions"

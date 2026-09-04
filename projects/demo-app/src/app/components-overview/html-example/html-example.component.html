@@ -1,11 +1,9 @@
-<example-base-structure exampleTitle="Html" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90html-v21">
+<example-base-structure
+  exampleTitle="Html"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90html-v21"
+>
   <example-base-content [exampleCentered]="false">
-    <lux-html
-      [luxData]="htmlData()"
-      [luxSanitizeConfig]="sanitizeConfig()"
-      [luxStyle]="style()"
-      [luxClass]="class()"
-      luxName="html_data" />
+    <lux-html [luxData]="htmlData()" [luxSanitizeConfig]="sanitizeConfig()" [luxStyle]="style()" [luxClass]="class()" luxName="html_data" />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-textarea-ac luxLabel="Html-Daten" [(luxValue)]="htmlData">

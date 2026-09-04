@@ -7,9 +7,9 @@
   <lux-form-hint>
     Dieses Property enthält ein Objekt/Array welches das Interface ICustomCSSConfig implementiert.<br />
     Das Interface bietet einen Klassennamen und eine Callback-Funktion an, um auf spezielle Elemente in der Tabelle angewendet zu werden.<br />
-    Sobald mindestens einer Zeile eine lux-text-highlight-*-Klasse zugewiesen ist, deaktiviert die Tabelle die alternierenden
-    Zeilenfarben automatisch. Weiße Zeilen trennt eine horizontale Linie, an Übergängen zu markierten Zeilen trennt der
-    Farbwechsel und aufeinanderfolgende markierte Zeilen trennt eine Linie in ihrer Schriftfarbe.
+    Sobald mindestens einer Zeile eine lux-text-highlight-*-Klasse zugewiesen ist, deaktiviert die Tabelle die alternierenden Zeilenfarben
+    automatisch. Weiße Zeilen trennt eine horizontale Linie, an Übergängen zu markierten Zeilen trennt der Farbwechsel und
+    aufeinanderfolgende markierte Zeilen trennt eine Linie in ihrer Schriftfarbe.
   </lux-form-hint>
 </lux-select-ac>
 <lux-button
@@ -29,7 +29,12 @@
     Wenn mehr Einträge vorhanden sind, als durch die Höhe darstellbar, wird die Tabelle automatisch scrollbar.
   </lux-form-hint>
 </lux-toggle-ac>
-<lux-input-ac luxLabel="Höhe" luxType="number" [(luxValue)]="tableExample().tableHeightPx" [luxDisabled]="!tableExample().calculateProportions">
+<lux-input-ac
+  luxLabel="Höhe"
+  luxType="number"
+  [(luxValue)]="tableExample().tableHeightPx"
+  [luxDisabled]="!tableExample().calculateProportions"
+>
   <lux-form-hint>Höhe des Parent-Elements für die LuxTable.</lux-form-hint>
 </lux-input-ac>
 <lux-toggle-ac luxLabel="luxAutoPaginate" [(luxChecked)]="tableExample().autoPagination" [luxNoTopLabel]="true">
@@ -53,36 +58,36 @@
   <h3>Optionen der Spalten</h3>
   <lux-accordion class="lux-mt-3" luxMode="flat">
     @for (config of tableExample().columnConfigs; track config) {
-    <lux-panel>
-      <lux-panel-header-title> Spalte "{{ config.label }}" </lux-panel-header-title>
-      <lux-panel-content>
-        <lux-toggle-ac luxLabel="Sortierbar" [(luxChecked)]="config.sortable" [luxNoTopLabel]="true"> </lux-toggle-ac>
-        <lux-toggle-ac
-          luxTagId="table-advanced-options-sticky"
-          [(luxChecked)]="config.sticky"
-          [luxDisabled]="config.sticky === undefined"
-          [luxNoTopLabel]="true"
-        >
-          <lux-form-label>Sticky</lux-form-label>
-        </lux-toggle-ac>
-        <lux-select-ac
-          luxLabel="Responsive Verhalten"
-          [luxOptions]="BEHAVIOURS | responsiveBehaviourFiltered : config"
-          luxOptionLabelProp="label"
-          [(luxSelected)]="config.responsiveBehaviour"
-        >
-        </lux-select-ac>
-        <lux-select-ac
-          luxLabel="Responsive MediaQueries"
-          [luxMultiple]="true"
-          [luxOptions]="tableExample().mediaQueryOptions"
-          [(luxSelected)]="config.responsiveAt"
-          [luxDisabled]="config.responsiveBehaviour.value === null"
-          [luxRequired]="true"
-        >
-        </lux-select-ac>
-      </lux-panel-content>
-    </lux-panel>
+      <lux-panel>
+        <lux-panel-header-title> Spalte "{{ config.label }}" </lux-panel-header-title>
+        <lux-panel-content>
+          <lux-toggle-ac luxLabel="Sortierbar" [(luxChecked)]="config.sortable" [luxNoTopLabel]="true"> </lux-toggle-ac>
+          <lux-toggle-ac
+            luxTagId="table-advanced-options-sticky"
+            [(luxChecked)]="config.sticky"
+            [luxDisabled]="config.sticky === undefined"
+            [luxNoTopLabel]="true"
+          >
+            <lux-form-label>Sticky</lux-form-label>
+          </lux-toggle-ac>
+          <lux-select-ac
+            luxLabel="Responsive Verhalten"
+            [luxOptions]="BEHAVIOURS | responsiveBehaviourFiltered: config"
+            luxOptionLabelProp="label"
+            [(luxSelected)]="config.responsiveBehaviour"
+          >
+          </lux-select-ac>
+          <lux-select-ac
+            luxLabel="Responsive MediaQueries"
+            [luxMultiple]="true"
+            [luxOptions]="tableExample().mediaQueryOptions"
+            [(luxSelected)]="config.responsiveAt"
+            [luxDisabled]="config.responsiveBehaviour.value === null"
+            [luxRequired]="true"
+          >
+          </lux-select-ac>
+        </lux-panel-content>
+      </lux-panel>
     }
   </lux-accordion>
 </div>

@@ -666,7 +666,7 @@ export function updateStandAloneImports(options: Options): Rule {
 function updateStandAloneImportsIntern(options: Options): Rule {
   return (tree: Tree, _context: SchematicContext) => {
     let resolvedPath = options?.path ?? DEFAULT_OPTIONS_PATH;
-    
+
     if (resolvedPath === DEFAULT_OPTIONS_PATH) {
       resolvedPath = '/';
     }

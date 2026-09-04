@@ -19,9 +19,7 @@ describe('LuxRelativeTimestampPipe', () => {
     jasmine.clock().mockDate(fixedNow);
 
     TestBed.configureTestingModule({
-      providers: [
-        provideLuxTranslocoTesting()
-      ]
+      providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
   });
 

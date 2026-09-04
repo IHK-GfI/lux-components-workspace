@@ -43,12 +43,7 @@
     >
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
     </lux-input-ac>
-    <lux-toggle-ac
-      class="lux-pt-3"
-      luxLabel="Nur folgendes erlauben"
-      [(luxChecked)]="allowedTagsToggle"
-      [luxNoLabels]="true"
-    />
+    <lux-toggle-ac class="lux-pt-3" luxLabel="Nur folgendes erlauben" [(luxChecked)]="allowedTagsToggle" [luxNoLabels]="true" />
     <lux-input-ac
       luxLabel="Erlaubte Tags"
       luxName="markdown_allowedTags"
@@ -68,12 +63,7 @@
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
     </lux-input-ac>
 
-    <lux-toggle-ac
-      class="lux-pt-3"
-      luxLabel="Zusätzlich erlauben"
-      [(luxChecked)]="addAllowedTagsToggle"
-      [luxNoLabels]="true"
-    />
+    <lux-toggle-ac class="lux-pt-3" luxLabel="Zusätzlich erlauben" [(luxChecked)]="addAllowedTagsToggle" [luxNoLabels]="true" />
     <lux-input-ac
       luxLabel="Zusätzlich erlaubte Tags"
       luxName="markdown_addAllowedTags"

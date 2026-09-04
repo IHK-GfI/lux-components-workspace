@@ -45,10 +45,16 @@ describe('migrateXlf', () => {
 
       callRule(migrateXlf(testOptions), appTree, context).subscribe({
         next: (success) => {
-          const contentDe = success.read((testOptions.path ?? '') + '/src/locale/de.json')?.toString()?.replace(/\s/g, '');
+          const contentDe = success
+            .read((testOptions.path ?? '') + '/src/locale/de.json')
+            ?.toString()
+            ?.replace(/\s/g, '');
           expect(contentDe).toEqual(jsonDe.replace(/\s/g, ''));
 
-          const contentEn = success.read((testOptions.path ?? '') + '/src/locale/en.json')?.toString()?.replace(/\s/g, '');
+          const contentEn = success
+            .read((testOptions.path ?? '') + '/src/locale/en.json')
+            ?.toString()
+            ?.replace(/\s/g, '');
           expect(contentEn).toEqual(jsonEn.replace(/\s/g, ''));
 
           done();

@@ -5,11 +5,7 @@
       <lux-textbox #validationBox luxTitle="Fehler" luxColor="red" class="lux-max-width-92">{{ validationMessage }}</lux-textbox>
     }
     <!-- Stepper mit deaktivierten Navigations-Buttons; Steuerung erfolgt über die Dialog-Actions -->
-    <lux-stepper
-      [luxShowNavigationButtons]="false"
-      [luxLinear]="true"
-      [(luxCurrentStepNumber)]="currentStepNumber"
-    >
+    <lux-stepper [luxShowNavigationButtons]="false" [luxLinear]="true" [(luxCurrentStepNumber)]="currentStepNumber">
       <lux-step [luxCompleted]="form1.valid" [luxStepControl]="form1">
         <lux-step-header>Kontaktdaten</lux-step-header>
         <lux-step-content [formGroup]="form1">

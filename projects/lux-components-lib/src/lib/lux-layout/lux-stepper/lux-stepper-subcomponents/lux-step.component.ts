@@ -56,7 +56,14 @@ export class LuxStepComponent {
    */
   private readonly stepControlValid = toSignal(
     toObservable(this.luxStepControl).pipe(
-      switchMap((stepControl) => (stepControl ? stepControl.statusChanges.pipe(startWith(stepControl.status), map(() => stepControl.valid)) : of(undefined)))
+      switchMap((stepControl) =>
+        stepControl
+          ? stepControl.statusChanges.pipe(
+              startWith(stepControl.status),
+              map(() => stepControl.valid)
+            )
+          : of(undefined)
+      )
     ),
     { initialValue: undefined }
   );

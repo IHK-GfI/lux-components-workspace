@@ -588,7 +588,9 @@ describe('LuxAppHeaderComponent', () => {
 });
 
 @Component({
-  template: ` <lux-app-header [luxClickable]="true" (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header> `,
+  template: `
+    <lux-app-header [luxClickable]="true" (luxClicked)="onClicked()" luxAppTitle="MyClickTitle" luxAppTitleShort="MyClick"></lux-app-header>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAppHeaderComponent]
 })
@@ -634,11 +636,7 @@ class MockIconClickedAppHeaderComponent {
   template: `
     <lux-app-header [luxUserName]="username()" [luxAppTitle]="title()" [luxAppTitleShort]="titleShort()">
       @if (testUseSideNav()) {
-        <lux-side-nav
-          [luxDashboardLink]="dashboardLink()"
-          [luxDashboardLinkTitle]="dashboardTitle()"
-          [luxOpenLinkBlank]="dashboardBlank()"
-        >
+        <lux-side-nav [luxDashboardLink]="dashboardLink()" [luxDashboardLinkTitle]="dashboardTitle()" [luxOpenLinkBlank]="dashboardBlank()">
           <lux-side-nav-header>
             <span class="test-side-nav-header">SideNav-Header</span>
           </lux-side-nav-header>

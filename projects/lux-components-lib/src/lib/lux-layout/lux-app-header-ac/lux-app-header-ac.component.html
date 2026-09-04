@@ -195,7 +195,9 @@
               (luxClicked)="onAppLogoClicked($event)"
             />
           }
-          <div class="lux-app-title" [ngClass]="{ 'lux-mobile': mobileView() }">{{ mobileView() ? luxAppTitleShort() : luxAppTitle() }}</div>
+          <div class="lux-app-title" [ngClass]="{ 'lux-mobile': mobileView() }">
+            {{ mobileView() ? luxAppTitleShort() : luxAppTitle() }}
+          </div>
         </div>
         <div class="lux-app-nav-menu">
           @if (navMenu()) {

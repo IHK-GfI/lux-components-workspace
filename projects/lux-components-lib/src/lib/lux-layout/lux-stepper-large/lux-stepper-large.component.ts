@@ -1,6 +1,18 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, ChangeDetectionStrategy, Component, contentChildren, effect, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  contentChildren,
+  effect,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  output,
+  signal
+} from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';

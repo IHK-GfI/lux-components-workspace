@@ -1,10 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import {
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
-} from '@ihk-gfi/lux-components';
+import { LuxFormHintComponent, LuxInputAcComponent, LuxTextareaAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
 import { LuxHtmlComponent, LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';

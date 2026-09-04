@@ -1,25 +1,26 @@
 <lux-input-ac
   luxLabel="luxLabel"
   luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
-  [(luxValue)]="fileExample().label" />
+  [(luxValue)]="fileExample().label"
+/>
 <lux-input-ac
   luxLabel="luxHint"
   luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
-  [(luxValue)]="fileExample().hint" />
+  [(luxValue)]="fileExample().hint"
+/>
 <lux-toggle-ac
   luxLabel="luxHintShowOnlyOnFocus"
   luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
   [(luxChecked)]="fileExample().hintShowOnlyOnFocus"
-  [luxNoTopLabel]="true" />
-<example-form-disable
-  [form]="fileExample().form"
-  [controlBinding]="fileExample().controlBinding"
-  [(disabled)]="fileExample().disabled" />
+  [luxNoTopLabel]="true"
+/>
+<example-form-disable [form]="fileExample().form" [controlBinding]="fileExample().controlBinding" [(disabled)]="fileExample().disabled" />
 <lux-toggle-ac
   [(luxChecked)]="fileExample().readonly"
   luxLabel="luxReadonly"
   luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
-  [luxNoTopLabel]="true" />
+  [luxNoTopLabel]="true"
+/>
 <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="fileExample().changeRequired($event)" [luxNoTopLabel]="true">
   <lux-form-hint>
     Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
@@ -30,21 +31,25 @@
   [(luxChecked)]="fileExample().dndActive"
   luxLabel="luxDnDActive"
   luxHint="Diese Eigenschaft legt fest ob Dateien via Drag-And-Drop in das Input gegeben werden können."
-  [luxNoTopLabel]="true" />
+  [luxNoTopLabel]="true"
+/>
 <lux-toggle-ac
   [(luxChecked)]="fileExample().contentAsBlob"
   luxLabel="luxContentAsBlob"
   luxHint="Diese Eigenschaft bestimmt ob die Dateien als Blob gespeichert werden sollen oder als Base64-String."
-  [luxNoTopLabel]="true" />
+  [luxNoTopLabel]="true"
+/>
 <lux-toggle-ac
   [(luxChecked)]="fileExample().reportProgress"
   luxLabel="luxUploadReportProgress"
   luxHint="Diese Eigenschaft legt fest ob beim Upload Progressbar mit festen Fortschrittswerten oder nicht angezeigt werden soll."
-  [luxNoTopLabel]="true" />
+  [luxNoTopLabel]="true"
+/>
 <lux-input-ac
   luxLabel="luxUploadUrl"
   luxHint="Diese Property bestimmt die URL, zu der die selektierten Dateien hochgeladen werden sollen."
-  [(luxValue)]="fileExample().uploadUrl" />
+  [(luxValue)]="fileExample().uploadUrl"
+/>
 <lux-input-ac
   luxLabel="luxMaxSizeMiB"
   luxHint="Die Property bestimmt die maximale erlaubte Dateigröße in MiB."
@@ -54,18 +59,21 @@
   <lux-input-ac-suffix>&nbsp;MiB</lux-input-ac-suffix>
 </lux-input-ac>
 @if (isFileListExample()) {
-<lux-input-ac
-  luxLabel="luxMaxFileCount"
-  luxHint="Diese Property legt die maximal erlaubte Anzahl an Dateien fest."
-  [(luxValue)]="fileExample().maxFileCount"
-  luxType="number" />
+  <lux-input-ac
+    luxLabel="luxMaxFileCount"
+    luxHint="Diese Property legt die maximal erlaubte Anzahl an Dateien fest."
+    [(luxValue)]="fileExample().maxFileCount"
+    luxType="number"
+  />
 }
 <lux-select-ac
   luxLabel="luxCapture"
   luxHint="Diese Property stellt ein ob für Mobilgeräte die Front- oder Rück-Kamera und Mikrophone verwendet werden sollen."
   [luxOptions]="['', 'user', 'environment']"
-  [(luxSelected)]="fileExample().capture" />
+  [(luxSelected)]="fileExample().capture"
+/>
 <lux-input-ac
   luxLabel="luxAccept"
   luxHint="Über diese Eigenschaft lässt sich einstellen, welche Dateiarten erlaubt sind (z.B. image/*,.pdf)."
-  [(luxValue)]="fileExample().accept" />
+  [(luxValue)]="fileExample().accept"
+/>

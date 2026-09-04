@@ -46,7 +46,10 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleBaseAdvancedOptionsComponent
   ]
 })
-export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig> implements OnInit, AfterViewInit {
+export class FileUploadExampleComponent
+  extends FileExampleComponent<ILuxFileObject[] | null, ILuxFilesListActionConfig>
+  implements OnInit, AfterViewInit
+{
   readonly fileUploads = viewChildren(LuxFileUploadComponent);
   readonly fileBaseWithoutComponent = viewChild.required('fileBaseWithoutComponent', { read: LuxFileUploadComponent });
   readonly fileBaseWithComponent = viewChild.required('fileBaseWithComponent', { read: LuxFileUploadComponent });
@@ -80,9 +83,7 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
     this.capture.set('environment');
     this.accept.set('.pdf,.jpeg,.jpg,.png');
     this.hint.set(
-      `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept())} mit einer Größe bis zu ${
-        this.maxSize()
-      } Megabytes hochladen.`
+      `Sie können Dateien der Typen ${LuxUtil.getAcceptTypesAsMessagePart(this.tService, this.accept())} mit einer Größe bis zu ${this.maxSize()} Megabytes hochladen.`
     );
     super.ngOnInit();
   }
@@ -94,41 +95,41 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
   toogleCustomHiddenActionConfig() {
     this.customActionConfigs[0] = {
       ...this.customActionConfigs[0],
-      hidden: !this.customActionConfigs[0].hidden,
-    }
+      hidden: !this.customActionConfigs[0].hidden
+    };
   }
 
   toogleCustomDisabeldActionConfig() {
     this.customActionConfigs[0] = {
       ...this.customActionConfigs[0],
-      disabled: !this.customActionConfigs[0].disabled,
-    }
+      disabled: !this.customActionConfigs[0].disabled
+    };
   }
 
   toogleViewConfig() {
     this.viewActionConfig = {
       ...this.viewActionConfig,
-      hidden: !this.viewActionConfig.hidden,
-    }
+      hidden: !this.viewActionConfig.hidden
+    };
 
     this.viewActionConfigForm = {
       ...this.viewActionConfigForm,
-      hidden: !this.viewActionConfigForm.hidden,
-    }
+      hidden: !this.viewActionConfigForm.hidden
+    };
   }
 
   toogleDeleteHiddenConfig() {
     this.deleteActionConfig = {
       ...this.deleteActionConfig,
-      hidden: !this.deleteActionConfig.hidden,
-    }
+      hidden: !this.deleteActionConfig.hidden
+    };
   }
 
   toogleDeleteDisabledConfig() {
     this.deleteActionConfig = {
       ...this.deleteActionConfig,
-      disabled: !this.deleteActionConfig.disabled,
-    }
+      disabled: !this.deleteActionConfig.disabled
+    };
   }
 
   initSelected() {
@@ -151,11 +152,15 @@ export class FileUploadExampleComponent extends FileExampleComponent<ILuxFileObj
   }
 
   openDialog(fileObject: ILuxFileObject) {
-    const dialogRef = this.dialogService.openComponent(LuxFileRenameDialogComponent,{
-      disableClose: false,
-      width: 'auto',
-      height: 'auto',
-    }, fileObject);
+    const dialogRef = this.dialogService.openComponent(
+      LuxFileRenameDialogComponent,
+      {
+        disableClose: false,
+        width: 'auto',
+        height: 'auto'
+      },
+      fileObject
+    );
 
     dialogRef.dialogClosed.subscribe((newFileName: any) => {
       if (typeof newFileName === 'string' && newFileName.length > 0) {

@@ -1,4 +1,7 @@
-<example-base-structure exampleTitle="Ripple" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxRipple-v21">
+<example-base-structure
+  exampleTitle="Ripple"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxRipple-v21"
+>
   <example-base-content [exampleCentered]="true">
     <div
       style="width: 250px; height: 100px"
@@ -21,45 +24,45 @@
       luxLabel="luxRippleColor"
       luxHint="Diese Property ermöglicht es, die Farbe der Component zu setzen."
       [(luxValue)]="color"
-     />
+    />
     <lux-input-ac
       luxName="ripple_luxRippleRadius"
       luxLabel="luxRippleRadius"
       luxHint="Diese Property ermöglicht es, den Radius der Animation festzulegen. Wenn 0 werden die Begrenzungen der Zielcomponent genommen."
       luxType="number"
       [(luxValue)]="radius"
-     />
+    />
     <lux-input-ac
       luxName="ripple_luxRippleEnterDuration"
       luxLabel="luxRippleEnterDuration"
       luxHint="Diese Property ermöglicht es, die Dauer der Eingangsanimation zu bestimmen."
       luxType="number"
       [(luxValue)]="enterDuration"
-     />
+    />
     <lux-input-ac
       luxName="ripple_luxRippleExitDuration"
       luxLabel="luxRippleExitDuration"
       luxHint="Diese Property ermöglicht es, die Dauer der Ausgangsanimation zu bestimmen."
       luxType="number"
       [(luxValue)]="exitDuration"
-     />
+    />
     <lux-toggle-ac
       luxLabel="luxRippleDisabled"
       luxHint="Dieses Flag deaktiviert das Auslösen der Ripple-Animationen über Maus-Klicks."
       [(luxChecked)]="disabled"
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-toggle-ac
       luxLabel="luxRippleCentered"
       luxHint="Dieses Flag stellt ein ob die Animation aus dem Zentrum der Zielcomponent läuft oder vom jeweiligen Klick."
       [(luxChecked)]="centered"
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-toggle-ac
       luxLabel="luxRippleUnbounded"
       luxHint="Dieses Flag stellt ein ob die Animation über die Zielcomponent hinauslaufen kann."
       [(luxChecked)]="unbounded"
       [luxNoTopLabel]="true"
-     />
+    />
   </example-base-simple-options>
 </example-base-structure>

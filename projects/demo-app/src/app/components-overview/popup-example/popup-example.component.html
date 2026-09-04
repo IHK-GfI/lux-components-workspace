@@ -1,4 +1,7 @@
-<example-base-structure exampleTitle="Popup" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90popup-v21">
+<example-base-structure
+  exampleTitle="Popup"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90popup-v21"
+>
   <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col lux-gap-10">
     <p>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
@@ -25,7 +28,7 @@
       [luxPopupShowDelay]="showDelay()"
       [luxPopupHideDelay]="hideDelay()"
       [luxPopupDisabled]="disabled()"
-     />
+    />
 
     <app-popup-example-info-popup
       #infoPopup="popupExampleInfoPopup"
@@ -33,7 +36,7 @@
       [text]="text()"
       [minWidth]="minWidth()"
       [maxWidth]="maxWidth()"
-     />
+    />
 
     <lux-button
       luxAriaLabel="Info"
@@ -44,7 +47,7 @@
       [luxPopupTriggerFor]="actionPopup"
       [luxPopupPosition]="position()"
       [luxPopupDisabled]="disabled()"
-     />
+    />
 
     <lux-popup
       #actionPopup

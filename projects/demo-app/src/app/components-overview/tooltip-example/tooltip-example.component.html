@@ -1,4 +1,7 @@
-<example-base-structure exampleTitle="Tooltip" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxTooltip-v21">
+<example-base-structure
+  exampleTitle="Tooltip"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/luxTooltip-v21"
+>
   <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col lux-gap-10">
     <div
       tabindex="0"
@@ -101,9 +104,9 @@
     >
       <span style="font-weight: 600; font-size: 1.1em">Tooltip nur bei abgeschnittenem Text</span>
       <span>
-        Aktiviert wird der Tooltip über den Input <code>[luxTooltipIfTruncated]="true"</code> zusammen mit einer Crop-Klasse
-        (hier <code>.lux-crop</code> mit <code>overflow: hidden; white-space: nowrap; text-overflow: ellipsis</code>).
-        <code>luxTooltip</code>, <code>luxTooltipIfTruncated</code> und die Crop-Klasse müssen auf demselben Element liegen.
+        Aktiviert wird der Tooltip über den Input <code>[luxTooltipIfTruncated]="true"</code> zusammen mit einer Crop-Klasse (hier
+        <code>.lux-crop</code> mit <code>overflow: hidden; white-space: nowrap; text-overflow: ellipsis</code>). <code>luxTooltip</code>,
+        <code>luxTooltipIfTruncated</code> und die Crop-Klasse müssen auf demselben Element liegen.
       </span>
       <div
         style="
@@ -135,8 +138,9 @@
 
       <span style="font-weight: 600; margin-top: 16px">Mehrzeilig gekürzter Text (line-clamp)</span>
       <span>
-        Die Erkennung funktioniert auch bei vertikaler Kürzung, z.B. mit der Klasse <code>.lux-crop-2-lines</code>
-        (<code>-webkit-line-clamp: 2</code>). Der Text darf umbrechen, wird aber nach zwei Zeilen ausgepunktet.
+        Die Erkennung funktioniert auch bei vertikaler Kürzung, z.B. mit der Klasse <code>.lux-crop-2-lines</code> (<code
+          >-webkit-line-clamp: 2</code
+        >). Der Text darf umbrechen, wird aber nach zwei Zeilen ausgepunktet.
       </span>
       <div
         style="
@@ -162,8 +166,8 @@
         </div>
       </div>
       <span class="lux-hint">
-        Solange der Text in zwei Zeilen passt, bleibt der Tooltip aus. Wird das Fenster schmaler gezogen und der Text nach der zweiten
-        Zeile abgeschnitten, erscheint der Tooltip beim Hover.
+        Solange der Text in zwei Zeilen passt, bleibt der Tooltip aus. Wird das Fenster schmaler gezogen und der Text nach der zweiten Zeile
+        abgeschnitten, erscheint der Tooltip beim Hover.
       </span>
     </div>
   </example-base-content>

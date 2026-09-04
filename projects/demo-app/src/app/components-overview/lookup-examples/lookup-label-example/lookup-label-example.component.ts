@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import {
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxLookupLabelComponent,
-    LuxProgressComponent,
-    LuxSelectAcComponent
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxInputAcSuffixComponent,
+  LuxLookupLabelComponent,
+  LuxProgressComponent,
+  LuxSelectAcComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

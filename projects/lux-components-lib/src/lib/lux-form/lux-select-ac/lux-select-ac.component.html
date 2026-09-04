@@ -63,9 +63,7 @@
           class="option-height"
           [style.display]="!luxEnableFilter() || selectFilter.isIndexVisible(i) ? '' : 'none'"
         >
-          <ng-container
-            *ngTemplateOutlet="tempRef() ? tempRef()! : noTemplateRefTemplate; context: { $implicit: luxOptions()[i] }"
-          />
+          <ng-container *ngTemplateOutlet="tempRef() ? tempRef()! : noTemplateRefTemplate; context: { $implicit: luxOptions()[i] }" />
         </mat-option>
       }
     </mat-select>

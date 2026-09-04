@@ -1,23 +1,26 @@
 <div [ngClass]="['lux-progress-' + luxSize(), luxType() === 'Spinner' ? 'spinner-padding' : '']">
-  @switch (luxType()) { @case ('Progressbar') {
-  <mat-progress-bar
-    luxAriaLabel="{{ luxAriaLabel() || ('luxc.progress.arialabel' | transloco) }}"
-    luxTagIdHandler
-    [luxTagId]="luxTagId()"
-    [luxCustomTagId]="luxTagId()"
-    [ngClass]="[typeCSS(), 'lux-color-' + luxColor()]"
-    [mode]="luxMode()"
-    [value]="luxValue()"
-  />
-  } @case ('Spinner') {
-  <mat-progress-spinner
-    luxAriaLabel="{{ luxAriaLabel() || ('luxc.progress.arialabel' | transloco) }}"
-    luxTagIdHandler
-    [luxTagId]="luxTagId()"
-    [luxCustomTagId]="luxTagId()"
-    [ngClass]="[typeCSS(), 'lux-color-' + luxColor()]"
-    [mode]="luxMode()"
-    [value]="luxValue()"
-  />
-  } }
+  @switch (luxType()) {
+    @case ('Progressbar') {
+      <mat-progress-bar
+        luxAriaLabel="{{ luxAriaLabel() || ('luxc.progress.arialabel' | transloco) }}"
+        luxTagIdHandler
+        [luxTagId]="luxTagId()"
+        [luxCustomTagId]="luxTagId()"
+        [ngClass]="[typeCSS(), 'lux-color-' + luxColor()]"
+        [mode]="luxMode()"
+        [value]="luxValue()"
+      />
+    }
+    @case ('Spinner') {
+      <mat-progress-spinner
+        luxAriaLabel="{{ luxAriaLabel() || ('luxc.progress.arialabel' | transloco) }}"
+        luxTagIdHandler
+        [luxTagId]="luxTagId()"
+        [luxCustomTagId]="luxTagId()"
+        [ngClass]="[typeCSS(), 'lux-color-' + luxColor()]"
+        [mode]="luxMode()"
+        [value]="luxValue()"
+      />
+    }
+  }
 </div>

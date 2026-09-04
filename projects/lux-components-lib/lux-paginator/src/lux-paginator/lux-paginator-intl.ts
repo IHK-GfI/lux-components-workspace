@@ -43,5 +43,4 @@ export class LuxPaginatorIntl extends MatPaginatorIntl {
     const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
     return this.tService.translate('luxc.paginator.page_part', { start: startIndex + 1, end: endIndex, length });
   }
-
 }

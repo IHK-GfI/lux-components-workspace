@@ -60,7 +60,9 @@
               <ng-container *ngTemplateOutlet="masterSimple?.iconTempRef() ?? null; context: { $implicit: masterElement }"></ng-container>
             </lux-list-item-icon>
             <lux-list-item-content>
-              <ng-container *ngTemplateOutlet="masterSimple?.contentTempRef() ?? null; context: { $implicit: masterElement }"></ng-container>
+              <ng-container
+                *ngTemplateOutlet="masterSimple?.contentTempRef() ?? null; context: { $implicit: masterElement }"
+              ></ng-container>
             </lux-list-item-content>
           </lux-list-item>
         }

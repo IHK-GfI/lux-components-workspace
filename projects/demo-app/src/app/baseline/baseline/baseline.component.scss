@@ -32,15 +32,16 @@ lux-card-content-expanded h4 {
 :host {
   &.show-frames {
     ::ng-deep {
-      .baseline lux-card-content, .baseline lux-card-content-expanded {
-        
+      .baseline lux-card-content,
+      .baseline lux-card-content-expanded {
         .lux-form-control-wrapper {
           background: lightslategray !important;
         }
         .lux-form-control-label-authentic {
           background: lightgreen !important;
         }
-        .lux-form-control-container-authentic, .lux-form-control-borderless .lux-form-control-container-authentic {
+        .lux-form-control-container-authentic,
+        .lux-form-control-borderless .lux-form-control-container-authentic {
           background: skyblue !important;
         }
         .lux-form-control-misc-authentic {

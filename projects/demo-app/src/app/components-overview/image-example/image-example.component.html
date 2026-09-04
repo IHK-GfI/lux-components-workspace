@@ -8,7 +8,8 @@
       [luxImageSrc]="imgSrc()"
       [luxImageWidth]="imgWidth()"
       [luxImageHeight]="imgHeight()"
-      [luxRawSrc]="imgRawSrc()" />
+      [luxRawSrc]="imgRawSrc()"
+    />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac luxLabel="Frame anzeigen" [(luxChecked)]="showImageFrame" [luxNoTopLabel]="true">
@@ -40,10 +41,12 @@
     <lux-input-ac
       [(luxValue)]="imgWidth"
       luxLabel="luxImageWidth"
-      luxHint="Bestimmt die Breite des Bildes, kann dabei einen beliebigen Wert enthalten (z.B. 100px oder 20%)." />
+      luxHint="Bestimmt die Breite des Bildes, kann dabei einen beliebigen Wert enthalten (z.B. 100px oder 20%)."
+    />
     <lux-input-ac
       [(luxValue)]="imgHeight"
       luxLabel="luxImageHeight"
-      luxHint="Bestimmt die Höhe des Bildes, kann dabei einen beliebigen Wert enthalten (z.B. 100px oder 20%)." />
+      luxHint="Bestimmt die Höhe des Bildes, kann dabei einen beliebigen Wert enthalten (z.B. 100px oder 20%)."
+    />
   </example-base-simple-options>
 </example-base-structure>

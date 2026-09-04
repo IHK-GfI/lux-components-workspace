@@ -15,14 +15,16 @@
           luxHint="Ich habe die AGB und Datenschutzvereinbarungen gelesen und akzeptiere diese."
           [luxRequired]="true"
           [luxNoTopLabel]="true"
-          #agbAcceptedToggle />
+          #agbAcceptedToggle
+        />
         <lux-button
           class="info-btn"
           luxIconName="lux-interface-alert-information-circle"
           luxColor="primary"
           luxAriaLabel="Erläuterung zu AGB gelesen"
           luxTagId="dialog.component.agb.info"
-          (luxClicked)="openInfoDialog()" />
+          (luxClicked)="openInfoDialog()"
+        />
       </div>
     </div>
   </lux-dialog-content>
@@ -32,6 +34,7 @@
       luxColor="primary"
       [luxDisabled]="!agbAcceptedToggle.luxChecked"
       [luxFlat]="true"
-      (luxClicked)="luxDialogRef.closeDialog(true)" />
+      (luxClicked)="luxDialogRef.closeDialog(true)"
+    />
   </lux-dialog-actions>
 </lux-dialog-structure>

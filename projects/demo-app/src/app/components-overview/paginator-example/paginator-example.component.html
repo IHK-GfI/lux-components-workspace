@@ -31,7 +31,7 @@
         [luxLastPageLabel]="toOptionalLabel(lastPageLabel())"
         [luxGetRangeLabel]="rangeLabel()"
         (luxPageChange)="onPageChange($event)"
-       />
+      />
     </div>
   </example-base-content>
 
@@ -41,7 +41,7 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-     />
+    />
 
     <lux-input-ac
       luxName="paginator_pageIndex"
@@ -50,7 +50,7 @@
       luxType="number"
       [luxNumberAlignLeft]="true"
       [(luxValue)]="pageIndex"
-     />
+    />
 
     <lux-select-ac
       luxLabel="luxPageSizeOptions"
@@ -59,7 +59,7 @@
       [luxPickValue]="(item) => item.value"
       luxHint="Auswahl der Seitengroessen-Arrays (aus dem Table-Beispiel)"
       [(luxSelected)]="selectedPageSizeOption"
-     />
+    />
 
     <lux-toggle-ac luxLabel="luxShowFirstLastButtons" [(luxChecked)]="showFirstLastButtons" [luxNoLabels]="true" />
     <lux-toggle-ac luxLabel="luxHidePageSize" [(luxChecked)]="hidePageSize" [luxNoLabels]="true" />
@@ -75,7 +75,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="itemsPerPageLabel"
-       />
+      />
 
       <lux-input-ac
         luxName="paginator_nextPageLabel"
@@ -83,7 +83,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="nextPageLabel"
-       />
+      />
 
       <lux-input-ac
         luxName="paginator_previousPageLabel"
@@ -91,7 +91,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="previousPageLabel"
-       />
+      />
 
       <lux-input-ac
         luxName="paginator_firstPageLabel"
@@ -99,7 +99,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="firstPageLabel"
-       />
+      />
 
       <lux-input-ac
         luxName="paginator_lastPageLabel"
@@ -107,7 +107,7 @@
         luxPlaceholder="Standardübersetzung wird verwendet"
         [luxNoBottomLabel]="true"
         [(luxValue)]="lastPageLabel"
-       />
+      />
 
       <lux-select-ac
         luxLabel="luxGetRangeLabel"
@@ -116,7 +116,7 @@
         luxOptionLabelProp="label"
         luxHint="Wählt ein vordefiniertes Bereichslabel für den Paginator aus"
         [(luxSelected)]="selectedRangeLabelOption"
-       />
+      />
     </div>
   </example-base-advanced-options>
 </example-base-structure>

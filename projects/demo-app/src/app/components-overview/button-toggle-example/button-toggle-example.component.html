@@ -17,7 +17,7 @@
           [(luxSelected)]="singleSelected"
           (luxSelectedChange)="onSingleChanged($event)"
         />
-        <example-value [value]="singleSelected()"/>
+        <example-value [value]="singleSelected()" />
       </div>
 
       <div class="lux-flex lux-flex-col lux-gap-3">
@@ -34,7 +34,7 @@
           [(luxSelectedValues)]="multiSelected"
           (luxSelectedValuesChange)="onMultiChanged($event)"
         />
-        <example-value [value]="multiSelected()"/>
+        <example-value [value]="multiSelected()" />
       </div>
 
       <div class="lux-flex lux-flex-col lux-gap-3" [formGroup]="form">
@@ -50,7 +50,7 @@
           luxControlBinding="singleSelect"
           (luxSelectedChange)="onSingleChanged($event)"
         />
-        <example-value [value]="$safeNavigationMigration(form.get('singleSelect')?.value)"/>
+        <example-value [value]="$safeNavigationMigration(form.get('singleSelect')?.value)" />
         <div>Valid: {{ form.get('singleSelect')?.valid }}</div>
       </div>
 
@@ -68,7 +68,7 @@
           luxControlBinding="multiSelect"
           (luxSelectedValuesChange)="onMultiChanged($event)"
         />
-        <example-value [value]="$safeNavigationMigration(form.get('multiSelect')?.value)"/>
+        <example-value [value]="$safeNavigationMigration(form.get('multiSelect')?.value)" />
         <div>Valid: {{ form.get('multiSelect')?.valid }}</div>
       </div>
     </div>

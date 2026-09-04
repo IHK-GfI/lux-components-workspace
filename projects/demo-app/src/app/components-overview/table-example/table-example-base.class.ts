@@ -76,7 +76,12 @@ export abstract class TableExampleBaseClass implements OnDestroy {
   readonly observeSelectedAsArrayChange = signal(true);
   nameConfig: ColumnConfig = new ColumnConfig({ label: 'Name', sticky: false });
   symbolConfig: ColumnConfig = new ColumnConfig({ label: 'Symbol' });
-  dateConfig: ColumnConfig = new ColumnConfig({ label: 'Datum', sticky: false,  responsiveAt: ['xs', 'sm', 'md'], responsiveBehaviour: ResponsiveBehaviour.COLUMN_HIDE });
+  dateConfig: ColumnConfig = new ColumnConfig({
+    label: 'Datum',
+    sticky: false,
+    responsiveAt: ['xs', 'sm', 'md'],
+    responsiveBehaviour: ResponsiveBehaviour.COLUMN_HIDE
+  });
   columnConfigs = [this.nameConfig, this.symbolConfig, this.dateConfig];
   dblClickSub?: OutputRefSubscription;
   readonly alignElementsTop = signal(false);

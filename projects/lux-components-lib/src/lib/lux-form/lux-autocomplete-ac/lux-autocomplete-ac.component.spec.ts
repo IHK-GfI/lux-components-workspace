@@ -983,7 +983,8 @@ class LuxAutoCompleteInFormAttributeComponent {
 @Component({
   selector: 'lux-value-attribute-component',
   template: `
-    <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict()"> </lux-autocomplete-ac>
+    <lux-autocomplete-ac luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict()">
+    </lux-autocomplete-ac>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteAcComponent]

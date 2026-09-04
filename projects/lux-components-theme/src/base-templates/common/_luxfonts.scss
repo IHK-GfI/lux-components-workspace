@@ -3,7 +3,8 @@
 @mixin font-definition($fontname, $url, $filename, $weight, $style: normal) {
   @font-face {
     font-family: $fontname;
-    src: url("#{$url}/#{$fontname}/WOFF2/#{$filename}-webfont.woff2") format("woff2"),
+    src:
+      url("#{$url}/#{$fontname}/WOFF2/#{$filename}-webfont.woff2") format("woff2"),
       url("#{$url}/#{$fontname}/WOFF/#{$filename}-webfont.woff") format("woff");
     font-weight: $weight;
     font-style: $style;

@@ -160,9 +160,7 @@
                     <ng-container *ngTemplateOutlet="tableColumn.header()?.tempRef() ?? null" />
                   </div>
                 }
-                <ng-container
-                  *ngTemplateOutlet="tableColumn.content()?.tempRef() ?? null; context: { $implicit: element, index: i }"
-                />
+                <ng-container *ngTemplateOutlet="tableColumn.content()?.tempRef() ?? null; context: { $implicit: element, index: i }" />
                 @if (hasMovedColumnsMap.has(tableColumn.luxColumnDef())) {
                   <div class="lux-mb-3"></div>
                 }

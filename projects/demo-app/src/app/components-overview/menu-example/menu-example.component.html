@@ -15,29 +15,31 @@
       luxTagId="demo-menu"
       #menu
     >
-      @for (item of menuItems; track item) { @if (item) {
-      <lux-menu-item
-        [luxIconName]="item.iconName"
-        [luxRaised]="item.raised"
-        [luxColor]="item.color"
-        [luxDisabled]="item.disabled"
-        [luxDisabledAria]="item.disabledAria ?? false"
-        [luxLabel]="item.label"
-        [luxButtonTooltip]="item.tooltip"
-        [luxMenuTooltip]="item.tooltipMenu"
-        [luxAlwaysVisible]="item.alwaysVisible"
-        [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
-        (luxClickNotAllowed)="log(showOutputEvents(), 'Item click not allowed (aria-disabled)', $event)"
-        [luxRounded]="item.round"
-        [luxHideLabelIfExtended]="item.hideLabelIfExtended"
-        [luxHidden]="item.hidden"
-        [luxPrio]="item.prio"
-        [luxClass]="item.class"
-        [luxButtonBadge]="item.buttonBadge"
-        [luxButtonBadgeColor]="item.buttonBadgeColor"
-       />
-      } }
+      @for (item of menuItems; track item) {
+        @if (item) {
+          <lux-menu-item
+            [luxIconName]="item.iconName"
+            [luxRaised]="item.raised"
+            [luxColor]="item.color"
+            [luxDisabled]="item.disabled"
+            [luxDisabledAria]="item.disabledAria ?? false"
+            [luxLabel]="item.label"
+            [luxButtonTooltip]="item.tooltip"
+            [luxMenuTooltip]="item.tooltipMenu"
+            [luxAlwaysVisible]="item.alwaysVisible"
+            [luxTagId]="item.label"
+            (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
+            (luxClickNotAllowed)="log(showOutputEvents(), 'Item click not allowed (aria-disabled)', $event)"
+            [luxRounded]="item.round"
+            [luxHideLabelIfExtended]="item.hideLabelIfExtended"
+            [luxHidden]="item.hidden"
+            [luxPrio]="item.prio"
+            [luxClass]="item.class"
+            [luxButtonBadge]="item.buttonBadge"
+            [luxButtonBadgeColor]="item.buttonBadgeColor"
+          />
+        }
+      }
     </lux-menu>
     <h3>Menu Panel Gruppen</h3>
     <lux-menu
@@ -51,67 +53,69 @@
       luxTagId="demo-menu-sections"
       [luxShowSections]="true"
     >
-      <lux-menu-panel-header
-        [luxTitle]="menuSectionHeaderTitle()"
-        [luxSubtitle]="menuSectionHeaderSubtitle()"
-        #menuSection
-       />
+      <lux-menu-panel-header [luxTitle]="menuSectionHeaderTitle()" [luxSubtitle]="menuSectionHeaderSubtitle()" #menuSection />
       <lux-divider #menuSection />
       <lux-menu-section-title [luxTitle]="menuSectionTitle()" #menuSection />
-      @for (item of menuItemsSections; track item; let i = $index) { @if (item && i < 3) {
-      <lux-menu-item
-        [luxIconName]="item.iconName"
-        [luxColor]="item.color"
-        [luxDisabled]="item.disabled"
-        [luxLabel]="item.label"
-        [luxMenuTooltip]="item.tooltipMenu"
-        [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
-        [luxHidden]="item.hidden"
-        [luxClass]="item.class"
-        [luxButtonBadge]="item.buttonBadge"
-        [luxButtonBadgeColor]="item.buttonBadgeColor"
-        [luxMenuItemSelected]="item.selected ?? false"
-        #menuSection
-       />
-      }}
+      @for (item of menuItemsSections; track item; let i = $index) {
+        @if (item && i < 3) {
+          <lux-menu-item
+            [luxIconName]="item.iconName"
+            [luxColor]="item.color"
+            [luxDisabled]="item.disabled"
+            [luxLabel]="item.label"
+            [luxMenuTooltip]="item.tooltipMenu"
+            [luxTagId]="item.label"
+            (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
+            [luxHidden]="item.hidden"
+            [luxClass]="item.class"
+            [luxButtonBadge]="item.buttonBadge"
+            [luxButtonBadgeColor]="item.buttonBadgeColor"
+            [luxMenuItemSelected]="item.selected ?? false"
+            #menuSection
+          />
+        }
+      }
       <lux-divider #menuSection />
       <lux-menu-section-title [luxTitle]="menuSectionTitle2()" #menuSection />
-      @for (item of menuItemsSections; track item; let i = $index) { @if (item && i > 2 && i < 5) {
-      <lux-menu-item
-        [luxIconName]="item.iconName"
-        [luxColor]="item.color"
-        [luxDisabled]="item.disabled"
-        [luxLabel]="item.label"
-        [luxMenuTooltip]="item.tooltipMenu"
-        [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
-        [luxHidden]="item.hidden"
-        [luxClass]="item.class"
-        [luxButtonBadge]="item.buttonBadge"
-        [luxButtonBadgeColor]="item.buttonBadgeColor"
-        [luxMenuItemSelected]="item.selected ?? false"
-        #menuSection
-       />
-      }}
+      @for (item of menuItemsSections; track item; let i = $index) {
+        @if (item && i > 2 && i < 5) {
+          <lux-menu-item
+            [luxIconName]="item.iconName"
+            [luxColor]="item.color"
+            [luxDisabled]="item.disabled"
+            [luxLabel]="item.label"
+            [luxMenuTooltip]="item.tooltipMenu"
+            [luxTagId]="item.label"
+            (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
+            [luxHidden]="item.hidden"
+            [luxClass]="item.class"
+            [luxButtonBadge]="item.buttonBadge"
+            [luxButtonBadgeColor]="item.buttonBadgeColor"
+            [luxMenuItemSelected]="item.selected ?? false"
+            #menuSection
+          />
+        }
+      }
       <lux-divider #menuSection />
-      @for (item of menuItemsSections; track item; let i = $index) { @if (item && i >= 5) {
-      <lux-menu-item
-        [luxIconName]="item.iconName"
-        [luxColor]="item.color"
-        [luxDisabled]="item.disabled"
-        [luxLabel]="item.label"
-        [luxMenuTooltip]="item.tooltipMenu"
-        [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
-        [luxHidden]="item.hidden"
-        [luxClass]="item.class"
-        [luxButtonBadge]="item.buttonBadge"
-        [luxButtonBadgeColor]="item.buttonBadgeColor"
-        [luxMenuItemSelected]="item.selected ?? false"
-        #menuSection
-       />
-      }}
+      @for (item of menuItemsSections; track item; let i = $index) {
+        @if (item && i >= 5) {
+          <lux-menu-item
+            [luxIconName]="item.iconName"
+            [luxColor]="item.color"
+            [luxDisabled]="item.disabled"
+            [luxLabel]="item.label"
+            [luxMenuTooltip]="item.tooltipMenu"
+            [luxTagId]="item.label"
+            (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
+            [luxHidden]="item.hidden"
+            [luxClass]="item.class"
+            [luxButtonBadge]="item.buttonBadge"
+            [luxButtonBadgeColor]="item.buttonBadgeColor"
+            [luxMenuItemSelected]="item.selected ?? false"
+            #menuSection
+          />
+        }
+      }
     </lux-menu>
     <h3>Menu Panel Large</h3>
     <lux-menu
@@ -127,44 +131,48 @@
       [luxMenuPanelLarge]="true"
     >
       <lux-menu-section-title [luxTitle]="menuSectionTitleLarge()" #menuSection />
-      @for (item of menuItemsLarge; track item; let i = $index) { @if (item && i < 3) {
-      <lux-menu-item
-        [luxIconName]="item.iconName"
-        [luxColor]="item.color"
-        [luxDisabled]="item.disabled"
-        [luxLabel]="item.label"
-        [luxMenuItemSubtitle]="item.subtitle"
-        [luxMenuTooltip]="item.tooltipMenu"
-        [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
-        [luxHidden]="item.hidden"
-        [luxClass]="item.class"
-        [luxButtonBadge]="item.buttonBadge"
-        [luxButtonBadgeColor]="item.buttonBadgeColor"
-        [luxMenuItemSelected]="item.selected"
-        #menuSection
-       />
-      }}
+      @for (item of menuItemsLarge; track item; let i = $index) {
+        @if (item && i < 3) {
+          <lux-menu-item
+            [luxIconName]="item.iconName"
+            [luxColor]="item.color"
+            [luxDisabled]="item.disabled"
+            [luxLabel]="item.label"
+            [luxMenuItemSubtitle]="item.subtitle"
+            [luxMenuTooltip]="item.tooltipMenu"
+            [luxTagId]="item.label"
+            (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
+            [luxHidden]="item.hidden"
+            [luxClass]="item.class"
+            [luxButtonBadge]="item.buttonBadge"
+            [luxButtonBadgeColor]="item.buttonBadgeColor"
+            [luxMenuItemSelected]="item.selected"
+            #menuSection
+          />
+        }
+      }
       <lux-divider #menuSection />
       <lux-menu-section-title [luxTitle]="menuSectionTitleLarge2()" #menuSection />
-      @for (item of menuItemsLarge; track item; let i = $index) { @if (item && i >= 3) {
-      <lux-menu-item
-        [luxIconName]="item.iconName"
-        [luxColor]="item.color"
-        [luxDisabled]="item.disabled"
-        [luxLabel]="item.label"
-        [luxMenuItemSubtitle]="item.subtitle"
-        [luxMenuTooltip]="item.tooltipMenu"
-        [luxTagId]="item.label"
-        (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
-        [luxHidden]="item.hidden"
-        [luxClass]="item.class"
-        [luxButtonBadge]="item.buttonBadge"
-        [luxButtonBadgeColor]="item.buttonBadgeColor"
-        [luxMenuItemSelected]="item.selected"
-        #menuSection
-       />
-      }}
+      @for (item of menuItemsLarge; track item; let i = $index) {
+        @if (item && i >= 3) {
+          <lux-menu-item
+            [luxIconName]="item.iconName"
+            [luxColor]="item.color"
+            [luxDisabled]="item.disabled"
+            [luxLabel]="item.label"
+            [luxMenuItemSubtitle]="item.subtitle"
+            [luxMenuTooltip]="item.tooltipMenu"
+            [luxTagId]="item.label"
+            (luxClicked)="log(showOutputEvents(), 'Item clicked', $event)"
+            [luxHidden]="item.hidden"
+            [luxClass]="item.class"
+            [luxButtonBadge]="item.buttonBadge"
+            [luxButtonBadgeColor]="item.buttonBadgeColor"
+            [luxMenuItemSelected]="item.selected"
+            #menuSection
+          />
+        }
+      }
     </lux-menu>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -178,17 +186,17 @@
       luxLabel="luxMenuLabel"
       luxHint="Diese Property ermöglicht es, das Label für das Menu zu ändern."
       [(luxValue)]="menuLabel"
-     />
+    />
     <lux-input-ac
       luxLabel="luxMenuIconName"
       luxHint="Diese Property ermöglicht es, das Icon für das Menu zu ändern."
       [(luxValue)]="iconName"
-     />
+    />
     <lux-toggle-ac
       luxLabel="luxMenuTriggerIconShowRight"
       luxHint="Die Property ermöglicht es, das Triggericon des Menüs rechts vom Label (siehe luxMenuLabel) darzustellen."
       [(luxChecked)]="menuTriggerIconShowRight"
-     />
+    />
     <lux-input-ac luxLabel="luxClassName" [(luxValue)]="className">
       <lux-form-hint>
         Über diese Property lassen sich CSS-Klassen für das ausgeklappte Menu setzen.
@@ -202,14 +210,14 @@
                   ausgeklappt angezeigten Menueinträgen darzustellen."
       [(luxChecked)]="displayMenuLeft"
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-toggle-ac
       luxLabel="luxDisplayExtended"
       luxHint="Diese Property bestimmt, ob Menu-Einträge bei ausreichend Platz außerhalb des
                   Menus dargestellt werden können."
       [(luxChecked)]="displayExtended"
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-input-ac
       luxLabel="luxMaximumExtended"
       luxHint="Die Property stellt ein wie viele Menu-Einträge maximal außerhalb des Menus dargestellt werden dürfen."
@@ -217,104 +225,104 @@
       luxType="number"
       [luxNumberAlignLeft]="true"
       [luxDisabled]="!displayExtended()"
-     />
+    />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>LuxMenuItemComponent</h3>
     <lux-accordion luxMode="flat" [luxMulti]="false">
       @for (item of menuItems; track item; let i = $index) {
-      <lux-panel>
-        <lux-panel-header-description>
-          <h4>Optionen - MenuItem #{{ i }}</h4>
-        </lux-panel-header-description>
-        <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
-          <lux-input-ac
-            luxLabel="luxLabel"
-            luxHint="Diese Property ermöglicht es, das Label eines Menu-Eintrags zu ändern."
-            [(luxValue)]="item.label"
-           />
-          <lux-input-ac
-            luxLabel="luxPrio"
-            luxHint="Diese Property ermöglicht es, die Anzeigereihenfolge zu beeinflussen."
-            [(luxValue)]="item.prio"
-           />
-          <lux-input-ac luxLabel="luxButtonTooltip" luxHint="Wenn als Button dargestellt" [(luxValue)]="item.tooltip" />
-          <lux-input-ac luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(luxValue)]="item.tooltipMenu" />
-          <lux-input-ac
-            luxLabel="luxIconName"
-            luxHint="Über diese Property kann ein Icon für den Menu-Eintrag eingerichtet werden."
-            [(luxValue)]="item.iconName"
-           />
-          <lux-select-ac
-            luxLabel="luxColor"
-            luxHint="Die Property ermöglicht die Einstellung der Farbe für diesen Eintrag."
-            [(luxSelected)]="item.color"
-            [luxOptions]="['primary', 'warn', 'accent']"
-           />
-          <lux-toggle-ac
-            luxLabel="luxRaised"
-            luxHint="Dieses Flag schaltet die hervorgehobene Darstellung des Menu-Eintrags ein."
-            [(luxChecked)]="item.raised"
-            [luxNoTopLabel]="true"
-           />
-          <lux-toggle-ac
-            luxLabel="luxDisabled"
-            luxHint="Über dieses Flag wird der Eintrag deaktiviert."
-            [(luxChecked)]="item.disabled"
-            [luxNoTopLabel]="true"
-           />
-          <div class="lux-flex lux-items-center lux-gap-2">
-            <lux-toggle-ac class="lux-flex-auto" luxLabel="luxDisabledAria" [(luxChecked)]="item.disabledAria" [luxNoTopLabel]="true">
+        <lux-panel>
+          <lux-panel-header-description>
+            <h4>Optionen - MenuItem #{{ i }}</h4>
+          </lux-panel-header-description>
+          <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
+            <lux-input-ac
+              luxLabel="luxLabel"
+              luxHint="Diese Property ermöglicht es, das Label eines Menu-Eintrags zu ändern."
+              [(luxValue)]="item.label"
+            />
+            <lux-input-ac
+              luxLabel="luxPrio"
+              luxHint="Diese Property ermöglicht es, die Anzeigereihenfolge zu beeinflussen."
+              [(luxValue)]="item.prio"
+            />
+            <lux-input-ac luxLabel="luxButtonTooltip" luxHint="Wenn als Button dargestellt" [(luxValue)]="item.tooltip" />
+            <lux-input-ac luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(luxValue)]="item.tooltipMenu" />
+            <lux-input-ac
+              luxLabel="luxIconName"
+              luxHint="Über diese Property kann ein Icon für den Menu-Eintrag eingerichtet werden."
+              [(luxValue)]="item.iconName"
+            />
+            <lux-select-ac
+              luxLabel="luxColor"
+              luxHint="Die Property ermöglicht die Einstellung der Farbe für diesen Eintrag."
+              [(luxSelected)]="item.color"
+              [luxOptions]="['primary', 'warn', 'accent']"
+            />
+            <lux-toggle-ac
+              luxLabel="luxRaised"
+              luxHint="Dieses Flag schaltet die hervorgehobene Darstellung des Menu-Eintrags ein."
+              [(luxChecked)]="item.raised"
+              [luxNoTopLabel]="true"
+            />
+            <lux-toggle-ac
+              luxLabel="luxDisabled"
+              luxHint="Über dieses Flag wird der Eintrag deaktiviert."
+              [(luxChecked)]="item.disabled"
+              [luxNoTopLabel]="true"
+            />
+            <div class="lux-flex lux-items-center lux-gap-2">
+              <lux-toggle-ac class="lux-flex-auto" luxLabel="luxDisabledAria" [(luxChecked)]="item.disabledAria" [luxNoTopLabel]="true">
+                <lux-form-hint>
+                  Über dieses Flag wird der Eintrag wahrnehmbar deaktiviert (aria-disabled): Er bleibt sichtbar und fokussierbar, die Aktion
+                  wird aber nicht ausgeführt. Statt luxClicked wird luxClickNotAllowed emittiert (siehe Console-Log).
+                </lux-form-hint>
+              </lux-toggle-ac>
+              <app-status-marker [markerType]="markerTypeNew" />
+            </div>
+            <lux-toggle-ac
+              luxLabel="luxHidden"
+              luxHint="Über dieses Flag wird der Eintrag ausgeblendet."
+              [(luxChecked)]="item.hidden"
+              [luxNoTopLabel]="true"
+            />
+            <lux-toggle-ac luxLabel="luxRounded" [(luxChecked)]="item.round" [luxNoTopLabel]="true">
               <lux-form-hint>
-                Über dieses Flag wird der Eintrag wahrnehmbar deaktiviert (aria-disabled): Er bleibt sichtbar und fokussierbar, die Aktion
-                wird aber nicht ausgeführt. Statt luxClicked wird luxClickNotAllowed emittiert (siehe Console-Log).
+                Über dieses Flag kann der Eintrag als Kreis dargestellt werden.
+                <br />
+                Sollte nur in Zusammenhang mit einem Icon ohne Text genutzt werden, da dieser sonst das Layout sprengt.
               </lux-form-hint>
             </lux-toggle-ac>
-            <app-status-marker [markerType]="markerTypeNew" />
-          </div>
-          <lux-toggle-ac
-            luxLabel="luxHidden"
-            luxHint="Über dieses Flag wird der Eintrag ausgeblendet."
-            [(luxChecked)]="item.hidden"
-            [luxNoTopLabel]="true"
-           />
-          <lux-toggle-ac luxLabel="luxRounded" [(luxChecked)]="item.round" [luxNoTopLabel]="true">
-            <lux-form-hint>
-              Über dieses Flag kann der Eintrag als Kreis dargestellt werden.
-              <br />
-              Sollte nur in Zusammenhang mit einem Icon ohne Text genutzt werden, da dieser sonst das Layout sprengt.
-            </lux-form-hint>
-          </lux-toggle-ac>
-          <lux-toggle-ac
-            luxLabel="luxAlwaysVisible"
-            [(luxChecked)]="item.alwaysVisible"
-            [luxDisabled]="!displayExtended()"
-            [luxNoTopLabel]="true"
-          >
-            <lux-form-hint>
-              Dieses Flag stellt sicher, das dieser Eintrag immer außerhalb des Menus dargestellt wird, solange der Platz noch ausreicht.<br />Andere
-              Einträge, die dieses Flag nicht gesetzt haben, werden dann zuerst ausgeblendet.
-            </lux-form-hint>
-          </lux-toggle-ac>
-          <lux-toggle-ac luxLabel="luxHideLabelIfExtended" [(luxChecked)]="item.hideLabelIfExtended" [luxNoTopLabel]="true">
-            <lux-form-hint>
-              Dieses Flag stellt ein ob das Label des MenuItems in der ausgeklappten Ansicht dargestellt werden soll oder nicht.
-            </lux-form-hint>
-          </lux-toggle-ac>
-          <lux-input-ac
-            luxLabel="luxButtonBadge"
-            luxHint="Diese Prooerty setzt das Label für eine Badge innerhalb des Buttons"
-            luxAutocomplete="off"
-            [(luxValue)]="item.buttonBadge"
-           />
-          <lux-select-ac
-            luxLabel="luxButtonBadgeColor"
-            luxHint="Die Property ermöglicht die Einstellung der Badgefarbe für diesen Eintrag."
-            [(luxSelected)]="item.buttonBadgeColor"
-            [luxOptions]="['primary', 'warn', 'accent']"
-           />
-        </lux-panel-content>
-      </lux-panel>
+            <lux-toggle-ac
+              luxLabel="luxAlwaysVisible"
+              [(luxChecked)]="item.alwaysVisible"
+              [luxDisabled]="!displayExtended()"
+              [luxNoTopLabel]="true"
+            >
+              <lux-form-hint>
+                Dieses Flag stellt sicher, das dieser Eintrag immer außerhalb des Menus dargestellt wird, solange der Platz noch
+                ausreicht.<br />Andere Einträge, die dieses Flag nicht gesetzt haben, werden dann zuerst ausgeblendet.
+              </lux-form-hint>
+            </lux-toggle-ac>
+            <lux-toggle-ac luxLabel="luxHideLabelIfExtended" [(luxChecked)]="item.hideLabelIfExtended" [luxNoTopLabel]="true">
+              <lux-form-hint>
+                Dieses Flag stellt ein ob das Label des MenuItems in der ausgeklappten Ansicht dargestellt werden soll oder nicht.
+              </lux-form-hint>
+            </lux-toggle-ac>
+            <lux-input-ac
+              luxLabel="luxButtonBadge"
+              luxHint="Diese Prooerty setzt das Label für eine Badge innerhalb des Buttons"
+              luxAutocomplete="off"
+              [(luxValue)]="item.buttonBadge"
+            />
+            <lux-select-ac
+              luxLabel="luxButtonBadgeColor"
+              luxHint="Die Property ermöglicht die Einstellung der Badgefarbe für diesen Eintrag."
+              [(luxSelected)]="item.buttonBadgeColor"
+              [luxOptions]="['primary', 'warn', 'accent']"
+            />
+          </lux-panel-content>
+        </lux-panel>
       }
     </lux-accordion>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -327,7 +335,7 @@
         luxLabel="luxTitle"
         luxHint="Diese Property ermöglicht es, den Titel (Benutzername) des Panel Headers zu ändern."
         [(luxValue)]="menuSectionHeaderTitle"
-       />
+      />
       <app-status-marker [markerType]="markerTypeNew" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -336,73 +344,73 @@
         luxLabel="luxSubtitle"
         luxHint="Diese Property ermöglicht es, den Untertitel (Email) des Panel Headers zu ändern."
         [(luxValue)]="menuSectionHeaderSubtitle"
-       />
+      />
       <app-status-marker [markerType]="markerTypeNew" />
     </div>
     <lux-input-ac
       luxLabel="luxTitle"
       luxHint="Diese Property ermöglicht es, die erste Überschrift im 1. Panel zu ändern."
       [(luxValue)]="menuSectionTitle"
-     />
+    />
     <lux-input-ac
       luxLabel="luxTitle"
       luxHint="Diese Property ermöglicht es, die zweite Überschrift im 1. Panel zu ändern."
       [(luxValue)]="menuSectionTitle2"
-     />
+    />
     <lux-accordion luxMode="flat" [luxMulti]="false">
       @for (item of menuItemsSections; track item; let i = $index) {
-      <lux-panel>
-        <lux-panel-header-description>
-          <h4>Optionen - MenuItem #{{ i }}</h4>
-        </lux-panel-header-description>
-        <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
-          <lux-input-ac
-            luxLabel="luxLabel"
-            luxHint="Diese Property ermöglicht es, das Label eines Menu-Eintrags zu ändern."
-            [(luxValue)]="item.label"
-           />
-          <lux-input-ac luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(luxValue)]="item.tooltipMenu" />
-          <lux-input-ac
-            luxLabel="luxIconName"
-            luxHint="Über diese Property kann ein Icon für den Menu-Eintrag eingerichtet werden."
-            [(luxValue)]="item.iconName"
-           />
-          <lux-select-ac
-            luxLabel="luxColor"
-            luxHint="Die Property ermöglicht die Einstellung der Farbe für diesen Eintrag."
-            [(luxSelected)]="item.color"
-            [luxOptions]="['primary', 'warn', 'accent']"
-           />
-          <lux-toggle-ac
-            luxLabel="luxDisabled"
-            luxHint="Über dieses Flag wird der Eintrag deaktiviert."
-            [(luxChecked)]="item.disabled"
-            [luxNoTopLabel]="true"
-           />
-          <lux-toggle-ac
-            luxLabel="luxHidden"
-            luxHint="Über dieses Flag wird der Eintrag ausgeblendet."
-            [(luxChecked)]="item.hidden"
-            [luxNoTopLabel]="true"
-           />
-          <lux-input-ac
-            luxLabel="luxButtonBadge"
-            luxHint="Diese Property setzt das Label für eine Badge innerhalb des Buttons"
-            luxAutocomplete="off"
-            [(luxValue)]="item.buttonBadge"
-           />
-          <div class="lux-flex lux-items-center lux-gap-2">
+        <lux-panel>
+          <lux-panel-header-description>
+            <h4>Optionen - MenuItem #{{ i }}</h4>
+          </lux-panel-header-description>
+          <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
+            <lux-input-ac
+              luxLabel="luxLabel"
+              luxHint="Diese Property ermöglicht es, das Label eines Menu-Eintrags zu ändern."
+              [(luxValue)]="item.label"
+            />
+            <lux-input-ac luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(luxValue)]="item.tooltipMenu" />
+            <lux-input-ac
+              luxLabel="luxIconName"
+              luxHint="Über diese Property kann ein Icon für den Menu-Eintrag eingerichtet werden."
+              [(luxValue)]="item.iconName"
+            />
+            <lux-select-ac
+              luxLabel="luxColor"
+              luxHint="Die Property ermöglicht die Einstellung der Farbe für diesen Eintrag."
+              [(luxSelected)]="item.color"
+              [luxOptions]="['primary', 'warn', 'accent']"
+            />
             <lux-toggle-ac
-              class="lux-flex-auto"
-              luxLabel="luxMenuItemSelected"
-              luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
-              [(luxChecked)]="item.selected"
+              luxLabel="luxDisabled"
+              luxHint="Über dieses Flag wird der Eintrag deaktiviert."
+              [(luxChecked)]="item.disabled"
               [luxNoTopLabel]="true"
-             />
-            <app-status-marker [markerType]="markerTypeNew" />
-          </div>
-        </lux-panel-content>
-      </lux-panel>
+            />
+            <lux-toggle-ac
+              luxLabel="luxHidden"
+              luxHint="Über dieses Flag wird der Eintrag ausgeblendet."
+              [(luxChecked)]="item.hidden"
+              [luxNoTopLabel]="true"
+            />
+            <lux-input-ac
+              luxLabel="luxButtonBadge"
+              luxHint="Diese Property setzt das Label für eine Badge innerhalb des Buttons"
+              luxAutocomplete="off"
+              [(luxValue)]="item.buttonBadge"
+            />
+            <div class="lux-flex lux-items-center lux-gap-2">
+              <lux-toggle-ac
+                class="lux-flex-auto"
+                luxLabel="luxMenuItemSelected"
+                luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
+                [(luxChecked)]="item.selected"
+                [luxNoTopLabel]="true"
+              />
+              <app-status-marker [markerType]="markerTypeNew" />
+            </div>
+          </lux-panel-content>
+        </lux-panel>
       }
     </lux-accordion>
     <h3>LuxMenuItemComponentLarge</h3>
@@ -410,71 +418,71 @@
       luxLabel="luxTitle"
       luxHint="Diese Property ermöglicht es, die erste Überschrift im zweiten Panel zu ändern."
       [(luxValue)]="menuSectionTitleLarge"
-     />
+    />
     <lux-input-ac
       luxLabel="luxTitle"
       luxHint="Diese Property ermöglicht es, die zweite Überschrift im zweiten Panel zu ändern."
       [(luxValue)]="menuSectionTitleLarge2"
-     />
+    />
     <lux-accordion luxMode="flat" [luxMulti]="false">
       @for (item of menuItemsLarge; track item; let i = $index) {
-      <lux-panel>
-        <lux-panel-header-description>
-          <h4>Optionen - MenuItem #{{ i }}</h4>
-        </lux-panel-header-description>
-        <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
-          <lux-input-ac
-            luxLabel="luxLabel"
-            luxHint="Diese Property ermöglicht es, das Label eines Menu-Eintrags zu ändern."
-            [(luxValue)]="item.label"
-           />
-          <div class="lux-flex lux-items-center lux-gap-2">
+        <lux-panel>
+          <lux-panel-header-description>
+            <h4>Optionen - MenuItem #{{ i }}</h4>
+          </lux-panel-header-description>
+          <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-mt-3">
             <lux-input-ac
-              class="lux-flex-auto"
-              luxLabel="luxMenuItemSubtitle"
-              luxHint="Diese Property ermöglicht es, das Untertitel eines Menu-Eintrags zu ändern."
-              [(luxValue)]="item.subtitle"
-             />
-            <app-status-marker [markerType]="markerTypeNew" />
-          </div>
-          <lux-input-ac luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(luxValue)]="item.tooltipMenu" />
-          <lux-input-ac
-            luxLabel="luxIconName"
-            luxHint="Über diese Property kann ein Icon für den Menu-Eintrag eingerichtet werden."
-            [(luxValue)]="item.iconName"
-           />
-          <lux-select-ac
-            luxLabel="luxColor"
-            luxHint="Die Property ermöglicht die Einstellung der Farbe für diesen Eintrag."
-            [(luxSelected)]="item.color"
-            [luxOptions]="['primary', 'warn', 'accent']"
-           />
-          <lux-toggle-ac
-            luxLabel="luxDisabled"
-            luxHint="Über dieses Flag wird der Eintrag deaktiviert."
-            [(luxChecked)]="item.disabled"
-            [luxNoTopLabel]="true"
-           />
-          <lux-toggle-ac
-            luxLabel="luxHidden"
-            luxHint="Über dieses Flag wird der Eintrag ausgeblendet."
-            [(luxChecked)]="item.hidden"
-            [luxNoTopLabel]="true"
-           />
-          <lux-input-ac
-            luxLabel="luxButtonBadge"
-            luxHint="Diese Property setzt das Label für eine Badge innerhalb des Buttons"
-            luxAutocomplete="off"
-            [(luxValue)]="item.buttonBadge"
-           />
-          <lux-toggle-ac
-            luxLabel="luxMenuItemSelected"
-            luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
-            [(luxChecked)]="item.selected"
-            [luxNoTopLabel]="true"
-           />
-        </lux-panel-content>
-      </lux-panel>
+              luxLabel="luxLabel"
+              luxHint="Diese Property ermöglicht es, das Label eines Menu-Eintrags zu ändern."
+              [(luxValue)]="item.label"
+            />
+            <div class="lux-flex lux-items-center lux-gap-2">
+              <lux-input-ac
+                class="lux-flex-auto"
+                luxLabel="luxMenuItemSubtitle"
+                luxHint="Diese Property ermöglicht es, das Untertitel eines Menu-Eintrags zu ändern."
+                [(luxValue)]="item.subtitle"
+              />
+              <app-status-marker [markerType]="markerTypeNew" />
+            </div>
+            <lux-input-ac luxLabel="luxMenuTooltip" luxHint="Wenn im Menü dargestellt" [(luxValue)]="item.tooltipMenu" />
+            <lux-input-ac
+              luxLabel="luxIconName"
+              luxHint="Über diese Property kann ein Icon für den Menu-Eintrag eingerichtet werden."
+              [(luxValue)]="item.iconName"
+            />
+            <lux-select-ac
+              luxLabel="luxColor"
+              luxHint="Die Property ermöglicht die Einstellung der Farbe für diesen Eintrag."
+              [(luxSelected)]="item.color"
+              [luxOptions]="['primary', 'warn', 'accent']"
+            />
+            <lux-toggle-ac
+              luxLabel="luxDisabled"
+              luxHint="Über dieses Flag wird der Eintrag deaktiviert."
+              [(luxChecked)]="item.disabled"
+              [luxNoTopLabel]="true"
+            />
+            <lux-toggle-ac
+              luxLabel="luxHidden"
+              luxHint="Über dieses Flag wird der Eintrag ausgeblendet."
+              [(luxChecked)]="item.hidden"
+              [luxNoTopLabel]="true"
+            />
+            <lux-input-ac
+              luxLabel="luxButtonBadge"
+              luxHint="Diese Property setzt das Label für eine Badge innerhalb des Buttons"
+              luxAutocomplete="off"
+              [(luxValue)]="item.buttonBadge"
+            />
+            <lux-toggle-ac
+              luxLabel="luxMenuItemSelected"
+              luxHint="Dieses Flag schaltet die Auswahl des Menu-Eintrags ein oder aus."
+              [(luxChecked)]="item.selected"
+              [luxNoTopLabel]="true"
+            />
+          </lux-panel-content>
+        </lux-panel>
       }
     </lux-accordion>
   </example-base-advanced-options>

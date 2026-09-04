@@ -1,12 +1,27 @@
 import { Component, ChangeDetectionStrategy, input, model } from '@angular/core';
-import { LuxCardComponent, LuxCardContentComponent, LuxDividerComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import {
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxDividerComponent,
+  LuxInputAcComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 
 @Component({
   selector: 'detail-example',
   templateUrl: './detail-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxDividerComponent, LuxCardContentComponent, LuxCardComponent, LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, StatusMarkerComponent]
+  imports: [
+    LuxDividerComponent,
+    LuxCardContentComponent,
+    LuxCardComponent,
+    LuxToggleAcComponent,
+    LuxSelectAcComponent,
+    LuxInputAcComponent,
+    StatusMarkerComponent
+  ]
 })
 export class DetailExampleComponent {
   readonly selectedDetail = input<any>();

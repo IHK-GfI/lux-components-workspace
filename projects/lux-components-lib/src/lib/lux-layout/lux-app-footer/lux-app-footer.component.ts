@@ -32,7 +32,16 @@ import { LuxAppFooterLinkService } from './lux-app-footer-link.service';
   selector: 'lux-app-footer',
   templateUrl: './lux-app-footer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxAriaRoleDirective, LuxAriaLabelDirective, NgClass, NgStyle, LuxLinkComponent, LuxMenuComponent, LuxMenuItemComponent, TranslocoPipe]
+  imports: [
+    LuxAriaRoleDirective,
+    LuxAriaLabelDirective,
+    NgClass,
+    NgStyle,
+    LuxLinkComponent,
+    LuxMenuComponent,
+    LuxMenuItemComponent,
+    TranslocoPipe
+  ]
 })
 export class LuxAppFooterComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly luxVersion = input<string | undefined>();
@@ -79,7 +88,9 @@ export class LuxAppFooterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.desktopView.set(this.mediaObserver.isSM() || this.mediaObserver.isMD() || this.mediaObserver.isLG() || this.mediaObserver.isXL());
     this.subscriptions.push(
       this.mediaObserver.getMediaQueryChangedAsObservable().subscribe(() => {
-        this.desktopView.set(this.mediaObserver.isSM() || this.mediaObserver.isMD() || this.mediaObserver.isLG() || this.mediaObserver.isXL());
+        this.desktopView.set(
+          this.mediaObserver.isSM() || this.mediaObserver.isMD() || this.mediaObserver.isLG() || this.mediaObserver.isXL()
+        );
       })
     );
 

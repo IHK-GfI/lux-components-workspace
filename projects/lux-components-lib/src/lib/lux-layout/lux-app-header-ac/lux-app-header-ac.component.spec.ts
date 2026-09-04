@@ -9,13 +9,12 @@ import { LuxAppHeaderAcComponent } from './lux-app-header-ac.component';
 declare const viewport: Viewport;
 
 describe('LuxAppHeaderAcComponent', () => {
-  
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
   });
-  
+
   describe('luxClicked', () => {
     it('App-Title sollte angezeigt werden ', fakeAsync(() => {
       viewport.set('desktop');

@@ -21,9 +21,10 @@
         (luxClicked)="log(showOutputEvents(), 'Tile clicked', $event)"
       >
         @if (showIcon()) {
-        <lux-icon luxIconName="lux-interface-weather-sun-1"></lux-icon>
-        } @if (!showIcon()) {
-        <lux-image luxImageSrc="assets/svg/Example.svg" luxImageWidth="50px" luxImageHeight="50px"></lux-image>
+          <lux-icon luxIconName="lux-interface-weather-sun-1"></lux-icon>
+        }
+        @if (!showIcon()) {
+          <lux-image luxImageSrc="assets/svg/Example.svg" luxImageWidth="50px" luxImageHeight="50px"></lux-image>
         }
       </lux-tile-ac>
     </div>

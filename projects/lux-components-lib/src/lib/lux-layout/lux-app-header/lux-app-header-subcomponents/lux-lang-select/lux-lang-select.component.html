@@ -7,12 +7,12 @@
     [luxDisplayExtended]="false"
   >
     @for (item of localeOptions; track item.label) {
-    <lux-menu-item
-      class="lux-lang-select-menu-item"
-      [luxLabel]="item.label"
-      luxIconName="lux-travel-map-rectangle-flag"
-      (luxClicked)="onLocaleChanged(item)"
-    />
+      <lux-menu-item
+        class="lux-lang-select-menu-item"
+        [luxLabel]="item.label"
+        luxIconName="lux-travel-map-rectangle-flag"
+        (luxClicked)="onLocaleChanged(item)"
+      />
     }
   </lux-menu>
 </div>

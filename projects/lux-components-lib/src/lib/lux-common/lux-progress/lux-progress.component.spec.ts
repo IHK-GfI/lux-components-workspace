@@ -126,7 +126,13 @@ describe('LuxProgressComponent', () => {
 
 @Component({
   selector: 'lux-mock-progress-bar',
-  template: `<lux-progress [luxType]="type()" [luxMode]="mode()" [luxColor]="color()" [luxSize]="size()" [luxValue]="value()"></lux-progress>`,
+  template: `<lux-progress
+    [luxType]="type()"
+    [luxMode]="mode()"
+    [luxColor]="color()"
+    [luxSize]="size()"
+    [luxValue]="value()"
+  ></lux-progress>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxProgressComponent]
 })

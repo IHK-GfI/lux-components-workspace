@@ -14,7 +14,8 @@
           luxTagId="demo-link"
           [luxHref]="href()"
           (luxClicked)="click($event)"
-          [luxBlank]="blank()" />
+          [luxBlank]="blank()"
+        />
         mit Icon im normalen Fließtext.
       </span>
       <h3>
@@ -27,7 +28,8 @@
           luxTagId="demo-link"
           [luxHref]="href()"
           (luxClicked)="click($event)"
-          [luxBlank]="blank()" />
+          [luxBlank]="blank()"
+        />
         in einer H3 mit einem Icon!
       </h3>
       <div>
@@ -41,7 +43,8 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/form"
-              (luxClicked)="click($event)" />
+              (luxClicked)="click($event)"
+            />
           </li>
           <li>
             <lux-link-plain
@@ -51,7 +54,8 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/components-overview"
-              (luxClicked)="click($event)" />
+              (luxClicked)="click($event)"
+            />
           </li>
           <li>
             <lux-link-plain
@@ -61,7 +65,8 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/baseline"
-              (luxClicked)="click($event)" />
+              (luxClicked)="click($event)"
+            />
           </li>
           <li>
             <lux-link-plain
@@ -71,7 +76,8 @@
               luxTagId="demo-link"
               [luxBlank]="false"
               luxHref="/configuration"
-              (luxClicked)="click($event)" />
+              (luxClicked)="click($event)"
+            />
           </li>
         </ul>
       </div>
@@ -91,7 +97,8 @@
           [luxBlank]="blank()"
           luxCustomClass="demo-extra-class"
           [luxIconShowRight]="true"
-          luxIconName="lux-programming-web" />
+          luxIconName="lux-programming-web"
+        />
         im Fließtext mit einer Custom-Style-Class.
       </span>
     </div>
@@ -113,7 +120,8 @@
       [(luxChecked)]="blank"
       luxLabel="luxBlank"
       luxHint="Diese Property bestimmt ob (externe) Links in einem neuen Tab geöffnet werden."
-      [luxNoTopLabel]="true" />
+      [luxNoTopLabel]="true"
+    />
 
     <lux-input-ac [(luxValue)]="label" luxLabel="luxLabel" luxHint="Bestimmt den Text, der für den Link angezeigt wird." />
     <lux-input-ac luxName="button_luxIconName" [(luxValue)]="iconName" luxLabel="luxIconName">

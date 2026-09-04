@@ -14,7 +14,15 @@ import { LuxAppHeaderAcNavMenuItemComponent } from './lux-app-header-ac-nav-menu
   selector: 'lux-app-header-ac-nav-menu',
   templateUrl: './lux-app-header-ac-nav-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, LuxAriaLabelDirective, LuxMenuItemComponent, LuxMenuTriggerComponent, LuxButtonComponent, LuxMenuComponent, TranslocoPipe]
+  imports: [
+    NgClass,
+    LuxAriaLabelDirective,
+    LuxMenuItemComponent,
+    LuxMenuTriggerComponent,
+    LuxButtonComponent,
+    LuxMenuComponent,
+    TranslocoPipe
+  ]
 })
 export class LuxAppHeaderAcNavMenuComponent implements OnDestroy {
   readonly luxNavMenuMaximumExtended = input(5);

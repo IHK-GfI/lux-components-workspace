@@ -12,5 +12,7 @@ export class LuxAppHeaderAcUserMenuComponent {
   readonly luxUseSectionsAndHeaderPanel = input<boolean>(false);
 
   readonly menuItemComponents = contentChildren(LuxMenuItemComponent);
-  readonly menuSectionComponents = contentChildren<LuxMenuItemComponent | LuxDividerComponent | LuxMenuSectionTitleComponent>('menuSection');
+  readonly menuSectionComponents = contentChildren<LuxMenuItemComponent | LuxDividerComponent | LuxMenuSectionTitleComponent>(
+    'menuSection'
+  );
 }

@@ -20,9 +20,10 @@
         [luxLabelTruncateAfterTwoLines]="truncateAfterTwoLines()"
       >
         @if (showIcon()) {
-        <lux-icon luxIconName="lux-camera-video" luxIconSize="1x"></lux-icon>
-        } @if (!showIcon()) {
-        <lux-image luxImageSrc="assets/svg/red_power_button.svg" luxImageWidth="50px" luxImageHeight="50px"></lux-image>
+          <lux-icon luxIconName="lux-camera-video" luxIconSize="1x"></lux-icon>
+        }
+        @if (!showIcon()) {
+          <lux-image luxImageSrc="assets/svg/red_power_button.svg" luxImageWidth="50px" luxImageHeight="50px"></lux-image>
         }
       </lux-tile>
     </div>
@@ -75,7 +76,6 @@
     <lux-input-ac
       luxLabel="luxCounterCap"
       [(luxValue)]="counterCap"
-
       [luxDisabled]="showNotification"
       luxType="number"
       [luxNumberAlignLeft]="true"

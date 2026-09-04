@@ -6,14 +6,14 @@
     <div class="lux-flex lux-flex-col lux-gap-4">
       <div class="lux-app-data-bg lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor() }">
         @for (color of colors; track color; let i = $index) {
-        <lux-progress
-          luxType="Progressbar"
-          luxTagId="pb-example-default{{ i }}"
-          [luxColor]="color"
-          [luxValue]="value()"
-          [luxMode]="mode()"
-          [luxSize]="size()"
-        />
+          <lux-progress
+            luxType="Progressbar"
+            luxTagId="pb-example-default{{ i }}"
+            [luxColor]="color"
+            [luxValue]="value()"
+            [luxMode]="mode()"
+            [luxSize]="size()"
+          />
         }
       </div>
     </div>
@@ -30,25 +30,25 @@
       [(luxSelected)]="mode"
       luxLabel="luxMode"
       luxHint="Die Property bestimmt ob die ProgressBar im Modus 'determinate' (= endlich) oder 'indeterminate' (= endlos) ist."
-     />
+    />
     <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
     </lux-input-ac>
     @if (mode() === 'determinate') {
-    <div class="lux-flex lux-flex-col lux-gap-2">
-      <lux-input-ac
-        class="lux-flex-auto"
-        luxLabel="luxValue"
-        luxHint="Diese Property setzt den Wert in dem ProgressBar, vorausgesetzt es ist im Modus 'determinate'"
-        luxType="number"
-        [(luxValue)]="value"
-        [luxNumberAlignLeft]="true"
-       />
-      <div class="lux-flex lux-flex-warp lux-gap-2">
-        <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true" />
-        <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true" />
+      <div class="lux-flex lux-flex-col lux-gap-2">
+        <lux-input-ac
+          class="lux-flex-auto"
+          luxLabel="luxValue"
+          luxHint="Diese Property setzt den Wert in dem ProgressBar, vorausgesetzt es ist im Modus 'determinate'"
+          luxType="number"
+          [(luxValue)]="value"
+          [luxNumberAlignLeft]="true"
+        />
+        <div class="lux-flex lux-flex-warp lux-gap-2">
+          <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true" />
+          <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true" />
+        </div>
       </div>
-    </div>
     }
   </example-base-simple-options>
 </example-base-structure>

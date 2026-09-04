@@ -153,15 +153,12 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     }
   });
 
-  readonly luxCompareWith = input<(o1: any, o2: any) => boolean, (o1: any, o2: any) => boolean>(
-    (o1: any, o2: any) => o1 === o2,
-    {
-      transform: (compareFn: (o1: any, o2: any) => boolean) => {
-        LuxUtil.assertNonNull('luxCompareWith', compareFn);
-        return compareFn;
-      }
+  readonly luxCompareWith = input<(o1: any, o2: any) => boolean, (o1: any, o2: any) => boolean>((o1: any, o2: any) => o1 === o2, {
+    transform: (compareFn: (o1: any, o2: any) => boolean) => {
+      LuxUtil.assertNonNull('luxCompareWith', compareFn);
+      return compareFn;
     }
-  );
+  });
 
   // Ersetzen die frühere .observed-Abfrage der obigen Outputs (output() hat kein Äquivalent) -
   // steuern sowohl die Cursor-Pointer-Darstellung der Row (siehe Template) als auch,

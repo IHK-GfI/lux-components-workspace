@@ -44,10 +44,7 @@
                   (keydown.enter)="onIconClicked(icon)"
                   [ngClass]="{ 'selected-item': icon === previewItem }"
                 >
-                  <lux-icon
-                    [luxIconName]="icon.iconName.split('--')[0].toLocaleLowerCase()"
-                    class="lux-color-blue"
-                    luxIconSize="2x" />
+                  <lux-icon [luxIconName]="icon.iconName.split('--')[0].toLocaleLowerCase()" class="lux-color-blue" luxIconSize="2x" />
                   <p class="icon-name">{{ icon.iconName.split('--')[0].toLocaleLowerCase() }}</p>
                 </div>
               </div>
@@ -78,30 +75,29 @@
                 <lux-icon
                   luxIconName="{{ previewItem.iconName.split('--')[0].toLowerCase() }}"
                   [luxIconSize]="iconSize"
-                  [class]="iconClass" />
+                  [class]="iconClass"
+                />
               }
               @if (previewItem && isBgColor) {
                 <lux-icon
                   luxIconName="{{ previewItem.iconName.split('--')[0].toLowerCase() }}"
                   [luxIconSize]="iconSize"
-                  [luxColor]="iconColor" />
+                  [luxColor]="iconColor"
+                />
               }
               @if (!previewItem) {
                 <p>Für die Vorschau ein Icon anklicken.</p>
               }
             </div>
-            <lux-select-ac
-              luxLabel="Icongröße"
-              [(luxSelected)]="iconSize"
-              [luxOptions]="iconSizesOptions"
-              [luxNoBottomLabel]="true" />
+            <lux-select-ac luxLabel="Icongröße" [(luxSelected)]="iconSize" [luxOptions]="iconSizesOptions" [luxNoBottomLabel]="true" />
             <lux-select-ac
               luxLabel="Farbwert"
               [luxOptions]="iconColorOptions"
               [luxSelected]="iconColorOptions[0]"
               luxOptionLabelProp="label"
               (luxSelectedChange)="onColorChanged($event)"
-              [luxNoBottomLabel]="true" />
+              [luxNoBottomLabel]="true"
+            />
             <lux-radio-ac
               luxTagId="Farbe"
               luxAriaLabel="Farbe"
@@ -110,7 +106,8 @@
               luxOptionLabelProp="label"
               [luxSelected]="fgBgOptions[0]"
               [luxOrientationVertical]="false"
-              (luxSelectedChange)="onBgChanged($event)" />
+              (luxSelectedChange)="onBgChanged($event)"
+            />
           </lux-card-content>
         </lux-card>
       }
@@ -122,7 +119,8 @@
               luxIconSize="1x"
               class="lux-color-blue copy-icon"
               luxTooltip="{{ copiedToClipboard() ? 'Kopiert!' : 'In die Zwischenablage kopieren.' }}"
-              (click)="onCopyToClipboard()" />
+              (click)="onCopyToClipboard()"
+            />
           </lux-card-info>
           <lux-card-content>
             <pre class="snippet">{{ codeSnippet() }}</pre>
@@ -161,6 +159,7 @@
       [luxOptions]="searchBindingOptions"
       [(luxSelected)]="selectedSearchBinding"
       [luxOrientationVertical]="false"
-      (luxSelectedChange)="onSearchBindingChanged()" />
+      (luxSelectedChange)="onSearchBindingChanged()"
+    />
   </div>
 </ng-template>

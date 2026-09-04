@@ -2,13 +2,13 @@ import { JsonPipe, NgClass, NgStyle } from '@angular/common';
 import { Component, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    LuxSelectAcComponent,
-    LuxSnackbarService,
-    LuxStepperLargeComponent,
-    LuxStepperLargeSelectionEvent,
-    LuxStepperLargeStepComponent,
-    LuxThemeService,
-    LuxToggleAcComponent
+  LuxSelectAcComponent,
+  LuxSnackbarService,
+  LuxStepperLargeComponent,
+  LuxStepperLargeSelectionEvent,
+  LuxStepperLargeStepComponent,
+  LuxThemeService,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { StepperLargeExampleDataService } from './stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from './stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';

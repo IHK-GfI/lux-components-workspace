@@ -37,7 +37,7 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         #test1
       />
-      <example-value [value]="value()" suffix="(ISO-Datum)"/>
+      <example-value [value]="value()" suffix="(ISO-Datum)" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
@@ -70,7 +70,7 @@
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
       />
-      <example-form-value [form]="form" [controlBinding]="controlBinding" suffix="(ISO-Datum)"/>
+      <example-form-value [form]="form" [controlBinding]="controlBinding" suffix="(ISO-Datum)" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -97,7 +97,7 @@
         (luxCheckedChange)="noTopLabel.set($event)"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -108,7 +108,7 @@
         (luxCheckedChange)="noBottomLabel.set($event)"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -119,7 +119,7 @@
         (luxCheckedChange)="noLabels.set($event)"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle-ac
       luxLabel="Output-Events loggen"
@@ -142,12 +142,7 @@
       [luxValue]="placeholder()"
       (luxValueChange)="placeholder.set($event)"
     />
-    <example-form-disable
-      [form]="form"
-      [controlBinding]="controlBinding"
-      [disabled]="disabled()"
-      (disabledChange)="disabled.set($event)"
-    />
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [disabled]="disabled()" (disabledChange)="disabled.set($event)" />
     <lux-toggle-ac
       [luxChecked]="readonly()"
       (luxCheckedChange)="readonly.set($event)"

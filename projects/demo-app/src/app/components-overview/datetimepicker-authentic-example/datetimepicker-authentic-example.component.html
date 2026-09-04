@@ -35,7 +35,7 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
       />
-      <example-value [value]="value()"/>
+      <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
@@ -68,7 +68,7 @@
         (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
         #test2
       />
-      <example-form-value [form]="form" [controlBinding]="controlBinding"/>
+      <example-form-value [form]="form" [controlBinding]="controlBinding" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -92,7 +92,7 @@
         [(luxChecked)]="noTopLabel"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -102,7 +102,7 @@
         [(luxChecked)]="noBottomLabel"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -112,7 +112,7 @@
         [(luxChecked)]="noLabels"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle-ac
       luxLabel="luxHintShowOnlyOnFocus"
@@ -132,7 +132,7 @@
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"/>
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
     <lux-toggle-ac
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
@@ -198,7 +198,7 @@
       [luxNoTopLabel]="true"
     />
     @if (useCustomFilter()) {
-    <pre class="lux-label"><b>customFilter</b> = {{ customFilterString }}</pre>
+      <pre class="lux-label"><b>customFilter</b> = {{ customFilterString }}</pre>
     }
     <lux-toggle-ac
       luxLabel="luxErrorMessage verwenden"
@@ -207,15 +207,15 @@
       [luxNoTopLabel]="true"
     />
     @if (useErrorMessage()) {
-    <lux-input-ac
-      luxName="datepicker_luxErrorMessage"
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <lux-input-ac
+        luxName="datepicker_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-    />
+        [(luxValue)]="errorMessage"
+      />
     } @else {
-    <pre class="lux-label">{{ errorCallbackString }}</pre>
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac
       [luxOptions]="validatorOptions"

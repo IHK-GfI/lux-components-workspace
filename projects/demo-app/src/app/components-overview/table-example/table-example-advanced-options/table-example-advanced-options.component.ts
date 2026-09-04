@@ -1,15 +1,15 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import {
-    LuxAccordionComponent,
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxFormLabelComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+  LuxAccordionComponent,
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxFormLabelComponent,
+  LuxInputAcComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { ResponsiveBehaviour } from '../responsive-behaviour';
 import { ResponsiveBehaviourFilteredPipe } from '../responsive-behaviour-filtered.pipe';

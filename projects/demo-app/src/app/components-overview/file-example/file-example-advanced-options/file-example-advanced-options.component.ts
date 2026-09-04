@@ -1,11 +1,11 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import {
-    LuxAccordionComponent,
-    LuxInputAcComponent,
-    LuxPanelComponent,
-    LuxPanelContentComponent,
-    LuxPanelHeaderTitleComponent,
-    LuxToggleAcComponent
+  LuxAccordionComponent,
+  LuxInputAcComponent,
+  LuxPanelComponent,
+  LuxPanelContentComponent,
+  LuxPanelHeaderTitleComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { FileExampleComponent } from '../file-example.component';
 

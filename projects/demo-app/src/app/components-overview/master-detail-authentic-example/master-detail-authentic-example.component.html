@@ -101,11 +101,7 @@
         <lux-tab luxTitle="Konfiguration" luxIconName="lux-interface-setting-tool-box">
           <ng-template>
             <detail-example [masterDetailConfig]="configuration" [(masterIsReloading)]="masterIsReloading" [selectedDetail]="detail">
-              <lux-toggle-ac
-                [(luxChecked)]="showCustomDetailHeader"
-                luxLabel="Custom Detail-Header anzeigen"
-                [luxNoLabels]="true"
-              />
+              <lux-toggle-ac [(luxChecked)]="showCustomDetailHeader" luxLabel="Custom Detail-Header anzeigen" [luxNoLabels]="true" />
             </detail-example>
           </ng-template>
         </lux-tab>

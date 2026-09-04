@@ -191,7 +191,7 @@ describe('LuxInfiniteScrollDirective', () => {
     Text
     <ul>
       @for (testText of testArr; track testText) {
-      <li>{{ testText }}</li>
+        <li>{{ testText }}</li>
       }
     </ul>
   </div>`,

@@ -1,24 +1,24 @@
 <!-- die tatsächlichen LuxListItems via Content-Projection einbinden -->
 @if (!isEmpty()) {
-<ng-content />
+  <ng-content />
 }
 <!-- wenn keine gefunden werden konnten, Empty-Icon und Empty-Label anzeigen -->
 @if (isEmpty()) {
-<div>
-  <div
-    class="lux-list-empty-container lux-flex lux-flex-col lux-place-content-center lux-items-center lux-p-2"
-    role="option"
-    aria-selected="false"
-  >
-    <lux-icon
-      class="lux-list-empty-icon lux-color-gray"
-      [luxIconName]="luxEmptyIconName()"
-      [luxIconSize]="luxEmptyIconSize()"
-      luxMargin="0 0 8 0"
-    />
-    <span class="lux-list-empty-icon-text">
-      {{ luxEmptyLabel() || ('luxc.list.empty_label' | transloco) }}
-    </span>
+  <div>
+    <div
+      class="lux-list-empty-container lux-flex lux-flex-col lux-place-content-center lux-items-center lux-p-2"
+      role="option"
+      aria-selected="false"
+    >
+      <lux-icon
+        class="lux-list-empty-icon lux-color-gray"
+        [luxIconName]="luxEmptyIconName()"
+        [luxIconSize]="luxEmptyIconSize()"
+        luxMargin="0 0 8 0"
+      />
+      <span class="lux-list-empty-icon-text">
+        {{ luxEmptyLabel() || ('luxc.list.empty_label' | transloco) }}
+      </span>
+    </div>
   </div>
-</div>
 }

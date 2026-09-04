@@ -37,7 +37,7 @@
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents(), 'luxSelectedChange', $event)"
         #defaultSelectComp
-       />
+      />
       <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col">
@@ -72,7 +72,7 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         #multiselectComp
-       />
+      />
       <example-value [value]="multiselectValue()" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
@@ -107,7 +107,7 @@
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents(), 'luxSelectedChange', $event)"
         #reactiveSelectComp
-       />
+      />
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
     </div>
     <div class="lux-flex lux-flex-col">
@@ -146,19 +146,19 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-input-ac
       luxName="select_luxLabel"
       luxLabel="luxLabel"
       luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
       [(luxValue)]="label"
-     />
+    />
     <lux-input-ac
       luxName="select_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(luxValue)]="hint"
-     />
+    />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
         class="lux-flex-auto"
@@ -166,7 +166,7 @@
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
         [(luxChecked)]="noTopLabel"
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -176,7 +176,7 @@
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
         [(luxChecked)]="noBottomLabel"
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -186,7 +186,7 @@
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
         [(luxChecked)]="noLabels"
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle-ac
@@ -194,13 +194,13 @@
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
       [(luxChecked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-input-ac
       luxName="select_luxPlaceholder"
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
       [(luxValue)]="placeholder"
-     />
+    />
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -208,7 +208,7 @@
         luxLabel="luxEnableFilter"
         luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeNew" />
     </div>
     @if (enableFilter()) {
@@ -219,7 +219,7 @@
           luxLabel="luxFilterPlaceholder"
           luxHint="Placeholder/Aria-Label des Filterfelds im Dropdown."
           [(luxValue)]="filterPlaceholder"
-         />
+        />
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
       <div class="lux-flex lux-items-center lux-gap-2">
@@ -229,7 +229,7 @@
           luxLabel="luxFilterValue"
           luxHint="Initialer Filterwert. Bei aktivem Filter wird der Clear-Button eingeblendet."
           [(luxValue)]="filterValue"
-         />
+        />
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
       <div class="lux-flex lux-items-center lux-gap-2">
@@ -239,7 +239,7 @@
           luxLabel="luxFilterClearAriaLabel"
           luxHint="Aria-Label/Label für den Clear-Button im Filterfeld."
           [(luxValue)]="filterClearAriaLabel"
-         />
+        />
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
       <div class="lux-flex lux-items-center lux-gap-2">
@@ -250,7 +250,7 @@
           luxHint="Begrenzt die Anzahl der sichtbaren Optionen im Dropdown. 0 verwendet die Standardhöhe."
           [(luxValue)]="visibleOptionCount"
           luxType="number"
-         />
+        />
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
     }
@@ -259,14 +259,14 @@
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
-     />
+    />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
         [(luxChecked)]="keepOptionOrder"
         luxLabel="luxKeepOptionOrder"
         luxHint="Behält die ursprüngliche Reihenfolge der Optionen bei. Selektierte Optionen werden nicht mehr an den Anfang der Liste sortiert."
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeNew" />
     </div>
     <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
@@ -280,7 +280,7 @@
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
-     />
+    />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac
@@ -323,7 +323,7 @@
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
       [(luxChecked)]="useErrorMessage"
       [luxNoTopLabel]="true"
-     />
+    />
     @if (useErrorMessage()) {
       <lux-input-ac
         luxName="select_luxErrorMessage"
@@ -340,7 +340,7 @@
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"
       [(luxChecked)]="labelLongFormat"
-     />
+    />
   </example-base-advanced-options>
   <example-base-options-actions>
     <div class="lux-flex lux-flex-wrap lux-gap-4">
@@ -349,13 +349,13 @@
         luxLabel="Werte resetten"
         (luxClicked)="reset(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
         class="lux-flex-none"
-       />
+      />
       <lux-button
         [luxStroked]="true"
         luxLabel="Fehler anzeigen"
         (luxClicked)="showErrors(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
         class="lux-flex-none"
-       />
+      />
     </div>
   </example-base-options-actions>
 </example-base-structure>

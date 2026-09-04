@@ -1,7 +1,7 @@
 @use "@angular/material" as mat;
 
 :root {
-   @include mat.datepicker-overrides(
+  @include mat.datepicker-overrides(
     (
       calendar-date-focus-state-background-color: var(--lux-theme-datepicker-panel-date-hover-background-color),
       calendar-date-selected-state-text-color: var(--lux-theme-datepicker-panel-date-selected-color),
@@ -17,8 +17,7 @@
       calendar-text-size: var(--lux-theme-datepicker-panel-font-size),
       calendar-body-label-text-size: var(--lux-theme-datepicker-panel-font-size),
       calendar-period-button-text-size: var(--lux-theme-datepicker-panel-font-size),
-      calendar-container-touch-shape: var(--lux-theme-datepicker-panel-shape),
-
+      calendar-container-touch-shape: var(--lux-theme-datepicker-panel-shape)
     )
   );
 }

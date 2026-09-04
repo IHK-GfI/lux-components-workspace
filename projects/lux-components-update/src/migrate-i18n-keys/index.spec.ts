@@ -25,7 +25,9 @@ describe('migrateI18nKeys', () => {
     appTree = await runner.runExternalSchematic(collection, 'workspace', workspaceOptions);
     appTree = await runner.runExternalSchematic(collection, 'application', appOptions, appTree);
 
-    context = runner.engine.createContext(runner.engine.createSchematic('migrate-i18n-keys', runner.engine.createCollection(collectionPath)));
+    context = runner.engine.createContext(
+      runner.engine.createSchematic('migrate-i18n-keys', runner.engine.createCollection(collectionPath))
+    );
 
     UtilConfig.defaultWaitMS = 0;
 
@@ -37,7 +39,7 @@ describe('migrateI18nKeys', () => {
   describe('[Rule] migrateI18nKeys', () => {
     it('Sollte den I18N-Tag in HTML-Dateien migrieren', (done) => {
       const fileHtml01 = (testOptions.path ?? '') + '/src/app/html01.html';
-      
+
       appTree.create(fileHtml01, html01);
 
       callRule(migrateI18nKeys(testOptions), appTree, context).subscribe({
@@ -53,7 +55,7 @@ describe('migrateI18nKeys', () => {
 
     it('Sollte das I18N-Attribut in HTML-Dateien migrieren', (done) => {
       const fileHtml02 = (testOptions.path ?? '') + '/src/app/html02.html';
-      
+
       appTree.create(fileHtml02, html02);
 
       callRule(migrateI18nKeys(testOptions), appTree, context).subscribe({

@@ -15,7 +15,7 @@ import {
   LuxLinkPlainComponent,
   LuxSelectAcComponent,
   LuxToggleAcComponent,
-    LuxValidators
+  LuxValidators
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';

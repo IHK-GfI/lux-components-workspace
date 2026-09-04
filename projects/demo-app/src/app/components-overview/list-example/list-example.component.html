@@ -61,7 +61,8 @@
                       class="lux-min-width-36 lux-max-width-36"
                       [luxDense]="true"
                       [luxNoLabels]="true"
-                      [(luxValue)]="item.title" />
+                      [(luxValue)]="item.title"
+                    />
                     <lux-autocomplete-ac
                       luxAriaLabel="Lorem ipsum"
                       luxAriaLabelSelector="input"
@@ -69,7 +70,8 @@
                       class="lux-min-width-36 lux-max-width-36"
                       [luxDense]="true"
                       [luxNoLabels]="true"
-                      [luxOptions]="['Label 1', 'Label 2']" />
+                      [luxOptions]="['Label 1', 'Label 2']"
+                    />
                     <lux-select-ac
                       luxAriaLabel="Lorem ipsum"
                       luxAriaLabelSelector="[role='combobox']"
@@ -77,7 +79,8 @@
                       class="lux-min-width-36 lux-max-width-36"
                       [luxOptions]="['Option 1', 'Option 2', 'Option 3']"
                       [luxDense]="true"
-                      [luxNoLabels]="true" />
+                      [luxNoLabels]="true"
+                    />
                     <lux-checkbox-ac luxLabel="Checkbox" [luxDense]="true" [luxNoLabels]="true" />
                     <lux-toggle-ac luxLabel="Toggle" [luxDense]="true" [luxNoLabels]="true" />
                     <lux-radio-ac
@@ -86,7 +89,8 @@
                       [luxGroupName]="'radio-' + i"
                       [luxDense]="true"
                       [luxNoLabels]="true"
-                      [luxOrientationVertical]="false" />
+                      [luxOrientationVertical]="false"
+                    />
                   </div>
                 }
                 @if (showRow3()) {
@@ -95,18 +99,21 @@
                       luxLabel="Bearbeiten"
                       luxColor="primary"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents(), 'Bearbeiten geklickt', item.title)" />
+                      (luxClicked)="log(showOutputEvents(), 'Bearbeiten geklickt', item.title)"
+                    />
                     <lux-link
                       luxHref="#"
                       luxLabel="Löschen"
                       luxColor="warn"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents(), 'Löschen geklickt', item.title)" />
+                      (luxClicked)="log(showOutputEvents(), 'Löschen geklickt', item.title)"
+                    />
                     <lux-link-plain
                       luxHref="#"
                       luxLabel="Link-Plain"
                       [luxStroked]="true"
-                      (luxClicked)="log(showOutputEvents(), 'Link-Plain geklickt', item.title)" />
+                      (luxClicked)="log(showOutputEvents(), 'Link-Plain geklickt', item.title)"
+                    />
                   </div>
                 }
               </div>
@@ -142,17 +149,20 @@
       luxLabel="Zeige Zeile 1 (mit Chips)"
       [(luxChecked)]="showRow1"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent()" />
+      [luxDisabled]="!showInteractiveContent()"
+    />
     <lux-toggle-ac
       luxLabel="Zeige Zeile 2 (mit Formularelementen)"
       [(luxChecked)]="showRow2"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent()" />
+      [luxDisabled]="!showInteractiveContent()"
+    />
     <lux-toggle-ac
       luxLabel="Zeige Zeile 3 (mit Buttons)"
       [(luxChecked)]="showRow3"
       [luxNoLabels]="true"
-      [luxDisabled]="!showInteractiveContent()" />
+      [luxDisabled]="!showInteractiveContent()"
+    />
     <div class="lux-flex lux-items-center">
       <lux-toggle-ac luxLabel="luxListItemCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true" />
       <app-status-marker />
@@ -161,23 +171,27 @@
       [(luxValue)]="emptyLabel"
       luxName="list_luxEmptyLabel"
       luxLabel="luxEmptyLabel"
-      luxHint="Diese Property stellt das Label ein, welches bei einer leeren Liste angezeigt werden soll." />
+      luxHint="Diese Property stellt das Label ein, welches bei einer leeren Liste angezeigt werden soll."
+    />
     <lux-input-ac
       [(luxValue)]="emptyIconName"
       luxName="list_luxEmptyIconName"
       luxLabel="luxEmptyIconName"
-      luxHint="Über diese Property wird das Icon bestimmt, das in einer leeren Liste angezeigt werden soll." />
+      luxHint="Über diese Property wird das Icon bestimmt, das in einer leeren Liste angezeigt werden soll."
+    />
     <lux-select-ac
       [(luxSelected)]="emptyIconSize"
       [luxOptions]="['1x', '2x', '3x', '4x', '5x']"
       luxLabel="luxEmptyIconSize"
-      luxHint="Über diese Property wird die Größe es luxEmptyIcons bestimmt." />
+      luxHint="Über diese Property wird die Größe es luxEmptyIcons bestimmt."
+    />
     <lux-input-ac
       [(luxValue)]="selectedPosition"
       luxName="list_luxSelectedPosition"
       luxLabel="luxSelectedPosition"
       luxHint="Diese Property bestimmt welches ListItem selektiert werden soll."
-      luxType="number" />
+      luxType="number"
+    />
   </example-base-simple-options>
   @if (items().length > 0) {
     <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
@@ -192,12 +206,14 @@
                 [(luxValue)]="item.title"
                 luxName="list_luxTitle"
                 luxLabel="luxTitle"
-                luxHint="Diese Property bestimmt den Titel des Items." />
+                luxHint="Diese Property bestimmt den Titel des Items."
+              />
               <lux-input-ac
                 [(luxValue)]="item.subTitle"
                 luxName="list_luxSubTitle"
                 luxLabel="luxSubTitle"
-                luxHint="Diese Property bestimmt den Untertitel (grau) des Items." />
+                luxHint="Diese Property bestimmt den Untertitel (grau) des Items."
+              />
               <lux-input-ac luxName="list_luxIconName" [(luxValue)]="item.iconName" luxLabel="luxIconName">
                 <lux-form-hint>
                   Der Name des Icons für dieses Item.<br />
@@ -209,7 +225,8 @@
                 luxLabel="luxTitleLineBreak"
                 luxHint="Dieses Flag bestimmt ob die Titel-Zeilen umgebrochen oder mit '...' abgekürzt werden."
                 [(luxChecked)]="item.lineBreak"
-                [luxNoTopLabel]="true" />
+                [luxNoTopLabel]="true"
+              />
               <lux-toggle-ac luxLabel="luxSelected" [(luxChecked)]="item.selected" [luxNoTopLabel]="true">
                 <lux-form-hint>
                   Mithilfe dieses Flags kann das Item hervorgehoben dargestellt werden.<br />

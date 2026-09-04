@@ -1,21 +1,24 @@
 @if (luxMessage(); as message) {
-<div class="lux-message-container" [ngClass]="['lux-messagebox-' + message.color, 'lux-messagebox-on-' + message.color]" luxAriaRole="listitem"
-  [class.lux-message-closing]="closing()"
-  (transitionend)="onTransitionEnd($event)"
->
-  @if (message.iconName) {
-  <lux-icon [luxIconName]="message.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon" />
-  } @else {
-  <div class="lux-message-icon"></div>
-  }
-  <p tabindex="0" class="lux-message-text">{{ message.text }}</p>
-  <lux-button
-    class="lux-close-message-btn"
-    [luxRounded]="true"
-    luxIconName="lux-interface-delete-1"
-    luxTagId="lux-message-box-close-btn"
-    (luxClicked)="close()"
-    luxAriaLabel="{{ 'luxc.message.btn.close.arialabel' | transloco }}"
-  />
-</div>
+  <div
+    class="lux-message-container"
+    [ngClass]="['lux-messagebox-' + message.color, 'lux-messagebox-on-' + message.color]"
+    luxAriaRole="listitem"
+    [class.lux-message-closing]="closing()"
+    (transitionend)="onTransitionEnd($event)"
+  >
+    @if (message.iconName) {
+      <lux-icon [luxIconName]="message.iconName" luxIconSize="1.25rem" luxPadding="0.25rem" class="lux-message-icon" />
+    } @else {
+      <div class="lux-message-icon"></div>
+    }
+    <p tabindex="0" class="lux-message-text">{{ message.text }}</p>
+    <lux-button
+      class="lux-close-message-btn"
+      [luxRounded]="true"
+      luxIconName="lux-interface-delete-1"
+      luxTagId="lux-message-box-close-btn"
+      (luxClicked)="close()"
+      luxAriaLabel="{{ 'luxc.message.btn.close.arialabel' | transloco }}"
+    />
+  </div>
 }

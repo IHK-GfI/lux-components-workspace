@@ -32,12 +32,7 @@
       />
       @if (luxShowToggle()) {
         <mat-datepicker-toggle [disabled]="luxDisabled() || luxReadonly()" [for]="datepicker" [disableRipple]="true">
-          <lux-icon
-            matDatepickerToggleIcon
-            luxIconName="lux-interface-calendar"
-            luxPadding="0px"
-            class="lux-datetimepicker-toggle-icon"
-          />
+          <lux-icon matDatepickerToggleIcon luxIconName="lux-interface-calendar" luxPadding="0px" class="lux-datetimepicker-toggle-icon" />
         </mat-datepicker-toggle>
       }
       <lux-datetime-overlay-ac

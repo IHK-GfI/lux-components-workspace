@@ -1,10 +1,10 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
-    LuxButtonComponent,
-    LuxDatepickerAcComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxRelativeTimestampPipe
+  LuxButtonComponent,
+  LuxDatepickerAcComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxRelativeTimestampPipe
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';

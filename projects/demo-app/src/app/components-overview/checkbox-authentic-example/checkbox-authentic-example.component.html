@@ -21,7 +21,7 @@
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
       />
-      <example-value [value]="value()"/>
+      <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
@@ -39,45 +39,25 @@
         [luxNoLabels]="noLabels()"
         [luxDense]="denseFormat()"
       />
-      <example-form-value [form]="form" [controlBinding]="controlBinding"/>
+      <example-form-value [form]="form" [controlBinding]="controlBinding" />
     </div>
     <div class="lux-mt-5">
       <lux-textbox luxTitle="Anwendungsbeispiel für luxNoTopLabel" luxIcon="lux-interface-favorite-like-1" luxColor="blue">
         <div [formGroup]="agb" class="lux-mt-4 demo-form">
           <h4>Bitte bestätigen Sie, dass Sie die folgenden Bedingungen gelesen haben:</h4>
-          <lux-checkbox-ac
-            [luxNoTopLabel]="true"
-            luxControlBinding="checkbox1"
-            luxLabel="{{ exampleText }}"
-            [luxDense]="denseFormat()"
-          />
-          <lux-checkbox-ac
-            [luxNoTopLabel]="true"
-            luxControlBinding="checkbox2"
-            luxLabel="{{ exampleText }}"
-            [luxDense]="denseFormat()"
-          />
-          <lux-checkbox-ac
-            [luxNoTopLabel]="true"
-            luxControlBinding="checkbox3"
-            luxLabel="{{ exampleText }}"
-            [luxDense]="denseFormat()"
-          />
+          <lux-checkbox-ac [luxNoTopLabel]="true" luxControlBinding="checkbox1" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
+          <lux-checkbox-ac [luxNoTopLabel]="true" luxControlBinding="checkbox2" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
+          <lux-checkbox-ac [luxNoTopLabel]="true" luxControlBinding="checkbox3" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
         </div>
         <div class="demo-button-row">
-          <lux-button
-            [luxStroked]="true"
-            luxColor="primary"
-            luxLabel="Formular zurücksetzen"
-            (luxClicked)="exampleValidator(false)"
-          />
-          <lux-button [luxFlat]="true" luxColor="primary" luxLabel="Weiter" (luxClicked)="exampleValidator(true)"/>
+          <lux-button [luxStroked]="true" luxColor="primary" luxLabel="Formular zurücksetzen" (luxClicked)="exampleValidator(false)" />
+          <lux-button [luxFlat]="true" luxColor="primary" luxLabel="Weiter" (luxClicked)="exampleValidator(true)" />
         </div>
       </lux-textbox>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label"/>
+    <lux-input-ac luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label" />
     <lux-input-ac
       luxName="checkbox_luxHint"
       luxLabel="luxHint"
@@ -92,7 +72,7 @@
         [(luxChecked)]="noTopLabel"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -102,7 +82,7 @@
         [(luxChecked)]="noBottomLabel"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
@@ -112,7 +92,7 @@
         [(luxChecked)]="noLabels"
         [luxNoTopLabel]="true"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle-ac
       luxName="checkbox_luxHintShowOnlyOnFocus"
@@ -139,6 +119,6 @@
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
     </lux-toggle-ac>
-    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"/>
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
   </example-base-simple-options>
 </example-base-structure>

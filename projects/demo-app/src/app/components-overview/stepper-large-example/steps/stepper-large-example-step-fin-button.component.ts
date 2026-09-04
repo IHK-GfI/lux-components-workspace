@@ -39,7 +39,10 @@ export class StepperLargeExampleStepFinButtonComponent extends LuxStepperLargeSt
 
     const finButtonConfig = this.dataService.finButtonConfig();
     this.form = new FormGroup<StepperLargeFinButtonDummyForm>({
-      label: new FormControl<string>(finButtonConfig.label ? finButtonConfig.label : 'Abschließen', { validators: Validators.required, nonNullable: true }),
+      label: new FormControl<string>(finButtonConfig.label ? finButtonConfig.label : 'Abschließen', {
+        validators: Validators.required,
+        nonNullable: true
+      }),
       iconName: new FormControl<string | undefined>(finButtonConfig.iconName, { nonNullable: true }),
       color: new FormControl<LuxThemePalette | undefined>(finButtonConfig.color, { nonNullable: true }),
       iconShowRight: new FormControl<boolean | undefined>(finButtonConfig.iconShowRight, { nonNullable: true }),

@@ -37,12 +37,14 @@
       luxLabel="disableClose"
       luxHint="Wenn aktiv, kann der Dialog nur über die Actions geschlossen werden."
       [(luxChecked)]="dialogConfig.disableClose"
-      [luxNoTopLabel]="true" />
+      [luxNoTopLabel]="true"
+    />
     <lux-toggle-ac
       luxLabel="disableBackdropAndEscClose"
       luxHint="Wenn aktiv, werden Backdrop-Klicks und die ESC-Taste ignoriert. Der X-Schließen-Button bleibt jedoch sichtbar."
       [(luxChecked)]="dialogConfig.disableBackdropAndEscClose"
-      [luxNoTopLabel]="true" />
+      [luxNoTopLabel]="true"
+    />
     <lux-radio-ac
       luxLabel="defaultButton"
       luxHint="Legt fest, welcher Button verwendet wird, wenn man den Dialog direkt mit Return schließt."
@@ -50,7 +52,8 @@
       luxOptionLabelProp="label"
       [luxPickValue]="pickValueFn"
       [(luxSelected)]="defaultButton"
-      [luxOrientationVertical]="false" />
+      [luxOrientationVertical]="false"
+    />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>Properties für Preset-Dialoge</h3>
@@ -58,18 +61,21 @@
       luxName="dialog_title"
       luxLabel="title"
       luxHint="Diese Property enthält den Titel des Dialogs."
-      [(luxValue)]="dialogConfig.title" />
+      [(luxValue)]="dialogConfig.title"
+    />
     <lux-input-ac
       luxName="dialog_icon"
       luxLabel="dialogIcon"
       luxHint="Diese Property enthält den Iconnamen des Dialogs."
-      [(luxValue)]="dialogConfig.iconName" />
+      [(luxValue)]="dialogConfig.iconName"
+    />
     <lux-toggle-ac
       luxLabel="Content-Template nutzen"
       luxHint="Wenn aktiv, wird dem Dialog ein 'TemplateRef' für den Inhalt übergeben."
       [(luxChecked)]="useContentTemplate"
       (luxCheckedChange)="useContentTemplateChange($event)"
-      [luxNoTopLabel]="true" />
+      [luxNoTopLabel]="true"
+    />
     @if (useContentTemplate()) {
       <pre class="lux-label">{{ contentTemplateString }}</pre>
     }
@@ -78,7 +84,8 @@
         luxName="dialog_content"
         luxLabel="content"
         luxHint="Über diese Eigenschaft der eigentliche Inhalt des Dialogs bestimmt."
-        [(luxValue)]="dialogConfig.content" />
+        [(luxValue)]="dialogConfig.content"
+      />
     }
     <lux-accordion luxMode="flat" [luxMulti]="true">
       <lux-panel>
@@ -118,30 +125,36 @@
     luxName="dialog_label"
     luxLabel="label"
     luxHint="Diese Property enthält das Label der Aktion."
-    [(luxValue)]="actionConfig.label" />
+    [(luxValue)]="actionConfig.label"
+  />
   <lux-input-ac
     luxName="dialog_iconName"
     luxLabel="iconName"
     luxHint="Diese Property bestimmt das Icon der Aktion"
-    [(luxValue)]="actionConfig.iconName" />
+    [(luxValue)]="actionConfig.iconName"
+  />
   <lux-select-ac
     luxLabel="color"
     luxHint="Diese Property definiert die Farbe der Aktion."
     [(luxSelected)]="actionConfig.color"
-    [luxOptions]="['primary', 'accent', 'warn', 'default']" />
+    [luxOptions]="['primary', 'accent', 'warn', 'default']"
+  />
   <lux-toggle-ac
     luxLabel="flat"
     luxHint="Wenn aktiv, wird die Aktion hervorgehoben dargestellt."
     [(luxChecked)]="actionConfig.flat"
-    [luxNoTopLabel]="true" />
+    [luxNoTopLabel]="true"
+  />
   <lux-toggle-ac
     luxLabel="disabled"
     luxHint="Wenn aktiv, wird die Aktion deaktiviert."
     [(luxChecked)]="actionConfig.disabled"
-    [luxNoTopLabel]="true" />
+    [luxNoTopLabel]="true"
+  />
   <lux-toggle-ac
     luxLabel="rounded"
     luxHint="Wenn aktiv, wird die Aktion als Kreis dargestellt. Sollte dann aber kein Label enthalten."
     [(luxChecked)]="actionConfig.rounded"
-    [luxNoTopLabel]="true" />
+    [luxNoTopLabel]="true"
+  />
 </ng-template>

@@ -6,13 +6,13 @@
   (luxMenuClosed)="onMenuClosed()"
 >
   @for (item of localeOptions; track item) {
-  <lux-menu-item
-    class="lux-lang-select-menu-item"
-    [luxLabel]="item.label"
-    [luxClass]="item.code === translocoService.getActiveLang() ? 'lux-selected-item-ac' : ''"
-    [luxDisabled]="item.code === translocoService.getActiveLang()"
-    (luxClicked)="onLocaleChanged(item)"
-  />
+    <lux-menu-item
+      class="lux-lang-select-menu-item"
+      [luxLabel]="item.label"
+      [luxClass]="item.code === translocoService.getActiveLang() ? 'lux-selected-item-ac' : ''"
+      [luxDisabled]="item.code === translocoService.getActiveLang()"
+      (luxClicked)="onLocaleChanged(item)"
+    />
   }
   <lux-menu-trigger>
     <lux-button

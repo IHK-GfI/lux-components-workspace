@@ -1,27 +1,32 @@
-<example-base-structure exampleTitle="Icon" exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90icon-v21">
+<example-base-structure
+  exampleTitle="Icon"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90icon-v21"
+>
   <example-base-content class="lux-flex lux-flex-col lux-gap-4">
     <div class="lux-flex lux-flex-col lux-gap-4 lux-app-data-bg lux-highlight-section" [ngStyle]="{ backgroundColor: backgroundColor() }">
       <h3 class="lux-highlight-section-label">Default</h3>
       <div class="icon-row">
         @for (color of colors; track color) {
-        <lux-icon
-          [luxIconName]="iconName()"
-          [luxIconSize]="iconSize()"
-          [luxPadding]="padding()"
-          [luxMargin]="margin()"
-          [luxRounded]="rounded()"
-          [luxColor]="color" />
+          <lux-icon
+            [luxIconName]="iconName()"
+            [luxIconSize]="iconSize()"
+            [luxPadding]="padding()"
+            [luxMargin]="margin()"
+            [luxRounded]="rounded()"
+            [luxColor]="color"
+          />
         }
       </div>
       <div class="icon-row">
         @for (color of colors; track color; let i = $index) {
-        <lux-icon
-          [luxIconName]="iconName()"
-          [luxIconSize]="iconSize()"
-          [luxPadding]="padding()"
-          [luxMargin]="margin()"
-          [luxRounded]="rounded()"
-          class="{{ 'lux-color-' + colors[i % colors.length] }}" />
+          <lux-icon
+            [luxIconName]="iconName()"
+            [luxIconSize]="iconSize()"
+            [luxPadding]="padding()"
+            [luxMargin]="margin()"
+            [luxRounded]="rounded()"
+            class="{{ 'lux-color-' + colors[i % colors.length] }}"
+          />
         }
       </div>
     </div>
@@ -29,24 +34,26 @@
       <h3 class="lux-highlight-section-label">Gradient</h3>
       <div class="icon-row">
         @for (color of colors; track color) {
-        <lux-icon
-          [luxIconName]="iconName()"
-          [luxIconSize]="iconSize()"
-          [luxPadding]="padding()"
-          [luxMargin]="margin()"
-          [luxRounded]="rounded()"
-          [luxColor]="color" />
+          <lux-icon
+            [luxIconName]="iconName()"
+            [luxIconSize]="iconSize()"
+            [luxPadding]="padding()"
+            [luxMargin]="margin()"
+            [luxRounded]="rounded()"
+            [luxColor]="color"
+          />
         }
       </div>
       <div class="icon-row">
         @for (color of colors; track color; let i = $index) {
-        <lux-icon
-          [luxIconName]="iconName()"
-          [luxIconSize]="iconSize()"
-          [luxPadding]="padding()"
-          [luxMargin]="margin()"
-          [luxRounded]="rounded()"
-          class="{{ 'lux-color-' + colors[i % colors.length] }}" />
+          <lux-icon
+            [luxIconName]="iconName()"
+            [luxIconSize]="iconSize()"
+            [luxPadding]="padding()"
+            [luxMargin]="margin()"
+            [luxRounded]="rounded()"
+            class="{{ 'lux-color-' + colors[i % colors.length] }}"
+          />
         }
       </div>
     </div>
@@ -59,7 +66,12 @@
         Die Größen sind relative 'em'-Werte.
       </lux-form-hint>
     </lux-select-ac>
-    <lux-checkbox-ac [(luxChecked)]="rounded" (luxCheckedChange)="padding.set($event ? '' : '0.25rem')" luxLabel="luxRounded" [luxNoTopLabel]="true">
+    <lux-checkbox-ac
+      [(luxChecked)]="rounded"
+      (luxCheckedChange)="padding.set($event ? '' : '0.25rem')"
+      luxLabel="luxRounded"
+      [luxNoTopLabel]="true"
+    >
       <lux-form-hint>
         Diese Property aktiviert eine abgerundete Darstellung des Icons<br />
         Ist nur in Kombination mit einer 'luxColor' sichtbar.
@@ -75,7 +87,8 @@
       luxLabel="Zur Iconsuche"
       luxHref="/icon-overview"
       luxIconName="lux-interface-arrows-button-right"
-      [luxIconShowRight]="true" />
+      [luxIconShowRight]="true"
+    />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-input-ac [(luxValue)]="margin" luxLabel="luxMargin">

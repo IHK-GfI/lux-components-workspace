@@ -12,6 +12,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
+    "format": "npx prettier --write \"projects/**/*.{ts,html,scss,json}\"",
     "smoketest": "npm run pack:all && npm run test:all",
     "pack:demo": "ng build demo-app",
     "pack:components": "ng build lux-components-lib",
@@ -38,6 +39,9 @@
     "watch:components": "npm run watch lux-components-lib",
     "watch:theme": "npm run watch --workspace=projects/lux-components-theme",
     "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,html,scss,json}": "prettier --write"
   },
   "workspaces": [
     "projects/*"
@@ -76,10 +80,11 @@
     "@chiragrupani/karma-chromium-edge-launcher": "^2.4.1",
     "@types/jasmine": "~5.1.8",
     "@types/uuid": "^10.0.0",
-    "axe-core": "^4.12.1",
     "angular-eslint": "22.0.0",
+    "axe-core": "^4.12.1",
     "del-cli": "^6.0.0",
     "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.8",
     "fs-extra": "^11.3.3",
     "glob": "^13.0.0",
     "husky": "^9.1.7",
@@ -93,6 +98,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "karma-viewport": "1.0.9",
+    "lint-staged": "^17.4.1",
     "ng-packagr": "^22.0.0",
     "npm-run-all": "^4.1.5",
     "npm-watch": "^0.13.0",

@@ -7,7 +7,7 @@
       <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor() }">
         <h3 class="lux-highlight-section-label">Alle Button-Variationen</h3>
         @if (errorBoxDefault()) {
-          <ng-container *ngTemplateOutlet="errorBox"/>
+          <ng-container *ngTemplateOutlet="errorBox" />
         }
         <div class="lux-flex lux-flex-wrap lux-gap-4">
           <div class="lux-flex lux-flex-wrap lux-gap-4">
@@ -148,7 +148,7 @@
       <div class="lux-gradient-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor() }">
         <h3 class="lux-highlight-section-label">Gradient</h3>
         @if (errorBoxGradient()) {
-          <ng-container *ngTemplateOutlet="errorBox"/>
+          <ng-container *ngTemplateOutlet="errorBox" />
         }
         <div class="lux-flex lux-flex-wrap lux-gap-4">
           <div class="lux-flex lux-flex-wrap lux-gap-4">
@@ -288,7 +288,7 @@
       <div class="lux-app-data-bg lux-highlight-section lux-flex lux-flex-col lux-gap-3" [ngStyle]="{ backgroundColor: backgroundColor() }">
         <h3 class="lux-highlight-section-label">Alle Loading Button-Variationen</h3>
         @if (errorBoxLoading()) {
-          <ng-container *ngTemplateOutlet="errorBox"/>
+          <ng-container *ngTemplateOutlet="errorBox" />
         }
         <div class="lux-flex lux-flex-wrap lux-gap-4">
           <div class="lux-flex lux-flex-wrap lux-gap-4">
@@ -450,8 +450,8 @@
         <h3 class="lux-highlight-section-label">Beispiel card für Loading-Button</h3>
         <lux-card luxTitle="Einfaches Eingabe-Formular">
           <lux-card-content>
-            <lux-input-ac luxLabel="Vorname" luxPlaceholder="Max" [(luxValue)]="spinnerExampleFirstname"/>
-            <lux-input-ac luxLabel="Nachname" luxPlaceholder="Mustermann" [(luxValue)]="spinnerExampleLastname"/>
+            <lux-input-ac luxLabel="Vorname" luxPlaceholder="Max" [(luxValue)]="spinnerExampleFirstname" />
+            <lux-input-ac luxLabel="Nachname" luxPlaceholder="Mustermann" [(luxValue)]="spinnerExampleLastname" />
           </lux-card-content>
           <lux-card-actions>
             <lux-button
@@ -494,7 +494,7 @@
         <i>luxLabel</i> gesetzt ist).<br />
       </lux-form-hint>
     </lux-input-ac>
-    <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true"/>
+    <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true" />
     <lux-toggle-ac
       [(luxChecked)]="disabled"
       luxLabel="luxDisabled"
@@ -510,7 +510,7 @@
         [luxNoTopLabel]="true"
         (luxCheckedChange)="disabled.set(disabledAria() ? false : disabled())"
       />
-      <app-status-marker [markerType]="markerTypeUpdated"/>
+      <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle-ac luxLabel="Label Uppercase" [(luxChecked)]="allUpperCase" [luxNoTopLabel]="true">
       <lux-form-hint>
@@ -550,8 +550,8 @@
         [luxNumberAlignLeft]="true"
       />
       <div class="lux-flex lux-flex-warp lux-gap-2">
-        <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true"/>
-        <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true"/>
+        <lux-button luxLabel="+10" (luxClicked)="addBarProgress()" luxColor="primary" [luxRaised]="true" />
+        <lux-button luxLabel="-10" (luxClicked)="subtractBarProgress()" luxColor="primary" [luxRaised]="true" />
       </div>
     }
   </example-base-simple-options>

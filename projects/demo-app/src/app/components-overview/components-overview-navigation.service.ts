@@ -49,7 +49,9 @@ export class ComponentsOverviewNavigationService {
     'tour-hint'
   ];
 
-  readonly currentModules: WritableSignal<Map<string, boolean>> = signal(new Map(this.currentModuleNames.map((moduleName) => [moduleName, false])));
+  readonly currentModules: WritableSignal<Map<string, boolean>> = signal(
+    new Map(this.currentModuleNames.map((moduleName) => [moduleName, false]))
+  );
 
   readonly filteredComponents: Signal<DemoNavigationComponentEntry[]> = computed(() =>
     this.components.filter((component) => !component.themes || !!component.themes.find((theme: string) => theme === this.themeName()))
@@ -174,7 +176,9 @@ export class ComponentsOverviewNavigationService {
     effect(() => {
       const selected = this.selectedComponent();
       const expandedByModule = new Map<string, boolean>();
-      this.currentModuleNames.forEach((moduleName: string) => expandedByModule.set(moduleName, selected ? moduleName === selected.moduleName : false));
+      this.currentModuleNames.forEach((moduleName: string) =>
+        expandedByModule.set(moduleName, selected ? moduleName === selected.moduleName : false)
+      );
       this.currentModules.set(expandedByModule);
     });
   }

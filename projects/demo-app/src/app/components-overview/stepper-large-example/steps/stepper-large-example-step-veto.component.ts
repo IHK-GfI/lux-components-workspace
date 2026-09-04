@@ -1,10 +1,10 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
-    ILuxDialogPresetConfig,
-    LuxDialogService,
-    LuxStepperLargeClickEvent,
-    LuxStepperLargeStepComponent,
-    LuxVetoState
+  ILuxDialogPresetConfig,
+  LuxDialogService,
+  LuxStepperLargeClickEvent,
+  LuxStepperLargeStepComponent,
+  LuxVetoState
 } from '@ihk-gfi/lux-components';
 
 @Component({
@@ -102,7 +102,9 @@ export class StepperLargeExampleStepVetoComponent extends LuxStepperLargeStepCom
     console.log(
       `Event 'luxVetoFn': \nAktueller Schritt "${this.luxTitle()}" (index = ${event.stepper
         .steps()
-        .findIndex((step) => step === this)} - hier wird das Vetorecht geprüft) \nNächster Schritt wäre "${event.newStep.luxTitle()}" (index = ${event.newIndex})`
+        .findIndex(
+          (step) => step === this
+        )} - hier wird das Vetorecht geprüft) \nNächster Schritt wäre "${event.newStep.luxTitle()}" (index = ${event.newIndex})`
     );
   }
 }

@@ -39,13 +39,14 @@
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
         (luxSelectedChange)="onSelectedChange($event)"
-        #fileinputexamplewithoutform />
+        #fileinputexamplewithoutform
+      />
       @if (!clearOnError() && !fileinputexamplewithoutform.formGroup.valid && fileinputexamplewithoutform.value()) {
-      <div class="lux-flex lux-gap-4">
-        <p>Datei "{{ fileinputexamplewithoutform.value()!.name }}" behalten?</p>
-        <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithoutForm(true)" />
-        <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithoutForm(false)" />
-      </div>
+        <div class="lux-flex lux-gap-4">
+          <p>Datei "{{ fileinputexamplewithoutform.value()!.name }}" behalten?</p>
+          <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithoutForm(true)" />
+          <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithoutForm(false)" />
+        </div>
       }
     </div>
     <div class="lux-flex lux-flex-col">
@@ -82,13 +83,14 @@
           (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
           (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
           (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
-          #fileinputexamplewithform />
+          #fileinputexamplewithform
+        />
         @if (!clearOnError() && !fileinputexamplewithform.formGroup.valid && fileinputexamplewithform.value()) {
-        <div class="lux-flex lux-gap-4">
-          <p>Datei "{{ fileinputexamplewithform.value()!.name }}" behalten?</p>
-          <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithForm(true)" />
-          <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithForm(false)" />
-        </div>
+          <div class="lux-flex lux-gap-4">
+            <p>Datei "{{ fileinputexamplewithform.value()!.name }}" behalten?</p>
+            <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithForm(true)" />
+            <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithForm(false)" />
+          </div>
         }
         <example-form-value [form]="form" [controlBinding]="controlBinding" [showValue]="false" />
       </div>
@@ -115,14 +117,16 @@
     <lux-input-ac
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
-      [(luxValue)]="placeholder" />
+      [(luxValue)]="placeholder"
+    />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
         [(luxChecked)]="noTopLabel"
-        [luxNoTopLabel]="true" />
+        [luxNoTopLabel]="true"
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -131,7 +135,8 @@
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
         [(luxChecked)]="noBottomLabel"
-        [luxNoTopLabel]="true" />
+        [luxNoTopLabel]="true"
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -140,53 +145,41 @@
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
         [(luxChecked)]="noLabels"
-        [luxNoTopLabel]="true" />
+        [luxNoTopLabel]="true"
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle-ac
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
-      [luxNoTopLabel]="true" />
+      [luxNoTopLabel]="true"
+    />
     <lux-toggle-ac
       luxLabel="luxClearOnError"
       luxHint="Gibt an, ob das Control bei einem Validierungsfehler geleert wird."
       [(luxChecked)]="clearOnError"
-      [luxNoTopLabel]="true" />
+      [luxNoTopLabel]="true"
+    />
     <app-file-example-simple-options [fileExample]="this" class="lux-flex lux-flex-col lux-gap-4" />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <app-file-example-advanced-options [fileExample]="this" [showHeaderConfigProperties]="false" />
     <h4>Custom Action "Akzeptieren"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac
-        luxLabel="Präfix"
-        luxName="filelist_prefix_accept"
-        [(luxValue)]="namePrefixAccept"
-        [luxNoBottomLabel]="true" />
-      <lux-input-ac
-        luxLabel="Suffix"
-        luxName="filelist_suffix_accept"
-        [(luxValue)]="nameSuffixAccept"
-        [luxNoBottomLabel]="true" />
+      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_accept" [(luxValue)]="namePrefixAccept" [luxNoBottomLabel]="true" />
+      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_accept" [(luxValue)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
     </div>
     <h4>Custom Action "Ablehnen"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac
-        luxLabel="Präfix"
-        luxName="filelist_prefix_decline"
-        [(luxValue)]="namePrefixDecline"
-        [luxNoBottomLabel]="true" />
-      <lux-input-ac
-        luxLabel="Suffix"
-        luxName="filelist_suffix_decline"
-        [(luxValue)]="nameSuffixDecline"
-        [luxNoBottomLabel]="true" />
+      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_decline" [(luxValue)]="namePrefixDecline" [luxNoBottomLabel]="true" />
+      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_decline" [(luxValue)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
     </div>
     <lux-toggle-ac
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"
-      [(luxChecked)]="labelLongFormat" />
+      [(luxChecked)]="labelLongFormat"
+    />
   </example-base-advanced-options>
 </example-base-structure>

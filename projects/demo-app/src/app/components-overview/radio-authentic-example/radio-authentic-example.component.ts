@@ -2,12 +2,12 @@ import { JsonPipe } from '@angular/common';
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-    LuxAutofocusDirective,
-    LuxButtonComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxRadioAcComponent,
-    LuxToggleAcComponent
+  LuxAutofocusDirective,
+  LuxButtonComponent,
+  LuxFormHintComponent,
+  LuxInputAcComponent,
+  LuxRadioAcComponent,
+  LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -17,12 +17,12 @@ import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-b
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import {
-    emptyErrorCallback,
-    exampleCompareWithFn,
-    exampleErrorCallback,
-    examplePickValueFn,
-    logResult,
-    setRequiredValidatorForFormControl
+  emptyErrorCallback,
+  exampleCompareWithFn,
+  exampleErrorCallback,
+  examplePickValueFn,
+  logResult,
+  setRequiredValidatorForFormControl
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';

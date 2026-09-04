@@ -3,14 +3,14 @@ import * as path from 'path';
 import { appOptions, workspaceOptions } from '../utility/test';
 import { UtilConfig } from '../utility/util';
 import {
-    addClassProperty,
-    addComponentImport,
-    addConstructorContent,
-    addImport,
-    addInterface,
-    removeComponentProvider,
-    removeImport,
-    removeInterface
+  addClassProperty,
+  addComponentImport,
+  addConstructorContent,
+  addImport,
+  addInterface,
+  removeComponentProvider,
+  removeImport,
+  removeInterface
 } from './typescript';
 
 const collectionPath = path.join(__dirname, '../../collection.json');

@@ -78,9 +78,7 @@
               (keydown.delete)="onChipGroupRemove(chipGroup, i)"
               (click)="chipGroup.click(i)"
             >
-              <ng-container
-                *ngTemplateOutlet="chipGroup.tempRef() ? chipGroup.tempRef()! : noTemplateRef; context: { $implicit: label }"
-              />
+              <ng-container *ngTemplateOutlet="chipGroup.tempRef() ? chipGroup.tempRef()! : noTemplateRef; context: { $implicit: label }" />
               @if (chipGroup.luxRemovable()) {
                 <lux-icon
                   class="lux-chip-icon"

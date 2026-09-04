@@ -65,9 +65,15 @@ export class LuxPanelComponent implements AfterViewInit, OnDestroy {
   readonly effectiveHideToggle = this.syncFromParentOnChange(this.luxHideToggle, () => this.parent?.luxHideToggle());
   readonly effectiveDisabled = this.syncFromParentOnChange(this.luxDisabled, () => this.parent?.luxDisabled());
   readonly effectiveTogglePosition = this.syncFromParentOnChange(this.luxTogglePosition, () => this.parent?.luxTogglePosition() ?? 'after');
-  readonly effectiveDynamicHeaderHeight = this.syncFromParentOnChange(this.luxDynamicHeaderHeight, () => this.parent?.luxDynamicHeaderHeight());
-  readonly effectiveExpandedHeaderHeight = computed(() => (this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedExpandedHeaderHeight()));
-  readonly effectiveCollapsedHeaderHeight = computed(() => (this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedCollapsedHeaderHeight()));
+  readonly effectiveDynamicHeaderHeight = this.syncFromParentOnChange(this.luxDynamicHeaderHeight, () =>
+    this.parent?.luxDynamicHeaderHeight()
+  );
+  readonly effectiveExpandedHeaderHeight = computed(() =>
+    this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedExpandedHeaderHeight()
+  );
+  readonly effectiveCollapsedHeaderHeight = computed(() =>
+    this.effectiveDynamicHeaderHeight() ? 'unset' : this.syncedCollapsedHeaderHeight()
+  );
 
   constructor() {
     this.mobile.set(this.mediaQuery.isSmallerOrEqual('sm'));

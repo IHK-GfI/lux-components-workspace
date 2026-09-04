@@ -6,13 +6,21 @@
   [ngStyle]="{ 'max-width': effectiveCenteredView() ? effectiveCenteredWidth() : '100%' }"
 >
   @if (luxVersion()) {
-  <div class="version lt-lg:lux-display-none">{{ 'luxc.app-footer.version' | transloco: { version: luxVersion() } }}</div>
-  } @if (linkInfos()) {
-  <div class="lux-app-footer-links">
-    @for (linkItem of linkInfos(); track linkItem) { @if (linkItem.alwaysVisible || desktopView()) {
-    <lux-link [luxLabel]="linkItem.label" [luxHref]="linkItem.path" [luxBlank]="linkItem.blank" (luxClicked)="linkItem.onClick?.(linkItem)" />
-    } }
-  </div>
+    <div class="version lt-lg:lux-display-none">{{ 'luxc.app-footer.version' | transloco: { version: luxVersion() } }}</div>
+  }
+  @if (linkInfos()) {
+    <div class="lux-app-footer-links">
+      @for (linkItem of linkInfos(); track linkItem) {
+        @if (linkItem.alwaysVisible || desktopView()) {
+          <lux-link
+            [luxLabel]="linkItem.label"
+            [luxHref]="linkItem.path"
+            [luxBlank]="linkItem.blank"
+            (luxClicked)="linkItem.onClick?.(linkItem)"
+          />
+        }
+      }
+    </div>
   }
 
   <div class="lux-app-footer-buttons">
@@ -25,22 +33,22 @@
       #buttonMenu
     >
       @for (menuItem of buttonInfos(); track menuItem) {
-      <lux-menu-item
-        [luxLabel]="menuItem.label"
-        [luxIconName]="menuItem.iconName"
-        [luxTagId]="menuItem.label"
-        [luxPrio]="menuItem.prio"
-        [luxHidden]="menuItem.hidden"
-        [luxAlwaysVisible]="menuItem.alwaysVisible"
-        [luxDisabled]="menuItem.disabled"
-        [luxRaised]="menuItem.raised"
-        [luxFlat]="menuItem.flat"
-        [luxStroked]="menuItem.stroked"
-        [luxColor]="menuItem.color"
-        [luxButtonTooltip]="menuItem.tooltip"
-        [luxMenuTooltip]="menuItem.tooltipMenu"
-        (luxClicked)="sendButtonCommand(menuItem.cmd)"
-      />
+        <lux-menu-item
+          [luxLabel]="menuItem.label"
+          [luxIconName]="menuItem.iconName"
+          [luxTagId]="menuItem.label"
+          [luxPrio]="menuItem.prio"
+          [luxHidden]="menuItem.hidden"
+          [luxAlwaysVisible]="menuItem.alwaysVisible"
+          [luxDisabled]="menuItem.disabled"
+          [luxRaised]="menuItem.raised"
+          [luxFlat]="menuItem.flat"
+          [luxStroked]="menuItem.stroked"
+          [luxColor]="menuItem.color"
+          [luxButtonTooltip]="menuItem.tooltip"
+          [luxMenuTooltip]="menuItem.tooltipMenu"
+          (luxClicked)="sendButtonCommand(menuItem.cmd)"
+        />
       }
     </lux-menu>
   </div>

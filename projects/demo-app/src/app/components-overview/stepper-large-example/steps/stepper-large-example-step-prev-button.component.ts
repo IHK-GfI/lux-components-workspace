@@ -39,7 +39,10 @@ export class StepperLargeExampleStepPrevButtonComponent extends LuxStepperLargeS
 
     const prevButtonConfig = this.dataService.prevButtonConfig();
     this.form = new FormGroup<StepperLargePrevButtonDummyForm>({
-      label: new FormControl<string>(prevButtonConfig.label ? prevButtonConfig.label : 'Zurück', { validators: Validators.required, nonNullable: true }),
+      label: new FormControl<string>(prevButtonConfig.label ? prevButtonConfig.label : 'Zurück', {
+        validators: Validators.required,
+        nonNullable: true
+      }),
       iconName: new FormControl<string | undefined>(prevButtonConfig.iconName, { nonNullable: true }),
       color: new FormControl<LuxThemePalette | undefined>(prevButtonConfig.color, { nonNullable: true }),
       iconShowRight: new FormControl<boolean | undefined>(prevButtonConfig.iconShowRight, { nonNullable: true }),

@@ -143,18 +143,10 @@
         <lux-link-plain [luxLabel]="'luxc.consent.link_back' | transloco" (luxClicked)="showSection('consent')" />
       }
       @if (activeSection() === 'consent' && isExpanded()) {
-        <lux-link-plain
-          [luxLabel]="'luxc.consent.hide_details' | transloco"
-          [luxIconShowRight]="false"
-          (luxClicked)="toggleDetails()"
-        />
+        <lux-link-plain [luxLabel]="'luxc.consent.hide_details' | transloco" [luxIconShowRight]="false" (luxClicked)="toggleDetails()" />
       }
       @if (activeSection() === 'consent' && !isExpanded()) {
-        <lux-link-plain
-          [luxLabel]="'luxc.consent.show_details' | transloco"
-          [luxIconShowRight]="false"
-          (luxClicked)="toggleDetails()"
-        />
+        <lux-link-plain [luxLabel]="'luxc.consent.show_details' | transloco" [luxIconShowRight]="false" (luxClicked)="toggleDetails()" />
       }
       <lux-link-plain [luxLabel]="'luxc.consent.link_datenschutz' | transloco" (luxClicked)="showSection('datenschutz')" />
       <lux-link-plain [luxLabel]="'luxc.consent.link_impressum' | transloco" (luxClicked)="showSection('impressum')" />

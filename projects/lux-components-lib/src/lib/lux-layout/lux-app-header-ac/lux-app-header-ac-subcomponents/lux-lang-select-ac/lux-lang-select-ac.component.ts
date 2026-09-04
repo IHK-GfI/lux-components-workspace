@@ -65,29 +65,25 @@ export class LuxLangSelectAcComponent implements OnInit {
     const newLocale = this.localeOptions.find((item) => item.code === locale);
     if (newLocale) {
       // Sicherstellen, dass Übersetzungen nach Lazy-Nachladen vorhanden sind
-      this.translocoService
-        .load(newLocale.code)
-        .subscribe({
-          next: () => this.translocoService.setActiveLang(newLocale!.code),
-          error: () => this.translocoService.setActiveLang('de')
-        });
+      this.translocoService.load(newLocale.code).subscribe({
+        next: () => this.translocoService.setActiveLang(newLocale!.code),
+        error: () => this.translocoService.setActiveLang('de')
+      });
     }
   }
 
   onLocaleChanged(locale: LuxLocaleAc) {
     // Vor Sprachwechsel: erst laden, dann aktivieren, damit Komponenten nicht kurz Keys anzeigen.
-    this.translocoService
-      .load(locale.code)
-      .subscribe({
-        next: () => {
-          this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
-          this.translocoService.setActiveLang(locale.code);
-        },
-        error: () => {
-          // Fallback: Cookie nicht setzen, bei Fehler auf Default zurück.
-          this.translocoService.setActiveLang('de');
-        }
-      });
+    this.translocoService.load(locale.code).subscribe({
+      next: () => {
+        this.cookieService.set(this.cookieName, locale.code, undefined, this.cookiePath);
+        this.translocoService.setActiveLang(locale.code);
+      },
+      error: () => {
+        // Fallback: Cookie nicht setzen, bei Fehler auf Default zurück.
+        this.translocoService.setActiveLang('de');
+      }
+    });
   }
 
   onMenuOpened() {

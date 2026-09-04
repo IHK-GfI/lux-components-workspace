@@ -32,7 +32,7 @@
         (luxValuePercent)="percentChanged($event)"
         (luxValueChange)="log(showOutputEvents(), 'Value changed', $event)"
         luxTagId="slidernoform"
-       />
+      />
       <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
@@ -61,7 +61,7 @@
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxValuePercent)="percentReactiveChanged($event)"
         luxTagId="sliderwithform"
-       />
+      />
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
     </div>
   </example-base-content>
@@ -71,19 +71,19 @@
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-input-ac
       luxName="slider_luxLabel"
       luxLabel="luxLabel"
       luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
       [(luxValue)]="label"
-     />
+    />
     <lux-input-ac
       luxName="slider_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(luxValue)]="hint"
-     />
+    />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle-ac
         class="lux-flex-auto"
@@ -91,7 +91,7 @@
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
         [(luxChecked)]="noTopLabel"
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -101,7 +101,7 @@
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
         [(luxChecked)]="noBottomLabel"
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -111,7 +111,7 @@
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
         [(luxChecked)]="noLabels"
         [luxNoTopLabel]="true"
-       />
+      />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle-ac
@@ -120,20 +120,20 @@
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
       [(luxChecked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
-     />
+    />
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
     <lux-toggle-ac
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-toggle-ac
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-select-ac
       [luxOptions]="colorOptions"
       luxOptionLabelProp="label"
@@ -141,7 +141,7 @@
       luxHint="Diese Property bestimmt das Farbschema des Sliders."
       [luxSelected]="colorOptions[0]"
       (luxSelectedChange)="colorChanged($event)"
-     />
+    />
     <lux-input-ac
       [(luxValue)]="min"
       luxType="number"
@@ -149,7 +149,7 @@
       luxName="slider_luxMin"
       luxLabel="luxMin"
       luxHint="Diese Property bestimmt den minimal möglichen Wert in dem Slider."
-     />
+    />
     <lux-input-ac
       [(luxValue)]="max"
       luxType="number"
@@ -157,7 +157,7 @@
       luxName="slider_luxMax"
       luxLabel="luxMax"
       luxHint="Diese Property bestimmt den maximal möglichen Wert des Sliders."
-     />
+    />
     <lux-input-ac
       luxType="number"
       [luxNumberAlignLeft]="true"
@@ -165,7 +165,7 @@
       luxName="slider_luxStep"
       luxLabel="luxStep"
       luxHint="Über die Property wird die Schrittgröße, in denen der Slider die Werte ändert bestimmt."
-     />
+    />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle-ac
@@ -173,33 +173,33 @@
       luxLabel="luxShowThumbLabel"
       luxHint="Dieses Flag schaltet die 'ThumbLabel'-Anzeige des aktuellen Wertes ein."
       [luxNoTopLabel]="true"
-     />
+    />
     <lux-toggle-ac
       luxLabel="luxDisplayWith"
       luxHint="Eigene displayWith-Funktion für die Anzeige im 'ThumbLabel' benutzen."
       [(luxChecked)]="useDisplayFn"
       [luxNoTopLabel]="true"
-     />
+    />
     @if (useDisplayFn()) {
-    <pre class="lux-label">{{ displayWithFnString }}</pre>
+      <pre class="lux-label">{{ displayWithFnString }}</pre>
     }
     <lux-toggle-ac
       luxLabel="luxErrorMessage verwenden"
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
       [(luxChecked)]="useErrorMessage"
       [luxNoTopLabel]="true"
-     />
+    />
     @if (useErrorMessage()) {
-    <lux-input-ac
-      luxName="slider_luxErrorMessage"
-      luxLabel="luxErrorMessage"
-      luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+      <lux-input-ac
+        luxName="slider_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-      [(luxValue)]="errorMessage"
-      [luxNoTopLabel]="true"
-     />
+        [(luxValue)]="errorMessage"
+        [luxNoTopLabel]="true"
+      />
     } @else {
-    <pre class="lux-label">{{ errorCallbackString }}</pre>
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
     <lux-select-ac
       [luxOptions]="validatorOptions"
@@ -221,6 +221,6 @@
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"
       [(luxChecked)]="labelLongFormat"
-     />
+    />
   </example-base-advanced-options>
 </example-base-structure>
