@@ -1,9 +1,9 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxIconComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxTextareaComponent,
   LuxTextboxColor,
   LuxTextboxComponent
 } from '@ihk-gfi/lux-components';
@@ -19,9 +19,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   imports: [
     LuxIconComponent,
     LuxTextboxComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent

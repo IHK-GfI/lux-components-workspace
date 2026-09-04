@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
+  LuxAutocompleteComponent,
   LuxButtonComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxDatepickerAcComponent,
-  LuxInputAcComponent
+  LuxDatepickerComponent,
+  LuxInputComponent
 } from '@ihk-gfi/lux-components';
 import { debounceTime } from 'rxjs';
 import { FormExampleSnapshot, FormExampleStateService } from '../form-example-state.service';
@@ -51,9 +51,9 @@ interface FormDualStreetForm {
     LuxButtonComponent,
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxInputAcComponent,
-    LuxDatepickerAcComponent,
-    LuxAutocompleteAcComponent,
+    LuxInputComponent,
+    LuxDatepickerComponent,
+    LuxAutocompleteComponent,
     ReactiveFormsModule,
     JsonPipe
   ]

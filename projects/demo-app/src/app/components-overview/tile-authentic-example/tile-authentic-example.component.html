@@ -1,5 +1,5 @@
 <example-base-structure
-  exampleTitle="Tile-Authentic"
+  exampleTitle="Tile-AC"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90tile-v21"
 >
   <example-base-content [exampleCentered]="true" class="lux-flex lux-flex-col lux-gap-3">
@@ -31,33 +31,31 @@
   </example-base-content>
 
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     >
-    </lux-toggle-ac>
-    <lux-input-ac
+    </lux-toggle>
+    <lux-input
       luxLabel="luxLabel"
       luxHint="Die Property bestimmt das Label, welches in dem unteren Kasten des Tiles dargestellt wird."
       [(luxValue)]="label"
     >
-    </lux-input-ac>
-    <lux-toggle-ac luxLabel="luxLabelTruncateAfterOneLine" [(luxChecked)]="labelTruncateAfterOneLine" [luxNoLabels]="true"> </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxLabelTruncateAfterTwoLines" [(luxChecked)]="labelTruncateAfterTwoLines" [luxNoLabels]="true">
-    </lux-toggle-ac>
-    <lux-input-ac luxLabel="luxSubTitle" luxHint="Die Property bestimmt den Untertitel des Tiles." [(luxValue)]="subTitle"> </lux-input-ac>
-    <lux-toggle-ac luxLabel="luxSubTitleTruncateAfterOneLine" [(luxChecked)]="subTitleTruncateAfterOneLine" [luxNoLabels]="true">
-    </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxSubTitleTruncateAfterTwoLines" [(luxChecked)]="subTitleTruncateAfterTwoLines" [luxNoLabels]="true">
-    </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxIcon anzeigen" [(luxChecked)]="showIcon" [luxNoTopLabel]="true">
+    </lux-input>
+    <lux-toggle luxLabel="luxLabelTruncateAfterOneLine" [(luxChecked)]="labelTruncateAfterOneLine" [luxNoLabels]="true"> </lux-toggle>
+    <lux-toggle luxLabel="luxLabelTruncateAfterTwoLines" [(luxChecked)]="labelTruncateAfterTwoLines" [luxNoLabels]="true"> </lux-toggle>
+    <lux-input luxLabel="luxSubTitle" luxHint="Die Property bestimmt den Untertitel des Tiles." [(luxValue)]="subTitle"> </lux-input>
+    <lux-toggle luxLabel="luxSubTitleTruncateAfterOneLine" [(luxChecked)]="subTitleTruncateAfterOneLine" [luxNoLabels]="true"> </lux-toggle>
+    <lux-toggle luxLabel="luxSubTitleTruncateAfterTwoLines" [(luxChecked)]="subTitleTruncateAfterTwoLines" [luxNoLabels]="true">
+    </lux-toggle>
+    <lux-toggle luxLabel="luxIcon anzeigen" [(luxChecked)]="showIcon" [luxNoTopLabel]="true">
       <lux-form-hint>
         Ein LuxIconComponent in dem Tile anzeigen.<br />
         Wenn 'false' wird stattdessen in dem Beispiel ein LuxImageComponent genutzt.
       </lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
     <lux-link-plain
       luxLabel="Testseite mit mehreren Kacheln"
       luxHref="/components-overview/example/tile-overview"
@@ -66,7 +64,7 @@
     ></lux-link-plain>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxLabel="luxCounter"
       [(luxValue)]="counter"
       [luxDisabled]="showNotification"
@@ -78,8 +76,8 @@
         Die Property definiert den aktuellen Zähler für die Tile.<br />
         Wenn der Wert den luxCounterCap überschreitet, wird die Zahl abgekürzt.
       </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxLabel="luxCounterCap"
       [(luxValue)]="badgeCap"
       [luxDisabled]="showNotification"
@@ -91,20 +89,20 @@
         Die Property definiert den aktuellen Zähler für die Tile.<br />
         Wenn der Wert den luxCounterCap überschreitet, wird die Zahl abgekürzt.
       </lux-form-hint>
-    </lux-input-ac>
-    <lux-select-ac
+    </lux-input>
+    <lux-select
       luxLabel="BadgeColor"
       [(luxSelected)]="badgeColor"
       luxHint="Diese Property definiert die Farbe der Notification"
       [luxOptions]="['primary', 'warn', 'accent', 'default']"
-    ></lux-select-ac>
-    <lux-radio-ac
+    ></lux-select>
+    <lux-radio
       luxLabel="luxNotificationSize"
       luxHint="Diese Property definiert die Größe der Notification"
       [luxOptions]="['small', 'medium', 'large']"
       [(luxSelected)]="badgeSize"
       [luxOrientationVertical]="false"
-    ></lux-radio-ac>
-    <lux-toggle-ac luxLabel="luxShowNotification" [(luxChecked)]="showNotification" [luxNoLabels]="true"></lux-toggle-ac>
+    ></lux-radio>
+    <lux-toggle luxLabel="luxShowNotification" [(luxChecked)]="showNotification" [luxNoLabels]="true"></lux-toggle>
   </example-base-advanced-options>
 </example-base-structure>

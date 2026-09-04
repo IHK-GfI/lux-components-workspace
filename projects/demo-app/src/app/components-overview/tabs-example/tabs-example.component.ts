@@ -6,15 +6,15 @@ import {
   LuxAutofocusDirective,
   LuxBadgeNotificationColor,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxTabComponent,
   LuxTabsComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -49,10 +49,10 @@ interface TabConfig {
     LuxPanelComponent,
     LuxTabsComponent,
     LuxTabComponent,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,

@@ -1,15 +1,15 @@
 import { NgStyle } from '@angular/common';
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
-  LuxCheckboxAcComponent,
+  LuxCheckboxComponent,
   LuxFormHintComponent,
   LuxIconColor,
   LuxIconColors,
   LuxIconComponent,
   LuxIconRegistryService,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkPlainComponent,
-  LuxSelectAcComponent
+  LuxSelectComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -24,10 +24,10 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   imports: [
     LuxIconComponent,
     LuxLinkPlainComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
-    LuxCheckboxAcComponent,
+    LuxCheckboxComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     NgStyle,

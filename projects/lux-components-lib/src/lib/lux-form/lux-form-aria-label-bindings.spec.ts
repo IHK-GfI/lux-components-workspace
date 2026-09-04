@@ -7,18 +7,18 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../lux-util/lux-console.service';
-import { LuxAutocompleteAcComponent } from './lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxCheckboxAcComponent } from './lux-checkbox-ac/lux-checkbox-ac.component';
-import { LuxChipsAcComponent } from './lux-chips-ac/lux-chips-ac.component';
-import { LuxDatepickerAcComponent } from './lux-datepicker-ac/lux-datepicker-ac.component';
-import { LuxDatetimepickerAcComponent } from './lux-datetimepicker-ac/lux-datetimepicker-ac.component';
-import { LuxFileInputAcComponent } from './lux-file/lux-file-input-ac/lux-file-input-ac.component';
-import { LuxInputAcComponent } from './lux-input-ac/lux-input-ac.component';
-import { LuxSelectAcComponent } from './lux-select-ac/lux-select-ac.component';
-import { LuxSliderAcComponent } from './lux-slider-ac/lux-slider-ac.component';
-import { LuxTextareaAcComponent } from './lux-textarea-ac/lux-textarea-ac.component';
+import { LuxAutocompleteComponent } from './lux-autocomplete/lux-autocomplete.component';
+import { LuxCheckboxComponent } from './lux-checkbox/lux-checkbox.component';
+import { LuxChipsComponent } from './lux-chips/lux-chips.component';
+import { LuxDatepickerComponent } from './lux-datepicker/lux-datepicker.component';
+import { LuxDatetimepickerComponent } from './lux-datetimepicker/lux-datetimepicker.component';
+import { LuxFileInputComponent } from './lux-file/lux-file-input/lux-file-input.component';
+import { LuxInputComponent } from './lux-input/lux-input.component';
+import { LuxSelectComponent } from './lux-select/lux-select.component';
+import { LuxSliderComponent } from './lux-slider/lux-slider.component';
+import { LuxTextareaComponent } from './lux-textarea/lux-textarea.component';
 import { LuxTimepickerComponent } from './lux-timepicker/lux-timepicker.component';
-import { LuxToggleAcComponent } from './lux-toggle-ac/lux-toggle-ac.component';
+import { LuxToggleComponent } from './lux-toggle/lux-toggle.component';
 
 describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', () => {
   let fixture: ComponentFixture<AriaBindingsTestComponent>;
@@ -42,13 +42,13 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
   });
 
   const cases: { selector: string; nativeSelector: string }[] = [
-    { selector: 'lux-input-ac', nativeSelector: 'lux-input-ac input' },
-    { selector: 'lux-textarea-ac', nativeSelector: 'lux-textarea-ac textarea' },
-    { selector: 'lux-autocomplete-ac', nativeSelector: 'lux-autocomplete-ac input' },
-    { selector: 'lux-datepicker-ac', nativeSelector: 'lux-datepicker-ac input' },
-    { selector: 'lux-datetimepicker-ac', nativeSelector: 'lux-datetimepicker-ac input' },
+    { selector: 'lux-input', nativeSelector: 'lux-input input' },
+    { selector: 'lux-textarea', nativeSelector: 'lux-textarea textarea' },
+    { selector: 'lux-autocomplete', nativeSelector: 'lux-autocomplete input' },
+    { selector: 'lux-datepicker', nativeSelector: 'lux-datepicker input' },
+    { selector: 'lux-datetimepicker', nativeSelector: 'lux-datetimepicker input' },
     { selector: 'lux-timepicker', nativeSelector: 'lux-timepicker input' },
-    { selector: 'lux-file-input-ac', nativeSelector: 'lux-file-input-ac input:not([type="file"])' }
+    { selector: 'lux-file-input', nativeSelector: 'lux-file-input input:not([type="file"])' }
   ];
 
   for (const c of cases) {
@@ -74,22 +74,22 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
 
 @Component({
   imports: [
-    LuxInputAcComponent,
-    LuxTextareaAcComponent,
-    LuxAutocompleteAcComponent,
-    LuxDatepickerAcComponent,
-    LuxDatetimepickerAcComponent,
+    LuxInputComponent,
+    LuxTextareaComponent,
+    LuxAutocompleteComponent,
+    LuxDatepickerComponent,
+    LuxDatetimepickerComponent,
     LuxTimepickerComponent,
-    LuxFileInputAcComponent
+    LuxFileInputComponent
   ],
   template: `
-    <lux-input-ac [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-input-ac>
-    <lux-textarea-ac [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-textarea-ac>
-    <lux-autocomplete-ac [luxOptions]="[]" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-autocomplete-ac>
-    <lux-datepicker-ac [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datepicker-ac>
-    <lux-datetimepicker-ac [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datetimepicker-ac>
+    <lux-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-input>
+    <lux-textarea [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-textarea>
+    <lux-autocomplete [luxOptions]="[]" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-autocomplete>
+    <lux-datepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datepicker>
+    <lux-datetimepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datetimepicker>
     <lux-timepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-timepicker>
-    <lux-file-input-ac [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-file-input-ac>
+    <lux-file-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-file-input>
   `
 })
 class AriaBindingsTestComponent {
@@ -151,7 +151,7 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
     fixture.detectChanges();
     LuxTestHelper.wait(fixture);
 
-    const selectComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance as LuxSelectAcComponent;
+    const selectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance as LuxSelectComponent;
     const elementsWithUid = fixture.nativeElement.querySelectorAll(`[id="${selectComponent.uid()}"]`);
     expect(elementsWithUid.length).toBe(1);
     // Die uid gehört dem versteckten nativen <select>, auf das das Wrapper-Label per for verweist.
@@ -160,8 +160,8 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
 });
 
 @Component({
-  imports: [LuxSelectAcComponent],
-  template: `<lux-select-ac [luxLabel]="label" [luxAriaLabel]="ariaLabel" [luxOptions]="['A', 'B']"></lux-select-ac>`
+  imports: [LuxSelectComponent],
+  template: `<lux-select [luxLabel]="label" [luxAriaLabel]="ariaLabel" [luxOptions]="['A', 'B']"></lux-select>`
 })
 class SelectAriaTestComponent {
   label = '';
@@ -253,11 +253,11 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
 });
 
 @Component({
-  imports: [LuxSliderAcComponent, LuxCheckboxAcComponent, LuxToggleAcComponent],
+  imports: [LuxSliderComponent, LuxCheckboxComponent, LuxToggleComponent],
   template: `
-    <lux-slider-ac luxLabel="Pegel" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-slider-ac>
-    <lux-checkbox-ac luxLabel="AGB" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-checkbox-ac>
-    <lux-toggle-ac luxLabel="Aktiv" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-toggle-ac>
+    <lux-slider luxLabel="Pegel" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-slider>
+    <lux-checkbox luxLabel="AGB" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-checkbox>
+    <lux-toggle luxLabel="Aktiv" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-toggle>
   `
 })
 class CheckableAriaTestComponent {
@@ -294,7 +294,7 @@ describe('Form-Controls - Chips: kein toter aria-labelledby-Verweis', () => {
 });
 
 @Component({
-  imports: [LuxChipsAcComponent],
-  template: `<lux-chips-ac luxLabel="Kategorien"></lux-chips-ac>`
+  imports: [LuxChipsComponent],
+  template: `<lux-chips luxLabel="Kategorien"></lux-chips>`
 })
 class ChipsAriaTestComponent {}

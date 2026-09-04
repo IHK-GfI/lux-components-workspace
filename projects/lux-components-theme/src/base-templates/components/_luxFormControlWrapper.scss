@@ -68,7 +68,8 @@
 // Textarea kann über luxMaxRows und luxMinRows in der Höhe variieren,
 // aus diesem Grund wird hier kein min-height für die .lux-form-control-container-authentic gesetzt,
 // sondern nur das Padding angepasst.
-lux-textarea-ac lux-form-control-wrapper .lux-form-control-wrapper {
+lux-textarea-ac lux-form-control-wrapper .lux-form-control-wrapper,
+lux-textarea lux-form-control-wrapper .lux-form-control-wrapper {
   .lux-form-control-container-authentic {
     padding-top: var(--lux-theme-form-control-textarea-padding);
     padding-bottom: var(--lux-theme-form-control-textarea-padding);
@@ -96,7 +97,16 @@ lux-datepicker-ac,
 lux-timepicker,
 lux-datetimepicker-ac,
 lux-file-input-ac,
-lux-textarea-ac {
+lux-textarea-ac,
+lux-autocomplete,
+lux-lookup-autocomplete,
+lux-input,
+lux-select,
+lux-lookup-combobox,
+lux-datepicker,
+lux-datetimepicker,
+lux-file-input,
+lux-textarea {
   lux-form-control-wrapper .lux-form-control-wrapper:not(.lux-form-control-disabled-authentic).lux-form-control-readonly-authentic {
     .lux-form-control-container-authentic {
       color: var(--lux-theme-form-readonly-color);

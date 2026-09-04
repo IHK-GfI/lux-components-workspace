@@ -17,19 +17,19 @@
       <lux-card-content class="lux-flex lux-flex-col lux-gap-4 lux-flex-auto">
         <div class="chip-container" class="lux-flex lux-flex-col lt-md:lux-display-none">
           @if (chipLabels.length > 0) {
-            <lux-chips-ac [luxInputAllowed]="false" [luxHideBorder]="true">
+            <lux-chips [luxInputAllowed]="false" [luxHideBorder]="true">
               @for (label of chipLabels; track label) {
                 @if (label.length > 0) {
-                  <lux-chip-ac (luxChipRemoved)="onChipRemoved($event)">
+                  <lux-chip (luxChipRemoved)="onChipRemoved($event)">
                     {{ label }}
-                  </lux-chip-ac>
+                  </lux-chip>
                 }
               }
-            </lux-chips-ac>
+            </lux-chips>
           } @else {
-            <lux-chips-ac [luxInputAllowed]="false" [luxHideBorder]="true">
-              <lux-chip-ac [luxRemovable]="false">alle</lux-chip-ac>
-            </lux-chips-ac>
+            <lux-chips [luxInputAllowed]="false" [luxHideBorder]="true">
+              <lux-chip [luxRemovable]="false">alle</lux-chip>
+            </lux-chips>
           }
           <div>Icons (gefiltert / gesamt): {{ filteredIcons().length + displayedIcons().length }} / {{ allIcons.length }}</div>
         </div>
@@ -89,8 +89,8 @@
                 <p>Für die Vorschau ein Icon anklicken.</p>
               }
             </div>
-            <lux-select-ac luxLabel="Icongröße" [(luxSelected)]="iconSize" [luxOptions]="iconSizesOptions" [luxNoBottomLabel]="true" />
-            <lux-select-ac
+            <lux-select luxLabel="Icongröße" [(luxSelected)]="iconSize" [luxOptions]="iconSizesOptions" [luxNoBottomLabel]="true" />
+            <lux-select
               luxLabel="Farbwert"
               [luxOptions]="iconColorOptions"
               [luxSelected]="iconColorOptions[0]"
@@ -98,7 +98,7 @@
               (luxSelectedChange)="onColorChanged($event)"
               [luxNoBottomLabel]="true"
             />
-            <lux-radio-ac
+            <lux-radio
               luxTagId="Farbe"
               luxAriaLabel="Farbe"
               [luxNoLabels]="false"
@@ -133,7 +133,7 @@
 
 <ng-template #search>
   <div class="lux-flex lux-flex-col lux-gap-2">
-    <lux-input-ac
+    <lux-input
       luxAutofocus
       luxTagId="Suchbegriff"
       luxAriaLabel="Suchbegriff"
@@ -145,11 +145,11 @@
       luxAutocomplete="off"
       luxHint="Suchbegriffe auf Englisch eingeben. Z.B. arrow, desktop,..."
     >
-      <lux-input-ac-prefix class="lux-mr-3" luxTagId="searchInput">
+      <lux-input-prefix class="lux-mr-3" luxTagId="searchInput">
         <lux-icon luxIconName="lux-interface-search" />
-      </lux-input-ac-prefix>
-    </lux-input-ac>
-    <lux-radio-ac
+      </lux-input-prefix>
+    </lux-input>
+    <lux-radio
       [luxNoTopLabel]="true"
       luxTagId="Suchbegriffverknüpfung"
       luxAriaLabel="Suchbegriffverknüpfung"

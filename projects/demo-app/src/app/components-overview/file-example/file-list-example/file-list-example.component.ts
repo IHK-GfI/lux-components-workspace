@@ -8,8 +8,8 @@ import {
   LuxDialogService,
   LuxFileListComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxToggleAcComponent,
+  LuxInputComponent,
+  LuxToggleComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
@@ -28,8 +28,8 @@ import { FileExampleComponent } from '../file-example.component';
   templateUrl: './file-list-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxFileListComponent,
     LuxAutofocusDirective,

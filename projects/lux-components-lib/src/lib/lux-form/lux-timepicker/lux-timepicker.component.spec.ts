@@ -9,7 +9,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxUtil } from '../../lux-util/lux-util';
-import { LuxDatepickerAcComponent } from '../lux-datepicker-ac/lux-datepicker-ac.component';
+import { LuxDatepickerComponent } from '../lux-datepicker/lux-datepicker.component';
 import { LuxTimepickerComponent } from './lux-timepicker.component';
 
 describe('LuxTimepickerComponent', () => {
@@ -65,8 +65,8 @@ describe('LuxTimepickerComponent', () => {
       LuxTimepickerCombinedNoFormTestComponent
     );
     const testComponent = fixture.componentInstance;
-    const datepickerComponent = fixture.debugElement.query(By.directive(LuxDatepickerAcComponent))
-      .componentInstance as LuxDatepickerAcComponent;
+    const datepickerComponent = fixture.debugElement.query(By.directive(LuxDatepickerComponent))
+      .componentInstance as LuxDatepickerComponent;
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
@@ -92,8 +92,8 @@ describe('LuxTimepickerComponent', () => {
       LuxTimepickerCombinedFormTestComponent
     );
     const testComponent = fixture.componentInstance;
-    const datepickerComponent = fixture.debugElement.query(By.directive(LuxDatepickerAcComponent))
-      .componentInstance as LuxDatepickerAcComponent;
+    const datepickerComponent = fixture.debugElement.query(By.directive(LuxDatepickerComponent))
+      .componentInstance as LuxDatepickerComponent;
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
@@ -174,10 +174,10 @@ class LuxTimepickerFormTestComponent {
 
 @Component({
   template: `
-    <lux-datepicker-ac luxLabel="Datum" [luxReferenceControl]="timepicker" [(luxValue)]="combinedISO" #datepicker></lux-datepicker-ac>
+    <lux-datepicker luxLabel="Datum" [luxReferenceControl]="timepicker" [(luxValue)]="combinedISO" #datepicker></lux-datepicker>
     <lux-timepicker luxLabel="Zeit" [luxReferenceControl]="datepicker" [(luxValue)]="combinedISO" #timepicker></lux-timepicker>
   `,
-  imports: [LuxDatepickerAcComponent, LuxTimepickerComponent]
+  imports: [LuxDatepickerComponent, LuxTimepickerComponent]
 })
 class LuxTimepickerCombinedNoFormTestComponent {
   combinedISO = '2026-06-18T14:15:00.000Z';
@@ -186,11 +186,11 @@ class LuxTimepickerCombinedNoFormTestComponent {
 @Component({
   template: `
     <div [formGroup]="form">
-      <lux-datepicker-ac luxLabel="Datum" luxControlBinding="date" [luxReferenceControl]="timepicker" #datepicker></lux-datepicker-ac>
+      <lux-datepicker luxLabel="Datum" luxControlBinding="date" [luxReferenceControl]="timepicker" #datepicker></lux-datepicker>
       <lux-timepicker luxLabel="Zeit" luxControlBinding="time" [luxReferenceControl]="datepicker" #timepicker></lux-timepicker>
     </div>
   `,
-  imports: [ReactiveFormsModule, LuxDatepickerAcComponent, LuxTimepickerComponent]
+  imports: [ReactiveFormsModule, LuxDatepickerComponent, LuxTimepickerComponent]
 })
 class LuxTimepickerReferenceFormTestComponent {
   form = new FormGroup({
@@ -210,11 +210,11 @@ class LuxTimepickerReferenceFormTestComponent {
 @Component({
   template: `
     <div [formGroup]="form">
-      <lux-datepicker-ac luxLabel="Datum" luxControlBinding="combined" [luxReferenceControl]="timepicker" #datepicker></lux-datepicker-ac>
+      <lux-datepicker luxLabel="Datum" luxControlBinding="combined" [luxReferenceControl]="timepicker" #datepicker></lux-datepicker>
       <lux-timepicker luxLabel="Zeit" luxControlBinding="combined" [luxReferenceControl]="datepicker" #timepicker></lux-timepicker>
     </div>
   `,
-  imports: [ReactiveFormsModule, LuxDatepickerAcComponent, LuxTimepickerComponent]
+  imports: [ReactiveFormsModule, LuxDatepickerComponent, LuxTimepickerComponent]
 })
 class LuxTimepickerCombinedFormTestComponent {
   form = new FormGroup({

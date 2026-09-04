@@ -7,13 +7,13 @@ import {
   LuxDialogDefaultButton,
   LuxDialogService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -33,10 +33,10 @@ import { DialogComponentExampleComponent } from './dialog-component-example/dial
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,

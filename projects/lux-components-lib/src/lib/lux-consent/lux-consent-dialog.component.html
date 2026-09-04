@@ -27,7 +27,7 @@
                   <span class="essential-hint">{{ category.hint | transloco }}</span>
                 </p>
               } @else {
-                <lux-toggle-ac
+                <lux-toggle
                   [luxNoTopLabel]="true"
                   [luxDense]="true"
                   [luxLabel]="category.name | transloco"
@@ -56,7 +56,7 @@
                         >: <span>{{ category.name | transloco }}</span>
                       </p>
                     } @else {
-                      <lux-toggle-ac
+                      <lux-toggle
                         [luxNoLabels]="true"
                         [luxLabel]="category.name | transloco"
                         [luxChecked]="category.enabled"

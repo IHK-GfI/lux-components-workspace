@@ -8,12 +8,12 @@ import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxDatepickerAcComponent } from '../../lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
-import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
-import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
+import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
+import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
+import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
 import { LuxTimepickerComponent } from '../../lux-form/lux-timepicker/lux-timepicker.component';
-import { LuxToggleAcComponent } from '../../lux-form/lux-toggle-ac/lux-toggle-ac.component';
+import { LuxToggleComponent } from '../../lux-form/lux-toggle/lux-toggle.component';
 import { LuxFilterItemDirective } from '../lux-filter-base/lux-filter-item.directive';
 import { LuxFilterFormComponent } from './lux-filter-form.component';
 
@@ -129,7 +129,7 @@ describe('LuxFilterFormComponent', () => {
       [luxStoredFilters]="storedFilters"
       class="lux-ml-1 lux-mr-1 lux-mb-3"
     >
-      <lux-input-ac
+      <lux-input
         luxLabel="Input"
         luxName="filter_input"
         luxAutocomplete="off"
@@ -138,23 +138,23 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterDisabled]="inputDisabled"
         [luxFilterHidden]="inputHidden"
         luxFilterItem
-      ></lux-input-ac>
-      <lux-autocomplete-ac
+      ></lux-input>
+      <lux-autocomplete
         luxLabel="Autocomplete"
         [luxOptions]="autoCompleteOptions"
         luxControlBinding="autocomplete"
         [luxFilterDisabled]="autoCompleteDisabled"
         [luxFilterHidden]="autoCompleteHidden"
         luxFilterItem
-      ></lux-autocomplete-ac>
-      <lux-datepicker-ac
+      ></lux-autocomplete>
+      <lux-datepicker
         luxLabel="Datepicker"
         luxName="filter_datepicker"
         luxControlBinding="datepicker"
         [luxFilterDisabled]="datepickerDisabled"
         [luxFilterHidden]="datepickerHidden"
         luxFilterItem
-      ></lux-datepicker-ac>
+      ></lux-datepicker>
       <lux-timepicker
         luxLabel="Timepicker"
         luxName="filter_timepicker"
@@ -165,7 +165,7 @@ describe('LuxFilterFormComponent', () => {
       ></lux-timepicker>
       <div>
         <div>
-          <lux-datepicker-ac
+          <lux-datepicker
             luxLabel="Datepicker + Timepicker (Datum)"
             luxName="filter_datepicker_combined"
             luxControlBinding="combinedDateTime"
@@ -174,7 +174,7 @@ describe('LuxFilterFormComponent', () => {
             [luxReferenceControl]="combinedTimepicker"
             luxFilterItem
             #combinedDatepicker
-          ></lux-datepicker-ac>
+          ></lux-datepicker>
           <lux-timepicker
             luxLabel="Datepicker + Timepicker (Uhrzeit)"
             luxName="filter_timepicker_combined"
@@ -187,7 +187,7 @@ describe('LuxFilterFormComponent', () => {
           ></lux-timepicker>
         </div>
       </div>
-      <lux-select-ac
+      <lux-select
         luxLabel="Single-Select"
         luxControlBinding="singleSelect"
         luxOptionLabelProp="label"
@@ -198,8 +198,8 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterHidden]="singleSelectHidden"
         luxFilterColor="accent"
         luxFilterItem
-      ></lux-select-ac>
-      <lux-select-ac
+      ></lux-select>
+      <lux-select
         luxLabel="Multi-Select"
         luxControlBinding="multiSelect"
         luxOptionLabelProp="label"
@@ -210,8 +210,8 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterHidden]="multiSelectHidden"
         luxFilterColor="accent"
         luxFilterItem
-      ></lux-select-ac>
-      <lux-toggle-ac
+      ></lux-select>
+      <lux-toggle
         luxLabel="Toggle"
         luxControlBinding="toggle"
         [luxFilterRenderFn]="renderToggleFn"
@@ -219,18 +219,18 @@ describe('LuxFilterFormComponent', () => {
         [luxFilterHidden]="toggleSelectHidden"
         luxFilterColor="warn"
         luxFilterItem
-      ></lux-toggle-ac>
+      ></lux-toggle>
     </lux-filter-form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxFilterFormComponent,
     LuxFilterItemDirective,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
-    LuxAutocompleteAcComponent,
-    LuxDatepickerAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
+    LuxAutocompleteComponent,
+    LuxDatepickerComponent,
     LuxTimepickerComponent
   ]
 })

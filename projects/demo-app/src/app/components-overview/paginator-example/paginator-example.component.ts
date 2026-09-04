@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, effect, model, untracked 
 import {
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { LuxPageEvent, LuxPaginatorComponent, LuxRangeLabelFn } from '@ihk-gfi/lux-components/lux-paginator';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -24,9 +24,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
+    LuxSelectComponent,
     ExampleBaseAdvancedOptionsComponent
   ]
 })

@@ -1,4 +1,4 @@
-<lux-select-ac
+<lux-select
   luxLabel="luxClasses"
   [(luxSelected)]="tableExample().cssClass"
   [luxOptions]="tableExample().tableCSS"
@@ -11,7 +11,7 @@
     automatisch. Weiße Zeilen trennt eine horizontale Linie, an Übergängen zu markierten Zeilen trennt der Farbwechsel und
     aufeinanderfolgende markierte Zeilen trennt eine Linie in ihrer Schriftfarbe.
   </lux-form-hint>
-</lux-select-ac>
+</lux-select>
 <lux-button
   luxLabel="Auswahl leeren"
   [luxStroked]="true"
@@ -20,32 +20,32 @@
   class="lux-mb-3"
 >
 </lux-button>
-<lux-input-ac luxLabel="luxMinWidthPx" luxType="number" [luxNumberAlignLeft]="true" [(luxValue)]="tableExample().minWidthPx">
+<lux-input luxLabel="luxMinWidthPx" luxType="number" [luxNumberAlignLeft]="true" [(luxValue)]="tableExample().minWidthPx">
   <lux-form-hint>Bestimmt die Minimalbreite der Tabelle in PX (greift erst ab dem nächsten Resize des Fensters). </lux-form-hint>
-</lux-input-ac>
-<lux-toggle-ac luxLabel="Höhe festlegen" [(luxChecked)]="tableExample().calculateProportions" [luxNoTopLabel]="true">
+</lux-input>
+<lux-toggle luxLabel="Höhe festlegen" [(luxChecked)]="tableExample().calculateProportions" [luxNoTopLabel]="true">
   <lux-form-hint>
     Die Höhe des Parent-Divs dieser Tabelle auf eine bestimmte Höhe festlegen.<br />
     Wenn mehr Einträge vorhanden sind, als durch die Höhe darstellbar, wird die Tabelle automatisch scrollbar.
   </lux-form-hint>
-</lux-toggle-ac>
-<lux-input-ac
+</lux-toggle>
+<lux-input
   luxLabel="Höhe"
   luxType="number"
   [(luxValue)]="tableExample().tableHeightPx"
   [luxDisabled]="!tableExample().calculateProportions"
 >
   <lux-form-hint>Höhe des Parent-Elements für die LuxTable.</lux-form-hint>
-</lux-input-ac>
-<lux-toggle-ac luxLabel="luxAutoPaginate" [(luxChecked)]="tableExample().autoPagination" [luxNoTopLabel]="true">
+</lux-input>
+<lux-toggle luxLabel="luxAutoPaginate" [(luxChecked)]="tableExample().autoPagination" [luxNoTopLabel]="true">
   <lux-form-hint>
     Diese Property aktiviert/deaktiviert die automatische Freischaltung der Pagination ab 100 auf einmal dargestellten Einträgen.
   </lux-form-hint>
-</lux-toggle-ac>
-<lux-toggle-ac luxLabel="luxHideBorders" [(luxChecked)]="tableExample().hideBorders" [luxNoTopLabel]="true">
+</lux-toggle>
+<lux-toggle luxLabel="luxHideBorders" [(luxChecked)]="tableExample().hideBorders" [luxNoTopLabel]="true">
   <lux-form-hint>Mithilfe dieser Property können die Borders der Table ausgeschaltet werden.</lux-form-hint>
-</lux-toggle-ac>
-<lux-select-ac
+</lux-toggle>
+<lux-select
   luxLabel="luxColWidthsPercent"
   [(luxSelected)]="tableExample().columnWidthOption"
   [luxOptions]="tableExample().columnWidthOptions"
@@ -53,7 +53,7 @@
   [luxPickValue]="tableExample().pickColWidth"
 >
   <lux-form-hint>Enthält ein Array von Strings, welche einen %-Wert für die Breite der jeweiligen Spalte beinhalten. </lux-form-hint>
-</lux-select-ac>
+</lux-select>
 <div class="lux-simple-form column">
   <h3>Optionen der Spalten</h3>
   <lux-accordion class="lux-mt-3" luxMode="flat">
@@ -61,23 +61,23 @@
       <lux-panel>
         <lux-panel-header-title> Spalte "{{ config.label }}" </lux-panel-header-title>
         <lux-panel-content>
-          <lux-toggle-ac luxLabel="Sortierbar" [(luxChecked)]="config.sortable" [luxNoTopLabel]="true"> </lux-toggle-ac>
-          <lux-toggle-ac
+          <lux-toggle luxLabel="Sortierbar" [(luxChecked)]="config.sortable" [luxNoTopLabel]="true"> </lux-toggle>
+          <lux-toggle
             luxTagId="table-advanced-options-sticky"
             [(luxChecked)]="config.sticky"
             [luxDisabled]="config.sticky === undefined"
             [luxNoTopLabel]="true"
           >
             <lux-form-label>Sticky</lux-form-label>
-          </lux-toggle-ac>
-          <lux-select-ac
+          </lux-toggle>
+          <lux-select
             luxLabel="Responsive Verhalten"
             [luxOptions]="BEHAVIOURS | responsiveBehaviourFiltered: config"
             luxOptionLabelProp="label"
             [(luxSelected)]="config.responsiveBehaviour"
           >
-          </lux-select-ac>
-          <lux-select-ac
+          </lux-select>
+          <lux-select
             luxLabel="Responsive MediaQueries"
             [luxMultiple]="true"
             [luxOptions]="tableExample().mediaQueryOptions"
@@ -85,7 +85,7 @@
             [luxDisabled]="config.responsiveBehaviour.value === null"
             [luxRequired]="true"
           >
-          </lux-select-ac>
+          </lux-select>
         </lux-panel-content>
       </lux-panel>
     }

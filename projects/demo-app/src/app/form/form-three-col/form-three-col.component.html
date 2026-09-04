@@ -5,9 +5,9 @@
       <lux-card luxTitle="Kunde" class="lux-flex">
         <lux-card-content>
           <div formGroupName="customer" class="lux-grid lux-grid-cols-1 lux-gap-4">
-            <lux-input-ac luxName="first-name" luxLabel="Vorname" luxControlBinding="name"></lux-input-ac>
-            <lux-input-ac luxName="given-name" luxLabel="Nachname" luxControlBinding="surname"></lux-input-ac>
-            <lux-radio-ac
+            <lux-input luxName="first-name" luxLabel="Vorname" luxControlBinding="name"></lux-input>
+            <lux-input luxName="given-name" luxLabel="Nachname" luxControlBinding="surname"></lux-input>
+            <lux-radio
               [luxOrientationVertical]="false"
               [luxOptions]="genders"
               [luxPickValue]="pickGenderValue"
@@ -17,35 +17,35 @@
               <ng-template let-option>
                 {{ option.name }}
               </ng-template>
-            </lux-radio-ac>
+            </lux-radio>
           </div>
         </lux-card-content>
       </lux-card>
       <lux-card luxTitle="Adresse" class="lux-flex">
         <lux-card-content>
           <div formGroupName="address" class="lux-grid lux-grid-cols-4 lt-md:lux-grid-cols-1 lux-gap-4">
-            <lux-input-ac
+            <lux-input
               luxName="postal-code"
               luxLabel="PLZ"
               luxType="number"
               [luxNumberAlignLeft]="true"
               luxControlBinding="zip"
-            ></lux-input-ac>
-            <lux-input-ac
+            ></lux-input>
+            <lux-input
               luxName="form-three_Stadt"
               luxLabel="Stadt"
               luxType="text"
               luxControlBinding="town"
               class="lux-col-span-3"
-            ></lux-input-ac>
-            <lux-input-ac
+            ></lux-input>
+            <lux-input
               luxName="street-address"
               luxLabel="Straße"
               luxType="text"
               luxControlBinding="street"
               class="lux-col-span-4"
-            ></lux-input-ac>
-            <lux-autocomplete-ac
+            ></lux-input>
+            <lux-autocomplete
               [luxOptions]="countries"
               luxOptionLabelProp="name"
               luxLabel="Land"
@@ -55,16 +55,16 @@
               luxControlBinding="country"
               class="lux-col-span-4"
             >
-            </lux-autocomplete-ac>
+            </lux-autocomplete>
           </div>
         </lux-card-content>
       </lux-card>
       <lux-card luxTitle="Feedback" class="lux-flex">
         <lux-card-content>
           <div formGroupName="feedback" class="lux-grid lux-grid-cols-1 lux-gap-4">
-            <lux-input-ac luxName="form-three_Bewertung" luxLabel="Bewertung" luxControlBinding="rating" luxType="text"></lux-input-ac>
-            <lux-checkbox-ac luxLabel="Anonymisieren" luxControlBinding="anonymous"></lux-checkbox-ac>
-            <lux-textarea-ac
+            <lux-input luxName="form-three_Bewertung" luxLabel="Bewertung" luxControlBinding="rating" luxType="text"></lux-input>
+            <lux-checkbox luxLabel="Anonymisieren" luxControlBinding="anonymous"></lux-checkbox>
+            <lux-textarea
               luxName="form-three_Kommentar"
               luxLabel="Kommentar"
               luxHint="Hier ist Platz für Ihre Nachricht."
@@ -72,7 +72,7 @@
               [luxMaxLength]="100"
               [luxMinRows]="1"
               [luxMaxRows]="-1"
-            ></lux-textarea-ac>
+            ></lux-textarea>
           </div>
         </lux-card-content>
       </lux-card>

@@ -9,19 +9,19 @@ import { By } from '@angular/platform-browser';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxAutocompleteAcComponent } from '../lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxCheckboxAcComponent } from '../lux-checkbox-ac/lux-checkbox-ac.component';
-import { LuxDatepickerAcComponent } from '../lux-datepicker-ac/lux-datepicker-ac.component';
+import { LuxAutocompleteComponent } from '../lux-autocomplete/lux-autocomplete.component';
+import { LuxCheckboxComponent } from '../lux-checkbox/lux-checkbox.component';
+import { LuxDatepickerComponent } from '../lux-datepicker/lux-datepicker.component';
 
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { LuxFileInputAcComponent } from '../lux-file/lux-file-input-ac/lux-file-input-ac.component';
+import { LuxFileInputComponent } from '../lux-file/lux-file-input/lux-file-input.component';
 import { LuxFileListComponent } from '../lux-file/lux-file-list/lux-file-list.component';
-import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
-import { LuxRadioAcComponent } from '../lux-radio-ac/lux-radio-ac.component';
-import { LuxSelectAcComponent } from '../lux-select-ac/lux-select-ac.component';
-import { LuxSliderAcComponent } from '../lux-slider-ac/lux-slider-ac.component';
-import { LuxTextareaAcComponent } from '../lux-textarea-ac/lux-textarea-ac.component';
-import { LuxToggleAcComponent } from '../lux-toggle-ac/lux-toggle-ac.component';
+import { LuxInputComponent } from '../lux-input/lux-input.component';
+import { LuxRadioComponent } from '../lux-radio/lux-radio.component';
+import { LuxSelectComponent } from '../lux-select/lux-select.component';
+import { LuxSliderComponent } from '../lux-slider/lux-slider.component';
+import { LuxTextareaComponent } from '../lux-textarea/lux-textarea.component';
+import { LuxToggleComponent } from '../lux-toggle/lux-toggle.component';
 
 describe('LuxControlDisable', () => {
   let fixture: ComponentFixture<LuxControlDisableComponent>;
@@ -434,60 +434,44 @@ describe('LuxControlDisable', () => {
 @Component({
   template: `
     <form [formGroup]="myForm">
-      <lux-input-ac luxLabel="Input" luxControlBinding="input" [(luxDisabled)]="disabledState" id="input"></lux-input-ac>
-      <lux-autocomplete-ac
+      <lux-input luxLabel="Input" luxControlBinding="input" [(luxDisabled)]="disabledState" id="input"></lux-input>
+      <lux-autocomplete
         luxLabel="Autocomplete"
         [luxOptions]="options"
         luxControlBinding="autocomplete"
         [(luxDisabled)]="disabledState"
         id="autocomplete"
-      ></lux-autocomplete-ac>
-      <lux-checkbox-ac luxLabel="checkbox" luxControlBinding="checkbox" [(luxDisabled)]="disabledState" id="checkbox"></lux-checkbox-ac>
-      <lux-datepicker-ac
-        luxLabel="datepicker"
-        luxControlBinding="datepicker"
-        [(luxDisabled)]="disabledState"
-        id="datepicker"
-      ></lux-datepicker-ac>
-      <lux-file-input-ac
-        luxLabel="fileInput"
-        luxControlBinding="fileInput"
-        [(luxDisabled)]="disabledState"
-        id="fileInput"
-      ></lux-file-input-ac>
+      ></lux-autocomplete>
+      <lux-checkbox luxLabel="checkbox" luxControlBinding="checkbox" [(luxDisabled)]="disabledState" id="checkbox"></lux-checkbox>
+      <lux-datepicker luxLabel="datepicker" luxControlBinding="datepicker" [(luxDisabled)]="disabledState" id="datepicker"></lux-datepicker>
+      <lux-file-input luxLabel="fileInput" luxControlBinding="fileInput" [(luxDisabled)]="disabledState" id="fileInput"></lux-file-input>
       <lux-file-list luxLabel="fileList" luxControlBinding="fileList" [(luxDisabled)]="disabledState" id="fileList"></lux-file-list>
-      <lux-radio-ac
-        luxLabel="radio"
-        [luxOptions]="options"
-        luxControlBinding="radio"
-        [(luxDisabled)]="disabledState"
-        id="radio"
-      ></lux-radio-ac>
-      <lux-select-ac
+      <lux-radio luxLabel="radio" [luxOptions]="options" luxControlBinding="radio" [(luxDisabled)]="disabledState" id="radio"></lux-radio>
+      <lux-select
         luxLabel="select"
         [luxOptions]="options"
         luxControlBinding="select"
         [(luxDisabled)]="disabledState"
         id="select"
-      ></lux-select-ac>
-      <lux-slider-ac luxLabel="slider" luxControlBinding="slider" [(luxDisabled)]="disabledState" id="slider"></lux-slider-ac>
-      <lux-textarea-ac luxLabel="textarea" luxControlBinding="textarea" [(luxDisabled)]="disabledState" id="textarea"></lux-textarea-ac>
-      <lux-toggle-ac luxLabel="toggle" luxControlBinding="toggle" [(luxDisabled)]="disabledState" id="toggle"></lux-toggle-ac>
+      ></lux-select>
+      <lux-slider luxLabel="slider" luxControlBinding="slider" [(luxDisabled)]="disabledState" id="slider"></lux-slider>
+      <lux-textarea luxLabel="textarea" luxControlBinding="textarea" [(luxDisabled)]="disabledState" id="textarea"></lux-textarea>
+      <lux-toggle luxLabel="toggle" luxControlBinding="toggle" [(luxDisabled)]="disabledState" id="toggle"></lux-toggle>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxSliderAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
-    LuxAutocompleteAcComponent,
-    LuxCheckboxAcComponent,
-    LuxDatepickerAcComponent,
-    LuxFileInputAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxSliderComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
+    LuxAutocompleteComponent,
+    LuxCheckboxComponent,
+    LuxDatepickerComponent,
+    LuxFileInputComponent,
     LuxFileListComponent
   ]
 })

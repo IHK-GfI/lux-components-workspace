@@ -1,7 +1,7 @@
 <div id="Home" class="page-content lux-flex lux-flex-col">
   <h1 class="page-title">Die Komponenten von A-Z</h1>
   <div class="lux-flex lux-flex-wrap lux-justify-start lux-align-start lux-gap-6">
-    <lux-input-ac
+    <lux-input
       luxAutofocus
       luxAriaLabel="Suchbegriff"
       luxTagId="Suchbegriff"
@@ -11,10 +11,10 @@
       [(luxValue)]="filterValue"
       luxAutocomplete="off"
     >
-      <lux-input-ac-prefix class="lux-mr-3" luxTagId="searchInput">
+      <lux-input-prefix class="lux-mr-3" luxTagId="searchInput">
         <lux-icon luxIconName="lux-interface-search"></lux-icon>
-      </lux-input-ac-prefix>
-    </lux-input-ac>
+      </lux-input-prefix>
+    </lux-input>
   </div>
   <div class="lux-flex lux-flex-wrap lux-justify-start lux-align-start lux-gap-6 lux-mb-4">
     @for (component of navigationService.getFilteredComponents(filterValue()) | luxAlphabeticallySorted; track component.label) {

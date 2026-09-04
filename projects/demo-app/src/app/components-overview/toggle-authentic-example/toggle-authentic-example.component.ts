@@ -1,6 +1,6 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LuxAutofocusDirective, LuxFormHintComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxAutofocusDirective, LuxFormHintComponent, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -21,8 +21,8 @@ interface ToggleDummyForm {
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,

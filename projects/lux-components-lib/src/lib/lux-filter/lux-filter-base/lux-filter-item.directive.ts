@@ -1,17 +1,17 @@
 import { Directive, ElementRef, OnInit, Renderer2, effect, inject, input } from '@angular/core';
-import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxCheckboxAcComponent } from '../../lux-form/lux-checkbox-ac/lux-checkbox-ac.component';
-import { LuxDatepickerAcComponent } from '../../lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
-import { LuxDatetimepickerAcComponent } from '../../lux-form/lux-datetimepicker-ac/lux-datetimepicker-ac.component';
+import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
+import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
+import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
+import { LuxDatetimepickerComponent } from '../../lux-form/lux-datetimepicker/lux-datetimepicker.component';
 import { LuxFormComponentBase } from '../../lux-form/lux-form-model/lux-form-component-base.class';
 import { LuxFormSelectableBase } from '../../lux-form/lux-form-model/lux-form-selectable-base.class';
-import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
-import { LuxRadioAcComponent } from '../../lux-form/lux-radio-ac/lux-radio-ac.component';
-import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
+import { LuxRadioComponent } from '../../lux-form/lux-radio/lux-radio.component';
+import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
 import { LuxTimepickerComponent } from '../../lux-form/lux-timepicker/lux-timepicker.component';
-import { LuxToggleAcComponent } from '../../lux-form/lux-toggle-ac/lux-toggle-ac.component';
-import { LuxLookupAutocompleteAcComponent } from '../../lux-lookup/lux-lookup-autocomplete-ac/lux-lookup-autocomplete-ac.component';
-import { LuxLookupComboboxAcComponent } from '../../lux-lookup/lux-lookup-combobox-ac/lux-lookup-combobox-ac.component';
+import { LuxToggleComponent } from '../../lux-form/lux-toggle/lux-toggle.component';
+import { LuxLookupAutocompleteComponent } from '../../lux-lookup/lux-lookup-autocomplete/lux-lookup-autocomplete.component';
+import { LuxLookupComboboxComponent } from '../../lux-lookup/lux-lookup-combobox/lux-lookup-combobox.component';
 import { LuxLookupComponent } from '../../lux-lookup/lux-lookup-model/lux-lookup-component';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxFilterItem } from './lux-filter-item';
@@ -27,17 +27,17 @@ export class LuxFilterItemDirective implements OnInit {
   readonly luxFilterHidden = input(false);
   readonly luxFilterDisabled = input(false);
 
-  inputAuthentic = inject(LuxInputAcComponent, { optional: true });
-  autoCompleteAuthentic = inject(LuxAutocompleteAcComponent, { optional: true });
-  autoCompleteLookupAuthentic = inject(LuxLookupAutocompleteAcComponent, { optional: true });
-  datepickerAuthentic = inject(LuxDatepickerAcComponent, { optional: true });
-  datetimepickerAuthentic = inject(LuxDatetimepickerAcComponent, { optional: true });
+  inputAuthentic = inject(LuxInputComponent, { optional: true });
+  autoCompleteAuthentic = inject(LuxAutocompleteComponent, { optional: true });
+  autoCompleteLookupAuthentic = inject(LuxLookupAutocompleteComponent, { optional: true });
+  datepickerAuthentic = inject(LuxDatepickerComponent, { optional: true });
+  datetimepickerAuthentic = inject(LuxDatetimepickerComponent, { optional: true });
   timepickerAuthentic = inject(LuxTimepickerComponent, { optional: true });
-  toggleAuthentic = inject(LuxToggleAcComponent, { optional: true });
-  checkboxAuthentic = inject(LuxCheckboxAcComponent, { optional: true });
-  selectAuthentic = inject(LuxSelectAcComponent, { optional: true });
-  selectLookupAuthentic = inject(LuxLookupComboboxAcComponent, { optional: true });
-  radioAuthentic = inject(LuxRadioAcComponent, { optional: true });
+  toggleAuthentic = inject(LuxToggleComponent, { optional: true });
+  checkboxAuthentic = inject(LuxCheckboxComponent, { optional: true });
+  selectAuthentic = inject(LuxSelectComponent, { optional: true });
+  selectLookupAuthentic = inject(LuxLookupComboboxComponent, { optional: true });
+  radioAuthentic = inject(LuxRadioComponent, { optional: true });
   formComponent!: LuxFormComponentBase;
   filterItem!: LuxFilterItem<any>;
 
@@ -110,20 +110,20 @@ export class LuxFilterItemDirective implements OnInit {
     if (luxFilterRenderFn) {
       this.filterItem.renderFn = luxFilterRenderFn;
     } else {
-      if (this.filterItem.component instanceof LuxToggleAcComponent || this.filterItem.component instanceof LuxCheckboxAcComponent) {
+      if (this.filterItem.component instanceof LuxToggleComponent || this.filterItem.component instanceof LuxCheckboxComponent) {
         this.filterItem.renderFn = this.renderToggleFn;
-      } else if (this.filterItem.component instanceof LuxDatepickerAcComponent) {
+      } else if (this.filterItem.component instanceof LuxDatepickerComponent) {
         this.filterItem.renderFn = this.renderDateAcFn;
-      } else if (this.filterItem.component instanceof LuxDatetimepickerAcComponent) {
+      } else if (this.filterItem.component instanceof LuxDatetimepickerComponent) {
         this.filterItem.renderFn = this.renderDateTimeAcFn;
       } else if (this.filterItem.component instanceof LuxTimepickerComponent) {
         this.filterItem.renderFn = this.renderTimeAcFn;
       } else if (
-        this.filterItem.component instanceof LuxSelectAcComponent ||
-        this.filterItem.component instanceof LuxAutocompleteAcComponent ||
-        this.filterItem.component instanceof LuxLookupComboboxAcComponent ||
-        this.filterItem.component instanceof LuxLookupAutocompleteAcComponent ||
-        this.filterItem.component instanceof LuxRadioAcComponent
+        this.filterItem.component instanceof LuxSelectComponent ||
+        this.filterItem.component instanceof LuxAutocompleteComponent ||
+        this.filterItem.component instanceof LuxLookupComboboxComponent ||
+        this.filterItem.component instanceof LuxLookupAutocompleteComponent ||
+        this.filterItem.component instanceof LuxRadioComponent
       ) {
         this.filterItem.renderFn = this.renderLabelFn;
       } else {
@@ -141,8 +141,8 @@ export class LuxFilterItemDirective implements OnInit {
     } else if (
       typeof value === 'object' &&
       (filterItem.component instanceof LuxFormSelectableBase ||
-        filterItem.component instanceof LuxAutocompleteAcComponent ||
-        filterItem.component instanceof LuxRadioAcComponent)
+        filterItem.component instanceof LuxAutocompleteComponent ||
+        filterItem.component instanceof LuxRadioComponent)
     ) {
       return (value as any)[filterItem.component.luxOptionLabelProp()];
     } else if (filterItem.component instanceof LuxLookupComponent) {
@@ -153,11 +153,11 @@ export class LuxFilterItemDirective implements OnInit {
   }
 
   renderDateAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxDatepickerAcComponent).datepickerInput()?.nativeElement.value;
+    return (filterItem.component as LuxDatepickerComponent).datepickerInput()?.nativeElement.value;
   }
 
   renderDateTimeAcFn(filterItem: LuxFilterItem, value: any) {
-    return (filterItem.component as LuxDatetimepickerAcComponent).dateTimePickerInputEl()?.nativeElement.value;
+    return (filterItem.component as LuxDatetimepickerComponent).dateTimePickerInputEl()?.nativeElement.value;
   }
 
   renderTimeAcFn(filterItem: LuxFilterItem, value: any) {

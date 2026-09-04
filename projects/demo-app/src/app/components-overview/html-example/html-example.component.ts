@@ -1,5 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LuxFormHintComponent, LuxInputAcComponent, LuxTextareaAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxFormHintComponent, LuxInputComponent, LuxTextareaComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { LuxHtmlComponent, LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -12,9 +12,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxHtmlComponent,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

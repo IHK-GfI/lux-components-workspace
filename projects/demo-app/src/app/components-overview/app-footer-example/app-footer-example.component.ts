@@ -9,13 +9,13 @@ import {
   LuxAppFooterLinkService,
   LuxButtonComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxSnackbarService,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -33,9 +33,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,
     LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent
+    LuxInputComponent,
+    LuxSelectComponent,
+    LuxToggleComponent
   ]
 })
 export class AppFooterExampleComponent {

@@ -2,13 +2,13 @@ import { JsonPipe, NgClass, NgStyle } from '@angular/common';
 import { Component, inject, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxSnackbarService,
   LuxStepperLargeComponent,
   LuxStepperLargeSelectionEvent,
   LuxStepperLargeStepComponent,
   LuxThemeService,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StepperLargeExampleDataService } from './stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from './stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';
@@ -26,8 +26,8 @@ import { StepperLargeExternStepExampleComponent } from './steps/stepper-large-ex
   imports: [
     LuxStepperLargeStepComponent,
     LuxStepperLargeComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
     NgStyle,
     NgClass,
     StepperLargeExampleStepPrevButtonComponent,
@@ -41,7 +41,7 @@ import { StepperLargeExternStepExampleComponent } from './steps/stepper-large-ex
 })
 export class StepperLargeExampleComponent {
   readonly stepper = viewChild(LuxStepperLargeComponent);
-  readonly toggle = viewChild<LuxToggleAcComponent>('requiredCheck');
+  readonly toggle = viewChild<LuxToggleComponent>('requiredCheck');
 
   dataService = inject(StepperLargeExampleDataService);
   readonly allowed = signal(false);

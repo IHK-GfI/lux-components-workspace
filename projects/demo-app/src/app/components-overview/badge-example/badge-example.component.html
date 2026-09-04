@@ -14,20 +14,20 @@
     }
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxLabel="luxIconName"
       luxHint="Diese Property definiert das Icon, welches in dem Badge angezeigt wird."
       [(luxValue)]="iconName"
     />
-    <lux-input-ac
+    <lux-input
       luxLabel="Badge Text"
       luxHint="Der Text-Inhalt der Badge wird über Content-Projection mithilfe der lux-label Component eingebunden."
       [(luxValue)]="text"
     />
-    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+    <lux-input luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
-    </lux-input-ac>
-    <lux-select-ac
+    </lux-input>
+    <lux-select
       luxLabel="luxSize"
       luxHint="Setzt die Schriftgröße des Badges. Ohne Angabe wird die Schriftgröße vom Parent-Element geerbt."
       [(luxSelected)]="size"
@@ -35,13 +35,13 @@
       luxOptionLabelProp="label"
       [luxPickValue]="sizePickValue"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="uppercase"
       luxLabel="luxUppercase"
       luxHint="Die Property ermöglicht eine Uppercase-Darstellung des Textes in der Badge einzuschalten."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="muted"
       luxLabel="luxMuted"
       luxHint="Die Property aktiviert die Muted-Darstellung mit hellem Hintergrund und farbigem Rahmen."

@@ -2,16 +2,16 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkComponent,
   LuxPopupActionsDirective,
   LuxPopupCloseReason,
   LuxPopupComponent,
   LuxPopupPosition,
   LuxPopupTriggerDirective,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxSelectComponent,
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -31,10 +31,10 @@ import { PopupExampleInfoPopupComponent } from './popup-example-info-popup.compo
     LuxPopupActionsDirective,
     LuxButtonComponent,
     LuxLinkComponent,
-    LuxInputAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxToggleComponent,
     PopupExampleInfoPopupComponent,
     LuxAriaLabelDirective
   ]

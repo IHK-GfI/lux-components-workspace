@@ -23,7 +23,7 @@
   </example-base-content>
 
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Impressum/Datenschutz als Components öffnen"
       luxHint="Wenn deaktiviert, werden stattdessen externe URLs verwendet."
       [luxNoTopLabel]="true"
@@ -31,7 +31,7 @@
       (luxCheckedChange)="useComponentTargets.set($event)"
     />
 
-    <lux-input-ac
+    <lux-input
       luxName="consent-impressum-url"
       luxLabel="Impressum URL"
       luxHint="URL für Impressum im Consent-Dialog (URL-Modus)."
@@ -40,7 +40,7 @@
       [luxDisabled]="useComponentTargets()"
     />
 
-    <lux-input-ac
+    <lux-input
       luxName="consent-datenschutz-url"
       luxLabel="Datenschutz URL"
       luxHint="URL für Datenschutz im Consent-Dialog (URL-Modus)."
@@ -49,7 +49,7 @@
       [luxDisabled]="useComponentTargets()"
     />
 
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Nur essentielle LuxConsentEntry-Einträge verwenden"
       luxHint="Zum Testen des Verhaltens ohne optionale Zwecke."
       [luxNoTopLabel]="true"

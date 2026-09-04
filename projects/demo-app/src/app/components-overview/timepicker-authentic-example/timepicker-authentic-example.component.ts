@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
-  LuxDatepickerAcComponent,
+  LuxDatepickerComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxTimepickerComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -29,10 +29,10 @@ interface TimepickerDummyForm {
   templateUrl: './timepicker-authentic-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
-    LuxDatepickerAcComponent,
+    LuxDatepickerComponent,
     LuxTimepickerComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,

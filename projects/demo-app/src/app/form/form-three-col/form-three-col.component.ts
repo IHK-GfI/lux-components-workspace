@@ -3,13 +3,13 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
+  LuxAutocompleteComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxCheckboxAcComponent,
-  LuxInputAcComponent,
-  LuxRadioAcComponent,
-  LuxTextareaAcComponent
+  LuxCheckboxComponent,
+  LuxInputComponent,
+  LuxRadioComponent,
+  LuxTextareaComponent
 } from '@ihk-gfi/lux-components';
 import { debounceTime } from 'rxjs';
 import { FormExampleSnapshot, FormExampleStateService } from '../form-example-state.service';
@@ -53,11 +53,11 @@ type FormThreeColState = FormExampleSnapshot<ReturnType<FormGroup<FormThreeColDu
   imports: [
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxTextareaAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
-    LuxCheckboxAcComponent,
-    LuxAutocompleteAcComponent,
+    LuxTextareaComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
+    LuxCheckboxComponent,
+    LuxAutocompleteComponent,
     ReactiveFormsModule,
     JsonPipe
   ]

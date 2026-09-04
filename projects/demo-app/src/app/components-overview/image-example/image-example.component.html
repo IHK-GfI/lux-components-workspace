@@ -12,14 +12,14 @@
     />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac luxLabel="Frame anzeigen" [(luxChecked)]="showImageFrame" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="Frame anzeigen" [(luxChecked)]="showImageFrame" [luxNoTopLabel]="true">
       <lux-form-hint>
         Frame für das HTML-Element des Bildes anzeigen.<br />
         Kann veranschaulichen, ob das Bild selbst komplett mit dem umgebenden Element skaliert.
       </lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
 
-    <lux-select-ac
+    <lux-select
       [(luxSelected)]="imgSrc"
       [luxOptions]="imgSrcArr()"
       luxLabel="luxImageSrc"
@@ -29,21 +29,21 @@
         Eine der Auswahloptionen wird zur Laufzeit als <i>blob:</i>-URL erzeugt und kann direkt zum Testen externer Blob-Bilder verwendet
         werden.
       </lux-form-hint>
-    </lux-select-ac>
-    <lux-toggle-ac luxLabel="luxRawSrc" [(luxChecked)]="imgRawSrc" [luxNoTopLabel]="true">
+    </lux-select>
+    <lux-toggle luxLabel="luxRawSrc" [(luxChecked)]="imgRawSrc" [luxNoTopLabel]="true">
       <lux-form-hint>
         Mithilfe dieses Flags kann die Bearbeitung/Prüfung des übergebenen <i>luxImgSrc</i> deaktiviert werden.<br />
         Dadurch ist es z.B. möglich, relative Links (siehe letzte Option in dem Select-Feld) darzustellen.<br />
         Hinweis: Weil es kein Backend gibt, wird das Bild hier nicht korrekt dargestellt.Ein Blick in die Developer-Tools zeigt aber eine
         theoretisch korrekte Image-Source an.
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-input-ac
+    </lux-toggle>
+    <lux-input
       [(luxValue)]="imgWidth"
       luxLabel="luxImageWidth"
       luxHint="Bestimmt die Breite des Bildes, kann dabei einen beliebigen Wert enthalten (z.B. 100px oder 20%)."
     />
-    <lux-input-ac
+    <lux-input
       [(luxValue)]="imgHeight"
       luxLabel="luxImageHeight"
       luxHint="Bestimmt die Höhe des Bildes, kann dabei einen beliebigen Wert enthalten (z.B. 100px oder 20%)."

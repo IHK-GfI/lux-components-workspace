@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, OnDestroy, inject, signal } from '@
 import { MatSnackBarDismiss } from '@angular/material/snack-bar';
 import {
   LuxButtonComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
+  LuxInputComponent,
+  LuxSelectComponent,
   LuxSnackbarColors,
   LuxSnackbarConfig,
   LuxSnackbarService,
-  LuxToggleAcComponent,
+  LuxToggleComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
@@ -22,9 +22,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxTooltipDirective,
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,

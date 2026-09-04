@@ -5,12 +5,12 @@ import {
   LuxFormHintComponent,
   LuxIconComponent,
   LuxImageComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkPlainComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
   LuxTileAcComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -28,10 +28,10 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxIconComponent,
     LuxLinkPlainComponent,
     LuxTileAcComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,

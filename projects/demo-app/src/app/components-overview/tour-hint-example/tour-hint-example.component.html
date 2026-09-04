@@ -6,14 +6,14 @@
     <lux-card id="Karte_1" luxTitle="Card 1">
       <lux-card-content>
         <p>Hier sind is ein Beispiel Formular zum Testen der lux-tour-hint Komponente.</p>
-        <lux-input-ac id="Input_1" luxLabel="Input 1"></lux-input-ac>
+        <lux-input id="Input_1" luxLabel="Input 1"></lux-input>
 
         <div id="Input_2_Und_3" class="lux-grid lux-grid-cols-2 lux-gap-4">
-          <lux-input-ac luxLabel="Input 2"></lux-input-ac>
-          <lux-input-ac luxLabel="Input 3"></lux-input-ac>
+          <lux-input luxLabel="Input 2"></lux-input>
+          <lux-input luxLabel="Input 3"></lux-input>
         </div>
 
-        <lux-select-ac luxLabel="Select 1" [luxOptions]="['A', 'B', 'C']"></lux-select-ac>
+        <lux-select luxLabel="Select 1" [luxOptions]="['A', 'B', 'C']"></lux-select>
       </lux-card-content>
       <lux-card-actions id="Karte_1_Aktionen">
         <lux-button id="Karte_1_Aktion_1" luxLabel="Action 1" [luxRaised]="true" luxColor="primary"></lux-button>
@@ -57,17 +57,17 @@
   </example-base-content>
   <example-base-simple-options>
     <h3>Einfacher Hinweis Konfiguration</h3>
-    <lux-select-ac luxLabel="Hint Ziel (id)" [(luxSelected)]="singleHintTarget" [luxOptions]="singleHintTargetOptions"></lux-select-ac>
+    <lux-select luxLabel="Hint Ziel (id)" [(luxSelected)]="singleHintTarget" [luxOptions]="singleHintTargetOptions"></lux-select>
 
-    <lux-input-ac luxLabel="Hint Titel" [(luxValue)]="singleHintTitle"></lux-input-ac>
+    <lux-input luxLabel="Hint Titel" [(luxValue)]="singleHintTitle"></lux-input>
 
-    <lux-textarea-ac luxLabel="Hint Beschreibung" [(luxValue)]="singleHintContent"></lux-textarea-ac>
+    <lux-textarea luxLabel="Hint Beschreibung" [(luxValue)]="singleHintContent"></lux-textarea>
 
-    <lux-toggle-ac luxLabel="Option 'Nicht wieder zeigen'" [(luxChecked)]="singleHintShowDontShowAgain"></lux-toggle-ac>
+    <lux-toggle luxLabel="Option 'Nicht wieder zeigen'" [(luxChecked)]="singleHintShowDontShowAgain"></lux-toggle>
 
     <h3>Tour Konfiguration</h3>
 
-    <lux-toggle-ac luxLabel="Option 'Nicht wieder zeigen'" [(luxChecked)]="tourShowDontShowAgain"></lux-toggle-ac>
+    <lux-toggle luxLabel="Option 'Nicht wieder zeigen'" [(luxChecked)]="tourShowDontShowAgain"></lux-toggle>
   </example-base-simple-options>
 
   <example-base-options-actions class="lux-pt-3">

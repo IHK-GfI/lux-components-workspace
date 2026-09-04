@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
-  LuxDateFilterAcFn,
-  LuxDatepickerAcComponent,
+  LuxDateFilterFn,
+  LuxDatepickerComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxStartAcView,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxStartView,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -35,11 +35,11 @@ interface DatepickerDummyForm {
   templateUrl: './datepicker-authentic-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
-    LuxDatepickerAcComponent,
+    LuxDatepickerComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -84,7 +84,7 @@ export class DatepickerAuthenticExampleComponent {
   readonly startDate = signal<string | null>(null);
   readonly minDate = signal<string | null>(null);
   readonly maxDate = signal<string | null>(null);
-  readonly startView = signal<LuxStartAcView>('month');
+  readonly startView = signal<LuxStartView>('month');
   readonly touchUi = signal(false);
   readonly labelLongFormat = signal(false);
   readonly denseFormat = signal(false);
@@ -92,7 +92,7 @@ export class DatepickerAuthenticExampleComponent {
   readonly errorCallback = exampleErrorCallback;
   readonly emptyCallback = emptyErrorCallback;
   readonly errorCallbackString = this.errorCallback + '';
-  readonly customFilter = computed<LuxDateFilterAcFn | undefined>(() => (this.useCustomFilter() ? this.weekendFilterFn : undefined));
+  readonly customFilter = computed<LuxDateFilterFn | undefined>(() => (this.useCustomFilter() ? this.weekendFilterFn : undefined));
 
   changeRequired(required: boolean) {
     this.required.set(required);

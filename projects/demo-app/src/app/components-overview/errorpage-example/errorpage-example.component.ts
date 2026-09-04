@@ -8,9 +8,9 @@ import {
   LuxErrorService,
   LuxErrorStoreService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -23,9 +23,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,

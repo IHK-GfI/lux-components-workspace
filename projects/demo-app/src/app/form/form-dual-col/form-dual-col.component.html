@@ -5,23 +5,23 @@
       <lux-card-content>
         <form [formGroup]="myGroup">
           <div formGroupName="customerDetails" class="lux-grid lux-cols-3 lt-md:lux-cols-1 lux-gap-4">
-            <lux-input-ac luxName="name" luxLabel="Name" luxControlBinding="name" class="lux-col-span-3"></lux-input-ac>
-            <lux-input-ac
+            <lux-input luxName="name" luxLabel="Name" luxControlBinding="name" class="lux-col-span-3"></lux-input>
+            <lux-input
               luxName="postal-code"
               luxLabel="PLZ"
               luxType="number"
               [luxNumberAlignLeft]="true"
               luxControlBinding="zip"
-            ></lux-input-ac>
-            <lux-input-ac
+            ></lux-input>
+            <lux-input
               luxName="form-dual-Stadt"
               luxLabel="Stadt"
               luxType="text"
               luxControlBinding="town"
               class="lux-col-span-2"
-            ></lux-input-ac>
+            ></lux-input>
 
-            <lux-autocomplete-ac
+            <lux-autocomplete
               [luxOptions]="countries"
               luxOptionLabelProp="name"
               luxLabel="Land"
@@ -31,25 +31,25 @@
               luxControlBinding="country"
               class="lux-col-span-3"
             >
-            </lux-autocomplete-ac>
+            </lux-autocomplete>
 
             <div formArrayName="streets" class="lux-mt-4 lux-col-span-3">
               @for (street of streetsFormArray.controls; track street; let i = $index) {
                 <div class="lux-grid lux-grid-cols-5 lux-gap-4" [formGroupName]="i">
-                  <lux-input-ac
+                  <lux-input
                     luxName="street-address"
                     luxLabel="Straße"
                     luxType="text"
                     luxControlBinding="streetName"
                     class="lux-col-span-3"
-                  ></lux-input-ac>
-                  <lux-input-ac
+                  ></lux-input>
+                  <lux-input
                     luxName="form-dual-Nr"
                     luxLabel="Nr"
                     luxType="number"
                     [luxNumberAlignLeft]="true"
                     luxControlBinding="nr"
-                  ></lux-input-ac>
+                  ></lux-input>
                   <lux-button
                     luxIconName="lux-interface-delete-bin-5"
                     luxLabel="Straße entfernen"
@@ -85,10 +85,10 @@
       <lux-card-content>
         <form [formGroup]="myGroup">
           <div class="lux-grid lux-grid-cols-2 lux-gap-4" formGroupName="orderDetails">
-            <lux-input-ac luxName="form-dual-Bestellnr" luxLabel="Bestellnr." luxControlBinding="orderNo"></lux-input-ac>
-            <lux-input-ac luxName="form-dual-Bestellwert" luxLabel="Bestellwert" luxType="text" luxControlBinding="value"></lux-input-ac>
-            <lux-datepicker-ac luxLabel="Gültig ab" luxControlBinding="validDate"></lux-datepicker-ac>
-            <lux-input-ac luxLabel="Uhrzeit" luxType="time" luxControlBinding="validTime" luxAutocomplete="off"></lux-input-ac>
+            <lux-input luxName="form-dual-Bestellnr" luxLabel="Bestellnr." luxControlBinding="orderNo"></lux-input>
+            <lux-input luxName="form-dual-Bestellwert" luxLabel="Bestellwert" luxType="text" luxControlBinding="value"></lux-input>
+            <lux-datepicker luxLabel="Gültig ab" luxControlBinding="validDate"></lux-datepicker>
+            <lux-input luxLabel="Uhrzeit" luxType="time" luxControlBinding="validTime" luxAutocomplete="off"></lux-input>
           </div>
         </form>
       </lux-card-content>

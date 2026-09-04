@@ -5,9 +5,9 @@ import {
   LuxAutofocusDirective,
   LuxButtonComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxRadioAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxRadioComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -39,9 +39,9 @@ interface RadioDummyForm {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
-    LuxToggleAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
@@ -109,13 +109,13 @@ export class RadioAuthenticExampleComponent {
     this.errorCallbackString = '' + this.errorCallback;
   }
 
-  showErrors(...radioComponents: LuxRadioAcComponent[]) {
+  showErrors(...radioComponents: LuxRadioComponent[]) {
     this.value.set(null);
     this.form.get('radioExample')!.setValue(null);
 
     this.changeRequired(true);
 
-    radioComponents.forEach((comp: LuxRadioAcComponent) => {
+    radioComponents.forEach((comp: LuxRadioComponent) => {
       comp.formControl.markAsTouched();
     });
   }
@@ -150,12 +150,12 @@ export class RadioAuthenticExampleComponent {
     }
   }
 
-  reset(...radioComponents: LuxRadioAcComponent[]) {
+  reset(...radioComponents: LuxRadioComponent[]) {
     this.value.set(undefined);
     this.form.get(this.controlBinding)!.setValue(undefined);
     this.disabledFirst.set(false);
 
-    radioComponents.forEach((comp: LuxRadioAcComponent) => {
+    radioComponents.forEach((comp: LuxRadioComponent) => {
       comp.formControl.markAsUntouched();
     });
   }

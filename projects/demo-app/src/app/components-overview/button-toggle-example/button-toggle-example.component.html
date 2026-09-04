@@ -75,39 +75,39 @@
   </example-base-content>
 
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxName="buttonToggle_luxAriaLabel"
       luxLabel="luxAriaLabel"
       [(luxValue)]="ariaLabel"
       luxHint="Beschreibt den Zweck der Gruppe für Screenreader."
     />
 
-    <lux-input-ac
+    <lux-input
       luxName="buttonToggle_luxHint"
       luxLabel="luxHint"
       [(luxValue)]="hint"
       luxHint="Hint-Text unterhalb des Button-Toggle (solange kein Fehler angezeigt wird)."
     />
 
-    <lux-input-ac
+    <lux-input
       luxName="buttonToggle_luxError"
       luxLabel="luxError"
       [(luxValue)]="error"
       luxHint="Error-Text, der bei invalidem Zustand (z. B. required) angezeigt wird."
     />
 
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxDense"
       [luxNoTopLabel]="true"
       [(luxChecked)]="dense"
       luxHint="Reduziert die Höhe der Button-Toggle-Komponente."
     />
 
-    <lux-toggle-ac luxLabel="luxDisabled" [luxNoTopLabel]="true" [(luxChecked)]="disabled" luxHint="Deaktiviert die gesamte Toggle-Gruppe.">
+    <lux-toggle luxLabel="luxDisabled" [luxNoTopLabel]="true" [(luxChecked)]="disabled" luxHint="Deaktiviert die gesamte Toggle-Gruppe.">
       <lux-form-hint>Für die Multi-Select-Demo ist die Option „Archiv“ zusätzlich segmentweise deaktiviert.</lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
 
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxRequired"
       [luxNoTopLabel]="true"
       [luxChecked]="required()"
@@ -115,7 +115,7 @@
       luxHint="Aktiviert Validators.required für singleSelect und multiSelect."
     />
 
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       [luxNoTopLabel]="true"
       [(luxChecked)]="showOutputEvents"

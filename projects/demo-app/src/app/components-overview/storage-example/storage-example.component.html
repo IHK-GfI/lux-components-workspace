@@ -19,7 +19,7 @@
           </div>
           @if (!localKeys()[i]!.endsWith('sensitive')) {
             <div class="lux-flex lux-gap-2 lt-md:lux-flex-col lt-md:lux-gap-0">
-              <lux-input-ac class="lux-flex-auto" luxLabel="Neuer Value" #luxInput [luxNoBottomLabel]="true"></lux-input-ac>
+              <lux-input class="lux-flex-auto" luxLabel="Neuer Value" #luxInput [luxNoBottomLabel]="true"></lux-input>
               <div class="lux-flex lux-flex-none lux-gap-2">
                 <lux-button
                   class="lux-flex lux-flex-none round-btn"
@@ -62,26 +62,26 @@
       </ol>
     </div>
     <div class="lux-highlight-section column">
-      <lux-input-ac
+      <lux-input
         luxLabel="Key"
         luxHint="Hier kann ein Key für einen Storage-Eintrag gesetzt werden."
         luxAutocomplete="off"
         [(luxValue)]="key"
       >
-      </lux-input-ac>
-      <lux-input-ac
+      </lux-input>
+      <lux-input
         luxLabel="Value"
         luxHint="Hier kann der Wert für den Key {{ key() }} eingetragen werden."
         luxAutocomplete="off"
         [(luxValue)]="value"
       >
-      </lux-input-ac>
-      <lux-toggle-ac luxLabel="sensitive" [(luxChecked)]="sensitive" [luxNoTopLabel]="true">
+      </lux-input>
+      <lux-toggle luxLabel="sensitive" [(luxChecked)]="sensitive" [luxNoTopLabel]="true">
         <lux-form-hint>
           Dieser Wert bestimmt, ob der eingetragene Schlüssel als 'empfindlicher' Datensatz gilt.<br />
           Sensible Datensätze können über den <i>LuxStorageService</i> gezielt entfernt werden.
         </lux-form-hint>
-      </lux-toggle-ac>
+      </lux-toggle>
       <lux-button
         class="lux-flex lux-max-width-40"
         luxLabel="Hinzufügen"

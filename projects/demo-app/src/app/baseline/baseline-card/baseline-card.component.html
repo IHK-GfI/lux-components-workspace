@@ -9,7 +9,7 @@
       </lux-textbox>
 
       <div class="form-grid-container">
-        <lux-radio-ac
+        <lux-radio
           luxGroupName="radio1"
           [luxOptions]="stateOptions"
           [luxOrientationVertical]="false"
@@ -20,18 +20,14 @@
           ><ng-template let-option>
             {{ option.label }}
           </ng-template>
-        </lux-radio-ac>
-        <lux-checkbox-ac
-          luxLabel="Fehler-Status anzeigen"
-          [luxNoBottomLabel]="true"
-          (luxCheckedChange)="toggleErrors($event)"
-        ></lux-checkbox-ac>
+        </lux-radio>
+        <lux-checkbox luxLabel="Fehler-Status anzeigen" [luxNoBottomLabel]="true" (luxCheckedChange)="toggleErrors($event)"></lux-checkbox>
       </div>
 
       <lux-divider [luxInset]="true"></lux-divider>
 
       <div [formGroup]="form" class="form-grid-container lux-mt-5 lux-mb-5">
-        <lux-input-ac
+        <lux-input
           luxLabel="Lux-Input-ac"
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
@@ -39,8 +35,8 @@
           luxAutocomplete="off"
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
-        ></lux-input-ac>
-        <lux-input-ac
+        ></lux-input>
+        <lux-input
           luxType="number"
           luxLabel="Lux-Input-ac mit Pre-/Suffix"
           luxPlaceholder="0"
@@ -50,10 +46,10 @@
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
         >
-          <lux-input-ac-prefix> EUR </lux-input-ac-prefix>
-          <lux-input-ac-suffix> .00 <lux-icon luxIconName="lux-money-currency-euro"></lux-icon></lux-input-ac-suffix>
-        </lux-input-ac>
-        <lux-autocomplete-ac
+          <lux-input-prefix> EUR </lux-input-prefix>
+          <lux-input-suffix> .00 <lux-icon luxIconName="lux-money-currency-euro"></lux-icon></lux-input-suffix>
+        </lux-input>
+        <lux-autocomplete
           luxLabel="Lux-Autocomplete-ac"
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
@@ -62,8 +58,8 @@
           [luxOptions]="options"
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
-        ></lux-autocomplete-ac>
-        <lux-datepicker-ac
+        ></lux-autocomplete>
+        <lux-datepicker
           luxLabel="Lux-Datepicker-ac"
           luxLocale="de-DE"
           luxPlaceholder="Platzhalter"
@@ -71,8 +67,8 @@
           [luxHint]="testHint"
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
-        ></lux-datepicker-ac>
-        <lux-datetimepicker-ac
+        ></lux-datepicker>
+        <lux-datetimepicker
           luxLabel="Lux-Datetimepicker-ac"
           luxLocale="de-DE"
           luxPlaceholder="Platzhalter"
@@ -80,8 +76,8 @@
           [luxHint]="testHint"
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
-        ></lux-datetimepicker-ac>
-        <lux-select-ac
+        ></lux-datetimepicker>
+        <lux-select
           luxLabel="Lux-Select-ac"
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
@@ -91,16 +87,16 @@
           [luxOptions]="options"
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
-        ></lux-select-ac>
-        <lux-file-input-ac
+        ></lux-select>
+        <lux-file-input
           luxLabel="Lux-File-Input-ac"
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
           luxControlBinding="file"
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
-        ></lux-file-input-ac>
-        <lux-textarea-ac
+        ></lux-file-input>
+        <lux-textarea
           luxLabel="Lux-Textarea-ac"
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
@@ -110,8 +106,8 @@
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
           [luxMaxLength]="100"
-        ></lux-textarea-ac>
-        <lux-toggle-ac
+        ></lux-textarea>
+        <lux-toggle
           luxLabel="Lux-Toggle-ac"
           [luxChecked]="false"
           luxHint="Hinweis"
@@ -119,8 +115,8 @@
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
           [luxNoTopLabel]="true"
-        ></lux-toggle-ac>
-        <lux-checkbox-ac
+        ></lux-toggle>
+        <lux-checkbox
           luxLabel="Lux-Checkbox-ac"
           [luxChecked]="false"
           luxHint="Hinweis"
@@ -128,8 +124,8 @@
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
           [luxNoTopLabel]="true"
-        ></lux-checkbox-ac>
-        <lux-radio-ac
+        ></lux-checkbox>
+        <lux-radio
           luxGroupName="radio1"
           [luxOptions]="options"
           [luxOrientationVertical]="true"
@@ -143,8 +139,8 @@
           <ng-template let-option>
             {{ option.label }}
           </ng-template>
-        </lux-radio-ac>
-        <lux-radio-ac
+        </lux-radio>
+        <lux-radio
           luxGroupName="radio3"
           [luxOptions]="options2"
           [luxOrientationVertical]="false"
@@ -158,15 +154,15 @@
           <ng-template let-option>
             {{ option.label }}
           </ng-template>
-        </lux-radio-ac>
-        <lux-slider-ac
+        </lux-radio>
+        <lux-slider
           luxLabel="Lux-Slider-ac"
           luxControlBinding="slider"
           luxHint="testHint"
           [luxDisabled]="disabledForm()"
           [luxReadonly]="readonly()"
-        ></lux-slider-ac>
-        <lux-chips-ac
+        ></lux-slider>
+        <lux-chips
           [luxInputAllowed]="true"
           luxInputLabel="Lux-Chips-ac im Input-Element"
           luxHint="Hinweis"
@@ -175,7 +171,7 @@
           [luxDisabled]="disabledForm()"
           class="grid-col-span-2"
         >
-          <lux-chip-ac-group
+          <lux-chip-group
             [luxLabels]="chipItems"
             luxColor="accent"
             [luxRemovable]="true"
@@ -184,8 +180,8 @@
             (luxChipClicked)="chipItemClicked($event)"
             #groupAc
           >
-          </lux-chip-ac-group>
-        </lux-chips-ac>
+          </lux-chip-group>
+        </lux-chips>
         <lux-file-list
           luxLabel="Lux-File-List"
           luxHint="Hinweis"

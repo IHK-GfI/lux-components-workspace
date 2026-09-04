@@ -3,10 +3,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } 
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -33,10 +33,10 @@ interface TextareaDummyForm {
   templateUrl: './textarea-authentic-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,

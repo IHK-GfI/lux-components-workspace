@@ -12,8 +12,8 @@ import {
   LuxDialogStructureComponent,
   LuxDialogTitleComponent,
   LuxFileUploadComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { logResult } from '../../../example-base/example-base-util/example-base-helper';
 
@@ -31,8 +31,8 @@ import { logResult } from '../../../example-base/example-base-util/example-base-
     LuxCardContentComponent,
     LuxCardComponent,
     LuxAriaLabelDirective,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
     LuxFileUploadComponent
   ]
 })

@@ -6,20 +6,20 @@ import { By } from '@angular/platform-browser';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
-import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxCheckboxAcComponent } from '../../lux-form/lux-checkbox-ac/lux-checkbox-ac.component';
-import { LuxChipsAcComponent } from '../../lux-form/lux-chips-ac/lux-chips-ac.component';
-import { LuxDatepickerAcComponent } from '../../lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
-import { LuxDatetimepickerAcComponent } from '../../lux-form/lux-datetimepicker-ac/lux-datetimepicker-ac.component';
-import { LuxFileInputAcComponent } from '../../lux-form/lux-file/lux-file-input-ac/lux-file-input-ac.component';
+import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
+import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
+import { LuxChipsComponent } from '../../lux-form/lux-chips/lux-chips.component';
+import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
+import { LuxDatetimepickerComponent } from '../../lux-form/lux-datetimepicker/lux-datetimepicker.component';
+import { LuxFileInputComponent } from '../../lux-form/lux-file/lux-file-input/lux-file-input.component';
 import { LuxFileListComponent } from '../../lux-form/lux-file/lux-file-list/lux-file-list.component';
 import { LuxFileUploadComponent } from '../../lux-form/lux-file/lux-file-upload/lux-file-upload.component';
-import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
-import { LuxRadioAcComponent } from '../../lux-form/lux-radio-ac/lux-radio-ac.component';
-import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
-import { LuxTextareaAcComponent } from '../../lux-form/lux-textarea-ac/lux-textarea-ac.component';
+import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
+import { LuxRadioComponent } from '../../lux-form/lux-radio/lux-radio.component';
+import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
+import { LuxTextareaComponent } from '../../lux-form/lux-textarea/lux-textarea.component';
 import { LuxTimepickerComponent } from '../../lux-form/lux-timepicker/lux-timepicker.component';
-import { LuxToggleAcComponent } from '../../lux-form/lux-toggle-ac/lux-toggle-ac.component';
+import { LuxToggleComponent } from '../../lux-form/lux-toggle/lux-toggle.component';
 import { LuxAutofocusDirective } from './lux-autofocus.directive';
 
 describe('LuxAutofocusDirective', () => {
@@ -187,41 +187,41 @@ describe('LuxAutofocusDirective', () => {
 
 @Component({
   selector: 'lux-autofocus-test-input',
-  template: `<lux-input-ac luxAutofocus></lux-input-ac>`,
+  template: `<lux-input luxAutofocus></lux-input>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxInputAcComponent, LuxAutofocusDirective]
+  imports: [LuxInputComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusInputComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-input',
-  template: `<lux-autocomplete-ac luxAutofocus></lux-autocomplete-ac>`,
+  template: `<lux-autocomplete luxAutofocus></lux-autocomplete>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxAutocompleteAcComponent, LuxAutofocusDirective]
+  imports: [LuxAutocompleteComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusAutoCompleteComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-checkbox',
-  template: `<lux-checkbox-ac luxAutofocus></lux-checkbox-ac>`,
+  template: `<lux-checkbox luxAutofocus></lux-checkbox>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxCheckboxAcComponent, LuxAutofocusDirective]
+  imports: [LuxCheckboxComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusCheckboxComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-chips',
-  template: `<lux-chips-ac [luxInputAllowed]="true" luxAutofocus></lux-chips-ac>`,
+  template: `<lux-chips [luxInputAllowed]="true" luxAutofocus></lux-chips>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxChipsAcComponent, LuxAutofocusDirective]
+  imports: [LuxChipsComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusChipsComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-datepicker',
-  template: `<lux-datepicker-ac luxAutofocus></lux-datepicker-ac>`,
+  template: `<lux-datepicker luxAutofocus></lux-datepicker>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxDatepickerAcComponent, LuxAutofocusDirective]
+  imports: [LuxDatepickerComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusDatePickerComponent {}
 
@@ -234,25 +234,25 @@ class LuxAutoFocusTimepickerComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-datetimepicker',
-  template: `<lux-datetimepicker-ac luxAutofocus></lux-datetimepicker-ac>`,
+  template: `<lux-datetimepicker luxAutofocus></lux-datetimepicker>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxDatetimepickerAcComponent, LuxAutofocusDirective]
+  imports: [LuxDatetimepickerComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusDateTimePickerComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-fileinput',
-  template: `<lux-file-input-ac luxAutofocus></lux-file-input-ac>`,
+  template: `<lux-file-input luxAutofocus></lux-file-input>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxFileInputAcComponent, LuxAutofocusDirective]
+  imports: [LuxFileInputComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusFileInputComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-radio',
-  template: `<lux-radio-ac [luxOptions]="options" luxAutofocus></lux-radio-ac>`,
+  template: `<lux-radio [luxOptions]="options" luxAutofocus></lux-radio>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxRadioAcComponent, LuxAutofocusDirective]
+  imports: [LuxRadioComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusRadioComponent {
   options: { label: string; value: string; disabled?: boolean }[] = [
@@ -264,9 +264,9 @@ class LuxAutoFocusRadioComponent {
 
 @Component({
   selector: 'lux-autofocus-test-select',
-  template: `<lux-select-ac [luxOptions]="options" luxAutofocus></lux-select-ac>`,
+  template: `<lux-select [luxOptions]="options" luxAutofocus></lux-select>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxSelectAcComponent, LuxAutofocusDirective]
+  imports: [LuxSelectComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusSelectComponent {
   options: { label: string; value: string }[] = [
@@ -277,17 +277,17 @@ class LuxAutoFocusSelectComponent {
 
 @Component({
   selector: 'lux-autofocus-test-textarea',
-  template: `<lux-textarea-ac luxAutofocus></lux-textarea-ac>`,
+  template: `<lux-textarea luxAutofocus></lux-textarea>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxTextareaAcComponent, LuxAutofocusDirective]
+  imports: [LuxTextareaComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusTextAreaComponent {}
 
 @Component({
   selector: 'lux-autofocus-test-toggle',
-  template: `<lux-toggle-ac luxAutofocus></lux-toggle-ac>`,
+  template: `<lux-toggle luxAutofocus></lux-toggle>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxToggleAcComponent, LuxAutofocusDirective]
+  imports: [LuxToggleComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusToggleComponent {}
 

@@ -17,24 +17,24 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-select-ac [luxOptions]="sizes" [(luxSelected)]="size" luxLabel="luxSize">
+    <lux-select [luxOptions]="sizes" [(luxSelected)]="size" luxLabel="luxSize">
       <lux-form-hint>
         Diese Property legt die Größe der Component fest.<br />
         Dabei sind die Eingaben 'small', 'medium' und 'large' erlaubt.
       </lux-form-hint>
-    </lux-select-ac>
-    <lux-select-ac
+    </lux-select>
+    <lux-select
       [luxOptions]="modes"
       [(luxSelected)]="mode"
       luxLabel="luxMode"
       luxHint="Die Property bestimmt ob der Spinner im Modus 'determinate' (= endlich) oder 'indeterminate' (= endlos) ist."
     />
-    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+    <lux-input luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
     @if (mode() === 'determinate') {
       <div class="lux-flex lux-flex-col lux-gap-2">
-        <lux-input-ac
+        <lux-input
           luxLabel="luxValue"
           luxHint="Diese Property setzt den Wert in dem Spinner, vorausgesetzt es ist im Modus 'determinate'"
           luxType="number"

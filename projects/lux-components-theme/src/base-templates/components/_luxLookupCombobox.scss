@@ -1,6 +1,7 @@
 @use "../common/luxfocus" as luxfocus;
 
-lux-lookup-combobox-ac {
+lux-lookup-combobox-ac,
+lux-lookup-combobox {
   &.lux-form-control-readonly {
     pointer-events: none;
   }
@@ -21,7 +22,8 @@ lux-lookup-combobox-ac {
   }
 }
 
-lux-lookup-combobox-ac {
+lux-lookup-combobox-ac,
+lux-lookup-combobox {
   @media (prefers-contrast: more) {
     .mat-mdc-select:focus {
       @include luxfocus.focus-dark-mixin;

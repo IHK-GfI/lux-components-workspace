@@ -120,7 +120,7 @@
   </div>
 }
 @if (filterItems().length > 0 && !luxFilterExpanded() && luxShowChips() && initComplete()) {
-  <lux-chips-ac
+  <lux-chips
     luxAriaLabel="Filterchips"
     luxAriaLabelSelector="mat-chip-grid"
     [luxHideBorder]="luxHideChipsBorder()"
@@ -128,7 +128,7 @@
     class="filter-item"
   >
     @for (item of filterItems(); track item) {
-      <lux-chip-ac [luxColor]="item.color" (luxChipRemoved)="filterChipRemoved($event)">{{ item.label }}: {{ item.value }}</lux-chip-ac>
+      <lux-chip [luxColor]="item.color" (luxChipRemoved)="filterChipRemoved($event)">{{ item.label }}: {{ item.value }}</lux-chip>
     }
-  </lux-chips-ac>
+  </lux-chips>
 }

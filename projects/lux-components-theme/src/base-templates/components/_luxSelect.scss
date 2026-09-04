@@ -51,7 +51,8 @@
   }
 }
 
-lux-select-ac {
+lux-select-ac,
+lux-select {
   @include mat.select-overrides(
     (
       enabled-arrow-color: var(--lux-theme-primary-color),
@@ -72,7 +73,8 @@ lux-select-ac {
   }
 }
 
-lux-select-ac {
+lux-select-ac,
+lux-select {
   @media (prefers-contrast: more) {
     .mat-mdc-select:focus {
       @include luxfocus.focus-dark-mixin;

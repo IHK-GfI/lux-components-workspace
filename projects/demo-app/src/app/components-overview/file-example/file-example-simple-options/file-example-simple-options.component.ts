@@ -1,10 +1,10 @@
 import { Component, computed, input, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxInputSuffixComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleFormDisableComponent } from '../../../example-base/example-form-disable/example-form-disable.component';
 import { FileExampleComponent } from '../file-example.component';
@@ -15,12 +15,12 @@ import { FileListExampleComponent } from '../file-list-example/file-list-example
   templateUrl: './file-example-simple-options.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleFormDisableComponent,
-    LuxInputAcSuffixComponent
+    LuxInputSuffixComponent
   ]
 })
 export class FileExampleSimpleOptionsComponent {

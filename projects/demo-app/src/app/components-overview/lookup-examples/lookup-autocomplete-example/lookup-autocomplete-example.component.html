@@ -1,0 +1,258 @@
+<example-base-structure
+  exampleTitle="Lookup-Autocomplete"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90lookup%E2%80%90autocomplete-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Beispiel ohne Reactive-Form</h3>
+      <lux-lookup-autocomplete
+        luxAutofocus
+        [luxAutofocusComponent]="firstlookup"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxValue)]="value"
+        [luxCompareFn]="compareFn()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxDebounceTime]="debounceTime()"
+        [luxMaximumDisplayed]="maximumDisplayed()"
+        [luxClearable]="clearable()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxLookupId="normalautocomplete"
+        luxTagId="lkpexample1"
+        #firstlookup
+      />
+      <example-value [value]="value()" />
+    </div>
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3>Beispiel in Reactive-Form</h3>
+      <lux-lookup-autocomplete
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxDebounceTime]="debounceTime()"
+        [luxMaximumDisplayed]="maximumDisplayed()"
+        [luxClearable]="clearable()"
+        [luxControlBinding]="controlBinding"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        [luxCompareFn]="compareFn()"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxLookupId="reactiveautocomplete"
+        luxTagId="lkpexample2"
+      />
+      <example-form-value [form]="form" [controlBinding]="controlBinding" />
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(luxChecked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    />
+    <lux-input
+      luxName="lookup_autocomplete_luxLabel"
+      luxLabel="luxLabel"
+      luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
+      [(luxValue)]="label"
+    />
+    <lux-input
+      luxName="lookup_autocomplete_luxHint"
+      luxLabel="luxHint"
+      luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
+      [(luxValue)]="hint"
+    />
+    <lux-toggle
+      luxName="lookup_autocomplete_luxHintShowOnlyOnFocus"
+      luxLabel="luxHintShowOnlyOnFocus"
+      luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
+      [(luxChecked)]="hintShowOnlyOnFocus"
+      [luxNoTopLabel]="true"
+    />
+    <lux-input
+      luxName="lookup_autocomplete_luxPlaceholder"
+      luxLabel="luxPlaceholder"
+      luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
+      [(luxValue)]="placeholder"
+    />
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
+    <lux-toggle
+      [(luxChecked)]="readonly"
+      luxLabel="luxReadonly"
+      luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      [(luxChecked)]="clearable"
+      luxLabel="luxClearable"
+      luxHint="Zeigt einen optionalen Button zum Zurücksetzen des Suchtextes bzw. Werts an."
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
+        <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
+      </lux-form-hint>
+    </lux-toggle>
+    <lux-toggle
+      [(luxChecked)]="denseFormat"
+      luxLabel="luxDense"
+      luxHint="Diese Property veringert das Padding innerhalb des Controls."
+      [luxNoTopLabel]="true"
+    />
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-input
+      luxName="lookup_autocomplete_luxDebounceTime"
+      luxLabel="luxDebounceTime"
+      [luxDisabled]="true"
+      luxHint="Diese Property setzt die zeitliche Verzögerung, bevor die Daten nach einem neuen Suchbegriff gefiltert werden. Kann nur initial gesetzt werden."
+      [(luxValue)]="debounceTime"
+    />
+    <lux-input
+      luxName="lookup_autocomplete_luxMaximumDisplay"
+      luxLabel="luxMaximumDisplayed"
+      luxHint="Hier kann eingestellt werden, wie viele Suchergebnisse im ausgeklappten Menu dargestellt werden."
+      (luxBlur)="reloadData()"
+      [(luxValue)]="maximumDisplayed"
+    />
+    <lux-toggle
+      luxLabel="Render-Funktion nutzen"
+      luxHint="Wenn 'true' wird für 'luxRenderProp' anstelle einer Render-Property (z.B. 'label') eine Callback-Funktion übergeben."
+      [(luxChecked)]="useRenderFn"
+      [luxNoTopLabel]="true"
+    />
+    @if (useRenderFn()) {
+      <pre class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
+    }
+    @if (!useRenderFn()) {
+      <lux-input
+        [(luxValue)]="renderProp"
+        luxName="lookup_autocomplete_luxRenderProp"
+        luxLabel="luxRenderProp"
+        luxHint="Hier kann die Property festgelegt werden, welche zur Darstellung der einzelnen Einträge genutzt wird."
+      />
+    }
+    @if (!useRenderFn()) {
+      <lux-input
+        [(luxValue)]="renderPropNoPropertyLabel"
+        luxName="lookup_autocomplete_luxRenderPropNoPropertyLabel"
+        luxLabel="luxRenderPropNoPropertyLabel"
+        luxHint="Dieser Text wird angezeigt, wenn das Property aus luxRenderProp bei dem Eintrag nicht existiert."
+      />
+    }
+    <lux-toggle
+      luxLabel="luxCompareFn"
+      luxHint="Sortiert die Optionen entweder nach dem Kurztext (aktiviert) oder Schlüssel (deaktiviert)."
+      (luxCheckedChange)="toggleCompareFn($event)"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxCustomStyles übergeben"
+      luxHint="Wenn 'true', wird der Component ein Objekt mit Styles für valide Elemente übergeben."
+      (luxCheckedChange)="changeCustomStyle($event)"
+      [luxNoTopLabel]="true"
+    />
+    @if (customStyle()) {
+      <pre class="lux-label"><b>customStyles</b> = {{ customStyle() | json }}</pre>
+    }
+    <lux-toggle
+      luxLabel="luxCustomInvalidStyles übergeben"
+      luxHint="Wenn 'true', wird der Component ein Objekt mit Styles für invalide Elemente übergeben."
+      (luxCheckedChange)="changeCustomInvalidStyle($event)"
+      [luxNoTopLabel]="true"
+    />
+    @if (customInvalidStyle()) {
+      <pre class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle() | json }}</pre>
+    }
+
+    <lux-select
+      luxLabel="luxBehandlungUngueltige"
+      luxOptionLabelProp="label"
+      [luxOptions]="options"
+      [luxSelected]="options[1]"
+      (luxSelectedChange)="changeOptionUngueltig($event)"
+    >
+      <lux-form-hint>
+        Über diese Property wird definiert, wie ungültige Einträge behandelt werden.<br />
+        Diese können ausgeblendet, deaktiviert oder dargestellt werden.
+      </lux-form-hint>
+    </lux-select>
+
+    <lux-toggle
+      luxLabel="luxErrorMessage verwenden"
+      luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
+      [(luxChecked)]="useErrorMessage"
+      [luxNoTopLabel]="true"
+    />
+    @if (!useErrorMessage()) {
+      <pre class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
+    }
+    @if (useErrorMessage()) {
+      <lux-input
+        luxName="lookup_autocomplete_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+                 (unabhängig vom speziellen Validierungsfehler) einstellen."
+        [(luxValue)]="errorMessage"
+      />
+    }
+    <lux-select
+      [luxOptions]="validatorOptions"
+      luxOptionLabelProp="label"
+      [luxMultiple]="true"
+      [luxPickValue]="pickValidatorValueFn"
+      luxLabel="luxControlValidators"
+      [(luxSelected)]="controlValidators"
+    >
+      <lux-form-hint>
+        Diese Property ermöglicht es einer Component die <b>nicht in einer Reactive-Form</b> ist, auf einfache Art und Weise trotzdem
+        Validatoren zu übergeben.<br />
+        Diese Property funktioniert nicht für Components in Reactive-Forms, da diese ihre Validatoren über die entsprechende FormControl
+        setzen.
+      </lux-form-hint>
+    </lux-select>
+    <lux-toggle
+      luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
+      luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
+      [luxNoTopLabel]="true"
+      [(luxChecked)]="labelLongFormat"
+    />
+  </example-base-advanced-options>
+</example-base-structure>

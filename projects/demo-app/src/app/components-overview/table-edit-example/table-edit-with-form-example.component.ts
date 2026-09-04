@@ -5,7 +5,7 @@ import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
   LuxFormComponentBase,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxTableColumnComponent,
   LuxTableColumnContentComponent,
   LuxTableColumnHeaderComponent,
@@ -31,7 +31,7 @@ interface TableForm {
     LuxTableColumnComponent,
     LuxTableComponent,
     LuxAriaLabelDirective,
-    LuxInputAcComponent,
+    LuxInputComponent,
     JsonPipe,
     NgClass
   ],

@@ -12,11 +12,11 @@ import {
   LuxButtonComponent,
   LuxDialogService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxSnackbarService,
   LuxStepComponent,
   LuxStepContentComponent,
@@ -24,7 +24,7 @@ import {
   LuxStepperComponent,
   LuxStepperHelperService,
   LuxTextboxComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -69,9 +69,9 @@ interface StepperForm2DummyForm {
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxButtonComponent,
     StepperExternalStepExampleComponent,

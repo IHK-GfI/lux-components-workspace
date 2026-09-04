@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
-import { LuxCheckboxAcComponent } from '../../lux-form/lux-checkbox-ac/lux-checkbox-ac.component';
+import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxTourHintRef } from '../lux-tour-hint-model/lux-tour-hint-ref.class';
 
@@ -11,7 +11,7 @@ import { LuxTourHintRef } from '../lux-tour-hint-model/lux-tour-hint-ref.class';
   templateUrl: './lux-tour-hint-preset.component.html',
   styleUrls: ['./lux-tour-hint-preset.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxIconComponent, LuxCheckboxAcComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
+  imports: [LuxIconComponent, LuxCheckboxComponent, LuxButtonComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxTourHintPresetComponent {
   protected readonly tourRef = inject(LuxTourHintRef);

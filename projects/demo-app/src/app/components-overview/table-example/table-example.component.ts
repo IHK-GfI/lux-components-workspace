@@ -9,7 +9,7 @@ import {
   LuxTableColumnFooterComponent,
   LuxTableColumnHeaderComponent,
   LuxTableComponent,
-  LuxToggleAcComponent,
+  LuxToggleComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -32,7 +32,7 @@ import { TableExampleSimpleOptionsComponent } from './table-example-simple-optio
     LuxTableColumnComponent,
     LuxTableColumnFooterComponent,
     LuxTableComponent,
-    LuxToggleAcComponent,
+    LuxToggleComponent,
     LuxMenuComponent,
     LuxMenuItemComponent,
     LuxTooltipDirective,

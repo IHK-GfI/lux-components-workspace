@@ -2,12 +2,12 @@ import { Component, signal, viewChild, ChangeDetectionStrategy } from '@angular/
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
   LuxAutofocusDirective,
-  LuxDatetimepickerAcComponent,
+  LuxDatetimepickerComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxStartAcView,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxStartView,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -29,11 +29,11 @@ interface DatetimeDummyForm {
   templateUrl: './datetimepicker-authentic-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
-    LuxDatetimepickerAcComponent,
+    LuxDatetimepickerComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -47,7 +47,7 @@ interface DatetimeDummyForm {
   ]
 })
 export class DatetimepickerAuthenticExampleComponent {
-  readonly dateTimeInFormComponent = viewChild.required<LuxDatetimepickerAcComponent>('test2');
+  readonly dateTimeInFormComponent = viewChild.required<LuxDatetimepickerComponent>('test2');
 
   readonly useCustomFilter = signal(false);
   readonly useErrorMessage = signal(true);
@@ -81,7 +81,7 @@ export class DatetimepickerAuthenticExampleComponent {
   readonly labelLongFormat = signal(false);
   readonly minDate = signal('01.01.2000, 00:00');
   readonly maxDate = signal('31.12.2100, 23:59');
-  readonly startView = signal<LuxStartAcView>('month');
+  readonly startView = signal<LuxStartView>('month');
   readonly startDate = signal('');
   readonly startTime = signal<number[]>([]);
   readonly customFilterString = this.customFilter + '';

@@ -1,5 +1,5 @@
 import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LuxAppHeaderAcSessionTimerService, LuxButtonComponent, LuxInputAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxAppHeaderAcSessionTimerService, LuxButtonComponent, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -11,8 +11,8 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
     ExampleBaseStructureComponent,
     ExampleBaseSimpleOptionsComponent,
     LuxButtonComponent,
-    LuxInputAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxToggleComponent,
     StatusMarkerComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

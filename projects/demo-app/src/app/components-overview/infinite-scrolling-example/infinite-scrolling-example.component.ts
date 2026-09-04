@@ -4,12 +4,12 @@ import {
   LuxFormHintComponent,
   LuxIconComponent,
   LuxInfiniteScrollDirective,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxListComponent,
   LuxListItemComponent,
   LuxListItemContentComponent,
   LuxListItemIconComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -30,8 +30,8 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxListItemIconComponent,
     LuxListItemComponent,
     LuxInfiniteScrollDirective,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

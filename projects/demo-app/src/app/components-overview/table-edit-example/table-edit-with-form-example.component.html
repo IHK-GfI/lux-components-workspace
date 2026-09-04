@@ -19,7 +19,7 @@
           </div>
         } @else {
           <div class="formfield-container">
-            <lux-input-ac
+            <lux-input
               [luxDense]="true"
               class="edit-formfield"
               (document:click)="onStopEditMode($event, inputStreet, element)"
@@ -30,7 +30,7 @@
               [luxNoTopLabel]="true"
               [luxNoLabels]="!validationEnabled()"
               #inputStreet
-            ></lux-input-ac>
+            ></lux-input>
           </div>
         }</ng-template
     ></lux-table-column-content>
@@ -45,7 +45,7 @@
           </div>
         } @else {
           <div class="formfield-container">
-            <lux-input-ac
+            <lux-input
               [luxDense]="true"
               (document:click)="onStopEditMode($event, inputNr, element)"
               luxAriaLabel="Hausnummer"
@@ -55,7 +55,7 @@
               [luxNoTopLabel]="true"
               [luxNoLabels]="!validationEnabled()"
               #inputNr
-            ></lux-input-ac>
+            ></lux-input>
           </div>
         }</ng-template
     ></lux-table-column-content>

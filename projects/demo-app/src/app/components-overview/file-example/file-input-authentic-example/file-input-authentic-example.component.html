@@ -1,11 +1,11 @@
 <example-base-structure
-  exampleTitle="File-Input-Authentic"
+  exampleTitle="File-Input"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90file%E2%80%90input-v21"
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
       <h3>Ohne ReactiveForm</h3>
-      <lux-file-input-ac
+      <lux-file-input
         luxAutofocus
         [luxLabel]="label()"
         [luxHint]="hint()"
@@ -52,7 +52,7 @@
     <div class="lux-flex lux-flex-col">
       <h3>Mit ReactiveForm</h3>
       <div [formGroup]="form">
-        <lux-file-input-ac
+        <lux-file-input
           [luxLabel]="label()"
           [luxHint]="hint()"
           [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
@@ -97,13 +97,13 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Backend mocken"
       [luxChecked]="mockBackend()"
       (luxCheckedChange)="changeMockBackend($event)"
@@ -113,14 +113,14 @@
         Mockt den Http-Client um das Uploaden der Dateien zu simulieren.<br />
         Dafür muss aber auch "luxUploadUrl" gesetzt sein (beliebiger Wert).
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-input-ac
+    </lux-toggle>
+    <lux-input
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
       [(luxValue)]="placeholder"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
@@ -130,7 +130,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
@@ -140,7 +140,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
@@ -149,13 +149,13 @@
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxClearOnError"
       luxHint="Gibt an, ob das Control bei einem Validierungsfehler geleert wird."
       [(luxChecked)]="clearOnError"
@@ -167,15 +167,15 @@
     <app-file-example-advanced-options [fileExample]="this" [showHeaderConfigProperties]="false" />
     <h4>Custom Action "Akzeptieren"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_accept" [(luxValue)]="namePrefixAccept" [luxNoBottomLabel]="true" />
-      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_accept" [(luxValue)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_accept" [(luxValue)]="namePrefixAccept" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_accept" [(luxValue)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
     </div>
     <h4>Custom Action "Ablehnen"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_decline" [(luxValue)]="namePrefixDecline" [luxNoBottomLabel]="true" />
-      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_decline" [(luxValue)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_decline" [(luxValue)]="namePrefixDecline" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_decline" [(luxValue)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
     </div>
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"

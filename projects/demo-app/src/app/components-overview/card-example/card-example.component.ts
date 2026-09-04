@@ -12,10 +12,10 @@ import {
   LuxFormHintComponent,
   LuxIconComponent,
   LuxImageComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
+  LuxInputComponent,
+  LuxSelectComponent,
   LuxSnackbarService,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -36,9 +36,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     LuxCardContentComponent,
     LuxCardInfoComponent,
     LuxCardComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
+    LuxSelectComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

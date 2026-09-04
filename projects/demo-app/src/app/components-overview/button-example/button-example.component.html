@@ -450,8 +450,8 @@
         <h3 class="lux-highlight-section-label">Beispiel card für Loading-Button</h3>
         <lux-card luxTitle="Einfaches Eingabe-Formular">
           <lux-card-content>
-            <lux-input-ac luxLabel="Vorname" luxPlaceholder="Max" [(luxValue)]="spinnerExampleFirstname" />
-            <lux-input-ac luxLabel="Nachname" luxPlaceholder="Mustermann" [(luxValue)]="spinnerExampleLastname" />
+            <lux-input luxLabel="Vorname" luxPlaceholder="Max" [(luxValue)]="spinnerExampleFirstname" />
+            <lux-input luxLabel="Nachname" luxPlaceholder="Mustermann" [(luxValue)]="spinnerExampleLastname" />
           </lux-card-content>
           <lux-card-actions>
             <lux-button
@@ -476,26 +476,26 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-input-ac
+    <lux-input
       [(luxValue)]="label"
       luxName="button_luxLabel"
       luxLabel="luxLabel"
       luxHint="Bestimmt den Text, der in dem Button angezeigt wird."
     />
-    <lux-input-ac luxName="button_luxIconName" [(luxValue)]="iconName" luxLabel="luxIconName">
+    <lux-input luxName="button_luxIconName" [(luxValue)]="iconName" luxLabel="luxIconName">
       <lux-form-hint>
         Diese Property definiert das Icon, welches in dem Button (linksbündig, wenn zusätzlich auch noch
         <i>luxLabel</i> gesetzt ist).<br />
       </lux-form-hint>
-    </lux-input-ac>
-    <lux-toggle-ac luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true" />
-    <lux-toggle-ac
+    </lux-input>
+    <lux-toggle luxLabel="luxIconShowRight" [(luxChecked)]="iconShowRight" [luxNoLabels]="true" />
+    <lux-toggle
       [(luxChecked)]="disabled"
       luxLabel="luxDisabled"
       luxHint="Diese Property deaktiviert den Button."
@@ -503,7 +503,7 @@
       (luxCheckedChange)="disabledAria.set(disabled() ? false : disabledAria())"
     />
     <div class="lux-flex lux-items-center">
-      <lux-toggle-ac
+      <lux-toggle
         [(luxChecked)]="disabledAria"
         luxLabel="luxDisabledAria"
         luxHint="Diese Property deaktiviert den Button fachlich."
@@ -512,18 +512,18 @@
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
-    <lux-toggle-ac luxLabel="Label Uppercase" [(luxChecked)]="allUpperCase" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="Label Uppercase" [(luxChecked)]="allUpperCase" [luxNoTopLabel]="true">
       <lux-form-hint>
         Über den <i>LuxComponentsConfigService</i> kann für alle LuxButtons applikationsweit eine Uppercase-Darstellung forciert werden.
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-input-ac
+    </lux-toggle>
+    <lux-input
       luxLabel="luxButtonBadge"
       luxHint="Diese Prooerty setzt das Label für eine Badge innerhalb des Buttons"
       luxAutocomplete="off"
       [(luxValue)]="buttonBadge"
     />
-    <lux-select-ac
+    <lux-select
       [luxOptions]="badgeColors"
       [luxSelected]="badgeColors[0]"
       luxOptionLabelProp="label"
@@ -531,17 +531,17 @@
       luxLabel="luxButtonBadgeColor"
       luxHint="Property mit der die Farbe der Button-Badge bestimmt wird"
     />
-    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+    <lux-input luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
-    </lux-input-ac>
-    <lux-select-ac
+    </lux-input>
+    <lux-select
       [luxOptions]="spinnerModes"
       [(luxSelected)]="spinnerMode"
       luxLabel="luxMode"
       luxHint="Die Property bestimmt ob der Spinner im Modus 'determinate' (= endlich) oder 'indeterminate' (= endlos) ist."
     />
     @if (spinnerMode() === 'determinate') {
-      <lux-input-ac
+      <lux-input
         class="lux-flex-auto"
         luxLabel="luxValue"
         luxHint="Diese Property setzt den Wert in dem Spinner, vorausgesetzt es ist im Modus 'determinate'"

@@ -1,11 +1,11 @@
 <example-base-structure
-  exampleTitle="Input-Authentic"
+  exampleTitle="Input"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90input-v21"
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel ohne Reactive-Form</h3>
-      <lux-input-ac
+      <lux-input
         luxAutofocus
         [(luxDisabled)]="disabled"
         [luxRequired]="required()"
@@ -36,22 +36,22 @@
         luxTagId="input-non-reactive"
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon luxIconName="lux-interface-alert-information-circle" />&nbsp; </lux-input-ac-prefix>
+          <lux-input-prefix> <lux-icon luxIconName="lux-interface-alert-information-circle" />&nbsp; </lux-input-prefix>
         }
         @if (showSuffix()) {
-          <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
+          <lux-input-suffix> .00 EUR </lux-input-suffix>
         }
         <lux-form-hint
           >Lorem ipsum
           <lux-link-plain luxLabel="Link" luxHref="https://www.ihk-gfi.de" luxIconName="lux-interface-link" [luxIconShowRight]="true" />
           dolor sit amet.</lux-form-hint
         >
-      </lux-input-ac>
+      </lux-input>
       <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
-      <lux-input-ac
+      <lux-input
         [(luxDisabled)]="disabled"
         [luxReadonly]="readonly()"
         [luxAutocomplete]="autocomplete()"
@@ -79,39 +79,39 @@
         luxTagId="input-reactive"
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-cogs'" />&nbsp; </lux-input-ac-prefix>
+          <lux-input-prefix> <lux-icon [luxIconName]="'lux-cogs'" />&nbsp; </lux-input-prefix>
         }
         @if (showSuffix()) {
-          <lux-input-ac-suffix> .00 EUR </lux-input-ac-suffix>
+          <lux-input-suffix> .00 EUR </lux-input-suffix>
         }
         <lux-form-hint
           >Lorem ipsum
           <lux-link-plain luxLabel="Link" luxHref="https://www.ihk-gfi.de" luxIconName="lux-interface-link" [luxIconShowRight]="true" />
           dolor sit amet.</lux-form-hint
         >
-      </lux-input-ac>
+      </lux-input>
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
 
       <h3>Beispiel-Formular</h3>
       <lux-card luxTitle="Suche nach Anschrift" class="example-form">
         <lux-card-content clas="lux-flex lux-flex-col lux-gap-5">
           <div class="form-grid">
-            <lux-input-ac
+            <lux-input
               luxLabel="Firma"
               luxPlaceholder="IHK-GfI"
               [luxDense]="denseFormat()"
               [luxValue]="exampleCompany"
               [luxRequired]="true"
             />
-            <lux-datepicker-ac
+            <lux-datepicker
               luxLabel="Geburtsdatum"
               luxPlaceholder="01.05.2022"
               [luxDense]="denseFormat()"
               [luxValue]="exampleDate"
               luxHint="Diese Angabe ist optional."
             />
-            <lux-input-ac luxLabel="Straße" luxPlaceholder="Hörder Hafenstr." [luxDense]="denseFormat()" [luxValue]="exampleStreet" />
-            <lux-input-ac
+            <lux-input luxLabel="Straße" luxPlaceholder="Hörder Hafenstr." [luxDense]="denseFormat()" [luxValue]="exampleStreet" />
+            <lux-input
               luxLabel="Hausnummer"
               luxPlaceholder="5"
               [luxValue]="exampleNumber"
@@ -120,14 +120,14 @@
               [luxHintShowOnlyOnFocus]="true"
               [luxAutocomplete]="autocomplete()"
             />
-            <lux-input-ac
+            <lux-input
               luxLabel="Postleitzahl"
               luxPlaceholder="44263"
               [luxValue]="exampleCompany"
               [luxDense]="denseFormat()"
               luxHint="Die Postleitzahl besteht aus 5 Ziffern."
             />
-            <lux-input-ac luxLabel="Ort" luxPlaceholder="Dortmund" [luxDense]="denseFormat()" [luxValue]="exampleDate" />
+            <lux-input luxLabel="Ort" luxPlaceholder="Dortmund" [luxDense]="denseFormat()" [luxValue]="exampleDate" />
           </div>
         </lux-card-content>
         <lux-card-actions class="lux-mt-4">
@@ -138,16 +138,16 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-input-ac luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label" />
-    <lux-input-ac luxLabel="luxHint" luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen." [(luxValue)]="hint" />
+    <lux-input luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label" />
+    <lux-input luxLabel="luxHint" luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen." [(luxValue)]="hint" />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
@@ -157,7 +157,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
@@ -167,7 +167,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
@@ -176,43 +176,43 @@
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
       [(luxChecked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Zeige eine Hint-Komponente"
       [luxChecked]="true"
       (luxCheckedChange)="hint.set($event === true ? '' : 'hint')"
       [luxNoTopLabel]="true"
     />
-    <lux-input-ac
+    <lux-input
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
       [(luxValue)]="placeholder"
     />
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="clearable"
       luxLabel="luxClearable"
       luxHint="Zeigt einen optionalen Button zum Zurücksetzen des Eingabewerts an."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       luxLabel="Zusatz-Validatoren auf FormControl setzen (minLength(3), maxLength(10))"
       [luxChecked]="extraValidators"
       (luxCheckedChange)="changeExtraValidators($event)"
@@ -223,20 +223,20 @@
         Zusammen mit <i>luxRequired</i> lässt sich so prüfen, ob bestehende Validatoren beim Setzen von <code>[luxRequired]</code> erhalten
         bleiben.
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
     />
-    <lux-select-ac
+    <lux-select
       luxLabel="luxType"
       luxHint="Über diese Property kann der erwartete Eingabewert für das Feld definiert werden."
       [(luxSelected)]="inputType"
       [luxOptions]="typeOptions"
     />
-    <lux-input-ac
+    <lux-input
       luxLabel="luxMaxLength"
       luxHint="Über diese Property kann die maximale Länge angegeben werden. Vorsicht funktioniert nicht für den Type 'number'"
       luxType="number"
@@ -245,7 +245,7 @@
       [(luxValue)]="maxLength"
     />
     @if (inputType() === 'number') {
-      <lux-toggle-ac
+      <lux-toggle
         luxLabel="luxNumberAlignLeft"
         luxHint="Mithilfe dieses Flags kann eingestellt werden, ob Zahlen links- oder rechtsbündig dargestellt werden."
         [(luxChecked)]="numberLeft"
@@ -253,26 +253,26 @@
       />
     }
     @if (inputType() === 'text' && maxLength()) {
-      <lux-toggle-ac
+      <lux-toggle
         luxLabel="luxHideCounterLabel"
         luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
         [(luxChecked)]="hideCounterLabel"
         [luxNoTopLabel]="true"
       />
     }
-    <lux-select-ac
+    <lux-select
       luxLabel="luxAutocomplete"
       luxHint="Dieses Flag schaltet die Einblendung früherer Eingaben für dieses Feld durch den Browser ein."
       [luxOptions]="autocompleteOptions"
       [(luxSelected)]="autocomplete"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="showPrefix"
       [luxNoTopLabel]="true"
       luxLabel="Präfix einblenden"
       luxHint="Blendet einen 'lux-input-prefix' ein."
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="showSuffix"
       [luxNoTopLabel]="true"
       luxLabel="Suffix einblenden"
@@ -280,14 +280,14 @@
     />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxErrorMessage verwenden"
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
       [(luxChecked)]="useErrorMessage"
       [luxNoTopLabel]="true"
     />
     @if (useErrorMessage()) {
-      <lux-input-ac
+      <lux-input
         luxLabel="luxErrorMessage"
         luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
@@ -297,7 +297,7 @@
     @if (!useErrorMessage()) {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
-    <lux-select-ac
+    <lux-select
       [luxOptions]="validatorOptions"
       luxOptionLabelProp="label"
       [luxMultiple]="true"
@@ -311,8 +311,8 @@
         Diese Property funktioniert nicht für Components in Reactive-Forms, da diese ihre Validatoren über die entsprechende FormControl
         setzen.
       </lux-form-hint>
-    </lux-select-ac>
-    <lux-toggle-ac
+    </lux-select>
+    <lux-toggle
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"

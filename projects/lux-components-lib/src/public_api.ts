@@ -86,19 +86,19 @@ export * from './lib/lux-error/lux-http-error/lux-http-error.component';
 /**
  * LUX-Form
  */
-export * from './lib/lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
-export * from './lib/lux-form/lux-checkbox-ac/lux-checkbox-ac.component';
-export * from './lib/lux-form/lux-chips-ac/lux-chips-ac.component';
-export * from './lib/lux-form/lux-chips-ac/lux-chips-subcomponents/lux-chip-ac-group.component';
-export * from './lib/lux-form/lux-chips-ac/lux-chips-subcomponents/lux-chip-ac.component';
-export * from './lib/lux-form/lux-datepicker-ac/lux-datepicker-ac-adapter';
-export * from './lib/lux-form/lux-datepicker-ac/lux-datepicker-ac-custom-header/lux-datepicker-ac-custom-header.component';
-export * from './lib/lux-form/lux-datepicker-ac/lux-datepicker-ac.component';
-export * from './lib/lux-form/lux-datetimepicker-ac/lux-datetime-overlay-ac/lux-datetime-overlay-ac.component';
-export * from './lib/lux-form/lux-datetimepicker-ac/lux-datetime-overlay-ac/lux-datetime-overlay-content-ac.component';
-export * from './lib/lux-form/lux-datetimepicker-ac/lux-datetimepicker-ac-adapter';
-export * from './lib/lux-form/lux-datetimepicker-ac/lux-datetimepicker-ac.component';
-export * from './lib/lux-form/lux-file/lux-file-input-ac/lux-file-input-ac.component';
+export * from './lib/lux-form/lux-autocomplete/lux-autocomplete.component';
+export * from './lib/lux-form/lux-checkbox/lux-checkbox.component';
+export * from './lib/lux-form/lux-chips/lux-chips-subcomponents/lux-chip-group.component';
+export * from './lib/lux-form/lux-chips/lux-chips-subcomponents/lux-chip.component';
+export * from './lib/lux-form/lux-chips/lux-chips.component';
+export * from './lib/lux-form/lux-datepicker/lux-datepicker-adapter';
+export * from './lib/lux-form/lux-datepicker/lux-datepicker-custom-header/lux-datepicker-custom-header.component';
+export * from './lib/lux-form/lux-datepicker/lux-datepicker.component';
+export * from './lib/lux-form/lux-datetimepicker/lux-datetime-overlay/lux-datetime-overlay-content.component';
+export * from './lib/lux-form/lux-datetimepicker/lux-datetime-overlay/lux-datetime-overlay.component';
+export * from './lib/lux-form/lux-datetimepicker/lux-datetimepicker-adapter';
+export * from './lib/lux-form/lux-datetimepicker/lux-datetimepicker.component';
+export * from './lib/lux-form/lux-file/lux-file-input/lux-file-input.component';
 export * from './lib/lux-form/lux-file/lux-file-list/lux-file-list.component';
 export * from './lib/lux-form/lux-file/lux-file-model/lux-file-action-config.interface';
 export * from './lib/lux-form/lux-file/lux-file-model/lux-file-capture.directive';
@@ -122,17 +122,55 @@ export * from './lib/lux-form/lux-form-model/lux-form-file-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-input-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-selectable-base.class';
 export * from './lib/lux-form/lux-form-model/lux-reference-control.interface';
-export * from './lib/lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
-export * from './lib/lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
-export * from './lib/lux-form/lux-input-ac/lux-input-ac.component';
-export * from './lib/lux-form/lux-radio-ac/lux-radio-ac.component';
-export * from './lib/lux-form/lux-select-ac/lux-select-ac.component';
-export * from './lib/lux-form/lux-slider-ac/lux-slider-ac.component';
-export * from './lib/lux-form/lux-textarea-ac/lux-textarea-ac.component';
+export * from './lib/lux-form/lux-input/lux-input-subcomponents/lux-input-prefix.component';
+export * from './lib/lux-form/lux-input/lux-input-subcomponents/lux-input-suffix.component';
+export * from './lib/lux-form/lux-input/lux-input.component';
+export * from './lib/lux-form/lux-radio/lux-radio.component';
+export * from './lib/lux-form/lux-select/lux-select.component';
+export * from './lib/lux-form/lux-slider/lux-slider.component';
+export * from './lib/lux-form/lux-textarea/lux-textarea.component';
 export * from './lib/lux-form/lux-timepicker/lux-timepicker-adapter';
 export * from './lib/lux-form/lux-timepicker/lux-timepicker.component';
-export * from './lib/lux-form/lux-toggle-ac/lux-toggle-ac.component';
+export * from './lib/lux-form/lux-toggle/lux-toggle.component';
 export * from './lib/lux-form/lux-validators';
+
+/**
+ * LUX-Form: Deprecated Aliases (pre-22.0.0 "-Ac" names)
+ * @deprecated Use the non-"Ac" class names instead. Will be removed in a future major version.
+ */
+export { LuxAutocompleteComponent as LuxAutocompleteAcComponent } from './lib/lux-form/lux-autocomplete/lux-autocomplete.component';
+export { LuxCheckboxComponent as LuxCheckboxAcComponent } from './lib/lux-form/lux-checkbox/lux-checkbox.component';
+export { LuxChipGroupComponent as LuxChipAcGroupComponent } from './lib/lux-form/lux-chips/lux-chips-subcomponents/lux-chip-group.component';
+export { LuxChipComponent as LuxChipAcComponent } from './lib/lux-form/lux-chips/lux-chips-subcomponents/lux-chip.component';
+export {
+  LuxChipsComponent as LuxChipsAcComponent,
+  type LuxChipsOrientation as LuxChipsAcOrientation
+} from './lib/lux-form/lux-chips/lux-chips.component';
+export { LuxDatepickerAdapter as LuxDatepickerAcAdapter } from './lib/lux-form/lux-datepicker/lux-datepicker-adapter';
+export { LuxDatepickerCustomHeaderComponent as LuxDatepickerAcCustomHeaderComponent } from './lib/lux-form/lux-datepicker/lux-datepicker-custom-header/lux-datepicker-custom-header.component';
+export {
+  LuxDatepickerComponent as LuxDatepickerAcComponent,
+  type LuxDateFilterFn as LuxDateFilterAcFn,
+  type LuxStartView as LuxStartAcView
+} from './lib/lux-form/lux-datepicker/lux-datepicker.component';
+export { LuxDatetimeOverlayContentComponent as LuxDatetimeOverlayContentAcComponent } from './lib/lux-form/lux-datetimepicker/lux-datetime-overlay/lux-datetime-overlay-content.component';
+export { LuxDatetimeOverlayComponent as LuxDatetimeOverlayAcComponent } from './lib/lux-form/lux-datetimepicker/lux-datetime-overlay/lux-datetime-overlay.component';
+export { LuxDatetimepickerAdapter as LuxDateTimePickerAcAdapter } from './lib/lux-form/lux-datetimepicker/lux-datetimepicker-adapter';
+export { LuxDatetimepickerComponent as LuxDatetimepickerAcComponent } from './lib/lux-form/lux-datetimepicker/lux-datetimepicker.component';
+export { LuxFileInputComponent as LuxFileInputAcComponent } from './lib/lux-form/lux-file/lux-file-input/lux-file-input.component';
+export { LuxInputPrefixComponent as LuxInputAcPrefixComponent } from './lib/lux-form/lux-input/lux-input-subcomponents/lux-input-prefix.component';
+export { LuxInputSuffixComponent as LuxInputAcSuffixComponent } from './lib/lux-form/lux-input/lux-input-subcomponents/lux-input-suffix.component';
+export { LuxInputComponent as LuxInputAcComponent } from './lib/lux-form/lux-input/lux-input.component';
+export { LuxRadioComponent as LuxRadioAcComponent } from './lib/lux-form/lux-radio/lux-radio.component';
+export { LuxSelectComponent as LuxSelectAcComponent } from './lib/lux-form/lux-select/lux-select.component';
+export {
+  LuxSliderComponent as LuxSliderAcComponent,
+  type LuxDisplayWithFnType as LuxDisplayWithAcFnType,
+  type LuxSliderColor as LuxSliderAcColor,
+  type LuxSliderTickInterval as LuxSliderAcTickInterval
+} from './lib/lux-form/lux-slider/lux-slider.component';
+export { LuxTextareaComponent as LuxTextareaAcComponent } from './lib/lux-form/lux-textarea/lux-textarea.component';
+export { LuxToggleComponent as LuxToggleAcComponent } from './lib/lux-form/lux-toggle/lux-toggle.component';
 
 /**
  * LUX-Filter
@@ -212,21 +250,21 @@ export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-custom-
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-heading.component';
 export * from './lib/lux-layout/lux-card/lux-card-subcomponents/lux-card-info.component';
 export * from './lib/lux-layout/lux-card/lux-card.component';
-export * from './lib/lux-layout/lux-checkbox-container-ac/lux-checkbox-container-ac.component';
+export * from './lib/lux-layout/lux-checkbox-container/lux-checkbox-container.component';
 export * from './lib/lux-layout/lux-divider/lux-divider.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-content.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-custom-header.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item-icon.component';
 export * from './lib/lux-layout/lux-list/lux-list-subcomponents/lux-list-item.component';
 export * from './lib/lux-layout/lux-list/lux-list.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-detail-header-ac/lux-detail-header-ac.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-detail-view-ac/lux-detail-view-ac.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-detail-view-ac/lux-detail-wrapper-ac.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-master-detail-ac.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-master-footer-ac/lux-master-footer-ac.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-master-header-ac/lux-master-header-ac.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-master-header-ac/lux-master-header-content-ac.component';
-export * from './lib/lux-layout/lux-master-detail-ac/lux-master-list-ac/lux-master-list-ac.component';
+export * from './lib/lux-layout/lux-master-detail/lux-detail-header/lux-detail-header.component';
+export * from './lib/lux-layout/lux-master-detail/lux-detail-view/lux-detail-view.component';
+export * from './lib/lux-layout/lux-master-detail/lux-detail-view/lux-detail-wrapper.component';
+export * from './lib/lux-layout/lux-master-detail/lux-master-detail.component';
+export * from './lib/lux-layout/lux-master-detail/lux-master-footer/lux-master-footer.component';
+export * from './lib/lux-layout/lux-master-detail/lux-master-header/lux-master-header-content.component';
+export * from './lib/lux-layout/lux-master-detail/lux-master-header/lux-master-header.component';
+export * from './lib/lux-layout/lux-master-detail/lux-master-list/lux-master-list.component';
 export * from './lib/lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-action.component';
 export * from './lib/lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-content.component';
 export * from './lib/lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-header-description.component';
@@ -259,11 +297,25 @@ export * from './lib/lux-layout/lux-tile-ac/lux-tile-ac.component';
 export * from './lib/lux-layout/lux-tile/lux-tile.component';
 
 /**
+ * LUX-Layout: Deprecated Aliases (pre-22.0.0 "-Ac" names)
+ * @deprecated Use the non-"Ac" class names instead. Will be removed in a future major version.
+ */
+export { LuxCheckboxContainerComponent as LuxCheckboxContainerAcComponent } from './lib/lux-layout/lux-checkbox-container/lux-checkbox-container.component';
+export { LuxDetailHeaderComponent as LuxDetailHeaderAcComponent } from './lib/lux-layout/lux-master-detail/lux-detail-header/lux-detail-header.component';
+export { LuxDetailViewComponent as LuxDetailViewAcComponent } from './lib/lux-layout/lux-master-detail/lux-detail-view/lux-detail-view.component';
+export { LuxDetailWrapperComponent as LuxDetailWrapperAcComponent } from './lib/lux-layout/lux-master-detail/lux-detail-view/lux-detail-wrapper.component';
+export { LuxMasterDetailComponent as LuxMasterDetailAcComponent } from './lib/lux-layout/lux-master-detail/lux-master-detail.component';
+export { LuxMasterFooterComponent as LuxMasterFooterAcComponent } from './lib/lux-layout/lux-master-detail/lux-master-footer/lux-master-footer.component';
+export { LuxMasterHeaderContentComponent as LuxMasterHeaderContentAcComponent } from './lib/lux-layout/lux-master-detail/lux-master-header/lux-master-header-content.component';
+export { LuxMasterHeaderComponent as LuxMasterHeaderAcComponent } from './lib/lux-layout/lux-master-detail/lux-master-header/lux-master-header.component';
+export { LuxMasterListComponent as LuxMasterListAcComponent } from './lib/lux-layout/lux-master-detail/lux-master-list/lux-master-list.component';
+
+/**
  * LUX-Lookup
  */
-export * from './lib/lux-lookup/lux-lookup-autocomplete-ac/lux-autocomplete-error-state-matcher-ac';
-export * from './lib/lux-lookup/lux-lookup-autocomplete-ac/lux-lookup-autocomplete-ac.component';
-export * from './lib/lux-lookup/lux-lookup-combobox-ac/lux-lookup-combobox-ac.component';
+export * from './lib/lux-lookup/lux-lookup-autocomplete/lux-autocomplete-error-state-matcher';
+export * from './lib/lux-lookup/lux-lookup-autocomplete/lux-lookup-autocomplete.component';
+export * from './lib/lux-lookup/lux-lookup-combobox/lux-lookup-combobox.component';
 export * from './lib/lux-lookup/lux-lookup-label/lux-lookup-label.component';
 export * from './lib/lux-lookup/lux-lookup-model/lux-lookup-component';
 export * from './lib/lux-lookup/lux-lookup-model/lux-lookup-error-state-matcher';
@@ -271,6 +323,14 @@ export * from './lib/lux-lookup/lux-lookup-model/lux-lookup-parameters';
 export * from './lib/lux-lookup/lux-lookup-model/lux-lookup-table-entry';
 export * from './lib/lux-lookup/lux-lookup-service/lux-lookup-handler.service';
 export * from './lib/lux-lookup/lux-lookup-service/lux-lookup.service';
+
+/**
+ * LUX-Lookup: Deprecated Aliases (pre-22.0.0 "-Ac" names)
+ * @deprecated Use the non-"Ac" class names instead. Will be removed in a future major version.
+ */
+export { LuxAutocompleteErrorStateMatcher as LuxAutocompleteErrorStateMatcherAc } from './lib/lux-lookup/lux-lookup-autocomplete/lux-autocomplete-error-state-matcher';
+export { LuxLookupAutocompleteComponent as LuxLookupAutocompleteAcComponent } from './lib/lux-lookup/lux-lookup-autocomplete/lux-lookup-autocomplete.component';
+export { LuxLookupComboboxComponent as LuxLookupComboboxAcComponent } from './lib/lux-lookup/lux-lookup-combobox/lux-lookup-combobox.component';
 
 /**
  * LUX-Pipes

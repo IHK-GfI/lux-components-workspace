@@ -1,11 +1,11 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAccordionComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { FileExampleComponent } from '../file-example.component';
 
@@ -18,8 +18,8 @@ import { FileExampleComponent } from '../file-example.component';
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent
+    LuxToggleComponent,
+    LuxInputComponent
   ]
 })
 export class FileExampleAdvancedOptionsComponent {

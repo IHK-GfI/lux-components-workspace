@@ -9,7 +9,7 @@ import { LuxTableColumnContentComponent } from '../lux-common/lux-table/lux-tabl
 import { LuxTableColumnHeaderComponent } from '../lux-common/lux-table/lux-table-subcomponents/lux-table-column-header.component';
 import { LuxTableColumnComponent } from '../lux-common/lux-table/lux-table-subcomponents/lux-table-column.component';
 import { LuxTableComponent } from '../lux-common/lux-table/lux-table.component';
-import { LuxToggleAcComponent } from '../lux-form/lux-toggle-ac/lux-toggle-ac.component';
+import { LuxToggleComponent } from '../lux-form/lux-toggle/lux-toggle.component';
 import { LuxDividerComponent } from '../lux-layout/lux-divider/lux-divider.component';
 import { LuxDialogRef } from '../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-ref.class';
 import { LuxDialogActionsComponent } from '../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-actions.component';
@@ -40,7 +40,7 @@ type LuxConsentSection = 'consent' | 'datenschutz' | 'impressum';
     LuxDialogActionsComponent,
     LuxButtonComponent,
     LuxLinkPlainComponent,
-    LuxToggleAcComponent,
+    LuxToggleComponent,
     LuxTableComponent,
     LuxTableColumnComponent,
     LuxTableColumnHeaderComponent,

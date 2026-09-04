@@ -8,12 +8,12 @@ import {
   LuxAutofocusDirective,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxCheckboxContainerAcComponent,
+  LuxCheckboxContainerComponent,
   LuxComponentsConfigService,
   LuxIconComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 
 @Component({
@@ -22,12 +22,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
-    LuxCheckboxContainerAcComponent,
+    LuxCheckboxContainerComponent,
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxAutofocusDirective,
     JsonPipe
   ]

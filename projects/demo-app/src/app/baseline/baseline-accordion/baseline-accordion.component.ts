@@ -3,16 +3,16 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import {
   LuxAccordionComponent,
-  LuxAutocompleteAcComponent,
-  LuxCheckboxAcComponent,
-  LuxInputAcComponent,
+  LuxAutocompleteComponent,
+  LuxCheckboxComponent,
+  LuxInputComponent,
   LuxLinkPlainComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
+  LuxSelectComponent,
+  LuxTextareaComponent,
   LuxTextboxComponent
 } from '@ihk-gfi/lux-components';
 
@@ -57,13 +57,13 @@ interface DummyStateForm {
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxInputAcComponent,
+    LuxInputComponent,
     ReactiveFormsModule,
-    LuxAutocompleteAcComponent,
-    LuxCheckboxAcComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxTextareaAcComponent
+    LuxAutocompleteComponent,
+    LuxCheckboxComponent,
+    LuxInputComponent,
+    LuxSelectComponent,
+    LuxTextareaComponent
   ]
 })
 export class BaselineAccordionComponent implements OnInit {

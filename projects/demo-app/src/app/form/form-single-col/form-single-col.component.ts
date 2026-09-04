@@ -3,18 +3,18 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
+  LuxAutocompleteComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxChipAcComponent,
-  LuxChipsAcComponent,
-  LuxDatepickerAcComponent,
+  LuxChipComponent,
+  LuxChipsComponent,
+  LuxDatepickerComponent,
   LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxInputSuffixComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { debounceTime } from 'rxjs';
 import { FormExampleSnapshot, FormExampleStateService } from '../form-example-state.service';
@@ -54,15 +54,15 @@ interface FormSingleState extends FormExampleSnapshot<ReturnType<FormGroup<FormS
     LuxIconComponent,
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxInputAcComponent,
-    LuxDatepickerAcComponent,
-    LuxChipsAcComponent,
-    LuxChipAcComponent,
-    LuxAutocompleteAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxInputSuffixComponent,
+    LuxInputComponent,
+    LuxDatepickerComponent,
+    LuxChipsComponent,
+    LuxChipComponent,
+    LuxAutocompleteComponent,
     ReactiveFormsModule,
     JsonPipe
   ]

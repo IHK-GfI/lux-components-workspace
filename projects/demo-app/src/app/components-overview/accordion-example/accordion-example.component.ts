@@ -5,15 +5,15 @@ import {
   LuxCardComponent,
   LuxCardContentComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxModeType,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
   LuxPanelHeaderTitleComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxToggleComponent,
   LuxTogglePosition
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -40,10 +40,10 @@ import { CustomPanelComponent } from './custom-panel/custom-panel.component';
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
     LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxRadioAcComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
+    LuxInputComponent,
+    LuxRadioComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
     LuxCardComponent,
     LuxCardContentComponent
   ]

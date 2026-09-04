@@ -4,11 +4,11 @@ import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxStorageService,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { Observable, Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -26,8 +26,8 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
     LuxMenuItemComponent,
     LuxButtonComponent,
     LuxAriaLabelDirective,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -72,7 +72,7 @@ export class StorageExampleComponent implements OnDestroy, DoCheck {
     this.valueSubscription.unsubscribe();
   }
 
-  updateExisting(key: string, luxInput: LuxInputAcComponent) {
+  updateExisting(key: string, luxInput: LuxInputComponent) {
     if (!luxInput.value()) {
       throw Error('Null is not allowed!');
     }

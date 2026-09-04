@@ -25,9 +25,9 @@ import { LuxMenuTriggerComponent } from '../../lux-action/lux-menu/lux-menu-subc
 import { LuxMenuComponent } from '../../lux-action/lux-menu/lux-menu.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
-import { LuxChipsAcComponent } from '../../lux-form/lux-chips-ac/lux-chips-ac.component';
-import { LuxChipAcComponent } from '../../lux-form/lux-chips-ac/lux-chips-subcomponents/lux-chip-ac.component';
-import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxChipsComponent } from '../../lux-form/lux-chips/lux-chips.component';
+import { LuxChipComponent } from '../../lux-form/lux-chips/lux-chips-subcomponents/lux-chip.component';
+import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
 import { LuxAccordionComponent } from '../../lux-layout/lux-accordion/lux-accordion.component';
 import { LuxCardActionsComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content-expanded.component';
@@ -38,7 +38,7 @@ import { LuxPanelActionComponent } from '../../lux-layout/lux-panel/lux-panel-su
 import { LuxPanelContentComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-content.component';
 import { LuxPanelHeaderTitleComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-header-title.component';
 import { LuxPanelComponent } from '../../lux-layout/lux-panel/lux-panel.component';
-import { LuxLookupComboboxAcComponent } from '../../lux-lookup/lux-lookup-combobox-ac/lux-lookup-combobox-ac.component';
+import { LuxLookupComboboxComponent } from '../../lux-lookup/lux-lookup-combobox/lux-lookup-combobox.component';
 import {
   DIALOG_WIDTH_SMALL_PX,
   ILuxDialogConfig,
@@ -82,9 +82,9 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
     LuxMenuItemComponent,
     LuxMenuTriggerComponent,
     NgClass,
-    LuxChipsAcComponent,
+    LuxChipsComponent,
     LuxAriaLabelDirective,
-    LuxChipAcComponent,
+    LuxChipComponent,
     TranslocoPipe
   ]
 })
@@ -267,8 +267,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.filterItems.set(filterItems);
 
     if (
-      (removedFilterItem.component instanceof LuxSelectAcComponent ||
-        removedFilterItem.component instanceof LuxLookupComboboxAcComponent) &&
+      (removedFilterItem.component instanceof LuxSelectComponent || removedFilterItem.component instanceof LuxLookupComboboxComponent) &&
       removedFilterItem.component.luxMultiple()
     ) {
       // Fall: Multiselect

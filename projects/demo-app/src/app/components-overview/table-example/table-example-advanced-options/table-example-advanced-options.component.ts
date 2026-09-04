@@ -4,12 +4,12 @@ import {
   LuxButtonComponent,
   LuxFormHintComponent,
   LuxFormLabelComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ResponsiveBehaviour } from '../responsive-behaviour';
 import { ResponsiveBehaviourFilteredPipe } from '../responsive-behaviour-filtered.pipe';
@@ -25,9 +25,9 @@ import { TableExampleBaseClass } from '../table-example-base.class';
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormLabelComponent,
     LuxFormHintComponent,
     ResponsiveBehaviourFilteredPipe

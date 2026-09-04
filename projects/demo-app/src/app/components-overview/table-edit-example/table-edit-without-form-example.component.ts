@@ -3,7 +3,7 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxTableColumnComponent,
   LuxTableColumnContentComponent,
   LuxTableColumnFooterComponent,
@@ -23,7 +23,7 @@ import {
     LuxTableComponent,
     LuxTooltipDirective,
     LuxAriaLabelDirective,
-    LuxInputAcComponent,
+    LuxInputComponent,
     LowerCasePipe
   ],
   templateUrl: './table-edit-without-form-example.component.html',

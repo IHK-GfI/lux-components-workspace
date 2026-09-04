@@ -7,7 +7,7 @@ import {
   LuxDialogRef,
   LuxDialogStructureComponent,
   LuxDialogTitleComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxStepComponent,
   LuxStepContentComponent,
   LuxStepHeaderComponent,
@@ -39,7 +39,7 @@ interface DialogStep2Form {
     LuxStepComponent,
     LuxStepHeaderComponent,
     LuxStepContentComponent,
-    LuxInputAcComponent,
+    LuxInputComponent,
     ReactiveFormsModule,
     LuxTextboxComponent
   ]

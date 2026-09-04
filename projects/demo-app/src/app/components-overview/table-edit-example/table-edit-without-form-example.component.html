@@ -17,7 +17,7 @@
           <span>{{ element.name }}</span>
         }
         @if (element.editable) {
-          <lux-input-ac
+          <lux-input
             [luxDense]="true"
             luxAriaLabel="Name"
             luxAriaLabelSelector="input"
@@ -25,7 +25,7 @@
             class="lux-table-no-label"
             [(luxValue)]="element.name"
             [luxNoLabels]="true"
-          ></lux-input-ac>
+          ></lux-input>
         }
       </ng-template>
     </lux-table-column-content>
@@ -46,7 +46,7 @@
         }
         <div class="lux-flex lux-flex-wrap">
           @if (element.editable) {
-            <lux-input-ac
+            <lux-input
               [luxDense]="true"
               luxAriaLabel="Symbol"
               luxAriaLabelSelector="input"
@@ -54,7 +54,7 @@
               class="lux-table-no-label"
               [(luxValue)]="element.symbol"
               [luxNoLabels]="true"
-            ></lux-input-ac>
+            ></lux-input>
           }
         </div>
       </ng-template>

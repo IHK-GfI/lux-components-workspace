@@ -73,9 +73,9 @@
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>Diese Konfiguration bezieht sich nur auf das Beispiel mit dem Angular Router</h3>
-    <lux-toggle-ac luxLabel="Url aktivieren" [(luxChecked)]="enableUrl" [luxNoTopLabel]="true" />
-    <lux-toggle-ac luxLabel="Mehrzeilig (Umbruch)" [(luxChecked)]="wrap" [luxNoTopLabel]="true" />
-    <lux-toggle-ac
+    <lux-toggle luxLabel="Url aktivieren" [(luxChecked)]="enableUrl" [luxNoTopLabel]="true" />
+    <lux-toggle luxLabel="Mehrzeilig (Umbruch)" [(luxChecked)]="wrap" [luxNoTopLabel]="true" />
+    <lux-toggle
       luxLabel="Nur erster & letzter Eintrag (Zwischenlinks als ... )"
       [(luxChecked)]="showOnlyFirstAndLast"
       [luxNoTopLabel]="true"
@@ -83,8 +83,8 @@
     @for (item of entries(); track item.name; let i = $index) {
       <div>
         <h3>Breadcrumb Eintrag #{{ i + 1 }}</h3>
-        <lux-input-ac [(luxValue)]="item.name" luxLabel="Name" (luxValueChange)="updateView()" />
-        <lux-input-ac [(luxValue)]="item.url" luxLabel="Url" (luxValueChange)="updateView()" />
+        <lux-input [(luxValue)]="item.name" luxLabel="Name" (luxValueChange)="updateView()" />
+        <lux-input [(luxValue)]="item.url" luxLabel="Url" (luxValueChange)="updateView()" />
       </div>
     }
     <lux-button

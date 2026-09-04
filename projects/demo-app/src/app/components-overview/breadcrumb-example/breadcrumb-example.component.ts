@@ -6,9 +6,9 @@ import {
   LuxBreadcrumbComponent,
   LuxButtonComponent,
   LuxDividerComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkPlainComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -24,8 +24,8 @@ import { ExampleValueComponent } from '../../example-base/example-value/example-
     LuxLinkPlainComponent,
     LuxButtonComponent,
     LuxDividerComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

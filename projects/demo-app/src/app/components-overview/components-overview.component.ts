@@ -6,8 +6,8 @@ import {
   LuxAutofocusDirective,
   LuxIconComponent,
   LuxImageComponent,
-  LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
+  LuxInputComponent,
+  LuxInputPrefixComponent,
   LuxTileAcComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
@@ -25,8 +25,8 @@ import { ComponentsOverviewNavigationService } from './components-overview-navig
     LuxIconComponent,
     LuxTileAcComponent,
     LuxAriaLabelDirective,
-    LuxInputAcPrefixComponent,
-    LuxInputAcComponent,
+    LuxInputPrefixComponent,
+    LuxInputComponent,
     LuxAutofocusDirective,
     StatusMarkerComponent
   ]

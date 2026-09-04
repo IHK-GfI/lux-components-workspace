@@ -1,5 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LuxInputAcComponent, LuxRippleDirective, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxInputComponent, LuxRippleDirective, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
@@ -11,8 +11,8 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxRippleDirective,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent

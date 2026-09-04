@@ -5,10 +5,10 @@ import {
   ILuxFileObject,
   LuxAutofocusDirective,
   LuxButtonComponent,
-  LuxFileInputAcComponent,
+  LuxFileInputComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { map, take } from 'rxjs/operators';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -28,10 +28,10 @@ import { DemoMarkerType } from '../../../base/status-marker/status-marker.model'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
-    LuxFileInputAcComponent,
+    LuxFileInputComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -45,9 +45,9 @@ import { DemoMarkerType } from '../../../base/status-marker/status-marker.model'
   ]
 })
 export class FileInputAuthenticExampleComponent extends FileExampleComponent implements AfterViewInit {
-  readonly fileInputs = viewChildren(LuxFileInputAcComponent);
-  readonly fileBaseWithoutComponent = viewChild.required('fileinputexamplewithoutform', { read: LuxFileInputAcComponent });
-  readonly fileBaseWithComponent = viewChild.required('fileinputexamplewithform', { read: LuxFileInputAcComponent });
+  readonly fileInputs = viewChildren(LuxFileInputComponent);
+  readonly fileBaseWithoutComponent = viewChild.required('fileinputexamplewithoutform', { read: LuxFileInputComponent });
+  readonly fileBaseWithComponent = viewChild.required('fileinputexamplewithform', { read: LuxFileInputComponent });
 
   readonly placeholder = signal('Placeholder');
   readonly clearOnError = signal(true);

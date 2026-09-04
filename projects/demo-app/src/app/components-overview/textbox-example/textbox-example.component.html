@@ -98,29 +98,29 @@
     </lux-textbox>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       class="lux-pt-4"
       luxLabel="luxTitle"
       [(luxValue)]="title"
       luxHint="Property um den Titel einer Textbox zu setzen."
-    ></lux-input-ac>
-    <lux-textarea-ac luxLabel="Inhalt" [(luxValue)]="content"></lux-textarea-ac>
-    <lux-input-ac luxLabel="luxIcon" [(luxValue)]="icon" luxHint="Property um das Icon einer Textbox zu setzen."></lux-input-ac>
-    <lux-select-ac
+    ></lux-input>
+    <lux-textarea luxLabel="Inhalt" [(luxValue)]="content"></lux-textarea>
+    <lux-input luxLabel="luxIcon" [(luxValue)]="icon" luxHint="Property um das Icon einer Textbox zu setzen."></lux-input>
+    <lux-select
       luxLabel="luxColor"
       luxHint="Setzt die Farbe einer Textbox."
       luxOptionLabelProp="label"
       [luxOptions]="colorOptions"
       [luxSelected]="colorOptions[1]"
       (luxSelectedChange)="onColorChanged($event)"
-    ></lux-select-ac>
-    <lux-input-ac
+    ></lux-select>
+    <lux-input
       luxLabel="luxHeading"
       luxHint="Diese Property erlaubt es die Heading für die Textbox anzupassen."
       luxType="number"
       [luxNumberAlignLeft]="true"
       [(luxValue)]="heading"
     >
-    </lux-input-ac>
+    </lux-input>
   </example-base-simple-options>
 </example-base-structure>

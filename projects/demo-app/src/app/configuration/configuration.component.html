@@ -9,35 +9,35 @@
     <lux-icon luxIconName="lux-interface-setting-wrench"></lux-icon>
     <lux-card-content class="lux-flex lux-flex-col lux-gap-4">
       <h3>Allgemein</h3>
-      <lux-checkbox-container-ac>
-        <lux-toggle-ac
+      <lux-checkbox-container>
+        <lux-toggle
           luxAutofocus
           luxLabel="Lux-Tag-Ids generieren"
           [(luxChecked)]="currentConfig().generateLuxTagIds"
           (luxCheckedChange)="updateConfig()"
           [luxNoLabels]="true"
-        ></lux-toggle-ac>
-        <lux-toggle-ac
+        ></lux-toggle>
+        <lux-toggle
           luxLabel="Lux-Console aktiv"
           [(luxChecked)]="currentConfig().displayLuxConsoleLogs"
           (luxCheckedChange)="updateConfig()"
           [luxNoLabels]="true"
-        ></lux-toggle-ac>
-        <lux-toggle-ac
+        ></lux-toggle>
+        <lux-toggle
           luxLabel="Lux-Card Animationen aktiv"
           [(luxChecked)]="currentConfig().cardExpansionAnimationActive"
           (luxCheckedChange)="updateConfig()"
           [luxNoLabels]="true"
-        ></lux-toggle-ac>
+        ></lux-toggle>
 
-        <lux-toggle-ac
+        <lux-toggle
           luxLabel="Alle Labels Uppercase"
           [(luxChecked)]="currentConfig().labelConfiguration!.allUppercase"
           (luxCheckedChange)="updateConfig()"
           [luxNoLabels]="true"
-        ></lux-toggle-ac>
-      </lux-checkbox-container-ac>
-      <lux-select-ac
+        ></lux-toggle>
+      </lux-checkbox-container>
+      <lux-select
         luxLabel="Ausnahmen"
         [luxMultiple]="true"
         [luxOptions]="notAppliedToOptions"
@@ -45,103 +45,103 @@
         (luxSelectedChange)="updateConfig()"
         [luxDisabled]="!currentConfig().labelConfiguration!.allUppercase"
         [luxNoBottomLabel]="true"
-      ></lux-select-ac>
-      <lux-input-ac
+      ></lux-select>
+      <lux-input
         luxLabel="Tenant URL"
         [(luxValue)]="currentConfig().tenantLogoLookupServiceUrl"
         [luxNoBottomLabel]="true"
         (luxValueChange)="updateConfig()"
-      ></lux-input-ac>
-      <lux-input-ac
+      ></lux-input>
+      <lux-input
         luxLabel="Lookup URL"
         [(luxValue)]="currentConfig().lookupServiceUrl"
         [luxNoBottomLabel]="true"
         (luxValueChange)="updateConfig()"
-      ></lux-input-ac>
-      <lux-input-ac
+      ></lux-input>
+      <lux-input
         luxLabel="throttleTimeMs der Buttons (Verhinderung von ungewollten Doppelklicks)"
         [(luxValue)]="currentConfig().buttonConfiguration!.throttleTimeMs"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
-      ></lux-input-ac>
+      ></lux-input>
 
       <div>
         <h3>Footer</h3>
-        <lux-checkbox-container-ac>
-          <lux-toggle-ac
+        <lux-checkbox-container>
+          <lux-toggle
             luxLabel="fixedDesktop"
             [luxNoLabels]="true"
             [(luxChecked)]="currentConfig().appFooter!.fixedDesktop"
             (luxCheckedChange)="updateConfig()"
-          ></lux-toggle-ac>
-          <lux-toggle-ac
+          ></lux-toggle>
+          <lux-toggle
             luxLabel="fixedMobile"
             [luxNoLabels]="true"
             [(luxChecked)]="currentConfig().appFooter!.fixedMobile"
             (luxCheckedChange)="updateConfig()"
-          ></lux-toggle-ac>
-        </lux-checkbox-container-ac>
+          ></lux-toggle>
+        </lux-checkbox-container>
       </div>
 
       <h3>Ripples</h3>
-      <lux-input-ac
+      <lux-input
         luxLabel="enterDuration der Lux-Ripples"
         [(luxValue)]="currentConfig().rippleConfiguration!.enterDuration"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
-      ></lux-input-ac>
-      <lux-input-ac
+      ></lux-input>
+      <lux-input
         luxLabel="exitDuration der Lux-Ripples"
         [(luxValue)]="currentConfig().rippleConfiguration!.exitDuration"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
-      ></lux-input-ac>
-      <lux-input-ac
+      ></lux-input>
+      <lux-input
         luxLabel="color der Lux-Ripples"
         [(luxValue)]="currentConfig().rippleConfiguration!.color"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
-      ></lux-input-ac>
-      <lux-input-ac
+      ></lux-input>
+      <lux-input
         luxLabel="radius der Lux-Ripples"
         [(luxValue)]="currentConfig().rippleConfiguration!.radius"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
-      ></lux-input-ac>
-      <lux-checkbox-container-ac>
-        <lux-toggle-ac
+      ></lux-input>
+      <lux-checkbox-container>
+        <lux-toggle
           luxLabel="centered-State der Lux-Ripples"
           [(luxChecked)]="currentConfig().rippleConfiguration!.centered"
           (luxCheckedChange)="updateConfig()"
           [luxNoLabels]="true"
-        ></lux-toggle-ac>
-        <lux-toggle-ac
+        ></lux-toggle>
+        <lux-toggle
           luxLabel="disabled-State der Lux-Ripples"
           [(luxChecked)]="currentConfig().rippleConfiguration!.disabled"
           (luxCheckedChange)="updateConfig()"
           [luxNoLabels]="true"
-        ></lux-toggle-ac>
-        <lux-toggle-ac
+        ></lux-toggle>
+        <lux-toggle
           luxLabel="unbounded-State der Lux-Ripples"
           [(luxChecked)]="currentConfig().rippleConfiguration!.unbounded"
           (luxCheckedChange)="updateConfig()"
           [luxNoLabels]="true"
-        ></lux-toggle-ac>
-      </lux-checkbox-container-ac>
+        ></lux-toggle>
+      </lux-checkbox-container>
 
       <h3>Session-Timer</h3>
-      <lux-input-ac
+      <lux-input
         luxLabel="Url des Session-Timers"
         [(luxValue)]="currentConfig().sessionTimerConfig!.url"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
-      ></lux-input-ac>
-      <lux-input-ac
+      ></lux-input>
+      <lux-input
         luxLabel="Local Storage Key Name des Session-Timers"
         [(luxValue)]="currentConfig().sessionTimerConfig!.localStorageKeyName"
         (luxValueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
-      ></lux-input-ac>
+      ></lux-input>
     </lux-card-content>
   </lux-card>
 </div>

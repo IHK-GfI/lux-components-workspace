@@ -9,16 +9,16 @@ import {
   LuxCardContentComponent,
   LuxCardContentExpandedComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMessageBoxColors,
   LuxMessageBoxComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxSelectComponent,
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -39,10 +39,10 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

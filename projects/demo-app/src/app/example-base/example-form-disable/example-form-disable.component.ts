@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { LuxButtonComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxButtonComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'example-form-disable',
   templateUrl: './example-form-disable.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxButtonComponent, LuxToggleAcComponent]
+  imports: [LuxButtonComponent, LuxToggleComponent]
 })
 export class ExampleFormDisableComponent {
   readonly form = input.required<FormGroup<any>>();

@@ -25,25 +25,25 @@
     }
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac luxLabel="luxImmediateCallback" [(luxChecked)]="immediateCallback" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxImmediateCallback" [(luxChecked)]="immediateCallback" [luxNoTopLabel]="true">
       <lux-form-hint>
         Bestimmt ob bei Initiierung ein luxScrolled-Event abgegeben wird.<br />
         Damit diese Property greift, bitte in den Optionen den Buttpn "Neu generieren" anklicken.
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       luxLabel="luxIsLoading"
       luxHint="Teilt der Component mit, ob gerade Daten geladen werden. Wenn true, werden keine luxScrolled-Events emittet."
       [(luxChecked)]="isLoading"
       [luxNoTopLabel]="true"
     />
-    <lux-input-ac
+    <lux-input
       luxType="number"
       [luxNumberAlignLeft]="true"
       luxName="infinite-scrolling_luxScrollPercent"

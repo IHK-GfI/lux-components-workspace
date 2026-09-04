@@ -3,7 +3,7 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxValidationErrors } from '../../../lux-form/lux-form-model/lux-form-component-base.class';
-import { LuxInputAcComponent } from '../../../lux-form/lux-input-ac/lux-input-ac.component';
+import { LuxInputComponent } from '../../../lux-form/lux-input/lux-input.component';
 import { LuxDialogRef } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-ref.class';
 import { LuxDialogActionsComponent } from '../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-actions.component';
 import { LuxDialogContentComponent } from '../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-content.component';
@@ -21,13 +21,13 @@ import { LuxFilterFormComponent } from '../../lux-filter-form/lux-filter-form.co
     LuxDialogTitleComponent,
     LuxDialogContentComponent,
     LuxDialogActionsComponent,
-    LuxInputAcComponent,
+    LuxInputComponent,
     LuxButtonComponent,
     TranslocoPipe
   ]
 })
 export class LuxFilterSaveDialogComponent implements OnInit, AfterViewInit {
-  readonly filterNameComponent = viewChild.required(LuxInputAcComponent);
+  readonly filterNameComponent = viewChild.required(LuxInputComponent);
 
   luxDialogRef = inject<LuxDialogRef<LuxFilterFormComponent>>(LuxDialogRef);
   currentFilters: LuxFilter[] = [];

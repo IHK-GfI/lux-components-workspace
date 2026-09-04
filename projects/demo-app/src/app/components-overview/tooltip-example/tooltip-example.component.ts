@@ -2,11 +2,11 @@ import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TooltipPosition } from '@angular/material/tooltip';
 import {
   LuxButtonComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkComponent,
   LuxLinkPlainComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
+  LuxSelectComponent,
+  LuxToggleComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -19,9 +19,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTooltipDirective,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,

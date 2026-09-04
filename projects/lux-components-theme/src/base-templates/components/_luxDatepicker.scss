@@ -38,7 +38,8 @@ mat-calendar {
 }
 
 // Formcontrol
-lux-datepicker-ac {
+lux-datepicker-ac,
+lux-datepicker {
   @include mat.datepicker-overrides(());
 
   button:not(:disabled) .lux-datepicker-toggle-icon {

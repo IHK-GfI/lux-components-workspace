@@ -46,11 +46,11 @@ import { catchError, debounceTime, distinctUntilChanged, tap } from 'rxjs/operat
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
-import { LuxCheckboxAcComponent } from '../../lux-form/lux-checkbox-ac/lux-checkbox-ac.component';
-import { LuxInputAcPrefixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
-import { LuxInputAcSuffixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
-import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
-import { LuxSelectAcComponent } from '../../lux-form/lux-select-ac/lux-select-ac.component';
+import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
+import { LuxInputPrefixComponent } from '../../lux-form/lux-input/lux-input-subcomponents/lux-input-prefix.component';
+import { LuxInputSuffixComponent } from '../../lux-form/lux-input/lux-input-subcomponents/lux-input-suffix.component';
+import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
+import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
@@ -75,10 +75,10 @@ export interface LuxTableDoubleClickEventType<T> {
   imports: [
     LuxProgressComponent,
     NgClass,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxSelectAcComponent,
+    LuxInputComponent,
+    LuxInputPrefixComponent,
+    LuxInputSuffixComponent,
+    LuxSelectComponent,
     NgStyle,
     MatTable,
     MatSort,
@@ -88,7 +88,7 @@ export interface LuxTableDoubleClickEventType<T> {
     MatSortHeader,
     MatCellDef,
     MatCell,
-    LuxCheckboxAcComponent,
+    LuxCheckboxComponent,
     LuxTabIndexDirective,
     LuxAriaLabelDirective,
     MatFooterCellDef,
@@ -180,7 +180,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private sortQuery = viewChild(MatSort);
   private paginatorElementQuery = viewChild('paginator', { read: ElementRef });
   private filterElementQuery = viewChild('filter', { read: ElementRef });
-  private filterComponentQuery = viewChild<LuxInputAcComponent>('filter');
+  private filterComponentQuery = viewChild<LuxInputComponent>('filter');
   private tableContainerElementQuery = viewChild('tableContainer', { read: ElementRef });
   private tableColumnsQuery = contentChildren(LuxTableColumnComponent);
 
@@ -216,7 +216,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     return this.filterElementQuery();
   }
 
-  get filterComponent(): LuxInputAcComponent | undefined {
+  get filterComponent(): LuxInputComponent | undefined {
     return this.filterComponentQuery();
   }
 

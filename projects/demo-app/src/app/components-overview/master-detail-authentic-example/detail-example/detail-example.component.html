@@ -3,56 +3,51 @@
     <div class="lux-flex lux-flex-col">
       <div class="lux-grid lux-grid-cols-2 lt-lg:lux-grid-cols-1 lux-gap-8">
         <div class="lux-flex lux-items-center">
-          <lux-toggle-ac
+          <lux-toggle
             luxLabel="luxCustomHeader anzeigen"
             [(luxChecked)]="masterDetailConfig()!.showCustomCardHeader"
             [luxNoLabels]="true"
           />
           <app-status-marker />
         </div>
-        <lux-input-ac
-          luxName="master-detail_titleDetail"
-          luxLabel="Title"
-          [luxNoBottomLabel]="true"
-          [(luxValue)]="selectedDetail().title"
-        />
-        <lux-input-ac
+        <lux-input luxName="master-detail_titleDetail" luxLabel="Title" [luxNoBottomLabel]="true" [(luxValue)]="selectedDetail().title" />
+        <lux-input
           luxName="master-detail_subtitleDetail"
           luxLabel="Subtitle"
           [luxNoBottomLabel]="true"
           [(luxValue)]="selectedDetail().subtitle"
         />
-        <lux-input-ac
+        <lux-input
           luxName="master-detail_luxEmptyLabelDetail"
           luxLabel="luxEmptyLabelDetail"
           luxHint="Diese Property bestimmt das Label welches angezeigt wird, wenn kein Detail selektiert ist."
           [(luxValue)]="masterDetailConfig()!.emptyLabelDetail"
         />
-        <lux-input-ac
+        <lux-input
           luxName="master-detail_luxEmptyLabelMaster"
           luxLabel="luxEmptyLabelMaster"
           luxHint="Diese Property bestimmt das Label welches angezeigt wird, wenn keine Master-Elemente vorhanden sind."
           [(luxValue)]="masterDetailConfig()!.emptyLabelMaster"
         />
-        <lux-input-ac
+        <lux-input
           luxName="master-detail_luxEmptyIconDetail"
           luxLabel="luxEmptyIconDetail"
           luxHint="Die Property legt das Icon fest, das angezeigt wird wenn kein Detail ausgewählt ist."
           [(luxValue)]="masterDetailConfig()!.emptyIconDetail"
         />
-        <lux-input-ac
+        <lux-input
           luxName="master-detail_luxEmptyIconMaster"
           luxLabel="luxEmptyIconMaster"
           luxHint="Die Property legt das Icon fest, das angezeigt wird wenn keine Master-Elemente vorhanden sind."
           [(luxValue)]="masterDetailConfig()!.emptyIconMaster"
         />
-        <lux-select-ac
+        <lux-select
           luxLabel="luxEmptyIconDetailSize"
           luxHint="Über diese Eigenschaft wird die (relative) Größe des EmptyDetail-Icons festgelegt."
           [(luxSelected)]="masterDetailConfig()!.emptyIconDetailSize"
           [luxOptions]="['1x', '2x', '3x', '4x', '5x']"
         />
-        <lux-select-ac
+        <lux-select
           luxLabel="luxEmptyIconMasterSize"
           luxHint="Über diese Eigenschaft wird die (relative) Größe des EmptyMaster-Icons festgelegt."
           [(luxSelected)]="masterDetailConfig()!.emptyIconMasterSize"
@@ -62,25 +57,25 @@
 
       <lux-divider [luxInset]="true" />
       <div class="lux-simple-form column">
-        <lux-toggle-ac
+        <lux-toggle
           luxLabel="luxOpen"
           luxHint="Die Property stellt ein ob die Masterliste aufgeklappt ist."
           [(luxChecked)]="masterDetailConfig()!.opened"
           [luxNoTopLabel]="true"
         />
-        <lux-toggle-ac
+        <lux-toggle
           luxLabel="luxTitleLineBreak"
           luxHint="Mithilfe dieses Flags kann eingestellt werden, ob die Titel in der Masterliste umbrechen oder mit '...' abgekürzt werden."
           [(luxChecked)]="masterDetailConfig()!.lineBreak"
           [luxNoTopLabel]="true"
         />
-        <lux-toggle-ac
+        <lux-toggle
           luxLabel="luxMasterIsReloading"
           luxHint="Über diesen Flag kann der Spinner am Ende der Masterliste sichtbar gemacht werden."
           [(luxChecked)]="masterIsReloading"
           [luxNoTopLabel]="true"
         />
-        <lux-toggle-ac
+        <lux-toggle
           luxLabel="Infinite-Scrolling ignorieren"
           luxHint="Das Nachladen weiterer Master-Einträge mithilfe von Infinite-Scrolling unterbinden."
           [(luxChecked)]="masterDetailConfig()!.ignoreScrollLoading"

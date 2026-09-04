@@ -3,18 +3,18 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import {
   LuxAccordionComponent,
   LuxAutofocusDirective,
-  LuxChipAcComponent,
-  LuxChipAcGroupComponent,
-  LuxChipsAcComponent,
-  LuxChipsAcOrientation,
+  LuxChipComponent,
+  LuxChipGroupComponent,
+  LuxChipsComponent,
+  LuxChipsOrientation,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxThemePalette,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -33,13 +33,13 @@ import { logResult, setRequiredValidatorForFormControl } from '../../example-bas
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
-    LuxChipsAcComponent,
-    LuxChipAcGroupComponent,
-    LuxChipAcComponent,
+    LuxChipsComponent,
+    LuxChipGroupComponent,
+    LuxChipComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -65,7 +65,7 @@ export class ChipAuthenticExampleComponent {
   readonly inputAllowed = signal(true);
   readonly inputLabel = signal('Neu');
   readonly placeholder = signal('eingeben oder auswählen');
-  readonly chipOrientation = signal<LuxChipsAcOrientation>('horizontal');
+  readonly chipOrientation = signal<LuxChipsOrientation>('horizontal');
   readonly autocomplete = signal(true);
   readonly autocompleteOptions = signal(this.createOptions());
   readonly autocompleteNoGroupAllOptions = ['Neuer Chip #1', 'Neuer Chip #2', 'Neuer Chip #3'];

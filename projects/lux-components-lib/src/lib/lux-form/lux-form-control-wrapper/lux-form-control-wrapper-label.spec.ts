@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
+import { LuxInputComponent } from '../lux-input/lux-input.component';
 
 describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
   let fixture: ComponentFixture<WrapperLabelTestComponent>;
@@ -106,14 +106,14 @@ describe('LuxFormControlWrapper - Label verstecken statt entfernen', () => {
 });
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac
+  imports: [LuxInputComponent],
+  template: `<lux-input
     [luxLabel]="label"
     [luxNoTopLabel]="noTopLabel"
     [luxNoLabels]="noLabels"
     [luxAriaLabel]="ariaLabel"
     [luxAriaLabelledby]="ariaLabelledby"
-  ></lux-input-ac>`
+  ></lux-input>`
 })
 class WrapperLabelTestComponent {
   label = 'Nachname';

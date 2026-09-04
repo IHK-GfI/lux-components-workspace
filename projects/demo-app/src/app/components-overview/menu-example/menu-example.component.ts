@@ -4,7 +4,7 @@ import {
   LuxDividerComponent,
   LuxFormHintComponent,
   LuxIconRegistryService,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxMenuPanelHeaderComponent,
@@ -12,9 +12,9 @@ import {
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxThemePalette,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -35,9 +35,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxPanelHeaderDescriptionComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

@@ -59,14 +59,14 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac [(luxValue)]="iconName" luxLabel="luxIconName" [luxHint]="iconHint" />
-    <lux-select-ac [(luxSelected)]="iconSize" [luxOptions]="iconSizes" luxLabel="luxIconSize">
+    <lux-input [(luxValue)]="iconName" luxLabel="luxIconName" [luxHint]="iconHint" />
+    <lux-select [(luxSelected)]="iconSize" [luxOptions]="iconSizes" luxLabel="luxIconSize">
       <lux-form-hint>
         Über diese Property kann die Größe des Icons festgelegt werden.<br />
         Die Größen sind relative 'em'-Werte.
       </lux-form-hint>
-    </lux-select-ac>
-    <lux-checkbox-ac
+    </lux-select>
+    <lux-checkbox
       [(luxChecked)]="rounded"
       (luxCheckedChange)="padding.set($event ? '' : '0.25rem')"
       luxLabel="luxRounded"
@@ -76,13 +76,13 @@
         Diese Property aktiviert eine abgerundete Darstellung des Icons<br />
         Ist nur in Kombination mit einer 'luxColor' sichtbar.
       </lux-form-hint>
-    </lux-checkbox-ac>
-    <lux-input-ac luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+    </lux-checkbox>
+    <lux-input luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint
         >Kontrast zwischen Element und Hintergrund prüfen. <br />
         Z.B. #f0f0f2 oder
       </lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
     <lux-link-plain
       luxLabel="Zur Iconsuche"
       luxHref="/icon-overview"
@@ -91,17 +91,17 @@
     />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac [(luxValue)]="margin" luxLabel="luxMargin">
+    <lux-input [(luxValue)]="margin" luxLabel="luxMargin">
       <lux-form-hint>
         Die Property ermöglicht es, die Margins für das Icon festzulegen<br />
         (z.B. '4px', '10px, 5em' oder '1px, 2px, 3px, 4px').
       </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac [(luxValue)]="padding" luxLabel="luxPadding">
+    </lux-input>
+    <lux-input [(luxValue)]="padding" luxLabel="luxPadding">
       <lux-form-hint>
         Die Property ermöglicht es, die Paddings für das Icon festzulegen<br />
         (z.B. '4px', '10px, 5em' oder '1px, 2px, 3px, 4px').
       </lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
   </example-base-advanced-options>
 </example-base-structure>

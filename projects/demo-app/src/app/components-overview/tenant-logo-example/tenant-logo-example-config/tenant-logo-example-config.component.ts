@@ -3,11 +3,11 @@ import {
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMediaQueryObserverService,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxTenantLogoComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { TenantLogoExampleConfigData } from './tenant-logo-example-config-data';
@@ -22,7 +22,7 @@ interface TenantLogoExampleKey {
   templateUrl: './tenant-logo-example-config.component.html',
   styleUrls: ['./tenant-logo-example-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, LuxFormHintComponent]
+  imports: [LuxToggleComponent, LuxSelectComponent, LuxInputComponent, LuxFormHintComponent]
 })
 export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
   readonly title = input.required<string>();

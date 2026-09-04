@@ -1,11 +1,11 @@
 <example-base-structure
-  exampleTitle="Autocomplete Authentic"
+  exampleTitle="Autocomplete"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90autocomplete-v21"
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel ohne Reactive-Form</h3>
-      <lux-autocomplete-ac
+      <lux-autocomplete
         luxAutofocus
         [luxAutofocusComponent]="autocomplete"
         [luxLabel]="label()"
@@ -45,10 +45,10 @@
         #autocomplete
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon luxIconName="lux-tasks" />&nbsp; </lux-input-ac-prefix>
+          <lux-input-prefix> <lux-icon luxIconName="lux-tasks" />&nbsp; </lux-input-prefix>
         }
         @if (showSuffix()) {
-          <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
+          <lux-input-suffix>ABC</lux-input-suffix>
         }
         @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
@@ -63,12 +63,12 @@
             </div>
           </ng-template>
         }
-      </lux-autocomplete-ac>
+      </lux-autocomplete>
       <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
-      <lux-autocomplete-ac
+      <lux-autocomplete
         [luxLabel]="label()"
         [luxPlaceholder]="placeholder()"
         [luxHint]="hint()"
@@ -103,10 +103,10 @@
         luxTagId="autocomplete-reactive"
       >
         @if (showPrefix()) {
-          <lux-input-ac-prefix> <lux-icon [luxIconName]="'lux-tasks'" />&nbsp; </lux-input-ac-prefix>
+          <lux-input-prefix> <lux-icon [luxIconName]="'lux-tasks'" />&nbsp; </lux-input-prefix>
         }
         @if (showSuffix()) {
-          <lux-input-ac-suffix>ABC</lux-input-ac-suffix>
+          <lux-input-suffix>ABC</lux-input-suffix>
         }
         @if (useTemplatesForLabels()) {
           <ng-template let-option #labelTemplate>
@@ -121,25 +121,25 @@
             </div>
           </ng-template>
         }
-      </lux-autocomplete-ac>
+      </lux-autocomplete>
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxName="autocomplete_luxLabel"
       luxLabel="luxLabel"
       luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
       [(luxValue)]="label"
     />
-    <lux-input-ac
+    <lux-input
       luxName="autocomplete_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(luxValue)]="hint"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
@@ -149,7 +149,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
@@ -159,7 +159,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
@@ -168,13 +168,13 @@
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
-    <lux-input-ac
+    <lux-input
       luxName="autocomplete_luxPlaceholder"
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
       [(luxValue)]="placeholder"
     />
-    <lux-select-ac
+    <lux-select
       [luxSelected]="renderProperties[0]"
       (luxSelectedChange)="onRenderProperty($event)"
       [luxOptions]="renderProperties"
@@ -183,55 +183,55 @@
       luxLabel="luxOptionLabelProp"
       luxHint="Über die Property wird eingestellt, woraus der anzuzeigende Label bezogen wird."
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
       [(luxChecked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="useStringValues"
       luxLabel="String-Werte verwenden"
       luxHint="Anstatt Objekte, String-Werte verwenden"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="clearable"
       luxLabel="luxClearable"
       luxHint="Zeigt einen optionalen Button zum Zurücksetzen des Eingabewerts an."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac [(luxChecked)]="strict" luxLabel="luxStrict" [luxNoTopLabel]="true">
+    <lux-toggle [(luxChecked)]="strict" luxLabel="luxStrict" [luxNoTopLabel]="true">
       <lux-form-hint>
         Dieses Flag aktiviert den strikten Modus dieser Component.<br />
         Das bedeutet, dass nur Eingaben die einer Option entsprechen als valide gelten.
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="usePickValueFn"
       luxLabel="luxPickValue"
       [luxDisabled]="!strict() || useStringValues()"
@@ -242,23 +242,23 @@
         Das bedeutet, es wird der von der PickValue-Funktion zurückgelieferte Wert selektiert und nicht die Option als ganzes. <br />
         Wenn String-Werte verwendet werden, kann diese Funktion nicht verwendet werden.
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac [(luxChecked)]="useFilterFn" luxLabel="luxFilterFn" [luxNoTopLabel]="true">
+    </lux-toggle>
+    <lux-toggle [(luxChecked)]="useFilterFn" luxLabel="luxFilterFn" [luxNoTopLabel]="true">
       <lux-form-hint>
         Dieses Flag aktiviert die Filterfunktion. <br />
         Diese Beispielfilterfunktion trennt die Eingabe anhand von Leerzeichen und prüft, ob alle Teile enthalten sind.
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac [(luxChecked)]="toggleOptions" luxLabel="Optionen austauschen" [luxNoTopLabel]="true">
+    </lux-toggle>
+    <lux-toggle [(luxChecked)]="toggleOptions" luxLabel="Optionen austauschen" [luxNoTopLabel]="true">
       <lux-form-hint> Dieses Toggle tauscht die Optionen aus. </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="showPrefix"
       luxLabel="Präfix einblenden"
       luxHint="Blendet einen 'lux-input-prefix' ein."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="showSuffix"
       luxLabel="Suffix einblenden"
       luxHint="Blendet einen 'lux-input-suffix' ein."
@@ -267,7 +267,7 @@
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxName="autocomplete_luxDelay"
       luxLabel="luxDelay"
       luxHint="Über diese Property kann die zeitliche Verzögerung für die Filterung eingestellt werden. Kann nur initial gesetzt werden und ist deshalb hier deaktiviert."
@@ -276,16 +276,16 @@
       luxType="number"
       [luxNumberAlignLeft]="true"
     />
-    <lux-input-ac
+    <lux-input
       luxName="autocomplete_luxPanelWidth"
       luxLabel="luxPanelWidth"
       luxHint="Über diese Property kann die Optionpanelbreite angepasst werden"
       [(luxValue)]="luxPanelWidth"
     />
-    <lux-input-ac luxLabel="luxOptionBlockSize" [(luxValue)]="optionBlockSize" luxType="number" [luxNumberAlignLeft]="true">
+    <lux-input luxLabel="luxOptionBlockSize" [(luxValue)]="optionBlockSize" luxType="number" [luxNumberAlignLeft]="true">
       <lux-form-hint> Lädt die Optionen in der eingestellten Blockgröße nach, wenn gescrollt wird. </lux-form-hint>
-    </lux-input-ac>
-    <lux-select-ac
+    </lux-input>
+    <lux-select
       [luxOptions]="validatorOptions"
       luxOptionLabelProp="label"
       [luxMultiple]="true"
@@ -299,19 +299,19 @@
         Diese Property funktioniert nicht für Components in Reactive-Forms, da diese ihre Validatoren über die entsprechende FormControl
         setzen.
       </lux-form-hint>
-    </lux-select-ac>
+    </lux-select>
     @if (strict()) {
-      <lux-input-ac
+      <lux-input
         luxName="autocomplete_luxErrorMessageNotAnOption"
         luxLabel="luxErrorMessageNotAnOption"
         luxHint="Die Property kann die Fehlermeldung für invalide Optionen einstellen."
         [(luxValue)]="errorMessageNotAnOption"
       >
         <lux-form-hint> Die Property kann die Fehlermeldung für invalide Optionen einstellen. </lux-form-hint>
-      </lux-input-ac>
+      </lux-input>
     }
     @if (useErrorMessage()) {
-      <lux-input-ac
+      <lux-input
         luxName="autocomplete_luxErrorMessage"
         luxLabel="luxErrorMessage"
         luxHint="Über diese Property lässt sich eine feste Fehlermeldung
@@ -321,30 +321,30 @@
     } @else {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxErrorMessage verwenden"
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
       [(luxChecked)]="useErrorMessage"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="selectAllOnClick"
       luxLabel="luxSelectAllOnClick"
       luxHint="Mit diesem Flag kann aktiviert werden, dass beim Klick auf das Feld der
                   gesamte Eingabewert direkt selektiert wird."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
+    <lux-toggle [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
       <lux-form-hint> Die Labels können über in die Component eingereichte Template-Tags erstellt werden. </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="useTranslocoDate"
       luxLabel="translocoDate in Template verwenden"
       luxHint="Steuert, ob das Datum über die translocoDate-Pipe im Label-Template angezeigt wird."
       [luxDisabled]="!useTemplatesForLabels()"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"

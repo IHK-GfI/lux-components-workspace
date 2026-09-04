@@ -3,57 +3,57 @@
     <lux-card-content>
       <form [formGroup]="myGroup">
         <div formGroupName="user" class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
-          <lux-input-ac luxName="first-name" luxLabel="Vorname" luxControlBinding="firstname" luxAutofocus></lux-input-ac>
-          <lux-input-ac luxName="given-name" luxLabel="Nachname" luxControlBinding="lastname"></lux-input-ac>
+          <lux-input luxName="first-name" luxLabel="Vorname" luxControlBinding="firstname" luxAutofocus></lux-input>
+          <lux-input luxName="given-name" luxLabel="Nachname" luxControlBinding="lastname"></lux-input>
 
-          <lux-input-ac luxName="email" luxLabel="E-Mail" luxControlBinding="email">
-            <lux-input-ac-suffix>
+          <lux-input luxName="email" luxLabel="E-Mail" luxControlBinding="email">
+            <lux-input-suffix>
               <lux-icon luxIconName="lux-mail-sign-at"></lux-icon>
-            </lux-input-ac-suffix>
-          </lux-input-ac>
-          <lux-input-ac luxName="current-password" luxLabel="Passwort" luxControlBinding="password" luxType="password">
-            <lux-input-ac-suffix>
+            </lux-input-suffix>
+          </lux-input>
+          <lux-input luxName="current-password" luxLabel="Passwort" luxControlBinding="password" luxType="password">
+            <lux-input-suffix>
               <lux-icon luxIconName="lux-interface-lock"></lux-icon>
-            </lux-input-ac-suffix>
-          </lux-input-ac>
+            </lux-input-suffix>
+          </lux-input>
         </div>
         <div class="lux-grid lux-grid-cols-2 lux-gap-4 lux-grid-cols-1-lt-md">
-          <lux-select-ac
+          <lux-select
             luxLabel="Hobbys"
             luxControlBinding="hobbies"
             [luxOptions]="hobbies"
             luxOptionLabelProp="label"
             [luxPickValue]="pickHobbyValue"
             [luxMultiple]="true"
-          ></lux-select-ac>
-          <lux-input-ac luxName="form-common_Spende" luxLabel="Spende" luxControlBinding="donation" luxType="number">
-            <lux-input-ac-prefix>
+          ></lux-select>
+          <lux-input luxName="form-common_Spende" luxLabel="Spende" luxControlBinding="donation" luxType="number">
+            <lux-input-prefix>
               <lux-icon luxIconName="lux-money-atm-card-1"></lux-icon>
-            </lux-input-ac-prefix>
-            <lux-input-ac-suffix>
+            </lux-input-prefix>
+            <lux-input-suffix>
               <lux-icon luxIconName="lux-money-currency-euro"></lux-icon>
-            </lux-input-ac-suffix>
-          </lux-input-ac>
+            </lux-input-suffix>
+          </lux-input>
 
-          <lux-toggle-ac luxLabel="Newsletter" luxControlBinding="newsletter"></lux-toggle-ac>
-          <lux-checkbox-ac luxControlBinding="hungry" luxLabel="Hungrig" class="lux-row-start-3"></lux-checkbox-ac>
+          <lux-toggle luxLabel="Newsletter" luxControlBinding="newsletter"></lux-toggle>
+          <lux-checkbox luxControlBinding="hungry" luxLabel="Hungrig" class="lux-row-start-3"></lux-checkbox>
 
-          <lux-input-ac
+          <lux-input
             luxName="form-common_Beschreibung"
             luxLabel="Beschreibung"
             luxControlBinding="description"
             class="lux-col-span-full"
-          ></lux-input-ac>
+          ></lux-input>
 
-          <lux-chips-ac
+          <lux-chips
             [luxInputAllowed]="true"
             luxInputLabel="Neuen Chip erstellen..."
             luxOrientation="horizontal"
             [luxNewChipGroup]="chipGroup2"
             class="lux-col-span-full"
           >
-            <lux-chip-ac [luxRemovable]="false" luxColor="warn"> Chip ohne Group </lux-chip-ac>
-            <lux-chip-ac-group
+            <lux-chip [luxRemovable]="false" luxColor="warn"> Chip ohne Group </lux-chip>
+            <lux-chip-group
               [luxRemovable]="false"
               luxColor="primary"
               (luxChipClicked)="chipItemClicked($event)"
@@ -64,8 +64,8 @@
               <ng-template let-chipItem>
                 {{ chipItem | lowercase }}
               </ng-template>
-            </lux-chip-ac-group>
-            <lux-chip-ac-group
+            </lux-chip-group>
+            <lux-chip-group
               [luxRemovable]="true"
               luxColor="accent"
               (luxChipClicked)="chipItemClicked($event)"
@@ -76,10 +76,10 @@
               <ng-template let-chipItem>
                 {{ chipItem | uppercase }}
               </ng-template>
-            </lux-chip-ac-group>
-          </lux-chips-ac>
+            </lux-chip-group>
+          </lux-chips>
 
-          <lux-radio-ac
+          <lux-radio
             [luxOptions]="hobbies"
             luxGroupName="1"
             luxControlBinding="radio"
@@ -90,19 +90,19 @@
             <ng-template let-option>
               {{ option['label'] }}
             </ng-template>
-          </lux-radio-ac>
+          </lux-radio>
 
-          <lux-datepicker-ac [luxTouchUi]="true" luxControlBinding="datepicker" luxLabel="Datepicker"> </lux-datepicker-ac>
+          <lux-datepicker [luxTouchUi]="true" luxControlBinding="datepicker" luxLabel="Datepicker"> </lux-datepicker>
 
-          <lux-autocomplete-ac
+          <lux-autocomplete
             [luxOptions]="chipItems2"
             luxLabel="Autocomplete"
             [luxLookupDelay]="100"
             [luxSelectAllOnClick]="false"
             luxControlBinding="autocomplete"
           >
-          </lux-autocomplete-ac>
-          <lux-textarea-ac
+          </lux-autocomplete>
+          <lux-textarea
             luxLabel="Textarea"
             luxPlaceholder="Bitte hinterlasse hier einen Kommentar..."
             luxControlBinding="comment"
@@ -111,7 +111,7 @@
             [luxMaxRows]="3"
             class="lux-col-span-full"
           >
-          </lux-textarea-ac>
+          </lux-textarea>
         </div>
       </form>
     </lux-card-content>
@@ -125,28 +125,28 @@
         weiterhin vor. Mit dem Schalter lassen sich die Labels zur Kontrolle wieder einblenden. Checkbox und Toggle fehlen hier bewusst,
         denn ihr Label steht neben dem Bedienelement und wird nicht visuell versteckt.
       </p>
-      <lux-toggle-ac luxLabel="Labels sichtbar anzeigen" [(luxChecked)]="showA11yLabels" [luxNoBottomLabel]="true"></lux-toggle-ac>
+      <lux-toggle luxLabel="Labels sichtbar anzeigen" [(luxChecked)]="showA11yLabels" [luxNoBottomLabel]="true"></lux-toggle>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
-        <lux-input-ac luxLabel="Suchbegriff eingeben" [luxNoTopLabel]="!showA11yLabels()" luxPlaceholder="Suchen..."></lux-input-ac>
-        <lux-textarea-ac luxLabel="Anmerkung erfassen" [luxNoTopLabel]="!showA11yLabels()"></lux-textarea-ac>
-        <lux-select-ac
+        <lux-input luxLabel="Suchbegriff eingeben" [luxNoTopLabel]="!showA11yLabels()" luxPlaceholder="Suchen..."></lux-input>
+        <lux-textarea luxLabel="Anmerkung erfassen" [luxNoTopLabel]="!showA11yLabels()"></lux-textarea>
+        <lux-select
           luxLabel="Liste sortieren nach"
           [luxNoTopLabel]="!showA11yLabels()"
           [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
-        ></lux-select-ac>
-        <lux-autocomplete-ac luxLabel="Hobby suchen" [luxNoTopLabel]="!showA11yLabels()" [luxOptions]="hobbies"></lux-autocomplete-ac>
-        <lux-datepicker-ac luxLabel="Startdatum wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-datepicker-ac>
-        <lux-datetimepicker-ac luxLabel="Termin wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-datetimepicker-ac>
+        ></lux-select>
+        <lux-autocomplete luxLabel="Hobby suchen" [luxNoTopLabel]="!showA11yLabels()" [luxOptions]="hobbies"></lux-autocomplete>
+        <lux-datepicker luxLabel="Startdatum wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-datepicker>
+        <lux-datetimepicker luxLabel="Termin wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-datetimepicker>
         <lux-timepicker luxLabel="Uhrzeit wählen" [luxNoTopLabel]="!showA11yLabels()"></lux-timepicker>
-        <lux-file-input-ac luxLabel="Datei auswählen" [luxNoTopLabel]="!showA11yLabels()"></lux-file-input-ac>
-        <lux-radio-ac
+        <lux-file-input luxLabel="Datei auswählen" [luxNoTopLabel]="!showA11yLabels()"></lux-file-input>
+        <lux-radio
           luxLabel="Hobby wählen"
           [luxNoTopLabel]="!showA11yLabels()"
           [luxOptions]="hobbies"
           luxOptionLabelProp="label"
-        ></lux-radio-ac>
-        <lux-slider-ac luxLabel="Lautstärke einstellen" [luxNoTopLabel]="!showA11yLabels()"></lux-slider-ac>
-        <lux-chips-ac luxLabel="Schlagwort ergänzen" [luxNoTopLabel]="!showA11yLabels()" [luxInputAllowed]="true"></lux-chips-ac>
+        ></lux-radio>
+        <lux-slider luxLabel="Lautstärke einstellen" [luxNoTopLabel]="!showA11yLabels()"></lux-slider>
+        <lux-chips luxLabel="Schlagwort ergänzen" [luxNoTopLabel]="!showA11yLabels()" [luxInputAllowed]="true"></lux-chips>
       </div>
 
       <h3>Ausnahme: Felder ganz ohne Labeltext</h3>
@@ -159,11 +159,8 @@
         luxNoTopLabel.
       </p>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
-        <lux-input-ac luxLabel="Nachname"></lux-input-ac>
-        <lux-select-ac
-          luxAriaLabel="Liste sortieren nach"
-          [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"
-        ></lux-select-ac>
+        <lux-input luxLabel="Nachname"></lux-input>
+        <lux-select luxAriaLabel="Liste sortieren nach" [luxOptions]="['Relevanz', 'Preis aufsteigend', 'Neueste zuerst']"></lux-select>
       </div>
 
       <h3>Name über sichtbaren Fremdtext (luxAriaLabelledby)</h3>
@@ -174,7 +171,7 @@
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
         <div>
           <span id="forms-a11y-spalte-rechnungsnummer">Rechnungsnummer</span>
-          <lux-input-ac luxAriaLabelledby="forms-a11y-spalte-rechnungsnummer"></lux-input-ac>
+          <lux-input luxAriaLabelledby="forms-a11y-spalte-rechnungsnummer"></lux-input>
         </div>
       </div>
     </lux-card-content>

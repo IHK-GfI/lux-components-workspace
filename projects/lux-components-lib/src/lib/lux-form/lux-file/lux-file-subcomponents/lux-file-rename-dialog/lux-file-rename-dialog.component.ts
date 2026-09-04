@@ -7,13 +7,13 @@ import { LuxDialogActionsComponent } from '../../../../lux-popups/lux-dialog/lux
 import { LuxDialogContentComponent } from '../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-content.component';
 import { LuxDialogTitleComponent } from '../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure-subcomponents/lux-dialog-title.component';
 import { LuxDialogStructureComponent } from '../../../../lux-popups/lux-dialog/lux-dialog-structure/lux-dialog-structure.component';
-import { LuxInputAcComponent } from '../../../lux-input-ac/lux-input-ac.component';
+import { LuxInputComponent } from '../../../lux-input/lux-input.component';
 import { ILuxFileObject } from '../../lux-file-model/lux-file-object.interface';
 
 @Component({
   selector: 'lux-file-rename-dialog',
   imports: [
-    LuxInputAcComponent,
+    LuxInputComponent,
     LuxDialogStructureComponent,
     LuxDialogTitleComponent,
     LuxDialogContentComponent,
@@ -27,7 +27,7 @@ import { ILuxFileObject } from '../../lux-file-model/lux-file-object.interface';
   styleUrl: './lux-file-rename-dialog.component.scss'
 })
 export class LuxFileRenameDialogComponent implements AfterViewInit {
-  readonly input = viewChild.required(LuxInputAcComponent);
+  readonly input = viewChild.required(LuxInputComponent);
 
   luxDialogRef = inject<LuxDialogRef<ILuxFileObject>>(LuxDialogRef);
 

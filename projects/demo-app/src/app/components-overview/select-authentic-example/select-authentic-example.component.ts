@@ -6,9 +6,9 @@ import {
   LuxButtonComponent,
   LuxFormHintComponent,
   LuxFormSelectableBase,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxToggleComponent,
   LuxTooltipDirective
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
@@ -40,9 +40,9 @@ interface SelectDummyForm {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,

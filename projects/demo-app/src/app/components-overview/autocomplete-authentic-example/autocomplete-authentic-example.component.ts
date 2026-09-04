@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
-  LuxAutocompleteAcComponent,
+  LuxAutocompleteComponent,
   LuxAutofocusDirective,
   LuxFormHintComponent,
   LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
-  LuxInputAcSuffixComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxInputPrefixComponent,
+  LuxInputSuffixComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { TranslocoDatePipe } from '@jsverse/transloco-locale';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
@@ -50,13 +50,13 @@ interface AutocompleteForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    LuxAutocompleteAcComponent,
+    LuxAutocompleteComponent,
     LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxSelectAcComponent,
-    LuxToggleAcComponent,
+    LuxInputComponent,
+    LuxInputPrefixComponent,
+    LuxInputSuffixComponent,
+    LuxSelectComponent,
+    LuxToggleComponent,
     LuxAutofocusDirective,
     TranslocoDatePipe,
     StatusMarkerComponent

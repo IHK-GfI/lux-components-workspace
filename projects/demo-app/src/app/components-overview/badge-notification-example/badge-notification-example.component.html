@@ -104,55 +104,55 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       [(luxValue)]="notification"
       luxName="badge-notification_luxBadgeNotification"
       luxLabel="luxBadgeNotification"
       luxHint="Diese Property definiert den Text-Inhalt der Badge-Notification"
     />
-    <lux-select-ac
+    <lux-select
       [(luxSelected)]="color"
       luxLabel="luxBadgeColor"
       luxHint="Diese Property definiert die Farbe der Notification"
       [luxOptions]="['primary', 'warn', 'accent', 'default']"
     />
-    <lux-select-ac
+    <lux-select
       [(luxSelected)]="position"
       luxLabel="luxBadgePosition"
       luxHint="Diese Property definiert die Position der Notification"
       [luxOptions]="['above after', 'above before', 'below before', 'below after']"
     />
-    <lux-select-ac
+    <lux-select
       [(luxSelected)]="size"
       luxLabel="luxBadgeSize"
       luxHint="Diese Property definiert die Größe der Notification"
       [luxOptions]="['small', 'medium', 'large']"
     />
-    <lux-input-ac
+    <lux-input
       [(luxValue)]="cap"
       luxName="badge-notification_luxBadgeCap"
       luxLabel="luxBadgeCap"
       luxHint="Diese Property legt fest, ob eine Maximalzahl nicht überschritten werden darf (Vorausgesetzt das der Inhalt eine Zahl ist)."
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="noBorder"
       luxLabel="luxBadgeNoBorder"
       luxHint="Dieses Flag bestimmt, ob die Border transparent ist."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="disabled"
       luxLabel="luxBadgeDisabled"
       luxHint="Dieses Flag bestimmt ob die Notification deaktiviert ist oder nicht."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="hidden"
       luxLabel="luxBadgeHidden"
       luxHint="Dieses Flag bestimmt ob die Notification versteckt ist oder nicht."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="overlap"
       luxLabel="luxBadgeOverlap"
       luxHint="Dieses Flag bestimmt ob die Notification hinter dem Quellelement liegt oder nicht."

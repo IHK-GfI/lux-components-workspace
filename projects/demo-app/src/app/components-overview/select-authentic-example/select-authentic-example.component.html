@@ -1,11 +1,11 @@
 <example-base-structure
-  exampleTitle="Select-Authentic"
+  exampleTitle="Select"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90select-v21"
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel ohne Reactive-Form</h3>
-      <lux-select-ac
+      <lux-select
         luxAutofocus
         luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
@@ -42,7 +42,7 @@
     </div>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel mit Multiselect (ohne Reactive-Form)</h3>
-      <lux-select-ac
+      <lux-select
         luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
         [luxLabel]="label()"
@@ -77,7 +77,7 @@
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
-      <lux-select-ac
+      <lux-select
         luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
         [luxControlBinding]="controlBinding"
@@ -112,7 +112,7 @@
     </div>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel mit Options via ng-template (inkl. Tooltip)</h3>
-      <lux-select-ac
+      <lux-select
         luxOptionLabelProp="label"
         [luxOptions]="options"
         luxLabel="Optionen via ng-template"
@@ -136,31 +136,31 @@
         <ng-template let-item>
           <span [luxTooltip]="item.label">via Template {{ item | json }}</span>
         </ng-template>
-      </lux-select-ac>
+      </lux-select>
       <example-value [value]="templateValue()" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-input-ac
+    <lux-input
       luxName="select_luxLabel"
       luxLabel="luxLabel"
       luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
       [(luxValue)]="label"
     />
-    <lux-input-ac
+    <lux-input
       luxName="select_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(luxValue)]="hint"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
@@ -170,7 +170,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
@@ -180,7 +180,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
@@ -189,13 +189,13 @@
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
       [(luxChecked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
     />
-    <lux-input-ac
+    <lux-input
       luxName="select_luxPlaceholder"
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
@@ -203,7 +203,7 @@
     />
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         [(luxChecked)]="enableFilter"
         luxLabel="luxEnableFilter"
         luxHint="Blendet ein Suchfeld im Dropdown ein und filtert clientseitig."
@@ -213,7 +213,7 @@
     </div>
     @if (enableFilter()) {
       <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input-ac
+        <lux-input
           class="lux-flex-auto"
           luxName="select_luxFilterPlaceholder"
           luxLabel="luxFilterPlaceholder"
@@ -223,7 +223,7 @@
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
       <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input-ac
+        <lux-input
           class="lux-flex-auto"
           luxName="select_luxFilterValue"
           luxLabel="luxFilterValue"
@@ -233,7 +233,7 @@
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
       <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input-ac
+        <lux-input
           class="lux-flex-auto"
           luxName="select_luxFilterClearAriaLabel"
           luxLabel="luxFilterClearAriaLabel"
@@ -243,7 +243,7 @@
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
       <div class="lux-flex lux-items-center lux-gap-2">
-        <lux-input-ac
+        <lux-input
           class="lux-flex-auto"
           luxName="select_luxVisibleOptionCount"
           luxLabel="luxVisibleOptionCount"
@@ -254,14 +254,14 @@
         <app-status-marker [markerType]="markerTypeNew" />
       </div>
     }
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         [(luxChecked)]="keepOptionOrder"
         luxLabel="luxKeepOptionOrder"
         luxHint="Behält die ursprüngliche Reihenfolge der Optionen bei. Selektierte Optionen werden nicht mehr an den Anfang der Liste sortiert."
@@ -269,13 +269,13 @@
       />
       <app-status-marker [markerType]="markerTypeNew" />
     </div>
-    <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
@@ -283,15 +283,15 @@
     />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="useSimpleArray"
       luxLabel="String-Array nutzen"
       (luxCheckedChange)="changeUseSimpleArray($event)"
       [luxNoTopLabel]="true"
     >
       <lux-form-hint> Für die Beispiele einfache String-Arrays anstelle von Arrays mit Objekten nutzen. </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="useValueFn"
       luxLabel="pickValue-Funktion nutzen"
       (luxCheckedChange)="changeUseValueFn($event)"
@@ -303,8 +303,8 @@
           <b>{{ pickValueFn.toString() }}</b>
         </div>
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="useCompareWithFn"
       luxLabel="compareWith-Funktion nutzen"
       (luxCheckedChange)="changeCompareWithFn($event)"
@@ -317,15 +317,15 @@
           <b>{{ compareWithFnString }}</b>
         </div>
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       luxLabel="luxErrorMessage verwenden"
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
       [(luxChecked)]="useErrorMessage"
       [luxNoTopLabel]="true"
     />
     @if (useErrorMessage()) {
-      <lux-input-ac
+      <lux-input
         luxName="select_luxErrorMessage"
         luxLabel="luxErrorMessage"
         luxHint="Über diese Property lässt sich eine feste Fehlermeldung
@@ -335,7 +335,7 @@
     } @else {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
     }
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"

@@ -1,11 +1,11 @@
 <example-base-structure
-  exampleTitle="Checkbox-Authentic"
+  exampleTitle="Checkbox"
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90checkbox-v21"
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel ohne Reactive-Form</h3>
-      <lux-checkbox-ac
+      <lux-checkbox
         luxAutofocus
         [(luxChecked)]="value"
         [luxLabel]="label()"
@@ -25,7 +25,7 @@
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
       <h3>Beispiel in Reactive-Form</h3>
-      <lux-checkbox-ac
+      <lux-checkbox
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
@@ -45,9 +45,9 @@
       <lux-textbox luxTitle="Anwendungsbeispiel für luxNoTopLabel" luxIcon="lux-interface-favorite-like-1" luxColor="blue">
         <div [formGroup]="agb" class="lux-mt-4 demo-form">
           <h4>Bitte bestätigen Sie, dass Sie die folgenden Bedingungen gelesen haben:</h4>
-          <lux-checkbox-ac [luxNoTopLabel]="true" luxControlBinding="checkbox1" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
-          <lux-checkbox-ac [luxNoTopLabel]="true" luxControlBinding="checkbox2" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
-          <lux-checkbox-ac [luxNoTopLabel]="true" luxControlBinding="checkbox3" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
+          <lux-checkbox [luxNoTopLabel]="true" luxControlBinding="checkbox1" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
+          <lux-checkbox [luxNoTopLabel]="true" luxControlBinding="checkbox2" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
+          <lux-checkbox [luxNoTopLabel]="true" luxControlBinding="checkbox3" luxLabel="{{ exampleText }}" [luxDense]="denseFormat()" />
         </div>
         <div class="demo-button-row">
           <lux-button [luxStroked]="true" luxColor="primary" luxLabel="Formular zurücksetzen" (luxClicked)="exampleValidator(false)" />
@@ -57,15 +57,15 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label" />
-    <lux-input-ac
+    <lux-input luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label" />
+    <lux-input
       luxName="checkbox_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
       [(luxValue)]="hint"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Hat bei dieser Komponente keine sichtbare Auswirkung, da das Label neben dem Bedienelement steht. Es entfällt nur die leere obere Label-Zeile."
@@ -75,7 +75,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
@@ -85,7 +85,7 @@
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
@@ -94,31 +94,31 @@
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
-    <lux-toggle-ac
+    <lux-toggle
       luxName="checkbox_luxHintShowOnlyOnFocus"
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
       [(luxChecked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       [(luxChecked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
   </example-base-simple-options>
 </example-base-structure>

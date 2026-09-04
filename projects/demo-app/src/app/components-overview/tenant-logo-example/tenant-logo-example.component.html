@@ -16,12 +16,12 @@
   <example-base-simple-options>
     <h3>Header Konfiguration</h3>
 
-    <lux-toggle-ac
+    <lux-toggle
       [luxNoBottomLabel]="true"
       (luxCheckedChange)="onChangeUseTenantLogoForHeader($event)"
       luxLabel="Nutze diese Komponente für den Header"
       [luxNoTopLabel]="true"
-    ></lux-toggle-ac>
+    ></lux-toggle>
 
     @if (useTenantLogoForHeader()) {
       <app-tenant-logo-example-config
@@ -32,12 +32,12 @@
 
     <h3 class="sectionHeader">Beispiel Konfiguration</h3>
 
-    <lux-toggle-ac
+    <lux-toggle
       [luxNoBottomLabel]="true"
       [luxNoTopLabel]="true"
       (luxCheckedChange)="onChangeShowBorderForImages($event)"
       luxLabel="Zeige Rahmen aller Tenant-Logo-Komponenten"
-    ></lux-toggle-ac>
+    ></lux-toggle>
 
     <app-tenant-logo-example-config
       title="Beispiel Konfiguration"

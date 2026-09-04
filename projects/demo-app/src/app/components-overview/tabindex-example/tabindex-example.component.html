@@ -5,66 +5,63 @@
   <example-base-content class="lux-flex lux-flex-wrap lux-gap-8">
     <lux-card class="lux-card-grow">
       <lux-card-content>
-        <lux-input-ac
-          luxLabel="Tabindex {{ wrongTabIndex() ? '1' : '' }} (LuxInput)"
-          [luxTabIndex]="wrongTabIndex() ? '1' : '0'"
-        ></lux-input-ac>
-        <lux-autocomplete-ac
+        <lux-input luxLabel="Tabindex {{ wrongTabIndex() ? '1' : '' }} (LuxInput)" [luxTabIndex]="wrongTabIndex() ? '1' : '0'"></lux-input>
+        <lux-autocomplete
           luxLabel="Tabindex {{ wrongTabIndex() ? '3' : '' }} (LuxAutocomplete)"
           [luxTabIndex]="wrongTabIndex() ? '3' : '0'"
-        ></lux-autocomplete-ac>
-        <lux-chips-ac
+        ></lux-autocomplete>
+        <lux-chips
           [luxInputAllowed]="true"
           luxInputLabel="Tabindex {{ wrongTabIndex() ? '5' : '' }} (LuxChips)"
           [luxTabIndex]="wrongTabIndex() ? '5' : '0'"
           [luxNewChipGroup]="chipGroup"
         >
-          <lux-chip-ac-group [luxRemovable]="true" luxColor="primary" [luxLabels]="chipItems" #chipGroup>
+          <lux-chip-group [luxRemovable]="true" luxColor="primary" [luxLabels]="chipItems" #chipGroup>
             <ng-template let-chipItem>
               {{ chipItem | uppercase }}
             </ng-template>
-          </lux-chip-ac-group>
-        </lux-chips-ac>
-        <lux-textarea-ac
+          </lux-chip-group>
+        </lux-chips>
+        <lux-textarea
           luxName="tabindex_Tabindex7"
           luxLabel="Tabindex {{ wrongTabIndex() ? '7' : '' }} (LuxTextarea)"
           [luxTabIndex]="wrongTabIndex() ? '7' : '0'"
-        ></lux-textarea-ac>
-        <lux-radio-ac
+        ></lux-textarea>
+        <lux-radio
           luxLabel="Tabindex {{ wrongTabIndex() ? '9' : '' }} (LuxRadio)"
           [luxOptions]="options"
           luxOptionLabelProp="label"
           [luxSelected]="options[0]"
           [luxTabIndex]="wrongTabIndex() ? '9' : '0'"
-        ></lux-radio-ac>
+        ></lux-radio>
         <lux-link luxLabel="Tabindex {{ wrongTabIndex() ? '10' : '' }} (LuxLink)" [luxTabIndex]="wrongTabIndex() ? '10' : '0'"></lux-link>
       </lux-card-content>
     </lux-card>
     <lux-card class="lux-card-grow">
       <lux-card-content>
-        <lux-datepicker-ac
+        <lux-datepicker
           luxLabel="Tabindex {{ wrongTabIndex() ? '2' : '' }} (LuxDatepicker)"
           [luxTabIndex]="wrongTabIndex() ? '2' : '0'"
-        ></lux-datepicker-ac>
-        <lux-checkbox-ac
+        ></lux-datepicker>
+        <lux-checkbox
           luxLabel="Tabindex {{ wrongTabIndex() ? '4' : '' }} (LuxCheckbox)"
           [luxTabIndex]="wrongTabIndex() ? '4' : '0'"
-        ></lux-checkbox-ac>
-        <lux-select-ac
+        ></lux-checkbox>
+        <lux-select
           luxLabel="Tabindex {{ wrongTabIndex() ? '6' : '' }} (LuxSelect)"
           [luxTabIndex]="wrongTabIndex() ? '6' : '0'"
           [luxOptions]="options"
           luxOptionLabelProp="label"
-        ></lux-select-ac>
-        <lux-toggle-ac
+        ></lux-select>
+        <lux-toggle
           luxLabel="Tabindex {{ wrongTabIndex() ? '8' : '' }} (LuxToggle)"
           [luxTabIndex]="wrongTabIndex() ? '8' : '0'"
-        ></lux-toggle-ac>
+        ></lux-toggle>
       </lux-card-content>
     </lux-card>
   </example-base-content>
   <example-base-simple-options>
-    <lux-toggle-ac luxLabel="Tabreihenfolge ändern" [(luxChecked)]="wrongTabIndex" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="Tabreihenfolge ändern" [(luxChecked)]="wrongTabIndex" [luxNoTopLabel]="true">
       <lux-form-hint>
         <span class="lux-text-highlight-error"
           >!!! Vorsicht !!!<br />
@@ -77,6 +74,6 @@
           nur mit dem Wert <i>0</i> verwendet werden.
         </p>
       </lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
   </example-base-simple-options>
 </example-base-structure>

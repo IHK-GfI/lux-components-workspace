@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
-import { LuxStepperLargeStepComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxStepperLargeStepComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { StepperLargeExampleDataService } from '../stepper-large-example-data.service';
 import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-example-error-message-box/stepper-large-example-error-message-box.component';
@@ -9,10 +9,10 @@ import { StepperLargeExampleErrorMessageBoxComponent } from '../stepper-large-ex
   templateUrl: './stepper-large-extern-step-example.component.html',
   providers: [{ provide: LuxStepperLargeStepComponent, useExisting: StepperLargeExternStepExampleComponent }],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxToggleAcComponent, StepperLargeExampleErrorMessageBoxComponent]
+  imports: [LuxToggleComponent, StepperLargeExampleErrorMessageBoxComponent]
 })
 export class StepperLargeExternStepExampleComponent extends LuxStepperLargeStepComponent implements OnInit, AfterViewInit {
-  readonly toggle = viewChild<LuxToggleAcComponent>('requiredCheck');
+  readonly toggle = viewChild<LuxToggleComponent>('requiredCheck');
 
   showErrorMessage = false;
   subscriptions: Subscription[] = [];

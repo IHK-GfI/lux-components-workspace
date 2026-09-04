@@ -71,13 +71,13 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Backend mocken"
       [luxChecked]="mockBackend()"
       (luxCheckedChange)="changeMockBackend($event)"
@@ -87,16 +87,16 @@
         Mockt den Http-Client um das Uploaden der Dateien zu simulieren.<br />
         Dafür muss aber auch "luxUploadUrl" gesetzt sein (beliebiger Wert).
       </lux-form-hint>
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    </lux-toggle>
+    <lux-toggle
       [(luxChecked)]="showPreview"
       luxLabel="luxShowPreview"
       luxHint="Diese Eigenschaft definiert, ob einzelne Bilder in einer Vorschau angezeigt werden sollen."
       [luxNoTopLabel]="true"
     />
-    <lux-input-ac luxLabel="luxHeading" luxHint="Gültige Werte sind 1-6" [(luxValue)]="heading" [luxControlValidators]="headingValidator" />
+    <lux-input luxLabel="luxHeading" luxHint="Gültige Werte sind 1-6" [(luxValue)]="heading" [luxControlValidators]="headingValidator" />
     <app-file-example-simple-options [fileExample]="this" class="lux-flex lux-flex-col lux-gap-4" />
-    <lux-input-ac
+    <lux-input
       luxLabel="Unlöschbare Dateien"
       luxHint="Komma-separierte Liste von Dateinamen, die nicht gelöscht werden können."
       [(luxValue)]="undeletableFileNames"
@@ -106,15 +106,15 @@
     <app-file-example-advanced-options [fileExample]="this" [showHeaderConfigProperties]="true" />
     <h4>Dialogaktion "Akzeptieren"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_accept" [(luxValue)]="namePrefixAccept" [luxNoBottomLabel]="true" />
-      <lux-input-ac
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_accept" [(luxValue)]="namePrefixAccept" [luxNoBottomLabel]="true" />
+      <lux-input
         luxLabel="Präfixfarbe"
         luxName="filelist_prefix_color_accept"
         [(luxValue)]="namePrefixColorAccept"
         [luxNoBottomLabel]="true"
       />
-      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_accept" [(luxValue)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
-      <lux-input-ac
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_accept" [(luxValue)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
+      <lux-input
         luxLabel="Suffixfarbe"
         luxName="filelist_suffix_color_accept"
         [(luxValue)]="nameSuffixColorAccept"
@@ -123,15 +123,15 @@
     </div>
     <h4>Dialogaktion "Ablehnen"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input-ac luxLabel="Präfix" luxName="filelist_prefix_decline" [(luxValue)]="namePrefixDecline" [luxNoBottomLabel]="true" />
-      <lux-input-ac
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_decline" [(luxValue)]="namePrefixDecline" [luxNoBottomLabel]="true" />
+      <lux-input
         luxLabel="Präfixfarbe"
         luxName="filelist_prefix_color_decline"
         [(luxValue)]="namePrefixColorDecline"
         [luxNoBottomLabel]="true"
       />
-      <lux-input-ac luxLabel="Suffix" luxName="filelist_suffix_decline" [(luxValue)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
-      <lux-input-ac
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_decline" [(luxValue)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
+      <lux-input
         luxLabel="Suffixfarbe"
         luxName="filelist_suffix_color_decline"
         [(luxValue)]="nameSuffixColorDecline"

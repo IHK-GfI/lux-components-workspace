@@ -172,21 +172,21 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxAutocomplete="off"
       luxLabel="luxTooltip"
       luxHint="Diese Property bestimmt den Text innerhalb des Tooltips."
       [(luxValue)]="message"
     >
-    </lux-input-ac>
-    <lux-select-ac
+    </lux-input>
+    <lux-select
       luxLabel="luxTooltipPosition"
       luxHint="Diese Property ändert die Position des Tooltips relativ zum Zielelement."
       [(luxSelected)]="position"
       [luxOptions]="positionOptions"
     >
-    </lux-select-ac>
-    <lux-input-ac
+    </lux-select>
+    <lux-input
       luxType="number"
       [luxNumberAlignLeft]="true"
       luxAutocomplete="off"
@@ -194,8 +194,8 @@
       luxHint="Mit dieser Property wird die zeitliche Verzögerung (in ms) zum Ausblenden des Tooltips eingerichtet."
       [(luxValue)]="hideDelay"
     >
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxType="number"
       [luxNumberAlignLeft]="true"
       luxAutocomplete="off"
@@ -203,13 +203,13 @@
       luxHint="Mit dieser Property wird die zeitliche Verzögerung (in ms) zum Einblenden des Tooltips eingerichtet."
       [(luxValue)]="showDelay"
     >
-    </lux-input-ac>
-    <lux-toggle-ac
+    </lux-input>
+    <lux-toggle
       luxLabel="luxTooltipDisabled"
       luxHint="Mit diesem Flag lässt sich der Tooltip deaktivieren."
       [(luxChecked)]="disabled"
       [luxNoTopLabel]="true"
     >
-    </lux-toggle-ac>
+    </lux-toggle>
   </example-base-simple-options>
 </example-base-structure>

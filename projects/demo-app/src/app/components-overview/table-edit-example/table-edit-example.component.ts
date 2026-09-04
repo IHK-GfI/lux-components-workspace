@@ -1,5 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import { LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -19,7 +19,7 @@ import { TableEditWithoutFormExampleComponent } from './table-edit-without-form-
     ExampleBaseAdvancedOptionsComponent,
     TableEditWithFormExampleComponent,
     TableEditWithoutFormExampleComponent,
-    LuxToggleAcComponent
+    LuxToggleComponent
   ]
 })
 export class TableEditExampleComponent {

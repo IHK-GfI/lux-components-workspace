@@ -6,7 +6,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
-import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
+import { LuxInputComponent } from '../lux-input/lux-input.component';
 
 describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
   let fixture: ComponentFixture<AriaBaseTestComponent>;
@@ -66,11 +66,11 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
 });
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac [luxLabel]="label()" [luxAriaLabel]="ariaLabel()" [luxAriaLabelledby]="ariaLabelledby()"></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input [luxLabel]="label()" [luxAriaLabel]="ariaLabel()" [luxAriaLabelledby]="ariaLabelledby()"></lux-input>`
 })
 class AriaBaseTestComponent {
-  readonly input = viewChild.required(LuxInputAcComponent);
+  readonly input = viewChild.required(LuxInputComponent);
 
   readonly label = signal('Nachname');
   readonly ariaLabel = signal<string | undefined>(undefined);
@@ -78,11 +78,11 @@ class AriaBaseTestComponent {
 }
 
 @Component({
-  imports: [LuxInputAcComponent, LuxFormLabelComponent],
-  template: `<lux-input-ac><lux-form-label>Nachname</lux-form-label></lux-input-ac>`
+  imports: [LuxInputComponent, LuxFormLabelComponent],
+  template: `<lux-input><lux-form-label>Nachname</lux-form-label></lux-input>`
 })
 class ProjectedLabelOnlyTestComponent {
-  readonly input = viewChild.required(LuxInputAcComponent);
+  readonly input = viewChild.required(LuxInputComponent);
 }
 
 describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
@@ -148,25 +148,25 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
 });
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input></lux-input>`
 })
 class NoNameTestComponent {}
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac luxLabel="Nachname" luxAriaLabel="Familienname"></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input luxLabel="Nachname" luxAriaLabel="Familienname"></lux-input>`
 })
 class ConflictingNameTestComponent {}
 
 @Component({
-  imports: [LuxInputAcComponent],
-  template: `<lux-input-ac luxAriaLabel="Suchbegriff eingeben"></lux-input-ac>`
+  imports: [LuxInputComponent],
+  template: `<lux-input luxAriaLabel="Suchbegriff eingeben"></lux-input>`
 })
 class AriaOnlyTestComponent {}
 
 @Component({
-  imports: [LuxInputAcComponent, LuxFormLabelComponent],
-  template: `<lux-input-ac luxAriaLabel="Familienname"><lux-form-label>Nachname</lux-form-label></lux-input-ac>`
+  imports: [LuxInputComponent, LuxFormLabelComponent],
+  template: `<lux-input luxAriaLabel="Familienname"><lux-form-label>Nachname</lux-form-label></lux-input>`
 })
 class ProjectedLabelTestComponent {}

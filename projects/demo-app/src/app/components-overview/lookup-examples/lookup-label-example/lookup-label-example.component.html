@@ -12,7 +12,7 @@
     />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxName="lookup-label_knr"
       luxLabel="Knr"
       [luxDisabled]="disabled()"
@@ -21,12 +21,12 @@
       [luxNumberAlignLeft]="true"
     >
       @if (disabled()) {
-        <lux-input-ac-suffix>
+        <lux-input-suffix>
           <lux-progress luxType="Spinner" luxMode="indeterminate" luxSize="small" luxTagId="knr-loading-spinner" />
-        </lux-input-ac-suffix>
+        </lux-input-suffix>
       }
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxName="lookup-label_luxTableNo"
       luxLabel="luxTableNo"
       [(luxValue)]="tableNo"
@@ -35,8 +35,8 @@
       [luxDisabled]="true"
     >
       <lux-form-hint> Die Property bestimmt die Schlüsseltabelle aus der die Daten geladen werden sollen. </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxName="lookup-label_luxTableKey"
       luxLabel="luxTableKey"
       [(luxValue)]="tableKey"
@@ -44,8 +44,8 @@
       luxType="number"
     >
       <lux-form-hint> Diese Property legt den einzelnen Key des gesuchten Schlüsseltabelleneintrags fest (z.B. 4, 5, 6). </lux-form-hint>
-    </lux-input-ac>
-    <lux-select-ac
+    </lux-input>
+    <lux-select
       luxLabel="luxBezeichnung"
       [(luxSelected)]="bezeichnung"
       [luxOptions]="['kurz', 'lang']"

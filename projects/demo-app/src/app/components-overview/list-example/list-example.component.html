@@ -47,14 +47,14 @@
               <div class="lux-flex lux-flex-col lux-gap-2 lux-mt-2">
                 @if (showRow1()) {
                   <div class="lux-flex lux-gap-2 lux-flex-wrap lux-items-center">
-                    <lux-chips-ac [luxHideBorder]="true" [luxNoLabels]="true" [luxInputAllowed]="false" [luxNewChipGroup]="group">
-                      <lux-chip-ac-group [luxLabels]="item.chips" luxColor="primary" [luxRemovable]="true" #group />
-                    </lux-chips-ac>
+                    <lux-chips [luxHideBorder]="true" [luxNoLabels]="true" [luxInputAllowed]="false" [luxNewChipGroup]="group">
+                      <lux-chip-group [luxLabels]="item.chips" luxColor="primary" [luxRemovable]="true" #group />
+                    </lux-chips>
                   </div>
                 }
                 @if (showRow2()) {
                   <div class="lux-flex lux-gap-2 lux-flex-wrap lux-items-center">
-                    <lux-input-ac
+                    <lux-input
                       luxAriaLabel="Lorem ipsum"
                       luxAriaLabelSelector="input"
                       luxPlaceholder="Input"
@@ -63,7 +63,7 @@
                       [luxNoLabels]="true"
                       [(luxValue)]="item.title"
                     />
-                    <lux-autocomplete-ac
+                    <lux-autocomplete
                       luxAriaLabel="Lorem ipsum"
                       luxAriaLabelSelector="input"
                       luxPlaceholder="Input"
@@ -72,7 +72,7 @@
                       [luxNoLabels]="true"
                       [luxOptions]="['Label 1', 'Label 2']"
                     />
-                    <lux-select-ac
+                    <lux-select
                       luxAriaLabel="Lorem ipsum"
                       luxAriaLabelSelector="[role='combobox']"
                       luxPlaceholder="Select"
@@ -81,9 +81,9 @@
                       [luxDense]="true"
                       [luxNoLabels]="true"
                     />
-                    <lux-checkbox-ac luxLabel="Checkbox" [luxDense]="true" [luxNoLabels]="true" />
-                    <lux-toggle-ac luxLabel="Toggle" [luxDense]="true" [luxNoLabels]="true" />
-                    <lux-radio-ac
+                    <lux-checkbox luxLabel="Checkbox" [luxDense]="true" [luxNoLabels]="true" />
+                    <lux-toggle luxLabel="Toggle" [luxDense]="true" [luxNoLabels]="true" />
+                    <lux-radio
                       luxAriaLabel="Lorem ipsum"
                       [luxOptions]="['A', 'B', 'C']"
                       [luxGroupName]="'radio-' + i"
@@ -124,14 +124,14 @@
     </lux-list>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
       [(luxChecked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
-      <lux-toggle-ac
+      <lux-toggle
         luxLabel="Interaktive Elemente in List-Items anzeigen (Grid-Navigation)"
         [(luxChecked)]="showInteractiveContent"
         [luxNoTopLabel]="true"
@@ -141,51 +141,51 @@
           Enter/F2/Space aktiviert den Bearbeiten-Modus,<br />Escape kehrt zur Liste zurück.<br /><span class="lux-text-highlight-alert"
             >Vorsicht! Wenn man viele List-Items mit mehreren interaktiven Elementen hat, kann dies die Performance beeinträchtigen.</span
           ></lux-form-hint
-        ></lux-toggle-ac
+        ></lux-toggle
       >
       <app-status-marker />
     </div>
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Zeige Zeile 1 (mit Chips)"
       [(luxChecked)]="showRow1"
       [luxNoLabels]="true"
       [luxDisabled]="!showInteractiveContent()"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Zeige Zeile 2 (mit Formularelementen)"
       [(luxChecked)]="showRow2"
       [luxNoLabels]="true"
       [luxDisabled]="!showInteractiveContent()"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Zeige Zeile 3 (mit Buttons)"
       [(luxChecked)]="showRow3"
       [luxNoLabels]="true"
       [luxDisabled]="!showInteractiveContent()"
     />
     <div class="lux-flex lux-items-center">
-      <lux-toggle-ac luxLabel="luxListItemCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true" />
+      <lux-toggle luxLabel="luxListItemCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true" />
       <app-status-marker />
     </div>
-    <lux-input-ac
+    <lux-input
       [(luxValue)]="emptyLabel"
       luxName="list_luxEmptyLabel"
       luxLabel="luxEmptyLabel"
       luxHint="Diese Property stellt das Label ein, welches bei einer leeren Liste angezeigt werden soll."
     />
-    <lux-input-ac
+    <lux-input
       [(luxValue)]="emptyIconName"
       luxName="list_luxEmptyIconName"
       luxLabel="luxEmptyIconName"
       luxHint="Über diese Property wird das Icon bestimmt, das in einer leeren Liste angezeigt werden soll."
     />
-    <lux-select-ac
+    <lux-select
       [(luxSelected)]="emptyIconSize"
       [luxOptions]="['1x', '2x', '3x', '4x', '5x']"
       luxLabel="luxEmptyIconSize"
       luxHint="Über diese Property wird die Größe es luxEmptyIcons bestimmt."
     />
-    <lux-input-ac
+    <lux-input
       [(luxValue)]="selectedPosition"
       luxName="list_luxSelectedPosition"
       luxLabel="luxSelectedPosition"
@@ -202,37 +202,37 @@
               {{ item.title }}
             </lux-panel-header-title>
             <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 column lux-mt-4">
-              <lux-input-ac
+              <lux-input
                 [(luxValue)]="item.title"
                 luxName="list_luxTitle"
                 luxLabel="luxTitle"
                 luxHint="Diese Property bestimmt den Titel des Items."
               />
-              <lux-input-ac
+              <lux-input
                 [(luxValue)]="item.subTitle"
                 luxName="list_luxSubTitle"
                 luxLabel="luxSubTitle"
                 luxHint="Diese Property bestimmt den Untertitel (grau) des Items."
               />
-              <lux-input-ac luxName="list_luxIconName" [(luxValue)]="item.iconName" luxLabel="luxIconName">
+              <lux-input luxName="list_luxIconName" [(luxValue)]="item.iconName" luxLabel="luxIconName">
                 <lux-form-hint>
                   Der Name des Icons für dieses Item.<br />
                   Das Icon wird über Content-Projection eingebunden, die restlichen Properties hierfür entfallen der Einfachheit halber für
                   das Beispiel.
                 </lux-form-hint>
-              </lux-input-ac>
-              <lux-toggle-ac
+              </lux-input>
+              <lux-toggle
                 luxLabel="luxTitleLineBreak"
                 luxHint="Dieses Flag bestimmt ob die Titel-Zeilen umgebrochen oder mit '...' abgekürzt werden."
                 [(luxChecked)]="item.lineBreak"
                 [luxNoTopLabel]="true"
               />
-              <lux-toggle-ac luxLabel="luxSelected" [(luxChecked)]="item.selected" [luxNoTopLabel]="true">
+              <lux-toggle luxLabel="luxSelected" [(luxChecked)]="item.selected" [luxNoTopLabel]="true">
                 <lux-form-hint>
                   Mithilfe dieses Flags kann das Item hervorgehoben dargestellt werden.<br />
                   In diesem Beispiel sorgt ein Klick auf ein Item dafür, dass dieses dann als selektiert gekennzeichnet wird.
                 </lux-form-hint>
-              </lux-toggle-ac>
+              </lux-toggle>
             </lux-panel-content>
           </lux-panel>
         }

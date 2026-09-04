@@ -12,20 +12,20 @@
     />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-textarea-ac luxLabel="Markdown-Daten" [(luxValue)]="markdownData" luxName="markdown_data">
+    <lux-textarea luxLabel="Markdown-Daten" [(luxValue)]="markdownData" luxName="markdown_data">
       <lux-form-hint> Hier kann man beliebige Markdown-Daten einfügen und ausprobieren. </lux-form-hint>
-    </lux-textarea-ac>
+    </lux-textarea>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac luxLabel="luxStyle" luxName="markdown_luxStyle" [(luxValue)]="style">
+    <lux-input luxLabel="luxStyle" luxName="markdown_luxStyle" [(luxValue)]="style">
       <lux-form-hint> Beliebige Styles (z.B. color: red; background-color: blue) </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac luxLabel="luxClass" luxName="markdown_luxClass" [(luxValue)]="class">
+    </lux-input>
+    <lux-input luxLabel="luxClass" luxName="markdown_luxClass" [(luxValue)]="class">
       <lux-form-hint> Beliebige CSS-Classen (z.B. lux-mt-3) </lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
 
-    <lux-toggle-ac luxLabel="Folgendes verbieten" [(luxChecked)]="forbiddenTagsToggle" [luxNoLabels]="true" />
-    <lux-input-ac
+    <lux-toggle luxLabel="Folgendes verbieten" [(luxChecked)]="forbiddenTagsToggle" [luxNoLabels]="true" />
+    <lux-input
       luxLabel="Verbotene Tags"
       luxName="markdown_forbiddenTags"
       [luxDisabled]="!forbiddenTagsToggle"
@@ -33,8 +33,8 @@
       (luxValueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Tags (z.B. a,h1,p) </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxLabel="Verbotene Attriubte"
       luxName="markdown_forbiddenAttributes"
       [luxDisabled]="!forbiddenTagsToggle"
@@ -42,9 +42,9 @@
       (luxValueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
-    </lux-input-ac>
-    <lux-toggle-ac class="lux-pt-3" luxLabel="Nur folgendes erlauben" [(luxChecked)]="allowedTagsToggle" [luxNoLabels]="true" />
-    <lux-input-ac
+    </lux-input>
+    <lux-toggle class="lux-pt-3" luxLabel="Nur folgendes erlauben" [(luxChecked)]="allowedTagsToggle" [luxNoLabels]="true" />
+    <lux-input
       luxLabel="Erlaubte Tags"
       luxName="markdown_allowedTags"
       [luxDisabled]="!allowedTagsToggle"
@@ -52,8 +52,8 @@
       (luxValueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Tags (z.B. a,h1,p) </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxLabel="Erlaubte Attribute"
       luxName="markdown_allowedAttributes"
       [luxDisabled]="!allowedTagsToggle"
@@ -61,10 +61,10 @@
       (luxValueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
 
-    <lux-toggle-ac class="lux-pt-3" luxLabel="Zusätzlich erlauben" [(luxChecked)]="addAllowedTagsToggle" [luxNoLabels]="true" />
-    <lux-input-ac
+    <lux-toggle class="lux-pt-3" luxLabel="Zusätzlich erlauben" [(luxChecked)]="addAllowedTagsToggle" [luxNoLabels]="true" />
+    <lux-input
       luxLabel="Zusätzlich erlaubte Tags"
       luxName="markdown_addAllowedTags"
       [luxDisabled]="!addAllowedTagsToggle"
@@ -72,8 +72,8 @@
       (luxValueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Tags (z.B. a,h1,p) </lux-form-hint>
-    </lux-input-ac>
-    <lux-input-ac
+    </lux-input>
+    <lux-input
       luxLabel="Zusätzlich erlaubte Attribute"
       luxName="markdown_addAllowedAttributes"
       [luxDisabled]="!addAllowedTagsToggle"
@@ -81,6 +81,6 @@
       (luxValueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
   </example-base-advanced-options>
 </example-base-structure>

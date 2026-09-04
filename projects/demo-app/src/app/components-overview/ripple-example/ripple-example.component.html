@@ -19,46 +19,46 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac
+    <lux-input
       luxName="ripple_luxRippleColor"
       luxLabel="luxRippleColor"
       luxHint="Diese Property ermöglicht es, die Farbe der Component zu setzen."
       [(luxValue)]="color"
     />
-    <lux-input-ac
+    <lux-input
       luxName="ripple_luxRippleRadius"
       luxLabel="luxRippleRadius"
       luxHint="Diese Property ermöglicht es, den Radius der Animation festzulegen. Wenn 0 werden die Begrenzungen der Zielcomponent genommen."
       luxType="number"
       [(luxValue)]="radius"
     />
-    <lux-input-ac
+    <lux-input
       luxName="ripple_luxRippleEnterDuration"
       luxLabel="luxRippleEnterDuration"
       luxHint="Diese Property ermöglicht es, die Dauer der Eingangsanimation zu bestimmen."
       luxType="number"
       [(luxValue)]="enterDuration"
     />
-    <lux-input-ac
+    <lux-input
       luxName="ripple_luxRippleExitDuration"
       luxLabel="luxRippleExitDuration"
       luxHint="Diese Property ermöglicht es, die Dauer der Ausgangsanimation zu bestimmen."
       luxType="number"
       [(luxValue)]="exitDuration"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxRippleDisabled"
       luxHint="Dieses Flag deaktiviert das Auslösen der Ripple-Animationen über Maus-Klicks."
       [(luxChecked)]="disabled"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxRippleCentered"
       luxHint="Dieses Flag stellt ein ob die Animation aus dem Zentrum der Zielcomponent läuft oder vom jeweiligen Klick."
       [(luxChecked)]="centered"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="luxRippleUnbounded"
       luxHint="Dieses Flag stellt ein ob die Animation über die Zielcomponent hinauslaufen kann."
       [(luxChecked)]="unbounded"

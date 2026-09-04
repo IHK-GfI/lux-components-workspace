@@ -3,9 +3,9 @@ import {
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkPlainComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -20,8 +20,8 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLinkPlainComponent,
-    LuxToggleAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,

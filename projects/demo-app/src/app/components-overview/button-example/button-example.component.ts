@@ -10,12 +10,12 @@ import {
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxProgressModeType,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxTextboxComponent,
   LuxThemePalette,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -32,9 +32,9 @@ type ErrorBoxType = 'default' | 'gradient' | 'loading';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,

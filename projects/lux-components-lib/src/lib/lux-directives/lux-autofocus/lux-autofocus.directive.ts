@@ -1,7 +1,7 @@
 import { AfterViewInit, Directive, ElementRef, inject, input } from '@angular/core';
-import { LuxAutocompleteAcComponent } from '../../lux-form/lux-autocomplete-ac/lux-autocomplete-ac.component';
-import { LuxChipsAcComponent } from '../../lux-form/lux-chips-ac/lux-chips-ac.component';
-import { LuxLookupAutocompleteAcComponent } from '../../lux-lookup/lux-lookup-autocomplete-ac/lux-lookup-autocomplete-ac.component';
+import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
+import { LuxChipsComponent } from '../../lux-form/lux-chips/lux-chips.component';
+import { LuxLookupAutocompleteComponent } from '../../lux-lookup/lux-lookup-autocomplete/lux-lookup-autocomplete.component';
 
 @Directive({
   selector: '[luxAutofocus]'
@@ -21,27 +21,48 @@ export class LuxAutofocusDirective implements AfterViewInit {
 
     if (
       tagName === 'lux-input-ac' ||
+      tagName === 'lux-input' ||
       tagName === 'lux-autocomplete-ac' ||
+      tagName === 'lux-autocomplete' ||
       tagName === 'lux-lookup-autocomplete-ac' ||
+      tagName === 'lux-lookup-autocomplete' ||
       tagName === 'lux-checkbox-ac' ||
+      tagName === 'lux-checkbox' ||
       tagName === 'lux-chips-ac' ||
+      tagName === 'lux-chips' ||
       tagName === 'lux-timepicker' ||
       tagName === 'lux-datepicker-ac' ||
+      tagName === 'lux-datepicker' ||
       tagName === 'lux-datetimepicker-ac' ||
+      tagName === 'lux-datetimepicker' ||
       tagName === 'lux-file-input-ac' ||
+      tagName === 'lux-file-input' ||
       tagName === 'lux-radio-ac' ||
-      tagName === 'lux-slider-ac'
+      tagName === 'lux-radio' ||
+      tagName === 'lux-slider-ac' ||
+      tagName === 'lux-slider'
     ) {
       return 'input:not([disabled])';
-    } else if (tagName === 'lux-select-ac' || tagName === 'lux-lookup-combobox-ac') {
+    } else if (
+      tagName === 'lux-select-ac' ||
+      tagName === 'lux-select' ||
+      tagName === 'lux-lookup-combobox-ac' ||
+      tagName === 'lux-lookup-combobox'
+    ) {
       return 'mat-select';
-    } else if (tagName === 'lux-button' || tagName === 'lux-link' || tagName === 'lux-link-plain' || tagName === 'lux-toggle-ac') {
+    } else if (
+      tagName === 'lux-button' ||
+      tagName === 'lux-link' ||
+      tagName === 'lux-link-plain' ||
+      tagName === 'lux-toggle-ac' ||
+      tagName === 'lux-toggle'
+    ) {
       return 'button:not([disabled])';
     } else if (tagName === 'lux-file-list') {
       return 'lux-card.lux-file-list';
     } else if (tagName === 'lux-file-upload') {
       return 'div.lux-file-upload-drop-container';
-    } else if (tagName === 'lux-textarea-ac') {
+    } else if (tagName === 'lux-textarea-ac' || tagName === 'lux-textarea') {
       return 'textarea:not([disabled])';
     } else if (tagName == 'lux-tile' || tagName == 'lux-tile-ac') {
       return 'mat-card';
@@ -73,11 +94,11 @@ export class LuxAutofocusDirective implements AfterViewInit {
       // Wenn das Element ein Autocomplete ist, wird das Panel geschlossen,
       // da es sonst geöffnet wird, wenn das Element fokussiert wird.
       const autofocusComponent = this.luxAutofocusComponent();
-      if (autofocusComponent instanceof LuxAutocompleteAcComponent) {
+      if (autofocusComponent instanceof LuxAutocompleteComponent) {
         autofocusComponent.matAutoComplete()?.closePanel();
-      } else if (autofocusComponent instanceof LuxLookupAutocompleteAcComponent) {
+      } else if (autofocusComponent instanceof LuxLookupAutocompleteComponent) {
         autofocusComponent.matAutocompleteTrigger()?.closePanel();
-      } else if (autofocusComponent instanceof LuxChipsAcComponent) {
+      } else if (autofocusComponent instanceof LuxChipsComponent) {
         autofocusComponent.matAutocompleteTrigger()?.closePanel();
       }
     });

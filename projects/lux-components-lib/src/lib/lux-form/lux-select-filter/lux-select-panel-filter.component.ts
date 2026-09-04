@@ -10,8 +10,8 @@ import {
   viewChild
 } from '@angular/core';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
-import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
-import { LuxInputAcComponent } from '../lux-input-ac/lux-input-ac.component';
+import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lux-input-suffix.component';
+import { LuxInputComponent } from '../lux-input/lux-input.component';
 import { LuxSelectFilterDirective } from './lux-select-filter.directive';
 
 @Component({
@@ -19,7 +19,7 @@ import { LuxSelectFilterDirective } from './lux-select-filter.directive';
   templateUrl: './lux-select-panel-filter.component.html',
   styleUrls: ['./lux-select-panel-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxInputAcComponent, LuxInputAcSuffixComponent, LuxButtonComponent]
+  imports: [LuxInputComponent, LuxInputSuffixComponent, LuxButtonComponent]
 })
 export class LuxSelectPanelFilterComponent implements AfterViewInit {
   readonly filterDirective = input.required<LuxSelectFilterDirective>();
@@ -28,7 +28,7 @@ export class LuxSelectPanelFilterComponent implements AfterViewInit {
   readonly filterValue = input('');
   readonly clearAriaLabel = input('Clear filter');
 
-  readonly filterInputComponent = viewChild<LuxInputAcComponent<string>>('filterInput');
+  readonly filterInputComponent = viewChild<LuxInputComponent<string>>('filterInput');
 
   get currentFilterValue(): string {
     return this.filterDirective()?.filterValue ?? this.filterValue();

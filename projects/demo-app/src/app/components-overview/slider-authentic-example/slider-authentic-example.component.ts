@@ -3,11 +3,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } 
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxSliderAcColor,
-  LuxSliderAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxSliderColor,
+  LuxSliderComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -34,10 +34,10 @@ interface SliderDummyForm {
   templateUrl: './slider-authentic-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxSliderAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSliderComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxAutofocusDirective,
     ExampleBaseStructureComponent,
@@ -71,7 +71,7 @@ export class SliderAuthenticExampleComponent {
   readonly labelLongFormat = signal(false);
   readonly value = signal(0);
   readonly displayWithFnString: string = this.displayFn + '';
-  readonly color = signal<LuxSliderAcColor>('primary');
+  readonly color = signal<LuxSliderColor>('primary');
   readonly showThumbLabel = signal(true);
   readonly step = signal(1);
   readonly controlBinding = 'sliderExample';
@@ -100,7 +100,7 @@ export class SliderAuthenticExampleComponent {
     });
   }
 
-  colorChanged(color: { label: string; value: LuxSliderAcColor }) {
+  colorChanged(color: { label: string; value: LuxSliderColor }) {
     this.color.set(color.value);
   }
 

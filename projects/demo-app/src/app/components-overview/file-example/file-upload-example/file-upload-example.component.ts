@@ -9,10 +9,10 @@ import {
   LuxFileRenameDialogComponent,
   LuxFileUploadComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxInputAcSuffixComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent,
+  LuxInputComponent,
+  LuxInputSuffixComponent,
+  LuxSelectComponent,
+  LuxToggleComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
 import { TranslocoService } from '@jsverse/transloco';
@@ -30,10 +30,10 @@ import { FileExampleComponent } from '../file-example.component';
   templateUrl: './file-upload-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcSuffixComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputSuffixComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     LuxFileUploadComponent,
     LuxAutofocusDirective,

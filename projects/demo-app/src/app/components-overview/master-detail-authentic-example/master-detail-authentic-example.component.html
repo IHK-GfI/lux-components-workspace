@@ -1,5 +1,5 @@
 <h1 class="lux-sr-only">Beispiel für den Master-Detail</h1>
-<lux-master-detail-ac
+<lux-master-detail
   class="lux-flex lux-flex-auto"
   [luxEmptyIconDetail]="configuration.emptyIconDetail"
   [luxEmptyIconMaster]="configuration.emptyIconMaster"
@@ -19,7 +19,7 @@
   (luxScrolled)="onLoadListTest()"
   (luxSelectedDetailChange)="loadDetail($event)"
 >
-  <lux-master-header-content-ac>
+  <lux-master-header-content>
     <lux-filter-form
       class="lux-flex-auto"
       [luxShowAsCard]="true"
@@ -28,7 +28,7 @@
       [luxShowSaveAction]="false"
       [luxShowLoadAction]="false"
     >
-      <lux-select-ac
+      <lux-select
         luxLabel="Fälligkeit"
         [luxOptions]="options"
         [luxSelected]="options[0]"
@@ -43,9 +43,9 @@
         </p>
       </lux-filter-form-extended>
     </lux-filter-form>
-  </lux-master-header-content-ac>
+  </lux-master-header-content>
 
-  <lux-master-list-ac
+  <lux-master-list
     luxTitleProp="title"
     luxTitleTooltipProp="titleTooltip"
     luxSubTitleProp="subtitle"
@@ -63,7 +63,7 @@
           <div class="custom-header-example">
             <div class="title">{{ master.title }}</div>
             <div class="subtitle">{{ master.subtitle }}</div>
-            <lux-input-ac
+            <lux-input
               luxAriaLabel="Lorem ipsum"
               luxAriaLabelSelector="input"
               luxPlaceholder="Input"
@@ -85,23 +85,23 @@
         Fällig <b>{{ master.timestamp | luxRelativeTimestamp: 'TIMESTAMP NULL' }}</b>
       </p>
     </ng-template>
-  </lux-master-list-ac>
+  </lux-master-list>
   @if (showCustomDetailHeader()) {
-    <lux-detail-header-ac class="custom-example-header">
+    <lux-detail-header class="custom-example-header">
       <div class="example-header">
         <h2>My Custom Detail Header!</h2>
         <p>Hier ist Platz für individuellen Inhalt!</p>
       </div>
-    </lux-detail-header-ac>
+    </lux-detail-header>
   }
-  <lux-detail-view-ac>
+  <lux-detail-view>
     <!-- Zugriff auf das aktuell selektierte Element über "detail" -->
     <ng-template let-detail>
       <lux-tabs [luxActiveTab]="0">
         <lux-tab luxTitle="Konfiguration" luxIconName="lux-interface-setting-tool-box">
           <ng-template>
             <detail-example [masterDetailConfig]="configuration" [(masterIsReloading)]="masterIsReloading" [selectedDetail]="detail">
-              <lux-toggle-ac [(luxChecked)]="showCustomDetailHeader" luxLabel="Custom Detail-Header anzeigen" [luxNoLabels]="true" />
+              <lux-toggle [(luxChecked)]="showCustomDetailHeader" luxLabel="Custom Detail-Header anzeigen" [luxNoLabels]="true" />
             </detail-example>
           </ng-template>
         </lux-tab>
@@ -115,9 +115,9 @@
         </lux-tab>
       </lux-tabs>
     </ng-template>
-  </lux-detail-view-ac>
+  </lux-detail-view>
 
-  <lux-master-footer-ac>
+  <lux-master-footer>
     <div class="lux-flex lux-flex-col">
       <div class="lux-flex lux-gap-2 lux-content-end lux-items-center">
         <lux-button luxLabel="#1" [luxFlat]="true" luxColor="primary" (luxClicked)="selectedDetail.set(masterEntries()[0])" />
@@ -149,8 +149,8 @@
         </lux-menu>
       </div>
     </div>
-  </lux-master-footer-ac>
-</lux-master-detail-ac>
+  </lux-master-footer>
+</lux-master-detail>
 
 <ng-template #urgent>
   <lux-badge class="lux-ml-3" luxColor="red" [luxUppercase]="false"><lux-label luxId="urgent">dringend</lux-label></lux-badge>

@@ -3,25 +3,25 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   ILuxFileObject,
-  LuxAutocompleteAcComponent,
+  LuxAutocompleteComponent,
   LuxCardComponent,
   LuxCardContentComponent,
   LuxCardContentExpandedComponent,
-  LuxCheckboxAcComponent,
-  LuxDatepickerAcComponent,
-  LuxFileInputAcComponent,
+  LuxCheckboxComponent,
+  LuxDatepickerComponent,
+  LuxFileInputComponent,
   LuxFormHintComponent,
   LuxFormLabelComponent,
   LuxIconComponent,
-  LuxInputAcComponent,
-  LuxInputAcPrefixComponent,
-  LuxInputAcSuffixComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
-  LuxSliderAcComponent,
-  LuxTextareaAcComponent,
+  LuxInputComponent,
+  LuxInputPrefixComponent,
+  LuxInputSuffixComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
+  LuxSliderComponent,
+  LuxTextareaComponent,
   LuxTextboxComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 
 interface DummyForm {
@@ -53,20 +53,20 @@ interface DummyForm {
     LuxCardComponent,
     NgClass,
     ReactiveFormsModule,
-    LuxAutocompleteAcComponent,
-    LuxCheckboxAcComponent,
-    LuxDatepickerAcComponent,
-    LuxFileInputAcComponent,
+    LuxAutocompleteComponent,
+    LuxCheckboxComponent,
+    LuxDatepickerComponent,
+    LuxFileInputComponent,
     LuxFormHintComponent,
     LuxFormLabelComponent,
-    LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent,
-    LuxRadioAcComponent,
-    LuxSelectAcComponent,
-    LuxSliderAcComponent,
-    LuxTextareaAcComponent,
-    LuxToggleAcComponent
+    LuxInputComponent,
+    LuxInputPrefixComponent,
+    LuxInputSuffixComponent,
+    LuxRadioComponent,
+    LuxSelectComponent,
+    LuxSliderComponent,
+    LuxTextareaComponent,
+    LuxToggleComponent
   ]
 })
 export class BaselineComponent {

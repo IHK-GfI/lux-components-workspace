@@ -3,9 +3,9 @@ import {
   LuxCardComponent,
   LuxCardContentComponent,
   LuxDividerComponent,
-  LuxInputAcComponent,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
 
@@ -17,9 +17,9 @@ import { StatusMarkerComponent } from '../../../base/status-marker/status-marker
     LuxDividerComponent,
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     StatusMarkerComponent
   ]
 })
