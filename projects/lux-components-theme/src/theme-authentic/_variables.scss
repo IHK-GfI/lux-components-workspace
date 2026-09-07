@@ -198,6 +198,11 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   // Accordion
   --lux-theme-accordion-panel-container-elevation-shadow-width: 1px;
+  --lux-theme-accordion-aria-panel-first-border-top: none;
+  --lux-theme-accordion-aria-panel-border-bottom: none;
+  --lux-theme-accordion-aria-panel-border-radius: var(--lux-theme-app-border-radius);
+  --lux-theme-accordion-aria-panel-box-shadow: 0 0 0 var(--lux-theme-accordion-panel-container-elevation-shadow-width)
+    var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant));
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
   --lux-theme-accordion-header-hover-color-on-neutral: var(--lux-theme-app-content-bg);

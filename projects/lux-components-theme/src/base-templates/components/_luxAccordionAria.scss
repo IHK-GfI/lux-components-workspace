@@ -1,8 +1,12 @@
 lux-panel-aria {
   .lux-panel {
-    border-radius: var(--lux-theme-app-border-radius);
-    box-shadow: 0 0 0 var(--lux-theme-accordion-panel-container-elevation-shadow-width)
-      var(--mat-card-outlined-outline-color, var(--mat-sys-outline-variant));
+    border-bottom: var(--lux-theme-accordion-aria-panel-border-bottom);
+    border-radius: var(--lux-theme-accordion-aria-panel-border-radius);
+    box-shadow: var(--lux-theme-accordion-aria-panel-box-shadow);
+  }
+
+  &:first-child .lux-panel {
+    border-top: var(--lux-theme-accordion-aria-panel-first-border-top);
   }
 
   .lux-expansion-panel-header {
@@ -25,7 +29,7 @@ lux-panel-aria {
     flex: 1;
     gap: 0;
     min-width: 0;
-    padding: 0;
+    padding: 0 var(--lux-theme-spacing-md) 0 0;
     text-align: left;
 
     &:not([aria-disabled="true"]) {
@@ -64,12 +68,13 @@ lux-panel-aria {
   .lux-expansion-panel-content-wrapper {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 0fr;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
     transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .lux-panel.lux-panel-expanded > .lux-expansion-panel-content-wrapper {
-    grid-template-rows: 1fr;
+    grid-template-rows: minmax(0, 1fr);
   }
 
   .lux-expansion-panel-content {
@@ -93,9 +98,12 @@ lux-panel-aria {
 
     .lux-expansion-panel-header {
       position: sticky;
-      top: var(--lux-panel-sticky-header-offset, 0);
       z-index: 2;
     }
+  }
+
+  .lux-panel.lux-panel-sticky-header.lux-panel-expanded.lux-panel-sticky-header-scrolled .lux-expansion-panel-header {
+    top: var(--lux-panel-sticky-header-offset, 0);
   }
 
   .lux-expansion-panel-header-toggle:disabled {
@@ -116,6 +124,14 @@ lux-panel-aria {
 
   .lux-expansion-indicator-after {
     margin-left: var(--lux-theme-spacing-3);
+  }
+
+  .lux-expansion-indicator {
+    transition: transform 200ms ease;
+  }
+
+  .lux-panel-expanded .lux-expansion-indicator {
+    transform: rotate(180deg);
   }
 
   &:first-of-type .lux-panel.lux-panel-expanded {

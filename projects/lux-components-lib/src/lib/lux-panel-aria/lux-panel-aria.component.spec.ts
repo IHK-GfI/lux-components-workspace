@@ -124,6 +124,15 @@ describe('LuxPanelAriaComponent', () => {
     expect(indicators.length).toBe(0);
   }));
 
+  it('sollte den Indikator bei einem deaktivierten Panel ausblenden', fakeAsync(() => {
+    testComponent.disabled = true;
+    fixture.detectChanges();
+    tick();
+
+    const indicators = fixture.debugElement.queryAll(By.css('.lux-expansion-indicator'));
+    expect(indicators.length).toBe(0);
+  }));
+
   it('sollte bei luxDynamicHeaderHeight keine feste Header-Hoehe setzen', fakeAsync(() => {
     testComponent.dynamicHeaderHeight = true;
     fixture.detectChanges();
@@ -192,6 +201,44 @@ describe('LuxPanelAriaComponent', () => {
     const content = fixture.debugElement.query(By.css('.lux-expansion-panel-content'));
     expect(header.nativeElement.getAttribute('aria-disabled')).toBe('true');
     expect(content).toBeNull();
+  }));
+
+  it('sollte luxClickNotAllowed bei Klick auf ein deaktiviertes Panel emittieren', fakeAsync(() => {
+    testComponent.disabled = true;
+    fixture.detectChanges();
+    tick();
+
+    const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
+    header.nativeElement.click();
+    fixture.detectChanges();
+    tick();
+
+    expect(testComponent.clickNotAllowedEvents.length).toBe(1);
+    expect(testComponent.expandedEvents).not.toContain(true);
+  }));
+
+  it('sollte luxClickNotAllowed bei Tastatureingabe auf ein deaktiviertes Panel emittieren', fakeAsync(() => {
+    testComponent.disabled = true;
+    fixture.detectChanges();
+    tick();
+
+    const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
+    header.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+    fixture.detectChanges();
+    tick();
+
+    expect(testComponent.clickNotAllowedEvents.length).toBe(1);
+    expect(testComponent.expandedEvents).not.toContain(true);
+  }));
+
+  it('sollte luxClickNotAllowed bei einem aktiven Panel nicht emittieren', fakeAsync(() => {
+    const header = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
+    header.nativeElement.click();
+    fixture.detectChanges();
+    tick();
+
+    expect(testComponent.clickNotAllowedEvents.length).toBe(0);
+    expect(testComponent.expandedEvents).toContain(true);
   }));
 
   it('sollte den Custom-Header-Inhalt bei luxDisabled ausblenden', fakeAsync(() => {
@@ -313,6 +360,7 @@ describe('LuxPanelAriaComponent A11y', () => {
         [luxStickyHeader]="stickyHeader"
         [luxStickyHeaderOffset]="stickyHeaderOffset"
         (luxExpandedChange)="expandedEvents.push($event)"
+        (luxClickNotAllowed)="clickNotAllowedEvents.push($event)"
       >
         <lux-panel-aria-header-title [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip">Titel</lux-panel-aria-header-title>
         <lux-panel-aria-header-description [luxTruncated]="truncated" [luxTruncatedTooltip]="truncatedTooltip"
@@ -337,6 +385,7 @@ class LuxPanelAriaTestComponent {
   truncatedTooltip = 'Tooltip';
   togglePosition: 'before' | 'after' = 'after';
   expandedEvents: boolean[] = [];
+  clickNotAllowedEvents: Event[] = [];
 }
 
 @Component({

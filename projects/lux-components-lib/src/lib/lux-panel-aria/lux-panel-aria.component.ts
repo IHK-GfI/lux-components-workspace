@@ -1,5 +1,18 @@
 import { AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/aria/accordion';
-import { afterRenderEffect, Component, DestroyRef, computed, effect, input, output, inject, untracked, viewChild } from '@angular/core';
+import { ScrollDispatcher } from '@angular/cdk/scrolling';
+import {
+  afterRenderEffect,
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  input,
+  output,
+  inject,
+  signal,
+  untracked,
+  viewChild
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observer.service';
 import { LuxIconComponent } from '../lux-icon/lux-icon/lux-icon.component';
@@ -21,6 +34,7 @@ export class LuxPanelAriaComponent {
 
   protected mediaQuery = inject(LuxMediaQueryObserverService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly scrollDispatcher = inject(ScrollDispatcher);
   private readonly themeService = inject(LuxThemeService);
   protected parent = inject(LuxAccordionAriaBase, { optional: true, host: true, skipSelf: true });
   protected readonly accordionPanel = viewChild.required(AccordionPanel);
@@ -36,7 +50,7 @@ export class LuxPanelAriaComponent {
       return expanded ? 'lux-interface-remove-1' : 'lux-interface-add-1';
     }
 
-    return expanded ? 'lux-interface-arrows-button-down' : 'lux-interface-arrows-button-up';
+    return 'lux-interface-arrows-button-down';
   });
 
   luxDisabled = input<boolean | undefined>(undefined);
@@ -57,6 +71,7 @@ export class LuxPanelAriaComponent {
   protected effectiveDynamicHeaderHeight = computed(() => this.luxDynamicHeaderHeight() ?? this.parent?.luxDynamicHeaderHeight() ?? false);
   protected stickyHeader = computed(() => this.luxStickyHeader() ?? this.parent?.luxStickyHeader());
   protected stickyHeaderOffset = computed(() => this.luxStickyHeaderOffset() ?? this.parent?.luxStickyHeaderOffset());
+  protected readonly hasScrolled = signal(false);
 
   headerHeightCacheActive = false;
   expandedHeaderHeightCache?: string;
@@ -74,6 +89,13 @@ export class LuxPanelAriaComponent {
     this.destroyRef.onDestroy(() => this.parent?.unregisterPanel(this));
 
     this.mobile = this.mediaQuery.isSmallerOrEqual('sm');
+
+    this.scrollDispatcher
+      .scrolled(0)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((scrollable) => {
+        this.hasScrolled.set(scrollable ? scrollable.measureScrollOffset('top') > 0 : window.scrollY > 0);
+      });
 
     this.mediaQuery
       .getMediaQueryChangedAsObservable()
