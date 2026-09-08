@@ -1288,7 +1288,7 @@ describe('LuxSelectComponent', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
+      const options = document.querySelectorAll('mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
       expect(options.length).toBe(4);
     });
 
@@ -1485,6 +1485,17 @@ describe('LuxSelectComponent', () => {
 
   describe('mit konfigurierter sichtbarer Optionsanzahl', () => {
     it('begrenzt die Panelhöhe auf die konfigurierte Anzahl sichtbarer Optionen', async () => {
+      // jsdom hat keine Layout-Engine: getBoundingClientRect() liefert für Optionen immer 0, wodurch
+      // die Panelhöhen-Berechnung nicht sinnvoll geprüft werden könnte. Eine feste Höhe für die
+      // Optionen bildet das reale Browser-Verhalten (Layout mit tatsächlicher Größe) nach.
+      const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+        if (this.classList.contains('mat-mdc-option')) {
+          return { height: 40, width: 0, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => {} } as DOMRect;
+        }
+        return originalGetBoundingClientRect.call(this);
+      });
+
       const fixture = TestBed.createComponent(SelectVisibleOptionCountComponent);
       fixture.detectChanges();
 

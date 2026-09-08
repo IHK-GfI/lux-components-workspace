@@ -1,6 +1,7 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -13,8 +14,7 @@ import {
   input,
   model,
   output,
-  signal,
-  ChangeDetectionStrategy
+  signal
 } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -25,14 +25,13 @@ import { LuxMenuTriggerComponent } from '../../lux-action/lux-menu/lux-menu-subc
 import { LuxMenuComponent } from '../../lux-action/lux-menu/lux-menu.component';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-tooltip.directive';
-import { LuxChipsComponent } from '../../lux-form/lux-chips/lux-chips.component';
 import { LuxChipComponent } from '../../lux-form/lux-chips/lux-chips-subcomponents/lux-chip.component';
+import { LuxChipsComponent } from '../../lux-form/lux-chips/lux-chips.component';
 import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
 import { LuxAccordionComponent } from '../../lux-layout/lux-accordion/lux-accordion.component';
 import { LuxCardActionsComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content-expanded.component';
 import { LuxCardContentComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-content.component';
-import { LuxCardInfoComponent } from '../../lux-layout/lux-card/lux-card-subcomponents/lux-card-info.component';
 import { LuxCardComponent } from '../../lux-layout/lux-card/lux-card.component';
 import { LuxPanelActionComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-action.component';
 import { LuxPanelContentComponent } from '../../lux-layout/lux-panel/lux-panel-subcomponents/lux-panel-content.component';
@@ -70,7 +69,6 @@ import { LuxFilterFormExtendedComponent } from './lux-filter-form-extended/lux-f
     LuxPanelContentComponent,
     LuxPanelActionComponent,
     LuxCardComponent,
-    LuxCardInfoComponent,
     LuxCardContentComponent,
     LuxCardContentExpandedComponent,
     LuxCardActionsComponent,

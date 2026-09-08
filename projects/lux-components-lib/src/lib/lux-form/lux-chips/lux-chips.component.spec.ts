@@ -316,7 +316,7 @@ describe('LuxChipComponent-Authentic', () => {
       // Änderungen durchführen
       const inputElement = fixture.debugElement.query(By.css('input'));
       await LuxTestHelper.typeInElementAsync('Option 1', fixture, inputElement.nativeElement, async () => {
-        const optionElement = fixture.nativeElement.querySelector('mat-option');
+        const optionElement = document.querySelector('mat-option') as HTMLElement;
         optionElement.click();
         await LuxTestHelper.wait(fixture, 500);
 
@@ -681,7 +681,7 @@ describe('LuxChipComponent-Authentic', () => {
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'Lorem');
       await LuxTestHelper.wait(fixture, delay);
 
-      let options = fixture.nativeElement.querySelectorAll('mat-option');
+      let options = document.querySelectorAll('mat-option');
       expect(options?.length).toEqual(8);
       expect(autocomplete.luxAutocompleteOptions().length).toEqual(10);
       expect(autocomplete.displayedOptions().length).toEqual(8);
@@ -705,7 +705,7 @@ describe('LuxChipComponent-Authentic', () => {
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'Lorem ');
       await LuxTestHelper.wait(fixture, delay);
 
-      options = fixture.nativeElement.querySelectorAll('mat-option');
+      options = document.querySelectorAll('mat-option');
       expect(options?.length).toEqual(8);
       expect(autocomplete.luxAutocompleteOptions().length).toEqual(10);
       expect(autocomplete.displayedOptions().length).toEqual(8);

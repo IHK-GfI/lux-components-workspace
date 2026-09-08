@@ -328,7 +328,13 @@ describe('LuxAppHeaderComponent', () => {
 
     it('Sollte den Dashboard-Link darstellen und öffnen', async () => {
       // Vorbedingungen testen
-      const spy = vi.spyOn(window, 'open').mockImplementation(() => null);
+      // mockClear() zusätzlich zu vi.restoreAllMocks() (test-setup.ts): unter isolate:false (Default
+      // dieses Vitest-Runners) kann window.open bereits durch einen anderen Test wieder gemockt
+      // worden sein, bevor dieser Mock zurückgesetzt wurde.
+      const spy = vi
+        .spyOn(window, 'open')
+        .mockImplementation(() => null)
+        .mockClear();
 
       fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
       await LuxTestHelper.wait(fixture);
@@ -357,7 +363,10 @@ describe('LuxAppHeaderComponent', () => {
 
     it('Sollte den Dashboard-Link in einem neuen Tab öffnen', async () => {
       // Vorbedingungen testen
-      const spy = vi.spyOn(window, 'open').mockImplementation(() => null);
+      const spy = vi
+        .spyOn(window, 'open')
+        .mockImplementation(() => null)
+        .mockClear();
 
       testComponent.dashboardTitle.set('Dashboard');
       testComponent.dashboardLink.set('https:///www.ihk-gfi.de');

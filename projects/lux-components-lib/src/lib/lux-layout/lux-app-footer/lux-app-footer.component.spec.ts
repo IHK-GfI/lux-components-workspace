@@ -200,9 +200,9 @@ describe('LuxAppFooterComponent', () => {
       const footerLinks = fixture.debugElement.queryAll(By.css('a span.lux-button-label'));
       expect(footerLinks).toBeDefined();
       expect(footerLinks.length).toEqual(3);
-      expect(footerLinks[0].nativeElement.innerText).toEqual('Link 1');
-      expect(footerLinks[1].nativeElement.innerText).toEqual('Link 2');
-      expect(footerLinks[2].nativeElement.innerText).toEqual('Link 3');
+      expect(footerLinks[0].nativeElement.innerText.trim()).toEqual('Link 1');
+      expect(footerLinks[1].nativeElement.innerText.trim()).toEqual('Link 2');
+      expect(footerLinks[2].nativeElement.innerText.trim()).toEqual('Link 3');
     });
   });
 });
@@ -251,10 +251,12 @@ class MockAppFooterLinkOrderComponent {
   private linkService = inject(LuxAppFooterLinkService);
 
   constructor() {
+    // alwaysVisible=true, damit die Links unabhängig von der (unter jsdom nicht auswertbaren)
+    // Breakpoint-Erkennung (desktopView) im Test sichtbar sind.
     this.linkService.linkInfos = [
-      new LuxAppFooterLinkInfo('Link 1', 'path1'),
-      new LuxAppFooterLinkInfo('Link 2', 'path2'),
-      new LuxAppFooterLinkInfo('Link 3', 'path3')
+      new LuxAppFooterLinkInfo('Link 1', 'path1', true),
+      new LuxAppFooterLinkInfo('Link 2', 'path2', true),
+      new LuxAppFooterLinkInfo('Link 3', 'path3', true)
     ];
   }
 }

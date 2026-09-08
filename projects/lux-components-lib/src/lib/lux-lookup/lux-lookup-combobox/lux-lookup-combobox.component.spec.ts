@@ -969,6 +969,20 @@ describe('LuxLookupComboboxComponent', () => {
     });
 
     it('begrenzt die Panelhöhe unabhängig von luxEntryBlockSize', async () => {
+      // jsdom hat keine Layout-Engine: getBoundingClientRect() liefert für Optionen und Filterzeile
+      // immer 0, wodurch die Panelhöhen-Berechnung nicht sinnvoll geprüft werden könnte. Feste Höhen
+      // bilden das reale Browser-Verhalten (Layout mit tatsächlicher Größe) nach.
+      const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+        if (this.classList.contains('mat-mdc-option')) {
+          return { height: 40, width: 0, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => {} } as DOMRect;
+        }
+        if (this.tagName.toLowerCase() === 'lux-select-panel-filter') {
+          return { height: 56, width: 0, top: 0, left: 0, right: 0, bottom: 0, x: 0, y: 0, toJSON: () => {} } as DOMRect;
+        }
+        return originalGetBoundingClientRect.call(this);
+      });
+
       const fixture = TestBed.createComponent(LuxVisibleOptionCountComponent);
       fixture.detectChanges();
       await new Promise((resolve) => setTimeout(resolve, 0));

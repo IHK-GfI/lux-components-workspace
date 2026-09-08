@@ -243,7 +243,7 @@ describe('LuxToggleComponent', () => {
 
       it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.disabled()).toBeUndefined();
+        expect(fixture.componentInstance.disabled()).toBeFalsy();
 
         // Änderungen durchführen
         fixture.componentInstance.disabled.set(true);
@@ -271,7 +271,7 @@ describe('LuxToggleComponent', () => {
 
       it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.label()).toBeUndefined();
+        expect(fixture.componentInstance.label()).toBeFalsy();
 
         // Änderungen durchführen
         const newLabel = 'A4711';

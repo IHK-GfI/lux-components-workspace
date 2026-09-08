@@ -412,7 +412,13 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
     }
 
     if (!value) {
-      this.setISOValue(value);
+      // Nur benachrichtigen, wenn tatsächlich ein Wert gelöscht wurde. Ohne diesen Guard löst z.B.
+      // ein reines Neu-Validieren (updateValueAndValidity() nach Validator-Änderungen) über
+      // formControl.valueChanges eine falsche/leere Wertänderungs-Meldung aus, obwohl der Wert nie
+      // gesetzt war.
+      if (this.value()) {
+        this.setISOValue(value);
+      }
       return;
     }
 

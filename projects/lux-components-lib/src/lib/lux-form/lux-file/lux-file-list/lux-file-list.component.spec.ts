@@ -502,8 +502,11 @@ describe('LuxFileListComponent', () => {
       const localTestComponent = localFixture.componentInstance;
       const localFileComponent = localFixture.debugElement.query(By.directive(LuxFileListComponent)).componentInstance;
 
+      localFileComponent['liveAnnouncer'] = { announce: () => {} } as any;
       // Wir mocken hier den FileReader weg, da er nicht mit fakeAsync kompatibel ist
       vi.spyOn(localFileComponent, 'readFile').mockResolvedValue('data:image/png;base64-dummy');
+      // Den read-Delay für die Ladeanzeige mocken (Standard: 1000ms), sonst greift LuxTestHelper.wait() nicht rechtzeitig
+      localFileComponent.defaultReadFileDelay = 0;
       localFixture.detectChanges();
 
       localTestComponent.multiple.set(true);
@@ -516,7 +519,7 @@ describe('LuxFileListComponent', () => {
       // Änderungen durchführen
       localTestComponent.showPreview.set(true);
       await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      localFixture.detectChanges();
       await LuxTestHelper.wait(localFixture);
 
       // Nachbedingungen prüfen

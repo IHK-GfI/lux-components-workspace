@@ -36,6 +36,13 @@ describe('LuxInfiniteScrollDirective', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(MockComponent);
       mockComp = fixture.componentInstance;
+
+      // jsdom hat keine Layout-Engine: scrollHeight/clientHeight liefern immer 0, wodurch nie eine
+      // Scrollbar erkannt würde. Die Werte werden hier auf ein plausibles Szenario (Inhalt größer als
+      // sichtbarer Bereich) gesetzt, um das reale Browser-Verhalten unter Karma nachzubilden.
+      const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element')).nativeElement;
+      Object.defineProperty(el, 'clientHeight', { configurable: true, value: 50 });
+      Object.defineProperty(el, 'scrollHeight', { configurable: true, value: 500 });
     });
 
     it('Sollte erstellt werden', () => {

@@ -95,7 +95,10 @@ describe('LuxLinkPlainComponent', () => {
 
   it('Sollte den (externen) href aufrufen', async () => {
     // Vorbedingungen prüfen
-    const spy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const spy = vi
+      .spyOn(window, 'open')
+      .mockImplementation(() => null)
+      .mockClear();
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen  [mit HTTP]
@@ -124,7 +127,13 @@ describe('LuxLinkPlainComponent', () => {
 
   it('Sollte den (externen) href in einem neuen Tab aufrufen', async () => {
     // Vorbedingungen prüfen
-    const spy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    // mockClear() zusätzlich zu vi.restoreAllMocks() (test-setup.ts): unter isolate:false (Default
+    // dieses Vitest-Runners) kann window.open bereits durch einen anderen Test wieder gemockt
+    // worden sein, bevor dieser Mock zurückgesetzt wurde.
+    const spy = vi
+      .spyOn(window, 'open')
+      .mockImplementation(() => null)
+      .mockClear();
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
@@ -143,7 +152,10 @@ describe('LuxLinkPlainComponent', () => {
 
   it('Sollte den (internen) href in einem neuen Tab ohne Opener-Referenz aufrufen', async () => {
     // Vorbedingungen prüfen
-    const spy = vi.spyOn(window, 'open').mockImplementation(() => null);
+    const spy = vi
+      .spyOn(window, 'open')
+      .mockImplementation(() => null)
+      .mockClear();
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen

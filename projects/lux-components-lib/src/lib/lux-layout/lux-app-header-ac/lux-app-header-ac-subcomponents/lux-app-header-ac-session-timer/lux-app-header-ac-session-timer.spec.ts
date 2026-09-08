@@ -145,9 +145,13 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     timerService.resetTimer(2);
     await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges(); // Microtasks flushen → endTime = Date.now() + 2000, erste timer(0) Emission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // toObservable() koppelt das Signal per effect() an ein Observable; effect() läuft erst nach dem
+    // aktuellen Change-Detection-Zyklus (nicht synchron), wodurch die interne timer(0, 1000)-Subscription
+    // etwas später als beim synchronen Aufruf von resetTimer() startet. Der 1000ms/1ms-Zeitplan hier ist
+    // daher mit Sicherheitsmarge versehen, statt exakt auf die interne Taktung zu vertrauen.
+    await new Promise((resolve) => setTimeout(resolve, 1300));
     fixture.detectChanges(); // 1s verbleibend → setTimeout(0) wird geplant
-    await new Promise((resolve) => setTimeout(resolve, 1));
+    await new Promise((resolve) => setTimeout(resolve, 50));
     fixture.detectChanges(); // setTimeout(0) feuert → timeoutUser()
 
     expect(timeoutFired).toBe(true);

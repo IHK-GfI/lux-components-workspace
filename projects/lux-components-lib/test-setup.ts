@@ -2,6 +2,13 @@
 // (siehe angular.json). Läuft nach der automatischen zone.js-Initialisierung, aber vor allen
 // Spec-Dateien. Stopft jsdom-Lücken gegenüber echtem Chrome, die unter Karma nicht auftraten.
 
+// Jasmine (Karma) hat spyOn()-Spione automatisch nach jedem Test wiederhergestellt. Vitest tut das
+// standardmäßig nicht, wodurch Spione (z.B. auf window.open) und ihre Aufrufzähler über Testfälle
+// hinweg erhalten blieben. Globales Zurücksetzen sorgt für isolierte Tests wie unter Karma.
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 // jsdom implementiert weder scrollIntoView noch die Drag&Drop-DataTransfer-API (beides wird von
 // LuxTestHelper bzw. Komponenten wie LuxTourHint/LuxList genutzt, unter echtem Chrome via Karma
 // aber real vorhanden). Minimal-Polyfills, damit die betroffenen Tests unter jsdom nicht crashen.

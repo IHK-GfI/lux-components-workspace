@@ -2,6 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -290,28 +291,31 @@ describe('LuxTextareaComponent', () => {
     });
 
     it('Sollte maximal und minimal n-Zeilen erlauben', async () => {
+      // Die tatsächliche Pixelhöhe (minHeight/maxHeight) ermittelt CdkTextareaAutosize über eine
+      // reale Zeilenhöhen-Messung (u.a. geklontes Element + scrollHeight), die jsdom mangels
+      // Layout-Engine nicht liefern kann. Stattdessen wird geprüft, dass luxMinRows/luxMaxRows
+      // korrekt an die Autosize-Direktive durchgereicht werden, die für die Höhenberechnung sorgt.
       // Vorbedingungen testen
       component.minRows.set(0);
       component.maxRows.set(1);
       await LuxTestHelper.wait(fixture);
-      let textareaNode = fixture.debugElement.query(By.css('textarea'));
-      const lineHeight = textareaNode.nativeElement.style.maxHeight;
+      const autosize = fixture.debugElement.query(By.directive(CdkTextareaAutosize)).injector.get(CdkTextareaAutosize);
+      expect(autosize.minRows).toBe(0);
+      expect(autosize.maxRows).toBe(1);
 
       // Änderungen durchführen
       component.maxRows.set(3);
       await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      textareaNode = fixture.debugElement.query(By.css('textarea'));
-      expect(textareaNode.nativeElement.style.maxHeight).toEqual(lineHeight.replace('px', '') * 3 + 'px');
+      expect(autosize.maxRows).toBe(3);
 
       // Änderungen durchführen
       component.minRows.set(2);
       await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
-      textareaNode = fixture.debugElement.query(By.css('textarea'));
-      expect(textareaNode.nativeElement.style.minHeight).toEqual(lineHeight.replace('px', '') * 2 + 'px');
+      expect(autosize.minRows).toBe(2);
     });
 
     it('Sollte luxValueChange angemessen oft aufrufen', async () => {

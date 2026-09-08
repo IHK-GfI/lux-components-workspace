@@ -709,6 +709,8 @@ describe('LuxDatepickerComponent', () => {
 
     it('Sollte nicht rekursiv Wertaktualisierungen vornehmen', async () => {
       // Vorbedingungen testen
+      // 251 reale Iterationen mit je einem Makrotask (LuxTestHelper.wait) überschreiten den
+      // Standard-Timeout von Vitest (5000ms); unter Karma/Jasmine galt dafür ein großzügigerer Default.
       const spy = vi.spyOn(datepickerComponent, 'notifyFormValueChanged').mockReturnValue(undefined);
       await LuxTestHelper.wait(fixture);
       expect(datepickerComponent.value()).toBeFalsy();
@@ -730,7 +732,7 @@ describe('LuxDatepickerComponent', () => {
       expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
       expect(spy).toHaveBeenCalledTimes(251);
-    });
+    }, 15000);
   });
 
   describe('A11y', () => {

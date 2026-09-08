@@ -113,7 +113,6 @@ export class LuxSelectPanelFilterComponent implements AfterViewInit {
       nativeInput.classList.add('lux-select-panel-filter-input');
       nativeInput.setAttribute('role', 'searchbox');
       nativeInput.setAttribute('aria-autocomplete', 'list');
-      nativeInput.setAttribute('aria-label', this.placeholder());
     }
   }
 }

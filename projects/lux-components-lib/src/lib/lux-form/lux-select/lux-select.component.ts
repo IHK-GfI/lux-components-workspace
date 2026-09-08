@@ -150,6 +150,7 @@ export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelect
       this.luxOptions();
       this.luxPickValue();
       this.luxKeepOptionOrder();
+      this.luxMultiple();
 
       untracked(() => this.refreshRenderOptionIndexes());
     });
@@ -227,8 +228,10 @@ export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelect
   private refreshRenderOptionIndexes(): void {
     const options = this.luxOptions() ?? [];
 
-    // Bei aktivem Flag die ursprüngliche Reihenfolge beibehalten (kein Sortieren nach oben).
-    if (this.luxKeepOptionOrder()) {
+    // Bei aktivem Flag oder im Multiselect die ursprüngliche Reihenfolge beibehalten (kein
+    // Sortieren nach oben): Im Multiselect sollen Checkboxen an ihrer Position bleiben, statt beim
+    // Selektieren im Panel nach oben zu springen.
+    if (this.luxKeepOptionOrder() || this.luxMultiple()) {
       this.renderOptionIndexes.set(options.map((_, i) => i));
       return;
     }

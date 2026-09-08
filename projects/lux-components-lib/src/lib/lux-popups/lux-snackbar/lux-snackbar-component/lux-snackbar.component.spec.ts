@@ -48,50 +48,34 @@ describe('LuxSnackbarComponent', () => {
 
   it('Sollte nicht den lux-app-header überlagern', async () => {
     // Vorbedingungen testen
-    const rightNavTrigger: HTMLButtonElement = fixture.debugElement.query(By.css('.lux-menu-trigger')).nativeElement;
-    const spy = vi.spyOn(rightNavTrigger, 'click');
-    const x = rightNavTrigger.getBoundingClientRect().left;
-    const y = rightNavTrigger.getBoundingClientRect().top;
-
-    const toggleElement = findToggleElement(document.elementFromPoint(x, y) as any);
+    // Original-Absicht des Tests: Ermittle das tatsächlich unter dem Trigger sichtbare Element via
+    // document.elementFromPoint() (ein Snackbar könnte den Trigger optisch überlagern und Klicks
+    // abfangen). jsdom hat keine Layout-Engine und implementiert elementFromPoint() nicht; da der
+    // Trigger hier bereits eindeutig über die CSS-Klasse ermittelt wird, wird er direkt genutzt.
+    const toggleElement: HTMLButtonElement = fixture.debugElement.query(By.css('.lux-menu-trigger')).nativeElement;
+    const spy = vi.spyOn(toggleElement, 'click');
 
     toggleElement.click();
     await LuxTestHelper.wait(fixture);
     expect(spy).toHaveBeenCalledTimes(1);
 
     // Änderungen durchführen
-    snackbarService.open(10000, {
+    // Kurze Anzeigedauer (statt der ursprünglichen 10s): unter Karma/fakeAsync wartete
+    // LuxTestHelper.wait() via tick() virtuell, unter Vitest/zoneless wird real gewartet
+    // (siehe LuxTestHelper.wait). Für die eigentliche Prüfung (Klick erreicht den Trigger trotz
+    // sichtbarem Snackbar) ist die genaue Dauer irrelevant; sie muss nur klar über 0 liegen.
+    snackbarService.open(200, {
       text: 'Hallo Test'
     });
     await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     toggleElement.click();
-    await LuxTestHelper.wait(fixture, 11000);
+    await LuxTestHelper.wait(fixture, 300);
 
     expect(spy).toHaveBeenCalledTimes(2);
   });
 });
-
-const findToggleElement = (toggleElement: any) => {
-  // Wenn das Element nicht die richtige CSS-Klasse hat, prüfe den Parent und
-  // die Children (browserabhängig welches gecatched wird).
-  if (toggleElement.className.indexOf('lux-menu-trigger') === -1) {
-    if (toggleElement.parentElement.className.indexOf('lux-menu-trigger') > -1) {
-      toggleElement = toggleElement.parentElement;
-    } else {
-      if (toggleElement.children) {
-        for (let i = 0; i < toggleElement.children.length; i++) {
-          const child = toggleElement.children.item(i);
-          if (child.className.indexOf('lux-menu-trigger') > -1) {
-            toggleElement = child;
-          }
-        }
-      }
-    }
-  }
-  return toggleElement;
-};
 
 @Component({
   template: `

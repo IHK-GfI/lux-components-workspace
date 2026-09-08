@@ -689,7 +689,7 @@ describe('LuxDatetimepickerComponent', () => {
       expect(datepickerComponent.value()).toEqual(expectedDate);
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
       expect(spy).toHaveBeenCalledTimes(251);
-    });
+    }, 15000);
   });
 
   describe('A11y', () => {

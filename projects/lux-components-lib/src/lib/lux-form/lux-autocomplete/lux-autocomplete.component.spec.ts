@@ -79,7 +79,7 @@ describe('LuxAutocompleteComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'meine');
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
-        const options = fixture.nativeElement.querySelectorAll('mat-option');
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         options[0].click();
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
@@ -100,7 +100,7 @@ describe('LuxAutocompleteComponent', () => {
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
         // Nachbedingungen testen
-        let options = fixture.nativeElement.querySelectorAll('mat-option');
+        let options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toEqual(4);
         // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
         expect(options[1].innerText).toContain('Gruppenaufgaben');
@@ -117,7 +117,7 @@ describe('LuxAutocompleteComponent', () => {
         // Nachbedingungen testen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'Au');
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
-        options = fixture.nativeElement.querySelectorAll('mat-option');
+        options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toEqual(3);
         // Hier wird toContain verwendet, da im Safari ein Zeilenumbruch im String entsteht, der zu einem Fehler führt
         expect(options[1].innerText).toContain('Gruppenaufgaben 2');
@@ -172,7 +172,7 @@ describe('LuxAutocompleteComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'meine');
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
-        const options = fixture.nativeElement.querySelectorAll('mat-option');
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         options[0].click();
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
@@ -307,7 +307,7 @@ describe('LuxAutocompleteComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'meine');
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
-        const options = fixture.nativeElement.querySelectorAll('mat-option');
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         options[0].click();
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
@@ -367,7 +367,7 @@ describe('LuxAutocompleteComponent', () => {
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'meine');
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
-        const options = fixture.nativeElement.querySelectorAll('mat-option');
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         options[0].click();
         await LuxTestHelper.wait(fixture, component.autocomplete().luxLookupDelay());
 
@@ -494,7 +494,7 @@ describe('LuxAutocompleteComponent', () => {
 
         fixture.detectChanges();
 
-        const options = fixture.nativeElement.querySelectorAll('mat-option');
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
 
         expect(options.length).toBeGreaterThan(0);
       });
@@ -502,7 +502,7 @@ describe('LuxAutocompleteComponent', () => {
 
     it('sollte keine Ergebnisse haben wenn ein invalider Wert eingetippt wird', async () => {
       await LuxTestHelper.typeInElementAsync('xxx', fixture, component.autocomplete().matInput()!.nativeElement, () => {
-        const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toBe(0);
       });
     });
@@ -515,7 +515,7 @@ describe('LuxAutocompleteComponent', () => {
 
     it('sollte die richtige Anzahl an Ergebnissen haben wenn ein valider Wert eingetippt wird', async () => {
       await LuxTestHelper.typeInElementAsync('Meine Aufgaben', fixture, component.autocomplete().matInput()!.nativeElement, () => {
-        const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toBe(1);
         options[0].click();
       });
@@ -548,7 +548,7 @@ describe('LuxAutocompleteComponent', () => {
 
     it('sollte custom template einbetten', async () => {
       await LuxTestHelper.typeInElementAsync('Meine Aufgaben', fixture, component.autocomplete().matInput()!.nativeElement, () => {
-        const options = fixture.nativeElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+        const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
         expect(options.length).toBe(1);
 
         const customOptionContainer = options[0].querySelector('span');
@@ -614,7 +614,7 @@ describe('LuxAutocompleteComponent', () => {
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'Lorem');
       await LuxTestHelper.wait(fixture, autocomplete.luxLookupDelay());
 
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       expect(options?.length).toEqual(8);
       expect(autocomplete.luxOptions().length).toEqual(10);
       expect(autocomplete.displayedOptions().length).toEqual(8);

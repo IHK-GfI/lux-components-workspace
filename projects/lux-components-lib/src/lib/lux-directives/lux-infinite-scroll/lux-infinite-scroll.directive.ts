@@ -13,6 +13,7 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
   private scrollSubscription: Subscription;
   private scroll$: Subject<void> = new Subject<void>();
   private lastPosition: LuxScrollPosition = { scrollHeight: 0, scrollTop: 0, clientHeight: 0 };
+  private readonly boundOnScroll = this.onScroll.bind(this);
 
   // Prozentzahl nach der ein scrollCallback ausgelöst wird
   readonly luxScrollPercent = input(85);
@@ -36,7 +37,7 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
   }
 
   ngOnInit() {
-    window.addEventListener('scroll', this.onScroll.bind(this), true);
+    window.addEventListener('scroll', this.boundOnScroll, true);
   }
 
   ngAfterViewInit() {
@@ -47,7 +48,7 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
   }
 
   ngOnDestroy() {
-    window.removeEventListener('scroll', this.onScroll, true);
+    window.removeEventListener('scroll', this.boundOnScroll, true);
     this.scrollSubscription.unsubscribe();
   }
 
@@ -74,8 +75,15 @@ export class LuxInfiniteScrollDirective implements OnInit, AfterViewInit, OnDest
       clientHeight: this.elementRef.nativeElement.clientHeight
     };
 
-    // Wenn nach unten gescrollt wird und die angegebene Prozentzahl überschritten wird
-    if (this.isUserScrollingDown(position) && this.isScrollExpectedPercent(position) && !this.luxIsLoading()) {
+    // Wenn nach unten gescrollt wird und die angegebene Prozentzahl überschritten wird. Ohne
+    // Scrollbereich (scrollHeight <= clientHeight) ist die Prozentrechnung nicht aussagekräftig
+    // (Division durch 0 bzw. durch einen zu kleinen Wert liefert sonst fälschlich "überschritten").
+    if (
+      position.scrollHeight > position.clientHeight &&
+      this.isUserScrollingDown(position) &&
+      this.isScrollExpectedPercent(position) &&
+      !this.luxIsLoading()
+    ) {
       this.luxScrolled.emit();
     }
 

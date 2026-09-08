@@ -58,6 +58,15 @@ describe('LuxSelectFilterDirective', () => {
     directive = matSelect?.injector.get(LuxSelectFilterDirective);
   });
 
+  afterEach(() => {
+    // Mehrere Tests planen über handleKeydown('Tab') einen verzögerten Fokuswechsel
+    // (setTimeout). Ohne explizites Zerstören der Fixture bleibt dieser Timer aktiv und kann
+    // während eines späteren Tests feuern und dort auf LuxSelectFilterUtils.focusNextFocusableElement
+    // gespotte Aufrufe verfälschen (isolate:false teilt den Ausführungskontext über Testdateien
+    // hinweg, siehe Vitest-Runner-Default).
+    fixture?.destroy();
+  });
+
   it('sollte erstellt werden', () => {
     expect(directive).toBeTruthy();
   });
@@ -588,7 +597,11 @@ describe('LuxSelectFilterDirective', () => {
     fixture.detectChanges();
 
     expect(closeSpy).toHaveBeenCalled();
-    expect(focusNextSpy).toHaveBeenCalledWith(activeAnchor);
+    // Per Referenzgleichheit statt toHaveBeenCalledWith(): unter isolate:false könnten mehrere
+    // strukturell identische <button>-Elemente aus anderen Tests im Spiel sein, die
+    // toHaveBeenCalledWith() sonst fälschlich als Treffer werten würde.
+    const calledWithOwnAnchor = focusNextSpy.mock.calls.some((call) => call[0] === activeAnchor);
+    expect(calledWithOwnAnchor).toBe(true);
 
     document.body.removeChild(activeAnchor);
   });
@@ -611,7 +624,14 @@ describe('LuxSelectFilterDirective', () => {
     fixture.detectChanges();
 
     expect(closeSpy).toHaveBeenCalled();
-    expect(focusNextSpy).not.toHaveBeenCalled();
+    // Gezielt per Referenzgleichheit auf den eigenen Anchor dieses Tests prüfen statt "gar nicht
+    // aufgerufen" bzw. toHaveBeenCalledWith(): unter isolate:false (Default dieses Vitest-Runners)
+    // teilen sich alle Spec-Dateien einen Ausführungskontext, wodurch andere (nicht per
+    // fixture.destroy() aufgeräumte) Tests ebenfalls verzögerte Aufrufe auf dieser statischen
+    // Utility-Funktion planen können - inklusive strukturell identischer (aber anderer) <button>-
+    // Elemente, die toHaveBeenCalledWith() sonst fälschlich als Treffer werten würde.
+    const calledWithOwnAnchor = focusNextSpy.mock.calls.some((call) => call[0] === activeAnchor);
+    expect(calledWithOwnAnchor).toBe(false);
 
     document.body.removeChild(activeAnchor);
   });

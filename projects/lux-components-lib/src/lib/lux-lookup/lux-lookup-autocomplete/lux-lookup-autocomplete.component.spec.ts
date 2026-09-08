@@ -76,7 +76,7 @@ describe('LuxLookupAutocompleteComponent', () => {
       await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');
@@ -98,7 +98,7 @@ describe('LuxLookupAutocompleteComponent', () => {
       await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');
@@ -120,7 +120,7 @@ describe('LuxLookupAutocompleteComponent', () => {
       await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
-      const options = fixture.nativeElement.querySelectorAll('mat-option');
+      const options = document.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
       expect(options[0].querySelector('span')?.innerText).toEqual('Afghanistan');
