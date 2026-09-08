@@ -4,7 +4,7 @@ import { OverlayContainer, OverlayModule } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import { PortalModule } from '@angular/cdk/portal';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../src/testing/transloco-test.provider';
 import { LUX_FILE_PREVIEW_DATA } from './lux-file-preview-config';
@@ -20,7 +20,7 @@ describe('LuxFilePreviewComponent', () => {
   let fixture: ComponentFixture<LuxFilePreviewComponent>;
   const previewData = { fileComponent: null, fileObject: { type: 'application/pdf' } };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule, PortalModule, LuxFilePreviewComponent],
       schemas: [NO_ERRORS_SCHEMA],
@@ -33,7 +33,7 @@ describe('LuxFilePreviewComponent', () => {
         { provide: LuxFilePreviewRef, useClass: MockLuxFilePreviewRef }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxFilePreviewComponent);
@@ -45,8 +45,9 @@ describe('LuxFilePreviewComponent', () => {
     expect(component).toBeTruthy();
   }));
 
-  it('Sollte den PDF-Viewer anzeigen', fakeAsync(
-    inject([LuxFilePreviewService, OverlayContainer, Platform], (previewService: LuxFilePreviewService, oc: OverlayContainer) => {
+  it('Sollte den PDF-Viewer anzeigen', inject(
+    [LuxFilePreviewService, OverlayContainer, Platform],
+    async (previewService: LuxFilePreviewService, oc: OverlayContainer) => {
       // Vorbedingungen testen
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
@@ -60,7 +61,7 @@ describe('LuxFilePreviewComponent', () => {
           fileObject: { name: 'testfile.pdf', content: 'data:application/pdf;base64,abc', type: 'application/pdf' }
         }
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeDefined();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeDefined();
@@ -68,19 +69,21 @@ describe('LuxFilePreviewComponent', () => {
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeNull();
 
       previewRef.close();
-      LuxTestHelper.wait(fixture);
-      flush();
+      await LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-imgviewer')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeNull();
-    })
+    }
   ));
 
-  it('Sollte den Img-Viewer anzeigen', fakeAsync(
-    inject([LuxFilePreviewService, OverlayContainer, Platform], (previewService: LuxFilePreviewService, oc: OverlayContainer) => {
+  it('Sollte den Img-Viewer anzeigen', inject(
+    [LuxFilePreviewService, OverlayContainer, Platform],
+    async (previewService: LuxFilePreviewService, oc: OverlayContainer) => {
       // Vorbedingungen testen
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
@@ -94,7 +97,7 @@ describe('LuxFilePreviewComponent', () => {
           fileObject: { name: 'testfile.png', content: 'data:image/png;base64,abc', type: 'image/png' }
         }
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeDefined();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
@@ -102,19 +105,21 @@ describe('LuxFilePreviewComponent', () => {
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeNull();
 
       previewRef.close();
-      LuxTestHelper.wait(fixture);
-      flush();
+      await LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-imgviewer')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeNull();
-    })
+    }
   ));
 
-  it('Sollte den NotSupported-Viewer anzeigen', fakeAsync(
-    inject([LuxFilePreviewService, OverlayContainer, Platform], (previewService: LuxFilePreviewService, oc: OverlayContainer) => {
+  it('Sollte den NotSupported-Viewer anzeigen', inject(
+    [LuxFilePreviewService, OverlayContainer, Platform],
+    async (previewService: LuxFilePreviewService, oc: OverlayContainer) => {
       // Vorbedingungen testen
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
@@ -128,7 +133,7 @@ describe('LuxFilePreviewComponent', () => {
           fileObject: { name: 'testfile.abc', content: 'data:ne/abc;base64,abc', type: 'ne/abc' }
         }
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeDefined();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
@@ -136,15 +141,16 @@ describe('LuxFilePreviewComponent', () => {
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeDefined();
 
       previewRef.close();
-      LuxTestHelper.wait(fixture);
-      flush();
+      await LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-imgviewer')).toBeNull();
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeNull();
-    })
+    }
   ));
 });
 

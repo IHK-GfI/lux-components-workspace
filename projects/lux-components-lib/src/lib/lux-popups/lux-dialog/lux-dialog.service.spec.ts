@@ -1,9 +1,8 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { waitForAsync } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -23,14 +22,14 @@ describe('LuxDialogService', () => {
   let overlayHelper: LuxOverlayHelper;
   let dialogRef: LuxDialogRef<void>;
 
-  const waitForDialogClosure = () => {
-    LuxTestHelper.wait(fixture);
-    flush();
-    discardPeriodicTasks();
-    LuxTestHelper.wait(fixture);
+  const waitForDialogClosure = async () => {
+    await LuxTestHelper.wait(fixture);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideLuxComponentsConfig({
@@ -44,7 +43,7 @@ describe('LuxDialogService', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MockDialogComponent);
@@ -54,66 +53,66 @@ describe('LuxDialogService', () => {
     fixture.detectChanges();
   });
 
-  afterEach(fakeAsync(() => {
+  afterEach(async () => {
     dialogRef.closeDialog(true);
-    waitForDialogClosure();
-  }));
+    await waitForDialogClosure();
+  });
 
   describe('[LuxDialogPresetComponent]', () => {
-    it('Sollte den Dialog öffnen', fakeAsync(() => {
+    it('Sollte den Dialog öffnen', async () => {
       // Vorbedingungen testen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.open({});
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
-    }));
+    });
 
-    it('Sollte den Titel setzen', fakeAsync(() => {
+    it('Sollte den Titel setzen', async () => {
       dialogRef = testComponent.dialogService.open({
         title: 'Hallo Welt'
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-title')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-title').textContent!.trim()).toEqual('Hallo Welt');
-    }));
+    });
 
-    it('Sollte den Content setzen', fakeAsync(() => {
+    it('Sollte den Content setzen', async () => {
       dialogRef = testComponent.dialogService.open({
         content: 'Hallo Welt'
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content').textContent!.trim()).toEqual('Hallo Welt');
-    }));
+    });
 
-    it('Sollte den Content via TemplateRef setzen', fakeAsync(() => {
+    it('Sollte den Content via TemplateRef setzen', async () => {
       dialogRef = testComponent.dialogService.open({
         contentTemplate: testComponent.templateRef()
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content').textContent!.trim()).toEqual('Hallo Welt');
-    }));
+    });
 
-    it('Sollte die ConfirmAction beachten', fakeAsync(() => {
+    it('Sollte die ConfirmAction beachten', async () => {
       // Vorbedingungen testen
       dialogRef = testComponent.dialogService.open({
         confirmAction: undefined
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm')).toBeNull();
 
       // Änderungen durchführen
       dialogRef.closeDialog(true);
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       dialogRef = testComponent.dialogService.open({
         confirmAction: {
@@ -121,26 +120,26 @@ describe('LuxDialogService', () => {
           raised: true
         }
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm .mat-mdc-raised-button')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm .lux-button-label').textContent!.trim()).toEqual('Hallo Welt');
-    }));
+    });
 
-    it('Sollte die DeclineAction beachten', fakeAsync(() => {
+    it('Sollte die DeclineAction beachten', async () => {
       // Vorbedingungen testen
       dialogRef = testComponent.dialogService.open({
         declineAction: undefined
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-decline')).toBeNull();
 
       // Änderungen durchführen
       dialogRef.closeDialog(true);
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       dialogRef = testComponent.dialogService.open({
         declineAction: {
@@ -148,15 +147,15 @@ describe('LuxDialogService', () => {
           raised: true
         }
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-decline')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-decline .mat-mdc-raised-button')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-decline .lux-button-label').textContent!.trim()).toEqual('Hallo Welt');
-    }));
+    });
 
-    it('Sollte die Buttons in der korrekten Reihenfolge darstellen', fakeAsync(() => {
+    it('Sollte die Buttons in der korrekten Reihenfolge darstellen', async () => {
       // Vorbedingungen testen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
@@ -169,7 +168,7 @@ describe('LuxDialogService', () => {
           label: 'Abbrechen'
         }
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const buttonNodeList = overlayHelper.selectAllFromOverlay('lux-button');
@@ -180,28 +179,28 @@ describe('LuxDialogService', () => {
 
       expect(buttonArray[0].innerText.toLowerCase()).toContain('löschen');
       expect(buttonArray[1].innerText.toLowerCase()).toContain('abbrechen');
-    }));
+    });
 
-    it('Sollte den Dialog schließen', fakeAsync(() => {
+    it('Sollte den Dialog schließen', async () => {
       // Vorbedingungen testen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.open({});
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
 
       // Änderungen durchführen
       dialogRef.closeDialog(true);
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
-    }));
+    });
 
-    it('Sollte dialogConfirmed aufrufen', fakeAsync(() => {
+    it('Sollte dialogConfirmed aufrufen', async () => {
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
@@ -211,13 +210,13 @@ describe('LuxDialogService', () => {
         }
       });
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       dialogRef.dialogConfirmed.subscribe(() => {
         testComponent.dialogConfirmed();
       });
 
-      const spy = spyOn(testComponent, 'dialogConfirmed');
-      LuxTestHelper.wait(fixture);
+      const spy = vi.spyOn(testComponent, 'dialogConfirmed').mockReturnValue(undefined);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -225,14 +224,14 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm button').click();
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
       expect(spy).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('Sollte declineConfirmed aufrufen', fakeAsync(() => {
+    it('Sollte declineConfirmed aufrufen', async () => {
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
@@ -242,13 +241,13 @@ describe('LuxDialogService', () => {
         }
       });
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       dialogRef.dialogDeclined.subscribe(() => {
         testComponent.dialogDeclined();
       });
 
-      const spy = spyOn(testComponent, 'dialogDeclined');
-      LuxTestHelper.wait(fixture);
+      const spy = vi.spyOn(testComponent, 'dialogDeclined').mockReturnValue(undefined);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -256,14 +255,14 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       overlayHelper.selectOneFromOverlay('.lux-dialog-preset-decline button').click();
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
       expect(spy).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('Sollte dialogClosed aufrufen', fakeAsync(() => {
+    it('Sollte dialogClosed aufrufen', async () => {
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
@@ -273,13 +272,13 @@ describe('LuxDialogService', () => {
         }
       });
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       dialogRef.dialogClosed.subscribe(() => {
         testComponent.dialogClosed();
       });
 
-      const spy = spyOn(testComponent, 'dialogClosed');
-      LuxTestHelper.wait(fixture);
+      const spy = vi.spyOn(testComponent, 'dialogClosed').mockReturnValue(undefined);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -287,106 +286,106 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm button').click();
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
       expect(spy).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('Sollte bei Preset-Dialogen ohne maxWidth und mit width=auto eine Default-maxWidth setzen', fakeAsync(() => {
+    it('Sollte bei Preset-Dialogen ohne maxWidth und mit width=auto eine Default-maxWidth setzen', async () => {
       dialogRef = testComponent.dialogService.open({
         width: 'auto',
         maxWidth: undefined
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const config = (dialogRef._matDialogRef as any)._containerInstance._config;
       expect(config.maxWidth).toEqual(minWidth(DIALOG_WIDTH_SMALL_PX));
-    }));
+    });
 
-    it('Sollte bei Preset-Dialogen mit konkreter width keine Default-maxWidth setzen', fakeAsync(() => {
+    it('Sollte bei Preset-Dialogen mit konkreter width keine Default-maxWidth setzen', async () => {
       dialogRef = testComponent.dialogService.open({
         width: '700px',
         maxWidth: undefined
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const config = (dialogRef._matDialogRef as any)._containerInstance._config;
       expect(config.maxWidth).toBeUndefined();
-    }));
+    });
 
-    it('Sollte das übergebene Config-Objekt nicht mutieren', fakeAsync(() => {
+    it('Sollte das übergebene Config-Objekt nicht mutieren', async () => {
       const inputConfig: ILuxDialogPresetConfig = {
         width: 'auto'
       };
 
       dialogRef = testComponent.dialogService.open(inputConfig);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(inputConfig.maxWidth).toBeUndefined();
-    }));
+    });
 
-    it('Sollte bei Nicht-Preset-Dialogen ohne maxWidth und mit width=auto eine Default-maxWidth setzen', fakeAsync(() => {
+    it('Sollte bei Nicht-Preset-Dialogen ohne maxWidth und mit width=auto eine Default-maxWidth setzen', async () => {
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent, {
         width: 'auto',
         maxWidth: undefined
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const config = (dialogRef._matDialogRef as any)._containerInstance._config;
       expect(config.maxWidth).toEqual(minWidth(DIALOG_WIDTH_LARGE_PX));
-    }));
+    });
   });
 
   describe('[LuxDialogStructureComponent]', () => {
-    it('Sollte den Dialog öffnen', fakeAsync(() => {
+    it('Sollte den Dialog öffnen', async () => {
       // Vorbedingungen testen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('.mock-dialog-title').textContent!.trim()).toEqual('Title');
       expect(overlayHelper.selectOneFromOverlay('.mock-dialog-content').textContent!.trim()).toEqual('Content');
       expect(overlayHelper.selectOneFromOverlay('.mock-dialog-action-ok')).not.toBeNull();
-    }));
+    });
 
-    it('Sollte den Dialog schließen', fakeAsync(() => {
+    it('Sollte den Dialog schließen', async () => {
       // Vorbedingungen testen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
 
       // Änderungen durchführen
       overlayHelper.selectOneFromOverlay('.mock-dialog-action-ok button').click();
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
-    }));
+    });
 
-    it('Sollte dialogClosed aufrufen', fakeAsync(() => {
+    it('Sollte dialogClosed aufrufen', async () => {
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent);
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       dialogRef.dialogClosed.subscribe(() => {
         testComponent.dialogClosed();
       });
 
-      const spy = spyOn(testComponent, 'dialogClosed');
-      LuxTestHelper.wait(fixture);
+      const spy = vi.spyOn(testComponent, 'dialogClosed').mockReturnValue(undefined);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -394,34 +393,34 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       overlayHelper.selectOneFromOverlay('.mock-dialog-action-ok button').click();
-      waitForDialogClosure();
+      await waitForDialogClosure();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).toBeNull();
       expect(spy).toHaveBeenCalledTimes(1);
-    }));
+    });
 
-    it('Sollte bei disableBackdropAndEscClose=true den Dialog über MatDialog sperren, aber den X-Button anzeigen', fakeAsync(() => {
+    it('Sollte bei disableBackdropAndEscClose=true den Dialog über MatDialog sperren, aber den X-Button anzeigen', async () => {
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent, {
         disableClose: false,
         disableBackdropAndEscClose: true
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
-      expect(dialogRef._matDialogRef.disableClose).toBeTrue();
+      expect(dialogRef._matDialogRef.disableClose).toBe(true);
       expect(overlayHelper.selectOneFromOverlay('.lux-icon-close')).not.toBeNull();
-    }));
+    });
 
-    it('Sollte bei disableClose=true den X-Button ausblenden', fakeAsync(() => {
+    it('Sollte bei disableClose=true den X-Button ausblenden', async () => {
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent, {
         disableClose: true,
         disableBackdropAndEscClose: false
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
-      expect(dialogRef._matDialogRef.disableClose).toBeTrue();
+      expect(dialogRef._matDialogRef.disableClose).toBe(true);
       expect(overlayHelper.selectOneFromOverlay('.lux-icon-close')).toBeNull();
-    }));
+    });
   });
 });
 

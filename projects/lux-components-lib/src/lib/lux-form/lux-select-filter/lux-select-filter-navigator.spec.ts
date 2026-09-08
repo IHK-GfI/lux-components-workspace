@@ -1,3 +1,4 @@
+import type { Mock } from 'vitest';
 import { ElementRef } from '@angular/core';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -7,30 +8,36 @@ describe('LuxSelectFilterNavigator', () => {
   function createOption(
     config: {
       host?: HTMLElement;
-      select?: jasmine.Spy;
-      selectViaInteraction?: jasmine.Spy;
+      select?: Mock;
+      selectViaInteraction?: Mock;
     } = {}
   ): MatOption {
     return {
       _getHostElement: config.host ? () => config.host as HTMLElement : undefined,
-      select: config.select ?? jasmine.createSpy('select'),
+      select: config.select ?? vi.fn().mockName('select'),
       _selectViaInteraction: config.selectViaInteraction
     } as unknown as MatOption;
   }
 
-  function createMatSelect(options: MatOption[], config: { panel?: HTMLElement; multiple?: boolean } = {}): MatSelect {
+  function createMatSelect(
+    options: MatOption[],
+    config: {
+      panel?: HTMLElement;
+      multiple?: boolean;
+    } = {}
+  ): MatSelect {
     return {
       options: { toArray: () => options },
       panel: config.panel ? new ElementRef(config.panel) : undefined,
       multiple: config.multiple ?? false,
-      close: jasmine.createSpy('close')
+      close: vi.fn().mockName('close')
     } as unknown as MatSelect;
   }
 
   function createKeyManager(overrides: Partial<InternalKeyManager> = {}): InternalKeyManager {
     return {
       activeItemIndex: -1,
-      setActiveItem: jasmine.createSpy('setActiveItem'),
+      setActiveItem: vi.fn().mockName('setActiveItem'),
       ...overrides
     };
   }
@@ -38,7 +45,7 @@ describe('LuxSelectFilterNavigator', () => {
   it('setzt bei unsichtbaren Optionen das aktive Item auf -1 zurück', () => {
     const hiddenHost = document.createElement('div');
     hiddenHost.style.display = 'none';
-    const keyManager = createKeyManager({ updateActiveItem: jasmine.createSpy('updateActiveItem') });
+    const keyManager = createKeyManager({ updateActiveItem: vi.fn().mockName('updateActiveItem') });
     const matSelect = createMatSelect([createOption({ host: hiddenHost })]);
     const navigator = new LuxSelectFilterNavigator(matSelect, { _keyManager: keyManager }, () => 0);
 
@@ -54,7 +61,7 @@ describe('LuxSelectFilterNavigator', () => {
     const options = [createOption({ host: firstHost }), createOption({ host: secondHost }), createOption({ host: thirdHost })];
     const keyManager = createKeyManager({
       activeItem: options[1],
-      setActiveItem: jasmine.createSpy('setActiveItem')
+      setActiveItem: vi.fn().mockName('setActiveItem')
     });
     const matSelect = createMatSelect(options);
     const navigator = new LuxSelectFilterNavigator(matSelect, { _keyManager: keyManager }, () => 0);
@@ -68,15 +75,18 @@ describe('LuxSelectFilterNavigator', () => {
     const hiddenHost = document.createElement('div');
     hiddenHost.style.display = 'none';
     const visibleHost = document.createElement('div');
-    const selectSpy = jasmine.createSpy('select');
+    const selectSpy = vi.fn().mockName('select');
     const options = [createOption({ host: hiddenHost }), createOption({ host: visibleHost, select: selectSpy })];
     const keyManager = createKeyManager({
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     });
     const matSelect = createMatSelect(options, { multiple: true });
-    const continueFilteringSpy = jasmine.createSpy('continueFiltering');
+    const continueFilteringSpy = vi.fn().mockName('continueFiltering');
     const navigator = new LuxSelectFilterNavigator(matSelect, { _keyManager: keyManager }, () => 0);
 
     navigator.selectActiveOrFirstVisibleOption(continueFilteringSpy);
@@ -105,13 +115,16 @@ describe('LuxSelectFilterNavigator', () => {
 
     const option = createOption({ host: optionHost });
     const keyManager = createKeyManager({
-      setActiveItem: jasmine.createSpy('setActiveItem').and.callFake((index: number) => {
-        keyManager.activeItemIndex = index;
-      })
+      setActiveItem: vi
+        .fn()
+        .mockName('setActiveItem')
+        .mockImplementation((index: number) => {
+          keyManager.activeItemIndex = index;
+        })
     });
     const internalSelect: MatSelectInternal = {
       _keyManager: keyManager,
-      _scrollOptionIntoView: jasmine.createSpy('_scrollOptionIntoView')
+      _scrollOptionIntoView: vi.fn().mockName('_scrollOptionIntoView')
     };
     const matSelect = createMatSelect([option], { panel });
     const navigator = new LuxSelectFilterNavigator(matSelect, internalSelect, () => 40);

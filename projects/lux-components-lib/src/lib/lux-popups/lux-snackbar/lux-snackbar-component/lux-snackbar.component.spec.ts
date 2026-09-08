@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, Injectable, NgModule, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, inject, TestBed } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -34,43 +34,43 @@ describe('LuxSnackbarComponent', () => {
   let testComponent: MockSnackbarComponent;
   let snackbarService: LuxSnackbarService;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(MockSnackbarComponent);
     testComponent = fixture.componentInstance;
-    LuxTestHelper.wait(fixture);
-    flush();
-    discardPeriodicTasks();
-  }));
+    await LuxTestHelper.wait(fixture);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
   beforeEach(inject([LuxSnackbarService], (service: LuxSnackbarService) => {
     snackbarService = service;
   }));
 
-  it('Sollte nicht den lux-app-header überlagern', fakeAsync(() => {
+  it('Sollte nicht den lux-app-header überlagern', async () => {
     // Vorbedingungen testen
     const rightNavTrigger: HTMLButtonElement = fixture.debugElement.query(By.css('.lux-menu-trigger')).nativeElement;
-    const spy = spyOn(rightNavTrigger, 'click').and.callThrough();
+    const spy = vi.spyOn(rightNavTrigger, 'click');
     const x = rightNavTrigger.getBoundingClientRect().left;
     const y = rightNavTrigger.getBoundingClientRect().top;
 
     const toggleElement = findToggleElement(document.elementFromPoint(x, y) as any);
 
     toggleElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
     expect(spy).toHaveBeenCalledTimes(1);
 
     // Änderungen durchführen
     snackbarService.open(10000, {
       text: 'Hallo Test'
     });
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     toggleElement.click();
-    LuxTestHelper.wait(fixture, 11000);
+    await LuxTestHelper.wait(fixture, 11000);
 
     expect(spy).toHaveBeenCalledTimes(2);
-  }));
+  });
 });
 
 const findToggleElement = (toggleElement: any) => {

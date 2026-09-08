@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -9,7 +9,7 @@ describe('LuxTagIdDirective', () => {
   let fixture: ComponentFixture<MockComponent>;
   let mockComp: MockComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         {
@@ -18,15 +18,15 @@ describe('LuxTagIdDirective', () => {
         }
       ]
     }).compileComponents();
-  }));
+  });
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(MockComponent);
     mockComp = fixture.componentInstance;
-  }));
+  });
 
   it('Sollte die Tag-ID generieren', () => {
-    const spy = spyOn(console, 'warn');
+    const spy = vi.spyOn(console, 'warn').mockReturnValue(undefined);
     mockComp.tagId.set('tagid-demo');
     fixture.detectChanges();
 

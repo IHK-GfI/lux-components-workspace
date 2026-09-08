@@ -1,14 +1,15 @@
 // noinspection DuplicatedCode
 
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
+import { LuxAccordionColor } from '../../lux-util/lux-colors.enum';
 import { LuxPanelContentComponent } from '../lux-panel/lux-panel-subcomponents/lux-panel-content.component';
 import { LuxPanelHeaderTitleComponent } from '../lux-panel/lux-panel-subcomponents/lux-panel-header-title.component';
 import { LuxPanelComponent } from '../lux-panel/lux-panel.component';
-import { LuxAccordionComponent } from './lux-accordion.component';
+import { LuxAccordionComponent, LuxTogglePosition } from './lux-accordion.component';
 
 describe('LuxAccordionComponent', () => {
   describe('Attribut "luxCollapsedHeaderHeight" und "luxExpandedHeaderHeight"', () => {
@@ -16,34 +17,35 @@ describe('LuxAccordionComponent', () => {
       let fixture: ComponentFixture<LuxAccordionHeightComponent>;
       let testComponent: LuxAccordionHeightComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionHeightComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Höhe prüfen', fakeAsync(() => {
+      it('Höhe prüfen', async () => {
         // Vorbedingungen testen
         const panel1HeaderEl = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'))[0];
         expect('150px').toEqual(panel1HeaderEl.nativeElement.style.height);
 
         // Änderungen durchführen
         panel1HeaderEl.nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect('100px').toEqual(panel1HeaderEl.nativeElement.style.height);
 
         // Änderungen durchführen
         panel1HeaderEl.nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect('150px').toEqual(panel1HeaderEl.nativeElement.style.height);
-      }));
+      });
 
-      it('Höhe verändern und prüfen', fakeAsync(() => {
+      it('Höhe verändern und prüfen', async () => {
         // Vorbedingungen testen
         const panel1HeaderEl = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'))[0];
         expect('150px').toEqual(panel1HeaderEl.nativeElement.style.height);
@@ -53,7 +55,7 @@ describe('LuxAccordionComponent', () => {
         const expectedExpandedHeight = '250px';
         fixture.componentInstance.collapsedHeaderHeight.set(expectedCollapsedHeight);
         fixture.componentInstance.expandedHeaderHeight.set(expectedExpandedHeight);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen.
         // Geschlossenes Panel
@@ -61,21 +63,21 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         panel1HeaderEl.nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen.
         // Geöffnetes Panel
         expect(expectedExpandedHeight).toEqual(panel1HeaderEl.nativeElement.style.height);
-      }));
+      });
 
-      it('Panel über *ngIf einblenden', fakeAsync(() => {
+      it('Panel über *ngIf einblenden', async () => {
         // Vorbedingungen testen
         const headerElemente = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
         expect(1).toEqual(headerElemente.length);
 
         // Änderungen durchführen
         fixture.componentInstance.visible.set(true);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newHeaderElemente = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
@@ -85,52 +87,53 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         newPanelHeaderEl.nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect('100px').toEqual(newPanelHeaderEl.nativeElement.style.height);
-      }));
+      });
     });
 
     describe('Höhe des Accordions im Panel überschreiben', () => {
       let fixture: ComponentFixture<LuxAccordionPanelOverrideHeightComponent>;
       let testComponent: LuxAccordionPanelOverrideHeightComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionPanelOverrideHeightComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Höhe prüfen', fakeAsync(() => {
+      it('Höhe prüfen', async () => {
         // Vorbedingungen testen
         const panel1HeaderEl = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'))[0];
         expect('110px').toEqual(panel1HeaderEl.nativeElement.style.height);
 
         // Änderungen durchführen
         panel1HeaderEl.nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect('120px').toEqual(panel1HeaderEl.nativeElement.style.height);
 
         // Änderungen durchführen
         panel1HeaderEl.nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect('110px').toEqual(panel1HeaderEl.nativeElement.style.height);
-      }));
+      });
 
-      it('Panel über *ngIf einblenden', fakeAsync(() => {
+      it('Panel über *ngIf einblenden', async () => {
         // Vorbedingungen testen
         const headerElemente = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
         expect(1).toEqual(headerElemente.length);
 
         // Änderungen durchführen
         fixture.componentInstance.visible.set(true);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newHeaderElemente = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
@@ -140,11 +143,11 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         newPanelHeaderEl.nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect('120px').toEqual(newPanelHeaderEl.nativeElement.style.height);
-      }));
+      });
     });
   });
 
@@ -152,14 +155,15 @@ describe('LuxAccordionComponent', () => {
     let fixture: ComponentFixture<LuxAccordionPanelMultiComponent>;
     let testComponent: LuxAccordionPanelMultiComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxAccordionPanelMultiComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-      tick();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('Mehrere Bereiche dürfen geöffnet sein', fakeAsync(() => {
+    it('Mehrere Bereiche dürfen geöffnet sein', async () => {
       // Vorbedingungen testen
       expect(true).toEqual(fixture.componentInstance.multi());
       const items = fixture.debugElement.queryAll(By.css('.mat-expansion-panel'));
@@ -170,16 +174,16 @@ describe('LuxAccordionComponent', () => {
       // Änderungen durchführen
       const headerElemente = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
       headerElemente[0].nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       headerElemente[1].nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(items[0].classes['mat-expanded']).toBeTruthy();
       expect(items[1].classes['mat-expanded']).toBeTruthy();
-    }));
+    });
 
-    it('Nur ein Bereich darf geöffnet sein', fakeAsync(() => {
+    it('Nur ein Bereich darf geöffnet sein', async () => {
       // Vorbedingungen testen
       expect(true).toEqual(fixture.componentInstance.multi());
       const items = fixture.debugElement.queryAll(By.css('.mat-expansion-panel'));
@@ -191,14 +195,14 @@ describe('LuxAccordionComponent', () => {
       fixture.componentInstance.multi.set(false);
       const headerElemente = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
       headerElemente[0].nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       headerElemente[1].nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(items[0].classes['mat-expanded']).toBeFalsy();
       expect(items[1].classes['mat-expanded']).toBeTruthy();
-    }));
+    });
   });
 
   describe('Attribut "luxHideToggle"', () => {
@@ -206,14 +210,15 @@ describe('LuxAccordionComponent', () => {
       let fixture: ComponentFixture<LuxAccordionHideToggleComponent>;
       let testComponent: LuxAccordionHideToggleComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionHideToggleComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Toggle prüfen', fakeAsync(() => {
+      it('Toggle prüfen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.hide()).toBeFalsy();
         const toggleEl = fixture.debugElement.query(By.css('.mat-expansion-indicator'));
@@ -221,26 +226,27 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         fixture.componentInstance.hide.set(true);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newToggleEl = fixture.debugElement.query(By.css('.mat-expansion-indicator'));
         expect(newToggleEl).toBeNull();
-      }));
+      });
     });
 
     describe('Toggle initial true über Accordion gesetzt', () => {
       let fixture: ComponentFixture<LuxAccordionHideToggleTrueComponent>;
       let testComponent: LuxAccordionHideToggleTrueComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionHideToggleTrueComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Toggle prüfen', fakeAsync(() => {
+      it('Toggle prüfen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.hide()).toBeTruthy();
         const toggleEl = fixture.debugElement.query(By.css('.mat-expansion-indicator'));
@@ -248,31 +254,32 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         fixture.componentInstance.hide.set(false);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newToggleEl = fixture.debugElement.query(By.css('.mat-expansion-indicator'));
         expect(newToggleEl).not.toBeNull();
-      }));
+      });
     });
 
     describe('Toggle des Accordions im Panel überschreiben', () => {
       let fixture: ComponentFixture<LuxAccordionOverrideHideToggleComponent>;
       let testComponent: LuxAccordionOverrideHideToggleComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideHideToggleComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Toggle prüfen', fakeAsync(() => {
+      it('Toggle prüfen', async () => {
         const toggleEl = fixture.debugElement.query(By.css('#panel1 .mat-expansion-indicator'));
         expect(toggleEl).not.toBeNull();
         const toggle2El = fixture.debugElement.query(By.css('#panel2 .mat-expansion-indicator'));
         expect(toggle2El).toBeNull();
-      }));
+      });
     });
   });
 
@@ -281,14 +288,15 @@ describe('LuxAccordionComponent', () => {
       let fixture: ComponentFixture<LuxAccordionDisabledComponent>;
       let testComponent: LuxAccordionDisabledComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionDisabledComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Disabled prüfen', fakeAsync(() => {
+      it('Disabled prüfen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.disabled()).toBeFalsy();
         const headerEl = fixture.debugElement.query(By.css('.mat-expansion-panel-header'));
@@ -296,25 +304,26 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         fixture.componentInstance.disabled.set(true);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect(headerEl.nativeElement.attributes['aria-disabled'].value).toEqual('true');
-      }));
+      });
     });
 
     describe('Disabled initial true über das Accordion gesetzt', () => {
       let fixture: ComponentFixture<LuxAccordionDisabledTrueComponent>;
       let testComponent: LuxAccordionDisabledTrueComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionDisabledTrueComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Disabled prüfen', fakeAsync(() => {
+      it('Disabled prüfen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.disabled()).toBeTruthy();
         const headerEl = fixture.debugElement.query(By.css('.mat-expansion-panel-header'));
@@ -322,30 +331,31 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         fixture.componentInstance.disabled.set(false);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect(headerEl.nativeElement.attributes['aria-disabled'].value).toEqual('false');
-      }));
+      });
     });
 
     describe('Disabled des Accordions im Panel überschreiben', () => {
       let fixture: ComponentFixture<LuxAccordionOverrideDisabledComponent>;
       let testComponent: LuxAccordionOverrideDisabledComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideDisabledComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Disabled prüfen', fakeAsync(() => {
+      it('Disabled prüfen', async () => {
         const headerEl = fixture.debugElement.query(By.css('#panel1 .mat-expansion-panel-header'));
         expect(headerEl.nativeElement.attributes['aria-disabled'].value).toEqual('false');
         const header2El = fixture.debugElement.query(By.css('#panel2 .mat-expansion-panel-header'));
         expect(header2El.nativeElement.attributes['aria-disabled'].value).toEqual('true');
-      }));
+      });
     });
   });
 
@@ -353,19 +363,20 @@ describe('LuxAccordionComponent', () => {
     let fixture: ComponentFixture<LuxAccordionOverrideDisabledReversedComponent>;
     let testComponent: LuxAccordionOverrideDisabledReversedComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxAccordionOverrideDisabledReversedComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-      tick();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('Disabled prüfen', fakeAsync(() => {
+    it('Disabled prüfen', async () => {
       const headerEl = fixture.debugElement.query(By.css('#panel1 .mat-expansion-panel-header'));
       expect(headerEl.nativeElement.attributes['aria-disabled'].value).toEqual('true');
       const header2El = fixture.debugElement.query(By.css('#panel2 .mat-expansion-panel-header'));
       expect(header2El.nativeElement.attributes['aria-disabled'].value).toEqual('false');
-    }));
+    });
   });
 
   describe('Attribut "luxTogglePosition"', () => {
@@ -373,14 +384,15 @@ describe('LuxAccordionComponent', () => {
       let fixture: ComponentFixture<LuxAccordionluxTogglePositionComponent>;
       let testComponent: LuxAccordionluxTogglePositionComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionluxTogglePositionComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('TogglePosition prüfen', fakeAsync(() => {
+      it('TogglePosition prüfen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.togglePosition()).toBe('after');
         const positionEl = fixture.debugElement.query(By.css('.mat-expansion-toggle-indicator-after'));
@@ -388,26 +400,27 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         fixture.componentInstance.togglePosition.set('before');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newPositionEl = fixture.debugElement.query(By.css('.mat-expansion-toggle-indicator-before'));
         expect(newPositionEl).not.toBeNull();
-      }));
+      });
     });
 
     describe('TogglePosition initial "before" über das Accordion gesetzt', () => {
       let fixture: ComponentFixture<LuxAccordionluxTogglePositionBeforeComponent>;
       let testComponent: LuxAccordionluxTogglePositionBeforeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionluxTogglePositionBeforeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('TogglePosition prüfen', fakeAsync(() => {
+      it('TogglePosition prüfen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.togglePosition()).toBe('before');
         const positionEl = fixture.debugElement.query(By.css('.mat-expansion-toggle-indicator-before'));
@@ -415,50 +428,52 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen durchführen
         fixture.componentInstance.togglePosition.set('after');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newPositionEl = fixture.debugElement.query(By.css('.mat-expansion-toggle-indicator-after'));
         expect(newPositionEl).not.toBeNull();
-      }));
+      });
     });
 
     describe('TogglePosition in Panels überschrieben', () => {
       let fixture: ComponentFixture<LuxAccordionOverrideluxTogglePositionComponent>;
       let testComponent: LuxAccordionOverrideluxTogglePositionComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideluxTogglePositionComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('TogglePosition prüfen', fakeAsync(() => {
+      it('TogglePosition prüfen', async () => {
         const positionEl = fixture.debugElement.query(By.css('#panel1 .mat-expansion-toggle-indicator-after'));
         expect(positionEl).not.toBeNull();
         const positionTwoEl = fixture.debugElement.query(By.css('#panel2 .mat-expansion-toggle-indicator-before'));
         expect(positionTwoEl).not.toBeNull();
-      }));
+      });
     });
 
     describe('TogglePosition in Panels überschrieben umgedreht', () => {
       let fixture: ComponentFixture<LuxAccordionOverridePanelReversedluxTogglePositionComponent>;
       let testComponent: LuxAccordionOverridePanelReversedluxTogglePositionComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverridePanelReversedluxTogglePositionComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('TogglePosition prüfen', fakeAsync(() => {
+      it('TogglePosition prüfen', async () => {
         const positionEl = fixture.debugElement.query(By.css('#panel1 .mat-expansion-toggle-indicator-before'));
         expect(positionEl).not.toBeNull();
         const positionTwoEl = fixture.debugElement.query(By.css('#panel2 .mat-expansion-toggle-indicator-after'));
         expect(positionTwoEl).not.toBeNull();
-      }));
+      });
     });
   });
 
@@ -467,14 +482,15 @@ describe('LuxAccordionComponent', () => {
       let fixture: ComponentFixture<LuxAccordionColorComponent>;
       let testComponent: LuxAccordionColorComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionColorComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Color prüfen', fakeAsync(() => {
+      it('Color prüfen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.color()).toBe('primary');
         const toggleEl = fixture.debugElement.query(By.css('.lux-primary'));
@@ -482,7 +498,7 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen auf accent durchführen
         fixture.componentInstance.color.set('accent');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newToggleEl = fixture.debugElement.query(By.css('.lux-accent'));
@@ -490,7 +506,7 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen auf warn durchführen
         fixture.componentInstance.color.set('warn');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newToggleEl2 = fixture.debugElement.query(By.css('.lux-warn'));
@@ -498,12 +514,12 @@ describe('LuxAccordionComponent', () => {
 
         // Änderungen auf neutral durchführen
         fixture.componentInstance.color.set('neutral');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         const newToggleEl3 = fixture.debugElement.query(By.css('.lux-neutral'));
         expect(newToggleEl3).not.toBeNull();
-      }));
+      });
     });
   });
 
@@ -511,13 +527,14 @@ describe('LuxAccordionComponent', () => {
     describe('Sticky über das Accordion gesetzt', () => {
       let fixture: ComponentFixture<LuxAccordionStickyHeaderComponent>;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionStickyHeaderComponent);
         fixture.detectChanges();
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Vererbung und nachträgliche Änderung prüfen', fakeAsync(() => {
+      it('Vererbung und nachträgliche Änderung prüfen', async () => {
         // Vorbedingungen testen
         const panelEl = fixture.debugElement.query(By.css('.mat-expansion-panel'));
         expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
@@ -525,29 +542,30 @@ describe('LuxAccordionComponent', () => {
         // Änderungen durchführen
         fixture.componentInstance.sticky.set(true);
         fixture.componentInstance.offset.set('48px');
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         expect(panelEl.classes['lux-panel-sticky-header']).toBeTruthy();
         expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('48px');
-      }));
+      });
     });
 
     describe('Sticky des Accordions im Panel überschreiben', () => {
       let fixture: ComponentFixture<LuxAccordionOverrideStickyHeaderComponent>;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideStickyHeaderComponent);
         fixture.detectChanges();
-        tick();
-      }));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
+      });
 
-      it('Sticky prüfen', fakeAsync(() => {
+      it('Sticky prüfen', async () => {
         const panel1El = fixture.debugElement.query(By.css('#panel1 .mat-expansion-panel'));
         expect(panel1El.classes['lux-panel-sticky-header']).toBeFalsy();
         const panel2El = fixture.debugElement.query(By.css('#panel2 .mat-expansion-panel'));
         expect(panel2El.classes['lux-panel-sticky-header']).toBeTruthy();
-      }));
+      });
     });
   });
 });
@@ -761,7 +779,7 @@ class LuxAccordionOverrideDisabledReversedComponent {}
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionluxTogglePositionComponent {
-  togglePosition = signal('after');
+  togglePosition = signal<LuxTogglePosition>('after');
 }
 
 @Component({
@@ -778,7 +796,7 @@ class LuxAccordionluxTogglePositionComponent {
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionluxTogglePositionBeforeComponent {
-  togglePosition = signal('before');
+  togglePosition = signal<LuxTogglePosition>('before');
 }
 
 @Component({
@@ -833,7 +851,7 @@ class LuxAccordionOverridePanelReversedluxTogglePositionComponent {}
   imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
 })
 class LuxAccordionColorComponent {
-  color = signal('primary');
+  color = signal<LuxAccordionColor>('primary');
 }
 
 @Component({

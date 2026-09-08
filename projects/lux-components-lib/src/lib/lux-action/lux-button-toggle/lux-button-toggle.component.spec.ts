@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
@@ -39,7 +39,7 @@ describe('LuxButtonToggleComponent', () => {
   });
 
   it('propagiert Single-Select über ControlValueAccessor', () => {
-    const onChange = jasmine.createSpy('onChange');
+    const onChange = vi.fn().mockName('onChange');
     component.registerOnChange(onChange);
 
     component.onSingleSelectionChange({ value: options[1].value } as any);
@@ -58,7 +58,7 @@ describe('LuxButtonToggleComponent', () => {
     expect(component.luxSelected()).toBe(options[1].value);
   });
 
-  it('setzt Single-Select asynchron per writeValue und markiert über luxCompareWith korrekt', fakeAsync(() => {
+  it('setzt Single-Select asynchron per writeValue und markiert über luxCompareWith korrekt', async () => {
     fixture.componentRef.setInput('luxCompareWith', (a: TestOptionValue, b: TestOptionValue) => a?.key === b?.key);
     fixture.detectChanges();
 
@@ -66,11 +66,11 @@ describe('LuxButtonToggleComponent', () => {
       component.writeValue({ key: 'details' });
     });
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
 
     expect(component.luxSelected()).toBe(options[1].value);
-  }));
+  });
 
   it('normalisiert Single-Select bei später geladenen Optionen auf die Options-Referenz', () => {
     fixture.componentRef.setInput('luxOptions', []);
@@ -87,7 +87,7 @@ describe('LuxButtonToggleComponent', () => {
     expect(component.luxSelected()).toBe(options[1].value);
   });
 
-  it('normalisiert Single-Select auch bei asynchron geladenen Optionen auf die Options-Referenz', fakeAsync(() => {
+  it('normalisiert Single-Select auch bei asynchron geladenen Optionen auf die Options-Referenz', async () => {
     fixture.componentRef.setInput('luxOptions', []);
     fixture.componentRef.setInput('luxCompareWith', (a: TestOptionValue, b: TestOptionValue) => a?.key === b?.key);
     fixture.detectChanges();
@@ -100,17 +100,17 @@ describe('LuxButtonToggleComponent', () => {
       fixture.componentRef.setInput('luxOptions', options);
     });
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
 
     expect(component.luxSelected()).toBe(options[1].value);
-  }));
+  });
 
   it('propagiert Multi-Select über ControlValueAccessor', () => {
     fixture.componentRef.setInput('luxMultiple', true);
     fixture.detectChanges();
 
-    const onChange = jasmine.createSpy('onChange');
+    const onChange = vi.fn().mockName('onChange');
     component.registerOnChange(onChange);
 
     component.onMultipleSelectionChange(options[0].value, true);
@@ -133,14 +133,14 @@ describe('LuxButtonToggleComponent', () => {
     expect(error.nativeElement.textContent).toContain('Das ist ein Pflichtfeld');
   });
 
-  it('aktualisiert den aria-label Fallback bei Sprachwechsel und respektiert Override', fakeAsync(() => {
+  it('aktualisiert den aria-label Fallback bei Sprachwechsel und respektiert Override', async () => {
     const tService = TestBed.inject(TranslocoService);
 
     let group = fixture.debugElement.query(By.css('mat-button-toggle-group'));
     expect(group.nativeElement.getAttribute('aria-label')).toBe('Auswahl');
 
     tService.setActiveLang('en');
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
 
     group = fixture.debugElement.query(By.css('mat-button-toggle-group'));
@@ -150,12 +150,12 @@ describe('LuxButtonToggleComponent', () => {
     fixture.detectChanges();
 
     tService.setActiveLang('de');
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
 
     group = fixture.debugElement.query(By.css('mat-button-toggle-group'));
     expect(group.nativeElement.getAttribute('aria-label')).toBe('Custom Label');
-  }));
+  });
 
   describe('mit String-Optionswerten', () => {
     let stringFixture: ComponentFixture<LuxButtonToggleComponent<string>>;
@@ -174,7 +174,7 @@ describe('LuxButtonToggleComponent', () => {
     });
 
     it('propagiert Single-Select mit String-Werten', () => {
-      const onChange = jasmine.createSpy('onChange');
+      const onChange = vi.fn().mockName('onChange');
       stringComponent.registerOnChange(onChange);
 
       stringComponent.onSingleSelectionChange({ value: 'two' } as any);
@@ -187,7 +187,7 @@ describe('LuxButtonToggleComponent', () => {
       stringFixture.componentRef.setInput('luxMultiple', true);
       stringFixture.detectChanges();
 
-      const onChange = jasmine.createSpy('onChange');
+      const onChange = vi.fn().mockName('onChange');
       stringComponent.registerOnChange(onChange);
 
       stringComponent.onMultipleSelectionChange('one', true);

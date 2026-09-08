@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -16,13 +16,13 @@ describe('LuxButtonComponent', () => {
     let fixture: ComponentFixture<MockButtonComponent>;
     let testComponent: MockButtonComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockButtonComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Button (normal) anklicken"', fakeAsync(() => {
+    it('Button (normal) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -30,9 +30,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxClicked(fixture);
-    }));
+    });
 
-    it('Button (raised) anklicken"', fakeAsync(() => {
+    it('Button (raised) anklicken"', async () => {
       fixture.componentInstance.raised.set(true);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -40,9 +40,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxClicked(fixture);
-    }));
+    });
 
-    it('Button (round)" anklicken', fakeAsync(() => {
+    it('Button (round)" anklicken', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(true);
       fixture.componentInstance.flat.set(false);
@@ -50,9 +50,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxClicked(fixture);
-    }));
+    });
 
-    it('Button (flat) anklicken"', fakeAsync(() => {
+    it('Button (flat) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(true);
@@ -60,9 +60,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxClicked(fixture);
-    }));
+    });
 
-    it('Button (stroked) anklicken"', fakeAsync(() => {
+    it('Button (stroked) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -70,9 +70,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxClicked(fixture);
-    }));
+    });
 
-    it('Button (stroked & rounded) anklicken"', fakeAsync(() => {
+    it('Button (stroked & rounded) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(true);
       fixture.componentInstance.flat.set(false);
@@ -80,20 +80,20 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxClicked(fixture);
-    }));
+    });
   });
 
   describe('Attribut "luxDisabled"', () => {
     let fixture: ComponentFixture<MockButtonComponent>;
     let testComponent: MockButtonComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockButtonComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Button (normal) anklicken', fakeAsync(() => {
+    it('Button (normal) anklicken', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -101,9 +101,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxDisabled(fixture);
-    }));
+    });
 
-    it('Button (raised) anklicken', fakeAsync(() => {
+    it('Button (raised) anklicken', async () => {
       fixture.componentInstance.raised.set(true);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -111,9 +111,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxDisabled(fixture);
-    }));
+    });
 
-    it('Button (round) anklicken', fakeAsync(() => {
+    it('Button (round) anklicken', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(true);
       fixture.componentInstance.flat.set(false);
@@ -121,9 +121,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxDisabled(fixture);
-    }));
+    });
 
-    it('Button (flat) anklicken"', fakeAsync(() => {
+    it('Button (flat) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(true);
@@ -131,9 +131,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxDisabled(fixture);
-    }));
+    });
 
-    it('Button (outlined) anklicken"', fakeAsync(() => {
+    it('Button (outlined) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -141,9 +141,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxDisabled(fixture);
-    }));
+    });
 
-    it('Button (outlined + rounded) anklicken"', fakeAsync(() => {
+    it('Button (outlined + rounded) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(true);
       fixture.componentInstance.flat.set(false);
@@ -151,20 +151,20 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxDisabled(fixture);
-    }));
+    });
   });
 
   describe('Attribut "luxDisabledAria"', () => {
     let fixture: ComponentFixture<MockButtonComponent>;
     let testComponent: MockButtonComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockButtonComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('setzt aria-disabled nur bei Aktivierung', fakeAsync(() => {
+    it('setzt aria-disabled nur bei Aktivierung', async () => {
       fixture.componentInstance.disabledAria.set(false);
       fixture.detectChanges();
 
@@ -176,9 +176,9 @@ describe('LuxButtonComponent', () => {
 
       buttonEl = fixture.debugElement.query(By.css('button'));
       expect(buttonEl.nativeElement.getAttribute('aria-disabled')).toBe('true');
-    }));
+    });
 
-    it('setzt aria-disabled auch bei initial aktivem luxDisabledAria', fakeAsync(() => {
+    it('setzt aria-disabled auch bei initial aktivem luxDisabledAria', async () => {
       // Regression: Das MatButton-Host-Binding für aria-disabled hat einen initial
       // gesetzten Wert im ersten Change-Detection-Zyklus wieder entfernt.
       const initialFixture = TestBed.createComponent(MockButtonComponent);
@@ -187,11 +187,11 @@ describe('LuxButtonComponent', () => {
 
       const buttonEl = initialFixture.debugElement.query(By.css('button'));
       expect(buttonEl.nativeElement.getAttribute('aria-disabled')).toBe('true');
-    }));
+    });
 
-    it('emittiert luxClickNotAllowed und kein luxClicked', fakeAsync(() => {
-      const onClickSpy = spyOn(fixture.componentInstance, 'onClick');
-      const onClickNotAllowedSpy = spyOn(fixture.componentInstance, 'onClickNotAllowed');
+    it('emittiert luxClickNotAllowed und kein luxClicked', async () => {
+      const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClick').mockReturnValue(undefined);
+      const onClickNotAllowedSpy = vi.spyOn(fixture.componentInstance, 'onClickNotAllowed').mockReturnValue(undefined);
       fixture.componentInstance.disabledAria.set(true);
       fixture.detectChanges();
 
@@ -201,21 +201,20 @@ describe('LuxButtonComponent', () => {
 
       expect(onClickSpy).not.toHaveBeenCalled();
       expect(onClickNotAllowedSpy).toHaveBeenCalled();
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('Attribut "luxLabel"', () => {
     let fixture: ComponentFixture<MockButtonLabelComponent>;
     let testComponent: MockButtonLabelComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockButtonLabelComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Button (normal)"', fakeAsync(() => {
+    it('Button (normal)"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -223,9 +222,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLabel(fixture);
-    }));
+    });
 
-    it('Button (raised)"', fakeAsync(() => {
+    it('Button (raised)"', async () => {
       fixture.componentInstance.raised.set(true);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -233,11 +232,11 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLabel(fixture);
-    }));
+    });
 
     // Rounded Buttons haben keine Label mehr
 
-    it('Button (flat) anklicken"', fakeAsync(() => {
+    it('Button (flat) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(true);
@@ -245,9 +244,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLabel(fixture);
-    }));
+    });
 
-    it('Button (outlined) anklicken"', fakeAsync(() => {
+    it('Button (outlined) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -255,20 +254,20 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLabel(fixture);
-    }));
+    });
   });
 
   describe('Attribut "luxLoading"', () => {
     let fixture: ComponentFixture<MockButtonLoadingComponent>;
     let testComponent: MockButtonLoadingComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockButtonLoadingComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Button (normal) anklicken"', fakeAsync(() => {
+    it('Button (normal) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -276,9 +275,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLoading(fixture);
-    }));
+    });
 
-    it('Button (raised) anklicken"', fakeAsync(() => {
+    it('Button (raised) anklicken"', async () => {
       fixture.componentInstance.raised.set(true);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -286,9 +285,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLoading(fixture);
-    }));
+    });
 
-    it('Button (round)" anklicken', fakeAsync(() => {
+    it('Button (round)" anklicken', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(true);
       fixture.componentInstance.flat.set(false);
@@ -296,9 +295,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLoading(fixture);
-    }));
+    });
 
-    it('Button (flat) anklicken"', fakeAsync(() => {
+    it('Button (flat) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(true);
@@ -306,9 +305,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLoading(fixture);
-    }));
+    });
 
-    it('Button (stroked) anklicken"', fakeAsync(() => {
+    it('Button (stroked) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(false);
       fixture.componentInstance.flat.set(false);
@@ -316,9 +315,9 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLoading(fixture);
-    }));
+    });
 
-    it('Button (stroked & rounded) anklicken"', fakeAsync(() => {
+    it('Button (stroked & rounded) anklicken"', async () => {
       fixture.componentInstance.raised.set(false);
       fixture.componentInstance.round.set(true);
       fixture.componentInstance.flat.set(false);
@@ -326,13 +325,13 @@ describe('LuxButtonComponent', () => {
       fixture.detectChanges();
 
       Checker.checkLuxLoading(fixture);
-    }));
+    });
   });
 
   describe('Attribut "luxIconButton"', () => {
     let fixture: ComponentFixture<MockButtonComponent>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockButtonComponent);
       fixture.componentInstance.iconButton.set(true);
       fixture.componentInstance.raised.set(false);
@@ -340,21 +339,21 @@ describe('LuxButtonComponent', () => {
       fixture.componentInstance.flat.set(false);
       fixture.componentInstance.outlined.set(false);
       fixture.detectChanges();
-    }));
+    });
 
-    it('rendert die Icon-Button-Variante', fakeAsync(() => {
+    it('rendert die Icon-Button-Variante', async () => {
       const buttonEl = fixture.debugElement.query(By.css('button'));
       expect(buttonEl.nativeElement.classList).toContain('lux-button-icon-only');
       expect(buttonEl.nativeElement.classList).toContain('mat-mdc-icon-button');
-    }));
+    });
 
-    it('emittiert luxClicked bei Klick', fakeAsync(() => {
+    it('emittiert luxClicked bei Klick', async () => {
       Checker.checkLuxClicked(fixture);
-    }));
+    });
 
-    it('beachtet luxDisabled', fakeAsync(() => {
+    it('beachtet luxDisabled', async () => {
       Checker.checkLuxDisabled(fixture);
-    }));
+    });
   });
 
   describe('A11y', () => {
@@ -365,11 +364,11 @@ describe('LuxButtonComponent', () => {
       LuxA11yTestHelper.addA11yMatchers();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockA11yComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
     it('Button (normal) hat keine Barrierefreiheitsverletzungen', async () => {
       testComponent.raised.set(false);
@@ -476,8 +475,8 @@ class Checker {
 
   static checkLuxClicked(fixture: ComponentFixture<MockButtonComponent>) {
     // Vorbedingungen testen
-    const onClickSpy = spyOn(fixture.componentInstance, 'onClick');
-    expect(fixture.componentInstance.disabled()).toBeFalse();
+    const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClick').mockReturnValue(undefined);
+    expect(fixture.componentInstance.disabled()).toBe(false);
 
     // Änderungen durchführen
     fixture.componentInstance.disabled.set(false);
@@ -492,13 +491,12 @@ class Checker {
     expect(buttonEl.nativeElement.disabled).toBeFalsy();
     expect(buttonEl.nativeElement.getAttribute('aria-label')).toContain('Lorem ipsum 4711');
     expect(onClickSpy).toHaveBeenCalled();
-    discardPeriodicTasks();
   }
 
   static checkLuxDisabled(fixture: ComponentFixture<MockButtonComponent>) {
     // Vorbedingungen testen
-    const onClickSpy = spyOn(fixture.componentInstance, 'onClick');
-    expect(fixture.componentInstance.disabled()).toBeFalse();
+    const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClick').mockReturnValue(undefined);
+    expect(fixture.componentInstance.disabled()).toBe(false);
 
     // Änderungen durchführen
     fixture.componentInstance.disabled.set(true);
@@ -517,7 +515,7 @@ class Checker {
 
   static checkLuxLoading(fixture: ComponentFixture<MockButtonLoadingComponent>) {
     // Vorbedingungen testen
-    const onClickSpy = spyOn(fixture.componentInstance, 'onClick');
+    const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClick').mockReturnValue(undefined);
     const buttonLoadingEl = fixture.debugElement.query(By.css('lux-progress'));
     expect(buttonLoadingEl).toBeNull();
 
@@ -533,7 +531,6 @@ class Checker {
     const buttonLoadingChangeEl = fixture.debugElement.query(By.css('lux-progress'));
     expect(buttonLoadingChangeEl).not.toBeNull();
     expect(onClickSpy).toHaveBeenCalled();
-    discardPeriodicTasks();
   }
 }
 

@@ -15,8 +15,8 @@ describe('LuxRelativeTimestampPipe', () => {
   }
 
   beforeEach(() => {
-    jasmine.clock().install();
-    jasmine.clock().mockDate(fixedNow);
+    vi.useFakeTimers();
+    vi.setSystemTime(fixedNow);
 
     TestBed.configureTestingModule({
       providers: [provideLuxTranslocoTesting()]
@@ -24,7 +24,7 @@ describe('LuxRelativeTimestampPipe', () => {
   });
 
   afterEach(() => {
-    jasmine.clock().uninstall();
+    vi.useRealTimers();
   });
 
   it('create an instance', () => {

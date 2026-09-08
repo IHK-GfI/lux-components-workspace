@@ -1,45 +1,49 @@
 import { SPACE } from '@angular/cdk/keycodes';
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 
 export class LuxTestHelper {
   /**
-   * Wichtig: aus fakeAsync-Block heraus aufrufen, da hier tick() genutzt wird.
    * @param input
    * @param value
    * @param fixture
    */
-  public static setInputValue(input: any, value: any, fixture: any) {
+  public static async setInputValue(input: any, value: any, fixture: any): Promise<void> {
     if (input) {
       input.value = value;
       input.dispatchEvent(LuxTestHelper.createFakeEvent('input'));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
     } else {
       console.error('UNIT-TEST FEHLER: input ist nicht definiert.');
     }
   }
 
   /**
-   * Wichtig: aus fakeAsync-Block heraus aufrufen, da hier tick() genutzt wird.
-   * Wartet asynchrone Aufrufe ab und ruft die ChangeDetection auf
+   * Wartet asynchrone Aufrufe ab und ruft die ChangeDetection auf.
+   * `tickDuration` wird, falls angegeben, als reale Wartezeit (setTimeout) abgewartet,
+   * da ohne fakeAsync keine virtuelle Zeit vorgespult werden kann.
    * @param fixture
    * @param tickDuration
    */
-  public static wait(fixture: any, tickDuration?: number) {
+  public static async wait(fixture: any, tickDuration?: number): Promise<void> {
     fixture.detectChanges();
-    tick(tickDuration);
+    await fixture.whenStable();
+    // Immer mindestens einen echten Makrotask abwarten: manche gemockten Promises (z.B.
+    // vi.fn().mockResolvedValue()) nutzen ggf. eine von zone.js ungepatchte native Promise, auf die
+    // fixture.whenStable() nicht wartet. Ein realer setTimeout-Tick garantiert, dass solche
+    // Microtask-Ketten trotzdem durchlaufen sind, bevor es weitergeht.
+    await new Promise((resolve) => setTimeout(resolve, tickDuration ?? 0));
     fixture.detectChanges();
   }
 
   /**
-   * Wichtig: aus fakeAsync-Block heraus aufrufen, da hier tick() genutzt wird.
    * Sendet ein Klick-Event ab und wartet dann.
    * @param fixture
    * @param debugElement
    */
-  public static click(fixture: any, debugElement: DebugElement) {
+  public static async click(fixture: any, debugElement: DebugElement): Promise<void> {
     debugElement.triggerEventHandler('click', null);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
   }
 
   /**
@@ -95,20 +99,22 @@ export class LuxTestHelper {
    * @param element
    * @param callback
    */
-  public static typeInElementAsync(text: string, fixture: ComponentFixture<any>, element: HTMLInputElement, callback: () => void) {
-    fixture.whenStable().then(() => {
-      LuxTestHelper.typeInElement(element, text);
-      fixture.detectChanges();
+  public static async typeInElementAsync(
+    text: string,
+    fixture: ComponentFixture<any>,
+    element: HTMLInputElement,
+    callback: () => void | Promise<void>
+  ): Promise<void> {
+    await fixture.whenStable();
+    LuxTestHelper.typeInElement(element, text);
+    fixture.detectChanges();
 
-      fixture.whenStable().then(() => {
-        LuxTestHelper.dispatchKeyboardEvent(element, 'keydown', SPACE);
-        fixture.detectChanges();
+    await fixture.whenStable();
+    LuxTestHelper.dispatchKeyboardEvent(element, 'keydown', SPACE);
+    fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          callback();
-        });
-      });
-    });
+    await fixture.whenStable();
+    await callback();
   }
 
   /**
@@ -119,18 +125,12 @@ export class LuxTestHelper {
    * @param key
    */
   public static createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
-    const event = document.createEvent('KeyboardEvent') as any;
-    // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
-    const initEventFn = (event.initKeyEvent || event.initKeyboardEvent).bind(event);
-    const originalPreventDefault = event.preventDefault;
+    const event = new KeyboardEvent(type, { bubbles: true, cancelable: true, key });
 
-    initEventFn(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
-
-    // Webkit Browsers don't set the keyCode when calling the init function.
+    // Webkit Browsers don't set the keyCode when calling the constructor.
     // See related bug https://bugs.webkit.org/show_bug.cgi?id=16735
     Object.defineProperties(event, {
       keyCode: { get: () => keyCode },
-      key: { get: () => key },
       target: { get: () => target }
     });
 

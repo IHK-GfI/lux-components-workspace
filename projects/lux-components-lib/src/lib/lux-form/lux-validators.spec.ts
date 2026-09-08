@@ -68,37 +68,37 @@ describe('luxAtLeastOneCheckboxChecked', () => {
       { validators: luxAtLeastOneCheckboxChecked(['opt1', 'opt2']) }
     );
 
-    expect(group.valid).toBeFalse();
+    expect(group.valid).toBe(false);
 
     group.get('opt1')!.setValue(true);
     group.updateValueAndValidity();
 
-    expect(group.valid).toBeTrue();
+    expect(group.valid).toBe(true);
   });
 });
 
 describe('luxAtLeastOneChecked', () => {
   it('sollte false zurückgeben, wenn alle Werte false sind', () => {
-    expect(luxAtLeastOneChecked([false, false, false])).toBeFalse();
+    expect(luxAtLeastOneChecked([false, false, false])).toBe(false);
   });
 
   it('sollte true zurückgeben, wenn genau ein Wert true ist', () => {
-    expect(luxAtLeastOneChecked([false, true, false])).toBeTrue();
+    expect(luxAtLeastOneChecked([false, true, false])).toBe(true);
   });
 
   it('sollte true zurückgeben, wenn alle Werte true sind', () => {
-    expect(luxAtLeastOneChecked([true, true, true])).toBeTrue();
+    expect(luxAtLeastOneChecked([true, true, true])).toBe(true);
   });
 
   it('sollte false zurückgeben, wenn das Array leer ist', () => {
-    expect(luxAtLeastOneChecked([])).toBeFalse();
+    expect(luxAtLeastOneChecked([])).toBe(false);
   });
 
   it('sollte false zurückgeben, wenn nur false-Werte übergeben werden', () => {
-    expect(luxAtLeastOneChecked([false])).toBeFalse();
+    expect(luxAtLeastOneChecked([false])).toBe(false);
   });
 
   it('sollte true zurückgeben, wenn ein einzelner Wert true ist', () => {
-    expect(luxAtLeastOneChecked([true])).toBeTrue();
+    expect(luxAtLeastOneChecked([true])).toBe(true);
   });
 });

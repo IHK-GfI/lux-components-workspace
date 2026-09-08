@@ -32,9 +32,9 @@ describe('LuxSelectPanelFilterComponent', () => {
 
   function createDirectiveMock(handled: boolean): LuxSelectFilterDirective<unknown> {
     const mock: Pick<LuxSelectFilterDirective<unknown>, 'handleKeydown' | 'onFilterInput' | 'setFilterInputRef' | 'filterValue'> = {
-      handleKeydown: jasmine.createSpy('handleKeydown').and.returnValue(handled),
-      onFilterInput: jasmine.createSpy('onFilterInput'),
-      setFilterInputRef: jasmine.createSpy('setFilterInputRef'),
+      handleKeydown: vi.fn().mockName('handleKeydown').mockReturnValue(handled),
+      onFilterInput: vi.fn().mockName('onFilterInput'),
+      setFilterInputRef: vi.fn().mockName('setFilterInputRef'),
       filterValue: ''
     };
 
@@ -44,7 +44,7 @@ describe('LuxSelectPanelFilterComponent', () => {
   function createKeyboardEvent(key: string): KeyboardEvent {
     return {
       key,
-      stopPropagation: jasmine.createSpy('stopPropagation')
+      stopPropagation: vi.fn().mockName('stopPropagation')
     } as unknown as KeyboardEvent;
   }
 
@@ -86,8 +86,8 @@ describe('LuxSelectPanelFilterComponent', () => {
   });
 
   it('sollte den Filter beim Clear leeren und das Input erneut fokussieren', () => {
-    const stopPropagation = jasmine.createSpy('stopPropagation');
-    const focusSpy = spyOn(component.filterInput()!.nativeElement, 'focus');
+    const stopPropagation = vi.fn().mockName('stopPropagation');
+    const focusSpy = vi.spyOn(component.filterInput()!.nativeElement, 'focus').mockReturnValue(undefined);
 
     component.onClear({ stopPropagation } as unknown as Event);
 

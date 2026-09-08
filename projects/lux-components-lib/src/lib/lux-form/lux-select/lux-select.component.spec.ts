@@ -4,7 +4,7 @@ import { JsonPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -19,7 +19,7 @@ import { LuxSelectComponent } from './lux-select.component';
 describe('LuxSelectComponent', () => {
   let dir: any;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: Directionality, useFactory: () => (dir = { value: 'ltr' }) },
@@ -37,7 +37,7 @@ describe('LuxSelectComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   const scrolledSubject = new Subject();
 
@@ -51,25 +51,26 @@ describe('LuxSelectComponent', () => {
       testComponent = fixture.componentInstance;
     });
 
-    it('Wert über das FormControl setzen', fakeAsync(() => {
+    it('Wert über das FormControl setzen', async () => {
       fixture.detectChanges();
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
 
       expect(testComponent.formGroup.get('hobbies')!.value).toBeNull();
 
       testComponent.formGroup.get('hobbies')!.setValue([testComponent.allHobbies()[0]]);
-      tick();
+      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       expect(options[0].classList).toContain('mdc-list-item--selected');
-    }));
+    });
 
-    it('Wert über das Popup setzen', fakeAsync(() => {
+    it('Wert über das Popup setzen', async () => {
       fixture.detectChanges();
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
 
@@ -77,35 +78,37 @@ describe('LuxSelectComponent', () => {
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       (document.querySelectorAll('.mat-mdc-select-panel mat-option')[1] as HTMLElement).click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect([{ label: 'Fußball', value: 'f' }]).toEqual(testComponent.formGroup.get('hobbies')!.value as Option[]);
-    }));
+    });
 
-    it('Den Wert und die Options mit leichter Verzögerung setzen', fakeAsync(() => {
+    it('Den Wert und die Options mit leichter Verzögerung setzen', async () => {
       // Vorbedingungen testen
       const luxSelect = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance;
       const mockData = [...testComponent.allHobbies()];
 
       testComponent.allHobbies.set([]);
       testComponent.formGroup.get('hobbies')!.setValue([mockData[0]]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(luxSelect.value()).toEqual([mockData[0]]);
 
       // Änderungen durchführen
       testComponent.allHobbies.set(mockData);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(luxSelect.value()).toEqual([mockData[0]]);
-    }));
+    });
 
-    it('Sollte required sein', fakeAsync(() => {
+    it('Sollte required sein', async () => {
       fixture.detectChanges();
       // Vorbedingungen testen
       const luxSelect: LuxSelectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance;
@@ -114,15 +117,15 @@ describe('LuxSelectComponent', () => {
 
       // Änderungen durchführen
       testComponent.formGroup.get('hobbies')!.setValidators(Validators.required);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       luxSelect.formControl.markAsTouched();
       luxSelect.formControl.updateValueAndValidity();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(luxSelect.luxRequired()).toBe(true);
       expect(luxSelect.formControl.valid).toBe(false);
-    }));
+    });
   });
 
   describe('außerhalb eines Formulars', () => {
@@ -131,49 +134,51 @@ describe('LuxSelectComponent', () => {
     let select: HTMLElement;
     let trigger: HTMLElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(SelectOutsideFormComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
       select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
-    }));
+    });
 
-    it('Wert über das Property setzen', fakeAsync(() => {
+    it('Wert über das Property setzen', async () => {
       expect(fixture.componentInstance.selectedOption()).toBeNull();
 
       fixture.componentInstance.selectedOption.set(testComponent.options()[3]);
 
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const selectedOptions = Array.from(options).filter((opt) => opt.classList.contains('mdc-list-item--selected'));
       expect(selectedOptions.length).toBe(1);
       expect(selectedOptions[0].innerText.trim()).toContain('Vertretungsaufgaben');
-    }));
+    });
 
-    it('Wert über das Popup setzen', fakeAsync(() => {
+    it('Wert über das Popup setzen', async () => {
       expect(fixture.componentInstance.selectedOption()).toBeNull();
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect({ label: 'Meine Aufgaben', value: 'A' }).toEqual(fixture.componentInstance.selectedOption() as Option);
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Validators setzen und korrekte Fehlermeldung anzeigen', fakeAsync(() => {
+    it('Validators setzen und korrekte Fehlermeldung anzeigen', async () => {
       // Vorbedingungen testen
       const selectComponent: LuxSelectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance;
       let errorEl = fixture.debugElement.query(By.css('mat-error'));
@@ -181,19 +186,19 @@ describe('LuxSelectComponent', () => {
 
       // Änderungen durchführen
       testComponent.validators.set(Validators.required);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       selectComponent.formControl.markAsTouched();
       selectComponent.formControl.updateValueAndValidity();
-      LuxTestHelper.wait(fixture, 100);
+      await LuxTestHelper.wait(fixture, 100);
 
       // Nachbedingungen testen
       errorEl = fixture.debugElement.query(By.css('mat-error'));
       expect(errorEl.nativeElement.innerText.trim().length).toBeGreaterThan(0);
       expect(errorEl.nativeElement.innerText.trim()).toEqual('* Pflichtfeld');
       expect(selectComponent.formControl.valid).toBeFalsy();
-    }));
+    });
 
-    it('Array als Value', fakeAsync(() => {
+    it('Array als Value', async () => {
       // Vorbedingungen testen
       testComponent.options.set([
         { label: '0', value: ['0', '1', '2'] },
@@ -202,42 +207,44 @@ describe('LuxSelectComponent', () => {
         { label: '3', value: ['9', '10', '11'] }
       ] as any);
       testComponent.selectedOption.set(null);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(testComponent.select().value()).toBeNull();
 
       // Änderungen durchführen
       testComponent.selectedOption.set(testComponent.options()[1]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(testComponent.select().value()).toEqual(testComponent.options()[1]);
 
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('Kein initiales Change-Event ausgeben', fakeAsync(() => {
+    it('Kein initiales Change-Event ausgeben', async () => {
       // Vorbedingungen testen.
       // Die Component muss neu initialisiert werden.
       fixture = TestBed.createComponent(SelectOutsideFormComponent);
       testComponent = fixture.componentInstance;
       const selectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance;
-      const changeEventSpy = spyOn(selectComponent.luxSelectedChange, 'emit');
+      const changeEventSpy = vi.spyOn(selectComponent.luxSelectedChange, 'emit').mockReturnValue(undefined);
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(changeEventSpy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
       testComponent.selectedOption.set(testComponent.options()[0]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(changeEventSpy).toHaveBeenCalledTimes(1);
 
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('aktualisiert renderOptionIndexes bei asynchron geänderten Optionen', fakeAsync(() => {
+    it('aktualisiert renderOptionIndexes bei asynchron geänderten Optionen', async () => {
       const selectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance as LuxSelectComponent;
 
       testComponent.options.set([
@@ -246,22 +253,24 @@ describe('LuxSelectComponent', () => {
       ]);
       testComponent.selectedOption.set(testComponent.options()[1]);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(selectComponent.renderOptionIndexes()).toEqual([1, 0]);
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       expect(options.length).toBe(2);
       const selectedOptions = Array.from(options).filter((opt) => opt.classList.contains('mdc-list-item--selected'));
       expect(selectedOptions.length).toBe(1);
       expect(selectedOptions[0].innerText.trim()).toContain('Neue Aufgabe B');
-    }));
+    });
 
-    it('Sollte required sein', fakeAsync(() => {
+    it('Sollte required sein', async () => {
       // Vorbedingungen testen
       const luxInput: LuxSelectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance;
       let selectRequired = fixture.debugElement.query(By.css('.mat-mdc-select-required'));
@@ -269,7 +278,7 @@ describe('LuxSelectComponent', () => {
 
       // Änderungen durchführen
       testComponent.required.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       selectRequired = fixture.debugElement.query(By.css('.mat-mdc-select-required'));
@@ -278,83 +287,83 @@ describe('LuxSelectComponent', () => {
       // Änderungen durchführen
       luxInput.formControl.markAsTouched();
       luxInput.formControl.updateValueAndValidity();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(luxInput.formControl.valid).toBe(false);
       expect(luxInput.formControl.errors).not.toBeNull();
       expect(luxInput.formControl.errors!['required']).toBe(true);
-    }));
+    });
 
-    it('Sollte readonly sein', fakeAsync(() => {
+    it('Sollte readonly sein', async () => {
       // Vorbedingungen testen
       let readonlySelect = fixture.debugElement.query(By.css('lux-select .lux-form-control-readonly-authentic'));
       expect(readonlySelect).toBeNull();
 
       // Änderungen durchführen
       testComponent.readonly.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       readonlySelect = fixture.debugElement.query(By.css('lux-select .lux-form-control-readonly-authentic'));
       expect(readonlySelect).not.toBeNull();
-    }));
+    });
 
-    it('Sollte disabled sein', fakeAsync(() => {
+    it('Sollte disabled sein', async () => {
       // Vorbedingungen testen
       let disabledSelect = fixture.debugElement.query(By.css('lux-select .lux-form-control-disabled-authentic'));
       expect(disabledSelect).toBeNull();
 
       // Änderungen durchführen
       testComponent.disabled.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       disabledSelect = fixture.debugElement.query(By.css('lux-select .lux-form-control-disabled-authentic'));
       expect(disabledSelect).not.toBeNull();
-    }));
+    });
 
-    it('Sollte das Label darstellen', fakeAsync(() => {
+    it('Sollte das Label darstellen', async () => {
       // Vorbedingungen testen
       let label = fixture.debugElement.query(By.css('.lux-label-authentic'));
       expect(label.nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
       testComponent.label.set('Label');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       label = fixture.debugElement.query(By.css('.lux-label-authentic'));
       expect(label.nativeElement.textContent.trim()).toEqual('Label');
-    }));
+    });
 
-    it('Sollte den Placeholder darstellen', fakeAsync(() => {
+    it('Sollte den Placeholder darstellen', async () => {
       // Vorbedingungen testen
       let placeholder = fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'));
       expect(placeholder.nativeElement.textContent.trim()).toEqual('');
 
       // Änderungen durchführen
       testComponent.placeholder.set('Placeholder');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       placeholder = fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'));
       expect(placeholder.nativeElement.textContent.trim()).toEqual('Placeholder');
-    }));
+    });
 
-    it('Sollte den Hint darstellen', fakeAsync(() => {
+    it('Sollte den Hint darstellen', async () => {
       // Vorbedingungen testen
       let hint = fixture.debugElement.query(By.css('mat-hint'));
       expect(hint).toBeNull();
 
       // Änderungen durchführen
       testComponent.hint.set('Hint');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       hint = fixture.debugElement.query(By.css('mat-hint'));
       expect(hint.nativeElement.textContent.trim()).toEqual('Hint');
-    }));
+    });
   });
 
   describe('Custom Compare', () => {
@@ -363,31 +372,32 @@ describe('LuxSelectComponent', () => {
     let select: HTMLElement;
     let trigger: HTMLElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(SelectCustomCompareComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
       select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
-    }));
+    });
 
-    it('Objekte anhand der Values vergleichen', fakeAsync(() => {
+    it('Objekte anhand der Values vergleichen', async () => {
       expect(fixture.componentInstance.selectedOption()).toBeNull();
 
       fixture.componentInstance.selectedOption.set({ absoluteNeueProperty: 'mock', value: 'D' });
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const selectedOptions = Array.from(options).filter((opt) => opt.classList.contains('mdc-list-item--selected'));
       expect(selectedOptions.length).toBe(1);
       expect(selectedOptions[0].innerText.trim()).toContain('Vertretungsaufgaben');
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('mit simplem Daten-Array', () => {
@@ -396,48 +406,52 @@ describe('LuxSelectComponent', () => {
     let select: HTMLElement;
     let trigger: HTMLElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(SelectStringArrayComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
       select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
-    }));
+    });
 
-    it('Wert über das Property setzen', fakeAsync(() => {
+    it('Wert über das Property setzen', async () => {
       expect(fixture.componentInstance.selectedOption()).toBeNull();
 
       fixture.componentInstance.selectedOption.set(testComponent.options()[3]);
 
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       trigger.click();
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture, 500);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const selectedOptions = Array.from(options).filter((opt) => opt.classList.contains('mdc-list-item--selected'));
       expect(selectedOptions.length).toBe(1);
       expect(selectedOptions[0].innerText.trim()).toContain('D');
-    }));
+    });
 
-    it('Wert über das Popup setzen', fakeAsync(() => {
+    it('Wert über das Popup setzen', async () => {
       expect(fixture.componentInstance.selectedOption()).toBeNull();
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       (document.querySelector('.mat-mdc-select-panel mat-option') as HTMLElement).click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect('A').toEqual(fixture.componentInstance.selectedOption());
-    }));
+    });
 
-    it('Array als Value', fakeAsync(() => {
+    it('Array als Value', async () => {
       // Vorbedingungen testen
       testComponent.options.set([
         ['0', '1', '2'],
@@ -446,37 +460,40 @@ describe('LuxSelectComponent', () => {
         ['9', '10', '11']
       ] as any);
       testComponent.selectedOption.set(undefined);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(testComponent.select().value()).toBeUndefined();
 
       // Änderungen durchführen
       testComponent.selectedOption.set(testComponent.options()[1]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(testComponent.select().value()).toEqual(testComponent.options()[1]);
 
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('Sollte null, undefined und "" fehlerfrei als leeren String darstellen und die Werte emitten', fakeAsync(() => {
-      const clickTrigger = () => {
+    it('Sollte null, undefined und "" fehlerfrei als leeren String darstellen und die Werte emitten', async () => {
+      const clickTrigger = async () => {
         trigger.click();
-        LuxTestHelper.wait(fixture, 500);
-        flush();
+        await LuxTestHelper.wait(fixture, 500);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
       };
 
-      const clickOption = (i: number) => {
+      const clickOption = async (i: number) => {
         options.item(i).click();
-        LuxTestHelper.wait(fixture, 500);
-        flush();
+        await LuxTestHelper.wait(fixture, 500);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
       };
 
       // Vorbedingungen testen
       testComponent.options.set([null, undefined, '', ...testComponent.options()]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
-      clickTrigger();
+      await clickTrigger();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
 
@@ -490,7 +507,7 @@ describe('LuxSelectComponent', () => {
       expect(options.item(6).innerText.trim()).toEqual('D');
 
       // Änderungen durchführen
-      clickOption(0);
+      await clickOption(0);
 
       // Nachbedingungen prüfen
       expect(testComponent.selectedOption()).toBeNull();
@@ -498,8 +515,8 @@ describe('LuxSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).not.toBeNull();
 
       // Änderungen durchführen
-      clickTrigger();
-      clickOption(2);
+      await clickTrigger();
+      await clickOption(2);
 
       // Nachbedingungen prüfen
       expect(testComponent.selectedOption()).toBe('');
@@ -507,8 +524,8 @@ describe('LuxSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).toBeNull();
 
       // Änderungen durchführen
-      clickTrigger();
-      clickOption(1);
+      await clickTrigger();
+      await clickOption(1);
 
       // Nachbedingungen prüfen
       expect(testComponent.selectedOption()).toBeUndefined();
@@ -516,14 +533,14 @@ describe('LuxSelectComponent', () => {
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).not.toBeNull();
 
       // Änderungen durchführen
-      clickTrigger();
-      clickOption(3);
+      await clickTrigger();
+      await clickOption(3);
 
       // Nachbedingungen prüfen
       expect(testComponent.selectedOption()).toBe('A');
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-value-text'))).not.toBeNull();
       expect(fixture.debugElement.query(By.css('.mat-mdc-select-placeholder'))).toBeNull();
-    }));
+    });
   });
 
   describe('mit einer gesetzten Value-Hook (ohne Formular)', () => {
@@ -532,22 +549,23 @@ describe('LuxSelectComponent', () => {
     let select: HTMLElement;
     let trigger: HTMLElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(SelectValueHookComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
       select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
-    }));
+    });
 
-    it('nur Werte und keine Objekte emitten', fakeAsync(() => {
+    it('nur Werte und keine Objekte emitten', async () => {
       // Vorbedingungen testen
       testComponent.selectedOption.set(testComponent.options()[1]);
       expect(testComponent.selectedOption()).toEqual(testComponent.options()[1]);
 
       // Änderungen durchführen
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(testComponent.selectedOption()).toEqual('B');
@@ -555,13 +573,14 @@ describe('LuxSelectComponent', () => {
       // Änderungen durchführen
       testComponent.selectedOption.set(testComponent.options()[2]);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(testComponent.selectedOption()).toEqual('C');
-    }));
+    });
 
-    it('Array als Value', fakeAsync(() => {
+    it('Array als Value', async () => {
       // Vorbedingungen testen
       testComponent.options.set([
         { label: '0', value: ['0', '1', '2'] },
@@ -570,17 +589,18 @@ describe('LuxSelectComponent', () => {
         { label: '3', value: ['9', '10', '11'] }
       ] as any);
       testComponent.selectedOption.set(undefined);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(testComponent.select().value()).toBeUndefined();
 
       // Änderungen durchführen
       testComponent.selectedOption.set(testComponent.options()[1]);
-      LuxTestHelper.wait(fixture);
-      flush();
+      await LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(testComponent.select().value()).toEqual(testComponent.options()[1].value);
-    }));
+    });
   });
 
   describe('mit einer gesetzten Value-Hook (in einem Formular)', () => {
@@ -589,32 +609,34 @@ describe('LuxSelectComponent', () => {
     let select: HTMLElement;
     let trigger: HTMLElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(SelectValueHookFormComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
       select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
-    }));
+    });
 
-    it('nur Werte und keine Objekte emitten', fakeAsync(() => {
+    it('nur Werte und keine Objekte emitten', async () => {
       // Vorbedingungen testen
       testComponent.formGroup.get('hobbies')!.setValue(testComponent.options[1]);
       // Änderungen durchführen
-      LuxTestHelper.wait(fixture);
-      flush();
+      await LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(testComponent.formGroup.value.hobbies).toEqual('B');
 
       // Änderungen durchführen
       testComponent.formGroup.get('hobbies')!.setValue(testComponent.options[2]);
-      LuxTestHelper.wait(fixture);
-      flush();
+      await LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(testComponent.formGroup.value.hobbies).toEqual('C');
-    }));
+    });
   });
 
   describe('als Multiselect', () => {
@@ -623,60 +645,62 @@ describe('LuxSelectComponent', () => {
     let select: HTMLElement;
     let trigger: HTMLElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(SelectMultipleComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
       select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
-    }));
+    });
 
-    it('Sollte mehrere Werte selektieren können (über PopUp)', fakeAsync(() => {
+    it('Sollte mehrere Werte selektieren können (über PopUp)', async () => {
       // Vorbedingungen testen
       expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       (options[0] as HTMLElement).click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       (options[1] as HTMLElement).click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
       expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[0].label + ', ' + testComponent.options()[1].label);
       expect([testComponent.options()[0], testComponent.options()[1]]).toEqual(fixture.componentInstance.selectedOptions() as any);
-      discardPeriodicTasks();
-    }));
+    });
 
-    it('Sollte mehrere Werte selektieren können (über Value)', fakeAsync(() => {
+    it('Sollte mehrere Werte selektieren können (über Value)', async () => {
       // Vorbedingungen testen
       const luxSelect: LuxSelectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance;
       expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
       testComponent.selectedOptions.set([testComponent.options()[0], testComponent.options()[1]]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
       expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[0].label + ', ' + testComponent.options()[1].label);
       expect(luxSelect.value()).toEqual([testComponent.options()[0], testComponent.options()[1]]);
-      discardPeriodicTasks();
-    }));
+    });
 
-    it('Sollte mehrere Werte selektieren können (mit ValueHook)', fakeAsync(() => {
+    it('Sollte mehrere Werte selektieren können (mit ValueHook)', async () => {
       const pickFixture: ComponentFixture<SelectMultiplePickValueFnComponent> = TestBed.createComponent(SelectMultiplePickValueFnComponent);
       const pickComponent: SelectMultiplePickValueFnComponent = pickFixture.componentInstance;
       pickFixture.detectChanges();
@@ -687,48 +711,45 @@ describe('LuxSelectComponent', () => {
 
       // Änderungen durchführen
       pickComponent.hook.set((option: Option) => option.value);
-      LuxTestHelper.wait(pickFixture);
+      await LuxTestHelper.wait(pickFixture);
       pickComponent.selectedOptions.set([pickComponent.options[0].value, pickComponent.options[1].value]);
-      LuxTestHelper.wait(pickFixture);
+      await LuxTestHelper.wait(pickFixture);
 
       // Nachbedingungen prüfen
       const selectText = pickFixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
       expect(selectText.nativeElement.textContent).toEqual(pickComponent.options[0].label + ', ' + pickComponent.options[1].label);
       expect(luxSelect.value()).toEqual([pickComponent.options[0].value, pickComponent.options[1].value]);
-      discardPeriodicTasks();
-    }));
+    });
 
-    it('Sollte mehrere Werte selektieren können (mit String-Options)', fakeAsync(() => {
+    it('Sollte mehrere Werte selektieren können (mit String-Options)', async () => {
       // Vorbedingungen testen
       const luxSelect: LuxSelectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance;
       expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
       testComponent.options.set(['A', 'B', 'C', 'D'] as any);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       testComponent.selectedOptions.set([testComponent.options()[0], testComponent.options()[1]]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
       expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[0] + ', ' + testComponent.options()[1]);
       expect(luxSelect.value()).toEqual([testComponent.options()[0], testComponent.options()[1]]);
-      discardPeriodicTasks();
-    }));
+    });
 
-    it('Sollte falsche Werte auslassen und einen Fehler loggen', fakeAsync(() => {
+    it('Sollte falsche Werte auslassen und einen Fehler loggen', async () => {
       // Vorbedingungen testen
       expect(testComponent.selectedOptions()).toEqual([]);
 
       // Änderungen durchführen
       testComponent.selectedOptions.set([{ value: 'WRONG', label: 'WRONG' }, testComponent.options()[1]]);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       const selectText = fixture.debugElement.query(By.css('.mat-mdc-select-value-text > span'));
       expect(selectText.nativeElement.textContent).toEqual(testComponent.options()[1].label);
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('Darstellung über Ng-Template', () => {
@@ -737,15 +758,15 @@ describe('LuxSelectComponent', () => {
     let select: HTMLElement;
     let trigger: HTMLElement;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(SelectWithTemplateComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
       trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
       select = fixture.debugElement.query(By.css('mat-select')).nativeElement;
-    }));
+    });
 
-    it('Sollte die Options richtig darstellen', fakeAsync(() => {
+    it('Sollte die Options richtig darstellen', async () => {
       // Vorbedingungen testen
       let optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(0);
@@ -753,7 +774,8 @@ describe('LuxSelectComponent', () => {
       // Änderungen durchführen
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
@@ -762,20 +784,21 @@ describe('LuxSelectComponent', () => {
       expect(optionTexts[1].textContent!.trim()).toEqual('Option: B');
       expect(optionTexts[2].textContent!.trim()).toEqual('Option: C');
       expect(optionTexts[3].textContent!.trim()).toEqual('Option: D');
-    }));
+    });
 
-    it('Sollte ngTemplate luxOptionLabelProp vorziehen', fakeAsync(() => {
+    it('Sollte ngTemplate luxOptionLabelProp vorziehen', async () => {
       // Vorbedingungen testen
       let optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
       expect(optionTexts.length).toBe(0);
 
       // Änderungen durchführen
       testComponent.labelProp.set('label');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       optionTexts = document.querySelectorAll('.mat-mdc-select-panel .mdc-list-item__primary-text');
@@ -784,11 +807,11 @@ describe('LuxSelectComponent', () => {
       expect(optionTexts[1].textContent!.trim()).toEqual('Option: B');
       expect(optionTexts[2].textContent!.trim()).toEqual('Option: C');
       expect(optionTexts[3].textContent!.trim()).toEqual('Option: D');
-    }));
+    });
   });
 
   describe('Reihenfolge selektierter Optionen', () => {
-    it('ordnet selektierte Optionen im Single-Select nach oben (stabil)', fakeAsync(() => {
+    it('ordnet selektierte Optionen im Single-Select nach oben (stabil)', async () => {
       const fixture = TestBed.createComponent(SelectOutsideFormComponent);
       fixture.detectChanges();
 
@@ -797,7 +820,8 @@ describe('LuxSelectComponent', () => {
       // Öffnen und Option C auswählen.
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const optionTexts = Array.from(options).map((opt) => opt.innerText.trim());
@@ -807,33 +831,36 @@ describe('LuxSelectComponent', () => {
 
       (optionC as HTMLElement).click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Panel erneut öffnen und Reihenfolge prüfen: C muss oben stehen.
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const optionsAfter = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
       const selectedOptions = optionsAfter.filter((opt) => opt.classList.contains('mdc-list-item--selected'));
       expect(selectedOptions.length).toBe(1);
       expect(selectedOptions[0].innerText.trim()).toContain('Zurückgestellte Aufgaben');
-    }));
+    });
 
-    it('behält im Multiselect die stabile Ursprungsreihenfolge bei', fakeAsync(() => {
+    it('behält im Multiselect die stabile Ursprungsreihenfolge bei', async () => {
       const fixture = TestBed.createComponent(SelectInsideFormComponent);
       const component = fixture.componentInstance;
       fixture.detectChanges();
 
       // Auswahl in umgekehrter Reihenfolge setzen: Stricken (idx 3) + Fußball (idx 1)
       component.formGroup.get('hobbies')!.setValue([component.allHobbies()[3], component.allHobbies()[1]]);
-      tick();
+      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const optionTexts = Array.from(
         document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>
@@ -843,9 +870,9 @@ describe('LuxSelectComponent', () => {
       expect(optionTexts[1]).toBe('Fußball');
       expect(optionTexts[2]).toBe('Handball');
       expect(optionTexts[3]).toBe('Stricken');
-    }));
+    });
 
-    it('behält bei aktivem luxKeepOptionOrder die Ursprungsreihenfolge (renderOptionIndexes)', fakeAsync(() => {
+    it('behält bei aktivem luxKeepOptionOrder die Ursprungsreihenfolge (renderOptionIndexes)', async () => {
       // Vorbedingungen testen
       const fixture = TestBed.createComponent(SelectKeepOptionOrderComponent);
       const testComponent = fixture.componentInstance;
@@ -857,27 +884,31 @@ describe('LuxSelectComponent', () => {
       // Änderungen durchführen: mittlere Option selektieren
       testComponent.selectedOption.set(testComponent.options[2]);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen: Reihenfolge bleibt stabil (kein Sortieren nach oben)
       expect(selectComponent.renderOptionIndexes()).toEqual([0, 1, 2, 3]);
 
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('lässt bei aktivem luxKeepOptionOrder die selektierte Option nicht nach oben wandern', fakeAsync(() => {
+    it('lässt bei aktivem luxKeepOptionOrder die selektierte Option nicht nach oben wandern', async () => {
       // Vorbedingungen testen
       const fixture = TestBed.createComponent(SelectKeepOptionOrderComponent);
       const testComponent = fixture.componentInstance;
       testComponent.selectedOption.set(testComponent.options[2]);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Änderungen durchführen: Panel öffnen
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen: gerenderte Reihenfolge entspricht der Ursprungsreihenfolge
       const optionTexts = Array.from(
@@ -892,19 +923,21 @@ describe('LuxSelectComponent', () => {
       expect(selectedOptions.length).toBe(1);
       expect(selectedOptions[0].innerText.trim()).toContain('Zurückgestellte Aufgaben');
 
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
   });
 
   describe('mit aktivierter Filterfunktion', () => {
-    it('verwendet ng-template trotz gesetztem luxOptionLabelProp und filtert weiterhin korrekt', fakeAsync(() => {
+    it('verwendet ng-template trotz gesetztem luxOptionLabelProp und filtert weiterhin korrekt', async () => {
       const fixture = TestBed.createComponent(SelectFilterWithTemplateComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const optionTexts = Array.from(
         document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>
@@ -917,35 +950,38 @@ describe('LuxSelectComponent', () => {
       filterInput.value = 'gruppe';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       expect(visibleOptions.length).toBe(1);
       expect(visibleOptions[0].innerText.trim()).toContain('OptionTpl: Gruppenaufgaben');
-    }));
+    });
 
-    it('rendert das Filterfeld nicht als deaktivierte mat-option', fakeAsync(() => {
+    it('rendert das Filterfeld nicht als deaktivierte mat-option', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(document.querySelector('.mat-mdc-select-panel mat-option.lux-select-panel-filter-option')).toBeNull();
       expect(document.querySelector('lux-select-panel-filter')).not.toBeNull();
-    }));
+    });
 
-    it('reicht placeholder, filterValue und clearAriaLabel an das Filterfeld durch', fakeAsync(() => {
+    it('reicht placeholder, filterValue und clearAriaLabel an das Filterfeld durch', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('input.lux-select-panel-filter-input') as HTMLInputElement;
       expect(filterInput).toBeTruthy();
@@ -955,30 +991,32 @@ describe('LuxSelectComponent', () => {
       const clearBtn = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
       expect(clearBtn).toBeTruthy();
       expect(clearBtn.getAttribute('aria-label')).toBe('Filter leeren');
-    }));
+    });
 
-    it('reduziert die Optionsliste anhand des Suchtexts', fakeAsync(() => {
+    it('reduziert die Optionsliste anhand des Suchtexts', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'gru';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       expect(visibleOptions.length).toBe(1);
       expect(visibleOptions[0].innerText.trim()).toContain('Gruppenaufgaben');
-    }));
+    });
 
-    it('navigiert mit Pfeiltasten fortlaufend über gefilterte Optionen', fakeAsync(() => {
+    it('navigiert mit Pfeiltasten fortlaufend über gefilterte Optionen', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
@@ -987,25 +1025,28 @@ describe('LuxSelectComponent', () => {
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Pfeiltasten werden über das Filterfeld an den MatSelect-KeyManager weitergereicht.
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const activeItem = (luxSelect.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.value).toBe('B');
-    }));
+    });
 
-    it('stoppt mit Pfeiltasten an der letzten gefilterten Option', fakeAsync(() => {
+    it('stoppt mit Pfeiltasten an der letzten gefilterten Option', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
@@ -1014,25 +1055,28 @@ describe('LuxSelectComponent', () => {
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       for (let i = 0; i < 5; i++) {
         LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       }
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const activeItem = (luxSelect.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.value).toBe('D');
-    }));
+    });
 
-    it('navigiert mit PageUp und PageDown über sichtbare Optionen', fakeAsync(() => {
+    it('navigiert mit PageUp und PageDown über sichtbare Optionen', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
@@ -1041,30 +1085,50 @@ describe('LuxSelectComponent', () => {
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = '';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
-      let keyManager = (luxSelect.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      let keyManager = (
+        luxSelect.matSelect() as unknown as {
+          _keyManager?: {
+            activeItem?: {
+              value?: Option;
+            };
+          };
+        }
+      )._keyManager;
       expect(keyManager?.activeItem?.value?.value).toBe('D');
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'PageUp', bubbles: true }));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
-      keyManager = (luxSelect.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      keyManager = (
+        luxSelect.matSelect() as unknown as {
+          _keyManager?: {
+            activeItem?: {
+              value?: Option;
+            };
+          };
+        }
+      )._keyManager;
       expect(keyManager?.activeItem?.value?.value).toBe('A');
-    }));
+    });
 
-    it('navigiert mit Home und End zur ersten bzw. letzten sichtbaren Option', fakeAsync(() => {
+    it('navigiert mit Home und End zur ersten bzw. letzten sichtbaren Option', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
@@ -1073,30 +1137,50 @@ describe('LuxSelectComponent', () => {
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = '';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
-      let keyManager = (luxSelect.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      let keyManager = (
+        luxSelect.matSelect() as unknown as {
+          _keyManager?: {
+            activeItem?: {
+              value?: Option;
+            };
+          };
+        }
+      )._keyManager;
       expect(keyManager?.activeItem?.value?.value).toBe('D');
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
-      keyManager = (luxSelect.matSelect() as unknown as { _keyManager?: { activeItem?: { value?: Option } } })._keyManager;
+      keyManager = (
+        luxSelect.matSelect() as unknown as {
+          _keyManager?: {
+            activeItem?: {
+              value?: Option;
+            };
+          };
+        }
+      )._keyManager;
       expect(keyManager?.activeItem?.value?.value).toBe('A');
-    }));
+    });
 
-    it('schließt im Single-Select bei Enter auf aktiver Option und erlaubt erneute Arrow-Navigation', fakeAsync(() => {
+    it('schließt im Single-Select bei Enter auf aktiver Option und erlaubt erneute Arrow-Navigation', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       const component = fixture.componentInstance;
       fixture.detectChanges();
@@ -1106,31 +1190,36 @@ describe('LuxSelectComponent', () => {
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const activeBeforeEnter = (luxSelect.matSelect() as any)?._keyManager?.activeItem;
       const activeElement = document.activeElement as HTMLElement;
       LuxTestHelper.dispatchEvent(activeElement, LuxTestHelper.createKeyboardEvent('keydown', 13, activeElement, 'Enter'));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(activeBeforeEnter).toBeTruthy();
-      expect(luxSelect.matSelect()?.panelOpen).toBeFalse();
+      expect(luxSelect.matSelect()?.panelOpen).toBe(false);
       expect(component.selectedOption).toBeTruthy();
 
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInputAfterReopen = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInputAfterReopen.value = 'aufgaben';
@@ -1140,13 +1229,14 @@ describe('LuxSelectComponent', () => {
         LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown')
       );
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const activeAfterReopen = (luxSelect.matSelect() as any)?._keyManager?.activeItem;
       expect(activeAfterReopen).toBeTruthy();
-    }));
+    });
 
-    it('funktioniert mit Filterung und Auswahl kombiniert', fakeAsync(() => {
+    it('funktioniert mit Filterung und Auswahl kombiniert', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       const component = fixture.componentInstance;
       fixture.detectChanges();
@@ -1154,73 +1244,82 @@ describe('LuxSelectComponent', () => {
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'zur';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       expect(visibleOptions.length).toBe(1);
       visibleOptions[0].click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(component.selectedOption?.value).toBe('C');
-    }));
+    });
 
-    it('zeigt wieder alle Optionen bei leerem Suchfeld', fakeAsync(() => {
+    it('zeigt wieder alle Optionen bei leerem Suchfeld', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'ver';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       filterInput.value = '';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = fixture.nativeElement.querySelectorAll('mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
       expect(options.length).toBe(4);
-    }));
+    });
 
-    it('leert den Filter per Clear-Button', fakeAsync(() => {
+    it('leert den Filter per Clear-Button', async () => {
       const fixture = TestBed.createComponent(SelectFilterComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'gru';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const clearButton = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
       clearButton.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option .mdc-list-item__primary-text') as NodeListOf<HTMLElement>;
       expect(options.length).toBe(4);
-    }));
+    });
 
-    it('funktioniert in Reactive Forms', fakeAsync(() => {
+    it('funktioniert in Reactive Forms', async () => {
       const fixture = TestBed.createComponent(SelectFilterReactiveFormComponent);
       const component = fixture.componentInstance;
       fixture.detectChanges();
@@ -1228,25 +1327,28 @@ describe('LuxSelectComponent', () => {
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'vert';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       expect(visibleOptions.length).toBe(1);
       visibleOptions[0].click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(component.formGroup.get('task')?.value?.value).toBe('D');
-    }));
+    });
 
-    it('funktioniert im Multiselect', fakeAsync(() => {
+    it('funktioniert im Multiselect', async () => {
       const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
       const component = fixture.componentInstance;
       fixture.detectChanges();
@@ -1254,20 +1356,23 @@ describe('LuxSelectComponent', () => {
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       expect(visibleOptions.length).toBeGreaterThan(0);
       visibleOptions[0].click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(document.activeElement).toBe(filterInput);
 
@@ -1276,29 +1381,32 @@ describe('LuxSelectComponent', () => {
       filterInput.value = 'gruppe';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options2 = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions2 = Array.from(options2).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       expect(visibleOptions2.length).toBe(1);
       visibleOptions2[0].click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(document.activeElement).toBe(filterInput);
       expect(component.selectedOptions.length).toBe(2);
       expect(component.selectedOptions[0].value).toBe('A');
       expect(component.selectedOptions[1].value).toBe('B');
-    }));
+    });
 
-    it('sortiert im geöffneten Multiselect nicht sofort nach Auswahl', fakeAsync(() => {
+    it('sortiert im geöffneten Multiselect nicht sofort nach Auswahl', async () => {
       const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       let options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
       let visibleOptions = options.filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -1308,27 +1416,30 @@ describe('LuxSelectComponent', () => {
       expect(gruppenOption).toBeTruthy();
       (gruppenOption as HTMLElement).click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
       visibleOptions = options.filter((opt) => window.getComputedStyle(opt).display !== 'none');
       expect(visibleOptions[0].innerText.trim()).toContain('Meine Aufgaben');
-    }));
+    });
 
-    it('hält im gefilterten Multiselect die Arrow-Navigation auf sichtbaren Optionen', fakeAsync(() => {
+    it('hält im gefilterten Multiselect die Arrow-Navigation auf sichtbaren Optionen', async () => {
       const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'gruppe';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -1338,45 +1449,50 @@ describe('LuxSelectComponent', () => {
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const luxSelect = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance as LuxSelectComponent;
       const activeItem = (luxSelect.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.value).toBe('B');
-    }));
+    });
 
-    it('hält im gefilterten Multiselect nach Arrow den Fokus im Filter-Input', fakeAsync(() => {
+    it('hält im gefilterten Multiselect nach Arrow den Fokus im Filter-Input', async () => {
       const fixture = TestBed.createComponent(SelectFilterMultipleComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'aufgaben';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       expect(document.activeElement).toBe(filterInput);
-    }));
+    });
   });
 
   describe('mit konfigurierter sichtbarer Optionsanzahl', () => {
-    it('begrenzt die Panelhöhe auf die konfigurierte Anzahl sichtbarer Optionen', fakeAsync(() => {
+    it('begrenzt die Panelhöhe auf die konfigurierte Anzahl sichtbarer Optionen', async () => {
       const fixture = TestBed.createComponent(SelectVisibleOptionCountComponent);
       fixture.detectChanges();
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       const panel = document.querySelector('.mat-mdc-select-panel') as HTMLElement;
       const options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
@@ -1384,7 +1500,7 @@ describe('LuxSelectComponent', () => {
       const maxHeight = parseFloat(panel.style.maxHeight);
 
       expect(maxHeight).toBeCloseTo(optionHeight * 2, 0);
-    }));
+    });
   });
 
   describe('A11y', () => {
@@ -1395,12 +1511,11 @@ describe('LuxSelectComponent', () => {
       LuxA11yTestHelper.addA11yMatchers();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxSelectA11yComponent);
       testComponent = fixture.componentInstance;
       fixture.detectChanges();
-      discardPeriodicTasks();
-    }));
+    });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
       fixture.detectChanges();
@@ -1487,15 +1602,15 @@ class SelectInsideFormComponent {
 class SelectOutsideFormComponent {
   readonly select = viewChild.required(LuxSelectComponent);
 
-  label = signal<string | undefined>(undefined);
-  hint = signal<string | undefined>(undefined);
-  readonly = signal<boolean | undefined>(undefined);
-  disabled = signal<boolean | undefined>(undefined);
-  placeholder = signal<string | undefined>(undefined);
+  label = signal('');
+  hint = signal('');
+  readonly = signal(false);
+  disabled = signal(false);
+  placeholder = signal('');
 
   selectedOption = signal<Option | null>(null);
   validators = signal<LuxPickValueFnType | undefined>(undefined);
-  required = signal<boolean | undefined>(undefined);
+  required = signal(false);
 
   options = signal([
     { label: 'Meine Aufgaben', value: 'A' },

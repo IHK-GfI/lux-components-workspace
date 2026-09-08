@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
@@ -23,7 +23,7 @@ import { LuxToggleComponent } from '../../lux-form/lux-toggle/lux-toggle.compone
 import { LuxAutofocusDirective } from './lux-autofocus.directive';
 
 describe('LuxAutofocusDirective', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxComponentsConfigService,
@@ -32,157 +32,172 @@ describe('LuxAutofocusDirective', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
-  it('Sollte mit lux-input-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-input-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusInputComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-autocomplete-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-autocomplete-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusAutoCompleteComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-checkbox-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-checkbox-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusCheckboxComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-chips-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-chips-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusChipsComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-datepicker-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-datepicker-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusDatePickerComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-timepicker funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-timepicker funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusTimepickerComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-dateptimeicker-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-dateptimeicker-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusDateTimePickerComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-file-input-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-file-input-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusFileInputComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-radio-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-radio-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusRadioComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-select-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-select-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusSelectComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('mat-select')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('mat-select')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('mat-select')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-textarea-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-textarea-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusTextAreaComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('textarea')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('textarea')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('textarea')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-toggle-ac funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-toggle-ac funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusToggleComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('button')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('button')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('button')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-button funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-button funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusButtonComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('button')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('button')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('button')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-file-list funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-file-list funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusFileListComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('lux-card.lux-file-list')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('lux-card.lux-file-list')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('lux-card.lux-file-list')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte mit lux-file-upload funktionieren', fakeAsync(() => {
+  it('Sollte mit lux-file-upload funktionieren', async () => {
     const fixture = TestBed.createComponent(LuxAutoFocusFileUploadComponent);
     fixture.detectChanges();
-    spyOn(fixture.debugElement.query(By.css('div.lux-file-upload-drop-container')).nativeElement, 'focus');
+    vi.spyOn(fixture.debugElement.query(By.css('div.lux-file-upload-drop-container')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('div.lux-file-upload-drop-container')).nativeElement.focus).toHaveBeenCalled();
-  }));
+  });
 });
 
 @Component({
@@ -255,7 +270,11 @@ class LuxAutoFocusFileInputComponent {}
   imports: [LuxRadioComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusRadioComponent {
-  options: { label: string; value: string; disabled?: boolean }[] = [
+  options: {
+    label: string;
+    value: string;
+    disabled?: boolean;
+  }[] = [
     { label: 'männlich', value: 'm' },
     { label: 'weiblich', value: 'w' },
     { label: 'divers', value: 'd', disabled: true }
@@ -269,7 +288,10 @@ class LuxAutoFocusRadioComponent {
   imports: [LuxSelectComponent, LuxAutofocusDirective]
 })
 class LuxAutoFocusSelectComponent {
-  options: { label: string; value: string }[] = [
+  options: {
+    label: string;
+    value: string;
+  }[] = [
     { label: 'männlich', value: 'm' },
     { label: 'weiblich', value: 'w' }
   ];

@@ -3,12 +3,13 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
+import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxCardActionsComponent } from './lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from './lux-card-subcomponents/lux-card-content-expanded.component';
 import { LuxCardContentComponent } from './lux-card-subcomponents/lux-card-content.component';
@@ -16,7 +17,7 @@ import { LuxCardInfoComponent } from './lux-card-subcomponents/lux-card-info.com
 import { LuxCardComponent } from './lux-card.component';
 
 describe('LuxCardComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -25,26 +26,26 @@ describe('LuxCardComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   describe('Attribut "luxExpanded"', () => {
     let fixture: ComponentFixture<LuxContentExpandedComponent>;
     let component: LuxContentExpandedComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxContentExpandedComponent);
       fixture.detectChanges();
       component = fixture.componentInstance;
-    }));
+    });
 
-    it('Two-Way-Binding testen', fakeAsync(() => {
+    it('Two-Way-Binding testen', async () => {
       // Vorbedingungen testen
       expect(component.expanded).toBeFalsy();
 
       // Änderungen durchführen
       const toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
       toggleEl.nativeElement.click();
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
       // Nachbedingungen testen
       expect(component.expanded).toBeTruthy();
@@ -54,19 +55,17 @@ describe('LuxCardComponent', () => {
 
       // Nachbedingungen testen
       expect(component.expanded).toBeFalsy();
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Event testen', fakeAsync(() => {
+    it('Event testen', async () => {
       // Vorbedingungen testen
       expect(component.expanded).toBeFalsy();
-      const onExpandedSpy = spyOn(component, 'onExpanded').and.callThrough();
+      const onExpandedSpy = vi.spyOn(component, 'onExpanded');
 
       // Änderungen durchführen
       const toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
       toggleEl.nativeElement.click();
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
       // Nachbedingungen testen
       expect(onExpandedSpy).toHaveBeenCalledTimes(1);
@@ -76,63 +75,61 @@ describe('LuxCardComponent', () => {
 
       // Nachbedingungen testen
       expect(onExpandedSpy).toHaveBeenCalledTimes(2);
-
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('Ohne Card Action', () => {
     let fixture: ComponentFixture<NoCardActionComponent>;
     let testComponent: NoCardActionComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(NoCardActionComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Style lux-cursor-pointer darf nicht gesetzt sein', fakeAsync(() => {
+    it('Style lux-cursor-pointer darf nicht gesetzt sein', async () => {
       const card = fixture.debugElement.query(By.css('.lux-cursor-pointer'));
       expect(card).toBeNull();
-    }));
+    });
   });
 
   describe('Mit Card Action', () => {
     let fixture: ComponentFixture<CardActionComponent>;
     let testComponent: CardActionComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(CardActionComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Style lux-cursor-pointer muss gesetzt sein', fakeAsync(() => {
+    it('Style lux-cursor-pointer muss gesetzt sein', async () => {
       const card = fixture.debugElement.query(By.css('.lux-cursor-pointer'));
       expect(card).not.toBeNull();
-    }));
+    });
   });
 
   describe('Erweiterbare Card mit einer Card-Action', () => {
     let fixture: ComponentFixture<ExpandedClickableCardComponent>;
     let component: ExpandedClickableCardComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(ExpandedClickableCardComponent);
       fixture.detectChanges();
       component = fixture.componentInstance;
-    }));
+    });
 
-    it('Click auf Toggle darf die Card-Action nicht auslösen', fakeAsync(() => {
+    it('Click auf Toggle darf die Card-Action nicht auslösen', async () => {
       // Vorbedingungen testen
-      const cardActionSpy = spyOn(component, 'onCardClickedTest');
+      const cardActionSpy = vi.spyOn(component, 'onCardClickedTest').mockReturnValue(undefined);
       const toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
       expect(toggleEl).not.toBeNull();
 
       // Änderungen durchführen
       // 1. Durchlauf: Aufklappen
       toggleEl.nativeElement.click();
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
       // Nachbedingungen testen
       expect(cardActionSpy).toHaveBeenCalledTimes(0);
@@ -144,22 +141,20 @@ describe('LuxCardComponent', () => {
 
       // Nachbedingungen testen
       expect(cardActionSpy).toHaveBeenCalledTimes(0);
-
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('Card auf- und zuklappen', () => {
     let fixture: ComponentFixture<ExpandedCardComponent>;
     let component: ExpandedCardComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(ExpandedCardComponent);
       fixture.detectChanges();
       component = fixture.componentInstance;
-    }));
+    });
 
-    it('Card über die Component auf- und zuklappen', fakeAsync(() => {
+    it('Card über die Component auf- und zuklappen', async () => {
       // Vorbedingungen testen
       let contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       let expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
@@ -186,7 +181,7 @@ describe('LuxCardComponent', () => {
 
       // Änderungen durchführen
       component.card().luxExpanded.set(false);
-      LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture, 500);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
@@ -196,9 +191,9 @@ describe('LuxCardComponent', () => {
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
-    }));
+    });
 
-    it('Card über den Button auf- und zuklappen', fakeAsync(() => {
+    it('Card über den Button auf- und zuklappen', async () => {
       // Vorbedingungen testen
       let contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
       let expandedEl = fixture.debugElement.query(By.directive(LuxCardContentExpandedComponent));
@@ -211,7 +206,7 @@ describe('LuxCardComponent', () => {
 
       // Änderungen durchführen
       toggleEl.nativeElement.click();
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
@@ -225,7 +220,7 @@ describe('LuxCardComponent', () => {
 
       // Änderungen durchführen
       toggleEl.nativeElement.click();
-      LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
@@ -235,136 +230,134 @@ describe('LuxCardComponent', () => {
       expect(contentEl.nativeElement.innerHTML).toEqual('Lorem ipsum');
       expect(expandedEl).toBeNull();
       expect(toggleEl.nativeElement.innerHTML).toContain('lux-interface-arrows-button-down');
-
-      discardPeriodicTasks();
-    }));
+    });
   });
 
   describe('Grundaufbau', () => {
     let fixture: ComponentFixture<MockCardComponent>;
     let component: MockCardComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(MockCardComponent);
       fixture.detectChanges();
       component = fixture.componentInstance;
-    }));
+    });
 
-    it('Sollte luxTitle und luxSubTitle darstellen', fakeAsync(() => {
+    it('Sollte luxTitle und luxSubTitle darstellen', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
 
       // Änderungen durchführen
       component.title.set('Hallo');
       component.subTitle.set('Welt');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('mat-card-header'))).not.toBeNull();
       expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('Hallo');
       expect(fixture.debugElement.query(By.css('.lux-card-subtitle')).nativeElement.textContent.trim()).toEqual('Welt');
-    }));
+    });
 
-    it('Sollte mat-card-header nicht rendern, wenn luxTitle auf undefined gesetzt wird', fakeAsync(() => {
+    it('Sollte mat-card-header nicht rendern, wenn luxTitle auf undefined gesetzt wird', async () => {
       // Vorbedingungen testen
       component.title.set('Hallo');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none-important'))).toBeNull();
       expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('Hallo');
 
       // Änderungen durchführen
       component.title.set(undefined);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
-    }));
+    });
 
-    it('Sollte lux-card-title nicht ausblenden, wenn luxTitle undefined aber lux-card-info gesetzt ist', fakeAsync(() => {
+    it('Sollte lux-card-title nicht ausblenden, wenn luxTitle undefined aber lux-card-info gesetzt ist', async () => {
       // Vorbedingungen testen
       component.title.set('Hallo');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none-important'))).toBeNull();
       expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('Hallo');
 
       // Änderungen durchführen
       component.testShowInfo.set(true);
       component.title.set(undefined);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('lux-card-heading h2.lux-display-none-important'))).toBeNull();
       expect(fixture.debugElement.query(By.css('lux-card-heading h2')).nativeElement.textContent.trim()).toEqual('');
-    }));
+    });
 
-    it('Sollte mat-card-header nicht rendern, wenn luxSubTitle auf undefined gesetzt wird', fakeAsync(() => {
+    it('Sollte mat-card-header nicht rendern, wenn luxSubTitle auf undefined gesetzt wird', async () => {
       // Vorbedingungen testen
       component.subTitle.set('Hallo');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('.lux-card-subtitle.lux-display-none-important'))).toBeNull();
 
       // Änderungen durchführen
       component.subTitle.set(undefined);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
-    }));
+    });
 
-    it('Sollte mat-card-actions ausblenden, wenn keine Actions gesetzt sind', fakeAsync(() => {
+    it('Sollte mat-card-actions ausblenden, wenn keine Actions gesetzt sind', async () => {
       // Vorbedingungen testen
       component.testShowAction.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('.mat-mdc-card-actions.lux-display-none-important'))).toBeNull();
 
       // Änderungen durchführen
       component.testShowAction.set(false);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('.mat-mdc-card-actions.lux-display-none-important'))).not.toBeNull();
-    }));
+    });
 
-    it('Sollte mat-card-header nicht rendern, wenn kein Header-Inhalt vorhanden ist', fakeAsync(() => {
+    it('Sollte mat-card-header nicht rendern, wenn kein Header-Inhalt vorhanden ist', async () => {
       // Vorbedingungen testen
       component.title.set(undefined);
       component.subTitle.set(undefined);
       component.testShowIcon.set(false);
       component.testShowInfo.set(false);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
-    }));
+    });
 
-    it('Sollte mat-card-header rendern, wenn luxTitle gesetzt ist', fakeAsync(() => {
+    it('Sollte mat-card-header rendern, wenn luxTitle gesetzt ist', async () => {
       // Vorbedingungen testen
       expect(fixture.debugElement.query(By.css('mat-card-header'))).toBeNull();
 
       // Änderungen durchführen
       component.title.set('Titel');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(fixture.debugElement.query(By.css('mat-card-header'))).not.toBeNull();
-    }));
+    });
 
-    it('Sollte Click-Events deaktivieren (luxDisabled)', fakeAsync(() => {
+    it('Sollte Click-Events deaktivieren (luxDisabled)', async () => {
       // Vorbedingungen testen
-      const spy = spyOn(component, 'cardClicked');
+      const spy = vi.spyOn(component, 'cardClicked').mockReturnValue(undefined);
       fixture.debugElement.query(By.css('mat-card')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
       component.disabled.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       fixture.debugElement.query(By.css('mat-card')).nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(spy).toHaveBeenCalledTimes(1);
-    }));
+    });
   });
 });
 
@@ -462,7 +455,7 @@ class LuxContentExpandedComponent {
     </lux-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxCardComponent, LuxCardContentComponent, LuxCardActionsComponent, LuxCardInfoComponent]
+  imports: [LuxCardComponent, LuxCardContentComponent, LuxCardActionsComponent, LuxCardInfoComponent, LuxIconComponent]
 })
 class MockCardComponent {
   title = signal<string | undefined>(undefined);

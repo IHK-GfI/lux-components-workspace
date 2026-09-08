@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxIconComponent } from './lux-icon.component';
 
@@ -10,19 +10,19 @@ describe('LuxIconComponent', () => {
     let fixture: ComponentFixture<LuxMockIconComponent>;
     let testComponent: LuxMockIconComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
       }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxMockIconComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
-    it('Icon setzen', fakeAsync(() => {
+    it('Icon setzen', async () => {
       // Vorbedingungen testen
       expect(fixture.componentInstance.iconName()).toEqual('lux-interface-setting-cog');
 
@@ -35,7 +35,7 @@ describe('LuxIconComponent', () => {
       const newIconEl = fixture.debugElement.query(By.css('lux-icon'));
       expect(fixture.componentInstance.iconName()).toEqual(expectedIcon);
       expect(newIconEl.nativeElement.innerHTML).toContain(expectedIcon);
-    }));
+    });
   });
 });
 

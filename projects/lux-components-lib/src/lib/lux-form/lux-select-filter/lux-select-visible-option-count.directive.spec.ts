@@ -1,5 +1,5 @@
 import { Component, ElementRef, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LuxSelectVisibleOptionCountDirective } from './lux-select-visible-option-count.directive';
@@ -32,7 +32,7 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
     matSelect = debugElement.injector.get(MatSelect);
   });
 
-  it('wendet die Panelhöhe auch dann an, wenn das Overlay erst verzögert verfügbar ist', fakeAsync(() => {
+  it('wendet die Panelhöhe auch dann an, wenn das Overlay erst verzögert verfügbar ist', async () => {
     const access = directive as unknown as {
       schedulePanelSizing(): void;
       matSelect: MatSelect;
@@ -44,17 +44,18 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
     option.getBoundingClientRect = () => ({ height: 20 }) as DOMRect;
     panel.appendChild(option);
 
-    spyOnProperty(matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn(matSelect, 'panelOpen', 'get').mockReturnValue(true);
     access.matSelect.panel = undefined as unknown as ElementRef<HTMLElement>;
 
     access.schedulePanelSizing();
     expect(access.panelAttachTimeout).toBeDefined();
 
     access.matSelect.panel = new ElementRef(panel);
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(panel.style.maxHeight).toBe('40px');
-  }));
+  });
 
   it('verwendet die Default-Option-Höhe, wenn keine sichtbare Option gemessen werden kann', () => {
     const access = directive as unknown as {
@@ -70,22 +71,23 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
     expect(panel.style.maxHeight).toBe('106px');
   });
 
-  it('räumt einen geplanten Retry beim Destroy wieder auf', fakeAsync(() => {
+  it('räumt einen geplanten Retry beim Destroy wieder auf', async () => {
     const access = directive as unknown as {
       schedulePanelSizing(): void;
       matSelect: MatSelect;
       panelAttachTimeout?: ReturnType<typeof setTimeout>;
     };
 
-    spyOnProperty(matSelect, 'panelOpen', 'get').and.returnValue(true);
+    vi.spyOn(matSelect, 'panelOpen', 'get').mockReturnValue(true);
     access.matSelect.panel = undefined as unknown as ElementRef<HTMLElement>;
 
     access.schedulePanelSizing();
     expect(access.panelAttachTimeout).toBeDefined();
 
     directive.ngOnDestroy();
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(access.panelAttachTimeout).toBeUndefined();
-  }));
+  });
 });

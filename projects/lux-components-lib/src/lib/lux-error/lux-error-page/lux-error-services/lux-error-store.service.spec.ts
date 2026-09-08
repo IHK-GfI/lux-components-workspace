@@ -70,7 +70,7 @@ describe('LuxErrorStoreService', () => {
     expect(service.config().errorText).toEqual('Lorem ipsum');
     expect(service.config().homeRedirectText).toEqual('Link');
     expect(service.config().errorPageUrl).toEqual('dolor/sit/amet/');
-    expect(service.config().skipLocationChange).toBeFalse();
+    expect(service.config().skipLocationChange).toBe(false);
   });
 });
 

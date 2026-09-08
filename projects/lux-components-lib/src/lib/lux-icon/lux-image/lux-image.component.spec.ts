@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -94,7 +94,7 @@ describe('LuxImageComponent', () => {
     expect(component.imageCmp().resolvedImageSrc()).toEqual('assets/png/example.png');
   });
 
-  it('Sollte den Pfad zum Bild enthalten', fakeAsync(() => {
+  it('Sollte den Pfad zum Bild enthalten', async () => {
     // Given
     component.href.set('assets/png/example.png');
     // When
@@ -102,9 +102,9 @@ describe('LuxImageComponent', () => {
     const imageEl = fixture.debugElement.query(By.css('.lux-image'));
     // Then
     expect(imageEl.nativeElement.src).toContain('assets/png/example.png');
-  }));
+  });
 
-  it('Sollte den Pfad ohne Bearbeitung anzeigen [luxRawSrc]', fakeAsync(() => {
+  it('Sollte den Pfad ohne Bearbeitung anzeigen [luxRawSrc]', async () => {
     // Given
     component.href.set('/fb/myimage.png');
     component.raw.set(true);
@@ -113,7 +113,7 @@ describe('LuxImageComponent', () => {
     const imageEl = fixture.debugElement.query(By.css('.lux-image'));
     // Then
     expect(imageEl.nativeElement.src).toContain('/fb/myimage.png');
-  }));
+  });
 
   it('Sollte luxImageError Event emittieren bei Fehler', () => {
     // Given
@@ -121,7 +121,7 @@ describe('LuxImageComponent', () => {
     // When
     fixture.detectChanges();
     const imageEl = fixture.debugElement.query(By.css('.lux-image'));
-    const spy = spyOn(component.imageCmp().luxImageError, 'emit');
+    const spy = vi.spyOn(component.imageCmp().luxImageError, 'emit').mockReturnValue(undefined);
     imageEl.nativeElement.dispatchEvent(new Event('error'));
     // Then
     expect(spy).toHaveBeenCalled();

@@ -1,21 +1,21 @@
 import { Component, TemplateRef } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTableColumnHeaderComponent } from './lux-table-column-header.component';
 
 describe('LuxTableColumnHeaderComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({}).compileComponents();
-  }));
+  });
 
   describe('Mit ng-template', () => {
     let fixture: ComponentFixture<DefaultTestComponent>;
     let headerComponent: LuxTableColumnHeaderComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(DefaultTestComponent);
       headerComponent = fixture.debugElement.query(By.directive(LuxTableColumnHeaderComponent)).componentInstance;
-    }));
+    });
 
     it('sollte erstellt werden', () => {
       fixture.detectChanges();

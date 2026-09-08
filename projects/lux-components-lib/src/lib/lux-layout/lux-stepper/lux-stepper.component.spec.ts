@@ -1,7 +1,7 @@
 // noinspection DuplicatedCode
 
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -23,7 +23,7 @@ describe('LuxStepperComponent', () => {
   let fixture: ComponentFixture<MockStepperComponent>;
   let stepperComponent: LuxStepperComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
@@ -32,7 +32,7 @@ describe('LuxStepperComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MockStepperComponent);
@@ -45,7 +45,7 @@ describe('LuxStepperComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Sollte die Steps korrekt darstellen', fakeAsync(() => {
+  it('Sollte die Steps korrekt darstellen', async () => {
     const stepHeaders = fixture.debugElement.queryAll(By.css('.step-header'));
     const stepContents = fixture.debugElement.queryAll(By.css('.step-content'));
 
@@ -57,9 +57,9 @@ describe('LuxStepperComponent', () => {
 
     expect(stepContents[0].nativeElement.textContent).toEqual('Step 0');
     expect(stepContents[1].nativeElement.textContent).toEqual('Step 1');
-  }));
+  });
 
-  it('Sollte Header und Content aus ausgelagerten #header/#content-Templates darstellen', fakeAsync(() => {
+  it('Sollte Header und Content aus ausgelagerten #header/#content-Templates darstellen', async () => {
     const externalFixture = TestBed.createComponent(MockExternalTemplateStepperComponent);
 
     externalFixture.detectChanges();
@@ -71,23 +71,23 @@ describe('LuxStepperComponent', () => {
     expect(stepContents.length).toBe(1);
     expect(stepHeaders[0].nativeElement.textContent.trim()).toEqual('Person');
     expect(stepContents[0].nativeElement.textContent.trim()).toEqual('Externer Inhalt');
-  }));
+  });
 
-  it('Sollte den Stepper deaktivieren', fakeAsync(() => {
+  it('Sollte den Stepper deaktivieren', async () => {
     // Vorbedingungen testen
     let stepperOverlay = fixture.debugElement.query(By.css('.lux-stepper-disabled-overlay.lux-hidden'));
     expect(stepperOverlay).not.toBeNull();
 
     // Änderungen durchführen
     component.disabled.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepperOverlay = fixture.debugElement.query(By.css('.lux-stepper-disabled-overlay.lux-hidden'));
     expect(stepperOverlay).toBeNull();
-  }));
+  });
 
-  it('Sollte den Step-Wechsel ohne Validierung erlauben (linear = false)', fakeAsync(() => {
+  it('Sollte den Step-Wechsel ohne Validierung erlauben (linear = false)', async () => {
     // Vorbedingungen testen
     let stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
@@ -95,34 +95,35 @@ describe('LuxStepperComponent', () => {
     // Änderungen durchführen
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    flush();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
-  it('Sollte den Step-Wechsel ohne Validierung nicht erlauben (linear = true)', fakeAsync(() => {
+  it('Sollte den Step-Wechsel ohne Validierung nicht erlauben (linear = true)', async () => {
     // Vorbedingungen testen
     let stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
     component.linear.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
-  }));
+  });
 
-  it('Sollte die Validierung über luxCompleted ermöglichen', fakeAsync(() => {
+  it('Sollte die Validierung über luxCompleted ermöglichen', async () => {
     // Vorbedingungen testen
     let stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
@@ -131,11 +132,11 @@ describe('LuxStepperComponent', () => {
     component.linear.set(true);
     component.step0Form.set(undefined);
     component.step0Completed.set(false);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
@@ -143,19 +144,20 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.step0Completed.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    flush();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
-  it('Sollte optionale Steps überspringen', fakeAsync(() => {
+  it('Sollte optionale Steps überspringen', async () => {
     // Vorbedingungen testen
     let stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
@@ -164,20 +166,21 @@ describe('LuxStepperComponent', () => {
     component.linear.set(true);
     component.step0Form.set(undefined);
     component.step0Optional.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    flush();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
-  it('Sollte nicht editierbare Steps nicht wieder aktivieren können', fakeAsync(() => {
+  it('Sollte nicht editierbare Steps nicht wieder aktivieren können', async () => {
     // Vorbedingungen testen
     let stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
@@ -187,11 +190,11 @@ describe('LuxStepperComponent', () => {
     component.step0Form.set(undefined);
     component.step0Editable.set(false);
     component.step0Completed.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
@@ -199,30 +202,31 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     stepHeaders[0].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    flush();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
-  it('Sollte die Standard-Icons ausblenden', fakeAsync(() => {
+  it('Sollte die Standard-Icons ausblenden', async () => {
     // Vorbedingungen testen
     let matStepIcons = fixture.debugElement.queryAll(By.css('.lux-ignore-mat-step-icons .mat-step-icon'));
     expect(matStepIcons.length).toBe(0);
 
     // Änderungen durchführen
     component.customIcons.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     matStepIcons = fixture.debugElement.queryAll(By.css('.lux-ignore-mat-step-icons .mat-step-icon'));
     expect(matStepIcons.length).toBe(2);
-  }));
+  });
 
-  it('Sollte die Navigation-Buttons konfigurieren können', fakeAsync(() => {
+  it('Sollte die Navigation-Buttons konfigurieren können', async () => {
     // Vorbedingungen testen
     const navButtons = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons .lux-button-label'));
     expect(navButtons.length).toBe(3);
@@ -234,55 +238,55 @@ describe('LuxStepperComponent', () => {
     component.prevConfig.update((cfg) => ({ ...cfg, label: 'Test prev' }));
     component.nextConf.update((cfg) => ({ ...cfg, label: 'Test next' }));
     component.finConf.update((cfg) => ({ ...cfg, label: 'Test fin' }));
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(navButtons[0].nativeElement.textContent.trim()).toEqual('Test next');
     expect(navButtons[1].nativeElement.textContent.trim()).toEqual('Test prev');
     expect(navButtons[2].nativeElement.textContent.trim()).toEqual('Test fin');
-  }));
+  });
 
-  it('Sollte die Navigation-Buttons ausblenden können', fakeAsync(() => {
+  it('Sollte die Navigation-Buttons ausblenden können', async () => {
     // Vorbedingungen testen
     let navButtons = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons .lux-button-label'));
     expect(navButtons.length).toBe(3);
 
     // Änderungen durchführen
     component.showNavButtons.set(false);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     navButtons = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons .lux-button-label'));
     expect(navButtons.length).toBe(0);
-  }));
+  });
 
-  it('Sollte den Next-Button im linearen Modus ohne A11Y deaktivieren', fakeAsync(() => {
+  it('Sollte den Next-Button im linearen Modus ohne A11Y deaktivieren', async () => {
     component.linear.set(true);
     component.a11yMode.set(false);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
-    expect(nextButton.disabled).toBeTrue();
-  }));
+    expect(nextButton.disabled).toBe(true);
+  });
 
-  it('Sollte den Next-Button im A11Y-Modus aktiviert lassen', fakeAsync(() => {
+  it('Sollte den Next-Button im A11Y-Modus aktiviert lassen', async () => {
     component.linear.set(true);
     component.a11yMode.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
-    expect(nextButton.disabled).toBeFalse();
-  }));
+    expect(nextButton.disabled).toBe(false);
+  });
 
-  it('Sollte die Navigations-Buttons linksbündig darstellen', fakeAsync(() => {
+  it('Sollte die Navigations-Buttons linksbündig darstellen', async () => {
     component.buttonAlignLeft.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const navButtonContainer = fixture.debugElement.query(By.css('lux-stepper-nav-buttons > div'));
-    expect(navButtonContainer.nativeElement.classList.contains('lux-place-content-start')).toBeTrue();
-  }));
+    expect(navButtonContainer.nativeElement.classList.contains('lux-place-content-start')).toBe(true);
+  });
 
-  it('Sollte einen vertikalen Stepper erstellen', fakeAsync(() => {
+  it('Sollte einen vertikalen Stepper erstellen', async () => {
     // Vorbedingungen testen
     let stepperHorizontal = fixture.debugElement.query(By.css('mat-horizontal-stepper'));
     let stepperVertical = fixture.debugElement.query(By.css('mat-vertical-stepper'));
@@ -291,104 +295,106 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.vertical.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepperHorizontal = fixture.debugElement.query(By.css('mat-horizontal-stepper'));
     stepperVertical = fixture.debugElement.query(By.css('mat-vertical-stepper'));
     expect(stepperHorizontal).toBeNull();
     expect(stepperVertical).not.toBeNull();
-  }));
+  });
 
-  it('Sollte zu einem bestimmten Step springen', fakeAsync(() => {
+  it('Sollte zu einem bestimmten Step springen', async () => {
     // Vorbedingungen testen
     let stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 0');
 
     // Änderungen durchführen
     component.currentStep.set(1);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    flush();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
-  it('Sollte luxStepChanged emitten', fakeAsync(() => {
+  it('Sollte luxStepChanged emitten', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(component, 'stepChange');
+    const spy = vi.spyOn(component, 'stepChange').mockReturnValue(undefined);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
 
-    flush();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
-  it('Sollte luxCheckValidation emitten, wenn Header-Navigation blockiert wird', fakeAsync(() => {
+  it('Sollte luxCheckValidation emitten, wenn Header-Navigation blockiert wird', async () => {
     component.linear.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
-    const spy = spyOn(component, 'checkValidation');
+    const spy = vi.spyOn(component, 'checkValidation').mockReturnValue(undefined);
     expect(spy).toHaveBeenCalledTimes(0);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(0); // aktueller Step (0), nicht Ziel-Step
-  }));
+  });
 
-  it('Sollte luxCheckValidation emitten, wenn Next-Button-Navigation blockiert wird (A11Y-Modus)', fakeAsync(() => {
+  it('Sollte luxCheckValidation emitten, wenn Next-Button-Navigation blockiert wird (A11Y-Modus)', async () => {
     // Vorbedingungen: linear=true, step0 nicht abgeschlossen, A11Y-Modus damit Button klickbar bleibt
     component.linear.set(true);
     component.a11yMode.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
-    const spy = spyOn(component, 'checkValidation');
+    const spy = vi.spyOn(component, 'checkValidation').mockReturnValue(undefined);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Next-Button von Step 0 klicken (erster Button in lux-stepper-nav-buttons)
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
     nextButton.click();
-    LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+    await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
     // Nachbedingungen prüfen: aktueller Step-Index (0) muss emittiert werden, nicht der Ziel-Step
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(0);
 
-    flush();
-    discardPeriodicTasks();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 
-  it('Sollte luxFinishButtonClicked emitten', fakeAsync(() => {
+  it('Sollte luxFinishButtonClicked emitten', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(component, 'finClicked');
+    const spy = vi.spyOn(component, 'finClicked').mockReturnValue(undefined);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+    await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
     const navButtons = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons .lux-button-label'));
     navButtons[2].nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
 
-    flush();
-    discardPeriodicTasks();
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  });
 });
 
 @Component({
@@ -423,7 +429,7 @@ describe('LuxStepperComponent', () => {
         </lux-step-header>
         <lux-step-content>
           <span class="step-content step-0-content">Step 0</span>
-          <div [formGroup]="form.get('step0')">
+          <div [formGroup]="$any(form.get('step0'))">
             <input formControlName="input" />
           </div>
         </lux-step-content>
@@ -440,7 +446,7 @@ describe('LuxStepperComponent', () => {
         </lux-step-header>
         <lux-step-content>
           <span class="step-content step-1-content">Step 1</span>
-          <div [formGroup]="form.get('step1')">
+          <div [formGroup]="$any(form.get('step1'))">
             <input formControlName="input" />
           </div>
         </lux-step-content>
@@ -460,7 +466,7 @@ class MockStepperComponent {
   buttonAlignLeft = signal(false);
   horAnimation = signal(true);
   showNavButtons = signal(true);
-  editedIconName = signal<string | undefined>(undefined);
+  editedIconName = signal('lux-interface-edit-pencil');
 
   prevConfig = signal<ILuxStepperButtonConfig>({
     label: 'Test zurück'

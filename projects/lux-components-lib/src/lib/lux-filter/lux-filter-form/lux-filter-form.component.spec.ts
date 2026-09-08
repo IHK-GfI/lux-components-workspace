@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
@@ -21,18 +21,19 @@ describe('LuxFilterFormComponent', () => {
   let component: TestFilterFormComponent;
   let fixture: ComponentFixture<TestFilterFormComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
-  }));
+  });
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(TestFilterFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    tick(500);
-  }));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -40,7 +41,7 @@ describe('LuxFilterFormComponent', () => {
 
   it('Sollte ohne Validierungsfehler filtern', () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
     expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
@@ -50,13 +51,13 @@ describe('LuxFilterFormComponent', () => {
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent().filterForm.valid).toBeTrue();
+    expect(component.filterComponent().filterForm.valid).toBe(true);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('Sollte mit Validierungsfehlern nicht filtern', () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
     expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
@@ -67,13 +68,13 @@ describe('LuxFilterFormComponent', () => {
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent().filterForm.valid).toBeFalse();
+    expect(component.filterComponent().filterForm.valid).toBe(false);
     expect(spy).toHaveBeenCalledTimes(0);
   });
 
   it('Sollte die Filterwerte vollständig ersetzen', () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
     expect(component.filterComponent().luxFilterValues()).toEqual({});
@@ -98,7 +99,7 @@ describe('LuxFilterFormComponent', () => {
 
   it('Sollte auch mit Datepicker-Timepicker-Kombination funktionieren', () => {
     // Init
-    const spy = spyOn(component, 'onFilter').and.callThrough();
+    const spy = vi.spyOn(component, 'onFilter');
 
     // Vorbedingungen testen
     expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toBeUndefined();
@@ -108,7 +109,7 @@ describe('LuxFilterFormComponent', () => {
     fixture.detectChanges();
 
     // Nachbedingungen prüfen
-    expect(component.filterComponent().filterForm.valid).toBeTrue();
+    expect(component.filterComponent().filterForm.valid).toBe(true);
     expect(component.filterComponent().filterForm.get('combinedDateTime')!.value).toEqual('2020-07-21T14:30:00.000Z');
     expect(component.currentFilter.combinedDateTime).toEqual('2020-07-21T14:30:00.000Z');
     expect(spy).toHaveBeenCalledTimes(1);

@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -15,180 +15,174 @@ describe('LuxLinkComponent', () => {
   let linkComponent: LuxLinkComponent;
   let router: Router;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
-  }));
+  });
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(MockLinkComponent);
     fixture.detectChanges();
     component = fixture.componentInstance;
     linkComponent = fixture.debugElement.query(By.directive(LuxLinkComponent)).componentInstance;
     router = TestBed.inject(Router);
-  }));
+  });
 
-  it('Sollte erstellt werden', fakeAsync(() => {
+  it('Sollte erstellt werden', async () => {
     expect(component).toBeDefined();
-  }));
+  });
 
-  it('Sollte das Label darstellen', fakeAsync(() => {
+  it('Sollte das Label darstellen', async () => {
     // Vorbedingungen testen
     let label = fixture.debugElement.query(By.css('.lux-button-label'));
     expect(label).toBeNull();
 
     // Änderungen durchführen
     component.label.set('Ein Label sie zu knechten');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     label = fixture.debugElement.query(By.css('.lux-button-label'));
     expect(label.nativeElement.textContent.trim()).toEqual('Ein Label sie zu knechten');
-  }));
+  });
 
-  it('Sollte das Icon darstellen', fakeAsync(() => {
+  it('Sollte das Icon darstellen', async () => {
     // Vorbedingungen testen
     let icon = fixture.debugElement.query(By.css('lux-icon'));
     expect(icon).toBeNull();
 
     // Änderungen durchführen
     component.iconName.set('lux-programming-bug');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     icon = fixture.debugElement.query(By.css('lux-icon'));
     expect(icon).not.toBeNull();
-  }));
+  });
 
-  it('Sollte deaktiviert werden', fakeAsync(() => {
+  it('Sollte deaktiviert werden', async () => {
     // Vorbedingungen testen
     let disabled = fixture.debugElement.query(By.css('a[disabled="true"]'));
     expect(disabled).toBeNull();
 
     // Änderungen durchführen
     component.disabled.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     disabled = fixture.debugElement.query(By.css('a[disabled="true"]'));
     expect(disabled).not.toBeNull();
-  }));
+  });
 
-  it('Sollte raised dargestellt werden', fakeAsync(() => {
+  it('Sollte raised dargestellt werden', async () => {
     // Vorbedingungen testen
     let raised = fixture.debugElement.query(By.css('.mat-mdc-raised-button'));
     expect(raised).toBeNull();
 
     // Änderungen durchführen
     component.raised.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     raised = fixture.debugElement.query(By.css('.mat-mdc-raised-button'));
     expect(raised).not.toBeNull();
-  }));
+  });
 
-  it('Sollte den (internen) href aufrufen', fakeAsync(() => {
+  it('Sollte den (internen) href aufrufen', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(false));
+    const spy = vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(false));
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     component.href.set('/mock-route');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', { preventDefault: () => {} });
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(['/mock-route']);
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Sollte den (internen) href per Enter-Taste aufrufen', fakeAsync(() => {
+  it('Sollte den (internen) href per Enter-Taste aufrufen', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(false));
+    const spy = vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(false));
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     component.href.set('/mock-route');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(['/mock-route']);
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Sollte bei deaktiviertem Link per Enter-Taste nicht navigieren', fakeAsync(() => {
+  it('Sollte bei deaktiviertem Link per Enter-Taste nicht navigieren', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(false));
-    const clickedSpy = jasmine.createSpy('luxClicked');
+    const spy = vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(false));
+    const clickedSpy = vi.fn().mockName('luxClicked');
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     component.href.set('/mock-route');
     component.disabled.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const sub = linkComponent.luxClicked.subscribe(clickedSpy);
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen: kein Navigate, kein luxClicked
     expect(spy).toHaveBeenCalledTimes(0);
     expect(clickedSpy).toHaveBeenCalledTimes(0);
 
     sub.unsubscribe();
-    discardPeriodicTasks();
-  }));
+  });
 
-  it('Sollte bei deaktiviertem Link per Space-Taste nicht navigieren', fakeAsync(() => {
+  it('Sollte bei deaktiviertem Link per Space-Taste nicht navigieren', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(false));
-    const clickedSpy = jasmine.createSpy('luxClicked');
+    const spy = vi.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(false));
+    const clickedSpy = vi.fn().mockName('luxClicked');
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     component.href.set('/mock-route');
     component.disabled.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const sub = linkComponent.luxClicked.subscribe(clickedSpy);
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('keydown.space', new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen: kein Navigate, kein luxClicked
     expect(spy).toHaveBeenCalledTimes(0);
     expect(clickedSpy).toHaveBeenCalledTimes(0);
 
     sub.unsubscribe();
-    discardPeriodicTasks();
-  }));
+  });
 
-  it('Sollte den (externen) href aufrufen', fakeAsync(() => {
+  it('Sollte den (externen) href aufrufen', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(window, 'open');
+    const spy = vi.spyOn(window, 'open').mockReturnValue(null);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen [mit HTTP]
     component.href.set('http://mock-route');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', { preventDefault: () => {} });
-    LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+    await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -196,82 +190,76 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen [mit HTTPS]
     component.href.set('https://mock-route');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     link.triggerEventHandler('click', { preventDefault: () => {} });
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(2);
     expect(spy).toHaveBeenCalledWith('http://mock-route', '_self');
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Sollte den (externen) href in einem neuen Tab aufrufen', fakeAsync(() => {
+  it('Sollte den (externen) href in einem neuen Tab aufrufen', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(window, 'open').and.callFake(() => null);
+    const spy = vi.spyOn(window, 'open').mockImplementation(() => null);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     component.blank.set(true);
     component.href.set('http://mock-route');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith('http://mock-route', '_blank', 'noopener,noreferrer');
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Sollte den (internen) href in einem neuen Tab ohne Opener-Referenz aufrufen', fakeAsync(() => {
+  it('Sollte den (internen) href in einem neuen Tab ohne Opener-Referenz aufrufen', async () => {
     // Vorbedingungen testen
-    const spy = spyOn(window, 'open').and.callFake(() => null);
+    const spy = vi.spyOn(window, 'open').mockImplementation(() => null);
     expect(spy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     component.blank.set(true);
     component.href.set('/mock-route');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(jasmine.stringMatching(/\/mock-route$/), '_blank', 'noopener,noreferrer');
+    expect(spy).toHaveBeenCalledWith(expect.stringMatching(/\/mock-route$/), '_blank', 'noopener,noreferrer');
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Sollte bei luxBlank das rel-Attribut "noopener noreferrer" am Anker setzen', fakeAsync(() => {
+  it('Sollte bei luxBlank das rel-Attribut "noopener noreferrer" am Anker setzen', async () => {
     // Vorbedingungen testen
     let link = fixture.debugElement.query(By.css('a'));
     expect(link.nativeElement.getAttribute('rel')).toBeNull();
 
     // Änderungen durchführen
     component.blank.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     link = fixture.debugElement.query(By.css('a'));
     expect(link.nativeElement.getAttribute('rel')).toEqual('noopener noreferrer');
-  }));
+  });
 
-  it('Sollte die Farbe anpassen', fakeAsync(() => {
+  it('Sollte die Farbe anpassen', async () => {
     // Vorbedingungen testen
     let color = fixture.debugElement.query(By.css('a.mat-unthemed'));
     expect(color).not.toBeNull();
 
     // Änderungen durchführen
     component.color.set('primary');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     color = fixture.debugElement.query(By.css('a.mat-primary'));
@@ -279,7 +267,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.color.set('warn');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     color = fixture.debugElement.query(By.css('a.mat-warn'));
@@ -287,12 +275,12 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.color.set('accent');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     color = fixture.debugElement.query(By.css('a.mat-accent'));
     expect(color).not.toBeNull();
-  }));
+  });
 });
 
 @Component({

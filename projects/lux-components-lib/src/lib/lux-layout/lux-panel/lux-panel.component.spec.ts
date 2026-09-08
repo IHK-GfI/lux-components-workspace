@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxPanelContentComponent } from './lux-panel-subcomponents/lux-panel-content.component';
@@ -10,13 +10,14 @@ describe('LuxPanelComponent', () => {
   describe('Attribut "luxStickyHeader"', () => {
     let fixture: ComponentFixture<LuxPanelStickyHeaderComponent>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxPanelStickyHeaderComponent);
       fixture.detectChanges();
-      tick();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('Sticky-Klasse und Offset-Variable prüfen', fakeAsync(() => {
+    it('Sticky-Klasse und Offset-Variable prüfen', async () => {
       // Vorbedingungen testen
       const panelEl = fixture.debugElement.query(By.css('.mat-expansion-panel'));
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
@@ -24,7 +25,7 @@ describe('LuxPanelComponent', () => {
       // Änderungen durchführen
       fixture.componentInstance.sticky.set(true);
       fixture.componentInstance.offset.set('64px');
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeTruthy();
@@ -32,18 +33,18 @@ describe('LuxPanelComponent', () => {
 
       // Änderungen durchführen
       fixture.componentInstance.sticky.set(false);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
 
       // Änderungen durchführen
       fixture.componentInstance.offset.set(undefined);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('');
-    }));
+    });
   });
 });
 

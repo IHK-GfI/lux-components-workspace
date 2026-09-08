@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
 import { LuxHtmlComponent } from './lux-html.component';
@@ -7,11 +7,11 @@ describe('LuxHtmlComponent', () => {
   let component: LuxHtmlComponent;
   let fixture: ComponentFixture<LuxHtmlComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [LuxHtmlComponent]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxHtmlComponent);
@@ -74,8 +74,8 @@ describe('LuxHtmlComponent', () => {
     fixture.detectChanges();
 
     expect(component.luxClass()).toEqual('my-class-1 my-class-2');
-    expect(fixture.debugElement.query(By.css('div')).classes['my-class-1']).toBeTrue();
-    expect(fixture.debugElement.query(By.css('div')).classes['my-class-2']).toBeTrue();
+    expect(fixture.debugElement.query(By.css('div')).classes['my-class-1']).toBe(true);
+    expect(fixture.debugElement.query(By.css('div')).classes['my-class-2']).toBe(true);
     expect(fixture.debugElement.query(By.css('div')).classes['my-class-not-found2']).toBeFalsy();
   });
 });

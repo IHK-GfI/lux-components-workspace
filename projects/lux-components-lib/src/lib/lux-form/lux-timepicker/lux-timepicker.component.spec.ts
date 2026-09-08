@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTimepickerSelected } from '@angular/material/timepicker';
 import { By } from '@angular/platform-browser';
@@ -13,7 +13,7 @@ import { LuxDatepickerComponent } from '../lux-datepicker/lux-datepicker.compone
 import { LuxTimepickerComponent } from './lux-timepicker.component';
 
 describe('LuxTimepickerComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
@@ -22,25 +22,26 @@ describe('LuxTimepickerComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
-  it('sollte einen ISO-Wert aus dem Formular anzeigen und beibehalten', fakeAsync(() => {
+  it('sollte einen ISO-Wert aus dem Formular anzeigen und beibehalten', async () => {
     const fixture: ComponentFixture<LuxTimepickerFormTestComponent> = TestBed.createComponent(LuxTimepickerFormTestComponent);
     const testComponent = fixture.componentInstance;
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    flush();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
     testComponent.formControl.setValue('1970-01-01T14:15:00.000Z');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
     expect(testComponent.formControl.value).toEqual('1970-01-01T14:15:00.000Z');
     expect(timepickerComponent.value()).toEqual('1970-01-01T14:15:00.000Z');
     expect(inputEl.value).toEqual('14:15');
-  }));
+  });
 
-  it('sollte bei referenziertem Datepicker das Datum beim Auswählen einer Zeit übernehmen', fakeAsync(() => {
+  it('sollte bei referenziertem Datepicker das Datum beim Auswählen einer Zeit übernehmen', async () => {
     const fixture: ComponentFixture<LuxTimepickerReferenceFormTestComponent> = TestBed.createComponent(
       LuxTimepickerReferenceFormTestComponent
     );
@@ -48,19 +49,20 @@ describe('LuxTimepickerComponent', () => {
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    flush();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
     testComponent.dateControl.setValue('2026-06-18T00:00:00.000Z');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const selectedTime = { value: new Date(Date.UTC(1970, 0, 1, 9, 30, 0, 0)) } as MatTimepickerSelected<Date>;
     timepickerComponent.onTimeOptionSelected(selectedTime);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.timeControl.value).toEqual('2026-06-18T09:30:00.000Z');
     expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
-  }));
+  });
 
-  it('sollte die Kombination ohne Reactive-Form synchron halten', fakeAsync(() => {
+  it('sollte die Kombination ohne Reactive-Form synchron halten', async () => {
     const fixture: ComponentFixture<LuxTimepickerCombinedNoFormTestComponent> = TestBed.createComponent(
       LuxTimepickerCombinedNoFormTestComponent
     );
@@ -70,8 +72,9 @@ describe('LuxTimepickerComponent', () => {
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    flush();
-    LuxTestHelper.wait(fixture);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     const inputEls: HTMLInputElement[] = fixture.debugElement.queryAll(By.css('input')).map((debugEl) => debugEl.nativeElement);
     expect(testComponent.combinedISO).toEqual('2026-06-18T14:15:00.000Z');
@@ -80,14 +83,14 @@ describe('LuxTimepickerComponent', () => {
 
     const selectedTime = { value: new Date(Date.UTC(1970, 0, 1, 9, 30, 0, 0)) } as MatTimepickerSelected<Date>;
     timepickerComponent.onTimeOptionSelected(selectedTime);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.combinedISO).toEqual('2026-06-18T09:30:00.000Z');
     expect(datepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
     expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
-  }));
+  });
 
-  it('sollte die Kombination in Reactive-Form mit gemeinsamem Control synchron halten', fakeAsync(() => {
+  it('sollte die Kombination in Reactive-Form mit gemeinsamem Control synchron halten', async () => {
     const fixture: ComponentFixture<LuxTimepickerCombinedFormTestComponent> = TestBed.createComponent(
       LuxTimepickerCombinedFormTestComponent
     );
@@ -97,8 +100,9 @@ describe('LuxTimepickerComponent', () => {
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    flush();
-    LuxTestHelper.wait(fixture);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(datepickerComponent.formControl).toBe(timepickerComponent.formControl);
     const inputEls: HTMLInputElement[] = fixture.debugElement.queryAll(By.css('input')).map((debugEl) => debugEl.nativeElement);
@@ -108,12 +112,12 @@ describe('LuxTimepickerComponent', () => {
 
     const selectedTime = { value: new Date(Date.UTC(1970, 0, 1, 9, 30, 0, 0)) } as MatTimepickerSelected<Date>;
     timepickerComponent.onTimeOptionSelected(selectedTime);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     expect(testComponent.combinedControl.value).toEqual('2026-06-18T09:30:00.000Z');
     expect(datepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
     expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
-  }));
+  });
 
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxTimepickerA11yComponent>;
@@ -123,11 +127,11 @@ describe('LuxTimepickerComponent', () => {
       LuxA11yTestHelper.addA11yMatchers();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxTimepickerA11yComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
       fixture.detectChanges();

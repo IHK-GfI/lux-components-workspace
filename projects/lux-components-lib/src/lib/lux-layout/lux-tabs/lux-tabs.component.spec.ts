@@ -1,6 +1,6 @@
 // noinspection DuplicatedCode
 
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
@@ -13,15 +13,14 @@ import { LuxTabsComponent } from './lux-tabs.component';
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { waitForAsync } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 describe('LuxTabsComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideNoopAnimations(), provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
     }).compileComponents();
-  }));
+  });
 
   describe('Event "luxActiveTabChanged"', () => {
     let component: LuxActiveTabChangedTabsComponent;
@@ -33,11 +32,11 @@ describe('LuxTabsComponent', () => {
       fixture.detectChanges();
     });
 
-    it('ohne Animation', (done: DoneFn) => {
+    it('ohne Animation', async () => {
       // Given
       expect(component.animated).toBe(false);
       expect(component.currentTabLabel).toBeUndefined();
-      const spy = spyOn(component, 'tabChanged').and.callThrough();
+      const spy = vi.spyOn(component, 'tabChanged');
 
       // When
       component.animated = false;
@@ -46,15 +45,12 @@ describe('LuxTabsComponent', () => {
       const tabArrEl = fixture.debugElement.queryAll(By.directive(LuxIconComponent));
       tabArrEl[1].nativeElement.click();
       fixture.detectChanges();
-
-      fixture.whenStable().then(() => {
+      await fixture.whenStable().then(() => {
         // Then
         expect(spy).toHaveBeenCalledTimes(1);
         expect(component.animated).toBe(false);
         expect(component.currentTabIndex).toBe(1);
         expect(component.currentTabLabel).toBe('Tabname 2');
-
-        done();
       });
     });
   });
@@ -225,10 +221,10 @@ describe('LuxTabsComponent', () => {
         // Given
         // When
         // Then
-        expect(component).toBeTruthy('Die LuxMockTabsComponent (animiert) konnte nicht erzeugt werden.');
+        expect(component).toBeTruthy();
       });
 
-      it('sollte den Tab wechseln', (done: DoneFn) => {
+      it('sollte den Tab wechseln', async () => {
         // Given
         // When
         // Then
@@ -239,20 +235,17 @@ describe('LuxTabsComponent', () => {
         component.currentTabIndex.set(1);
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          expect(component.currentTabIndex()).toBe(1);
-          expect(component.luxTabs()!.luxActiveTab()).toBe(1);
+        await fixture.whenStable();
+        expect(component.currentTabIndex()).toBe(1);
+        expect(component.luxTabs()!.luxActiveTab()).toBe(1);
 
-          component.currentTabIndex.set(2);
-          fixture.detectChanges();
+        component.currentTabIndex.set(2);
+        fixture.detectChanges();
 
-          fixture.whenStable().then(() => {
-            // Then
-            expect(component.currentTabIndex()).toBe(2);
-            expect(component.luxTabs()!.luxActiveTab()).toBe(2);
-            done();
-          });
-        });
+        await fixture.whenStable();
+        // Then
+        expect(component.currentTabIndex()).toBe(2);
+        expect(component.luxTabs()!.luxActiveTab()).toBe(2);
       });
     });
 
@@ -266,7 +259,7 @@ describe('LuxTabsComponent', () => {
         expect(component).toBeTruthy();
       });
 
-      it('sollte den Tab wechseln', (done: DoneFn) => {
+      it('sollte den Tab wechseln', async () => {
         // Given
         // When
         // Then
@@ -277,20 +270,17 @@ describe('LuxTabsComponent', () => {
         component.currentTabIndex.set(1);
         fixture.detectChanges();
 
-        fixture.whenStable().then(() => {
-          expect(component.currentTabIndex()).toBe(1);
-          expect(component.luxTabs()!.luxActiveTab()).toBe(1);
+        await fixture.whenStable();
+        expect(component.currentTabIndex()).toBe(1);
+        expect(component.luxTabs()!.luxActiveTab()).toBe(1);
 
-          component.currentTabIndex.set(2);
-          fixture.detectChanges();
+        component.currentTabIndex.set(2);
+        fixture.detectChanges();
 
-          fixture.whenStable().then(() => {
-            // Then
-            expect(component.currentTabIndex()).toBe(2);
-            expect(component.luxTabs()!.luxActiveTab()).toBe(2);
-            done();
-          });
-        });
+        await fixture.whenStable();
+        // Then
+        expect(component.currentTabIndex()).toBe(2);
+        expect(component.luxTabs()!.luxActiveTab()).toBe(2);
       });
     });
   });
@@ -299,138 +289,149 @@ describe('LuxTabsComponent', () => {
     let fixture: ComponentFixture<LuxTabNumberComponent>;
     let testComponent: LuxTabNumberComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxTabNumberComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('Anzahl 0', fakeAsync(() => {
+    it('Anzahl 0', async () => {
       // Vorbedingungen testen
       expect(fixture.componentInstance.tabCounter()).toEqual(0);
       expect(fixture.componentInstance.tabCounterCap()).toEqual(10);
 
       // Nachbedingungen testen
       expect(getBadgeElement(fixture).textContent).toEqual('0');
-    }));
+    });
 
-    it('Anzahl 10', fakeAsync(() => {
+    it('Anzahl 10', async () => {
       // Vorbedingungen testen
       expect(fixture.componentInstance.tabCounter()).toEqual(0);
       expect(fixture.componentInstance.tabCounterCap()).toEqual(10);
 
       // Änderungen durchführen
       fixture.componentInstance.tabCounter.set(10);
-      tick();
+      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(getBadgeElement(fixture).children[0].textContent).toEqual('10');
-    }));
+    });
 
-    it('Anzahl 10+', fakeAsync(() => {
+    it('Anzahl 10+', async () => {
       // Vorbedingungen testen
       expect(fixture.componentInstance.tabCounter()).toEqual(0);
       expect(fixture.componentInstance.tabCounterCap()).toEqual(10);
 
       // Änderungen durchführen
       fixture.componentInstance.tabCounter.set(11);
-      tick();
+      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(getBadgeElement(fixture).children[0].textContent).toEqual('10+');
-    }));
+    });
   });
 
   describe('ohne Tabanzahlanzeige', () => {
     let fixture: ComponentFixture<LuxTabWithoutNumberComponent>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxTabWithoutNumberComponent);
       fixture.detectChanges();
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('Attribut "tabCounter" nicht gesetzt.', fakeAsync(() => {
+    it('Attribut "tabCounter" nicht gesetzt.', async () => {
       // Nachbedingungen testen
       expect(getBadgeElement(fixture)).toBeNull();
-    }));
+    });
   });
 
   describe('Attribut "luxNotificationColor"', () => {
     let component: LuxNotificationColorComponent;
     let fixture: ComponentFixture<LuxNotificationColorComponent>;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxNotificationColorComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
-      flush();
-    }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+    });
 
-    it('sollte Standard-Farbe "accent" verwenden', fakeAsync(() => {
+    it('sollte Standard-Farbe "accent" verwenden', async () => {
       // Given
       component.showNotification.set(true);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Then
       expect(getNotificationSpan(fixture, 'lux-notification-color-accent')).not.toBeNull();
-    }));
+    });
 
-    it('sollte die gesetzte Farbe als CSS-Klasse rendern', fakeAsync(() => {
+    it('sollte die gesetzte Farbe als CSS-Klasse rendern', async () => {
       // Given
       component.showNotification.set(true);
       component.notificationColor.set('warn');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Then
       expect(getNotificationSpan(fixture, 'lux-notification-color-warn')).not.toBeNull();
-    }));
+    });
 
-    it('sollte die CSS-Klasse bei Farbwechsel aktualisieren', fakeAsync(() => {
+    it('sollte die CSS-Klasse bei Farbwechsel aktualisieren', async () => {
       // Given
       component.showNotification.set(true);
       component.notificationColor.set('primary');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
       expect(getNotificationSpan(fixture, 'lux-notification-color-primary')).not.toBeNull();
 
       // When
       component.notificationColor.set('accent');
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Then
       expect(getNotificationSpan(fixture, 'lux-notification-color-accent')).not.toBeNull();
       expect(getNotificationSpan(fixture, 'lux-notification-color-primary')).toBeNull();
-    }));
+    });
 
-    it('sollte "lux-notification-read" setzen, wenn luxShowNotification false ist', fakeAsync(() => {
+    it('sollte "lux-notification-read" setzen, wenn luxShowNotification false ist', async () => {
       // Given
       component.showNotification.set(false);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Then
       expect(getNotificationSpan(fixture, 'lux-notification-read')).not.toBeNull();
       expect(getNotificationSpan(fixture, 'lux-notification-color-accent')).toBeNull();
-    }));
+    });
 
-    it('sollte "lux-notification-read" setzen, wenn luxShowNotification undefined ist', fakeAsync(() => {
+    it('sollte "lux-notification-read" setzen, wenn luxShowNotification undefined ist', async () => {
       // Given
       component.showNotification.set(undefined);
       fixture.detectChanges();
-      flush();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
 
       // Then
       expect(getNotificationSpan(fixture, 'lux-notification-read')).not.toBeNull();
-    }));
+    });
   });
 });
 
@@ -450,7 +451,7 @@ describe('LuxTabsComponent', () => {
 })
 class LuxActiveTabChangedTabsComponent {
   animated = false;
-  currentTabIndex?: number;
+  currentTabIndex = 0;
   currentTabLabel?: string;
 
   readonly luxTabs = viewChild.required(LuxTabsComponent);
@@ -480,7 +481,7 @@ class LuxActiveTabChangedTabsComponent {
 })
 class LuxMockTabsComponent {
   animated = false;
-  currentTabIndex = signal<number | undefined>(undefined);
+  currentTabIndex = signal(0);
 
   readonly luxTabs = viewChild(LuxTabsComponent);
   readonly luxTabList = viewChildren(LuxTabComponent);

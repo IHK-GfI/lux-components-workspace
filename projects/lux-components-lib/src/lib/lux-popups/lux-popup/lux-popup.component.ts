@@ -378,7 +378,7 @@ export class LuxPopupComponent implements OnDestroy {
 
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
-        const element = this.overlayRef?.overlayElement.querySelector('.lux-popup') as HTMLElement | null;
+        const element = this.overlayRef?.overlayElement?.querySelector('.lux-popup') as HTMLElement | null;
         element?.focus();
       });
     });

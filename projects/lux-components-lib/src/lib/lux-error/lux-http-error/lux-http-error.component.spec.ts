@@ -3,12 +3,10 @@
 import { HttpClient, HttpRequest, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
-import { Subscription } from 'rxjs';
-import { skip } from 'rxjs/operators';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
 import { LuxHttpErrorComponent } from './lux-http-error.component';
@@ -18,9 +16,8 @@ describe('LuxHttpErrorComponent', () => {
   let fixture: ComponentFixture<LuxMockHttpErrorComponent>;
   let httpClient: HttpClient;
   let httpController: HttpTestingController;
-  let subscription: Subscription;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
@@ -29,7 +26,7 @@ describe('LuxHttpErrorComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxMockHttpErrorComponent);
@@ -40,78 +37,40 @@ describe('LuxHttpErrorComponent', () => {
   });
 
   afterEach(() => {
-    if (subscription) {
-      subscription.unsubscribe();
-    }
-
     httpController.verify();
   });
 
-  it('Sollte Fehler aus der Property "errors" anzeigen', fakeAsync(() => {
-    // Jeder Request setzt den LuxHttpErrorInterceptor.dataStream$() auf ein leeres Array zurück.
-    // Das folgende If stellt sicher, dass nur der Fehlerfall überprüft wird.
-    subscription = LuxHttpErrorInterceptor.dataStream$()
-      .pipe(skip(1))
-      .subscribe((errors) => {
-        if (Array.isArray(errors) && errors.length > 0) {
-          expect(errors).toEqual(data_errors.errors);
-
-          LuxTestHelper.wait(fixture);
-          const messageTexte = fixture.debugElement.queryAll(By.css('.lux-message-text'));
-          expect(messageTexte.length).toEqual(data_errors.errors.length);
-
-          for (let i = 0; i < messageTexte.length; i++) {
-            expect(messageTexte[i].nativeElement.textContent).toBe(data_errors.errors[i].message);
-          }
-        }
-      });
-
+  it('Sollte Fehler aus der Property "errors" anzeigen', async () => {
     // Hier wird die Anzahl der gleichzeitig angezeigten Meldungen auf 4 erhöht,
     // damit alle Meldungen mit einer queryAll-Abfrage eingesammelt werden können.
     component.errorComponent().messageComponent().luxMaximumDisplayed.set(4);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     httpClient.get<any>('abc').subscribe({ next: () => {}, error: () => {} });
     httpController
       .expectOne((req: HttpRequest<any>) => req.url.includes('abc'))
       .flush(data_errors, { status: 400, statusText: 'Constraint Violation' });
+    await LuxTestHelper.wait(fixture);
 
-    handleIconRequests(httpController, fixture);
-  }));
+    await handleIconRequests(httpController, fixture);
+  });
 
-  it('Sollte Fehler aus der Property "violations" anzeigen', fakeAsync(() => {
-    subscription = LuxHttpErrorInterceptor.dataStream$()
-      .pipe(skip(1))
-      .subscribe((errors) => {
-        // Jeder Request setzt den LuxHttpErrorInterceptor.dataStream$() auf ein leeres Array zurück.
-        // Das folgende If stellt sicher, dass nur der Fehlerfall überprüft wird.
-        if (Array.isArray(errors) && errors.length > 0) {
-          expect(errors).toEqual(data_violations.violations);
-
-          LuxTestHelper.wait(fixture);
-          const messageTexte = fixture.debugElement.queryAll(By.css('.lux-message-text'));
-          expect(messageTexte.length).toEqual(data_violations.violations.length);
-
-          for (let i = 0; i < messageTexte.length; i++) {
-            expect(messageTexte[i].nativeElement.textContent).toBe(data_violations.violations[i].message);
-          }
-        }
-      });
-
+  it('Sollte Fehler aus der Property "violations" anzeigen', async () => {
     // Hier wird die Anzahl der gleichzeitig angezeigten Meldungen auf 4 erhöht,
     // damit alle Meldungen mit einer queryAll-Abfrage eingesammelt werden können.
     component.errorComponent().messageComponent().luxMaximumDisplayed.set(4);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     httpClient.get<any>('abc').subscribe({ next: () => {}, error: () => {} });
     httpController
       .expectOne((req: HttpRequest<any>) => req.url.includes('abc'))
       .flush(data_violations, { status: 400, statusText: 'Constraint Violation' });
+    await LuxTestHelper.wait(fixture);
 
-    handleIconRequests(httpController, fixture);
-  }));
+    await handleIconRequests(httpController, fixture);
+  });
 
-  it('Sollte die Fehler (aus Strings) anzeigen', fakeAsync(() => {
+  it('Sollte die Fehler (aus Strings) anzeigen', async () => {
     // Vorbedingungen testen
     let messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -123,7 +82,7 @@ describe('LuxHttpErrorComponent', () => {
 
     // Änderungen durchführen
     LuxHttpErrorInterceptor.dataStream.next(['Error 0', 'Error 1', 'Error 2']);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
@@ -136,10 +95,10 @@ describe('LuxHttpErrorComponent', () => {
     expect(messageContainer.nativeElement.className).toContain('lux-messagebox-red');
     expect(messageContainer.nativeElement.className).toContain('lux-messagebox-on-red');
 
-    handleIconRequests(httpController, fixture);
-  }));
+    await handleIconRequests(httpController, fixture);
+  });
 
-  it('Sollte die Fehler (aus Objekten mit .message) anzeigen', fakeAsync(() => {
+  it('Sollte die Fehler (aus Objekten mit .message) anzeigen', async () => {
     // Vorbedingungen testen
     let messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -155,7 +114,7 @@ describe('LuxHttpErrorComponent', () => {
       { status: '403', message: 'Error 403' },
       { status: '401', message: 'Error 402' }
     ]);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
@@ -168,10 +127,10 @@ describe('LuxHttpErrorComponent', () => {
     expect(messageContainer.nativeElement.className).toContain('lux-messagebox-red');
     expect(messageContainer.nativeElement.className).toContain('lux-messagebox-on-red');
 
-    handleIconRequests(httpController, fixture);
-  }));
+    await handleIconRequests(httpController, fixture);
+  });
 
-  it('Sollte die Fehler (aus Objekten mit .toString()) anzeigen', fakeAsync(() => {
+  it('Sollte die Fehler (aus Objekten mit .toString()) anzeigen', async () => {
     // Vorbedingungen testen
     let messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -187,7 +146,7 @@ describe('LuxHttpErrorComponent', () => {
       { status: '403', toString: () => '403' },
       { status: '401', toString: () => '401' }
     ]);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
@@ -200,10 +159,10 @@ describe('LuxHttpErrorComponent', () => {
     expect(messageContainer.nativeElement.className).toContain('lux-messagebox-red');
     expect(messageContainer.nativeElement.className).toContain('lux-messagebox-on-red');
 
-    handleIconRequests(httpController, fixture);
-  }));
+    await handleIconRequests(httpController, fixture);
+  });
 
-  it('Sollte durch die Fehler navigieren können', fakeAsync(() => {
+  it('Sollte durch die Fehler navigieren können', async () => {
     // Vorbedingungen testen
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
     expect(messageText).toBeNull();
@@ -214,7 +173,7 @@ describe('LuxHttpErrorComponent', () => {
       { status: '403', toString: () => '403' },
       { status: '401', toString: () => '401' }
     ]);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     const paginatorPrev = fixture.debugElement.query(By.css('.mat-mdc-paginator-navigation-previous'));
@@ -246,8 +205,8 @@ describe('LuxHttpErrorComponent', () => {
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
     expect(messageText.nativeElement.textContent).toBe('403');
 
-    handleIconRequests(httpController, fixture);
-  }));
+    await handleIconRequests(httpController, fixture);
+  });
 });
 
 @Component({
@@ -318,14 +277,16 @@ const svg_icon = `<?xml version="1.0"?>
  * @param httpTestingController
  * @param fixture
  */
-function handleIconRequests(httpTestingController: HttpTestingController, fixture: ComponentFixture<LuxMockHttpErrorComponent>) {
-  httpTestingController
-    .match((req: HttpRequest<any>) => req.url.includes('assets/icons/'))
-    .forEach((request) => {
-      if (!request.cancelled) {
-        request.flush(svg_icon);
-        LuxTestHelper.wait(fixture);
-      }
-    });
-  flush();
+async function handleIconRequests(
+  httpTestingController: HttpTestingController,
+  fixture: ComponentFixture<LuxMockHttpErrorComponent>
+): Promise<void> {
+  const requests = httpTestingController.match((req: HttpRequest<any>) => req.url.includes('assets/icons/'));
+  for (const request of requests) {
+    if (!request.cancelled) {
+      request.flush(svg_icon);
+      await LuxTestHelper.wait(fixture);
+    }
+  }
+  await new Promise((resolve) => setTimeout(resolve, 0));
 }

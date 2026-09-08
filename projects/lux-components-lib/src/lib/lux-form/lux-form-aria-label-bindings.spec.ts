@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -24,7 +24,7 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
   let fixture: ComponentFixture<AriaBindingsTestComponent>;
   let testComponent: AriaBindingsTestComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -34,7 +34,7 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AriaBindingsTestComponent);
@@ -52,23 +52,23 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
   ];
 
   for (const c of cases) {
-    it(`${c.selector}: luxAriaLabel landet als aria-label am nativen Element`, fakeAsync(() => {
+    it(`${c.selector}: luxAriaLabel landet als aria-label am nativen Element`, async () => {
       testComponent.ariaLabel = 'Suchbegriff eingeben';
       fixture.detectChanges();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const nativeEl = fixture.debugElement.query(By.css(c.nativeSelector));
       expect(nativeEl.nativeElement.getAttribute('aria-label')).toBe('Suchbegriff eingeben');
-    }));
+    });
 
-    it(`${c.selector}: luxAriaLabelledby landet als aria-labelledby am nativen Element`, fakeAsync(() => {
+    it(`${c.selector}: luxAriaLabelledby landet als aria-labelledby am nativen Element`, async () => {
       testComponent.ariaLabelledby = 'externes-label-id';
       fixture.detectChanges();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const nativeEl = fixture.debugElement.query(By.css(c.nativeSelector));
       expect(nativeEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
-    }));
+    });
   }
 });
 
@@ -101,7 +101,7 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
   let fixture: ComponentFixture<SelectAriaTestComponent>;
   let testComponent: SelectAriaTestComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -111,52 +111,52 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SelectAriaTestComponent);
     testComponent = fixture.componentInstance;
   });
 
-  it('mit luxLabel: aria-labelledby verweist auf das Wrapper-Label', fakeAsync(() => {
+  it('mit luxLabel: aria-labelledby verweist auf das Wrapper-Label', async () => {
     testComponent.label = 'Anrede';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
     const labelEl = fixture.debugElement.query(By.css('label.lux-form-label-authentic'));
     expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBe(labelEl.nativeElement.id);
-  }));
+  });
 
-  it('ohne luxLabel, mit luxAriaLabel: kein toter labelledby-Verweis, aria-label greift', fakeAsync(() => {
+  it('ohne luxLabel, mit luxAriaLabel: kein toter labelledby-Verweis, aria-label greift', async () => {
     testComponent.ariaLabel = 'Liste sortieren nach';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
     expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
     expect(matSelectEl.nativeElement.getAttribute('aria-label')).toBe('Liste sortieren nach');
-  }));
+  });
 
-  it('ohne jegliches Label: aria-labelledby wird nicht gesetzt (kein toter Verweis)', fakeAsync(() => {
+  it('ohne jegliches Label: aria-labelledby wird nicht gesetzt (kein toter Verweis)', async () => {
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
     expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
-  }));
+  });
 
-  it('vergibt die uid nur einmal im DOM (keine doppelte id)', fakeAsync(() => {
+  it('vergibt die uid nur einmal im DOM (keine doppelte id)', async () => {
     testComponent.label = 'Anrede';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const selectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance as LuxSelectComponent;
     const elementsWithUid = fixture.nativeElement.querySelectorAll(`[id="${selectComponent.uid()}"]`);
     expect(elementsWithUid.length).toBe(1);
     // Die uid gehört dem versteckten nativen <select>, auf das das Wrapper-Label per for verweist.
     expect(elementsWithUid[0].tagName.toLowerCase()).toBe('select');
-  }));
+  });
 });
 
 @Component({
@@ -172,7 +172,7 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
   let fixture: ComponentFixture<CheckableAriaTestComponent>;
   let testComponent: CheckableAriaTestComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -182,74 +182,74 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CheckableAriaTestComponent);
     testComponent = fixture.componentInstance;
   });
 
-  it('Slider: luxAriaLabel hat Vorrang vor dem luxLabel-Fallback', fakeAsync(() => {
+  it('Slider: luxAriaLabel hat Vorrang vor dem luxLabel-Fallback', async () => {
     testComponent.ariaLabel = 'Lautstärke';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
     expect(sliderInputEl.nativeElement.getAttribute('aria-label')).toBe('Lautstärke');
-  }));
+  });
 
-  it('Slider: ohne luxAriaLabel bleibt luxLabel der aria-label-Fallback', fakeAsync(() => {
+  it('Slider: ohne luxAriaLabel bleibt luxLabel der aria-label-Fallback', async () => {
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
     expect(sliderInputEl.nativeElement.getAttribute('aria-label')).toBe('Pegel');
-  }));
+  });
 
-  it('Slider: luxAriaLabelledby landet als aria-labelledby am Thumb-Input', fakeAsync(() => {
+  it('Slider: luxAriaLabelledby landet als aria-labelledby am Thumb-Input', async () => {
     testComponent.ariaLabelledby = 'externes-label-id';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
     expect(sliderInputEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
-  }));
+  });
 
-  it('Checkbox: luxAriaLabel landet am nativen input', fakeAsync(() => {
+  it('Checkbox: luxAriaLabel landet am nativen input', async () => {
     testComponent.ariaLabel = 'AGB akzeptieren';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const checkboxInputEl = fixture.debugElement.query(By.css('mat-checkbox input[type="checkbox"]'));
     expect(checkboxInputEl.nativeElement.getAttribute('aria-label')).toBe('AGB akzeptieren');
-  }));
+  });
 
-  it('Checkbox: luxAriaLabelledby landet als aria-labelledby am nativen input', fakeAsync(() => {
+  it('Checkbox: luxAriaLabelledby landet als aria-labelledby am nativen input', async () => {
     testComponent.ariaLabelledby = 'externes-label-id';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const checkboxInputEl = fixture.debugElement.query(By.css('mat-checkbox input[type="checkbox"]'));
     expect(checkboxInputEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
-  }));
+  });
 
-  it('Toggle: luxAriaLabel landet am Switch-Button', fakeAsync(() => {
+  it('Toggle: luxAriaLabel landet am Switch-Button', async () => {
     testComponent.ariaLabel = 'Benachrichtigungen';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const switchEl = fixture.debugElement.query(By.css('mat-slide-toggle button[role="switch"]'));
     expect(switchEl.nativeElement.getAttribute('aria-label')).toBe('Benachrichtigungen');
-  }));
+  });
 
-  it('Toggle: luxAriaLabelledby landet als aria-labelledby am Switch-Button', fakeAsync(() => {
+  it('Toggle: luxAriaLabelledby landet als aria-labelledby am Switch-Button', async () => {
     testComponent.ariaLabelledby = 'externes-label-id';
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const switchEl = fixture.debugElement.query(By.css('mat-slide-toggle button[role="switch"]'));
     expect(switchEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
-  }));
+  });
 });
 
 @Component({
@@ -268,7 +268,7 @@ class CheckableAriaTestComponent {
 describe('Form-Controls - Chips: kein toter aria-labelledby-Verweis', () => {
   let fixture: ComponentFixture<ChipsAriaTestComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -278,19 +278,19 @@ describe('Form-Controls - Chips: kein toter aria-labelledby-Verweis', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ChipsAriaTestComponent);
   });
 
-  it('Standardkonfiguration (nur luxLabel gesetzt) besitzt kein aria-labelledby, da der Wrapper kein Label rendert', fakeAsync(() => {
+  it('Standardkonfiguration (nur luxLabel gesetzt) besitzt kein aria-labelledby, da der Wrapper kein Label rendert', async () => {
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const chipGridEl = fixture.debugElement.query(By.css('mat-chip-grid'));
     expect(chipGridEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
-  }));
+  });
 });
 
 @Component({

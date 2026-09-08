@@ -41,7 +41,7 @@ describe('LuxBreadcrumbComponent', () => {
 
     const container: HTMLElement | null = fixture.nativeElement.querySelector('ol.lux-breadcrumb-container');
     expect(container).toBeTruthy();
-    expect(container!.classList.contains('lux-breadcrumb-container-wrap')).toBeTrue();
+    expect(container!.classList.contains('lux-breadcrumb-container-wrap')).toBe(true);
   });
 
   it('collapses middle entries when luxShowOnlyFirstAndLast is true', () => {
@@ -75,7 +75,7 @@ describe('LuxBreadcrumbComponent', () => {
     fixture.componentRef.setInput('luxEntries', [{ name: 'A' }, { name: 'B' }, { name: 'C' }]);
     fixture.detectChanges();
 
-    const spy = spyOn(component.luxClicked, 'emit');
+    const spy = vi.spyOn(component.luxClicked, 'emit').mockReturnValue(undefined);
     const firstLink: HTMLElement | null = fixture.nativeElement.querySelector('.lux-breadcrumb-item a');
     expect(firstLink).toBeTruthy();
 
@@ -91,7 +91,7 @@ describe('LuxBreadcrumbComponent', () => {
     fixture.componentRef.setInput('luxEntries', [{ name: 'A' }, { name: 'B' }, { name: 'C' }]);
     fixture.detectChanges();
 
-    const spy = spyOn(component.luxClicked, 'emit');
+    const spy = vi.spyOn(component.luxClicked, 'emit').mockReturnValue(undefined);
     const dottedLink: HTMLElement | null = fixture.nativeElement.querySelector('.lux-breadcrumb-item-dotted a');
     expect(dottedLink).toBeTruthy();
 

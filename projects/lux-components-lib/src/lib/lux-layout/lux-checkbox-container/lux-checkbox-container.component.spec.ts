@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LuxCheckboxContainerComponent } from './lux-checkbox-container.component';
 
@@ -6,7 +6,7 @@ describe('LuxCheckboxContainerComponent', () => {
   let component: LuxCheckboxContainerComponent;
   let fixture: ComponentFixture<LuxCheckboxContainerComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [LuxCheckboxContainerComponent]
     }).compileComponents();
@@ -14,7 +14,7 @@ describe('LuxCheckboxContainerComponent', () => {
     fixture = TestBed.createComponent(LuxCheckboxContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

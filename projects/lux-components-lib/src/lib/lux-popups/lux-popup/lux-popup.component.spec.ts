@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { provideLuxComponentsConfig } from '../../lux-components-config/lux-components-config.provider';
@@ -14,7 +14,7 @@ describe('LuxPopupComponent', () => {
   let hostComponent: LuxPopupHostComponent;
   let overlayHelper: LuxOverlayHelper;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideLuxComponentsConfig({
@@ -28,7 +28,7 @@ describe('LuxPopupComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxPopupHostComponent);
@@ -37,42 +37,42 @@ describe('LuxPopupComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should open popup and render projected body', fakeAsync(() => {
+  it('should open popup and render projected body', async () => {
     hostComponent.title.set('Popup Title');
     hostComponent.content.set('Projected Content');
 
     hostComponent.popup().open(hostComponent.trigger());
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const popupElement = overlayHelper.selectOneFromOverlay('.lux-popup');
 
     expect(popupElement).not.toBeNull();
     expect(popupElement?.textContent).toContain('Projected Content');
     expect(hostComponent.openedCount).toBe(1);
-    expect(hostComponent.popup().isOpen()).toBeTrue();
+    expect(hostComponent.popup().isOpen()).toBe(true);
 
     hostComponent.popup().close('program');
-    LuxTestHelper.wait(fixture);
-  }));
+    await LuxTestHelper.wait(fixture);
+  });
 
-  it('should close popup with provided reason', fakeAsync(() => {
+  it('should close popup with provided reason', async () => {
     hostComponent.popup().open(hostComponent.trigger());
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     hostComponent.popup().close('escape');
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     expect(overlayHelper.selectOneFromOverlay('.lux-popup')).toBeNull();
     expect(hostComponent.closedReasons).toEqual(['escape']);
-    expect(hostComponent.popup().isOpen()).toBeFalse();
-  }));
+    expect(hostComponent.popup().isOpen()).toBe(false);
+  });
 
-  it('should apply persistent attributes and classes', fakeAsync(() => {
+  it('should apply persistent attributes and classes', async () => {
     hostComponent.persistent.set(true);
     fixture.detectChanges();
 
     hostComponent.popup().open(hostComponent.trigger());
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     const panelElement = overlayHelper.selectOneFromOverlay('.lux-popup-panel--persistent');
     const popupElement = overlayHelper.selectOneFromOverlay('.lux-popup');
@@ -83,19 +83,19 @@ describe('LuxPopupComponent', () => {
     expect(popupElement?.getAttribute('aria-modal')).toBe('false');
 
     hostComponent.popup().close('program');
-    LuxTestHelper.wait(fixture);
-  }));
+    await LuxTestHelper.wait(fixture);
+  });
 
-  it('should close when clicking outside the overlay', fakeAsync(() => {
+  it('should close when clicking outside the overlay', async () => {
     hostComponent.popup().open(hostComponent.trigger());
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     LuxTestHelper.dispatchEvent(document.body, LuxTestHelper.createFakeEvent('pointerdown', true));
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     expect(hostComponent.closedReasons).toContain('outside');
-    expect(hostComponent.popup().isOpen()).toBeFalse();
-  }));
+    expect(hostComponent.popup().isOpen()).toBe(false);
+  });
 });
 
 @Component({

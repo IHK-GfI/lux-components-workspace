@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
@@ -44,14 +44,14 @@ describe('LuxFileUploadComponent', () => {
       fileComponent['liveAnnouncer'] = { announce: () => {} } as any;
 
       // Wir mocken hier den FileReader weg, da er nicht mit fakeAsync kompatibel ist
-      spyOn(fileComponent, 'readFile').and.returnValue(Promise.resolve(base64Dummy));
+      vi.spyOn(fileComponent, 'readFile').mockResolvedValue(base64Dummy);
       // Den read-Delay für die Ladeanzeige mocken
       fileComponent.defaultReadFileDelay = 0;
       overlayHelper = new LuxOverlayHelper();
       fixture.detectChanges();
     });
 
-    it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', fakeAsync(() => {
+    it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', async () => {
       // Vorbedingungen: Maximal 1 Datei erlaubt
       testComponent.maxFileCount.set(1);
       testComponent.multiple.set(true);
@@ -59,15 +59,17 @@ describe('LuxFileUploadComponent', () => {
 
       // Eine Datei hinzufügen
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
-      flush();
-      LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fileComponent.value()!.length).toBe(1);
       expect(fileComponent.formControl.errors).toBeNull();
 
       // Versucht eine zweite Datei hinzuzufügen -> Error
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      flush();
-      LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fileComponent.formControl.errors).not.toBeNull();
       expect(fileComponent.formControl.errors![LuxFileErrorCause.MaxFileCount]).toBeDefined();
 
@@ -77,13 +79,14 @@ describe('LuxFileUploadComponent', () => {
 
       // Fügt eine zweite Datei hinzu
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      flush();
-      LuxTestHelper.wait(fixture);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Jetzt sollten zwei Dateien erlaubt sein
       expect(fileComponent.value()!.length).toBe(2);
       expect(fileComponent.formControl.errors).toBeNull();
-    }));
+    });
 
     it('Sollte den Delete-Button bei luxListOnly=true anzeigen, wenn hidden=false konfiguriert ist', () => {
       testComponent.listOnly.set(true);

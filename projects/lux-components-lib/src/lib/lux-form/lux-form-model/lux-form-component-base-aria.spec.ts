@@ -1,7 +1,8 @@
+import type { Mock } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, signal, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -12,7 +13,7 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
   let fixture: ComponentFixture<AriaBaseTestComponent>;
   let testComponent: AriaBaseTestComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -22,7 +23,7 @@ describe('LuxFormComponentBase - Namenskaskade (labelledBy)', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AriaBaseTestComponent);
@@ -86,9 +87,9 @@ class ProjectedLabelOnlyTestComponent {
 }
 
 describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
-  let warnSpy: jasmine.Spy;
+  let warnSpy: Mock;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -98,53 +99,58 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     const consoleService = TestBed.inject(LuxConsoleService);
-    warnSpy = jasmine.createSpy('warn');
-    spyOnProperty(consoleService, 'warn', 'get').and.returnValue(warnSpy);
+    warnSpy = vi.fn().mockName('warn');
+    vi.spyOn(consoleService as any, 'warn', 'get').mockReturnValue(warnSpy);
   });
 
-  it('warnt, wenn ein Control keinerlei zugänglichen Namen hat', fakeAsync(() => {
+  it('warnt, wenn ein Control keinerlei zugänglichen Namen hat', async () => {
     const fixture = TestBed.createComponent(NoNameTestComponent);
     fixture.detectChanges();
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
-    expect(warnSpy).toHaveBeenCalledWith(jasmine.stringContaining('keinen zugänglichen Namen'));
-  }));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('keinen zugänglichen Namen'));
+  });
 
-  it('warnt bei sichtbarem Label plus abweichendem luxAriaLabel (WCAG 2.5.3)', fakeAsync(() => {
+  it('warnt bei sichtbarem Label plus abweichendem luxAriaLabel (WCAG 2.5.3)', async () => {
     const fixture = TestBed.createComponent(ConflictingNameTestComponent);
     fixture.detectChanges();
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
-    expect(warnSpy).toHaveBeenCalledWith(jasmine.stringContaining('2.5.3'));
-  }));
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('2.5.3'));
+  });
 
-  it('warnt nicht, wenn luxLabel gesetzt ist', fakeAsync(() => {
+  it('warnt nicht, wenn luxLabel gesetzt ist', async () => {
     const fixture = TestBed.createComponent(AriaBaseTestComponent);
     fixture.detectChanges();
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(warnSpy).not.toHaveBeenCalled();
-  }));
+  });
 
-  it('warnt nicht, wenn nur luxAriaLabel gesetzt ist', fakeAsync(() => {
+  it('warnt nicht, wenn nur luxAriaLabel gesetzt ist', async () => {
     const fixture = TestBed.createComponent(AriaOnlyTestComponent);
     fixture.detectChanges();
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(warnSpy).not.toHaveBeenCalled();
-  }));
+  });
 
-  it('warnt nicht bei projiziertem lux-form-label plus luxAriaLabel (Text hier nicht auslesbar)', fakeAsync(() => {
+  it('warnt nicht bei projiziertem lux-form-label plus luxAriaLabel (Text hier nicht auslesbar)', async () => {
     const fixture = TestBed.createComponent(ProjectedLabelTestComponent);
     fixture.detectChanges();
-    tick();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
 
     expect(warnSpy).not.toHaveBeenCalled();
-  }));
+  });
 });
 
 @Component({

@@ -3,7 +3,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
@@ -27,7 +27,7 @@ describe('LuxControlDisable', () => {
   let fixture: ComponentFixture<LuxControlDisableComponent>;
   let testComponent: LuxControlDisableComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -37,16 +37,15 @@ describe('LuxControlDisable', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(LuxControlDisableComponent);
     fixture.detectChanges();
     testComponent = fixture.componentInstance;
-    discardPeriodicTasks();
-  }));
+  });
 
-  it('Controls über luxDisabled (de-)aktivieren', fakeAsync(() => {
+  it('Controls über luxDisabled (de-)aktivieren', async () => {
     // Vorbedingungen testen
     const inputEl = fixture.debugElement.query(By.css('#input input')).nativeElement as HTMLInputElement;
     const autocompleteEl = fixture.debugElement.query(By.css('#autocomplete input')).nativeElement as HTMLInputElement;
@@ -74,7 +73,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -103,7 +102,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(false);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);
@@ -129,11 +128,9 @@ describe('LuxControlDisable', () => {
     expect(testComponent.myForm.get('textarea')!.disabled).toBe(false);
     expect(toggleEl.disabled).toBe(false);
     expect(testComponent.myForm.get('toggle')!.disabled).toBe(false);
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Controls über das Formular (de-)aktivieren', fakeAsync(() => {
+  it('Controls über das Formular (de-)aktivieren', async () => {
     // Vorbedingungen testen
     const inputEl = fixture.debugElement.query(By.css('#input input')).nativeElement as HTMLInputElement;
     const autocompleteEl = fixture.debugElement.query(By.css('#autocomplete input')).nativeElement as HTMLInputElement;
@@ -171,7 +168,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.disable();
     testComponent.myForm.get('textarea')!.disable();
     testComponent.myForm.get('toggle')!.disable();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -209,7 +206,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.enable();
     testComponent.myForm.get('textarea')!.enable();
     testComponent.myForm.get('toggle')!.enable();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);
@@ -234,11 +231,9 @@ describe('LuxControlDisable', () => {
     expect(testComponent.myForm.get('textarea')!.disabled).toBe(false);
     expect(toggleEl.disabled).toBe(false);
     expect(testComponent.myForm.get('toggle')!.disabled).toBe(false);
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Controls über das Formular deaktivieren und über LuxDisabled aktivieren', fakeAsync(() => {
+  it('Controls über das Formular deaktivieren und über LuxDisabled aktivieren', async () => {
     // Vorbedingungen testen
     const inputEl = fixture.debugElement.query(By.css('#input input')).nativeElement as HTMLInputElement;
     const autocompleteEl = fixture.debugElement.query(By.css('#autocomplete input')).nativeElement as HTMLInputElement;
@@ -276,7 +271,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.disable();
     testComponent.myForm.get('textarea')!.disable();
     testComponent.myForm.get('toggle')!.disable();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -304,7 +299,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(false);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);
@@ -329,11 +324,9 @@ describe('LuxControlDisable', () => {
     expect(testComponent.myForm.get('textarea')!.disabled).toBe(false);
     expect(toggleEl.disabled).toBe(false);
     expect(testComponent.myForm.get('toggle')!.disabled).toBe(false);
+  });
 
-    discardPeriodicTasks();
-  }));
-
-  it('Controls über luxDisabled deaktivieren und übers Formular aktivieren', fakeAsync(() => {
+  it('Controls über luxDisabled deaktivieren und übers Formular aktivieren', async () => {
     // Vorbedingungen testen
     const inputEl = fixture.debugElement.query(By.css('#input input')).nativeElement as HTMLInputElement;
     const autocompleteEl = fixture.debugElement.query(By.css('#autocomplete input')).nativeElement as HTMLInputElement;
@@ -361,7 +354,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(true);
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -400,7 +393,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.enable();
     testComponent.myForm.get('textarea')!.enable();
     testComponent.myForm.get('toggle')!.enable();
-    LuxTestHelper.wait(fixture);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);
@@ -426,9 +419,7 @@ describe('LuxControlDisable', () => {
     expect(testComponent.myForm.get('textarea')!.disabled).toBe(false);
     expect(toggleEl.disabled).toBe(false);
     expect(testComponent.myForm.get('toggle')!.disabled).toBe(false);
-
-    discardPeriodicTasks();
-  }));
+  });
 });
 
 @Component({

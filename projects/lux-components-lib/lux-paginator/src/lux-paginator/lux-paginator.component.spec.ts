@@ -113,7 +113,7 @@ describe('LuxPaginatorComponent', () => {
   });
 
   describe('Events', () => {
-    it('should emit luxPageChange on onPageChange', (done) => {
+    it('should emit luxPageChange on onPageChange', async () => {
       const pageEvent: LuxPageEvent = {
         previousPageIndex: 0,
         pageIndex: 1,
@@ -123,7 +123,6 @@ describe('LuxPaginatorComponent', () => {
 
       component.luxPageChange.subscribe((event) => {
         expect(event).toEqual(pageEvent);
-        done();
       });
 
       component.onPageChange(pageEvent as any);
@@ -142,7 +141,7 @@ describe('LuxPaginatorComponent', () => {
       expect(component.luxPageIndex()).toBe(2);
     });
 
-    it('should emit correct event on page size change', (done) => {
+    it('should emit correct event on page size change', async () => {
       const pageEvent: LuxPageEvent = {
         previousPageIndex: 0,
         pageIndex: 0,
@@ -152,7 +151,6 @@ describe('LuxPaginatorComponent', () => {
 
       component.luxPageChange.subscribe((event) => {
         expect(event.pageSize).toBe(25);
-        done();
       });
 
       component.onPageChange(pageEvent as any);

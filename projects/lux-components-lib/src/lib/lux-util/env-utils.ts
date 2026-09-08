@@ -11,6 +11,7 @@ export function isTestEnv(): boolean {
     typeof testGlobals.jasmine !== 'undefined' ||
     typeof testGlobals.__karma__ !== 'undefined' ||
     typeof testGlobals.process?.env?.['JEST_WORKER_ID'] !== 'undefined' ||
-    typeof testGlobals.process?.env?.['KARMA_WORKER_ID'] !== 'undefined'
+    typeof testGlobals.process?.env?.['KARMA_WORKER_ID'] !== 'undefined' ||
+    typeof testGlobals.process?.env?.['VITEST'] !== 'undefined'
   );
 }

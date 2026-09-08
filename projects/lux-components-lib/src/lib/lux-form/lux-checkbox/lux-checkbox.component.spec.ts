@@ -1,7 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -12,7 +12,7 @@ import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class
 import { LuxCheckboxComponent } from './lux-checkbox.component';
 
 describe('LuxCheckboxComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
@@ -22,20 +22,20 @@ describe('LuxCheckboxComponent', () => {
         LuxConsoleService
       ]
     }).compileComponents();
-  }));
+  });
 
   describe('innerhalb eines Formulars', () => {
     describe('FormGroup (not required)"', () => {
       let fixture: ComponentFixture<LuxCheckboxInFormAttributeComponent>;
       let testComponent: LuxCheckboxInFormAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxCheckboxInFormAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Formularwert über die Component setzen', fakeAsync(() => {
+      it('Formularwert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toEqual(true);
 
@@ -48,20 +48,20 @@ describe('LuxCheckboxComponent', () => {
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBe(false);
         expect(checkboxEl.nativeElement.checked).toBeFalsy();
         expect(checkboxEl.nativeElement.required).toBeFalsy();
-      }));
+      });
     });
 
     describe('FormGroup (required)"', () => {
       let fixture: ComponentFixture<LuxCheckboxRequiredInFormAttributeComponent>;
       let testComponent: LuxCheckboxRequiredInFormAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxCheckboxRequiredInFormAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Formularwert über die Component setzen', fakeAsync(() => {
+      it('Formularwert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toEqual(null);
 
@@ -73,9 +73,9 @@ describe('LuxCheckboxComponent', () => {
         const checkboxEl = fixture.debugElement.query(By.css('input'));
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
         expect(checkboxEl.nativeElement.checked).toBeTruthy();
-      }));
+      });
 
-      it('Label anklicken', fakeAsync(() => {
+      it('Label anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
 
@@ -83,13 +83,14 @@ describe('LuxCheckboxComponent', () => {
         const checkboxEl = fixture.debugElement.query(By.css('label'));
         checkboxEl.nativeElement.click();
         fixture.detectChanges();
-        flush();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
-      }));
+      });
 
-      it('Checkbox anklicken', fakeAsync(() => {
+      it('Checkbox anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
 
@@ -100,7 +101,7 @@ describe('LuxCheckboxComponent', () => {
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
-      }));
+      });
 
       it('Sollte die korrekte Fehlermeldung anzeigen', () => {
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -118,10 +119,10 @@ describe('LuxCheckboxComponent', () => {
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
       });
 
-      it('Sollte einen Fehler bei Startwert "" anzeigen können', fakeAsync(() => {
+      it('Sollte einen Fehler bei Startwert "" anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(null);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeNull();
@@ -129,49 +130,49 @@ describe('LuxCheckboxComponent', () => {
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
 
-      it('Sollte einen Fehler bei Startwert false anzeigen können', fakeAsync(() => {
+      it('Sollte einen Fehler bei Startwert false anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(false);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Vorbedingungen testen
-        expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalse();
+        expect(fixture.componentInstance.formGroup.get('eula')!.value).toBe(false);
         expect(errorElement).toBeNull();
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
 
-      it('Sollte einen Fehler bei Startwert true anzeigen können', fakeAsync(() => {
+      it('Sollte einen Fehler bei Startwert true anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(true);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Vorbedingungen testen
-        expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTrue();
+        expect(fixture.componentInstance.formGroup.get('eula')!.value).toBe(true);
         expect(errorElement).toBeNull();
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.setValue(false);
         testComponent.formGroup.get('eula')!.markAsTouched();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
     });
   });
 
@@ -180,13 +181,13 @@ describe('LuxCheckboxComponent', () => {
       let fixture: ComponentFixture<LuxCheckedAttributeComponent>;
       let testComponent: LuxCheckedAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxCheckedAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Wert über die Component setzen', fakeAsync(() => {
+      it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula()).toBeUndefined();
 
@@ -197,9 +198,9 @@ describe('LuxCheckboxComponent', () => {
         // Nachbedingungen testen
         const checkboxEl = fixture.debugElement.query(By.css('input'));
         expect(checkboxEl.nativeElement.checked).toBeTruthy();
-      }));
+      });
 
-      it('Label anklicken', fakeAsync(() => {
+      it('Label anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula()).toBeFalsy();
 
@@ -207,13 +208,14 @@ describe('LuxCheckboxComponent', () => {
         const checkboxEl = fixture.debugElement.query(By.css('label'));
         checkboxEl.nativeElement.click();
         fixture.detectChanges();
-        flush();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.eula()).toBeTruthy();
-      }));
+      });
 
-      it('Checkbox anklicken', fakeAsync(() => {
+      it('Checkbox anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula()).toBeFalsy();
 
@@ -224,20 +226,20 @@ describe('LuxCheckboxComponent', () => {
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.eula()).toBeTruthy();
-      }));
+      });
     });
 
     describe('Attribut "luxDisabled"', () => {
       let fixture: ComponentFixture<LuxDisabledAttributeComponent>;
       let testComponent: LuxDisabledAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxDisabledAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Wert über die Component setzen', fakeAsync(() => {
+      it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.disabled()).toBeUndefined();
 
@@ -252,20 +254,20 @@ describe('LuxCheckboxComponent', () => {
         // Nachbedingungen testen
         expect(fixture.componentInstance.disabled()).toBeTruthy();
         expect(checkboxEl.nativeElement.disabled).toBeTruthy();
-      }));
+      });
     });
 
     describe('Attribut "luxLabel"', () => {
       let fixture: ComponentFixture<LuxLabelAttributeComponent>;
       let testComponent: LuxLabelAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxLabelAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Wert über die Component setzen', fakeAsync(() => {
+      it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.label()).toEqual('');
 
@@ -279,21 +281,21 @@ describe('LuxCheckboxComponent', () => {
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.label()).toEqual(newLabel);
-        expect(labelEl.nativeElement.innerHTML.trim().indexOf(newLabel) !== -1).toBeTrue();
-      }));
+        expect(labelEl.nativeElement.innerHTML.trim().indexOf(newLabel) !== -1).toBe(true);
+      });
     });
 
     describe('Attribut "luxCheckedChange"', () => {
       let fixture: ComponentFixture<LuxCheckedChangeComponent>;
       let testComponent: LuxCheckedChangeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxCheckedChangeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Check Event', fakeAsync(() => {
+      it('Check Event', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula).toBeUndefined();
 
@@ -313,7 +315,7 @@ describe('LuxCheckboxComponent', () => {
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.eula).toBeFalsy();
-      }));
+      });
     });
 
     describe('Attribut "luxRequired"', () => {
@@ -321,14 +323,14 @@ describe('LuxCheckboxComponent', () => {
       let testComponent: LuxRequiredAttributeComponent;
       let checkboxComponent: LuxCheckboxComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxRequiredAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
         checkboxComponent = fixture.debugElement.query(By.directive(LuxCheckboxComponent)).componentInstance;
-      }));
+      });
 
-      it('Sollte die korrekte Fehlermeldung anzeigen', fakeAsync(() => {
+      it('Sollte die korrekte Fehlermeldung anzeigen', async () => {
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
 
         // Vorbedingungen testen
@@ -336,12 +338,12 @@ describe('LuxCheckboxComponent', () => {
 
         // Änderungen durchführen
         checkboxComponent.formControl.markAsTouched();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
     });
 
     describe('Error-Message', () => {
@@ -349,30 +351,30 @@ describe('LuxCheckboxComponent', () => {
       let testComponent: LuxValidatorsComponent;
       let checkboxComponent: LuxCheckboxComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxValidatorsComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
         checkboxComponent = fixture.debugElement.query(By.directive(LuxCheckboxComponent)).componentInstance;
-      }));
+      });
 
-      it('Validatoren setzen und die Fehlermeldungen korrekt anzeigen', fakeAsync(() => {
+      it('Validatoren setzen und die Fehlermeldungen korrekt anzeigen', async () => {
         // Vorbedingungen testen
         let errorEl = fixture.debugElement.query(By.css('mat-error'));
         expect(errorEl).toBeNull();
 
         // Änderungen durchführen
         testComponent.validators.set(Validators.required);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
         checkboxComponent.formControl.markAsTouched();
         checkboxComponent.formControl.updateValueAndValidity();
-        LuxTestHelper.wait(fixture, 100);
+        await LuxTestHelper.wait(fixture, 100);
 
         // Nachbedingungen testen
         errorEl = fixture.debugElement.query(By.css('mat-error'));
         expect(errorEl.nativeElement.innerText.trim().length).toBeGreaterThan(0);
         expect(checkboxComponent.formControl.valid).toBeFalsy();
-      }));
+      });
     });
   });
 
@@ -384,11 +386,11 @@ describe('LuxCheckboxComponent', () => {
       LuxA11yTestHelper.addA11yMatchers();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxCheckboxA11yComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
       fixture.detectChanges();

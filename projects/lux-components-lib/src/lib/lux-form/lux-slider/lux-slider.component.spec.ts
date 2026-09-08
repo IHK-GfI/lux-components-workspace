@@ -3,17 +3,17 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
-import { LuxDisplayWithFnType, LuxSliderComponent } from './lux-slider.component';
+import { LuxDisplayWithFnType, LuxSliderColor, LuxSliderComponent } from './lux-slider.component';
 
 describe('LuxSliderComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -23,7 +23,7 @@ describe('LuxSliderComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   describe('In ReactiveForm', () => {
     let component: MockSliderFormComponent;
@@ -40,25 +40,25 @@ describe('LuxSliderComponent', () => {
     // Änderungen durchführen
     // Nachbedingungen prüfen
 
-    it('Sollte den Wert setzen', fakeAsync(() => {
+    it('Sollte den Wert setzen', async () => {
       // Vorbedingungen testen
       expect(component.form.value.slider).toEqual(0);
 
       // Änderungen durchführen
       component.form.get('slider')!.setValue(25);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(component.form.value.slider).toEqual(25);
       expect(sliderComponent.formControl.value).toEqual(25);
-    }));
+    });
 
-    it('Sollte den Wert und Prozent-Wert richtig emitten (bei geändertem Max/Min Wert)', fakeAsync(() => {
+    it('Sollte den Wert und Prozent-Wert richtig emitten (bei geändertem Max/Min Wert)', async () => {
       // Vorbedingungen testen
-      const valueSpy = spyOn(component, 'valueChanged');
-      const percentSpy = spyOn(component, 'percentChanged');
+      const valueSpy = vi.spyOn(component, 'valueChanged').mockReturnValue(undefined);
+      const percentSpy = vi.spyOn(component, 'percentChanged').mockReturnValue(undefined);
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(valueSpy).toHaveBeenCalledTimes(0);
       expect(percentSpy).toHaveBeenCalledTimes(0);
@@ -66,18 +66,18 @@ describe('LuxSliderComponent', () => {
       // Änderungen durchführen
       component.max.set(50);
       component.min.set(25);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       component.form.get('slider')!.setValue(30);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(valueSpy).toHaveBeenCalledTimes(1);
       expect(percentSpy).toHaveBeenCalledTimes(1);
       expect(valueSpy).toHaveBeenCalledWith(30);
       expect(percentSpy).toHaveBeenCalledWith(20);
-    }));
+    });
 
-    it('Sollte den Min- und Max-Wert nicht überschreiten', fakeAsync(() => {
+    it('Sollte den Min- und Max-Wert nicht überschreiten', async () => {
       // Vorbedingungen testen
       expect(component.form.get('slider')!.value).toEqual(0);
       expect(sliderComponent.value()).toEqual(0);
@@ -85,9 +85,9 @@ describe('LuxSliderComponent', () => {
       // Änderungen durchführen
       component.max.set(50);
       component.min.set(25);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       component.form.get('slider')!.setValue(20);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(component.form.get('slider')!.value).toEqual(25);
@@ -95,14 +95,14 @@ describe('LuxSliderComponent', () => {
 
       // Änderungen durchführen
       component.form.get('slider')!.setValue(55);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(component.form.get('slider')!.value).toEqual(50);
       expect(sliderComponent.value()).toEqual(50);
-    }));
+    });
 
-    it('Sollte deaktiviert werden (über die Property)', fakeAsync(() => {
+    it('Sollte deaktiviert werden (über die Property)', async () => {
       // Vorbedingungen testen
       let disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeNull();
@@ -110,25 +110,25 @@ describe('LuxSliderComponent', () => {
 
       // Änderungen durchführen
       component.disabled.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeDefined();
       expect(sliderComponent.luxDisabled()).toBe(true);
-    }));
+    });
 
-    it('Sollte deaktiviert werden (über die FormControl)', fakeAsync(() => {
+    it('Sollte deaktiviert werden (über die FormControl)', async () => {
       // Vorbedingungen testen
       expect(sliderComponent.formControl.disabled).toBe(false);
 
       // Änderungen durchführen
       component.form.get('slider')!.disable();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(sliderComponent.formControl.disabled).toBe(true);
-    }));
+    });
   });
 
   describe('Ohne ReactiveForm', () => {
@@ -143,26 +143,26 @@ describe('LuxSliderComponent', () => {
       sliderComponent = fixture.debugElement.query(By.directive(LuxSliderComponent)).componentInstance;
     });
 
-    it('Sollte den Wert setzen', fakeAsync(() => {
+    it('Sollte den Wert setzen', async () => {
       // Vorbedingungen testen
       expect(component.value()).toEqual(0);
       expect(sliderComponent.value()).toEqual(0);
 
       // Änderungen durchführen
       component.value.set(50);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(component.value()).toEqual(50);
       expect(sliderComponent.value()).toEqual(50);
-    }));
+    });
 
-    it('Sollte den Wert und Prozent-Wert richtig emitten (bei geändertem Max/Min Wert)', fakeAsync(() => {
+    it('Sollte den Wert und Prozent-Wert richtig emitten (bei geändertem Max/Min Wert)', async () => {
       // Vorbedingungen testen
-      const valueSpy = spyOn(component, 'valueChanged');
-      const percentSpy = spyOn(component, 'percentChanged');
+      const valueSpy = vi.spyOn(component, 'valueChanged').mockReturnValue(undefined);
+      const percentSpy = vi.spyOn(component, 'percentChanged').mockReturnValue(undefined);
 
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(valueSpy).toHaveBeenCalledTimes(0);
       expect(percentSpy).toHaveBeenCalledTimes(0);
@@ -170,18 +170,18 @@ describe('LuxSliderComponent', () => {
       // Änderungen durchführen
       component.max.set(50);
       component.min.set(25);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       component.value.set(30);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(valueSpy).toHaveBeenCalledTimes(1);
       expect(percentSpy).toHaveBeenCalledTimes(1);
       expect(valueSpy).toHaveBeenCalledWith(30);
       expect(percentSpy).toHaveBeenCalledWith(20);
-    }));
+    });
 
-    it('Sollte deaktiviert werden', fakeAsync(() => {
+    it('Sollte deaktiviert werden', async () => {
       // Vorbedingungen testen
       let disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeNull();
@@ -189,15 +189,15 @@ describe('LuxSliderComponent', () => {
 
       // Änderungen durchführen
       component.disabled.set(true);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       disabledSlider = fixture.debugElement.query(By.css('.mat-slider-disabled'));
       expect(disabledSlider).toBeDefined();
       expect(sliderComponent.luxDisabled()).toBe(true);
-    }));
+    });
 
-    it('Sollte den Min- und Max-Wert nicht überschreiten', fakeAsync(() => {
+    it('Sollte den Min- und Max-Wert nicht überschreiten', async () => {
       // Vorbedingungen testen
       expect(component.value()).toEqual(0);
       expect(sliderComponent.value()).toEqual(0);
@@ -205,9 +205,9 @@ describe('LuxSliderComponent', () => {
       // Änderungen durchführen
       component.max.set(50);
       component.min.set(25);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       component.value.set(20);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(component.value()).toEqual(25);
@@ -215,28 +215,28 @@ describe('LuxSliderComponent', () => {
 
       // Änderungen durchführen
       component.value.set(55);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(component.value()).toEqual(50);
       expect(sliderComponent.value()).toEqual(50);
-    }));
+    });
 
-    it('Sollte den Thumb-Label anzeigen und verstecken', fakeAsync(() => {
+    it('Sollte den Thumb-Label anzeigen und verstecken', async () => {
       // Vorbedingungen testen
       let thumbLabel = fixture.debugElement.query(By.css('.mat-slider-thumb-label-showing .mat-slider-thumb-label'));
       expect(thumbLabel).toBeDefined();
 
       // Änderungen durchführen
       component.showThumbLabel.set(false);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       thumbLabel = fixture.debugElement.query(By.css('.mat-slider-thumb-label-showing .mat-slider-thumb-label'));
       expect(thumbLabel).toBeNull();
-    }));
+    });
 
-    it('Sollte die displayWith-Funktion korrekt ausführen', fakeAsync(() => {
+    it('Sollte die displayWith-Funktion korrekt ausführen', async () => {
       // Vorbedingungen testen
       let thumbLabelText = fixture.debugElement.query(By.css('.mdc-slider__value-indicator-text'));
       expect(thumbLabelText.nativeElement.textContent).toEqual('0');
@@ -251,21 +251,21 @@ describe('LuxSliderComponent', () => {
         }
         return result;
       });
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       component.value.set(1000);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       thumbLabelText = fixture.debugElement.query(By.css('.mdc-slider__value-indicator-text'));
       expect(thumbLabelText.nativeElement.textContent).toEqual('1k');
 
       component.value.set(5600);
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       thumbLabelText = fixture.debugElement.query(By.css('.mdc-slider__value-indicator-text'));
       expect(thumbLabelText.nativeElement.textContent).toEqual('6k');
-    }));
+    });
   });
 
   describe('A11y', () => {
@@ -276,11 +276,11 @@ describe('LuxSliderComponent', () => {
       LuxA11yTestHelper.addA11yMatchers();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxSliderA11yComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
       fixture.detectChanges();
@@ -326,7 +326,7 @@ describe('LuxSliderComponent', () => {
   imports: [LuxSliderComponent]
 })
 class MockSliderNoFormComponent {
-  color = signal('primary');
+  color = signal<LuxSliderColor>('primary');
   disabled = signal(false);
   showThumbLabel = signal(true);
   value = signal(0);

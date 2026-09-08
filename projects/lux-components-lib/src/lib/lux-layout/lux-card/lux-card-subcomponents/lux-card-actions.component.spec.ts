@@ -27,16 +27,16 @@ describe('LuxCardActionsComponent', () => {
 
   it('sollte default rechts ausrichten', () => {
     const div = containerDiv();
-    expect(div.classList.contains('lux-justify-end')).toBeTrue();
-    expect(div.classList.contains('lux-justify-start')).toBeFalse();
+    expect(div.classList.contains('lux-justify-end')).toBe(true);
+    expect(div.classList.contains('lux-justify-start')).toBe(false);
   });
 
   it('sollte links ausrichten wenn luxAlign="left"', () => {
     host.align.set('left');
     fixture.detectChanges();
     const div = containerDiv();
-    expect(div.classList.contains('lux-justify-start')).toBeTrue();
-    expect(div.classList.contains('lux-justify-end')).toBeFalse();
+    expect(div.classList.contains('lux-justify-start')).toBe(true);
+    expect(div.classList.contains('lux-justify-end')).toBe(false);
   });
 
   it('sollte Content projizieren', () => {

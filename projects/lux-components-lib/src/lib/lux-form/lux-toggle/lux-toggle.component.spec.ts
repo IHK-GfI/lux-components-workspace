@@ -3,7 +3,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -14,7 +14,7 @@ import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class
 import { LuxToggleComponent } from './lux-toggle.component';
 
 describe('LuxToggleComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -24,20 +24,20 @@ describe('LuxToggleComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   describe('innerhalb eines Formulars', () => {
     describe('FormGroup (not required)"', () => {
       let fixture: ComponentFixture<LuxToggleInFormAttributeComponent>;
       let testComponent: LuxToggleInFormAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxToggleInFormAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Formularwert über die Component setzen', fakeAsync(() => {
+      it('Formularwert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toEqual(true);
 
@@ -50,20 +50,20 @@ describe('LuxToggleComponent', () => {
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
         expect(toggleEl.nativeElement.classList).toContain('mdc-switch--unselected');
         expect(toggleEl.nativeElement.required).toBeFalsy();
-      }));
+      });
     });
 
     describe('FormGroup (required)"', () => {
       let fixture: ComponentFixture<LuxToggleRequiredInFormAttributeComponent>;
       let testComponent: LuxToggleRequiredInFormAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxToggleRequiredInFormAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Formularwert über die Component setzen', fakeAsync(() => {
+      it('Formularwert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toEqual(null);
 
@@ -75,9 +75,9 @@ describe('LuxToggleComponent', () => {
         const toggleEl = fixture.debugElement.query(By.css('button'));
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
         expect(toggleEl.nativeElement.classList).toContain('mdc-switch--selected');
-      }));
+      });
 
-      it('Label anklicken', fakeAsync(() => {
+      it('Label anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
 
@@ -85,13 +85,14 @@ describe('LuxToggleComponent', () => {
         const toggleEl = fixture.debugElement.query(By.css('label'));
         toggleEl.nativeElement.click();
         fixture.detectChanges();
-        flush();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
-      }));
+      });
 
-      it('Toggle anklicken', fakeAsync(() => {
+      it('Toggle anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
 
@@ -102,7 +103,7 @@ describe('LuxToggleComponent', () => {
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
-      }));
+      });
 
       it('Sollte die korrekte Fehlermeldung anzeigen', () => {
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -120,10 +121,10 @@ describe('LuxToggleComponent', () => {
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
       });
 
-      it('Sollte einen Fehler bei Startwert "" anzeigen können', fakeAsync(() => {
+      it('Sollte einen Fehler bei Startwert "" anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue('');
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
@@ -131,17 +132,17 @@ describe('LuxToggleComponent', () => {
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
 
-      it('Sollte einen Fehler bei Startwert false anzeigen können', fakeAsync(() => {
+      it('Sollte einen Fehler bei Startwert false anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(false);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
@@ -149,17 +150,17 @@ describe('LuxToggleComponent', () => {
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
 
-      it('Sollte einen Fehler bei Startwert true anzeigen können', fakeAsync(() => {
+      it('Sollte einen Fehler bei Startwert true anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(true);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
@@ -168,12 +169,12 @@ describe('LuxToggleComponent', () => {
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.setValue(false);
         testComponent.formGroup.get('eula')!.markAsTouched();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
     });
   });
 
@@ -182,13 +183,13 @@ describe('LuxToggleComponent', () => {
       let fixture: ComponentFixture<LuxCheckedAttributeComponent>;
       let testComponent: LuxCheckedAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxCheckedAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Wert über die Component setzen', fakeAsync(() => {
+      it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula()).toBeUndefined();
 
@@ -199,9 +200,9 @@ describe('LuxToggleComponent', () => {
         // Nachbedingungen testen
         const toggleEl = fixture.debugElement.query(By.css('button'));
         expect(toggleEl.nativeElement.classList).toContain('mdc-switch--selected');
-      }));
+      });
 
-      it('Label anklicken', fakeAsync(() => {
+      it('Label anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula()).toBeFalsy();
 
@@ -209,13 +210,14 @@ describe('LuxToggleComponent', () => {
         const toggleEl = fixture.debugElement.query(By.css('label'));
         toggleEl.nativeElement.click();
         fixture.detectChanges();
-        flush();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.eula()).toBeTruthy();
-      }));
+      });
 
-      it('Toggle anklicken', fakeAsync(() => {
+      it('Toggle anklicken', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula()).toBeFalsy();
 
@@ -226,20 +228,20 @@ describe('LuxToggleComponent', () => {
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.eula()).toBeTruthy();
-      }));
+      });
     });
 
     describe('Attribut "luxDisabled"', () => {
       let fixture: ComponentFixture<LuxDisabledAttributeComponent>;
       let testComponent: LuxDisabledAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxDisabledAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Wert über die Component setzen', fakeAsync(() => {
+      it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.disabled()).toBeUndefined();
 
@@ -254,20 +256,20 @@ describe('LuxToggleComponent', () => {
         // Nachbedingungen testen
         expect(fixture.componentInstance.disabled()).toBeTruthy();
         expect(toggleEl.nativeElement.disabled).toBeTruthy();
-      }));
+      });
     });
 
     describe('Attribut "luxLabel"', () => {
       let fixture: ComponentFixture<LuxLabelAttributeComponent>;
       let testComponent: LuxLabelAttributeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxLabelAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Wert über die Component setzen', fakeAsync(() => {
+      it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.label()).toBeUndefined();
 
@@ -282,20 +284,20 @@ describe('LuxToggleComponent', () => {
         // Nachbedingungen testen
         expect(fixture.componentInstance.label()).toEqual(newLabel);
         expect(labelEl.nativeElement.innerHTML.trim().indexOf(newLabel) !== -1).toBeTruthy();
-      }));
+      });
     });
 
     describe('Attribut "luxCheckedChange"', () => {
       let fixture: ComponentFixture<LuxCheckedChangeComponent>;
       let testComponent: LuxCheckedChangeComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxCheckedChangeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
-      }));
+      });
 
-      it('Check Event', fakeAsync(() => {
+      it('Check Event', async () => {
         // Vorbedingungen testen
         expect(fixture.componentInstance.eula).toBeNull();
 
@@ -315,12 +317,12 @@ describe('LuxToggleComponent', () => {
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.eula).toBeFalsy();
-      }));
+      });
 
-      it('Sollte den Change-Event nach einer stillen (emitEvent:false) Wertänderung nicht verschlucken', fakeAsync(() => {
+      it('Sollte den Change-Event nach einer stillen (emitEvent:false) Wertänderung nicht verschlucken', async () => {
         const toggleComponent: LuxToggleComponent = fixture.debugElement.query(By.directive(LuxToggleComponent)).componentInstance;
         const toggleEl = fixture.debugElement.query(By.css('button'));
-        const changeSpy = spyOn(testComponent, 'onCheckedChange').and.callThrough();
+        const changeSpy = vi.spyOn(testComponent, 'onCheckedChange');
 
         // Änderungen durchführen
         // 1. Click => true (echte User-Interaktion, löst Change-Event aus)
@@ -347,7 +349,7 @@ describe('LuxToggleComponent', () => {
         // Nachbedingungen testen
         expect(changeSpy).toHaveBeenCalledTimes(2);
         expect(fixture.componentInstance.eula).toBeTruthy();
-      }));
+      });
     });
 
     describe('Attribut "luxRequired"', () => {
@@ -355,14 +357,14 @@ describe('LuxToggleComponent', () => {
       let testComponent: LuxRequiredAttributeComponent;
       let toggleComponent: LuxToggleComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxRequiredAttributeComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
         toggleComponent = fixture.debugElement.query(By.directive(LuxToggleComponent)).componentInstance;
-      }));
+      });
 
-      it('Sollte die korrekte Fehlermeldung anzeigen', fakeAsync(() => {
+      it('Sollte die korrekte Fehlermeldung anzeigen', async () => {
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
 
         // Vorbedingungen testen
@@ -371,12 +373,13 @@ describe('LuxToggleComponent', () => {
         // Änderungen durchführen
         toggleComponent.formControl.markAsTouched();
         fixture.detectChanges();
-        tick();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
-      }));
+      });
     });
 
     describe('Error-Message', () => {
@@ -384,30 +387,30 @@ describe('LuxToggleComponent', () => {
       let testComponent: LuxValidatorsComponent;
       let toggleComponent: LuxToggleComponent;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(LuxValidatorsComponent);
         fixture.detectChanges();
         testComponent = fixture.componentInstance;
         toggleComponent = fixture.debugElement.query(By.directive(LuxToggleComponent)).componentInstance;
-      }));
+      });
 
-      it('Validatoren setzen und die Fehlermeldungen korrekt anzeigen', fakeAsync(() => {
+      it('Validatoren setzen und die Fehlermeldungen korrekt anzeigen', async () => {
         // Vorbedingungen testen
         let errorEl = fixture.debugElement.query(By.css('mat-error'));
         expect(errorEl).toBeNull();
 
         // Änderungen durchführen
         testComponent.validators.set(Validators.required);
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
         toggleComponent.formControl.markAsTouched();
         toggleComponent.formControl.updateValueAndValidity();
-        LuxTestHelper.wait(fixture, 100);
+        await LuxTestHelper.wait(fixture, 100);
 
         // Nachbedingungen testen
         errorEl = fixture.debugElement.query(By.css('mat-error'));
         expect(errorEl.nativeElement.innerText.trim().length).toBeGreaterThan(0);
         expect(toggleComponent.formControl.valid).toBeFalsy();
-      }));
+      });
     });
   });
 
@@ -419,11 +422,11 @@ describe('LuxToggleComponent', () => {
       LuxA11yTestHelper.addA11yMatchers();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxToggleA11yComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
       fixture.detectChanges();
@@ -456,7 +459,7 @@ describe('LuxToggleComponent', () => {
   imports: [LuxToggleComponent]
 })
 class LuxDisabledAttributeComponent {
-  disabled = signal<boolean | undefined>(undefined);
+  disabled = signal(false);
 }
 
 @Component({
@@ -487,7 +490,7 @@ class LuxCheckedAttributeComponent {
   imports: [LuxToggleComponent]
 })
 class LuxLabelAttributeComponent {
-  label = signal<string | undefined>(undefined);
+  label = signal('');
 }
 
 @Component({
@@ -496,7 +499,7 @@ class LuxLabelAttributeComponent {
   imports: [LuxToggleComponent]
 })
 class LuxRequiredAttributeComponent {
-  label?: string;
+  label = '';
 }
 
 @Component({
@@ -510,7 +513,7 @@ class LuxRequiredAttributeComponent {
 })
 class LuxToggleInFormAttributeComponent {
   formGroup: FormGroup;
-  required?: boolean;
+  required = false;
 
   constructor() {
     this.formGroup = new FormGroup<any>({

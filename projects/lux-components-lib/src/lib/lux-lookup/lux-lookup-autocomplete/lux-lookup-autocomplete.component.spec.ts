@@ -3,7 +3,7 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -20,7 +20,7 @@ import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 import { LuxLookupAutocompleteComponent } from './lux-lookup-autocomplete.component';
 
 describe('LuxLookupAutocompleteComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -32,22 +32,23 @@ describe('LuxLookupAutocompleteComponent', () => {
         { provide: LuxLookupService, useClass: MockLookupService }
       ]
     }).compileComponents();
-  }));
+  });
 
   describe('Außerhalb einer Form', () => {
     let fixture: ComponentFixture<LuxNoFormComponent>;
     let component: LuxNoFormComponent;
     let autocomplete: LuxLookupAutocompleteComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(LuxNoFormComponent);
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxLookupAutocompleteComponent)).componentInstance;
       fixture.detectChanges();
-      tick(autocomplete.luxDebounceTime());
-    }));
+      await new Promise((resolve) => setTimeout(resolve, autocomplete.luxDebounceTime()));
+      fixture.detectChanges();
+    });
 
-    it('Validatoren setzen und korrekte Fehlermeldung anzeigen', fakeAsync(() => {
+    it('Validatoren setzen und korrekte Fehlermeldung anzeigen', async () => {
       // Vorbedingungen testen
       let errorEl = fixture.debugElement.query(By.css('mat-error'));
       expect(errorEl).toBeNull();
@@ -55,26 +56,24 @@ describe('LuxLookupAutocompleteComponent', () => {
 
       // Änderungen durchführen
       component.validators.set(Validators.compose([Validators.required]));
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       autocomplete.formControl.markAsTouched();
       autocomplete.formControl.updateValueAndValidity();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       errorEl = fixture.debugElement.query(By.css('mat-error'));
       expect(errorEl).toBeTruthy();
       expect(errorEl.nativeElement.innerText.trim()).toEqual('* Pflichtfeld');
       expect(autocomplete.formControl.valid).toBeFalsy();
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte die Optionen ausgeben wie sie geladen wurden', fakeAsync(() => {
+    it('Sollte die Optionen ausgeben wie sie geladen wurden', async () => {
       expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
 
       // Änderungen durchführen
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
-      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
+      await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
       const options = fixture.nativeElement.querySelectorAll('mat-option');
@@ -85,11 +84,9 @@ describe('LuxLookupAutocompleteComponent', () => {
       expect(options[2].querySelector('span')?.innerText).toEqual('Angola');
       expect(options[3].querySelector('span')?.innerText).toEqual('Andorra');
       expect(options[4].querySelector('span')?.innerText).toEqual('Algerien');
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte die Optionen sortiert nach Kurztext ausgeben', fakeAsync(() => {
+    it('Sollte die Optionen sortiert nach Kurztext ausgeben', async () => {
       expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
 
       // Änderungen durchführen
@@ -98,7 +95,7 @@ describe('LuxLookupAutocompleteComponent', () => {
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
       fixture.detectChanges();
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
-      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
+      await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
       const options = fixture.nativeElement.querySelectorAll('mat-option');
@@ -109,11 +106,9 @@ describe('LuxLookupAutocompleteComponent', () => {
       expect(options[2].querySelector('span')?.innerText).toEqual('Andorra');
       expect(options[3].querySelector('span')?.innerText).toEqual('Angola');
       expect(options[4].querySelector('span')?.innerText).toEqual('Armenien');
+    });
 
-      discardPeriodicTasks();
-    }));
-
-    it('Sollte die Optionen sortiert nach Schlüssel ausgeben', fakeAsync(() => {
+    it('Sollte die Optionen sortiert nach Schlüssel ausgeben', async () => {
       expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
 
       // Änderungen durchführen
@@ -122,7 +117,7 @@ describe('LuxLookupAutocompleteComponent', () => {
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
       fixture.detectChanges();
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
-      LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
+      await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
       const options = fixture.nativeElement.querySelectorAll('mat-option');
@@ -133,31 +128,27 @@ describe('LuxLookupAutocompleteComponent', () => {
       expect(options[2].querySelector('span')?.innerText).toEqual('Angola');
       expect(options[3].querySelector('span')?.innerText).toEqual('Andorra');
       expect(options[4].querySelector('span')?.innerText).toEqual('Algerien');
-
-      discardPeriodicTasks();
-    }));
+    });
 
     describe('Clear-Button', () => {
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         component.clearable.set(true);
         fixture.detectChanges();
-      }));
+      });
 
-      it('Sollte den Wert über den Clear-Button zurücksetzen', fakeAsync(() => {
+      it('Sollte den Wert über den Clear-Button zurücksetzen', async () => {
         LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
-        LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
+        await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
         expect(autocomplete.formControl.value as any).toEqual('A');
         expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeTruthy();
 
         fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
-        LuxTestHelper.wait(fixture);
+        await LuxTestHelper.wait(fixture);
 
         expect(autocomplete.formControl.value).toBeNull();
         expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
-
-        discardPeriodicTasks();
-      }));
+      });
     });
   });
 });
