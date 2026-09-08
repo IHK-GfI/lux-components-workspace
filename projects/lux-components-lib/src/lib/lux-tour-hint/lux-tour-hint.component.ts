@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   inject,
   ChangeDetectionStrategy,
@@ -18,7 +19,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgStyle, NgClass]
 })
-export class LuxTourHintComponent implements OnInit, AfterViewInit {
+export class LuxTourHintComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly tourHintContainer = viewChild('tourHintContainer', { read: ElementRef });
 
   set luxTarget(luxTarget: any) {
@@ -54,17 +55,21 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit {
   private readonly arrowLength = 16;
   private readonly shadowPadding = 5;
 
+  private readonly onWindowResize = () => this.updateTargetAndPositions();
+
   ngOnInit(): void {
     //When resizing / min- / maximizing window update all positions
-    addEventListener('resize', () => {
-      this.updateTargetAndPositions();
-    });
+    addEventListener('resize', this.onWindowResize);
   }
 
   ngAfterViewInit(): void {
     //Focus after loaded so we can navigate the tour with arrow keys
     this.updateTargetAndPositions();
     this.tourHintContainer()?.nativeElement.focus();
+  }
+
+  ngOnDestroy(): void {
+    removeEventListener('resize', this.onWindowResize);
   }
 
   private updateTargetAndPositions() {

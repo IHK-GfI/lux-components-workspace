@@ -14,10 +14,12 @@ import {
   OnInit,
   ViewContainerRef,
   contentChild,
+  effect,
   inject,
   input,
   model,
   output,
+  untracked,
   viewChild,
   viewChildren
 } from '@angular/core';
@@ -172,6 +174,8 @@ export class LuxMasterDetailComponent<T = any> implements OnInit, AfterContentIn
   private maxItemsVisible?: number;
   private updateDetail$ = new ReplaySubject<any>(1);
   private subscriptions: { unsubscribe(): void }[] = [];
+  private resizeObserver?: ResizeObserver;
+  private readonly observedAlignmentElements = new Set<HTMLElement>();
   // Hält fest, welches Detail aktuell tatsächlich gerendert ist. Getrennt von luxSelectedDetail(),
   // weil dessen Wert bei einer VON AUSSEN gesetzten Selektion bereits aktualisiert ist, BEVOR
   // handleDetailUpdate() die Änderung verarbeitet - ein Vergleich gegen luxSelectedDetail() würde
@@ -194,6 +198,19 @@ export class LuxMasterDetailComponent<T = any> implements OnInit, AfterContentIn
         this.cdr.markForCheck();
       })
     );
+
+    // Ersetzt das frühere Polling in ngDoCheck (das bei jedem CD-Zyklus offsetHeight auf bis zu drei Elementen
+    // gelesen und damit potenziell einen synchronen Reflow erzwungen hat, siehe checkEmptyIndicatorAlignment()).
+    // Header/Footer/Container sind optionale Projected-/View-Children, die erst nach und nach verfügbar werden
+    // können, daher hier reaktiv statt einmalig in ngAfterViewInit beobachtet.
+    effect(() => {
+      const elements = [
+        this.masterHeaderQuery()?.nativeElement,
+        this.masterFooterQuery()?.nativeElement,
+        this.masterContainerQuery()?.nativeElement
+      ];
+      untracked(() => this.observeAlignmentElements(elements));
+    });
   }
 
   ngOnInit() {
@@ -213,11 +230,6 @@ export class LuxMasterDetailComponent<T = any> implements OnInit, AfterContentIn
 
       this.announcePossibleInfiniteScrolling();
     }
-
-    // Ausrichtung der Empty-Indikatoren der Masterliste prüfen
-    if (!this.isMobile && (!this.luxMasterList() || this.luxMasterList().length === 0)) {
-      this.checkEmptyIndicatorAlignment();
-    }
   }
 
   ngAfterContentInit() {
@@ -233,6 +245,7 @@ export class LuxMasterDetailComponent<T = any> implements OnInit, AfterContentIn
   }
 
   ngOnDestroy() {
+    this.resizeObserver?.disconnect();
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
@@ -420,6 +433,32 @@ export class LuxMasterDetailComponent<T = any> implements OnInit, AfterContentIn
         )
         .subscribe()
     );
+  }
+
+  /**
+   * Beobachtet die übergebenen (optionalen) Header-/Footer-/Container-Elemente per ResizeObserver, sofern noch
+   * nicht beobachtet, und stößt bei tatsächlicher Größenänderung checkEmptyIndicatorAlignment() an - statt das
+   * wie zuvor bei jedem Change-Detection-Zyklus per ngDoCheck neu zu berechnen.
+   * @param elements
+   */
+  private observeAlignmentElements(elements: (HTMLElement | undefined)[]) {
+    if (!this.resizeObserver) {
+      if (typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      this.resizeObserver = new ResizeObserver(() => {
+        if (!this.isMobile && (!this.luxMasterList() || this.luxMasterList().length === 0)) {
+          this.checkEmptyIndicatorAlignment();
+        }
+      });
+    }
+
+    elements.forEach((element) => {
+      if (element && !this.observedAlignmentElements.has(element)) {
+        this.observedAlignmentElements.add(element);
+        this.resizeObserver!.observe(element);
+      }
+    });
   }
 
   /**

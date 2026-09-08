@@ -1,7 +1,6 @@
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -61,7 +60,7 @@ import { LuxMenuTriggerComponent } from './lux-menu-subcomponents/lux-menu-trigg
     TranslocoPipe
   ]
 })
-export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterViewChecked, OnDestroy, OnInit {
+export class LuxMenuComponent implements AfterViewInit, AfterContentInit, OnDestroy, OnInit {
   readonly luxMenuLabel = input<string>('');
   readonly luxMenuIconName = input<string>('lux-interface-setting-menu-1');
   readonly luxMenuTriggerIconShowRight = input<boolean>(false);
@@ -190,13 +189,24 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
 
   private menuItemSubscriptions: OutputRefSubscription[] = [];
   private readonly onTriggerListener = () => this.onTrigger();
+  private resizeObserver?: ResizeObserver;
 
   constructor() {
     this.canvas = document.createElement('canvas');
 
+    // Ersetzt das frühere ngAfterViewChecked()-Polling (das bei JEDEM Change-Detection-Zyklus unconditional die
+    // Item-Breiten per Canvas neu vermessen und die Extended-Berechnung inkl. Layout-Reads wiederholt hat).
+    // effect() liest hier dieselben Signale wie zuvor calculateMenuItemWidths()/updateExtendedMenuItems() (Content-
+    // Query der MenuItems, pro Item luxIconName/luxLabel/luxHideLabelIfExtended/luxButtonBadge/luxHidden/
+    // luxAlwaysVisible, sowie luxShowSections/luxDisplayExtended/luxMaximumExtended/luxMenuItemFixWidth) und läuft
+    // dadurch nur noch, wenn sich davon tatsächlich etwas ändert. Größenänderungen des Containers (die keine dieser
+    // Signale betreffen) werden separat per ResizeObserver abgedeckt (siehe ngAfterViewInit).
     effect(() => {
-      this.luxDisplayExtended();
-      if (this.menuTriggerElRef) {
+      if (this.luxShowSections()) {
+        this.addMenuElementsToArray();
+      } else {
+        this.menuItems = this.luxMenuItemComponents;
+        this.calculateMenuItemWidths();
         this.updateExtendedMenuItems();
       }
     });
@@ -261,19 +271,22 @@ export class LuxMenuComponent implements AfterViewInit, AfterContentInit, AfterV
     this.triggerButtonDivEl = this.elementRef.nativeElement.querySelector('div.lux-menu-trigger');
     this.customTriggerEl = this.elementRef.nativeElement.querySelector('lux-menu-trigger');
     this.customTriggerEl?.addEventListener('click', this.onTriggerListener);
-  }
 
-  ngAfterViewChecked() {
-    if (this.luxShowSections()) {
-      this.addMenuElementsToArray();
-    } else {
-      this.menuItems = this.luxMenuItemComponents;
-      this.calculateMenuItemWidths();
-      this.updateExtendedMenuItems();
+    // Deckt Größenänderungen ab, die keine der oben per effect() beobachteten Signale betreffen (z.B. Resize des
+    // umgebenden Layouts ohne Fenster-Resize, etwa durch Ein-/Ausklappen einer Sidebar). Fensterweite Änderungen
+    // fängt weiterhin der bestehende (window:resize)-Listener ab.
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => this.updateExtendedMenuItems());
+      this.resizeObserver.observe(this.menuExtendedContainer.nativeElement);
+      if (this.menuTriggerElRef) {
+        this.resizeObserver.observe(this.menuTriggerElRef.nativeElement);
+      }
     }
   }
 
   ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+
     if (this.customTriggerEl && this.triggerButtonDivEl) {
       this.customTriggerEl?.removeEventListener('click', this.onTriggerListener);
     }

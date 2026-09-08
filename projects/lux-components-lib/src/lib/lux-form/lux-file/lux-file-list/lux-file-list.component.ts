@@ -1,6 +1,5 @@
 import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -106,7 +105,7 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
     TranslocoPipe
   ]
 })
-export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements AfterViewChecked {
+export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> {
   readonly luxShowPreview = input(true);
   readonly luxMultiple = input(true);
   readonly luxHeading = input(2);
@@ -139,6 +138,9 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
 
   private dialogService = inject(LuxDialogService);
 
+  private resizeObserver?: ResizeObserver;
+  private observedRowElement?: HTMLElement;
+
   constructor() {
     super();
 
@@ -148,10 +150,40 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
 
       untracked(() => this.updateIconAndImage());
     });
+
+    // ResizeObserver statt Polling in ngAfterViewChecked (das bei jedem CD-Zyklus offsetWidth gelesen und damit
+    // potenziell einen synchronen Reflow erzwungen hat): beobachtet nur noch die erste Zeile (alle Zeilen sind
+    // gleich breit) und berechnet die Icon-Action-Bar-Breite nur bei tatsächlicher Größenänderung neu.
+    effect(() => {
+      const firstRow = this.fileEntries()[0]?.nativeElement;
+      untracked(() => this.observeRowResize(firstRow));
+    });
   }
 
-  ngAfterViewChecked(): void {
-    this.resizeIconActionBar();
+  override ngOnDestroy() {
+    super.ngOnDestroy();
+    this.resizeObserver?.disconnect();
+  }
+
+  private observeRowResize(element?: HTMLElement) {
+    if (this.observedRowElement === element) {
+      return;
+    }
+
+    if (this.observedRowElement) {
+      this.resizeObserver?.unobserve(this.observedRowElement);
+    }
+    this.observedRowElement = element;
+
+    if (element) {
+      if (!this.resizeObserver) {
+        if (typeof ResizeObserver === 'undefined') {
+          return;
+        }
+        this.resizeObserver = new ResizeObserver(() => this.resizeIconActionBar());
+      }
+      this.resizeObserver.observe(element);
+    }
   }
 
   shouldDisplayPreviewImg(index: number): boolean {

@@ -6,7 +6,6 @@ import {
   ChangeDetectorRef,
   Component,
   contentChildren,
-  DoCheck,
   effect,
   ElementRef,
   inject,
@@ -106,7 +105,7 @@ export interface LuxTableDoubleClickEventType<T> {
     TranslocoPipe
   ]
 })
-export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoCheck, OnDestroy {
+export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, OnDestroy {
   static AUTO_PAGINATION_START = 100; // 100 Elemente bis automatisch die Pagination aktiviert wird
 
   readonly luxShowColumnSelector = input<boolean>(false);
@@ -285,8 +284,7 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
   private _dataSource: LuxTableDataSource<any> = new LuxTableDataSource<any>([]);
   private _luxSelected = new Set<T>();
 
-  private previousWidth = 0;
-  private previousHeight = 0;
+  private resizeObserver?: ResizeObserver;
   private httpRequestConf: { page?: number; pageSize?: number; filter?: string; sort?: string; order?: string } = {};
 
   private mediaQuerySubscription: Subscription;
@@ -438,26 +436,20 @@ export class LuxTableComponent<T = any> implements OnInit, AfterViewInit, DoChec
     if (this.luxShowPagination()) {
       this.handlePagination();
     }
-  }
 
-  ngDoCheck() {
+    // ResizeObserver statt Polling in ngDoCheck (das bei jedem CD-Zyklus offsetWidth/offsetHeight gelesen und damit
+    // potenziell einen synchronen Reflow erzwungen hat): berechnet die Proportionen nur noch bei tatsächlicher
+    // Größenänderung des Table-Containers neu (analog zum ResizeObserver-Einsatz in LuxTooltipTruncationWatcher).
     const tableContainerElement = this.tableContainerElementQuery();
-    if (!tableContainerElement) {
-      return;
-    }
-
-    if (
-      tableContainerElement.nativeElement.offsetWidth !== this.previousWidth ||
-      tableContainerElement.nativeElement.offsetHeight !== this.previousHeight
-    ) {
-      this.previousWidth = tableContainerElement.nativeElement.offsetWidth;
-      this.previousHeight = tableContainerElement.nativeElement.offsetHeight;
-
-      this.calculateProportions();
+    if (tableContainerElement && typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => this.calculateProportions());
+      this.resizeObserver.observe(tableContainerElement.nativeElement);
     }
   }
 
   ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+
     // Subscriptions auflösen
     this.columnSubscriptions.forEach((subscription: Subscription) => {
       subscription.unsubscribe();
