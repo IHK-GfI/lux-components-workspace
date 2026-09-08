@@ -84,9 +84,8 @@ describe('LuxAccordionAriaComponent', () => {
       tick();
       fixture.detectChanges();
 
-      const openContents = fixture.debugElement.queryAll(By.css('.lux-expansion-panel-content'));
-      expect(openContents.length).toBe(1);
-      expect(openContents[0].nativeElement.textContent).toContain('Content 2');
+      expect(headerButtons[0].nativeElement.getAttribute('aria-expanded')).toBe('false');
+      expect(headerButtons[1].nativeElement.getAttribute('aria-expanded')).toBe('true');
     }));
 
     it('sollte verschachtelte Accordions unabhängig voneinander verwalten', fakeAsync(() => {
