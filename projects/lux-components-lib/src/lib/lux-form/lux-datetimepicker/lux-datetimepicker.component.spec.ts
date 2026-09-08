@@ -233,9 +233,9 @@ describe('LuxDatetimepickerComponent', () => {
 
       // Änderungen durchführen
       of('2005-02-05, 00:00')
-        .pipe(delay(2000))
+        .pipe(delay(20))
         .subscribe((value) => testComponent.formControl.setValue(value));
-      await LuxTestHelper.wait(fixture, 2500);
+      await LuxTestHelper.wait(fixture, 100);
 
       // Nachbedingungen testen
       const expectedDate = '2005-02-05T00:00:00.000Z';
@@ -653,9 +653,9 @@ describe('LuxDatetimepickerComponent', () => {
 
       // Änderungen durchführen
       of('2005-02-05, 00:00')
-        .pipe(delay(2000))
+        .pipe(delay(20))
         .subscribe((value) => testComponent.value.set(value));
-      await LuxTestHelper.wait(fixture, 2500);
+      await LuxTestHelper.wait(fixture, 100);
       await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
@@ -675,13 +675,24 @@ describe('LuxDatetimepickerComponent', () => {
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      for (let i = 0; i < 251; i++) {
-        if (i % 2 === 0) {
-          datepickerComponent.formControl.setValue('01/01/' + (1950 + i) + ', 00:00');
-        } else {
-          testComponent.value.set('01/01/' + (1950 + i) + ', 00:00');
+      // Gefakte Uhr statt 251x echtem Makrotask: der interne setTimeout() in setISOValue() hat
+      // keine Debounce-Wartezeit (0ms), daher kann er hier gefahrlos vorgespult werden, ohne dass
+      // whenStable() auf eine reale Wartezeit angewiesen ist (siehe lux-autocomplete für einen
+      // Fall, in dem das wegen eines echten Debounce nicht funktioniert).
+      vi.useFakeTimers();
+      try {
+        for (let i = 0; i < 251; i++) {
+          if (i % 2 === 0) {
+            datepickerComponent.formControl.setValue('01/01/' + (1950 + i) + ', 00:00');
+          } else {
+            testComponent.value.set('01/01/' + (1950 + i) + ', 00:00');
+          }
+          fixture.detectChanges();
+          await Promise.all([fixture.whenStable(), vi.advanceTimersByTimeAsync(0)]);
+          fixture.detectChanges();
         }
-        await LuxTestHelper.wait(fixture);
+      } finally {
+        vi.useRealTimers();
       }
 
       // Nachbedingungen prüfen

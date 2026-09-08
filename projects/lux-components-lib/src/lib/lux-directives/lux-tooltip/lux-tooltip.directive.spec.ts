@@ -19,12 +19,12 @@ describe('LuxTooltipDirective', () => {
   let tooltipSpan: HTMLElement;
   let tooltip: LuxTooltipDirective;
 
-  const showTooltip = async (wait = 500) => {
+  const showTooltip = async (wait = 0) => {
     tooltip.show(mockComp.showDelay());
     await LuxTestHelper.wait(fixture, wait);
   };
 
-  const hideTooltip = async (wait = 500) => {
+  const hideTooltip = async (wait = 0) => {
     tooltip.hide(mockComp.hideDelay());
     await LuxTestHelper.wait(fixture, wait);
     await new Promise((resolve) => setTimeout(resolve, 0));

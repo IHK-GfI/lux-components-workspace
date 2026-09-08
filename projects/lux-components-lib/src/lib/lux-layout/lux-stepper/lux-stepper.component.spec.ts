@@ -11,7 +11,6 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { ILuxStepperButtonConfig } from './lux-stepper-model/lux-stepper-button-config.interface';
 import { LuxStepContentComponent } from './lux-stepper-subcomponents/lux-step-content.component';
 import { LuxStepHeaderComponent } from './lux-stepper-subcomponents/lux-step-header.component';
@@ -365,7 +364,7 @@ describe('LuxStepperComponent', () => {
     // Next-Button von Step 0 klicken (erster Button in lux-stepper-nav-buttons)
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
     nextButton.click();
-    await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen: aktueller Step-Index (0) muss emittiert werden, nicht der Ziel-Step
     expect(spy).toHaveBeenCalledTimes(1);
@@ -383,7 +382,7 @@ describe('LuxStepperComponent', () => {
     // Änderungen durchführen
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+    await LuxTestHelper.wait(fixture);
 
     const navButtons = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons .lux-button-label'));
     navButtons[2].nativeElement.click();

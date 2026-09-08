@@ -808,6 +808,7 @@ describe('LuxAutocompleteComponent', () => {
         [luxOptions]="options"
         luxControlBinding="aufgaben"
         [luxClearable]="clearable()"
+        [luxLookupDelay]="0"
       ></lux-autocomplete>
     </form>
   `,
@@ -831,7 +832,13 @@ class LuxAutoCompleteClearableInFormComponent {
 
 @Component({
   template: `
-    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxClearable]="true"></lux-autocomplete>
+    <lux-autocomplete
+      luxLabel="Autocomplete"
+      [luxOptions]="options"
+      [(luxValue)]="selected"
+      [luxClearable]="true"
+      [luxLookupDelay]="0"
+    ></lux-autocomplete>
   `,
   imports: [LuxAutocompleteComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -851,7 +858,8 @@ class LuxAutoCompleteClearableOutsideFormComponent {
   selector: 'lux-autocomplete-in-form-with-string-values-component',
   template: `
     <form [formGroup]="formGroup">
-      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"> </lux-autocomplete>
+      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben" [luxLookupDelay]="0">
+      </lux-autocomplete>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -874,7 +882,8 @@ class LuxAutoCompleteInFormWithStringValuesComponent {
 @Component({
   selector: 'lux-autocomplete-two-way-binding-with-string-values-component',
   template: `
-    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict"> </lux-autocomplete>
+    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict" [luxLookupDelay]="0">
+    </lux-autocomplete>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteComponent]
@@ -891,7 +900,8 @@ class LuxAutoCompleteTwoWayBindingWithStringValuesComponent {
 @Component({
   selector: 'lux-autocomplete-with-custom-option-template-component',
   template: `
-    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict"> </lux-autocomplete>
+    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict" [luxLookupDelay]="0">
+    </lux-autocomplete>
 
     <ng-template let-option #labelTemplate>
       <div>
@@ -912,7 +922,7 @@ class LuxAutoCompleteWithCustomOptionTemplateComponent {
 }
 
 @Component({
-  template: ` <lux-autocomplete luxLabel="Label" [luxOptions]="options" [luxOptionBlockSize]="8"></lux-autocomplete> `,
+  template: ` <lux-autocomplete luxLabel="Label" [luxOptions]="options" [luxOptionBlockSize]="8" [luxLookupDelay]="0"></lux-autocomplete> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteComponent]
 })
@@ -938,7 +948,8 @@ class LuxScrollComponent {
   selector: 'lux-autocomplete-in-form-attribute-component',
   template: `
     <form [formGroup]="formGroup">
-      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options()" luxControlBinding="aufgaben"> </lux-autocomplete>
+      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options()" luxControlBinding="aufgaben" [luxLookupDelay]="0">
+      </lux-autocomplete>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -966,7 +977,8 @@ class LuxAutoCompleteInFormAttributeComponent {
 @Component({
   selector: 'lux-value-attribute-component',
   template: `
-    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict()"> </lux-autocomplete>
+    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [(luxValue)]="selected" [luxStrict]="strict()" [luxLookupDelay]="0">
+    </lux-autocomplete>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteComponent]
@@ -987,7 +999,8 @@ class LuxValueAttributeComponent {
 
 @Component({
   template: `
-    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" (luxOptionSelected)="setSelected($event)"> </lux-autocomplete>
+    <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" (luxOptionSelected)="setSelected($event)" [luxLookupDelay]="0">
+    </lux-autocomplete>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteComponent]
@@ -1036,6 +1049,7 @@ class MockAutocompleteComponent {
       [luxPickValue]="valueFn"
       [luxStrict]="true"
       (luxValueChange)="setSelected($event)"
+      [luxLookupDelay]="0"
     >
     </lux-autocomplete>
   `,
@@ -1067,7 +1081,8 @@ class MockPickValueComponent {
 @Component({
   template: `
     <form [formGroup]="formGroup">
-      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"> </lux-autocomplete>
+      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben" [luxLookupDelay]="0">
+      </lux-autocomplete>
     </form>
 
     <lux-button luxLabel="Speichern" [luxDisabled]="!formGroup.valid"></lux-button>
@@ -1100,7 +1115,7 @@ class LuxAutoCompleteNotAnOptionComponent {
   selector: 'lux-autocomplete-single-option-component',
   template: `
     <form [formGroup]="formGroup">
-      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben"></lux-autocomplete>
+      <lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" luxControlBinding="aufgaben" [luxLookupDelay]="0"></lux-autocomplete>
     </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

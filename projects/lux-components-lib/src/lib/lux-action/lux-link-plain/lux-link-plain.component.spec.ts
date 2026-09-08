@@ -5,7 +5,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
-import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxLinkPlainComponent } from './lux-link-plain.component';
 
@@ -107,7 +106,7 @@ describe('LuxLinkPlainComponent', () => {
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+    await LuxTestHelper.wait(fixture);
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);

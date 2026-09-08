@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxMenuItemComponent } from '../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
-import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxSideNavFooterComponent } from '../lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-footer.component';
 import { LuxSideNavHeaderComponent } from '../lux-app-header/lux-app-header-subcomponents/lux-side-nav/lux-side-nav-subcomponents/lux-side-nav-header.component';
@@ -300,7 +299,7 @@ describe('LuxAppHeaderComponent', () => {
       testComponent.createSideNavItems(1);
       await LuxTestHelper.wait(fixture);
       fixture.debugElement.query(By.css('.lux-side-nav-trigger button')).nativeElement.click();
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       const sideNavEl = fixture.debugElement.query(By.css('.lux-side-nav')).nativeElement;
       expect(sideNavEl.style.opacity).toEqual('1');
@@ -308,7 +307,7 @@ describe('LuxAppHeaderComponent', () => {
 
       // Änderungen durchführen
       fixture.debugElement.query(By.css('.lux-side-nav-item button')).nativeElement.click();
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(sideNavEl.style.opacity).toEqual('1');
@@ -379,7 +378,7 @@ describe('LuxAppHeaderComponent', () => {
 
       let link = fixture.debugElement.query(By.css('.lux-side-nav-content lux-link a'));
       link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith('https:///www.ihk-gfi.de', '_self');

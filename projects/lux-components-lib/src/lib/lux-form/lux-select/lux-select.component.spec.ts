@@ -189,7 +189,7 @@ describe('LuxSelectComponent', () => {
       await LuxTestHelper.wait(fixture);
       selectComponent.formControl.markAsTouched();
       selectComponent.formControl.updateValueAndValidity();
-      await LuxTestHelper.wait(fixture, 100);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       errorEl = fixture.debugElement.query(By.css('mat-error'));
@@ -424,7 +424,7 @@ describe('LuxSelectComponent', () => {
       fixture.detectChanges();
 
       trigger.click();
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
       fixture.detectChanges();
       await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
@@ -477,14 +477,14 @@ describe('LuxSelectComponent', () => {
     it('Sollte null, undefined und "" fehlerfrei als leeren String darstellen und die Werte emitten', async () => {
       const clickTrigger = async () => {
         trigger.click();
-        await LuxTestHelper.wait(fixture, 500);
+        await LuxTestHelper.wait(fixture);
         await new Promise((resolve) => setTimeout(resolve, 0));
         fixture.detectChanges();
       };
 
       const clickOption = async (i: number) => {
         options.item(i).click();
-        await LuxTestHelper.wait(fixture, 500);
+        await LuxTestHelper.wait(fixture);
         await new Promise((resolve) => setTimeout(resolve, 0));
         fixture.detectChanges();
       };

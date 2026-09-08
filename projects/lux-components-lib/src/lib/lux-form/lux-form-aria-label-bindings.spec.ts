@@ -36,23 +36,32 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
     }).compileComponents();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AriaBindingsTestComponent);
-    testComponent = fixture.componentInstance;
-  });
-
-  const cases: { selector: string; nativeSelector: string }[] = [
-    { selector: 'lux-input', nativeSelector: 'lux-input input' },
-    { selector: 'lux-textarea', nativeSelector: 'lux-textarea textarea' },
-    { selector: 'lux-autocomplete', nativeSelector: 'lux-autocomplete input' },
-    { selector: 'lux-datepicker', nativeSelector: 'lux-datepicker input' },
-    { selector: 'lux-datetimepicker', nativeSelector: 'lux-datetimepicker input' },
-    { selector: 'lux-timepicker', nativeSelector: 'lux-timepicker input' },
-    { selector: 'lux-file-input', nativeSelector: 'lux-file-input input:not([type="file"])' }
+  // Jeder Testfall bekommt seine eigene, schlanke Host-Komponente mit nur dem jeweils relevanten
+  // Control. Zuvor rendersierte eine gemeinsame Host-Komponente immer alle 7 Form-Controls
+  // (inkl. Autocomplete/Datepicker/Datetimepicker/Timepicker/File-Input) für jeden der 14 Tests
+  // mit, was die Kosten pro Test ca. versiebenfacht hat, obwohl nur ein Control geprüft wird.
+  const cases: { selector: string; nativeSelector: string; componentType: new () => AriaBindingsTestComponent }[] = [
+    { selector: 'lux-input', nativeSelector: 'lux-input input', componentType: LuxInputAriaBindingsTestComponent },
+    { selector: 'lux-textarea', nativeSelector: 'lux-textarea textarea', componentType: LuxTextareaAriaBindingsTestComponent },
+    { selector: 'lux-autocomplete', nativeSelector: 'lux-autocomplete input', componentType: LuxAutocompleteAriaBindingsTestComponent },
+    { selector: 'lux-datepicker', nativeSelector: 'lux-datepicker input', componentType: LuxDatepickerAriaBindingsTestComponent },
+    {
+      selector: 'lux-datetimepicker',
+      nativeSelector: 'lux-datetimepicker input',
+      componentType: LuxDatetimepickerAriaBindingsTestComponent
+    },
+    { selector: 'lux-timepicker', nativeSelector: 'lux-timepicker input', componentType: LuxTimepickerAriaBindingsTestComponent },
+    {
+      selector: 'lux-file-input',
+      nativeSelector: 'lux-file-input input:not([type="file"])',
+      componentType: LuxFileInputAriaBindingsTestComponent
+    }
   ];
 
   for (const c of cases) {
     it(`${c.selector}: luxAriaLabel landet als aria-label am nativen Element`, async () => {
+      fixture = TestBed.createComponent(c.componentType);
+      testComponent = fixture.componentInstance;
       testComponent.ariaLabel = 'Suchbegriff eingeben';
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
@@ -62,6 +71,8 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
     });
 
     it(`${c.selector}: luxAriaLabelledby landet als aria-labelledby am nativen Element`, async () => {
+      fixture = TestBed.createComponent(c.componentType);
+      testComponent = fixture.componentInstance;
       testComponent.ariaLabelledby = 'externes-label-id';
       fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
@@ -72,30 +83,52 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
   }
 });
 
-@Component({
-  imports: [
-    LuxInputComponent,
-    LuxTextareaComponent,
-    LuxAutocompleteComponent,
-    LuxDatepickerComponent,
-    LuxDatetimepickerComponent,
-    LuxTimepickerComponent,
-    LuxFileInputComponent
-  ],
-  template: `
-    <lux-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-input>
-    <lux-textarea [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-textarea>
-    <lux-autocomplete [luxOptions]="[]" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-autocomplete>
-    <lux-datepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datepicker>
-    <lux-datetimepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datetimepicker>
-    <lux-timepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-timepicker>
-    <lux-file-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-file-input>
-  `
-})
-class AriaBindingsTestComponent {
+abstract class AriaBindingsTestComponent {
   ariaLabel?: string;
   ariaLabelledby?: string;
 }
+
+@Component({
+  imports: [LuxInputComponent],
+  template: `<lux-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-input>`
+})
+class LuxInputAriaBindingsTestComponent extends AriaBindingsTestComponent {}
+
+@Component({
+  imports: [LuxTextareaComponent],
+  template: `<lux-textarea [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-textarea>`
+})
+class LuxTextareaAriaBindingsTestComponent extends AriaBindingsTestComponent {}
+
+@Component({
+  imports: [LuxAutocompleteComponent],
+  template: `<lux-autocomplete [luxOptions]="[]" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-autocomplete>`
+})
+class LuxAutocompleteAriaBindingsTestComponent extends AriaBindingsTestComponent {}
+
+@Component({
+  imports: [LuxDatepickerComponent],
+  template: `<lux-datepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datepicker>`
+})
+class LuxDatepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
+
+@Component({
+  imports: [LuxDatetimepickerComponent],
+  template: `<lux-datetimepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datetimepicker>`
+})
+class LuxDatetimepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
+
+@Component({
+  imports: [LuxTimepickerComponent],
+  template: `<lux-timepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-timepicker>`
+})
+class LuxTimepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
+
+@Component({
+  imports: [LuxFileInputComponent],
+  template: `<lux-file-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-file-input>`
+})
+class LuxFileInputAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', () => {
   let fixture: ComponentFixture<SelectAriaTestComponent>;

@@ -214,7 +214,7 @@ describe('LuxTableComponent', () => {
       component.showPagination.set(true);
       component.pageSize.set(5);
 
-      await LuxTestHelper.wait(fixture, 300);
+      await LuxTestHelper.wait(fixture);
       let contentRows = document.querySelectorAll('.mat-mdc-row');
       expect(contentRows.length).toEqual(5);
       expect(luxTableComponent.dataSource.data.length).toEqual(17);
@@ -292,7 +292,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2FirstElements = document.getElementsByClassName('c2-content');
@@ -304,7 +304,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2FirstElements = document.getElementsByClassName('c2-content');
@@ -342,7 +342,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2Elements = document.getElementsByClassName('c2-content');
@@ -355,7 +355,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeaders.item(0) as HTMLButtonElement).click();
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2Elements = document.getElementsByClassName('c2-content');
@@ -1305,7 +1305,7 @@ describe('LuxTableComponent', () => {
       // Änderungen durchführen body
       const sortHeader = document.querySelector('th.mat-sort-header');
       (sortHeader as HTMLButtonElement).click();
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(sortHeader).toBeDefined();
@@ -1316,7 +1316,7 @@ describe('LuxTableComponent', () => {
 
       // Änderungen durchführen
       (sortHeader as HTMLButtonElement).click();
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       col2FirstElements = document.getElementsByClassName('c2-content');

@@ -240,9 +240,9 @@ describe('LuxDatepickerComponent', () => {
 
       // Änderungen durchführen
       of('2005-02-05')
-        .pipe(delay(2000))
+        .pipe(delay(20))
         .subscribe((value) => testComponent.formControl.setValue(value));
-      await LuxTestHelper.wait(fixture, 2500);
+      await LuxTestHelper.wait(fixture, 100);
 
       // Nachbedingungen testen
       const expectedDate = '2005-02-05T00:00:00.000Z';
@@ -694,9 +694,9 @@ describe('LuxDatepickerComponent', () => {
 
       // Änderungen durchführen
       of('2005-02-05')
-        .pipe(delay(2000))
+        .pipe(delay(20))
         .subscribe((value) => testComponent.value.set(value));
-      await LuxTestHelper.wait(fixture, 2500);
+      await LuxTestHelper.wait(fixture, 100);
       await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
@@ -718,13 +718,22 @@ describe('LuxDatepickerComponent', () => {
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      for (let i = 0; i < 251; i++) {
-        if (i % 2 === 0) {
-          datepickerComponent.formControl.setValue('01/01/' + (1950 + i));
-        } else {
-          testComponent.value.set('01/01/' + (1950 + i));
+      // EXPERIMENT: gefakte Uhr statt 251x echtem Makrotask, um zu prüfen, ob das mit der
+      // zoneless whenStable()-Kopplung an den internen setTimeout() in setISOValue() harmoniert.
+      vi.useFakeTimers();
+      try {
+        for (let i = 0; i < 251; i++) {
+          if (i % 2 === 0) {
+            datepickerComponent.formControl.setValue('01/01/' + (1950 + i));
+          } else {
+            testComponent.value.set('01/01/' + (1950 + i));
+          }
+          fixture.detectChanges();
+          await Promise.all([fixture.whenStable(), vi.advanceTimersByTimeAsync(0)]);
+          fixture.detectChanges();
         }
-        await LuxTestHelper.wait(fixture);
+      } finally {
+        vi.useRealTimers();
       }
 
       // Nachbedingungen prüfen

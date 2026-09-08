@@ -318,7 +318,7 @@ describe('LuxChipComponent-Authentic', () => {
       await LuxTestHelper.typeInElementAsync('Option 1', fixture, inputElement.nativeElement, async () => {
         const optionElement = document.querySelector('mat-option') as HTMLElement;
         optionElement.click();
-        await LuxTestHelper.wait(fixture, 500);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen prüfen
         chipElements = fixture.debugElement.queryAll(By.css('.mat-mdc-chip'));
@@ -349,7 +349,7 @@ describe('LuxChipComponent-Authentic', () => {
 
       await LuxTestHelper.typeInElementAsync('1', fixture, inputElement.nativeElement, async () => {
         LuxTestHelper.dispatchEvent(inputElement.nativeElement, new Event('blur'));
-        await LuxTestHelper.wait(fixture, 500);
+        await LuxTestHelper.wait(fixture);
 
         // Nachbedingungen prüfen
         chipElements = fixture.debugElement.queryAll(By.css('.mat-mdc-chip'));

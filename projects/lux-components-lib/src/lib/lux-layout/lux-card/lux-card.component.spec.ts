@@ -8,7 +8,6 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
-import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxCardActionsComponent } from './lux-card-subcomponents/lux-card-actions.component';
 import { LuxCardContentExpandedComponent } from './lux-card-subcomponents/lux-card-content-expanded.component';
@@ -45,7 +44,7 @@ describe('LuxCardComponent', () => {
       // Änderungen durchführen
       const toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
       toggleEl.nativeElement.click();
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(component.expanded).toBeTruthy();
@@ -65,7 +64,7 @@ describe('LuxCardComponent', () => {
       // Änderungen durchführen
       const toggleEl = fixture.debugElement.query(By.css('.lux-expanded-button button'));
       toggleEl.nativeElement.click();
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(onExpandedSpy).toHaveBeenCalledTimes(1);
@@ -129,7 +128,7 @@ describe('LuxCardComponent', () => {
       // Änderungen durchführen
       // 1. Durchlauf: Aufklappen
       toggleEl.nativeElement.click();
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(cardActionSpy).toHaveBeenCalledTimes(0);
@@ -181,7 +180,7 @@ describe('LuxCardComponent', () => {
 
       // Änderungen durchführen
       component.card().luxExpanded.set(false);
-      await LuxTestHelper.wait(fixture, 500);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
@@ -206,7 +205,7 @@ describe('LuxCardComponent', () => {
 
       // Änderungen durchführen
       toggleEl.nativeElement.click();
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
@@ -220,7 +219,7 @@ describe('LuxCardComponent', () => {
 
       // Änderungen durchführen
       toggleEl.nativeElement.click();
-      await LuxTestHelper.wait(fixture, LuxComponentsConfigService.DEFAULT_CONFIG.buttonConfiguration.throttleTimeMs);
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
