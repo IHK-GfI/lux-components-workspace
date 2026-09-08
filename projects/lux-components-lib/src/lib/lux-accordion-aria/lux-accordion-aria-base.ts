@@ -1,8 +1,10 @@
 import { Signal } from '@angular/core';
+import { LuxAccordionColor } from '../lux-util/lux-colors.enum';
 
 export type LuxAccordionAriaTogglePosition = 'before' | 'after' | undefined;
 
 export abstract class LuxAccordionAriaBase {
+  abstract readonly luxColor: Signal<LuxAccordionColor | undefined>;
   abstract readonly luxDisabled: Signal<boolean | undefined>;
   abstract readonly luxHideToggle: Signal<boolean | undefined>;
   abstract readonly luxDynamicHeaderHeight: Signal<boolean | undefined>;

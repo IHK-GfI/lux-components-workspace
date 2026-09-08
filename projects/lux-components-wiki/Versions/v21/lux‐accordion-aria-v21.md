@@ -1,5 +1,7 @@
 # LUX-Accordion (Angular Aria-basiert)
 
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img.png)
+
 - [LUX-Accordion (Angular Aria-basiert)](#lux-accordion-angular-aria-basiert)
   - [Overview / API](#overview--api)
     - [Allgemein](#allgemein)
@@ -150,6 +152,8 @@ Enthält ein Panel einen Custom-Header, wird die Toggle-Icon-Position automatisc
 
 ## Beispiele
 
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-01.png)
+
 ### 1. Accordion
 
 Html
@@ -190,6 +194,8 @@ Html
 
 ### 2. Panel
 
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-01.png)
+
 Html
 
 ```html
@@ -209,6 +215,8 @@ Html
 ```
 
 ### 3. Accordion mit Custom-Header
+
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-02.png)
 
 Der Custom-Header eignet sich für schnelle Aktionen (z.B. Buttons oder ein Menü), die unabhängig vom Auf-/Zuklappen des Panels bedienbar sein sollen.
 
@@ -230,19 +238,14 @@ Html
       </p>
     </lux-panel-aria-content>
   </lux-panel-aria>
-  <lux-panel-aria>
-    <lux-panel-aria-header-title>Antrag 2012</lux-panel-aria-header-title>
-    <lux-panel-aria-header-description
-      >Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit</lux-panel-aria-header-description
-    >
-    <lux-panel-aria-content></lux-panel-aria-content>
-  </lux-panel-aria>
 </lux-accordion-aria>
 ```
 
 ### 4. Accordion mit verschiedenen Farben
 
 #### 4.1 Accordion mit der Farbe accent
+
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-03.png)
 
 Html
 
@@ -271,6 +274,8 @@ Html
 
 #### 4.2 Accordion mit der Farbe warn
 
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-04.png)
+
 Html
 
 ```html
@@ -278,16 +283,19 @@ Html
   <lux-panel-aria>
     <lux-panel-aria-header-title>Antrag 4711</lux-panel-aria-header-title>
     <lux-panel-aria-header-description> Lorem ipsum dolor sit amet, consetetur sadipscing elitr </lux-panel-aria-header-description>
+    <lux-panel-aria-content><p>Hier steht der Inhalt.</p></lux-panel-aria-content>
   </lux-panel-aria>
-  <lux-panel-aria [luxDisabled]="true">
+  <lux-panel-aria>
     <lux-panel-aria-header-title>Antrag 1234</lux-panel-aria-header-title>
     <lux-panel-aria-header-description> Duis autem vel eum iriure dolor in hendrerit </lux-panel-aria-header-description>
-    <lux-panel-aria-content>Hier steht der Inhalt.</lux-panel-aria-content>
+    <lux-panel-aria-content><p>Hier steht der Inhalt.</p></lux-panel-aria-content>
   </lux-panel-aria>
 </lux-accordion-aria>
 ```
 
 #### 4.3 Accordion mit der Farbe neutral
+
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-05.png)
 
 Html
 
@@ -303,15 +311,12 @@ Html
       </p>
     </lux-panel-aria-content>
   </lux-panel-aria>
-  <lux-panel-aria [luxDisabled]="true">
-    <lux-panel-aria-header-title>Antrag 1234</lux-panel-aria-header-title>
-    <lux-panel-aria-header-description> Duis autem vel eum iriure dolor in hendrerit </lux-panel-aria-header-description>
-    <lux-panel-aria-content>Hier steht der Inhalt.</lux-panel-aria-content>
-  </lux-panel-aria>
 </lux-accordion-aria>
 ```
 
 ### 5. Accordion mit Toggle Icon links
+
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-06.png)
 
 Die Position des Toggle Icons kann auch im Panel definiert werden. Priorität hat das Property im Panel.
 
@@ -334,6 +339,12 @@ Html
     <lux-panel-aria-header-description>
       Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
     </lux-panel-aria-header-description>
+    <lux-panel-aria-content>
+      <p>
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+        erat, sed diam voluptua.
+      </p>
+    </lux-panel-aria-content>
   </lux-panel-aria>
 </lux-accordion-aria>
 ```
@@ -356,6 +367,8 @@ Html
 ```
 
 ### 7. Deaktiviertes Panel
+
+![Beispielbild LUX-Accordion-aria](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐accordion-aria-v21-img-07.png)
 
 Ein deaktiviertes Panel lässt sich nicht öffnen, bleibt aber fokussierbar (aria-disabled statt native disabled). Ein Klick oder eine Bedienung per Tastatur (Enter/Leertaste) auf den Header emittiert `luxClickNotAllowed`, sodass die Anwendung z.B. einen Hinweis anzeigen kann.
 

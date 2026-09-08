@@ -1,4 +1,4 @@
-import { AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/aria/accordion';
+import { AccordionGroup, AccordionPanel, AccordionTrigger, AccordionContent } from '@angular/aria/accordion';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
   afterRenderEffect,
@@ -18,13 +18,15 @@ import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observ
 import { LuxIconComponent } from '../lux-icon/lux-icon/lux-icon.component';
 import { LuxThemeService } from '../lux-theme/lux-theme.service';
 import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-accordion-aria/lux-accordion-aria-base';
+import { LuxAccordionColor } from '../lux-util/lux-colors.enum';
 
 @Component({
   selector: 'lux-panel-aria',
   templateUrl: './lux-panel-aria.component.html',
   styleUrls: ['./lux-panel-aria.component.scss'],
   standalone: true,
-  imports: [AccordionPanel, AccordionTrigger, LuxIconComponent, AccordionContent]
+  imports: [AccordionPanel, AccordionTrigger, LuxIconComponent, AccordionContent],
+  hostDirectives: [AccordionGroup]
 })
 export class LuxPanelAriaComponent {
   private static panelIdCounter = 0;
@@ -54,6 +56,7 @@ export class LuxPanelAriaComponent {
   });
 
   luxDisabled = input<boolean | undefined>(undefined);
+  luxColor = input<LuxAccordionColor | undefined>(undefined);
   luxExpanded = input<boolean>(false);
   luxHideToggle = input<boolean | undefined>(undefined);
   luxTogglePosition = input<LuxAccordionAriaTogglePosition>(undefined);
@@ -64,8 +67,9 @@ export class LuxPanelAriaComponent {
   luxStickyHeaderOffset = input<string | undefined>();
 
   protected effectiveTogglePosition = computed<Exclude<LuxAccordionAriaTogglePosition, undefined>>(
-    () => this.parent?.effectiveLuxTogglePosition() ?? this.luxTogglePosition() ?? 'after'
+    () => this.luxTogglePosition() ?? this.parent?.effectiveLuxTogglePosition() ?? 'after'
   );
+  protected effectiveLuxColor = computed(() => this.luxColor() ?? this.parent?.luxColor() ?? 'primary');
   protected effectiveDisabled = computed(() => !!this.luxDisabled() || !!this.parent?.luxDisabled());
   protected effectiveHideToggle = computed(() => this.luxHideToggle() ?? this.parent?.luxHideToggle() ?? false);
   protected effectiveDynamicHeaderHeight = computed(() => this.luxDynamicHeaderHeight() ?? this.parent?.luxDynamicHeaderHeight() ?? false);

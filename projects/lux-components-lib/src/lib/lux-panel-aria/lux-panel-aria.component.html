@@ -1,5 +1,9 @@
 <div
   class="lux-panel"
+  [class.lux-primary]="effectiveLuxColor() === 'primary'"
+  [class.lux-accent]="effectiveLuxColor() === 'accent'"
+  [class.lux-warn]="effectiveLuxColor() === 'warn'"
+  [class.lux-neutral]="effectiveLuxColor() === 'neutral'"
   [class.lux-panel-expanded]="accordionTrigger().expanded()"
   [class.lux-panel-mobile]="mobile"
   [class.lux-panel-sticky-header]="!!stickyHeader()"

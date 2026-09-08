@@ -169,6 +169,15 @@ describe('LuxPanelAriaComponent', () => {
     expect(panelContent.hasAttribute('inert')).toBeFalse();
   }));
 
+  it('sollte luxColor auch ohne umgebendes Accordion auf das Panel anwenden', fakeAsync(() => {
+    const standaloneFixture = TestBed.createComponent(LuxPanelAriaStandaloneTestComponent);
+    standaloneFixture.detectChanges();
+    tick();
+
+    const panel = standaloneFixture.debugElement.query(By.css('.lux-panel'));
+    expect(panel.nativeElement.classList.contains('lux-warn')).toBeTrue();
+  }));
+
   it('sollte bei luxTruncated Titel und Beschreibung abschneiden', fakeAsync(() => {
     testComponent.truncated = true;
     fixture.detectChanges();
@@ -350,7 +359,7 @@ describe('LuxPanelAriaComponent A11y', () => {
     LuxPanelAriaContentComponent
   ],
   template: `
-    <lux-accordion-aria>
+    <lux-accordion-aria luxTogglePosition="before">
       <lux-panel-aria
         [luxExpanded]="expanded"
         [luxDisabled]="disabled"
@@ -402,6 +411,18 @@ class LuxPanelAriaTestComponent {
   `
 })
 class LuxPanelAriaPlainContentTestComponent {}
+
+@Component({
+  selector: 'lux-panel-aria-standalone-test',
+  standalone: true,
+  imports: [LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent],
+  template: `
+    <lux-panel-aria luxColor="warn">
+      <lux-panel-aria-header-title>Titel</lux-panel-aria-header-title>
+    </lux-panel-aria>
+  `
+})
+class LuxPanelAriaStandaloneTestComponent {}
 
 @Component({
   selector: 'lux-panel-aria-custom-header-test',
