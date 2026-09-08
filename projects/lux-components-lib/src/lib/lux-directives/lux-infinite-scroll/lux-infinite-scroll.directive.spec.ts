@@ -52,7 +52,7 @@ describe('LuxInfiniteScrollDirective', () => {
 
     it('Sollte luxScrolled nach Initialisierung emitten', async () => {
       const spy = vi.spyOn(mockComp, 'onMockEvent').mockReturnValue(undefined);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledTimes(1);
     });

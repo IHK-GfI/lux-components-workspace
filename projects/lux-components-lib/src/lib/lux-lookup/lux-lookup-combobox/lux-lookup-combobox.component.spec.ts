@@ -232,13 +232,11 @@ describe('LuxLookupComboboxComponent', () => {
     });
 
     it('Sollte die Optionen ausgeben wie sie geladen wurden', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(6);
@@ -251,15 +249,13 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('Sollte die Optionen sortiert nach Kurztext ausgeben', async () => {
       component.compareFn.set(luxLookupCompareKurzTextFn);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(6);
@@ -272,15 +268,13 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('Sollte die Optionen sortiert nach Schlüssel ausgeben', async () => {
       component.compareFn.set(luxLookupCompareKeyFn);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(6);
@@ -305,15 +299,13 @@ describe('LuxLookupComboboxComponent', () => {
     });
 
     it('Sollte die Optionen nachladen', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement;
 
       const spy = vi.spyOn(combobox, 'updateDisplayedEntries');
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option');
       expect(options?.length).toEqual(9); // 8 + Leereintrag
@@ -357,13 +349,11 @@ describe('LuxLookupComboboxComponent', () => {
   describe('mit aktivierter Filterfunktion', () => {
     it('rendert das Filterfeld nicht als deaktivierte mat-option', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(document.querySelector('.mat-mdc-select-panel mat-option.lux-select-panel-filter-option')).toBeNull();
       expect(document.querySelector('lux-select-panel-filter')).not.toBeNull();
@@ -371,13 +361,11 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('reicht placeholder, filterValue und clearAriaLabel an das Filterfeld durch', async () => {
       const fixture = TestBed.createComponent(LuxFilterInputBindingsComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('input.lux-select-panel-filter-input') as HTMLInputElement;
       expect(filterInput).toBeTruthy();
@@ -391,9 +379,7 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('lädt bei initial aktivem Filter alle Einträge nach', async () => {
       const fixture = TestBed.createComponent(LuxFilterInitialLoadComponent);
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const combobox = fixture.componentInstance.combobox();
       expect(combobox.displayedEntries.length).toBe(10);
@@ -402,20 +388,16 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('reduziert die Optionsliste anhand des Suchtexts', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'deu';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -425,26 +407,20 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('navigiert mit Pfeiltasten fortlaufend über gefilterte Optionen', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'a';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent))
         .componentInstance as LuxLookupComboboxComponent;
@@ -454,27 +430,21 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('stoppt mit Pfeiltasten an der letzten gefilterten Option', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'a';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       for (let i = 0; i < 6; i++) {
         LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       }
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent))
         .componentInstance as LuxLookupComboboxComponent;
@@ -484,28 +454,22 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('navigiert mit PageUp und PageDown über sichtbare Optionen', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent))
         .componentInstance as LuxLookupComboboxComponent;
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = '';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true }));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       let keyManager = (
         luxLookup.matSelect() as unknown as {
@@ -519,9 +483,7 @@ describe('LuxLookupComboboxComponent', () => {
       expect(keyManager?.activeItem?.value?.key).toBe('1100');
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'PageUp', bubbles: true }));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       keyManager = (
         luxLookup.matSelect() as unknown as {
@@ -537,28 +499,22 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('navigiert mit Home und End zur ersten bzw. letzten sichtbaren Option', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent))
         .componentInstance as LuxLookupComboboxComponent;
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = '';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       let keyManager = (
         luxLookup.matSelect() as unknown as {
@@ -572,9 +528,7 @@ describe('LuxLookupComboboxComponent', () => {
       expect(keyManager?.activeItem?.value?.key).toBe('1100');
 
       LuxTestHelper.dispatchEvent(filterInput, new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       keyManager = (
         luxLookup.matSelect() as unknown as {
@@ -590,43 +544,33 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('schließt im Single-Select bei Enter auf aktiver Option und erlaubt erneute Arrow-Navigation', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent))
         .componentInstance as LuxLookupComboboxComponent;
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'a';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const activeBeforeEnter = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       const activeElement = document.activeElement as HTMLElement;
       LuxTestHelper.dispatchEvent(activeElement, LuxTestHelper.createKeyboardEvent('keydown', 13, activeElement, 'Enter'));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(activeBeforeEnter?.value?.key).toBe('100');
       expect(luxLookup.matSelect()?.panelOpen).toBe(false);
 
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInputAfterReopen = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInputAfterReopen.value = 'a';
@@ -635,9 +579,7 @@ describe('LuxLookupComboboxComponent', () => {
         filterInputAfterReopen,
         LuxTestHelper.createKeyboardEvent('keydown', 40, filterInputAfterReopen, 'ArrowDown')
       );
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const activeAfterReopen = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       expect(activeAfterReopen).toBeTruthy();
@@ -645,24 +587,20 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('aktiviert per Tab aus dem Filter die erste sichtbare Option', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent))
         .componentInstance as LuxLookupComboboxComponent;
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 9, filterInput, 'Tab'));
       await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const activeItem = (luxLookup.matSelect() as any)?._keyManager?.activeItem;
       expect(activeItem?.value?.key).toBe('1');
@@ -671,53 +609,41 @@ describe('LuxLookupComboboxComponent', () => {
     it('funktioniert mit Filterung und Auswahl kombiniert', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
       const component = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'alg';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       (visibleOptions[0] as HTMLElement).click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect((component.value() as LuxLookupTableEntry)?.key).toBe('1100');
     });
 
     it('zeigt wieder alle Optionen bei leerem Suchfeld', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'bell';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       filterInput.value = '';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -726,26 +652,20 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('leert den Filter per Clear-Button', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'deu';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const clearButton = document.querySelector('.lux-select-panel-filter-clear-btn button') as HTMLButtonElement;
       clearButton.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -754,13 +674,11 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('ordnet selektierte Einträge nach oben (stabil)', async () => {
       const fixture = TestBed.createComponent(LuxFilterComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -768,15 +686,11 @@ describe('LuxLookupComboboxComponent', () => {
       expect(deutschlandOption).toBeDefined();
 
       (deutschlandOption as HTMLElement).click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Single-Select schließt das Panel nach Auswahl – erneut öffnen und Reihenfolge prüfen.
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const optionsAfter = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
       const selectedOptions = optionsAfter.filter((opt) => opt.classList.contains('mdc-list-item--selected'));
@@ -790,13 +704,11 @@ describe('LuxLookupComboboxComponent', () => {
 
       // Reihenfolge im Value ist absichtlich nicht die Originalreihenfolge.
       component.value.set([mockResultTest[3], mockResultTest[0]]);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -809,27 +721,21 @@ describe('LuxLookupComboboxComponent', () => {
     it('funktioniert in Reactive Forms', async () => {
       const fixture = TestBed.createComponent(LuxFilterReactiveFormComponent);
       const component = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'afg';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       (visibleOptions[0] as HTMLElement).click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(component.form.get('entry')?.value?.key).toBe('1');
     });
@@ -837,27 +743,21 @@ describe('LuxLookupComboboxComponent', () => {
     it('funktioniert im Multiselect', async () => {
       const fixture = TestBed.createComponent(LuxFilterMultipleComponent);
       const component = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'deu';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       (visibleOptions[0] as HTMLElement).click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(document.activeElement).toBe(filterInput);
 
@@ -865,16 +765,12 @@ describe('LuxLookupComboboxComponent', () => {
       // Daher können wir direkt im selben Panel weiter filtern und selektieren.
       filterInput.value = 'alg';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options2 = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions2 = Array.from(options2).filter((opt) => window.getComputedStyle(opt).display !== 'none');
       (visibleOptions2[0] as HTMLElement).click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(document.activeElement).toBe(filterInput);
       const selectedEntries = component.value() as LuxLookupTableEntry[];
@@ -885,13 +781,11 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('sortiert im geöffneten Multiselect nicht sofort nach Auswahl', async () => {
       const fixture = TestBed.createComponent(LuxFilterMultipleComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       let options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
       let visibleOptions = options.filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -900,9 +794,7 @@ describe('LuxLookupComboboxComponent', () => {
       const deutschlandOption = visibleOptions.find((opt) => opt.querySelector('span')?.innerText === 'Deutschland');
       expect(deutschlandOption).toBeTruthy();
       (deutschlandOption as HTMLElement).click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       options = Array.from(document.querySelectorAll('.mat-mdc-select-panel mat-option')) as HTMLElement[];
       visibleOptions = options.filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -911,20 +803,16 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('hält im gefilterten Multiselect die Arrow-Navigation auf sichtbaren Optionen', async () => {
       const fixture = TestBed.createComponent(LuxFilterMultipleComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'deu';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
       const visibleOptions = Array.from(options).filter((opt) => window.getComputedStyle(opt).display !== 'none');
@@ -933,9 +821,7 @@ describe('LuxLookupComboboxComponent', () => {
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const luxLookup = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent))
         .componentInstance as LuxLookupComboboxComponent;
@@ -945,25 +831,19 @@ describe('LuxLookupComboboxComponent', () => {
 
     it('hält im gefilterten Multiselect nach Arrow den Fokus im Filter-Input', async () => {
       const fixture = TestBed.createComponent(LuxFilterMultipleComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
       filterInput.value = 'deu';
       LuxTestHelper.dispatchFakeEvent(filterInput, 'input');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 40, filterInput, 'ArrowDown'));
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(document.activeElement).toBe(filterInput);
     });
@@ -984,15 +864,11 @@ describe('LuxLookupComboboxComponent', () => {
       });
 
       const fixture = TestBed.createComponent(LuxVisibleOptionCountComponent);
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const trigger = fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement as HTMLElement;
       trigger.click();
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const panel = document.querySelector('.mat-mdc-select-panel') as HTMLElement;
       const filterHost = document.querySelector('lux-select-panel-filter') as HTMLElement;

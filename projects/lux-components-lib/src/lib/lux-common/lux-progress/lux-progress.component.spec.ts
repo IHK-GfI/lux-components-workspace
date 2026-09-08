@@ -58,11 +58,11 @@ describe('LuxProgressComponent', () => {
       // Vorbedingungen testen
       component.mode.set('determinate');
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressBar)).componentInstance;
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
       component.value.set(10);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
     });
@@ -113,11 +113,11 @@ describe('LuxProgressComponent', () => {
 
       const matProgress: MatProgressBar = fixture.debugElement.query(By.directive(MatProgressSpinner)).componentInstance;
       component.mode.set('determinate');
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       expect(matProgress.value).toBe(0);
       // Änderungen durchführen
       component.value.set(10);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       // Nachbedingungen prüfen
       expect(matProgress.value).toBe(10);
     });

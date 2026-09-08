@@ -61,7 +61,7 @@ describe('LuxFilePreviewComponent', () => {
           fileObject: { name: 'testfile.pdf', content: 'data:application/pdf;base64,abc', type: 'application/pdf' }
         }
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeDefined();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeDefined();
@@ -69,8 +69,6 @@ describe('LuxFilePreviewComponent', () => {
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeNull();
 
       previewRef.close();
-      await LuxTestHelper.wait(fixture);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       // Nachbedingungen testen
@@ -97,7 +95,7 @@ describe('LuxFilePreviewComponent', () => {
           fileObject: { name: 'testfile.png', content: 'data:image/png;base64,abc', type: 'image/png' }
         }
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeDefined();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
@@ -105,8 +103,6 @@ describe('LuxFilePreviewComponent', () => {
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeNull();
 
       previewRef.close();
-      await LuxTestHelper.wait(fixture);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       // Nachbedingungen testen
@@ -133,7 +129,7 @@ describe('LuxFilePreviewComponent', () => {
           fileObject: { name: 'testfile.abc', content: 'data:ne/abc;base64,abc', type: 'ne/abc' }
         }
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(oc.getContainerElement().querySelector('lux-file-preview')).toBeDefined();
       expect(oc.getContainerElement().querySelector('lux-file-preview-pdfviewer')).toBeNull();
@@ -141,8 +137,6 @@ describe('LuxFilePreviewComponent', () => {
       expect(oc.getContainerElement().querySelector('lux-file-preview-notsupportedviewer')).toBeDefined();
 
       previewRef.close();
-      await LuxTestHelper.wait(fixture);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       // Nachbedingungen testen

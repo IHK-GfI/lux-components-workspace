@@ -33,7 +33,7 @@ describe('LuxTourHintService', () => {
     fixture = TestBed.createComponent(MockTourHintComponent);
 
     testComponent = fixture.componentInstance;
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
   });
 
   describe('[LuxTourHintPresetComponent]', () => {

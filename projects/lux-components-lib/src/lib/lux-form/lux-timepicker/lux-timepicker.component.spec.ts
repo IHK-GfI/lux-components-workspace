@@ -30,8 +30,7 @@ describe('LuxTimepickerComponent', () => {
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
     testComponent.formControl.setValue('1970-01-01T14:15:00.000Z');
     await LuxTestHelper.wait(fixture);
 
@@ -49,8 +48,7 @@ describe('LuxTimepickerComponent', () => {
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
     testComponent.dateControl.setValue('2026-06-18T00:00:00.000Z');
     await LuxTestHelper.wait(fixture);
 
@@ -72,8 +70,6 @@ describe('LuxTimepickerComponent', () => {
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
     const inputEls: HTMLInputElement[] = fixture.debugElement.queryAll(By.css('input')).map((debugEl) => debugEl.nativeElement);
@@ -100,8 +96,6 @@ describe('LuxTimepickerComponent', () => {
     const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
       .componentInstance as LuxTimepickerComponent;
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
     await LuxTestHelper.wait(fixture);
 
     expect(datepickerComponent.formControl).toBe(timepickerComponent.formControl);
@@ -129,30 +123,30 @@ describe('LuxTimepickerComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxTimepickerA11yComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
       testComponent.disabled = true;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
       testComponent.readonly = true;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
       testComponent.required = true;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
   });

@@ -27,8 +27,6 @@ describe('LuxTooltipDirective', () => {
   const hideTooltip = async (wait = 0) => {
     tooltip.hide(mockComp.hideDelay());
     await LuxTestHelper.wait(fixture, wait);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
   };
 
   // Der Truncation-Watcher plant beim connect() eine erste Messung via setTimeout(0).
@@ -171,7 +169,6 @@ describe('LuxTooltipDirective', () => {
     mockComp.hostWidth.set(80);
     mockComp.label.set('Ein deutlich längerer Text, der sicher gekürzt wird');
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     // When
     await showTooltip();

@@ -42,7 +42,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte value über das FormControl aktualisieren', async () => {
       // Given
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const formControl = component.form.get('control')!;
       const textareaEl = fixture.debugElement.query(By.css('textarea')).nativeElement;
       // When
@@ -63,7 +63,7 @@ describe('LuxTextareaComponent', () => {
       const formControl = component.form.get('control')!;
       formControl.setValidators(Validators.required);
       component.value.set('Test');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // When
       // Then
       expect(formControl.errors).toBeFalsy();
@@ -71,7 +71,7 @@ describe('LuxTextareaComponent', () => {
 
       // When
       component.value.set('');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Then
       expect(formControl.errors).toBeTruthy();
       expect(formControl.errors!['required']).toBeTruthy();
@@ -111,7 +111,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte value über Two-Way-Binding aktualisieren', async () => {
       // Given
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const textareaEl = fixture.debugElement.query(By.css('textarea')).nativeElement;
       // When
       // Then
@@ -130,7 +130,7 @@ describe('LuxTextareaComponent', () => {
       // Given
       component.label.set('Label');
       component.placeholder.set('Placeholder');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const labelEl = fixture.debugElement.query(By.css('.lux-label-authentic')).nativeElement;
       const textareaEl = fixture.debugElement.query(By.css('textarea')).nativeElement;
@@ -144,7 +144,7 @@ describe('LuxTextareaComponent', () => {
       // Given
       component.required.set(true);
       component.value.set('Test');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // When
       // Then
       expect(textarea.formControl.errors).toBeFalsy();
@@ -152,7 +152,7 @@ describe('LuxTextareaComponent', () => {
 
       // When
       component.value.set('');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Then
       expect(textarea.formControl.errors).toBeTruthy();
       expect(textarea.formControl.errors!['required']).toBeTruthy();
@@ -161,7 +161,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte Validatoren setzen und korrekte Fehlermeldungen anzeigen', async () => {
       // Vorbedingungen testen
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       let errorEl = fixture.debugElement.query(By.css('mat-error'));
       expect(errorEl).toBeFalsy();
 
@@ -189,7 +189,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte den Hint setzen', async () => {
       // Vorbedingungen testen
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('mat-hint'))).toBeNull();
 
       // Änderungen durchführen
@@ -202,7 +202,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte disabled sein', async () => {
       // Vorbedingungen testen
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('textarea')).nativeElement.disabled).toBe(false);
       expect(textarea.luxDisabled()).toBe(false);
 
@@ -217,7 +217,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte die luxErrorMessage anzeigen', async () => {
       // Vorbedingungen testen
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
       // Änderungen durchführen
@@ -237,7 +237,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte den Fehler über luxErrorCallback anzeigen', async () => {
       // Vorbedingungen testen
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
       // Änderungen durchführen
@@ -259,7 +259,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte nicht null/undefined im Label anzeigen', async () => {
       // Vorbedingungen testen
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('mat-label'))).toBeNull();
 
       // Änderungen durchführen
@@ -279,7 +279,7 @@ describe('LuxTextareaComponent', () => {
 
     it('Sollte readonly sein', async () => {
       // Vorbedingungen testen
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       expect(fixture.debugElement.query(By.css('textarea')).attributes['readonly']).toBeFalsy();
 
       // Änderungen durchführen
@@ -357,13 +357,13 @@ describe('LuxTextareaComponent', () => {
       fixture = TestBed.createComponent(LuxTextareaCounterLabelComponent);
       testComponent = fixture.componentInstance;
       textarea = fixture.debugElement.query(By.directive(LuxTextareaComponent)).componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('sollte Counter-Label bei focused=true anzeigen', async () => {
       // Vorbedingungen testen
       testComponent.maxLength.set(50);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const textareaEl = fixture.debugElement.query(By.css('textarea'));
 
       // Fokus aktivieren
@@ -378,7 +378,7 @@ describe('LuxTextareaComponent', () => {
       expect(labelEl.nativeElement.innerHTML.trim()).toContain('11/50');
       // Fokus deaktivieren
       formControlComponent.focused.set(false);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Prüfen
       labelEl = fixture.debugElement.query(By.css('.lux-form-control-character-counter-authentic'));
       expect(labelEl.nativeElement.innerHTML.trim()).not.toContain('11/50');
@@ -387,7 +387,7 @@ describe('LuxTextareaComponent', () => {
     it('sollte Counter-Label bei leerem Value anzeigen', async () => {
       // Vorbedingungen testen
       testComponent.maxLength.set(50);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const textareaEl = fixture.debugElement.query(By.css('textarea'));
 
       // Fokus aktivieren
@@ -405,7 +405,7 @@ describe('LuxTextareaComponent', () => {
     it('bei disabled sollte kein Wert gezeigt werden', async () => {
       // Vorbedingungen testen
       testComponent.maxLength.set(50);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       const textareaEl = fixture.debugElement.query(By.css('textarea'));
 
       // Fokus aktivieren
@@ -424,7 +424,7 @@ describe('LuxTextareaComponent', () => {
       // Fokus deaktivieren
       testComponent.disabled.set(true);
       formControlComponent.focused.set(false);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Prüfen
       labelEl = fixture.debugElement.query(By.css('.lux-form-control-character-counter-authentic'));
       expect(textareaEl.nativeElement.disabled).toBe(true);
@@ -443,29 +443,29 @@ describe('LuxTextareaComponent', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxTextareaA11yComponent);
       testComponent = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
       testComponent.disabled.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
       testComponent.readonly.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
       testComponent.required.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
   });

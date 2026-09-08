@@ -340,8 +340,6 @@ describe('LuxFileInputComponent', () => {
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.png', 'image/png')]);
 
       await LuxTestHelper.wait(fixture);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
 
       expect(fileComponent.value()!.name).toEqual('mockfile1.png');
       expect(fileComponent.value()!.content).toEqual(base64Dummy);
@@ -364,8 +362,7 @@ describe('LuxFileInputComponent', () => {
       expect(fileComponent.value()!.content).toEqual(base64Dummy);
       expect(spy).toHaveBeenCalledTimes(3);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     describe('Sollte die Events mit passenden Werten emitten,', () => {

@@ -24,10 +24,7 @@ describe('LuxDialogService', () => {
   let dialogRef: LuxDialogRef<void>;
 
   const waitForDialogClosure = async () => {
-    await LuxTestHelper.wait(fixture);
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
   };
 
   beforeEach(async () => {
@@ -67,7 +64,7 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.open({});
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -77,7 +74,7 @@ describe('LuxDialogService', () => {
       dialogRef = testComponent.dialogService.open({
         title: 'Hallo Welt'
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-title')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-title').textContent!.trim()).toEqual('Hallo Welt');
@@ -87,7 +84,7 @@ describe('LuxDialogService', () => {
       dialogRef = testComponent.dialogService.open({
         content: 'Hallo Welt'
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content').textContent!.trim()).toEqual('Hallo Welt');
@@ -97,7 +94,7 @@ describe('LuxDialogService', () => {
       dialogRef = testComponent.dialogService.open({
         contentTemplate: testComponent.templateRef()
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content')).not.toBeNull();
       expect(overlayHelper.selectOneFromOverlay('lux-dialog-content').textContent!.trim()).toEqual('Hallo Welt');
@@ -108,7 +105,7 @@ describe('LuxDialogService', () => {
       dialogRef = testComponent.dialogService.open({
         confirmAction: undefined
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm')).toBeNull();
 
@@ -122,7 +119,7 @@ describe('LuxDialogService', () => {
           raised: true
         }
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-confirm')).not.toBeNull();
@@ -135,7 +132,7 @@ describe('LuxDialogService', () => {
       dialogRef = testComponent.dialogService.open({
         declineAction: undefined
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-decline')).toBeNull();
 
@@ -149,7 +146,7 @@ describe('LuxDialogService', () => {
           raised: true
         }
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog-preset-decline')).not.toBeNull();
@@ -170,7 +167,7 @@ describe('LuxDialogService', () => {
           label: 'Abbrechen'
         }
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       const buttonNodeList = overlayHelper.selectAllFromOverlay('lux-button');
@@ -189,7 +186,7 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.open({});
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -212,13 +209,13 @@ describe('LuxDialogService', () => {
         }
       });
 
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       dialogRef.dialogConfirmed.subscribe(() => {
         testComponent.dialogConfirmed();
       });
 
       const spy = vi.spyOn(testComponent, 'dialogConfirmed').mockReturnValue(undefined);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -243,13 +240,13 @@ describe('LuxDialogService', () => {
         }
       });
 
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       dialogRef.dialogDeclined.subscribe(() => {
         testComponent.dialogDeclined();
       });
 
       const spy = vi.spyOn(testComponent, 'dialogDeclined').mockReturnValue(undefined);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -274,13 +271,13 @@ describe('LuxDialogService', () => {
         }
       });
 
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       dialogRef.dialogClosed.subscribe(() => {
         testComponent.dialogClosed();
       });
 
       const spy = vi.spyOn(testComponent, 'dialogClosed').mockReturnValue(undefined);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -300,7 +297,7 @@ describe('LuxDialogService', () => {
         width: 'auto',
         maxWidth: undefined
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const config = (dialogRef._matDialogRef as any)._containerInstance._config;
       expect(config.maxWidth).toEqual(minWidth(DIALOG_WIDTH_SMALL_PX));
@@ -311,7 +308,7 @@ describe('LuxDialogService', () => {
         width: '700px',
         maxWidth: undefined
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const config = (dialogRef._matDialogRef as any)._containerInstance._config;
       expect(config.maxWidth).toBeUndefined();
@@ -323,7 +320,7 @@ describe('LuxDialogService', () => {
       };
 
       dialogRef = testComponent.dialogService.open(inputConfig);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(inputConfig.maxWidth).toBeUndefined();
     });
@@ -333,7 +330,7 @@ describe('LuxDialogService', () => {
         width: 'auto',
         maxWidth: undefined
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const config = (dialogRef._matDialogRef as any)._containerInstance._config;
       expect(config.maxWidth).toEqual(minWidth(DIALOG_WIDTH_LARGE_PX));
@@ -347,7 +344,7 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -362,7 +359,7 @@ describe('LuxDialogService', () => {
 
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -381,13 +378,13 @@ describe('LuxDialogService', () => {
       // Änderungen durchführen
       dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent);
 
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
       dialogRef.dialogClosed.subscribe(() => {
         testComponent.dialogClosed();
       });
 
       const spy = vi.spyOn(testComponent, 'dialogClosed').mockReturnValue(undefined);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(overlayHelper.selectOneFromOverlay('.lux-dialog')).not.toBeNull();
@@ -407,7 +404,7 @@ describe('LuxDialogService', () => {
         disableClose: false,
         disableBackdropAndEscClose: true
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(dialogRef._matDialogRef.disableClose).toBe(true);
       expect(overlayHelper.selectOneFromOverlay('.lux-icon-close')).not.toBeNull();
@@ -418,7 +415,7 @@ describe('LuxDialogService', () => {
         disableClose: true,
         disableBackdropAndEscClose: false
       });
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(dialogRef._matDialogRef.disableClose).toBe(true);
       expect(overlayHelper.selectOneFromOverlay('.lux-icon-close')).toBeNull();

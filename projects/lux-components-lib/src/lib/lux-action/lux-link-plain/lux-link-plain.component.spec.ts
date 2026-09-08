@@ -39,7 +39,7 @@ describe('LuxLinkPlainComponent', () => {
 
     // Änderungen durchführen
     component.label.set('Ein Label sie zu knechten');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     label = fixture.debugElement.query(By.css('.lux-link-plain-text'));
@@ -53,7 +53,7 @@ describe('LuxLinkPlainComponent', () => {
 
     // Änderungen durchführen
     component.iconName.set('lux-programming-bug');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     icon = fixture.debugElement.query(By.css('lux-icon'));
@@ -67,7 +67,7 @@ describe('LuxLinkPlainComponent', () => {
 
     // Änderungen durchführen
     component.disabled.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     disabled = fixture.debugElement.query(By.css('.lux-disabled'));
@@ -81,11 +81,11 @@ describe('LuxLinkPlainComponent', () => {
 
     // Änderungen durchführen
     component.href.set('/mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -102,11 +102,11 @@ describe('LuxLinkPlainComponent', () => {
 
     // Änderungen durchführen  [mit HTTP]
     component.href.set('http://mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -114,10 +114,10 @@ describe('LuxLinkPlainComponent', () => {
 
     // Änderungen durchführen [mit HTTPS]
     component.href.set('https://mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(2);
@@ -138,11 +138,11 @@ describe('LuxLinkPlainComponent', () => {
     // Änderungen durchführen
     component.blank.set(true);
     component.href.set('http://mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -160,11 +160,11 @@ describe('LuxLinkPlainComponent', () => {
     // Änderungen durchführen
     component.blank.set(true);
     component.href.set('/mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('.link-wrapper'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -178,7 +178,7 @@ describe('LuxLinkPlainComponent', () => {
 
     // Änderungen durchführen
     component.blank.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     link = fixture.debugElement.query(By.css('.link-wrapper'));

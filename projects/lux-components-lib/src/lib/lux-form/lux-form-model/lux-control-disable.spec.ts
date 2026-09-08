@@ -73,7 +73,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -102,7 +102,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(false);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);
@@ -168,7 +168,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.disable();
     testComponent.myForm.get('textarea')!.disable();
     testComponent.myForm.get('toggle')!.disable();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -206,7 +206,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.enable();
     testComponent.myForm.get('textarea')!.enable();
     testComponent.myForm.get('toggle')!.enable();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);
@@ -271,7 +271,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.disable();
     testComponent.myForm.get('textarea')!.disable();
     testComponent.myForm.get('toggle')!.disable();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -299,7 +299,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(false);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);
@@ -354,7 +354,7 @@ describe('LuxControlDisable', () => {
 
     // Änderungen durchführen
     testComponent.disabledState.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(true);
@@ -393,7 +393,7 @@ describe('LuxControlDisable', () => {
     testComponent.myForm.get('slider')!.enable();
     testComponent.myForm.get('textarea')!.enable();
     testComponent.myForm.get('toggle')!.enable();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     expect(inputEl.disabled).toBe(false);

@@ -2,6 +2,7 @@ import { Component, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxSelectVisibleOptionCountDirective } from './lux-select-visible-option-count.directive';
 
 @Component({
@@ -25,7 +26,7 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(VisibleOptionCountHostComponent);
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     const debugElement = fixture.debugElement.query((el) => el.injector.get(LuxSelectVisibleOptionCountDirective, null) !== null);
     directive = debugElement.injector.get(LuxSelectVisibleOptionCountDirective);
@@ -51,8 +52,7 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
     expect(access.panelAttachTimeout).toBeDefined();
 
     access.matSelect.panel = new ElementRef(panel);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(panel.style.maxHeight).toBe('40px');
   });
@@ -85,8 +85,7 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
     expect(access.panelAttachTimeout).toBeDefined();
 
     directive.ngOnDestroy();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(access.panelAttachTimeout).toBeUndefined();
   });

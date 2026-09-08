@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxSelectFilterDirective } from './lux-select-filter.directive';
 import { LuxSelectFilterUtils } from './lux-select-filter.utils';
 
@@ -52,7 +53,7 @@ describe('LuxSelectFilterDirective', () => {
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     const matSelect = fixture.debugElement.query((el) => el.componentInstance instanceof MatSelect);
     directive = matSelect?.injector.get(LuxSelectFilterDirective);
@@ -469,8 +470,7 @@ describe('LuxSelectFilterDirective', () => {
 
     const fromInput = directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fromInput).toBe(true);
     expect(closeSpy).toHaveBeenCalled();
@@ -486,8 +486,7 @@ describe('LuxSelectFilterDirective', () => {
 
     const fromInput = directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fromInput).toBe(true);
     expect(closeSpy).toHaveBeenCalled();
@@ -508,8 +507,7 @@ describe('LuxSelectFilterDirective', () => {
 
     directive.handleOptionKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).not.toHaveBeenCalled();
   });
@@ -527,8 +525,7 @@ describe('LuxSelectFilterDirective', () => {
     (directive as any).matSelect.focus = focusSpy;
 
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).toHaveBeenCalled();
   });
@@ -541,8 +538,7 @@ describe('LuxSelectFilterDirective', () => {
     (directive as any).matSelect.focus = focusSpy;
 
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(document.activeElement).toBe(externalButton);
     expect(focusSpy).not.toHaveBeenCalled();
@@ -557,8 +553,7 @@ describe('LuxSelectFilterDirective', () => {
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).not.toHaveBeenCalled();
   });
@@ -593,8 +588,7 @@ describe('LuxSelectFilterDirective', () => {
 
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(closeSpy).toHaveBeenCalled();
     // Per Referenzgleichheit statt toHaveBeenCalledWith(): unter isolate:false könnten mehrere
@@ -620,8 +614,7 @@ describe('LuxSelectFilterDirective', () => {
     directive.handleKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
     (directive as any).onPanelClose();
     directive.ngOnDestroy();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(closeSpy).toHaveBeenCalled();
     // Gezielt per Referenzgleichheit auf den eigenen Anchor dieses Tests prüfen statt "gar nicht
@@ -654,8 +647,7 @@ describe('LuxSelectFilterDirective', () => {
     externalButton.focus();
     externalButton.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
     (directive as any).onPanelClose();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(document.activeElement).toBe(externalButton);
     expect(focusSpy).not.toHaveBeenCalled();
@@ -682,8 +674,7 @@ describe('LuxSelectFilterDirective', () => {
 
     (directive as any).registerPanelKeydownListener();
     option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(document.activeElement).toBe(input);
 
@@ -709,8 +700,7 @@ describe('LuxSelectFilterDirective', () => {
 
     (directive as any).registerPanelKeydownListener();
     option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
 

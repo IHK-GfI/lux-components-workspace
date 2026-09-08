@@ -79,7 +79,7 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.disabled.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepperOverlay = fixture.debugElement.query(By.css('.lux-stepper-disabled-overlay.lux-hidden'));
@@ -94,13 +94,12 @@ describe('LuxStepperComponent', () => {
     // Änderungen durchführen
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -111,11 +110,11 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.linear.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
@@ -131,11 +130,11 @@ describe('LuxStepperComponent', () => {
     component.linear.set(true);
     component.step0Form.set(undefined);
     component.step0Completed.set(false);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
@@ -143,16 +142,15 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.step0Completed.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -165,17 +163,16 @@ describe('LuxStepperComponent', () => {
     component.linear.set(true);
     component.step0Form.set(undefined);
     component.step0Optional.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -189,11 +186,11 @@ describe('LuxStepperComponent', () => {
     component.step0Form.set(undefined);
     component.step0Editable.set(false);
     component.step0Completed.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
@@ -201,13 +198,12 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     stepHeaders[0].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -218,7 +214,7 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.customIcons.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     matStepIcons = fixture.debugElement.queryAll(By.css('.lux-ignore-mat-step-icons .mat-step-icon'));
@@ -237,7 +233,7 @@ describe('LuxStepperComponent', () => {
     component.prevConfig.update((cfg) => ({ ...cfg, label: 'Test prev' }));
     component.nextConf.update((cfg) => ({ ...cfg, label: 'Test next' }));
     component.finConf.update((cfg) => ({ ...cfg, label: 'Test fin' }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(navButtons[0].nativeElement.textContent.trim()).toEqual('Test next');
@@ -252,7 +248,7 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.showNavButtons.set(false);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     navButtons = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons .lux-button-label'));
@@ -262,7 +258,7 @@ describe('LuxStepperComponent', () => {
   it('Sollte den Next-Button im linearen Modus ohne A11Y deaktivieren', async () => {
     component.linear.set(true);
     component.a11yMode.set(false);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
     expect(nextButton.disabled).toBe(true);
@@ -271,7 +267,7 @@ describe('LuxStepperComponent', () => {
   it('Sollte den Next-Button im A11Y-Modus aktiviert lassen', async () => {
     component.linear.set(true);
     component.a11yMode.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
     expect(nextButton.disabled).toBe(false);
@@ -279,7 +275,7 @@ describe('LuxStepperComponent', () => {
 
   it('Sollte die Navigations-Buttons linksbündig darstellen', async () => {
     component.buttonAlignLeft.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const navButtonContainer = fixture.debugElement.query(By.css('lux-stepper-nav-buttons > div'));
     expect(navButtonContainer.nativeElement.classList.contains('lux-place-content-start')).toBe(true);
@@ -294,7 +290,7 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.vertical.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepperHorizontal = fixture.debugElement.query(By.css('mat-horizontal-stepper'));
@@ -310,13 +306,12 @@ describe('LuxStepperComponent', () => {
 
     // Änderungen durchführen
     component.currentStep.set(1);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     stepSelected = fixture.debugElement.query(By.css('mat-step-header[aria-selected="true"] .step-header'));
     expect(stepSelected.nativeElement.textContent).toEqual('Step 1');
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -328,25 +323,24 @@ describe('LuxStepperComponent', () => {
     // Änderungen durchführen
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
   it('Sollte luxCheckValidation emitten, wenn Header-Navigation blockiert wird', async () => {
     component.linear.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const spy = vi.spyOn(component, 'checkValidation').mockReturnValue(undefined);
     expect(spy).toHaveBeenCalledTimes(0);
 
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(0); // aktueller Step (0), nicht Ziel-Step
@@ -356,7 +350,7 @@ describe('LuxStepperComponent', () => {
     // Vorbedingungen: linear=true, step0 nicht abgeschlossen, A11Y-Modus damit Button klickbar bleibt
     component.linear.set(true);
     component.a11yMode.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const spy = vi.spyOn(component, 'checkValidation').mockReturnValue(undefined);
     expect(spy).toHaveBeenCalledTimes(0);
@@ -364,13 +358,12 @@ describe('LuxStepperComponent', () => {
     // Next-Button von Step 0 klicken (erster Button in lux-stepper-nav-buttons)
     const nextButton = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons button'))[0].nativeElement as HTMLButtonElement;
     nextButton.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen: aktueller Step-Index (0) muss emittiert werden, nicht der Ziel-Step
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(0);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -382,16 +375,15 @@ describe('LuxStepperComponent', () => {
     // Änderungen durchführen
     const stepHeaders = fixture.debugElement.queryAll(By.css('mat-step-header'));
     stepHeaders[1].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const navButtons = fixture.debugElement.queryAll(By.css('lux-stepper-nav-buttons .lux-button-label'));
     navButtons[2].nativeElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 });

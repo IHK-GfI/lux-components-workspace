@@ -50,7 +50,7 @@ describe('LuxInputComponent', () => {
 
     describe('type="text"', () => {
       it('Wert über das FormControl setzen', async () => {
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         expect(fixture.componentInstance.formGroup.get('text')!.value).toEqual(null);
 
         fixture.componentInstance.formGroup.get('text')!.setValue('abc');
@@ -62,7 +62,7 @@ describe('LuxInputComponent', () => {
       });
 
       it('Wert (Kommazahl) über das Textfeld setzen', async () => {
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         expect(fixture.componentInstance.formGroup.get('amount0')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount1')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount2')!.value).toEqual(0);
@@ -80,7 +80,7 @@ describe('LuxInputComponent', () => {
       });
 
       it('Wert über das Textfeld setzen', async () => {
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         expect(fixture.componentInstance.formGroup.get('text')!.value).toBeNull();
 
         const inputEl = fixture.debugElement.query(By.css('#text input'));
@@ -94,7 +94,7 @@ describe('LuxInputComponent', () => {
       it('Validatoren setzen und die Fehlermeldungen korrekt anzeigen', async () => {
         // Vorbedingungen testen
         testComponent.formGroup.get('text')!.setValidators(Validators.required);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         const textInput = fixture.debugElement.query(By.css('#text')).componentInstance;
         let errorEl = fixture.debugElement.query(By.css('mat-error'));
         expect(errorEl).toBeFalsy();
@@ -114,7 +114,7 @@ describe('LuxInputComponent', () => {
 
       it('Sollte einen Startwert setzen', async () => {
         testComponent.formGroup.get('text')!.setValue('abc');
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const inputEl = fixture.debugElement.query(By.css('#text input'));
 
@@ -123,7 +123,7 @@ describe('LuxInputComponent', () => {
 
       it('Sollte required sein', async () => {
         // Vorbedingungen testen
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         const luxInput: LuxInputComponent = fixture.debugElement.query(By.css('#text')).componentInstance;
         expect(testComponent.formGroup.get('text')!.valid).toBe(true);
 
@@ -154,7 +154,7 @@ describe('LuxInputComponent', () => {
       it('Sollte bestehende Validatoren bei [luxRequired] in Reactive Forms nicht überschreiben', async () => {
         fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
         testComponent = fixture.componentInstance;
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
         textControl.setValue('ab');
@@ -171,7 +171,7 @@ describe('LuxInputComponent', () => {
       it('Sollte required-Fehler der FormGroup bei leerem Wert anzeigen (Reactive Form)', async () => {
         fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
         testComponent = fixture.componentInstance;
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
         textControl.setValue(null);
@@ -189,7 +189,7 @@ describe('LuxInputComponent', () => {
       it('Sollte bei gültigem Wert keine Validierungsfehler haben (Reactive Form)', async () => {
         fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
         testComponent = fixture.componentInstance;
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
         textControl.setValue('lux-test');
@@ -205,11 +205,11 @@ describe('LuxInputComponent', () => {
       it('Sollte Validatoren nach [luxRequired]-Änderung (true → false) in Reactive Form erhalten', async () => {
         fixture = TestBed.createComponent(LuxInputRequiredReactiveFormComponent);
         testComponent = fixture.componentInstance;
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         // luxRequired auf false ändern, nachdem die Komponente gerendert wurde
         testComponent.required.set(false);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         await LuxTestHelper.wait(fixture);
 
         const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
@@ -227,7 +227,7 @@ describe('LuxInputComponent', () => {
       it('Sollte required extern per addValidators/removeValidators an- und wieder abschaltbar sein (Reactive Form)', async () => {
         fixture = TestBed.createComponent(LuxInputExternalRequiredToggleComponent);
         testComponent = fixture.componentInstance;
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const luxInput: LuxInputComponent = fixture.debugElement.query(By.css('#text')).componentInstance;
         const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
@@ -274,7 +274,7 @@ describe('LuxInputComponent', () => {
       });
 
       it('Wert über das Textfeld setzen', async () => {
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         expect(fixture.componentInstance.formGroup.get('amount0')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount1')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount2')!.value).toEqual(0);
@@ -300,7 +300,7 @@ describe('LuxInputComponent', () => {
         fixture = TestBed.createComponent(LuxInputWerteInsideFormComponent);
         testComponent = fixture.componentInstance;
 
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         expect(fixture.componentInstance.formGroup.get('amount01')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount02')!.value).toEqual(0);
@@ -393,7 +393,7 @@ describe('LuxInputComponent', () => {
         fixture = TestBed.createComponent(LuxInputWerteInsideFormComponent);
         testComponent = fixture.componentInstance;
 
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         expect(fixture.componentInstance.formGroup.get('amount01')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount02')!.value).toEqual(0);
@@ -454,7 +454,7 @@ describe('LuxInputComponent', () => {
       });
 
       it('Keine NaN-Werte setzen', async () => {
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         expect(fixture.componentInstance.formGroup.get('amount0')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount1')!.value).toEqual(0);
         expect(fixture.componentInstance.formGroup.get('amount2')!.value).toEqual(0);
@@ -478,7 +478,7 @@ describe('LuxInputComponent', () => {
       it('Validatoren setzen und die Fehlermeldungen korrekt anzeigen', async () => {
         // Vorbedingungen testen
         testComponent.formGroup.get('amount1')!.setValidators(Validators.max(10));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         const numberInput = fixture.debugElement.query(By.css('#amount1')).componentInstance;
         let errorEl = fixture.debugElement.query(By.css('mat-error'));
         expect(errorEl).toBeFalsy();
@@ -499,7 +499,7 @@ describe('LuxInputComponent', () => {
 
       it('Sollte einen Startwert setzen', async () => {
         testComponent.formGroup.get('amount0')!.setValue(100);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const inputEl = fixture.debugElement.query(By.css('input'));
 
@@ -508,7 +508,7 @@ describe('LuxInputComponent', () => {
 
       it('Sollte required sein', async () => {
         // Vorbedingungen testen
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         const luxInput: LuxInputComponent = fixture.debugElement.query(By.css('#amount0')).componentInstance;
         expect(testComponent.formGroup.get('amount0')!.valid).toBe(true);
 
@@ -545,7 +545,7 @@ describe('LuxInputComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxInputOutsideFormComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
     });
 
@@ -596,7 +596,7 @@ describe('LuxInputComponent', () => {
 
       it('Sollte einen Startwert setzen', async () => {
         testComponent.myText.set('abc');
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const inputEl = fixture.debugElement.query(By.css('#text input'));
 
@@ -663,7 +663,7 @@ describe('LuxInputComponent', () => {
 
       it('Sollte einen Startwert setzen', async () => {
         testComponent.amount0.set(100);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
 
         const inputEl = fixture.debugElement.query(By.css('#amount0 input'));
 
@@ -671,7 +671,7 @@ describe('LuxInputComponent', () => {
       });
 
       it('Keine NaN-Werte setzen', async () => {
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         expect(testComponent.amount0()).toEqual(0);
         expect(testComponent.amount1()).toEqual(0);
         expect(testComponent.amount2).toEqual(0);
@@ -701,7 +701,7 @@ describe('LuxInputComponent', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxInputWithPrefixComponent);
       testComponent = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte sowohl Pre- als auch Suffix darstellen', async () => {
@@ -715,7 +715,7 @@ describe('LuxInputComponent', () => {
       // Änderungen durchführen
       testComponent.showPrefix.set(true);
       testComponent.showSuffix.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       suffix = fixture.debugElement.query(By.css('lux-input-suffix'));
@@ -735,13 +735,13 @@ describe('LuxInputComponent', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxInputCounterLabelComponent);
       testComponent = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('sollte Counter-Label bei focused=true anzeigen', async () => {
       // Vorbedingung
       testComponent.maxLength.set(50);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Fokus aktivieren
       const formControlEl = fixture.debugElement.query(By.directive(LuxFormControlWrapperComponent))!;
@@ -756,7 +756,7 @@ describe('LuxInputComponent', () => {
       expect(labelEl.nativeElement.innerHTML.trim()).toContain('11/50');
       // Fokus deaktivieren
       formControlComponent.focused.set(false);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Prüfen
       labelEl = fixture.debugElement.query(By.css('.lux-form-control-character-counter-authentic'));
       expect(labelEl.nativeElement.innerHTML.trim()).not.toContain('11/50');
@@ -765,7 +765,7 @@ describe('LuxInputComponent', () => {
     it('sollte Counter-Label auch bei leerem Value anzeigen', async () => {
       // Vorbedingung
       testComponent.maxLength.set(50);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Fokus aktivieren
       const formControlEl = fixture.debugElement.query(By.directive(LuxFormControlWrapperComponent))!;
@@ -784,7 +784,7 @@ describe('LuxInputComponent', () => {
       // Vorbedingungen
       const inputEl = fixture.debugElement.query(By.css('input'));
       testComponent.maxLength.set(50);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Fokus aktivieren
       const formControlEl = fixture.debugElement.query(By.directive(LuxFormControlWrapperComponent))!;
@@ -802,7 +802,7 @@ describe('LuxInputComponent', () => {
       // TestComponent deaktivieren und Focus zurücksetzen
       formControlComponent.focused.set(false);
       testComponent.disabled.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       labelEl = fixture.debugElement.query(By.css('.lux-form-control-character-counter-authentic'));
@@ -819,7 +819,7 @@ describe('LuxInputComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxInputClearableInFormComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         component = fixture.componentInstance;
         inputAc = fixture.debugElement.query(By.directive(LuxInputComponent)).componentInstance;
       });
@@ -871,7 +871,7 @@ describe('LuxInputComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxInputClearableOutsideFormComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         component = fixture.componentInstance;
       });
 
@@ -903,7 +903,7 @@ describe('LuxInputComponent', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxInputAttributesComponent);
       testComponent = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte im Label nicht "undefined" oder "null" anzeigen', async () => {
@@ -1099,35 +1099,35 @@ describe('LuxInputComponent', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxInputA11yComponent);
       testComponent = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
       testComponent.disabled.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
       testComponent.readonly.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
       testComponent.required.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (luxNoTopLabel, Label nur visuell versteckt)', async () => {
       testComponent.noTopLabel.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
   });

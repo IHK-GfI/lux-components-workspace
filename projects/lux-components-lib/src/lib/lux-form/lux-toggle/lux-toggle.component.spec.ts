@@ -85,8 +85,6 @@ describe('LuxToggleComponent', () => {
         const toggleEl = fixture.debugElement.query(By.css('label'));
         toggleEl.nativeElement.click();
         fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
@@ -124,7 +122,7 @@ describe('LuxToggleComponent', () => {
       it('Sollte einen Fehler bei Startwert "" anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue('');
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
@@ -132,7 +130,7 @@ describe('LuxToggleComponent', () => {
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -142,7 +140,7 @@ describe('LuxToggleComponent', () => {
       it('Sollte einen Fehler bei Startwert false anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(false);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
@@ -150,7 +148,7 @@ describe('LuxToggleComponent', () => {
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -160,7 +158,7 @@ describe('LuxToggleComponent', () => {
       it('Sollte einen Fehler bei Startwert true anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(true);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
@@ -169,7 +167,7 @@ describe('LuxToggleComponent', () => {
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.setValue(false);
         testComponent.formGroup.get('eula')!.markAsTouched();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -209,8 +207,6 @@ describe('LuxToggleComponent', () => {
         // Änderungen durchführen
         const toggleEl = fixture.debugElement.query(By.css('label'));
         toggleEl.nativeElement.click();
-        fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, 0));
         fixture.detectChanges();
 
         // Nachbedingungen testen
@@ -373,8 +369,6 @@ describe('LuxToggleComponent', () => {
         // Änderungen durchführen
         toggleComponent.formControl.markAsTouched();
         fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -401,7 +395,7 @@ describe('LuxToggleComponent', () => {
 
         // Änderungen durchführen
         testComponent.validators.set(Validators.required);
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
         toggleComponent.formControl.markAsTouched();
         toggleComponent.formControl.updateValueAndValidity();
         await LuxTestHelper.wait(fixture, 100);

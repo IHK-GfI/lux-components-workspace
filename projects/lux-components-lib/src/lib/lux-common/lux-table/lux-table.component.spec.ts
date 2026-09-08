@@ -51,7 +51,7 @@ describe('LuxTableComponent', () => {
       fixture = TestBed.createComponent(TableComponent);
       component = fixture.componentInstance;
       luxTableComponent = fixture.debugElement.query(By.directive(LuxTableComponent)).componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte Spalten per luxShowColumnSelector und hiddenColumns ausblenden', async () => {
@@ -93,7 +93,7 @@ describe('LuxTableComponent', () => {
       // keine erneute Prüfung der View aus. onHiddenColumnsChange() ist der reguläre Weg (siehe
       // (luxSelectedChange)-Handler im Template) und stößt intern die Neuberechnung + markForCheck() an.
       luxTableComponent.onHiddenColumnsChange([]);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxTestHelper.wait(fixture);
       cells = document.querySelectorAll('th:not(.mat-column-noData)');
       expect(cells.length).toBe(2);
@@ -110,7 +110,7 @@ describe('LuxTableComponent', () => {
 
       // Spalte c2 ausblenden
       component.showColumnSelector.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       luxTableComponent.onHiddenColumnsChange(['c2']);
       await LuxTestHelper.wait(fixture);
       expect(eventSpy).toHaveBeenCalledWith(['c2']);
@@ -152,8 +152,7 @@ describe('LuxTableComponent', () => {
       expect(headerRow).toBeDefined();
       expect(footerRow).toBeDefined();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Die Einträge filtern', async () => {
@@ -235,8 +234,7 @@ describe('LuxTableComponent', () => {
       expect(luxTableComponent.dataSource.data.length).toEqual(17);
       expect(luxTableComponent.paginator!.hasNextPage()).toBeFalsy();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Die Pagination nachträglich aktivieren', async () => {
@@ -313,8 +311,7 @@ describe('LuxTableComponent', () => {
       expect(col2FirstElements.item(2)!.textContent).toEqual('Beta');
       expect(col2FirstElements.item(1)!.textContent).toEqual('Gamma');
       expect(col2FirstElements.item(0)!.textContent).toEqual('Teta');
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Die Einträge mit Sonderzeichen sortieren', async () => {
@@ -365,8 +362,7 @@ describe('LuxTableComponent', () => {
       expect(col2Elements.item(2)!.textContent).toEqual('$ Asdf');
       expect(col2Elements.item(1)!.textContent).toEqual('1234');
       expect(col2Elements.item(0)!.textContent).toEqual('Hallo');
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Die Breite korrekt setzen', async () => {
@@ -557,8 +553,7 @@ describe('LuxTableComponent', () => {
         expect(cells.length).toBe(4);
         expect(movedCells.length).toBe(0);
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       }
     ));
 
@@ -609,8 +604,7 @@ describe('LuxTableComponent', () => {
         expect(cells.length).toBe(4);
         expect(movedCells.length).toBe(0);
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       }
     ));
 
@@ -678,8 +672,7 @@ describe('LuxTableComponent', () => {
       hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeFalsy();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte nicht automatisch die Pagination bei > 100 Einträgen aktivieren', async () => {
@@ -700,8 +693,7 @@ describe('LuxTableComponent', () => {
       hiddenPaginator = document.querySelector('lux-paginator.lux-hide');
       expect(hiddenPaginator).toBeDefined();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte die Borders ausblenden', async () => {
@@ -722,8 +714,7 @@ describe('LuxTableComponent', () => {
       noBorderTable = document.getElementsByClassName('lux-hide-borders');
       expect(noBorderTable.length).toBe(1);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte den luxNoDataText nicht anzeigen, wenn Daten über ein Signal gesetzt werden (Issue #217)', async () => {
@@ -732,10 +723,9 @@ describe('LuxTableComponent', () => {
       const signalComponent = signalFixture.componentInstance;
 
       // Vorbedingungen testen: Keine Daten → noDataText sichtbar
-      signalFixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
-      signalFixture.detectChanges();
+      await LuxTestHelper.wait(signalFixture);
+      await LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(signalFixture);
       let noDataRow = document.querySelector('.lux-table-header-no-data');
       expect(noDataRow?.classList.contains('lux-display-none')).toBe(false);
 
@@ -745,20 +735,18 @@ describe('LuxTableComponent', () => {
         { c1: 1, c2: 'Hydrogen' },
         { c1: 2, c2: 'Helium' }
       ]);
-      signalFixture.detectChanges();
+      await LuxTestHelper.wait(signalFixture);
       // setTimeout in luxData-Setter feuert: setzt totalElements und ruft markForCheck() auf.
       // Der nachfolgende detectChanges() verarbeitet die markForCheck()-Anforderung und
       // aktualisiert die View korrekt – noDataText muss jetzt ausgeblendet sein.
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
-      signalFixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(signalFixture);
 
       // Nachbedingungen testen: noDataText darf NICHT sichtbar sein, da Daten vorhanden sind
       noDataRow = document.querySelector('.lux-table-header-no-data');
       expect(noDataRow?.classList.contains('lux-display-none')).toBe(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
   });
 
@@ -769,7 +757,7 @@ describe('LuxTableComponent', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(TableComponent);
       component = fixture.componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     const getTableContent = () => fixture.debugElement.query(By.css('.lux-table-content')).nativeElement as HTMLElement;
@@ -884,8 +872,7 @@ describe('LuxTableComponent', () => {
       expect(headerRow).toBeDefined();
       expect(footerRow).toBeDefined();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte nur die Daten nach dem aktuellen Filter setzen', async () => {
@@ -912,13 +899,13 @@ describe('LuxTableComponent', () => {
           throw new Error('Unreachable');
         }
       };
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       luxTableComponent.filtered$.next('old_filter_text_later_arrival');
       await LuxTestHelper.wait(fixture, 550);
 
       luxTableComponent.filtered$.next('new_filter_text_earlier_arrival');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       await LuxTestHelper.wait(fixture, 2500);
 
@@ -980,8 +967,7 @@ describe('LuxTableComponent', () => {
       expect(multiSelectTh).toBeTruthy();
       expect(multiSelectTh.classList.contains('mat-sort-header-disabled')).toBe(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sort-Event auf multiSelect-Spalte mit HTTP-DAO + MultiSelect ruft loadHttpDAOData nicht auf', async () => {
@@ -1002,8 +988,7 @@ describe('LuxTableComponent', () => {
       // loadHttpDAOData darf NICHT aufgerufen worden sein
       expect(luxTableComponent['loadHttpDAOData']).not.toHaveBeenCalled();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sortierung auf normale Spalten mit HTTP-DAO + MultiSelect ruft loadHttpDAOData auf', async () => {
@@ -1024,8 +1009,7 @@ describe('LuxTableComponent', () => {
       // loadHttpDAOData MUSS aufgerufen worden sein
       expect(luxTableComponent['loadHttpDAOData']).toHaveBeenCalled();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
   });
 

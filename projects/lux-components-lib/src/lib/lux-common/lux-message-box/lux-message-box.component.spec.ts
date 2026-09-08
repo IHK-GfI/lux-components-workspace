@@ -53,7 +53,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen
     component.messages.set([]);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
@@ -64,8 +64,6 @@ describe('LuxMessageBoxComponent', () => {
     expect(messageText).toBeNull();
     expect(messageIcon).toBeNull();
 
-    await LuxTestHelper.wait(fixture);
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -78,7 +76,7 @@ describe('LuxMessageBoxComponent', () => {
     // Änderungen durchführen
     component.maxDisplayed.set(2);
     component.messages.set([...component.messages()]);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     singleMessages = fixture.debugElement.queryAll(By.directive(LuxMessageComponent));
@@ -92,15 +90,13 @@ describe('LuxMessageBoxComponent', () => {
       { text: 'Msg 4', iconName: 'lux-programming-bug', color: 'blue' }
     ];
     component.messages.set([...component.messages(), ...newMessages]);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     singleMessages = fixture.debugElement.queryAll(By.directive(LuxMessageComponent));
 
     expect(singleMessages.length).toBe(3);
 
-    await LuxTestHelper.wait(fixture);
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -113,7 +109,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen
     component.index.set(1);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -123,7 +119,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [Sollte negative Werte abfangen]
     component.index.set(-100);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -133,7 +129,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [Sollte zu hohe positive Werte abfangen]
     component.index.set(100);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -153,7 +149,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [NACH VORNE STEPPEN]
     paginator.nextPage();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -166,7 +162,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [NACH HINTEN STEPPEN]
     paginator.previousPage();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -188,15 +184,13 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen
     component.messages.set([]);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
     expect(messageContainer).toBeNull();
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
-    await LuxTestHelper.wait(fixture);
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 });

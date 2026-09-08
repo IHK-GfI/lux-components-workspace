@@ -112,7 +112,7 @@ describe('LuxAutocompleteComponent', () => {
           { label: 'Zurückgestellte Aufgaben 2', value: 'C' }
         ];
         component.options.set(testOptions);
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'Au');
@@ -207,11 +207,11 @@ describe('LuxAutocompleteComponent', () => {
         const newTextValue = 'DieseOptionHierGibtEsNicht';
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, newTextValue);
         LuxTestHelper.dispatchFakeEvent(component.autocomplete().matInput()!.nativeElement, 'focusout', true);
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         const buttonEl = fixture.debugElement.query(By.css('button'));
         buttonEl.nativeElement.click();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(buttonEl.nativeElement.disabled).toBe(true);
@@ -625,7 +625,7 @@ describe('LuxAutocompleteComponent', () => {
       expect(panel).toBeDefined();
       panel.nativeElement.scrollTop = 200;
       LuxTestHelper.dispatchFakeEvent(panel.nativeElement, 'scroll');
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(spy).toHaveBeenCalledTimes(1);
       expect(autocomplete.luxOptions().length).toEqual(10);
@@ -671,7 +671,7 @@ describe('LuxAutocompleteComponent', () => {
 
         // Änderungen durchführen
         fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(autocomplete.formControl.value).toBeNull();
@@ -714,7 +714,7 @@ describe('LuxAutocompleteComponent', () => {
 
         // Änderungen durchführen
         fixture.debugElement.query(By.css('.lux-input-clear-btn button')).nativeElement.click();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(autocomplete.value()).toBeNull();
@@ -760,7 +760,6 @@ describe('LuxAutocompleteComponent', () => {
       fixture = TestBed.createComponent(LuxAutocompleteA11yComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
     });
 

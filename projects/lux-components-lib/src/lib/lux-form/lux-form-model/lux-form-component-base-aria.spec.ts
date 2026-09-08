@@ -4,6 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
@@ -109,45 +110,35 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
 
   it('warnt, wenn ein Control keinerlei zugänglichen Namen hat', async () => {
     const fixture = TestBed.createComponent(NoNameTestComponent);
-    fixture.detectChanges();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('keinen zugänglichen Namen'));
   });
 
   it('warnt bei sichtbarem Label plus abweichendem luxAriaLabel (WCAG 2.5.3)', async () => {
     const fixture = TestBed.createComponent(ConflictingNameTestComponent);
-    fixture.detectChanges();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('2.5.3'));
   });
 
   it('warnt nicht, wenn luxLabel gesetzt ist', async () => {
     const fixture = TestBed.createComponent(AriaBaseTestComponent);
-    fixture.detectChanges();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
   it('warnt nicht, wenn nur luxAriaLabel gesetzt ist', async () => {
     const fixture = TestBed.createComponent(AriaOnlyTestComponent);
-    fixture.detectChanges();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
   it('warnt nicht bei projiziertem lux-form-label plus luxAriaLabel (Text hier nicht auslesbar)', async () => {
     const fixture = TestBed.createComponent(ProjectedLabelTestComponent);
-    fixture.detectChanges();
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(warnSpy).not.toHaveBeenCalled();
   });

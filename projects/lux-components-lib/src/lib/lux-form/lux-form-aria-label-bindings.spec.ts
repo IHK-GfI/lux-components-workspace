@@ -64,7 +64,6 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
       testComponent = fixture.componentInstance;
       testComponent.ariaLabel = 'Suchbegriff eingeben';
       fixture.detectChanges();
-      await LuxTestHelper.wait(fixture);
 
       const nativeEl = fixture.debugElement.query(By.css(c.nativeSelector));
       expect(nativeEl.nativeElement.getAttribute('aria-label')).toBe('Suchbegriff eingeben');
@@ -75,7 +74,6 @@ describe('Form-Controls - aria-label/aria-labelledby am nativen Eingabefeld', ()
       testComponent = fixture.componentInstance;
       testComponent.ariaLabelledby = 'externes-label-id';
       fixture.detectChanges();
-      await LuxTestHelper.wait(fixture);
 
       const nativeEl = fixture.debugElement.query(By.css(c.nativeSelector));
       expect(nativeEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
@@ -154,7 +152,6 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
   it('mit luxLabel: aria-labelledby verweist auf das Wrapper-Label', async () => {
     testComponent.label = 'Anrede';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
     const labelEl = fixture.debugElement.query(By.css('label.lux-form-label-authentic'));
@@ -164,7 +161,6 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
   it('ohne luxLabel, mit luxAriaLabel: kein toter labelledby-Verweis, aria-label greift', async () => {
     testComponent.ariaLabel = 'Liste sortieren nach';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
     expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
@@ -173,7 +169,6 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
 
   it('ohne jegliches Label: aria-labelledby wird nicht gesetzt (kein toter Verweis)', async () => {
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const matSelectEl = fixture.debugElement.query(By.css('mat-select'));
     expect(matSelectEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();
@@ -182,7 +177,6 @@ describe('Form-Controls - Namenskaskade bei aria-labelledby-Controls (Select)', 
   it('vergibt die uid nur einmal im DOM (keine doppelte id)', async () => {
     testComponent.label = 'Anrede';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const selectComponent = fixture.debugElement.query(By.directive(LuxSelectComponent)).componentInstance as LuxSelectComponent;
     const elementsWithUid = fixture.nativeElement.querySelectorAll(`[id="${selectComponent.uid()}"]`);
@@ -225,7 +219,6 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
   it('Slider: luxAriaLabel hat Vorrang vor dem luxLabel-Fallback', async () => {
     testComponent.ariaLabel = 'Lautstärke';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
     expect(sliderInputEl.nativeElement.getAttribute('aria-label')).toBe('Lautstärke');
@@ -233,7 +226,6 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
 
   it('Slider: ohne luxAriaLabel bleibt luxLabel der aria-label-Fallback', async () => {
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
     expect(sliderInputEl.nativeElement.getAttribute('aria-label')).toBe('Pegel');
@@ -242,7 +234,6 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
   it('Slider: luxAriaLabelledby landet als aria-labelledby am Thumb-Input', async () => {
     testComponent.ariaLabelledby = 'externes-label-id';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const sliderInputEl = fixture.debugElement.query(By.css('mat-slider input'));
     expect(sliderInputEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
@@ -251,7 +242,6 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
   it('Checkbox: luxAriaLabel landet am nativen input', async () => {
     testComponent.ariaLabel = 'AGB akzeptieren';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const checkboxInputEl = fixture.debugElement.query(By.css('mat-checkbox input[type="checkbox"]'));
     expect(checkboxInputEl.nativeElement.getAttribute('aria-label')).toBe('AGB akzeptieren');
@@ -260,7 +250,6 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
   it('Checkbox: luxAriaLabelledby landet als aria-labelledby am nativen input', async () => {
     testComponent.ariaLabelledby = 'externes-label-id';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const checkboxInputEl = fixture.debugElement.query(By.css('mat-checkbox input[type="checkbox"]'));
     expect(checkboxInputEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
@@ -269,7 +258,6 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
   it('Toggle: luxAriaLabel landet am Switch-Button', async () => {
     testComponent.ariaLabel = 'Benachrichtigungen';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const switchEl = fixture.debugElement.query(By.css('mat-slide-toggle button[role="switch"]'));
     expect(switchEl.nativeElement.getAttribute('aria-label')).toBe('Benachrichtigungen');
@@ -278,7 +266,6 @@ describe('Form-Controls - Slider/Checkbox/Toggle', () => {
   it('Toggle: luxAriaLabelledby landet als aria-labelledby am Switch-Button', async () => {
     testComponent.ariaLabelledby = 'externes-label-id';
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const switchEl = fixture.debugElement.query(By.css('mat-slide-toggle button[role="switch"]'));
     expect(switchEl.nativeElement.getAttribute('aria-labelledby')).toBe('externes-label-id');
@@ -319,7 +306,6 @@ describe('Form-Controls - Chips: kein toter aria-labelledby-Verweis', () => {
 
   it('Standardkonfiguration (nur luxLabel gesetzt) besitzt kein aria-labelledby, da der Wrapper kein Label rendert', async () => {
     fixture.detectChanges();
-    await LuxTestHelper.wait(fixture);
 
     const chipGridEl = fixture.debugElement.query(By.css('mat-chip-grid'));
     expect(chipGridEl.nativeElement.getAttribute('aria-labelledby')).toBeNull();

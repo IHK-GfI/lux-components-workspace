@@ -83,8 +83,6 @@ describe('LuxCheckboxComponent', () => {
         const checkboxEl = fixture.debugElement.query(By.css('label'));
         checkboxEl.nativeElement.click();
         fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
 
         // Nachbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
@@ -122,7 +120,7 @@ describe('LuxCheckboxComponent', () => {
       it('Sollte einen Fehler bei Startwert "" anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(null);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeNull();
@@ -130,7 +128,7 @@ describe('LuxCheckboxComponent', () => {
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -140,7 +138,7 @@ describe('LuxCheckboxComponent', () => {
       it('Sollte einen Fehler bei Startwert false anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(false);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBe(false);
@@ -148,7 +146,7 @@ describe('LuxCheckboxComponent', () => {
 
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.markAsTouched();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -158,7 +156,7 @@ describe('LuxCheckboxComponent', () => {
       it('Sollte einen Fehler bei Startwert true anzeigen können', async () => {
         testComponent.formGroup.get('eula')!.setValue(true);
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Vorbedingungen testen
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBe(true);
@@ -167,7 +165,7 @@ describe('LuxCheckboxComponent', () => {
         // Änderungen durchführen
         testComponent.formGroup.get('eula')!.setValue(false);
         testComponent.formGroup.get('eula')!.markAsTouched();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -207,8 +205,6 @@ describe('LuxCheckboxComponent', () => {
         // Änderungen durchführen
         const checkboxEl = fixture.debugElement.query(By.css('label'));
         checkboxEl.nativeElement.click();
-        fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, 0));
         fixture.detectChanges();
 
         // Nachbedingungen testen
@@ -338,7 +334,7 @@ describe('LuxCheckboxComponent', () => {
 
         // Änderungen durchführen
         checkboxComponent.formControl.markAsTouched();
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
 
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
@@ -365,7 +361,7 @@ describe('LuxCheckboxComponent', () => {
 
         // Änderungen durchführen
         testComponent.validators.set(Validators.required);
-        await LuxTestHelper.wait(fixture);
+        fixture.detectChanges();
         checkboxComponent.formControl.markAsTouched();
         checkboxComponent.formControl.updateValueAndValidity();
         await LuxTestHelper.wait(fixture, 100);

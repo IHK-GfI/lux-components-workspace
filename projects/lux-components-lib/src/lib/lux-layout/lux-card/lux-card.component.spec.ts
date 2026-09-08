@@ -33,7 +33,7 @@ describe('LuxCardComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxContentExpandedComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       component = fixture.componentInstance;
     });
 
@@ -83,7 +83,7 @@ describe('LuxCardComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(NoCardActionComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
     });
 
@@ -99,7 +99,7 @@ describe('LuxCardComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(CardActionComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
     });
 
@@ -115,7 +115,7 @@ describe('LuxCardComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(ExpandedClickableCardComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       component = fixture.componentInstance;
     });
 
@@ -136,7 +136,7 @@ describe('LuxCardComponent', () => {
       // Änderungen durchführen
       // 2. Durchlauf: Zuklappen
       toggleEl.nativeElement.click();
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       expect(cardActionSpy).toHaveBeenCalledTimes(0);
@@ -149,7 +149,7 @@ describe('LuxCardComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(ExpandedCardComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       component = fixture.componentInstance;
     });
 
@@ -166,7 +166,7 @@ describe('LuxCardComponent', () => {
 
       // Änderungen durchführen
       component.card().luxExpanded.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       contentEl = fixture.debugElement.query(By.directive(LuxCardContentComponent));
@@ -238,7 +238,7 @@ describe('LuxCardComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(MockCardComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       component = fixture.componentInstance;
     });
 

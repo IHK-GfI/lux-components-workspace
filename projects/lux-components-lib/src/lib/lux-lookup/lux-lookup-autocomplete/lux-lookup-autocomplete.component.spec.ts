@@ -43,9 +43,9 @@ describe('LuxLookupAutocompleteComponent', () => {
       fixture = TestBed.createComponent(LuxNoFormComponent);
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxLookupAutocompleteComponent)).componentInstance;
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await new Promise((resolve) => setTimeout(resolve, autocomplete.luxDebounceTime()));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Validatoren setzen und korrekte Fehlermeldung anzeigen', async () => {
@@ -91,9 +91,9 @@ describe('LuxLookupAutocompleteComponent', () => {
 
       // Änderungen durchführen
       component.compareFn.set(luxLookupCompareKurzTextFn);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
       await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
@@ -113,9 +113,9 @@ describe('LuxLookupAutocompleteComponent', () => {
 
       // Änderungen durchführen
       component.compareFn.set(luxLookupCompareKeyFn);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       fixture.debugElement.injector.get(LuxLookupHandlerService).reloadData('test');
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
       await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
@@ -133,7 +133,7 @@ describe('LuxLookupAutocompleteComponent', () => {
     describe('Clear-Button', () => {
       beforeEach(async () => {
         component.clearable.set(true);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Sollte den Wert über den Clear-Button zurücksetzen', async () => {

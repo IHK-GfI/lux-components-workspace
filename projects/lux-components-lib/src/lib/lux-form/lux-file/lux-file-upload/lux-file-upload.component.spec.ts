@@ -55,32 +55,26 @@ describe('LuxFileUploadComponent', () => {
       // Vorbedingungen: Maximal 1 Datei erlaubt
       testComponent.maxFileCount.set(1);
       testComponent.multiple.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Eine Datei hinzufügen
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
       expect(fileComponent.value()!.length).toBe(1);
       expect(fileComponent.formControl.errors).toBeNull();
 
       // Versucht eine zweite Datei hinzuzufügen -> Error
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
       expect(fileComponent.formControl.errors).not.toBeNull();
       expect(fileComponent.formControl.errors![LuxFileErrorCause.MaxFileCount]).toBeDefined();
 
       // MaxFileCount dynamisch erhöhen
       testComponent.maxFileCount.set(2);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Fügt eine zweite Datei hinzu
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
 
       // Jetzt sollten zwei Dateien erlaubt sein

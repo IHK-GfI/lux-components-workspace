@@ -102,14 +102,13 @@ describe('LuxFileListComponent', () => {
       expect(testComponent.formControl.value![0].content).toEqual(base64Dummy);
       expect(fileComponent.formControl.value![0].content).toEqual(base64Dummy);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte alle Werte an das FormControl übergeben', async () => {
       // Vorbedingungen testen
       testComponent.multiple.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(testComponent.formControl.value).toBeFalsy();
       expect(fileComponent.formControl.value).toBeFalsy();
@@ -127,8 +126,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.formControl.value![0].content).toEqual(base64Dummy);
       expect(fileComponent.formControl.value![1].content).toEqual(base64Dummy);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte required sein', async () => {
@@ -199,8 +197,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.formControl.valid).toBe(true);
       expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte Label und Hint korrekt setzen', async () => {
@@ -284,8 +281,7 @@ describe('LuxFileListComponent', () => {
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(1);
       expect(fileComponent.value()!.length).toBe(2);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte den Startwert korrekt setzen', async () => {
@@ -358,40 +354,33 @@ describe('LuxFileListComponent', () => {
       expect(fixture.debugElement.query(By.css('.lux-file-icon'))).toBeNull();
       expect(fixture.debugElement.query(By.css('mat-hint'))).toBeNull();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', async () => {
       // Vorbedingungen: Maximal 1 Datei erlaubt
       testComponent.maxFileCount.set(1);
       testComponent.multiple.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Eine Datei hinzufügen
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
       expect(fileComponent.value()!.length).toBe(1);
       expect(fileComponent.formControl.errors).toBeNull();
 
       // Versucht eine zweite Datei hinzuzufügen -> Error
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
       expect(fileComponent.formControl.errors).not.toBeNull();
       expect(fileComponent.formControl.errors![LuxFileErrorCause.MaxFileCount]).toBeDefined();
 
       // MaxFileCount dynamisch erhöhen
       testComponent.maxFileCount.set(2);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Fügt eine zweite Datei hinzu
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
 
       // Jetzt sollten zwei Dateien erlaubt sein
@@ -418,8 +407,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.value()![0].name).toEqual('mockfile1.txt');
       expect(fileComponent.value()![0].content).toEqual(base64Dummy);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte die Drag-and-Drop Events aufrufen (mehrere Dateien)', async () => {
@@ -449,8 +437,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.value()![1].name).toEqual('mockfile2.pdf');
       expect(fileComponent.value()![1].content).toEqual(base64Dummy);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte eine einzelne Datei updaten', async () => {
@@ -461,8 +448,6 @@ describe('LuxFileListComponent', () => {
       const spy = vi.spyOn(testComponent, 'selectedChange');
 
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(1);
@@ -473,8 +458,6 @@ describe('LuxFileListComponent', () => {
 
       // Änderungen durchführen
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/html')]);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       await LuxTestHelper.wait(fixture);
 
       const replaceButton = overlayHelper.selectAllFromOverlay('button')[1];
@@ -492,8 +475,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.value()![0].name).toEqual('mockfile1.txt');
       expect(fileComponent.value()![0].content).toEqual(base64Dummy);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte Image-Preview für Bilder anzeigen', async () => {
@@ -507,7 +489,7 @@ describe('LuxFileListComponent', () => {
       vi.spyOn(localFileComponent, 'readFile').mockResolvedValue('data:image/png;base64-dummy');
       // Den read-Delay für die Ladeanzeige mocken (Standard: 1000ms), sonst greift LuxTestHelper.wait() nicht rechtzeitig
       localFileComponent.defaultReadFileDelay = 0;
-      localFixture.detectChanges();
+      await LuxTestHelper.wait(localFixture);
 
       localTestComponent.multiple.set(true);
       await LuxTestHelper.wait(localFixture);
@@ -518,8 +500,6 @@ describe('LuxFileListComponent', () => {
 
       // Änderungen durchführen
       localTestComponent.showPreview.set(true);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      localFixture.detectChanges();
       await LuxTestHelper.wait(localFixture);
 
       // Nachbedingungen prüfen
@@ -603,8 +583,7 @@ describe('LuxFileListComponent', () => {
       expect(fileComponent.value()![0].content).toEqual(base64Dummy);
       expect(spy).toHaveBeenCalledTimes(3);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     describe('Sollte die Events mit passenden Werten emitten,', () => {
@@ -636,8 +615,7 @@ describe('LuxFileListComponent', () => {
         expect(testComponent.selected()![1].name).toEqual('mockfile2.txt');
         expect(testComponent.selected()![1].content).toEqual(base64Dummy);
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('wenn ein Fehler aufgetreten ist', async () => {
@@ -779,8 +757,7 @@ describe('LuxFileListComponent', () => {
         expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
         expect(fileComponent.value()).toBeTruthy();
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('wenn ein Dateityp sich in der Groß- und Kleinschreibung unterscheidet', async () => {
@@ -808,8 +785,7 @@ describe('LuxFileListComponent', () => {
         expect(fileComponent.formControl.valid).toBe(true);
         expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('wenn ein Dateityp nicht unter luxAccept geführt wird', async () => {
@@ -843,8 +819,7 @@ describe('LuxFileListComponent', () => {
         expect(fileComponent.formControl.valid).toBe(true);
         expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
 
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
     });
 
@@ -866,9 +841,6 @@ describe('LuxFileListComponent', () => {
           ];
           fileComponent.selectFiles(files);
           await LuxTestHelper.wait(fixture);
-
-          await new Promise((resolve) => setTimeout(resolve, 0));
-          fixture.detectChanges();
 
           await LuxTestHelper.wait(fixture);
 
@@ -944,8 +916,7 @@ describe('LuxFileListComponent', () => {
           expect(spy).toHaveBeenCalledTimes(2);
           expect(spy).toHaveBeenCalledWith(fileComponent.value());
 
-          await new Promise((resolve) => setTimeout(resolve, 0));
-          fixture.detectChanges();
+          await LuxTestHelper.wait(fixture);
         });
 
         it('Sollte den Callback aufrufen und die Datei nicht ersetzen', async () => {
@@ -980,8 +951,7 @@ describe('LuxFileListComponent', () => {
           expect(spy).toHaveBeenCalledTimes(1);
           expect(spy).toHaveBeenCalledWith(fileComponent.value());
 
-          await new Promise((resolve) => setTimeout(resolve, 0));
-          fixture.detectChanges();
+          await LuxTestHelper.wait(fixture);
         });
       });
 

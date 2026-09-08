@@ -53,7 +53,7 @@ describe('LuxRadioComponent', () => {
       const requiredMessage = 'XXX darf nicht leer sein.';
       testComponent.errorMessage.set(requiredMessage);
       LuxUtil.showValidationErrors(testComponent.form);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       error = fixture.debugElement.query(By.css('mat-error'));
@@ -63,14 +63,13 @@ describe('LuxRadioComponent', () => {
 
       // Änderungen durchführen
       testComponent.selected.set(testComponent.options[1]);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       error = fixture.debugElement.query(By.directive(MatError));
       expect(error).toBeNull();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
   });
 
@@ -94,7 +93,7 @@ describe('LuxRadioComponent', () => {
       // Änderungen durchführen
       const requiredMessage = '* Pflichtfeld';
       LuxUtil.showValidationErrors(testComponent.form);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       error = fixture.debugElement.query(By.css('mat-error'));
@@ -103,14 +102,13 @@ describe('LuxRadioComponent', () => {
 
       // Änderungen durchführen
       testComponent.selected.set(testComponent.options[1]);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       error = fixture.debugElement.query(By.directive(MatError));
       expect(error).toBeNull();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
   });
 
@@ -143,8 +141,7 @@ describe('LuxRadioComponent', () => {
       expect(radioLabels[1].nativeElement.innerText.trim()).toEqual('Option 2');
       expect(radioLabels[2].nativeElement.innerText.trim()).toEqual('Option 3');
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Werte selektieren (Object-Array)', async () => {
@@ -251,7 +248,7 @@ describe('LuxRadioComponent', () => {
     it('Werte selektieren (mit PickValue Funktion)', async () => {
       // Vorbedingungen testen
       testComponent.pickValueFn.set((o1: Option) => (o1 ? o1.value : ''));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       const radioLabels = fixture.debugElement.queryAll(By.css('.mdc-label'));
       expect(radioLabels[0].nativeElement.innerText.trim()).toEqual('Meine Aufgaben');
@@ -278,8 +275,7 @@ describe('LuxRadioComponent', () => {
       expect(testComponent.selected()).toEqual(testComponent.options()[2].value);
       expect(checkedRadioLabel.nativeElement.innerText.trim()).toEqual('Zurückgestellte Aufgaben');
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Kein initiales Change-Event ausgeben', async () => {
@@ -353,7 +349,7 @@ describe('LuxRadioComponent', () => {
     it('Sollte Werte anhand der Compare-Funktion vergleichen', async () => {
       // Vorbedingungen testen
       testComponent.compareFn.set((o1, o2) => o1.value === o2.value);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(radioComponent.value()).toBeFalsy();
 
@@ -365,8 +361,7 @@ describe('LuxRadioComponent', () => {
       // Nachbedingungen prüfen
       expect(radioComponent.value()).toBe(copy);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
   });
 
@@ -460,7 +455,7 @@ describe('LuxRadioComponent', () => {
 
       // Änderungen durchführen
       testComponent.form.get('radio')!.setValidators(Validators.required);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxTestHelper.wait(fixture);
       radioComponent.formControl.markAsTouched();
       radioComponent.formControl.updateValueAndValidity();
@@ -482,30 +477,30 @@ describe('LuxRadioComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxRadioA11yComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
       testComponent.disabled.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
       testComponent.readonly.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
       testComponent.required.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
   });

@@ -22,7 +22,7 @@ describe('LuxBadgeNotificationDirective', () => {
 
     // Änderungen durchführen
     mockComp.notification.set('1');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(badgeContent.nativeElement.children[0].children[0].textContent.trim()).toEqual('1');
@@ -31,12 +31,12 @@ describe('LuxBadgeNotificationDirective', () => {
   it('Sollte die Notification verstecken', async () => {
     // Vorbedingungen testen
     mockComp.notification.set('1');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.mat-badge-hidden'))).toBeNull();
 
     // Änderungen durchführen
     mockComp.hidden.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(fixture.debugElement.query(By.css('.mat-badge-hidden'))).not.toBeNull();
@@ -45,12 +45,12 @@ describe('LuxBadgeNotificationDirective', () => {
   it('Sollte die Notification deaktivieren', async () => {
     // Vorbedingungen testen
     mockComp.notification.set('1');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.mat-badge-disabled'))).toBeNull();
 
     // Änderungen durchführen
     mockComp.disabled.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(fixture.debugElement.query(By.css('.mat-badge-disabled'))).not.toBeNull();
@@ -59,14 +59,14 @@ describe('LuxBadgeNotificationDirective', () => {
   it('Sollte den Inhalt anhand von luxMaxNumber abkürzen', async () => {
     // Vorbedingungen testen
     mockComp.notification.set('100');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const badgeContent = fixture.debugElement.query(By.css('span'));
     expect(badgeContent.nativeElement.children[0].children[0].textContent.trim()).toEqual('100');
 
     // Änderungen durchführen
     mockComp.maxNumber.set(90);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(badgeContent.nativeElement.children[0].children[0].textContent.trim()).toEqual('90+');

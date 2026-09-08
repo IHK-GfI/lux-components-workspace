@@ -3,6 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -39,8 +40,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -50,8 +50,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -61,8 +60,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -72,8 +70,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -83,8 +80,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -94,8 +90,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -105,8 +100,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -116,8 +110,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -127,8 +120,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('input')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('input')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -138,8 +130,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('mat-select')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('mat-select')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -149,8 +140,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('textarea')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('textarea')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -160,8 +150,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('button')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('button')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -171,8 +160,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('button')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('button')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -182,8 +170,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('lux-card.lux-file-list')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('lux-card.lux-file-list')).nativeElement.focus).toHaveBeenCalled();
   });
@@ -193,8 +180,7 @@ describe('LuxAutofocusDirective', () => {
     fixture.detectChanges();
     vi.spyOn(fixture.debugElement.query(By.css('div.lux-file-upload-drop-container')).nativeElement, 'focus').mockReturnValue(undefined);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    fixture.detectChanges();
+    await LuxTestHelper.wait(fixture);
 
     expect(fixture.debugElement.query(By.css('div.lux-file-upload-drop-container')).nativeElement.focus).toHaveBeenCalled();
   });

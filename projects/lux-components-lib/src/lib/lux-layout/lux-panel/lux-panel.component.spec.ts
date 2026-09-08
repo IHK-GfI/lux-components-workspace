@@ -13,8 +13,6 @@ describe('LuxPanelComponent', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxPanelStickyHeaderComponent);
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
     });
 
     it('Sticky-Klasse und Offset-Variable prüfen', async () => {
@@ -25,7 +23,7 @@ describe('LuxPanelComponent', () => {
       // Änderungen durchführen
       fixture.componentInstance.sticky.set(true);
       fixture.componentInstance.offset.set('64px');
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeTruthy();
@@ -33,14 +31,14 @@ describe('LuxPanelComponent', () => {
 
       // Änderungen durchführen
       fixture.componentInstance.sticky.set(false);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
 
       // Änderungen durchführen
       fixture.componentInstance.offset.set(undefined);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('');

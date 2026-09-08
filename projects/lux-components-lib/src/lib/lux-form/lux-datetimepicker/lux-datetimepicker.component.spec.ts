@@ -49,8 +49,7 @@ describe('LuxDatetimepickerComponent', () => {
       fixture = TestBed.createComponent(LuxFormCustomValidatorComponent);
       testComponent = fixture.componentInstance;
       datepickerComponent = fixture.debugElement.query(By.directive(LuxDatetimepickerComponent)).componentInstance;
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte mehrere Validatoren (Standard- und Custom-Validatoren) unterstützen', async () => {
@@ -117,8 +116,7 @@ describe('LuxDatetimepickerComponent', () => {
       fixture = TestBed.createComponent(LuxFormTestComponent);
       testComponent = fixture.componentInstance;
       datepickerComponent = fixture.debugElement.query(By.directive(LuxDatetimepickerComponent)).componentInstance;
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte einen Wert nach dem Rendern besitzen', async () => {
@@ -140,7 +138,7 @@ describe('LuxDatetimepickerComponent', () => {
     });
 
     it('Sollte den Wert aktualisieren', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Vorbedingungen testen
       expect(testComponent.formControl.value).toBeFalsy();
       expect(datepickerComponent.value()).toBeFalsy();
@@ -170,7 +168,7 @@ describe('LuxDatetimepickerComponent', () => {
     });
 
     it('Sollte das Datum 01.0.2020 in 01.01.2020 umwandeln und nicht in 01.12.2019', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Vorbedingungen testen
       expect(testComponent.formControl.value).toBeFalsy();
       expect(datepickerComponent.value()).toBeFalsy();
@@ -209,7 +207,7 @@ describe('LuxDatetimepickerComponent', () => {
 
     it('Sollte required sein', async () => {
       testComponent.formControl.setValidators(Validators.required);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       // Vorbedingungen testen
       let matErrorEl = fixture.debugElement.query(By.css('mat-error'));
       expect(matErrorEl).toBeFalsy();
@@ -263,9 +261,7 @@ describe('LuxDatetimepickerComponent', () => {
       datepickerComponent = fixture.debugElement.query(By.directive(LuxDatetimepickerComponent)).componentInstance;
       overlayHelper = new LuxOverlayHelper();
 
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('LuxValue Simple', async () => {
@@ -282,8 +278,7 @@ describe('LuxDatetimepickerComponent', () => {
       expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('10.07.2015');
       expect(datepickerComponent.value()).toEqual(testComponent.value());
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('LuxDisabled', async () => {
@@ -364,8 +359,7 @@ describe('LuxDatetimepickerComponent', () => {
       // Nachbedingungen testen
       expect(matErrorEl).toBeDefined();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('LuxRequired', async () => {
@@ -384,8 +378,7 @@ describe('LuxDatetimepickerComponent', () => {
       expect(datepickerComponent.luxRequired()).toBeTruthy();
       expect(datepickerComponent.formControl.invalid).toBeTruthy();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('LuxReadonly', async () => {
@@ -427,8 +420,7 @@ describe('LuxDatetimepickerComponent', () => {
       expect(datepickerComponent.formControl.errors!['required']).toBeDefined();
       expect(matError).not.toBeNull();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('LuxErrorMessage', async () => {
@@ -451,8 +443,7 @@ describe('LuxDatetimepickerComponent', () => {
       expect(matError).not.toBeNull();
       expect(matError.nativeElement.textContent.trim()).toEqual('Ein Fehler sie zu knechten');
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('LuxErrorMessageCallback', async () => {
@@ -477,8 +468,7 @@ describe('LuxDatetimepickerComponent', () => {
       expect(matError.nativeElement.textContent.trim()).toEqual('Achtung, das ist ein Fehler');
       expect(spy).toHaveBeenCalled();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('LuxOpened', async () => {
@@ -498,14 +488,12 @@ describe('LuxDatetimepickerComponent', () => {
       testComponent.opened.set(false);
       // Zwei Aufrufe, weil sonst der Calendar nicht rechtzeitig geschlossen wird
       await LuxTestHelper.wait(fixture);
-      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       calendar = overlayHelper.selectOneFromOverlay('mat-calendar');
       expect(calendar).toBeNull();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte beim Öffnen den korrekten Monat anzeigen, wenn der 1. eines Monats ausgewählt ist', async () => {
@@ -526,10 +514,6 @@ describe('LuxDatetimepickerComponent', () => {
 
       testComponent.opened.set(false);
       await LuxTestHelper.wait(fixture);
-      await LuxTestHelper.wait(fixture);
-
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
     });
 
     it('Sollte luxValueChange angemessen oft aufrufen', async () => {
@@ -561,8 +545,7 @@ describe('LuxDatetimepickerComponent', () => {
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(2);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte verschiedene Eingabewerte erlauben', async () => {
@@ -656,8 +639,10 @@ describe('LuxDatetimepickerComponent', () => {
         .pipe(delay(20))
         .subscribe((value) => testComponent.value.set(value));
       await LuxTestHelper.wait(fixture, 100);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      // Der Datepicker normalisiert den über luxValue eingehenden Rohstring intern per eigenem
+      // setTimeout() (setISOValue()) - ein zusätzlicher Tick ist hier nötig, damit dieser zweite
+      // Hop der Async-Kette (zusätzlich zum delay(20) oben) abgeschlossen ist.
+      await LuxTestHelper.wait(fixture);
 
       // Nachbedingungen testen
       const expectedDate = '2005-02-05T00:00:00.000Z';
@@ -713,30 +698,30 @@ describe('LuxDatetimepickerComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxDatetimepickerA11yComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (leer)', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (disabled)', async () => {
       testComponent.disabled.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (readonly)', async () => {
       testComponent.readonly.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
     it('sollte keine Barrierefreiheitsverletzungen haben (required)', async () => {
       testComponent.required.set(true);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
   });

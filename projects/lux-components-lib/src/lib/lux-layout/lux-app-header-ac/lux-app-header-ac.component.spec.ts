@@ -15,11 +15,11 @@ describe('LuxAppHeaderAcComponent', () => {
   describe('luxClicked', () => {
     it('App-Title sollte angezeigt werden ', async () => {
       const fixture = TestBed.createComponent(MockIconsClickedAppHeaderAcComponent);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const element = fixture.debugElement.query(By.css('.lux-app-title'));
 
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       expect(element).toBeDefined();
     });

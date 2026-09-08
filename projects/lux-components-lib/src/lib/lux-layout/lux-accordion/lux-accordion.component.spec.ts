@@ -19,10 +19,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionHeightComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Höhe prüfen', async () => {
@@ -100,10 +99,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionPanelOverrideHeightComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Höhe prüfen', async () => {
@@ -157,10 +155,9 @@ describe('LuxAccordionComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxAccordionPanelMultiComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Mehrere Bereiche dürfen geöffnet sein', async () => {
@@ -212,10 +209,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionHideToggleComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Toggle prüfen', async () => {
@@ -240,10 +236,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionHideToggleTrueComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Toggle prüfen', async () => {
@@ -268,10 +263,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideHideToggleComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Toggle prüfen', async () => {
@@ -290,10 +284,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionDisabledComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Disabled prüfen', async () => {
@@ -317,10 +310,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionDisabledTrueComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Disabled prüfen', async () => {
@@ -344,10 +336,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideDisabledComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Disabled prüfen', async () => {
@@ -365,10 +356,9 @@ describe('LuxAccordionComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxAccordionOverrideDisabledReversedComponent);
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Disabled prüfen', async () => {
@@ -386,10 +376,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionluxTogglePositionComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('TogglePosition prüfen', async () => {
@@ -414,10 +403,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionluxTogglePositionBeforeComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('TogglePosition prüfen', async () => {
@@ -442,10 +430,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideluxTogglePositionComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('TogglePosition prüfen', async () => {
@@ -462,10 +449,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverridePanelReversedluxTogglePositionComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('TogglePosition prüfen', async () => {
@@ -484,10 +470,9 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionColorComponent);
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Color prüfen', async () => {
@@ -529,9 +514,7 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionStickyHeaderComponent);
-        fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Vererbung und nachträgliche Änderung prüfen', async () => {
@@ -555,9 +538,7 @@ describe('LuxAccordionComponent', () => {
 
       beforeEach(async () => {
         fixture = TestBed.createComponent(LuxAccordionOverrideStickyHeaderComponent);
-        fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        fixture.detectChanges();
+        await LuxTestHelper.wait(fixture);
       });
 
       it('Sticky prüfen', async () => {

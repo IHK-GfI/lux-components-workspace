@@ -24,7 +24,7 @@ describe('LuxAppFooterComponent', () => {
     it('Sollte die Buttonreihenfolge beibehalten', async () => {
       const fixture = TestBed.createComponent(MockAppFooterButtonOrderComponent);
       const testComponent = fixture.componentInstance;
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       let footerButtons = fixture.debugElement.queryAll(By.css('button span.lux-button-label'));
       expect(footerButtons.length).toEqual(3);
@@ -195,7 +195,7 @@ describe('LuxAppFooterComponent', () => {
   describe('App-Footer-Links', () => {
     it('Sollte die Linkreihenfolge beibehalten', async () => {
       const fixture = TestBed.createComponent(MockAppFooterLinkOrderComponent);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const footerLinks = fixture.debugElement.queryAll(By.css('a span.lux-button-label'));
       expect(footerLinks).toBeDefined();

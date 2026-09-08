@@ -172,7 +172,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
     it('sollte "dialog-closed" senden wenn timeoutUser aufgerufen wird', async () => {
       timerService.resetTimer(300);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       timerService.timeoutUser();
@@ -182,7 +181,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
     it('sollte "dialog-closed" senden wenn logoutUser aufgerufen wird', async () => {
       timerService.resetTimer(300);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       timerService.logoutUser();
@@ -194,7 +192,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
       const url = '/api/test/extend';
       timerService.url = url;
       timerService.resetTimer(300);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
       (broadcastChannel as any).postMessage.mockClear();
 
@@ -202,7 +199,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
       const req = httpController.expectOne(url);
       req.flush({});
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       // extendSessionTimer sendet broadcast in seinem map() Handler
@@ -213,7 +209,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
       const url = '/api/test/extend';
       timerService.url = url;
       timerService.resetTimer(300);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
       let errorCaught = false;
 
@@ -225,7 +220,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
 
       const req = httpController.expectOne(url);
       req.error(new ProgressEvent('error'));
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       expect(errorCaught).toBe(true);
@@ -234,7 +228,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
     it('sollte extendSessionTimer undefined zurückgeben wenn canExtendSession false ist', async () => {
       timerService.canExtendSession = false;
       timerService.resetTimer(300);
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       const result = timerService.extendSessionTimer();
@@ -292,7 +285,6 @@ describe('LuxAppHeaderAcSessionTimerComponent', () => {
       const dialogRef = (timerService as any).currentDialogRef;
       if (dialogRef) {
         dialogRef._dialogClosed.next('dismissed');
-        await new Promise((resolve) => setTimeout(resolve, 0));
         fixture.detectChanges();
 
         expect((broadcastChannel as any).postMessage).toHaveBeenCalledWith({ type: LuxSessionTimerBroadcastType.DECLINED });

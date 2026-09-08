@@ -42,7 +42,7 @@ describe('LuxAppHeaderComponent', () => {
       const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClicked').mockReturnValue(undefined);
 
       element.nativeElement.click();
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
@@ -57,7 +57,7 @@ describe('LuxAppHeaderComponent', () => {
       const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClicked').mockReturnValue(undefined);
 
       element.nativeElement.click();
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('LuxAppHeaderComponent', () => {
       const onClickSpy = vi.spyOn(fixture.componentInstance, 'onClicked').mockReturnValue(undefined);
 
       element.nativeElement.click();
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(element).toBeDefined();
       expect(onClickSpy).toHaveBeenCalled();
@@ -433,12 +433,11 @@ describe('LuxAppHeaderComponent', () => {
     });
 
     it('Sollte erstellt werden', async () => {
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
 
       expect(testComponent).toBeTruthy();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte das lux-app-header-menu-right darstellen', async () => {
@@ -482,8 +481,7 @@ describe('LuxAppHeaderComponent', () => {
       // Nachbedingungen prüfen
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item').length).toEqual(2);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte die lux-menu-items korrekt darstellen', async () => {
@@ -500,8 +498,7 @@ describe('LuxAppHeaderComponent', () => {
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item .lux-button-label')[0].textContent!.trim()).toEqual('Label 0');
       expect(overlayHelper.selectAllFromOverlay('.lux-menu-item .lux-button-label')[1].textContent!.trim()).toEqual('Label 1');
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
 
     it('Sollte die lux-menu-items deaktivieren', async () => {
@@ -522,8 +519,7 @@ describe('LuxAppHeaderComponent', () => {
       expect((overlayHelper.selectAllFromOverlay('.lux-menu-item')[0] as any).disabled).toEqual(true);
       expect((overlayHelper.selectAllFromOverlay('.lux-menu-item')[1] as any).disabled).toEqual(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
+      await LuxTestHelper.wait(fixture);
     });
   });
 

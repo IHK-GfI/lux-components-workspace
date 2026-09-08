@@ -97,7 +97,6 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
       extendButton.nativeElement.click();
 
       httpController.expectOne('/session').flush({});
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       expect(dialogRefMock.closeDialog).toHaveBeenCalledWith('confirmed');
@@ -111,7 +110,6 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
       extendButton.nativeElement.click();
 
       httpController.expectOne('/session').flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       expect(dialogRefMock.closeDialog).toHaveBeenCalledWith('error');

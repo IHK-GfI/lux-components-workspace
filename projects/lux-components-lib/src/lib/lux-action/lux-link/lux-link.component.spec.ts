@@ -39,7 +39,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.label.set('Ein Label sie zu knechten');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     label = fixture.debugElement.query(By.css('.lux-button-label'));
@@ -53,7 +53,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.iconName.set('lux-programming-bug');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     icon = fixture.debugElement.query(By.css('lux-icon'));
@@ -67,7 +67,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.disabled.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     disabled = fixture.debugElement.query(By.css('a[disabled="true"]'));
@@ -81,7 +81,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.raised.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     raised = fixture.debugElement.query(By.css('.mat-mdc-raised-button'));
@@ -95,11 +95,11 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.href.set('/mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', { preventDefault: () => {} });
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -113,11 +113,11 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.href.set('/mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -133,12 +133,12 @@ describe('LuxLinkComponent', () => {
     // Änderungen durchführen
     component.href.set('/mock-route');
     component.disabled.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const sub = linkComponent.luxClicked.subscribe(clickedSpy);
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('keydown.enter', new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen: kein Navigate, kein luxClicked
     expect(spy).toHaveBeenCalledTimes(0);
@@ -156,12 +156,12 @@ describe('LuxLinkComponent', () => {
     // Änderungen durchführen
     component.href.set('/mock-route');
     component.disabled.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const sub = linkComponent.luxClicked.subscribe(clickedSpy);
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('keydown.space', new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen: kein Navigate, kein luxClicked
     expect(spy).toHaveBeenCalledTimes(0);
@@ -177,11 +177,11 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen [mit HTTP]
     component.href.set('http://mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', { preventDefault: () => {} });
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -189,10 +189,10 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen [mit HTTPS]
     component.href.set('https://mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     link.triggerEventHandler('click', { preventDefault: () => {} });
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(2);
@@ -213,11 +213,11 @@ describe('LuxLinkComponent', () => {
     // Änderungen durchführen
     component.blank.set(true);
     component.href.set('http://mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -235,11 +235,11 @@ describe('LuxLinkComponent', () => {
     // Änderungen durchführen
     component.blank.set(true);
     component.href.set('/mock-route');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const link = fixture.debugElement.query(By.css('a'));
     link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
@@ -253,7 +253,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.blank.set(true);
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     link = fixture.debugElement.query(By.css('a'));
@@ -267,7 +267,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.color.set('primary');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     color = fixture.debugElement.query(By.css('a.mat-primary'));
@@ -275,7 +275,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.color.set('warn');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     color = fixture.debugElement.query(By.css('a.mat-warn'));
@@ -283,7 +283,7 @@ describe('LuxLinkComponent', () => {
 
     // Änderungen durchführen
     component.color.set('accent');
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     color = fixture.debugElement.query(By.css('a.mat-accent'));

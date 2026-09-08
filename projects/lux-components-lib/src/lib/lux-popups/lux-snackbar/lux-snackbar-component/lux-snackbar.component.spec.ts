@@ -37,8 +37,6 @@ describe('LuxSnackbarComponent', () => {
   beforeEach(async () => {
     fixture = TestBed.createComponent(MockSnackbarComponent);
     testComponent = fixture.componentInstance;
-    await LuxTestHelper.wait(fixture);
-    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
   });
 
@@ -56,7 +54,7 @@ describe('LuxSnackbarComponent', () => {
     const spy = vi.spyOn(toggleElement, 'click');
 
     toggleElement.click();
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(1);
 
     // Änderungen durchführen
@@ -67,7 +65,7 @@ describe('LuxSnackbarComponent', () => {
     snackbarService.open(200, {
       text: 'Hallo Test'
     });
-    await LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen testen
     toggleElement.click();

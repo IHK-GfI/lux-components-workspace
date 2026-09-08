@@ -2,6 +2,7 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 
@@ -293,7 +294,6 @@ describe('LuxTabsComponent', () => {
       fixture = TestBed.createComponent(LuxTabNumberComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
     });
 
@@ -315,8 +315,6 @@ describe('LuxTabsComponent', () => {
       fixture.componentInstance.tabCounter.set(10);
       await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(getBadgeElement(fixture).children[0].textContent).toEqual('10');
@@ -331,8 +329,6 @@ describe('LuxTabsComponent', () => {
       fixture.componentInstance.tabCounter.set(11);
       await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
 
       // Nachbedingungen testen
       expect(getBadgeElement(fixture).children[0].textContent).toEqual('10+');
@@ -344,8 +340,6 @@ describe('LuxTabsComponent', () => {
 
     beforeEach(async () => {
       fixture = TestBed.createComponent(LuxTabWithoutNumberComponent);
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
     });
 
@@ -363,15 +357,11 @@ describe('LuxTabsComponent', () => {
       fixture = TestBed.createComponent(LuxNotificationColorComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
     });
 
     it('sollte Standard-Farbe "accent" verwenden', async () => {
       // Given
       component.showNotification.set(true);
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       // Then
@@ -383,8 +373,6 @@ describe('LuxTabsComponent', () => {
       component.showNotification.set(true);
       component.notificationColor.set('warn');
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
 
       // Then
       expect(getNotificationSpan(fixture, 'lux-notification-color-warn')).not.toBeNull();
@@ -395,14 +383,10 @@ describe('LuxTabsComponent', () => {
       component.showNotification.set(true);
       component.notificationColor.set('primary');
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
       expect(getNotificationSpan(fixture, 'lux-notification-color-primary')).not.toBeNull();
 
       // When
       component.notificationColor.set('accent');
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       // Then
@@ -414,8 +398,6 @@ describe('LuxTabsComponent', () => {
       // Given
       component.showNotification.set(false);
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-      fixture.detectChanges();
 
       // Then
       expect(getNotificationSpan(fixture, 'lux-notification-read')).not.toBeNull();
@@ -425,8 +407,6 @@ describe('LuxTabsComponent', () => {
     it('sollte "lux-notification-read" setzen, wenn luxShowNotification undefined ist', async () => {
       // Given
       component.showNotification.set(undefined);
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
       fixture.detectChanges();
 
       // Then

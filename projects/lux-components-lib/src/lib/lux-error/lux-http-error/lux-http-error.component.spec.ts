@@ -285,7 +285,7 @@ async function handleIconRequests(
   for (const request of requests) {
     if (!request.cancelled) {
       request.flush(svg_icon);
-      await LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
     }
   }
   await new Promise((resolve) => setTimeout(resolve, 0));
