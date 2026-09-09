@@ -385,6 +385,9 @@ describe('LuxFileInputComponent', () => {
       });
 
       it('wenn ein Fehler aufgetreten ist', async () => {
+        // Der Fehlerpfad wird hier absichtlich ausgelöst; ohne Spy landet der Fehler roh in der
+        // Testausgabe und sieht dort wie ein echter Testfehler aus.
+        vi.spyOn(console, 'error').mockReturnValue(undefined);
         // Vorbedingungen testen
         const selectedChange = vi.spyOn(testComponent, 'selectedChange').mockReturnValue(undefined);
         const files = [LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')];
@@ -406,6 +409,9 @@ describe('LuxFileInputComponent', () => {
 
     describe('Sollte eine passende Fehlermeldung abgeben,', () => {
       it('wenn die maximale Dateigröße überschritten wird (luxClearOnError = true)', async () => {
+        // Der Fehlerpfad wird hier absichtlich ausgelöst; ohne Spy landet der Fehler roh in der
+        // Testausgabe und sieht dort wie ein echter Testfehler aus.
+        vi.spyOn(console, 'error').mockReturnValue(undefined);
         // Vorbedingungen testen
         let files = [LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')];
         // wir mocken erstmal 2 MB Dateigröße
@@ -443,6 +449,9 @@ describe('LuxFileInputComponent', () => {
       });
 
       it('wenn die maximale Dateigröße überschritten wird (luxClearOnError = false)', async () => {
+        // Der Fehlerpfad wird hier absichtlich ausgelöst; ohne Spy landet der Fehler roh in der
+        // Testausgabe und sieht dort wie ein echter Testfehler aus.
+        vi.spyOn(console, 'error').mockReturnValue(undefined);
         // Vorbedingungen testen
         let files = [LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')];
         // wir mocken erstmal 2 MB Dateigröße
@@ -484,6 +493,9 @@ describe('LuxFileInputComponent', () => {
       });
 
       it('die luxUploadUrl nicht erreichbar ist', async () => {
+        // Der Fehlerpfad wird hier absichtlich ausgelöst; ohne Spy landet der Fehler roh in der
+        // Testausgabe und sieht dort wie ein echter Testfehler aus.
+        vi.spyOn(console, 'error').mockReturnValue(undefined);
         // Vorbedingungen testen
         const httpClient = fixture.debugElement.injector.get(HttpClient);
         const spy = vi.spyOn(httpClient, 'post').mockReturnValue(throwError('404'));
@@ -518,6 +530,9 @@ describe('LuxFileInputComponent', () => {
       });
 
       it('wenn ein Dateityp nicht unter luxAccept geführt wird', async () => {
+        // Der Fehlerpfad wird hier absichtlich ausgelöst; ohne Spy landet der Fehler roh in der
+        // Testausgabe und sieht dort wie ein echter Testfehler aus.
+        vi.spyOn(console, 'error').mockReturnValue(undefined);
         // Vorbedingungen testen
         await LuxTestHelper.wait(fixture);
         expect(fileComponent.formControl.errors).toBeNull();

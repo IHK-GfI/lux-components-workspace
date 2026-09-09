@@ -24,7 +24,7 @@
       [attr.aria-disabled]="luxDisabled() ? 'true' : null"
       [id]="uid()"
     >
-      @for (option of luxOptions(); track option; let i = $index) {
+      @for (option of luxOptions(); track i; let i = $index) {
         <mat-radio-button
           [value]="luxPickValue() ? luxOptionsPickValue()[i] : option"
           [disableRipple]="true"

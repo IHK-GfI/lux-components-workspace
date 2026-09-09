@@ -69,6 +69,9 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
   private queryService = inject(LuxMediaQueryObserverService);
 
   private subscriptions: Subscription[] = [];
+  private rerenderTabsTimeout?: ReturnType<typeof setTimeout>;
+  private rerenderTabsTrimTimeout?: ReturnType<typeof setTimeout>;
+  private callOnTabActivatedTimeout?: ReturnType<typeof setTimeout>;
 
   ngOnInit() {
     this.subscriptions.push(
@@ -102,6 +105,9 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    clearTimeout(this.rerenderTabsTimeout);
+    clearTimeout(this.rerenderTabsTrimTimeout);
+    clearTimeout(this.callOnTabActivatedTimeout);
   }
 
   getNotificationIconColorClassForTab(luxTab: LuxTabComponent): string {
@@ -118,9 +124,9 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
   rerenderTabs() {
     const tabs = this.luxTabs();
     if (tabs.length > 0) {
-      setTimeout(() => {
+      this.rerenderTabsTimeout = setTimeout(() => {
         tabs[0].luxTitle.update((title) => title + ' ');
-        setTimeout(() => {
+        this.rerenderTabsTrimTimeout = setTimeout(() => {
           tabs[0].luxTitle.update((title) => title.trim());
         });
       });
@@ -128,7 +134,7 @@ export class LuxTabsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private callOnTabActivated() {
-    setTimeout(() => {
+    this.callOnTabActivatedTimeout = setTimeout(() => {
       this.luxTabs()[this.luxActiveTab()]?.onTabActivated();
     });
   }

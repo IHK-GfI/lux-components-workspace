@@ -135,6 +135,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   formElementes: LuxFilterItemDirective[] = [];
   filterForm: FormGroup;
   subscriptions: Subscription[] = [];
+  private registerFilterItemsTimeout?: ReturnType<typeof setTimeout>;
   readonly filterItems = signal<LuxFilterItem<any>[]>([]);
   readonly initComplete = signal(false);
   initFilterValue = null;
@@ -185,6 +186,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
+    clearTimeout(this.registerFilterItemsTimeout);
   }
 
   openSaveDialog() {
@@ -347,7 +349,7 @@ export class LuxFilterFormComponent implements OnInit, AfterViewInit, OnDestroy 
   registerFilterItems(filterItemDirectives: readonly LuxFilterItemDirective[]) {
     // An dieser Codestelle ist setTimeout nötig, wenn die Inhalte über eine LUX-Layout-Form-Row gesetzt werden.
     // D.h. initial gibt es keine Filteritems, aber dann werden die Filteritems über ngAfterContentInit hinzugefügt.
-    setTimeout(() => {
+    this.registerFilterItemsTimeout = setTimeout(() => {
       filterItemDirectives.forEach((item) => {
         this.filterForm.addControl(item.filterItem.binding, item.filterItem.component.formControl);
         this.formElementes.push(item);

@@ -42,6 +42,11 @@ describe('LuxControlDisable', () => {
   beforeEach(async () => {
     fixture = TestBed.createComponent(LuxControlDisableComponent);
     fixture.detectChanges();
+    // Datepicker/Timepicker verzögern ihren initialen Value-Change-Emit per setTimeout (siehe
+    // notifyFormValueChangedTimeout), um ein ExpressionChangedAfterChecked zu vermeiden. Ohne
+    // dieses Warten kann die Fixture in einem Folgetest zerstört werden, bevor der Timeout dieser
+    // Instanz feuert (NG0953).
+    await fixture.whenStable();
     testComponent = fixture.componentInstance;
   });
 

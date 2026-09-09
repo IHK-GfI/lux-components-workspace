@@ -174,7 +174,7 @@ export class LuxDatepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
       this.luxOpened();
 
       // Eventuell gibt es ohne das Timeout sonst Fehler, weil der matDatepicker noch nicht gesetzt ist
-      untracked(() => setTimeout(() => this.triggerOpenClose()));
+      untracked(() => (this.triggerOpenCloseTimeout = setTimeout(() => this.triggerOpenClose())));
     });
   }
 
@@ -341,7 +341,7 @@ export class LuxDatepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
     if (minOk && maxOk) {
       // ExpressionChangedError vermeiden, indem die Änderung in einen Timeout gepackt wird, damit sie nach der aktuellen Änderungsschleife ausgeführt wird.
       // Wenn z.B. ein Datum mit Uhrzeit von außen übergeben wird, wird das Datum intern angepasst (z.B. auf 00:00 Uhr gesetzt), damit es im Datepicker korrekt dargestellt wird. In diesem Fall würde luxValueChange sofort erneut getriggert werden, was zu einem ExpressionChangedError führen kann, da sich der Wert während der Änderungsschleife ändert.
-      setTimeout(() => {
+      this.notifyFormValueChangedTimeout = setTimeout(() => {
         this.notifyFormValueChanged(isoValue);
       });
     }

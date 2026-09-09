@@ -1,7 +1,7 @@
 @if (luxMessages() && luxMessages().length > 0) {
   <div luxAriaLabel="{{ 'luxc.message.container.arialabel' | transloco }}" class="lux-message-box-content" tabindex="0" #messagebox>
     <div role="list">
-      @for (displayedMessage of displayedMessages(); track displayedMessage) {
+      @for (displayedMessage of displayedMessages(); track $index) {
         <lux-message class="lux-message-box" [luxMessage]="displayedMessage" (luxMessageClosed)="messageClosed($event)" />
       }
     </div>

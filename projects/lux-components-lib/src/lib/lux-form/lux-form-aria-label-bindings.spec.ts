@@ -86,43 +86,53 @@ abstract class AriaBindingsTestComponent {
   ariaLabelledby?: string;
 }
 
+// Jede Host-Komponente bekommt einen eigenen, eindeutigen Selector. Ohne Selector fallen alle auf
+// den Default 'ng-component' zurück; Angular generiert die interne Component-ID aus Selector und
+// Template, wodurch mehrere kurze, ähnliche anonyme Templates kollidieren können (NG0912).
 @Component({
+  selector: 'lux-test-input-aria-bindings',
   imports: [LuxInputComponent],
   template: `<lux-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-input>`
 })
 class LuxInputAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 @Component({
+  selector: 'lux-test-textarea-aria-bindings',
   imports: [LuxTextareaComponent],
   template: `<lux-textarea [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-textarea>`
 })
 class LuxTextareaAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 @Component({
+  selector: 'lux-test-autocomplete-aria-bindings',
   imports: [LuxAutocompleteComponent],
   template: `<lux-autocomplete [luxOptions]="[]" [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-autocomplete>`
 })
 class LuxAutocompleteAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 @Component({
+  selector: 'lux-test-datepicker-aria-bindings',
   imports: [LuxDatepickerComponent],
   template: `<lux-datepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datepicker>`
 })
 class LuxDatepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 @Component({
+  selector: 'lux-test-datetimepicker-aria-bindings',
   imports: [LuxDatetimepickerComponent],
   template: `<lux-datetimepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-datetimepicker>`
 })
 class LuxDatetimepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 @Component({
+  selector: 'lux-test-timepicker-aria-bindings',
   imports: [LuxTimepickerComponent],
   template: `<lux-timepicker [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-timepicker>`
 })
 class LuxTimepickerAriaBindingsTestComponent extends AriaBindingsTestComponent {}
 
 @Component({
+  selector: 'lux-test-file-input-aria-bindings',
   imports: [LuxFileInputComponent],
   template: `<lux-file-input [luxAriaLabel]="ariaLabel" [luxAriaLabelledby]="ariaLabelledby"></lux-file-input>`
 })

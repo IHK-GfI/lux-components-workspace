@@ -152,6 +152,14 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected latestErrors: any = null;
   protected _initialValue?: any;
   private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
+  // Von Subklassen (z.B. Datepicker/Datetimepicker/Timepicker) genutzt, um den ValueChange-Emit
+  // in einen setTimeout auszulagern (vermeidet ExpressionChangedAfterChecked, siehe dortige
+  // notifyFormValueChanged-Overrides) und diesen beim Zerstören der Komponente abzubrechen.
+  protected notifyFormValueChangedTimeout?: ReturnType<typeof setTimeout>;
+  // Von Time-/Datetimepicker genutzt, um das Öffnen/Schließen des Overlays (abhängig von
+  // luxOpened) in einen setTimeout auszulagern, da die Overlay-Komponente zum Zeitpunkt des
+  // Effects noch nicht gesetzt sein kann.
+  protected triggerOpenCloseTimeout?: ReturnType<typeof setTimeout>;
   private validatorsInitialized = false;
   private readonly generatedUid = 'lux-form-control-' + uuidv4();
 
@@ -261,6 +269,9 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     if (this.a11yNameCheckTimeout) {
       clearTimeout(this.a11yNameCheckTimeout);
     }
+
+    clearTimeout(this.notifyFormValueChangedTimeout);
+    clearTimeout(this.triggerOpenCloseTimeout);
   }
 
   /**

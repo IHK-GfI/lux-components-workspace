@@ -200,7 +200,7 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
       this.luxOpened();
 
       // Eventuell gibt es ohne das Timeout sonst Fehler, weil die OverlayComponent noch nicht gesetzt ist
-      untracked(() => setTimeout(() => this.triggerOpenClose()));
+      untracked(() => (this.triggerOpenCloseTimeout = setTimeout(() => this.triggerOpenClose())));
     });
   }
 
@@ -351,7 +351,7 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
   }
 
   private setISOValue(isoValue: string) {
-    setTimeout(() => {
+    this.notifyFormValueChangedTimeout = setTimeout(() => {
       const min = this.min();
       const max = this.max();
 

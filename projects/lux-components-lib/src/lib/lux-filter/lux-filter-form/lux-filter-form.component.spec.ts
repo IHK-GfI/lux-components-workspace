@@ -97,7 +97,7 @@ describe('LuxFilterFormComponent', () => {
     expect(component.filterComponent().filterForm.get('input')!.value).toBeUndefined();
   });
 
-  it('Sollte auch mit Datepicker-Timepicker-Kombination funktionieren', () => {
+  it('Sollte auch mit Datepicker-Timepicker-Kombination funktionieren', async () => {
     // Init
     const spy = vi.spyOn(component, 'onFilter');
 
@@ -107,6 +107,10 @@ describe('LuxFilterFormComponent', () => {
     // Änderungen durchführen
     component.initFilter.set({ input: 'Not empty', combinedDateTime: '2020-07-21T14:30:00.000Z' });
     fixture.detectChanges();
+    // Datepicker/Timepicker verzögern ihren Value-Change-Emit per setTimeout (siehe
+    // notifyFormValueChangedTimeout), um ein ExpressionChangedAfterChecked zu vermeiden. Ohne
+    // dieses Warten wird die Fixture zerstört, bevor der Timeout feuert (NG0953).
+    await fixture.whenStable();
 
     // Nachbedingungen prüfen
     expect(component.filterComponent().filterForm.valid).toBe(true);

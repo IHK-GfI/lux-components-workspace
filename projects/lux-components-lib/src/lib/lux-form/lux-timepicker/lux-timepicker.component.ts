@@ -124,7 +124,7 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
     effect(() => {
       this.luxOpened();
 
-      untracked(() => setTimeout(() => this.triggerOpenClose()));
+      untracked(() => (this.triggerOpenCloseTimeout = setTimeout(() => this.triggerOpenClose())));
     });
 
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
@@ -251,7 +251,7 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> {
     if (minOk && maxOk) {
       // ExpressionChangedError vermeiden, indem die Änderung des ValueChange-Emitters in einen Timeout gepackt wird, damit sie nach der aktuellen Änderungsschleife ausgeführt wird.
       // Wenn z.B. ein Datum mit Uhrzeit von außen übergeben wird, wird das Datum intern angepasst (z.B. auf 00:00 Uhr gesetzt), damit es im Datepicker korrekt dargestellt wird. In diesem Fall würde der ValueChange-Emitter sofort erneut getriggert werden, was zu einem ExpressionChangedError führen kann, da sich der Wert während der Änderungsschleife ändert.
-      setTimeout(() => {
+      this.notifyFormValueChangedTimeout = setTimeout(() => {
         this.notifyFormValueChanged(isoValue);
       });
     }

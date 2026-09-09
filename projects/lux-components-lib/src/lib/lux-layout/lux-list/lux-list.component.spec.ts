@@ -508,6 +508,7 @@ class MockListComponent {
   selector: 'lux-mock-list-interactive',
   template: `
     <lux-list
+      luxLabel="Testliste"
       [luxSelectedPosition]="selectedPosition()"
       (luxSelectedPositionChange)="onSelected($event)"
       (luxFocusedPositionChange)="onFocused($event)"

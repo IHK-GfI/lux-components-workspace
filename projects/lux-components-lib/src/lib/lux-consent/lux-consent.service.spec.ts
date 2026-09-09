@@ -99,14 +99,20 @@ describe('LuxConsentService (config overrides)', () => {
   });
 
   it('clears runtime override after open error', () => {
+    // Der Service loggt einen fehlgeschlagenen Dialog-Import bewusst per console.error (siehe
+    // lux-consent.service.ts). Ohne Spy landet der volle Error-Stacktrace in der Testausgabe und
+    // sieht dort wie ein echter Testfehler aus, obwohl der Fehlerpfad hier gezielt geprüft wird.
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockReturnValue(undefined);
+    const dialogError = new Error('dialog import failed');
     openSpy.mockImplementation((_onClosed?: () => void, onError?: (error: unknown) => void) => {
-      onError?.(new Error('dialog import failed'));
+      onError?.(dialogError);
     });
 
     service.open({ cookieKey: overrideKey });
     service.acceptAll();
 
     expect(cookieStore.has(baseKey)).toBe(true);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Konnte den Consent-Dialog nicht öffnen.', dialogError);
   });
 
   it('acceptAll stores only essential and purposes with entries', () => {

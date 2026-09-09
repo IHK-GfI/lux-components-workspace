@@ -83,7 +83,7 @@
           <!-- Mehrere Dateien ausgewählt -->
           @if (isArray(selectedFiles)) {
             <lux-divider />
-            @for (selectedFile of selectedFiles; track selectedFile; let i = $index) {
+            @for (selectedFile of selectedFiles; track i; let i = $index) {
               <ng-container *ngTemplateOutlet="fileListEntryTemplate; context: { selectedFile: selectedFile, index: i }" />
             }
           }

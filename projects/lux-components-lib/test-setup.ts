@@ -54,20 +54,20 @@ if (!Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'innerText')) {
 }
 
 // jsdom implementiert HTMLCanvasElement.getContext('2d') nicht (liefert null), ohne das native
-// 'canvas'-npm-Paket zu installieren. LuxMenuComponent nutzt Canvas zur Textbreitenmessung
-// (getTextWidth); ein minimaler Mock-Context reicht aus, da es hier nur um plausible, nicht
-// pixelgenaue Breiten geht (jsdom hat ohnehin keine echte Layout-Engine).
-if (document.createElement('canvas').getContext('2d') === null) {
-  (HTMLCanvasElement.prototype as any).getContext = function (contextId: string) {
-    if (contextId !== '2d') {
-      return null;
-    }
-    return {
-      font: '',
-      measureText: (text: string) => ({ width: text.length * 7 })
-    };
+// 'canvas'-npm-Paket zu installieren ('canvas' ist hier keine Dependency). LuxMenuComponent nutzt
+// Canvas zur Textbreitenmessung (getTextWidth); ein minimaler Mock-Context reicht aus, da es hier
+// nur um plausible, nicht pixelgenaue Breiten geht (jsdom hat ohnehin keine echte Layout-Engine).
+// Wichtig: Kein vorheriger Aufruf des echten (nativen) getContext() zur Erkennung, da dieser bereits
+// jsdoms "Not implemented"-Meldung auf die Konsole schreibt, bevor der Mock installiert ist.
+(HTMLCanvasElement.prototype as any).getContext = function (contextId: string) {
+  if (contextId !== '2d') {
+    return null;
+  }
+  return {
+    font: '',
+    measureText: (text: string) => ({ width: text.length * 7 })
   };
-}
+};
 
 if (typeof (globalThis as any).DragEvent === 'undefined') {
   class LuxTestDragEvent extends MouseEvent {

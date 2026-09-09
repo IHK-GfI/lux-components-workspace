@@ -129,9 +129,9 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
     const value = (formValue ?? 0) as number;
 
     if (value < min) {
-      setTimeout(() => this.setValue(min));
+      this.notifyFormValueChangedTimeout = setTimeout(() => this.setValue(min));
     } else if (value > max) {
-      setTimeout(() => this.setValue(max));
+      this.notifyFormValueChangedTimeout = setTimeout(() => this.setValue(max));
     } else {
       this.luxValueChange.emit(value);
       this.luxValuePercent.emit(((value - min) * 100) / (max - min));
