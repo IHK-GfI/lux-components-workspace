@@ -1331,7 +1331,7 @@ class LuxInputWithPrefixComponent {
   template: `
     <lux-input
       [luxType]="type()"
-      [luxLabel]="label()"
+      [luxLabel]="$any(label())"
       [luxHint]="hint()"
       [luxReadonly]="readonly()"
       [luxPlaceholder]="placeholder()"
@@ -1349,12 +1349,12 @@ class LuxInputWithPrefixComponent {
 class LuxInputAttributesComponent {
   type = signal('text');
   label = signal<string | null | undefined>(undefined);
-  hint = signal<string | undefined>(undefined);
-  placeholder = signal<string | undefined>(undefined);
+  hint = signal<string>('');
+  placeholder = signal<string>('');
   readonly = signal(false);
-  disabled = signal<boolean | undefined>(undefined);
+  disabled = signal<boolean>(false);
   required = signal(false);
-  numberLeft = signal<boolean | undefined>(undefined);
+  numberLeft = signal<boolean>(false);
   value = signal<string | undefined>(undefined);
 
   valueChanged() {}
@@ -1369,9 +1369,9 @@ class LuxInputAttributesComponent {
 })
 class LuxInputCounterLabelComponent {
   type = 'text';
-  hint?: string;
-  disabled = signal<boolean | undefined>(undefined);
-  maxLength = signal<number | undefined>(undefined);
+  hint = '';
+  disabled = signal<boolean>(false);
+  maxLength = signal<number>(0);
 }
 
 @Component({

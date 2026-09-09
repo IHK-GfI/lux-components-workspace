@@ -790,19 +790,19 @@ describe('LuxFileInputComponent', () => {
   imports: [LuxFileInputComponent]
 })
 class FileComponent {
-  label = signal<string | undefined>(undefined);
-  placeholder = signal<string | undefined>(undefined);
-  hint = signal<string | undefined>(undefined);
-  required = signal<boolean | undefined>(undefined);
-  readonly = signal<boolean | undefined>(undefined);
-  disabled = signal<boolean | undefined>(undefined);
+  label = signal<string>('');
+  placeholder = signal<string>('');
+  hint = signal<string>('');
+  required = signal<boolean>(false);
+  readonly = signal<boolean>(false);
+  disabled = signal<boolean>(false);
   accept = signal<string | undefined>(undefined);
-  capture?: string;
+  capture = '';
   dndActive = signal(true);
   iconName?: string;
   maxSizeMiB = signal(10);
-  uploadUrl = signal<string | undefined>(undefined);
-  contentsAsBlob = signal<boolean | undefined>(undefined);
+  uploadUrl = signal<string>('');
+  contentsAsBlob = signal<boolean>(false);
   clearOnError = signal(true);
 
   selected = signal<ILuxFileObject | null>(null);
@@ -836,7 +836,7 @@ class FileComponent {
     onClick: () => null
   });
 
-  selectedChange(file: ILuxFileObject) {
+  selectedChange(file: ILuxFileObject | null) {
     this.selected.set(file);
   }
 }
@@ -869,17 +869,17 @@ class FileFormComponent {
   form: FormGroup;
   formControl: AbstractControl;
 
-  label?: string;
-  placeholder?: string;
-  hint?: string;
-  readonly?: boolean;
-  disabled?: boolean;
+  label = '';
+  placeholder = '';
+  hint = '';
+  readonly = false;
+  disabled = false;
   accept?: string;
-  capture?: string;
+  capture = '';
   dndActive = true;
   iconName?: string;
   maxSizeMiB = 10;
-  uploadUrl?: string;
+  uploadUrl = '';
   clearOnError = true;
 
   constructor() {

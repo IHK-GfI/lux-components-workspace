@@ -792,12 +792,12 @@ describe('LuxDatepickerComponent', () => {
 })
 class LuxNoFormAttributeTestComponent {
   value = signal<string | undefined>(undefined);
-  disabled = signal<boolean | undefined>(undefined);
+  disabled = signal<boolean>(false);
   readonly = signal(false);
   required = signal(false);
-  minDate = signal<string | undefined>(undefined);
-  maxDate = signal<string | undefined>(undefined);
-  startDate?: string;
+  minDate = signal<string | null>(null);
+  maxDate = signal<string | null>(null);
+  startDate: string | null = null;
   customFilter = signal<LuxDateFilterFn | undefined>(undefined);
   showToggle = true;
   errorMessage = signal<string | undefined>(undefined);

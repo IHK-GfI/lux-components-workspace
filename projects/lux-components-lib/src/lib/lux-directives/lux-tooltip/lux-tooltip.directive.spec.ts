@@ -242,11 +242,11 @@ describe('LuxTooltipDirective', () => {
   imports: [LuxTooltipDirective]
 })
 class MockComponent {
-  readonly message = signal<string | undefined>(undefined);
-  readonly hideDelay = signal<number | undefined>(undefined);
-  readonly showDelay = signal<number | undefined>(undefined);
+  readonly message = signal<string>('???');
+  readonly hideDelay = signal<number>(0);
+  readonly showDelay = signal<number>(0);
   readonly position = signal<TooltipPosition>('above');
-  readonly disabled = signal<boolean | undefined>(undefined);
+  readonly disabled = signal<boolean>(false);
   readonly ifTruncated = signal(false);
   readonly hostWidth = signal(200);
   readonly label = signal('Ich bin ein Demotext');

@@ -1068,11 +1068,11 @@ class MockPickValueComponent {
 
   readonly autocomplete = viewChild.required(LuxAutocompleteComponent);
 
-  setSelected(selected: string) {
-    this.selected = selected;
+  setSelected(selected: string | null | undefined) {
+    this.selected = selected ?? undefined;
   }
 
-  valueFn(option: TestOption): string {
+  valueFn(option: TestOption | null | undefined): string {
     return option ? option.value : '';
   }
 }

@@ -41,7 +41,7 @@
       }
     </div>
   }
-  @if ((formHintComponent() || luxHint()) && !(formControl?.getError('required') && touched()) && !luxListOnly()) {
+  @if ((formHintComponent() || luxHint()) && !(formControl.getError('required') && touched()) && !luxListOnly()) {
     <mat-hint class="lux-hint lux-file-upload-hint-container" [id]="uid() + '-misc'">
       @if (luxHint()) {
         {{ luxHint() }}

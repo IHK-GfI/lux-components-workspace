@@ -6,8 +6,7 @@ import { LuxAppHeaderAcActionNavItemComponent } from './lux-app-header-ac-action
 @Component({
   selector: 'lux-app-header-ac-action-nav',
   templateUrl: './lux-app-header-ac-action-nav.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LuxAppHeaderAcSessionTimerComponent]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LuxAppHeaderAcActionNavComponent implements AfterViewInit {
   readonly templateRef = viewChild.required(TemplateRef);

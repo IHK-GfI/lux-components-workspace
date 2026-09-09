@@ -43,7 +43,7 @@ describe('LuxTagIdDirective', () => {
   imports: [LuxTagIdDirective]
 })
 class MockComponent {
-  readonly tagId = signal<string | null>(null);
+  readonly tagId = signal<string | undefined>(undefined);
 }
 
 @Component({

@@ -145,20 +145,20 @@ class MockStorage {
   imports: [LuxFileUploadComponent]
 })
 class FileComponent {
-  label?: string;
-  hint?: string;
-  required?: boolean;
-  readonly?: boolean;
-  disabled?: boolean;
+  label = '';
+  hint = '';
+  required = false;
+  readonly = false;
+  disabled = false;
   accept?: string;
-  capture?: string;
+  capture = '';
   iconName?: string;
   maxSizeMiB = 10;
-  uploadUrl?: string;
-  multiple = signal<boolean | undefined>(undefined);
+  uploadUrl = '';
+  multiple = signal<boolean>(false);
   maxFileCount = signal(100);
-  contentsAsBlob?: boolean;
-  listOnly = signal<boolean | undefined>(undefined);
+  contentsAsBlob = false;
+  listOnly = signal<boolean>(false);
 
   selected = signal<ILuxFileObject[] | null>(null);
 

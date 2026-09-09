@@ -752,7 +752,7 @@ describe('LuxDatetimepickerComponent', () => {
 })
 class LuxNoFormAttributeTestComponent {
   value = signal<string | undefined>(undefined);
-  disabled = signal<boolean | undefined>(undefined);
+  disabled = signal<boolean>(false);
   readonly = signal(false);
   required = signal(false);
   minDate = signal<string | undefined>(undefined);

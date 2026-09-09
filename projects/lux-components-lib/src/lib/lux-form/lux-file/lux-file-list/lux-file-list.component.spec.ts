@@ -389,8 +389,12 @@ describe('LuxFileListComponent', () => {
     });
 
     it('Sollte die Drag-and-Drop Events aufrufen (eine Datei)', async () => {
-      const spyDrag = vi.spyOn(LuxFormFileBase.prototype, 'onDragOver');
-      const spyDrop = vi.spyOn(LuxFormFileBase.prototype, 'onDrop');
+      // vi.spyOn() liefert bei einem bereits gespionten Prototyp-Member (z.B. durch den Test "mehrere
+      // Dateien") dieselbe Mock-Instanz inkl. bisherigem Aufruf-Zähler zurück. Da der Vitest-Runner die
+      // Testdateien standardmäßig nicht isoliert ausführt, muss der Zähler hier explizit genullt werden,
+      // um Interferenzen mit anderen Tests zu vermeiden.
+      const spyDrag = vi.spyOn(LuxFormFileBase.prototype, 'onDragOver').mockClear();
+      const spyDrop = vi.spyOn(LuxFormFileBase.prototype, 'onDrop').mockClear();
 
       const fileInputNode = fixture.debugElement.query(By.css('lux-file-list')).nativeElement;
       LuxTestHelper.dispatchFakeEvent(fileInputNode, 'dragover', true);
@@ -412,8 +416,10 @@ describe('LuxFileListComponent', () => {
 
     it('Sollte die Drag-and-Drop Events aufrufen (mehrere Dateien)', async () => {
       testComponent.multiple.set(true);
-      const spyDrag = vi.spyOn(LuxFormFileBase.prototype, 'onDragOver');
-      const spyDrop = vi.spyOn(LuxFormFileBase.prototype, 'onDrop');
+      // Siehe Kommentar im Test "eine Datei": Zähler explizit nullen, da vi.spyOn() bei einem bereits
+      // gespionten Prototyp-Member dieselbe Mock-Instanz (inkl. bisherigem Aufruf-Zähler) zurückgibt.
+      const spyDrag = vi.spyOn(LuxFormFileBase.prototype, 'onDragOver').mockClear();
+      const spyDrop = vi.spyOn(LuxFormFileBase.prototype, 'onDrop').mockClear();
 
       const fileInputNode = fixture.debugElement.query(By.css('lux-file-list')).nativeElement;
       LuxTestHelper.dispatchFakeEvent(fileInputNode, 'dragover', true);
@@ -1235,20 +1241,20 @@ describe('LuxFileListComponent', () => {
   imports: [LuxFileListComponent]
 })
 class FileComponent {
-  label = signal<string | undefined>(undefined);
-  hint = signal<string | undefined>(undefined);
-  required = signal<boolean | undefined>(undefined);
-  readonly = signal<boolean | undefined>(undefined);
-  disabled = signal<boolean | undefined>(undefined);
+  label = signal<string>('');
+  hint = signal<string>('');
+  required = signal<boolean>(false);
+  readonly = signal<boolean>(false);
+  disabled = signal<boolean>(false);
   accept = signal<string | undefined>(undefined);
-  capture?: string;
+  capture = '';
   iconName?: string;
   maxSizeMiB = signal(10);
-  uploadUrl = signal<string | undefined>(undefined);
-  showPreview = signal<boolean | undefined>(undefined);
-  multiple = signal<boolean | undefined>(undefined);
+  uploadUrl = signal<string>('');
+  showPreview = signal<boolean>(false);
+  multiple = signal<boolean>(false);
   maxFileCount = signal(100);
-  contentsAsBlob = signal<boolean | undefined>(undefined);
+  contentsAsBlob = signal<boolean>(false);
 
   selected = signal<ILuxFileObject[] | null>(null);
 
@@ -1319,16 +1325,16 @@ class FileFormComponent {
   form: FormGroup;
   formControl: AbstractControl<ILuxFileObject[] | null>;
 
-  label?: string;
-  hint?: string;
-  readonly?: boolean;
-  disabled?: boolean;
+  label = '';
+  hint = '';
+  readonly = false;
+  disabled = false;
   accept?: string;
-  capture?: string;
+  capture = '';
   iconName?: string;
   maxSizeMiB = 10;
-  uploadUrl?: string;
-  multiple = signal<boolean | undefined>(undefined);
+  uploadUrl = '';
+  multiple = signal<boolean>(false);
 
   constructor() {
     this.form = new FormGroup({

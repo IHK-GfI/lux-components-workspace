@@ -237,7 +237,7 @@ describe('LuxCheckboxComponent', () => {
 
       it('Wert über die Component setzen', async () => {
         // Vorbedingungen testen
-        expect(fixture.componentInstance.disabled()).toBeUndefined();
+        expect(fixture.componentInstance.disabled()).toBe(false);
 
         // Änderungen durchführen
         fixture.componentInstance.disabled.set(true);
@@ -419,7 +419,7 @@ describe('LuxCheckboxComponent', () => {
   imports: [LuxCheckboxComponent]
 })
 class LuxDisabledAttributeComponent {
-  disabled = signal<boolean | undefined>(undefined);
+  disabled = signal<boolean>(false);
 }
 
 @Component({
@@ -473,7 +473,7 @@ class LuxRequiredAttributeComponent {
 })
 class LuxCheckboxInFormAttributeComponent {
   formGroup: FormGroup;
-  required?: boolean;
+  required = false;
 
   constructor() {
     this.formGroup = new FormGroup({

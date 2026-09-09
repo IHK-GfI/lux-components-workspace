@@ -531,7 +531,7 @@ declare interface Option {
   imports: [LuxRadioComponent]
 })
 class MockRadioComponent {
-  label = signal<string | undefined>(undefined);
+  label = signal<string>('');
   options = signal<Option[]>([
     { label: 'Meine Aufgaben', value: 'A' },
     { label: 'Gruppenaufgaben', value: 'B' },
@@ -540,7 +540,7 @@ class MockRadioComponent {
   ]);
 
   selected = signal<any>(undefined);
-  disabled = signal<boolean | undefined>(undefined);
+  disabled = signal<boolean>(false);
   readonly = signal(false);
   required = false;
   pickValueFn = signal<LuxPickValueFnType<Option, string> | undefined>(undefined);
@@ -605,7 +605,7 @@ class MockRadioFormComponent {
   ]);
 
   selected: any;
-  disabled?: boolean;
+  disabled = false;
 
   form: FormGroup;
 

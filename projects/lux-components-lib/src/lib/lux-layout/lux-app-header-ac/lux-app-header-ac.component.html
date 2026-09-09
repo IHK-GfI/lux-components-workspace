@@ -57,7 +57,7 @@
               <ng-container [ngTemplateOutlet]="actionNavRef.templateRef()" />
             </div>
           }
-          @if (luxLocaleSupported() && (luxLocaleSupported()?.length ?? 0) > 1) {
+          @if (luxLocaleSupported() && luxLocaleSupported().length > 1) {
             <lux-lang-select-ac
               [luxLocaleSupported]="luxLocaleSupported()"
               [luxLocaleBaseHref]="luxLocaleBaseHref()"

@@ -1522,24 +1522,24 @@ class TableComponent {
   showPagination = signal(false);
   showColumnSelector = signal(false);
   showFilter = signal(false);
-  colWidths = signal<number[] | undefined>(undefined);
-  pageSize = signal<number | undefined>(undefined);
-  cssClasses = signal<ICustomCSSConfig | ICustomCSSConfig[] | undefined>(undefined);
+  colWidths = signal<number[]>([]);
+  pageSize = signal<number>(10);
+  cssClasses = signal<ICustomCSSConfig | ICustomCSSConfig[]>([]);
   noDataText = signal('Keine Daten gefunden.');
-  minWidth = signal<number | undefined>(undefined);
+  minWidth = signal<number>(-1);
   containerHeight = signal<number | undefined>(undefined);
   containerWidth = signal<number | undefined>(undefined);
   autoPaginate = signal(false);
   hideBorders = signal(false);
   hideHeaders = signal(false);
-  c1Sortable = signal<boolean | undefined>(undefined);
-  c1Sticky = signal<boolean | undefined>(undefined);
-  c2Sortable = signal<boolean | undefined>(undefined);
-  c2Sticky = signal<boolean | undefined>(undefined);
-  c1RespAt = signal<string[] | undefined>(undefined);
-  c2RespAt = signal<string | string[] | undefined>(undefined);
-  c1RespBeh = signal<string | undefined>(undefined);
-  c2RespBeh = signal<string | undefined>(undefined);
+  c1Sortable = signal<boolean>(false);
+  c1Sticky = signal<boolean>(false);
+  c2Sortable = signal<boolean>(false);
+  c2Sticky = signal<boolean>(false);
+  c1RespAt = signal<string | string[] | null>(null);
+  c2RespAt = signal<string | string[] | null>(null);
+  c1RespBeh = signal<string>('');
+  c2RespBeh = signal<string>('');
 
   constructor() {}
 }
@@ -1699,7 +1699,7 @@ class HttpDaoTableComponent {
 class TableMultiselectComponent {
   dataSource = signal<TableItem[]>([]);
   selected = signal(new Set());
-  preselected = signal<Set<TableItem> | undefined>(undefined);
+  preselected = signal<Set<TableItem>>(new Set<TableItem>());
   showPagination = signal(false);
   showFilter = signal(false);
   showMultiSelect = signal(false);

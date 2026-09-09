@@ -140,6 +140,6 @@ class LuxMockProgressBarComponent {
   type = signal<LuxProgressType | undefined>(undefined);
   mode = signal<LuxProgressModeType | undefined>(undefined);
   color = signal<LuxProgressColor | undefined>(undefined);
-  size = signal<LuxProgressSizeType | undefined>(undefined);
+  size = signal<LuxProgressSizeType>('medium');
   value = signal(0);
 }
