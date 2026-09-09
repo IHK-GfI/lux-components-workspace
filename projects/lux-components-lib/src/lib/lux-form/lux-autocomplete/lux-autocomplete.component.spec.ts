@@ -29,11 +29,19 @@ describe('LuxAutocompleteComponent', () => {
       let component: LuxAutoCompleteInFormAttributeComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAutoCompleteInFormAttributeComponent);
         fixture.detectChanges();
         component = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, fixture.componentInstance.autocomplete().luxLookupDelay()));
+        await vi.advanceTimersByTimeAsync(fixture.componentInstance.autocomplete().luxLookupDelay());
         fixture.detectChanges();
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Formularwert über die Component setzen', async () => {
@@ -138,11 +146,19 @@ describe('LuxAutocompleteComponent', () => {
       let component: LuxAutoCompleteInFormWithStringValuesComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAutoCompleteInFormWithStringValuesComponent);
         fixture.detectChanges();
         component = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, fixture.componentInstance.autocomplete().luxLookupDelay()));
+        await vi.advanceTimersByTimeAsync(fixture.componentInstance.autocomplete().luxLookupDelay());
         fixture.detectChanges();
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Wert über das Textfeld setzen', async () => {
@@ -228,11 +244,19 @@ describe('LuxAutocompleteComponent', () => {
       let component: LuxValueAttributeComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxValueAttributeComponent);
         fixture.detectChanges();
         component = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, fixture.componentInstance.autocomplete().luxLookupDelay()));
+        await vi.advanceTimersByTimeAsync(fixture.componentInstance.autocomplete().luxLookupDelay());
         fixture.detectChanges();
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Wert über die Component setzen', async () => {
@@ -323,11 +347,19 @@ describe('LuxAutocompleteComponent', () => {
       let component: LuxAutoCompleteTwoWayBindingWithStringValuesComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAutoCompleteTwoWayBindingWithStringValuesComponent);
         fixture.detectChanges();
         component = fixture.componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, fixture.componentInstance.autocomplete().luxLookupDelay()));
+        await vi.advanceTimersByTimeAsync(fixture.componentInstance.autocomplete().luxLookupDelay());
         fixture.detectChanges();
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Wert über die Component setzen', async () => {
@@ -383,11 +415,19 @@ describe('LuxAutocompleteComponent', () => {
       let component: LuxOptionSelectedComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxOptionSelectedComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        await new Promise((resolve) => setTimeout(resolve, fixture.componentInstance.autocomplete().luxLookupDelay()));
+        await vi.advanceTimersByTimeAsync(fixture.componentInstance.autocomplete().luxLookupDelay());
         fixture.detectChanges();
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Neue Option auswählen', async () => {
@@ -565,9 +605,17 @@ describe('LuxAutocompleteComponent', () => {
     let fixture: ComponentFixture<MockPickValueComponent>;
 
     beforeEach(() => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(MockPickValueComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
     });
 
     it('sollte erstellt werden', () => {
@@ -602,12 +650,20 @@ describe('LuxAutocompleteComponent', () => {
     let autocomplete: LuxAutocompleteComponent;
 
     beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(LuxScrollComponent);
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxAutocompleteComponent)).componentInstance;
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, autocomplete.luxLookupDelay()));
+      await vi.advanceTimersByTimeAsync(autocomplete.luxLookupDelay());
       fixture.detectChanges();
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
     });
 
     it('Sollte die Optionen nachladen', async () => {
@@ -641,12 +697,20 @@ describe('LuxAutocompleteComponent', () => {
       let autocomplete: LuxAutocompleteComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAutoCompleteClearableInFormComponent);
         fixture.detectChanges();
         component = fixture.componentInstance;
         autocomplete = fixture.debugElement.query(By.directive(LuxAutocompleteComponent)).componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, autocomplete.luxLookupDelay()));
+        await vi.advanceTimersByTimeAsync(autocomplete.luxLookupDelay());
         fixture.detectChanges();
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Sollte den Clear-Button anzeigen wenn ein Wert gesetzt ist', async () => {
@@ -696,12 +760,20 @@ describe('LuxAutocompleteComponent', () => {
       let autocomplete: LuxAutocompleteComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAutoCompleteClearableOutsideFormComponent);
         fixture.detectChanges();
         component = fixture.componentInstance;
         autocomplete = fixture.debugElement.query(By.directive(LuxAutocompleteComponent)).componentInstance;
-        await new Promise((resolve) => setTimeout(resolve, autocomplete.luxLookupDelay()));
+        await vi.advanceTimersByTimeAsync(autocomplete.luxLookupDelay());
         fixture.detectChanges();
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Sollte den Wert über den Clear-Button zurücksetzen', async () => {
@@ -729,11 +801,19 @@ describe('LuxAutocompleteComponent', () => {
     let component: LuxAutoCompleteSingleOptionComponent;
 
     beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(LuxAutoCompleteSingleOptionComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, component.autocomplete().luxLookupDelay()));
+      await vi.advanceTimersByTimeAsync(component.autocomplete().luxLookupDelay());
       fixture.detectChanges();
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
     });
 
     it('should not auto-select the only option on focusout', async () => {

@@ -47,6 +47,7 @@ describe('LuxSelectFilterDirective', () => {
   let directive: LuxSelectFilterDirective;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     await TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, TestComponent]
     }).compileComponents();
@@ -59,13 +60,20 @@ describe('LuxSelectFilterDirective', () => {
     directive = matSelect?.injector.get(LuxSelectFilterDirective);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     // Mehrere Tests planen über handleKeydown('Tab') einen verzögerten Fokuswechsel
     // (setTimeout). Ohne explizites Zerstören der Fixture bleibt dieser Timer aktiv und kann
     // während eines späteren Tests feuern und dort auf LuxSelectFilterUtils.focusNextFocusableElement
     // gespotte Aufrufe verfälschen (isolate:false teilt den Ausführungskontext über Testdateien
     // hinweg, siehe Vitest-Runner-Default).
+    // Erst alle ausstehenden Fake-Timer abarbeiten (noch im Fake-Modus, damit ein eventuelles
+    // clearTimeout() beim fixture.destroy() dieselbe Timer-Implementierung wie beim setTimeout()
+    // sieht), dann zerstören, dann erst auf echte Timer zurückschalten.
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
     fixture?.destroy();
+    vi.useRealTimers();
   });
 
   it('sollte erstellt werden', () => {

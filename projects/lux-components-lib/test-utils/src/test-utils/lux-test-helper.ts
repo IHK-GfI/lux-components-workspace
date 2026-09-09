@@ -1,6 +1,7 @@
 import { SPACE } from '@angular/cdk/keycodes';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
+import { vi } from 'vitest';
 
 export class LuxTestHelper {
   /**
@@ -20,19 +21,27 @@ export class LuxTestHelper {
 
   /**
    * Wartet asynchrone Aufrufe ab und ruft die ChangeDetection auf.
-   * `tickDuration` wird, falls angegeben, als reale Wartezeit (setTimeout) abgewartet,
-   * da ohne fakeAsync keine virtuelle Zeit vorgespult werden kann.
+   * `tickDuration` wird, falls angegeben, als Wartezeit abgewartet.
+   * Sind Vitest-Fake-Timer aktiv (vi.useFakeTimers()), wird die virtuelle Zeit vorgespult statt real zu
+   * warten - das spart bei Specs mit vielen wait()-Aufrufen reale Wall-Clock-Zeit. Ohne Fake-Timer (Default)
+   * verhält sich wait() unverändert wie zuvor: ein echter setTimeout-Tick garantiert, dass auch Microtask-
+   * Ketten von ggf. nicht zone.js-gepatchten nativen Promises (z.B. vi.fn().mockResolvedValue()) durchlaufen
+   * sind, bevor es weitergeht - fixture.whenStable() allein wartet darauf nicht zuverlässig.
    * @param fixture
    * @param tickDuration
    */
   public static async wait(fixture: any, tickDuration?: number): Promise<void> {
     fixture.detectChanges();
     await fixture.whenStable();
-    // Immer mindestens einen echten Makrotask abwarten: manche gemockten Promises (z.B.
-    // vi.fn().mockResolvedValue()) nutzen ggf. eine von zone.js ungepatchte native Promise, auf die
-    // fixture.whenStable() nicht wartet. Ein realer setTimeout-Tick garantiert, dass solche
-    // Microtask-Ketten trotzdem durchlaufen sind, bevor es weitergeht.
-    await new Promise((resolve) => setTimeout(resolve, tickDuration ?? 0));
+    if (vi.isFakeTimers()) {
+      if (tickDuration) {
+        await vi.advanceTimersByTimeAsync(tickDuration);
+      } else {
+        await vi.runAllTimersAsync();
+      }
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, tickDuration ?? 0));
+    }
     fixture.detectChanges();
   }
 
@@ -105,14 +114,23 @@ export class LuxTestHelper {
     element: HTMLInputElement,
     callback: () => void | Promise<void>
   ): Promise<void> {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
     await fixture.whenStable();
     LuxTestHelper.typeInElement(element, text);
     fixture.detectChanges();
 
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
     await fixture.whenStable();
     LuxTestHelper.dispatchKeyboardEvent(element, 'keydown', SPACE);
     fixture.detectChanges();
 
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
     await fixture.whenStable();
     await callback();
   }

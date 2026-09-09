@@ -29,6 +29,7 @@ declare interface TableItem {
 
 describe('LuxTableComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -40,6 +41,13 @@ describe('LuxTableComponent', () => {
         { provide: LuxConsoleService, useClass: MockConsoleService }
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('Übliche Anwendungsfälle (ohne HTTP-DAO)', () => {

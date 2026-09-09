@@ -21,6 +21,7 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
   let matSelect: MatSelect;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     await TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, VisibleOptionCountHostComponent]
     }).compileComponents();
@@ -31,6 +32,13 @@ describe('LuxSelectVisibleOptionCountDirective', () => {
     const debugElement = fixture.debugElement.query((el) => el.injector.get(LuxSelectVisibleOptionCountDirective, null) !== null);
     directive = debugElement.injector.get(LuxSelectVisibleOptionCountDirective);
     matSelect = debugElement.injector.get(MatSelect);
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   it('wendet die Panelhöhe auch dann an, wenn das Overlay erst verzögert verfügbar ist', async () => {

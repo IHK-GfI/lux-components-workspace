@@ -19,6 +19,7 @@ import { LuxSnackbarService } from '../lux-snackbar.service';
 
 describe('LuxSnackbarComponent', () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       imports: [MockSnackbarModule],
       providers: [
@@ -28,6 +29,13 @@ describe('LuxSnackbarComponent', () => {
         provideLuxTranslocoTesting()
       ]
     });
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   let fixture: ComponentFixture<MockSnackbarComponent>;

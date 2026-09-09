@@ -19,6 +19,7 @@ import { LuxRadioComponent } from './lux-radio.component';
 
 describe('LuxRadioComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -29,6 +30,13 @@ describe('LuxRadioComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('Attribut "luxErrorMessage"', () => {

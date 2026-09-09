@@ -21,6 +21,7 @@ describe('LuxButtonToggleComponent', () => {
   ];
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     await TestBed.configureTestingModule({
       providers: [provideLuxTranslocoTesting()]
     }).compileComponents();
@@ -29,6 +30,13 @@ describe('LuxButtonToggleComponent', () => {
     component = fixture.componentInstance;
     fixture.componentRef.setInput('luxOptions', options);
     await LuxTestHelper.wait(fixture);
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   it('rendert keine Gruppe bei weniger als zwei Optionen', () => {

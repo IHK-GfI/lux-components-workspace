@@ -15,6 +15,7 @@ import { LuxToggleComponent } from './lux-toggle.component';
 
 describe('LuxToggleComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -24,6 +25,13 @@ describe('LuxToggleComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('innerhalb eines Formulars', () => {

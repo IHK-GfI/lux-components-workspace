@@ -1,5 +1,5 @@
 import axe, { type AxeResults } from 'axe-core';
-import { expect } from 'vitest';
+import { expect, vi } from 'vitest';
 
 declare module 'vitest' {
   interface Assertion<T = any> {
@@ -45,10 +45,24 @@ export class LuxA11yTestHelper {
   /**
    * Führt einen axe-core-Scan auf dem übergebenen Element aus und erwartet, dass keine Barrierefreiheitsverletzungen vorliegen.
    * Setzt voraus, dass zuvor `addA11yMatchers()` aufgerufen wurde.
+   * axe-core nutzt intern eigenes setTimeout-Scheduling. Sind Vitest-Fake-Timer aktiv (vi.useFakeTimers()),
+   * würde axe.run() nie auflösen, da nichts die virtuelle Uhr vorspult - der Scan bliebe hängen und axe-core
+   * würde für alle folgenden Aufrufe im selben Prozess mit "Axe is already running" blockiert bleiben. Daher
+   * wird währenddessen defensiv auf echte Timer umgeschaltet und der vorherige Modus danach wiederhergestellt.
    * @param element
    */
   public static async expectNoA11yViolations(element: Element): Promise<void> {
-    const results = await axe.run(element);
-    expect(results).toHaveNoViolations();
+    const usingFakeTimers = vi.isFakeTimers();
+    if (usingFakeTimers) {
+      vi.useRealTimers();
+    }
+    try {
+      const results = await axe.run(element);
+      expect(results).toHaveNoViolations();
+    } finally {
+      if (usingFakeTimers) {
+        vi.useFakeTimers();
+      }
+    }
   }
 }

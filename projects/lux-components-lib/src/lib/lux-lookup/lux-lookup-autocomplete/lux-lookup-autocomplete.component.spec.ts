@@ -21,6 +21,7 @@ import { LuxLookupAutocompleteComponent } from './lux-lookup-autocomplete.compon
 
 describe('LuxLookupAutocompleteComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -34,6 +35,13 @@ describe('LuxLookupAutocompleteComponent', () => {
     }).compileComponents();
   });
 
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
+  });
+
   describe('Außerhalb einer Form', () => {
     let fixture: ComponentFixture<LuxNoFormComponent>;
     let component: LuxNoFormComponent;
@@ -44,7 +52,9 @@ describe('LuxLookupAutocompleteComponent', () => {
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxLookupAutocompleteComponent)).componentInstance;
       await LuxTestHelper.wait(fixture);
-      await new Promise((resolve) => setTimeout(resolve, autocomplete.luxDebounceTime()));
+      // Ersatz für die reale setTimeout-Wartezeit: Bei aktiven Vitest-Fake-Timern (vi.useFakeTimers())
+      // würde ein echter setTimeout-basierter Promise sonst nie auflösen (die virtuelle Uhr steht still).
+      await vi.advanceTimersByTimeAsync(autocomplete.luxDebounceTime());
       await LuxTestHelper.wait(fixture);
     });
 

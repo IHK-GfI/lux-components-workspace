@@ -28,6 +28,7 @@ const startsWithLuxValidator: ValidatorFn = (control: AbstractControl) => {
 
 describe('LuxInputComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -37,6 +38,13 @@ describe('LuxInputComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('innerhalb eines Formulars', () => {

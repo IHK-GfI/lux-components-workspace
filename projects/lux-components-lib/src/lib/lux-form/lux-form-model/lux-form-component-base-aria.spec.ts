@@ -91,6 +91,7 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
   let warnSpy: Mock;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -106,6 +107,13 @@ describe('LuxFormComponentBase - Dev-Warnungen (checkA11yName)', () => {
     const consoleService = TestBed.inject(LuxConsoleService);
     warnSpy = vi.fn().mockName('warn');
     vi.spyOn(consoleService as any, 'warn', 'get').mockReturnValue(warnSpy);
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   it('warnt, wenn ein Control keinerlei zugänglichen Namen hat', async () => {

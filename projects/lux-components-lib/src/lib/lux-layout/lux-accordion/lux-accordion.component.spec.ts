@@ -18,10 +18,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionHeightComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionHeightComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Höhe prüfen', async () => {
@@ -98,10 +106,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionPanelOverrideHeightComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionPanelOverrideHeightComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Höhe prüfen', async () => {
@@ -154,10 +170,18 @@ describe('LuxAccordionComponent', () => {
     let testComponent: LuxAccordionPanelMultiComponent;
 
     beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(LuxAccordionPanelMultiComponent);
       await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
       await LuxTestHelper.wait(fixture);
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
     });
 
     it('Mehrere Bereiche dürfen geöffnet sein', async () => {
@@ -208,10 +232,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionHideToggleComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionHideToggleComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Toggle prüfen', async () => {
@@ -235,10 +267,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionHideToggleTrueComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionHideToggleTrueComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Toggle prüfen', async () => {
@@ -262,10 +302,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionOverrideHideToggleComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionOverrideHideToggleComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Toggle prüfen', async () => {
@@ -283,10 +331,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionDisabledComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionDisabledComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Disabled prüfen', async () => {
@@ -309,10 +365,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionDisabledTrueComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionDisabledTrueComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Disabled prüfen', async () => {
@@ -335,10 +399,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionOverrideDisabledComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionOverrideDisabledComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Disabled prüfen', async () => {
@@ -355,10 +427,18 @@ describe('LuxAccordionComponent', () => {
     let testComponent: LuxAccordionOverrideDisabledReversedComponent;
 
     beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(LuxAccordionOverrideDisabledReversedComponent);
       await LuxTestHelper.wait(fixture);
       testComponent = fixture.componentInstance;
       await LuxTestHelper.wait(fixture);
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
     });
 
     it('Disabled prüfen', async () => {
@@ -375,10 +455,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionluxTogglePositionComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionluxTogglePositionComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('TogglePosition prüfen', async () => {
@@ -402,10 +490,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionluxTogglePositionBeforeComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionluxTogglePositionBeforeComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('TogglePosition prüfen', async () => {
@@ -429,10 +525,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionOverrideluxTogglePositionComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionOverrideluxTogglePositionComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('TogglePosition prüfen', async () => {
@@ -448,10 +552,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionOverridePanelReversedluxTogglePositionComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionOverridePanelReversedluxTogglePositionComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('TogglePosition prüfen', async () => {
@@ -469,10 +581,18 @@ describe('LuxAccordionComponent', () => {
       let testComponent: LuxAccordionColorComponent;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionColorComponent);
         await LuxTestHelper.wait(fixture);
         testComponent = fixture.componentInstance;
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Color prüfen', async () => {
@@ -513,8 +633,16 @@ describe('LuxAccordionComponent', () => {
       let fixture: ComponentFixture<LuxAccordionStickyHeaderComponent>;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionStickyHeaderComponent);
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Vererbung und nachträgliche Änderung prüfen', async () => {
@@ -537,8 +665,16 @@ describe('LuxAccordionComponent', () => {
       let fixture: ComponentFixture<LuxAccordionOverrideStickyHeaderComponent>;
 
       beforeEach(async () => {
+        vi.useFakeTimers();
         fixture = TestBed.createComponent(LuxAccordionOverrideStickyHeaderComponent);
         await LuxTestHelper.wait(fixture);
+      });
+
+      afterEach(async () => {
+        if (vi.isFakeTimers()) {
+          await vi.runAllTimersAsync();
+        }
+        vi.useRealTimers();
       });
 
       it('Sticky prüfen', async () => {

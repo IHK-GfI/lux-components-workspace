@@ -26,7 +26,7 @@ describe('LuxInfiniteScrollDirective', () => {
     document.dispatchEvent(scrollEvent);
 
     await LuxTestHelper.wait(componentFixture, WAIT_TIME);
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await vi.advanceTimersByTimeAsync(0);
   };
 
   describe('Mit Scrollbar', () => {
@@ -34,6 +34,7 @@ describe('LuxInfiniteScrollDirective', () => {
     let mockComp: MockComponent;
 
     beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(MockComponent);
       mockComp = fixture.componentInstance;
 
@@ -43,6 +44,13 @@ describe('LuxInfiniteScrollDirective', () => {
       const el = fixture.debugElement.query(By.css('#toggleMasterFocus-element')).nativeElement;
       Object.defineProperty(el, 'clientHeight', { configurable: true, value: 50 });
       Object.defineProperty(el, 'scrollHeight', { configurable: true, value: 500 });
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
     });
 
     it('Sollte erstellt werden', () => {
@@ -145,8 +153,16 @@ describe('LuxInfiniteScrollDirective', () => {
     let mockComp: MockWithoutScrollBarAndImmediateCallbackComponent;
 
     beforeEach(async () => {
+      vi.useFakeTimers();
       fixture = TestBed.createComponent(MockWithoutScrollBarAndImmediateCallbackComponent);
       mockComp = fixture.componentInstance;
+    });
+
+    afterEach(async () => {
+      if (vi.isFakeTimers()) {
+        await vi.runAllTimersAsync();
+      }
+      vi.useRealTimers();
     });
 
     it('Sollte luxScrolled nicht emitten wenn luxImmediateCallback = true ist', async () => {

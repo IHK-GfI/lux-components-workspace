@@ -20,6 +20,7 @@ import { LuxFileInputComponent } from './lux-file-input.component';
 
 describe('LuxFileInputComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -33,6 +34,13 @@ describe('LuxFileInputComponent', () => {
         }
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('[ReactiveForm]', () => {

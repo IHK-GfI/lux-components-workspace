@@ -14,6 +14,7 @@ import { LuxDisplayWithFnType, LuxSliderColor, LuxSliderComponent } from './lux-
 
 describe('LuxSliderComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -23,6 +24,13 @@ describe('LuxSliderComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('In ReactiveForm', () => {

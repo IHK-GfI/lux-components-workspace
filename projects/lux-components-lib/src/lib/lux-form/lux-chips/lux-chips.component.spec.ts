@@ -17,6 +17,7 @@ import { LuxChipComponent } from './lux-chips-subcomponents/lux-chip.component';
 
 describe('LuxChipComponent-Authentic', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -26,6 +27,13 @@ describe('LuxChipComponent-Authentic', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('Allgemein', () => {
@@ -384,7 +392,7 @@ describe('LuxChipComponent-Authentic', () => {
       const chipElements = localFixture.debugElement.queryAll(By.css('mat-chip-row'));
 
       expect(chipElements.length).toEqual(2);
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await vi.advanceTimersByTimeAsync(0);
     });
 
     it('Sollte einen Chip löschen', async () => {
@@ -653,7 +661,7 @@ describe('LuxChipComponent-Authentic', () => {
       component = fixture.componentInstance;
       autocomplete = fixture.debugElement.query(By.directive(LuxChipsComponent)).componentInstance;
       await LuxTestHelper.wait(fixture);
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      await vi.advanceTimersByTimeAsync(delay);
       await LuxTestHelper.wait(fixture);
     });
 

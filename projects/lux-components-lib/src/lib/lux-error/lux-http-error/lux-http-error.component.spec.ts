@@ -18,6 +18,7 @@ describe('LuxHttpErrorComponent', () => {
   let httpController: HttpTestingController;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
@@ -36,7 +37,14 @@ describe('LuxHttpErrorComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    // Ausstehende Fake-Timer noch im Fake-Modus abarbeiten, bevor auf echte Timer zurückgeschaltet
+    // wird - sonst kann ein von der TestBed-Teardown später ausgelöstes clearTimeout() auf eine
+    // Fake-Timer-ID treffen, während bereits die echte Timer-Implementierung aktiv ist.
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
     httpController.verify();
   });
 
@@ -288,5 +296,7 @@ async function handleIconRequests(
       fixture.detectChanges();
     }
   }
-  await new Promise((resolve) => setTimeout(resolve, 0));
+  // Statt eines echten setTimeout-Ticks (der bei aktiven Vitest-Fake-Timern nie feuern würde)
+  // wird hier die virtuelle Zeit um 0ms vorgespult.
+  await vi.advanceTimersByTimeAsync(0);
 }

@@ -22,6 +22,7 @@ import { LuxLookupComboboxComponent } from './lux-lookup-combobox.component';
 
 describe('LuxLookupComboboxComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -33,6 +34,13 @@ describe('LuxLookupComboboxComponent', () => {
         { provide: LuxLookupService, useClass: MockLookupService }
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('Außerhalb einer Form', () => {
@@ -599,7 +607,7 @@ describe('LuxLookupComboboxComponent', () => {
       const filterInput = document.querySelector('.lux-select-panel-filter-input') as HTMLInputElement;
 
       LuxTestHelper.dispatchEvent(filterInput, LuxTestHelper.createKeyboardEvent('keydown', 9, filterInput, 'Tab'));
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await vi.advanceTimersByTimeAsync(0);
       await LuxTestHelper.wait(fixture);
 
       const activeItem = (luxLookup.matSelect() as any)?._keyManager?.activeItem;

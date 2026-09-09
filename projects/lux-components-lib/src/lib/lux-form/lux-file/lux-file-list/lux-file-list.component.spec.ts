@@ -24,6 +24,7 @@ import { LuxFileListComponent } from './lux-file-list.component';
 
 describe('LuxFileListComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -43,6 +44,13 @@ describe('LuxFileListComponent', () => {
         }
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('[ReactiveForm]', () => {

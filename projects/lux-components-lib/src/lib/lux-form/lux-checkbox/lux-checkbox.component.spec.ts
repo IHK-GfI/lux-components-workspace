@@ -13,6 +13,7 @@ import { LuxCheckboxComponent } from './lux-checkbox.component';
 
 describe('LuxCheckboxComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
@@ -22,6 +23,13 @@ describe('LuxCheckboxComponent', () => {
         LuxConsoleService
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('innerhalb eines Formulars', () => {

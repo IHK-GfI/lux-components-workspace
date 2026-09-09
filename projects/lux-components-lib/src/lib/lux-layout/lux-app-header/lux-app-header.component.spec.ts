@@ -22,6 +22,7 @@ import { LuxAppHeaderComponent } from './lux-app-header.component';
 
 describe('LuxAppHeaderComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -31,6 +32,13 @@ describe('LuxAppHeaderComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('luxClicked', () => {

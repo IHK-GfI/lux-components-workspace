@@ -19,6 +19,7 @@ describe('LuxTextareaComponent', () => {
   let textarea: LuxTextareaComponent;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -28,6 +29,13 @@ describe('LuxTextareaComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('[ReactiveForm]', () => {

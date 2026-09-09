@@ -17,6 +17,7 @@ import { LuxDateFilterFn, LuxDatepickerComponent } from './lux-datepicker.compon
 
 describe('LuxDatepickerComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxConsoleService,
@@ -26,6 +27,13 @@ describe('LuxDatepickerComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('Validatoren', () => {

@@ -19,21 +19,26 @@ describe('LuxTooltipDirective', () => {
   let tooltipSpan: HTMLElement;
   let tooltip: LuxTooltipDirective;
 
-  const showTooltip = async (wait = 0) => {
+  const showTooltip = async (delay = 0) => {
     tooltip.show(mockComp.showDelay());
-    await LuxTestHelper.wait(fixture, wait);
+    await LuxTestHelper.wait(fixture, delay);
   };
 
-  const hideTooltip = async (wait = 0) => {
+  const hideTooltip = async (delay = 0) => {
     tooltip.hide(mockComp.hideDelay());
-    await LuxTestHelper.wait(fixture, wait);
+    await LuxTestHelper.wait(fixture, delay);
   };
 
   // Der Truncation-Watcher plant beim connect() eine erste Messung via setTimeout(0).
-  // Dieser Timer muss geleert werden, bevor deterministisch gemessen wird.
-  const flushTruncationWatch = () => new Promise((resolve) => setTimeout(resolve, 0));
+  // Dieser Timer muss geleert werden, bevor deterministisch gemessen wird. Bei aktiven
+  // Vitest-Fake-Timern wird dazu die virtuelle Zeit um 0ms vorgespult, statt auf einen
+  // echten setTimeout-Tick zu warten (der bei Fake-Timern sonst nie feuern würde).
+  const flushTruncationWatch = async () => {
+    await vi.advanceTimersByTimeAsync(0);
+  };
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [provideNoopAnimations()]
     }).compileComponents();
@@ -55,11 +60,19 @@ describe('LuxTooltipDirective', () => {
     })();
   });
 
-  afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
+  afterEach(inject([OverlayContainer], async (currentOverlayContainer: OverlayContainer) => {
+    // Ausstehende Fake-Timer noch im Fake-Modus abarbeiten, bevor die Overlays zerstört und auf
+    // echte Timer zurückgeschaltet wird - sonst kann ein von ngOnDestroy() ausgelöstes
+    // clearTimeout() auf eine Fake-Timer-ID treffen, während bereits die echte Timer-Implementierung
+    // aktiv ist, und ein verwaister Timer feuert später in einem fremden Test.
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
     // Since we're resetting the testing module in some tests,
     // we can potentially have multiple overlay containers.
     currentOverlayContainer.ngOnDestroy();
     overlayContainer.ngOnDestroy();
+    vi.useRealTimers();
   }));
 
   it('should create an instance', () => {
@@ -191,7 +204,7 @@ describe('LuxTooltipDirective', () => {
     expect(tooltip._isTooltipVisible()).toBe(false);
 
     // When
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await vi.advanceTimersByTimeAsync(500);
     fixture.detectChanges();
     // Then
     expect(tooltip._isTooltipVisible()).toBe(true);
@@ -213,7 +226,7 @@ describe('LuxTooltipDirective', () => {
     expect(tooltip._isTooltipVisible()).toBe(true);
 
     // When
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await vi.advanceTimersByTimeAsync(500);
     fixture.detectChanges();
     // Then
     expect(tooltip._isTooltipVisible()).toBe(false);

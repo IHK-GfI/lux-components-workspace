@@ -20,6 +20,7 @@ describe('LuxSelectComponent', () => {
   let dir: any;
 
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         { provide: Directionality, useFactory: () => (dir = { value: 'ltr' }) },
@@ -37,6 +38,13 @@ describe('LuxSelectComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   const scrolledSubject = new Subject();

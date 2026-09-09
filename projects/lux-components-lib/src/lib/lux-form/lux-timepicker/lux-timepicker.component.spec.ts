@@ -14,6 +14,7 @@ import { LuxTimepickerComponent } from './lux-timepicker.component';
 
 describe('LuxTimepickerComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideNoopAnimations(),
@@ -22,6 +23,13 @@ describe('LuxTimepickerComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   it('sollte einen ISO-Wert aus dem Formular anzeigen und beibehalten', async () => {

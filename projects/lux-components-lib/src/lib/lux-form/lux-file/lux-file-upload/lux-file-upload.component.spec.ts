@@ -15,6 +15,7 @@ import { LuxFileUploadComponent } from './lux-file-upload.component';
 
 describe('LuxFileUploadComponent', () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -27,6 +28,13 @@ describe('LuxFileUploadComponent', () => {
         }
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('[Allgemein]', () => {

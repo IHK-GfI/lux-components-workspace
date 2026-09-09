@@ -17,6 +17,7 @@ import { LuxCardComponent } from './lux-card.component';
 
 describe('LuxCardComponent', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -25,6 +26,13 @@ describe('LuxCardComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('Attribut "luxExpanded"', () => {

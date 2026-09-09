@@ -25,6 +25,7 @@ import { LuxAutofocusDirective } from './lux-autofocus.directive';
 
 describe('LuxAutofocusDirective', () => {
   beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         LuxComponentsConfigService,
@@ -33,6 +34,13 @@ describe('LuxAutofocusDirective', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   it('Sollte mit lux-input-ac funktionieren', async () => {
@@ -195,7 +203,7 @@ describe('LuxAutofocusDirective', () => {
 class LuxAutoFocusInputComponent {}
 
 @Component({
-  selector: 'lux-autofocus-test-input',
+  selector: 'lux-autofocus-test-autocomplete',
   template: `<lux-autocomplete luxAutofocus></lux-autocomplete>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxAutocompleteComponent, LuxAutofocusDirective]
