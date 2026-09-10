@@ -10,7 +10,6 @@ import {
   untracked,
   viewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
@@ -73,6 +72,9 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
 
   readonly matSlider = viewChild(MatSlider);
 
+  private isDestroyed = false;
+  private initialRedrawDone = false;
+
   readonly describedBy = computed(() => {
     if (this.errorMessage()) {
       return this.uid() + '-error';
@@ -86,6 +88,8 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
 
     this.syncValueInputToFormControl(this.luxValue);
 
+    this.destroyRef.onDestroy(() => (this.isDestroyed = true));
+
     effect(() => {
       if (this.luxRequired()) {
         untracked(() => this.logger.error('The LuxSlider cannot be marked as required.'));
@@ -95,7 +99,17 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
     afterRenderEffect({
       mixedReadWrite: () => {
         this.luxDisabled();
-        untracked(() => this.redrawSliderWorkaround());
+        untracked(() => {
+          // Beim ersten Render darf der Workaround nicht laufen (Verhalten des früheren
+          // Constructor-Effects, der die viewChild-Referenz zu dem Zeitpunkt noch nicht kannte).
+          // Das temporäre Zurücksetzen von step würde den nativen Range-Input sonst neu
+          // einrasten lassen und beim Start ein luxChange auslösen.
+          if (this.initialRedrawDone) {
+            this.redrawSliderWorkaround();
+          } else {
+            this.initialRedrawDone = true;
+          }
+        });
       }
     });
   }
@@ -106,12 +120,6 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
     this._initialValue = this.luxValue();
 
     super.ngOnInit();
-
-    this.formControl.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status: string) => {
-      if (status === 'DISABLED') {
-        this.redrawSliderWorkaround();
-      }
-    });
   }
 
   /**
@@ -141,9 +149,9 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
     const value = (formValue ?? 0) as number;
 
     if (value < min) {
-      Promise.resolve().then(() => this.setValue(min));
+      this.clampValue(min);
     } else if (value > max) {
-      Promise.resolve().then(() => this.setValue(max));
+      this.clampValue(max);
     } else {
       this.luxValueChange.emit(value);
       this.luxValuePercent.emit(((value - min) * 100) / (max - min));
@@ -158,8 +166,26 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
   }
 
   /**
+   * Korrigiert einen Wert außerhalb von [luxMin, luxMax] verzögert, damit nicht in den gerade
+   * laufenden valueChanges-Zyklus zurückgeschrieben wird. Nach dem Destroy darf nicht mehr in
+   * das (ggf. weiterlebende) FormControl der Parent-FormGroup geschrieben werden.
+   * @param value
+   */
+  private clampValue(value: number) {
+    Promise.resolve().then(() => {
+      if (!this.isDestroyed) {
+        this.setValue(value);
+      }
+    });
+  }
+
+  /**
    * Workaround, ohne den der Slider leider nicht beim Wechsel zum disabled-State den Gab
-   * um den Thumb herum zeichnet.
+   * um den Thumb herum zeichnet. Das kurzzeitige Umsetzen von step erzwingt ein Neuzeichnen.
+   *
+   * Der Aufruf erfolgt ausschließlich aus dem afterRenderEffect und damit erst, nachdem der
+   * neue disabled-Zustand am MatSliderThumb angekommen ist. Ein zusätzliches Deferring
+   * (setTimeout o. Ä.) ist deshalb nicht nötig.
    */
   private redrawSliderWorkaround() {
     const matSlider = this.matSlider();

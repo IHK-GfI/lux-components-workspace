@@ -1,10 +1,9 @@
 import { JsonPipe, NgClass } from '@angular/common';
-import { Component, effect, input, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, effect, input, signal, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   LuxAriaLabelDirective,
   LuxButtonComponent,
-  LuxFormComponentBase,
   LuxInputComponent,
   LuxTableColumnComponent,
   LuxTableColumnContentComponent,
@@ -12,6 +11,16 @@ import {
   LuxTableComponent,
   LuxUtil
 } from '@ihk-gfi/lux-components';
+
+/**
+ * Der Ausschnitt einer LUX-FormComponent, den dieses Beispiel braucht.
+ *
+ * Bewusst strukturell statt LuxFormComponentBase: Die auf Signal Forms umgestellten Controls
+ * (z.B. lux-input) erben von LuxFormControlBase und nicht mehr von LuxFormComponentBase.
+ */
+interface LuxEditableFormComponent {
+  formControlWrapperComponentRef: () => ElementRef | undefined;
+}
 
 interface AddressForm {
   streetName: FormControl<string | null>;
@@ -119,7 +128,7 @@ export class TableEditWithFormExampleComponent {
     LuxUtil.stopEventPropagation(event.event);
   }
 
-  onStopEditMode(event: Event, element: LuxFormComponentBase, rowItem: FormGroup) {
+  onStopEditMode(event: Event, element: LuxEditableFormComponent, rowItem: FormGroup) {
     if (this.isEditMode() && !this.checkIfTargetIsInEditRow(element, event)) {
       if (rowItem.valid) {
         // Das Editieren nur beenden, wenn die Zeile valide ist und das Event-Target außerhalb der Zeile liegt
@@ -146,7 +155,7 @@ export class TableEditWithFormExampleComponent {
     return this.dataSource()[rowIndex].valid;
   }
 
-  private checkIfTargetIsInEditRow(element: LuxFormComponentBase<any>, event: Event) {
+  private checkIfTargetIsInEditRow(element: LuxEditableFormComponent, event: Event) {
     return element.formControlWrapperComponentRef()?.nativeElement.contains(event.target);
   }
 

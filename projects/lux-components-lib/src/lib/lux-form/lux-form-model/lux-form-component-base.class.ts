@@ -27,6 +27,7 @@ import { LuxComponentsConfigService } from '../../lux-components-config/lux-comp
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
+import type { LuxFormControlWrapperState } from './lux-form-control-base.class';
 import { LuxFormHintComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-hint.component';
 import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
 
@@ -172,6 +173,15 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
   readonly uid = computed(() => this.luxId() || this.generatedUid);
 
+  // Gemeinsame Schnittstelle mit LuxFormControlBase, damit LuxFormControlWrapperComponent beide
+  // Basisklassen bedienen kann (siehe LuxFormControlWrapperHost).
+  readonly wrapperState = computed<LuxFormControlWrapperState>(() => ({
+    disabled: this.luxDisabled(),
+    readonly: this.luxReadonly(),
+    required: this.luxRequired(),
+    showError: !!this.errorMessage() && this.touched() && !this.luxReadonly()
+  }));
+
   constructor() {
     effect(() => {
       this.luxDisabled();
@@ -280,6 +290,12 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * undefined bedeutet: kein aria-labelledby setzen (die Aria-Direktiven
    * entfernen das Attribut dann), damit ein gesetztes luxAriaLabel greifen kann.
    */
+  /** Blendet die aktuell sichtbare Fehlermeldung aus (Schließen-Button im Wrapper). */
+  dismissError() {
+    this.errorMessage.set(undefined);
+    this.formControl.updateValueAndValidity();
+  }
+
   labelledBy(): string | undefined {
     if (this.luxAriaLabelledby()) {
       return this.luxAriaLabelledby();

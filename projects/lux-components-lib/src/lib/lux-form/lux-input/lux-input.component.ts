@@ -13,7 +13,6 @@ import {
   untracked,
   viewChild
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { TranslocoPipe } from '@jsverse/transloco';
@@ -25,7 +24,8 @@ import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.compo
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxMaxLengthDirective } from '../lux-form-control/lux-form-directives/lux-maxlength/lux-max-length.directive';
 import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
-import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.class';
+import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
 import { LuxInputPrefixComponent } from '../lux-input/lux-input-subcomponents/lux-input-prefix.component';
 import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lux-input-suffix.component';
 
@@ -34,10 +34,9 @@ import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lu
   templateUrl: './lux-input.component.html',
   styleUrls: ['./lux-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxInputComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatPrefix,
     MatInput,
     LuxNameDirective,
@@ -52,7 +51,7 @@ import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lu
     LuxAriaLabelledbyDirective
   ]
 })
-export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
+export class LuxInputComponent<T = string> extends LuxFormLegacyValueBase<T> {
   readonly luxType = input('text');
   readonly luxNumberAlignLeft = input(false);
   readonly luxHideCounterLabel = input(false);
@@ -64,15 +63,36 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
   readonly inputSuffix = contentChild(LuxInputSuffixComponent);
   readonly inputElement = viewChild<ElementRef>('input');
 
-  readonly focused = signal(false);
-
   private readonly symbolRegExp = /[,.]/;
+  private readonly liveAnnouncer = inject(LiveAnnouncer);
+  /**
+   * Der zuletzt getippte Rohtext. Nötig, weil ohne [formControl] der Wert über ein [value]-Binding
+   * ins DOM zurückfliesst: Bei type="number" würde "1." beim Tippen sofort zu "1" zusammenfallen,
+   * weil der geparste Wert 1 ist. Solange der Rohtext denselben Wert ergibt, bleibt er stehen.
+   */
+  private readonly lastRawInput = signal<string | undefined>(undefined);
 
-  private liveAnnouncer = inject(LiveAnnouncer);
+  readonly isNumber = computed(() => this.luxType() === 'number');
+
+  readonly nativeValue = computed(() => {
+    const value = this.value();
+
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    if (this.isNumber()) {
+      const raw = this.lastRawInput();
+      if (raw !== undefined && LuxInputComponent.parseNumber(raw) === (value as unknown)) {
+        return raw;
+      }
+    }
+
+    return String(value);
+  });
 
   /**
-   * Zeichenzähler, der unterhalb des Feldes angezeigt wird. Basiert auf dem luxValue-Model,
-   * das den FormControl-Wert spiegelt.
+   * Zeichenzähler, der unterhalb des Feldes angezeigt wird.
    */
   readonly counterLabel = computed(() => {
     const maxLength = this.luxMaxLength();
@@ -83,15 +103,6 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
 
     const value = this.value();
     return (typeof value === 'string' ? value.length : 0) + '/' + maxLength;
-  });
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
   });
 
   constructor() {
@@ -106,12 +117,22 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
     });
   }
 
+  onInput(event: Event) {
+    const raw = (event.target as HTMLInputElement).value;
+    this.lastRawInput.set(raw);
+    this.value.set((this.isNumber() ? LuxInputComponent.parseNumber(raw) : raw) as T);
+  }
+
   /**
    * Wird bei jedem Tastendruck auf dem Inputfeld aufgerufen.
    * @param keyboardEvent
    */
   onKeyDown(keyboardEvent: KeyboardEvent) {
-    // Soll nur für number-Inputs greifen
+    // Soll nur für number-Inputs greifen.
+    if (!this.isNumber()) {
+      return;
+    }
+
     const inputElement = this.inputElement();
     if (inputElement) {
       const value = inputElement.nativeElement.value;
@@ -120,6 +141,12 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
         keyboardEvent.preventDefault();
       }
     }
+  }
+
+  onNativeBlur(e: FocusEvent) {
+    // Markiert das Control als berührt (touch-Output im Formular, interner Zustand ohne Formular).
+    this.onBlur();
+    this.luxBlur.emit(e);
   }
 
   onFocus(e: FocusEvent) {
@@ -138,7 +165,7 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
   }
 
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled() || this.luxReadonly()) {
+    if (this.isDisabled() || this.isReadonly()) {
       return;
     }
 
@@ -150,7 +177,7 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
   }
 
   showClearButton(): boolean {
-    if (!this.luxClearable() || this.luxReadonly() || this.luxDisabled()) {
+    if (!this.luxClearable() || this.isReadonly() || this.isDisabled()) {
       return false;
     }
 
@@ -169,11 +196,8 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
 
     const inputElement = this.inputElement()?.nativeElement as HTMLInputElement | undefined;
 
-    if (this.inForm) {
-      this.formControl.setValue(null as T);
-    } else {
-      this.setValue(null as T);
-    }
+    this.lastRawInput.set(undefined);
+    this.value.set(null as T);
 
     try {
       inputElement?.focus({ preventScroll: true });
@@ -189,5 +213,10 @@ export class LuxInputComponent<T = string> extends LuxFormInputBaseClass<T> {
     }
 
     return !!target.closest('.lux-input-clear-btn-container, .lux-input-clear-btn');
+  }
+
+  /** Entspricht dem Parse-Verhalten von Angulars NumberValueAccessor. */
+  private static parseNumber(raw: string): number | null {
+    return raw === '' ? null : parseFloat(raw);
   }
 }

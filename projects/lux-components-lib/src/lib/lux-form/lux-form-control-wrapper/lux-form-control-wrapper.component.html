@@ -2,8 +2,8 @@
   class="lux-form-control-wrapper"
   [ngClass]="{
     'lux-form-control-error-authentic': shouldDisplayError(),
-    'lux-form-control-disabled-authentic': luxFormComponent().luxDisabled(),
-    'lux-form-control-readonly-authentic': luxFormComponent().luxReadonly(),
+    'lux-form-control-disabled-authentic': luxFormComponent().wrapperState().disabled,
+    'lux-form-control-readonly-authentic': luxFormComponent().wrapperState().readonly,
     'lux-focused-authentic': focused(),
     'lux-dense-authentic': luxFormComponent().luxDense()
   }"
@@ -31,7 +31,7 @@
               <!-- Nicht in die nächste Zeile verschieben, sonst bricht das Label an dem Leerzeichen um. -->
               <ng-container *ngTemplateOutlet="luxFormComponent().formLabelComponent()?.templateRef() ?? null"></ng-container>
             }
-            @if (luxFormComponent().luxRequired()) {
+            @if (luxFormComponent().wrapperState().required) {
               <span aria-hidden="true">&nbsp;*</span>
             }
           </label>
@@ -78,7 +78,7 @@
             (luxFormComponent().formHintComponent() || luxFormComponent().luxHint()) &&
             (!luxFormComponent().luxHintShowOnlyOnFocus() || (luxFormComponent().luxHintShowOnlyOnFocus() && focused()))
           ) {
-            <mat-hint [id]="luxFormComponent().uid() + '-hint'" [attr.aria-disabled]="luxFormComponent().luxDisabled()">
+            <mat-hint [id]="luxFormComponent().uid() + '-hint'" [attr.aria-disabled]="luxFormComponent().wrapperState().disabled">
               @if (luxFormComponent().luxHint()) {
                 {{ luxFormComponent().luxHint() }}
               } @else {

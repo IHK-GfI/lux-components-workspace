@@ -3,7 +3,6 @@ import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-au
 import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
 import { LuxDatetimepickerComponent } from '../../lux-form/lux-datetimepicker/lux-datetimepicker.component';
-import { LuxFormComponentBase } from '../../lux-form/lux-form-model/lux-form-component-base.class';
 import { LuxFormSelectableBase } from '../../lux-form/lux-form-model/lux-form-selectable-base.class';
 import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
 import { LuxRadioComponent } from '../../lux-form/lux-radio/lux-radio.component';
@@ -14,7 +13,7 @@ import { LuxLookupAutocompleteComponent } from '../../lux-lookup/lux-lookup-auto
 import { LuxLookupComboboxComponent } from '../../lux-lookup/lux-lookup-combobox/lux-lookup-combobox.component';
 import { LuxLookupComponent } from '../../lux-lookup/lux-lookup-model/lux-lookup-component';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
-import { LuxFilterItem } from './lux-filter-item';
+import { LuxFilterableFormComponent, LuxFilterItem } from './lux-filter-item';
 
 export declare type LuxFilterRenderFnType<T = any> = (filter: LuxFilterItem<T>, value: T) => string;
 
@@ -38,7 +37,7 @@ export class LuxFilterItemDirective implements OnInit {
   selectAuthentic = inject(LuxSelectComponent, { optional: true });
   selectLookupAuthentic = inject(LuxLookupComboboxComponent, { optional: true });
   radioAuthentic = inject(LuxRadioComponent, { optional: true });
-  formComponent!: LuxFormComponentBase;
+  formComponent!: LuxFilterableFormComponent;
   filterItem!: LuxFilterItem<any>;
 
   private elRef = inject(ElementRef);

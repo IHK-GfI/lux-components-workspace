@@ -103,6 +103,7 @@ export class ComponentsOverviewNavigationService {
     this.create('error', 'Error-Page'),
     this.create('error', 'HTTP-Error'),
     this.create('filter', 'Filter'),
+    this.create('form', 'Bindungsarten', DemoMarkerType.New),
     this.create('form', 'Autocomplete'),
     this.create('form', 'Checkbox'),
     this.create('form', 'Chips'),

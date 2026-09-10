@@ -1,12 +1,34 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, computed, input, signal } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
-import { LuxFormComponentBase } from '../lux-form-model/lux-form-component-base.class';
+import { LuxFormHintComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-hint.component';
+import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
+import type { LuxFormControlWrapperState } from '../lux-form-model/lux-form-control-base.class';
 
 export const luxFormControlSelektor = 'lux-form-control-wrapper';
+
+/**
+ * Die Schnittstelle, die eine FormComponent dem Wrapper bieten muss.
+ *
+ * Bewusst ein Interface statt einer konkreten Basisklasse: Der Wrapper bedient sowohl die neuen
+ * Signal-Forms-Komponenten (LuxFormControlBase) als auch die noch nicht migrierten
+ * (LuxFormComponentBase). Beide erfüllen diesen Vertrag.
+ */
+export interface LuxFormControlWrapperHost {
+  readonly uid: Signal<string>;
+  readonly luxLabel: Signal<string>;
+  readonly luxHint: Signal<string>;
+  readonly luxHintShowOnlyOnFocus: Signal<boolean>;
+  readonly luxDense: Signal<boolean>;
+  readonly errorMessage: Signal<string | undefined>;
+  readonly formLabelComponent: Signal<LuxFormLabelComponent | undefined>;
+  readonly formHintComponent: Signal<LuxFormHintComponent | undefined>;
+  readonly wrapperState: Signal<LuxFormControlWrapperState>;
+  dismissError(): void;
+}
 
 @Component({
   selector: 'lux-form-control-wrapper',
@@ -23,7 +45,7 @@ export class LuxFormControlWrapperComponent {
   /**
    * Die zugrunde liegende FormComponent
    */
-  readonly luxFormComponent = input.required<LuxFormComponentBase>();
+  readonly luxFormComponent = input.required<LuxFormControlWrapperHost>();
   readonly luxIgnoreDefaultLabel = input(false);
   readonly luxCounterLabel = input('');
   readonly luxHideCounterLabel = input(false);
@@ -51,9 +73,7 @@ export class LuxFormControlWrapperComponent {
   /**
    * Gibt wieder, ob der Fehler für diese FormComponent dargestellt werden soll.
    */
-  readonly shouldDisplayError = computed(
-    () => !!this.luxFormComponent().errorMessage() && this.luxFormComponent().touched() && !this.luxFormComponent().luxReadonly()
-  );
+  readonly shouldDisplayError = computed(() => this.luxFormComponent().wrapperState().showError);
 
   readonly shouldDisplayMisc = computed(() => !this.luxNoBottomLabel() && !this.luxNoLabels());
 
@@ -80,7 +100,6 @@ export class LuxFormControlWrapperComponent {
   }
 
   onCloseErrorMessage() {
-    this.luxFormComponent().errorMessage.set(undefined);
-    this.luxFormComponent().formControl.updateValueAndValidity();
+    this.luxFormComponent().dismissError();
   }
 }

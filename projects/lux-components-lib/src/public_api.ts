@@ -117,7 +117,14 @@ export * from './lib/lux-form/lux-form-control/lux-form-control-subcomponents/lu
 export * from './lib/lux-form/lux-form-control/lux-form-directives/lux-maxlength/lux-max-length.directive';
 export * from './lib/lux-form/lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
 export * from './lib/lux-form/lux-form-model/lux-form-checkable-base.class';
+export * from './lib/lux-form/lux-form-model/lux-form-checkbox-control-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-component-base.class';
+export * from './lib/lux-form/lux-form-model/lux-form-control-base.class';
+export * from './lib/lux-form/lux-form-model/lux-form-value-control-base.class';
+export * from './lib/lux-form/lux-form-model/lux-form-legacy/lux-control-value-accessor.directive';
+export * from './lib/lux-form/lux-form-model/lux-form-legacy/lux-form-legacy-checkable-base.class';
+export * from './lib/lux-form/lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
+export * from './lib/lux-form/lux-form-model/lux-form-legacy/lux-legacy-form-bridge';
 export * from './lib/lux-form/lux-form-model/lux-form-file-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-input-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-selectable-base.class';
