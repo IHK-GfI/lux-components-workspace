@@ -3,14 +3,14 @@ import {
   afterRenderEffect,
   ChangeDetectionStrategy,
   Component,
-  computed,
+  DestroyRef,
   effect,
+  inject,
   input,
   output,
   untracked,
   viewChild
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
@@ -19,7 +19,8 @@ import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-ar
 import { LuxTabIndexDirective } from '../../lux-directives/lux-tabindex/lux-tab-index.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
-import { LuxFormComponentBase } from '../lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 
 export declare type LuxDisplayWithFnType = (value: number) => string;
 export declare type LuxSliderTickInterval = 'auto' | number;
@@ -32,10 +33,9 @@ const defaultDisplayWithFn: LuxDisplayWithFnType = (value: number) => (value ? '
   templateUrl: './lux-slider.component.html',
   styleUrls: ['./lux-slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxSliderComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatSlider,
     MatSliderThumb,
     NgClass,
@@ -47,10 +47,9 @@ const defaultDisplayWithFn: LuxDisplayWithFnType = (value: number) => (value ? '
     LuxTabIndexDirective
   ]
 })
-export class LuxSliderComponent extends LuxFormComponentBase<number> {
+export class LuxSliderComponent extends LuxFormLegacyValueBase<number> {
   readonly luxColor = input<LuxSliderColor>('primary');
   readonly luxShowThumbLabel = input(true);
-  readonly luxTagId = input<string | undefined>(undefined);
   readonly luxMax = input(100);
   readonly luxMin = input(0);
   readonly luxStep = input(1);
@@ -59,46 +58,30 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
     transform: (displayFn) => displayFn ?? defaultDisplayWithFn
   });
 
-  /**
-   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
-   * Wert liefern das Signal value() bzw. getValue().
-   */
-  readonly luxValue = input(0);
-
   readonly luxChange = output<number>();
   readonly luxInput = output<number>();
   readonly luxValuePercent = output<number>();
-  readonly luxValueChange = output<number>();
 
   readonly matSlider = viewChild(MatSlider);
 
+  private readonly destroyRef = inject(DestroyRef);
   private isDestroyed = false;
   private initialRedrawDone = false;
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    return this.formHintComponent() || this.luxHint() ? this.uid() + '-hint' : undefined;
-  });
 
   constructor() {
     super();
 
-    this.syncValueInputToFormControl(this.luxValue);
-
     this.destroyRef.onDestroy(() => (this.isDestroyed = true));
 
     effect(() => {
-      if (this.luxRequired()) {
+      if (this.isRequired()) {
         untracked(() => this.logger.error('The LuxSlider cannot be marked as required.'));
       }
     });
 
     afterRenderEffect({
       mixedReadWrite: () => {
-        this.luxDisabled();
+        this.isDisabled();
         untracked(() => {
           // Beim ersten Render darf der Workaround nicht laufen (Verhalten des früheren
           // Constructor-Effects, der die viewChild-Referenz zu dem Zeitpunkt noch nicht kannte).
@@ -114,20 +97,13 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
     });
   }
 
-  override ngOnInit() {
-    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
-    // löst der Initialwert - wie bisher - noch kein luxValueChange aus.
-    this._initialValue = this.luxValue();
-
-    super.ngOnInit();
-  }
-
   /**
    * Wird beim Ändern des Slider-Wertes aufgerufen.
    * @param value
    */
   onChange(value: number) {
-    this.setValue(value);
+    this.markAsDirty();
+    this.value.set(value);
     this.luxChange.emit(value);
   }
 
@@ -136,39 +112,38 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
    * @param value
    */
   onInput(value: number) {
-    this.setValue(value);
+    this.markAsDirty();
+    this.value.set(value);
     this.luxInput.emit(value);
-    if (!this.formControl.touched) {
-      this.formControl.markAsTouched();
+    if (!this.isTouched()) {
+      this.markAsTouched();
     }
   }
 
-  override notifyFormValueChanged(formValue: any) {
+  override emitValueChange(value: number) {
     const min = this.luxMin();
     const max = this.luxMax();
-    const value = (formValue ?? 0) as number;
+    const numericValue = (value ?? 0) as number;
 
-    if (value < min) {
+    if (numericValue < min) {
       this.clampValue(min);
-    } else if (value > max) {
+    } else if (numericValue > max) {
       this.clampValue(max);
     } else {
-      this.luxValueChange.emit(value);
-      this.luxValuePercent.emit(((value - min) * 100) / (max - min));
-    }
-  }
-
-  protected override applyValueInput(value: number) {
-    // Im Readonly-/Disabled-Zustand darf ein von außen gesetzter Wert nicht übernommen werden.
-    if (!this.luxReadonly() && !this.luxDisabled()) {
-      super.applyValueInput(value);
+      super.emitValueChange(numericValue);
+      this.luxValuePercent.emit(((numericValue - min) * 100) / (max - min));
     }
   }
 
   /**
    * Korrigiert einen Wert außerhalb von [luxMin, luxMax] verzögert, damit nicht in den gerade
-   * laufenden valueChanges-Zyklus zurückgeschrieben wird. Nach dem Destroy darf nicht mehr in
-   * das (ggf. weiterlebende) FormControl der Parent-FormGroup geschrieben werden.
+   * laufenden Änderungszyklus zurückgeschrieben wird. Nach dem Destroy darf nicht mehr in das
+   * (ggf. weiterlebende) FormControl der Parent-FormGroup geschrieben werden.
+   *
+   * Bewusst this.setValue() (schreibt synchron über die Brücke in das FormControl) statt
+   * this.value.set(): Letzteres bräuchte den asynchronen modelValue-Effect der Brücke, um den
+   * korrigierten Wert überhaupt in das FormControl zurückzuspiegeln - ein zusätzlicher, in Tests
+   * nicht zuverlässig abwartbarer Umweg.
    * @param value
    */
   private clampValue(value: number) {
