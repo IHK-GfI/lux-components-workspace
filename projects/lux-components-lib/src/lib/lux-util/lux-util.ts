@@ -112,7 +112,14 @@ export class LuxUtil {
 
     if (errors['pattern']) {
       const pattern = errors['pattern'].requiredPattern;
-      return tService.translate('luxc.util.error_message.pattern', { pattern: pattern.substring(1, pattern.length - 1) });
+      // requiredPattern ist entweder "^...$" (Validators.pattern(string)) oder der String eines
+      // RegExp-Literals inkl. Slashes und optionalen Flags (Validators.pattern(RegExp) bzw. der
+      // pattern()-Validator aus Signal Forms). Im zweiten Fall müssen Slashes UND Flags entfernt
+      // werden, sonst bleiben sie in der angezeigten Fehlermeldung sichtbar.
+      const regexLiteral = /^\/(.*)\/[a-z]*$/.exec(pattern);
+      return tService.translate('luxc.util.error_message.pattern', {
+        pattern: regexLiteral ? regexLiteral[1] : pattern.substring(1, pattern.length - 1)
+      });
     }
 
     return '';

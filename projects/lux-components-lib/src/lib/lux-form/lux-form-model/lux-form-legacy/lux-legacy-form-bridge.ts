@@ -226,6 +226,26 @@ export class LuxLegacyFormBridge<T> {
     return Array.isArray(validators) ? validators.length > 0 : !!validators;
   }
 
+  /**
+   * Meldet eine Nutzer-Interaktion an das gebundene AbstractControl weiter.
+   *
+   * Vor der Signal-Forms-Umstellung erledigte das Angulars Value-Accessor-Maschinerie, die über
+   * [formControl] am nativen Eingabeelement hing (markAsTouched beim Blur, markAsDirty bei jeder
+   * Eingabe). Diese Bindung gibt es nicht mehr, also muss die Brücke es selbst tun - sonst blieben
+   * formGroup.touched und formGroup.dirty dauerhaft false.
+   */
+  markAsTouched() {
+    if (this.engaged && this.formControl && !this.formControl.touched) {
+      this.formControl.markAsTouched();
+    }
+  }
+
+  markAsDirty() {
+    if (this.engaged && this.formControl && !this.formControl.dirty) {
+      this.formControl.markAsDirty();
+    }
+  }
+
   getValue(): T {
     return this.formControl ? this.formControl.value : (this.initialValue as T);
   }
@@ -315,6 +335,7 @@ export class LuxLegacyFormBridge<T> {
       disabled: this.formControl.disabled,
       required: hasRequiredValidator(this.formControl),
       touched: this.formControl.touched,
+      dirty: this.formControl.dirty,
       invalid: this.formControl.invalid,
       legacyErrors: this.formControl.errors
     };
@@ -324,6 +345,7 @@ export class LuxLegacyFormBridge<T> {
       current.disabled === next.disabled &&
       current.required === next.required &&
       current.touched === next.touched &&
+      current.dirty === next.dirty &&
       current.invalid === next.invalid &&
       current.legacyErrors === next.legacyErrors
     ) {
@@ -412,7 +434,7 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
  * eingeschleusten Angular-RequiredValidator erkennen, dessen Zustand selbst wieder von luxRequired
  * abhängt (Zirkelbezug, siehe Issue #240).
  */
-function hasRequiredValidator(control: AbstractControl | undefined): boolean {
+export function hasRequiredValidator(control: AbstractControl | undefined): boolean {
   if (!control) {
     return false;
   }

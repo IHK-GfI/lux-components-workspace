@@ -30,6 +30,7 @@ import { LuxFormLegacyCheckableBase } from '../lux-form-model/lux-form-legacy/lu
 })
 export class LuxCheckboxComponent<T = boolean> extends LuxFormLegacyCheckableBase<T> {
   onCheckboxChange(event: MatCheckboxChange) {
+    this.markAsDirty();
     this.checked.set(event.checked);
   }
 

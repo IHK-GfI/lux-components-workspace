@@ -56,6 +56,21 @@ class ReactiveFormHostComponent {
   });
 }
 
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input luxLabel="Name" luxControlBinding="name" />
+    </form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxInputComponent, ReactiveFormsModule]
+})
+class LuxControlBindingHostComponent {
+  readonly formGroup = new FormGroup({
+    name: new FormControl('Anna', Validators.required)
+  });
+}
+
 describe('LuxInputComponent - Bindungsarten', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -223,6 +238,71 @@ describe('LuxInputComponent - Bindungsarten', () => {
 
       expect(inputOf(fixture).isDisabled()).toBe(true);
       expect(nativeOf(fixture).disabled).toBe(true);
+    });
+  });
+  /**
+   * dirty und touched des gebundenen AbstractControls.
+   *
+   * Vor der Signal-Forms-Umstellung erledigte das Angulars Value-Accessor-Maschinerie, die am
+   * nativen Input über [formControl] hing. Ohne diese Bindung müssen die Brücken die beiden
+   * Zustände selbst zurückspiegeln.
+   */
+  describe('dirty/touched des Formulars', () => {
+    it('sollte im luxControlBinding-Modus touched setzen', () => {
+      const fixture = TestBed.createComponent(LuxControlBindingHostComponent);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.formGroup.touched).toBe(false);
+
+      nativeOf(fixture).dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.formGroup.controls.name.touched).toBe(true);
+      expect(fixture.componentInstance.formGroup.touched).toBe(true);
+    });
+
+    it('sollte im luxControlBinding-Modus dirty setzen', () => {
+      const fixture = TestBed.createComponent(LuxControlBindingHostComponent);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.formGroup.dirty).toBe(false);
+
+      type(fixture, 'Berta');
+
+      expect(fixture.componentInstance.formGroup.controls.name.dirty).toBe(true);
+      expect(fixture.componentInstance.formGroup.dirty).toBe(true);
+    });
+
+    it('sollte im luxControlBinding-Modus ohne Zutun des Nutzers nicht dirty werden', () => {
+      const fixture = TestBed.createComponent(LuxControlBindingHostComponent);
+      fixture.detectChanges();
+
+      fixture.componentInstance.formGroup.controls.name.setValue('Programmatisch');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.formGroup.dirty).toBe(false);
+    });
+
+    it('sollte im formControlName-Modus dirty und touched setzen', () => {
+      const fixture = TestBed.createComponent(ReactiveFormHostComponent);
+      fixture.detectChanges();
+
+      type(fixture, 'Berta');
+      nativeOf(fixture).dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.formGroup.dirty).toBe(true);
+      expect(fixture.componentInstance.formGroup.touched).toBe(true);
+    });
+
+    it('sollte im Signal Form dirty und touched setzen', () => {
+      const fixture = TestBed.createComponent(SignalFormHostComponent);
+      fixture.detectChanges();
+
+      type(fixture, 'Berta');
+      nativeOf(fixture).dispatchEvent(new Event('blur'));
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.testForm.name().dirty()).toBe(true);
+      expect(fixture.componentInstance.testForm.name().touched()).toBe(true);
     });
   });
 });

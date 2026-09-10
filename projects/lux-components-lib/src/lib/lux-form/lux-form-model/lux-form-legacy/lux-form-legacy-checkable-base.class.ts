@@ -75,6 +75,17 @@ export abstract class LuxFormLegacyCheckableBase<T = boolean>
     this.bridge.check();
   }
 
+  // Siehe LuxFormLegacyValueBase: synchrone Weitergabe der Nutzer-Interaktion an das FormControl.
+  override markAsTouched() {
+    super.markAsTouched();
+    this.bridge.markAsTouched();
+  }
+
+  override markAsDirty() {
+    super.markAsDirty();
+    this.bridge.markAsDirty();
+  }
+
   getValue(): boolean {
     return this.bridge.getValue();
   }

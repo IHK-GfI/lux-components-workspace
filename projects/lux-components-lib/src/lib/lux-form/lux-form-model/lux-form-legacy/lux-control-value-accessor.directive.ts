@@ -1,7 +1,8 @@
 import { DestroyRef, Directive, OnInit, effect, inject, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, ControlValueAccessor, NgControl, Validators } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { LUX_FORM_CONTROL } from '../lux-form-control-base.class';
+import { hasRequiredValidator } from './lux-legacy-form-bridge';
 
 /**
  * Die Element-Selektoren, an denen die ControlValueAccessor-Brücke greift.
@@ -50,8 +51,16 @@ export class LuxControlValueAccessorDirective implements ControlValueAccessor, O
 
   private onChange: (value: unknown) => void = () => undefined;
   private onTouched: () => void = () => undefined;
-  /** Verhindert, dass ein writeValue() sofort wieder als Nutzeränderung zurückgemeldet wird. */
-  private writingFromForm = false;
+  /**
+   * Verhindert, dass ein writeValue() sofort wieder als Nutzeränderung zurückgemeldet wird.
+   *
+   * Ein reiner Boolean-Flag funktioniert hier nicht: effect() läuft immer verzögert nach dem
+   * aktuellen Change-Detection-Durchlauf, also ist ein synchron in writeValue() gesetztes und
+   * wieder zurückgesetztes Flag beim tatsächlichen Lauf des Effects längst wieder false. Stattdessen
+   * wird der zuletzt per writeValue() geschriebene Wert gemerkt und mit dem Wert verglichen, den der
+   * Effect sieht.
+   */
+  private pendingFormValue: { value: unknown } | undefined;
   private disabledFromForm = false;
 
   constructor() {
@@ -71,7 +80,10 @@ export class LuxControlValueAccessorDirective implements ControlValueAccessor, O
       const value = this.formControlComponent.controlValue();
 
       untracked(() => {
-        if (!this.writingFromForm) {
+        const pending = this.pendingFormValue;
+        this.pendingFormValue = undefined;
+
+        if (!pending || !Object.is(pending.value, value)) {
           this.onChange(value);
         }
       });
@@ -91,12 +103,8 @@ export class LuxControlValueAccessorDirective implements ControlValueAccessor, O
   }
 
   writeValue(value: unknown) {
-    this.writingFromForm = true;
-    try {
-      this.formControlComponent.writeControlValue(value);
-    } finally {
-      this.writingFromForm = false;
-    }
+    this.pendingFormValue = { value };
+    this.formControlComponent.writeControlValue(value);
   }
 
   registerOnChange(fn: (value: unknown) => void) {
@@ -119,6 +127,7 @@ export class LuxControlValueAccessorDirective implements ControlValueAccessor, O
       disabled: control.disabled || this.disabledFromForm,
       required: hasRequiredValidator(control),
       touched: control.touched,
+      dirty: control.dirty,
       invalid: control.invalid,
       legacyErrors: control.errors
     });
@@ -132,9 +141,3 @@ export class LuxControlValueAccessorDirective implements ControlValueAccessor, O
  * @example imports: [LuxInputComponent, ReactiveFormsModule, ...LUX_FORMS_COMPAT]
  */
 export const LUX_FORMS_COMPAT = [LuxControlValueAccessorDirective] as const;
-
-function hasRequiredValidator(control: AbstractControl): boolean {
-  // Wie in LuxLegacyFormBridge: gezielt auf die Validator-Referenzen prüfen statt den komponierten
-  // Validator auszuführen (Issue #240).
-  return control.hasValidator(Validators.required) || control.hasValidator(Validators.requiredTrue);
-}

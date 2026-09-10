@@ -1,12 +1,8 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormField, email, form, maxLength, minLength, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
-  LuxButtonComponent,
-  LuxCardActionsComponent,
-  LuxCardComponent,
-  LuxCardContentComponent,
-  LuxDatepickerComponent,
   LuxFormHintComponent,
   LuxIconComponent,
   LuxInputComponent,
@@ -31,6 +27,7 @@ import {
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface InputDummyForm {
@@ -45,30 +42,40 @@ interface InputDummyForm {
   imports: [
     LuxIconComponent,
     LuxLinkPlainComponent,
-    LuxButtonComponent,
-    LuxCardActionsComponent,
-    LuxCardContentComponent,
-    LuxCardComponent,
     LuxToggleComponent,
     LuxSelectComponent,
     LuxInputSuffixComponent,
     LuxInputPrefixComponent,
     LuxInputComponent,
     LuxFormHintComponent,
-    LuxDatepickerComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     LuxAutofocusDirective,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    FormField
   ]
 })
 export class InputAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal({ inputValue: '' });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.inputValue, { message: 'Bitte einen Wert eingeben', when: () => this.required() });
+    minLength(path.inputValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 3 : undefined));
+    maxLength(path.inputValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 10 : undefined));
+    email(path.inputValue, { when: () => this.controlValidators().includes(this.validatorOptions[2].value) });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal('');
+  readonly plainDisabled = signal(false);
+
   readonly showSuffix = signal(false);
   readonly showPrefix = signal(false);
   readonly useErrorMessage = signal(true);
@@ -109,16 +116,12 @@ export class InputAuthenticExampleComponent {
   readonly denseFormat = signal(false);
   readonly clearable = signal(false);
   readonly extraValidators = signal(false);
-  exampleCompany = '';
-  exampleDate = '';
-  exampleStreet = '';
-  exampleNumber = '';
   minLengthValidator = Validators.minLength(3);
   maxLengthValidator = Validators.maxLength(10);
 
   constructor() {
     this.form = new FormGroup<InputDummyForm>({
-      inputExample: new FormControl<string | null>(null)
+      inputExample: new FormControl<string | null>('')
     });
   }
 

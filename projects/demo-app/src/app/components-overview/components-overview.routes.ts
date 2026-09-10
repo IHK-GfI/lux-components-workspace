@@ -64,7 +64,6 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
       { path: 'tile', loadComponent: () => import('./tile-example/tile-example.component').then(m => m.TileExampleComponent) },
       { path: 'tile-ac', loadComponent: () => import('./tile-authentic-example/tile-authentic-example.component').then(m => m.TileAuthenticExampleComponent) },
       { path: 'input', loadComponent: () => import('./input-authentic-example/input-authentic-example.component').then(m => m.InputAuthenticExampleComponent) },
-      { path: 'bindungsarten', loadComponent: () => import('./binding-modes-example/binding-modes-example.component').then(m => m.BindingModesExampleComponent) },
       { path: 'checkbox', loadComponent: () => import('./checkbox-authentic-example/checkbox-authentic-example.component').then(m => m.CheckboxAuthenticExampleComponent) },
       { path: 'tile-overview', loadComponent: () => import('./tile-authentic-example/overview-example/overview-example.component').then(m => m.OverviewExampleComponent) },
       { path: 'checkbox-container', loadComponent: () => import('./checkbox-container-example/checkbox-container-example.component').then(m => m.CheckboxContainerExampleComponent) },

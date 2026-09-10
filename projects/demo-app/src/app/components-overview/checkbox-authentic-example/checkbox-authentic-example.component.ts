@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -17,6 +18,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 import { emptyErrorCallback, exampleErrorCallback } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface CheckboxDummyForm {
@@ -47,12 +49,22 @@ interface CheckboxAgbDummyForm {
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    FormField
   ]
 })
 export class CheckboxAuthenticExampleComponent {
+  readonly signalModel = signal({ checkboxValue: false });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.checkboxValue, { when: () => this.required() });
+  });
+
+  readonly plainChecked = signal(false);
+  readonly plainDisabled = signal(false);
+
   readonly useErrorMessage = signal(true);
   readonly form = new FormGroup<CheckboxDummyForm>({
     checkboxExample: new FormControl<boolean | null>(null)

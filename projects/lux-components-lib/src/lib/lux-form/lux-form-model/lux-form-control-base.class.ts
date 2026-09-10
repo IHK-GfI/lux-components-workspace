@@ -43,6 +43,7 @@ export interface LuxControlStateOverride {
   readonly?: boolean;
   required?: boolean;
   touched?: boolean;
+  dirty?: boolean;
   invalid?: boolean;
   /**
    * Die Fehler des gebundenen AbstractControls, bewusst in der klassischen ValidationErrors-Form.
@@ -201,8 +202,9 @@ export abstract class LuxFormControlBase<T = unknown> {
   protected readonly logger = inject(LuxConsoleService);
   protected readonly tService = inject(TranslocoService);
 
-  /** Blur-getriebener Touched-Zustand für den Betrieb ohne Formular. */
+  /** Blur- bzw. eingabegetriebener Zustand für den Betrieb ohne Formular. */
   private readonly touchedInternal = signal(false);
+  private readonly dirtyInternal = signal(false);
   private readonly generatedUid = 'lux-form-control-' + uuidv4();
   private a11yNameChecked = false;
 
@@ -215,6 +217,7 @@ export abstract class LuxFormControlBase<T = unknown> {
   readonly isRequired = computed(() => this.stateOverride()?.required ?? (this.required() || this.luxRequired()));
   readonly isInvalid = computed(() => this.stateOverride()?.invalid ?? this.invalid());
   readonly isTouched = computed(() => this.stateOverride()?.touched ?? (this.touched() || this.touchedInternal()));
+  readonly isDirty = computed(() => this.stateOverride()?.dirty ?? (this.dirty() || this.dirtyInternal()));
 
   /**
    * Die Fehler aus Signal Forms. Im Legacy-Betrieb leer - dort ist legacyErrors() die Quelle,
@@ -359,6 +362,7 @@ export abstract class LuxFormControlBase<T = unknown> {
   /** Teil des FormUiControl-Vertrags: Zurücksetzen des reinen UI-Zustands. */
   reset() {
     this.touchedInternal.set(false);
+    this.dirtyInternal.set(false);
     this.errorDismissed.set(false);
   }
 
@@ -374,6 +378,18 @@ export abstract class LuxFormControlBase<T = unknown> {
   markAsTouched() {
     this.touchedInternal.set(true);
     this.touch.emit();
+  }
+
+  /**
+   * Markiert das Control als vom Nutzer verändert. Von den Komponenten aus ihren
+   * Eingabe-Handlern aufzurufen - NICHT beim programmatischen Setzen eines Werts.
+   *
+   * Im Signal Form leitet Angular dirty selbst aus der Wertänderung ab; der Aufruf ist dort
+   * folgenlos. Im Formular-Betrieb spiegeln die Legacy-Brücken ihn in das AbstractControl
+   * zurück - das erledigte früher Angulars Value-Accessor am nativen Input.
+   */
+  markAsDirty() {
+    this.dirtyInternal.set(true);
   }
 
   /** Von den Templates an das native Eingabeelement zu binden. */

@@ -120,6 +120,7 @@ export class LuxInputComponent<T = string> extends LuxFormLegacyValueBase<T> {
   onInput(event: Event) {
     const raw = (event.target as HTMLInputElement).value;
     this.lastRawInput.set(raw);
+    this.markAsDirty();
     this.value.set((this.isNumber() ? LuxInputComponent.parseNumber(raw) : raw) as T);
   }
 
@@ -197,6 +198,7 @@ export class LuxInputComponent<T = string> extends LuxFormLegacyValueBase<T> {
     const inputElement = this.inputElement()?.nativeElement as HTMLInputElement | undefined;
 
     this.lastRawInput.set(undefined);
+    this.markAsDirty();
     this.value.set(null as T);
 
     try {

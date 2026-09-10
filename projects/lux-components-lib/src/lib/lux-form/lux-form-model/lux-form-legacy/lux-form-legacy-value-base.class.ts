@@ -70,6 +70,18 @@ export abstract class LuxFormLegacyValueBase<T> extends LuxFormValueControlBase<
     this.bridge.check();
   }
 
+  // Bewusst synchrone Weitergabe statt eines effect()s: Der Zustand des gebundenen FormControls
+  // soll unmittelbar mit der Interaktion stimmen, nicht erst im nächsten Change-Detection-Lauf.
+  override markAsTouched() {
+    super.markAsTouched();
+    this.bridge.markAsTouched();
+  }
+
+  override markAsDirty() {
+    super.markAsDirty();
+    this.bridge.markAsDirty();
+  }
+
   getValue(): T {
     return this.bridge.getValue();
   }
