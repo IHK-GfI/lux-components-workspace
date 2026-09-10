@@ -1,8 +1,9 @@
-﻿import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../testing/transloco-test.provider';
 import { LuxConsentService } from '../lux-consent/lux-consent.service';
 import { LuxTourHintRef } from './lux-tour-hint-model/lux-tour-hint-ref.class';

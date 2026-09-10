@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { StepperSelectionEvent } from '@angular/cdk/stepper';

@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LuxBreadcrumbComponent } from './lux-breadcrumb.component';

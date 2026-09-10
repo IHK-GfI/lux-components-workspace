@@ -1,3 +1,4 @@
+import { describe, it, beforeAll, beforeEach, afterEach, expect, vi } from 'vitest';
 import { Directionality } from '@angular/cdk/bidi';
 import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import { JsonPipe } from '@angular/common';

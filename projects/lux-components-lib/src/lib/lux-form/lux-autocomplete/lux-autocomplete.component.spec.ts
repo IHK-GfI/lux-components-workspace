@@ -1,3 +1,4 @@
+import { describe, it, beforeAll, beforeEach, afterEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';

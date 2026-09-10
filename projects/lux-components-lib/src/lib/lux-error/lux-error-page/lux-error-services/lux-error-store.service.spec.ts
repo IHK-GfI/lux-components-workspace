@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 // noinspection DuplicatedCode
 
 import { ChangeDetectionStrategy, Component, inject as inject_1 } from '@angular/core';

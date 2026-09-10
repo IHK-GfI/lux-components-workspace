@@ -5,7 +5,7 @@ import { Platform } from '@angular/cdk/platform';
 import { PortalModule } from '@angular/cdk/portal';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
-import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../src/testing/transloco-test.provider';
 import { LUX_FILE_PREVIEW_DATA } from './lux-file-preview-config';
 

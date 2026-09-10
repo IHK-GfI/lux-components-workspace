@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';

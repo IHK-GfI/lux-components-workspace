@@ -1,5 +1,15 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, output, untracked, viewChild } from '@angular/core';
+import {
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  input,
+  output,
+  untracked,
+  viewChild
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
@@ -82,9 +92,11 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
       }
     });
 
-    effect(() => {
-      this.luxDisabled();
-      untracked(() => this.redrawSliderWorkaround());
+    afterRenderEffect({
+      mixedReadWrite: () => {
+        this.luxDisabled();
+        untracked(() => this.redrawSliderWorkaround());
+      }
     });
   }
 
@@ -129,9 +141,9 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
     const value = (formValue ?? 0) as number;
 
     if (value < min) {
-      this.notifyFormValueChangedTimeout = setTimeout(() => this.setValue(min));
+      Promise.resolve().then(() => this.setValue(min));
     } else if (value > max) {
-      this.notifyFormValueChangedTimeout = setTimeout(() => this.setValue(max));
+      Promise.resolve().then(() => this.setValue(max));
     } else {
       this.luxValueChange.emit(value);
       this.luxValuePercent.emit(((value - min) * 100) / (max - min));
@@ -154,12 +166,7 @@ export class LuxSliderComponent extends LuxFormComponentBase<number> {
 
     if (matSlider) {
       matSlider.step = this.luxStep() - 1;
-      setTimeout(() => {
-        const slider = this.matSlider();
-        if (slider) {
-          slider.step = this.luxStep();
-        }
-      });
+      matSlider.step = this.luxStep();
     }
   }
 }
