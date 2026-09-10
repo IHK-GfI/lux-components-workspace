@@ -1,8 +1,7 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, TemplateRef, computed, contentChild, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatRadioButton, MatRadioChange, MatRadioGroup } from '@angular/material/radio';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -12,7 +11,8 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
-import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacySelectableBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-selectable-base.class';
 
 @Component({
   selector: 'lux-radio, lux-radio-ac',
@@ -22,10 +22,9 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     class: 'lux-pb-3'
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxRadioComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatRadioGroup,
     NgClass,
     MatRadioButton,
@@ -39,7 +38,7 @@ import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-bas
     LuxRenderPropertyPipe
   ]
 })
-export class LuxRadioComponent<O = any, V = any> extends LuxFormSelectableBase<O, V> {
+export class LuxRadioComponent<O = any, V = any> extends LuxFormLegacySelectableBase<O, V> {
   readonly luxGroupName = input('');
   readonly luxOrientationVertical = input(true);
 
@@ -47,20 +46,10 @@ export class LuxRadioComponent<O = any, V = any> extends LuxFormSelectableBase<O
   readonly tempRef = contentChild(TemplateRef);
 
   readonly forceVertical = signal(false);
-  readonly focused = signal(false);
 
   private mediaObserver = inject(LuxMediaQueryObserverService);
 
   readonly isVertical = computed(() => this.luxOrientationVertical() || this.forceVertical());
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
 
   constructor() {
     super();
@@ -73,6 +62,11 @@ export class LuxRadioComponent<O = any, V = any> extends LuxFormSelectableBase<O
     this.forceVertical.set(this.mediaObserver.isXS());
   }
 
+  onChange(event: MatRadioChange) {
+    this.markAsDirty();
+    this.value.set(event.value);
+  }
+
   onFocusIn(e: FocusEvent) {
     this.focused.set(true);
     this.luxFocusIn.emit(e);
@@ -81,9 +75,10 @@ export class LuxRadioComponent<O = any, V = any> extends LuxFormSelectableBase<O
   onFocusOut(e: FocusEvent) {
     this.focused.set(false);
     this.luxFocusOut.emit(e);
+    this.onBlur();
   }
 
-  isDisabled(option: any): boolean {
+  isOptionDisabled(option: any): boolean {
     return option ? Object.hasOwn(option, 'disabled') && option.disabled === true : false;
   }
 }
