@@ -57,6 +57,8 @@ export class LuxLegacyFormBridge<T> {
   private initialized = false;
   /** Verhindert die Rückkopplung modelValue -> FormControl -> modelValue. */
   private applyingFromFormControl = false;
+  /** Markiert einen Schreibzugriff der Brücke selbst, siehe registerOnChange-Callback in init(). */
+  private applyingToFormControl = false;
   /** Wird true, sobald der Alt-Input luxValue/luxChecked jemals einen echten Wert geliefert hat. */
   private legacyValueSeen = false;
 
@@ -145,8 +147,24 @@ export class LuxLegacyFormBridge<T> {
   init() {
     this.initFormControl();
 
-    this.formControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: T) => {
+    // Synchronisiert die Anzeige auch bei einem direkten setValue() auf das AbstractControl mit
+    // { emitEvent: false } (z.B. um eine Two-Way-Binding-Loop zu brechen): Anders als valueChanges
+    // feuert dieser Callback unabhängig von emitEvent - exakt der Mechanismus, über den früher der
+    // ControlValueAccessor (writeValue) die Anzeige synchron hielt.
+    //
+    // Ein Aufruf, der nicht von der Brücke selbst kommt (applyingToFormControl), bedeutet: Jemand
+    // bedient das AbstractControl direkt an der Brücke vorbei - z.B. ein reales luxFormControl/
+    // luxFormGroup oder ein manuelles setValue() in einem Test. Das zählt wie ein echter
+    // luxValue/luxChecked-Wert als Alt-API-Nutzung, sonst bliebe die Brücke "nicht zuständig"
+    // (engaged === false) und der Wert würde nie im Vertrags-Model ankommen.
+    this.formControl.registerOnChange((value: T) => {
+      if (!this.applyingToFormControl) {
+        this.legacyValueSeen = true;
+      }
       this.publishValue(value);
+    });
+
+    this.formControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: T) => {
       this.host.emitValueChange(value);
     });
 
@@ -262,7 +280,12 @@ export class LuxLegacyFormBridge<T> {
       return;
     }
 
-    this.formControl.setValue(value);
+    this.applyingToFormControl = true;
+    try {
+      this.formControl.setValue(value);
+    } finally {
+      this.applyingToFormControl = false;
+    }
   }
 
   /** Den (noch nicht initialisierten) Startwert setzen, ohne ein Change-Event auszulösen. */

@@ -1,7 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaInvalidDirective } from '../../lux-directives/lux-aria/lux-aria-invalid.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -9,17 +8,17 @@ import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-ar
 import { LuxAriaRequiredDirective } from '../../lux-directives/lux-aria/lux-aria-required.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
-import { LuxFormCheckableBaseClass } from '../lux-form-model/lux-form-checkable-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacyCheckableBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-checkable-base.class';
 
 @Component({
   selector: 'lux-toggle, lux-toggle-ac',
   templateUrl: './lux-toggle.component.html',
   styleUrls: ['./lux-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxToggleComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatSlideToggle,
     NgTemplateOutlet,
     LuxAriaDescribedbyDirective,
@@ -30,17 +29,11 @@ import { LuxFormCheckableBaseClass } from '../lux-form-model/lux-form-checkable-
     LuxTagIdDirective
   ]
 })
-export class LuxToggleComponent<T = boolean> extends LuxFormCheckableBaseClass<T> {
-  readonly focused = signal(false);
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
+export class LuxToggleComponent<T = boolean> extends LuxFormLegacyCheckableBase<T> {
+  onToggleChange(event: MatSlideToggleChange) {
+    this.markAsDirty();
+    this.checked.set(event.checked);
+  }
 
   onFocusIn(e: FocusEvent) {
     this.focused.set(true);
@@ -50,5 +43,6 @@ export class LuxToggleComponent<T = boolean> extends LuxFormCheckableBaseClass<T
   onFocusOut(e: FocusEvent) {
     this.focused.set(false);
     this.luxFocusOut.emit(e);
+    this.onBlur();
   }
 }

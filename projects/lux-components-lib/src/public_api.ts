@@ -116,7 +116,6 @@ export * from './lib/lux-form/lux-form-control/lux-form-control-subcomponents/lu
 export * from './lib/lux-form/lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
 export * from './lib/lux-form/lux-form-control/lux-form-directives/lux-maxlength/lux-max-length.directive';
 export * from './lib/lux-form/lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
-export * from './lib/lux-form/lux-form-model/lux-form-checkable-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-checkbox-control-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-component-base.class';
 export * from './lib/lux-form/lux-form-model/lux-form-control-base.class';
