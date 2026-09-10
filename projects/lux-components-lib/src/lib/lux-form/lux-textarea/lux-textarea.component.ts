@@ -1,7 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { MatInput } from '@angular/material/input';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
@@ -10,17 +9,17 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxMaxLengthDirective } from '../lux-form-control/lux-form-directives/lux-maxlength/lux-max-length.directive';
 import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
-import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 
 @Component({
   selector: 'lux-textarea, lux-textarea-ac',
   templateUrl: './lux-textarea.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxTextareaComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatInput,
     CdkTextareaAutosize,
     LuxNameDirective,
@@ -31,19 +30,16 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
     LuxAriaLabelledbyDirective
   ]
 })
-export class LuxTextareaComponent<T = string> extends LuxFormInputBaseClass<T> {
+export class LuxTextareaComponent<T = string> extends LuxFormLegacyValueBase<T> {
   readonly luxMaxRows = input(-1);
   readonly luxMinRows = input(0);
   readonly luxHideCounterLabel = input(false);
   readonly luxMaxLength = input(0);
 
-  readonly focused = signal(false);
-
   private liveAnnouncer = inject(LiveAnnouncer);
 
   /**
-   * Zeichenzähler, der unterhalb des Feldes angezeigt wird. Basiert auf dem luxValue-Model,
-   * das den FormControl-Wert spiegelt.
+   * Zeichenzähler, der unterhalb des Feldes angezeigt wird.
    */
   readonly counterLabel = computed(() => {
     const maxLength = this.luxMaxLength();
@@ -56,15 +52,6 @@ export class LuxTextareaComponent<T = string> extends LuxFormInputBaseClass<T> {
     return (typeof value === 'string' ? value.length : 0) + '/' + maxLength;
   });
 
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
-
   constructor() {
     super();
 
@@ -75,6 +62,16 @@ export class LuxTextareaComponent<T = string> extends LuxFormInputBaseClass<T> {
         untracked(() => this.liveAnnouncer.announce(counterLabel));
       }
     });
+  }
+
+  onInput(event: Event) {
+    this.markAsDirty();
+    this.value.set((event.target as HTMLTextAreaElement).value as T);
+  }
+
+  onNativeBlur(e: FocusEvent) {
+    this.onBlur();
+    this.luxBlur.emit(e);
   }
 
   onFocus(e: FocusEvent) {

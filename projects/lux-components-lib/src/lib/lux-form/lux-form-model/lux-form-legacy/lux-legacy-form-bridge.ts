@@ -2,7 +2,7 @@ import { DestroyRef, ModelSignal, Signal, WritableSignal, effect, inject, untrac
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { LuxConsoleService } from '../../../lux-util/lux-console.service';
-import { ValidatorFnType } from '../lux-form-component-base.class';
+import { LuxValidationErrors, ValidatorFnType } from '../lux-form-component-base.class';
 import { LuxControlStateOverride } from '../lux-form-control-base.class';
 
 const DEFAULT_CTRL_NAME = 'control';
@@ -370,7 +370,7 @@ export class LuxLegacyFormBridge<T> {
       current.touched === next.touched &&
       current.dirty === next.dirty &&
       current.invalid === next.invalid &&
-      current.legacyErrors === next.legacyErrors
+      errorsEqual(current.legacyErrors, next.legacyErrors)
     ) {
       return;
     }
@@ -462,4 +462,31 @@ export function hasRequiredValidator(control: AbstractControl | undefined): bool
     return false;
   }
   return control.hasValidator(Validators.required) || control.hasValidator(Validators.requiredTrue);
+}
+
+/**
+ * Wertgleichheit statt Referenzgleichheit für ValidationErrors.
+ *
+ * `AbstractControl.updateValueAndValidity()` lässt die Validatoren jedes Mal neu laufen und erzeugt
+ * dabei ein frisches Fehler-Objekt, selbst wenn sich inhaltlich nichts geändert hat (z.B.
+ * Validators.required liefert immer ein neues { required: true }). Ein Referenzvergleich in
+ * syncState() würde das als Änderung werten und den stateOverride unnötig neu setzen - das
+ * invalidiert das errorMessage()-computed der Basisklasse und ruft luxErrorCallback ein zweites Mal
+ * auf, obwohl sich die Fehlerlage nicht geändert hat.
+ */
+function errorsEqual(a: LuxValidationErrors | null | undefined, b: LuxValidationErrors | null | undefined): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (!a || !b) {
+    return false;
+  }
+
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  }
+
+  return aKeys.every((key) => JSON.stringify(a[key]) === JSON.stringify(b[key]));
 }
