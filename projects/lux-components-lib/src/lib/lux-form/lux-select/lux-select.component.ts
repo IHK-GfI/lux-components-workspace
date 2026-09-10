@@ -14,16 +14,16 @@ import {
   viewChild,
   viewChildren
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
-import { LuxFormSelectableBase } from '../lux-form-model/lux-form-selectable-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacySelectableBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-selectable-base.class';
 import { LuxSelectFilterDirective } from '../lux-select-filter/lux-select-filter.directive';
 import { LuxSelectPanelFilterComponent } from '../lux-select-filter/lux-select-panel-filter.component';
 import { LuxSelectVisibleOptionCountDirective } from '../lux-select-filter/lux-select-visible-option-count.directive';
@@ -38,10 +38,9 @@ import { LuxSelectVisibleOptionCountDirective } from '../lux-select-filter/lux-s
   templateUrl: './lux-select.component.html',
   styleUrls: ['./lux-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxSelectComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     NgClass,
     MatSelect,
     MatOption,
@@ -56,7 +55,7 @@ import { LuxSelectVisibleOptionCountDirective } from '../lux-select-filter/lux-s
     LuxSelectVisibleOptionCountDirective
   ]
 })
-export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelectableBase<O, V, P> {
+export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormLegacySelectableBase<O, V, P> {
   /**
    * Platzhalter-Text, der angezeigt wird, wenn kein Wert ausgewählt ist.
    */
@@ -105,7 +104,6 @@ export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelect
   readonly matSelect = viewChild('select', { read: MatSelect });
 
   readonly displayedViewValue = signal<string | undefined>(undefined);
-  readonly focused = signal(false);
 
   /**
    * Indizes in der Reihenfolge, wie die Optionen gerendert werden sollen.
@@ -134,15 +132,6 @@ export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelect
 
   private liveAnnouncer = inject(LiveAnnouncer);
 
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
-
   constructor() {
     super();
 
@@ -156,10 +145,15 @@ export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelect
     });
   }
 
-  override notifyFormValueChanged(formValue: any) {
-    super.notifyFormValueChanged(formValue);
+  onSelectionChange(event: MatSelectChange) {
+    this.markAsDirty();
+    this.value.set(event.value);
+  }
 
-    const matOption = this.matOptions().find((option: MatOption) => option.value === formValue);
+  override emitValueChange(value: V) {
+    super.emitValueChange(value);
+
+    const matOption = this.matOptions().find((option: MatOption) => option.value === value);
     if (matOption) {
       this.displayedViewValue.set(matOption.viewValue);
       this.liveAnnouncer.announce(matOption.viewValue, 'assertive');
@@ -174,6 +168,7 @@ export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelect
   onFocusOut(e: FocusEvent) {
     this.focused.set(false);
     this.luxFocusOut.emit(e);
+    this.onBlur();
   }
 
   /**
@@ -196,7 +191,7 @@ export class LuxSelectComponent<O = any, V = any, P = any> extends LuxFormSelect
    * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
    */
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled() || this.luxReadonly()) {
+    if (this.isDisabled() || this.isReadonly()) {
       return;
     }
 

@@ -3,7 +3,6 @@ import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-au
 import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
 import { LuxDatetimepickerComponent } from '../../lux-form/lux-datetimepicker/lux-datetimepicker.component';
-import { LuxFormSelectableBase } from '../../lux-form/lux-form-model/lux-form-selectable-base.class';
 import { LuxInputComponent } from '../../lux-form/lux-input/lux-input.component';
 import { LuxRadioComponent } from '../../lux-form/lux-radio/lux-radio.component';
 import { LuxSelectComponent } from '../../lux-form/lux-select/lux-select.component';
@@ -139,7 +138,7 @@ export class LuxFilterItemDirective implements OnInit {
       return value;
     } else if (
       typeof value === 'object' &&
-      (filterItem.component instanceof LuxFormSelectableBase ||
+      (filterItem.component instanceof LuxSelectComponent ||
         filterItem.component instanceof LuxAutocompleteComponent ||
         filterItem.component instanceof LuxRadioComponent)
     ) {

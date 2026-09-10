@@ -114,15 +114,20 @@ export class LuxLegacyFormBridge<T> {
         if (initialRun) {
           initialRun = false;
 
+          // Ein null/undefined-Wert beim allerersten Lauf ist mehrdeutig: Entweder wurde der
+          // Alt-Input nie gebunden (dann bleibt er bei seinem eigenen Default), oder er wurde
+          // bewusst auf null/undefined gesetzt - das lässt sich hier nicht unterscheiden. Ein
+          // bereits vorhandener FormControl-Wert (z.B. aus einer Reactive Form) darf deshalb nicht
+          // überschrieben werden.
           if (value === undefined || value === null) {
             return;
           }
         }
 
-        // Ein echter Wert am Alt-Input bedeutet: Die Komponente wird über die Alt-API genutzt.
-        if (value !== undefined && value !== null) {
-          this.legacyValueSeen = true;
-        }
+        // Jede Änderung nach dem ersten Lauf ist eindeutig: Nur eine echte Bindung (Alt-API oder
+        // Two-Way) kann den Alt-Input überhaupt verändern - anders als beim ersten Lauf ist ein
+        // null/undefined-Wert hier also genauso aussagekräftig wie jeder andere.
+        this.legacyValueSeen = true;
 
         this.setValue(value);
       });

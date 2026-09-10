@@ -1,74 +1,73 @@
-@if (formGroup) {
-  <lux-form-control-wrapper
-    (mousedown)="onWrapperClick($event)"
-    [luxFormComponent]="this"
-    [formGroup]="formGroup"
-    [luxNoLabels]="luxNoLabels()"
-    [luxNoBottomLabel]="luxNoBottomLabel()"
-    [luxNoTopLabel]="luxNoTopLabel()"
-    [luxLabelLongFormat]="luxLabelLongFormat()"
-    [ngClass]="matSelect()?.panelOpen ? 'lux-panel-opened' : ''"
-    luxTagId="luxSelectWrapper"
+<lux-form-control-wrapper
+  (mousedown)="onWrapperClick($event)"
+  [luxFormComponent]="this"
+  [luxNoLabels]="luxNoLabels()"
+  [luxNoBottomLabel]="luxNoBottomLabel()"
+  [luxNoTopLabel]="luxNoTopLabel()"
+  [luxLabelLongFormat]="luxLabelLongFormat()"
+  [ngClass]="matSelect()?.panelOpen ? 'lux-panel-opened' : ''"
+  luxTagId="luxSelectWrapper"
+>
+  <!--
+  Material-Workaround: Incorrect use of <label for=FORM_ELEMENT> (Browser-Fehler in der Debug-Console)
+  ------------------------------------------------------------------------------------------------------------------
+  Das mat-select nutzt intern kein echtes HTML-Element wie das select und darum wird der obige Fehler geworfen.
+  Die aktuelle Lösung ist ein zusätzliches Select einzufügen und zu verstecken, damit der Fehler verschwindet.
+  Wenn der Fehler in den Material Components behoben wurde, dann kann das unsichtbare Select wieder entfernt werden.
+  Wichtig: Nur das versteckte <select> trägt die uid (Ziel des Wrapper-Labels per for).
+  Das mat-select darf keine eigene id="uid" bekommen, sonst entsteht eine doppelte DOM-ID.
+  -->
+  <select [id]="uid()" style="display: none"></select>
+  <mat-select
+    luxTagIdHandler
+    [luxTagId]="luxTagId()"
+    [luxSelectFilter]="luxEnableFilter()"
+    [luxFilterLabelFn]="filterLabelFn"
+    [placeholder]="luxPlaceholder()"
+    [multiple]="luxMultiple()"
+    [compareWith]="compareObjects"
+    [required]="isRequired()"
+    [disabled]="isDisabled()"
+    [disableRipple]="true"
+    [value]="value()"
+    (selectionChange)="onSelectionChange($event)"
+    [attr.aria-invalid]="isInvalid()"
+    [attr.aria-required]="isRequired()"
+    [attr.aria-readonly]="isReadonly()"
+    [luxSelectVisibleOptionCount]="luxVisibleOptionCount()"
+    [panelClass]="[
+      luxMultiple() ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
+      isReadonly() ? 'lux-display-none' : '',
+      luxEnableFilter() ? 'lux-select-panel-ac-filter' : ''
+    ]"
+    [luxAriaLabelledby]="labelledBy()"
+    [luxAriaLabel]="luxAriaLabel()"
+    [luxAriaDescribedby]="describedBy()"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
+    (openedChange)="onOpenedChange($event, selectFilter)"
+    #selectFilter="luxSelectFilter"
+    #select
   >
-    <!--
-    Material-Workaround: Incorrect use of <label for=FORM_ELEMENT> (Browser-Fehler in der Debug-Console)
-    ------------------------------------------------------------------------------------------------------------------
-    Das mat-select nutzt intern kein echtes HTML-Element wie das select und darum wird der obige Fehler geworfen.
-    Die aktuelle Lösung ist ein zusätzliches Select einzufügen und zu verstecken, damit der Fehler verschwindet.
-    Wenn der Fehler in den Material Components behoben wurde, dann kann das unsichtbare Select wieder entfernt werden.
-    Wichtig: Nur das versteckte <select> trägt die uid (Ziel des Wrapper-Labels per for).
-    Das mat-select darf keine eigene id="uid" bekommen, sonst entsteht eine doppelte DOM-ID.
-    -->
-    <select [id]="uid()" style="display: none"></select>
-    <mat-select
-      luxTagIdHandler
-      [luxTagId]="luxTagId()"
-      [luxSelectFilter]="luxEnableFilter()"
-      [luxFilterLabelFn]="filterLabelFn"
-      [placeholder]="luxPlaceholder()"
-      [multiple]="luxMultiple()"
-      [compareWith]="compareObjects"
-      [required]="luxRequired()"
-      [disableRipple]="true"
-      [formControl]="formControl"
-      [attr.aria-invalid]="invalid()"
-      [attr.aria-required]="luxRequired()"
-      [attr.aria-readonly]="luxReadonly()"
-      [luxSelectVisibleOptionCount]="luxVisibleOptionCount()"
-      [panelClass]="[
-        luxMultiple() ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
-        luxReadonly() ? 'lux-display-none' : '',
-        luxEnableFilter() ? 'lux-select-panel-ac-filter' : ''
-      ]"
-      [luxAriaLabelledby]="labelledBy()"
-      [luxAriaLabel]="luxAriaLabel()"
-      [luxAriaDescribedby]="describedBy()"
-      (focusin)="onFocusIn($event)"
-      (focusout)="onFocusOut($event)"
-      (openedChange)="onOpenedChange($event, selectFilter)"
-      #selectFilter="luxSelectFilter"
-      #select
-    >
-      @if (luxEnableFilter()) {
-        <lux-select-panel-filter
-          [placeholder]="luxFilterPlaceholder()"
-          [filterValue]="luxFilterValue()"
-          [clearAriaLabel]="luxFilterClearAriaLabel()"
-          [filterDirective]="selectFilter"
-        />
-      }
-      @for (i of renderOptionIndexes(); track i) {
-        <mat-option
-          [value]="luxPickValue() ? luxOptionsPickValue()[i] : luxOptions()[i]"
-          class="option-height"
-          [style.display]="!luxEnableFilter() || selectFilter.isIndexVisible(i) ? '' : 'none'"
-        >
-          <ng-container *ngTemplateOutlet="tempRef() ? tempRef()! : noTemplateRefTemplate; context: { $implicit: luxOptions()[i] }" />
-        </mat-option>
-      }
-    </mat-select>
-  </lux-form-control-wrapper>
-}
+    @if (luxEnableFilter()) {
+      <lux-select-panel-filter
+        [placeholder]="luxFilterPlaceholder()"
+        [filterValue]="luxFilterValue()"
+        [clearAriaLabel]="luxFilterClearAriaLabel()"
+        [filterDirective]="selectFilter"
+      />
+    }
+    @for (i of renderOptionIndexes(); track i) {
+      <mat-option
+        [value]="luxPickValue() ? luxOptionsPickValue()[i] : luxOptions()[i]"
+        class="option-height"
+        [style.display]="!luxEnableFilter() || selectFilter.isIndexVisible(i) ? '' : 'none'"
+      >
+        <ng-container *ngTemplateOutlet="tempRef() ? tempRef()! : noTemplateRefTemplate; context: { $implicit: luxOptions()[i] }" />
+      </mat-option>
+    }
+  </mat-select>
+</lux-form-control-wrapper>
 
 <ng-template #noTemplateRefTemplate let-option>
   @if (option && luxOptionLabelProp() && option[luxOptionLabelProp()]) {

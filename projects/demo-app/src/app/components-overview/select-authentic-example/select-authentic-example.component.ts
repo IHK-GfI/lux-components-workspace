@@ -5,7 +5,7 @@ import {
   LuxAutofocusDirective,
   LuxButtonComponent,
   LuxFormHintComponent,
-  LuxFormSelectableBase,
+  LuxFormLegacySelectableBase,
   LuxInputComponent,
   LuxSelectComponent,
   LuxToggleComponent,
@@ -157,7 +157,7 @@ export class SelectAuthenticExampleComponent {
     this.errorCallbackString = '' + this.errorCallback;
   }
 
-  showErrors(...comps: LuxFormSelectableBase[]) {
+  showErrors(...comps: LuxFormLegacySelectableBase[]) {
     this.value.set(null);
     this.multiselectValue.set(null);
     this.templateValue.set(null);
@@ -165,7 +165,7 @@ export class SelectAuthenticExampleComponent {
 
     this.changeRequired(true);
 
-    comps.forEach((comp: LuxFormSelectableBase) => {
+    comps.forEach((comp: LuxFormLegacySelectableBase) => {
       comp.formControl.markAsTouched();
     });
   }
@@ -199,13 +199,13 @@ export class SelectAuthenticExampleComponent {
     }
   }
 
-  reset(...comps: LuxFormSelectableBase[]) {
+  reset(...comps: LuxFormLegacySelectableBase[]) {
     this.value.set(undefined);
     this.multiselectValue.set(undefined);
     this.templateValue.set(undefined);
     this.form.get(this.controlBinding)!.setValue(undefined);
 
-    comps.forEach((comp: LuxFormSelectableBase) => {
+    comps.forEach((comp: LuxFormLegacySelectableBase) => {
       comp.formControl.markAsUntouched();
     });
   }
