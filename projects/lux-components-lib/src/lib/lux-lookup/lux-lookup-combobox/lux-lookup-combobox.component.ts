@@ -1,6 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, input, signal, viewChild } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { Subscription } from 'rxjs';
@@ -9,11 +8,11 @@ import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-la
 import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../../lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';
+import { provideLuxFormControl } from '../../lux-form/lux-form-model/lux-form-control-base.class';
 import { LuxSelectFilterDirective } from '../../lux-form/lux-select-filter/lux-select-filter.directive';
 import { LuxSelectPanelFilterComponent } from '../../lux-form/lux-select-filter/lux-select-panel-filter.component';
 import { LuxSelectVisibleOptionCountDirective } from '../../lux-form/lux-select-filter/lux-select-visible-option-count.directive';
 import { LuxLookupComponent } from '../lux-lookup-model/lux-lookup-component';
-import { LuxLookupErrorStateMatcher } from '../lux-lookup-model/lux-lookup-error-state-matcher';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
 
 @Component({
@@ -21,9 +20,9 @@ import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry'
   templateUrl: './lux-lookup-combobox.component.html',
   styleUrls: ['./lux-lookup-combobox.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxLookupComboboxComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    ReactiveFormsModule,
     NgClass,
     MatSelect,
     LuxTagIdDirective,
@@ -94,7 +93,6 @@ export class LuxLookupComboboxComponent<T = LuxLookupTableEntry> extends LuxLook
   readonly matSelect = viewChild(MatSelect);
   readonly filterDirective = viewChild(LuxSelectFilterDirective);
 
-  stateMatcher: LuxLookupErrorStateMatcher;
   displayedEntries: LuxLookupTableEntry[] = [];
   invisibleEntries: LuxLookupTableEntry[] = [];
   /**
@@ -114,11 +112,6 @@ export class LuxLookupComboboxComponent<T = LuxLookupTableEntry> extends LuxLook
 
   private panelScrollHandler?: EventListener;
   private panelElement?: Element;
-
-  constructor() {
-    super();
-    this.stateMatcher = new LuxLookupErrorStateMatcher(this);
-  }
 
   ngAfterViewInit() {
     this.ensureInitialFilterEntriesLoaded();
@@ -175,8 +168,19 @@ export class LuxLookupComboboxComponent<T = LuxLookupTableEntry> extends LuxLook
     this.refreshRenderedEntries();
   }
 
-  override notifyFormValueChanged(formValue: any): void {
-    super.notifyFormValueChanged(formValue);
+  /**
+   * Reentrancy-geschützt (emitValueChangeRunning, geerbt von LuxLookupComponent): super.
+   * emitValueChange() kann - über einen intern ausgelösten updateValueAndValidity()-Aufruf - erneut
+   * synchron auf diese Methode zurückrufen, bevor der äußere Aufruf fertig ist. Der Guard sorgt
+   * dafür, dass ein solcher rekursiver Zwischenaufruf sofort ohne Wirkung zurückkehrt und
+   * ensureSelectedEntriesLoaded() nur einmal (für den äußeren, echten Aufruf) läuft.
+   */
+  override emitValueChange(formValue: any): void {
+    if (this.emitValueChangeRunning) {
+      return;
+    }
+
+    super.emitValueChange(formValue);
     this.ensureSelectedEntriesLoaded();
   }
 
@@ -185,7 +189,17 @@ export class LuxLookupComboboxComponent<T = LuxLookupTableEntry> extends LuxLook
    * @param selectChange
    */
   selected(selectChange: MatSelectChange) {
-    this.setValue(selectChange.value);
+    this.markAsDirty();
+    this.value.set(selectChange.value);
+  }
+
+  onFocusIn(e: FocusEvent) {
+    this.luxFocusIn.emit(e);
+  }
+
+  onFocusOut(e: FocusEvent) {
+    this.luxFocusOut.emit(e);
+    this.onBlur();
   }
 
   /**
@@ -236,7 +250,7 @@ export class LuxLookupComboboxComponent<T = LuxLookupTableEntry> extends LuxLook
    * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
    */
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled() || this.luxReadonly()) {
+    if (this.isDisabled() || this.isReadonly()) {
       return;
     }
 

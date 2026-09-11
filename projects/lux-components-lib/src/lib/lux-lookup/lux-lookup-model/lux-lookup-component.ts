@@ -1,8 +1,10 @@
 import { Directive, OnDestroy, OnInit, inject, input, output } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
-import { LuxFormComponentBase, LuxValidationErrors } from '../../lux-form/lux-form-model/lux-form-component-base.class';
+import { LuxValidationErrors } from '../../lux-form/lux-form-model/lux-form-component-base.class';
+import { LuxFormLegacyValueBase } from '../../lux-form/lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 import { LuxLookupHandlerService } from '../lux-lookup-service/lux-lookup-handler.service';
 import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 import { LuxBehandlungsOptionenUngueltige, LuxLookupParameters } from './lux-lookup-parameters';
@@ -65,8 +67,7 @@ export const luxLookupCompareLangText2Fn: LuxLookupCompareFn = (a: LuxLookupTabl
 };
 
 @Directive()
-export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> implements OnInit, OnDestroy {
-  readonly luxPlaceholder = input('');
+export abstract class LuxLookupComponent<T> extends LuxFormLegacyValueBase<T> implements OnInit, OnDestroy {
   readonly luxLookupId = input('');
   readonly luxTableNo = input('');
   readonly luxRenderProp = input<any>();
@@ -76,16 +77,9 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
   readonly luxCustomStyles = input<object | null | undefined>(undefined);
   readonly luxCustomInvalidStyles = input<object | null | undefined>(undefined);
   readonly luxCompareFn = input<LuxLookupCompareFn | undefined>(undefined);
-  readonly luxTagId = input<string | undefined>(undefined);
-  /**
-   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
-   * Wert liefern das Signal value() bzw. getValue().
-   */
-  readonly luxValue = input<T>(null as T);
 
   readonly luxDataLoaded = output<boolean>();
   readonly luxDataLoadedAsArray = output<T[]>();
-  readonly luxValueChange = output<T | null>();
 
   entries: LuxLookupTableEntry[] = [];
   apiPath = LuxComponentsConfigService.DEFAULT_CONFIG.lookupServiceUrl;
@@ -93,12 +87,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
 
   protected lookupService = inject(LuxLookupService);
   protected lookupHandler = inject(LuxLookupHandlerService);
-
-  constructor() {
-    super();
-
-    this.syncValueInputToFormControl(this.luxValue);
-  }
+  protected configService = inject(LuxComponentsConfigService);
 
   override ngOnInit() {
     super.ngOnInit();
@@ -133,9 +122,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
     );
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
+  ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
@@ -215,6 +202,75 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
     return undefined;
   }
 
+  /**
+   * Jede Wertänderung (intern wie extern) läuft hier zusammen - übernimmt hier die Prüfung auf
+   * ungültige Einträge, die früher LuxLookupErrorStateMatcher.isErrorState() erledigte (dort an
+   * [errorStateMatcher]/NgControl gekoppelt, das ohne [formControl] nicht mehr automatisch läuft).
+   *
+   * Reentrancy-geschützt (emitValueChangeRunning): syncUngueltigValidator() ruft
+   * formControl.updateValueAndValidity() OHNE {emitEvent:false} auf, was auch valueChanges erneut
+   * feuert (nicht nur statusChanges) - ohne diesen Guard würde das sofort wieder emitValueChange()
+   * aufrufen und in einer Endlosschleife enden (siehe LuxDatepickerComponent.processValueChange()
+   * für dasselbe Muster bei einem anderen Auslöser). Ableitende Klassen mit eigener
+   * updateValueAndValidity()-Synchronisation (siehe LuxLookupAutocompleteComponent) prüfen denselben
+   * Guard an ihrem eigenen emitValueChange()-Einstiegspunkt.
+   */
+  override emitValueChange(value: T) {
+    if (this.emitValueChangeRunning) {
+      return;
+    }
+
+    try {
+      this.emitValueChangeRunning = true;
+      this.syncUngueltigValidator();
+      super.emitValueChange(value);
+    } finally {
+      this.emitValueChangeRunning = false;
+    }
+  }
+
+  /**
+   * Prüft, ob der aktuelle Wert (ein oder mehrere Einträge) einen ungültigen Eintrag enthält, und
+   * setzt/entfernt den "ungueltig"-Fehler entsprechend. Registriert den Validator beim ersten Aufruf
+   * einmalig (addValidators mit einer stabilen Funktionsreferenz ist idempotent). Der Aufrufer
+   * (emitValueChange()) trägt die Reentrancy-Absicherung.
+   */
+  protected syncUngueltigValidator() {
+    if (!this.formControl) {
+      return;
+    }
+
+    if (!this.ungueltigValidatorRegistered) {
+      this.ungueltigValidatorRegistered = true;
+      this.formControl.addValidators(this.ungueltigValidator);
+    }
+
+    this.formControl.updateValueAndValidity();
+  }
+
+  /**
+   * Schützt vor rekursiven emitValueChange()-Aufrufen, ausgelöst durch ein formControl.
+   * updateValueAndValidity() innerhalb von emitValueChange() selbst (siehe syncUngueltigValidator()
+   * bzw. LuxLookupAutocompleteComponent.syncNoResultValidator()). Geteilt (protected) statt privat,
+   * damit ableitende Klassen an ihrem eigenen emitValueChange()-Einstiegspunkt denselben Schutz
+   * nutzen, statt eine eigene, redundante Guard-Variable anzulegen.
+   */
+  protected emitValueChangeRunning = false;
+
+  private ungueltigValidatorRegistered = false;
+
+  private readonly ungueltigValidator: ValidatorFn = (control) => {
+    const value = control.value;
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    const isEntryUngueltig = (entry: any) => !!entry?.isUngueltig;
+    const invalid = Array.isArray(value) ? value.some(isEntryUngueltig) : isEntryUngueltig(value);
+
+    return invalid ? { ungueltig: 'true' } : null;
+  };
+
   getLabel(entry: any): string {
     if (this.isRenderPropAFunction()) {
       return this.luxRenderProp()(entry);
@@ -226,10 +282,6 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
     } else {
       return this.luxRenderPropNoPropertyLabel();
     }
-  }
-
-  override notifyFormValueChanged(formValue: any) {
-    this.luxValueChange.emit(formValue);
   }
 
   /**

@@ -1,6 +1,6 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, input, output, signal, viewChild } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, input, signal, viewChild } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatOption } from '@angular/material/core';
 import { MatSuffix } from '@angular/material/form-field';
@@ -14,18 +14,17 @@ import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-ar
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../../lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxValidationErrors } from '../../lux-form/lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../../lux-form/lux-form-model/lux-form-control-base.class';
 import { LuxLookupComponent } from '../lux-lookup-model/lux-lookup-component';
-import { LuxLookupErrorStateMatcher } from '../lux-lookup-model/lux-lookup-error-state-matcher';
 import { LuxLookupTableEntry } from '../lux-lookup-model/lux-lookup-table-entry';
-import { LuxAutocompleteErrorStateMatcher } from './lux-autocomplete-error-state-matcher';
 @Component({
   selector: 'lux-lookup-autocomplete, lux-lookup-autocomplete-ac',
   templateUrl: './lux-lookup-autocomplete.component.html',
   styleUrls: ['./lux-lookup-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxLookupAutocompleteComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    ReactiveFormsModule,
     MatInput,
     MatAutocompleteTrigger,
     LuxTagIdDirective,
@@ -47,9 +46,6 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
   readonly luxClearable = input(false);
   readonly luxClearAriaLabel = input('');
 
-  readonly luxBlur = output<FocusEvent>();
-  readonly luxFocus = output<FocusEvent>();
-
   readonly matInput = viewChild('autoCompleteInput', { read: ElementRef });
   readonly matAutocomplete = viewChild(MatAutocomplete);
   readonly matAutocompleteTrigger = viewChild(MatAutocompleteTrigger);
@@ -58,13 +54,19 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
   readonly entriesCount = signal(0);
   readonly latestSearchValue = signal<string | undefined>(undefined);
 
-  stateMatcher: LuxLookupErrorStateMatcher;
+  /**
+   * Der zuletzt verarbeitete Rohtext des Eingabefelds - siehe LuxAutocompleteComponent für die
+   * ausführliche Begründung (ersetzt das _previousValue-Guard-Verhalten, das früher
+   * MatAutocompleteTrigger._handleInput() über [formControl] automatisch übernahm).
+   */
+  private previousInputValue?: string;
 
-  constructor() {
-    super();
+  private noResultValidatorRegistered = false;
 
-    this.stateMatcher = new LuxAutocompleteErrorStateMatcher(this);
-  }
+  private readonly noResultValidator: ValidatorFn = (control) => {
+    const value = control.value;
+    return typeof value === 'string' && value.length > 0 ? { noResult: true } : null;
+  };
 
   override ngOnInit() {
     super.ngOnInit();
@@ -87,7 +89,9 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
   }
 
   ngAfterViewInit() {
-    this.cdr.detectChanges();
+    // Initiale Anzeige nachholen: emitValueChange() lief ggf. bereits in ngOnInit, bevor das
+    // Input-Element existierte (viewChild löst matInput() erst ab hier auf).
+    this.updateInputDisplayValue(this.getValue());
   }
 
   /**
@@ -125,11 +129,11 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
    * @param clickEvent
    */
   onClick(clickEvent: any) {
-    if (!this.luxReadonly() && !this.luxDisabled()) {
+    if (!this.isReadonly() && !this.isDisabled()) {
       clickEvent.target.setSelectionRange(0, clickEvent.target.value.length);
       // Beim Klick, wenn kein Wert gesetzt ist, das Panel öffnen
       const matAutocompleteTrigger = this.matAutocompleteTrigger();
-      if (!this.luxValue() && matAutocompleteTrigger) {
+      if (!this.value() && matAutocompleteTrigger) {
         matAutocompleteTrigger._onChange('');
         matAutocompleteTrigger.openPanel();
       }
@@ -141,7 +145,7 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
    * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
    */
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled() || this.luxReadonly()) {
+    if (this.isDisabled() || this.isReadonly()) {
       return;
     }
 
@@ -171,12 +175,12 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
   }
 
   showClearButton(): boolean {
-    if (!this.luxClearable() || this.luxReadonly() || this.luxDisabled()) {
+    if (!this.luxClearable() || this.isReadonly() || this.isDisabled()) {
       return false;
     }
 
-    const value = this.inForm ? this.formControl?.value : this.luxValue();
-    return value !== null && value !== undefined && value !== '';
+    const value = this.value();
+    return value !== null && value !== undefined && (value as unknown) !== '';
   }
 
   onClearMouseDown(event: MouseEvent) {
@@ -190,11 +194,7 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
 
     const inputElement = this.matInput()?.nativeElement as HTMLInputElement | undefined;
 
-    if (this.inForm) {
-      this.formControl.setValue(null as T);
-    } else {
-      this.setValue(null as T);
-    }
+    this.setValue(null as T);
     this.matAutocompleteTrigger()?.closePanel();
 
     try {
@@ -213,6 +213,64 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
     this.setValue(event.option.value);
   }
 
+  onFocus(e: FocusEvent) {
+    this.focused.set(true);
+    this.luxFocus.emit(e);
+  }
+
+  onFocusIn(e: FocusEvent) {
+    this.focused.set(true);
+    this.luxFocusIn.emit(e);
+  }
+
+  onFocusOut(e: FocusEvent) {
+    this.onBlur();
+    this.focused.set(false);
+    this.luxFocusOut.emit(e);
+  }
+
+  /**
+   * Wird bei jeder Eingabe im Textfeld ausgeführt und schreibt den rohen Text synchron in das
+   * FormControl - das übernahm früher automatisch der ControlValueAccessor von [formControl].
+   * Der previousInputValue-Guard bildet nach, dass MatAutocompleteTrigger._handleInput() den Wert
+   * ebenfalls nur bei einer tatsächlichen Textänderung committet (siehe LuxAutocompleteComponent).
+   */
+  onInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    if (this.previousInputValue === value) {
+      return;
+    }
+
+    this.previousInputValue = value;
+    this.formControl.setValue(value as T);
+  }
+
+  /**
+   * Jede Wertänderung (intern wie extern) läuft hier zusammen: aktualisiert die Anzeige und prüft
+   * auf einen nicht aufgelösten Rohtext (siehe LuxAutocompleteErrorStateMatcher, früher an
+   * [errorStateMatcher]/NgControl gekoppelt, das ohne [formControl] nicht mehr automatisch läuft).
+   *
+   * Reentrancy-geschützt (emitValueChangeRunning, geerbt von LuxLookupComponent): syncNoResultValidator()
+   * ruft formControl.updateValueAndValidity() OHNE {emitEvent:false} auf, was auch valueChanges
+   * erneut feuert und sonst sofort wieder hierher zurückriefe (siehe LuxLookupComponent.
+   * emitValueChange() für dasselbe Muster).
+   */
+  override emitValueChange(formValue: any) {
+    if (this.emitValueChangeRunning) {
+      return;
+    }
+
+    try {
+      this.emitValueChangeRunning = true;
+      this.syncNoResultValidator();
+      this.updateInputDisplayValue(formValue);
+    } finally {
+      this.emitValueChangeRunning = false;
+    }
+
+    super.emitValueChange(formValue);
+  }
+
   /**
    * @override
    * @param value
@@ -228,6 +286,41 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
       return this.tService.translate(`luxc.lookup-autocomplete.error_message.not_available`);
     }
     return undefined;
+  }
+
+  /**
+   * Prüft auf einen nicht aufgelösten Rohtext im FormControl. Der Aufrufer (emitValueChange()) trägt
+   * die Reentrancy-Absicherung für den updateValueAndValidity()-Aufruf hier.
+   */
+  private syncNoResultValidator() {
+    if (!this.formControl) {
+      return;
+    }
+
+    if (!this.noResultValidatorRegistered) {
+      this.noResultValidatorRegistered = true;
+      this.formControl.addValidators(this.noResultValidator);
+    }
+
+    this.formControl.updateValueAndValidity();
+  }
+
+  /**
+   * Schreibt den darzustellenden Text direkt in das native Eingabeelement, analog zu dem, was
+   * früher writeValue() des MatAutocompleteTrigger-ControlValueAccessor übernahm - inklusive der
+   * previousInputValue-Baseline, damit die nächste Texteingabe korrekt dagegen verglichen wird
+   * (siehe LuxAutocompleteComponent für die ausführliche Begründung).
+   */
+  private updateInputDisplayValue(newValue: any) {
+    const matInput = this.matInput();
+    if (!matInput || !matInput.nativeElement) {
+      return;
+    }
+
+    const resolved = this.displayFn(newValue);
+    const displayValue = resolved || (typeof newValue === 'string' || newValue instanceof String ? (newValue as string) : '');
+    matInput.nativeElement.value = displayValue;
+    this.previousInputValue = displayValue;
   }
 
   private ignoreWrapperClick(event: MouseEvent): boolean {
