@@ -4,6 +4,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
+  OnInit,
   computed,
   effect,
   inject,
@@ -13,7 +15,7 @@ import {
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ValidationErrors, ValidatorFn } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { DateFilterFn, MatDatepickerToggle, MatDatepickerToggleIcon } from '@angular/material/datepicker';
 import { MatInput } from '@angular/material/input';
@@ -26,11 +28,11 @@ import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxThemePalette } from '../../lux-util/lux-colors.enum';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxDateFilterFn, LuxStartView } from '../lux-datepicker/lux-datepicker.component';
-import { LuxDatetimeOverlayComponent } from '../lux-datetimepicker/lux-datetime-overlay/lux-datetime-overlay.component';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
-import { LuxValidationErrors, ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
-import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.class';
-import { LuxDatetimeOverlayComponent as LuxDatetimeOverlayComponent_1 } from './lux-datetime-overlay/lux-datetime-overlay.component';
+import { LuxValidationErrors } from '../lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
+import { LuxDatetimeOverlayComponent } from './lux-datetime-overlay/lux-datetime-overlay.component';
 import { LuxDatetimepickerAdapter } from './lux-datetimepicker-adapter';
 
 export const APP_DATE_TIME_FORMATS_AC = {
@@ -51,27 +53,26 @@ export const APP_DATE_TIME_FORMATS_AC = {
 @Component({
   selector: 'lux-datetimepicker, lux-datetimepicker-ac',
   templateUrl: './lux-datetimepicker.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     { provide: DateAdapter, useClass: LuxDatetimepickerAdapter, deps: [MAT_DATE_LOCALE, Platform] },
-    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_TIME_FORMATS_AC }
+    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_TIME_FORMATS_AC },
+    provideLuxFormControl(() => LuxDatetimepickerComponent)
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxIconComponent,
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatInput,
     MatDatepickerToggle,
     MatDatepickerToggleIcon,
-    LuxDatetimeOverlayComponent_1,
+    LuxDatetimeOverlayComponent,
     LuxAriaDescribedbyDirective,
     LuxAriaLabelDirective,
     LuxAriaLabelledbyDirective,
     LuxTagIdDirective
   ]
 })
-export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T> implements AfterViewInit {
+export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> implements OnInit, AfterViewInit, OnDestroy {
   readonly luxStartView = input<LuxStartView>('month');
   readonly luxOpened = input(false);
   readonly luxStartDate = input<string | undefined>(undefined);
@@ -88,8 +89,6 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
   readonly dateTimePickerInputEl = viewChild<ElementRef>('dateTimePickerInput');
 
   readonly luxLocale = signal<string>('de-DE');
-
-  readonly focused = signal(false);
 
   dateTimeValidator: ValidatorFn = (): ValidationErrors | null => {
     let result = null;
@@ -109,7 +108,7 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
       }
     } else {
       if (!this.inForm) {
-        if (this.luxRequired()) {
+        if (this.isRequired()) {
           result = { required: true };
         }
       }
@@ -119,7 +118,10 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
   };
 
   // Code des Interfaces "MatDatepickerControl" - Start
-  disabled = false;
+  // "disabled" kollidiert mit dem gleichnamigen Vertrags-Input der neuen Basisklasse, daher
+  // umbenannt - dieses Feld wird nirgends gelesen oder geschrieben (die Klasse implementiert
+  // MatDatepickerControl nicht wirklich, nur strukturell ähnlich benannt).
+  datepickerControlDisabled = false;
   dateFilter?: DateFilterFn<any>;
   stateChanges?: Observable<void>;
   // Code des Interfaces "MatDatepickerControl" - Ende
@@ -142,6 +144,10 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
 
   private dateTimeAdapter = inject<DateAdapter<Date>>(DateAdapter);
 
+  private previousISO?: string;
+  private triggerOpenCloseTimeout?: ReturnType<typeof setTimeout>;
+  private notifyFormValueChangedTimeout?: ReturnType<typeof setTimeout>;
+
   readonly min = computed(() => this.parseDateTimeInput(this.luxMinDate()));
   readonly max = computed(() => this.parseDateTimeInput(this.luxMaxDate()));
 
@@ -160,15 +166,6 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
     const start = new Date(0);
     start.setUTCFullYear(+startDateArr[2], +startDateArr[1] - 1, +startDateArr[0]);
     return start;
-  });
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
   });
 
   constructor() {
@@ -190,9 +187,10 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
       }
       this.dateTimeAdapter.setLocale(this.luxLocale());
 
-      // Input-Feld neu formatieren
+      // Input-Feld neu formatieren. formControl.value ist ein ISO-String, kein Date - vor dem
+      // Formatieren erst deserialisieren (siehe LuxDatepickerComponent für dieselbe Korrektur).
       if (this.formControl && this.dateTimePickerInputEl()) {
-        this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
+        this.dateTimeInputValue = this.formatDateTime(this.dateTimeAdapter.deserialize(this.formControl.value));
       }
     });
 
@@ -202,11 +200,43 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
       // Eventuell gibt es ohne das Timeout sonst Fehler, weil die OverlayComponent noch nicht gesetzt ist
       untracked(() => (this.triggerOpenCloseTimeout = setTimeout(() => this.triggerOpenClose())));
     });
+
+    // dateTimeValidator erneut registrieren, nachdem die Legacy-Bridge auf luxControlValidators-
+    // bzw. luxRequired-Änderungen reagiert hat: Deren updateValidators() ruft formControl.
+    // setValidators() auf, was die gesamte Validator-Liste (inkl. dateTimeValidator) ersetzt statt
+    // nur zu ergänzen. addValidators() mit derselben (stabilen) Funktionsreferenz ist idempotent,
+    // ein erneuter Aufruf hier fügt also keine Duplikate hinzu.
+    effect(() => {
+      this.luxControlValidators();
+      this.luxRequired();
+
+      untracked(() => {
+        if (this.formControl) {
+          this.formControl.addValidators(this.dateTimeValidator);
+        }
+      });
+    });
+  }
+
+  override ngOnInit() {
+    super.ngOnInit();
+
+    if (this.formControl.value !== null && this.formControl.value !== undefined) {
+      // Ein bereits vorhandener FormControl-Wert (z.B. aus einer Reactive Form) wurde von der
+      // Brücke nicht automatisch verarbeitet - sie schreibt nur einen echten luxValue-Initialwert,
+      // nicht einen bereits vorhandenen Fremd-Wert. Einmalige Normalisierung nachholen.
+      this.updateDateValue(this.formControl.value);
+    }
   }
 
   ngAfterViewInit() {
-    this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
+    this.dateTimeInputValue = this.formatDateTime(this.dateTimeAdapter.deserialize(this.formControl.value));
     this.formControl.addValidators(this.dateTimeValidator);
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.notifyFormValueChangedTimeout);
+    clearTimeout(this.triggerOpenCloseTimeout);
   }
 
   // Code des Interfaces "MatDatepickerControl" - Start
@@ -255,8 +285,15 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
         this.dateTimeInputValue = formattedDate;
       }
     }
+    // Ersetzt die früher von [formControl] übernommene automatische Touched-Markierung beim Blur.
+    this.onBlur();
     this.focused.set(false);
     this.luxFocusOut.emit(event);
+  }
+
+  onInput(event: Event) {
+    this.markAsDirty();
+    this.formControl.setValue((event.target as HTMLInputElement).value as T);
   }
 
   override errorMessageModifier(_value: any, errors: LuxValidationErrors): string | undefined {
@@ -277,67 +314,30 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormInputBaseClass<T
     return undefined;
   }
 
-  override setValue(value: any) {
-    if (value !== this.getValue()) {
-      if (!this.formControl) {
-        this._initialValue = value;
-        return;
-      }
-      this.formControl.setValue(value);
+  /**
+   * Jede Wertänderung von außen (über [(value)]/[formField] oder ein reales FormControl) läuft
+   * hier zusammen.
+   */
+  override emitValueChange(formValue: any) {
+    this.updateDateValue(formValue);
+
+    if (LuxUtil.ISO_8601_FULL.test(formValue)) {
+      this.dateTimeInputValue = this.formatDateTime(this.dateTimeAdapter.deserialize(formValue));
+    } else if (typeof formValue === 'string') {
+      // Entspricht dem früheren ControlValueAccessor (writeValue), der bei JEDER Wertänderung den
+      // Rohwert unverändert in die Anzeige spiegelte - unabhängig davon, ob updateDateValue() ihn
+      // selbst in ein ISO-Datum umwandeln konnte (z.B. ein Datum ohne Uhrzeit wie "10.07.2015").
+      this.dateTimeInputValue = formValue;
     }
   }
 
-  protected override initFormValueSubscription() {
-    this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {
-      this.updateDateValue(value);
-
-      if (LuxUtil.ISO_8601_FULL.test(value)) {
-        this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
-      }
-    });
-
-    if (this.formControl.value !== null && this.formControl.value !== undefined) {
-      // Es kann vorkommen, dass der initiale Wert nicht im ISO-Format angegeben ist.
-      // Dann muss der Wert noch umgewandelt werden.
-      this.updateDateValue(this.formControl.value);
-    } else if (this._initialValue !== null && this._initialValue !== undefined) {
-      // Vorhandenen Initialwert setzen
-      this.formControl.setValue(this._initialValue);
-    }
-  }
-
-  protected override updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
-    const hasValidators = (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0);
-
-    if (!this.inForm) {
-      setTimeout(() => {
-        // Der setTimeout-Callback feuert asynchron. Zu diesem Zeitpunkt kann inForm bereits true
-        // sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen Guard würde
-        // setValidators() die Validatoren des FormControls überschreiben.
-        if (this.inForm) {
-          return;
-        }
-
-        this.formControl.setValidators(validators ?? null);
-        this.formControl.addValidators(this.dateTimeValidator);
-
-        if (checkRequiredValidator) {
-          if (this.luxRequired()) {
-            this.formControl.addValidators(this.getRequiredValidator());
-          } else {
-            this.formControl.removeValidators(this.getRequiredValidator());
-          }
-        }
-
-        this.formControl.updateValueAndValidity();
-      });
-    } else if (hasValidators) {
-      this.logger.warn(
-        `
-Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding()}) können ausschließlich über das Formular gesetzt werden,
-aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignoriert!`
-      );
-    }
+  /**
+   * Die eigentliche luxValueChange-Emission, entkoppelt von emitValueChange() (das hier bereits als
+   * "irgendein Wert hat sich geändert"-Hook der Brücke belegt ist, siehe oben). Wird ausschließlich
+   * verzögert aus setISOValue() aufgerufen, wenn der neue Wert innerhalb von min/max liegt.
+   */
+  notifyFormValueChanged(value: T) {
+    super.emitValueChange(value);
   }
 
   private parseDateTimeInput(value: string | undefined): Date | null {
@@ -352,6 +352,13 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
 
   private setISOValue(isoValue: string) {
     this.notifyFormValueChangedTimeout = setTimeout(() => {
+      // Siehe LuxDatepickerComponent.setISOValue(): Der valueInput-Effect der Legacy-Bridge wendet
+      // einen unveränderten luxValue-Rohwert beim allerersten Lauf trotzdem erneut an, was hier zu
+      // einer doppelten (redundanten) luxValueChange-Emission führen würde, wäre diese nicht gegen
+      // den zuletzt tatsächlich emittierten ISO-Wert abgesichert.
+      const valueGenuinelyChanged = this.previousISO !== isoValue;
+      this.previousISO = isoValue;
+
       const min = this.min();
       const max = this.max();
 
@@ -365,27 +372,32 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
         maxOk = false;
       }
 
-      if (minOk && maxOk) {
-        this.notifyFormValueChanged(isoValue);
+      if (minOk && maxOk && valueGenuinelyChanged) {
+        this.notifyFormValueChanged(isoValue as T);
       }
 
-      // "silently" den FormControl auf den (potenziell) geänderten Wert aktualisieren
-      this.formControl.setValue(isoValue as any, {
-        emitEvent: false,
-        emitModelToViewChange: false,
-        emitViewToModelChange: false
-      });
+      if (this.formControl.value !== isoValue) {
+        // "silently" den FormControl auf den (potenziell) geänderten Wert aktualisieren
+        this.formControl.setValue(isoValue as any, {
+          emitEvent: false,
+          emitModelToViewChange: false,
+          emitViewToModelChange: false
+        });
+        // emitEvent: false unterdrückt auch formControl.events, wodurch weder die Brücke ihren
+        // stateOverride nachzieht noch diese OnPush-Komponente als zu prüfen markiert wird (siehe
+        // LuxDatepickerComponent.syncDatepickerValidation() für dasselbe Muster). Ohne den erneuten,
+        // NICHT unterdrückten Aufruf hier bliebe z.B. ein durch die Normalisierung neu entstandener
+        // matDatepickerParse/required-Fehler unsichtbar, bis irgendein anderer Trigger die
+        // Komponente zufällig erneut prüft.
+        this.formControl.updateValueAndValidity();
+      }
+      // Signal-Schreibzugriff - markiert diese OnPush-Komponente automatisch als zu prüfen (kein
+      // manuelles markForCheck() mehr nötig, siehe LuxLegacyFormBridge/LuxFormControlBase).
       this.value.set(isoValue as any);
-
-      // emitEvent: false löst KEIN formControl.events aus, wodurch die automatische
-      // markForCheck()-Kopplung in LuxFormComponentBase (ngOnInit) ausbleibt. Ohne diesen
-      // manuellen Aufruf würde ngDoCheck() (und damit die Fehlermeldungs-Anzeige) bei dieser
-      // OnPush-Komponente erst bei einer zufällig ausgelösten Prüfung nachziehen.
-      this.cdr.markForCheck();
 
       if (!this.dateTimeInputValue && isoValue) {
         // Per Hand dem Input-Element einen formatierten String übergeben
-        this.dateTimeInputValue = this.formatDateTime(isoValue);
+        this.dateTimeInputValue = this.formatDateTime(this.dateTimeAdapter.deserialize(isoValue));
       }
     });
   }
