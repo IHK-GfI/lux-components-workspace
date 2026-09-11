@@ -1,11 +1,10 @@
 @if (formGroup) {
   <lux-form-control-wrapper
-    (click)="!luxDisabled() && !luxReadonly() ? visibleInput.focus() : null"
+    (click)="!isDisabled() && !isReadonly() ? visibleInput.focus() : null"
     [luxFormComponent]="this"
     [luxNoLabels]="luxNoLabels()"
     [luxNoBottomLabel]="luxNoBottomLabel()"
     [luxNoTopLabel]="luxNoTopLabel()"
-    [formGroup]="formGroup"
     [luxLabelLongFormat]="luxLabelLongFormat()"
     [luxDisplayClearErrorButton]="displayClearErrorButton()"
     luxTagId="luxFileInputWrapper"
@@ -20,7 +19,8 @@
         autocomplete="off"
         [luxTagId]="luxTagId()"
         [placeholder]="luxPlaceholder()"
-        [required]="luxRequired()"
+        [disabled]="isDisabled()"
+        [required]="isRequired()"
         [readonly]="true"
         [id]="uid()"
         [value]="(value()?.namePrefix ?? '') + (value()?.name ?? '') + (value()?.nameSuffix ?? '')"
@@ -31,7 +31,7 @@
         [luxAriaDescribedby]="describedBy()"
         [luxAriaLabel]="luxAriaLabel()"
         [luxAriaLabelledby]="luxAriaLabelledby()"
-        [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+        [attr.aria-disabled]="isDisabled() ? 'true' : null"
         #visibleInput
       />
       @let viewConfig = luxViewActionConfig();
@@ -44,13 +44,13 @@
           luxTagId="{{ 'lux-file-input-actions' }}"
           [luxMenuItemFixWidth]="32"
           [luxMaximumExtended]="luxMaximumExtended()"
-          [luxToggleDisabled]="luxDisabled() || luxReadonly()"
+          [luxToggleDisabled]="isDisabled() || isReadonly()"
           [luxDisplayExtended]="true"
         >
           <lux-menu-item
             luxTagId="lux-file-view"
             [luxIconName]="viewConfig.iconName"
-            [luxDisabled]="viewConfig.disabled || luxDisabled() || !value() || luxReadonly()"
+            [luxDisabled]="viewConfig.disabled || isDisabled() || !value() || isReadonly()"
             luxLabel="{{ viewConfig.label || ('luxc.form-file-base.view.action.lbl' | transloco) }}"
             [luxHideLabelIfExtended]="true"
             [luxAlwaysVisible]="true"
@@ -62,7 +62,7 @@
           <lux-menu-item
             luxTagId="lux-file-download"
             [luxIconName]="downloadConfig.iconName"
-            [luxDisabled]="downloadConfig.disabled || luxDisabled() || !value() || luxReadonly()"
+            [luxDisabled]="downloadConfig.disabled || isDisabled() || !value() || isReadonly()"
             luxLabel="{{ downloadConfig.label || ('luxc.form-file-base.download.action.lbl' | transloco) }}"
             [luxHideLabelIfExtended]="true"
             [luxAlwaysVisible]="true"
@@ -74,7 +74,7 @@
           <lux-menu-item
             luxTagId="lux-file-remove"
             [luxIconName]="deleteConfig.iconName"
-            [luxDisabled]="!value() || luxDisabled() || deleteConfig.disabled || luxReadonly()"
+            [luxDisabled]="!value() || isDisabled() || deleteConfig.disabled || isReadonly()"
             luxLabel="{{ deleteConfig.label || ('luxc.form-file-base.delete.action.lbl' | transloco) }}"
             [luxHideLabelIfExtended]="true"
             [luxAlwaysVisible]="true"
@@ -86,7 +86,7 @@
           <lux-menu-item
             luxTagId="lux-file-upload"
             [luxIconName]="uploadConfig.iconName"
-            [luxDisabled]="uploadConfig.disabled || luxDisabled() || luxReadonly()"
+            [luxDisabled]="uploadConfig.disabled || isDisabled() || isReadonly()"
             luxLabel="{{ uploadConfig.label || ('luxc.form-file-base.upload.action.lbl' | transloco) }}"
             [luxHideLabelIfExtended]="true"
             [luxAlwaysVisible]="true"
@@ -99,7 +99,7 @@
             <lux-menu-item
               luxTagId="lux-file-list-entry-custom{{ i }}"
               [luxIconName]="customConfig.iconName"
-              [luxDisabled]="customConfig.disabled || luxDisabled() || luxReadonly() || !value()"
+              [luxDisabled]="customConfig.disabled || isDisabled() || isReadonly() || !value()"
               [luxLabel]="customConfig.label"
               [luxHideLabelIfExtended]="true"
               [luxPrio]="customConfig.prio ? customConfig.prio : 50 + i"
@@ -122,7 +122,7 @@
   [multiple]="false"
   [accept]="luxAccept()"
   [luxFileCapture]="luxCapture()"
-  [required]="luxRequired()"
+  [required]="isRequired()"
   (change)="onSelectFiles($event.target)"
   #fileUpload
 />

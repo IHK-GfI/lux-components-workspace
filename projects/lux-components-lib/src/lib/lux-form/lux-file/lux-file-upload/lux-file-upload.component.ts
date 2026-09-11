@@ -2,6 +2,7 @@ import { NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   computed,
   effect,
@@ -31,6 +32,7 @@ import { LuxTheme } from '../../../lux-theme/lux-theme';
 import { LuxThemeService } from '../../../lux-theme/lux-theme.service';
 import { LuxMediaQueryObserverService } from '../../../lux-util/lux-media-query-observer.service';
 import { LuxUtil } from '../../../lux-util/lux-util';
+import { provideLuxFormControl } from '../../lux-form-model/lux-form-control-base.class';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
 import { ILuxFileActionConfig, ILuxFilesActionConfig } from '../lux-file-model/lux-file-action-config.interface';
 import { LuxFileCaptureDirective } from '../lux-file-model/lux-file-capture.directive';
@@ -71,6 +73,7 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
   templateUrl: './lux-file-upload.component.html',
   styleUrls: ['./lux-file-upload.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxFileUploadComponent)],
   imports: [
     NgClass,
     NgTemplateOutlet,
@@ -137,6 +140,7 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   private dialogService = inject(LuxDialogService);
   private queryService = inject(LuxMediaQueryObserverService);
   private themeService = inject(LuxThemeService);
+  private destroyRef = inject(DestroyRef);
 
   // Muss nach themeService deklariert werden, da der Initializer synchron auf this.themeService zugreift.
   readonly theme = signal(this.themeService.getTheme().name);

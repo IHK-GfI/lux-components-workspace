@@ -27,6 +27,14 @@ export interface LuxLegacyBridgeHost<T> {
   emitValueChange(value: T): void;
   /** Validators.required bzw. Validators.requiredTrue. */
   getRequiredValidator(): ValidatorFn;
+  /**
+   * Für Controls, die formControl.setErrors()/-.errors auch außerhalb einer echten Form oder eines
+   * gesetzten luxRequired/luxControlValidators als eigentliche Fehlerquelle nutzen (z.B. die
+   * File-Controls mit ihren Upload-/Größen-/Dateityp-Fehlern) - ohne dieses Flag bliebe die Brücke
+   * "nicht zuständig" (engaged === false) und solche Fehler kämen nie im errorMessage()-computed an.
+   * Optional, Default false (keine Verhaltensänderung für alle anderen Controls).
+   */
+  readonly alwaysEngaged?: boolean;
 }
 
 /**
@@ -241,7 +249,7 @@ export class LuxLegacyFormBridge<T> {
     if (this.host.stateOverrideClaimed()) {
       return false;
     }
-    if (this.inForm || this.legacyValueSeen || this.host.luxRequired()) {
+    if (this.host.alwaysEngaged || this.inForm || this.legacyValueSeen || this.host.luxRequired()) {
       return true;
     }
 

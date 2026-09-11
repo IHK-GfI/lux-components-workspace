@@ -6,9 +6,9 @@
 
 <lux-card
   class="lux-file-list"
-  [ngClass]="{ 'lux-file-list-disabled': luxDisabled(), 'lux-file-list-error': errorMessage() && touched() }"
-  [luxTitle]="(luxLabel() ? luxLabel() : '') + (luxRequired() ? '&nbsp;*' : '')"
-  [luxAriaInvalid]="'' + invalid()"
+  [ngClass]="{ 'lux-file-list-disabled': isDisabled(), 'lux-file-list-error': errorMessage() && isTouched() }"
+  [luxTitle]="(luxLabel() ? luxLabel() : '') + (isRequired() ? '&nbsp;*' : '')"
+  [luxAriaInvalid]="'' + isInvalid()"
   tabindex="0"
   [luxHeading]="luxHeading()"
 >
@@ -24,8 +24,8 @@
             !selectedFiles ||
             selectedFiles.length === 0 ||
             deleteConfig.disabledHeader ||
-            luxDisabled() ||
-            luxReadonly() ||
+            isDisabled() ||
+            isReadonly() ||
             hasOnlyDeleteProtectedFiles()
           "
           (luxClicked)="clearFiles($event)"
@@ -39,7 +39,7 @@
           [luxIconName]="uploadConfig.iconNameHeader"
           luxTagId="lux-file-add"
           (luxClicked)="fileUpload.click()"
-          [luxDisabled]="uploadConfig.disabledHeader || luxDisabled() || luxReadonly()"
+          [luxDisabled]="uploadConfig.disabledHeader || isDisabled() || isReadonly()"
           luxColor="primary"
           luxAriaLabel="{{ uploadConfig.labelHeader || ('luxc.file-list.upload_title.lbl' | transloco) }}"
           luxAriaLabelSelector="button"
@@ -79,7 +79,7 @@
           }
         </div>
       } @else {
-        <div class="lux-file-list-entries" [attr.aria-disabled]="luxDisabled() ? 'true' : null">
+        <div class="lux-file-list-entries" [attr.aria-disabled]="isDisabled() ? 'true' : null">
           <!-- Mehrere Dateien ausgewählt -->
           @if (isArray(selectedFiles)) {
             <lux-divider />
@@ -96,7 +96,7 @@
       }
     </div>
   </lux-card-content>
-  @if (errorMessage() && touched() && !forceProgressIndeterminate()) {
+  @if (errorMessage() && isTouched() && !forceProgressIndeterminate()) {
     <lux-card-actions class="lux-file-actions lux-error">
       <lux-icon class="lux-alert-icon" luxIconName="lux-interface-alert-warning-triangle" luxIconSize="0.75rem" />
       <mat-error [id]="uid() + '-misc'" class="lux-file-list-error-message">
@@ -138,15 +138,15 @@
         }
       }
       <!-- Der Name der Datei -->
-      <span class="lux-file-list-entry-label lux-mr-3 lux-ml-3" [ngClass]="{ 'lux-file-list-entry-label-disabled': luxDisabled() }">
+      <span class="lux-file-list-entry-label lux-mr-3 lux-ml-3" [ngClass]="{ 'lux-file-list-entry-label-disabled': isDisabled() }">
         @if (selectedFile.namePrefix) {
-          <span [ngStyle]="{ color: !luxDisabled() ? selectedFile.namePrefixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
+          <span [ngStyle]="{ color: !isDisabled() ? selectedFile.namePrefixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
             selectedFile.namePrefix
           }}</span>
         }
         {{ selectedFile.name }}
         @if (selectedFile.nameSuffix) {
-          <span [ngStyle]="{ color: !luxDisabled() ? selectedFile.nameSuffixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
+          <span [ngStyle]="{ color: !isDisabled() ? selectedFile.nameSuffixColor : '', fontSize: '0.8em', fontStyle: 'italic' }">{{
             selectedFile.nameSuffix
           }}</span>
         }
@@ -171,14 +171,14 @@
         luxTagId="{{ 'lux-file-list-entry-' + index + '-actions' }}"
         [luxMenuItemFixWidth]="45"
         (luxMenuClosed)="fileEntry.focus()"
-        [luxToggleDisabled]="luxDisabled() || luxReadonly()"
+        [luxToggleDisabled]="isDisabled() || isReadonly()"
         [luxDisplayExtended]="true"
         [luxMaximumExtended]="luxMaximumExtended()"
       >
         <lux-menu-item
           luxTagId="lux-file-list-entry-view"
           [luxIconName]="viewConfig.iconName"
-          [luxDisabled]="viewConfig.disabled || luxDisabled() || luxReadonly()"
+          [luxDisabled]="viewConfig.disabled || isDisabled() || isReadonly()"
           luxLabel="{{ viewConfig.label || ('luxc.form-file-base.view.action.lbl' | transloco) }}"
           [luxHideLabelIfExtended]="true"
           [luxAlwaysVisible]="true"
@@ -190,7 +190,7 @@
         <lux-menu-item
           luxTagId="lux-file-list-entry-download"
           [luxIconName]="downloadConfig.iconName"
-          [luxDisabled]="downloadConfig.disabled || luxDisabled() || luxReadonly()"
+          [luxDisabled]="downloadConfig.disabled || isDisabled() || isReadonly()"
           luxLabel="{{ downloadConfig.label || ('luxc.form-file-base.download.action.lbl' | transloco) }}"
           [luxHideLabelIfExtended]="true"
           [luxAlwaysVisible]="true"
@@ -204,8 +204,8 @@
           [luxIconName]="deleteConfig.iconName"
           [luxDisabled]="
             deleteConfig.disabled ||
-            luxDisabled() ||
-            luxReadonly() ||
+            isDisabled() ||
+            isReadonly() ||
             (deleteConfig.isDeletable ? !deleteConfig.isDeletable(selectedFile) : false)
           "
           luxLabel="{{ deleteConfig.label || ('luxc.file-list.delete.lbl' | transloco) }}"
@@ -219,7 +219,7 @@
         <lux-menu-item
           luxTagId="lux-file-list-entry-upload"
           [luxIconName]="uploadConfig.iconName"
-          [luxDisabled]="uploadConfig.disabled || luxDisabled() || luxReadonly()"
+          [luxDisabled]="uploadConfig.disabled || isDisabled() || isReadonly()"
           luxLabel="{{ uploadConfig.label || ('luxc.file-list.upload.lbl' | transloco) }}"
           [luxHideLabelIfExtended]="true"
           [luxAlwaysVisible]="true"
@@ -232,7 +232,7 @@
           <lux-menu-item
             luxTagId="lux-file-list-entry-custom{{ i }}"
             [luxIconName]="customConfig.iconName"
-            [luxDisabled]="customConfig.disabled || luxDisabled() || luxReadonly()"
+            [luxDisabled]="customConfig.disabled || isDisabled() || isReadonly()"
             [luxLabel]="customConfig.label"
             [luxHideLabelIfExtended]="true"
             [luxAlwaysVisible]="true"

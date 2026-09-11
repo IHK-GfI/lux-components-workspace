@@ -1,5 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, computed, input, output, signal, viewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, viewChild } from '@angular/core';
 import { MatInput } from '@angular/material/input';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxMenuItemComponent } from '../../../lux-action/lux-menu/lux-menu-subcomponents/lux-menu-item.component';
@@ -11,6 +10,7 @@ import { LuxTagIdDirective } from '../../../lux-directives/lux-tag-id/lux-tag-id
 import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxFormControlWrapperComponent } from '../../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxValidationErrors } from '../../lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../../lux-form-model/lux-form-control-base.class';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
 import { ILuxFileActionConfig } from '../lux-file-model/lux-file-action-config.interface';
 import { LuxFileCaptureDirective } from '../lux-file-model/lux-file-capture.directive';
@@ -48,10 +48,9 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
   templateUrl: './lux-file-input.component.html',
   styleUrls: ['./lux-file-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxFileInputComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatInput,
     LuxFileCaptureDirective,
     LuxFileProgressComponent,
@@ -80,21 +79,7 @@ export class LuxFileInputComponent extends LuxFormFileBase<ILuxFileObject | null
     transform: (config) => config ?? defaultDownloadActionConfig
   });
 
-  readonly luxBlur = output<FocusEvent>();
-  readonly luxFocus = output<FocusEvent>();
-
   readonly visibleInput = viewChild.required<ElementRef>('visibleInput');
-
-  readonly focused = signal(false);
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
 
   ngAfterViewInit() {
     LuxUtil.assertNonNull('visibleInput', this.visibleInput());

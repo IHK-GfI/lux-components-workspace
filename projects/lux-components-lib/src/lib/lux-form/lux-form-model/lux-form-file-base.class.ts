@@ -1,7 +1,21 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Directive, ElementRef, computed, inject, input, output, signal, viewChild } from '@angular/core';
-import { Validators } from '@angular/forms';
+import {
+  Directive,
+  DoCheck,
+  ElementRef,
+  ModelSignal,
+  OnInit,
+  Signal,
+  computed,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+  viewChild
+} from '@angular/core';
+import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { isObservable, Observable, throwError } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { LuxProgressModeType } from '../../lux-common/lux-progress/lux-progress.component';
@@ -9,8 +23,23 @@ import { LuxUtil } from '../../lux-util/lux-util';
 import { ILuxFileActionConfig } from '../lux-file/lux-file-model/lux-file-action-config.interface';
 import { ILuxFileError, LuxFileErrorCause } from '../lux-file/lux-file-model/lux-file-error.interface';
 import { ILuxFileObject } from '../lux-file/lux-file-model/lux-file-object.interface';
-import { LuxFormComponentBase, LuxValidationErrors, ValidatorFnType } from './lux-form-component-base.class';
+import { LuxValidationErrors, ValidatorFnType } from './lux-form-component-base.class';
+import { LuxLegacyBridgeHost, LuxLegacyFormBridge } from './lux-form-legacy/lux-legacy-form-bridge';
+import { LuxFormValueControlBase } from './lux-form-value-control-base.class';
 
+/**
+ * Übergangs-Basisklasse für die File-FormControls (File-Input, File-Upload, File-List).
+ *
+ * Enthält - anders als bei den übrigen migrierten Controls - die Legacy-Bridge-Anbindung (luxSelected/
+ * luxSelectedChange statt luxValue/luxValueChange, das ist der historisch gewachsene Alt-Name dieser
+ * Controls) direkt in dieser Klasse statt in einer eigenen lux-form-legacy/-Zwischenklasse: Eine
+ * zusätzliche Zwischenklasse (vierte @Directive()-Ebene vor der konkreten @Component-Klasse) führte in
+ * der Vitest/Vite-JIT-Umgebung zu einem NG0919 ("Cannot read @Component metadata") beim Instanziieren
+ * der konkreten Komponenten - vermutlich ein Framework-/Tooling-Limit für die Verschachtelungstiefe
+ * dekorierter Basisklassen, nicht spezifisch für diesen Code. Anders als bei LuxFormLegacySelectableBase
+ * (Radio/Select) ist luxSelected hier zudem ein reiner Wert (eine Datei bzw. Dateiliste), kein
+ * Options-Pick - deshalb ohne dessen luxOptions/luxPickValue-Auflösung.
+ */
 @Directive({
   host: {
     '[class.lux-file-highlight]': 'isDragActive()',
@@ -19,7 +48,92 @@ import { LuxFormComponentBase, LuxValidationErrors, ValidatorFnType } from './lu
     '(drop)': 'onDrop($event)'
   }
 })
-export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
+export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T> implements LuxLegacyBridgeHost<T>, OnInit, DoCheck {
+  // Der Alt-Spec erwartet vor jeder Interaktion explizit null statt des generischen undefined-
+  // Defaults von LuxFormValueControlBase.value (der für andere Controls passt, hier aber nicht -
+  // File-Controls hatten historisch immer einen expliziten "kein Wert"-Zustand). controlValue muss
+  // hier erneut zugewiesen werden, sonst zeigt es (per Feldinitialisierer-Reihenfolge während super())
+  // weiterhin auf das ursprüngliche, gleich wieder verworfene value-Signal der Basisklasse.
+  override readonly value = model<T>(null as T);
+  override readonly controlValue: Signal<T> = this.value;
+
+  readonly luxControlBinding = input<string | undefined>(undefined);
+  readonly luxFormGroup = input<FormGroup | undefined>(undefined);
+  readonly luxFormControl = input<FormControl<T> | undefined>(undefined);
+  readonly luxControlValidators = input<ValidatorFnType>(undefined);
+  /**
+   * Der von aussen gesetzte Wert. Den aktuellen Wert liefern value() bzw. getValue().
+   * @deprecated Stattdessen [(value)] oder [formField] nutzen.
+   */
+  readonly luxSelected = input<T>(null as T);
+
+  readonly luxSelectedChange = output<T>();
+  readonly luxBlur = output<FocusEvent>();
+  readonly luxFocus = output<FocusEvent>();
+
+  /**
+   * File-Controls setzen Upload-/Größen-/Dateityp-Fehler direkt über formControl.setErrors(), auch
+   * außerhalb einer echten Form und ohne luxRequired/luxControlValidators - die Brücke muss dafür
+   * immer zuständig sein (siehe LuxLegacyBridgeHost.alwaysEngaged), sonst kämen diese Fehler nie in
+   * errorMessage() an.
+   */
+  readonly alwaysEngaged = true;
+
+  protected readonly bridge = new LuxLegacyFormBridge<T>(this);
+
+  get inForm(): boolean {
+    return this.bridge.inForm;
+  }
+
+  get formGroup(): FormGroup {
+    return this.bridge.formGroup;
+  }
+
+  get formControl(): FormControl<T> {
+    return this.bridge.formControl;
+  }
+
+  get modelValue(): ModelSignal<T> {
+    return this.value;
+  }
+
+  get valueInput(): Signal<T> {
+    return this.luxSelected;
+  }
+
+  ngOnInit() {
+    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch löst
+    // der Initialwert - wie bisher - noch kein luxSelectedChange aus.
+    this.bridge.setInitialValue(this.luxSelected());
+    this.bridge.init();
+  }
+
+  ngDoCheck() {
+    this.bridge.check();
+  }
+
+  override markAsTouched() {
+    super.markAsTouched();
+    this.bridge.markAsTouched();
+  }
+
+  override markAsDirty() {
+    super.markAsDirty();
+    this.bridge.markAsDirty();
+  }
+
+  getValue(): T {
+    return this.bridge.getValue();
+  }
+
+  setValue(value: T) {
+    this.bridge.setValue(value);
+  }
+
+  getRequiredValidator(): ValidatorFn {
+    return Validators.required;
+  }
+
   readonly luxUploadReportProgress = input(false);
   readonly luxContentsAsBlob = input(false);
   readonly luxTagId = input<string | undefined>(undefined);
@@ -37,14 +151,6 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   readonly luxAccept = input<string, any>('', {
     transform: (accepts) => (Array.isArray(accepts) ? accepts.join(',') : (accepts ?? ''))
   });
-
-  /**
-   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
-   * Wert liefern das Signal value() bzw. getValue().
-   */
-  readonly luxSelected = input<T>(null as T);
-
-  readonly luxSelectedChange = output<T>();
 
   readonly downloadLink = viewChild.required<ElementRef>('downloadLink');
   readonly fileUploadInput = viewChild.required<ElementRef>('fileUpload');
@@ -64,20 +170,6 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   );
 
   readonly isProgressVisible = computed(() => this.progress() >= 0 || this.forceProgressIndeterminate());
-
-  constructor() {
-    super();
-
-    this.syncValueInputToFormControl(this.luxSelected);
-  }
-
-  override ngOnInit() {
-    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
-    // löst der Initialwert - wie bisher - noch kein luxSelectedChange aus.
-    this._initialValue = this.luxSelected();
-
-    super.ngOnInit();
-  }
 
   onDragOver(dragEvent: DragEvent) {
     if (this.isDnDAllowed()) {
@@ -427,7 +519,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
   abstract handleViewFileClick(file: ILuxFileObject): void;
 
   onCloseErrorMessage() {
-    this.errorMessage.set(undefined);
+    this.errorDismissed.set(true);
     this.formControl.updateValueAndValidity();
   }
 
@@ -454,6 +546,8 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
       // Das neue Fehlerobjekt in das FormControl schreiben
       this.formControl.setErrors(errors);
     }
+
+    this.updateClearErrorButton();
   }
 
   /**
@@ -470,6 +564,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
     errors[error.cause] = { file: error.file };
 
     this.formControl.setErrors(errors);
+    this.updateClearErrorButton();
   }
 
   /**
@@ -589,7 +684,13 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
     return undefined;
   }
 
-  protected override notifyFormValueChanged() {
+  /**
+   * Wird explizit von den konkreten File-Controls aufgerufen, nachdem sich der Wert durch eine
+   * Nutzer-Interaktion (Auswahl/Löschen einer Datei) geändert hat - anders als bei den meisten
+   * anderen migrierten Controls löst eine rein externe FormControl-Änderung (z.B. aus einer
+   * Reactive Form) hier bewusst KEIN luxSelectedChange aus (unverändertes Alt-Verhalten).
+   */
+  protected notifyFormValueChanged() {
     this.luxSelectedChange.emit(this.getValue());
 
     // Wir leeren nach jedem Value-Change das Input, da wir das FormControl bereits als SSoT besitzen
@@ -597,31 +698,13 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormComponentBase<T> {
     this.fileUploadInput().nativeElement.value = null;
   }
 
-  protected override updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
-    if (!validators && this.luxRequired()) {
-      validators = Validators.required;
-    }
-
-    super.updateValidators(validators, checkRequiredValidator);
-  }
-
-  protected override initFormValueSubscription() {
-    this._formValueChangeSub = this.formControl.valueChanges.subscribe(() => {
-      // Wenn die Dateien erfolgreich gelesen werden konnten, die (spezifischen) Fehler entfernen
-      this.clearFormControlErrors();
-    });
-
-    if (this._initialValue !== null && this._initialValue !== undefined) {
-      this.setValue(this._initialValue);
-    }
-  }
-
-  protected override fetchErrorMessage(): string | undefined {
-    const result = super.fetchErrorMessage();
-
-    this.updateClearErrorButton();
-
-    return result;
+  /**
+   * Jede Wertänderung (intern wie extern) läuft hier zusammen - bewusst OHNE luxSelectedChange
+   * auszulösen, siehe notifyFormValueChanged().
+   */
+  emitValueChange(_value: T) {
+    // Wenn die Dateien erfolgreich gelesen werden konnten, die (spezifischen) Fehler entfernen
+    this.clearFormControlErrors();
   }
 
   private updateClearErrorButton() {

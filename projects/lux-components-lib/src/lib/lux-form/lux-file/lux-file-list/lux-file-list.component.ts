@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
   effect,
   inject,
   input,
@@ -31,6 +32,7 @@ import {
 } from '../../../lux-popups/lux-dialog/lux-dialog-model/lux-dialog-config.interface';
 import { LuxDialogService } from '../../../lux-popups/lux-dialog/lux-dialog.service';
 import { LuxValidationErrors } from '../../lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../../lux-form-model/lux-form-control-base.class';
 import { LuxFormFileBase } from '../../lux-form-model/lux-form-file-base.class';
 import { ILuxFileActionConfig } from '../lux-file-model/lux-file-action-config.interface';
 import { LuxFileCaptureDirective } from '../lux-file-model/lux-file-capture.directive';
@@ -83,6 +85,7 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
   templateUrl: './lux-file-list.component.html',
   styleUrls: ['./lux-file-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxFileListComponent)],
   imports: [
     NgClass,
     MatHint,
@@ -105,7 +108,7 @@ const defaultDownloadActionConfig: ILuxFileActionConfig = {
     TranslocoPipe
   ]
 })
-export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> {
+export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | null> implements OnDestroy {
   readonly luxShowPreview = input(true);
   readonly luxMultiple = input(true);
   readonly luxHeading = input(2);
@@ -160,8 +163,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
     });
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy();
+  ngOnDestroy() {
     this.resizeObserver?.disconnect();
   }
 
@@ -521,7 +523,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
 
   private resizeIconActionBar() {
     const fileEntries = this.fileEntries();
-    if (fileEntries.length > 0 && this.cdr) {
+    if (fileEntries.length > 0) {
       const newRowWidth = fileEntries[0].nativeElement.offsetWidth;
       if (this.rowWidth !== newRowWidth) {
         let buttonCount = 0;
@@ -555,8 +557,6 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
         } else {
           this.iconActionBarWidth.set(50);
         }
-
-        this.cdr.detectChanges();
       }
     }
   }
