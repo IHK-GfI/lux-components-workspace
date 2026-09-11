@@ -4,7 +4,7 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-select
         luxAutofocus
         luxOptionLabelProp="label"
@@ -16,7 +16,6 @@
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [luxDense]="denseFormat()"
         [luxPlaceholder]="placeholder()"
@@ -28,7 +27,75 @@
         [luxKeepOptionOrder]="keepOptionOrder()"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn() ? pickValueFn : undefined"
-        [(luxSelected)]="value"
+        [formField]="signalForm.selectValue"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn() ? compareWithFn : defaultCompareWith"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        #signalFormSelectComp
+      />
+      <example-signal-form-value [field]="signalForm.selectValue" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Signal Form &mdash; <code>[formField]</code> Multiselect</h3>
+      <lux-select
+        luxOptionLabelProp="label"
+        [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxPlaceholder]="placeholder()"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxKeepOptionOrder]="keepOptionOrder()"
+        [luxMultiple]="true"
+        [luxPickValue]="useValueFn() ? pickValueFn : undefined"
+        [formField]="signalMultiselectForm.selectValue"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn() ? compareWithFn : defaultCompareWith"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        #signalMultiselectComp
+      />
+      <example-signal-form-value [field]="signalMultiselectForm.selectValue" />
+    </div>
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
+      <lux-select
+        luxOptionLabelProp="label"
+        [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
+        [luxControlBinding]="controlBinding"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxPlaceholder]="placeholder()"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxKeepOptionOrder]="keepOptionOrder()"
+        [luxMultiple]="false"
+        [luxPickValue]="useValueFn() ? pickValueFn : undefined"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         [luxCompareWith]="useCompareWithFn() ? compareWithFn : defaultCompareWith"
@@ -36,12 +103,12 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents(), 'luxSelectedChange', $event)"
-        #defaultSelectComp
+        #reactiveSelectComp
       />
-      <example-value [value]="value()" />
+      <example-form-value [form]="form" [controlBinding]="controlBinding" />
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel mit Multiselect (ohne Reactive-Form)</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code> Multiselect</h3>
       <lux-select
         luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
@@ -75,19 +142,19 @@
       />
       <example-value [value]="multiselectValue()" />
     </div>
-    <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
       <lux-select
         luxOptionLabelProp="label"
         [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
-        [luxControlBinding]="controlBinding"
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
-        [(luxDisabled)]="disabled"
+        [disabled]="disabled()"
+        [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [luxDense]="denseFormat()"
         [luxPlaceholder]="placeholder()"
@@ -99,6 +166,42 @@
         [luxKeepOptionOrder]="keepOptionOrder()"
         [luxMultiple]="false"
         [luxPickValue]="useValueFn() ? pickValueFn : undefined"
+        [(value)]="plainValue"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn() ? compareWithFn : defaultCompareWith"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        #plainValueSelectComp
+      />
+      <example-value [value]="plainValue()" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxSelected)] @deprecated</code></h3>
+      <lux-select
+        luxOptionLabelProp="label"
+        [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxPlaceholder]="placeholder()"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxKeepOptionOrder]="keepOptionOrder()"
+        [luxMultiple]="false"
+        [luxPickValue]="useValueFn() ? pickValueFn : undefined"
+        [(luxSelected)]="value"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         [luxCompareWith]="useCompareWithFn() ? compareWithFn : defaultCompareWith"
@@ -106,9 +209,9 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxSelectedChange)="log(showOutputEvents(), 'luxSelectedChange', $event)"
-        #reactiveSelectComp
+        #defaultSelectComp
       />
-      <example-form-value [form]="form" [controlBinding]="controlBinding" />
+      <example-value [value]="value()" />
     </div>
     <div class="lux-flex lux-flex-col">
       <h3>Beispiel mit Options via ng-template (inkl. Tooltip)</h3>
@@ -347,13 +450,33 @@
       <lux-button
         [luxStroked]="true"
         luxLabel="Werte resetten"
-        (luxClicked)="reset(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
+        (luxClicked)="
+          reset(
+            signalFormSelectComp,
+            signalMultiselectComp,
+            multiselectComp,
+            reactiveSelectComp,
+            plainValueSelectComp,
+            defaultSelectComp,
+            tooltipSelectComp
+          )
+        "
         class="lux-flex-none"
       />
       <lux-button
         [luxStroked]="true"
         luxLabel="Fehler anzeigen"
-        (luxClicked)="showErrors(defaultSelectComp, multiselectComp, reactiveSelectComp, tooltipSelectComp)"
+        (luxClicked)="
+          showErrors(
+            signalFormSelectComp,
+            signalMultiselectComp,
+            multiselectComp,
+            reactiveSelectComp,
+            plainValueSelectComp,
+            defaultSelectComp,
+            tooltipSelectComp
+          )
+        "
         class="lux-flex-none"
       />
     </div>

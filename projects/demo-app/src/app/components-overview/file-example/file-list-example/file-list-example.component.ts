@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, OnDestroy, inject, signal, viewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, inject, signal, viewChildren } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
@@ -19,6 +20,7 @@ import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/examp
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { FileExampleAdvancedOptionsComponent } from '../file-example-advanced-options/file-example-advanced-options.component';
 import { FileExampleSimpleOptionsComponent } from '../file-example-simple-options/file-example-simple-options.component';
 import { FileExampleComponent } from '../file-example.component';
@@ -37,10 +39,12 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleBaseContentComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     FileExampleSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    FileExampleAdvancedOptionsComponent
+    FileExampleAdvancedOptionsComponent,
+    FormField
   ]
 })
 export class FileListExampleComponent
@@ -48,6 +52,11 @@ export class FileListExampleComponent
   implements AfterViewInit, OnDestroy
 {
   readonly fileLists = viewChildren(LuxFileListComponent);
+  readonly signalModel = signal<ILuxFileObject[] | null>(null);
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path, { when: () => this.required() });
+  });
+  readonly plainValue = signal<ILuxFileObject[] | null>(null);
 
   readonly namePrefixAccept = signal('(akzeptiert) ');
   readonly namePrefixColorAccept = signal('#3e8320');
@@ -156,6 +165,8 @@ export class FileListExampleComponent
               size: loremIpsumPdfBase64.length
             }
           ]);
+          this.signalModel.set(this.selected());
+          this.plainValue.set(this.selected());
           this.form.get(this.controlBinding)!.setValue([
             fileObject,
             {

@@ -94,10 +94,10 @@
     <div class="lux-flex lux-flex-col">
       <h3>Freistehend &mdash; <code>[(value)]</code></h3>
       <lux-input
-        [disabled]="plainDisabled()"
         [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [(value)]="plainValue"
+        [disabled]="disabled()"
         [luxAutocomplete]="autocomplete()"
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"

@@ -4,12 +4,11 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-file-list
         luxAutofocus
         [luxLabel]="label()"
         [luxHeading]="heading()"
-        [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [(luxDisabled)]="disabled"
         [luxShowPreview]="showPreview()"
@@ -28,16 +27,16 @@
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
         [luxDnDActive]="dndActive()"
-        [luxSelected]="selected()"
+        [formField]="signalForm"
         [luxContentsAsBlob]="contentAsBlob()"
         [luxUploadReportProgress]="reportProgress()"
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
-        (luxSelectedChange)="onSelectedChange($event)"
       />
+      <example-signal-form-value [field]="signalForm" [showValue]="false" />
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <div [formGroup]="form">
         <lux-file-list
           [luxLabel]="label()"
@@ -68,6 +67,64 @@
         />
         <example-form-value [form]="form" [controlBinding]="controlBinding" [showValue]="false" />
       </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-file-list
+        [luxLabel]="label()"
+        [luxHeading]="heading()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxDisabled)]="disabled"
+        [luxShowPreview]="showPreview()"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMultiple]="multiple()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxMaxFileCount]="maxFileCount()"
+        [luxUploadActionConfig]="uploadActionConfig"
+        [luxCustomActionConfigs]="customActionConfigs"
+        [luxViewActionConfig]="viewActionConfig"
+        [luxDeleteActionConfig]="deleteActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
+        [luxMaximumExtended]="maximumExtended"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxDnDActive]="dndActive()"
+        [(value)]="plainValue"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+      />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxSelected)] @deprecated</code></h3>
+      <lux-file-list
+        [luxLabel]="label()"
+        [luxHeading]="heading()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxDisabled)]="disabled"
+        [luxShowPreview]="showPreview()"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMultiple]="multiple()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxMaxFileCount]="maxFileCount()"
+        [luxUploadActionConfig]="uploadActionConfig"
+        [luxCustomActionConfigs]="customActionConfigs"
+        [luxViewActionConfig]="viewActionConfig"
+        [luxDeleteActionConfig]="deleteActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
+        [luxMaximumExtended]="maximumExtended"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxDnDActive]="dndActive()"
+        [(luxSelected)]="selected"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+      />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

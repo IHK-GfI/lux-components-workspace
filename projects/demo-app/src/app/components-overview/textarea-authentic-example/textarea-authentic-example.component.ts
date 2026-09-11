@@ -1,5 +1,6 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormField, form, maxLength as maxLengthValidator, minLength, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -22,6 +23,7 @@ import {
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface TextareaDummyForm {
@@ -44,13 +46,26 @@ interface TextareaDummyForm {
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    FormField
   ]
 })
 export class TextareaAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal({ textareaValue: '' });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.textareaValue, { message: 'Bitte einen Wert eingeben', when: () => this.required() });
+    minLength(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 3 : undefined));
+    maxLengthValidator(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 10 : undefined));
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal('');
+
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
   validatorOptions = [

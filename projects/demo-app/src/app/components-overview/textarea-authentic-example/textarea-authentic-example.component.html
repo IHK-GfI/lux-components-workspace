@@ -4,9 +4,104 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-textarea
         luxAutofocus
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly()"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [formField]="signalForm.textareaValue"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-signal-form"
+      >
+      </lux-textarea>
+      <example-signal-form-value [field]="signalForm.textareaValue"></example-signal-form-value>
+    </div>
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
+      <lux-textarea
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly()"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [luxControlBinding]="controlBinding"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-reactive"
+      >
+      </lux-textarea>
+      <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-textarea
+        [disabled]="disabled()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(value)]="plainValue"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [luxControlValidators]="controlValidators()"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-plain-value"
+      >
+      </lux-textarea>
+      <example-value [value]="plainValue()"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-textarea
         luxName="textarea_withoutForm"
         [(luxDisabled)]="disabled"
         [luxRequired]="required()"
@@ -33,40 +128,10 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-plain-lux-value"
       >
       </lux-textarea>
       <example-value [value]="value()"></example-value>
-    </div>
-    <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
-      <lux-textarea
-        luxName="textarea_withForm"
-        [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly()"
-        [luxAutocomplete]="autocomplete()"
-        [luxPlaceholder]="placeholder()"
-        [luxLabel]="label()"
-        [luxHint]="hint()"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
-        [luxNoTopLabel]="noTopLabel()"
-        [luxNoBottomLabel]="noBottomLabel()"
-        [luxNoLabels]="noLabels()"
-        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
-        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
-        [luxMaxLength]="maxLength()"
-        [luxControlBinding]="controlBinding"
-        [luxMinRows]="min()"
-        [luxMaxRows]="max()"
-        [luxHideCounterLabel]="hideCounterLabel()"
-        [luxLabelLongFormat]="labelLongFormat()"
-        [luxDense]="denseFormat()"
-        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
-        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
-        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
-      >
-      </lux-textarea>
-      <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

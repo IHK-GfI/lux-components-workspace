@@ -4,7 +4,7 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-datetimepicker
         luxAutofocus
         [luxShowToggle]="showToggle()"
@@ -16,10 +16,9 @@
         [luxMaxDate]="maxDate()"
         [luxStartView]="startView()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [luxDense]="denseFormat()"
-        [(luxValue)]="value"
+        [formField]="signalForm.datetimepickerValue"
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
         [luxHint]="hint()"
@@ -29,16 +28,15 @@
         [luxNoLabels]="noLabels()"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
-        [luxControlValidators]="controlValidators()"
         [luxLabelLongFormat]="labelLongFormat()"
         (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
-        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        luxTagId="datetimepicker-signal-form"
       />
-      <example-value [value]="value()" />
+      <example-signal-form-value [field]="signalForm.datetimepickerValue" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <lux-datetimepicker
         [luxShowToggle]="showToggle()"
         [luxOpened]="opened()"
@@ -69,6 +67,73 @@
         #test2
       />
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-datetimepicker
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxStartDate]="startDate()"
+        [luxStartTime]="startTime()"
+        [luxCustomFilter]="useCustomFilter() ? customFilter : undefined"
+        [luxMinDate]="minDate()"
+        [luxMaxDate]="maxDate()"
+        [luxStartView]="startView()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [(value)]="plainValue"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        luxTagId="datetimepicker-plain-value"
+      />
+      <example-value [value]="plainValue()" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-datetimepicker
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxStartDate]="startDate()"
+        [luxStartTime]="startTime()"
+        [luxCustomFilter]="useCustomFilter() ? customFilter : undefined"
+        [luxMinDate]="minDate()"
+        [luxMaxDate]="maxDate()"
+        [luxStartView]="startView()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [(luxValue)]="value"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        luxTagId="datetimepicker-plain-lux-value"
+      />
+      <example-value [value]="value()" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

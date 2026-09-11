@@ -4,7 +4,7 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-timepicker
         luxAutofocus
         [luxShowToggle]="showToggle()"
@@ -13,9 +13,8 @@
         [luxMaxTime]="maxTime()"
         [luxInterval]="interval()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required()"
         [luxReadonly]="readonly()"
-        [(luxValue)]="value"
+        [formField]="signalForm.timepickerValue"
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
         [luxHint]="hint()"
@@ -28,13 +27,13 @@
         [luxDense]="denseFormat()"
         (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
-        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        luxTagId="timepicker-signal-form"
       >
       </lux-timepicker>
-      <example-value [value]="value()" suffix="(ISO-Uhrzeit)"></example-value>
+      <example-signal-form-value [field]="signalForm.timepickerValue"></example-signal-form-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <lux-timepicker
         [luxShowToggle]="showToggle()"
         [luxOpened]="opened()"
@@ -63,7 +62,66 @@
       <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3>Kombination: ohne Reactive-Form</h3>
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-timepicker
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxMinTime]="minTime()"
+        [luxMaxTime]="maxTime()"
+        [luxInterval]="interval()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(value)]="plainValue"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        luxTagId="timepicker-plain-value"
+      >
+      </lux-timepicker>
+      <example-value [value]="plainValue()" suffix="(ISO-Uhrzeit)"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-timepicker
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxMinTime]="minTime()"
+        [luxMaxTime]="maxTime()"
+        [luxInterval]="interval()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxValue)]="value"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'luxValueChange', $event)"
+        luxTagId="timepicker-plain-lux-value"
+      >
+      </lux-timepicker>
+      <example-value [value]="value()" suffix="(ISO-Uhrzeit)"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Kombination: Signal Form &mdash; <code>[formField]</code></h3>
       <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
         <lux-datepicker
           class="lux-flex-auto"
@@ -71,14 +129,13 @@
           [luxReadonly]="readonly()"
           [luxDense]="denseFormat()"
           [luxPlaceholder]="placeholder()"
-          [luxRequired]="required()"
           [luxLabel]="label()"
           [luxHint]="hint()"
           [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
           [luxShowToggle]="showToggle()"
-          [luxReferenceControl]="combinedTimepicker"
-          [(luxValue)]="combinedISO"
-          #combinedDatepicker
+          [luxReferenceControl]="combinedTimepickerSignalForm"
+          [formField]="combinedSignalForm.combinedValue"
+          #combinedDatepickerSignalForm
         >
         </lux-datepicker>
         <lux-timepicker
@@ -91,27 +148,26 @@
           [luxReadonly]="readonly()"
           [luxDense]="denseFormat()"
           [luxPlaceholder]="placeholder()"
-          [luxRequired]="required()"
           [luxLabel]="label()"
           [luxHint]="hint()"
           [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
           [luxShowToggle]="showToggle()"
-          [luxReferenceControl]="combinedDatepicker"
-          [(luxValue)]="combinedISO"
+          [luxReferenceControl]="combinedDatepickerSignalForm"
+          [formField]="combinedSignalForm.combinedValue"
           [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
           [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
           (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
           (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
           (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
           (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
-          #combinedTimepicker
+          #combinedTimepickerSignalForm
         >
         </lux-timepicker>
       </div>
-      <example-value [value]="combinedISO()" suffix="(kombinierter ISO-Wert)"></example-value>
+      <example-signal-form-value [field]="combinedSignalForm.combinedValue"></example-signal-form-value>
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Kombination: in Reactive-Form</h3>
+      <h3 class="deprecated">Kombination: Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
         <lux-datepicker
           class="lux-flex-auto"
@@ -159,6 +215,102 @@
         geht (updateOn: 'blur').
       </p>
       <example-form-value [form]="form" [controlBinding]="controlBindingCombined"></example-form-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Kombination: Freistehend &mdash; <code>[(value)]</code></h3>
+      <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
+        <lux-datepicker
+          class="lux-flex-auto"
+          [(luxDisabled)]="disabled"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxRequired]="required()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
+          [luxReferenceControl]="combinedTimepickerPlainValue"
+          [(value)]="combinedPlainValue"
+          #combinedDatepickerPlainValue
+        >
+        </lux-datepicker>
+        <lux-timepicker
+          class="lux-flex-auto"
+          [luxOpened]="opened()"
+          [luxMinTime]="minTime()"
+          [luxMaxTime]="maxTime()"
+          [luxInterval]="interval()"
+          [(luxDisabled)]="disabled"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxRequired]="required()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
+          [luxReferenceControl]="combinedDatepickerPlainValue"
+          [(value)]="combinedPlainValue"
+          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+          (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+          (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+          (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+          #combinedTimepickerPlainValue
+        >
+        </lux-timepicker>
+      </div>
+      <example-value [value]="combinedPlainValue()" suffix="(kombinierter ISO-Wert)"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Kombination: Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
+        <lux-datepicker
+          class="lux-flex-auto"
+          [(luxDisabled)]="disabled"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxRequired]="required()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
+          [luxReferenceControl]="combinedTimepicker"
+          [(luxValue)]="combinedISO"
+          #combinedDatepicker
+        >
+        </lux-datepicker>
+        <lux-timepicker
+          class="lux-flex-auto"
+          [luxOpened]="opened()"
+          [luxMinTime]="minTime()"
+          [luxMaxTime]="maxTime()"
+          [luxInterval]="interval()"
+          [(luxDisabled)]="disabled"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [luxPlaceholder]="placeholder()"
+          [luxRequired]="required()"
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxShowToggle]="showToggle()"
+          [luxReferenceControl]="combinedDatepicker"
+          [(luxValue)]="combinedISO"
+          [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+          [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+          (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+          (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+          (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+          #combinedTimepicker
+        >
+        </lux-timepicker>
+      </div>
+      <example-value [value]="combinedISO()" suffix="(kombinierter ISO-Wert)"></example-value>
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

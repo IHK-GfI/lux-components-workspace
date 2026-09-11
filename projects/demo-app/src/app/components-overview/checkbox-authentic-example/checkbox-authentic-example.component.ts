@@ -63,7 +63,6 @@ export class CheckboxAuthenticExampleComponent {
   });
 
   readonly plainChecked = signal(false);
-  readonly plainDisabled = signal(false);
 
   readonly useErrorMessage = signal(true);
   readonly form = new FormGroup<CheckboxDummyForm>({

@@ -4,17 +4,16 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-slider
         luxAutofocus
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
-        [luxControlValidators]="controlValidators()"
         [luxColor]="color()"
         [(luxDisabled)]="disabled"
         [luxShowThumbLabel]="showThumbLabel()"
-        [(luxValue)]="value"
+        [formField]="signalForm.sliderValue"
         [luxMax]="max()"
         [luxMin]="min()"
         [luxStep]="step()"
@@ -30,13 +29,12 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxValuePercent)="percentChanged($event)"
-        (luxValueChange)="log(showOutputEvents(), 'Value changed', $event)"
-        luxTagId="slidernoform"
+        luxTagId="slider-signal-form"
       />
-      <example-value [value]="value()" />
+      <example-signal-form-value [field]="signalForm.sliderValue" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <lux-slider
         [luxLabel]="label()"
         [luxHint]="hint()"
@@ -60,9 +58,68 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxValuePercent)="percentReactiveChanged($event)"
-        luxTagId="sliderwithform"
+        luxTagId="slider-reactive"
       />
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-slider
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxControlValidators]="controlValidators()"
+        [luxColor]="color()"
+        [disabled]="disabled()"
+        [luxShowThumbLabel]="showThumbLabel()"
+        [(value)]="plainValue"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        luxTagId="slider-plain-value"
+      />
+      <example-value [value]="plainValue()" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-slider
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxControlValidators]="controlValidators()"
+        [luxColor]="color()"
+        [(luxDisabled)]="disabled"
+        [luxShowThumbLabel]="showThumbLabel()"
+        [(luxValue)]="value"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'Value changed', $event)"
+        luxTagId="slider-plain-lux-value"
+      />
+      <example-value [value]="value()" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

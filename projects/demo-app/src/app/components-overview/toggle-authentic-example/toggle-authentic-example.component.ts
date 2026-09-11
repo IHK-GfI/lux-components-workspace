@@ -1,5 +1,6 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import { LuxAutofocusDirective, LuxFormHintComponent, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -9,6 +10,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 import { emptyErrorCallback, exampleErrorCallback } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface ToggleDummyForm {
@@ -30,12 +32,23 @@ interface ToggleDummyForm {
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    FormField
   ]
 })
 export class ToggleAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal({ toggleValue: false });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.toggleValue, { when: () => this.required() });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainChecked = signal(false);
+
   readonly useErrorMessage = signal(true);
   form: FormGroup<ToggleDummyForm>;
   readonly value = signal(false);

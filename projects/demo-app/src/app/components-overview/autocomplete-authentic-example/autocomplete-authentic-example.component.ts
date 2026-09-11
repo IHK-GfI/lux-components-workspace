@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutocompleteComponent,
   LuxAutofocusDirective,
@@ -27,6 +28,7 @@ import {
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 import { AutocompleteAcExampleOption } from './autocomplete-authentic-example-option';
 import { RenderPropertyItem } from './render-property-item';
@@ -59,10 +61,21 @@ interface AutocompleteForm {
     LuxToggleComponent,
     LuxAutofocusDirective,
     TranslocoDatePipe,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    ExampleSignalFormValueComponent,
+    FormField
   ]
 })
 export class AutocompleteAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ autocompleteValue: AutocompleteAcExampleOption | string | null }>({ autocompleteValue: null });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.autocompleteValue, { when: () => this.required() });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal<AutocompleteAcExampleOption | string | null>(null);
+
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
   readonly showPrefix = signal(false);

@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, inject, OnInit, signal, viewChild, viewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { form, FormField, required } from '@angular/forms/signals';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
@@ -23,6 +24,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleFormDisableComponent } from '../../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { FileExampleComponent } from '../file-example.component';
 
 @Component({
@@ -41,9 +43,11 @@ import { FileExampleComponent } from '../file-example.component';
     ExampleBaseContentComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
-    ExampleBaseAdvancedOptionsComponent
+    ExampleBaseAdvancedOptionsComponent,
+    FormField
   ]
 })
 export class FileUploadExampleComponent
@@ -53,6 +57,11 @@ export class FileUploadExampleComponent
   readonly fileUploads = viewChildren(LuxFileUploadComponent);
   readonly fileBaseWithoutComponent = viewChild.required('fileBaseWithoutComponent', { read: LuxFileUploadComponent });
   readonly fileBaseWithComponent = viewChild.required('fileBaseWithComponent', { read: LuxFileUploadComponent });
+  readonly signalModel = signal<ILuxFileObject[] | null>(null);
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path, { when: () => this.required() });
+  });
+  readonly plainValue = signal<ILuxFileObject[] | null>(null);
 
   override readonly label = signal(`Zum Hochladen Datei hier ablegen oder `);
   readonly labelLink = signal(`Datei durchsuchen`);
@@ -90,6 +99,11 @@ export class FileUploadExampleComponent
 
   ngAfterViewInit() {
     this.fileComponents = [...this.fileUploads()];
+
+    const selected = this.selected();
+    if (selected) {
+      this.syncInitialFiles(selected);
+    }
   }
 
   toogleCustomHiddenActionConfig() {
@@ -142,13 +156,21 @@ export class FileUploadExampleComponent
           file.name = 'example.png';
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
-          this.selected.set([fileObject]);
-          this.form.get(this.controlBinding)!.setValue([fileObject]);
+          const selectedFiles = [fileObject];
+          this.selected.set(selectedFiles);
+          this.signalModel.set(selectedFiles);
+          this.plainValue.set(selectedFiles);
+          this.form.get(this.controlBinding)!.setValue(selectedFiles);
+          this.syncInitialFiles(selectedFiles);
         })
       )
       .subscribe(() => {
         /* Do nothing */
       });
+  }
+
+  private syncInitialFiles(files: ILuxFileObject[]) {
+    this.fileUploads().forEach((fileUpload) => fileUpload.setValue(files));
   }
 
   openDialog(fileObject: ILuxFileObject) {

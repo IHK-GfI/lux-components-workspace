@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, signal, viewChild, viewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, signal, viewChild, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
@@ -11,16 +12,18 @@ import {
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { map, take } from 'rxjs/operators';
+import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../../example-base/example-signal-form-value/example-signal-form-value.component';
+import { ExampleValueComponent } from '../../../example-base/example-value/example-value.component';
 import { FileExampleAdvancedOptionsComponent } from '../file-example-advanced-options/file-example-advanced-options.component';
 import { FileExampleSimpleOptionsComponent } from '../file-example-simple-options/file-example-simple-options.component';
 import { FileExampleComponent } from '../file-example.component';
-import { StatusMarkerComponent } from '../../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../../base/status-marker/status-marker.model';
 
 @Component({
   selector: 'lux-file-input-authentic-example',
@@ -37,17 +40,26 @@ import { DemoMarkerType } from '../../../base/status-marker/status-marker.model'
     ExampleBaseContentComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
+    ExampleValueComponent,
     ExampleBaseSimpleOptionsComponent,
     FileExampleSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
     FileExampleAdvancedOptionsComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    FormField
   ]
 })
 export class FileInputAuthenticExampleComponent extends FileExampleComponent implements AfterViewInit {
   readonly fileInputs = viewChildren(LuxFileInputComponent);
   readonly fileBaseWithoutComponent = viewChild.required('fileinputexamplewithoutform', { read: LuxFileInputComponent });
   readonly fileBaseWithComponent = viewChild.required('fileinputexamplewithform', { read: LuxFileInputComponent });
+
+  readonly signalModel = signal<ILuxFileObject | null>(null);
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path, { when: () => this.required() });
+  });
+  readonly plainValue = signal<ILuxFileObject | null>(null);
 
   readonly placeholder = signal('Placeholder');
   readonly clearOnError = signal(true);
@@ -83,6 +95,8 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
           this.selected.set(fileObject);
+          this.signalModel.set(fileObject);
+          this.plainValue.set(fileObject);
           this.form.get(this.controlBinding)!.setValue(fileObject);
         })
       )

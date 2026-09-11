@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxDateFilterFn,
@@ -24,6 +25,7 @@ import {
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface DatepickerDummyForm {
@@ -49,15 +51,26 @@ interface DatepickerDummyForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    ExampleSignalFormValueComponent,
+    FormField
   ]
 })
 export class DatepickerAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ datepickerValue: string | null }>({ datepickerValue: '2020-05-28T14:15:00.000Z' });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.datepickerValue, { when: () => this.required() });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal<string | null>('2020-05-28T14:15:00.000Z');
+
   readonly useCustomFilter = signal(false);
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
   readonly form = new FormGroup<DatepickerDummyForm>({
-    datepickerExample: new FormControl<string | null>(new Date(2020, 5, 28, 14, 15) as any)
+    datepickerExample: new FormControl<string | null>(new Date(2020, 4, 28, 14, 15) as any)
   });
   readonly log = logResult;
   readonly validatorOptions = [

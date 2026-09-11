@@ -74,7 +74,6 @@ export class InputAuthenticExampleComponent {
 
   // 2. Freistehend, ohne jedes Formular.
   readonly plainValue = signal('');
-  readonly plainDisabled = signal(false);
 
   readonly showSuffix = signal(false);
   readonly showPrefix = signal(false);

@@ -1,5 +1,6 @@
-import { Component, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxDatetimepickerComponent,
@@ -9,6 +10,8 @@ import {
   LuxStartView,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -16,9 +19,8 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 import { emptyErrorCallback, exampleErrorCallback, logResult } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 
 interface DatetimeDummyForm {
   datepickerExample: FormControl<string | null>;
@@ -43,11 +45,22 @@ interface DatetimeDummyForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    ExampleSignalFormValueComponent,
+    FormField
   ]
 })
 export class DatetimepickerAuthenticExampleComponent {
   readonly dateTimeInFormComponent = viewChild.required<LuxDatetimepickerComponent>('test2');
+
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ datetimepickerValue: string | null }>({ datetimepickerValue: null });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.datetimepickerValue, { when: () => this.required() });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal<string | null>(null);
 
   readonly useCustomFilter = signal(false);
   readonly useErrorMessage = signal(true);

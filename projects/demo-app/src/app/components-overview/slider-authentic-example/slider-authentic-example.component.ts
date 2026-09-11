@@ -1,5 +1,6 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormField, form, max as maxValidator, min as minValidator, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -23,6 +24,7 @@ import {
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface SliderDummyForm {
@@ -45,13 +47,26 @@ interface SliderDummyForm {
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    FormField
   ]
 })
 export class SliderAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal({ sliderValue: 0 });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.sliderValue, { when: () => this.required() });
+    maxValidator(path.sliderValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 100 : undefined));
+    minValidator(path.sliderValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 25 : undefined));
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal(0);
+
   readonly useErrorMessage = signal(true);
   readonly useDisplayFn = signal(false);
   readonly showOutputEvents = signal(false);

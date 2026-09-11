@@ -1,6 +1,7 @@
 import { JsonPipe } from '@angular/common';
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -28,6 +29,7 @@ import {
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface SelectDummyForm {
@@ -50,16 +52,31 @@ interface SelectDummyForm {
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     ExampleBaseOptionsActionsComponent,
     LuxTooltipDirective,
     StatusMarkerComponent,
-    JsonPipe
+    JsonPipe,
+    FormField
   ]
 })
 export class SelectAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ selectValue: any }>({ selectValue: null });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.selectValue, { when: () => this.required() });
+  });
+  readonly signalMultiselectModel = signal<{ selectValue: any[] }>({ selectValue: [] });
+  readonly signalMultiselectForm = form(this.signalMultiselectModel, (path) => {
+    required(path.selectValue, { when: () => this.required() });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal<any>(null);
+
   readonly markerTypeNew = DemoMarkerType.New;
   readonly markerTypeUpdated = DemoMarkerType.Updated;
   readonly useErrorMessage = signal(true);
@@ -158,6 +175,9 @@ export class SelectAuthenticExampleComponent {
   }
 
   showErrors(...comps: LuxFormLegacySelectableBase[]) {
+    this.signalModel.set({ selectValue: null });
+    this.signalMultiselectModel.set({ selectValue: [] });
+    this.plainValue.set(null);
     this.value.set(null);
     this.multiselectValue.set(null);
     this.templateValue.set(null);
@@ -200,6 +220,9 @@ export class SelectAuthenticExampleComponent {
   }
 
   reset(...comps: LuxFormLegacySelectableBase[]) {
+    this.signalModel.set({ selectValue: undefined });
+    this.signalMultiselectModel.set({ selectValue: [] });
+    this.plainValue.set(undefined);
     this.value.set(undefined);
     this.multiselectValue.set(undefined);
     this.templateValue.set(undefined);

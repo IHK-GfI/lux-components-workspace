@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxDatepickerComponent,
@@ -8,6 +9,8 @@ import {
   LuxTimepickerComponent,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -15,9 +18,8 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 import { emptyErrorCallback, exampleErrorCallback, logResult } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
-import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
-import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 
 interface TimepickerDummyForm {
   timepickerExample: FormControl<string | null>;
@@ -43,10 +45,26 @@ interface TimepickerDummyForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    ExampleSignalFormValueComponent,
+    FormField
   ]
 })
 export class TimepickerAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ timepickerValue: string | null }>({ timepickerValue: '2026-06-18T14:30:00.000Z' });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.timepickerValue, { when: () => this.required() });
+  });
+  readonly combinedSignalModel = signal<{ combinedValue: string | null }>({ combinedValue: '2026-06-18T14:30:00.000Z' });
+  readonly combinedSignalForm = form(this.combinedSignalModel, (path) => {
+    required(path.combinedValue, { when: () => this.required() });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal<string | null>('2026-06-18T14:30:00.000Z');
+  readonly combinedPlainValue = signal<string | null>('2026-06-18T14:30:00.000Z');
+
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
   form: FormGroup<TimepickerDummyForm>;

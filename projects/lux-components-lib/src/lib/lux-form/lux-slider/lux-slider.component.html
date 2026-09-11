@@ -32,7 +32,7 @@
       [id]="uid()"
       matSliderThumb
       [ngClass]="{ 'lux-readonly': isReadonly() }"
-      [value]="value() ?? 0"
+      [value]="value()"
       (valueChange)="onChange($event)"
       #ngSliderThumb="matSliderThumb"
       (input)="onInput(ngSliderThumb.value)"
