@@ -19,9 +19,21 @@ import { LuxLegacyBridgeHost, LuxLegacyFormBridge } from './lux-legacy-form-brid
  */
 @Directive()
 export abstract class LuxFormLegacyValueBase<T> extends LuxFormValueControlBase<T> implements LuxLegacyBridgeHost<T>, OnInit, DoCheck {
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxControlBinding = input<string | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxFormGroup = input<FormGroup | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxFormControl = input<FormControl<T> | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen die Validatoren direkt am Signal Form definieren.
+   */
   readonly luxControlValidators = input<ValidatorFnType>(undefined);
   /**
    * Der von aussen gesetzte Wert. Den aktuellen Wert liefern value() bzw. getValue().

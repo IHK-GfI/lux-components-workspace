@@ -17,9 +17,21 @@ export abstract class LuxFormLegacySelectableBase<O = any, V = any, P = any>
   extends LuxFormSelectableControlBase<O, V, P>
   implements LuxLegacyBridgeHost<V>, OnInit, DoCheck
 {
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxControlBinding = input<string | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxFormGroup = input<FormGroup | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxFormControl = input<FormControl<V> | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen die Validatoren direkt am Signal Form definieren.
+   */
   readonly luxControlValidators = input<ValidatorFnType>(undefined);
   /**
    * Der von aussen gesetzte Wert. Den aktuellen Wert liefern value() bzw. getValue().

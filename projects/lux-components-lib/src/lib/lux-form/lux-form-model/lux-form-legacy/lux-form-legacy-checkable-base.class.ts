@@ -17,16 +17,28 @@ export abstract class LuxFormLegacyCheckableBase<T = boolean>
   extends LuxFormCheckboxControlBase
   implements LuxLegacyBridgeHost<boolean>, OnInit, DoCheck
 {
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxControlBinding = input<string | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxFormGroup = input<FormGroup | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen [formField] nutzen.
+   */
   readonly luxFormControl = input<FormControl<boolean> | undefined>(undefined);
+  /**
+   * @deprecated Stattdessen die Validatoren direkt am Signal Form definieren.
+   */
   readonly luxControlValidators = input<ValidatorFnType>(undefined);
   /**
    * Der von aussen gesetzte Zustand.
    *
-   * Der Default ist bewusst null und nicht false: Nur so erkennt die Brücke beim ersten Lauf, dass
-   * von aussen gar kein Wert gebunden wurde, und lässt einen bereits vorhandenen FormControl-Wert
-   * (z.B. aus einer Reactive Form) unangetastet.
+   * Der Default ist bewusst undefined und nicht false: Nur so erkennt die Brücke beim ersten Lauf,
+   * dass von aussen gar kein Wert gebunden wurde, und lässt einen bereits vorhandenen
+   * FormControl-Wert (z.B. aus einer Reactive Form) unangetastet.
    *
    * Bleibt generisch, obwohl das Vertrags-Model checked auf boolean festgelegt ist: Angular leitet
    * den Typparameter der Komponente aus den Template-Bindings ab, sodass bestehende Aufrufe wie
