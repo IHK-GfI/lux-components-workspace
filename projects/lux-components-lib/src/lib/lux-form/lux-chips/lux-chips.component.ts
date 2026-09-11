@@ -3,12 +3,14 @@ import {
   AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
   computed,
   contentChildren,
   effect,
+  inject,
   input,
   output,
   signal,
@@ -26,7 +28,8 @@ import { LuxTooltipDirective } from '../../lux-directives/lux-tooltip/lux-toolti
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
-import { LuxFormComponentBase } from '../lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 import { LuxChipGroupComponent } from './lux-chips-subcomponents/lux-chip-group.component';
 import { LuxChipComponent } from './lux-chips-subcomponents/lux-chip.component';
 
@@ -38,6 +41,7 @@ let luxChipControlUID = 0;
   templateUrl: './lux-chips.component.html',
   styleUrls: ['./lux-chips.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxChipsComponent)],
   imports: [
     LuxIconComponent,
     LuxFormControlWrapperComponent,
@@ -54,12 +58,12 @@ let luxChipControlUID = 0;
     LuxTooltipDirective
   ]
 })
-export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> implements AfterContentInit, AfterViewInit, OnDestroy {
+export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> implements AfterContentInit, AfterViewInit, OnDestroy {
   readonly luxOrientation = input<LuxChipsOrientation>('horizontal');
   readonly luxInputAllowed = input(false);
   readonly luxNewChipGroup = input<LuxChipGroupComponent | undefined>(undefined);
   readonly luxStrict = input(false);
-  readonly luxPlaceholder = input('');
+  override readonly luxPlaceholder = input('');
   readonly luxOptionBlockSize = input(500);
   readonly luxHideBorder = input(false);
   readonly luxInputLabelAlwaysVisible = input(false);
@@ -107,6 +111,7 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
     return this.luxChipGroupComponents();
   }
 
+  private readonly cdr = inject(ChangeDetectorRef);
   private subscriptions: Subscription[] = [];
   private readonly generatedChipUid = 'lux-chip-control-ac-' + luxChipControlUID++;
   private disabledPropagationEnabled = false;
@@ -125,7 +130,7 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
     });
 
     effect(() => {
-      const disabled = this.luxDisabled();
+      const disabled = this.isDisabled();
 
       untracked(() => {
         // Den Disabled-State nicht während der Initialisierung übertragen, sonst würde ein an der
@@ -272,9 +277,7 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
     }
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
+  ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
@@ -347,10 +350,11 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
             newChipGroup.add(value);
 
             const newLabels = newChipGroup.luxLabels();
+            this.markAsDirty();
             if (newLabels && Array.isArray(newLabels) && newLabels.length > 0) {
-              this.formControl.setValue([...newLabels]);
+              this.value.set([...newLabels]);
             } else {
-              this.formControl.setValue([]);
+              this.value.set([]);
             }
           }
         } else {
@@ -373,10 +377,10 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
       // (add/remove löst setValue erst nach dem Event aus), sodass ein direktes
       // markAsTouched kurzzeitig einen falschen required-Fehler anzeigen würde.
       setTimeout(() => {
-        this.formControl.markAsTouched();
+        this.markAsTouched();
       }, 100);
     } else {
-      this.formControl.markAsTouched();
+      this.markAsTouched();
     }
   }
 
@@ -389,10 +393,11 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
       if (chipGroup === this.luxNewChipGroup()) {
         const labels = chipGroup.luxLabels();
 
+        this.markAsDirty();
         if (labels && Array.isArray(labels) && labels.length > 0) {
-          this.formControl.setValue([...labels]);
+          this.value.set([...labels]);
         } else {
-          this.formControl.setValue([]);
+          this.value.set([]);
         }
 
         this.setFilteredOptions(this.luxAutocompleteOptions());
@@ -495,9 +500,12 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
     }
   }
 
-  protected override notifyFormValueChanged(formValue: any) {
-    super.notifyFormValueChanged(formValue);
-
+  /**
+   * Bewusst ohne super.emitValueChange(value): Wie schon vor der Signal-Forms-Umstellung löst eine
+   * Wertänderung bei lux-chips kein luxValueChange aus - die Basisklasse kennt diesen Hook nur für
+   * den ChipGroup-Sync unten, nicht als allgemeinen Value-Change-Output.
+   */
+  override emitValueChange(value: string[] | null) {
     const newChipGroup = this.luxNewChipGroup();
 
     // An dieser Stelle muss man die ValueChanged-Events ignorieren,
@@ -506,8 +514,8 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
     // bereits aktualisiert worden. Um das doppelte Setzen zu
     // verhindern, wurde hier das actionRunning-Flag eingeführt.
     if (!this.actionRunning && this.inForm && newChipGroup) {
-      if (formValue && Array.isArray(formValue)) {
-        newChipGroup.luxLabels.set([...formValue]);
+      if (value && Array.isArray(value)) {
+        newChipGroup.luxLabels.set([...value]);
       } else {
         newChipGroup.luxLabels.set([]);
       }
@@ -543,15 +551,20 @@ export class LuxChipsComponent extends LuxFormComponentBase<string[] | null> imp
     // required-Validator. Die tatsächlichen Chip-Labels werden ausschließlich
     // durch das Parent-Template verwaltet (deklarative lux-chip-ac-Elemente).
     const newValue: string[] | null = count > 0 ? new Array(count).fill('') : null;
+    // Bewusst direkt am FormControl statt über this.value.set(): Dieser Präsenz-Indikator ist kein
+    // echter Inhaltswert und soll nicht als solcher nach außen dringen (siehe emitValueChange()
+    // unten - die Sync-Logik dort ist absichtlich ein No-Op für !inForm). { emitEvent: false }
+    // unterdrückt valueChanges/events fürs Erste; registerOnChange (siehe LuxLegacyFormBridge)
+    // feuert trotzdem synchron und hält value()/stateOverride konsistent, falls die Brücke gerade
+    // engaged ist (z.B. über luxRequired).
     this.formControl.setValue(newValue, { emitEvent: false });
-    // Hier bewusst OHNE emitEvent: false: updateValueAndValidity() muss ein StatusChangeEvent
-    // über formControl.events feuern, damit die base-class-Subscription (siehe
-    // LuxFormComponentBase.ngOnInit) markForCheck() aufruft. Ohne das bleibt diese OnPush-
-    // Komponente nach einer rein extern (contentChildren-Query) ausgelösten Neuberechnung
-    // ungeprüft, und der required-Fehler im Wrapper zeigt einen veralteten Status an - siehe
-    // Issue #289. Der Aufruf feuert zwar auch ein (redundantes, wertgleiches) valueChanges-
-    // Event, das ist hier aber unkritisch: notifyFormValueChanged() ist in diesem Codepfad
-    // (!inForm && !luxNewChipGroup) ein No-Op.
+    // Hier bewusst OHNE emitEvent: false: Erst das folgende updateValueAndValidity() feuert ein
+    // echtes StatusChangeEvent über formControl.events, auf das LuxLegacyFormBridge.init()
+    // abonniert ist und stateOverride() (isRequired()/isInvalid()/showError()) aktualisiert. Ohne
+    // das bliebe der required-Fehler im Wrapper nach einer rein extern (contentChildren-Query)
+    // ausgelösten Neuberechnung veraltet - siehe Issue #289. Der Aufruf feuert zwar auch ein
+    // (redundantes, wertgleiches) valueChanges-Event, das ist hier aber unkritisch:
+    // emitValueChange() ist in diesem Codepfad (!inForm && !luxNewChipGroup) ein No-Op.
     this.formControl.updateValueAndValidity();
   }
 

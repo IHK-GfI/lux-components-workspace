@@ -11,7 +11,7 @@
   >
     <mat-chip-grid
       [ngClass]="[luxOrientation().toLocaleLowerCase() === 'vertical' ? 'lux-vertical' : 'lux-horizontal']"
-      [disabled]="luxDisabled()"
+      [disabled]="isDisabled()"
       [attr.aria-labelledby]="labelledBy() ?? null"
       [attr.aria-label]="luxAriaLabel() ?? null"
       role="grid"
@@ -109,7 +109,7 @@
           [matAutocomplete]="auto"
           [attr.aria-labelledby]="labelledBy() ?? null"
           [attr.aria-label]="luxAriaLabel() ?? null"
-          [disabled]="luxDisabled()"
+          [disabled]="isDisabled()"
           (matChipInputTokenEnd)="inputAdd(input)"
           (focusout)="onFocusOut()"
           (keyup)="inputChanged(input.value)"

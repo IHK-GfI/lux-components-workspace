@@ -6,7 +6,6 @@ import {
   ElementRef,
   OnDestroy,
   TemplateRef,
-  computed,
   contentChild,
   effect,
   inject,
@@ -16,7 +15,6 @@ import {
   untracked,
   viewChild
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatOption } from '@angular/material/core';
 import { MatPrefix, MatSuffix } from '@angular/material/form-field';
@@ -32,7 +30,9 @@ import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.di
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxNameDirective } from '../lux-form-control/lux-form-directives/lux-name/lux-name-directive.directive';
-import { LuxFormComponentBase, LuxValidationErrors } from '../lux-form-model/lux-form-component-base.class';
+import { LuxValidationErrors } from '../lux-form-model/lux-form-component-base.class';
+import { provideLuxFormControl } from '../lux-form-model/lux-form-control-base.class';
+import { LuxFormLegacyValueBase } from '../lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 import { LuxInputPrefixComponent } from '../lux-input/lux-input-subcomponents/lux-input-prefix.component';
 import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lux-input-suffix.component';
 
@@ -41,10 +41,9 @@ import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lu
   templateUrl: './lux-autocomplete.component.html',
   styleUrls: ['./lux-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [provideLuxFormControl(() => LuxAutocompleteComponent)],
   imports: [
     LuxFormControlWrapperComponent,
-    FormsModule,
-    ReactiveFormsModule,
     MatPrefix,
     MatInput,
     MatAutocompleteTrigger,
@@ -62,15 +61,12 @@ import { LuxInputSuffixComponent } from '../lux-input/lux-input-subcomponents/lu
     TranslocoPipe
   ]
 })
-export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponentBase<V> implements OnDestroy, AfterViewInit {
-  readonly luxPlaceholder = input('');
+export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyValueBase<V> implements OnDestroy, AfterViewInit {
   readonly luxOptionLabelProp = input('label');
   readonly luxLookupDelay = input(500);
   readonly luxErrorMessageNotAnOption = input('');
-  readonly luxTagId = input<string | undefined>(undefined);
   readonly luxSelectAllOnClick = input(true);
   readonly luxStrict = input(true);
-  readonly luxName = input<string | undefined>(undefined);
   readonly luxPickValue = input<((selected: O | null | undefined) => V) | undefined>(undefined);
   readonly luxFilterFn = input<((filterTerm: string, label: string, option: any) => boolean) | undefined>(undefined);
   readonly luxPanelWidth = input<string | number>('');
@@ -80,16 +76,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
 
   readonly luxOptions = input<O[], O[] | undefined>([], { transform: (options) => options ?? [] });
 
-  /**
-   * Der von außen gesetzte Wert. Die Quelle der Wahrheit bleibt das FormControl; den aktuellen
-   * Wert liefern das Signal value() bzw. getValue().
-   */
-  readonly luxValue = input<V>(null as V);
-  readonly luxValueChange = output<V | null>();
-
   readonly luxOptionSelected = output<V | null>();
-  readonly luxBlur = output<FocusEvent>();
-  readonly luxFocus = output<FocusEvent>();
 
   readonly labelTemplate = contentChild('labelTemplate', { read: TemplateRef });
   readonly inputPrefix = contentChild(LuxInputPrefixComponent);
@@ -103,7 +90,6 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
 
   readonly filteredOptions = signal<O[]>([]);
   readonly displayedOptions = signal<O[]>([]);
-  readonly focused = signal(false);
 
   loadingRunning = false;
   activeIndex = -1;
@@ -114,7 +100,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
         const targetElement = mutation.target as HTMLElement;
         if (targetElement.classList && targetElement.classList.contains('cdk-text-field-autofilled')) {
           this.updateFormControlValue();
-          this.formControl.markAsTouched();
+          this.markAsTouched();
         }
       }
     });
@@ -123,20 +109,17 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
   private selected$: ReplaySubject<any> = new ReplaySubject<any>(1);
   private subscriptions: Subscription[] = [];
   private valueChangeSubscription?: Subscription;
-
-  readonly describedBy = computed(() => {
-    if (this.errorMessage()) {
-      return this.uid() + '-error';
-    }
-
-    const hasHint = !!this.formHintComponent() || !!this.luxHint();
-    return hasHint && (!this.luxHintShowOnlyOnFocus() || this.focused()) ? this.uid() + '-hint' : undefined;
-  });
+  /**
+   * Der zuletzt verarbeitete Rohtext des Eingabefelds. Verhindert - analog zu _previousValue im
+   * MatAutocompleteTrigger-ControlValueAccessor, den [formControl] früher automatisch nutzte -,
+   * dass ein Input-Event ohne tatsächliche Textänderung erneut committet wird. Ohne diesen Guard
+   * würde erneutes Eintippen desselben (bereits angezeigten) Textes noch einmal durch die
+   * emitValueChange()/selected$-Pipeline laufen und eine zweite, ungewollte Emission auslösen.
+   */
+  private previousInputValue?: string;
 
   constructor() {
     super();
-
-    this.syncValueInputToFormControl(this.luxValue);
 
     effect(() => {
       this.luxOptions();
@@ -152,10 +135,6 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
   }
 
   override ngOnInit() {
-    // Den gebundenen Startwert übernehmen, bevor das FormControl initialisiert wird. Dadurch
-    // löst der Initialwert - wie bisher - noch kein luxValueChange aus.
-    this._initialValue = this.luxValue();
-
     super.ngOnInit();
 
     this.subscriptions.push(
@@ -163,7 +142,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
         if (this.luxStrict()) {
           if (value === '' || value === null || value === undefined) {
             this.luxOptionSelected.emit(null);
-            this.luxValueChange.emit(null);
+            this.luxValueChange.emit(null as V);
           } else {
             const selectedOption = this.getPickValueOption(value);
             const pickValueFn = this.luxPickValue();
@@ -240,6 +219,10 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
 
     this.registerNewValueChangesListener();
 
+    // Initiale Anzeige nachholen: emitValueChange() lief ggf. bereits in ngOnInit, bevor das
+    // Input-Element existierte (viewChild löst matInput() erst ab hier auf).
+    this.updateInputDisplayValue(this.getValue());
+
     this.autoFillObserver.observe(this.matInput()!.nativeElement, {
       attributes: true,
       childList: false,
@@ -247,9 +230,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
     });
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
+  ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
     this.valueChangeSubscription?.unsubscribe();
 
@@ -268,7 +249,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
 
     if (filteredOptions.length > 0) {
       this.loadingRunning = true;
-      this.activeIndex = this.matAutocompleteComponent()?._keyManager.activeItemIndex ?? -1;
+      this.activeIndex = this.matAutocompleteComponent()?._keyManager?.activeItemIndex ?? -1;
       const start = 0;
       const end = Math.min(this.luxOptionBlockSize(), filteredOptions.length);
       const nextBlock = filteredOptions.splice(start, end);
@@ -376,11 +357,12 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
 
   onFocusOut(e: FocusEvent) {
     this.updateFormControlValue();
+    this.onBlur();
     this.focused.set(false);
     this.luxFocusOut.emit(e);
   }
 
-  override notifyFormValueChanged(formValue: any) {
+  override emitValueChange(formValue: any) {
     const pickValueFn = this.luxPickValue();
     let newValue;
 
@@ -391,15 +373,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
     }
 
     this.selected$.next(newValue);
-
-    const matInput = this.matInput();
-    if (matInput && matInput.nativeElement && newValue) {
-      if ((typeof newValue === 'string' || newValue instanceof String) && newValue) {
-        matInput.nativeElement.value = newValue;
-      } else if (newValue[this.luxOptionLabelProp()]) {
-        matInput.nativeElement.value = newValue[this.luxOptionLabelProp()];
-      }
-    }
+    this.updateInputDisplayValue(newValue);
   }
 
   /**
@@ -407,7 +381,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
    * Verwendet mousedown statt click, um Event-Bubbling nicht zu stören.
    */
   onWrapperClick(event: MouseEvent) {
-    if (this.luxDisabled() || this.luxReadonly()) {
+    if (this.isDisabled() || this.isReadonly()) {
       return;
     }
 
@@ -430,7 +404,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
   }
 
   showClearButton(): boolean {
-    if (!this.luxClearable() || this.luxReadonly() || this.luxDisabled()) {
+    if (!this.luxClearable() || this.isReadonly() || this.isDisabled()) {
       return false;
     }
 
@@ -449,11 +423,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
 
     const inputElement = this.matInput()?.nativeElement as HTMLInputElement | undefined;
 
-    if (this.inForm) {
-      this.formControl.setValue(null as V);
-    } else {
-      this.setValue(null as V);
-    }
+    this.setValue(null as V);
     this.matAutoComplete()?.closePanel();
 
     try {
@@ -490,10 +460,42 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormComponent
     return `${option}-${index}`;
   }
 
-  protected override applyValueInput(value: V) {
-    const pickValueFn = this.luxPickValue();
+  /**
+   * Wird bei jeder Eingabe im Textfeld ausgeführt und schreibt den rohen Text synchron in das
+   * FormControl - das übernahm früher automatisch der ControlValueAccessor von [formControl].
+   * Der previousInputValue-Guard bildet nach, dass MatAutocompleteTrigger._handleInput() den
+   * Wert ebenfalls nur bei einer tatsächlichen Textänderung committet.
+   */
+  onInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    if (this.previousInputValue === value) {
+      return;
+    }
 
-    this.setValue(value instanceof Object && !!pickValueFn ? pickValueFn(value as any) : value);
+    this.previousInputValue = value;
+    this.formControl.setValue(value as V);
+  }
+
+  /**
+   * Schreibt den darzustellenden Text direkt in das native Eingabeelement, analog zu dem, was
+   * früher writeValue() des MatAutocompleteTrigger-ControlValueAccessor übernahm - inklusive der
+   * previousInputValue-Baseline, damit die nächste Texteingabe korrekt dagegen verglichen wird.
+   *
+   * displayFn() löst bevorzugt auf (z.B. den über luxPickValue gepickten Wert zurück auf das
+   * Options-Label). Liefert das noch nichts (z.B. während des Tippens, bevor der Text zu einer
+   * Option passt), bleibt ein roher String-Wert unangetastet stehen, statt das Feld leerzuräumen -
+   * sonst würde die gerade laufende Eingabe des Nutzers überschrieben.
+   */
+  private updateInputDisplayValue(newValue: any) {
+    const matInput = this.matInput();
+    if (!matInput || !matInput.nativeElement) {
+      return;
+    }
+
+    const resolved = this.displayFn(newValue);
+    const displayValue = resolved || (typeof newValue === 'string' || newValue instanceof String ? (newValue as string) : '');
+    matInput.nativeElement.value = displayValue;
+    this.previousInputValue = displayValue;
   }
 
   /**
