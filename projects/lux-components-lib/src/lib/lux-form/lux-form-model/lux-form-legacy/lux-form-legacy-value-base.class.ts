@@ -27,7 +27,7 @@ export abstract class LuxFormLegacyValueBase<T> extends LuxFormValueControlBase<
    * Der von aussen gesetzte Wert. Den aktuellen Wert liefern value() bzw. getValue().
    * @deprecated Stattdessen [(value)] oder [formField] nutzen.
    */
-  readonly luxValue = input<T>(null as T);
+  readonly luxValue = input<T>(undefined as T);
   readonly luxPlaceholder = input('');
   readonly luxTagId = input<string | undefined>(undefined);
   readonly luxName = input<string | undefined>(undefined);

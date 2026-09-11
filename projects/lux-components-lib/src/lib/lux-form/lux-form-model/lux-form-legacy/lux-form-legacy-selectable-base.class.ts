@@ -25,7 +25,7 @@ export abstract class LuxFormLegacySelectableBase<O = any, V = any, P = any>
    * Der von aussen gesetzte Wert. Den aktuellen Wert liefern value() bzw. getValue().
    * @deprecated Stattdessen [(value)] oder [formField] nutzen.
    */
-  readonly luxSelected = input<V | null>(null);
+  readonly luxSelected = input<V | null | undefined>(undefined);
 
   readonly luxSelectedChange = output<V>();
   readonly luxBlur = output<FocusEvent>();

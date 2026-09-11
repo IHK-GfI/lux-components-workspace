@@ -34,7 +34,7 @@ export abstract class LuxFormLegacyCheckableBase<T = boolean>
    *
    * @deprecated Stattdessen [(checked)] oder [formField] nutzen.
    */
-  readonly luxChecked = input<T>(null as T);
+  readonly luxChecked = input<T>(undefined as T);
   readonly luxTagId = input<string | undefined>(undefined);
   readonly luxName = input<string | undefined>(undefined);
 

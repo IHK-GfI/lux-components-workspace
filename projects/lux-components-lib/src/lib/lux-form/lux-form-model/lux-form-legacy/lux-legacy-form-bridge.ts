@@ -69,6 +69,11 @@ export class LuxLegacyFormBridge<T> {
   private applyingToFormControl = false;
   /** Wird true, sobald der Alt-Input luxValue/luxChecked jemals einen echten Wert geliefert hat. */
   private legacyValueSeen = false;
+  /**
+   * Ob beim letzten check() ein Required-Validator am FormControl hing. undefined = noch nie
+   * geprüft, dann wird nur gemerkt und (noch) nicht revalidiert. Siehe check().
+   */
+  private lastSeenRequired?: boolean;
 
   constructor(private readonly host: LuxLegacyBridgeHost<T>) {
     // Reine Validator-Änderungen dürfen den Required-Validator nicht anfassen, sonst würde ein
@@ -122,12 +127,14 @@ export class LuxLegacyFormBridge<T> {
         if (initialRun) {
           initialRun = false;
 
-          // Ein null/undefined-Wert beim allerersten Lauf ist mehrdeutig: Entweder wurde der
-          // Alt-Input nie gebunden (dann bleibt er bei seinem eigenen Default), oder er wurde
-          // bewusst auf null/undefined gesetzt - das lässt sich hier nicht unterscheiden. Ein
-          // bereits vorhandener FormControl-Wert (z.B. aus einer Reactive Form) darf deshalb nicht
-          // überschrieben werden.
-          if (value === undefined || value === null) {
+          // undefined ist der Default ALLER Alt-Value-Inputs (luxValue/luxChecked/luxSelected) und
+          // damit das eindeutige Kennzeichen für "nie gebunden": Ein bereits vorhandener
+          // FormControl-Wert (z.B. aus einer Reactive Form) darf dann nicht überschrieben werden.
+          //
+          // Ein gebundenes null ist dagegen eine bewusste Aussage ("kein Wert") und wird - anders
+          // als früher, als beide Fälle denselben Default null teilten und deshalb nicht
+          // unterscheidbar waren - regulär übernommen.
+          if (value === undefined) {
             return;
           }
         }
@@ -228,7 +235,23 @@ export class LuxLegacyFormBridge<T> {
    */
   check() {
     if (this.inForm) {
-      this.host.luxRequired.set(hasRequiredValidator(this.formControl));
+      const required = hasRequiredValidator(this.formControl);
+      this.host.luxRequired.set(required);
+
+      // AbstractControl.setValidators() setzt nur die Validator-Liste, löst aber KEINE
+      // Neu-Validierung aus (im Angular-Quelltext verifiziert). Wird der Required-Validator also von
+      // aussen direkt am FormControl gesetzt, bliebe das Control bis zum nächsten beliebigen
+      // Validitäts-Anlass fälschlich "gültig".
+      //
+      // Bewusst FLANKENGESTEUERT statt bei jedem Check: Ein pauschales updateValueAndValidity() pro
+      // Change-Detection-Runde würde bei jedem Lauf statusChanges feuern und damit mit der
+      // luxDisabled-Spiegelung unten kollidieren (ein frisch gesetztes luxDisabled=true wird vom
+      // Effect erst NACH dieser Runde auf das FormControl angewandt - der Status wäre in dieser
+      // Lücke noch VALID/INVALID und würde luxDisabled sofort wieder auf false zurücksetzen).
+      if (this.lastSeenRequired !== undefined && this.lastSeenRequired !== required) {
+        this.formControl.updateValueAndValidity();
+      }
+      this.lastSeenRequired = required;
     }
 
     this.syncState();
@@ -305,7 +328,11 @@ export class LuxLegacyFormBridge<T> {
   setInitialValue(value: T) {
     this.initialValue = value;
 
-    if (value !== undefined && value !== null) {
+    // undefined = nie gebunden (siehe valueInput-Effect). Jeder andere Wert - auch null - ist eine
+    // bewusste Bindung und wird hier STILL übernommen: initFormControl() setzt ihn direkt auf das
+    // FormControl, bevor die valueChanges-Subscription steht, sodass der Startwert - wie bisher -
+    // kein luxValueChange/luxSelectedChange auslöst.
+    if (value !== undefined) {
       this.legacyValueSeen = true;
     }
   }

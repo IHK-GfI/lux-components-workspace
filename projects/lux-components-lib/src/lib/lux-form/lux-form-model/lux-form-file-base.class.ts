@@ -65,7 +65,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
    * Der von aussen gesetzte Wert. Den aktuellen Wert liefern value() bzw. getValue().
    * @deprecated Stattdessen [(value)] oder [formField] nutzen.
    */
-  readonly luxSelected = input<T>(null as T);
+  readonly luxSelected = input<T>(undefined as T);
 
   readonly luxSelectedChange = output<T>();
   readonly luxBlur = output<FocusEvent>();
