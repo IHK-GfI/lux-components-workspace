@@ -12,8 +12,6 @@
         [luxMinTime]="minTime()"
         [luxMaxTime]="maxTime()"
         [luxInterval]="interval()"
-        [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly()"
         [formField]="signalForm.timepickerValue"
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
@@ -125,8 +123,6 @@
       <div class="lux-flex lux-gap-4 lt-sm:lux-flex-col lt-sm:lux-gap-0">
         <lux-datepicker
           class="lux-flex-auto"
-          [(luxDisabled)]="disabled"
-          [luxReadonly]="readonly()"
           [luxDense]="denseFormat()"
           [luxPlaceholder]="placeholder()"
           [luxLabel]="label()"
@@ -144,8 +140,6 @@
           [luxMinTime]="minTime()"
           [luxMaxTime]="maxTime()"
           [luxInterval]="interval()"
-          [(luxDisabled)]="disabled"
-          [luxReadonly]="readonly()"
           [luxDense]="denseFormat()"
           [luxPlaceholder]="placeholder()"
           [luxLabel]="label()"

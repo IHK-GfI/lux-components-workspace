@@ -7,8 +7,6 @@
       <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-textarea
         luxAutofocus
-        [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly()"
         [luxAutocomplete]="autocomplete()"
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
@@ -69,7 +67,7 @@
     <div class="lux-flex lux-flex-col">
       <h3>Freistehend &mdash; <code>[(value)]</code></h3>
       <lux-textarea
-        [disabled]="disabled()"
+        [luxDisabled]="disabled()"
         [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [(value)]="plainValue"

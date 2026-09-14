@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import { LuxAutofocusDirective, LuxFormHintComponent, LuxInputComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -43,6 +43,8 @@ export class ToggleAuthenticExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal({ toggleValue: false });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.toggleValue, { when: () => this.disabled() });
+    readonly(path.toggleValue, { when: () => this.readonly() });
     required(path.toggleValue, { when: () => this.required() });
   });
 

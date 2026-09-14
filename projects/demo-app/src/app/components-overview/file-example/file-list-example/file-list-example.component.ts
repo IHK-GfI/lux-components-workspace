@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, inject, signal, viewChildren } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
@@ -54,6 +54,8 @@ export class FileListExampleComponent
   readonly fileLists = viewChildren(LuxFileListComponent);
   readonly signalModel = signal<ILuxFileObject[] | null>(null);
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path, { when: () => this.disabled() });
+    readonly(path, { when: () => this.readonly() });
     required(path, { when: () => this.required() });
   });
   readonly plainValue = signal<ILuxFileObject[] | null>(null);

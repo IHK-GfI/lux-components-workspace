@@ -287,15 +287,23 @@ export class LuxLegacyFormBridge<T> {
    * [formControl] am nativen Eingabeelement hing (markAsTouched beim Blur, markAsDirty bei jeder
    * Eingabe). Diese Bindung gibt es nicht mehr, also muss die Brücke es selbst tun - sonst blieben
    * formGroup.touched und formGroup.dirty dauerhaft false.
+   *
+   * Bewusst an stateOverrideClaimed statt an engaged geprüft: engaged hängt u.a. von luxRequired
+   * ab, das erst NACH dem Touch gesetzt werden kann (z.B. Feld zuerst berühren, dann per Toggle
+   * required setzen). War die Brücke beim Touch noch nicht engaged, ginge der Touch mit einer
+   * engaged-Prüfung hier unwiderruflich verloren - das synthetische FormControl bliebe untouched,
+   * obwohl der Nutzer das Feld längst verlassen hat. stateOverrideClaimed markiert dagegen nur den
+   * einen Fall, in dem eine andere Instanz (die ControlValueAccessor-Direktive) den Zustand
+   * bereits vollständig übernommen hat - nur dann darf die Brücke nicht mitschreiben.
    */
   markAsTouched() {
-    if (this.engaged && this.formControl && !this.formControl.touched) {
+    if (!this.host.stateOverrideClaimed() && this.formControl && !this.formControl.touched) {
       this.formControl.markAsTouched();
     }
   }
 
   markAsDirty() {
-    if (this.engaged && this.formControl && !this.formControl.dirty) {
+    if (!this.host.stateOverrideClaimed() && this.formControl && !this.formControl.dirty) {
       this.formControl.markAsDirty();
     }
   }

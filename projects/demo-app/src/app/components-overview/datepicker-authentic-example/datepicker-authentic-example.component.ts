@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxDateFilterFn,
@@ -60,6 +60,8 @@ export class DatepickerAuthenticExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ datepickerValue: string | null }>({ datepickerValue: '2020-05-28T14:15:00.000Z' });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.datepickerValue, { when: () => this.disabled() });
+    readonly(path.datepickerValue, { when: () => this.readonly() });
     required(path.datepickerValue, { when: () => this.required() });
   });
 

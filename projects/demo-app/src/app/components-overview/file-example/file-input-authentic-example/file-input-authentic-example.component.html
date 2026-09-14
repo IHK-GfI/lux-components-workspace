@@ -7,7 +7,6 @@
       <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-file-input
         luxAutofocus
-        [(luxDisabled)]="disabled"
         [formField]="signalForm"
         [luxLabel]="label()"
         [luxHint]="hint()"
@@ -16,7 +15,6 @@
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
         [luxPlaceholder]="placeholder()"
-        [luxReadonly]="readonly()"
         [luxUploadUrl]="uploadUrl()"
         [luxMaxSizeMiB]="maxSize()"
         [luxCustomActionConfigs]="customActionConfigs"

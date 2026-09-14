@@ -32,7 +32,12 @@ export abstract class LuxFormLegacyValueBase<T> extends LuxFormValueControlBase<
    */
   readonly luxFormControl = input<FormControl<T> | undefined>(undefined);
   /**
-   * @deprecated Stattdessen die Validatoren direkt am Signal Form definieren.
+   * Im Signal-Form die Validatoren direkt im Schema definieren - dort wird dieser Input nicht
+   * gebraucht. Im schemalosen [(value)]-Betrieb (kein [formField], siehe LuxLegacyFormBridge) ist
+   * er weiterhin erforderlich: Nur luxControlValidators hängt Validatoren an das synthetische
+   * FormControl der Brücke, es gibt dafür keinen Vertrags-Input-Ersatz. Deshalb bewusst NICHT
+   * &#64;deprecated - das würde Tooling/Codemods dazu verleiten, ihn ersatzlos zu entfernen und damit
+   * den [(value)]-Betrieb zu brechen.
    */
   readonly luxControlValidators = input<ValidatorFnType>(undefined);
   /**

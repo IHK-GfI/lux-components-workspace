@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { disabled, FormField, form, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxDatepickerComponent,
@@ -54,10 +54,14 @@ export class TimepickerAuthenticExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ timepickerValue: string | null }>({ timepickerValue: '2026-06-18T14:30:00.000Z' });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.timepickerValue, { when: () => this.disabled() });
+    readonly(path.timepickerValue, { when: () => this.readonly() });
     required(path.timepickerValue, { when: () => this.required() });
   });
   readonly combinedSignalModel = signal<{ combinedValue: string | null }>({ combinedValue: '2026-06-18T14:30:00.000Z' });
   readonly combinedSignalForm = form(this.combinedSignalModel, (path) => {
+    disabled(path.combinedValue, { when: () => this.disabled() });
+    readonly(path.combinedValue, { when: () => this.readonly() });
     required(path.combinedValue, { when: () => this.required() });
   });
 

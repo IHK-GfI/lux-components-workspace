@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormField, form, max as maxValidator, min as minValidator, required } from '@angular/forms/signals';
+import { FormField, disabled, form, max as maxValidator, min as minValidator, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -59,6 +59,8 @@ export class SliderAuthenticExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal({ sliderValue: 0 });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.sliderValue, { when: () => this.disabled() });
+    readonly(path.sliderValue, { when: () => this.readonly() });
     required(path.sliderValue, { when: () => this.required() });
     maxValidator(path.sliderValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 100 : undefined));
     minValidator(path.sliderValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 25 : undefined));

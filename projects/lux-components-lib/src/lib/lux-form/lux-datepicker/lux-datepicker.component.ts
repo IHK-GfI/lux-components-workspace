@@ -418,7 +418,16 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     // selbst aktualisiert, sodass hier keine laufende Eingabe überschrieben wird.
     inputDirective.writeValue(this.formControl.value);
 
-    this.formControl.updateValueAndValidity();
+    // Bewusst OHNE Event-Emission: updateValueAndValidity() feuert value-/statusChanges/events IMMER
+    // neu, auch wenn sich weder Wert noch Status geändert haben. Da syncDatepickerValidation() aus
+    // setISOValue() heraus bei JEDEM Aufruf läuft, würde ein nicht unterdrücktes valueChanges hier
+    // die LuxLegacyFormBridge-Subscription (formControl.valueChanges -> host.emitValueChange() ->
+    // processValueChange() -> updateDateValue() -> setISOValue() -> syncDatepickerValidation()) mit
+    // demselben, unveränderten Wert erneut anstoßen - eine Endlosschleife, die die CPU auf einem Kern
+    // dauerhaft auslastet (siehe Issue #289 - Hang auf der baseline-Demoseite). Die Validatoren
+    // laufen trotzdem synchron neu; die Anzeige von touched/dirty/invalid/errorMessage bleibt aktuell,
+    // weil LuxLegacyFormBridge.check() ohnehin bei jedem ngDoCheck() syncState() aufruft.
+    this.formControl.updateValueAndValidity({ emitEvent: false });
   }
 
   private updateDateValue(value: any) {

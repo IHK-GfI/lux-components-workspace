@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutocompleteComponent,
   LuxAutofocusDirective,
@@ -70,6 +70,8 @@ export class AutocompleteAuthenticExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ autocompleteValue: AutocompleteAcExampleOption | string | null }>({ autocompleteValue: null });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.autocompleteValue, { when: () => this.disabled() });
+    readonly(path.autocompleteValue, { when: () => this.readonly() });
     required(path.autocompleteValue, { when: () => this.required() });
   });
 

@@ -1,7 +1,7 @@
 import { Directive, DoCheck, ModelSignal, OnInit, Signal, input, output } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { LuxValidationErrors, ValidatorFnType } from '../lux-form-component-base.class';
 import { LuxFormCheckboxControlBase } from '../lux-form-checkbox-control-base.class';
+import { LuxValidationErrors, ValidatorFnType } from '../lux-form-component-base.class';
 import { LuxLegacyBridgeHost, LuxLegacyFormBridge } from './lux-legacy-form-bridge';
 
 /**
@@ -30,7 +30,12 @@ export abstract class LuxFormLegacyCheckableBase<T = boolean>
    */
   readonly luxFormControl = input<FormControl<boolean> | undefined>(undefined);
   /**
-   * @deprecated Stattdessen die Validatoren direkt am Signal Form definieren.
+   * Im Signal-Form die Validatoren direkt im Schema definieren - dort wird dieser Input nicht
+   * gebraucht. Im schemalosen [(checked)]-Betrieb (kein [formField], siehe LuxLegacyFormBridge)
+   * ist er weiterhin erforderlich: Nur luxControlValidators hängt Validatoren an das synthetische
+   * FormControl der Brücke, es gibt dafür keinen Vertrags-Input-Ersatz. Deshalb bewusst NICHT
+   * &#64;deprecated - das würde Tooling/Codemods dazu verleiten, ihn ersatzlos zu entfernen und damit
+   * den [(checked)]-Betrieb zu brechen.
    */
   readonly luxControlValidators = input<ValidatorFnType>(undefined);
   /**

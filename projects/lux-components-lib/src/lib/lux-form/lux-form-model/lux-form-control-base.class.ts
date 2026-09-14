@@ -126,11 +126,30 @@ export abstract class LuxFormControlBase<T = unknown> {
   // Diese drei sind die von der bisherigen API gewohnten Namen. Sie bleiben erhalten, damit
   // bestehende Templates unverändert funktionieren, und werden von isDisabled()/isRequired()/
   // isReadonly() mit den gleichnamigen Vertrags-Inputs verodert.
-  /** @deprecated Im Signal-Form über disabled() bzw. die disabled()-Regel des Schemas steuern. */
+  /**
+   * Im Signal-Form über die disabled()-Regel des Schemas steuern - dort wird dieser Alias nicht
+   * gebraucht. Im schemalosen [(value)]-Betrieb (kein [formField], siehe LuxLegacyFormBridge) ist
+   * er weiterhin erforderlich: Nur luxDisabled schaltet dort das synthetische FormControl der
+   * Brücke disabled, der Vertrags-Input disabled() bleibt dort wirkungslos. Deshalb bewusst NICHT
+   * &#64;deprecated - das würde Tooling/Codemods dazu verleiten, ihn überall durch disabled() zu
+   * ersetzen und damit den [(value)]-Betrieb zu brechen.
+   */
   readonly luxDisabled = model(false);
-  /** @deprecated Im Signal-Form über die required()-Regel des Schemas steuern. */
+  /**
+   * Im Signal-Form über die required()-Regel des Schemas steuern - dort wird dieser Alias nicht
+   * gebraucht. Im schemalosen [(value)]-Betrieb (kein [formField], siehe LuxLegacyFormBridge) ist
+   * er weiterhin erforderlich: Nur luxRequired schaltet dort den Validators.required am
+   * synthetischen FormControl der Brücke scharf, der Vertrags-Input required() bleibt dort
+   * wirkungslos. Deshalb bewusst NICHT &#64;deprecated - das würde Tooling/Codemods dazu verleiten,
+   * ihn überall durch required() zu ersetzen und damit den [(value)]-Betrieb zu brechen.
+   */
   readonly luxRequired = model(false);
-  /** @deprecated Im Signal-Form über readonly() bzw. die readonly()-Regel des Schemas steuern. */
+  /**
+   * @deprecated Im Signal-Form über readonly() bzw. die readonly()-Regel des Schemas steuern. Im
+   * schemalosen [(value)]-Betrieb genauso gut durch den Vertrags-Input readonly() ersetzbar - die
+   * LuxLegacyFormBridge kennt readonly gar nicht, es gibt also keine funktionale Abhängigkeit wie
+   * bei luxDisabled/luxRequired.
+   */
   readonly luxReadonly = input(false);
 
   // --- LUX-Präsentation ---

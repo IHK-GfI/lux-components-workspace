@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -67,10 +67,14 @@ export class SelectAuthenticExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ selectValue: any }>({ selectValue: null });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.selectValue, { when: () => this.disabled() });
+    readonly(path.selectValue, { when: () => this.readonly() });
     required(path.selectValue, { when: () => this.required() });
   });
   readonly signalMultiselectModel = signal<{ selectValue: any[] }>({ selectValue: [] });
   readonly signalMultiselectForm = form(this.signalMultiselectModel, (path) => {
+    disabled(path.selectValue, { when: () => this.disabled() });
+    readonly(path.selectValue, { when: () => this.readonly() });
     required(path.selectValue, { when: () => this.required() });
   });
 

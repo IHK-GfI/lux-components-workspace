@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, signal, viewChild, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
@@ -55,6 +55,8 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
 
   readonly signalModel = signal<ILuxFileObject | null>(null);
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path, { when: () => this.disabled() });
+    readonly(path, { when: () => this.readonly() });
     required(path, { when: () => this.required() });
   });
   readonly plainValue = signal<ILuxFileObject | null>(null);

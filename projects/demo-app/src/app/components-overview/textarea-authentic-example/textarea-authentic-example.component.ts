@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormField, form, maxLength as maxLengthValidator, minLength, required } from '@angular/forms/signals';
+import { FormField, disabled, form, maxLength as maxLengthValidator, minLength, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -58,6 +58,8 @@ export class TextareaAuthenticExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal({ textareaValue: '' });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.textareaValue, { when: () => this.disabled() });
+    readonly(path.textareaValue, { when: () => this.readonly() });
     required(path.textareaValue, { message: 'Bitte einen Wert eingeben', when: () => this.required() });
     minLength(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 3 : undefined));
     maxLengthValidator(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 10 : undefined));

@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { disabled, FormField, form, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -51,10 +51,14 @@ import { LookupExampleComponent } from '../lookup-example.component';
 export class LookupComboboxExampleComponent extends LookupExampleComponent implements OnInit {
   readonly signalModel = signal({ lookupValue: null as any });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.lookupValue, { when: () => this.disabled() });
+    readonly(path.lookupValue, { when: () => this.readonly() });
     required(path.lookupValue, { when: () => this.required() });
   });
   readonly signalMultiModel = signal({ lookupValue: null as any });
   readonly signalMultiForm = form(this.signalMultiModel, (path) => {
+    disabled(path.lookupValue, { when: () => this.disabled() });
+    readonly(path.lookupValue, { when: () => this.readonly() });
     required(path.lookupValue, { when: () => this.required() });
   });
   readonly plainValue = signal<any>(null);

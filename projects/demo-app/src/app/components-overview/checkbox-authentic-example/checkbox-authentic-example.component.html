@@ -7,7 +7,6 @@
       <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-checkbox
         luxAutofocus
-        [(luxDisabled)]="disabled"
         [formField]="signalForm.checkboxValue"
         [luxLabel]="label()"
         [luxHint]="hint()"
@@ -41,7 +40,7 @@
       <h3>Freistehend &mdash; <code>[(checked)]</code></h3>
       <lux-checkbox
         [(checked)]="plainChecked"
-        [disabled]="disabled()"
+        [luxDisabled]="disabled()"
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"

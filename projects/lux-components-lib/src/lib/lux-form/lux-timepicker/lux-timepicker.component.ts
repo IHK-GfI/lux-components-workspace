@@ -346,7 +346,18 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     }
 
     inputDirective.writeValue(this.formControl.value);
-    this.formControl.updateValueAndValidity();
+
+    // Bewusst OHNE Event-Emission - siehe LuxDatepickerComponent.syncDatepickerValidation() für die
+    // ausführliche Begründung. Ohne emitEvent:false feuert updateValueAndValidity() IMMER erneut
+    // formControl.valueChanges/events, auch ohne echte Änderung. Da syncTimepickerValidation() aus
+    // setISOValue() heraus praktisch bei jedem Aufruf läuft, schaukelt sich das über die
+    // LuxLegacyFormBridge-Subscription selbst hoch - reproduzierbar u.a. wenn zwei
+    // lux-timepicker-Instanzen per luxControlBinding an dasselbe FormControl gebunden sind (jede
+    // Instanz hat ihren eigenen valueChangesRunning-Reentrancy-Guard, der die jeweils ANDERE Instanz
+    // nicht vor der Rückkopplung schützt) - endet dort in einem synchronen Stack-Overflow. Die
+    // Validatoren laufen trotzdem synchron neu; touched/dirty/invalid/errorMessage bleiben aktuell,
+    // weil LuxLegacyFormBridge.check() ohnehin bei jedem ngDoCheck() syncState() aufruft.
+    this.formControl.updateValueAndValidity({ emitEvent: false });
   }
 
   private updateTimeValue(value: any) {

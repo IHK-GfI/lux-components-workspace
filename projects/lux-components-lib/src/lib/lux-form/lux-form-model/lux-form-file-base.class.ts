@@ -1,17 +1,17 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import {
+  computed,
   Directive,
   DoCheck,
   ElementRef,
-  ModelSignal,
-  OnInit,
-  Signal,
-  computed,
   inject,
   input,
   model,
+  ModelSignal,
+  OnInit,
   output,
+  Signal,
   signal,
   viewChild
 } from '@angular/core';
@@ -70,7 +70,12 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
    */
   readonly luxFormControl = input<FormControl<T> | undefined>(undefined);
   /**
-   * @deprecated Stattdessen die Validatoren direkt am Signal Form definieren.
+   * Im Signal-Form die Validatoren direkt im Schema definieren - dort wird dieser Input nicht
+   * gebraucht. Im schemalosen Betrieb (kein [formField], siehe LuxLegacyFormBridge) ist er
+   * weiterhin erforderlich: Nur luxControlValidators hängt zusätzliche Validatoren an das
+   * synthetische FormControl der Brücke, es gibt dafür keinen Vertrags-Input-Ersatz. Deshalb
+   * bewusst NICHT &#64;deprecated - das würde Tooling/Codemods dazu verleiten, ihn ersatzlos zu
+   * entfernen und damit den schemalosen Betrieb zu brechen.
    */
   readonly luxControlValidators = input<ValidatorFnType>(undefined);
   /**

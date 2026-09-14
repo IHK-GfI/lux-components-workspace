@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormField, form, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -59,6 +59,8 @@ interface CheckboxAgbDummyForm {
 export class CheckboxAuthenticExampleComponent {
   readonly signalModel = signal({ checkboxValue: false });
   readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.checkboxValue, { when: () => this.disabled() });
+    readonly(path.checkboxValue, { when: () => this.readonly() });
     required(path.checkboxValue, { when: () => this.required() });
   });
 

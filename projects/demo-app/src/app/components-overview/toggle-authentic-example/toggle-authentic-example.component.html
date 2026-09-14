@@ -7,12 +7,10 @@
       <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-toggle
         luxAutofocus
-        [(luxDisabled)]="disabled"
         [formField]="signalForm.toggleValue"
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
-        [luxReadonly]="readonly()"
         [luxDense]="denseFormat()"
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
@@ -44,7 +42,7 @@
       <h3>Freistehend &mdash; <code>[(checked)]</code></h3>
       <lux-toggle
         [(checked)]="plainChecked"
-        [disabled]="disabled()"
+        [luxDisabled]="disabled()"
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"

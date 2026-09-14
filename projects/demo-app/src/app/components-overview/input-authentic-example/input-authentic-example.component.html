@@ -7,8 +7,6 @@
       <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-input
         luxAutofocus
-        [(luxDisabled)]="disabled"
-        [luxReadonly]="readonly()"
         [luxAutocomplete]="autocomplete()"
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
@@ -95,9 +93,9 @@
       <h3>Freistehend &mdash; <code>[(value)]</code></h3>
       <lux-input
         [luxRequired]="required()"
-        [luxReadonly]="readonly()"
+        [readonly]="readonly()"
         [(value)]="plainValue"
-        [disabled]="disabled()"
+        [luxDisabled]="disabled()"
         [luxAutocomplete]="autocomplete()"
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
