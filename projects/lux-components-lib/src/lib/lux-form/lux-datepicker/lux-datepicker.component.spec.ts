@@ -737,6 +737,46 @@ describe('LuxDatepickerComponent', () => {
     }, 15000);
   });
 
+  describe('Geteiltes FormControl (mehrere Instanzen)', () => {
+    // Regressionstest für Issue #289: Zwei lux-datepicker-Instanzen, die per luxControlBinding an
+    // dasselbe FormControl gebunden sind (z.B. Normal-/Spalten-Ansicht derselben Form), lösten vor
+    // dem Fix in syncDatepickerValidation() (updateValueAndValidity() ohne emitEvent:false) eine
+    // Endlosschleife über formControl.valueChanges aus, sobald ngOnInit() beim Rendern einen
+    // bereits vorhandenen Wert normalisierte. Der reine Ablauf dieses Tests (kein Timeout, kein
+    // "Maximum call stack size exceeded") ist die eigentliche Absicherung.
+    let fixture: ComponentFixture<LuxDatepickerSharedControlComponent>;
+    let testComponent: LuxDatepickerSharedControlComponent;
+    let datepickerComponents: LuxDatepickerComponent[];
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(LuxDatepickerSharedControlComponent);
+      testComponent = fixture.componentInstance;
+      await LuxTestHelper.wait(fixture);
+      datepickerComponents = fixture.debugElement
+        .queryAll(By.directive(LuxDatepickerComponent))
+        .map((debugEl) => debugEl.componentInstance as LuxDatepickerComponent);
+    });
+
+    it('sollte mit einem vorbelegten Wert rendern, ohne in eine Endlosschleife zu laufen', async () => {
+      // Die Vorbedingung ist bereits die eigentliche Prüfung: Das Rendern mit einem im Konstruktor
+      // vorbelegten FormControl-Wert ist exakt der Ablauf, der die Endlosschleife auslöste.
+      expect(datepickerComponents.length).toEqual(2);
+      expect(testComponent.form.get('datepicker')!.value).toEqual('2020-01-01T00:00:00.000Z');
+      expect(datepickerComponents[0].value()).toEqual('2020-01-01T00:00:00.000Z');
+      expect(datepickerComponents[1].value()).toEqual('2020-01-01T00:00:00.000Z');
+    });
+
+    it('sollte einen über die erste Instanz gesetzten Wert an die zweite Instanz weitergeben', async () => {
+      // Änderungen durchführen
+      testComponent.form.get('datepicker')!.setValue('2021-05-10T00:00:00.000Z');
+      await LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen
+      expect(datepickerComponents[0].value()).toEqual('2021-05-10T00:00:00.000Z');
+      expect(datepickerComponents[1].value()).toEqual('2021-05-10T00:00:00.000Z');
+    });
+  });
+
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxDatepickerA11yComponent>;
     let testComponent: LuxDatepickerA11yComponent;
@@ -880,6 +920,24 @@ class LuxFormTestComponent {
     });
     this.formControl = this.form.get('datepicker')!;
   }
+}
+
+@Component({
+  template: `
+    <div [formGroup]="form">
+      <lux-datepicker luxLabel="Datum (Ansicht 1)" luxControlBinding="datepicker"></lux-datepicker>
+      <lux-datepicker luxLabel="Datum (Ansicht 2)" luxControlBinding="datepicker"></lux-datepicker>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, LuxDatepickerComponent]
+})
+class LuxDatepickerSharedControlComponent {
+  // Der vorbelegte Wert ist entscheidend: ngOnInit() normalisiert ihn direkt (nicht über den
+  // processValueChange()-Reentrancy-Guard abgesichert) und löste darüber die Endlosschleife aus.
+  readonly form = new FormGroup({
+    datepicker: new FormControl<string | null>('2020-01-01T00:00:00.000Z')
+  });
 }
 
 @Component({

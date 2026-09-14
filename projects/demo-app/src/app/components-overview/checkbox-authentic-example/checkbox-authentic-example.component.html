@@ -15,6 +15,8 @@
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
       />
       <example-signal-form-value [field]="signalForm.checkboxValue" />
     </div>
@@ -44,11 +46,14 @@
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
         [luxDense]="denseFormat()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
       />
       <example-value [value]="plainChecked()" />
     </div>

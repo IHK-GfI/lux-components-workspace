@@ -81,12 +81,14 @@ describe('LuxLookupAutocompleteComponent', () => {
 
     it('Sollte die Optionen ausgeben wie sie geladen wurden', async () => {
       expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
+      expect(autocomplete.formControl.dirty).toBe(false);
 
       // Änderungen durchführen
       LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
       await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
       // Nachbedingungen testen
+      expect(autocomplete.formControl.dirty).toBe(true);
       const options = document.querySelectorAll('mat-option');
 
       expect(options?.length).toEqual(5);
@@ -148,6 +150,8 @@ describe('LuxLookupAutocompleteComponent', () => {
       });
 
       it('Sollte den Wert über den Clear-Button zurücksetzen', async () => {
+        expect(autocomplete.formControl.dirty).toBe(false);
+
         LuxTestHelper.typeInElement(autocomplete.matInput()!.nativeElement, 'A');
         await LuxTestHelper.wait(fixture, autocomplete.luxDebounceTime());
 
@@ -159,6 +163,7 @@ describe('LuxLookupAutocompleteComponent', () => {
 
         expect(autocomplete.formControl.value).toBeNull();
         expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
+        expect(autocomplete.formControl.dirty).toBe(true);
       });
     });
   });

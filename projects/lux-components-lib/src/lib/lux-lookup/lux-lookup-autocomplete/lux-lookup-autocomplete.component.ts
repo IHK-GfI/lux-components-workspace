@@ -194,6 +194,7 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
 
     const inputElement = this.matInput()?.nativeElement as HTMLInputElement | undefined;
 
+    this.markAsDirty();
     this.setValue(null as T);
     this.matAutocompleteTrigger()?.closePanel();
 
@@ -210,6 +211,7 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
    * @param event
    */
   selected(event: MatAutocompleteSelectedEvent) {
+    this.markAsDirty();
     this.setValue(event.option.value);
   }
 
@@ -242,6 +244,7 @@ export class LuxLookupAutocompleteComponent<T = LuxLookupTableEntry | null> exte
     }
 
     this.previousInputValue = value;
+    this.markAsDirty();
     this.formControl.setValue(value as T);
   }
 

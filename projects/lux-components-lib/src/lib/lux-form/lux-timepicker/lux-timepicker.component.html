@@ -22,6 +22,7 @@
       [required]="isRequired()"
       [readonly]="isReadonly()"
       [autocomplete]="luxAutocomplete()"
+      (valueChange)="onTimeInputValueChange($event)"
       (blur)="luxBlur.emit($event)"
       (focus)="onFocus($event)"
       (focusin)="onFocusIn($event)"

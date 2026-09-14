@@ -108,6 +108,16 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
   private triggerOpenCloseTimeout?: ReturnType<typeof setTimeout>;
   private notifyFormValueChangedTimeout?: ReturnType<typeof setTimeout>;
   private timepickerValidatorRegistered = false;
+  /**
+   * Verhindert die Rückkopplung inputDirective.writeValue() -> (valueChange) -> onTimeInputValueChange().
+   * MatTimepickerInput.value ist ein ModelSignal - anders als bei MatDatepickerInput/writeValue() gibt
+   * es dort keine getrennte "nur Anzeige, kein Event"-Variante: Jedes .set() (auch unser eigenes
+   * writeValue() in syncTimepickerValidation(), das nur die Anzeige synchron halten soll) löst
+   * (valueChange) genauso aus wie eine echte Nutzereingabe. Ohne dieses Flag ruft syncTimepickerValidation()
+   * über onTimeInputValueChange() wieder setISOValue() auf, das seinerseits wieder syncTimepickerValidation()
+   * aufruft - ein synchroner Stack-Overflow.
+   */
+  private applyingToInput = false;
 
   readonly min = computed(() => this.parseTime(this.luxMinTime()));
   readonly max = computed(() => this.parseTime(this.luxMaxTime()));
@@ -216,24 +226,55 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
   }
 
   onTimeOptionSelected(event: MatTimepickerSelected<Date>) {
+    // Bewusst nur bei vorhandenem luxReferenceControl aktiv: Ohne Referenz-Datepicker übernimmt
+    // bereits onTimeInputValueChange() die Auswahl (MatTimepickerInput spiegelt eine Panel-Auswahl
+    // ebenfalls in sein eigenes value-Model, das (valueChange) auslöst) - ein zusätzlicher Aufruf
+    // hier wäre redundant. Nur die Referenzdatum-Übernahme erledigt ausschließlich diese Methode.
     const referenceValue = this.luxReferenceControl()?.formControl?.value;
     if (event?.value && this.formControl && referenceValue) {
-      const newDate: Date = new Date(event.value);
-      if (referenceValue instanceof Date && LuxUtil.isDate(referenceValue)) {
-        newDate.setUTCFullYear(referenceValue.getUTCFullYear(), referenceValue.getUTCMonth(), referenceValue.getUTCDate());
-      }
-      if (typeof referenceValue === 'string' && LuxUtil.ISO_8601_FULL.test(referenceValue)) {
-        newDate.setUTCFullYear(
-          new Date(referenceValue).getUTCFullYear(),
-          new Date(referenceValue).getUTCMonth(),
-          new Date(referenceValue).getUTCDate()
-        );
-      }
-
-      this.updateTimeValue(newDate);
+      this.updateTimeValue(this.applyReferenceDate(event.value));
     }
 
     this.matTimepicker()?.close();
+  }
+
+  /**
+   * Wird bei jeder manuellen Texteingabe im Feld ausgeführt - MatTimepickerInput hat (anders als
+   * MatDatepickerInput) keine (dateInput)/(dateChange)-Outputs, sondern legt den geparsten Wert
+   * ausschließlich in seinem eigenen value-Model ab. Ohne diesen Handler kommt eine per Tastatur
+   * eingetragene Uhrzeit nie im FormControl an - ein bereits gesetzter Wert ließe sich dann nicht
+   * mehr überschreiben, und mangels Wertänderung würde auch nie neu validiert (keine Fehlermeldung).
+   */
+  onTimeInputValueChange(value: Date | null) {
+    if (this.applyingToInput) {
+      return;
+    }
+
+    this.markAsDirty();
+    this.updateTimeValue(value ? this.applyReferenceDate(value) : value);
+  }
+
+  /**
+   * Übernimmt das Datum des über luxReferenceControl verbundenen Datepickers in eine neu erfasste
+   * Uhrzeit - gemeinsame Grundlage für Auswahl im Panel (onTimeOptionSelected) und Texteingabe
+   * (onTimeInputValueChange).
+   */
+  private applyReferenceDate(value: Date): Date {
+    const referenceValue = this.luxReferenceControl()?.formControl?.value;
+    const newDate = new Date(value);
+
+    if (referenceValue instanceof Date && LuxUtil.isDate(referenceValue)) {
+      newDate.setUTCFullYear(referenceValue.getUTCFullYear(), referenceValue.getUTCMonth(), referenceValue.getUTCDate());
+    }
+    if (typeof referenceValue === 'string' && LuxUtil.ISO_8601_FULL.test(referenceValue)) {
+      newDate.setUTCFullYear(
+        new Date(referenceValue).getUTCFullYear(),
+        new Date(referenceValue).getUTCMonth(),
+        new Date(referenceValue).getUTCDate()
+      );
+    }
+
+    return newDate;
   }
 
   /**
@@ -345,7 +386,12 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
       this.formControl.addValidators((control) => inputDirective.validate(control));
     }
 
-    inputDirective.writeValue(this.formControl.value);
+    this.applyingToInput = true;
+    try {
+      inputDirective.writeValue(this.formControl.value);
+    } finally {
+      this.applyingToInput = false;
+    }
 
     // Bewusst OHNE Event-Emission - siehe LuxDatepickerComponent.syncDatepickerValidation() für die
     // ausführliche Begründung. Ohne emitEvent:false feuert updateValueAndValidity() IMMER erneut

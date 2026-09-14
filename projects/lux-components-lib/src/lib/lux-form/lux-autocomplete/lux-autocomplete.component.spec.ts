@@ -4,6 +4,7 @@ import { describe, it, beforeAll, beforeEach, afterEach, expect, vi } from 'vite
 import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
@@ -65,6 +66,7 @@ describe('LuxAutocompleteComponent', () => {
         // Vorbedingungen testen
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('');
         expect(component.formGroup.get('aufgaben')!.value).toBeNull();
+        expect(component.formGroup.get('aufgaben')!.dirty).toBe(false);
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'Vertretungsaufgaben');
@@ -75,6 +77,7 @@ describe('LuxAutocompleteComponent', () => {
         // Nachbedingungen testen
         expect(component.autocomplete().value()).toEqual(component.options()[3]);
         expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options()[3]);
+        expect(component.formGroup.get('aufgaben')!.dirty).toBe(true);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('Vertretungsaufgaben');
         expect(component.autocomplete().matInput()!.nativeElement.required).toBeFalsy();
       });
@@ -83,6 +86,7 @@ describe('LuxAutocompleteComponent', () => {
         // Vorbedingungen testen
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('');
         expect(component.formGroup.get('aufgaben')!.value).toBeNull();
+        expect(component.formGroup.get('aufgaben')!.dirty).toBe(false);
 
         // Änderungen durchführen
         LuxTestHelper.typeInElement(component.autocomplete().matInput()!.nativeElement, 'meine');
@@ -95,6 +99,7 @@ describe('LuxAutocompleteComponent', () => {
         // Nachbedingungen testen
         expect(component.autocomplete().value()).toEqual(component.options()[0]);
         expect(component.formGroup.get('aufgaben')!.value).toEqual(component.options()[0]);
+        expect(component.formGroup.get('aufgaben')!.dirty).toBe(true);
         expect(component.autocomplete().matInput()!.nativeElement.value).toEqual('Meine Aufgaben');
       });
 
@@ -742,6 +747,7 @@ describe('LuxAutocompleteComponent', () => {
         expect(autocomplete.formControl.value).toBeNull();
         expect(autocomplete.matInput()!.nativeElement.value).toEqual('');
         expect(fixture.debugElement.query(By.css('.lux-input-clear-btn button'))).toBeNull();
+        expect(component.formGroup.get('aufgaben')!.dirty).toBe(true);
       });
 
       it('Sollte den Clear-Button nicht anzeigen wenn luxClearable=false', async () => {
@@ -826,6 +832,86 @@ describe('LuxAutocompleteComponent', () => {
 
       expect(component.formGroup.get('aufgaben')!.value).toBeNull();
       expect(component.autocomplete().value()).toBeNull();
+    });
+  });
+
+  describe('Geteiltes FormControl (mehrere Instanzen)', () => {
+    // Regressionstest für Issue #289: Zwei lux-autocomplete-Instanzen, die per luxControlBinding an
+    // dasselbe FormControl gebunden sind (z.B. Normal-/Spalten-Ansicht derselben Form, siehe
+    // baseline.component.html), lösten vor dem Fix in der LuxLegacyFormBridge eine Endlosschleife
+    // aus, sobald ngOnInit() beim Rendern einen bereits vorhandenen Wert normalisierte. Der reine
+    // Ablauf dieses Tests (kein Timeout, kein "Maximum call stack size exceeded") ist die
+    // eigentliche Absicherung.
+    it('sollte mit einem vorbelegten Wert rendern, ohne in eine Endlosschleife zu laufen', async () => {
+      vi.useFakeTimers();
+      const fixture: ComponentFixture<LuxAutoCompleteSharedControlComponent> = TestBed.createComponent(
+        LuxAutoCompleteSharedControlComponent
+      );
+      const testComponent = fixture.componentInstance;
+      fixture.detectChanges();
+      await vi.advanceTimersByTimeAsync(0);
+      fixture.detectChanges();
+
+      const autocompleteComponents = fixture.debugElement
+        .queryAll(By.directive(LuxAutocompleteComponent))
+        .map((debugEl) => debugEl.componentInstance as LuxAutocompleteComponent);
+
+      expect(autocompleteComponents.length).toEqual(2);
+      expect(testComponent.formGroup.get('aufgaben')!.value).toEqual(testComponent.options[1]);
+      expect(autocompleteComponents[0].value()).toEqual(testComponent.options[1]);
+      expect(autocompleteComponents[1].value()).toEqual(testComponent.options[1]);
+
+      await vi.runAllTimersAsync();
+      vi.useRealTimers();
+    });
+  });
+
+  describe('Signal Form: required bleibt nach Engagement der Legacy-Bridge reaktiv', () => {
+    // Regressionstest: Sobald die LuxLegacyFormBridge einmal "engaged" ist (z.B. weil onInput()
+    // formControl.setValue() direkt aufruft), überschrieb stateOverride().required/invalid/
+    // legacyErrors dauerhaft den echten Signal-Forms-Zustand aus required()/invalid()/errors() -
+    // isRequired()/errorMessage() reagierten danach nicht mehr auf das Schema. Siehe
+    // lux-legacy-form-bridge.ts (syncState()).
+    let fixture: ComponentFixture<LuxAutoCompleteSignalFormComponent>;
+    let host: LuxAutoCompleteSignalFormComponent;
+    let autocomplete: LuxAutocompleteComponent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(LuxAutoCompleteSignalFormComponent);
+      host = fixture.componentInstance;
+      fixture.detectChanges();
+      autocomplete = fixture.debugElement.query(By.directive(LuxAutocompleteComponent)).componentInstance;
+    });
+
+    it('sollte vor jeder Interaktion auf das Schema reagieren', () => {
+      expect(autocomplete.isRequired()).toBe(false);
+
+      host.required.set(true);
+      fixture.detectChanges();
+
+      expect(autocomplete.isRequired()).toBe(true);
+    });
+
+    it('sollte nach Tippen und Löschen weiterhin auf required() aus dem Schema reagieren', () => {
+      // Tippen engagiert die Bridge (onInput() ruft formControl.setValue() direkt auf).
+      const input = autocomplete.matInput()!.nativeElement as HTMLInputElement;
+      LuxTestHelper.typeInElement(input, 'Test');
+      fixture.detectChanges();
+      LuxTestHelper.typeInElement(input, '');
+      fixture.detectChanges();
+
+      host.required.set(true);
+      fixture.detectChanges();
+
+      expect(autocomplete.isRequired()).toBe(true);
+      expect(autocomplete.isInvalid()).toBe(true);
+      expect(autocomplete.errorMessage()).toBeTruthy();
+
+      host.required.set(false);
+      fixture.detectChanges();
+
+      expect(autocomplete.isRequired()).toBe(false);
+      expect(autocomplete.isInvalid()).toBe(false);
     });
   });
 
@@ -1208,6 +1294,51 @@ class LuxAutoCompleteSingleOptionComponent {
 
   formGroup = new FormGroup({
     aufgaben: new FormControl<TestOption | null>(null)
+  });
+}
+
+@Component({
+  template: `
+    <div [formGroup]="formGroup">
+      <lux-autocomplete luxLabel="Autocomplete (Ansicht 1)" [luxOptions]="options" luxControlBinding="aufgaben" [luxLookupDelay]="0">
+      </lux-autocomplete>
+      <lux-autocomplete luxLabel="Autocomplete (Ansicht 2)" [luxOptions]="options" luxControlBinding="aufgaben" [luxLookupDelay]="0">
+      </lux-autocomplete>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, LuxAutocompleteComponent]
+})
+class LuxAutoCompleteSharedControlComponent {
+  options: TestOption[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' },
+    { label: 'Zurückgestellte Aufgaben', value: 'C' },
+    { label: 'Vertretungsaufgaben', value: 'D' }
+  ];
+
+  // Der vorbelegte Wert ist entscheidend: ngOnInit() normalisiert ihn direkt (nicht über den
+  // processValueChange()-Reentrancy-Guard abgesichert) und löste darüber die Endlosschleife aus.
+  readonly formGroup = new FormGroup({
+    aufgaben: new FormControl<TestOption | null>(this.options[1])
+  });
+}
+
+@Component({
+  template: `<lux-autocomplete luxLabel="Autocomplete" [luxOptions]="options" [formField]="testForm.aufgaben" [luxLookupDelay]="0" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxAutocompleteComponent, FormField]
+})
+class LuxAutoCompleteSignalFormComponent {
+  options: TestOption[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' }
+  ];
+
+  readonly required = signal(false);
+  readonly model = signal<{ aufgaben: TestOption | null }>({ aufgaben: null });
+  readonly testForm = form(this.model, (path) => {
+    required(path.aufgaben, { when: () => this.required() });
   });
 }
 

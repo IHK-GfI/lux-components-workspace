@@ -338,6 +338,8 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
   selected(selectedEvent: MatAutocompleteSelectedEvent) {
     const pickValueFn = this.luxPickValue();
 
+    this.markAsDirty();
+
     if (this.luxStrict() && !!pickValueFn) {
       this.setValue(pickValueFn(selectedEvent.option.value));
     } else {
@@ -423,6 +425,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
 
     const inputElement = this.matInput()?.nativeElement as HTMLInputElement | undefined;
 
+    this.markAsDirty();
     this.setValue(null as V);
     this.matAutoComplete()?.closePanel();
 
@@ -473,6 +476,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
     }
 
     this.previousInputValue = value;
+    this.markAsDirty();
     this.formControl.setValue(value as V);
   }
 

@@ -28,7 +28,7 @@
         (luxChipAdded)="chipAdded($event)"
         #firstchipGroup
       >
-        @for (chip of chips(); track chip.label; let i = $index) {
+        @for (chip of chips(); track $index; let i = $index) {
           <lux-chip
             [luxDisabled]="chip.disabled"
             [luxColor]="chip.color"
@@ -240,7 +240,7 @@
     <div class="lux-flex lux-flex-col lux-gap-4">
       <h3>Einzelne Chips</h3>
       <lux-accordion [luxMulti]="false">
-        @for (chip of chips(); track chip.label; let i = $index) {
+        @for (chip of chips(); track $index; let i = $index) {
           <lux-panel (luxOpened)="openedPanel.set(i)">
             <lux-panel-header-title> Chip #{{ i + 1 }} </lux-panel-header-title>
             @if (openedPanel() === i) {

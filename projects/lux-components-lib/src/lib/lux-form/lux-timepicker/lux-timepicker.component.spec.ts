@@ -49,6 +49,28 @@ describe('LuxTimepickerComponent', () => {
     expect(inputEl.value).toEqual('14:15');
   });
 
+  it('sollte eine manuelle Texteingabe im FormControl übernehmen und dirty markieren', async () => {
+    // Regressionstest: MatTimepickerInput hat (anders als MatDatepickerInput) kein (dateInput)/
+    // (dateChange)-Output, sondern legt getippte Werte ausschließlich in seinem eigenen
+    // value-Model ab. Ohne (valueChange)-Anbindung in der Komponente kam eine Texteingabe nie im
+    // FormControl an - ein einmal gesetzter Wert blieb dauerhaft stehen und wurde nie dirty.
+    const fixture: ComponentFixture<LuxTimepickerFormTestComponent> = TestBed.createComponent(LuxTimepickerFormTestComponent);
+    const testComponent = fixture.componentInstance;
+
+    await LuxTestHelper.wait(fixture);
+    testComponent.formControl.setValue('1970-01-01T14:15:00.000Z');
+    await LuxTestHelper.wait(fixture);
+
+    const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+    expect(testComponent.formControl.dirty).toBe(false);
+
+    LuxTestHelper.typeInElement(inputEl, '09:15');
+    await LuxTestHelper.wait(fixture);
+
+    expect(testComponent.formControl.value).toEqual('1970-01-01T09:15:00.000Z');
+    expect(testComponent.formControl.dirty).toBe(true);
+  });
+
   it('sollte bei referenziertem Datepicker das Datum beim Auswählen einer Zeit übernehmen', async () => {
     const fixture: ComponentFixture<LuxTimepickerReferenceFormTestComponent> = TestBed.createComponent(
       LuxTimepickerReferenceFormTestComponent
@@ -120,6 +142,47 @@ describe('LuxTimepickerComponent', () => {
     expect(testComponent.combinedControl.value).toEqual('2026-06-18T09:30:00.000Z');
     expect(datepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
     expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
+  });
+
+  describe('Geteiltes FormControl (mehrere Instanzen)', () => {
+    // Regressionstest: Zwei lux-timepicker-Instanzen an demselben luxControlBinding-Control lösten
+    // vor dem Fix in syncTimepickerValidation() (updateValueAndValidity() ohne emitEvent:false)
+    // einen synchronen Stack-Overflow aus - jede Instanz hat ihren eigenen valueChangesRunning-
+    // Reentrancy-Guard, der die jeweils ANDERE Instanz nicht vor der Rückkopplung über das geteilte
+    // FormControl schützt. Der reine Ablauf dieses Tests (kein "Maximum call stack size exceeded")
+    // ist die eigentliche Absicherung.
+    it('sollte mit einem vorbelegten Wert rendern, ohne in eine Endlosschleife zu laufen', async () => {
+      const fixture: ComponentFixture<LuxTimepickerSharedControlComponent> = TestBed.createComponent(LuxTimepickerSharedControlComponent);
+      const testComponent = fixture.componentInstance;
+
+      await LuxTestHelper.wait(fixture);
+
+      const timepickerComponents = fixture.debugElement
+        .queryAll(By.directive(LuxTimepickerComponent))
+        .map((debugEl) => debugEl.componentInstance as LuxTimepickerComponent);
+      expect(timepickerComponents.length).toEqual(2);
+      expect(testComponent.form.get('time')!.value).toEqual('1970-01-01T14:15:00.000Z');
+      expect(timepickerComponents[0].value()).toEqual('1970-01-01T14:15:00.000Z');
+      expect(timepickerComponents[1].value()).toEqual('1970-01-01T14:15:00.000Z');
+    });
+
+    it('sollte eine Texteingabe in der ersten Instanz im gemeinsamen FormControl übernehmen, ohne in eine Endlosschleife zu laufen', async () => {
+      const fixture: ComponentFixture<LuxTimepickerSharedControlComponent> = TestBed.createComponent(LuxTimepickerSharedControlComponent);
+      const testComponent = fixture.componentInstance;
+
+      await LuxTestHelper.wait(fixture);
+
+      const inputEls: HTMLInputElement[] = fixture.debugElement.queryAll(By.css('input')).map((debugEl) => debugEl.nativeElement);
+      LuxTestHelper.typeInElement(inputEls[0], '09:15');
+      await LuxTestHelper.wait(fixture);
+
+      // Das geteilte FormControl ist die maßgebliche Quelle (beide Instanzen lesen dieselbe
+      // Objektreferenz) - die Anzeige der jeweils ANDEREN Instanz aktualisiert sich dagegen nicht
+      // automatisch mit, weil setISOValue() ohne luxReferenceControl bewusst mit emitEvent:false
+      // schreibt (siehe dortige Begründung). Das ist unverändertes Bestandsverhalten, nicht Teil
+      // dieser Regressionsabsicherung.
+      expect(testComponent.form.get('time')!.value).toEqual('1970-01-01T09:15:00.000Z');
+    });
   });
 
   describe('A11y', () => {
@@ -231,6 +294,23 @@ class LuxTimepickerCombinedFormTestComponent {
   get combinedControl() {
     return this.form.get('combined') as FormControl<string | null>;
   }
+}
+
+@Component({
+  template: `
+    <div [formGroup]="form">
+      <lux-timepicker luxLabel="Zeit (Ansicht 1)" luxControlBinding="time"></lux-timepicker>
+      <lux-timepicker luxLabel="Zeit (Ansicht 2)" luxControlBinding="time"></lux-timepicker>
+    </div>
+  `,
+  imports: [ReactiveFormsModule, LuxTimepickerComponent]
+})
+class LuxTimepickerSharedControlComponent {
+  // Der vorbelegte Wert ist entscheidend: ngOnInit() normalisiert ihn direkt (nicht über den
+  // valueChangesRunning-Reentrancy-Guard abgesichert) und löste darüber den Stack-Overflow aus.
+  readonly form = new FormGroup({
+    time: new FormControl<string | null>('1970-01-01T14:15:00.000Z')
+  });
 }
 
 @Component({

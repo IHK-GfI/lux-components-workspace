@@ -697,6 +697,31 @@ describe('LuxDatetimepickerComponent', () => {
     }, 15000);
   });
 
+  describe('Geteiltes FormControl (mehrere Instanzen)', () => {
+    // Regressionsschutz: Anders als bei Datepicker/Timepicker (siehe dortige gleichnamige Tests) ist
+    // LuxDatetimepickerComponent für dieses Szenario nicht anfällig, weil das nicht unterdrückte
+    // updateValueAndValidity() in setISOValue() dort bereits hinter einem "Wert hat sich wirklich
+    // geändert"-Gate steckt (if (this.formControl.value !== isoValue)). Dieser Test hält das fest,
+    // damit eine künftige Änderung an setISOValue() nicht unbemerkt dieselbe Endlosschleife
+    // wiedereinführt, die bei Datepicker/Timepicker gefunden und gefixt wurde.
+    it('sollte mit einem vorbelegten Wert rendern, ohne in eine Endlosschleife zu laufen', async () => {
+      const fixture: ComponentFixture<LuxDatetimepickerSharedControlComponent> = TestBed.createComponent(
+        LuxDatetimepickerSharedControlComponent
+      );
+      const testComponent = fixture.componentInstance;
+      await LuxTestHelper.wait(fixture);
+
+      const datetimepickerComponents = fixture.debugElement
+        .queryAll(By.directive(LuxDatetimepickerComponent))
+        .map((debugEl) => debugEl.componentInstance as LuxDatetimepickerComponent);
+
+      expect(datetimepickerComponents.length).toEqual(2);
+      expect(testComponent.form.get('datepicker')!.value).toEqual('2020-01-01T10:15:00.000Z');
+      expect(datetimepickerComponents[0].value()).toEqual('2020-01-01T10:15:00.000Z');
+      expect(datetimepickerComponents[1].value()).toEqual('2020-01-01T10:15:00.000Z');
+    });
+  });
+
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxDatetimepickerA11yComponent>;
     let testComponent: LuxDatetimepickerA11yComponent;
@@ -837,6 +862,22 @@ class LuxFormTestComponent {
     });
     this.formControl = this.form.get('datepicker')!;
   }
+}
+
+@Component({
+  template: `
+    <div [formGroup]="form">
+      <lux-datetimepicker luxLabel="Datum (Ansicht 1)" luxControlBinding="datepicker"></lux-datetimepicker>
+      <lux-datetimepicker luxLabel="Datum (Ansicht 2)" luxControlBinding="datepicker"></lux-datetimepicker>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, LuxDatetimepickerComponent]
+})
+class LuxDatetimepickerSharedControlComponent {
+  readonly form = new FormGroup({
+    datepicker: new FormControl<string | null>('2020-01-01T10:15:00.000Z')
+  });
 }
 
 @Component({

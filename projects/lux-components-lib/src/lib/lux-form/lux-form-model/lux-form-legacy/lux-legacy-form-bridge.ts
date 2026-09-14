@@ -1,7 +1,10 @@
 import { DestroyRef, ModelSignal, Signal, WritableSignal, effect, inject, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+// ValidationError besitzt keinen Runtime-Wert (reines Typ-Konstrukt), siehe lux-form-control-base.class.ts.
+import type { ValidationError } from '@angular/forms/signals';
 import { LuxConsoleService } from '../../../lux-util/lux-console.service';
+import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxValidationErrors, ValidatorFnType } from '../lux-form-component-base.class';
 import { LuxControlStateOverride } from '../lux-form-control-base.class';
 
@@ -19,6 +22,20 @@ export interface LuxLegacyBridgeHost<T> {
   readonly luxControlValidators: Signal<ValidatorFnType>;
   readonly luxDisabled: ModelSignal<boolean>;
   readonly luxRequired: ModelSignal<boolean>;
+  /**
+   * Der Vertrags-Input required(), von der [formField]-Direktive automatisch aus dem Signal-Form-
+   * Schema verdrahtet (required(path, {when: ...})). Anders als luxRequired betrifft das NIE das
+   * synthetische FormControl der Brücke - syncState() braucht ihn trotzdem, um required im
+   * stateOverride korrekt widerzuspiegeln, siehe dortige Begründung.
+   */
+  readonly required: Signal<boolean>;
+  /**
+   * Die Vertrags-Inputs invalid()/errors(), ebenfalls von der [formField]-Direktive verdrahtet.
+   * Aus demselben Grund wie required() nötig: Das synthetische FormControl der Brücke trägt im
+   * Signal-Forms-Betrieb nie die schema-seitigen Fehler, syncState() muss sie hier zusätzlich holen.
+   */
+  readonly invalid: Signal<boolean>;
+  readonly errors: Signal<readonly ValidationError.WithOptionalFieldTree[]>;
   /** Das Vertrags-Model der Komponente: value bzw. checked. */
   readonly modelValue: ModelSignal<T>;
   /** Der Alt-Input: luxValue bzw. luxChecked. */
@@ -404,11 +421,25 @@ export class LuxLegacyFormBridge<T> {
     const current = this.host.stateOverride();
     const next: LuxControlStateOverride = {
       disabled: this.formControl.disabled,
-      required: hasRequiredValidator(this.formControl),
+      // Zusätzlich zum synthetischen FormControl auch host.required() einbeziehen: Im Signal-Forms-
+      // Betrieb ([formField]) setzt das Schema (required(path, {when})) den Required-Zustand NIE als
+      // Validator auf diesem synthetischen Control, sondern ausschließlich über den automatisch
+      // verdrahteten required()-Input. Ohne diese Ergänzung überschreibt ein einmal aktiviertes
+      // stateOverride (engaged wird schon durch das erste formControl.setValue() aus onInput() wahr,
+      // unabhängig vom Signal-Forms/Legacy-Modus) den echten required()-Input dauerhaft mit dem
+      // (im Signal-Forms-Betrieb immer falschen) hasRequiredValidator()-Ergebnis - siehe isRequired()
+      // in LuxFormControlBase, das stateOverride().required per ?? bevorzugt.
+      required: hasRequiredValidator(this.formControl) || this.host.required(),
       touched: this.formControl.touched,
       dirty: this.formControl.dirty,
-      invalid: this.formControl.invalid,
-      legacyErrors: this.formControl.errors
+      // Dieselbe Ergänzung wie bei required oben: Die schema-seitige Ungültigkeit/Fehler
+      // (required(), minLength() usw. aus dem Signal-Form) landen nie auf dem synthetischen
+      // FormControl - ohne host.invalid()/host.errors() hier bliebe das Feld nach dem ersten
+      // engagierenden setValue() (z.B. aus onInput()) dauerhaft als gültig/fehlerfrei markiert,
+      // obwohl [formField] längst einen Fehler meldet. errorMessage() liest ausschließlich
+      // legacyErrors() - ohne den Merge würde also gar keine Fehlermeldung mehr angezeigt.
+      invalid: this.formControl.invalid || this.host.invalid(),
+      legacyErrors: mergeLegacyErrors(this.formControl.errors, LuxUtil.toLegacyValidationErrors(this.host.errors()))
     };
 
     if (
@@ -510,6 +541,34 @@ export function hasRequiredValidator(control: AbstractControl | undefined): bool
     return false;
   }
   return control.hasValidator(Validators.required) || control.hasValidator(Validators.requiredTrue);
+}
+
+/**
+ * Führt die Fehler des synthetischen FormControls (Legacy-Validatoren/luxControlValidators) und die
+ * des Signal-Form-Schemas (bereits über LuxUtil.toLegacyValidationErrors() konvertiert) zusammen.
+ *
+ * Beide Quellen können gleichzeitig Fehler tragen (z.B. ein Legacy-Validator UND ein required() aus
+ * dem Schema), deshalb ein Merge statt einer Bevorzugung.
+ *
+ * Bewusst referenzstabil, wenn eine Quelle leer ist: Liefert dann die ANDERE Quelle unverändert
+ * zurück, statt ein neues Objekt zu spreaden. errorMessage()/errorDismissed() in LuxFormControlBase
+ * hängen an legacyErrors() bzw. dessen Referenz - ein bei jedem syncState()-Aufruf frisch gespreadetes
+ * Objekt (auch bei inhaltlich unveränderten Fehlern, z.B. weil Validators.required() bei jedem
+ * updateValueAndValidity() ein neues { required: true } liefert) würde errorMessage() unnötig
+ * neu auswerten und luxErrorCallback ein zweites Mal mit denselben Fehlern aufrufen - siehe
+ * "Sollte den Fehler über luxErrorCallback anzeigen" in lux-textarea.component.spec.ts.
+ */
+function mergeLegacyErrors(
+  fromFormControl: LuxValidationErrors | null,
+  fromSchema: LuxValidationErrors | null
+): LuxValidationErrors | null {
+  if (!fromSchema) {
+    return fromFormControl;
+  }
+  if (!fromFormControl) {
+    return fromSchema;
+  }
+  return { ...fromSchema, ...fromFormControl };
 }
 
 /**
