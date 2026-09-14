@@ -199,8 +199,8 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   // Accordion
   --lux-theme-accordion-panel-container-elevation-shadow-width: 1px;
+  --lux-theme-accordion-aria-panel-border-bottom: 1px solid var(--lux-theme-app-border-color);
   --lux-theme-accordion-aria-panel-first-border-top: 1px solid var(--lux-theme-app-border-color);
-  --lux-theme-accordion-aria-panel-border-bottom: 0;
   --lux-theme-accordion-aria-panel-border-radius: 0;
   --lux-theme-accordion-aria-panel-box-shadow: none;
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);

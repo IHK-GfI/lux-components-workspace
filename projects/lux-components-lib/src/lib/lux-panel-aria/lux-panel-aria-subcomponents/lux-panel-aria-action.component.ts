@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LuxDividerComponent } from '../../../public_api';
+import { LuxDividerComponent } from '../../lux-layout/lux-divider/lux-divider.component';
 
 @Component({
   selector: 'lux-panel-aria-action',

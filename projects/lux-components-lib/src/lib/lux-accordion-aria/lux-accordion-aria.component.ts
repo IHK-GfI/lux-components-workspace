@@ -31,14 +31,13 @@ export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
     '[class.lux-flat]': "luxMode() === 'flat'"
   }
 })
-export class LuxAccordionAriaComponent extends LuxAccordionAriaBase implements OnDestroy {
+export class LuxAccordionAriaComponent extends LuxAccordionAriaBase {
   private static accordionIdCounter = 0;
   private readonly destroyRef = inject(DestroyRef);
   private readonly panels = new Set<LuxAccordionAriaPanel>();
   // forwarded via hostDirectives inputs above, this is the single source of truth for the disabled state
   private readonly accordionGroup = inject(AccordionGroup, { self: true });
 
-  changed$ = new Subject<string>();
   readonly id = `lux-accordion-aria-${LuxAccordionAriaComponent.accordionIdCounter++}`;
 
   luxMulti = input<LuxAccordionMulti>(false);
@@ -85,10 +84,6 @@ export class LuxAccordionAriaComponent extends LuxAccordionAriaBase implements O
           ? (Object.keys(state) as (keyof typeof state)[]).filter((key) => previousState?.[key] !== state[key])
           : (Object.keys(state) as (keyof typeof state)[]);
 
-        changedProperties.forEach((propertyName) => {
-          this.changed$.next(propertyName);
-        });
-
         const validColor = this.resolvedLuxColor();
 
         if (validColor !== state.luxColor) {
@@ -97,10 +92,6 @@ export class LuxAccordionAriaComponent extends LuxAccordionAriaBase implements O
 
         previousState = state;
       });
-  }
-
-  ngOnDestroy() {
-    this.changed$.complete();
   }
 
   registerPanel(panel: LuxAccordionAriaPanel): void {
