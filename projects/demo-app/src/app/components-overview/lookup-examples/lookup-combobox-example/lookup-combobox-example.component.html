@@ -4,7 +4,7 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-lookup-combobox
         luxAutofocus
         [luxPlaceholder]="placeholder()"
@@ -19,9 +19,8 @@
         [luxBehandlungUngueltige]="behandlungUngueltige()"
         [luxTableNo]="tableNo()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required()"
         [luxReadonly]="readonly()"
-        [(luxValue)]="value"
+        [formField]="signalForm.lookupValue"
         [luxCompareFn]="compareFn()"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
@@ -41,10 +40,10 @@
         luxLookupId="normalcombobox"
         luxTagId="lkpexample1"
       />
-      <example-value [value]="value()" />
+      <example-signal-form-value [field]="signalForm.lookupValue" />
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3>Multiselect Beispiel</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code> Multiselect</h3>
       <lux-lookup-combobox
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
@@ -64,7 +63,7 @@
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         [luxControlValidators]="controlValidators()"
-        [(luxValue)]="multiValue"
+        [formField]="signalMultiForm.lookupValue"
         [luxCompareFn]="compareFn()"
         [luxMultiple]="true"
         [luxEnableFilter]="enableFilter()"
@@ -81,10 +80,10 @@
         luxLookupId="multicombobox"
         luxTagId="lkpexample2"
       />
-      <example-value [value]="multiValue()" />
+      <example-signal-form-value [field]="signalMultiForm.lookupValue" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <lux-lookup-combobox
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
@@ -119,6 +118,68 @@
         luxTagId="lkpexample3"
       />
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-lookup-combobox
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
+        [(value)]="plainValue"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxCompareFn]="compareFn()"
+        [luxEntryBlockSize]="entryBlockSize()"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxWithEmptyEntry]="bLuxWithEmptyEntry()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        luxLookupId="plaincombobox"
+      />
+      <example-value [value]="plainValue()" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-lookup-combobox
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
+        [(luxValue)]="value"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxCompareFn]="compareFn()"
+        [luxEntryBlockSize]="entryBlockSize()"
+        [luxEnableFilter]="enableFilter()"
+        [luxFilterPlaceholder]="filterPlaceholder()"
+        [luxFilterValue]="filterValue()"
+        [luxFilterClearAriaLabel]="filterClearAriaLabel()"
+        [luxVisibleOptionCount]="visibleOptionCount()"
+        [luxWithEmptyEntry]="bLuxWithEmptyEntry()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        luxLookupId="plainluxcombobox"
+      />
+      <example-value [value]="value()" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">

@@ -1,6 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
@@ -15,6 +16,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleFormDisableComponent } from '../../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../../example-base/example-value/example-value.component';
 import { LookupExampleComponent } from '../lookup-example.component';
 
@@ -34,13 +36,20 @@ import { LookupExampleComponent } from '../lookup-example.component';
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    JsonPipe
+    JsonPipe,
+    FormField
   ]
 })
 export class LookupAutocompleteExampleComponent extends LookupExampleComponent implements OnInit {
+  readonly signalModel = signal<{ lookupValue: any }>({ lookupValue: null });
+  readonly signalForm = form(this.signalModel, (path) => {
+    required(path.lookupValue, { when: () => this.required() });
+  });
+  readonly plainValue = signal<any>(null);
   readonly debounceTime = signal(250);
   readonly maximumDisplayed = signal(50);
   readonly labelLongFormat = signal(false);

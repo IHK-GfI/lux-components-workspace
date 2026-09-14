@@ -20,7 +20,6 @@ import { ExampleBaseSimpleOptionsComponent } from '../../../example-base/example
 import { ExampleBaseStructureComponent } from '../../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { ExampleFormValueComponent } from '../../../example-base/example-form-value/example-form-value.component';
 import { ExampleSignalFormValueComponent } from '../../../example-base/example-signal-form-value/example-signal-form-value.component';
-import { ExampleValueComponent } from '../../../example-base/example-value/example-value.component';
 import { FileExampleAdvancedOptionsComponent } from '../file-example-advanced-options/file-example-advanced-options.component';
 import { FileExampleSimpleOptionsComponent } from '../file-example-simple-options/file-example-simple-options.component';
 import { FileExampleComponent } from '../file-example.component';
@@ -41,7 +40,6 @@ import { FileExampleComponent } from '../file-example.component';
     ReactiveFormsModule,
     ExampleFormValueComponent,
     ExampleSignalFormValueComponent,
-    ExampleValueComponent,
     ExampleBaseSimpleOptionsComponent,
     FileExampleSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,

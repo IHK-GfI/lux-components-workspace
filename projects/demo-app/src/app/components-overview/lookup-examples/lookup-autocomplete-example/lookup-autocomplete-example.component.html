@@ -4,7 +4,7 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-lookup-autocomplete
         luxAutofocus
         [luxAutofocusComponent]="firstlookup"
@@ -20,9 +20,8 @@
         [luxBehandlungUngueltige]="behandlungUngueltige()"
         [luxTableNo]="tableNo()"
         [(luxDisabled)]="disabled"
-        [luxRequired]="required()"
         [luxReadonly]="readonly()"
-        [(luxValue)]="value"
+        [formField]="signalForm.lookupValue"
         [luxCompareFn]="compareFn()"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
@@ -41,10 +40,10 @@
         luxTagId="lkpexample1"
         #firstlookup
       />
-      <example-value [value]="value()" />
+      <example-signal-form-value [field]="signalForm.lookupValue" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <lux-lookup-autocomplete
         [luxPlaceholder]="placeholder()"
         [luxLabel]="label()"
@@ -77,6 +76,60 @@
         luxTagId="lkpexample2"
       />
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-lookup-autocomplete
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
+        [(value)]="plainValue"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxCompareFn]="compareFn()"
+        [luxDebounceTime]="debounceTime()"
+        [luxMaximumDisplayed]="maximumDisplayed()"
+        [luxClearable]="clearable()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        luxLookupId="plainautocomplete"
+      />
+      <example-value [value]="plainValue()" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-lookup-autocomplete
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxCustomStyles]="customStyle()"
+        [luxCustomInvalidStyles]="customInvalidStyle()"
+        [luxRenderProp]="useRenderFn() ? renderFn : renderProp()"
+        [luxRenderPropNoPropertyLabel]="renderPropNoPropertyLabel()"
+        [luxParameters]="parameters()"
+        [luxBehandlungUngueltige]="behandlungUngueltige()"
+        [luxTableNo]="tableNo()"
+        [(luxValue)]="value"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxCompareFn]="compareFn()"
+        [luxDebounceTime]="debounceTime()"
+        [luxMaximumDisplayed]="maximumDisplayed()"
+        [luxClearable]="clearable()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        luxLookupId="plainluxautocomplete"
+      />
+      <example-value [value]="value()" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
