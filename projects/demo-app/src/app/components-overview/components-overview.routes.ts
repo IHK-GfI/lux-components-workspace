@@ -7,6 +7,7 @@ export const COMPONENT_OVERVIEW_ROUTES: Routes = [
   {
     path: 'example', loadComponent: () => import('../example-base/example-base-root/example-root.component').then(m => m.ExampleRootComponent), children: [
       { path: 'accordion', loadComponent: () => import('./accordion-example/accordion-example.component').then(m => m.AccordionExampleComponent) },
+      { path: 'accordion-aria', loadComponent: () => import('./accordion-aria-example/accordion-aria-example.component').then(m => m.AccordionAriaExampleComponent) },
       { path: 'autocomplete-ac', loadComponent: () => import('./autocomplete-authentic-example/autocomplete-authentic-example.component').then(m => m.AutocompleteAuthenticExampleComponent) },
       { path: 'badge', loadComponent: () => import('./badge-example/badge-example.component').then(m => m.BadgeExampleComponent) },
       { path: 'button', loadComponent: () => import('./button-example/button-example.component').then(m => m.ButtonExampleComponent) },
