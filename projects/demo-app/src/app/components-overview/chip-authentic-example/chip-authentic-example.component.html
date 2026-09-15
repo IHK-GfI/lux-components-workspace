@@ -7,6 +7,7 @@
       <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-chips
         luxAutofocus
+        [luxAutofocusComponent]="signalChipsComp"
         [luxStrict]="strict()"
         [luxInputAllowed]="inputAllowed()"
         [luxInputLabelAlwaysVisible]="inputLabelAlwaysVisible()"
@@ -23,11 +24,11 @@
         [luxNoTopLabel]="noTopLabel()"
         [luxNoBottomLabel]="noBottomLabel()"
         [luxNoLabels]="noLabels()"
+        #signalChipsComp
       >
         <lux-chip-group
           [luxRemovable]="groupRemovable()"
           [luxColor]="groupColor()"
-          [luxLabels]="groupLabels"
           [luxDisabled]="groupDisabled()"
           (luxChipRemoved)="log(showOutputEvents(), '[GROUP] Chip removed', $event)"
           (luxChipAdded)="log(showOutputEvents(), '[GROUP] Chip added', $event)"
