@@ -214,6 +214,17 @@ export abstract class LuxFormControlBase<T = unknown> {
    */
   readonly stateOverrideClaimed = signal(false);
 
+  /**
+   * Fehlerlage, die eine Komponente rein intern (unabhängig vom Formular-Modus) ermittelt - z.B.
+   * luxMinTime/luxMaxTime bei LuxTimepickerComponent. Solche Grenzen kennt weder ein Signal-Forms-
+   * Schema noch eine Legacy-Brücke (stateOverride bleibt im Signal-Forms-/Freistehend-Betrieb bewusst
+   * undefined, siehe LuxLegacyFormBridge.engaged) - ohne diesen zusätzlichen, IMMER wirksamen Kanal
+   * bliebe die Prüfung in genau diesen beiden Betriebsarten unsichtbar. Mit Wertgleichheit, damit ein
+   * bei jedem updateValueAndValidity() frisch erzeugtes, aber inhaltlich unverändertes Fehlerobjekt
+   * nicht unnötig errorMessage()/errorDismissed() invalidiert (siehe mergeErrors()/errorsEqual() unten).
+   */
+  protected readonly internalErrors = signal<LuxValidationErrors | null>(null, { equal: errorsEqual });
+
   /** Ob das Control gerade den Fokus hat. Steuert u.a. luxHintShowOnlyOnFocus. */
   readonly focused = signal(false);
 
@@ -234,7 +245,7 @@ export abstract class LuxFormControlBase<T = unknown> {
   readonly isDisabled = computed(() => this.stateOverride()?.disabled ?? (this.disabled() || this.luxDisabled()));
   readonly isReadonly = computed(() => this.stateOverride()?.readonly ?? (this.readonly() || this.luxReadonly()));
   readonly isRequired = computed(() => this.stateOverride()?.required ?? (this.required() || this.luxRequired()));
-  readonly isInvalid = computed(() => this.stateOverride()?.invalid ?? this.invalid());
+  readonly isInvalid = computed(() => (this.stateOverride()?.invalid ?? this.invalid()) || !!this.internalErrors());
   readonly isTouched = computed(() => this.stateOverride()?.touched ?? (this.touched() || this.touchedInternal()));
   readonly isDirty = computed(() => this.stateOverride()?.dirty ?? (this.dirty() || this.dirtyInternal()));
 
@@ -251,7 +262,8 @@ export abstract class LuxFormControlBase<T = unknown> {
    */
   readonly legacyErrors = computed<LuxValidationErrors | null>(() => {
     const override = this.stateOverride();
-    return override ? (override.legacyErrors ?? null) : LuxUtil.toLegacyValidationErrors(this.errors());
+    const base = override ? (override.legacyErrors ?? null) : LuxUtil.toLegacyValidationErrors(this.errors());
+    return mergeErrors(base, this.internalErrors());
   });
 
   /**
@@ -462,4 +474,43 @@ export abstract class LuxFormControlBase<T = unknown> {
       );
     }
   }
+}
+
+/**
+ * Führt die schema-/legacy-seitigen Fehler mit internalErrors() zusammen - bewusst referenzstabil, wenn
+ * eine Quelle leer ist (liefert dann die ANDERE Quelle unverändert zurück statt eines frischen
+ * Spread-Objekts), aus demselben Grund wie die gleichnamige Problematik bei
+ * LuxLegacyFormBridge.mergeLegacyErrors(): Ein bei jedem Aufruf neu gespreadetes, aber inhaltlich
+ * unverändertes Objekt würde errorMessage()/errorDismissed() unnötig neu auswerten.
+ */
+function mergeErrors(base: LuxValidationErrors | null, internal: LuxValidationErrors | null): LuxValidationErrors | null {
+  if (!internal) {
+    return base;
+  }
+  if (!base) {
+    return internal;
+  }
+  return { ...base, ...internal };
+}
+
+/**
+ * Wertgleichheit statt Referenzgleichheit für internalErrors() - siehe die gleichnamige Funktion in
+ * LuxLegacyFormBridge für die ausführliche Begründung (dort ist derselbe Mechanismus für
+ * stateOverride().legacyErrors nötig).
+ */
+function errorsEqual(a: LuxValidationErrors | null, b: LuxValidationErrors | null): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (!a || !b) {
+    return false;
+  }
+
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  }
+
+  return aKeys.every((key) => JSON.stringify(a[key]) === JSON.stringify(b[key]));
 }

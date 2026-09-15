@@ -98,6 +98,8 @@
         [luxClearable]="clearable()"
         [luxLabelLongFormat]="labelLongFormat()"
         [luxDense]="denseFormat()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         luxLookupId="plainautocomplete"
       />
       <example-value [value]="plainValue()" />
@@ -125,6 +127,8 @@
         [luxClearable]="clearable()"
         [luxLabelLongFormat]="labelLongFormat()"
         [luxDense]="denseFormat()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         luxLookupId="plainluxautocomplete"
       />
       <example-value [value]="value()" />

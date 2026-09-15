@@ -413,10 +413,21 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     // (writeValue() wird von Angular immer mindestens einmal aufgerufen, auch für einen leeren
     // Initialwert; ohne diesen Aufruf bliebe _lastValueValid dauerhaft bei seinem Default false
     // stehen und ein völlig unberührtes, leeres Feld würde fälschlich als "ungültiges Datum"
-    // gemeldet). writeValue() reformatiert die Anzeige NUR, wenn sich der Wert von dem
-    // unterscheidet, den die Direktive intern bereits kennt - beim Tippen hat _onInput() das schon
-    // selbst aktualisiert, sodass hier keine laufende Eingabe überschrieben wird.
-    inputDirective.writeValue(this.formControl.value);
+    // gemeldet).
+    //
+    // NUR während das Feld NICHT fokussiert ist: MatDatepickerInputBase.writeValue() reformatiert
+    // die Anzeige entgegen der ursprünglichen Annahme hier IMMER, wenn der übergebene Wert (bei uns
+    // immer ein ISO-String) nicht per === der intern gehaltenen Date-Referenz entspricht - das ist
+    // buchstäblich bei jedem Aufruf der Fall, ein Referenzvergleich String-gegen-Date kann nie wahr
+    // werden. Ohne diese Fokus-Bremse überschrieb setISOValue() -> syncDatepickerValidation() bei
+    // JEDEM Tastendruck (jeder Aufruf von onDateChange()) die gerade laufende Eingabe des Nutzers
+    // mit dem kanonisch reformatierten Wert - z.B. sprang "1.09.2026" (Nutzer löscht eine Ziffer aus
+    // "15.09.2026" und tippt weiter) sofort zu "01.09.2026". _onInput() der Direktive hält
+    // _lastValueValid während echter Tastatureingabe ohnehin schon selbst aktuell, ein Nachziehen
+    // ist hier also nur bei externen Änderungen (Programmzugriff, ngAfterViewInit, Blur) nötig.
+    if (!this.focused()) {
+      inputDirective.writeValue(this.formControl.value);
+    }
 
     // Bewusst OHNE Event-Emission: updateValueAndValidity() feuert value-/statusChanges/events IMMER
     // neu, auch wenn sich weder Wert noch Status geändert haben. Da syncDatepickerValidation() aus

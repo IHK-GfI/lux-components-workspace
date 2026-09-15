@@ -141,6 +141,8 @@
         [luxWithEmptyEntry]="bLuxWithEmptyEntry()"
         [luxLabelLongFormat]="labelLongFormat()"
         [luxDense]="denseFormat()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         luxLookupId="plaincombobox"
       />
       <example-value [value]="plainValue()" />
@@ -172,6 +174,8 @@
         [luxWithEmptyEntry]="bLuxWithEmptyEntry()"
         [luxLabelLongFormat]="labelLongFormat()"
         [luxDense]="denseFormat()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         luxLookupId="plainluxcombobox"
       />
       <example-value [value]="value()" />

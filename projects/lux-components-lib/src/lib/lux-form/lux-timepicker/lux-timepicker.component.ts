@@ -14,6 +14,7 @@ import {
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AbstractControl } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatInput } from '@angular/material/input';
 import { MatTimepicker, MatTimepickerInput, MatTimepickerSelected, MatTimepickerToggle } from '@angular/material/timepicker';
@@ -305,6 +306,50 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     return typeof value === 'string' ? this.dateAdapter.parse(value, {}) : null;
   }
 
+  private checkMinMax(dateValue: Date | null): { minOk: boolean; maxOk: boolean } {
+    const min = this.min();
+    const max = this.max();
+    const minOk = !min || !dateValue || this.dateAdapter.compareTime(min, dateValue) <= 0;
+    const maxOk = !max || !dateValue || this.dateAdapter.compareTime(max, dateValue) >= 0;
+    return { minOk, maxOk };
+  }
+
+  /**
+   * Eigenständige Ersetzung von MatTimepickerInput.validate(): Dessen zusammengesetzter Validator
+   * liest ausschließlich interne Flags (_lastValueValid/_minValid/_maxValid), die alle drei nur von
+   * einem effect() aktualisiert werden (siehe timepicker.mjs, _updateFormsState()). Dieser effect()
+   * läuft asynchron NACH einem .set() auf MatTimepickerInput.value, nicht synchron davor - ruft man
+   * (wie syncTimepickerValidation() es tut) direkt danach formControl.updateValueAndValidity() auf,
+   * liest der Validator daher immer den Stand VOR der aktuellen Änderung. In der Praxis bedeutete das:
+   * matTimepickerMax/-Min wurden nie gemeldet (immer "eine Änderung zu spät" geprüft), während
+   * matTimepickerParse teils fälschlich mit dem vorherigen Zwischenstand des Texts auftauchte (z.B.
+   * "20:0" statt "20:00", weil die letzte Ziffer noch nicht in die gecachten Flags eingeflossen war).
+   * Diese Prüfung liest stattdessen direkt formControl.value/timeInputValue/min()/max() - alle drei
+   * bereits aktuell, wenn updateValueAndValidity() läuft.
+   */
+  private validateTime = (control: AbstractControl): LuxValidationErrors | null => {
+    if (!control.value) {
+      // Kein geparster Wert vorhanden - ungültig NUR, wenn tatsächlich (nicht parsbarer) Text im
+      // Feld steht. Ein leeres Feld ist für sich genommen gültig, required wird separat geprüft.
+      return this.timeInputValue ? { matTimepickerParse: { text: this.timeInputValue } } : null;
+    }
+
+    const value = this.dateAdapter.deserialize(control.value);
+    if (!value || !this.dateAdapter.isValid(value)) {
+      return { matTimepickerParse: { text: this.timeInputValue } };
+    }
+
+    const { minOk, maxOk } = this.checkMinMax(value);
+    if (!minOk) {
+      return { matTimepickerMin: { min: this.min(), actual: value } };
+    }
+    if (!maxOk) {
+      return { matTimepickerMax: { max: this.max(), actual: value } };
+    }
+
+    return null;
+  };
+
   private triggerOpenClose() {
     if (this.luxOpened()) {
       this.matTimepicker()?.open();
@@ -347,10 +392,7 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     }
 
     const dateValue = isoValue ? new Date(isoValue) : null;
-    const min = this.min();
-    const max = this.max();
-    const minOk = !min || !dateValue || this.dateAdapter.compareTime(min, dateValue) <= 0;
-    const maxOk = !max || !dateValue || this.dateAdapter.compareTime(max, dateValue) >= 0;
+    const { minOk, maxOk } = this.checkMinMax(dateValue);
 
     if (minOk && maxOk && valueGenuinelyChanged) {
       // ExpressionChangedError vermeiden, indem die Änderung des ValueChange-Emitters in einen Timeout gepackt wird, damit sie nach der aktuellen Änderungsschleife ausgeführt wird.
@@ -362,10 +404,11 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
   }
 
   /**
-   * Registriert MatTimepickerInput.validate() (deckt matTimepickerMin/-Max/-Parse ab) als regulären
-   * Validator auf dem FormControl - siehe LuxDatepickerComponent.syncDatepickerValidation() für die
-   * ausführliche Begründung (ohne [formControl]/NgControl komponiert Angular NG_VALIDATORS nicht
-   * mehr automatisch).
+   * Registriert validateTime() (deckt matTimepickerMin/-Max/-Parse ab) als regulären Validator auf
+   * dem FormControl - siehe LuxDatepickerComponent.syncDatepickerValidation() für die ausführliche
+   * Begründung (ohne [formControl]/NgControl komponiert Angular NG_VALIDATORS nicht mehr
+   * automatisch). Bewusst NICHT inputDirective.validate() selbst (siehe validateTime()-Kommentar für
+   * dessen Stale-Cache-Problematik).
    *
    * BEWUSST OHNE inputDirective.registerOnValidatorChange(): Ein erster Versuch, darüber bei einer
    * MatTimepickerInput-internen Gültigkeitsänderung updateValueAndValidity() anzustoßen, verursachte
@@ -383,7 +426,7 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
 
     if (!this.timepickerValidatorRegistered) {
       this.timepickerValidatorRegistered = true;
-      this.formControl.addValidators((control) => inputDirective.validate(control));
+      this.formControl.addValidators(this.validateTime);
     }
 
     this.applyingToInput = true;
@@ -404,6 +447,12 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     // Validatoren laufen trotzdem synchron neu; touched/dirty/invalid/errorMessage bleiben aktuell,
     // weil LuxLegacyFormBridge.check() ohnehin bei jedem ngDoCheck() syncState() aufruft.
     this.formControl.updateValueAndValidity({ emitEvent: false });
+
+    // Im Signal-Forms- und Freistehend-Betrieb bleibt stateOverride bewusst undefined (die
+    // Legacy-Brücke ist dort nicht "engaged", siehe LuxLegacyFormBridge.engaged) - ohne diese
+    // zusätzliche Meldung an internalErrors() käme luxMinTime/luxMaxTime in genau diesen beiden
+    // Betriebsarten nie in isInvalid()/errorMessage() an.
+    this.internalErrors.set(this.formControl.errors as LuxValidationErrors | null);
   }
 
   private updateTimeValue(value: any) {

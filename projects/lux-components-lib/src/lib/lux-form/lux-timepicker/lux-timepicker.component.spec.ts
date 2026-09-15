@@ -117,6 +117,38 @@ describe('LuxTimepickerComponent', () => {
     expect(timepickerComponent.value()).toEqual('2026-06-18T09:30:00.000Z');
   });
 
+  it('sollte luxMinTime/luxMaxTime auch ohne Formular (Freistehend) als Fehler melden', async () => {
+    // Regressionstest: MatTimepickerInput.validate() liest die Gültigkeit ausschließlich aus internen
+    // Flags, die nur asynchron per effect() aktualisiert werden (siehe validateTime()-Kommentar in
+    // LuxTimepickerComponent) - syncTimepickerValidation() rief updateValueAndValidity() bisher aber
+    // synchron direkt danach auf und las deshalb immer den Stand VOR der aktuellen Eingabe.
+    // luxMinTime/luxMaxTime wurden dadurch nie gemeldet. Zusätzlich blieb isInvalid() im
+    // Signal-Forms-/Freistehend-Betrieb strukturell leer, weil stateOverride dort bewusst nie gesetzt
+    // wird (siehe LuxLegacyFormBridge.engaged) - ohne internalErrors() in LuxFormControlBase käme die
+    // Prüfung dort nie an.
+    const fixture: ComponentFixture<LuxTimepickerMinMaxTestComponent> = TestBed.createComponent(LuxTimepickerMinMaxTestComponent);
+    const timepickerComponent = fixture.debugElement.query(By.directive(LuxTimepickerComponent))
+      .componentInstance as LuxTimepickerComponent;
+
+    await LuxTestHelper.wait(fixture);
+
+    const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+    LuxTestHelper.typeInElement(inputEl, '20:00');
+    await LuxTestHelper.wait(fixture);
+    expect(timepickerComponent.isInvalid()).toBe(true);
+    expect(timepickerComponent.errorMessage()).toBeTruthy();
+
+    LuxTestHelper.typeInElement(inputEl, '05:00');
+    await LuxTestHelper.wait(fixture);
+    expect(timepickerComponent.isInvalid()).toBe(true);
+    expect(timepickerComponent.errorMessage()).toBeTruthy();
+
+    LuxTestHelper.typeInElement(inputEl, '10:00');
+    await LuxTestHelper.wait(fixture);
+    expect(timepickerComponent.isInvalid()).toBe(false);
+  });
+
   it('sollte die Kombination in Reactive-Form mit gemeinsamem Control synchron halten', async () => {
     const fixture: ComponentFixture<LuxTimepickerCombinedFormTestComponent> = TestBed.createComponent(
       LuxTimepickerCombinedFormTestComponent
@@ -251,6 +283,14 @@ class LuxTimepickerFormTestComponent {
 })
 class LuxTimepickerCombinedNoFormTestComponent {
   combinedISO = '2026-06-18T14:15:00.000Z';
+}
+
+@Component({
+  template: `<lux-timepicker luxLabel="Zeit" [(value)]="value" luxMinTime="08:00" luxMaxTime="19:00"></lux-timepicker>`,
+  imports: [LuxTimepickerComponent]
+})
+class LuxTimepickerMinMaxTestComponent {
+  value: string | null = null;
 }
 
 @Component({
