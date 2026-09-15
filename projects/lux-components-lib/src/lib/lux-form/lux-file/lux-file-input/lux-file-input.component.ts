@@ -173,9 +173,10 @@ export class LuxFileInputComponent extends LuxFormFileBase<ILuxFileObject | null
     this.luxFocusIn.emit(e);
   }
 
-  onFocusOut(e: FocusEvent) {
+  override onFocusOut(e: FocusEvent) {
     this.focused.set(false);
     this.luxFocusOut.emit(e);
+    this.markAsTouched();
   }
 
   protected override errorMessageModifier(value: any, errors: LuxValidationErrors): string | undefined {

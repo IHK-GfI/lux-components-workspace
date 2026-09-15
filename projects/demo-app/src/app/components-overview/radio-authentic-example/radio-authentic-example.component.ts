@@ -1,6 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -26,6 +27,7 @@ import {
 } from '../../example-base/example-base-util/example-base-helper';
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
 interface RadioDummyForm {
@@ -49,15 +51,28 @@ interface RadioDummyForm {
     ExampleValueComponent,
     ReactiveFormsModule,
     ExampleFormValueComponent,
+    ExampleSignalFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     ExampleBaseOptionsActionsComponent,
     JsonPipe,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    FormField
   ]
 })
 export class RadioAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ radioValue: any }>({ radioValue: null });
+  readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.radioValue, { when: () => this.disabled() });
+    readonly(path.radioValue, { when: () => this.readonly() });
+    required(path.radioValue, { when: () => this.required() });
+  });
+
+  // 2. Freistehend, ohne jedes Formular.
+  readonly plainValue = signal<any>(undefined);
+
   readonly useErrorMessage = signal(true);
   readonly useTemplatesForLabels = signal(false);
   readonly useCompareWithFn = signal(false);
@@ -110,10 +125,15 @@ export class RadioAuthenticExampleComponent {
   }
 
   showErrors(...radioComponents: LuxRadioComponent[]) {
+    this.signalModel.set({ radioValue: null });
+    this.plainValue.set(null);
     this.value.set(null);
     this.form.get('radioExample')!.setValue(null);
 
     this.changeRequired(true);
+
+    // Die Legacy-Brücke (formControl) steuert im Signal-Form-Betrieb nicht den echten Field-State.
+    this.signalForm.radioValue().markAsTouched();
 
     radioComponents.forEach((comp: LuxRadioComponent) => {
       comp.formControl.markAsTouched();
@@ -151,9 +171,14 @@ export class RadioAuthenticExampleComponent {
   }
 
   reset(...radioComponents: LuxRadioComponent[]) {
+    this.signalModel.set({ radioValue: null });
+    this.plainValue.set(undefined);
     this.value.set(undefined);
     this.form.get(this.controlBinding)!.setValue(undefined);
     this.disabledFirst.set(false);
+
+    // Die Legacy-Brücke (formControl) steuert im Signal-Form-Betrieb nicht den echten Field-State.
+    this.signalForm.radioValue().reset();
 
     radioComponents.forEach((comp: LuxRadioComponent) => {
       comp.formControl.markAsUntouched();

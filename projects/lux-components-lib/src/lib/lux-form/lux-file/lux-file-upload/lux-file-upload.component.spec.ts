@@ -1,10 +1,11 @@
-import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormField, form, required, requiredError, validate } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../../lux-util/lux-console.service';
 import { LuxStorageService } from '../../../lux-util/lux-storage.service';
@@ -113,7 +114,84 @@ describe('LuxFileUploadComponent', () => {
       expect(deleteButton).toBeFalsy();
     });
   });
+
+  describe('[formField]', () => {
+    let fixture: ComponentFixture<FormFieldFileComponent>;
+    let testComponent: FormFieldFileComponent;
+    let fileComponent: LuxFileUploadComponent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(FormFieldFileComponent);
+      testComponent = fixture.componentInstance;
+      fileComponent = fixture.debugElement.query(By.directive(LuxFileUploadComponent)).componentInstance;
+      fileComponent['liveAnnouncer'] = { announce: () => {} } as any;
+      fixture.detectChanges();
+    });
+
+    it('sollte required+touched als Fehler anzeigen, wenn required() allein einen leeren Array-Wert nicht erkennt', () => {
+      testComponent.required.set(true);
+      fixture.detectChanges();
+      fileComponent.markAsTouched();
+      fixture.detectChanges();
+
+      // Signal Forms' isEmpty() behandelt ein leeres Array nicht als leer - required() allein würde
+      // hier also NIE anschlagen, siehe die zusätzliche validate()-Regel in FormFieldFileComponent unten.
+      expect(fileComponent.errorMessage()).toBeTruthy();
+      expect(fileComponent.isTouched()).toBe(true);
+    });
+
+    it('sollte per focusout touched werden, ohne dass zuvor eine Datei ausgewählt wurde', () => {
+      testComponent.required.set(true);
+      fixture.detectChanges();
+
+      const container = fixture.debugElement.query(By.css('.lux-file-upload-container')).nativeElement as HTMLElement;
+      container.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      fixture.detectChanges();
+
+      const errorEl = fixture.debugElement.query(By.css('.lux-file-upload-error-container-no-button, .lux-file-upload-error-container'));
+      expect(errorEl).toBeTruthy();
+    });
+
+    it('sollte den Fehler wieder verstecken, wenn per Upload eine Datei zu einem leeren Array-Wert hinzugefügt wird', async () => {
+      // Reproduziert den Bug: this.getValue() lieferte dieselbe Array-Referenz wie zuvor per push()
+      // erweitert zurück, wodurch LuxLegacyFormBridge.setValue() per Referenzvergleich fälschlich
+      // annahm, es habe sich nichts geändert, und modelValue().set() nie aufgerufen wurde.
+      vi.useFakeTimers();
+      vi.spyOn(fileComponent, 'readFile').mockResolvedValue('data:text/plain;base64,YWJj');
+      fileComponent.defaultReadFileDelay = 0;
+
+      testComponent.model.set([]);
+      testComponent.required.set(true);
+      fixture.detectChanges();
+      fileComponent.markAsTouched();
+      fixture.detectChanges();
+      expect(fileComponent.errorMessage()).toBeTruthy();
+
+      fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
+      await vi.runAllTimersAsync();
+      fixture.detectChanges();
+
+      expect(fileComponent.value()).toEqual([expect.objectContaining({ name: 'mockfile1.txt' })]);
+      expect(fileComponent.errorMessage()).toBeFalsy();
+      vi.useRealTimers();
+    });
+  });
 });
+
+@Component({
+  selector: 'lux-formfield-file-host',
+  template: `<lux-file-upload [formField]="testForm" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxFileUploadComponent, FormField]
+})
+class FormFieldFileComponent {
+  readonly required = signal(false);
+  readonly model = signal<ILuxFileObject[] | null>(null);
+  readonly testForm = form(this.model, (path) => {
+    required(path, { when: () => this.required() });
+    validate(path, (ctx) => (this.required() && Array.isArray(ctx.value()) && ctx.value()!.length === 0 ? requiredError() : undefined));
+  });
+}
 
 class MockStorage {
   getItem(key: string): string {

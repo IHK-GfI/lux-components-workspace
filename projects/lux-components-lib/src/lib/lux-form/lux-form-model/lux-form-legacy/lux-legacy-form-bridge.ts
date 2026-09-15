@@ -30,6 +30,15 @@ export interface LuxLegacyBridgeHost<T> {
    */
   readonly required: Signal<boolean>;
   /**
+   * Der Vertrags-Input disabled(), aus demselben Grund wie required() hier nötig: Das Schema setzt
+   * einen per disabled(path, {when: ...}) gesteuerten Zustand NIE auf dieses synthetische
+   * FormControl, sondern ausschließlich über diesen automatisch verdrahteten Input. Betrifft vor
+   * allem alwaysEngaged-Controls (z.B. die File-Controls) - dort ist die Brücke immer zuständig,
+   * ohne diese Ergänzung würde stateOverride.disabled dort also NIE auf ein schema-seitiges
+   * disabled() reagieren, siehe isDisabled() in LuxFormControlBase.
+   */
+  readonly disabled: Signal<boolean>;
+  /**
    * Die Vertrags-Inputs invalid()/errors(), ebenfalls von der [formField]-Direktive verdrahtet.
    * Aus demselben Grund wie required() nötig: Das synthetische FormControl der Brücke trägt im
    * Signal-Forms-Betrieb nie die schema-seitigen Fehler, syncState() muss sie hier zusätzlich holen.
@@ -420,7 +429,12 @@ export class LuxLegacyFormBridge<T> {
 
     const current = this.host.stateOverride();
     const next: LuxControlStateOverride = {
-      disabled: this.formControl.disabled,
+      // Zusätzlich zum synthetischen FormControl auch host.disabled() einbeziehen: Bei
+      // alwaysEngaged-Controls (z.B. File-Controls) ist die Brücke IMMER zuständig, ein
+      // schema-seitiges disabled(path, {when}) landet aber nie auf dem synthetischen FormControl,
+      // sondern ausschließlich im automatisch verdrahteten disabled()-Input - ohne diese Ergänzung
+      // bliebe ein solches Control in Signal Forms für immer aktiviert.
+      disabled: this.formControl.disabled || this.host.disabled(),
       // Zusätzlich zum synthetischen FormControl auch host.required() einbeziehen: Im Signal-Forms-
       // Betrieb ([formField]) setzt das Schema (required(path, {when})) den Required-Zustand NIE als
       // Validator auf diesem synthetischen Control, sondern ausschließlich über den automatisch

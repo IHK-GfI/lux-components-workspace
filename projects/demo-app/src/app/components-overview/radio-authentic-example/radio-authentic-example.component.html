@@ -4,7 +4,7 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-radio
         luxAutofocus
         [luxOptionLabelProp]="useTemplatesForLabels() ? undefined : 'label'"
@@ -13,13 +13,10 @@
         [luxLabel]="label()"
         [luxHint]="hint()"
         [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
-        [(luxDisabled)]="disabled"
-        [luxRequired]="required()"
-        [luxReadonly]="readonly()"
         [luxOrientationVertical]="isVertical()"
         [luxDense]="denseFormat()"
         [luxPickValue]="useValueFn() ? pickValueFn : undefined"
-        [(luxSelected)]="value"
+        [formField]="signalForm.radioValue"
         [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
         [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
         [luxCompareWith]="useCompareWithFn() ? compareWithFn : undefined"
@@ -29,15 +26,14 @@
         [luxNoLabels]="noLabels()"
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
-        (luxSelectedChange)="log(showOutputEvents(), 'luxSelectedChange', $event)"
-        #defaultRadioComp
+        #signalFormRadioComp
       >
         <ng-template let-item>via Template {{ item | json }}</ng-template>
       </lux-radio>
-      <example-value [value]="value()" />
+      <example-signal-form-value [field]="signalForm.radioValue" />
     </div>
     <div class="lux-flex lux-flex-col" [formGroup]="form">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <lux-radio
         [luxOptionLabelProp]="useTemplatesForLabels() ? undefined : 'label'"
         [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
@@ -65,6 +61,69 @@
         <ng-template let-item>via Template {{ item | json }}</ng-template>
       </lux-radio>
       <example-form-value [form]="form" [controlBinding]="controlBinding" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-radio
+        [luxOptionLabelProp]="useTemplatesForLabels() ? undefined : 'label'"
+        [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
+        luxGroupName="plainValueGroup"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxDisabled]="disabled()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxOrientationVertical]="isVertical()"
+        [luxDense]="denseFormat()"
+        [luxPickValue]="useValueFn() ? pickValueFn : undefined"
+        [(value)]="plainValue"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn() ? compareWithFn : undefined"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        #plainValueRadioComp
+      >
+        <ng-template let-item>via Template {{ item | json }}</ng-template>
+      </lux-radio>
+      <example-value [value]="plainValue()" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxSelected)] @deprecated</code></h3>
+      <lux-radio
+        [luxOptionLabelProp]="useTemplatesForLabels() ? undefined : 'label'"
+        [luxOptions]="useSimpleArray() ? optionsPrimitive : options"
+        luxGroupName="legacySelectedGroup"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxOrientationVertical]="isVertical()"
+        [luxDense]="denseFormat()"
+        [luxPickValue]="useValueFn() ? pickValueFn : undefined"
+        [(luxSelected)]="value"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxCompareWith]="useCompareWithFn() ? compareWithFn : undefined"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxSelectedChange)="log(showOutputEvents(), 'luxSelectedChange', $event)"
+        #defaultRadioComp
+      >
+        <ng-template let-item>via Template {{ item | json }}</ng-template>
+      </lux-radio>
+      <example-value [value]="value()" />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
@@ -259,7 +318,7 @@
       <lux-button
         [luxStroked]="true"
         luxLabel="Werte resetten"
-        (luxClicked)="reset(defaultRadioComp, reactiveRadioComp)"
+        (luxClicked)="reset(signalFormRadioComp, reactiveRadioComp, plainValueRadioComp, defaultRadioComp)"
         luxColor="primary"
         class="lux-flex-none"
       />
@@ -267,7 +326,7 @@
         [luxFlat]="true"
         luxLabel="Fehler anzeigen"
         luxColor="primary"
-        (luxClicked)="showErrors(defaultRadioComp, reactiveRadioComp)"
+        (luxClicked)="showErrors(signalFormRadioComp, reactiveRadioComp, plainValueRadioComp, defaultRadioComp)"
         class="lux-flex-none"
       />
     </div>

@@ -6,11 +6,12 @@
 
 <lux-card
   class="lux-file-list"
-  [ngClass]="{ 'lux-file-list-disabled': isDisabled(), 'lux-file-list-error': errorMessage() && isTouched() }"
+  [ngClass]="{ 'lux-file-list-disabled': isDisabled(), 'lux-file-list-error': errorMessage() && isTouched() && !isReadonly() }"
   [luxTitle]="(luxLabel() ? luxLabel() : '') + (isRequired() ? '&nbsp;*' : '')"
   [luxAriaInvalid]="'' + isInvalid()"
   tabindex="0"
   [luxHeading]="luxHeading()"
+  (focusout)="onFocusOut($event)"
 >
   @if (luxMultiple() || !selectedFiles) {
     <lux-card-info>
@@ -96,7 +97,7 @@
       }
     </div>
   </lux-card-content>
-  @if (errorMessage() && isTouched() && !forceProgressIndeterminate()) {
+  @if (errorMessage() && isTouched() && !isReadonly() && !forceProgressIndeterminate()) {
     <lux-card-actions class="lux-file-actions lux-error">
       <lux-icon class="lux-alert-icon" luxIconName="lux-interface-alert-warning-triangle" luxIconSize="0.75rem" />
       <mat-error [id]="uid() + '-misc'" class="lux-file-list-error-message">

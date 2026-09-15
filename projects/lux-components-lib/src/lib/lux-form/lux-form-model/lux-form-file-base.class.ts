@@ -207,12 +207,23 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
   }
 
   /**
-   * Wird beim Fokussieren des Elements aufgerufen und markiert das FormControl als "touched".
+   * Wird beim Fokussieren des Elements aufgerufen und markiert das Control als "touched".
    * @param focusEvent
    */
   onFocusIn(focusEvent: FocusEvent) {
-    this.formControl.markAsTouched();
+    this.markAsTouched();
     this.luxFocusIn.emit(focusEvent);
+  }
+
+  /**
+   * Wird beim Verlassen des Elements aufgerufen und markiert das Control als "touched" - anders als
+   * z.B. bei lux-input gibt es hier kein natives Eingabeelement, dessen (blur) das übernehmen
+   * könnte, ohne dass vorher eine Datei ausgewählt/entfernt wurde.
+   * @param focusEvent
+   */
+  onFocusOut(focusEvent: FocusEvent) {
+    this.markAsTouched();
+    this.luxFocusOut.emit(focusEvent);
   }
 
   /**
@@ -220,7 +231,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
    * @param file
    */
   downloadFile(file: ILuxFileObject | ILuxFileObject[]) {
-    this.formControl.markAsTouched();
+    this.markAsTouched();
     const myFile: ILuxFileObject = Array.isArray(file) ? file[0] : file;
     const downloadLink = this.downloadLink().nativeElement as HTMLAnchorElement;
 
@@ -257,7 +268,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
    * @param file
    */
   viewFile(file: ILuxFileObject) {
-    this.formControl.markAsTouched();
+    this.markAsTouched();
     // Wenn die Datei bereits einen Base64-Wert besitzt, den onClick-Callback ausführen
     if (file.content) {
       this.handleViewFileClick(file);
@@ -290,8 +301,8 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
       await this.mapFilesToFileObjects(files).then((fileObjects: ILuxFileObject[]) => (newFiles = fileObjects));
       await this.uploadFiles(newFiles);
       this.handleUploadClick(newFiles);
-      this.formControl.markAsTouched();
-      this.formControl.markAsDirty();
+      this.markAsTouched();
+      this.markAsDirty();
       return Promise.resolve(newFiles);
     } catch (error) {
       return Promise.reject(error);

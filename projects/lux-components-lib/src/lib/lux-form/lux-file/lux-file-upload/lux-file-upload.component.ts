@@ -203,8 +203,8 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   }
 
   selectFiles(files: FileList | File[]) {
-    this.formControl.markAsTouched();
-    this.formControl.markAsDirty();
+    this.markAsTouched();
+    this.markAsDirty();
     this.forceProgressIndeterminate.set(true);
     this.announceFileProcess(files && files.length > 1);
 
@@ -312,14 +312,14 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
   }
 
   onUpload() {
-    if (!this.luxDisabled() && !this.luxReadonly()) {
+    if (!this.isDisabled() && !this.isReadonly()) {
       this.fileUploadInput().nativeElement.click();
     }
   }
 
   onRemoveFile(index: number) {
-    this.formControl.markAsTouched();
-    this.formControl.markAsDirty();
+    this.markAsTouched();
+    this.markAsDirty();
 
     // Wenn mehrere Dateien selektiert sind, diese nach der entfernten Datei filtern ansonsten "undefined" nutzen
     const selected = this.getValue();
@@ -375,7 +375,9 @@ export class LuxFileUploadComponent extends LuxFormFileBase<ILuxFileObject[] | n
 
     this.updateSelectedFiles(files).then(
       (newFiles: ILuxFileObject[]) => {
-        const tempSelectedFiles = selectedFilesArray;
+        // Kopie statt derselben Referenz wie this.getValue(): setValue() bricht sonst früh ab, weil
+        // Wert und aktueller Modellwert nach dem push() referenzgleich sind (siehe LuxLegacyFormBridge.setValue()).
+        const tempSelectedFiles = [...selectedFilesArray];
 
         // die zu ersetzenden Dateien durchgehen und aktualisieren
         replaceableFilesMap.forEach((file: File, index: number) => {

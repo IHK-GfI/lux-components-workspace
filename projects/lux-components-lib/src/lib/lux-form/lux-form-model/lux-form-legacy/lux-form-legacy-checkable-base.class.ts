@@ -116,7 +116,12 @@ export abstract class LuxFormLegacyCheckableBase<T = boolean>
 
     // Ein abgewähltes Pflicht-Ankreuzfeld ist ungültig, auch wenn requiredTrue (etwa ohne Formular)
     // nicht greift. Verhalten aus LuxFormCheckableBaseClass übernommen.
-    if (value === false && this.isRequired() && this.formControl.errors === null) {
+    //
+    // Bewusst zusätzlich !this.formControl.disabled geprüft: formControl.disable() setzt errors
+    // selbst auf null und feuert dabei synchron einen (unveränderten) valueChanges-Event, der genau
+    // hier ankommt - ohne diese Bedingung würde ein deaktiviertes Pflichtfeld seinen Fehler sofort
+    // wieder selbst setzen und trotz Deaktivierung als ungültig/fehlerhaft angezeigt bleiben.
+    if (value === false && this.isRequired() && this.formControl.errors === null && !this.formControl.disabled) {
       this.formControl.setErrors({ required: true });
     }
   }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, disabled, form, minLength, readonly, required } from '@angular/forms/signals';
 import {
   LuxAccordionComponent,
   LuxAutofocusDirective,
@@ -23,6 +24,7 @@ import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { logResult, setRequiredValidatorForFormControl } from '../../example-base/example-base-util/example-base-helper';
+import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 
 @Component({
   selector: 'lux-chip-authentic-example',
@@ -46,10 +48,23 @@ import { logResult, setRequiredValidatorForFormControl } from '../../example-bas
     ReactiveFormsModule,
     ExampleBaseSimpleOptionsComponent,
     ExampleBaseAdvancedOptionsComponent,
-    StatusMarkerComponent
+    StatusMarkerComponent,
+    ExampleSignalFormValueComponent,
+    FormField
   ]
 })
 export class ChipAuthenticExampleComponent {
+  // 1. Signal Form - der empfohlene Weg.
+  readonly signalModel = signal<{ chipsValue: string[] }>({ chipsValue: [] });
+  readonly signalForm = form(this.signalModel, (path) => {
+    disabled(path.chipsValue, { when: () => this.disabled() });
+    readonly(path.chipsValue, { when: () => this.readonly() });
+    required(path.chipsValue, { when: () => this.required() });
+    // required() allein reicht bei einem Array-Wert nicht: Angulars isEmpty()-Prüfung kennt nur
+    // '', false und null/undefined als "leer", ein leeres Array gilt ihr bereits als gefüllt.
+    minLength(path.chipsValue, 1, { when: () => this.required() });
+  });
+
   readonly showOutputEvents = signal(false);
   readonly log = logResult;
   readonly colors = ['Keine Farbe', 'warn', 'accent', 'primary'];
@@ -62,6 +77,7 @@ export class ChipAuthenticExampleComponent {
   readonly openedPanel = signal(0);
   readonly longOptionLabel = 'Lorem ipsum dolor \n sit amet consectetur adipisicing elit.  ';
   readonly disabled = signal(false);
+  readonly readonly = signal(false);
   readonly inputAllowed = signal(true);
   readonly inputLabel = signal('Neu');
   readonly placeholder = signal('eingeben oder auswählen');

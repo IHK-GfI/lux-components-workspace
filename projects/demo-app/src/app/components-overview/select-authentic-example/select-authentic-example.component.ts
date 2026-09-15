@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormField, disabled, form, readonly, required } from '@angular/forms/signals';
+import { FormField, disabled, form, minLength, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxButtonComponent,
@@ -76,6 +76,9 @@ export class SelectAuthenticExampleComponent {
     disabled(path.selectValue, { when: () => this.disabled() });
     readonly(path.selectValue, { when: () => this.readonly() });
     required(path.selectValue, { when: () => this.required() });
+    // required() allein reicht bei einem Array-Wert nicht: Angulars isEmpty()-Prüfung kennt nur
+    // '', false und null/undefined als "leer", ein leeres Array gilt ihr bereits als gefüllt.
+    minLength(path.selectValue, 1, { when: () => this.required() });
   });
 
   // 2. Freistehend, ohne jedes Formular.
