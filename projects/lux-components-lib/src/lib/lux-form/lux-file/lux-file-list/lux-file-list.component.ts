@@ -4,6 +4,8 @@ import {
   Component,
   ElementRef,
   OnDestroy,
+  afterRenderEffect,
+  computed,
   effect,
   inject,
   input,
@@ -129,7 +131,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   readonly fileEntries = viewChildren('fileEntry', { read: ElementRef });
   readonly fileUploadSingleInput = viewChild.required<ElementRef>('fileUploadSingle');
 
-  readonly fileIcons = signal<string[]>([]);
+  readonly fileIcons = computed(() => this.computeFileIcons(this.value()));
   rowWidth = 0;
   readonly iconActionBarWidth = signal(50);
   dialogReplaceConfig: ILuxDialogConfig = {
@@ -147,11 +149,18 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   constructor() {
     super();
 
-    effect(() => {
-      this.fileEntries();
-      this.getValue();
+    // afterRenderEffect statt effect: setImgSrc() liest das <img>-Element per querySelector aus dem DOM.
+    // Abhängigkeit von fileIcons() (statt getValue()) ist entscheidend: Erst wenn fileIcons() sich
+    // ändert, hat Angular das @switch von Icon auf <img> neu gerendert - erst dann existiert das
+    // <img>-Element, das setImgSrc() per querySelector befüllt.
+    afterRenderEffect({
+      mixedReadWrite: () => {
+        this.fileEntries();
+        this.fileIcons();
+        this.luxShowPreview();
 
-      untracked(() => this.updateIconAndImage());
+        untracked(() => this.updateIconAndImage());
+      }
     });
 
     // ResizeObserver statt Polling in ngAfterViewChecked (das bei jedem CD-Zyklus offsetWidth gelesen und damit
@@ -410,8 +419,6 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   }
 
   private updateIconAndImage() {
-    this.setFileIcons();
-
     if (this.luxShowPreview()) {
       this.setImgSrc();
     }
@@ -485,13 +492,11 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
   }
 
   /**
-   * Setzt die Icons für die Elemente in der Auflistung
+   * Ermittelt die Icons für die Elemente in der Auflistung
    */
-  private setFileIcons() {
-    const selected = this.getValue();
-
+  private computeFileIcons(selected: ILuxFileObject[] | null): string[] {
     if (!selected) {
-      return;
+      return [];
     }
 
     const fileIcons: string[] = [];
@@ -520,7 +525,7 @@ export class LuxFileListComponent extends LuxFormFileBase<ILuxFileObject[] | nul
       fileIcons.push(newFileIcon);
     });
 
-    this.fileIcons.set(fileIcons);
+    return fileIcons;
   }
 
   private resizeIconActionBar() {

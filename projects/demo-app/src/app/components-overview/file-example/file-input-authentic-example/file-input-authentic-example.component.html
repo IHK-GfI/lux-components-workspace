@@ -35,7 +35,6 @@
         (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
         (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
-        (luxSelectedChange)="onSelectedChange($event)"
         #fileinputexamplesignalform
       />
       <example-signal-form-value [field]="signalForm" [showValue]="false" />
@@ -142,7 +141,7 @@
         [luxRequired]="required()"
         [luxReadonly]="readonly()"
         [(luxDisabled)]="disabled"
-        [(luxSelected)]="selected"
+        [(luxSelected)]="selectedValue"
         [luxUploadUrl]="uploadUrl()"
         [luxMaxSizeMiB]="maxSize()"
         [luxCustomActionConfigs]="customActionConfigs"

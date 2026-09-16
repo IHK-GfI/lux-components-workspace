@@ -124,6 +124,13 @@ lux-chips {
     cursor: default;
   }
 
+  // Readonly: Verbleibende Chips bleiben lesbar, aber nicht mehr bedienbar (kein Hinzufügen/Entfernen)
+  &.lux-form-control-readonly {
+    .lux-chips-input-container {
+      pointer-events: none;
+    }
+  }
+
   // Fokus
   mat-chip-row.cdk-focused:not(.cdk-mouse-focused):not(.cdk-program-focused) {
     --mat-chip-elevated-container-color: var(--lux-theme-custom-on-blue);

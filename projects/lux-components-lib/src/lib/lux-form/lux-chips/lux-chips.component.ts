@@ -334,6 +334,10 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
    * @param value
    */
   add(value: string) {
+    if (this.isReadonly()) {
+      return;
+    }
+
     try {
       this.actionRunning = true;
 
@@ -385,6 +389,10 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
   }
 
   onChipGroupRemove(chipGroup: LuxChipGroupComponent, index: number) {
+    if (this.isReadonly()) {
+      return;
+    }
+
     try {
       this.actionRunning = true;
 
@@ -432,6 +440,10 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
    * auswählen.
    */
   onAutocompleteClick() {
+    if (this.isReadonly()) {
+      return;
+    }
+
     this.matAutocompleteTrigger()?.openPanel();
   }
 
@@ -489,6 +501,10 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
   }
 
   onArrowIcon() {
+    if (this.isReadonly()) {
+      return;
+    }
+
     const trigger = this.matAutocompleteTrigger();
 
     if (trigger?.panelOpen) {

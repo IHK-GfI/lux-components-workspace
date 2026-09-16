@@ -14,6 +14,7 @@
       [disabled]="isDisabled()"
       [attr.aria-labelledby]="labelledBy() ?? null"
       [attr.aria-label]="luxAriaLabel() ?? null"
+      [attr.aria-readonly]="isReadonly()"
       role="grid"
       #chips
     >
@@ -30,15 +31,15 @@
               'lux-chip-color-accent': chip.luxColor() === 'accent',
               'lux-chip-color-warn': chip.luxColor() === 'warn'
             }"
-            [removable]="chip.luxRemovable()"
+            [removable]="chip.luxRemovable() && !isReadonly()"
             [disabled]="chip.luxDisabled()"
             [color]="chip.luxColor()"
             [disableRipple]="true"
-            (keydown.delete)="chip.remove(i)"
+            (keydown.delete)="!isReadonly() && chip.remove(i)"
             (click)="chip.click(i)"
           >
             <ng-template *ngTemplateOutlet="chip.templateRef()"></ng-template>
-            @if (chip.luxRemovable()) {
+            @if (chip.luxRemovable() && !isReadonly()) {
               <lux-icon
                 class="lux-chip-icon"
                 [ngClass]="{ 'lux-chip-icon-disabled': chip.luxDisabled() }"
@@ -71,15 +72,15 @@
                 'lux-chip-color-accent': chipGroup.luxColor() === 'accent',
                 'lux-chip-color-warn': chipGroup.luxColor() === 'warn'
               }"
-              [removable]="chipGroup.luxRemovable()"
+              [removable]="chipGroup.luxRemovable() && !isReadonly()"
               [disabled]="chipGroup.luxDisabled()"
               [disableRipple]="true"
               [color]="chipGroup.luxColor()"
-              (keydown.delete)="onChipGroupRemove(chipGroup, i)"
+              (keydown.delete)="!isReadonly() && onChipGroupRemove(chipGroup, i)"
               (click)="chipGroup.click(i)"
             >
               <ng-container *ngTemplateOutlet="chipGroup.tempRef() ? chipGroup.tempRef()! : noTemplateRef; context: { $implicit: label }" />
-              @if (chipGroup.luxRemovable()) {
+              @if (chipGroup.luxRemovable() && !isReadonly()) {
                 <lux-icon
                   class="lux-chip-icon"
                   [ngClass]="{ 'lux-chip-icon-disabled': chipGroup.luxDisabled() }"
@@ -109,7 +110,7 @@
           [matAutocomplete]="auto"
           [attr.aria-labelledby]="labelledBy() ?? null"
           [attr.aria-label]="luxAriaLabel() ?? null"
-          [disabled]="isDisabled()"
+          [disabled]="isDisabled() || isReadonly()"
           (matChipInputTokenEnd)="inputAdd(input)"
           (focusout)="onFocusOut()"
           (keyup)="inputChanged(input.value)"

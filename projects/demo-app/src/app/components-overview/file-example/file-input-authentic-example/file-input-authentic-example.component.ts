@@ -60,6 +60,7 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
     required(path, { when: () => this.required() });
   });
   readonly plainValue = signal<ILuxFileObject | null>(null);
+  readonly selectedValue = signal<ILuxFileObject | null>(null);
 
   readonly placeholder = signal('Placeholder');
   readonly clearOnError = signal(true);
@@ -94,9 +95,9 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
           file.name = 'example.png';
           file.lastModifiedDate = new Date();
           const fileObject = { name: 'example.png', content: file, type: file.type, size: file.size };
-          this.selected.set(fileObject);
           this.signalModel.set(fileObject);
           this.plainValue.set(fileObject);
+          this.selectedValue.set(fileObject);
           this.form.get(this.controlBinding)!.setValue(fileObject);
         })
       )
@@ -108,7 +109,7 @@ export class FileInputAuthenticExampleComponent extends FileExampleComponent imp
   onKeepFileWithoutForm(keepFile: boolean) {
     if (keepFile) {
       const fileCopy = { name: '', type: '' };
-      Object.assign(fileCopy, this.selected());
+      Object.assign(fileCopy, this.plainValue());
       this.fileBaseWithoutComponent().setValue(fileCopy);
     } else {
       this.fileBaseWithoutComponent().setValue(null);

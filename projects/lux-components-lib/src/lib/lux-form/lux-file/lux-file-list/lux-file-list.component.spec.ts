@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { HttpClient, withXhr } from '@angular/common/http';
@@ -519,6 +519,7 @@ describe('LuxFileListComponent', () => {
 
       // Nachbedingungen prüfen
       expect(localFixture.debugElement.queryAll(By.css('img')).length).toBe(1);
+      expect(localFixture.debugElement.query(By.css('img')).nativeElement.src).toContain('data:image/png;base64-dummy');
     });
 
     it('Sollte den Base64-String via Base64-Callback füllen', async () => {

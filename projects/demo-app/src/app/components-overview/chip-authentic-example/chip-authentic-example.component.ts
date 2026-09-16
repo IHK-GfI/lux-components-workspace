@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormField, disabled, form, minLength, readonly, required } from '@angular/forms/signals';
+import { FormField, disabled, form, readonly, required, requiredError, validate } from '@angular/forms/signals';
 import {
   LuxAccordionComponent,
   LuxAutofocusDirective,
@@ -62,7 +62,7 @@ export class ChipAuthenticExampleComponent {
     required(path.chipsValue, { when: () => this.required() });
     // required() allein reicht bei einem Array-Wert nicht: Angulars isEmpty()-Prüfung kennt nur
     // '', false und null/undefined als "leer", ein leeres Array gilt ihr bereits als gefüllt.
-    minLength(path.chipsValue, 1, { when: () => this.required() });
+    validate(path.chipsValue, (ctx) => (this.required() && ctx.value().length === 0 ? requiredError() : undefined));
   });
 
   readonly showOutputEvents = signal(false);
