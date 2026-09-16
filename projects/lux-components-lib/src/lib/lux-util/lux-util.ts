@@ -182,6 +182,35 @@ export class LuxUtil {
   }
 
   /**
+   * Parst einen "HH:mm"- oder "HH:mm:ss"-String (wie luxMinTime/luxMaxTime bei LuxTimepickerComponent)
+   * in Sekunden seit Mitternacht. Dieselbe Grammatik wie LuxTimepickerAdapter.parse() - bewusst nicht
+   * dorthin ausgelagert, da der Adapter ein Date zurückgibt und über Angular Material DI aufgelöst
+   * wird, während diese Methode DI-frei bleiben muss, um auch außerhalb einer Component-Instanz
+   * (z.B. in Signal-Forms-Schema-Validatoren wie luxTimepickerMinMax()) nutzbar zu sein.
+   * @param value Der Zeit-String, oder null/undefined.
+   * @returns Sekunden seit Mitternacht, oder null, wenn der String nicht geparst werden kann.
+   */
+  public static parseTimeToSeconds(value: string | null | undefined): number | null {
+    if (!value) {
+      return null;
+    }
+
+    const match = value.trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (!match) {
+      return null;
+    }
+
+    const hours = +match[1];
+    const minutes = +match[2];
+    const seconds = match[3] ? +match[3] : 0;
+    if (hours > 23 || minutes > 59 || seconds > 59) {
+      return null;
+    }
+
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+
+  /**
    * Diese Methode liefert ein neues Date-Objekt auf Basis des übergebenen Date-Objekts zurück.
    * Das zurückgelieferte Date-Objekt hat denselben Tag, Monat und das Jahr wie das übergebene Date-Objekt,
    * die Stunden, Minuten und Sekunden sind jedoch 0.

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { disabled, FormField, form, readonly, required } from '@angular/forms/signals';
+import { disabled, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxDatepickerComponent,
   LuxFormHintComponent,
   LuxInputComponent,
+  luxTimepickerMinMax,
   LuxTimepickerComponent,
   LuxToggleComponent
 } from '@ihk-gfi/lux-components';
@@ -57,12 +58,14 @@ export class TimepickerAuthenticExampleComponent {
     disabled(path.timepickerValue, { when: () => this.disabled() });
     readonly(path.timepickerValue, { when: () => this.readonly() });
     required(path.timepickerValue, { when: () => this.required() });
+    validate(path.timepickerValue, luxTimepickerMinMax({ min: () => this.minTime(), max: () => this.maxTime() }));
   });
   readonly combinedSignalModel = signal<{ combinedValue: string | null }>({ combinedValue: '2026-06-18T14:30:00.000Z' });
   readonly combinedSignalForm = form(this.combinedSignalModel, (path) => {
     disabled(path.combinedValue, { when: () => this.disabled() });
     readonly(path.combinedValue, { when: () => this.readonly() });
     required(path.combinedValue, { when: () => this.required() });
+    validate(path.combinedValue, luxTimepickerMinMax({ min: () => this.minTime(), max: () => this.maxTime() }));
   });
 
   // 2. Freistehend, ohne jedes Formular.

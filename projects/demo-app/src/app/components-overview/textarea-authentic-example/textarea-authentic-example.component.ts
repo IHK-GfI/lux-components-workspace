@@ -60,7 +60,7 @@ export class TextareaAuthenticExampleComponent {
   readonly signalForm = form(this.signalModel, (path) => {
     disabled(path.textareaValue, { when: () => this.disabled() });
     readonly(path.textareaValue, { when: () => this.readonly() });
-    required(path.textareaValue, { message: 'Bitte einen Wert eingeben', when: () => this.required() });
+    required(path.textareaValue, { when: () => this.required() });
     minLength(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 3 : undefined));
     maxLengthValidator(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 10 : undefined));
   });

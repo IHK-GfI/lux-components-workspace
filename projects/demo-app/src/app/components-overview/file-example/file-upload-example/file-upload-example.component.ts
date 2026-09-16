@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { disabled, form, FormField, readonly, required, requiredError, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import {
   ILuxFileActionConfig,
   ILuxFileObject,
@@ -12,6 +12,7 @@ import {
   LuxFormHintComponent,
   LuxInputComponent,
   LuxInputSuffixComponent,
+  luxRequiredArray,
   LuxSelectComponent,
   LuxToggleComponent,
   LuxUtil
@@ -62,10 +63,7 @@ export class FileUploadExampleComponent
     disabled(path, { when: () => this.disabled() });
     readonly(path, { when: () => this.readonly() });
     required(path, { when: () => this.required() });
-    // required() allein reicht nicht: Nach dem Entfernen aller Dateien wird der Wert zu einem
-    // leeren Array statt null, und Angulars isEmpty()-Prüfung kennt nur '', false und null/undefined
-    // als "leer" - ein leeres Array gilt ihr bereits als gefüllt.
-    validate(path, (ctx) => (this.required() && Array.isArray(ctx.value()) && ctx.value()!.length === 0 ? requiredError() : undefined));
+    validate(path, luxRequiredArray({ when: () => this.required() }));
   });
   readonly plainValue = signal<ILuxFileObject[] | null>(null);
 
