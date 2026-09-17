@@ -20,7 +20,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { debounce, distinctUntilChanged, merge, share, skip, take, timer } from 'rxjs';
+import { debounce, share, timer } from 'rxjs';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -129,7 +129,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   // Eigener name pro Instanz, sonst teilen sich Radios instanzübergreifend den CDK-UniqueSelectionDispatcher.
   protected radioName = computed(() => `lux-list-select-radio-${this.uniqueId}`);
 
-  // share(): Anzeige-Pipeline (toSignal) und Lade-Subscription im Konstruktor teilen sich denselben Debounce-Timer.
+  // share(): Anzeige-Pipeline (toSignal) und DataSource teilen sich denselben Debounce-Timer.
   private searchValue$ = toObservable(this.luxSearchValue);
   private debouncedSearch$ = this.searchValue$.pipe(
     debounce(() => timer(this.luxSearchDelay())),
@@ -138,7 +138,19 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected debouncedSearch = toSignal(this.debouncedSearch$, { initialValue: '' });
 
   // Ist ein DAO gesetzt, kommen die angezeigten Daten ausschließlich vom Server; luxItems und Client-Filterung/-Slicing werden ignoriert.
-  private readonly dataSource = new LuxListSelectDataSource<T>(this.luxHttpDao, this.luxPageSize, this.injector);
+  private readonly dataSource = new LuxListSelectDataSource<T>(
+    {
+      httpDao: this.luxHttpDao,
+      pageSize: this.luxPageSize,
+      pageIndex: this.luxPageIndex,
+      showPagination: this.luxShowPagination,
+      infiniteScroll: this.luxInfiniteScroll,
+      searchValue: this.luxSearchValue,
+      debouncedSearch: this.debouncedSearch,
+      debouncedSearch$: this.debouncedSearch$
+    },
+    this.injector
+  );
   protected loading = this.dataSource.loading;
   protected daoItems = this.dataSource.daoItems;
   protected daoTotalCount = this.dataSource.daoTotalCount;
@@ -192,9 +204,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected viewportLoading = computed(() => this.serverMode() && this.loading());
 
   constructor() {
-    // Lade-Orchestrierung als RxJS-Subscriptions statt Effects: toObservable/takeUntilDestroyed
-    // brauchen den Injection-Context, deshalb steht alles hier im Konstruktor.
-
     // Bewusst ein computed-Paar statt combineLatest: combineLatest würde bei gleichzeitiger Änderung
     // beider Signale zuerst ein Zwischenpaar aus neuem Modus und alter Selektion liefern.
     toObservable(computed(() => ({ mode: this.luxMode(), selected: this.luxSelected() })))
@@ -204,83 +213,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
           this.luxSelected.set([selected[0]]);
           this.onChange(this.luxSelected());
         }
-      });
-
-    // skip(1) verwirft den Startwert (inkl. dessen entprelltem Nachzügler via distinctUntilChanged):
-    // ein vorbelegter luxSearchValue soll keinen Doppel-Load auslösen.
-    merge(this.searchValue$.pipe(take(1)), this.debouncedSearch$)
-      .pipe(distinctUntilChanged(), skip(1), takeUntilDestroyed())
-      .subscribe((search) => {
-        this.luxPageIndex.set(0);
-        if (this.luxHttpDao()) {
-          this.dataSource.triggerLoad(0, search, false);
-        }
-      });
-
-    // Baseline wird erst übernommen, wenn Paginierung/Infinite-Scroll/DAO aktiv sind ("relevant"),
-    // sonst zählt eine vorbelegte Erstkonfiguration fälschlich als Laufzeit-Wechsel.
-    let pageSizeBaseline: number | null = null;
-    // Ändert sich DAO und luxPageSize in derselben Emission, lädt bereits die DAO-Subscription unten
-    // neu - ein zusätzlicher Load hier wäre doppelt.
-    let lastSeenDao = this.luxHttpDao();
-    toObservable(
-      computed(() => ({
-        pageSize: this.luxPageSize(),
-        dao: this.luxHttpDao(),
-        relevant: !!this.luxHttpDao() || this.luxShowPagination() || this.luxInfiniteScroll()
-      }))
-    )
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ pageSize, dao, relevant }) => {
-        const daoChanged = dao !== lastSeenDao;
-        lastSeenDao = dao;
-        if (!relevant) {
-          return;
-        }
-        if (pageSizeBaseline === null) {
-          pageSizeBaseline = pageSize;
-          return;
-        }
-        if (pageSize === pageSizeBaseline) {
-          return;
-        }
-        pageSizeBaseline = pageSize;
-        this.luxPageIndex.set(0);
-        if (dao && !daoChanged) {
-          this.dataSource.reset();
-          this.dataSource.triggerLoad(0, this.debouncedSearch(), false);
-        }
-      });
-
-    toObservable(this.luxHttpDao)
-      .pipe(distinctUntilChanged(), takeUntilDestroyed())
-      .subscribe((dao) => {
-        if (!dao) {
-          return;
-        }
-        this.dataSource.reset();
-        this.luxPageIndex.set(0);
-        this.dataSource.triggerLoad(0, this.luxSearchValue(), false);
-      });
-
-    // serverMode im Stream: wird der DAO erst nachträglich gesetzt, übernimmt die Subscription den
-    // dann aktuellen Seitenindex als Ausgangsstand, statt den ersten Wechsel als Erstlauf zu verschlucken.
-    let isFirstPageEmission = true;
-    toObservable(computed(() => ({ page: this.luxPageIndex(), serverMode: this.serverMode() })))
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ page, serverMode }) => {
-        if (!serverMode) {
-          return;
-        }
-        if (isFirstPageEmission) {
-          isFirstPageEmission = false;
-          this.dataSource.lastRequestedPage = page;
-          return;
-        }
-        if (page === this.dataSource.lastRequestedPage) {
-          return;
-        }
-        this.dataSource.triggerLoad(page, this.debouncedSearch(), false);
       });
 
     effect(() => {
@@ -379,18 +311,12 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
 
   onPageChange(event: LuxPageEvent) {
     this.luxPageChange.emit(event);
-    if (this.luxHttpDao()) {
-      // Synchron mit dem Klick; triggerLoad merkt die Seite gegen einen doppelten Load durch die luxPageIndex-Subscription.
-      this.dataSource.triggerLoad(event.pageIndex, this.debouncedSearch(), false);
-    }
+    this.dataSource.loadPage(event.pageIndex);
   }
 
   onScrolled() {
     this.luxScrolled.emit();
-    if (this.luxHttpDao() && !this.loading() && this.daoItems().length < this.daoTotalCount()) {
-      const nextPage = Math.floor(this.daoItems().length / this.luxPageSize());
-      this.dataSource.loadMore(nextPage, this.debouncedSearch());
-    }
+    this.dataSource.loadNextPage();
   }
 
   protected onSearchClear() {

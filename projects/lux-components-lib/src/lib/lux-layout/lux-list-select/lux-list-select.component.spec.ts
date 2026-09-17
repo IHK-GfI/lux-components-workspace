@@ -1123,6 +1123,29 @@ describe('LuxListSelectComponent', () => {
       const firstCard = fixture.debugElement.query(By.css('.lux-list-select-card'));
       expect(firstCard.nativeElement.classList).toContain('lux-disabled');
     });
+
+    it('Sollte im DAO-Modus einen vorbelegten luxPageIndex respektieren und genau diese Seite laden', fakeAsync(() => {
+      // Vorbedingungen testen: eigene Instanz, DAO, Paginierung und Seitenindex sind vor der ersten Change-Detection gesetzt
+      const dao = new TestListSelectHttpDao();
+      const fixture2 = TestBed.createComponent(MockHostComponent);
+      const host2 = fixture2.componentInstance;
+      host2.pageSize = 2;
+      host2.showPagination = true;
+      host2.pageIndex = 1;
+      host2.httpDao = dao;
+
+      // Änderungen durchführen
+      fixture2.detectChanges();
+      tick(50);
+      fixture2.detectChanges();
+
+      // Nachbedingungen prüfen: genau ein Load, und zwar für Seite 1; der Seitenindex bleibt erhalten
+      expect(dao.loadDataSpy).toHaveBeenCalledTimes(1);
+      expect(dao.loadDataSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: 1, pageSize: 2 }));
+      expect(host2.pageIndex).toBe(1);
+
+      fixture2.destroy();
+    }));
   });
 
   describe('Grid-Tastaturnavigation', () => {
@@ -1230,6 +1253,31 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen
       expect(host.selected).toEqual([]);
+    });
+
+    it('Sollte einen nachträglich eingeblendeten Detail-Button aus der Tab-Reihenfolge nehmen', () => {
+      // Vorbedingungen testen
+      expect(fixture.debugElement.query(By.css('.lux-list-select-detail button'))).toBeNull();
+
+      // Änderungen durchführen
+      host.showDetailButton = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen: außerhalb der Innennavigation ist kein Detail-Button ein Tab-Stopp
+      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
+      expect(detailButtons.length).toBeGreaterThan(0);
+      detailButtons.forEach((button) => expect((button.nativeElement as HTMLElement).tabIndex).toBe(-1));
+    });
+
+    it('Sollte auch den Detail-Button eines disabled-Items aus der Tab-Reihenfolge nehmen', () => {
+      // Änderungen durchführen (TEST_ITEMS[2] ist disabled)
+      host.showDetailButton = true;
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      const disabledButton = cards()[2].query(By.css('.lux-list-select-detail button')).nativeElement as HTMLButtonElement;
+      expect(disabledButton.disabled).toBeTrue();
+      expect(disabledButton.tabIndex).toBe(-1);
     });
 
     it('Sollte mit F2 in den Detail-Button und mit Escape zurück auf die Karte wechseln', () => {
