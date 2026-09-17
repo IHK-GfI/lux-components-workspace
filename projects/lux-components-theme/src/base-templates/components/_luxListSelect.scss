@@ -4,11 +4,6 @@ $lux-list-select-scrollbar-thumb: #8b8b8b;
 lux-list-select {
   display: block;
 
-  .lux-list-select-container {
-    display: flex;
-    flex-direction: column; // luxMaxHeight wirkt hier als Gesamthöhe, Viewport nimmt den Rest ein
-  }
-
   .lux-list-select-header {
     gap: 22px;
   }
@@ -55,11 +50,10 @@ lux-list-select {
   }
 
   .lux-list-select-card {
-    min-height: 81px;
-    box-sizing: border-box;
-    padding: 0 20px;
-    background-color: #fff;
-    border: 2px solid var(--lux-theme-app-border-color);
+    // Figma: 81px Kartenhöhe = 1px Border + 15px + 49px Inhalt (Titel 22 + Gap 8 + Untertitel 19) + 15px + 1px Border
+    padding: 15px var(--lux-theme-card-padding);
+    background-color: var(--lux-theme-card-background-color);
+    border: 1px solid var(--lux-theme-app-border-color);
     border-radius: var(--lux-theme-radius-sm);
     cursor: pointer;
 
@@ -97,6 +91,7 @@ lux-list-select {
   .lux-list-select-title {
     font-family: var(--lux-theme-app-headline-font);
     font-size: var(--lux-theme-font-size-xl);
+    line-height: 1.1; // Figma: 22px bei 20px Schrift; "normal" ergibt mit Blogger Sans im Browser 24px
     color: var(--lux-theme-dark-primary-text);
     white-space: nowrap;
     overflow: hidden;

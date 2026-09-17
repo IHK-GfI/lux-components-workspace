@@ -20,14 +20,11 @@
   }
 </ng-template>
 
-<div class="lux-list-select-container" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
+<div class="lux-list-select-container lux-flex lux-flex-col lux-gap-4" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
   @if (luxShowSearch()) {
     <lux-input-ac
       class="lux-list-select-search lux-flex-shrink-0"
       [luxNoLabels]="true"
-      [luxNoTopLabel]="true"
-      [luxNoBottomLabel]="true"
-      [luxHideCounterLabel]="true"
       [luxPlaceholder]="'luxc.list-select.search_arialabel' | transloco"
       [luxAriaLabel]="'luxc.list-select.search_arialabel' | transloco"
       luxAutocomplete="off"
@@ -54,7 +51,7 @@
   }
 
   @if (luxMode() === 'multi') {
-    <div class="lux-list-select-header lux-flex lux-items-center lux-flex-shrink-0 lux-mb-4">
+    <div class="lux-list-select-header lux-flex lux-items-center lux-flex-shrink-0">
       <mat-checkbox
         class="lux-list-select-select-all"
         [checked]="allSelected()"
@@ -65,7 +62,7 @@
         {{ luxSelectAllLabel() ?? ('luxc.list-select.select_all' | transloco) }}
       </mat-checkbox>
       @if (luxShowCounter()) {
-        <lux-badge luxColor="lightblue" luxSize="small" [luxMuted]="true" [luxUppercase]="false">
+        <lux-badge luxColor="lightblue" [luxMuted]="true" [luxUppercase]="false">
           <lux-label [luxId]="counterLabelId()">{{
             'luxc.list-select.counter' | transloco: { selected: luxSelected().length, total: totalCount() }
           }}</lux-label>
@@ -123,7 +120,7 @@
 
   @if (paginationActive()) {
     <lux-paginator
-      class="lux-flex-shrink-0 lux-mt-3"
+      class="lux-flex-shrink-0"
       [luxLength]="totalCount()"
       [luxPageSize]="luxPageSize()"
       [(luxPageIndex)]="luxPageIndex"
@@ -135,6 +132,6 @@
   }
 
   @if (errorMessages().length > 0) {
-    <lux-message-box class="lux-list-select-error lux-flex-shrink-0 lux-mt-3" [luxMessages]="errorMessages()"></lux-message-box>
+    <lux-message-box class="lux-list-select-error lux-flex-shrink-0" [luxMessages]="errorMessages()"></lux-message-box>
   }
 </div>
