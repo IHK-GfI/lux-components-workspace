@@ -271,7 +271,9 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
 
       this.subscriptions.push(
         matAutocompleteComponent.closed.subscribe(() => {
-          matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
+          if (matAutocompleteComponent.panel) {
+            matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
+          }
         })
       );
     }

@@ -137,6 +137,7 @@ export class FileListExampleComponent
         fileObject.namePrefixColor = this.namePrefixColorDecline();
         fileObject.nameSuffix = this.nameSuffixDecline();
         fileObject.nameSuffixColor = this.nameSuffixColorDecline();
+        this.refreshFileLists();
       })
     );
 
@@ -146,8 +147,25 @@ export class FileListExampleComponent
         fileObject.namePrefixColor = this.namePrefixColorAccept();
         fileObject.nameSuffix = this.nameSuffixAccept();
         fileObject.nameSuffixColor = this.nameSuffixColorAccept();
+        this.refreshFileLists();
       })
     );
+  }
+
+  /**
+   * Der Dialog aus openDialog() haengt nicht im View-Baum der lux-file-list-Instanzen, sondern in einem
+   * CDK-Overlay-Portal. Ein dialogConfirmed/dialogDeclined-Callback markiert daher nicht automatisch die
+   * lux-file-list-Views als dirty. Da fileObject zudem nur mit neuen Properties mutiert wird (gleiche
+   * Array-Referenz), erkennt die Gleichheitspruefung der Signal-Inputs (luxSelected/formField/value/
+   * luxControlBinding) keine Aenderung. Deshalb hier fuer jede der 4 Bindungsvarianten eine neue
+   * Array-Referenz setzen, damit namePrefix/nameSuffix sofort sichtbar werden.
+   */
+  private refreshFileLists() {
+    this.selected.set(this.selected() ? [...this.selected()!] : this.selected());
+    this.signalModel.set(this.signalModel() ? [...this.signalModel()!] : this.signalModel());
+    this.plainValue.set(this.plainValue() ? [...this.plainValue()!] : this.plainValue());
+    const control = this.form.get(this.controlBinding)!;
+    control.setValue(control.value ? [...control.value] : control.value);
   }
 
   initSelected() {

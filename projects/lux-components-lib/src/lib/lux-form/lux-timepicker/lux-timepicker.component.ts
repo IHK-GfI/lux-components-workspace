@@ -231,7 +231,8 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     // bereits onTimeInputValueChange() die Auswahl (MatTimepickerInput spiegelt eine Panel-Auswahl
     // ebenfalls in sein eigenes value-Model, das (valueChange) auslöst) - ein zusätzlicher Aufruf
     // hier wäre redundant. Nur die Referenzdatum-Übernahme erledigt ausschließlich diese Methode.
-    const referenceValue = this.luxReferenceControl()?.formControl?.value;
+    // Siehe applyReferenceDate() für die Begründung, warum lastValue Vorrang vor formControl.value hat.
+    const referenceValue = this.luxReferenceControl()?.lastValue ?? this.luxReferenceControl()?.formControl?.value;
     if (event?.value && this.formControl && referenceValue) {
       this.updateTimeValue(this.applyReferenceDate(event.value));
     }
@@ -261,7 +262,14 @@ export class LuxTimepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
    * (onTimeInputValueChange).
    */
   private applyReferenceDate(value: Date): Date {
-    const referenceValue = this.luxReferenceControl()?.formControl?.value;
+    // Bewusst zuerst lastValue statt formControl.value: Teilen sich Datepicker und Timepicker (z.B.
+    // im Reactive-Form-Betrieb über dasselbe luxControlBinding) dasselbe FormControl, setzt das
+    // Leeren des Zeit-Felds dessen Wert kurzzeitig auf null (siehe updateTimeValue()) - genau in
+    // diesem Moment gelesen, ginge das zuvor gesetzte Datum unwiederbringlich verloren, obwohl der
+    // Datepicker es über lastValue weiterhin unverändert kennt. lastValue wird ausschließlich vom
+    // Datepicker selbst gepflegt und bleibt von dieser Race unberührt - siehe
+    // LuxDatepickerComponent.referenceTimeProvider für dasselbe Muster.
+    const referenceValue = this.luxReferenceControl()?.lastValue ?? this.luxReferenceControl()?.formControl?.value;
     const newDate = new Date(value);
 
     if (referenceValue instanceof Date && LuxUtil.isDate(referenceValue)) {

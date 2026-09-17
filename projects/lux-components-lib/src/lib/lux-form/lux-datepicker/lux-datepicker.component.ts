@@ -439,6 +439,13 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
     // laufen trotzdem synchron neu; die Anzeige von touched/dirty/invalid/errorMessage bleibt aktuell,
     // weil LuxLegacyFormBridge.check() ohnehin bei jedem ngDoCheck() syncState() aufruft.
     this.formControl.updateValueAndValidity({ emitEvent: false });
+
+    // Im Signal-Forms- und Freistehend-Betrieb bleibt stateOverride bewusst undefined (die
+    // Legacy-Brücke ist dort nicht "engaged", siehe LuxLegacyFormBridge.engaged) - ohne diese
+    // zusätzliche Meldung an internalErrors() käme luxMinDate/luxMaxDate/luxCustomFilter in genau
+    // diesen beiden Betriebsarten nie in isInvalid()/errorMessage() an (siehe LuxTimepickerComponent
+    // .syncTimepickerValidation() für dasselbe Muster).
+    this.internalErrors.set(this.formControl.errors as LuxValidationErrors | null);
   }
 
   private updateDateValue(value: any) {

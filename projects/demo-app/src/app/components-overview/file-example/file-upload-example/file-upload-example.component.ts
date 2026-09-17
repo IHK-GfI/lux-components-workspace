@@ -111,17 +111,21 @@ export class FileUploadExampleComponent
   }
 
   toogleCustomHiddenActionConfig() {
-    this.customActionConfigs[0] = {
-      ...this.customActionConfigs[0],
-      hidden: !this.customActionConfigs[0].hidden
-    };
+    this.customActionConfigs = [
+      {
+        ...this.customActionConfigs[0],
+        hidden: !this.customActionConfigs[0].hidden
+      }
+    ];
   }
 
   toogleCustomDisabeldActionConfig() {
-    this.customActionConfigs[0] = {
-      ...this.customActionConfigs[0],
-      disabled: !this.customActionConfigs[0].disabled
-    };
+    this.customActionConfigs = [
+      {
+        ...this.customActionConfigs[0],
+        disabled: !this.customActionConfigs[0].disabled
+      }
+    ];
   }
 
   toogleViewConfig() {

@@ -213,7 +213,9 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
     this.subscriptions.push(
       matAutocompleteComponent.closed.subscribe(() => {
         this.updateFilterOptions();
-        matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
+        if (matAutocompleteComponent.panel) {
+          matAutocompleteComponent.panel.nativeElement.removeEventListener('scroll', this.loadOnScroll);
+        }
       })
     );
 

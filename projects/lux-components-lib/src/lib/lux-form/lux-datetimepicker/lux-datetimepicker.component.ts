@@ -99,12 +99,16 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<
     if (this.dateTimeInputValue) {
       const date = this.parseDateTime(this.dateTimeInputValue);
 
+      const filterFn = this.luxCustomFilter();
+
       if (date === null) {
         result = { matDatepickerParse: { text: this.dateTimeInputValue } };
       } else if (min && this.compareDateWithTime(min, date) > 0) {
         result = { matDatepickerMin: { min, actual: this.dateTimeInputValue } };
       } else if (max && this.compareDateWithTime(date, max) > 0) {
         result = { matDatepickerMax: { max, actual: this.dateTimeInputValue } };
+      } else if (filterFn && !filterFn(date)) {
+        result = { matDatepickerFilter: true };
       }
     } else {
       if (!this.inForm) {
@@ -301,7 +305,7 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<
       return this.tService.translate('luxc.datetimepicker.error_message.min');
     } else if (errors['matDatepickerMax']) {
       return this.tService.translate('luxc.datetimepicker.error_message.max');
-    } else if (errors['matDatepickerParse']) {
+    } else if (errors['matDatepickerParse'] || errors['matDatepickerFilter']) {
       return this.tService.translate('luxc.datetimepicker.error_message.invalid');
     } else if (errors['required']) {
       if (this.dateTimeInputValue) {
@@ -320,6 +324,19 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<
    */
   override emitValueChange(formValue: any) {
     this.updateDateValue(formValue);
+
+    // NUR während das Feld NICHT fokussiert ist: Während echter Tastatureingabe läuft onInput() ->
+    // formControl.setValue() -> (über die LuxLegacyFormBridge) synchron wieder hier herein, auch für
+    // JEDEN Zwischenzustand. Lässt sich ein unfertiger Zwischenwert (z.B. "7.09.2026, 12:15" nach dem
+    // Löschen der führenden "1" aus "17.09.2026, 12:15") bereits zu einem vollständigen Datum
+    // parsen, würde setISOValue() -> updateValueAndValidity() (siehe dort, bewusst OHNE
+    // emitEvent:false) diesen Callback ein zweites Mal mit dem kanonisch reformatierten ISO-Wert
+    // durchlaufen - die Anzeige spränge dabei sofort zu z.B. "07.09.2026, 12:15", bevor der Nutzer
+    // die Ersatzziffer tippen kann. Siehe LuxDatepickerComponent.syncDatepickerValidation() für
+    // dieselbe "Fokus-Bremse" bei genau diesem Problem.
+    if (this.focused()) {
+      return;
+    }
 
     if (LuxUtil.ISO_8601_FULL.test(formValue)) {
       this.dateTimeInputValue = this.formatDateTime(this.dateTimeAdapter.deserialize(formValue));
@@ -428,7 +445,16 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<
       // ein reines Neu-Validieren (updateValueAndValidity() nach Validator-Änderungen) über
       // formControl.valueChanges eine falsche/leere Wertänderungs-Meldung aus, obwohl der Wert nie
       // gesetzt war.
-      if (this.value()) {
+      //
+      // Bewusst gegen previousISO statt gegen this.value() geprüft: Die LuxLegacyFormBridge
+      // registriert einen eigenen, synchronen onChange-Callback direkt am FormControl
+      // (publishValue()), der bei engagierter Brücke (z.B. luxValue/luxControlBinding) diesen
+      // Modell-Signal-Wert bereits VOR diesem Guard auf den neuen (leeren) Rohwert setzt. Eine
+      // Prüfung gegen this.value() sähe das Feld dadurch fälschlich schon als geleert an und würde
+      // setISOValue() nie aufrufen - luxValueChange bliebe beim Leeren des Felds aus. previousISO
+      // wird ausschließlich von setISOValue() selbst geschrieben und bleibt von dieser Race
+      // unberührt.
+      if (this.previousISO) {
         this.setISOValue(value);
       }
       return;

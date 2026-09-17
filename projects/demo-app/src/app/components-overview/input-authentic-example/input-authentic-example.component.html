@@ -257,7 +257,7 @@
     </lux-toggle>
     <lux-toggle
       luxLabel="Zusatz-Validatoren auf FormControl setzen (minLength(3), maxLength(10))"
-      [luxChecked]="extraValidators"
+      [luxChecked]="extraValidators()"
       (luxCheckedChange)="changeExtraValidators($event)"
       [luxNoTopLabel]="true"
     >

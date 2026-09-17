@@ -608,10 +608,17 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
    * @param file
    */
   protected getMaxSizeErrorMessage(file: File): string {
+    // luxMaxSizeMiB() defensiv gegen null/undefined absichern: Ist die Property extern an ein
+    // numerisches Eingabefeld gebunden (wie im Demo-Beispiel), kann sie kurzzeitig null werden,
+    // während der Nutzer den Feldinhalt leert, bevor er einen neuen Wert eintippt. Diese
+    // Fehlermeldung wird als computed() aus errorMessage() heraus neu ausgewertet, sobald sich
+    // luxMaxSizeMiB() ändert - ein ungeschütztes .toFixed() würde genau in diesem Moment eine nicht
+    // abgefangene Exception werfen, obwohl noch gar keine neue Datei ausgewählt wurde.
+    const maxSizeMiB = this.luxMaxSizeMiB();
     return this.tService.translate('luxc.form-file-base.error_message.max_file_size', {
       fileName: file.name,
       fileSizeInMiB: (+this.getFileSizeInMiB(file).toFixed(2)).toString(),
-      maxSizeMiB: (+this.luxMaxSizeMiB().toFixed(2)).toString()
+      maxSizeMiB: maxSizeMiB != null ? (+maxSizeMiB.toFixed(2)).toString() : ''
     });
   }
 
@@ -620,7 +627,14 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
    * @param file
    */
   protected getMaxFileCountMessage(): string {
-    return this.tService.translate('luxc.form-file-base.error_message.max_file_count', { maxFileCount: this.luxMaxFileCount().toString() });
+    // Siehe getMaxSizeErrorMessage() fuer die Begruendung: luxMaxFileCount() kann kurzzeitig null
+    // werden, waehrend ein extern gebundenes Eingabefeld geleert wird, bevor ein neuer Wert
+    // eingetippt wird - ein ungeschuetztes .toString() wuerde diese Fehlermeldung dann abstuerzen
+    // lassen.
+    const maxFileCount = this.luxMaxFileCount();
+    return this.tService.translate('luxc.form-file-base.error_message.max_file_count', {
+      maxFileCount: maxFileCount != null ? maxFileCount.toString() : ''
+    });
   }
 
   /**

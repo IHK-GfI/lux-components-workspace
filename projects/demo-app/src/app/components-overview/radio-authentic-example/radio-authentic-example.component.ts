@@ -186,7 +186,7 @@ export class RadioAuthenticExampleComponent {
   }
 
   onToggleDisabledFirst() {
-    this.options[0].disabled = this.disabledFirst();
+    this.options = this.options.map((option, index) => (index === 0 ? { ...option, disabled: this.disabledFirst() } : option));
   }
 
   onRefresh() {

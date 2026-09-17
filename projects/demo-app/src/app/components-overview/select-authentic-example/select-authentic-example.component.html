@@ -383,7 +383,7 @@
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle
-      [(luxChecked)]="useSimpleArray"
+      [luxChecked]="useSimpleArray()"
       luxLabel="String-Array nutzen"
       (luxCheckedChange)="changeUseSimpleArray($event)"
       [luxNoTopLabel]="true"
@@ -391,7 +391,7 @@
       <lux-form-hint> Für die Beispiele einfache String-Arrays anstelle von Arrays mit Objekten nutzen. </lux-form-hint>
     </lux-toggle>
     <lux-toggle
-      [(luxChecked)]="useValueFn"
+      [luxChecked]="useValueFn()"
       luxLabel="pickValue-Funktion nutzen"
       (luxCheckedChange)="changeUseValueFn($event)"
       [luxNoTopLabel]="true"
@@ -404,7 +404,7 @@
       </lux-form-hint>
     </lux-toggle>
     <lux-toggle
-      [(luxChecked)]="useCompareWithFn"
+      [luxChecked]="useCompareWithFn()"
       luxLabel="compareWith-Funktion nutzen"
       (luxCheckedChange)="changeCompareWithFn($event)"
       [luxNoTopLabel]="true"

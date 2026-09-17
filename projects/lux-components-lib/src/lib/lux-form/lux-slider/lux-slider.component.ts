@@ -102,6 +102,9 @@ export class LuxSliderComponent extends LuxFormLegacyValueBase<number> {
    * @param value
    */
   onChange(value: number) {
+    if (this.isReadonly()) {
+      return;
+    }
     this.markAsDirty();
     this.value.set(value);
     this.luxChange.emit(value);
@@ -112,11 +115,48 @@ export class LuxSliderComponent extends LuxFormLegacyValueBase<number> {
    * @param value
    */
   onInput(value: number) {
+    if (this.isReadonly()) {
+      return;
+    }
     this.markAsDirty();
     this.value.set(value);
     this.luxInput.emit(value);
     if (!this.isTouched()) {
       this.markAsTouched();
+    }
+  }
+
+  /**
+   * Wird beim Fokussieren des Sliders aufgerufen.
+   * @param event
+   */
+  onFocusIn(event: FocusEvent) {
+    this.focused.set(true);
+    this.luxFocusIn.emit(event);
+  }
+
+  /**
+   * Wird beim Verlassen des Fokus des Sliders aufgerufen.
+   * @param event
+   */
+  onFocusOut(event: FocusEvent) {
+    this.focused.set(false);
+    this.luxFocusOut.emit(event);
+    this.onBlur();
+  }
+
+  /**
+   * Das native readonly-Attribut wird von Browsern für input[type=range] nicht ausgewertet (nur für
+   * textartige Inputs), daher würden Pfeiltasten den Wert trotz luxReadonly veraendern. Da onChange/onInput
+   * bereits einen readonly-Guard haben, wuerde ohne dieses preventDefault() nur unser Datenmodell stabil
+   * bleiben, waehrend der native DOM-Wert (und damit der sichtbare Thumb) durch die Tastatur trotzdem
+   * weiterspringt - denn Angular schreibt [value]="value()" nur neu, wenn sich der Signal-Wert tatsaechlich
+   * aendert. Daher die Taste hier direkt blockieren, bevor der Browser den Wert nativ aendert.
+   * @param event
+   */
+  onKeyDown(event: KeyboardEvent) {
+    if (this.isReadonly()) {
+      event.preventDefault();
     }
   }
 

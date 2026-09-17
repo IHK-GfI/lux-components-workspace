@@ -26,6 +26,8 @@
     luxAriaLabelSelector="input"
     [luxAriaLabelledby]="luxAriaLabelledby()"
     luxAriaLabelledbySelector="input"
+    (focusin)="onFocusIn($event)"
+    (focusout)="onFocusOut($event)"
     tabIndex="-1"
     #ngSlider
     ><input
@@ -36,6 +38,7 @@
       (valueChange)="onChange($event)"
       #ngSliderThumb="matSliderThumb"
       (input)="onInput(ngSliderThumb.value)"
+      (keydown)="onKeyDown($event)"
       [readOnly]="isReadonly()"
     />
   </mat-slider>

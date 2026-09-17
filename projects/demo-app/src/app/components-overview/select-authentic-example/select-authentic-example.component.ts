@@ -203,6 +203,7 @@ export class SelectAuthenticExampleComponent {
 
   changeUseSimpleArray(useSimpleArray: boolean) {
     this.reset();
+    this.useSimpleArray.set(useSimpleArray);
     if (useSimpleArray) {
       this.useValueFn.set(false);
       this.useCompareWithFn.set(false);
@@ -211,6 +212,7 @@ export class SelectAuthenticExampleComponent {
 
   changeUseValueFn(useValueFn: boolean) {
     this.reset();
+    this.useValueFn.set(useValueFn);
     if (useValueFn) {
       this.useSimpleArray.set(false);
       this.useCompareWithFn.set(false);
@@ -219,6 +221,7 @@ export class SelectAuthenticExampleComponent {
 
   changeCompareWithFn(useCompareWithfn: boolean) {
     this.reset();
+    this.useCompareWithFn.set(useCompareWithfn);
     if (useCompareWithfn) {
       this.useSimpleArray.set(false);
       this.useValueFn.set(false);
@@ -226,7 +229,7 @@ export class SelectAuthenticExampleComponent {
   }
 
   reset(...comps: LuxFormLegacySelectableBase[]) {
-    this.signalModel.set({ selectValue: undefined });
+    this.signalModel.set({ selectValue: null });
     this.signalMultiselectModel.set({ selectValue: [] });
     this.plainValue.set(undefined);
     this.value.set(undefined);
