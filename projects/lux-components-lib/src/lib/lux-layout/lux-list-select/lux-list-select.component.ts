@@ -1,4 +1,3 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -15,12 +14,11 @@ import {
   TemplateRef,
   viewChildren
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { debounce, share, timer } from 'rxjs';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -38,6 +36,7 @@ import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-h
 import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
 import { LuxListSelectKeyboardController } from './lux-list-select-keyboard-controller';
 import { LuxListSelectDataSource } from './lux-list-select-data-source';
+import { announceSearchResults } from './lux-list-select-search-announcer';
 
 @Component({
   selector: 'lux-list-select',
@@ -76,7 +75,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private static nextUniqueId = 0;
 
   private tService = inject(TranslocoService);
-  private liveAnnouncer = inject(LiveAnnouncer);
   private readonly injector = inject(Injector);
   private readonly uniqueId = LuxListSelectComponent.nextUniqueId++;
 
@@ -129,14 +127,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   // Eigener name pro Instanz, sonst teilen sich Radios instanzübergreifend den CDK-UniqueSelectionDispatcher.
   protected radioName = computed(() => `lux-list-select-radio-${this.uniqueId}`);
 
-  // share(): Anzeige-Pipeline (toSignal) und DataSource teilen sich denselben Debounce-Timer.
-  private searchValue$ = toObservable(this.luxSearchValue);
-  private debouncedSearch$ = this.searchValue$.pipe(
-    debounce(() => timer(this.luxSearchDelay())),
-    share()
-  );
-  protected debouncedSearch = toSignal(this.debouncedSearch$, { initialValue: '' });
-
   // Ist ein DAO gesetzt, kommen die angezeigten Daten ausschließlich vom Server; luxItems und Client-Filterung/-Slicing werden ignoriert.
   private readonly dataSource = new LuxListSelectDataSource<T>(
     {
@@ -146,11 +136,11 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       showPagination: this.luxShowPagination,
       infiniteScroll: this.luxInfiniteScroll,
       searchValue: this.luxSearchValue,
-      debouncedSearch: this.debouncedSearch,
-      debouncedSearch$: this.debouncedSearch$
+      searchDelay: this.luxSearchDelay
     },
     this.injector
   );
+  protected debouncedSearch = this.dataSource.filter;
   protected loading = this.dataSource.loading;
   protected daoItems = this.dataSource.daoItems;
   protected daoTotalCount = this.dataSource.daoTotalCount;
@@ -223,34 +213,16 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       }
     });
 
-    // Muss als Letztes deklariert bleiben: die Ansage darf im Server-Modus erst nach dem
-    // eingetroffenen Ergebnis kommen (effectiveIsLoading muss bereits aktuell sein).
-    // Bewusst NICHT totalCount(): das liefert im Client-Modus bei gesetztem luxTotalItems die
-    // Gesamtanzahl aller Items statt der tatsächlichen Trefferzahl der Suche.
-    // Dedup-Guard verankert sich zusätzlich am Term: zwei unterschiedliche Suchen können zufällig
-    // dieselbe Trefferzahl liefern, ein reiner Message-Vergleich würde die zweite Ansage unterdrücken.
-    let lastAnnouncement: string | null = null;
-    let lastAnnouncedTerm: string | null = null;
-    effect(() => {
-      const term = this.debouncedSearch();
-      const count = this.serverMode() ? this.daoTotalCount() : this.filteredItems().length;
-      if (!this.luxShowSearch() || term === '') {
-        lastAnnouncement = null;
-        lastAnnouncedTerm = null;
-        return;
-      }
-      // Dedup-Zustand bleibt beim Laden erhalten, sonst würde die unveränderte Trefferzahl nach
-      // jedem Seitenwechsel/Append erneut angesagt.
-      if (this.effectiveIsLoading()) {
-        return;
-      }
-      const message = this.tService.translate('luxc.list-select.search_results', { count });
-      if (message !== lastAnnouncement || term !== lastAnnouncedTerm) {
-        lastAnnouncement = message;
-        lastAnnouncedTerm = term;
-        this.liveAnnouncer.announce(message, 'polite');
-      }
-    });
+    // Bewusst die Trefferzahl der Suche und nicht totalCount(): das wäre bei gesetztem luxTotalItems die Gesamtanzahl.
+    announceSearchResults(
+      {
+        active: this.luxShowSearch,
+        term: this.debouncedSearch,
+        count: computed(() => (this.serverMode() ? this.daoTotalCount() : this.filteredItems().length)),
+        loading: this.effectiveIsLoading
+      },
+      this.injector
+    );
   }
 
   isSelected(item: T): boolean {
@@ -311,7 +283,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
 
   onPageChange(event: LuxPageEvent) {
     this.luxPageChange.emit(event);
-    this.dataSource.loadPage(event.pageIndex);
   }
 
   onScrolled() {

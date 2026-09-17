@@ -876,18 +876,21 @@ describe('LuxListSelectComponent', () => {
 
       // Änderungen durchführen: erstes Scroll-Ende hängt Seite 1 an
       listSelect.onScrolled();
+      fixture.detectChanges();
       tick(50);
       fixture.detectChanges();
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(4);
 
       // Änderungen durchführen: zweites Scroll-Ende hängt die letzte Seite an, Menge ist danach vollständig geladen
       listSelect.onScrolled();
+      fixture.detectChanges();
       tick(50);
       fixture.detectChanges();
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(5);
 
       // Änderungen durchführen: weiteres Scroll-Ende darf keinen weiteren Request mehr auslösen
       listSelect.onScrolled();
+      fixture.detectChanges();
       tick(50);
       fixture.detectChanges();
 
@@ -1033,7 +1036,7 @@ describe('LuxListSelectComponent', () => {
       // Änderungen durchführen: der DAO liefert beim nächsten Trigger (Seitenwechsel) wieder
       // erfolgreich Daten - der Trigger-Stream muss den vorherigen Fehler überlebt haben
       dao.shouldFail = false;
-      listSelect.onPageChange({ pageIndex: 1, pageSize: 2, length: 0 });
+      listSelect.luxPageIndex.set(1);
       fixture.detectChanges();
       tick(50);
       fixture.detectChanges();

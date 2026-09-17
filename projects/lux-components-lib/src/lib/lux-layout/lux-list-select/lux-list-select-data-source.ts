@@ -1,6 +1,6 @@
-import { computed, DestroyRef, Injector, Signal, signal, WritableSignal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { catchError, distinctUntilChanged, EMPTY, finalize, merge, Observable, skip, Subject, switchMap, take, tap } from 'rxjs';
+import { computed, DestroyRef, Injector, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
+import { rxResource, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { catchError, debounce, distinctUntilChanged, merge, skip, take, tap, throwError, timer } from 'rxjs';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
 
 export interface LuxListSelectDataSourceConfig<T> {
@@ -10,159 +10,110 @@ export interface LuxListSelectDataSourceConfig<T> {
   showPagination: Signal<boolean>;
   infiniteScroll: Signal<boolean>;
   searchValue: Signal<string>;
-  debouncedSearch: Signal<string>;
-  debouncedSearch$: Observable<string>;
+  searchDelay: Signal<number>;
 }
 
 /**
- * Seiten- und Ladezustand von lux-list-select: setzt den Seitenindex bei Suche/Seitengrößenwechsel
- * zurück und lädt im Server-Modus (DAO gesetzt) die passenden Seiten. Hält Items, Gesamtzähler und
- * Ladezustand als Signale.
+ * Such-, Seiten- und Ladezustand von lux-list-select: entprellt die Suche, setzt den Seitenindex bei
+ * Suche/Seitengrößen-/DAO-Wechsel zurück und lädt im Server-Modus (DAO gesetzt) über eine rxResource.
  */
 export class LuxListSelectDataSource<T> {
-  // switchMap verwirft veraltete Requests, catchError im inneren Stream hält den Trigger-Stream bei Fehlern am Leben.
-  private readonly loadTrigger$ = new Subject<{ page: number; filter: string; append: boolean }>();
-
-  private readonly loadingSignal = signal(false);
+  private readonly filterSignal = signal('');
   private readonly daoItemsSignal = signal<T[]>([]);
   private readonly daoTotalCountSignal = signal(0);
 
-  readonly loading = this.loadingSignal.asReadonly();
+  /** Entprellter Suchbegriff; ein vorbelegter Startwert gilt sofort. */
+  readonly filter = this.filterSignal.asReadonly();
   readonly daoItems = this.daoItemsSignal.asReadonly();
   readonly daoTotalCount = this.daoTotalCountSignal.asReadonly();
+  readonly loading: Signal<boolean>;
 
-  // Zuletzt angeforderte Seite: verhindert, dass die pageIndex-Subscription einen bereits ausgelösten Load wiederholt.
-  private lastRequestedPage: number | null = null;
-  private readonly destroyRef: DestroyRef;
+  private readonly appendMode = computed(() => this.config.infiniteScroll() && !this.config.showPagination());
+
+  // Nachladeseite des Infinite Scrolls; beginnt bei jedem Wechsel von DAO, Seitengröße oder Suchbegriff wieder bei 0.
+  private readonly scrollPage = linkedSignal({
+    source: () => ({ dao: this.config.httpDao(), pageSize: this.config.pageSize(), filter: this.filter() }),
+    computation: () => 0
+  });
+
+  private readonly request = computed(() => {
+    const dao = this.config.httpDao();
+    if (!dao) {
+      return undefined;
+    }
+    const page = this.appendMode() ? this.scrollPage() : this.config.pageIndex();
+    return { dao, page, pageSize: this.config.pageSize(), filter: this.filter(), append: this.appendMode() && page > 0 };
+  });
 
   constructor(
     private readonly config: LuxListSelectDataSourceConfig<T>,
-    private readonly injector: Injector
+    injector: Injector
   ) {
-    this.destroyRef = injector.get(DestroyRef);
+    // Die Seiten-Resets stehen vor der Resource: so laufen sie im selben Zyklus zuerst und die Resource lädt nur einmal.
+    this.resetPageIndexOnChanges(injector);
 
-    this.loadTrigger$
-      .pipe(
-        switchMap((trigger) => {
-          const dao = this.config.httpDao();
-          if (!dao) {
-            return EMPTY;
-          }
-          this.loadingSignal.set(true);
-          return dao.loadData({ page: trigger.page, pageSize: this.config.pageSize(), filter: trigger.filter }).pipe(
-            tap((result) => {
-              this.daoItemsSignal.update((current) => (trigger.append ? [...current, ...result.items] : result.items));
-              this.daoTotalCountSignal.set(result.totalCount);
-            }),
-            catchError((error) => {
-              console.error('lux-list-select: Fehler beim Laden der DAO-Daten.', error);
-              return EMPTY;
-            }),
-            finalize(() => this.loadingSignal.set(false))
-          );
-        }),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe();
-
-    this.resetPageOnSearch();
-    this.resetPageOnPageSizeChange();
-    // Reihenfolge ist relevant: der DAO-Load merkt sich seine Seite, bevor die pageIndex-Subscription im selben Zyklus prüft.
-    this.loadOnDaoChange();
-    this.loadOnPageIndexChange();
+    const resource = rxResource({
+      params: this.request,
+      stream: ({ params }) =>
+        params.dao.loadData({ page: params.page, pageSize: params.pageSize, filter: params.filter }).pipe(
+          tap((result) => {
+            this.daoItemsSignal.update((current) => (params.append ? [...current, ...result.items] : result.items));
+            this.daoTotalCountSignal.set(result.totalCount);
+          }),
+          catchError((error) => {
+            console.error('lux-list-select: Fehler beim Laden der DAO-Daten.', error);
+            return throwError(() => error);
+          })
+        ),
+      injector
+    });
+    this.loading = resource.isLoading;
   }
 
-  /** Seitenwechsel über den Paginator. */
-  loadPage(page: number): void {
-    if (this.config.httpDao()) {
-      this.triggerLoad(page, this.config.debouncedSearch());
-    }
-  }
-
-  /** Infinite Scroll: hängt die nächste Seite an, solange noch nicht alles geladen ist. */
+  /** Infinite Scroll: fordert die nächste Seite an, solange noch nicht alles geladen ist. */
   loadNextPage(): void {
     if (this.config.httpDao() && !this.loading() && this.daoItems().length < this.daoTotalCount()) {
-      const page = Math.floor(this.daoItems().length / this.config.pageSize());
-      this.loadTrigger$.next({ page, filter: this.config.debouncedSearch(), append: true });
+      this.scrollPage.set(Math.floor(this.daoItems().length / this.config.pageSize()));
     }
   }
 
-  private triggerLoad(page: number, filter: string): void {
-    this.lastRequestedPage = page;
-    this.loadTrigger$.next({ page, filter, append: false });
-  }
+  private resetPageIndexOnChanges(injector: Injector): void {
+    const destroyRef = injector.get(DestroyRef);
+    const searchValue$ = toObservable(this.config.searchValue, { injector });
 
-  private resetPageOnSearch(): void {
-    // skip(1) verwirft den Startwert samt entprelltem Nachzügler: ein vorbelegter Suchwert löst keinen zweiten Load aus.
-    merge(toObservable(this.config.searchValue, { injector: this.injector }).pipe(take(1)), this.config.debouncedSearch$)
-      .pipe(distinctUntilChanged(), skip(1), takeUntilDestroyed(this.destroyRef))
+    // Der Startwert gilt sofort und ohne Seiten-Reset, danach entprellt.
+    let isStartValue = true;
+    merge(searchValue$.pipe(take(1)), searchValue$.pipe(debounce(() => timer(this.config.searchDelay()))))
+      .pipe(distinctUntilChanged(), takeUntilDestroyed(destroyRef))
       .subscribe((search) => {
-        this.config.pageIndex.set(0);
-        if (this.config.httpDao()) {
-          this.triggerLoad(0, search);
+        if (!isStartValue) {
+          this.config.pageIndex.set(0);
         }
+        isStartValue = false;
+        this.filterSignal.set(search);
       });
-  }
 
-  private resetPageOnPageSizeChange(): void {
-    // Die Baseline zählt erst, wenn die Seitengröße überhaupt wirkt, sonst gilt eine vorbelegte Erstkonfiguration als Wechsel.
-    let baseline: number | null = null;
-    // Wechseln DAO und Seitengröße gleichzeitig, lädt bereits loadOnDaoChange neu.
-    let lastSeenDao = this.config.httpDao();
-    toObservable(
-      computed(() => ({
-        pageSize: this.config.pageSize(),
-        dao: this.config.httpDao(),
-        relevant: !!this.config.httpDao() || this.config.showPagination() || this.config.infiniteScroll()
-      })),
-      { injector: this.injector }
-    )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ pageSize, dao, relevant }) => {
-        const daoChanged = dao !== lastSeenDao;
-        lastSeenDao = dao;
+    // Die Seitengröße zählt erst als Wechsel, wenn sie überhaupt wirkt (DAO, Paginierung oder Infinite Scroll aktiv).
+    let pageSizeBaseline: number | null = null;
+    const pageSizeState = computed(() => ({
+      pageSize: this.config.pageSize(),
+      relevant: !!this.config.httpDao() || this.config.showPagination() || this.config.infiniteScroll()
+    }));
+    toObservable(pageSizeState, { injector })
+      .pipe(takeUntilDestroyed(destroyRef))
+      .subscribe(({ pageSize, relevant }) => {
         if (!relevant) {
           return;
         }
-        if (baseline === null || pageSize === baseline) {
-          baseline = pageSize;
-          return;
-        }
-        baseline = pageSize;
-        this.config.pageIndex.set(0);
-        if (dao && !daoChanged) {
-          this.daoItemsSignal.set([]);
-          this.triggerLoad(0, this.config.debouncedSearch());
-        }
-      });
-  }
-
-  private loadOnDaoChange(): void {
-    let isInitialDao = true;
-    toObservable(this.config.httpDao, { injector: this.injector })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((dao) => {
-        // Ein beim Start gesetzter DAO respektiert einen vorbelegten luxPageIndex, jeder spätere DAO-Wechsel beginnt bei Seite 0.
-        const keepPage = isInitialDao && this.config.showPagination();
-        isInitialDao = false;
-        if (!dao) {
-          return;
-        }
-        this.daoItemsSignal.set([]);
-        if (!keepPage) {
+        if (pageSizeBaseline !== null && pageSize !== pageSizeBaseline) {
           this.config.pageIndex.set(0);
         }
-        this.triggerLoad(this.config.pageIndex(), this.config.searchValue());
+        pageSizeBaseline = pageSize;
       });
-  }
 
-  private loadOnPageIndexChange(): void {
-    toObservable(computed(() => ({ page: this.config.pageIndex(), dao: this.config.httpDao() })), { injector: this.injector })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ page, dao }) => {
-        if (dao && page !== this.lastRequestedPage) {
-          this.triggerLoad(page, this.config.debouncedSearch());
-        }
-      });
+    // Ein beim Start gesetzter DAO respektiert einen vorbelegten luxPageIndex, jeder spätere DAO-Wechsel beginnt bei Seite 0.
+    toObservable(this.config.httpDao, { injector })
+      .pipe(skip(1), takeUntilDestroyed(destroyRef))
+      .subscribe(() => this.config.pageIndex.set(0));
   }
 }
