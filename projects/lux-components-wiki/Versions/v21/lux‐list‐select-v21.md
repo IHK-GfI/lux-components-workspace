@@ -15,7 +15,7 @@
     - [Server-Modus (mit luxHttpDao)](#server-modus-mit-luxhttpdao)
   - [Tastaturnavigation](#tastaturnavigation)
     - [Listennavigation (Normal-Modus)](#listennavigation-normal-modus)
-    - [Bearbeiten-Modus (Edit-Modus)](#bearbeiten-modus-edit-modus)
+    - [Innennavigation](#innennavigation)
   - [Beispiele](#beispiele)
     - [1. Multi-Select mit „Alle auswählen“](#1-multi-select-mit-alle-auswählen)
     - [2. Single-Select (Radio)](#2-single-select-radio)
@@ -236,7 +236,7 @@ Beispiel-DAO mit Infinite Scrolling: Die `loadData`-Methode ist identisch zum Pa
 
 ## Tastaturnavigation
 
-`lux-list-select` implementiert, analog zu [lux-list](lux‐list-v21), das ARIA-Grid-Pattern (`role="grid"`). Jede Karte hat die Rolle `row`, ihr Inhalt (Checkbox-/Radio-Zelle, Titel/Untertitel bzw. projizierter Inhalt, ggf. Detail-Button) ist in `gridcell`-Bereiche unterteilt. Außerhalb des Bearbeiten-Modus ist die gesamte Liste ein einziger Tab-Stopp, die Navigation zwischen den Karten erfolgt über die Pfeiltasten.
+`lux-list-select` implementiert, analog zu [lux-list](lux‐list-v21), das ARIA-Grid-Pattern (`role="grid"`). Jede Karte hat die Rolle `row`, ihr Inhalt (Checkbox-/Radio-Zelle, Titel/Untertitel bzw. projizierter Inhalt, ggf. Detail-Button) ist in `gridcell`-Bereiche unterteilt. Außerhalb der Innennavigation ist die gesamte Liste ein einziger Tab-Stopp, die Navigation zwischen den Karten erfolgt über die Pfeiltasten.
 
 ### Listennavigation (Normal-Modus)
 
@@ -247,22 +247,22 @@ Beispiel-DAO mit Infinite Scrolling: Die `loadData`-Methode ist identisch zum Pa
 | `Home`                   | Erste Karte fokussieren                                                                                                                                          |
 | `End`                    | Letzte Karte fokussieren                                                                                                                                         |
 | `Space`                  | Auswahl der aktiven Karte umschalten (Checkbox bzw. Radio-Button)                                                                                                |
-| `Enter`                  | Ohne `luxShowDetailButton`: Auswahl umschalten (wie `Space`). Mit `luxShowDetailButton`: Bearbeiten-Modus aktivieren.                                            |
-| `F2`                     | Bearbeiten-Modus aktivieren (nur wenn die Karte interaktive innere Elemente besitzt, z. B. Detail-Button oder interaktive Elemente aus dem projizierten Inhalt) |
+| `Enter`                  | Ohne `luxShowDetailButton`: Auswahl umschalten (wie `Space`). Mit `luxShowDetailButton`: Innennavigation betreten.                                            |
+| `F2`                     | Innennavigation betreten (nur wenn die Karte interaktive innere Elemente besitzt, z. B. Detail-Button oder interaktive Elemente aus dem projizierten Inhalt) |
 
-### Bearbeiten-Modus (Edit-Modus)
+### Innennavigation
 
-Besitzt die aktive Karte interaktive innere Elemente (Detail-Button, interaktive Elemente aus dem per `ng-template` projizierten Karteninhalt), kann der Bearbeiten-Modus aktiviert werden. Checkbox bzw. Radio-Button sind davon ausgenommen und bleiben dauerhaft kein eigener Tab-Stopp. Im Bearbeiten-Modus regelt der Browser die Tab-Reihenfolge innerhalb der Karte.
+Besitzt die aktive Karte interaktive innere Elemente (Detail-Button, interaktive Elemente aus dem per `ng-template` projizierten Karteninhalt), kann per `Enter` bzw. `F2` in die Karte abgestiegen werden (Innennavigation). Checkbox bzw. Radio-Button sind davon ausgenommen und bleiben dauerhaft kein eigener Tab-Stopp. In der Innennavigation regelt der Browser die Tab-Reihenfolge innerhalb der Karte.
 
 | Taste                            | Aktion                                                                                                                     |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Tab`                             | Nächstes inneres interaktives Element fokussieren; vom letzten Element aus zurück zur Karte (Bearbeiten-Modus bleibt aktiv)                            |
+| `Tab`                             | Nächstes inneres interaktives Element fokussieren; vom letzten Element aus zurück zur Karte (Innennavigation bleibt aktiv)                            |
 | `Shift+Tab`                       | Vorheriges inneres interaktives Element fokussieren; von der Karte aus zum letzten Element                                                             |
-| `ArrowUp` / `ArrowDown` / `Home` / `End` | Bearbeiten-Modus beenden und zur entsprechenden Karte wechseln (nur solange der Fokus auf der Karte selbst liegt, nicht auf einem inneren Element) |
-| `Escape`                          | Bearbeiten-Modus beenden, Fokus zurück auf die Karte                                                                                                    |
-| `F2`                              | Bearbeiten-Modus beenden, Fokus zurück auf die Karte                                                                                                    |
+| `ArrowUp` / `ArrowDown` / `Home` / `End` | Innennavigation verlassen und zur entsprechenden Karte wechseln (nur solange der Fokus auf der Karte selbst liegt, nicht auf einem inneren Element) |
+| `Escape`                          | Innennavigation verlassen, Fokus zurück auf die Karte                                                                                                    |
+| `F2`                              | Innennavigation verlassen, Fokus zurück auf die Karte                                                                                                    |
 
-> **Hinweis:** Interaktive Elemente innerhalb eines per `ng-template` projizierten Karteninhalts (siehe [Eigener Item-Inhalt](#eigener-item-inhalt-content-projection)) werden automatisch verwaltet: Außerhalb des Bearbeiten-Modus erhalten sie `tabindex="-1"` und sind damit kein eigener Tab-Stopp, im Bearbeiten-Modus `tabindex="0"`.
+> **Hinweis:** Interaktive Elemente innerhalb eines per `ng-template` projizierten Karteninhalts (siehe [Eigener Item-Inhalt](#eigener-item-inhalt-content-projection)) werden automatisch verwaltet: Außerhalb der Innennavigation erhalten sie `tabindex="-1"` und sind damit kein eigener Tab-Stopp, in der Innennavigation `tabindex="0"`.
 
 ## Beispiele
 

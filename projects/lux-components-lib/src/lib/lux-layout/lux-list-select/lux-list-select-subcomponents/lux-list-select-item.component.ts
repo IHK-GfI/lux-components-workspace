@@ -51,9 +51,8 @@ export class LuxListSelectItemComponent<T = unknown> implements FocusableOption 
   readonly luxDetailIconName = input('lux-interface-arrows-expand-5');
   readonly luxContentTemplate = input<TemplateRef<unknown> | null>(null);
   readonly luxRadioName = input('');
-  // Von der Hauptkomponente gesetzt, wenn dieses Item das aktive UND im Edit-Modus befindliche
-  // Item ist; treibt die Tab-Stopp-Verwaltung im afterRenderEffect unten.
-  readonly luxEditMode = input(false);
+  // True nur für das aktive Item in der Innennavigation; treibt die Tab-Stopp-Verwaltung im afterRenderEffect unten.
+  readonly luxInnerNavigation = input(false);
 
   readonly luxToggleSelected = output<void>();
   readonly luxDetail = output<void>();
@@ -69,7 +68,7 @@ export class LuxListSelectItemComponent<T = unknown> implements FocusableOption 
       // Nur gelesen, um den Effect als Dependency zu registrieren: erscheint der Detail-Button erst
       // später, muss die Tab-Stopp-Verwaltung erneut laufen.
       this.luxShowDetailButton();
-      if (this.luxEditMode()) {
+      if (this.luxInnerNavigation()) {
         this.enableInnerTabStops();
       } else {
         this.disableInnerTabStops();
@@ -104,12 +103,12 @@ export class LuxListSelectItemComponent<T = unknown> implements FocusableOption 
     this.cardElement().nativeElement.focus();
   }
 
-  /** Prüft, ob das übergebene Element Teil dieser Karte ist (für die editMode-Fokus-Verwaltung der Hauptkomponente). */
+  /** Prüft, ob das übergebene Element Teil dieser Karte ist (für die Fokus-Verwaltung der Hauptkomponente). */
   contains(element: Node | null): boolean {
     return !!element && this.elementRef.nativeElement.contains(element);
   }
 
-  /** Liefert die innerhalb der Karte per Tastatur erreichbaren Elemente (ohne Checkbox/Radio-Button) für die Tab-Zyklus-Logik des Edit-Modus. */
+  /** Liefert die innerhalb der Karte per Tastatur erreichbaren Elemente (ohne Checkbox/Radio-Button) für die Tab-Zyklus-Logik der Innennavigation. */
   getFocusableElements(): HTMLElement[] {
     const elements = this.cardElement().nativeElement.querySelectorAll<HTMLElement>(NAVIGABLE_SELECTORS);
     return Array.from(elements).filter((el) => !el.closest(CONTROL_CELL_SELECTOR));

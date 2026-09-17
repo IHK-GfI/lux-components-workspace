@@ -12,7 +12,7 @@
       [luxDetailIconName]="luxDetailIconName()"
       [luxContentTemplate]="contentTemplate() ?? null"
       [luxRadioName]="radioName()"
-      [luxEditMode]="editMode() && i === activeItemIndex()"
+      [luxInnerNavigation]="innerNavigation() && i === activeItemIndex()"
       (luxToggleSelected)="toggleItem(item)"
       (luxDetail)="luxDetailClicked.emit(item)"
       (click)="onItemActivated(i)"

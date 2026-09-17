@@ -124,7 +124,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     { toggleItem: (item) => this.toggleItem(item) },
     this.injector
   );
-  protected editMode = this.keyboard.editMode;
+  protected innerNavigation = this.keyboard.innerNavigation;
   protected activeItemIndex = this.keyboard.activeItemIndex;
   // Eigener name pro Instanz, sonst teilen sich Radios instanzübergreifend den CDK-UniqueSelectionDispatcher.
   protected radioName = computed(() => `lux-list-select-radio-${this.uniqueId}`);
@@ -346,7 +346,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     this.onTouched();
   }
 
-  // Methodennamen bleiben unverändert, damit das Template unangetastet bleibt.
   protected onGridFocus(event: FocusEvent): void {
     this.keyboard.onGridFocus(event);
   }

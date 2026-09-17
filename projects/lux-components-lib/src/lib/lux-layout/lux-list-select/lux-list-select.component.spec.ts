@@ -1239,7 +1239,7 @@ describe('LuxListSelectComponent', () => {
       LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
       fixture.detectChanges();
 
-      // Änderungen durchführen: F2 betritt den Edit-Modus und fokussiert den Detail-Button
+      // Änderungen durchführen: F2 betritt die Innennavigation und fokussiert den Detail-Button
       gridContainer().dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
       fixture.detectChanges();
 
@@ -1247,7 +1247,7 @@ describe('LuxListSelectComponent', () => {
       const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
       expect(document.activeElement).toBe(detailButtons[0].nativeElement);
 
-      // Änderungen durchführen: Escape verlässt den Edit-Modus wieder
+      // Änderungen durchführen: Escape verlässt die Innennavigation wieder
       LuxTestHelper.dispatchKeyboardEvent(detailButtons[0].nativeElement, 'keydown', ESCAPE);
       fixture.detectChanges();
 
@@ -1363,8 +1363,8 @@ describe('LuxListSelectComponent', () => {
       expect(document.activeElement).toBe(cards()[1].nativeElement);
     });
 
-    it('Sollte Pfeiltasten und Space nutzen können, wenn im Edit-Modus der Fokus per Tab auf die Karte zurückkehrt (Review-Finding)', () => {
-      // Vorbedingungen testen: Edit-Modus auf Item 0 betreten (Fokus auf Detail-Button)
+    it('Sollte Pfeiltasten und Space nutzen können, wenn in der Innennavigation der Fokus per Tab auf die Karte zurückkehrt (Review-Finding)', () => {
+      // Vorbedingungen testen: Innennavigation auf Item 0 betreten (Fokus auf Detail-Button)
       host.showDetailButton = true;
       fixture.detectChanges();
       LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
@@ -1378,18 +1378,18 @@ describe('LuxListSelectComponent', () => {
       // landet (da alle anderen Elemente tabindex=-1 sind) beim Grid-Container selbst - simuliert
       // durch ein natives focus-Event mit relatedTarget=Detail-Button (echte Tab-Traversierung
       // lässt sich per dispatchEvent nicht auslösen). onGridFocus springt daraufhin zur Karte
-      // zurück, der Edit-Modus bleibt (strukturell) aktiv.
+      // zurück, die Innennavigation bleibt (strukturell) aktiv.
       const focusEvent = new FocusEvent('focus', { relatedTarget: detailButtons[0].nativeElement });
       gridContainer().dispatchEvent(focusEvent);
       fixture.detectChanges();
       expect(document.activeElement).toBe(cards()[0].nativeElement);
 
-      // Änderungen durchführen: ArrowDown muss trotz (strukturell) aktivem Edit-Modus zum
+      // Änderungen durchführen: ArrowDown muss trotz (strukturell) aktiver Innennavigation zum
       // nächsten Item navigieren. Dispatch als natives KeyboardEvent auf der Karte (nicht dem
       // Container, und nicht über LuxTestHelper.dispatchKeyboardEvent - dessen target-Property
       // ist fest auf den optionalen 4. Parameter gebunden): im echten Browser bubbelt das Event
       // vom tatsächlich fokussierten Element (der Karte) nach oben, event.target ist daher die
-      // Karte, was die focusIsOnRow-Prüfung im Edit-Modus benötigt.
+      // Karte, was die focusIsOnRow-Prüfung in der Innennavigation benötigt.
       cards()[0].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
       fixture.detectChanges();
       expect(document.activeElement).toBe(cards()[1].nativeElement);
@@ -1409,7 +1409,7 @@ describe('LuxListSelectComponent', () => {
       // Änderungen durchführen: der Fokus "kehrt" vom aktiven Item auf den Grid-Container zurück
       // (z.B. Shift+Tab von der Karte, deren tabindex=-1 sie aus dem normalen Tab-Fluss nimmt und
       // den Container als nächsten rückwärtigen Tab-Stopp übrig lässt) - simuliert durch ein
-      // natives focus-Event mit relatedTarget=Karte, außerhalb des Edit-Modus.
+      // natives focus-Event mit relatedTarget=Karte, außerhalb der Innennavigation.
       const focusSpy = spyOn(cards()[0].nativeElement, 'focus').and.callThrough();
       const focusEvent = new FocusEvent('focus', { relatedTarget: cards()[0].nativeElement });
       gridContainer().dispatchEvent(focusEvent);
@@ -1473,14 +1473,14 @@ describe('LuxListSelectComponent', () => {
       const card = fixtureCT.debugElement.query(By.css('.lux-list-select-card')).nativeElement as HTMLElement;
       expect(link.tabIndex).toBe(-1);
 
-      // Änderungen durchführen: Grid fokussieren, F2 betritt den Edit-Modus
+      // Änderungen durchführen: Grid fokussieren, F2 betritt die Innennavigation
       LuxTestHelper.dispatchFakeEvent(container, 'focus', true);
       fixtureCT.detectChanges();
       container.dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
       fixtureCT.detectChanges();
       tick();
 
-      // Nachbedingungen prüfen: im Edit-Modus sind beide inneren Elemente reguläre Tab-Stopps -
+      // Nachbedingungen prüfen: in der Innennavigation sind beide inneren Elemente reguläre Tab-Stopps -
       // der Browser regelt die Reihenfolge zwischen ihnen selbst; der Fokus landet auf dem
       // ersten inneren Element (Link, da er in der Kartenreihenfolge vor dem Detail-Button liegt)
       expect(link.tabIndex).toBe(0);
@@ -1494,12 +1494,12 @@ describe('LuxListSelectComponent', () => {
       fixtureCT.detectChanges();
       expect(document.activeElement).toBe(card);
 
-      // Änderungen durchführen: F2 verlässt den Edit-Modus wieder
+      // Änderungen durchführen: F2 verlässt die Innennavigation wieder
       card.dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
       fixtureCT.detectChanges();
       tick();
 
-      // Nachbedingungen prüfen: außerhalb des Edit-Modus ist der Link wieder kein Tab-Stopp
+      // Nachbedingungen prüfen: außerhalb der Innennavigation ist der Link wieder kein Tab-Stopp
       expect(link.tabIndex).toBe(-1);
 
       fixtureCT.destroy();
