@@ -742,6 +742,88 @@ describe('LuxTableComponent', () => {
     }));
   });
 
+  describe('Striping bei Highlight-Zeilen (Issue #269)', () => {
+    let component: TableComponent;
+    let fixture: ComponentFixture<TableComponent>;
+
+    beforeEach(waitForAsync(() => {
+      fixture = TestBed.createComponent(TableComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    }));
+
+    const getTableContent = () => fixture.debugElement.query(By.css('.lux-table-content')).nativeElement as HTMLElement;
+
+    it('Sollte das Striping deaktivieren, wenn einer Zeile eine Highlight-Klasse zugewiesen ist', fakeAsync(() => {
+      // Vorbedingung: Tabelle ohne Highlight-Klassen -> kein lux-table-no-striping
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
+
+      // Highlight-Klasse trifft auf eine Zeile zu -> Striping deaktiviert
+      component.cssClasses = [{ class: 'lux-text-highlight-error', check: (element: any) => element.c1 === 1 }];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeTrue();
+    }));
+
+    it('Sollte das Striping reaktivieren, wenn keine Highlight-Klasse mehr zugewiesen ist', fakeAsync(() => {
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      component.cssClasses = [{ class: 'lux-text-highlight-alert', check: () => true }];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeTrue();
+
+      // Alle Highlight-Klassen entfernen -> Striping kehrt ohne Neuaufbau zurueck
+      component.cssClasses = [];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
+    }));
+
+    it('Sollte das Striping beibehalten, wenn die Highlight-Klasse auf keine Zeile zutrifft', fakeAsync(() => {
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      component.cssClasses = [{ class: 'lux-text-highlight-success', check: (element: any) => element.c1 === 99 }];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
+    }));
+
+    it('Sollte das Striping bei Nicht-Highlight-Klassen beibehalten', fakeAsync(() => {
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      component.cssClasses = [{ class: 'meine-app-klasse', check: () => true }];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
+    }));
+
+    it('Sollte das Striping reaktivieren, wenn ein Datenwechsel die einzige passende Zeile entfernt', fakeAsync(() => {
+      // Vorbedingung: Highlight-Klasse trifft auf eine Zeile der aktuellen Daten zu
+      component.dataSource = [
+        { c1: 1, c2: 'Hydrogen' },
+        { c1: 2, c2: 'Helium' }
+      ];
+      component.cssClasses = [{ class: 'lux-text-highlight-error', check: (element: any) => element.c1 === 1 }];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeTrue();
+
+      // Datenwechsel entfernt die einzige passende Zeile, cssClasses bleibt unveraendert
+      component.dataSource = [
+        { c1: 3, c2: 'Lithium' },
+        { c1: 4, c2: 'Beryllium' }
+      ];
+      LuxTestHelper.wait(fixture);
+      expect(getTableContent().classList.contains('lux-table-no-striping')).toBeFalse();
+    }));
+  });
+
   describe('HTTP-DAO', () => {
     let component: HttpDaoTableComponent;
     let fixture: ComponentFixture<HttpDaoTableComponent>;

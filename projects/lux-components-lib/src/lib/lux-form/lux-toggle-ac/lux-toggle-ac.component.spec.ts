@@ -316,6 +316,38 @@ describe('LuxToggleAcComponent', () => {
         // Nachbedingungen testen
         expect(fixture.componentInstance.eula).toBeFalsy();
       }));
+
+      it('Sollte den Change-Event nach einer stillen (emitEvent:false) Wertänderung nicht verschlucken', fakeAsync(() => {
+        const toggleComponent: LuxToggleAcComponent = fixture.debugElement.query(By.directive(LuxToggleAcComponent)).componentInstance;
+        const toggleEl = fixture.debugElement.query(By.css('button'));
+        const changeSpy = spyOn(testComponent, 'onCheckedChange').and.callThrough();
+
+        // Änderungen durchführen
+        // 1. Click => true (echte User-Interaktion, löst Change-Event aus)
+        toggleEl.nativeElement.click();
+        fixture.detectChanges();
+
+        // Nachbedingungen testen
+        expect(changeSpy).toHaveBeenCalledTimes(1);
+        expect(fixture.componentInstance.eula).toBeTruthy();
+
+        // Änderungen durchführen
+        // 2. Wert intern ohne Event auf false setzen (z.B. um eine Two-Way-Binding-Loop zu brechen)
+        toggleComponent.luxFormControl.setValue(false, { emitEvent: false });
+        fixture.detectChanges();
+
+        // Nachbedingungen testen: Kein zusätzlicher Change-Event, da bewusst ohne emit gesetzt
+        expect(changeSpy).toHaveBeenCalledTimes(1);
+
+        // Änderungen durchführen
+        // 3. Click => true (echte User-Interaktion, muss trotz identischem End-Wert erneut feuern)
+        toggleEl.nativeElement.click();
+        fixture.detectChanges();
+
+        // Nachbedingungen testen
+        expect(changeSpy).toHaveBeenCalledTimes(2);
+        expect(fixture.componentInstance.eula).toBeTruthy();
+      }));
     });
 
     describe('Attribut "luxRequired"', () => {

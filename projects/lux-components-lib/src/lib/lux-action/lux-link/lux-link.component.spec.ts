@@ -224,9 +224,44 @@ describe('LuxLinkComponent', () => {
 
     // Nachbedingungen prüfen
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith('http://mock-route', '_blank');
+    expect(spy).toHaveBeenCalledWith('http://mock-route', '_blank', 'noopener,noreferrer');
 
     discardPeriodicTasks();
+  }));
+
+  it('Sollte den (internen) href in einem neuen Tab ohne Opener-Referenz aufrufen', fakeAsync(() => {
+    // Vorbedingungen testen
+    const spy = spyOn(window, 'open').and.callFake(() => null);
+    expect(spy).toHaveBeenCalledTimes(0);
+
+    // Änderungen durchführen
+    component.blank = true;
+    component.href = '/mock-route';
+    LuxTestHelper.wait(fixture);
+
+    const link = fixture.debugElement.query(By.css('a'));
+    link.triggerEventHandler('click', new MouseEvent('click', { bubbles: true, cancelable: true }));
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(jasmine.stringMatching(/\/mock-route$/), '_blank', 'noopener,noreferrer');
+
+    discardPeriodicTasks();
+  }));
+
+  it('Sollte bei luxBlank das rel-Attribut "noopener noreferrer" am Anker setzen', fakeAsync(() => {
+    // Vorbedingungen testen
+    let link = fixture.debugElement.query(By.css('a'));
+    expect(link.nativeElement.getAttribute('rel')).toBeNull();
+
+    // Änderungen durchführen
+    component.blank = true;
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen
+    link = fixture.debugElement.query(By.css('a'));
+    expect(link.nativeElement.getAttribute('rel')).toEqual('noopener noreferrer');
   }));
 
   it('Sollte die Farbe anpassen', fakeAsync(() => {

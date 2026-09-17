@@ -1430,6 +1430,13 @@ describe('LuxSelectAcComponent', () => {
       fixture.detectChanges();
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
+
+    it('sollte keine Barrierefreiheitsverletzungen haben (nur luxAriaLabel, ganz ohne luxLabel)', async () => {
+      testComponent.label = '';
+      testComponent.ariaLabel = 'Liste sortieren nach';
+      fixture.detectChanges();
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
   });
 });
 
@@ -1831,7 +1838,8 @@ class SelectWithTemplateComponent {
 @Component({
   template: `
     <lux-select-ac
-      luxLabel="Aufgaben"
+      [luxLabel]="label"
+      [luxAriaLabel]="ariaLabel"
       luxOptionLabelProp="label"
       [luxOptions]="options"
       [luxDisabled]="disabled"
@@ -1843,6 +1851,8 @@ class SelectWithTemplateComponent {
 })
 class LuxSelectA11yComponent {
   options = [{ label: 'Meine Aufgaben', value: 'A' }];
+  label = 'Aufgaben';
+  ariaLabel?: string;
   disabled = false;
   readonly = false;
   required = false;

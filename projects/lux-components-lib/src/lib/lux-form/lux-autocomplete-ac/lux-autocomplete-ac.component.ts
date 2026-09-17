@@ -23,6 +23,8 @@ import { ReplaySubject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxRenderPropertyPipe } from '../../lux-pipes/lux-render-property/lux-render-property.pipe';
 import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
@@ -48,6 +50,8 @@ import { LuxInputAcSuffixComponent } from '../lux-input-ac/lux-input-ac-subcompo
     MatOption,
     NgTemplateOutlet,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
+    LuxAriaLabelledbyDirective,
     LuxTagIdDirective,
     LuxRenderPropertyPipe,
     LuxButtonComponent,
@@ -90,9 +94,6 @@ export class LuxAutocompleteAcComponent<V = any, O = any> extends LuxFormCompone
   @Input() luxPickValue?: ((selected: O | null | undefined) => V) | undefined;
   @Input() luxFilterFn?: (filterTerm: string, label: string, option: any) => boolean;
   @Input() luxPanelWidth: string | number = '';
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxOptionBlockSize = 500;
   @Input() luxClearable = false;
   @Input() luxClearAriaLabel = '';

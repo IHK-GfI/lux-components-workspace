@@ -262,7 +262,7 @@
     >
     </lux-toggle-ac>
     @if (useRenderFn) {
-      <pre class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
+      <pre tabindex="0" class="lux-label"><b>renderFn</b> = {{ renderFnString }}</pre>
     }
     @if (!useRenderFn) {
       <lux-input-ac
@@ -304,7 +304,7 @@
     >
     </lux-toggle-ac>
     @if (customStyle) {
-      <pre class="lux-label"><b>customStyles</b> = {{ customStyle | json }}</pre>
+      <pre tabindex="0" class="lux-label"><b>customStyles</b> = {{ customStyle | json }}</pre>
     }
     <lux-toggle-ac
       luxLabel="luxCustomInvalidStyles übergeben"
@@ -314,7 +314,7 @@
     >
     </lux-toggle-ac>
     @if (customInvalidStyle) {
-      <pre class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle | json }}</pre>
+      <pre tabindex="0" class="lux-label"><b>customInvalidStyles</b> = {{ customInvalidStyle | json }}</pre>
     }
 
     <lux-select-ac
@@ -338,7 +338,7 @@
     >
     </lux-toggle-ac>
     @if (!useErrorMessage) {
-      <pre class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
+      <pre tabindex="0" class="lux-label"><b>luxErrorCallback</b> = {{ errorCallbackString }}</pre>
     }
     @if (useErrorMessage) {
       <lux-input-ac

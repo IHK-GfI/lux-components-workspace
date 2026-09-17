@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, input, OnDestroy, ViewChild } from '@angular/core';
 import { MatAccordion, MatAccordionDisplayMode, MatAccordionTogglePosition } from '@angular/material/expansion';
 import { Subject } from 'rxjs';
 import { LuxAccordionColor, LuxAccordionColors } from '../../lux-util/lux-colors.enum';
@@ -34,6 +34,9 @@ export class LuxAccordionComponent implements AfterViewInit, OnDestroy {
   _luxExpandedHeaderHeight?: string;
   _luxCollapsedHeaderHeight?: string;
   _luxTogglePosition?: LuxTogglePosition;
+
+  luxStickyHeader = input<boolean | undefined>();
+  luxStickyHeaderOffset = input<string | undefined>();
 
   @Input()
   get luxDisabled() {

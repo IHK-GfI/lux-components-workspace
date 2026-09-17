@@ -42,6 +42,8 @@ export class CardExampleComponent {
   useExpandableContent = false;
   btn2Raised = true;
   hideCardContent = false;
+  showWideContent = false;
+  scrollContent = false;
   disabled = false;
   titleLineBreak = true;
   title = `Testkarte - Lorem ipsum dolor sit amet, consectetur adipisici elit.`;

@@ -381,6 +381,7 @@ interface ExampleMenuItem {
   raised: boolean;
   color: LuxThemePalette;
   disabled: boolean;
+  disabledAria?: boolean;
   hidden: boolean;
   label: string;
   tooltip: string;

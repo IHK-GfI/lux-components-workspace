@@ -2,6 +2,7 @@
   class="link-wrapper"
   [attr.href]="luxDisabled || !luxHref ? null : luxHref"
   [target]="luxBlank ? '_blank' : '_self'"
+  [attr.rel]="luxBlank ? 'noopener noreferrer' : null"
   tabindex="{{ luxDisabled ? -1 : 0 }}"
   (focus)="tooltipDirective?.show()"
   (blur)="tooltipDirective?.hide()"

@@ -16,6 +16,8 @@ import {
   LuxThemePalette,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -42,7 +44,8 @@ import { logResult, setRequiredValidatorForFormControl } from '../../example-bas
     ExampleBaseContentComponent,
     ReactiveFormsModule,
     ExampleBaseSimpleOptionsComponent,
-    ExampleBaseAdvancedOptionsComponent
+    ExampleBaseAdvancedOptionsComponent,
+    StatusMarkerComponent
   ]
 })
 export class ChipAuthenticExampleComponent {
@@ -80,6 +83,10 @@ export class ChipAuthenticExampleComponent {
   denseFormat = false;
   hideBorder = false;
   inputLabelAlwaysVisible = false;
+  noTopLabel = false;
+  noBottomLabel = false;
+  noLabels = false;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
 
   constructor() {
     this.form = new FormGroup({

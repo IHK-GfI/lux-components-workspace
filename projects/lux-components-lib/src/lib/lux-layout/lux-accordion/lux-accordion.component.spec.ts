@@ -506,6 +506,50 @@ describe('LuxAccordionComponent', () => {
       }));
     });
   });
+
+  describe('Attribut "luxStickyHeader"', () => {
+    describe('Sticky über das Accordion gesetzt', () => {
+      let fixture: ComponentFixture<LuxAccordionStickyHeaderComponent>;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxAccordionStickyHeaderComponent);
+        fixture.detectChanges();
+        tick();
+      }));
+
+      it('Vererbung und nachträgliche Änderung prüfen', fakeAsync(() => {
+        // Vorbedingungen testen
+        const panelEl = fixture.debugElement.query(By.css('.mat-expansion-panel'));
+        expect(panelEl.classes['lux-panel-sticky-header']).toBeFalsy();
+
+        // Änderungen durchführen
+        fixture.componentInstance.sticky = true;
+        fixture.componentInstance.offset = '48px';
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(panelEl.classes['lux-panel-sticky-header']).toBeTruthy();
+        expect(panelEl.nativeElement.style.getPropertyValue('--lux-panel-sticky-header-offset')).toBe('48px');
+      }));
+    });
+
+    describe('Sticky des Accordions im Panel überschreiben', () => {
+      let fixture: ComponentFixture<LuxAccordionOverrideStickyHeaderComponent>;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxAccordionOverrideStickyHeaderComponent);
+        fixture.detectChanges();
+        tick();
+      }));
+
+      it('Sticky prüfen', fakeAsync(() => {
+        const panel1El = fixture.debugElement.query(By.css('#panel1 .mat-expansion-panel'));
+        expect(panel1El.classes['lux-panel-sticky-header']).toBeFalsy();
+        const panel2El = fixture.debugElement.query(By.css('#panel2 .mat-expansion-panel'));
+        expect(panel2El.classes['lux-panel-sticky-header']).toBeTruthy();
+      }));
+    });
+  });
 });
 
 @Component({
@@ -803,3 +847,38 @@ class LuxAccordionOverridePanelReversedluxTogglePositionComponent {}
 class LuxAccordionColorComponent {
   color = 'primary';
 }
+
+@Component({
+  selector: 'lux-accordion-sticky-header',
+  template: `
+    <lux-accordion [luxStickyHeader]="sticky" [luxStickyHeaderOffset]="offset">
+      <lux-panel [luxExpanded]="true">
+        <lux-panel-header-title>Titel 1</lux-panel-header-title>
+        <lux-panel-content> 111111 </lux-panel-content>
+      </lux-panel>
+    </lux-accordion>
+  `,
+  imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
+})
+class LuxAccordionStickyHeaderComponent {
+  sticky = false;
+  offset?: string;
+}
+
+@Component({
+  selector: 'lux-accordion-override-sticky-header',
+  template: `
+    <lux-accordion [luxStickyHeader]="true">
+      <lux-panel id="panel1" [luxStickyHeader]="false">
+        <lux-panel-header-title>Titel 1</lux-panel-header-title>
+        <lux-panel-content> 111111 </lux-panel-content>
+      </lux-panel>
+      <lux-panel id="panel2">
+        <lux-panel-header-title>Titel 2</lux-panel-header-title>
+        <lux-panel-content> 22222222 </lux-panel-content>
+      </lux-panel>
+    </lux-accordion>
+  `,
+  imports: [LuxAccordionComponent, LuxPanelComponent, LuxPanelContentComponent, LuxPanelHeaderTitleComponent]
+})
+class LuxAccordionOverrideStickyHeaderComponent {}

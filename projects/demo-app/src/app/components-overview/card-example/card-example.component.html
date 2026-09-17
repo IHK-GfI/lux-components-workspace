@@ -15,6 +15,7 @@
       (luxClicked)="onCardClicked()"
       [luxExpandedLabelClose]="closeLabel"
       [luxExpandedLabelOpen]="openLabel"
+      [class.lux-card-scroll-content]="scrollContent"
       luxCustomTagId="my-card-id"
       luxCustomTagIdSelector="mat-card"
     >
@@ -40,6 +41,20 @@
             nicht zur Nachahmung annimieren. Bitte entscheidet euch, je nach Anwendungsfall, wie ihr eure Karte gestaltet. Weniger ist
             Besser!
           </p>
+          @if (showWideContent) {
+            <div class="wide-demo-content">
+              Überbreiter Beispielinhalt (1200px) - wird von der Card abgeschnitten.
+              <lux-button
+                luxLabel="Fokussierbar am rechten Rand"
+                [luxStroked]="true"
+                luxColor="primary"
+                class="wide-demo-button"
+              ></lux-button>
+            </div>
+            <pre tabindex="0">
+Überbreiter Beispielinhalt in einem pre-Element - scrollt innerhalb des pre-Elements.                                        Ende des pre-Tags.</pre
+            >
+          }
         </lux-card-content>
       }
       @if (useExpandableContent) {
@@ -155,5 +170,25 @@
       luxHint="Diese Property steuert den Labeltext auf dem Button zum Einklappen des erweiterten Card-Contents."
       [(luxValue)]="closeLabel"
     ></lux-input-ac>
+    <lux-toggle-ac luxLabel="Überbreiten Inhalt anzeigen" [(luxChecked)]="showWideContent" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Fügt dem Card-Content Beispielinhalt hinzu, der absichtlich breiter als die Card ist.<br />
+        Damit lässt sich manuell testen, wie die Card mit überbreitem Inhalt umgeht: Der normale Block wird am Card-Rand abgeschnitten
+        (overflow: clip), das pre-Element scrollt dagegen in sich selbst.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="lux-card-scroll-content"
+      [(luxChecked)]="scrollContent"
+      [luxDisabled]="!showWideContent"
+      [luxNoTopLabel]="true"
+    >
+      <lux-form-hint>
+        Opt-out aus dem Clipping: Der Card-Inhalt wird wieder innerhalb der Card scrollbar.<br />
+        Zum Testen der Barrierefreiheit den überbreiten Inhalt einschalten und mit der Tab-Taste zum Button "Fokussierbar am rechten Rand"
+        navigieren. Ohne diese Klasse bleibt der Button ausserhalb des sichtbaren Bereichs, mit ihr scrollt der Browser ihn in den Blick.
+        luxStickyHeader funktioniert innerhalb einer so markierten Card dagegen nicht.
+      </lux-form-hint>
+    </lux-toggle-ac>
   </example-base-advanced-options>
 </example-base-structure>

@@ -10,3 +10,19 @@
   justify-content: space-around;
 }
 
+// Absichtlich breiter als die Card, um das Verhalten bei überbreitem Inhalt manuell testen zu können.
+.wide-demo-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  width: 1200px;
+  padding: 8px;
+  border: 1px dashed var(--lux-theme-dark-primary-text);
+
+  // Sitzt am rechten Ende des überbreiten Blocks und ist damit ohne Scrollmöglichkeit
+  // per Tastatur nicht erreichbar (siehe Klasse "lux-card-scroll-content").
+  .wide-demo-button {
+    flex: 0 0 auto;
+  }
+}
+

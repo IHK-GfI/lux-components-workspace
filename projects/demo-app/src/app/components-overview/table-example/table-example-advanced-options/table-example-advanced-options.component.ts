@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
     LuxAccordionComponent,
+    LuxButtonComponent,
     LuxFormHintComponent,
     LuxFormLabelComponent,
     LuxInputAcComponent,
@@ -20,6 +21,7 @@ import { TableExampleBaseClass } from '../table-example-base.class';
   templateUrl: './table-example-advanced-options.component.html',
   imports: [
     LuxAccordionComponent,
+    LuxButtonComponent,
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,

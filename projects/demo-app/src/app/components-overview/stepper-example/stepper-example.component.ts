@@ -32,6 +32,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
 import { StepperDialogExampleComponent } from './stepper-dialog-example/stepper-dialog-example.component';
+import { StepperExternalStepExampleComponent } from './stepper-external-step-example.component';
 
 interface IStepperButtonConfigWithVariant extends ILuxStepperButtonConfig {
   variant?: 'default' | 'flat' | 'stroked';
@@ -72,6 +73,7 @@ interface StepperForm2DummyForm {
     LuxInputAcComponent,
     LuxFormHintComponent,
     LuxButtonComponent,
+    StepperExternalStepExampleComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ReactiveFormsModule,

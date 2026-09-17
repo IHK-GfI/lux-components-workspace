@@ -17,6 +17,8 @@ import { emptyErrorCallback, exampleErrorCallback, logResult } from '../../examp
 import { ExampleFormDisableComponent } from '../../example-base/example-form-disable/example-form-disable.component';
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 
 interface DatetimeDummyForm {
   datepickerExample: FormControl<string | null>;
@@ -39,7 +41,8 @@ interface DatetimeDummyForm {
     ExampleFormValueComponent,
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
-    ExampleBaseAdvancedOptionsComponent
+    ExampleBaseAdvancedOptionsComponent,
+    StatusMarkerComponent
   ]
 })
 export class DatetimepickerAuthenticExampleComponent {
@@ -62,6 +65,10 @@ export class DatetimepickerAuthenticExampleComponent {
   label = 'Label';
   hint = 'Optionaler Zusatztext';
   hintShowOnlyOnFocus = false;
+  noTopLabel = false;
+  noBottomLabel = false;
+  noLabels = false;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   placeholder = 'Placeholder';
   controlValidators: ValidatorFn[] = [];
   errorMessage = 'Das Feld enthält keinen gültigen Wert';

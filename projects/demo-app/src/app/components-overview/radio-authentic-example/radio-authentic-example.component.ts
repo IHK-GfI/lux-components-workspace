@@ -9,6 +9,8 @@ import {
     LuxRadioAcComponent,
     LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
+import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
+import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -50,7 +52,8 @@ interface RadioDummyForm {
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
     ExampleBaseOptionsActionsComponent,
-    JsonPipe
+    JsonPipe,
+    StatusMarkerComponent
   ]
 })
 export class RadioAuthenticExampleComponent {
@@ -82,6 +85,10 @@ export class RadioAuthenticExampleComponent {
   label = 'Label';
   hint = 'Optionaler Zusatztext';
   hintShowOnlyOnFocus = false;
+  noTopLabel = false;
+  noBottomLabel = false;
+  noLabels = false;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   controlValidators: ValidatorFn[] = [];
   errorMessage = 'Das Feld enthält keinen gültigen Wert';
   value: any;

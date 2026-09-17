@@ -9,6 +9,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxAriaDescribedbyDirective } from '../../lux-directives/lux-aria/lux-aria-describedby.directive';
+import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
+import { LuxAriaLabelledbyDirective } from '../../lux-directives/lux-aria/lux-aria-labelledby.directive';
 import { LuxTagIdDirective } from '../../lux-directives/lux-tag-id/lux-tag-id.directive';
 import { LuxFormControlWrapperComponent } from '../../lux-form/lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { LuxValidationErrors } from '../../lux-form/lux-form-model/lux-form-component-base.class';
@@ -27,6 +29,8 @@ import { LuxAutocompleteErrorStateMatcherAc } from './lux-autocomplete-error-sta
     MatAutocompleteTrigger,
     LuxTagIdDirective,
     LuxAriaDescribedbyDirective,
+    LuxAriaLabelDirective,
+    LuxAriaLabelledbyDirective,
     MatAutocomplete,
     MatOption,
     NgClass,
@@ -47,9 +51,6 @@ export class LuxLookupAutocompleteAcComponent<T = LuxLookupTableEntry | null>
 
   @Input() luxDebounceTime = 250;
   @Input() luxMaximumDisplayed = 50;
-  @Input() luxNoLabels = false;
-  @Input() luxNoTopLabel = false;
-  @Input() luxNoBottomLabel = false;
   @Input() luxClearable = false;
   @Input() luxClearAriaLabel = '';
 

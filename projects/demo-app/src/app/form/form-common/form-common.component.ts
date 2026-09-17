@@ -12,13 +12,17 @@ import {
     LuxChipsAcComponent,
     LuxConsoleService,
     LuxDatepickerAcComponent,
+    LuxDatetimepickerAcComponent,
+    LuxFileInputAcComponent,
     LuxIconComponent,
     LuxInputAcComponent,
     LuxInputAcPrefixComponent,
     LuxInputAcSuffixComponent,
     LuxRadioAcComponent,
     LuxSelectAcComponent,
+    LuxSliderAcComponent,
     LuxTextareaAcComponent,
+    LuxTimepickerComponent,
     LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
 import { FormBase } from '../model/form-base.class';
@@ -56,6 +60,10 @@ interface FormCommonUser {
     LuxIconComponent,
     LuxCardContentComponent,
     LuxCardComponent,
+    LuxDatetimepickerAcComponent,
+    LuxFileInputAcComponent,
+    LuxSliderAcComponent,
+    LuxTimepickerComponent,
     LuxToggleAcComponent,
     LuxTextareaAcComponent,
     LuxSelectAcComponent,
@@ -89,6 +97,9 @@ export class FormCommonComponent extends FormBase implements OnInit {
   ];
   chipItems: string[] = [];
   chipItems2: string[] = [];
+
+  // Schalter im Beispiel "A11y - Visuell versteckte Labels"
+  showA11yLabels = false;
 
   constructor() {
     super();

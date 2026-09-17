@@ -18,9 +18,11 @@ export class LuxStepComponent {
   private _iconChange = new BehaviorSubject<boolean>(false);
   private _luxIconName?: string = undefined;
 
-  @ViewChild('header', { static: true }) headerTemplate!: TemplateRef<any>;
-  @ViewChild('content', { static: true }) contentTemplate!: TemplateRef<any>;
+  @ViewChild('header', { static: true }) defaultHeaderTemplate!: TemplateRef<any>;
+  @ViewChild('content', { static: true }) defaultContentTemplate!: TemplateRef<any>;
   @ContentChild(LuxStepHeaderComponent) luxStepHeader?: LuxStepHeaderComponent;
+  @ContentChild('header', { descendants: true, read: TemplateRef }) projectedHeaderTemplate?: TemplateRef<any>;
+  @ContentChild('content', { descendants: true, read: TemplateRef }) projectedContentTemplate?: TemplateRef<any>;
 
   @Input() luxIconSize = '1x';
   @Input() luxOptional = false;
@@ -28,8 +30,18 @@ export class LuxStepComponent {
   @Input() luxCompleted = true;
   @Input() luxStepControl?: FormGroup;
 
+  get headerTemplate(): TemplateRef<any> {
+    return this.projectedHeaderTemplate ?? this.defaultHeaderTemplate;
+  }
+
+  get contentTemplate(): TemplateRef<any> {
+    return this.projectedContentTemplate ?? this.defaultContentTemplate;
+  }
+
   get hasHeader(): boolean {
-    return !!this.luxStepHeader;
+    return (
+      !!this.luxStepHeader || !!this.projectedHeaderTemplate || (this.constructor !== LuxStepComponent && !!this.defaultHeaderTemplate)
+    );
   }
 
   get luxIconName(): string | undefined {

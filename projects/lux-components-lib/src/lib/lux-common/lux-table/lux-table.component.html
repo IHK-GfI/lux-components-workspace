@@ -51,7 +51,7 @@
     <!-- Overlay, welches bei der Anzeige des Ladebalkens die Interaktion mit der Tabelle unterbindet -->
     <div class="lux-table-overlay" [ngClass]="{ 'lux-table-overlay-active': isLoadingResults }"></div>
 
-    <div class="lux-table-content" [ngClass]="{ 'lux-hide-borders': luxHideBorders }">
+    <div class="lux-table-content" [ngClass]="{ 'lux-hide-borders': luxHideBorders, 'lux-table-no-striping': hasHighlightedRows }">
       <table
         mat-table
         [dataSource]="dataSource"

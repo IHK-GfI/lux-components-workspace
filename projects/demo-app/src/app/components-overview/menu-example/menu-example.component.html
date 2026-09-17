@@ -21,12 +21,14 @@
         [luxRaised]="item.raised"
         [luxColor]="item.color"
         [luxDisabled]="item.disabled"
+        [luxDisabledAria]="item.disabledAria ?? false"
         [luxLabel]="item.label"
         [luxButtonTooltip]="item.tooltip"
         [luxMenuTooltip]="item.tooltipMenu"
         [luxAlwaysVisible]="item.alwaysVisible"
         [luxTagId]="item.label"
         (luxClicked)="log(showOutputEvents, 'Item clicked', $event)"
+        (luxClickNotAllowed)="log(showOutputEvents, 'Item click not allowed (aria-disabled)', $event)"
         [luxRounded]="item.round"
         [luxHideLabelIfExtended]="item.hideLabelIfExtended"
         [luxHidden]="item.hidden"
@@ -273,6 +275,15 @@
             [luxNoTopLabel]="true"
           >
           </lux-toggle-ac>
+          <div class="lux-flex lux-items-center lux-gap-2">
+            <lux-toggle-ac class="lux-flex-auto" luxLabel="luxDisabledAria" [(luxChecked)]="item.disabledAria" [luxNoTopLabel]="true">
+              <lux-form-hint>
+                Über dieses Flag wird der Eintrag wahrnehmbar deaktiviert (aria-disabled): Er bleibt sichtbar und fokussierbar, die Aktion
+                wird aber nicht ausgeführt. Statt luxClicked wird luxClickNotAllowed emittiert (siehe Console-Log).
+              </lux-form-hint>
+            </lux-toggle-ac>
+            <app-status-marker [markerType]="markerTypeNew"></app-status-marker>
+          </div>
           <lux-toggle-ac
             luxLabel="luxHidden"
             luxHint="Über dieses Flag wird der Eintrag ausgeblendet."

@@ -16,6 +16,8 @@
     Das mat-select nutzt intern kein echtes HTML-Element wie das select und darum wird der obige Fehler geworfen.
     Die aktuelle Lösung ist ein zusätzliches Select einzufügen und zu verstecken, damit der Fehler verschwindet.
     Wenn der Fehler in den Material Components behoben wurde, dann kann das unsichtbare Select wieder entfernt werden.
+    Wichtig: Nur das versteckte <select> trägt die uid (Ziel des Wrapper-Labels per for).
+    Das mat-select darf keine eigene id="uid" bekommen, sonst entsteht eine doppelte DOM-ID.
     -->
     <select [id]="uid" style="display: none"></select>
     <mat-select
@@ -32,14 +34,14 @@
       [attr.aria-invalid]="formControl.invalid"
       [attr.aria-required]="luxRequired"
       [attr.aria-readonly]="luxReadonly"
-      [id]="uid"
       [luxSelectVisibleOptionCount]="luxVisibleOptionCount"
       [panelClass]="[
         luxMultiple ? 'lux-select-panel-ac-multiple' : 'lux-select-panel-ac',
         luxReadonly ? 'lux-display-none' : '',
         luxEnableFilter ? 'lux-select-panel-ac-filter' : ''
       ]"
-      [luxAriaLabelledby]="uid + '-label'"
+      [luxAriaLabelledby]="labelledBy()"
+      [luxAriaLabel]="luxAriaLabel"
       [luxAriaDescribedby]="describedBy()"
       (focusin)="onFocusIn($event)"
       (focusout)="onFocusOut($event)"

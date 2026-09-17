@@ -392,7 +392,7 @@ describe('LuxAppHeaderComponent', () => {
       LuxTestHelper.wait(fixture);
 
       expect(spy).toHaveBeenCalledTimes(2);
-      expect(spy).toHaveBeenCalledWith('https:///www.ihk-gfi.de', '_blank');
+      expect(spy).toHaveBeenCalledWith('https:///www.ihk-gfi.de', '_blank', 'noopener,noreferrer');
 
       discardPeriodicTasks();
     }));

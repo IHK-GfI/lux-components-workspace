@@ -60,6 +60,7 @@ interface SelectDummyForm {
 })
 export class SelectAuthenticExampleComponent {
   readonly markerTypeNew = DemoMarkerType.New;
+  readonly markerTypeUpdated = DemoMarkerType.Updated;
   useErrorMessage = true;
   useCompareWithFn = false;
   useValueFn = false;
@@ -128,6 +129,9 @@ export class SelectAuthenticExampleComponent {
   label = 'Label';
   hint = 'Optionaler Zusatztext';
   hintShowOnlyOnFocus = false;
+  noTopLabel = false;
+  noBottomLabel = false;
+  noLabels = false;
   placeholder = 'Placeholder';
   controlValidators: ValidatorFn[] = [];
   errorMessage = 'Das Feld enthält keinen gültigen Wert';
