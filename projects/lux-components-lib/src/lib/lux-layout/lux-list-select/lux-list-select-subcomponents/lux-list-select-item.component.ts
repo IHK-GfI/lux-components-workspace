@@ -3,7 +3,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, TemplateRef, viewChild } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioButton } from '@angular/material/radio';
-import { TranslocoService } from '@jsverse/transloco';
+import { translateSignal } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
 import { LuxListSelectMode } from '../lux-list-select-model/lux-list-select-types';
 
@@ -28,18 +28,15 @@ const NAVIGABLE_SELECTORS =
 export class LuxListSelectItemComponent<T = unknown> implements FocusableOption {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
   private static nextItemUid = 0;
-  private readonly tService = inject(TranslocoService);
   private readonly itemUid = LuxListSelectItemComponent.nextItemUid++;
 
   protected readonly labelId = `lux-list-select-item-label-${this.itemUid}`;
   protected readonly subLabelId = `lux-list-select-item-sublabel-${this.itemUid}`;
   // Itembezogenes Arialabel; ohne auflösbares Label bleibt die generische Ansage.
-  protected readonly detailAriaLabel = computed(() => {
-    const label = this.luxLabel();
-    return label
-      ? this.tService.translate('luxc.list-select.detail_item_arialabel', { label })
-      : this.tService.translate('luxc.list-select.detail_arialabel');
-  });
+  protected readonly detailAriaLabel = translateSignal(
+    computed(() => (this.luxLabel() ? 'luxc.list-select.detail_item_arialabel' : 'luxc.list-select.detail_arialabel')),
+    computed(() => ({ label: this.luxLabel() }))
+  );
 
   readonly luxItem = input.required<T>();
   readonly luxMode = input<LuxListSelectMode>('multi');

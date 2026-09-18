@@ -10,6 +10,7 @@ import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-u
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
+import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxListSelectComponent } from './lux-list-select.component';
 import {
@@ -1626,6 +1627,22 @@ describe('LuxListSelectComponent', () => {
   });
 
   describe('A11y', () => {
+    it('Sollte das Standard-Arialabel der Liste bei einem Sprachwechsel zur Laufzeit aktualisieren', () => {
+      // Vorbedingungen testen: deutsches Standardlabel
+      const translocoService = TestBed.inject(TranslocoService);
+      const grid = () => fixture.debugElement.query(By.css('.lux-list-select-list')).nativeElement as HTMLElement;
+      expect(grid().getAttribute('aria-label')).toBe('Auswahlliste');
+
+      // Änderungen durchführen
+      translocoService.setActiveLang('en');
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(grid().getAttribute('aria-label')).toBe('Selection list');
+
+      translocoService.setActiveLang('de');
+    });
+
     beforeAll(() => {
       LuxA11yTestHelper.addA11yMatchers();
     });

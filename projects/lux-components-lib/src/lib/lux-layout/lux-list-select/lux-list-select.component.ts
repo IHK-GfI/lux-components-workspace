@@ -18,7 +18,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LuxPageEvent, LuxPaginatorComponent } from '@ihk-gfi/lux-components/lux-paginator';
-import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { translateSignal, TranslocoPipe } from '@jsverse/transloco';
 import { LuxBadgeComponent } from '../../lux-common/lux-badge/lux-badge.component';
 import { LuxLabelComponent } from '../../lux-common/lux-label/lux-label.component';
 import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
@@ -74,7 +74,6 @@ import { announceSearchResults } from './lux-list-select-search-announcer';
 export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor {
   private static nextUniqueId = 0;
 
-  private tService = inject(TranslocoService);
   private readonly injector = inject(Injector);
   private readonly uniqueId = LuxListSelectComponent.nextUniqueId++;
 
@@ -146,7 +145,8 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   protected daoTotalCount = this.dataSource.daoTotalCount;
   protected serverMode = computed(() => !!this.luxHttpDao());
 
-  protected listLabel = computed(() => this.luxLabel() ?? this.tService.translate('luxc.list-select.arialabel'));
+  private defaultListLabel = translateSignal('luxc.list-select.arialabel');
+  protected listLabel = computed(() => this.luxLabel() ?? this.defaultListLabel());
   protected filteredItems = computed(() => {
     const items = this.luxItems();
     if (!this.luxShowSearch()) {
