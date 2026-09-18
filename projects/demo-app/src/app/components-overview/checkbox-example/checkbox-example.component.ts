@@ -32,9 +32,9 @@ interface CheckboxAgbDummyForm {
 }
 
 @Component({
-  selector: 'lux-checkbox-authentic-example',
-  templateUrl: './checkbox-authentic-example.component.html',
-  styleUrls: ['./checkbox-authentic-example.component.scss'],
+  selector: 'lux-checkbox-example',
+  templateUrl: './checkbox-example.component.html',
+  styleUrls: ['./checkbox-example.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTextboxComponent,
@@ -56,7 +56,7 @@ interface CheckboxAgbDummyForm {
     FormField
   ]
 })
-export class CheckboxAuthenticExampleComponent {
+export class CheckboxExampleComponent {
   readonly signalModel = signal({ checkboxValue: false });
   readonly signalForm = form(this.signalModel, (path) => {
     disabled(path.checkboxValue, { when: () => this.disabled() });

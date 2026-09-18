@@ -1,17 +1,13 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { FormField, disabled, email, form, maxLength, minLength, readonly, required } from '@angular/forms/signals';
+import { FormField, disabled, form, maxLength as maxLengthValidator, minLength, readonly, required } from '@angular/forms/signals';
 import {
   LuxAutofocusDirective,
   LuxFormHintComponent,
-  LuxIconComponent,
   LuxInputComponent,
-  LuxInputPrefixComponent,
-  LuxInputSuffixComponent,
-  LuxLinkPlainComponent,
   LuxSelectComponent,
-  LuxToggleComponent,
-  LuxValidators
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -30,24 +26,21 @@ import { ExampleFormValueComponent } from '../../example-base/example-form-value
 import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
 
-interface InputDummyForm {
-  inputExample: FormControl<string | null>;
+interface TextareaDummyForm {
+  textareaExample: FormControl<string | null>;
 }
 
 @Component({
-  selector: 'lux-input-authentic-example',
-  templateUrl: './input-authentic-example.component.html',
-  styleUrls: ['./input-authentic-example.component.scss'],
+  selector: 'lux-textarea-example',
+  templateUrl: './textarea-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxIconComponent,
-    LuxLinkPlainComponent,
     LuxToggleComponent,
+    LuxTextareaComponent,
     LuxSelectComponent,
-    LuxInputSuffixComponent,
-    LuxInputPrefixComponent,
     LuxInputComponent,
     LuxFormHintComponent,
+    LuxAutofocusDirective,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleValueComponent,
@@ -57,45 +50,39 @@ interface InputDummyForm {
     ExampleBaseSimpleOptionsComponent,
     ExampleFormDisableComponent,
     ExampleBaseAdvancedOptionsComponent,
-    LuxAutofocusDirective,
     StatusMarkerComponent,
     FormField
   ]
 })
-export class InputAuthenticExampleComponent {
+export class TextareaExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
-  readonly signalModel = signal({ inputValue: '' });
+  readonly signalModel = signal({ textareaValue: '' });
   readonly signalForm = form(this.signalModel, (path) => {
-    disabled(path.inputValue, { when: () => this.disabled() });
-    readonly(path.inputValue, { when: () => this.readonly() });
-    required(path.inputValue, { message: 'Bitte einen Wert eingeben', when: () => this.required() });
-    minLength(path.inputValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 3 : undefined));
-    maxLength(path.inputValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 10 : undefined));
-    email(path.inputValue, { when: () => this.controlValidators().includes(this.validatorOptions[2].value) });
+    disabled(path.textareaValue, { when: () => this.disabled() });
+    readonly(path.textareaValue, { when: () => this.readonly() });
+    required(path.textareaValue, { when: () => this.required() });
+    minLength(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[0].value) ? 3 : undefined));
+    maxLengthValidator(path.textareaValue, () => (this.controlValidators().includes(this.validatorOptions[1].value) ? 10 : undefined));
   });
 
   // 2. Freistehend, ohne jedes Formular.
   readonly plainValue = signal('');
 
-  readonly showSuffix = signal(false);
-  readonly showPrefix = signal(false);
   readonly useErrorMessage = signal(true);
   readonly showOutputEvents = signal(false);
   validatorOptions = [
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' },
-    { value: LuxValidators.email, label: 'LuxValidators.email' }
+    { value: Validators.email, label: 'Validators.email' }
   ];
-  typeOptions = ['text', 'number', 'email', 'time', 'password', 'color'];
-  autocompleteOptions = ['on', 'off'];
-  form: FormGroup<InputDummyForm>;
+  autocompleteOptions = ['on', 'off', 'name'];
+  form: FormGroup<TextareaDummyForm>;
   log = logResult;
-  readonly value = signal<any>(undefined);
-  controlBinding = 'inputExample';
+  readonly value = signal<string | null>(null);
+  controlBinding = 'textareaExample';
   readonly disabled = signal(false);
   readonly readonly = signal(false);
   readonly required = signal(false);
-  readonly numberLeft = signal(false);
   readonly label = signal('Label');
   readonly hint = signal('Optionaler Zusatztext');
   readonly hintShowOnlyOnFocus = signal(false);
@@ -107,7 +94,8 @@ export class InputAuthenticExampleComponent {
   readonly controlValidators = signal<ValidatorFn[]>([]);
   readonly errorMessage = signal('Das Feld enthält keinen gültigen Wert');
   readonly autocomplete = signal('off');
-  readonly inputType = signal('text');
+  readonly max = signal(-1);
+  readonly min = signal(1);
   errorCallback = exampleErrorCallback;
   emptyCallback = emptyErrorCallback;
   errorCallbackString = this.errorCallback + '';
@@ -115,33 +103,16 @@ export class InputAuthenticExampleComponent {
   readonly hideCounterLabel = signal(false);
   readonly labelLongFormat = signal(false);
   readonly denseFormat = signal(false);
-  readonly clearable = signal(false);
-  readonly extraValidators = signal(false);
-  minLengthValidator = Validators.minLength(3);
-  maxLengthValidator = Validators.maxLength(10);
 
   constructor() {
-    this.form = new FormGroup<InputDummyForm>({
-      inputExample: new FormControl<string | null>('')
+    this.form = new FormGroup<TextareaDummyForm>({
+      textareaExample: new FormControl<string | null>(null)
     });
   }
 
   changeRequired(required: boolean) {
     this.required.set(required);
     setRequiredValidatorForFormControl(required, this.form, this.controlBinding);
-  }
-
-  changeExtraValidators(enabled: boolean) {
-    this.extraValidators.set(enabled);
-    const control = this.form.get(this.controlBinding);
-    if (control) {
-      if (enabled) {
-        control.addValidators([this.minLengthValidator, this.maxLengthValidator]);
-      } else {
-        control.removeValidators([this.minLengthValidator, this.maxLengthValidator]);
-      }
-      control.updateValueAndValidity();
-    }
   }
 
   pickValidatorValueFn(selected: any) {

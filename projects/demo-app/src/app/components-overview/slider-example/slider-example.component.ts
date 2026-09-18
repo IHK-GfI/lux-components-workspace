@@ -32,8 +32,8 @@ interface SliderDummyForm {
 }
 
 @Component({
-  selector: 'lux-slider-authentic-example',
-  templateUrl: './slider-authentic-example.component.html',
+  selector: 'lux-slider-example',
+  templateUrl: './slider-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleComponent,
@@ -55,7 +55,7 @@ interface SliderDummyForm {
     FormField
   ]
 })
-export class SliderAuthenticExampleComponent {
+export class SliderExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal({ sliderValue: 0 });
   readonly signalForm = form(this.signalModel, (path) => {

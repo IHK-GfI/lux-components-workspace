@@ -28,8 +28,8 @@ interface TimepickerDummyForm {
 }
 
 @Component({
-  selector: 'lux-timepicker-authentic-example',
-  templateUrl: './timepicker-authentic-example.component.html',
+  selector: 'lux-timepicker-example',
+  templateUrl: './timepicker-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleComponent,
@@ -51,7 +51,7 @@ interface TimepickerDummyForm {
     FormField
   ]
 })
-export class TimepickerAuthenticExampleComponent {
+export class TimepickerExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ timepickerValue: string | null }>({ timepickerValue: '2026-06-18T14:30:00.000Z' });
   readonly signalForm = form(this.signalModel, (path) => {

@@ -38,8 +38,8 @@ interface SelectDummyForm {
 }
 
 @Component({
-  selector: 'lux-select-authentic-example',
-  templateUrl: './select-authentic-example.component.html',
+  selector: 'lux-select-example',
+  templateUrl: './select-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
@@ -64,7 +64,7 @@ interface SelectDummyForm {
     FormField
   ]
 })
-export class SelectAuthenticExampleComponent {
+export class SelectExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ selectValue: any }>({ selectValue: null });
   readonly signalForm = form(this.signalModel, (path) => {

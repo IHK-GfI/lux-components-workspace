@@ -33,8 +33,8 @@ interface DatepickerDummyForm {
 }
 
 @Component({
-  selector: 'lux-datepicker-authentic-example',
-  templateUrl: './datepicker-authentic-example.component.html',
+  selector: 'lux-datepicker-example',
+  templateUrl: './datepicker-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleComponent,
@@ -56,7 +56,7 @@ interface DatepickerDummyForm {
     FormField
   ]
 })
-export class DatepickerAuthenticExampleComponent {
+export class DatepickerExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ datepickerValue: string | null }>({ datepickerValue: '2020-05-28T14:15:00.000Z' });
   readonly signalForm = form(this.signalModel, (path) => {

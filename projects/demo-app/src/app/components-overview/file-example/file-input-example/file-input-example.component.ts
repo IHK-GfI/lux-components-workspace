@@ -25,8 +25,8 @@ import { FileExampleSimpleOptionsComponent } from '../file-example-simple-option
 import { FileExampleComponent } from '../file-example.component';
 
 @Component({
-  selector: 'lux-file-input-authentic-example',
-  templateUrl: './file-input-authentic-example.component.html',
+  selector: 'lux-file-input-example',
+  templateUrl: './file-input-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
@@ -48,7 +48,7 @@ import { FileExampleComponent } from '../file-example.component';
     FormField
   ]
 })
-export class FileInputAuthenticExampleComponent extends FileExampleComponent implements AfterViewInit {
+export class FileInputExampleComponent extends FileExampleComponent implements AfterViewInit {
   readonly fileInputs = viewChildren(LuxFileInputComponent);
   readonly fileBaseWithoutComponent = viewChild.required('fileinputexamplewithoutform', { read: LuxFileInputComponent });
   readonly fileBaseWithComponent = viewChild.required('fileinputexamplewithform', { read: LuxFileInputComponent });

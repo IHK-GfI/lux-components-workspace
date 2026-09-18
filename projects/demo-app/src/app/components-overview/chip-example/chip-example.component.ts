@@ -28,8 +28,8 @@ import { logResult, setRequiredValidatorForFormControl } from '../../example-bas
 import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 
 @Component({
-  selector: 'lux-chip-authentic-example',
-  templateUrl: './chip-authentic-example.component.html',
+  selector: 'lux-chip-example',
+  templateUrl: './chip-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxAccordionComponent,
@@ -54,7 +54,7 @@ import { ExampleSignalFormValueComponent } from '../../example-base/example-sign
     FormField
   ]
 })
-export class ChipAuthenticExampleComponent {
+export class ChipExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ chipsValue: string[] }>({ chipsValue: [] });
   readonly signalForm = form(this.signalModel, (path) => {

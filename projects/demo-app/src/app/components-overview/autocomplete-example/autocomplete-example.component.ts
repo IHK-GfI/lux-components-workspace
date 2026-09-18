@@ -30,7 +30,7 @@ import { ExampleFormDisableComponent } from '../../example-base/example-form-dis
 import { ExampleFormValueComponent } from '../../example-base/example-form-value/example-form-value.component';
 import { ExampleSignalFormValueComponent } from '../../example-base/example-signal-form-value/example-signal-form-value.component';
 import { ExampleValueComponent } from '../../example-base/example-value/example-value.component';
-import { AutocompleteAcExampleOption } from './autocomplete-authentic-example-option';
+import { AutocompleteAcExampleOption } from './autocomplete-example-option';
 import { RenderPropertyItem } from './render-property-item';
 
 interface AutocompleteForm {
@@ -38,8 +38,8 @@ interface AutocompleteForm {
 }
 
 @Component({
-  selector: 'lux-autocomplete-authentic-example',
-  templateUrl: './autocomplete-authentic-example.component.html',
+  selector: 'lux-autocomplete-example',
+  templateUrl: './autocomplete-example.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -66,7 +66,7 @@ interface AutocompleteForm {
     FormField
   ]
 })
-export class AutocompleteAuthenticExampleComponent {
+export class AutocompleteExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ autocompleteValue: AutocompleteAcExampleOption | string | null }>({ autocompleteValue: null });
   readonly signalForm = form(this.signalModel, (path) => {

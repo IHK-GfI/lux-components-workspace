@@ -18,8 +18,8 @@ interface ToggleDummyForm {
 }
 
 @Component({
-  selector: 'lux-toggle-authentic-example',
-  templateUrl: './toggle-authentic-example.component.html',
+  selector: 'lux-toggle-example',
+  templateUrl: './toggle-example.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -39,7 +39,7 @@ interface ToggleDummyForm {
     FormField
   ]
 })
-export class ToggleAuthenticExampleComponent {
+export class ToggleExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal({ toggleValue: false });
   readonly signalForm = form(this.signalModel, (path) => {

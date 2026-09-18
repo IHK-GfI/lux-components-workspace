@@ -27,8 +27,8 @@ interface DatetimeDummyForm {
 }
 
 @Component({
-  selector: 'app-datetimepicker-authentic-example',
-  templateUrl: './datetimepicker-authentic-example.component.html',
+  selector: 'app-datetimepicker-example',
+  templateUrl: './datetimepicker-example.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxToggleComponent,
@@ -50,7 +50,7 @@ interface DatetimeDummyForm {
     FormField
   ]
 })
-export class DatetimepickerAuthenticExampleComponent {
+export class DatetimepickerExampleComponent {
   readonly dateTimeInFormComponent = viewChild.required<LuxDatetimepickerComponent>('test2');
 
   // 1. Signal Form - der empfohlene Weg.

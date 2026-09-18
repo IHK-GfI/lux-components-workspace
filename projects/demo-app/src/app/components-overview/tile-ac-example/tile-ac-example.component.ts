@@ -19,9 +19,9 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
 
 @Component({
-  selector: 'app-tile-authentic-example',
-  templateUrl: './tile-authentic-example.component.html',
-  styleUrls: ['./tile-authentic-example.component.scss'],
+  selector: 'app-tile-ac-example',
+  templateUrl: './tile-ac-example.component.html',
+  styleUrls: ['./tile-ac-example.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxImageComponent,
@@ -40,7 +40,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     ExampleBaseAdvancedOptionsComponent
   ]
 })
-export class TileAuthenticExampleComponent {
+export class TileAcExampleComponent {
   readonly showIcon = signal(true);
   readonly showOutputEvents = signal(false);
 

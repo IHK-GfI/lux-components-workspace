@@ -35,9 +35,9 @@ import { MasterDetailExampleDataService } from './master-detail-example-data.ser
 import { TextExampleComponent } from './text-example/text-example.component';
 
 @Component({
-  selector: 'lux-master-detail-authentic-example',
-  templateUrl: './master-detail-authentic-example.component.html',
-  styleUrls: ['./master-detail-authentic-example.component.scss'],
+  selector: 'lux-master-detail-example',
+  templateUrl: './master-detail-example.component.html',
+  styleUrls: ['./master-detail-example.component.scss'],
   providers: [MasterDetailExampleDataService],
   imports: [
     LuxRelativeTimestampPipe,
@@ -70,7 +70,7 @@ import { TextExampleComponent } from './text-example/text-example.component';
     '[class.green]': 'theme() === "green"'
   }
 })
-export class MasterDetailAuthenticExampleComponent implements OnInit, OnDestroy {
+export class MasterDetailExampleComponent implements OnInit, OnDestroy {
   options = [
     { value: null, label: 'Kein Filter' },
     { value: Date.now() + MasterDetailExampleDataService.DAY * 3, label: 'Nächste 3 Tage' },

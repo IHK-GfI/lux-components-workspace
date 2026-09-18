@@ -35,8 +35,8 @@ interface RadioDummyForm {
 }
 
 @Component({
-  selector: 'lux-radio-authentic-example',
-  templateUrl: './radio-authentic-example.component.html',
+  selector: 'lux-radio-example',
+  templateUrl: './radio-example.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -61,7 +61,7 @@ interface RadioDummyForm {
     FormField
   ]
 })
-export class RadioAuthenticExampleComponent {
+export class RadioExampleComponent {
   // 1. Signal Form - der empfohlene Weg.
   readonly signalModel = signal<{ radioValue: any }>({ radioValue: null });
   readonly signalForm = form(this.signalModel, (path) => {
