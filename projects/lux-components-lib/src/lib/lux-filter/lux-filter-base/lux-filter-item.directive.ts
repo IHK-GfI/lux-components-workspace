@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, Renderer2, effect, inject, input } from '@angular/core';
+import { Directive, ElementRef, OnInit, Renderer2, effect, inject, input, untracked } from '@angular/core';
 import { LuxAutocompleteComponent } from '../../lux-form/lux-autocomplete/lux-autocomplete.component';
 import { LuxCheckboxComponent } from '../../lux-form/lux-checkbox/lux-checkbox.component';
 import { LuxDatepickerComponent } from '../../lux-form/lux-datepicker/lux-datepicker.component';
@@ -80,8 +80,15 @@ export class LuxFilterItemDirective implements OnInit {
         return;
       }
 
-      this.updateHiddenState(hidden);
-      this.updateDisabledState(disabled);
+      // untracked() ist zwingend: updateHiddenState()/updateDisabledState() lesen und schreiben
+      // formControl.disabled, das im Signal-Forms-Betrieb selbst signalgestützt ist. Ohne untracked()
+      // würde dieser Read den Effect an formControl.disabled koppeln - jeder darauf folgende
+      // disable()/enable()-Aufruf (auch der eigene) würde den Effect dann erneut anstoßen und nie zur
+      // Ruhe kommen (siehe Endlosschleife in der Filter-Demo, wenn luxFilterDisabled aktiviert wird).
+      untracked(() => {
+        this.updateHiddenState(hidden);
+        this.updateDisabledState(disabled);
+      });
     });
   }
 
@@ -177,19 +184,32 @@ export class LuxFilterItemDirective implements OnInit {
       // kommt man dynamisch nicht so einfach heran.
       if (hidden) {
         this.renderer.addClass(this.elRef.nativeElement, 'lux-display-none-important');
-        this.filterItem.component.formControl.disable();
+
+        // Nur deaktivieren, wenn nicht schon deaktiviert: Ein formControl.disable()/enable() feuert
+        // IMMER statusChanges, unabhängig vom bisherigen Zustand. Die LuxLegacyFormBridge der
+        // FormComponent spiegelt DISABLED/VALID/INVALID-Statuswechsel in ihr luxDisabled-Model, deren
+        // eigener Effect bei einer Änderung wiederum handleFormDisabledState() aufruft - ein
+        // unbedingter Aufruf hier würde also bei jedem Effect-Lauf erneut disable()/enable() auslösen
+        // und nie zur Ruhe kommen (siehe Endlosschleife in der Filter-Demo).
+        if (!this.filterItem.component.formControl.disabled) {
+          this.filterItem.component.formControl.disable();
+        }
       } else {
         this.renderer.removeClass(this.elRef.nativeElement, 'lux-display-none-important');
-        this.filterItem.component.formControl.enable();
+
+        if (this.filterItem.component.formControl.disabled) {
+          this.filterItem.component.formControl.enable();
+        }
       }
     }
   }
 
   private updateDisabledState(disabled: boolean) {
     if (this.filterItem) {
-      if (disabled) {
+      // Guard aus demselben Grund wie in updateHiddenState().
+      if (disabled && !this.filterItem.component.formControl.disabled) {
         this.filterItem.component.formControl.disable();
-      } else {
+      } else if (!disabled && this.filterItem.component.formControl.disabled) {
         this.filterItem.component.formControl.enable();
       }
     }

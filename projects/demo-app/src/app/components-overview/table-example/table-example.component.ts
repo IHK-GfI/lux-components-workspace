@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OutputRefSubscription, signal, viewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OutputRefSubscription, signal, viewChild } from '@angular/core';
 import {
   LuxFormHintComponent,
   LuxMenuComponent,
@@ -86,6 +86,11 @@ export class TableExampleComponent extends TableExampleBaseClass implements Afte
 
   getDataArr() {
     return this.dataSource();
+  }
+
+  setMultiSelectDisabled(disabled: boolean): void {
+    // Neue Array-/Objekt-Referenzen, damit die Signal-Änderung das luxData-Input-Binding der Tabelle auslöst.
+    this.dataSource.update((data) => data.map((item, index) => (index === 0 || index === 2 ? { ...item, disabled } : item)));
   }
 
   override refreshSelectionBindings() {

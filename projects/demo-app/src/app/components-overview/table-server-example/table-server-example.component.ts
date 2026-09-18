@@ -1,5 +1,5 @@
 import { DatePipe, LowerCasePipe, NgStyle } from '@angular/common';
-import { Component, viewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
 import {
   LuxConsoleService,
   LuxMenuComponent,
@@ -61,6 +61,16 @@ export class TableServerExampleComponent extends TableExampleBaseClass {
 
   getDataArr() {
     return this.httpDAO.data;
+  }
+
+  setMultiSelectDisabled(disabled: boolean): void {
+    this.httpDAO.data.forEach((item, index) => {
+      if (index === 0 || index === 2) {
+        item.disabled = disabled;
+      }
+    });
+    // Erzwingt einen erneuten (gemockten) Server-Request, damit die Tabelle die geänderten Daten übernimmt.
+    this.getTableComponent().loadHttpDAOData();
   }
 
   getTableComponent(): LuxTableComponent<any> {

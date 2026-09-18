@@ -129,6 +129,8 @@ export abstract class TableExampleBaseClass implements OnDestroy {
 
   abstract refreshSelectionBindings(): void;
 
+  abstract setMultiSelectDisabled(disabled: boolean): void;
+
   compareFn(o1: any, o2: any) {
     return o1.name === o2.name;
   }

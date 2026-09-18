@@ -4,7 +4,7 @@
 <lux-toggle
   luxLabel="luxMultiSelectDisabledProperty"
   [(checked)]="tableExample().multiSelectDisabledPropertyActive"
-  (checkedChange)="tableExample().getDataArr()[0].disabled = $event; tableExample().getDataArr()[2].disabled = $event"
+  (checkedChange)="tableExample().setMultiSelectDisabled($event)"
   [luxDisabled]="!tableExample().multiSelect"
 >
   <lux-form-hint>Deaktiviert die erste und dritte Checkbox in der Tabelle.</lux-form-hint>

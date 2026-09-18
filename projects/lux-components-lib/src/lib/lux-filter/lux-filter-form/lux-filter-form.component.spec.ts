@@ -1,7 +1,7 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
-import { Component, inject, OnDestroy, ChangeDetectionStrategy, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LuxMediaQueryObserverService } from '../../lux-util/lux-media-query-observer.service';
 import { LuxFilter } from '../lux-filter-base/lux-filter';
 import { LuxFilterItem } from '../lux-filter-base/lux-filter-item';
@@ -119,6 +119,30 @@ describe('LuxFilterFormComponent', () => {
     expect(component.currentFilter.combinedDateTime).toEqual('2020-07-21T14:30:00.000Z');
     expect(spy).toHaveBeenCalledTimes(1);
   });
+
+  it('Sollte luxFilterDisabled ohne Endlosschleife umschalten', async () => {
+    // formControl.disabled ist im Signal-Forms-Betrieb selbst signalgestützt. Ohne untracked() um
+    // die disable()/enable()-Aufrufe koppelte deren Read den Effect der Direktive an
+    // formControl.disabled - jeder disable()/enable()-Aufruf (auch der eigene) stieß den Effect
+    // dadurch erneut an und kam nie zur Ruhe.
+    const inputItem = component.filterComponent().formElementes.find((f) => f.filterItem.binding === 'input')!;
+    const fc = inputItem.filterItem.component.formControl;
+    const disableSpy = vi.spyOn(fc, 'disable');
+    const enableSpy = vi.spyOn(fc, 'enable');
+
+    component.inputDisabled.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fc.disabled).toBe(true);
+
+    component.inputDisabled.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fc.disabled).toBe(false);
+
+    expect(disableSpy.mock.calls.length).toBeLessThan(5);
+    expect(enableSpy.mock.calls.length).toBeLessThan(5);
+  });
 });
 
 @Component({
@@ -141,7 +165,7 @@ describe('LuxFilterFormComponent', () => {
         luxAutocomplete="off"
         luxControlBinding="input"
         [luxRequired]="true"
-        [luxFilterDisabled]="inputDisabled"
+        [luxFilterDisabled]="inputDisabled()"
         [luxFilterHidden]="inputHidden"
         luxFilterItem
       ></lux-input>
@@ -273,7 +297,7 @@ class TestFilterFormComponent implements OnDestroy {
 
   mediaQuerySubscription: Subscription;
 
-  inputDisabled = false;
+  inputDisabled = signal(false);
   inputHidden = false;
   autoCompleteDisabled = false;
   autoCompleteHidden = false;
