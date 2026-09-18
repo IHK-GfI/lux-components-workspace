@@ -13,27 +13,27 @@
         <lux-toggle
           luxAutofocus
           luxLabel="Lux-Tag-Ids generieren"
-          [(luxChecked)]="currentConfig().generateLuxTagIds"
-          (luxCheckedChange)="updateConfig()"
+          [checked]="currentConfig().generateLuxTagIds ?? false"
+          (checkedChange)="currentConfig().generateLuxTagIds = $event; updateConfig()"
           [luxNoLabels]="true"
         ></lux-toggle>
         <lux-toggle
           luxLabel="Lux-Console aktiv"
-          [(luxChecked)]="currentConfig().displayLuxConsoleLogs"
-          (luxCheckedChange)="updateConfig()"
+          [checked]="currentConfig().displayLuxConsoleLogs ?? false"
+          (checkedChange)="currentConfig().displayLuxConsoleLogs = $event; updateConfig()"
           [luxNoLabels]="true"
         ></lux-toggle>
         <lux-toggle
           luxLabel="Lux-Card Animationen aktiv"
-          [(luxChecked)]="currentConfig().cardExpansionAnimationActive"
-          (luxCheckedChange)="updateConfig()"
+          [checked]="currentConfig().cardExpansionAnimationActive ?? false"
+          (checkedChange)="currentConfig().cardExpansionAnimationActive = $event; updateConfig()"
           [luxNoLabels]="true"
         ></lux-toggle>
 
         <lux-toggle
           luxLabel="Alle Labels Uppercase"
-          [(luxChecked)]="currentConfig().labelConfiguration!.allUppercase"
-          (luxCheckedChange)="updateConfig()"
+          [(checked)]="currentConfig().labelConfiguration!.allUppercase"
+          (checkedChange)="updateConfig()"
           [luxNoLabels]="true"
         ></lux-toggle>
       </lux-checkbox-container>
@@ -41,27 +41,27 @@
         luxLabel="Ausnahmen"
         [luxMultiple]="true"
         [luxOptions]="notAppliedToOptions"
-        [(luxSelected)]="currentConfig().labelConfiguration!.notAppliedTo"
-        (luxSelectedChange)="updateConfig()"
+        [(value)]="currentConfig().labelConfiguration!.notAppliedTo"
+        (valueChange)="updateConfig()"
         [luxDisabled]="!currentConfig().labelConfiguration!.allUppercase"
         [luxNoBottomLabel]="true"
       ></lux-select>
       <lux-input
         luxLabel="Tenant URL"
-        [(luxValue)]="currentConfig().tenantLogoLookupServiceUrl"
+        [(value)]="currentConfig().tenantLogoLookupServiceUrl"
         [luxNoBottomLabel]="true"
-        (luxValueChange)="updateConfig()"
+        (valueChange)="updateConfig()"
       ></lux-input>
       <lux-input
         luxLabel="Lookup URL"
-        [(luxValue)]="currentConfig().lookupServiceUrl"
+        [(value)]="currentConfig().lookupServiceUrl"
         [luxNoBottomLabel]="true"
-        (luxValueChange)="updateConfig()"
+        (valueChange)="updateConfig()"
       ></lux-input>
       <lux-input
         luxLabel="throttleTimeMs der Buttons (Verhinderung von ungewollten Doppelklicks)"
-        [(luxValue)]="currentConfig().buttonConfiguration!.throttleTimeMs"
-        (luxValueChange)="updateConfig()"
+        [(value)]="currentConfig().buttonConfiguration!.throttleTimeMs"
+        (valueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input>
 
@@ -71,14 +71,14 @@
           <lux-toggle
             luxLabel="fixedDesktop"
             [luxNoLabels]="true"
-            [(luxChecked)]="currentConfig().appFooter!.fixedDesktop"
-            (luxCheckedChange)="updateConfig()"
+            [checked]="currentConfig().appFooter!.fixedDesktop ?? false"
+            (checkedChange)="currentConfig().appFooter!.fixedDesktop = $event; updateConfig()"
           ></lux-toggle>
           <lux-toggle
             luxLabel="fixedMobile"
             [luxNoLabels]="true"
-            [(luxChecked)]="currentConfig().appFooter!.fixedMobile"
-            (luxCheckedChange)="updateConfig()"
+            [checked]="currentConfig().appFooter!.fixedMobile ?? false"
+            (checkedChange)="currentConfig().appFooter!.fixedMobile = $event; updateConfig()"
           ></lux-toggle>
         </lux-checkbox-container>
       </div>
@@ -86,45 +86,45 @@
       <h3>Ripples</h3>
       <lux-input
         luxLabel="enterDuration der Lux-Ripples"
-        [(luxValue)]="currentConfig().rippleConfiguration!.enterDuration"
-        (luxValueChange)="updateConfig()"
+        [(value)]="currentConfig().rippleConfiguration!.enterDuration"
+        (valueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input>
       <lux-input
         luxLabel="exitDuration der Lux-Ripples"
-        [(luxValue)]="currentConfig().rippleConfiguration!.exitDuration"
-        (luxValueChange)="updateConfig()"
+        [(value)]="currentConfig().rippleConfiguration!.exitDuration"
+        (valueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input>
       <lux-input
         luxLabel="color der Lux-Ripples"
-        [(luxValue)]="currentConfig().rippleConfiguration!.color"
-        (luxValueChange)="updateConfig()"
+        [(value)]="currentConfig().rippleConfiguration!.color"
+        (valueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input>
       <lux-input
         luxLabel="radius der Lux-Ripples"
-        [(luxValue)]="currentConfig().rippleConfiguration!.radius"
-        (luxValueChange)="updateConfig()"
+        [(value)]="currentConfig().rippleConfiguration!.radius"
+        (valueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input>
       <lux-checkbox-container>
         <lux-toggle
           luxLabel="centered-State der Lux-Ripples"
-          [(luxChecked)]="currentConfig().rippleConfiguration!.centered"
-          (luxCheckedChange)="updateConfig()"
+          [checked]="currentConfig().rippleConfiguration!.centered ?? false"
+          (checkedChange)="currentConfig().rippleConfiguration!.centered = $event; updateConfig()"
           [luxNoLabels]="true"
         ></lux-toggle>
         <lux-toggle
           luxLabel="disabled-State der Lux-Ripples"
-          [(luxChecked)]="currentConfig().rippleConfiguration!.disabled"
-          (luxCheckedChange)="updateConfig()"
+          [checked]="currentConfig().rippleConfiguration!.disabled ?? false"
+          (checkedChange)="currentConfig().rippleConfiguration!.disabled = $event; updateConfig()"
           [luxNoLabels]="true"
         ></lux-toggle>
         <lux-toggle
           luxLabel="unbounded-State der Lux-Ripples"
-          [(luxChecked)]="currentConfig().rippleConfiguration!.unbounded"
-          (luxCheckedChange)="updateConfig()"
+          [checked]="currentConfig().rippleConfiguration!.unbounded ?? false"
+          (checkedChange)="currentConfig().rippleConfiguration!.unbounded = $event; updateConfig()"
           [luxNoLabels]="true"
         ></lux-toggle>
       </lux-checkbox-container>
@@ -132,14 +132,14 @@
       <h3>Session-Timer</h3>
       <lux-input
         luxLabel="Url des Session-Timers"
-        [(luxValue)]="currentConfig().sessionTimerConfig!.url"
-        (luxValueChange)="updateConfig()"
+        [(value)]="currentConfig().sessionTimerConfig!.url"
+        (valueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input>
       <lux-input
         luxLabel="Local Storage Key Name des Session-Timers"
-        [(luxValue)]="currentConfig().sessionTimerConfig!.localStorageKeyName"
-        (luxValueChange)="updateConfig()"
+        [(value)]="currentConfig().sessionTimerConfig!.localStorageKeyName"
+        (valueChange)="updateConfig()"
         [luxNoBottomLabel]="true"
       ></lux-input>
     </lux-card-content>

@@ -168,15 +168,10 @@
     <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-toggle
-      luxLabel="Backend mocken"
-      [luxChecked]="mockBackend()"
-      (luxCheckedChange)="changeMockBackend($event)"
-      [luxNoTopLabel]="true"
-    >
+    <lux-toggle luxLabel="Backend mocken" [checked]="mockBackend()" (checkedChange)="changeMockBackend($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Mockt den Http-Client um das Uploaden der Dateien zu simulieren.<br />
         Dafür muss aber auch "luxUploadUrl" gesetzt sein (beliebiger Wert).
@@ -185,14 +180,14 @@
     <lux-input
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
-      [(luxValue)]="placeholder"
+      [(value)]="placeholder"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
-        [(luxChecked)]="noTopLabel"
+        [(checked)]="noTopLabel"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -202,7 +197,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(luxChecked)]="noBottomLabel"
+        [(checked)]="noBottomLabel"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -212,13 +207,13 @@
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(luxChecked)]="noLabels"
+        [(checked)]="noLabels"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
     </div>
     <lux-toggle
-      [(luxChecked)]="denseFormat"
+      [(checked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
@@ -226,7 +221,7 @@
     <lux-toggle
       luxLabel="luxClearOnError"
       luxHint="Gibt an, ob das Control bei einem Validierungsfehler geleert wird."
-      [(luxChecked)]="clearOnError"
+      [(checked)]="clearOnError"
       [luxNoTopLabel]="true"
     />
     <app-file-example-simple-options [fileExample]="this" class="lux-flex lux-flex-col lux-gap-4" />
@@ -235,19 +230,19 @@
     <app-file-example-advanced-options [fileExample]="this" [showHeaderConfigProperties]="false" />
     <h4>Custom Action "Akzeptieren"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input luxLabel="Präfix" luxName="filelist_prefix_accept" [(luxValue)]="namePrefixAccept" [luxNoBottomLabel]="true" />
-      <lux-input luxLabel="Suffix" luxName="filelist_suffix_accept" [(luxValue)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_accept" [(value)]="namePrefixAccept" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_accept" [(value)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
     </div>
     <h4>Custom Action "Ablehnen"</h4>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-input luxLabel="Präfix" luxName="filelist_prefix_decline" [(luxValue)]="namePrefixDecline" [luxNoBottomLabel]="true" />
-      <lux-input luxLabel="Suffix" luxName="filelist_suffix_decline" [(luxValue)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_decline" [(value)]="namePrefixDecline" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_decline" [(value)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
     </div>
     <lux-toggle
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"
-      [(luxChecked)]="labelLongFormat"
+      [(checked)]="labelLongFormat"
     />
   </example-base-advanced-options>
 </example-base-structure>

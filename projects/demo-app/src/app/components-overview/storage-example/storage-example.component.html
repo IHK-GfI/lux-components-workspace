@@ -62,21 +62,16 @@
       </ol>
     </div>
     <div class="lux-highlight-section column">
-      <lux-input
-        luxLabel="Key"
-        luxHint="Hier kann ein Key für einen Storage-Eintrag gesetzt werden."
-        luxAutocomplete="off"
-        [(luxValue)]="key"
-      >
+      <lux-input luxLabel="Key" luxHint="Hier kann ein Key für einen Storage-Eintrag gesetzt werden." luxAutocomplete="off" [(value)]="key">
       </lux-input>
       <lux-input
         luxLabel="Value"
         luxHint="Hier kann der Wert für den Key {{ key() }} eingetragen werden."
         luxAutocomplete="off"
-        [(luxValue)]="value"
+        [(value)]="value"
       >
       </lux-input>
-      <lux-toggle luxLabel="sensitive" [(luxChecked)]="sensitive" [luxNoTopLabel]="true">
+      <lux-toggle luxLabel="sensitive" [(checked)]="sensitive" [luxNoTopLabel]="true">
         <lux-form-hint>
           Dieser Wert bestimmt, ob der eingetragene Schlüssel als 'empfindlicher' Datensatz gilt.<br />
           Sensible Datensätze können über den <i>LuxStorageService</i> gezielt entfernt werden.

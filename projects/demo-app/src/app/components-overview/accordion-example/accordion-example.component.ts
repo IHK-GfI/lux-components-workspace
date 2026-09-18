@@ -88,10 +88,6 @@ export class AccordionExampleComponent {
     setTimeout(() => this.expanded.set(true));
   }
 
-  onColorChanged(color: LuxAccordionColor) {
-    this.color.set(color);
-  }
-
   readonly panelConfigShortLabelArr: { title: string; description: string }[] = [
     { title: 'Panel #1 - Hauptüberschrift im Panel', description: 'Optionale zusätzliche Beschreibung' },
     { title: 'Panel #2', description: 'Beschreibung Panel #2' }

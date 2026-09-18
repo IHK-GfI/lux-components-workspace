@@ -151,7 +151,7 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle luxLabel="luxInputAllowed" [(luxChecked)]="inputAllowed" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxInputAllowed" [(checked)]="inputAllowed" [luxNoTopLabel]="true">
       <lux-form-hint>
         Aktiviert das Eingabefeld für die Chips, darüber lassen sich dann neue Chips hinzufügen.<br />
         Bei Chip-Groups werden diese automatisch hinzugefügt, bei einzelnen Chips muss der Aufrufer über den Callback "luxChipAdded"
@@ -160,14 +160,14 @@
     </lux-toggle>
     <lux-input
       luxLabel="luxInputLabel"
-      [(luxValue)]="inputLabel"
+      [(value)]="inputLabel"
       luxHint="Über diese Property kann das Label für das Eingabefeld dieser Component gesetzt werden."
     />
     <lux-toggle
       luxLabel="luxInputLabelAlwaysVisible"
       [luxDisabled]="inputAllowed()"
       luxHint="Zeigt das Label auch dann an, wenn kein Eingabefeld angezeigt wird."
-      [(luxChecked)]="inputLabelAlwaysVisible"
+      [(checked)]="inputLabelAlwaysVisible"
       [luxNoTopLabel]="true"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -175,7 +175,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
-        [(luxChecked)]="noTopLabel"
+        [(checked)]="noTopLabel"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -185,7 +185,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(luxChecked)]="noBottomLabel"
+        [(checked)]="noBottomLabel"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -195,7 +195,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(luxChecked)]="noLabels"
+        [(checked)]="noLabels"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -203,17 +203,17 @@
     <lux-input
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
-      [(luxValue)]="placeholder"
+      [(value)]="placeholder"
     />
     <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
     <lux-toggle
       luxLabel="luxAutocompleteOptions übergeben"
-      [(luxChecked)]="autocomplete"
+      [(checked)]="autocomplete"
       [luxDisabled]="!inputAllowed()"
       [luxNoTopLabel]="true"
     >
@@ -226,20 +226,20 @@
       luxLabel="luxStrict"
       [luxDisabled]="!inputAllowed()"
       luxHint="Gibt an, ob nur Werte aus den vorhandenen Optionen ausgewählt werden dürfen."
-      [(luxChecked)]="strict"
+      [(checked)]="strict"
       [luxNoTopLabel]="true"
     />
     <lux-toggle
       luxLabel="luxHideBorder"
       [luxDisabled]="inputAllowed()"
       luxHint="Mit dieser Property kann die Border um die Chip-Elemente ausgeblendet werden, wenn kein Input vorhanden ist."
-      [(luxChecked)]="hideBorder"
+      [(checked)]="hideBorder"
       [luxNoTopLabel]="true"
     />
     <lux-input
       luxLabel="luxOptionBlockSize"
       [luxDisabled]="!inputAllowed()"
-      [(luxValue)]="optionBlockSize"
+      [(value)]="optionBlockSize"
       luxType="number"
       [luxNumberAlignLeft]="true"
     >
@@ -248,23 +248,18 @@
 
     <lux-select
       luxLabel="luxOrientation"
-      [(luxSelected)]="chipOrientation"
+      [(value)]="chipOrientation"
       luxHint="Über diese Property kann eine horizontale oder vertikale Darstellung gewählt werden."
       [luxOptions]="['horizontal', 'vertical']"
     />
+    <lux-toggle [(checked)]="disabled" luxLabel="luxDisabled" luxHint="Erlaubt es, die Component zu deaktivieren." [luxNoTopLabel]="true" />
     <lux-toggle
-      [(luxChecked)]="disabled"
-      luxLabel="luxDisabled"
-      luxHint="Erlaubt es, die Component zu deaktivieren."
-      [luxNoTopLabel]="true"
-    />
-    <lux-toggle
-      [(luxChecked)]="readonly"
+      [(checked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle luxLabel="luxRequired" [luxChecked]="required()" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" [checked]="required()" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components mit Groups, die nicht in einer Reactive-Form
         sind. D.h. das luxRequired funktioniert nicht für das erste Beispiel "Chips (ohne Group)".<br />
@@ -272,7 +267,7 @@
       </lux-form-hint>
     </lux-toggle>
     <lux-toggle
-      [(luxChecked)]="denseFormat"
+      [(checked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
@@ -290,28 +285,28 @@
                 <lux-input
                   luxLabel="luxLabel"
                   luxHint="Bestimmt das Label des einzelnen Chips"
-                  [luxValue]="chip.label"
-                  (luxValueChange)="updateChip(i, { label: $event })"
+                  [value]="chip.label"
+                  (valueChange)="updateChip(i, { label: $event })"
                 />
                 <lux-select
                   luxLabel="luxColor"
                   luxHint="Bestimmt die Farbe der Chips für eine LuxChipGroup."
-                  [luxSelected]="chip.color"
-                  (luxSelectedChange)="updateChip(i, { color: $event })"
+                  [value]="chip.color"
+                  (valueChange)="updateChip(i, { color: $event })"
                   [luxOptions]="colors"
                 />
                 <lux-toggle
                   luxLabel="luxDisabled"
                   luxHint="Mit dieser Property können die Chips einer Group deaktiviert werden."
-                  [luxChecked]="chip.disabled"
-                  (luxCheckedChange)="updateChip(i, { disabled: $event })"
+                  [checked]="chip.disabled"
+                  (checkedChange)="updateChip(i, { disabled: $event })"
                   [luxNoTopLabel]="true"
                 />
                 <lux-toggle
                   luxLabel="luxRemovable"
                   luxHint="Diese Property markiert die Chips in einer Group als entfernbar."
-                  [luxChecked]="chip.removable"
-                  (luxCheckedChange)="updateChip(i, { removable: $event })"
+                  [checked]="chip.removable"
+                  (checkedChange)="updateChip(i, { removable: $event })"
                   [luxNoTopLabel]="true"
                 />
               </lux-panel-content>
@@ -325,19 +320,19 @@
       <lux-select
         luxLabel="luxColor"
         luxHint="Bestimmt die Farbe der Chips für eine LuxChipGroup."
-        [(luxSelected)]="groupColor"
+        [(value)]="groupColor"
         [luxOptions]="colors"
       />
       <lux-toggle
         luxLabel="luxDisabled"
         luxHint="Mit dieser Property können die Chips einer Group deaktiviert werden."
-        [(luxChecked)]="groupDisabled"
+        [(checked)]="groupDisabled"
         [luxNoTopLabel]="true"
       />
       <lux-toggle
         luxLabel="luxRemovable"
         luxHint="Diese Property markiert die Chips in einer Group als entfernbar."
-        [(luxChecked)]="groupRemovable"
+        [(checked)]="groupRemovable"
         [luxNoTopLabel]="true"
       />
     </div>
@@ -345,7 +340,7 @@
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="(Gilt hier für das luxInputLabel) Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"
-      [(luxChecked)]="labelLongFormat"
+      [(checked)]="labelLongFormat"
     />
   </example-base-advanced-options>
 </example-base-structure>

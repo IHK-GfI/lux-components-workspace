@@ -5,12 +5,12 @@
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4 lux-max-width-full">
     <div class="lux-flex lux-flex-col lux-gap-4">
       <h3>Error Properties</h3>
-      <lux-input luxName="error-page_errorId" luxLabel="errorId" luxHint="Diese Property enthält die Fehler-ID." [(luxValue)]="errorId" />
+      <lux-input luxName="error-page_errorId" luxLabel="errorId" luxHint="Diese Property enthält die Fehler-ID." [(value)]="errorId" />
       <lux-input
         luxName="error-page_errorMessage"
         luxLabel="errorMessage"
         luxHint="Die Property definiert die Fehlermeldung selbst, welche in dem Panel auf der Fehlerseite dargestellt wird."
-        [(luxValue)]="errorMessage"
+        [(value)]="errorMessage"
       />
     </div>
     <div class="lux-flex lux-flex-col lux-gap-4" [formGroup]="configForm">

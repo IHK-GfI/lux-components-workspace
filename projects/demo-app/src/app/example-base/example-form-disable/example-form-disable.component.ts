@@ -12,8 +12,4 @@ export class ExampleFormDisableComponent {
   readonly form = input.required<FormGroup<any>>();
   readonly controlBinding = input.required<string>();
   readonly disabled = model(false);
-
-  setDisabled(disabled: boolean): void {
-    this.disabled.set(disabled);
-  }
 }

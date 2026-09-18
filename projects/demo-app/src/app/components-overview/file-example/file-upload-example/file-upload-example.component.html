@@ -141,27 +141,27 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input luxLabel="luxLabel" [(luxValue)]="label" />
-    <lux-input luxLabel="luxLabelLink" [(luxValue)]="labelLink" />
+    <lux-input luxLabel="luxLabel" [(value)]="label" />
+    <lux-input luxLabel="luxLabelLink" [(value)]="labelLink" />
     <lux-input
       luxLabel="luxLabelLinkShort"
       luxHint="Dieses Label wird nur auf kleinen Auflösungen angezeigt und ersetzt den Wert aus luxLabelLink"
-      [(luxValue)]="labelLinkShort"
+      [(value)]="labelLinkShort"
     />
-    <lux-input luxLabel="luxHint" [(luxValue)]="hint" />
+    <lux-input luxLabel="luxHint" [(value)]="hint" />
 
-    <lux-input luxLabel="luxUploadIcon" [(luxValue)]="uploadIcon" />
-    <lux-input luxLabel="luxDeleteIcon" [(luxValue)]="deleteIcon" />
+    <lux-input luxLabel="luxUploadIcon" [(value)]="uploadIcon" />
+    <lux-input luxLabel="luxDeleteIcon" [(value)]="deleteIcon" />
 
     <lux-toggle
-      [(luxChecked)]="listOnly"
+      [(checked)]="listOnly"
       luxLabel="luxListOnly"
       luxHint="Reine Anzeige der Dateien ohne Upload-Option. Action-Buttons bleiben über ihre Configs steuerbar."
       [luxNoLabels]="true"
     />
 
     <lux-toggle
-      [(luxChecked)]="multiple"
+      [(checked)]="multiple"
       luxLabel="luxMultiple"
       luxHint="Dieses Flag legt fest, ob nur eine oder mehrere Dateien selektiert werden können."
       [luxNoLabels]="true"
@@ -170,11 +170,11 @@
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
 
     <lux-toggle
-      [(luxChecked)]="readonly"
+      [(checked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
     />
-    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)">
+    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
@@ -182,42 +182,32 @@
     </lux-toggle>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle luxLabel="Vorschaulink anzeigen" [luxChecked]="true" (luxCheckedChange)="toogleViewConfig()" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="Vorschaulink anzeigen" [checked]="true" (checkedChange)="toogleViewConfig()" [luxNoLabels]="true" />
     <div class="lux-grid lux-grid-cols-2 lt-lg:lux-grid-cols-1 lux-gap-4">
-      <lux-toggle
-        luxLabel="Löschbutton anzeigen"
-        [luxChecked]="true"
-        (luxCheckedChange)="toogleDeleteHiddenConfig()"
-        [luxNoLabels]="true"
-      />
+      <lux-toggle luxLabel="Löschbutton anzeigen" [checked]="true" (checkedChange)="toogleDeleteHiddenConfig()" [luxNoLabels]="true" />
       <lux-toggle
         luxLabel="Löschbutton deaktivieren"
-        [luxChecked]="false"
-        (luxCheckedChange)="toogleDeleteDisabledConfig()"
+        [checked]="false"
+        (checkedChange)="toogleDeleteDisabledConfig()"
         [luxNoLabels]="true"
       />
       <lux-toggle
         luxLabel="Custombutton anzeigen"
-        [luxChecked]="true"
-        (luxCheckedChange)="toogleCustomHiddenActionConfig()"
+        [checked]="true"
+        (checkedChange)="toogleCustomHiddenActionConfig()"
         [luxNoLabels]="true"
       />
       <lux-toggle
         luxLabel="Custombutton deaktivieren"
-        [luxChecked]="false"
-        (luxCheckedChange)="toogleCustomDisabeldActionConfig()"
+        [checked]="false"
+        (checkedChange)="toogleCustomDisabeldActionConfig()"
         [luxNoLabels]="true"
       />
     </div>
-    <lux-toggle
-      luxLabel="Output-Events loggen"
-      luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
-      [luxNoLabels]="true"
-    />
+    <lux-toggle luxLabel="Output-Events loggen" luxHint="(Console --> F12/CMD+ALT+I)" [(checked)]="showOutputEvents" [luxNoLabels]="true" />
 
     <lux-toggle
-      [(luxChecked)]="contentAsBlob"
+      [(checked)]="contentAsBlob"
       luxLabel="luxContentAsBlob"
       luxHint="Diese Eigenschaft bestimmt ob die Dateien als Blob gespeichert werden sollen oder als Base64-String."
       [luxNoLabels]="true"
@@ -226,7 +216,7 @@
     <lux-input
       luxLabel="luxMaxSizeMiB"
       luxHint="Die Property bestimmt die maximale erlaubte Dateigröße in MiB."
-      [(luxValue)]="maxSize"
+      [(value)]="maxSize"
       luxType="number"
     >
       <lux-input-suffix>&nbsp;MiB</lux-input-suffix>
@@ -234,24 +224,24 @@
     <lux-input
       luxLabel="luxMaxFileCount"
       luxHint="Diese Property legt die maximal erlaubte Anzahl an Dateien fest."
-      [(luxValue)]="maxFileCount"
+      [(value)]="maxFileCount"
       luxType="number"
     />
     <lux-select
       luxLabel="luxCapture"
       luxHint="Diese Property stellt ein ob für Mobilgeräte die Front- oder Rück-Kamera und Mikrophone verwendet werden sollen."
       [luxOptions]="['', 'user', 'environment']"
-      [(luxSelected)]="capture"
+      [(value)]="capture"
     />
     <lux-input
       luxLabel="luxAccept"
       luxHint="Über diese Eigenschaft lässt sich einstellen, welche Dateiarten erlaubt sind (z.B. image/*,.pdf)."
-      [(luxValue)]="accept"
+      [(value)]="accept"
     />
     <lux-input
       luxLabel="Unlöschbare Dateien"
       luxHint="Komma-separierte Liste von Dateinamen, die nicht gelöscht werden können."
-      [(luxValue)]="undeletableFileNames"
+      [(value)]="undeletableFileNames"
     />
   </example-base-advanced-options>
 </example-base-structure>

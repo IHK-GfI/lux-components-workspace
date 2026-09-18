@@ -31,10 +31,10 @@
       <lux-select
         luxLabel="Fälligkeit"
         [luxOptions]="options"
-        [luxSelected]="options[0]"
+        [value]="options[0]"
         luxOptionLabelProp="label"
         [luxDense]="true"
-        (luxSelectedChange)="changeFilter($event)"
+        (valueChange)="changeFilter($event)"
       />
       <lux-filter-form-extended>
         <p>
@@ -70,7 +70,7 @@
               class="lux-min-width-36 lux-max-width-36"
               [luxDense]="true"
               [luxNoLabels]="true"
-              [(luxValue)]="master.title"
+              [(value)]="master.title"
             />
           </div>
         }
@@ -101,7 +101,7 @@
         <lux-tab luxTitle="Konfiguration" luxIconName="lux-interface-setting-tool-box">
           <ng-template>
             <detail-example [masterDetailConfig]="configuration" [(masterIsReloading)]="masterIsReloading" [selectedDetail]="detail">
-              <lux-toggle [(luxChecked)]="showCustomDetailHeader" luxLabel="Custom Detail-Header anzeigen" [luxNoLabels]="true" />
+              <lux-toggle [(checked)]="showCustomDetailHeader" luxLabel="Custom Detail-Header anzeigen" [luxNoLabels]="true" />
             </detail-example>
           </ng-template>
         </lux-tab>

@@ -98,28 +98,23 @@
     </lux-textbox>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input
-      class="lux-pt-4"
-      luxLabel="luxTitle"
-      [(luxValue)]="title"
-      luxHint="Property um den Titel einer Textbox zu setzen."
-    ></lux-input>
-    <lux-textarea luxLabel="Inhalt" [(luxValue)]="content"></lux-textarea>
-    <lux-input luxLabel="luxIcon" [(luxValue)]="icon" luxHint="Property um das Icon einer Textbox zu setzen."></lux-input>
+    <lux-input class="lux-pt-4" luxLabel="luxTitle" [(value)]="title" luxHint="Property um den Titel einer Textbox zu setzen."></lux-input>
+    <lux-textarea luxLabel="Inhalt" [(value)]="content"></lux-textarea>
+    <lux-input luxLabel="luxIcon" [(value)]="icon" luxHint="Property um das Icon einer Textbox zu setzen."></lux-input>
     <lux-select
       luxLabel="luxColor"
       luxHint="Setzt die Farbe einer Textbox."
       luxOptionLabelProp="label"
       [luxOptions]="colorOptions"
-      [luxSelected]="colorOptions[1]"
-      (luxSelectedChange)="onColorChanged($event)"
+      [value]="colorOptions[1]"
+      (valueChange)="onColorChanged($event)"
     ></lux-select>
     <lux-input
       luxLabel="luxHeading"
       luxHint="Diese Property erlaubt es die Heading für die Textbox anzupassen."
       luxType="number"
       [luxNumberAlignLeft]="true"
-      [(luxValue)]="heading"
+      [(value)]="heading"
     >
     </lux-input>
   </example-base-simple-options>

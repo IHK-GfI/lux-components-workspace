@@ -28,11 +28,11 @@ export class SessionTimerExampleComponent {
     return this.timerService.canExtendSession;
   }
 
-  setTimer() {
-    this.timerService.resetTimer(this.startingSeconds());
+  set canExtendSession(value: boolean) {
+    this.timerService.canExtendSession = value;
   }
 
-  toggleCanExtendSession(checked: boolean) {
-    this.timerService.canExtendSession = checked;
+  setTimer() {
+    this.timerService.resetTimer(this.startingSeconds());
   }
 }

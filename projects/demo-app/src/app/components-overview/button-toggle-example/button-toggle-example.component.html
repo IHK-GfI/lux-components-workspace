@@ -78,47 +78,42 @@
     <lux-input
       luxName="buttonToggle_luxAriaLabel"
       luxLabel="luxAriaLabel"
-      [(luxValue)]="ariaLabel"
+      [(value)]="ariaLabel"
       luxHint="Beschreibt den Zweck der Gruppe für Screenreader."
     />
 
     <lux-input
       luxName="buttonToggle_luxHint"
       luxLabel="luxHint"
-      [(luxValue)]="hint"
+      [(value)]="hint"
       luxHint="Hint-Text unterhalb des Button-Toggle (solange kein Fehler angezeigt wird)."
     />
 
     <lux-input
       luxName="buttonToggle_luxError"
       luxLabel="luxError"
-      [(luxValue)]="error"
+      [(value)]="error"
       luxHint="Error-Text, der bei invalidem Zustand (z. B. required) angezeigt wird."
     />
 
-    <lux-toggle
-      luxLabel="luxDense"
-      [luxNoTopLabel]="true"
-      [(luxChecked)]="dense"
-      luxHint="Reduziert die Höhe der Button-Toggle-Komponente."
-    />
+    <lux-toggle luxLabel="luxDense" [luxNoTopLabel]="true" [(checked)]="dense" luxHint="Reduziert die Höhe der Button-Toggle-Komponente." />
 
-    <lux-toggle luxLabel="luxDisabled" [luxNoTopLabel]="true" [(luxChecked)]="disabled" luxHint="Deaktiviert die gesamte Toggle-Gruppe.">
+    <lux-toggle luxLabel="luxDisabled" [luxNoTopLabel]="true" [(checked)]="disabled" luxHint="Deaktiviert die gesamte Toggle-Gruppe.">
       <lux-form-hint>Für die Multi-Select-Demo ist die Option „Archiv“ zusätzlich segmentweise deaktiviert.</lux-form-hint>
     </lux-toggle>
 
     <lux-toggle
       luxLabel="luxRequired"
       [luxNoTopLabel]="true"
-      [luxChecked]="required()"
-      (luxCheckedChange)="changeRequired($event)"
+      [checked]="required()"
+      (checkedChange)="changeRequired($event)"
       luxHint="Aktiviert Validators.required für singleSelect und multiSelect."
     />
 
     <lux-toggle
       luxLabel="Output-Events loggen"
       [luxNoTopLabel]="true"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       luxHint="(Console --> F12/CMD+ALT+I)"
     />
   </example-base-simple-options>

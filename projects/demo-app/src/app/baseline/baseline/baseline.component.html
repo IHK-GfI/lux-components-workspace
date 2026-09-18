@@ -2,20 +2,18 @@
   <lux-card luxTitle="Optionen" class="baseline-options">
     <lux-card-content>
       <div class="lux-flex lux-flex-wrap lux-gap-3">
-        <lux-toggle class="lux-flex lux-flex-basis-52" luxLabel="Fehler anzeigen" (luxCheckedChange)="toggleErrors($event)"> </lux-toggle>
+        <lux-toggle class="lux-flex lux-flex-basis-52" luxLabel="Fehler anzeigen" (checkedChange)="toggleErrors($event)"> </lux-toggle>
         <div class="lux-flex lux-flex-col lux-flex-basis-52">
-          <lux-toggle luxLabel="Frames anzeigen" (luxCheckedChange)="showFrames.set($event)"> </lux-toggle>
+          <lux-toggle luxLabel="Frames anzeigen" [(checked)]="showFrames"> </lux-toggle>
           <i class="lux-label">Grau -> FormComponent</i>
           <i class="lux-label">Grün -> Label</i>
           <i class="lux-label">Blau -> Content</i>
           <i class="lux-label">Rosa -> Misc</i>
         </div>
-        <lux-toggle luxLabel="Als Column darstellen" (luxCheckedChange)="showAsColumn.set($event)" class="lux-flex lux-flex-basis-52">
-        </lux-toggle>
-        <lux-toggle luxLabel="Deaktivieren" (luxCheckedChange)="disabled.set($event)" class="lux-flex lux-flex-basis-52"> </lux-toggle>
-        <lux-toggle luxLabel="Readonly" (luxCheckedChange)="readonly.set($event)" class="lux-flex lux-flex-basis-52"> </lux-toggle>
-        <lux-toggle luxLabel="Denseformat anzeigen" (luxCheckedChange)="denseFormat.set($event)" class="lux-flex lux-flex-basis-52">
-        </lux-toggle>
+        <lux-toggle luxLabel="Als Column darstellen" [(checked)]="showAsColumn" class="lux-flex lux-flex-basis-52"> </lux-toggle>
+        <lux-toggle luxLabel="Deaktivieren" [(checked)]="disabled" class="lux-flex lux-flex-basis-52"> </lux-toggle>
+        <lux-toggle luxLabel="Readonly" [(checked)]="readonly" class="lux-flex lux-flex-basis-52"> </lux-toggle>
+        <lux-toggle luxLabel="Denseformat anzeigen" [(checked)]="denseFormat" class="lux-flex lux-flex-basis-52"> </lux-toggle>
       </div>
     </lux-card-content>
   </lux-card>

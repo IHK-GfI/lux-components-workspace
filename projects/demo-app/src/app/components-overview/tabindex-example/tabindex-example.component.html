@@ -31,7 +31,7 @@
           luxLabel="Tabindex {{ wrongTabIndex() ? '9' : '' }} (LuxRadio)"
           [luxOptions]="options"
           luxOptionLabelProp="label"
-          [luxSelected]="options[0]"
+          [value]="options[0]"
           [luxTabIndex]="wrongTabIndex() ? '9' : '0'"
         ></lux-radio>
         <lux-link luxLabel="Tabindex {{ wrongTabIndex() ? '10' : '' }} (LuxLink)" [luxTabIndex]="wrongTabIndex() ? '10' : '0'"></lux-link>
@@ -61,7 +61,7 @@
     </lux-card>
   </example-base-content>
   <example-base-simple-options>
-    <lux-toggle luxLabel="Tabreihenfolge ändern" [(luxChecked)]="wrongTabIndex" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="Tabreihenfolge ändern" [(checked)]="wrongTabIndex" [luxNoTopLabel]="true">
       <lux-form-hint>
         <span class="lux-text-highlight-error"
           >!!! Vorsicht !!!<br />

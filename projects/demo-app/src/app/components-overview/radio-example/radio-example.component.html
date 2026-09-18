@@ -130,36 +130,36 @@
     <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
     <lux-input
       luxName="radio_luxLabel"
       luxLabel="luxLabel"
       luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
-      [(luxValue)]="label"
+      [(value)]="label"
     />
     <lux-input
       luxName="Option 1"
       luxLabel="Option 1"
-      [(luxValue)]="options[0].label"
-      (luxValueChange)="onRefresh()"
+      [(value)]="options[0].label"
+      (valueChange)="onRefresh()"
       [luxDisabled]="useSimpleArray()"
       [luxNoBottomLabel]="true"
     />
     <lux-input
       luxName="Option 2"
       luxLabel="Option 2"
-      [(luxValue)]="options[1].label"
-      (luxValueChange)="onRefresh()"
+      [(value)]="options[1].label"
+      (valueChange)="onRefresh()"
       [luxDisabled]="useSimpleArray()"
       [luxNoBottomLabel]="true"
     />
     <lux-input
       luxName="Option 3"
       luxLabel="Option 3"
-      [(luxValue)]="options[2].label"
-      (luxValueChange)="onRefresh()"
+      [(value)]="options[2].label"
+      (valueChange)="onRefresh()"
       [luxDisabled]="useSimpleArray()"
       [luxNoBottomLabel]="true"
     />
@@ -167,14 +167,14 @@
       luxName="radio_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
-      [(luxValue)]="hint"
+      [(value)]="hint"
     />
     <div class="lux-flex lux-items-center lux-gap-2">
       <lux-toggle
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
-        [(luxChecked)]="noTopLabel"
+        [(checked)]="noTopLabel"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -184,7 +184,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(luxChecked)]="noBottomLabel"
+        [(checked)]="noBottomLabel"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -194,7 +194,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(luxChecked)]="noLabels"
+        [(checked)]="noLabels"
         [luxNoTopLabel]="true"
       />
       <app-status-marker [markerType]="markerTypeUpdated" />
@@ -202,37 +202,37 @@
     <lux-toggle
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
-      [(luxChecked)]="hintShowOnlyOnFocus"
+      [(checked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
     />
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
     <lux-toggle
-      [(luxChecked)]="disabledFirst"
-      (luxCheckedChange)="onToggleDisabledFirst()"
+      [(checked)]="disabledFirst"
+      (checkedChange)="onToggleDisabledFirst()"
       luxLabel="1. Option deaktivieren"
       [luxDisabled]="useSimpleArray()"
       [luxNoTopLabel]="true"
     />
     <lux-toggle
-      [(luxChecked)]="readonly"
+      [(checked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     />
-    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
     </lux-toggle>
     <lux-toggle
-      [(luxChecked)]="isVertical"
+      [(checked)]="isVertical"
       luxLabel="luxOrientationVertical"
       luxHint="Über dieses Flag kann gesteuert werden, ob die Radio-Buttons horizontal oder vertikal dargestellt werden."
       [luxNoTopLabel]="true"
     />
     <lux-toggle
-      [(luxChecked)]="denseFormat"
+      [(checked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
@@ -240,17 +240,17 @@
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-toggle
-      [(luxChecked)]="useSimpleArray"
+      [(checked)]="useSimpleArray"
       luxLabel="String-Array nutzen"
-      (luxCheckedChange)="changeUseSimpleArray($event)"
+      (checkedChange)="changeUseSimpleArray($event)"
       [luxNoTopLabel]="true"
     >
       <lux-form-hint> Für die Beispiele einfache String-Arrays anstelle von Arrays mit Objekten nutzen. </lux-form-hint>
     </lux-toggle>
     <lux-toggle
-      [(luxChecked)]="useValueFn"
+      [(checked)]="useValueFn"
       luxLabel="pickValue-Funktion nutzen"
-      (luxCheckedChange)="changeUseValueFn($event)"
+      (checkedChange)="changeUseValueFn($event)"
       [luxNoTopLabel]="true"
     >
       <lux-form-hint>
@@ -261,9 +261,9 @@
       </lux-form-hint>
     </lux-toggle>
     <lux-toggle
-      [(luxChecked)]="useCompareWithFn"
+      [(checked)]="useCompareWithFn"
       luxLabel="compareWith-Funktion nutzen"
-      (luxCheckedChange)="changeCompareWithFn($event)"
+      (checkedChange)="changeCompareWithFn($event)"
       [luxNoTopLabel]="true"
     >
       <lux-form-hint>
@@ -274,16 +274,16 @@
         </div>
       </lux-form-hint>
     </lux-toggle>
-    <lux-toggle [(luxChecked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
+    <lux-toggle [(checked)]="useTemplatesForLabels" luxLabel="Labels via Templates" [luxNoTopLabel]="true">
       <lux-form-hint> Die Labels können über in die Component eingereichte Template-Tags erstellt werden. </lux-form-hint>
     </lux-toggle>
-    <lux-input luxName="radio_luxGroupName" luxLabel="luxGroupName - normales Beispiel" [(luxValue)]="groupNameNormal">
+    <lux-input luxName="radio_luxGroupName" luxLabel="luxGroupName - normales Beispiel" [(value)]="groupNameNormal">
       <lux-form-hint>
         Diese Property definiert die Radio-Group, zu der die einzelnen Radio-Buttons gehören sollen.<br />
         Wenn derselbe Name für 2 Radio-Components genutzt wird, agieren diese wie eine gemeinsame Group.
       </lux-form-hint>
     </lux-input>
-    <lux-input luxName="radio_luxGroupName" luxLabel="luxGroupName - ReactiveForm Beispiel" [(luxValue)]="groupNameReactive">
+    <lux-input luxName="radio_luxGroupName" luxLabel="luxGroupName - ReactiveForm Beispiel" [(value)]="groupNameReactive">
       <lux-form-hint>
         Diese Property definiert die Radio-Group, zu der die einzelnen Radio-Buttons gehören sollen.<br />
         Wenn derselbe Name für 2 Radio-Components genutzt wird, agieren diese wie eine gemeinsame Group.
@@ -292,7 +292,7 @@
     <lux-toggle
       luxLabel="luxErrorMessage verwenden"
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
-      [(luxChecked)]="useErrorMessage"
+      [(checked)]="useErrorMessage"
       [luxNoTopLabel]="true"
     />
     @if (useErrorMessage()) {
@@ -301,7 +301,7 @@
         luxLabel="luxErrorMessage"
         luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-        [(luxValue)]="errorMessage"
+        [(value)]="errorMessage"
       />
     } @else {
       <pre class="lux-label">{{ errorCallbackString }}</pre>
@@ -310,7 +310,7 @@
       luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
       luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
       [luxNoTopLabel]="true"
-      [(luxChecked)]="labelLongFormat"
+      [(checked)]="labelLongFormat"
     />
   </example-base-advanced-options>
   <example-base-options-actions>

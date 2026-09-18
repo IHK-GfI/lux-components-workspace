@@ -1,10 +1,4 @@
-<lux-toggle
-  [luxChecked]="disabled()"
-  (luxCheckedChange)="setDisabled($event)"
-  luxLabel="luxDisabled"
-  luxHint="Erlaubt es, die Component zu deaktivieren."
-  [luxNoTopLabel]="true"
->
+<lux-toggle [(checked)]="disabled" luxLabel="luxDisabled" luxHint="Erlaubt es, die Component zu deaktivieren." [luxNoTopLabel]="true">
 </lux-toggle>
 <div class="column">
   <div class="lux-flex lux-row-wrap lux-mt-4">

@@ -80,64 +80,64 @@
     </lux-card>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input luxLabel="luxTitle" [(luxValue)]="title" />
-    <lux-input luxLabel="luxTitleTooltip" [(luxValue)]="titleTooltip" />
-    <lux-input luxLabel="luxSubTitle" [(luxValue)]="subTitle" />
-    <lux-input luxLabel="luxSubTitleTooltip" [(luxValue)]="subTitleTooltip" />
+    <lux-input luxLabel="luxTitle" [(value)]="title" />
+    <lux-input luxLabel="luxTitleTooltip" [(value)]="titleTooltip" />
+    <lux-input luxLabel="luxSubTitle" [(value)]="subTitle" />
+    <lux-input luxLabel="luxSubTitleTooltip" [(value)]="subTitleTooltip" />
     <lux-input
       luxLabel="luxHeading"
       luxHint="Gültige Werte sind 1-6 (verändert nur die Überschriftenstruktur, aber nicht die Darstellung (Barrierefreiheit)."
-      [(luxValue)]="heading"
+      [(value)]="heading"
       luxType="number"
       [luxNumberAlignLeft]="true"
       [luxControlValidators]="headingValidator"
     />
-    <lux-toggle luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxDisabled]="showActions()" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxDisabled" [(checked)]="disabled" [luxDisabled]="showActions()" [luxNoTopLabel]="true">
       <lux-form-hint>
         Über diese Property werden die Klick-Events der Card unterbunden.<br />
         Diese Property greift nicht, wenn Card-Actions dargestellt werden.
       </lux-form-hint>
     </lux-toggle>
-    <lux-toggle luxLabel="luxTitleLineBreak" [(luxChecked)]="titleLineBreak" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxTitleLineBreak" [(checked)]="titleLineBreak" [luxNoTopLabel]="true">
       <lux-form-hint>
         Dieses Flag aktiviert den Zeilenumbruch bei zu langen Titeln. <br />
         Wenn 'false', wird der Titel mit '...' abgekürzt.
       </lux-form-hint>
     </lux-toggle>
-    <lux-toggle luxLabel="luxRaised (Button 2)" [(luxChecked)]="btn2Raised" [luxNoLabels]="true" />
-    <lux-toggle luxLabel="lux-card-content ausblenden" [(luxChecked)]="hideCardContent" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="luxRaised (Button 2)" [(checked)]="btn2Raised" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="lux-card-content ausblenden" [(checked)]="hideCardContent" [luxNoLabels]="true" />
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <div class="lux-flex lux-items-center">
-      <lux-toggle luxLabel="luxCustomHeader anzeigen" [(luxChecked)]="showCustomHeader" [luxNoLabels]="true" />
+      <lux-toggle luxLabel="luxCustomHeader anzeigen" [(checked)]="showCustomHeader" [luxNoLabels]="true" />
       <app-status-marker />
     </div>
     <lux-toggle
       luxLabel="luxIcon anzeigen"
       luxHint="Das linksbündige Icon für die Card darstellen."
-      [(luxChecked)]="showIcon"
+      [(checked)]="showIcon"
       [luxNoTopLabel]="true"
     />
     <lux-toggle
       luxLabel="luxCardActions anzeigen"
       luxHint="Die Card-Action für das Beispiel darstellen."
-      [(luxChecked)]="showActions"
+      [(checked)]="showActions"
       [luxNoTopLabel]="true"
     />
     <lux-select
       luxLabel="luxAlign (Buttonausrichtung)"
       [luxOptions]="actionAlignOptions"
-      [(luxSelected)]="actionAlign"
+      [(value)]="actionAlign"
       [luxDisabled]="!showActions()"
     >
       <ng-template let-option>
         {{ option.label }}
       </ng-template>
     </lux-select>
-    <lux-toggle luxLabel="luxCardInfo anzeigen" [(luxChecked)]="showInfo" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxCardInfo anzeigen" [(checked)]="showInfo" [luxNoTopLabel]="true">
       <lux-form-hint> Die Component für die Darstellung von Zusatzinfos rechts vom Titel anzeigen. </lux-form-hint>
     </lux-toggle>
-    <lux-toggle luxLabel="luxCardContentExpanded aktivieren" [(luxChecked)]="useExpandableContent" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxCardContentExpanded aktivieren" [(checked)]="useExpandableContent" [luxNoTopLabel]="true">
       <lux-form-hint>
         Den ausklappbaren Inhalt für die Card aktivieren.<br />
         Dieser wird dann unterhalb des eigentlichen Inhalts dargestellt.
@@ -146,12 +146,12 @@
     <lux-input
       luxLabel="luxExpandedLabelOpen"
       luxHint="Diese Property steuert den Labeltext auf dem Button zum Ausklappen des erweiterten Card-Contents."
-      [(luxValue)]="openLabel"
+      [(value)]="openLabel"
     />
     <lux-input
       luxLabel="luxExpandedLabelClose"
       luxHint="Diese Property steuert den Labeltext auf dem Button zum Einklappen des erweiterten Card-Contents."
-      [(luxValue)]="closeLabel"
+      [(value)]="closeLabel"
     />
   </example-base-advanced-options>
 </example-base-structure>

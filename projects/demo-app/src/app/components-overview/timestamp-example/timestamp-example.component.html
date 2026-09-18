@@ -20,7 +20,7 @@
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
     <div class="lux-flex lux-gap-2 lt-sm:lux-flex-col lt-sm:lux-gap-0">
-      <lux-datepicker class="lux-flex-auto" luxLabel="timestamp" [(luxValue)]="nowISO" (luxValueChange)="updateNow($event)">
+      <lux-datepicker class="lux-flex-auto" luxLabel="timestamp" [(value)]="nowISO" (valueChange)="updateNow($event)">
         <lux-form-hint>
           Hier kann ein Datum für das Beispiel eingetragen werden.<br />
           Das Beispiel nimmt dann den Timestamp aus dem Date-Objekt.
@@ -53,10 +53,10 @@
       luxName="timestamp_defaultText"
       luxLabel="defaultText"
       luxHint="Dieser Parameter bestimmt den Standard-Text welcher wiedergegeben wird wenn der Timestamp nicht gegeben ist."
-      [(luxValue)]="defaultText"
+      [(value)]="defaultText"
     >
     </lux-input>
-    <lux-input luxName="timestamp_prefix" luxAutocomplete="off" luxLabel="prefix" [(luxValue)]="prefix">
+    <lux-input luxName="timestamp_prefix" luxAutocomplete="off" luxLabel="prefix" [(value)]="prefix">
       <lux-form-hint>
         Dieser Parameter legt den Präfix für die relativen Zeitangaben fest.<br />
         Standardmäßig werden die Präfixe 'in' und 'vor' benutzt.

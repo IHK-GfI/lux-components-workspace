@@ -89,13 +89,13 @@
                 <p>Für die Vorschau ein Icon anklicken.</p>
               }
             </div>
-            <lux-select luxLabel="Icongröße" [(luxSelected)]="iconSize" [luxOptions]="iconSizesOptions" [luxNoBottomLabel]="true" />
+            <lux-select luxLabel="Icongröße" [(value)]="iconSize" [luxOptions]="iconSizesOptions" [luxNoBottomLabel]="true" />
             <lux-select
               luxLabel="Farbwert"
               [luxOptions]="iconColorOptions"
-              [luxSelected]="iconColorOptions[0]"
+              [value]="iconColorOptions[0]"
               luxOptionLabelProp="label"
-              (luxSelectedChange)="onColorChanged($event)"
+              (valueChange)="onColorChanged($event)"
               [luxNoBottomLabel]="true"
             />
             <lux-radio
@@ -104,9 +104,9 @@
               [luxNoLabels]="false"
               [luxOptions]="fgBgOptions"
               luxOptionLabelProp="label"
-              [luxSelected]="fgBgOptions[0]"
+              [value]="fgBgOptions[0]"
               [luxOrientationVertical]="false"
-              (luxSelectedChange)="onBgChanged($event)"
+              (valueChange)="onBgChanged($event)"
             />
           </lux-card-content>
         </lux-card>
@@ -141,7 +141,7 @@
       [luxClearable]="true"
       [luxNoTopLabel]="true"
       luxPlaceholder="Suchbegriff eingeben"
-      [(luxValue)]="inputValue"
+      [(value)]="inputValue"
       luxAutocomplete="off"
       luxHint="Suchbegriffe auf Englisch eingeben. Z.B. arrow, desktop,..."
     >
@@ -157,9 +157,9 @@
       luxHint="Suchbegriffverknüpfung"
       luxGroupName="search-radios"
       [luxOptions]="searchBindingOptions"
-      [(luxSelected)]="selectedSearchBinding"
+      [(value)]="selectedSearchBinding"
       [luxOrientationVertical]="false"
-      (luxSelectedChange)="onSearchBindingChanged()"
+      (valueChange)="onSearchBindingChanged()"
     />
   </div>
 </ng-template>

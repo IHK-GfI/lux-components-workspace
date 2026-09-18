@@ -312,14 +312,14 @@
       luxName="timepicker_luxLabel"
       luxLabel="luxLabel"
       luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
-      [(luxValue)]="label"
+      [(value)]="label"
     >
     </lux-input>
     <lux-input
       luxName="timepicker_luxHint"
       luxLabel="luxHint"
       luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
-      [(luxValue)]="hint"
+      [(value)]="hint"
     >
     </lux-input>
     <div class="lux-flex lux-items-center lux-gap-2">
@@ -327,7 +327,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoTopLabel"
         luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
-        [(luxChecked)]="noTopLabel"
+        [(checked)]="noTopLabel"
         [luxNoTopLabel]="true"
       ></lux-toggle>
       <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
@@ -337,7 +337,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoBottomLabel"
         luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
-        [(luxChecked)]="noBottomLabel"
+        [(checked)]="noBottomLabel"
         [luxNoTopLabel]="true"
       ></lux-toggle>
       <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
@@ -347,7 +347,7 @@
         class="lux-flex-auto"
         luxLabel="luxNoLabels"
         luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
-        [(luxChecked)]="noLabels"
+        [(checked)]="noLabels"
         [luxNoTopLabel]="true"
       ></lux-toggle>
       <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
@@ -355,38 +355,38 @@
     <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     ></lux-toggle>
     <lux-toggle
       luxLabel="luxHintShowOnlyOnFocus"
       luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
-      [(luxChecked)]="hintShowOnlyOnFocus"
+      [(checked)]="hintShowOnlyOnFocus"
       [luxNoTopLabel]="true"
     ></lux-toggle>
     <lux-input
       luxName="timepicker_luxPlaceholder"
       luxLabel="luxPlaceholder"
       luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
-      [(luxValue)]="placeholder"
+      [(value)]="placeholder"
     >
     </lux-input>
     <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
     <lux-toggle
-      [(luxChecked)]="readonly"
+      [(checked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
-    <lux-toggle luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
     </lux-toggle>
     <lux-toggle
-      [(luxChecked)]="denseFormat"
+      [(checked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
       [luxNoTopLabel]="true"
@@ -397,30 +397,30 @@
     <lux-toggle
       luxLabel="luxShowToggle"
       luxHint="Dieses Flag schaltet den Toggle-Button für die Zeitauswahl ein."
-      [(luxChecked)]="showToggle"
+      [(checked)]="showToggle"
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
     <lux-toggle
       luxLabel="luxOpened"
       luxHint="Über diesen Flag kann die Zeitauswahl eingeblendet werden."
-      [(luxChecked)]="opened"
+      [(checked)]="opened"
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
-    <lux-input luxName="timepicker_interval" luxLabel="luxInterval" [(luxValue)]="interval">
+    <lux-input luxName="timepicker_interval" luxLabel="luxInterval" [(value)]="interval">
       <lux-form-hint>Intervall für die Zeitauswahl, z.B. 15m, 30m oder 1h.</lux-form-hint>
     </lux-input>
-    <lux-input luxName="timepicker_minTime" luxLabel="luxMinTime" [(luxValue)]="minTime">
+    <lux-input luxName="timepicker_minTime" luxLabel="luxMinTime" [(value)]="minTime">
       <lux-form-hint>Minimale Zeit, z.B. 08:00.</lux-form-hint>
     </lux-input>
-    <lux-input luxName="timepicker_maxTime" luxLabel="luxMaxTime" [(luxValue)]="maxTime">
+    <lux-input luxName="timepicker_maxTime" luxLabel="luxMaxTime" [(value)]="maxTime">
       <lux-form-hint>Maximale Zeit, z.B. 18:00.</lux-form-hint>
     </lux-input>
     <lux-toggle
       luxLabel="luxErrorMessage verwenden"
       luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
-      [(luxChecked)]="useErrorMessage"
+      [(checked)]="useErrorMessage"
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
@@ -430,7 +430,7 @@
         luxLabel="luxErrorMessage"
         luxHint="Über diese Property lässt sich eine feste Fehlermeldung
                  (unabhängig vom speziellen Validierungsfehler) einstellen."
-        [(luxValue)]="errorMessage"
+        [(value)]="errorMessage"
       >
       </lux-input>
     }

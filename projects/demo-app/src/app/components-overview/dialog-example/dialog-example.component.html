@@ -6,23 +6,23 @@
     <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
     <h3>Allgemeine Properties</h3>
     <div class="lux-grid lux-grid-cols-2 lt-md:lux-grid-cols-1 lux-gap-4">
-      <lux-input luxName="dialog_width" luxLabel="width" [(luxValue)]="dialogConfig.width" [luxNoBottomLabel]="true" />
-      <lux-input luxName="dialog_height" luxLabel="height" [(luxValue)]="dialogConfig.height" [luxNoBottomLabel]="true" />
-      <lux-input luxName="dialog_minWidth" luxLabel="minWidth" [(luxValue)]="dialogConfig.minWidth" [luxNoBottomLabel]="true" />
-      <lux-input luxName="dialog_minHeight" luxLabel="minHeight" [(luxValue)]="dialogConfig.minHeight" [luxNoBottomLabel]="true" />
-      <lux-input luxName="dialog_maxWidth" luxLabel="maxWidth" [(luxValue)]="dialogConfig.maxWidth" [luxNoBottomLabel]="true" />
-      <lux-input luxName="dialog_maxHeight" luxLabel="maxHeight" [(luxValue)]="dialogConfig.maxHeight" [luxNoBottomLabel]="true" />
+      <lux-input luxName="dialog_width" luxLabel="width" [(value)]="dialogConfig.width" [luxNoBottomLabel]="true" />
+      <lux-input luxName="dialog_height" luxLabel="height" [(value)]="dialogConfig.height" [luxNoBottomLabel]="true" />
+      <lux-input luxName="dialog_minWidth" luxLabel="minWidth" [(value)]="dialogConfig.minWidth" [luxNoBottomLabel]="true" />
+      <lux-input luxName="dialog_minHeight" luxLabel="minHeight" [(value)]="dialogConfig.minHeight" [luxNoBottomLabel]="true" />
+      <lux-input luxName="dialog_maxWidth" luxLabel="maxWidth" [(value)]="dialogConfig.maxWidth" [luxNoBottomLabel]="true" />
+      <lux-input luxName="dialog_maxHeight" luxLabel="maxHeight" [(value)]="dialogConfig.maxHeight" [luxNoBottomLabel]="true" />
     </div>
     @if (!useContentTemplate()) {
       <lux-input
         luxName="dialog_panelClass"
         luxLabel="panelClass"
-        [luxValue]="dialogConfig.panelClass"
+        [value]="dialogConfig.panelClass"
         (luxBlur)="updatePanelClass(panelClassInput.value())"
         #panelClassInput
       >
@@ -36,13 +36,15 @@
     <lux-toggle
       luxLabel="disableClose"
       luxHint="Wenn aktiv, kann der Dialog nur über die Actions geschlossen werden."
-      [(luxChecked)]="dialogConfig.disableClose"
+      [checked]="dialogConfig.disableClose ?? false"
+      (checkedChange)="dialogConfig.disableClose = $event"
       [luxNoTopLabel]="true"
     />
     <lux-toggle
       luxLabel="disableBackdropAndEscClose"
       luxHint="Wenn aktiv, werden Backdrop-Klicks und die ESC-Taste ignoriert. Der X-Schließen-Button bleibt jedoch sichtbar."
-      [(luxChecked)]="dialogConfig.disableBackdropAndEscClose"
+      [checked]="dialogConfig.disableBackdropAndEscClose ?? false"
+      (checkedChange)="dialogConfig.disableBackdropAndEscClose = $event"
       [luxNoTopLabel]="true"
     />
     <lux-radio
@@ -51,7 +53,7 @@
       [luxOptions]="defaultButtonOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="pickValueFn"
-      [(luxSelected)]="defaultButton"
+      [(value)]="defaultButton"
       [luxOrientationVertical]="false"
     />
   </example-base-simple-options>
@@ -61,19 +63,19 @@
       luxName="dialog_title"
       luxLabel="title"
       luxHint="Diese Property enthält den Titel des Dialogs."
-      [(luxValue)]="dialogConfig.title"
+      [(value)]="dialogConfig.title"
     />
     <lux-input
       luxName="dialog_icon"
       luxLabel="dialogIcon"
       luxHint="Diese Property enthält den Iconnamen des Dialogs."
-      [(luxValue)]="dialogConfig.iconName"
+      [(value)]="dialogConfig.iconName"
     />
     <lux-toggle
       luxLabel="Content-Template nutzen"
       luxHint="Wenn aktiv, wird dem Dialog ein 'TemplateRef' für den Inhalt übergeben."
-      [(luxChecked)]="useContentTemplate"
-      (luxCheckedChange)="useContentTemplateChange($event)"
+      [(checked)]="useContentTemplate"
+      (checkedChange)="useContentTemplateChange($event)"
       [luxNoTopLabel]="true"
     />
     @if (useContentTemplate()) {
@@ -84,7 +86,7 @@
         luxName="dialog_content"
         luxLabel="content"
         luxHint="Über diese Eigenschaft der eigentliche Inhalt des Dialogs bestimmt."
-        [(luxValue)]="dialogConfig.content"
+        [(value)]="dialogConfig.content"
       />
     }
     <lux-accordion luxMode="flat" [luxMulti]="true">
@@ -102,7 +104,7 @@
       </lux-panel>
     </lux-accordion>
     <h3>Beispiel für "data" für eigene Dialoge</h3>
-    <lux-input luxName="dialog_data" luxLabel="data" [(luxValue)]="exampleData">
+    <lux-input luxName="dialog_data" luxLabel="data" [(value)]="exampleData">
       <lux-form-hint>
         Dieses Objekt wird einem eigenen Dialog während 'openComponent' mitgegeben und enthält Daten, die für die Dialog-Componente wichtig
         sein könnten.
@@ -125,36 +127,36 @@
     luxName="dialog_label"
     luxLabel="label"
     luxHint="Diese Property enthält das Label der Aktion."
-    [(luxValue)]="actionConfig.label"
+    [(value)]="actionConfig.label"
   />
   <lux-input
     luxName="dialog_iconName"
     luxLabel="iconName"
     luxHint="Diese Property bestimmt das Icon der Aktion"
-    [(luxValue)]="actionConfig.iconName"
+    [(value)]="actionConfig.iconName"
   />
   <lux-select
     luxLabel="color"
     luxHint="Diese Property definiert die Farbe der Aktion."
-    [(luxSelected)]="actionConfig.color"
+    [(value)]="actionConfig.color"
     [luxOptions]="['primary', 'accent', 'warn', 'default']"
   />
   <lux-toggle
     luxLabel="flat"
     luxHint="Wenn aktiv, wird die Aktion hervorgehoben dargestellt."
-    [(luxChecked)]="actionConfig.flat"
+    [(checked)]="actionConfig.flat"
     [luxNoTopLabel]="true"
   />
   <lux-toggle
     luxLabel="disabled"
     luxHint="Wenn aktiv, wird die Aktion deaktiviert."
-    [(luxChecked)]="actionConfig.disabled"
+    [(checked)]="actionConfig.disabled"
     [luxNoTopLabel]="true"
   />
   <lux-toggle
     luxLabel="rounded"
     luxHint="Wenn aktiv, wird die Aktion als Kreis dargestellt. Sollte dann aber kein Label enthalten."
-    [(luxChecked)]="actionConfig.rounded"
+    [(checked)]="actionConfig.rounded"
     [luxNoTopLabel]="true"
   />
 </ng-template>

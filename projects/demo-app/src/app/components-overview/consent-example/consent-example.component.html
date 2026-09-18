@@ -27,16 +27,14 @@
       luxLabel="Impressum/Datenschutz als Components öffnen"
       luxHint="Wenn deaktiviert, werden stattdessen externe URLs verwendet."
       [luxNoTopLabel]="true"
-      [luxChecked]="useComponentTargets()"
-      (luxCheckedChange)="useComponentTargets.set($event)"
+      [(checked)]="useComponentTargets"
     />
 
     <lux-input
       luxName="consent-impressum-url"
       luxLabel="Impressum URL"
       luxHint="URL für Impressum im Consent-Dialog (URL-Modus)."
-      [luxValue]="impressumUrl()"
-      (luxValueChange)="impressumUrl.set($event)"
+      [(value)]="impressumUrl"
       [luxDisabled]="useComponentTargets()"
     />
 
@@ -44,8 +42,7 @@
       luxName="consent-datenschutz-url"
       luxLabel="Datenschutz URL"
       luxHint="URL für Datenschutz im Consent-Dialog (URL-Modus)."
-      [luxValue]="datenschutzUrl()"
-      (luxValueChange)="datenschutzUrl.set($event)"
+      [(value)]="datenschutzUrl"
       [luxDisabled]="useComponentTargets()"
     />
 
@@ -53,8 +50,7 @@
       luxLabel="Nur essentielle LuxConsentEntry-Einträge verwenden"
       luxHint="Zum Testen des Verhaltens ohne optionale Zwecke."
       [luxNoTopLabel]="true"
-      [luxChecked]="useEssentialOnlyEntries()"
-      (luxCheckedChange)="useEssentialOnlyEntries.set($event)"
+      [(checked)]="useEssentialOnlyEntries"
     />
   </example-base-simple-options>
 </example-base-structure>

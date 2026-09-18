@@ -148,8 +148,4 @@ export class BaselineCardComponent {
       this.form.get(key)!.updateValueAndValidity();
     });
   }
-
-  selectState(state: (typeof this.stateOptions)[number]) {
-    this.selectedState.set(state);
-  }
 }

@@ -7,42 +7,42 @@
     <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     />
-    <lux-input luxLabel="text" luxHint="Diese Property definiert den Text der Snackbar." [(luxValue)]="snackbarConfig.text" />
+    <lux-input luxLabel="text" luxHint="Diese Property definiert den Text der Snackbar." [(value)]="snackbarConfig.text" />
     <lux-select
       luxLabel="textColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für den Text eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="textColor"
+      [(value)]="textColor"
     />
-    <lux-input luxLabel="iconName" luxHint="Diese Property definiert das Icon der Snackbar." [(luxValue)]="snackbarConfig.iconName" />
+    <lux-input luxLabel="iconName" luxHint="Diese Property definiert das Icon der Snackbar." [(value)]="snackbarConfig.iconName" />
     <lux-select
       luxLabel="iconSize"
       luxHint="Die Property bestimmt die (relative) Größe des Icons."
-      [(luxSelected)]="snackbarConfig.iconSize"
+      [(value)]="snackbarConfig.iconSize"
       [luxOptions]="['1x', '2x', '3x', '4x', '5x']"
     />
     <lux-select
       luxLabel="iconColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für das Icon eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="iconColor"
+      [(value)]="iconColor"
     />
-    <lux-input luxLabel="action" luxHint="Diese Property definiert die Action der Snackbar." [(luxValue)]="snackbarConfig.action" />
+    <lux-input luxLabel="action" luxHint="Diese Property definiert die Action der Snackbar." [(value)]="snackbarConfig.action" />
     <lux-select
       luxLabel="actionColor"
       [luxOptions]="colors"
       luxHint="Hier kann ein Farbwert für die Action eingetragen werden (aus dem entsprechenden Enum)."
-      [(luxSelected)]="actionColor"
+      [(value)]="actionColor"
     />
     <lux-input
       luxLabel="duration"
       luxHint="Diese Property definiert wie lange die Snackbar angezeigt wird."
       luxType="number"
       [luxNumberAlignLeft]="true"
-      [(luxValue)]="duration"
+      [(value)]="duration"
     />
   </example-base-simple-options>
   <example-base-options-actions>

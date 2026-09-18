@@ -92,7 +92,7 @@
     <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
     ></lux-toggle>
     <lux-input
@@ -100,37 +100,37 @@
       luxHint="Diese Property ermöglicht es, das aktuell aktive Tab zu setzen."
       luxType="number"
       [luxNumberAlignLeft]="true"
-      [(luxValue)]="activeTab"
+      [(value)]="activeTab"
     >
     </lux-input>
     <lux-select
       luxLabel="luxIconSize"
       luxHint="Die Property setzt die (relative) Icon-Größe für alle Tabs."
-      [(luxSelected)]="iconSize"
+      [(value)]="iconSize"
       [luxOptions]="['1x', '2x', '3x', '4x', '5x']"
     >
     </lux-select>
     <lux-toggle
       luxLabel="luxDisplayDivider"
       luxHint="Dieses Flag schaltet die Trennlinie zwischen Tab-Header und Tab-Content ein."
-      [(luxChecked)]="displayDivider"
+      [(checked)]="displayDivider"
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
     <lux-toggle
       luxLabel="luxLazyLoading"
       luxHint="Wenn Dieses Flag den Wert 'true' besitzt, werden die Inhalte der einzelnen Tabs erst zum Aktivierungszeitpunkt erzeugt."
-      [(luxChecked)]="lazyLoading"
+      [(checked)]="lazyLoading"
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
-    <lux-input luxName="button_background_Color" [(luxValue)]="backgroundColor" luxLabel="Hintergrundfarbe">
+    <lux-input luxName="button_background_Color" [(value)]="backgroundColor" luxLabel="Hintergrundfarbe">
       <lux-form-hint>Kontrast zwischen Element und Hintergrund prüfen.</lux-form-hint>
     </lux-input>
     <lux-toggle
       luxLabel="luxShowBorder"
       luxHint="Wenn Dieses Flag den Wert 'true' besitzt, wird eine Border um den Tab-header und den Tab-Content gesetzt."
-      [(luxChecked)]="showBorder"
+      [(checked)]="showBorder"
       [luxNoTopLabel]="true"
     >
     </lux-toggle>
@@ -141,28 +141,33 @@
         <lux-panel>
           <lux-panel-header-title> Tab #{{ i + 1 }} </lux-panel-header-title>
           <lux-panel-content class="lux-flex lux-flex-col lux-gap-4 lux-m-3">
-            <lux-input luxLabel="luxTitle" luxHint="Diese Property ermöglicht es, den Titel des Tabs festzulegen." [(luxValue)]="tab.title">
+            <lux-input luxLabel="luxTitle" luxHint="Diese Property ermöglicht es, den Titel des Tabs festzulegen." [(value)]="tab.title">
             </lux-input>
-            <lux-input luxLabel="luxIconName" luxHint="Diese Property legt das Icon für den Tab fest." [(luxValue)]="tab.iconName">
+            <lux-input luxLabel="luxIconName" luxHint="Diese Property legt das Icon für den Tab fest." [(value)]="tab.iconName">
             </lux-input>
             <lux-input
               luxLabel="luxImageSrc"
               [luxDisabled]="!!tab.iconName"
               luxHint="Diese Property greift nur, wenn es kein luxIconName gibt."
-              [(luxValue)]="tab.imageSrc"
+              [(value)]="tab.imageSrc"
             >
             </lux-input>
-            <lux-input luxLabel="luxImageAlign" luxHint="Werte: left, center oder right" [(luxValue)]="tab.imageAlign"> </lux-input>
-            <lux-input luxLabel="luxImageWidth" [(luxValue)]="tab.imageWidth"> </lux-input>
-            <lux-input luxLabel="luxImageHeight" [(luxValue)]="tab.imageHeight"> </lux-input>
+            <lux-input luxLabel="luxImageAlign" luxHint="Werte: left, center oder right" [(value)]="tab.imageAlign"> </lux-input>
+            <lux-input luxLabel="luxImageWidth" [(value)]="tab.imageWidth"> </lux-input>
+            <lux-input luxLabel="luxImageHeight" [(value)]="tab.imageHeight"> </lux-input>
             <lux-toggle
               luxLabel="luxDisabled"
               luxHint="Dieses Flag ermöglicht es, den Tab zu deaktivieren."
-              [(luxChecked)]="tab.disabled"
+              [(checked)]="tab.disabled"
               [luxNoTopLabel]="true"
             >
             </lux-toggle>
-            <lux-toggle luxLabel="luxShowNotification" [(luxChecked)]="tab.showNotification" [luxNoTopLabel]="true">
+            <lux-toggle
+              luxLabel="luxShowNotification"
+              [checked]="tab.showNotification ?? false"
+              (checkedChange)="tab.showNotification = $event"
+              [luxNoTopLabel]="true"
+            >
               <lux-form-hint>
                 Diese Property aktiviert eine Notifizierungsansicht an dem Tab.<br />
                 Wenn 'undefined', wird nichts angezeigt. Bei 'true' wird ein farbiger Kreis dargestellt und bei 'false' ein ausgeblendeter
@@ -172,14 +177,14 @@
             <lux-select
               luxLabel="luxNotificationColor"
               luxHint="Bestimmt die Farbe des Notifizierungssymbols. Wird nur berücksichtigt, wenn luxShowNotification true ist."
-              [(luxSelected)]="tab.notificationColor"
+              [(value)]="tab.notificationColor"
               [luxOptions]="notificationColors"
               [luxDisabled]="tab.showNotification !== true"
             >
             </lux-select>
             <lux-toggle
               luxLabel="luxCounter aktiv"
-              (luxCheckedChange)="$event ? (tab.counter = 0) : (tab.counter = undefined)"
+              (checkedChange)="$event ? (tab.counter = 0) : (tab.counter = undefined)"
               [luxNoTopLabel]="true"
             >
               <lux-form-hint>
@@ -189,7 +194,7 @@
             </lux-toggle>
             <lux-input
               luxLabel="luxCounter"
-              [(luxValue)]="tab.counter"
+              [(value)]="tab.counter"
               luxType="number"
               [luxNumberAlignLeft]="true"
               [luxDisabled]="tab.counter === undefined"
@@ -204,7 +209,7 @@
               luxHint="Diese Property bestimmt die Obergrenze für luxCounter."
               luxType="number"
               [luxNumberAlignLeft]="true"
-              [(luxValue)]="tab.counterCap"
+              [(value)]="tab.counterCap"
             >
             </lux-input>
           </lux-panel-content>

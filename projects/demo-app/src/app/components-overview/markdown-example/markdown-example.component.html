@@ -12,25 +12,25 @@
     />
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-textarea luxLabel="Markdown-Daten" [(luxValue)]="markdownData" luxName="markdown_data">
+    <lux-textarea luxLabel="Markdown-Daten" [(value)]="markdownData" luxName="markdown_data">
       <lux-form-hint> Hier kann man beliebige Markdown-Daten einfügen und ausprobieren. </lux-form-hint>
     </lux-textarea>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input luxLabel="luxStyle" luxName="markdown_luxStyle" [(luxValue)]="style">
+    <lux-input luxLabel="luxStyle" luxName="markdown_luxStyle" [(value)]="style">
       <lux-form-hint> Beliebige Styles (z.B. color: red; background-color: blue) </lux-form-hint>
     </lux-input>
-    <lux-input luxLabel="luxClass" luxName="markdown_luxClass" [(luxValue)]="class">
+    <lux-input luxLabel="luxClass" luxName="markdown_luxClass" [(value)]="class">
       <lux-form-hint> Beliebige CSS-Classen (z.B. lux-mt-3) </lux-form-hint>
     </lux-input>
 
-    <lux-toggle luxLabel="Folgendes verbieten" [(luxChecked)]="forbiddenTagsToggle" [luxNoLabels]="true" />
+    <lux-toggle luxLabel="Folgendes verbieten" [(checked)]="forbiddenTagsToggle" [luxNoLabels]="true" />
     <lux-input
       luxLabel="Verbotene Tags"
       luxName="markdown_forbiddenTags"
       [luxDisabled]="!forbiddenTagsToggle"
-      [(luxValue)]="forbiddenTags"
-      (luxValueChange)="updateTags()"
+      [(value)]="forbiddenTags"
+      (valueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Tags (z.B. a,h1,p) </lux-form-hint>
     </lux-input>
@@ -38,18 +38,18 @@
       luxLabel="Verbotene Attriubte"
       luxName="markdown_forbiddenAttributes"
       [luxDisabled]="!forbiddenTagsToggle"
-      [(luxValue)]="forbiddenAttributes"
-      (luxValueChange)="updateTags()"
+      [(value)]="forbiddenAttributes"
+      (valueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
     </lux-input>
-    <lux-toggle class="lux-pt-3" luxLabel="Nur folgendes erlauben" [(luxChecked)]="allowedTagsToggle" [luxNoLabels]="true" />
+    <lux-toggle class="lux-pt-3" luxLabel="Nur folgendes erlauben" [(checked)]="allowedTagsToggle" [luxNoLabels]="true" />
     <lux-input
       luxLabel="Erlaubte Tags"
       luxName="markdown_allowedTags"
       [luxDisabled]="!allowedTagsToggle"
-      [(luxValue)]="allowedTags"
-      (luxValueChange)="updateTags()"
+      [(value)]="allowedTags"
+      (valueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Tags (z.B. a,h1,p) </lux-form-hint>
     </lux-input>
@@ -57,19 +57,19 @@
       luxLabel="Erlaubte Attribute"
       luxName="markdown_allowedAttributes"
       [luxDisabled]="!allowedTagsToggle"
-      [(luxValue)]="allowedAttributes"
-      (luxValueChange)="updateTags()"
+      [(value)]="allowedAttributes"
+      (valueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
     </lux-input>
 
-    <lux-toggle class="lux-pt-3" luxLabel="Zusätzlich erlauben" [(luxChecked)]="addAllowedTagsToggle" [luxNoLabels]="true" />
+    <lux-toggle class="lux-pt-3" luxLabel="Zusätzlich erlauben" [(checked)]="addAllowedTagsToggle" [luxNoLabels]="true" />
     <lux-input
       luxLabel="Zusätzlich erlaubte Tags"
       luxName="markdown_addAllowedTags"
       [luxDisabled]="!addAllowedTagsToggle"
-      [(luxValue)]="addAllowedTags"
-      (luxValueChange)="updateTags()"
+      [(value)]="addAllowedTags"
+      (valueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Tags (z.B. a,h1,p) </lux-form-hint>
     </lux-input>
@@ -77,8 +77,8 @@
       luxLabel="Zusätzlich erlaubte Attribute"
       luxName="markdown_addAllowedAttributes"
       [luxDisabled]="!addAllowedTagsToggle"
-      [(luxValue)]="addAllowedAttributes"
-      (luxValueChange)="updateTags()"
+      [(value)]="addAllowedAttributes"
+      (valueChange)="updateTags()"
     >
       <lux-form-hint> Kommaseparierte Liste von Attributen (z.B. href,target) </lux-form-hint>
     </lux-input>

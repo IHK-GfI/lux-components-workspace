@@ -68,9 +68,9 @@
     <h2>Beispiel ohne Reactive-Form</h2>
     <div>
       <lux-checkbox-container luxLabel="Lorem ipsum" [luxShowRequiredMarker]="true">
-        <lux-checkbox luxLabel="Option A" [(luxChecked)]="standalone1" />
-        <lux-checkbox luxLabel="Option B" [(luxChecked)]="standalone2" />
-        <lux-checkbox luxLabel="Option C" [(luxChecked)]="standalone3" />
+        <lux-checkbox luxLabel="Option A" [(checked)]="standalone1" />
+        <lux-checkbox luxLabel="Option B" [(checked)]="standalone2" />
+        <lux-checkbox luxLabel="Option C" [(checked)]="standalone3" />
       </lux-checkbox-container>
       @if (standaloneSubmitted() && !luxAtLeastOneChecked([standalone1(), standalone2(), standalone3()])) {
         <div class="lux-pl-3 lux-form-error-container">
@@ -90,11 +90,11 @@
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(luxValue)]="label" />
+    <lux-input luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(value)]="label" />
     <lux-toggle
       luxLabel="luxVertical"
       luxHint="Erlaubt es, zwischen vertikaler oder horizontaler Ausrichtung zu wechseln"
-      [(luxChecked)]="isVertical"
+      [(checked)]="isVertical"
       [luxNoTopLabel]="true"
     />
     <p class="lux-text-highlight-alert">

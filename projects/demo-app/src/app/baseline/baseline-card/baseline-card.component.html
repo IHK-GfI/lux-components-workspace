@@ -14,14 +14,13 @@
           [luxOptions]="stateOptions"
           [luxOrientationVertical]="false"
           [luxNoBottomLabel]="true"
-          [luxSelected]="selectedState()"
-          (luxSelectedChange)="selectState($event)"
+          [(value)]="selectedState"
           luxLabel="Status der Form-Controls"
           ><ng-template let-option>
             {{ option.label }}
           </ng-template>
         </lux-radio>
-        <lux-checkbox luxLabel="Fehler-Status anzeigen" [luxNoBottomLabel]="true" (luxCheckedChange)="toggleErrors($event)"></lux-checkbox>
+        <lux-checkbox luxLabel="Fehler-Status anzeigen" [luxNoBottomLabel]="true" (checkedChange)="toggleErrors($event)"></lux-checkbox>
       </div>
 
       <lux-divider [luxInset]="true"></lux-divider>
@@ -82,7 +81,7 @@
           luxPlaceholder="Platzhalter"
           [luxHint]="testHint"
           luxControlBinding="select"
-          [luxSelected]="testOption()"
+          [value]="testOption()"
           luxOptionLabelProp="label"
           [luxOptions]="options"
           [luxDisabled]="disabledForm()"
@@ -109,7 +108,7 @@
         ></lux-textarea>
         <lux-toggle
           luxLabel="Lux-Toggle-ac"
-          [luxChecked]="false"
+          [checked]="false"
           luxHint="Hinweis"
           luxControlBinding="toggle"
           [luxDisabled]="disabledForm()"
@@ -118,7 +117,7 @@
         ></lux-toggle>
         <lux-checkbox
           luxLabel="Lux-Checkbox-ac"
-          [luxChecked]="false"
+          [checked]="false"
           luxHint="Hinweis"
           luxControlBinding="checkbox"
           [luxDisabled]="disabledForm()"
@@ -129,7 +128,7 @@
           luxGroupName="radio1"
           [luxOptions]="options"
           [luxOrientationVertical]="true"
-          [luxSelected]="options[0]"
+          [value]="options[0]"
           luxLabel="Lux-Radio-ac - vertikal"
           luxHint="Hinweis"
           [luxDisabled]="disabledForm()"
@@ -144,7 +143,7 @@
           luxGroupName="radio3"
           [luxOptions]="options2"
           [luxOrientationVertical]="false"
-          [luxSelected]="options[0]"
+          [value]="options[0]"
           luxLabel="Lux-Radio-ac - horizontal"
           luxHint="Dieses ist eine Testkomponents! Normalerweise sollte eine Radio-Komponente höchstens 5 Optionen besitzen."
           [luxDisabled]="disabledForm()"
