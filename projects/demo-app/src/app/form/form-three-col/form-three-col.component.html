@@ -1,86 +1,79 @@
 <div class="lux-container">
   <h2>3 Karten pro Zeile</h2>
-  <form [formGroup]="myGroup">
-    <div class="lux-grid lux-grid-cols-3 lt-md:lux-grid-cols-1 lux-gap-8">
-      <lux-card luxTitle="Kunde" class="lux-flex">
-        <lux-card-content>
-          <div formGroupName="customer" class="lux-grid lux-grid-cols-1 lux-gap-4">
-            <lux-input luxName="first-name" luxLabel="Vorname" luxControlBinding="name"></lux-input>
-            <lux-input luxName="given-name" luxLabel="Nachname" luxControlBinding="surname"></lux-input>
-            <lux-radio
-              [luxOrientationVertical]="false"
-              [luxOptions]="genders"
-              [luxPickValue]="pickGenderValue"
-              luxControlBinding="gender"
-              luxLabel="Geschlecht"
-            >
-              <ng-template let-option>
-                {{ option.name }}
-              </ng-template>
-            </lux-radio>
-          </div>
-        </lux-card-content>
-      </lux-card>
-      <lux-card luxTitle="Adresse" class="lux-flex">
-        <lux-card-content>
-          <div formGroupName="address" class="lux-grid lux-grid-cols-4 lt-md:lux-grid-cols-1 lux-gap-4">
-            <lux-input
-              luxName="postal-code"
-              luxLabel="PLZ"
-              luxType="number"
-              [luxNumberAlignLeft]="true"
-              luxControlBinding="zip"
-            ></lux-input>
-            <lux-input
-              luxName="form-three_Stadt"
-              luxLabel="Stadt"
-              luxType="text"
-              luxControlBinding="town"
-              class="lux-col-span-3"
-            ></lux-input>
-            <lux-input
-              luxName="street-address"
-              luxLabel="Straße"
-              luxType="text"
-              luxControlBinding="street"
-              class="lux-col-span-4"
-            ></lux-input>
-            <lux-autocomplete
-              [luxOptions]="countries"
-              luxOptionLabelProp="name"
-              luxLabel="Land"
-              [luxLookupDelay]="100"
-              luxHint="Wählen Sie ein Land aus"
-              [luxSelectAllOnClick]="false"
-              luxControlBinding="country"
-              class="lux-col-span-4"
-            >
-            </lux-autocomplete>
-          </div>
-        </lux-card-content>
-      </lux-card>
-      <lux-card luxTitle="Feedback" class="lux-flex">
-        <lux-card-content>
-          <div formGroupName="feedback" class="lux-grid lux-grid-cols-1 lux-gap-4">
-            <lux-input luxName="form-three_Bewertung" luxLabel="Bewertung" luxControlBinding="rating" luxType="text"></lux-input>
-            <lux-checkbox luxLabel="Anonymisieren" luxControlBinding="anonymous"></lux-checkbox>
-            <lux-textarea
-              luxName="form-three_Kommentar"
-              luxLabel="Kommentar"
-              luxHint="Hier ist Platz für Ihre Nachricht."
-              luxControlBinding="comment"
-              [luxMaxLength]="100"
-              [luxMinRows]="1"
-              [luxMaxRows]="-1"
-            ></lux-textarea>
-          </div>
-        </lux-card-content>
-      </lux-card>
-      <lux-card luxTitle="Formulardaten" class="lux-col-span-full">
-        <lux-card-content>
-          <pre>{{ myGroup.value | json }}</pre>
-        </lux-card-content>
-      </lux-card>
-    </div>
-  </form>
+  <div class="lux-grid lux-grid-cols-3 lt-md:lux-grid-cols-1 lux-gap-8">
+    <lux-card luxTitle="Kunde" class="lux-flex">
+      <lux-card-content>
+        <div class="lux-grid lux-grid-cols-1 lux-gap-4">
+          <lux-input luxName="first-name" luxLabel="Vorname" [formField]="myForm.customer.name"></lux-input>
+          <lux-input luxName="given-name" luxLabel="Nachname" [formField]="myForm.customer.surname"></lux-input>
+          <lux-radio
+            [luxOrientationVertical]="false"
+            [luxOptions]="genders"
+            [luxPickValue]="pickGenderValue"
+            [formField]="myForm.customer.gender"
+            luxLabel="Geschlecht"
+          >
+            <ng-template let-option>
+              {{ option.name }}
+            </ng-template>
+          </lux-radio>
+        </div>
+      </lux-card-content>
+    </lux-card>
+    <lux-card luxTitle="Adresse" class="lux-flex">
+      <lux-card-content>
+        <div class="lux-grid lux-grid-cols-4 lt-md:lux-grid-cols-1 lux-gap-4">
+          <lux-input luxName="postal-code" luxLabel="PLZ" luxType="number" [luxNumberAlignLeft]="true" [formField]="myForm.address.zip">
+          </lux-input>
+          <lux-input
+            luxName="form-three_Stadt"
+            luxLabel="Stadt"
+            luxType="text"
+            [formField]="myForm.address.town"
+            class="lux-col-span-3"
+          ></lux-input>
+          <lux-input
+            luxName="street-address"
+            luxLabel="Straße"
+            luxType="text"
+            [formField]="myForm.address.street"
+            class="lux-col-span-4"
+          ></lux-input>
+          <lux-autocomplete
+            [luxOptions]="countries"
+            luxOptionLabelProp="name"
+            luxLabel="Land"
+            [luxLookupDelay]="100"
+            luxHint="Wählen Sie ein Land aus"
+            [luxSelectAllOnClick]="false"
+            [formField]="myForm.address.country"
+            class="lux-col-span-4"
+          >
+          </lux-autocomplete>
+        </div>
+      </lux-card-content>
+    </lux-card>
+    <lux-card luxTitle="Feedback" class="lux-flex">
+      <lux-card-content>
+        <div class="lux-grid lux-grid-cols-1 lux-gap-4">
+          <lux-input luxName="form-three_Bewertung" luxLabel="Bewertung" luxType="text" [formField]="myForm.feedback.rating"></lux-input>
+          <lux-checkbox luxLabel="Anonymisieren" [formField]="myForm.feedback.anonymous"></lux-checkbox>
+          <lux-textarea
+            luxName="form-three_Kommentar"
+            luxLabel="Kommentar"
+            luxHint="Hier ist Platz für Ihre Nachricht."
+            [formField]="myForm.feedback.comment"
+            [luxMaxLength]="100"
+            [luxMinRows]="1"
+            [luxMaxRows]="-1"
+          ></lux-textarea>
+        </div>
+      </lux-card-content>
+    </lux-card>
+    <lux-card luxTitle="Formulardaten" class="lux-col-span-full">
+      <lux-card-content>
+        <pre>{{ model() | json }}</pre>
+      </lux-card-content>
+    </lux-card>
+  </div>
 </div>

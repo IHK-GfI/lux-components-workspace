@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FieldState } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import {
   LuxAppFooterButtonInfo,
@@ -108,38 +108,41 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
 
   hasUnsavedData(): boolean {
     return (
-      this.formCommon().myGroup.dirty || this.formSingle().myGroup.dirty || this.formDuo().myGroup.dirty || this.formThree().myGroup.dirty
+      this.formCommon().myForm().dirty() ||
+      this.formSingle().myForm().dirty() ||
+      this.formDuo().myForm().dirty() ||
+      this.formThree().myForm().dirty()
     );
   }
 
   handleSaveClicked() {
-    let formGroup: FormGroup | null;
+    let field: FieldState<unknown> | null;
     let stateKey: FormExampleStateKey | null;
     switch (this.tabComponent().luxActiveTab()) {
       case 0:
-        formGroup = this.formCommon().myGroup;
+        field = this.formCommon().myForm();
         stateKey = 'common';
         break;
       case 1:
-        formGroup = this.formSingle().myGroup;
+        field = this.formSingle().myForm();
         stateKey = 'single';
         break;
       case 2:
-        formGroup = this.formDuo().myGroup;
+        field = this.formDuo().myForm();
         stateKey = 'dual';
         break;
       case 3:
-        formGroup = this.formThree().myGroup;
+        field = this.formThree().myForm();
         stateKey = 'three';
         break;
       default:
-        formGroup = null;
+        field = null;
         stateKey = null;
         break;
     }
 
-    if (formGroup && formGroup.valid) {
-      formGroup.markAsPristine();
+    if (field && field.valid()) {
+      field.reset();
       if (stateKey) {
         this.state.markPristine(stateKey);
       }
@@ -155,16 +158,16 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   highlightErrors() {
     switch (this.tabComponent().luxActiveTab()) {
       case 0:
-        LuxUtil.showValidationErrors(this.formCommon().myGroup);
+        this.formCommon().myForm().markAsTouched();
         break;
       case 1:
-        LuxUtil.showValidationErrors(this.formSingle().myGroup);
+        this.formSingle().myForm().markAsTouched();
         break;
       case 2:
-        LuxUtil.showValidationErrors(this.formDuo().myGroup);
+        this.formDuo().myForm().markAsTouched();
         break;
       case 3:
-        LuxUtil.showValidationErrors(this.formThree().myGroup);
+        this.formThree().myForm().markAsTouched();
         break;
       default:
         break;

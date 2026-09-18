@@ -1,7 +1,7 @@
 import { JsonPipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { disabled, email, form, FormField, max, min, minLength, pattern, required } from '@angular/forms/signals';
 import {
   LuxAutocompleteComponent,
   LuxAutofocusDirective,
@@ -35,29 +35,27 @@ interface FormCommonOption {
   value: string;
 }
 
-interface FormCommonDummy {
-  user: FormGroup<FormCommonUser>;
-  description: FormControl<string | null>;
-  newsletter: FormControl<boolean | null>;
-  hobbies: FormControl<string[] | null>;
-  donation: FormControl<number | null>;
-  hungry: FormControl<boolean | null>;
-  chipsDeletable: FormControl<string[] | null>;
-  chipsFix: FormControl<string[] | null>;
-  radio: FormControl<FormCommonOption | null>;
-  datepicker: FormControl<string | null>;
-  autocomplete: FormControl<string>;
-  comment: FormControl<string | null>;
+interface FormCommonModel {
+  user: {
+    firstname: string;
+    lastname: string;
+    email: string;
+    password: string;
+  };
+  description: string | null;
+  newsletter: boolean;
+  hobbies: string[] | null;
+  donation: number | null;
+  hungry: boolean;
+  chipsDeletable: string[] | null;
+  chipsFix: string[] | null;
+  radio: FormCommonOption | null;
+  datepicker: string | null;
+  autocomplete: string;
+  comment: string | null;
 }
 
-interface FormCommonUser {
-  firstname: FormControl<string>;
-  lastname: FormControl<string>;
-  email: FormControl<string>;
-  password: FormControl<string>;
-}
-
-interface FormCommonState extends FormExampleSnapshot<ReturnType<FormGroup<FormCommonDummy>['getRawValue']>> {
+interface FormCommonState extends FormExampleSnapshot<FormCommonModel> {
   chipItems: string[];
   chipItems2: string[];
 }
@@ -88,27 +86,52 @@ interface FormCommonState extends FormExampleSnapshot<ReturnType<FormGroup<FormC
     LuxCheckboxComponent,
     LuxAutocompleteComponent,
     LuxAutofocusDirective,
-    ReactiveFormsModule,
+    FormField,
     UpperCasePipe,
     LowerCasePipe,
     JsonPipe
   ]
 })
-export class FormCommonComponent extends FormBase implements OnInit {
-  myGroup!: FormGroup<FormCommonDummy>;
-
+export class FormCommonComponent extends FormBase {
   hobbies: FormCommonOption[] = [
     { label: 'Reiten', value: 'r' },
     { label: 'Fußball', value: 'f' },
     { label: 'Handball', value: 'h' },
     { label: 'Stricken', value: 's' }
   ];
-  chipItems: string[] = [];
-  chipItems2: string[] = [];
+  chipItems: string[] = ['Chip #1', 'Chip #2'];
+  chipItems2: string[] = ['Chip #3', 'Chip #4'];
 
   // Schalter im Beispiel "A11y - Visuell versteckte Labels"
   readonly showA11yLabels = signal(false);
   readonly pickHobbyValue = (hobby: FormCommonOption) => hobby.value;
+
+  readonly model = signal<FormCommonModel>({
+    user: { firstname: '', lastname: '', email: '', password: '' },
+    description: '',
+    newsletter: true,
+    hobbies: null,
+    donation: 0,
+    hungry: true,
+    chipsDeletable: [...this.chipItems],
+    chipsFix: [...this.chipItems2],
+    radio: this.hobbies[2],
+    datepicker: new Date(2018, 11, 1).toISOString(),
+    autocomplete: this.chipItems2[1],
+    comment: null
+  });
+
+  readonly myForm = form(this.model, (path) => {
+    pattern(path.user.firstname, /^[a-zA-Z0-9]*$/);
+    required(path.user.lastname, { message: 'Bitte einen Nachnamen eingeben' });
+    minLength(path.user.lastname, 3);
+    required(path.user.email, { message: 'Bitte eine E-Mail-Adresse eingeben' });
+    email(path.user.email);
+    disabled(path.description);
+    min(path.donation, 0);
+    max(path.donation, 1000);
+    required(path.autocomplete, { message: 'Bitte einen Wert auswählen' });
+  });
 
   private logger = inject(LuxConsoleService);
   private readonly destroyRef = inject(DestroyRef);
@@ -117,66 +140,36 @@ export class FormCommonComponent extends FormBase implements OnInit {
   constructor() {
     super();
 
-    this.chipItems = ['Chip #1', 'Chip #2'];
-    this.chipItems2 = ['Chip #3', 'Chip #4'];
-  }
-
-  ngOnInit() {
-    this.myGroup = new FormGroup<FormCommonDummy>({
-      user: new FormGroup<FormCommonUser>({
-        firstname: new FormControl<string>('', { validators: Validators.pattern('[a-zA-Z0-9]*'), nonNullable: true }),
-        lastname: new FormControl<string>('', {
-          validators: Validators.compose([Validators.required, Validators.minLength(3)]),
-          nonNullable: true
-        }),
-        email: new FormControl<string>('', { validators: Validators.compose([Validators.required, Validators.email]), nonNullable: true }),
-        password: new FormControl<string>('', { nonNullable: true })
-      }),
-      description: new FormControl<string | null>(''),
-      newsletter: new FormControl<boolean | null>(true),
-      hobbies: new FormControl<string[] | null>(null),
-      donation: new FormControl<number | null>(0, Validators.compose([Validators.min(0), Validators.max(1000)])),
-      hungry: new FormControl<boolean | null>(true),
-      chipsDeletable: new FormControl<string[] | null>([...this.chipItems]),
-      chipsFix: new FormControl<string[] | null>([...this.chipItems2]),
-      radio: new FormControl<FormCommonOption | null>(this.hobbies[2]),
-      datepicker: new FormControl<string | null>(new Date(2018, 11, 1).toISOString()),
-      autocomplete: new FormControl<string>(this.chipItems2[1], { validators: Validators.required, nonNullable: true }),
-      comment: new FormControl<string | null>(null)
-    });
-    this.myGroup.get('description')?.disable();
-
     const snapshot = this.state.get<FormCommonState>('common');
     if (snapshot) {
       this.chipItems = snapshot.chipItems;
       this.chipItems2 = snapshot.chipItems2;
-      this.myGroup.patchValue(
-        {
-          ...snapshot.rawValue,
-          radio: this.findHobby(snapshot.rawValue.radio)
-        },
-        { emitEvent: false }
-      );
+      this.model.set({
+        ...snapshot.rawValue,
+        radio: this.findHobby(snapshot.rawValue.radio)
+      });
       if (snapshot.dirty) {
-        this.myGroup.markAsDirty({ emitEvent: false });
+        this.myForm().markAsDirty();
       }
     }
 
-    this.myGroup.valueChanges.pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef)).subscribe(() => this.saveState());
+    toObservable(this.model)
+      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.saveState());
     this.destroyRef.onDestroy(() => this.saveState());
   }
 
   hasUnsavedData(): boolean {
-    return this.myGroup.dirty;
+    return this.myForm().dirty();
   }
 
   show() {
-    this.logger.log(this.myGroup.value);
+    this.logger.log(this.model());
   }
 
   chipItemClicked(index: number) {
     this.logger.log(index);
-    this.logger.log(this.myGroup.value);
+    this.logger.log(this.model());
   }
 
   onChipItemsChange(): void {
@@ -189,8 +182,8 @@ export class FormCommonComponent extends FormBase implements OnInit {
 
   private saveState(): void {
     this.state.save<FormCommonState>('common', {
-      rawValue: this.myGroup.getRawValue(),
-      dirty: this.myGroup.dirty,
+      rawValue: this.model(),
+      dirty: this.myForm().dirty(),
       chipItems: this.chipItems,
       chipItems2: this.chipItems2
     });

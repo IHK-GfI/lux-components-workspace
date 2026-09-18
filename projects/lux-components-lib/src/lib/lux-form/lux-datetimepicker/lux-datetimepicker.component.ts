@@ -230,6 +230,9 @@ export class LuxDatetimepickerComponent<T = any> extends LuxFormLegacyValueBase<
       // Brücke nicht automatisch verarbeitet - sie schreibt nur einen echten luxValue-Initialwert,
       // nicht einen bereits vorhandenen Fremd-Wert. Einmalige Normalisierung nachholen.
       this.updateDateValue(this.formControl.value);
+      // Siehe LuxDatepickerComponent.ngOnInit() für die Begründung: eine interne Normalisierung darf
+      // vor der ersten Interaktion kein dirty auslösen.
+      this.resetFieldTouchedAndDirty();
     }
   }
 

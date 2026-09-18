@@ -1,119 +1,113 @@
 <div class="lux-container lux-grid lux-grid-cols-1 lux-gap-4">
   <lux-card luxTitle="Benutzer" luxTagId="forms">
     <lux-card-content>
-      <form [formGroup]="myGroup">
-        <div formGroupName="user" class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
-          <lux-input luxName="first-name" luxLabel="Vorname" luxControlBinding="firstname" luxAutofocus></lux-input>
-          <lux-input luxName="given-name" luxLabel="Nachname" luxControlBinding="lastname"></lux-input>
+      <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
+        <lux-input luxName="first-name" luxLabel="Vorname" [formField]="myForm.user.firstname" luxAutofocus></lux-input>
+        <lux-input luxName="given-name" luxLabel="Nachname" [formField]="myForm.user.lastname"></lux-input>
 
-          <lux-input luxName="email" luxLabel="E-Mail" luxControlBinding="email">
-            <lux-input-suffix>
-              <lux-icon luxIconName="lux-mail-sign-at"></lux-icon>
-            </lux-input-suffix>
-          </lux-input>
-          <lux-input luxName="current-password" luxLabel="Passwort" luxControlBinding="password" luxType="password">
-            <lux-input-suffix>
-              <lux-icon luxIconName="lux-interface-lock"></lux-icon>
-            </lux-input-suffix>
-          </lux-input>
-        </div>
-        <div class="lux-grid lux-grid-cols-2 lux-gap-4 lux-grid-cols-1-lt-md">
-          <lux-select
-            luxLabel="Hobbys"
-            luxControlBinding="hobbies"
-            [luxOptions]="hobbies"
-            luxOptionLabelProp="label"
-            [luxPickValue]="pickHobbyValue"
-            [luxMultiple]="true"
-          ></lux-select>
-          <lux-input luxName="form-common_Spende" luxLabel="Spende" luxControlBinding="donation" luxType="number">
-            <lux-input-prefix>
-              <lux-icon luxIconName="lux-money-atm-card-1"></lux-icon>
-            </lux-input-prefix>
-            <lux-input-suffix>
-              <lux-icon luxIconName="lux-money-currency-euro"></lux-icon>
-            </lux-input-suffix>
-          </lux-input>
+        <lux-input luxName="email" luxLabel="E-Mail" [formField]="myForm.user.email">
+          <lux-input-suffix>
+            <lux-icon luxIconName="lux-mail-sign-at"></lux-icon>
+          </lux-input-suffix>
+        </lux-input>
+        <lux-input luxName="current-password" luxLabel="Passwort" [formField]="myForm.user.password" luxType="password">
+          <lux-input-suffix>
+            <lux-icon luxIconName="lux-interface-lock"></lux-icon>
+          </lux-input-suffix>
+        </lux-input>
+      </div>
+      <div class="lux-grid lux-grid-cols-2 lux-gap-4 lux-grid-cols-1-lt-md">
+        <lux-select
+          luxLabel="Hobbys"
+          [formField]="myForm.hobbies"
+          [luxOptions]="hobbies"
+          luxOptionLabelProp="label"
+          [luxPickValue]="pickHobbyValue"
+          [luxMultiple]="true"
+        ></lux-select>
+        <lux-input luxName="form-common_Spende" luxLabel="Spende" [formField]="myForm.donation" luxType="number">
+          <lux-input-prefix>
+            <lux-icon luxIconName="lux-money-atm-card-1"></lux-icon>
+          </lux-input-prefix>
+          <lux-input-suffix>
+            <lux-icon luxIconName="lux-money-currency-euro"></lux-icon>
+          </lux-input-suffix>
+        </lux-input>
 
-          <lux-toggle luxLabel="Newsletter" luxControlBinding="newsletter"></lux-toggle>
-          <lux-checkbox luxControlBinding="hungry" luxLabel="Hungrig" class="lux-row-start-3"></lux-checkbox>
+        <lux-toggle luxLabel="Newsletter" [formField]="myForm.newsletter"></lux-toggle>
+        <lux-checkbox [formField]="myForm.hungry" luxLabel="Hungrig" class="lux-row-start-3"></lux-checkbox>
 
-          <lux-input
-            luxName="form-common_Beschreibung"
-            luxLabel="Beschreibung"
-            luxControlBinding="description"
-            class="lux-col-span-full"
-          ></lux-input>
+        <lux-input luxName="form-common_Beschreibung" luxLabel="Beschreibung" [formField]="myForm.description" class="lux-col-span-full">
+        </lux-input>
 
-          <lux-chips
-            [luxInputAllowed]="true"
-            luxInputLabel="Neuen Chip erstellen..."
-            luxOrientation="horizontal"
-            [luxNewChipGroup]="chipGroup2"
-            class="lux-col-span-full"
+        <lux-chips
+          [luxInputAllowed]="true"
+          luxInputLabel="Neuen Chip erstellen..."
+          luxOrientation="horizontal"
+          [luxNewChipGroup]="chipGroup2"
+          class="lux-col-span-full"
+        >
+          <lux-chip [luxRemovable]="false" luxColor="warn"> Chip ohne Group </lux-chip>
+          <lux-chip-group
+            [luxRemovable]="false"
+            luxColor="primary"
+            (luxChipClicked)="chipItemClicked($event)"
+            [(luxLabels)]="chipItems"
+            (luxLabelsChange)="onChipItemsChange()"
+            #chipGroup
           >
-            <lux-chip [luxRemovable]="false" luxColor="warn"> Chip ohne Group </lux-chip>
-            <lux-chip-group
-              [luxRemovable]="false"
-              luxColor="primary"
-              (luxChipClicked)="chipItemClicked($event)"
-              [(luxLabels)]="chipItems"
-              (luxLabelsChange)="onChipItemsChange()"
-              #chipGroup
-            >
-              <ng-template let-chipItem>
-                {{ chipItem | lowercase }}
-              </ng-template>
-            </lux-chip-group>
-            <lux-chip-group
-              [luxRemovable]="true"
-              luxColor="accent"
-              (luxChipClicked)="chipItemClicked($event)"
-              [(luxLabels)]="chipItems2"
-              (luxLabelsChange)="onChipItemsChange()"
-              #chipGroup2
-            >
-              <ng-template let-chipItem>
-                {{ chipItem | uppercase }}
-              </ng-template>
-            </lux-chip-group>
-          </lux-chips>
-
-          <lux-radio
-            [luxOptions]="hobbies"
-            luxGroupName="1"
-            luxControlBinding="radio"
-            [luxOrientationVertical]="false"
-            luxLabel="Hobbies"
-            class="lux-col-span-full"
-          >
-            <ng-template let-option>
-              {{ option['label'] }}
+            <ng-template let-chipItem>
+              {{ chipItem | lowercase }}
             </ng-template>
-          </lux-radio>
-
-          <lux-datepicker [luxTouchUi]="true" luxControlBinding="datepicker" luxLabel="Datepicker"> </lux-datepicker>
-
-          <lux-autocomplete
-            [luxOptions]="chipItems2"
-            luxLabel="Autocomplete"
-            [luxLookupDelay]="100"
-            [luxSelectAllOnClick]="false"
-            luxControlBinding="autocomplete"
+          </lux-chip-group>
+          <lux-chip-group
+            [luxRemovable]="true"
+            luxColor="accent"
+            (luxChipClicked)="chipItemClicked($event)"
+            [(luxLabels)]="chipItems2"
+            (luxLabelsChange)="onChipItemsChange()"
+            #chipGroup2
           >
-          </lux-autocomplete>
-          <lux-textarea
-            luxLabel="Textarea"
-            luxPlaceholder="Bitte hinterlasse hier einen Kommentar..."
-            luxControlBinding="comment"
-            [luxMaxLength]="300"
-            [luxMinRows]="2"
-            [luxMaxRows]="3"
-            class="lux-col-span-full"
-          >
-          </lux-textarea>
-        </div>
-      </form>
+            <ng-template let-chipItem>
+              {{ chipItem | uppercase }}
+            </ng-template>
+          </lux-chip-group>
+        </lux-chips>
+
+        <lux-radio
+          [luxOptions]="hobbies"
+          luxGroupName="1"
+          [formField]="myForm.radio"
+          [luxOrientationVertical]="false"
+          luxLabel="Hobbies"
+          class="lux-col-span-full"
+        >
+          <ng-template let-option>
+            {{ option['label'] }}
+          </ng-template>
+        </lux-radio>
+
+        <lux-datepicker [luxTouchUi]="true" [formField]="myForm.datepicker" luxLabel="Datepicker"> </lux-datepicker>
+
+        <lux-autocomplete
+          [luxOptions]="chipItems2"
+          luxLabel="Autocomplete"
+          [luxLookupDelay]="100"
+          [luxSelectAllOnClick]="false"
+          [formField]="myForm.autocomplete"
+        >
+        </lux-autocomplete>
+        <lux-textarea
+          luxLabel="Textarea"
+          luxPlaceholder="Bitte hinterlasse hier einen Kommentar..."
+          [formField]="myForm.comment"
+          [luxMaxLength]="300"
+          [luxMinRows]="2"
+          [luxMaxRows]="3"
+          class="lux-col-span-full"
+        >
+        </lux-textarea>
+      </div>
     </lux-card-content>
   </lux-card>
 
@@ -125,7 +119,7 @@
         weiterhin vor. Mit dem Schalter lassen sich die Labels zur Kontrolle wieder einblenden. Checkbox und Toggle fehlen hier bewusst,
         denn ihr Label steht neben dem Bedienelement und wird nicht visuell versteckt.
       </p>
-      <lux-toggle luxLabel="Labels sichtbar anzeigen" [(luxChecked)]="showA11yLabels" [luxNoBottomLabel]="true"></lux-toggle>
+      <lux-toggle luxLabel="Labels sichtbar anzeigen" [(checked)]="showA11yLabels" [luxNoBottomLabel]="true"></lux-toggle>
       <div class="lux-grid lux-grid-cols-2 lux-gap-4 lt-md:lux-grid-cols-1">
         <lux-input luxLabel="Suchbegriff eingeben" [luxNoTopLabel]="!showA11yLabels()" luxPlaceholder="Suchen..."></lux-input>
         <lux-textarea luxLabel="Anmerkung erfassen" [luxNoTopLabel]="!showA11yLabels()"></lux-textarea>
@@ -180,7 +174,7 @@
   <lux-card luxTitle="Formulardaten">
     <lux-card-content>
       <div>
-        <pre>{{ myGroup.value | json }}</pre>
+        <pre>{{ model() | json }}</pre>
       </div>
     </lux-card-content>
   </lux-card>

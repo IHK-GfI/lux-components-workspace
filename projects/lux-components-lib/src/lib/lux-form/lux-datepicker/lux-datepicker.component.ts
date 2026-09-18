@@ -200,6 +200,10 @@ export class LuxDatepickerComponent<T = any> extends LuxFormLegacyValueBase<T> i
       // Brücke nicht automatisch verarbeitet - sie schreibt nur einen echten luxValue-Initialwert,
       // nicht einen bereits vorhandenen Fremd-Wert. Einmalige Normalisierung nachholen.
       this.updateDateValue(this.formControl.value);
+      // updateDateValue() kann dabei den Wert normalisieren (z.B. Uhrzeitanteil kappen) und schreibt
+      // die Korrektur über this.value.set() - im Signal-Forms-Betrieb sähe das wie eine echte
+      // Nutzeränderung aus. Vor jeder Interaktion ist ein Zurücksetzen von touched/dirty sicher.
+      this.resetFieldTouchedAndDirty();
     }
 
     (this.dateAdapter as LuxDatepickerAdapter).referenceTimeProvider = () => {
