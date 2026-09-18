@@ -235,6 +235,16 @@
       "arialabel": "Liste",
       "empty_label": "Keine Einträge vorhanden"
     },
+    "list-select": {
+      "arialabel": "Auswahlliste",
+      "counter": "{{selected}} von {{total}} ausgewählt",
+      "detail_arialabel": "Details anzeigen",
+      "detail_item_arialabel": "Details anzeigen zu {{label}}",
+      "search_arialabel": "Suche",
+      "search_clear_arialabel": "Suche löschen",
+      "search_results": "{{count}} Treffer",
+      "select_all": "Alle auswählen"
+    },
     "lookup": {
       "error_message.invalid": "Der ausgewählte Wert ist ungültig."
     },

@@ -1,0 +1,66 @@
+<!-- Klick auf die Karte ist reine Komfort-Erweiterung; die Tastaturbedienung läuft über role="row" und den FocusKeyManager der Hauptkomponente. -->
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
+<div
+  #card
+  class="lux-list-select-card lux-flex lux-items-center lux-gap-4"
+  role="row"
+  tabindex="-1"
+  [class.lux-selected]="luxSelected()"
+  [class.lux-disabled]="luxDisabled()"
+  [attr.aria-selected]="luxSelected()"
+  [attr.aria-disabled]="luxDisabled() ? 'true' : null"
+  (click)="onCardClick($event)"
+>
+  <div class="lux-list-select-control-cell lux-flex lux-items-center" role="gridcell">
+    @if (luxMode() === 'multi') {
+      <!-- aria-label bewusst ohne || null: MatCheckbox koalesziert intern selbst; aria-describedby braucht $any(), da der Material-Typ non-nullable ist. -->
+      <mat-checkbox
+        class="lux-list-select-control"
+        [checked]="luxSelected()"
+        [disabled]="luxDisabled()"
+        [tabIndex]="-1"
+        [aria-label]="luxLabel()"
+        [aria-labelledby]="luxLabel() ? null : labelId"
+        [aria-describedby]="$any(luxSubLabel() && !luxContentTemplate() ? subLabelId : null)"
+        (change)="onControlChange()"
+      ></mat-checkbox>
+    } @else {
+      <mat-radio-button
+        class="lux-list-select-control"
+        [value]="luxItem()"
+        [checked]="luxSelected()"
+        [disabled]="luxDisabled()"
+        [tabIndex]="-1"
+        [name]="luxRadioName()"
+        [aria-label]="luxLabel() || null"
+        [aria-labelledby]="luxLabel() ? null : labelId"
+        [aria-describedby]="luxSubLabel() && !luxContentTemplate() ? subLabelId : null"
+        [disableRipple]="true"
+        color="primary"
+        (change)="onControlChange()"
+      ></mat-radio-button>
+    }
+  </div>
+  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto lux-gap-2" role="gridcell" [attr.id]="labelId">
+    @if (luxContentTemplate()) {
+      <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
+    } @else {
+      <span class="lux-list-select-title">{{ luxLabel() }}</span>
+      @if (luxSubLabel()) {
+        <span class="lux-list-select-subtitle lux-leading-tight" [attr.id]="subLabelId">{{ luxSubLabel() }}</span>
+      }
+    }
+  </div>
+  @if (luxShowDetailButton()) {
+    <div class="lux-list-select-detail-cell lux-flex lux-items-center" role="gridcell">
+      <lux-button
+        class="lux-list-select-detail"
+        [luxRounded]="true"
+        [luxIconName]="luxDetailIconName()"
+        [luxLabel]="detailAriaLabel()"
+        [luxDisabled]="luxDisabled()"
+        (luxClicked)="luxDetail.emit()"
+      ></lux-button>
+    </div>
+  }
+</div>

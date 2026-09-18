@@ -1,0 +1,137 @@
+<ng-template #itemsTpl>
+  <!-- track $index: Items halten keinen eigenen Zustand, Index-Tracking vermeidet DOM-Neuaufbau bei neuen Objekt-Identitäten. -->
+  @for (item of displayedItems(); track $index; let i = $index) {
+    <lux-list-select-item
+      [luxItem]="item"
+      [luxMode]="luxMode()"
+      [luxSelected]="isSelected(item)"
+      [luxDisabled]="componentDisabled() || isItemDisabled(item)"
+      [luxLabel]="getLabel(item)"
+      [luxSubLabel]="getSubLabel(item)"
+      [luxShowDetailButton]="luxShowDetailButton()"
+      [luxDetailIconName]="luxDetailIconName()"
+      [luxContentTemplate]="contentTemplate() ?? null"
+      [luxRadioName]="radioName()"
+      [luxInnerNavigation]="innerNavigation() && i === activeItemIndex()"
+      (luxToggleSelected)="toggleItem(item)"
+      (luxDetail)="luxDetailClicked.emit(item)"
+      (click)="onItemActivated(i)"
+    />
+  }
+</ng-template>
+
+<div class="lux-list-select-container lux-flex lux-flex-col lux-gap-4" luxTagIdHandler [luxTagId]="luxTagId()" [style.max-height]="luxMaxHeight()">
+  @if (luxShowSearch()) {
+    <lux-input-ac
+      class="lux-list-select-search lux-flex-shrink-0"
+      [luxNoLabels]="true"
+      [luxPlaceholder]="'luxc.list-select.search_arialabel' | transloco"
+      [luxAriaLabel]="'luxc.list-select.search_arialabel' | transloco"
+      luxAutocomplete="off"
+      [luxDisabled]="componentDisabled()"
+      [luxValue]="luxSearchValue()"
+      (luxValueChange)="luxSearchValue.set($event ?? '')"
+    >
+      <lux-input-ac-prefix class="lux-mr-2">
+        <lux-icon luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
+      </lux-input-ac-prefix>
+      @if (luxSearchValue()) {
+        <lux-input-ac-suffix>
+          <lux-button
+            class="lux-list-select-search-clear"
+            [luxRounded]="true"
+            luxIconName="lux-interface-delete-circle"
+            [luxLabel]="'luxc.list-select.search_clear_arialabel' | transloco"
+            [luxDisabled]="componentDisabled()"
+            (luxClicked)="onSearchClear()"
+          ></lux-button>
+        </lux-input-ac-suffix>
+      }
+    </lux-input-ac>
+  }
+
+  @if (luxMode() === 'multi') {
+    <div class="lux-list-select-header lux-flex lux-items-center lux-flex-shrink-0">
+      <mat-checkbox
+        class="lux-list-select-select-all"
+        [checked]="allSelected()"
+        [indeterminate]="partiallySelected()"
+        [disabled]="componentDisabled()"
+        (change)="onSelectAllChange($event.checked)"
+      >
+        {{ luxSelectAllLabel() ?? ('luxc.list-select.select_all' | transloco) }}
+      </mat-checkbox>
+      @if (luxShowCounter()) {
+        <lux-badge luxColor="lightblue" [luxMuted]="true" [luxUppercase]="false">
+          <lux-label [luxId]="counterLabelId()">{{
+            'luxc.list-select.counter' | transloco: { selected: luxSelected().length, total: totalCount() }
+          }}</lux-label>
+        </lux-badge>
+      }
+    </div>
+  }
+
+  <ng-template #listTpl>
+    <div
+      class="lux-list-select-list lux-flex lux-flex-col lux-gap-2"
+      role="grid"
+      tabindex="0"
+      [attr.aria-label]="listLabel()"
+      [attr.aria-multiselectable]="luxMode() === 'multi' ? true : null"
+      (focus)="onGridFocus($event)"
+      (focusout)="onGridFocusOut($event)"
+      (keydown)="onGridKeydown($event)"
+    >
+      <ng-container [ngTemplateOutlet]="itemsTpl"></ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #loadingOverlayTpl>
+    @if (viewportLoading()) {
+      <div class="lux-list-select-loading-overlay">
+        <lux-progress luxType="Spinner" luxMode="indeterminate"></lux-progress>
+      </div>
+    }
+  </ng-template>
+
+  @if (infiniteScrollActive()) {
+    <div
+      class="lux-list-select-viewport lux-flex-auto lux-overflow-y-auto"
+      [class.lux-list-select-loading]="viewportLoading()"
+      [attr.aria-busy]="viewportLoading() ? true : null"
+      luxInfiniteScroll
+      [luxImmediateCallback]="false"
+      [luxIsLoading]="effectiveIsLoading()"
+      (luxScrolled)="onScrolled()"
+    >
+      <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
+      <ng-container [ngTemplateOutlet]="loadingOverlayTpl"></ng-container>
+    </div>
+  } @else {
+    <div
+      class="lux-list-select-viewport lux-flex-auto lux-overflow-y-auto"
+      [class.lux-list-select-loading]="viewportLoading()"
+      [attr.aria-busy]="viewportLoading() ? true : null"
+    >
+      <ng-container [ngTemplateOutlet]="listTpl"></ng-container>
+      <ng-container [ngTemplateOutlet]="loadingOverlayTpl"></ng-container>
+    </div>
+  }
+
+  @if (paginationActive()) {
+    <lux-paginator
+      class="lux-flex-shrink-0"
+      [luxLength]="totalCount()"
+      [luxPageSize]="luxPageSize()"
+      [(luxPageIndex)]="luxPageIndex"
+      [luxHidePageSize]="true"
+      [luxShowFirstLastButtons]="false"
+      [luxDisabled]="componentDisabled()"
+      (luxPageChange)="onPageChange($event)"
+    ></lux-paginator>
+  }
+
+  @if (errorMessages().length > 0) {
+    <lux-message-box class="lux-list-select-error lux-flex-shrink-0" [luxMessages]="errorMessages()"></lux-message-box>
+  }
+</div>

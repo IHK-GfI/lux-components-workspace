@@ -75,6 +75,7 @@ Es wird empfohlen, das Layout mit den Komponenten aus dem [Layout](#layout) zu e
 - [lux-checkbox-container‐ac](lux‐checkbox‐container‐ac-v21)
 - [lux-divider](lux‐divider-v21)
 - [lux-list](lux‐list-v21)
+- [lux-list-select](lux‐list‐select-v21)
 - [lux‐master‐detail‐ac](lux‐master‐detail‐ac-v21)
 - [lux-panel](lux‐panel-v21)
 - [lux-session-timer](lux‐session‐timer‐v21)
