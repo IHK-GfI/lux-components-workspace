@@ -1,4 +1,4 @@
-import { describe, it, beforeAll, beforeEach, afterEach, expect, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
@@ -694,6 +694,22 @@ describe('LuxAutocompleteComponent', () => {
       expect(autocomplete.displayedOptions().length).toEqual(10);
       expect(autocomplete.filteredOptions().length).toEqual(0);
     });
+
+    it('Sollte einen initialen Wert außerhalb des ersten geladenen Blocks korrekt anzeigen', async () => {
+      const initialValueFixture = TestBed.createComponent(LuxScrollWithInitialValueComponent);
+      const initialValueComponent = initialValueFixture.componentInstance;
+      initialValueFixture.detectChanges();
+      await vi.advanceTimersByTimeAsync(initialValueComponent.autocomplete().luxLookupDelay());
+      initialValueFixture.detectChanges();
+
+      // Vorbedingung: Die ausgewählte Option (Index 8) liegt außerhalb des ersten Blocks (luxOptionBlockSize = 8).
+      expect(initialValueComponent.options.slice(0, 8)).not.toContain(initialValueComponent.options[8]);
+
+      // Die Anzeige des Werts (Textfeld + value()) basiert auf luxOptions() und ist unabhängig von der
+      // Pagination der Optionsliste (filteredOptions()/displayedOptions()) korrekt.
+      expect(initialValueComponent.autocomplete().value()).toEqual(initialValueComponent.options[8]);
+      expect(initialValueComponent.autocomplete().matInput()!.nativeElement.value).toEqual(initialValueComponent.options[8].label);
+    });
   });
 
   describe('luxClearable', () => {
@@ -1108,6 +1124,38 @@ class LuxScrollComponent {
     { label: 'Lorem ipsum I', value: 'I' },
     { label: 'Lorem ipsum J', value: 'J' }
   ];
+}
+
+@Component({
+  template: ` <lux-autocomplete
+    luxLabel="Label"
+    [luxOptions]="options"
+    [luxOptionBlockSize]="8"
+    [luxLookupDelay]="0"
+    [(luxValue)]="selected"
+  >
+  </lux-autocomplete>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxAutocompleteComponent]
+})
+class LuxScrollWithInitialValueComponent {
+  options: TestOption[] = [
+    { label: 'Lorem ipsum A', value: 'A' },
+    { label: 'Lorem ipsum B', value: 'B' },
+    { label: 'Lorem ipsum C', value: 'C' },
+    { label: 'Lorem ipsum D', value: 'D' },
+    { label: 'Lorem ipsum E', value: 'E' },
+    { label: 'Lorem ipsum F', value: 'F' },
+    { label: 'Lorem ipsum G', value: 'G' },
+    { label: 'Lorem ipsum H', value: 'H' },
+    { label: 'Lorem ipsum I', value: 'I' },
+    { label: 'Lorem ipsum J', value: 'J' }
+  ];
+
+  // Bewusst außerhalb des ersten geladenen Blocks (luxOptionBlockSize = 8).
+  selected = signal<TestOption | ''>(this.options[8]);
+
+  readonly autocomplete = viewChild.required(LuxAutocompleteComponent);
 }
 
 @Component({

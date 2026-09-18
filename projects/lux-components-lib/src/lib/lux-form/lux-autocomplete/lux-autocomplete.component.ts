@@ -70,7 +70,7 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
   readonly luxPickValue = input<((selected: O | null | undefined) => V) | undefined>(undefined);
   readonly luxFilterFn = input<((filterTerm: string, label: string, option: any) => boolean) | undefined>(undefined);
   readonly luxPanelWidth = input<string | number>('');
-  readonly luxOptionBlockSize = input(500);
+  readonly luxOptionBlockSize = input(50);
   readonly luxClearable = input(false);
   readonly luxClearAriaLabel = input('');
 
@@ -117,6 +117,13 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
    * emitValueChange()/selected$-Pipeline laufen und eine zweite, ungewollte Emission auslösen.
    */
   private previousInputValue?: string;
+  /**
+   * Cached Ergebnisse von luxPickValue() pro Options-Objekt. Ohne diesen Cache würde luxPickValue()
+   * z.B. in trackOption() für jede sichtbare Option bei jedem Change-Detection-Durchlauf (also bei
+   * jedem Tastendruck) erneut aufgerufen werden, da @for seine Track-Funktion bei jeder Prüfung für
+   * alle Einträge erneut auswertet.
+   */
+  private pickValueCache = new WeakMap<object, V | undefined>();
 
   constructor() {
     super();
@@ -131,6 +138,13 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
           this.registerNewValueChangesListener();
         }
       });
+    });
+
+    effect(() => {
+      this.luxPickValue();
+
+      // Bei einer neuen/geänderten luxPickValue-Funktion dürfen keine veralteten Ergebnisse mehr genutzt werden.
+      untracked(() => (this.pickValueCache = new WeakMap<object, V | undefined>()));
     });
   }
 
@@ -452,9 +466,8 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
     }
 
     if (option instanceof Object) {
-      const pickValueFn = this.luxPickValue();
-      if (pickValueFn) {
-        const pickValue = pickValueFn(option);
+      if (this.luxPickValue()) {
+        const pickValue = this.resolvePickValue(option);
         if (pickValue !== undefined && pickValue !== null) {
           return `${pickValue}-${index}`;
         }
@@ -548,13 +561,34 @@ export class LuxAutocompleteComponent<V = any, O = any> extends LuxFormLegacyVal
 
   private getPickValueOption(value: O): O | null {
     const pickValueFn = this.luxPickValue();
-    const pickValue = value instanceof Object && !!pickValueFn ? pickValueFn(value) : value;
+    const pickValue = value instanceof Object && !!pickValueFn ? this.resolvePickValue(value) : value;
     const found = this.luxOptions().find((currentOption) => {
-      const pickOptionValue = currentOption instanceof Object && !!pickValueFn ? pickValueFn(currentOption) : currentOption;
+      const pickOptionValue = currentOption instanceof Object && !!pickValueFn ? this.resolvePickValue(currentOption) : currentOption;
       return pickValue === pickOptionValue;
     });
 
     return found ?? null;
+  }
+
+  /**
+   * Ruft luxPickValue() für ein Options-Objekt höchstens einmal auf und liefert das Ergebnis
+   * danach aus dem Cache. Verhindert wiederholte, potenziell teure Aufrufe der von außen
+   * übergebenen Funktion, wenn dieselbe Option mehrfach ausgewertet wird (z.B. in trackOption()
+   * bei jedem Change-Detection-Durchlauf oder beim Durchsuchen von luxOptions()).
+   */
+  private resolvePickValue(option: O): V | undefined {
+    const pickValueFn = this.luxPickValue();
+    if (!pickValueFn || !(option instanceof Object)) {
+      return undefined;
+    }
+
+    if (this.pickValueCache.has(option as object)) {
+      return this.pickValueCache.get(option as object);
+    }
+
+    const pickValue = pickValueFn(option);
+    this.pickValueCache.set(option as object, pickValue);
+    return pickValue;
   }
 
   private updateFilterOptions() {

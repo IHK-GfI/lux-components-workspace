@@ -88,7 +88,7 @@ export class AutocompleteAuthenticExampleComponent {
   readonly longOptionLabel =
     'Lorem ipsum dolor \n sit amet consectetur adipisicing elit. Nulla officiis consectetur natus id iusto asperiores cum eum sint esse in?';
   readonly toggleOptions = signal(true);
-  readonly optionBlockSize = signal(500);
+  readonly optionBlockSize = signal(50);
   readonly options: AutocompleteAcExampleOption[] = this.createOption();
   readonly options2: AutocompleteAcExampleOption[] = [
     { label: 'Meine Aufgaben 2', short: 'MA2', value: 'A2', gueltigAb: new Date(2024, 0, 1) },

@@ -64,7 +64,7 @@ export class LuxChipsComponent extends LuxFormLegacyValueBase<string[] | null> i
   readonly luxNewChipGroup = input<LuxChipGroupComponent | undefined>(undefined);
   readonly luxStrict = input(false);
   override readonly luxPlaceholder = input('');
-  readonly luxOptionBlockSize = input(500);
+  readonly luxOptionBlockSize = input(50);
   readonly luxHideBorder = input(false);
   readonly luxInputLabelAlwaysVisible = input(false);
 

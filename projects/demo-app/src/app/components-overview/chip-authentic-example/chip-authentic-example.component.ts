@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormField, disabled, form, readonly, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import {
   LuxAccordionComponent,
   LuxAutofocusDirective,
@@ -85,7 +85,7 @@ export class ChipAuthenticExampleComponent {
   readonly autocompleteOptions = signal(this.createOptions());
   readonly autocompleteNoGroupAllOptions = ['Neuer Chip #1', 'Neuer Chip #2', 'Neuer Chip #3'];
   readonly autocompleteNoGroupOptions = signal([...this.autocompleteNoGroupAllOptions]);
-  readonly optionBlockSize = signal(500);
+  readonly optionBlockSize = signal(50);
   readonly strict = signal(false);
   readonly required = signal(false);
   readonly form = new FormGroup({
