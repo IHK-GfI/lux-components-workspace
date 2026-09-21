@@ -49,10 +49,15 @@ export class StorageExampleComponent implements OnDestroy, DoCheck {
   readonly storageLength = signal(0);
 
   constructor() {
-    this.value$ = this.luxStorageService.getItemAsObservable(this.key());
+    const initialKey = this.key();
+    this.value$ = this.luxStorageService.getItemAsObservable(initialKey);
 
+    // Das Value-Feld spiegelt den gespeicherten Wert nur, solange es noch zum vorbelegten Key gehört. Nach
+    // dem Hinzufügen (Key wird geleert) darf ein späteres Aktualisieren/Löschen des Eintrags das Formular nicht mehr füllen.
     this.valueSubscription = this.value$.subscribe((newValue) => {
-      this.value.set(newValue);
+      if (this.key() === initialKey) {
+        this.value.set(newValue);
+      }
     });
   }
 

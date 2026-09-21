@@ -12,6 +12,7 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
+import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { ILuxStepperButtonConfig } from './lux-stepper-model/lux-stepper-button-config.interface';
 import { LuxStepContentComponent } from './lux-stepper-subcomponents/lux-step-content.component';
 import { LuxStepHeaderComponent } from './lux-stepper-subcomponents/lux-step-header.component';
@@ -220,6 +221,38 @@ describe('LuxStepperComponent', () => {
     // Nachbedingungen prüfen
     matStepIcons = fixture.debugElement.queryAll(By.css('.lux-ignore-mat-step-icons .mat-step-icon'));
     expect(matStepIcons.length).toBe(2);
+  });
+
+  it('Sollte die individuellen Icons den richtigen Steps zuordnen, wenn ein Step aus- und wieder eingeblendet wird', async () => {
+    const hideFixture = TestBed.createComponent(MockHideStepStepperComponent);
+    hideFixture.detectChanges();
+    const getNormalIcons = () =>
+      hideFixture.debugElement
+        .queryAll(By.css('mat-step-header'))
+        .map((header) =>
+          header
+            .queryAll(By.css('lux-icon.lux-stepper-normal-icon'))
+            .map((icon) => (icon.componentInstance as LuxIconComponent).luxIconName())
+        );
+    const stabilize = async () => {
+      hideFixture.detectChanges();
+      await hideFixture.whenStable();
+      hideFixture.detectChanges();
+    };
+
+    hideFixture.componentInstance.customIcons.set(true);
+    await stabilize();
+    expect(getNormalIcons()).toEqual([['icon-a'], ['icon-b'], ['icon-c']]);
+
+    // Step 0 ausblenden: die Icons der übrigen Steps dürfen nicht verrutschen
+    hideFixture.componentInstance.step0Visible.set(false);
+    await stabilize();
+    expect(getNormalIcons()).toEqual([['icon-b'], ['icon-c']]);
+
+    // Step 0 wieder einblenden
+    hideFixture.componentInstance.step0Visible.set(true);
+    await stabilize();
+    expect(getNormalIcons()).toEqual([['icon-a'], ['icon-b'], ['icon-c']]);
   });
 
   it('Sollte die Navigation-Buttons konfigurieren können', async () => {
@@ -502,6 +535,33 @@ class MockStepperComponent {
       })
     });
   }
+}
+
+@Component({
+  template: `
+    <lux-stepper [luxUseCustomIcons]="customIcons()">
+      @if (step0Visible()) {
+        <lux-step luxIconName="icon-a">
+          <lux-step-header>Step A</lux-step-header>
+          <lux-step-content>Content A</lux-step-content>
+        </lux-step>
+      }
+      <lux-step luxIconName="icon-b">
+        <lux-step-header>Step B</lux-step-header>
+        <lux-step-content>Content B</lux-step-content>
+      </lux-step>
+      <lux-step luxIconName="icon-c">
+        <lux-step-header>Step C</lux-step-header>
+        <lux-step-content>Content C</lux-step-content>
+      </lux-step>
+    </lux-stepper>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxStepperComponent, LuxStepComponent, LuxStepHeaderComponent, LuxStepContentComponent]
+})
+class MockHideStepStepperComponent {
+  customIcons = signal(false);
+  step0Visible = signal(true);
 }
 
 @Component({

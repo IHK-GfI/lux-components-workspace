@@ -42,6 +42,13 @@ class TwoWayHostComponent {
 }
 
 @Component({
+  template: `<lux-input luxLabel="Name" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxInputComponent]
+})
+class UnboundHostComponent {}
+
+@Component({
   template: `
     <form [formGroup]="formGroup">
       <lux-input luxLabel="Name" formControlName="name" />
@@ -181,6 +188,33 @@ describe('LuxInputComponent - Bindungsarten', () => {
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('mat-error'))).toBeNull();
+    });
+
+    it('sollte ein setValue() von aussen anzeigen und an die Bindung melden', () => {
+      type(fixture, 'Berta');
+
+      inputOf(fixture).setValue('');
+      fixture.detectChanges();
+
+      expect(nativeOf(fixture).value).toBe('');
+      expect(host.name()).toBe('');
+    });
+  });
+
+  describe('freistehend ohne Bindung (Template-Referenz)', () => {
+    it('sollte ein setValue() von aussen anzeigen', () => {
+      const fixture = TestBed.createComponent(UnboundHostComponent);
+      fixture.detectChanges();
+
+      type(fixture, 'Berta');
+      expect(inputOf(fixture).value()).toBe('Berta');
+
+      inputOf(fixture).setValue('');
+      fixture.detectChanges();
+
+      expect(nativeOf(fixture).value).toBe('');
+      expect(inputOf(fixture).value()).toBe('');
+      expect(inputOf(fixture).getValue()).toBe('');
     });
   });
 

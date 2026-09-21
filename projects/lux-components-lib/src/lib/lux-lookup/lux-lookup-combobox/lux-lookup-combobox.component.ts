@@ -186,11 +186,16 @@ export class LuxLookupComboboxComponent<T = LuxLookupTableEntry> extends LuxLook
 
   /**
    * Setzt den aktuellen Value-Wert auf den ausgewählten Wert.
+   *
+   * Der Leereintrag ("keine Auswahl") liefert von MatSelect undefined. Das darf nicht ins Model
+   * geschrieben werden: Ein Signal Form behandelt eine Eigenschaft mit dem Wert undefined als nicht
+   * vorhanden und entfernt das Feld aus dem Feldbaum, [formField] verlöre dadurch seine Bindung und
+   * der zuvor gewählte Wert bliebe stehen. "Kein Wert" ist daher wie bei der Lookup-Autocomplete null.
    * @param selectChange
    */
   selected(selectChange: MatSelectChange) {
     this.markAsDirty();
-    this.value.set(selectChange.value);
+    this.value.set((selectChange.value ?? null) as T);
   }
 
   onFocusIn(e: FocusEvent) {

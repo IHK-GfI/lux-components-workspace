@@ -345,17 +345,20 @@ export class LuxLegacyFormBridge<T> {
       return;
     }
 
-    if (value === this.formControl.value) {
-      this.publishValue(value);
-      return;
+    if (value !== this.formControl.value) {
+      this.applyingToFormControl = true;
+      try {
+        this.formControl.setValue(value);
+      } finally {
+        this.applyingToFormControl = false;
+      }
     }
 
-    this.applyingToFormControl = true;
-    try {
-      this.formControl.setValue(value);
-    } finally {
-      this.applyingToFormControl = false;
-    }
+    // Ein expliziter setValue()-Aufruf muss auch dann in der Anzeige ankommen, wenn die Alt-Mechanik
+    // nicht zuständig ist (freistehendes Feld ohne luxValue/[(value)]/Formular, z.B. per Template-
+    // Referenz): Dort ist das Model die Quelle, der registerOnChange-Rückweg über publishValue()
+    // wird also verworfen - ohne force bliebe die Anzeige beim alten Text stehen.
+    this.publishValue(value, true);
   }
 
   /** Den (noch nicht initialisierten) Startwert setzen, ohne ein Change-Event auszulösen. */
@@ -402,7 +405,13 @@ export class LuxLegacyFormBridge<T> {
 
       // Ist die Alt-Mechanik nicht zuständig ([formField] oder [(value)]), ist das Model die
       // Quelle - das synthetische FormControl darf den gebundenen Wert nicht überschreiben.
-      this.formControl.setValue(this.engaged ? (this.initialValue as T) : this.host.modelValue());
+      //
+      // Das gilt auch, wenn die Brücke zwar zuständig ist (z.B. nur wegen luxRequired), der Alt-Input
+      // luxValue/luxChecked aber nie gebunden wurde (initialValue === undefined): Sonst würde
+      // [(value)]/[(checked)] zusammen mit [luxRequired] den gebundenen Startwert beim Initialisieren
+      // durch undefined ersetzen und über publishValue() zurück in die Two-Way-Bindung schreiben.
+      const legacyValueBound = this.initialValue !== undefined;
+      this.formControl.setValue(this.engaged && legacyValueBound ? (this.initialValue as T) : this.host.modelValue());
     }
 
     if (this.host.luxDisabled()) {
@@ -471,10 +480,13 @@ export class LuxLegacyFormBridge<T> {
     this.host.stateOverride.set(next);
   }
 
-  /** Schreibt einen Wert aus dem FormControl in das Vertrags-Model, ohne zurückzuschreiben. */
-  private publishValue(value: T) {
+  /**
+   * Schreibt einen Wert aus dem FormControl in das Vertrags-Model, ohne zurückzuschreiben.
+   * @param force - Schreibt auch dann, wenn die Alt-Mechanik nicht zuständig ist (nur für explizite setValue()-Aufrufe).
+   */
+  private publishValue(value: T, force = false) {
     // Ist die Alt-Mechanik nicht zuständig, ist das Model die Quelle und nicht das FormControl.
-    if (!this.engaged || this.host.modelValue() === value) {
+    if ((!force && !this.engaged) || this.host.modelValue() === value) {
       return;
     }
 

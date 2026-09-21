@@ -4,7 +4,7 @@
     <lux-stepper-vertical
       [luxStepperConfig]="stepperConfiguration()"
       (luxMatStepperLoaded)="matStepper = $event"
-      (luxMatStepLabelsLoaded)="matStepLabels = $event"
+      (luxMatStepLabelsLoaded)="onMatStepLabelsLoaded($event)"
       (luxStepChanged)="onStepChanged($event)"
       (luxFinButtonClicked)="luxFinishButtonClicked.emit($event)"
       (luxPrevButtonClicked)="stepperService.previousStep(this)"
@@ -18,7 +18,7 @@
     <lux-stepper-horizontal
       [luxStepperConfig]="stepperConfiguration()"
       (luxMatStepperLoaded)="matStepper = $event"
-      (luxMatStepLabelsLoaded)="matStepLabels = $event"
+      (luxMatStepLabelsLoaded)="onMatStepLabelsLoaded($event)"
       (luxStepChanged)="onStepChanged($event)"
       (luxFinButtonClicked)="luxFinishButtonClicked.emit($event)"
       (luxPrevButtonClicked)="stepperService.previousStep(this)"

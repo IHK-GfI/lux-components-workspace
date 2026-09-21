@@ -60,9 +60,12 @@ export class ComponentsOverviewNavigationService {
   readonly sortedComponentEntries: Signal<Map<string, DemoNavigationComponentEntry[]>> = computed(() => {
     const entries = new Map<string, DemoNavigationComponentEntry[]>();
     this.currentModuleNames.forEach((moduleName: string) => {
+      // Gleiche Sortierung wie in der Navigation (luxAlphabeticallySorted), damit "Zurück"/"Weiter" der angezeigten Reihenfolge folgen.
       entries.set(
         moduleName,
-        this.filteredComponents().filter((component) => component.moduleName === moduleName)
+        this.filteredComponents()
+          .filter((component) => component.moduleName === moduleName)
+          .sort((a, b) => a.label.toLocaleLowerCase().localeCompare(b.label.toLocaleLowerCase()))
       );
     });
     return entries;

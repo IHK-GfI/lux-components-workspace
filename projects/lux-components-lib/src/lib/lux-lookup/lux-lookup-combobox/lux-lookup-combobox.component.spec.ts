@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/com
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormField, form, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
@@ -891,6 +892,45 @@ describe('LuxLookupComboboxComponent', () => {
       expect(maxHeight).toBeCloseTo(filterHeight + optionHeight * 2, 0);
     });
   });
+
+  describe('Signal Form ([formField])', () => {
+    let fixture: ComponentFixture<LuxSignalFormComponent>;
+    let component: LuxSignalFormComponent;
+    let combobox: LuxLookupComboboxComponent;
+
+    async function selectOption(index: number) {
+      fixture.debugElement.query(By.css('.mat-mdc-select-trigger')).nativeElement.click();
+      await LuxTestHelper.wait(fixture);
+      const options = document.querySelectorAll('.mat-mdc-select-panel mat-option') as NodeListOf<HTMLElement>;
+      options[index].click();
+      await LuxTestHelper.wait(fixture);
+    }
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(LuxSignalFormComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+      combobox = fixture.debugElement.query(By.directive(LuxLookupComboboxComponent)).componentInstance;
+      await LuxTestHelper.wait(fixture);
+    });
+
+    it('Sollte nach der Auswahl eines Eintrags den Leereintrag wieder auswählen können', async () => {
+      // Optionen: 0 = Leereintrag, 1 = Afghanistan, 2 = Bellux (ungültig), 3 = Ägypten, 4 = Deutschland, 5 = Algerien
+      await selectOption(1);
+      expect(component.model().lookupValue?.kurzText).toBe('Afghanistan');
+      expect(combobox.value()?.kurzText).toBe('Afghanistan');
+
+      await selectOption(0);
+      // null statt undefined: Ein Signal Form entfernt Felder mit dem Wert undefined aus dem Feldbaum.
+      expect(component.model().lookupValue).toBeNull();
+      expect(combobox.value()).toBeNull();
+      expect(fixture.debugElement.query(By.css('.mat-mdc-select-value-text'))?.nativeElement.textContent.trim() ?? '').toBe('');
+
+      // Das Feld muss danach weiter bedienbar sein.
+      await selectOption(4);
+      expect(component.model().lookupValue?.kurzText).toBe('Deutschland');
+    });
+  });
 });
 
 @Component({
@@ -921,6 +961,31 @@ class LuxNoFormComponent {
   value = signal<any>(undefined);
   required = signal(false);
   compareFn = signal<LuxLookupCompareFn | undefined>(undefined);
+}
+
+@Component({
+  template: `
+    <lux-lookup-combobox
+      luxTableNo="5"
+      luxLookupId="test"
+      luxRenderProp="kurzText"
+      [luxParameters]="params"
+      luxLabel="Label"
+      [formField]="signalForm.lookupValue"
+    ></lux-lookup-combobox>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxLookupComboboxComponent, FormField]
+})
+class LuxSignalFormComponent {
+  readonly params = new LuxLookupParameters({
+    knr: 101,
+    fields: [LuxFieldValues.kurz, LuxFieldValues.lang1, LuxFieldValues.lang2]
+  });
+  readonly model = signal<{ lookupValue: LuxLookupTableEntry | null }>({ lookupValue: null });
+  readonly signalForm = form(this.model, (path) => {
+    required(path.lookupValue, { when: () => false });
+  });
 }
 
 @Component({

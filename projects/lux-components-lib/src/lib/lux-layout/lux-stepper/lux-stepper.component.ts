@@ -17,6 +17,7 @@ import {
   OnInit,
   output,
   signal,
+  untracked,
   ViewContainerRef
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
@@ -127,7 +128,10 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
         isFirstIconsRun = false;
         return;
       }
-      this.updateIcons();
+      // updateIcons() liest intern luxSteps(). Ohne untracked würde der Effect bei jeder Änderung der Steps
+      // (z.B. Step ein-/ausblenden) laufen, solange matStepLabels noch die alten Labels enthält, und die Icons
+      // den falschen Steps zuordnen. Bei geänderten Steps sorgt onMatStepLabelsLoaded() für die Neugenerierung.
+      untracked(() => this.updateIcons());
     });
 
     // Rollen-Attribute korrigieren, wenn sich die Ausrichtung (horizontal/vertikal) ändert.
@@ -222,6 +226,22 @@ export class LuxStepperComponent implements AfterViewInit, OnDestroy, OnInit {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Wird aufgerufen, sobald der horizontale/vertikale Stepper seine Step-Labels (neu) gemeldet hat.
+   * Die individuellen Icons hängen an diesen Labels und müssen daher neu generiert werden, wenn sich die Labels
+   * ändern (Step ein-/ausblenden, Wechsel horizontal/vertikal). Erst jetzt passen Labels und Steps zusammen.
+   * @param labels
+   */
+  onMatStepLabelsLoaded(labels: ViewContainerRef[]) {
+    const isInitialLoad = !this.matStepLabels;
+    this.matStepLabels = labels;
+
+    // Die initiale Generierung übernimmt ngAfterViewInit.
+    if (!isInitialLoad) {
+      this.updateIcons();
     }
   }
 

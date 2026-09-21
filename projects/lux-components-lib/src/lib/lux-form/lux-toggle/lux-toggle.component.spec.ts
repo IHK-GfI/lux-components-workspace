@@ -397,6 +397,34 @@ describe('LuxToggleComponent', () => {
       });
     });
 
+    describe('Two-Way-Binding "checked" mit Attribut "luxRequired"', () => {
+      let fixture: ComponentFixture<LuxCheckedRequiredAttributeComponent>;
+
+      beforeEach(async () => {
+        fixture = TestBed.createComponent(LuxCheckedRequiredAttributeComponent);
+        fixture.detectChanges();
+      });
+
+      it('Sollte den gebundenen Startwert behalten', async () => {
+        // Regression: Allein durch luxRequired galt die Brücke als zuständig und überschrieb das gebundene
+        // checked beim Initialisieren mit dem (nie gebundenen) Alt-Input luxChecked = undefined.
+        expect(fixture.componentInstance.checked()).toBe(true);
+        expect(fixture.debugElement.query(By.css('button')).nativeElement.classList).toContain('mdc-switch--selected');
+      });
+
+      it('Sollte nach dem Abwählen und erneuten Auswählen den Wert übernehmen', async () => {
+        const buttonEl = fixture.debugElement.query(By.css('button')).nativeElement;
+
+        buttonEl.click();
+        fixture.detectChanges();
+        expect(fixture.componentInstance.checked()).toBe(false);
+
+        buttonEl.click();
+        fixture.detectChanges();
+        expect(fixture.componentInstance.checked()).toBe(true);
+      });
+    });
+
     describe('Error-Message', () => {
       let fixture: ComponentFixture<LuxValidatorsComponent>;
       let testComponent: LuxValidatorsComponent;
@@ -506,6 +534,15 @@ class LuxCheckedAttributeComponent {
 })
 class LuxLabelAttributeComponent {
   label = signal('');
+}
+
+@Component({
+  template: ` <lux-toggle luxLabel="Zustimmung erforderlich" [(checked)]="checked" [luxRequired]="true"></lux-toggle> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxToggleComponent]
+})
+class LuxCheckedRequiredAttributeComponent {
+  checked = signal(true);
 }
 
 @Component({
