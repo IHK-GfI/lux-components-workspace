@@ -112,6 +112,18 @@ describe('LuxToggleComponent', () => {
         expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeTruthy();
       });
 
+      it('Toggle anklicken schreibt den Wert synchron ins FormControl', async () => {
+        // Vorbedingungen testen
+        expect(fixture.componentInstance.formGroup.get('eula')!.value).toBeFalsy();
+
+        // Änderungen durchführen (bewusst OHNE detectChanges: kein Warten auf einen Effect)
+        const toggleEl = fixture.debugElement.query(By.css('button'));
+        toggleEl.nativeElement.click();
+
+        // Nachbedingungen testen
+        expect(fixture.componentInstance.formGroup.get('eula')!.value).toBe(true);
+      });
+
       it('Sollte die korrekte Fehlermeldung anzeigen', () => {
         let errorElement = fixture.debugElement.query(By.css('mat-error'));
 

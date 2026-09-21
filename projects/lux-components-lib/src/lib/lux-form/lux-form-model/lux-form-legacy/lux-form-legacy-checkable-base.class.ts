@@ -130,6 +130,26 @@ export abstract class LuxFormLegacyCheckableBase<T = boolean>
     return Validators.requiredTrue;
   }
 
+  /**
+   * Übernimmt eine Nutzer-Interaktion (Klick auf die Checkbox bzw. den Toggle).
+   *
+   * Schreibt den Wert bewusst SYNCHRON über die Brücke in das FormControl, statt sich allein auf den
+   * Effect der Brücke zu verlassen, der das Vertrags-Model erst später während der Change-Detection
+   * ins FormControl spiegelt. Der Klick auf das Control markiert es dagegen sofort als touched
+   * (siehe (click) am Wrapper im Template, das vor dem change-Event feuert). Ohne den synchronen
+   * Schreibzugriff sähe ein OnPush-Parent, der Formularzustand imperativ liest (z.B.
+   * `group.hasError(..) && group.touched`), im selben Tick "touched, aber noch alter Wert" und würde
+   * eine falsche Fehlermeldung anzeigen bzw. verbergen. Der Effect schreibt erst NACH dem Parent und
+   * markiert ihn nicht erneut als zu prüfen - der falsche Zustand bliebe bis zum nächsten
+   * Change-Detection-Anlass stehen.
+   */
+  protected commitUserChange(checked: boolean) {
+    this.markAsDirty();
+    this.setValue(checked);
+    // Ohne aktive Brücke (z.B. [(checked)] ohne Formular) bleibt das Vertrags-Model die Quelle.
+    this.checked.set(checked);
+  }
+
   protected override errorMessageModifier(value: unknown, errors: LuxValidationErrors): string | undefined {
     if (errors['required']) {
       return this.tService.translate('luxc.form-checkable-base.error_message.required');

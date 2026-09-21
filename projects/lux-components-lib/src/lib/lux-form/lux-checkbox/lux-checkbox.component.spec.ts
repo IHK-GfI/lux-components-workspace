@@ -10,6 +10,7 @@ import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-u
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
+import { luxAtLeastOneCheckboxChecked } from '../lux-validators';
 import { LuxCheckboxComponent } from './lux-checkbox.component';
 
 describe('LuxCheckboxComponent', () => {
@@ -179,6 +180,71 @@ describe('LuxCheckboxComponent', () => {
         // Nachbedingungen testen
         errorElement = fixture.debugElement.query(By.css('mat-error'));
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
+      });
+    });
+
+    describe('FormGroup-Validator über mehrere Checkboxen (OnPush-Parent liest den Zustand imperativ)', () => {
+      let fixture: ComponentFixture<LuxCheckboxGroupValidatorComponent>;
+      let testComponent: LuxCheckboxGroupValidatorComponent;
+
+      const checkboxInput = (index: number): HTMLInputElement => fixture.debugElement.queryAll(By.css('input'))[index].nativeElement;
+      const groupError = () => fixture.debugElement.query(By.css('.group-error'));
+
+      beforeEach(() => {
+        fixture = TestBed.createComponent(LuxCheckboxGroupValidatorComponent);
+        fixture.detectChanges();
+        testComponent = fixture.componentInstance;
+      });
+
+      it('Sollte den Wert beim Klick synchron ins FormControl schreiben', () => {
+        checkboxInput(0).click();
+
+        // Bewusst OHNE detectChanges(): Der Wert darf nicht erst von einem Effect während der
+        // Change-Detection nachgetragen werden.
+        expect(testComponent.formGroup.get('options.cb1')!.value).toBe(true);
+        expect(testComponent.formGroup.get('options')!.hasError('luxAtLeastOneCheckboxChecked')).toBe(false);
+      });
+
+      it('Sollte nach dem Aktivieren einer Checkbox keinen Gruppenfehler anzeigen, obwohl der Klick sie als touched markiert', () => {
+        checkboxInput(0).click();
+        fixture.detectChanges();
+
+        expect(testComponent.formGroup.get('options')!.touched).toBe(true);
+        expect(groupError()).toBeNull();
+
+        // Ein weiterer Change-Detection-Lauf, der den Parent nicht als dirty markiert, darf den
+        // Zustand nicht mehr verändern (der Fehler blieb früher bis zum nächsten Anlass stehen).
+        fixture.detectChanges();
+        expect(groupError()).toBeNull();
+      });
+
+      it('Sollte nach dem Deaktivieren der letzten Checkbox sofort den Gruppenfehler anzeigen', () => {
+        checkboxInput(0).click();
+        fixture.detectChanges();
+        expect(groupError()).toBeNull();
+
+        checkboxInput(0).click();
+        fixture.detectChanges();
+
+        expect(testComponent.formGroup.get('options.cb1')!.value).toBe(false);
+        expect(groupError()).not.toBeNull();
+      });
+
+      it('Sollte auch die zweite Checkbox synchron ins FormControl schreiben', () => {
+        checkboxInput(0).click();
+        checkboxInput(1).click();
+        fixture.detectChanges();
+
+        expect(testComponent.formGroup.get('options')!.value).toEqual({ cb1: true, cb2: true });
+        expect(groupError()).toBeNull();
+
+        checkboxInput(0).click();
+        fixture.detectChanges();
+        expect(groupError()).toBeNull();
+
+        checkboxInput(1).click();
+        fixture.detectChanges();
+        expect(groupError()).not.toBeNull();
       });
     });
   });
@@ -508,6 +574,33 @@ class LuxCheckboxRequiredInFormAttributeComponent {
       eula: new FormControl<boolean | null>(null, Validators.required)
     });
   }
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <div formGroupName="options">
+        <lux-checkbox luxLabel="Option 1" luxControlBinding="cb1" />
+        <lux-checkbox luxLabel="Option 2" luxControlBinding="cb2" />
+      </div>
+      @if (formGroup.get('options')?.hasError('luxAtLeastOneCheckboxChecked') && formGroup.get('options')?.touched) {
+        <div class="group-error">Es muss mindestens eine Option ausgewählt werden.</div>
+      }
+    </form>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, LuxCheckboxComponent]
+})
+class LuxCheckboxGroupValidatorComponent {
+  readonly formGroup = new FormGroup({
+    options: new FormGroup(
+      {
+        cb1: new FormControl<boolean>(false, { nonNullable: true }),
+        cb2: new FormControl<boolean>(false, { nonNullable: true })
+      },
+      { validators: luxAtLeastOneCheckboxChecked(['cb1', 'cb2']) }
+    )
+  });
 }
 
 @Component({

@@ -31,8 +31,7 @@ import { LuxFormLegacyCheckableBase } from '../lux-form-model/lux-form-legacy/lu
 })
 export class LuxToggleComponent<T = boolean> extends LuxFormLegacyCheckableBase<T> {
   onToggleChange(event: MatSlideToggleChange) {
-    this.markAsDirty();
-    this.checked.set(event.checked);
+    this.commitUserChange(event.checked);
   }
 
   onFocusIn(e: FocusEvent) {
