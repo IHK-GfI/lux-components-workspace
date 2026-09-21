@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxListItemContentComponent } from './lux-list-subcomponents/lux-list-item-content.component';
@@ -443,7 +444,43 @@ describe('LuxListComponent', () => {
       });
     });
   });
+
+  describe('Standardlabel', () => {
+    it('Sollte das Standardlabel nach einem Sprachwechsel zur Laufzeit aktualisieren', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const labelFixture = TestBed.createComponent(MockListWithoutLabelComponent);
+      labelFixture.detectChanges();
+      const listElement: HTMLElement = labelFixture.debugElement.query(By.directive(LuxListComponent)).nativeElement;
+
+      expect(listElement.getAttribute('aria-label')).toBe('Liste');
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+
+      TestBed.inject(TranslocoService).setActiveLang('en');
+      labelFixture.detectChanges();
+
+      expect(listElement.getAttribute('aria-label')).toBe('List');
+      warnSpy.mockRestore();
+    });
+
+    it('Sollte bei gesetztem luxLabel das Label verwenden und nicht warnen', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const labelFixture = TestBed.createComponent(MockListComponent);
+      labelFixture.detectChanges();
+
+      expect(labelFixture.debugElement.query(By.directive(LuxListComponent)).nativeElement.getAttribute('aria-label')).toBe('Testliste');
+      expect(warnSpy).not.toHaveBeenCalled();
+      warnSpy.mockRestore();
+    });
+  });
 });
+
+@Component({
+  selector: 'lux-mock-list-without-label',
+  template: `<lux-list />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxListComponent]
+})
+class MockListWithoutLabelComponent {}
 
 @Component({
   selector: 'lux-mock-list',

@@ -16,7 +16,7 @@ import {
   output,
   PLATFORM_ID
 } from '@angular/core';
-import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { TranslocoPipe, translateSignal } from '@jsverse/transloco';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxUtil } from '../../lux-util/lux-util';
 import { LuxListItemComponent } from './lux-list-subcomponents/lux-list-item.component';
@@ -75,7 +75,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
     return this.effectiveLabel();
   }
 
-  private tService = inject(TranslocoService);
+  private defaultLabel = translateSignal('luxc.list.arialabel');
   private elementRef = inject(ElementRef);
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
@@ -100,7 +100,7 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   private editMode = false;
 
-  readonly effectiveLabel = computed(() => this.luxLabel() || this.tService.translate('luxc.list.arialabel'));
+  readonly effectiveLabel = computed(() => this.luxLabel() || this.defaultLabel());
 
   constructor() {
     effect(() => {
@@ -159,13 +159,12 @@ export class LuxListComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const defaultLabel = this.tService.translate('luxc.list.arialabel');
-    if (this.label === defaultLabel) {
+    if (!this.luxLabel()) {
       console.warn(
         'lux-list:\n' +
           'Die Property "luxLabel" wurde nicht gesetzt.\n' +
           'Bitte ein sprechendes Label setzen, damit dieses von Screenreadern vorgelesen werden kann.\n' +
-          `Es wird das Standardlabel "${defaultLabel}" verwendet.`
+          `Es wird das Standardlabel "${this.defaultLabel()}" verwendet.`
       );
     }
   }

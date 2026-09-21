@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
@@ -10,7 +10,6 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { ILuxStepperButtonConfig } from './lux-stepper-model/lux-stepper-button-config.interface';
@@ -242,17 +241,17 @@ describe('LuxStepperComponent', () => {
 
     hideFixture.componentInstance.customIcons.set(true);
     await stabilize();
-    expect(getNormalIcons()).toEqual([['icon-a'], ['icon-b'], ['icon-c']]);
+    expect(getNormalIcons()).toEqual([['lux-battery-low-1'], ['lux-battery-medium-1'], ['lux-battery-full-1']]);
 
     // Step 0 ausblenden: die Icons der übrigen Steps dürfen nicht verrutschen
     hideFixture.componentInstance.step0Visible.set(false);
     await stabilize();
-    expect(getNormalIcons()).toEqual([['icon-b'], ['icon-c']]);
+    expect(getNormalIcons()).toEqual([['lux-battery-medium-1'], ['lux-battery-full-1']]);
 
     // Step 0 wieder einblenden
     hideFixture.componentInstance.step0Visible.set(true);
     await stabilize();
-    expect(getNormalIcons()).toEqual([['icon-a'], ['icon-b'], ['icon-c']]);
+    expect(getNormalIcons()).toEqual([['lux-battery-low-1'], ['lux-battery-medium-1'], ['lux-battery-full-1']]);
   });
 
   it('Sollte die Navigation-Buttons konfigurieren können', async () => {
@@ -541,16 +540,16 @@ class MockStepperComponent {
   template: `
     <lux-stepper [luxUseCustomIcons]="customIcons()">
       @if (step0Visible()) {
-        <lux-step luxIconName="icon-a">
+        <lux-step luxIconName="lux-battery-low-1">
           <lux-step-header>Step A</lux-step-header>
           <lux-step-content>Content A</lux-step-content>
         </lux-step>
       }
-      <lux-step luxIconName="icon-b">
+      <lux-step luxIconName="lux-battery-medium-1">
         <lux-step-header>Step B</lux-step-header>
         <lux-step-content>Content B</lux-step-content>
       </lux-step>
-      <lux-step luxIconName="icon-c">
+      <lux-step luxIconName="lux-battery-full-1">
         <lux-step-header>Step C</lux-step-header>
         <lux-step-content>Content C</lux-step-content>
       </lux-step>
