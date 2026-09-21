@@ -4,6 +4,7 @@ import * as path from 'path';
 import { Options, updateStandAloneImports } from '.';
 import { appOptions, workspaceOptions } from '../utility/test';
 import { UtilConfig } from '../utility/util';
+import { lastValueFrom } from 'rxjs';
 
 describe('updateStandAloneImports', () => {
   let appTree: UnitTestTree;
@@ -33,14 +34,9 @@ describe('updateStandAloneImports', () => {
   });
 
   describe('[Rule] updateStandAloneImports', () => {
-    it('Sollte die Regel updateStandAloneimports ausführen', (done) => {
-      callRule(updateStandAloneImports(testOptions), appTree, context).subscribe({
-        next: (success) => {
-          expect(success).toBeDefined();
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+    it('Sollte die Regel updateStandAloneimports ausführen', async () => {
+      const success = await lastValueFrom(callRule(updateStandAloneImports(testOptions), appTree, context));
+      expect(success).toBeDefined();
     });
   });
 });

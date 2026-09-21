@@ -117,13 +117,13 @@ export class LuxTourHintComponent implements OnInit, AfterViewInit, OnDestroy {
       const arrowOffset = this.arrowLength * 4;
 
       //Offsets for modal and arrow so when target is outside screen it will be handled correctly
-      let baseOffX = 0;
-      let baseOffY = 0;
-      let arrowOffX = 0;
-      let arrowOffY = 0;
+      let baseOffX: number;
+      let baseOffY: number;
+      let arrowOffX: number;
+      let arrowOffY: number;
 
-      let tourHintPosLeft = 0;
-      let tourHintPosTop = 0;
+      let tourHintPosLeft: number;
+      let tourHintPosTop: number;
 
       if (showTop || showBottom) {
         //Top OR Bottom

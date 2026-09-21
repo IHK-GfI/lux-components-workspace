@@ -35,7 +35,7 @@ describe('typescript', () => {
   });
 
   describe('[Method] addComponentimport', () => {
-    it('Sollte den import zum leeren Array hinzufügen', (done) => {
+    it('Sollte den import zum leeren Array hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/addComponentimport.component.ts';
 
       appTree.create(
@@ -55,11 +55,9 @@ export class HomeComponent {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('imports: [Aaa]');
-
-      done();
     });
 
-    it('Sollte den import nicht doppelt hinzufügen', (done) => {
+    it('Sollte den import nicht doppelt hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/addComponentimport.component.ts';
 
       appTree.create(
@@ -79,11 +77,9 @@ export class HomeComponent {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('imports: [ Aaa ]');
-
-      done();
     });
 
-    it('Sollte den import hinzufügen', (done) => {
+    it('Sollte den import hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/addComponentimport.component.ts';
 
       appTree.create(
@@ -103,11 +99,9 @@ export class HomeComponent {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('imports: [Aaa, LuxLayoutModule, LuxIconModule]');
-
-      done();
     });
 
-    it('Sollte den import inklusive Array hinzufügen', (done) => {
+    it('Sollte den import inklusive Array hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/addComponentimport.component.ts';
 
       appTree.create(
@@ -126,13 +120,11 @@ export class HomeComponent {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('  imports: [Aaa],');
-
-      done();
     });
   });
 
   describe('[Method] removeProvider', () => {
-    it('Sollte den Provider (mehrere Provider - erster Provider) entfernen', (done) => {
+    it('Sollte den Provider (mehrere Provider - erster Provider) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -169,11 +161,9 @@ export class AppModule {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('providers      : [\n    LuxDialogService,\n    DatePipe\n  ],');
-
-      done();
     });
 
-    it('Sollte den Provider (mehrere Provider - mittlerer Provider) entfernen', (done) => {
+    it('Sollte den Provider (mehrere Provider - mittlerer Provider) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -210,11 +200,9 @@ export class AppModule {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('providers      : [\n    LuxDialogService,\n    DatePipe\n  ],');
-
-      done();
     });
 
-    it('Sollte den Provider (mehrere Provider - mittlerer Provider - komplexer Provider) entfernen', (done) => {
+    it('Sollte den Provider (mehrere Provider - mittlerer Provider - komplexer Provider) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -255,11 +243,9 @@ export class AppModule {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('providers      : [\n    LuxDialogService,\n    DatePipe\n  ],');
-
-      done();
     });
 
-    it('Sollte den Provider (mehrere Provider - letzter Provider) entfernen', (done) => {
+    it('Sollte den Provider (mehrere Provider - letzter Provider) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -296,11 +282,9 @@ export class AppModule {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('providers      : [\n    LuxDialogService,\n    DatePipe\n  ],');
-
-      done();
     });
 
-    it('Sollte den Provider (nicht vorhanden) entfernen', (done) => {
+    it('Sollte den Provider (nicht vorhanden) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -336,11 +320,9 @@ export class AppModule {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('providers      : [\n    LuxDialogService,\n    DatePipe\n  ],');
-
-      done();
     });
 
-    it('Sollte den Provider (Provider-Abschnitt fehlt vollständig) entfernen', (done) => {
+    it('Sollte den Provider (Provider-Abschnitt fehlt vollständig) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -372,13 +354,11 @@ export class AppModule {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).not.toContain('providers');
-
-      done();
     });
   });
 
   describe('[Method] removeInterface', () => {
-    it('Sollte das Interface (mehrere Interfaces - erstes Interface) entfernen', (done) => {
+    it('Sollte das Interface (mehrere Interfaces - erstes Interface) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -407,11 +387,9 @@ export class AnbindungLazyComponent implements OnInit, OnDestroy {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent implements OnDestroy {');
-
-      done();
     });
 
-    it('Sollte das Interface (mehrere Interfaces - mittleres Interface) entfernen', (done) => {
+    it('Sollte das Interface (mehrere Interfaces - mittleres Interface) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -440,11 +418,9 @@ export class AnbindungLazyComponent implements OnChanges, OnInit, OnDestroy {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent implements OnChanges, OnDestroy {');
-
-      done();
     });
 
-    it('Sollte das Interface (mehrere Interfaces - mittleres Interface - mit extends) entfernen', (done) => {
+    it('Sollte das Interface (mehrere Interfaces - mittleres Interface - mit extends) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -473,11 +449,9 @@ export class AnbindungLazyComponent extends Aaa implements OnChanges, OnInit, On
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent extends Aaa implements OnChanges, OnDestroy {');
-
-      done();
     });
 
-    it('Sollte das Interface (mehrere Interfaces - letztes Interface) entfernen', (done) => {
+    it('Sollte das Interface (mehrere Interfaces - letztes Interface) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -506,11 +480,9 @@ export class AnbindungLazyComponent implements OnChanges, OnDestroy, OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent implements OnChanges, OnDestroy {');
-
-      done();
     });
 
-    it('Sollte das Interface (nicht vorhanden) entfernen', (done) => {
+    it('Sollte das Interface (nicht vorhanden) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -539,13 +511,11 @@ export class AnbindungLazyComponent {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent {');
-
-      done();
     });
   });
 
   describe('[Method] addInterface', () => {
-    it('Sollte das Interface (mit extends - ohne Interface) hinzufügen', (done) => {
+    it('Sollte das Interface (mit extends - ohne Interface) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -572,11 +542,9 @@ export class AnbindungLazyComponent extends Aaa {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent extends Aaa implements OnChanges {');
-
-      done();
     });
 
-    it('Sollte das Interface (mit extends - mit Interface) hinzufügen', (done) => {
+    it('Sollte das Interface (mit extends - mit Interface) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -603,11 +571,9 @@ export class AnbindungLazyComponent extends Aaa implements Bbb {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent extends Aaa implements Bbb, OnChanges {');
-
-      done();
     });
 
-    it('Sollte das Interface (ohne extends - ohne Interface) hinzufügen', (done) => {
+    it('Sollte das Interface (ohne extends - ohne Interface) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -634,11 +600,9 @@ export class AnbindungLazyComponent {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent implements OnChanges {');
-
-      done();
     });
 
-    it('Sollte das Interface (ohne extends - mit Interface) hinzufügen', (done) => {
+    it('Sollte das Interface (ohne extends - mit Interface) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -665,13 +629,11 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('export class AnbindungLazyComponent implements OnInit, OnChanges {');
-
-      done();
     });
   });
 
   describe('[Method] addimport', () => {
-    it('Sollte den import (mehrere imports vorhanden) nicht hinzufügen', (done) => {
+    it('Sollte den import (mehrere imports vorhanden) nicht hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -703,11 +665,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       expect(content).toContain(`import { OnChanges } from '@angular/core';
 import { Input } from '@angular/core';`);
-
-      done();
     });
 
-    it('Sollte den import (kein import vorhanden) hinzufügen', (done) => {
+    it('Sollte den import (kein import vorhanden) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -735,11 +695,9 @@ export class AnbindungLazyComponent implements OnInit {
       const content = appTree.read(filePath)?.toString();
 
       expect(content).toContain("import { OnChanges } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (bereits vorhanden) hinzufügen', (done) => {
+    it('Sollte den import (bereits vorhanden) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -768,11 +726,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnChanges, OnDestroy, Component } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (ein import) hinzufügen', (done) => {
+    it('Sollte den import (ein import) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -801,11 +757,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnInit, OnChanges } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (mehrere imports - einfache Anführungszeichen) hinzufügen', (done) => {
+    it('Sollte den import (mehrere imports - einfache Anführungszeichen) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -834,11 +788,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnInit, Component, OnChanges } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (mehrere imports - doppelte Anführungszeichen) hinzufügen', (done) => {
+    it('Sollte den import (mehrere imports - doppelte Anführungszeichen) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -867,13 +819,11 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain(`import { OnInit, Component, OnChanges } from "@angular/core";`);
-
-      done();
     });
   });
 
   describe('[Method] removeimport', () => {
-    it('Sollte den import (mehrere imports - erster import) entfernen', (done) => {
+    it('Sollte den import (mehrere imports - erster import) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -902,11 +852,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { Component } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (mehrere imports - erster import - doppelte Anführungszeichen) entfernen', (done) => {
+    it('Sollte den import (mehrere imports - erster import - doppelte Anführungszeichen) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -935,11 +883,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain(`import { Component } from "@angular/core";`);
-
-      done();
     });
 
-    it('Sollte den import (mehrere imports - mittlerer import) entfernen', (done) => {
+    it('Sollte den import (mehrere imports - mittlerer import) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -968,11 +914,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnDestroy, Component } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (mehrere imports - mittlerer import - ohne Leerzeichen) entfernen', (done) => {
+    it('Sollte den import (mehrere imports - mittlerer import - ohne Leerzeichen) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1001,11 +945,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { OnDestroy,Component } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (mehrere imports - letzter import) entfernen', (done) => {
+    it('Sollte den import (mehrere imports - letzter import) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1034,11 +976,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { Component } from '@angular/core';");
-
-      done();
     });
 
-    it('Sollte den import (nur Paketname) entfernen', (done) => {
+    it('Sollte den import (nur Paketname) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1067,11 +1007,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).not.toContain('import');
-
-      done();
     });
 
-    it('Sollte den import (nur Paketname - nicht vorhanden) entfernen', (done) => {
+    it('Sollte den import (nur Paketname - nicht vorhanden) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1100,11 +1038,9 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import '@angular/common/locales/global/de';");
-
-      done();
     });
 
-    it('Sollte den import (nicht vorhanden) entfernen', (done) => {
+    it('Sollte den import (nicht vorhanden) entfernen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1133,13 +1069,11 @@ export class AnbindungLazyComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("import { Component } from '@angular/core';");
-
-      done();
     });
   });
 
   describe('[Method] addConstructorContent', () => {
-    it('Sollte Inhalt im Konstruktor (mit Konstruktor - append=false) hinzufügen', (done) => {
+    it('Sollte Inhalt im Konstruktor (mit Konstruktor - append=false) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1167,11 +1101,9 @@ export class AnbindungLazyComponent extends Aaa {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('constructor() {\n    router.initialNavigation();\n    console.log();\n  }');
-
-      done();
     });
 
-    it('Sollte Inhalt im Konstruktor (mit Konstruktor - append=true) hinzufügen', (done) => {
+    it('Sollte Inhalt im Konstruktor (mit Konstruktor - append=true) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1199,11 +1131,9 @@ export class AnbindungLazyComponent extends Aaa {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('constructor() {\n    console.log();\n    router.initialNavigation();\n  }');
-
-      done();
     });
 
-    it('Sollte Inhalt im Konstruktor (mit leerem Konstruktor - append=false) hinzufügen', (done) => {
+    it('Sollte Inhalt im Konstruktor (mit leerem Konstruktor - append=false) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1229,11 +1159,9 @@ export class AnbindungLazyComponent extends Aaa {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('constructor() {\n    router.initialNavigation();\n  }');
-
-      done();
     });
 
-    it('Sollte Inhalt im Konstruktor (mit leerem Konstruktor - append=true) hinzufügen', (done) => {
+    it('Sollte Inhalt im Konstruktor (mit leerem Konstruktor - append=true) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1259,11 +1187,9 @@ export class AnbindungLazyComponent extends Aaa {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('constructor() {\n    router.initialNavigation();\n  }');
-
-      done();
     });
 
-    it('Sollte Inhalt im Konstruktor (ohne Konstruktor - append=false) hinzufügen', (done) => {
+    it('Sollte Inhalt im Konstruktor (ohne Konstruktor - append=false) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1288,11 +1214,9 @@ export class AnbindungLazyComponent extends Aaa {
       const content = appTree.read(filePath)?.toString();
 
       expect(content).toContain('constructor() {\n    router.initialNavigation();\n  }');
-
-      done();
     });
 
-    it('Sollte Inhalt im Konstruktor (ohne Konstruktor - append=true) hinzufügen', (done) => {
+    it('Sollte Inhalt im Konstruktor (ohne Konstruktor - append=true) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1316,13 +1240,11 @@ export class AnbindungLazyComponent extends Aaa {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain('constructor() {\n    router.initialNavigation();\n  }');
-
-      done();
     });
   });
 
   describe('[Method] addClassProperty', () => {
-    it('Sollte eine Property (mit Properties) hinzufügen', (done) => {
+    it('Sollte eine Property (mit Properties) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1354,11 +1276,9 @@ export class AppComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("  @Input() luxAppHeader: 'normal' | 'minimal' | 'none' = 'normal';");
-
-      done();
     });
 
-    it('Sollte eine Property (ohne Properties) hinzufügen', (done) => {
+    it('Sollte eine Property (ohne Properties) hinzufügen', async () => {
       const filePath = testOptions.path + '/src/app/test.component.ts';
 
       appTree.create(
@@ -1387,8 +1307,6 @@ export class AppComponent implements OnInit {
 
       const content = appTree.read(filePath)?.toString();
       expect(content).toContain("  @Input() luxAppHeader: 'normal' | 'minimal' | 'none' = 'normal';");
-
-      done();
     });
   });
 });

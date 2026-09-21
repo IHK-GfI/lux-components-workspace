@@ -240,7 +240,7 @@ export abstract class LuxFormFileBase<T = any> extends LuxFormValueControlBase<T
     // absichtlich auf 'application/pdf-download' gesetzt.
     const downloadType = myFile.type === 'application/pdf' ? 'application/pdf-download' : myFile.type;
 
-    let dataAsBlob: Blob | null = null;
+    let dataAsBlob: Blob;
     if (myFile.content instanceof Blob) {
       dataAsBlob = new Blob([myFile.content], { type: downloadType });
     } else {

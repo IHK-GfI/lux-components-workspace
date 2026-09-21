@@ -4,6 +4,7 @@ import * as path from 'path';
 import { appOptions, workspaceOptions } from '../utility/test';
 import { UtilConfig } from '../utility/util';
 import { migrateXlf, Options } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('migrateXlf', () => {
   let appTree: UnitTestTree;
@@ -36,31 +37,25 @@ describe('migrateXlf', () => {
   });
 
   describe('[Rule] migrateXlf', () => {
-    it('Sollte die englische Übersetzungen aktualisieren', (done) => {
+    it('Sollte die englische Übersetzungen aktualisieren', async () => {
       const filePathDe = (testOptions.path ?? '') + '/src/locale/messages.xlf';
       const filePathEn = (testOptions.path ?? '') + '/src/locale/messages.en.xlf';
 
       appTree.create(filePathDe, xlfDe);
       appTree.create(filePathEn, xlfEn);
 
-      callRule(migrateXlf(testOptions), appTree, context).subscribe({
-        next: (success) => {
-          const contentDe = success
-            .read((testOptions.path ?? '') + '/src/locale/de.json')
-            ?.toString()
-            ?.replace(/\s/g, '');
-          expect(contentDe).toEqual(jsonDe.replace(/\s/g, ''));
+      const success = await lastValueFrom(callRule(migrateXlf(testOptions), appTree, context));
+      const contentDe = success
+        .read((testOptions.path ?? '') + '/src/locale/de.json')
+        ?.toString()
+        ?.replace(/\s/g, '');
+      expect(contentDe).toEqual(jsonDe.replace(/\s/g, ''));
 
-          const contentEn = success
-            .read((testOptions.path ?? '') + '/src/locale/en.json')
-            ?.toString()
-            ?.replace(/\s/g, '');
-          expect(contentEn).toEqual(jsonEn.replace(/\s/g, ''));
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const contentEn = success
+        .read((testOptions.path ?? '') + '/src/locale/en.json')
+        ?.toString()
+        ?.replace(/\s/g, '');
+      expect(contentEn).toEqual(jsonEn.replace(/\s/g, ''));
     });
   });
 });

@@ -345,7 +345,9 @@ export class LuxLegacyFormBridge<T> {
       return;
     }
 
-    if (value !== this.formControl.value) {
+    const unchanged = value === this.formControl.value;
+
+    if (!unchanged) {
       this.applyingToFormControl = true;
       try {
         this.formControl.setValue(value);
@@ -358,7 +360,16 @@ export class LuxLegacyFormBridge<T> {
     // nicht zuständig ist (freistehendes Feld ohne luxValue/[(value)]/Formular, z.B. per Template-
     // Referenz): Dort ist das Model die Quelle, der registerOnChange-Rückweg über publishValue()
     // wird also verworfen - ohne force bliebe die Anzeige beim alten Text stehen.
-    this.publishValue(value, true);
+    //
+    // Ist die Brücke zuständig, bleibt es beim bisherigen Verhalten: Ein geänderter Wert läuft über
+    // die valueChanges-Subscription zurück ins Model. Ein zusätzliches Publish an dieser Stelle würde
+    // den Rohwert des Aufrufers schreiben, bevor das Control ihn normalisiert hat (z.B. der Datepicker
+    // bei '03/05/2019'), und über die Two-Way-Bindung eine Endlosschleife auslösen.
+    if (!this.engaged) {
+      this.publishValue(value, true);
+    } else if (unchanged) {
+      this.publishValue(value);
+    }
   }
 
   /** Den (noch nicht initialisierten) Startwert setzen, ohne ein Change-Event auszulösen. */

@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true,
-    "types": ["jasmine"]
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src", "src/**/*.json", "**/*.spec.ts"],
   "exclude": ["src/**/files/**/*", "node_modules"]

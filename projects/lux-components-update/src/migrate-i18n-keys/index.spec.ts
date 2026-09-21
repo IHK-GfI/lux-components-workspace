@@ -5,6 +5,7 @@ import { appOptions, workspaceOptions } from '../utility/test';
 import { Options } from '../utility/types';
 import { UtilConfig } from '../utility/util';
 import { migrateI18nKeys } from './index';
+import { lastValueFrom } from 'rxjs';
 
 describe('migrateI18nKeys', () => {
   let appTree: UnitTestTree;
@@ -37,36 +38,24 @@ describe('migrateI18nKeys', () => {
   });
 
   describe('[Rule] migrateI18nKeys', () => {
-    it('Sollte den I18N-Tag in HTML-Dateien migrieren', (done) => {
+    it('Sollte den I18N-Tag in HTML-Dateien migrieren', async () => {
       const fileHtml01 = (testOptions.path ?? '') + '/src/app/html01.html';
 
       appTree.create(fileHtml01, html01);
 
-      callRule(migrateI18nKeys(testOptions), appTree, context).subscribe({
-        next: (success) => {
-          const contentHtml01 = success.read(fileHtml01)?.toString();
-          expect(contentHtml01).toEqual(html01Expected);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const success = await lastValueFrom(callRule(migrateI18nKeys(testOptions), appTree, context));
+      const contentHtml01 = success.read(fileHtml01)?.toString();
+      expect(contentHtml01).toEqual(html01Expected);
     });
 
-    it('Sollte das I18N-Attribut in HTML-Dateien migrieren', (done) => {
+    it('Sollte das I18N-Attribut in HTML-Dateien migrieren', async () => {
       const fileHtml02 = (testOptions.path ?? '') + '/src/app/html02.html';
 
       appTree.create(fileHtml02, html02);
 
-      callRule(migrateI18nKeys(testOptions), appTree, context).subscribe({
-        next: (success) => {
-          const contentHtml02 = success.read(fileHtml02)?.toString();
-          expect(contentHtml02).toEqual(html02Expected);
-
-          done();
-        },
-        error: (reason) => expect(reason).toBeUndefined()
-      });
+      const success = await lastValueFrom(callRule(migrateI18nKeys(testOptions), appTree, context));
+      const contentHtml02 = success.read(fileHtml02)?.toString();
+      expect(contentHtml02).toEqual(html02Expected);
     });
   });
 });
