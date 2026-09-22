@@ -3,7 +3,10 @@
   <lux-dialog-content>
     <div class="content">
       <lux-card luxTagId="card-lorem-ipsum">
-        <lux-card-content>Lorem ipsum dolor sit amet.</lux-card-content>
+        <lux-card-content>
+          <p>Lorem ipsum dolor sit amet.</p>
+          <p>Lokaler Provider: {{ localProviderValue ?? 'nicht vorhanden (Standard-Injector wird genutzt)' }}</p>
+        </lux-card-content>
       </lux-card>
       <span>Ihre Daten werden im Anschluss an diesen Dialog gespeichert.</span>
       <b>Zusatzinformationen</b>

@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, OnDestroy, TemplateRef, ViewChild, inject } from '@angular/core';
+import { Component, Injector, OnDestroy, TemplateRef, ViewChild, inject } from '@angular/core';
 import {
   ILuxDialogPresetConfig,
   LuxAccordionComponent,
@@ -22,6 +22,7 @@ import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-ba
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { examplePickValueFn, logResult } from '../../example-base/example-base-util/example-base-helper';
 import { DialogComponentExampleComponent } from './dialog-component-example/dialog-component-example.component';
+import { DIALOG_EXAMPLE_LOCAL_TOKEN } from './dialog-example-local.token';
 
 @Component({
   selector: 'app-dialog-example',
@@ -42,10 +43,15 @@ import { DialogComponentExampleComponent } from './dialog-component-example/dial
     ExampleBaseAdvancedOptionsComponent,
     NgTemplateOutlet,
     ExampleBaseOptionsActionsComponent
-  ]
+  ],
+  // Stellt einen lokalen Provider bereit, um Issue #305 zu demonstrieren: Über den
+  // "injector"-Parameter von "LuxDialogService.openComponent" kann dieser lokale Provider
+  // im geöffneten Dialog injiziert werden (siehe "openDialogComponentWithInjector").
+  providers: [{ provide: DIALOG_EXAMPLE_LOCAL_TOKEN, useValue: 'Wert aus einem lokalen Provider der aufrufenden Komponente' }]
 })
 export class DialogExampleComponent implements OnDestroy {
   private dialogService = inject(LuxDialogService);
+  private injector = inject(Injector);
 
   @ViewChild('contentTemplate', { static: true }) contentTemplate!: TemplateRef<any>;
   useContentTemplate = false;
@@ -164,6 +170,24 @@ export class DialogExampleComponent implements OnDestroy {
     const dialogRef = this.dialogService.openComponent(DialogComponentExampleComponent, this.dialogConfig, {
       showOutputEvents: this.showOutputEvents
     });
+
+    this.subscriptions.push(
+      dialogRef.dialogClosed.subscribe((result: any) => {
+        this.log(this.showOutputEvents, 'dialogClosed', result);
+      })
+    );
+  }
+
+  /**
+   * Demonstriert Issue #305: Übergibt den eigenen Injector dieser Komponente als "config.injector",
+   * sodass der lokale Provider (DIALOG_EXAMPLE_LOCAL_TOKEN) im Dialog injizierbar ist.
+   */
+  openDialogComponentWithInjector() {
+    const dialogRef = this.dialogService.openComponent(
+      DialogComponentExampleComponent,
+      { ...this.dialogConfig, injector: this.injector },
+      { showOutputEvents: this.showOutputEvents }
+    );
 
     this.subscriptions.push(
       dialogRef.dialogClosed.subscribe((result: any) => {

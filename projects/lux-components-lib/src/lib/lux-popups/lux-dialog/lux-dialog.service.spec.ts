@@ -2,7 +2,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed } fro
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, importProvidersFrom, inject, Injector, InjectionToken, TemplateRef, ViewChild } from '@angular/core';
 import { waitForAsync } from '@angular/core/testing';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -424,8 +424,29 @@ describe('LuxDialogService', () => {
       expect(dialogRef._matDialogRef.disableClose).toBeTrue();
       expect(overlayHelper.selectOneFromOverlay('.lux-icon-close')).toBeNull();
     }));
+
+    it('Sollte ohne übergebenen Injector den Root-Injector als Parent nutzen und den Token nicht auflösen können', fakeAsync(() => {
+      dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent);
+      LuxTestHelper.wait(fixture);
+
+      expect(dialogRef.componentInstance.testValue).toBeNull();
+    }));
+
+    it('Sollte den übergebenen Injector als Parent-Injector nutzen, sodass lokale Provider im Dialog auflösbar sind', fakeAsync(() => {
+      const customInjector = Injector.create({
+        parent: TestBed.inject(Injector),
+        providers: [{ provide: TEST_TOKEN, useValue: 'Wert aus lokalem Provider' }]
+      });
+
+      dialogRef = testComponent.dialogService.openComponent(MockCustomDialogComponent, { injector: customInjector });
+      LuxTestHelper.wait(fixture);
+
+      expect(dialogRef.componentInstance.testValue).toEqual('Wert aus lokalem Provider');
+    }));
   });
 });
+
+export const TEST_TOKEN = new InjectionToken<string>('TEST_TOKEN');
 
 @Component({
   template: ` <ng-template #testContentTemplate><span>Hallo Welt</span></ng-template> `,
@@ -461,6 +482,7 @@ class MockDialogComponent {
 })
 class MockCustomDialogComponent {
   dialogRef = inject<LuxDialogRef<void>>(LuxDialogRef);
+  testValue = inject(TEST_TOKEN, { optional: true });
 
   dialogClosed() {}
 }

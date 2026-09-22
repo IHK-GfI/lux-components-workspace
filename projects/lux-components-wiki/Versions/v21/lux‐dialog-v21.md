@@ -20,6 +20,7 @@
   - [Beispiele](#beispiele)
     - [1. Confirm Dialog mit Defaultbutton](#1-confirm-dialog-mit-defaultbutton)
     - [2. Dialog mit eigener Komponente](#2-dialog-mit-eigener-komponente)
+    - [3. Dialog mit eigenem Injector](#3-dialog-mit-eigenem-injector)
   - [Zusatzinformationen](#zusatzinformationen)
 
 ## Overview / API
@@ -110,6 +111,7 @@ Es existiert ein zusätzliches Objekt DEFAULT_DIALOG_CONF mit zuvor festgelegten
 | panelClass                 | string, string[] | Über diese Property ist es möglich eine einzelne bzw. mehrere CSS-Klassen an den geöffneten Dialog zu setzen.                                                                                                                                                                                                                            |
 | disableClose               | boolean          | Diese Property bestimmt, ob der Dialog nur über die Schaltflächen schließbar ist oder nicht.                                                                                                                                                                                                                                             |
 | disableBackdropAndEscClose | boolean          | Wenn `true`, werden Backdrop-Klicks und die ESC-Taste ignoriert – der X-Schließen-Button bleibt jedoch weiterhin sichtbar. Unterschied zu `disableClose`: `disableClose` verhindert zusätzlich den X-Button.                                                                                                                             |
+| injector                   | Injector         | Optionaler, eigener Parent-Injector für den Dialog (Default: Root-Injector). Damit lassen sich z.B. lokal auf der aufrufenden Component bereitgestellte Provider (`@Component({ providers: [...] })`) innerhalb des Dialogs injizieren. Siehe [3. Dialog mit eigenem Injector](#3-dialog-mit-eigenem-injector).                          |
 
 ### ILuxDialogPresetConfig
 
@@ -291,6 +293,47 @@ constructor(public luxDialogRef: LuxDialogRef<any>) {
 }
 
 ngOnInit() {
+}
+```
+
+### 3. Dialog mit eigenem Injector
+
+Standardmäßig wird für den Dialog der Root-Injector als Parent-Injector genutzt. Provider, die lokal auf
+der aufrufenden Component bereitgestellt werden (`@Component({ providers: [...] })`), sind daher im
+Dialog normalerweise NICHT auflösbar. Über `config.injector` kann stattdessen der Injector der aufrufenden
+Component übergeben werden, sodass deren lokale Provider auch im Dialog injiziert werden können.
+
+Ts - Aufrufer
+
+```typescript
+export const MY_LOCAL_TOKEN = new InjectionToken<string>('MY_LOCAL_TOKEN');
+
+@Component({
+  ...
+  providers: [{ provide: MY_LOCAL_TOKEN, useValue: 'Ein lokaler Wert' }]
+})
+export class CallerComponent {
+  private injector = inject(Injector);
+
+  constructor(private dialogService: LuxDialogService) {
+  }
+
+  openDialog() {
+    const dialogRef = this.dialogService.openComponent(ExampleDialogComponent, { injector: this.injector });
+
+    dialogRef.dialogClosed.subscribe((result: any) => {
+        console.log('dialogClosed', result);
+    });
+  }
+}
+```
+
+Ts - Dialog
+
+```typescript
+constructor(public luxDialogRef: LuxDialogRef<any>) {
+  // Da "injector" beim Öffnen übergeben wurde, ist MY_LOCAL_TOKEN hier auflösbar.
+  this.localValue = inject(MY_LOCAL_TOKEN, { optional: true });
 }
 ```
 
