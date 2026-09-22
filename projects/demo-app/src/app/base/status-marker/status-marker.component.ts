@@ -12,7 +12,9 @@ export class StatusMarkerComponent {
   private static globalCounter = 0;
 
   readonly markerType = input(DemoMarkerType.New);
+
+  readonly counter = StatusMarkerComponent.globalCounter++;
+
   readonly badgeColor = computed(() => (this.markerType() === DemoMarkerType.New ? 'green' : 'lightblue'));
   readonly label = computed(() => getDemoMarkerLabel(this.markerType()));
-  readonly counter = StatusMarkerComponent.globalCounter++;
 }

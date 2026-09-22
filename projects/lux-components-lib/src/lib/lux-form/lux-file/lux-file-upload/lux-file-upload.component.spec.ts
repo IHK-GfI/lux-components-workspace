@@ -1,9 +1,11 @@
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormField, form, required, requiredError, validate } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { provideLuxTranslocoTesting } from '../../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../../lux-util/lux-console.service';
 import { LuxStorageService } from '../../../lux-util/lux-storage.service';
@@ -15,6 +17,7 @@ import { LuxFileUploadComponent } from './lux-file-upload.component';
 
 describe('LuxFileUploadComponent', () => {
   beforeEach(() => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -27,6 +30,13 @@ describe('LuxFileUploadComponent', () => {
         }
       ]
     }).compileComponents();
+  });
+
+  afterEach(async () => {
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
+    vi.useRealTimers();
   });
 
   describe('[Allgemein]', () => {
@@ -44,51 +54,48 @@ describe('LuxFileUploadComponent', () => {
       fileComponent['liveAnnouncer'] = { announce: () => {} } as any;
 
       // Wir mocken hier den FileReader weg, da er nicht mit fakeAsync kompatibel ist
-      spyOn(fileComponent, 'readFile').and.returnValue(Promise.resolve(base64Dummy));
+      vi.spyOn(fileComponent, 'readFile').mockResolvedValue(base64Dummy);
       // Den read-Delay für die Ladeanzeige mocken
       fileComponent.defaultReadFileDelay = 0;
       overlayHelper = new LuxOverlayHelper();
       fixture.detectChanges();
     });
 
-    it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', fakeAsync(() => {
+    it('Sollte die dynamische Änderung von luxMaxFileCount korrekt berücksichtigen', async () => {
       // Vorbedingungen: Maximal 1 Datei erlaubt
-      fileComponent.luxMaxFileCount = 1;
-      fileComponent.luxMultiple = true;
-      fixture.detectChanges();
+      testComponent.maxFileCount.set(1);
+      testComponent.multiple.set(true);
+      await LuxTestHelper.wait(fixture);
 
       // Eine Datei hinzufügen
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
-      flush();
-      LuxTestHelper.wait(fixture);
-      expect(fileComponent.luxSelected!.length).toBe(1);
+      await LuxTestHelper.wait(fixture);
+      expect(fileComponent.value()!.length).toBe(1);
       expect(fileComponent.formControl.errors).toBeNull();
 
       // Versucht eine zweite Datei hinzuzufügen -> Error
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      flush();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(fileComponent.formControl.errors).not.toBeNull();
       expect(fileComponent.formControl.errors![LuxFileErrorCause.MaxFileCount]).toBeDefined();
 
       // MaxFileCount dynamisch erhöhen
-      fileComponent.luxMaxFileCount = 2;
-      fixture.detectChanges();
+      testComponent.maxFileCount.set(2);
+      await LuxTestHelper.wait(fixture);
 
       // Fügt eine zweite Datei hinzu
       fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile2.txt', 'text/txt')]);
-      flush();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       // Jetzt sollten zwei Dateien erlaubt sein
-      expect(fileComponent.luxSelected!.length).toBe(2);
+      expect(fileComponent.value()!.length).toBe(2);
       expect(fileComponent.formControl.errors).toBeNull();
-    }));
+    });
 
     it('Sollte den Delete-Button bei luxListOnly=true anzeigen, wenn hidden=false konfiguriert ist', () => {
-      testComponent.listOnly = true;
-      testComponent.deleteActionConfig = { ...testComponent.deleteActionConfig, hidden: false };
-      testComponent.selected = [{ name: 'mockfile1.txt', type: 'text/plain' }];
+      testComponent.listOnly.set(true);
+      testComponent.deleteActionConfig.set({ ...testComponent.deleteActionConfig(), hidden: false });
+      testComponent.selected.set([{ name: 'mockfile1.txt', type: 'text/plain' }]);
 
       fixture.detectChanges();
 
@@ -97,9 +104,9 @@ describe('LuxFileUploadComponent', () => {
     });
 
     it('Sollte den Delete-Button bei hidden=true auch mit luxListOnly=true ausblenden', () => {
-      testComponent.listOnly = true;
-      testComponent.deleteActionConfig = { ...testComponent.deleteActionConfig, hidden: true };
-      testComponent.selected = [{ name: 'mockfile1.txt', type: 'text/plain' }];
+      testComponent.listOnly.set(true);
+      testComponent.deleteActionConfig.set({ ...testComponent.deleteActionConfig(), hidden: true });
+      testComponent.selected.set([{ name: 'mockfile1.txt', type: 'text/plain' }]);
 
       fixture.detectChanges();
 
@@ -107,7 +114,84 @@ describe('LuxFileUploadComponent', () => {
       expect(deleteButton).toBeFalsy();
     });
   });
+
+  describe('[formField]', () => {
+    let fixture: ComponentFixture<FormFieldFileComponent>;
+    let testComponent: FormFieldFileComponent;
+    let fileComponent: LuxFileUploadComponent;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(FormFieldFileComponent);
+      testComponent = fixture.componentInstance;
+      fileComponent = fixture.debugElement.query(By.directive(LuxFileUploadComponent)).componentInstance;
+      fileComponent['liveAnnouncer'] = { announce: () => {} } as any;
+      fixture.detectChanges();
+    });
+
+    it('sollte required+touched als Fehler anzeigen, wenn required() allein einen leeren Array-Wert nicht erkennt', () => {
+      testComponent.required.set(true);
+      fixture.detectChanges();
+      fileComponent.markAsTouched();
+      fixture.detectChanges();
+
+      // Signal Forms' isEmpty() behandelt ein leeres Array nicht als leer - required() allein würde
+      // hier also NIE anschlagen, siehe die zusätzliche validate()-Regel in FormFieldFileComponent unten.
+      expect(fileComponent.errorMessage()).toBeTruthy();
+      expect(fileComponent.isTouched()).toBe(true);
+    });
+
+    it('sollte per focusout touched werden, ohne dass zuvor eine Datei ausgewählt wurde', () => {
+      testComponent.required.set(true);
+      fixture.detectChanges();
+
+      const container = fixture.debugElement.query(By.css('.lux-file-upload-container')).nativeElement as HTMLElement;
+      container.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+      fixture.detectChanges();
+
+      const errorEl = fixture.debugElement.query(By.css('.lux-file-upload-error-container-no-button, .lux-file-upload-error-container'));
+      expect(errorEl).toBeTruthy();
+    });
+
+    it('sollte den Fehler wieder verstecken, wenn per Upload eine Datei zu einem leeren Array-Wert hinzugefügt wird', async () => {
+      // Reproduziert den Bug: this.getValue() lieferte dieselbe Array-Referenz wie zuvor per push()
+      // erweitert zurück, wodurch LuxLegacyFormBridge.setValue() per Referenzvergleich fälschlich
+      // annahm, es habe sich nichts geändert, und modelValue().set() nie aufgerufen wurde.
+      vi.useFakeTimers();
+      vi.spyOn(fileComponent, 'readFile').mockResolvedValue('data:text/plain;base64,YWJj');
+      fileComponent.defaultReadFileDelay = 0;
+
+      testComponent.model.set([]);
+      testComponent.required.set(true);
+      fixture.detectChanges();
+      fileComponent.markAsTouched();
+      fixture.detectChanges();
+      expect(fileComponent.errorMessage()).toBeTruthy();
+
+      fileComponent.selectFiles([LuxTestHelper.createFileBrowserSafe('mockfile1.txt', 'text/txt')]);
+      await vi.runAllTimersAsync();
+      fixture.detectChanges();
+
+      expect(fileComponent.value()).toEqual([expect.objectContaining({ name: 'mockfile1.txt' })]);
+      expect(fileComponent.errorMessage()).toBeFalsy();
+      vi.useRealTimers();
+    });
+  });
 });
+
+@Component({
+  selector: 'lux-formfield-file-host',
+  template: `<lux-file-upload [formField]="testForm" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxFileUploadComponent, FormField]
+})
+class FormFieldFileComponent {
+  readonly required = signal(false);
+  readonly model = signal<ILuxFileObject[] | null>(null);
+  readonly testForm = form(this.model, (path) => {
+    required(path, { when: () => this.required() });
+    validate(path, (ctx) => (this.required() && Array.isArray(ctx.value()) && ctx.value()!.length === 0 ? requiredError() : undefined));
+  });
+}
 
 class MockStorage {
   getItem(key: string): string {
@@ -127,41 +211,43 @@ class MockStorage {
       [luxRequired]="required"
       [luxReadonly]="readonly"
       [luxDisabled]="disabled"
-      [luxListOnly]="listOnly"
+      [luxListOnly]="listOnly()"
       [luxAccept]="accept"
       [luxCapture]="capture"
       [luxMaxSizeMiB]="maxSizeMiB"
       [luxUploadUrl]="uploadUrl"
-      [luxSelected]="selected"
-      [luxMultiple]="multiple"
+      [luxSelected]="selected()"
+      [luxMultiple]="multiple()"
+      [luxMaxFileCount]="maxFileCount()"
       [luxUploadActionConfig]="uploadActionConfig"
       [luxDownloadActionConfig]="downloadActionConfig"
-      [luxDeleteActionConfig]="deleteActionConfig"
+      [luxDeleteActionConfig]="deleteActionConfig()"
       [luxViewActionConfig]="viewActionConfig"
       [luxContentsAsBlob]="contentsAsBlob"
       (luxSelectedChange)="selectedChange($event)"
     >
     </lux-file-upload>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxFileUploadComponent]
 })
 class FileComponent {
-  label?: string;
-  hint?: string;
-  required?: boolean;
-  readonly?: boolean;
-  disabled?: boolean;
+  label = '';
+  hint = '';
+  required = false;
+  readonly = false;
+  disabled = false;
   accept?: string;
-  capture?: string;
+  capture = '';
   iconName?: string;
   maxSizeMiB = 10;
-  uploadUrl?: string;
-  multiple?: boolean;
-  contentsAsBlob?: boolean;
-  listOnly?: boolean;
+  uploadUrl = '';
+  multiple = signal<boolean>(false);
+  maxFileCount = signal(100);
+  contentsAsBlob = false;
+  listOnly = signal<boolean>(false);
 
-  selected: ILuxFileObject[] | null = null;
+  selected = signal<ILuxFileObject[] | null>(null);
 
   uploadActionConfig: ILuxFilesListActionConfig = {
     disabled: false,
@@ -174,7 +260,7 @@ class FileComponent {
     labelHeader: 'Neue Dateien hochladen',
     onClick: () => null
   };
-  deleteActionConfig: ILuxFileListActionConfig = {
+  deleteActionConfig = signal<ILuxFileListActionConfig>({
     disabled: false,
     disabledHeader: false,
     hidden: false,
@@ -184,7 +270,7 @@ class FileComponent {
     label: 'Löschen',
     labelHeader: 'Alle Dateien entfernen',
     onClick: () => null
-  };
+  });
   viewActionConfig: ILuxFileActionConfig = {
     disabled: false,
     hidden: false,
@@ -201,7 +287,7 @@ class FileComponent {
   };
 
   selectedChange(files: ILuxFileObject[] | null) {
-    this.selected = files;
+    this.selected.set(files);
   }
 }
 

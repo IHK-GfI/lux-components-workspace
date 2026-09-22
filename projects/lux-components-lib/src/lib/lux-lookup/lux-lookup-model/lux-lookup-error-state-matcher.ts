@@ -11,7 +11,7 @@ export class LuxLookupErrorStateMatcher implements ErrorStateMatcher {
 
   isErrorState(control: FormControl | UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     if (control) {
-      const lookupValue = this.lookupComponent.luxValue;
+      const lookupValue = this.lookupComponent.luxValue();
       if (lookupValue) {
         // Wenn ein selektierter Wert ungültig ist, Fehler anzeigen
         if (

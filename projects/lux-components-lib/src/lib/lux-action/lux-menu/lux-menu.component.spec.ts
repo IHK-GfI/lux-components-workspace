@@ -1,8 +1,9 @@
+import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
@@ -17,11 +18,11 @@ describe('LuxMenuComponent', () => {
   let menuComponent: LuxMenuComponent;
   let overlayContainer: OverlayContainer;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MockComponent);
@@ -32,20 +33,20 @@ describe('LuxMenuComponent', () => {
     overlayContainer = TestBed.inject(OverlayContainer);
   });
 
-  it('Sollte erstellt werden', fakeAsync(() => {
+  it('Sollte erstellt werden', async () => {
     expect(component).toBeTruthy();
-  }));
+  });
 
-  it('Sollte die MenuItems darstellen (nur im Menu und Extended)', fakeAsync(() => {
+  it('Sollte die MenuItems darstellen (nur im Menu und Extended)', async () => {
     // Vorbedingungen prüfen
     let menuItems = fixture.debugElement.queryAll(By.css('lux-menu-item'));
     expect(menuItems.length).toBe(0);
     expect(menuComponent.menuItems.length).toBe(0);
-    expect(component.displayExtended()).toBeTrue();
+    expect(component.displayExtended()).toBe(true);
 
     // Änderungen durchführen
     component.generateItems(3);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     menuItems = fixture.debugElement.queryAll(By.css('lux-button.lux-menu-item'));
@@ -54,43 +55,43 @@ describe('LuxMenuComponent', () => {
 
     // Änderungen durchführen
     component.displayExtended.set(false);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     const extendedMenuItems = fixture.debugElement.queryAll(By.css('lux-button.lux-menu-item'));
     expect(extendedMenuItems.length).toBe(3);
-  }));
+  });
 
-  it('Sollte die MenuItems korrekt ausblenden wenn der Platz nicht mehr ausreicht', fakeAsync(() => {
+  it('Sollte die MenuItems korrekt ausblenden wenn der Platz nicht mehr ausreicht', async () => {
     // Vorbedingungen testen
     component.generateItems(3);
-    updateExtendedMenuItems();
-    expect(component.displayExtended()).toBeTrue();
+    await updateExtendedMenuItems();
+    expect(component.displayExtended()).toBe(true);
 
     const menuDebugEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
-    const offsetWidthSpy = spyOnProperty(menuDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+    const offsetWidthSpy = vi.spyOn(menuDebugEl.nativeElement, 'offsetWidth', 'get').mockReturnValue(1200);
     const triggerDebugEl = fixture.debugElement.query(By.css('div.lux-menu-trigger'));
-    spyOnProperty(triggerDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(190);
-    updateExtendedMenuItems();
+    vi.spyOn(triggerDebugEl.nativeElement, 'offsetWidth', 'get').mockReturnValue(190);
+    await updateExtendedMenuItems();
 
     let extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
     expect(extendedMenuItems.length).toBe(3);
 
     // Änderungen durchführen
-    offsetWidthSpy.and.returnValue(300);
-    updateExtendedMenuItems();
+    offsetWidthSpy.mockReturnValue(300);
+    await updateExtendedMenuItems();
 
     // Nachbedingungen prüfen
     extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
     expect(extendedMenuItems.length).toBeGreaterThan(0);
     expect(extendedMenuItems.length).toBeLessThan(3);
-  }));
+  });
 
-  it('Sollte einen eigenen Toggle-Button injecten', fakeAsync(() => {
+  it('Sollte einen eigenen Toggle-Button injecten', async () => {
     // Vorbedingungen testen
     component.generateItems(3);
     component.displayExtended.set(false);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     let defaultTriggerNode = fixture.debugElement.query(By.css('.lux-menu-trigger-default'));
     let mockTriggerNode = fixture.debugElement.query(By.css('.mock-trigger'));
@@ -100,7 +101,7 @@ describe('LuxMenuComponent', () => {
 
     // Änderungen durchführen
     component.showMockTrigger.set(true);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     defaultTriggerNode = fixture.debugElement.query(By.css('.lux-menu-trigger-default'));
@@ -108,25 +109,25 @@ describe('LuxMenuComponent', () => {
 
     expect(defaultTriggerNode).toBeNull();
     expect(mockTriggerNode).not.toBeNull();
-  }));
+  });
 
-  it('Sollte nur n (n = luxMaximumExtend) Menu-Items darstellen', fakeAsync(() => {
+  it('Sollte nur n (n = luxMaximumExtend) Menu-Items darstellen', async () => {
     // Vorbedingungen testen
     component.generateItems(3);
-    updateExtendedMenuItems();
+    await updateExtendedMenuItems();
 
     const menuDebugEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
-    spyOnProperty(menuDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(1200);
+    vi.spyOn(menuDebugEl.nativeElement, 'offsetWidth', 'get').mockReturnValue(1200);
     const triggerDebugEl = fixture.debugElement.query(By.css('div.lux-menu-trigger'));
-    spyOnProperty(triggerDebugEl.nativeElement, 'offsetWidth', 'get').and.returnValue(200);
-    updateExtendedMenuItems();
+    vi.spyOn(triggerDebugEl.nativeElement, 'offsetWidth', 'get').mockReturnValue(200);
+    await updateExtendedMenuItems();
 
     let extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
     expect(extendedMenuItems.length).toBe(3);
 
     // Änderungen durchführen
     component.maximumExtended.set(1);
-    updateExtendedMenuItems();
+    await updateExtendedMenuItems();
 
     // Nachbedingungen prüfen
     extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
@@ -134,19 +135,19 @@ describe('LuxMenuComponent', () => {
 
     // Änderungen durchführen
     component.maximumExtended.set(2);
-    updateExtendedMenuItems();
+    await updateExtendedMenuItems();
 
     // Nachbedingungen prüfen
     extendedMenuItems = fixture.debugElement.queryAll(By.css('.lux-menu-item:not([style*=none])'));
     expect(extendedMenuItems.length).toBe(2);
-  }));
+  });
 
-  it('Sollte das extendedMenu rechtsbündig darstellen', fakeAsync(() => {
+  it('Sollte das extendedMenu rechtsbündig darstellen', async () => {
     // Vorbedingungen testen
     component.generateItems(3);
     component.maximumExtended.set(2);
     component.displayMenuLeft.set(true);
-    updateExtendedMenuItems();
+    await updateExtendedMenuItems();
 
     let menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
     let children = menuExtendedEl.children;
@@ -155,21 +156,21 @@ describe('LuxMenuComponent', () => {
 
     // Änderungen durchführen
     component.displayMenuLeft.set(false);
-    updateExtendedMenuItems();
+    await updateExtendedMenuItems();
 
     menuExtendedEl = fixture.debugElement.query(By.css('div.lux-menu-extended'));
     children = menuExtendedEl.children;
 
     expect(children[0].nativeElement.classList).toContain('lux-menu-trigger');
-  }));
+  });
 
-  it('Sollte Menu-Items deaktivieren', fakeAsync(() => {
+  it('Sollte Menu-Items deaktivieren', async () => {
     // Vorbedingungen testen
     component.generateItems(3);
-    updateExtendedMenuItems();
+    await updateExtendedMenuItems();
 
     menuComponent.menuTriggerElRef!.nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     let disabledLength = fixture.debugElement.queryAll(By.css('.lux-menu-item:not(.lux-hidden) button[disabled]')).length;
     expect(disabledLength).toBe(0);
@@ -178,82 +179,81 @@ describe('LuxMenuComponent', () => {
     component.items()[0].disabled = true;
     component.items()[1].disabled = true;
     component.items()[2].disabled = true;
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     menuComponent.menuTriggerElRef!.nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     disabledLength = fixture.debugElement.queryAll(By.css('.lux-menu-item:not(.lux-hidden) button[disabled]')).length;
     expect(disabledLength).toBe(3);
 
-    flush();
-    discardPeriodicTasks();
-  }));
+    fixture.detectChanges();
+  });
 
-  it('Sollte zur Laufzeit weitere Menu-Items hinzufügen können', fakeAsync(() => {
+  it('Sollte zur Laufzeit weitere Menu-Items hinzufügen können', async () => {
     // Vorbedingungen testen
     component.generateItems(3);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     let items = fixture.debugElement.queryAll(By.css('.lux-menu-item:not(.lux-hidden)'));
     expect(items.length).toBe(3);
 
     // Änderungen durchführen
     component.pushItems(2);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     items = fixture.debugElement.queryAll(By.css('.lux-menu-item:not(.lux-hidden)'));
     expect(items.length).toBe(5);
-  }));
+  });
 
-  it('Sollte den Fokus auf den Custom-Trigger zurücksetzen nach dem Schließen des Menüs', fakeAsync(() => {
+  it('Sollte den Fokus auf den Custom-Trigger zurücksetzen nach dem Schließen des Menüs', async () => {
     // Vorbedingungen prüfen
     component.generateItems(3);
     component.showMockTrigger.set(true);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const mockTriggerBtn = fixture.debugElement.query(By.css('.mock-trigger')).nativeElement as HTMLElement;
-    const focusSpy = spyOn(mockTriggerBtn, 'focus');
+    const focusSpy = vi.spyOn(mockTriggerBtn, 'focus').mockReturnValue(undefined);
 
     // Menü schließen simulieren
     menuComponent.onMenuClosed();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(focusSpy).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte den Fokus auf den Default-Trigger zurücksetzen nach dem Schließen des Menüs (kein Custom-Trigger)', fakeAsync(() => {
+  it('Sollte den Fokus auf den Default-Trigger zurücksetzen nach dem Schließen des Menüs (kein Custom-Trigger)', async () => {
     // Vorbedingungen prüfen
     component.generateItems(3);
     component.showMockTrigger.set(false);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const defaultTriggerBtn = menuComponent.defaultTriggerElRef!.nativeElement.children.item(0) as HTMLElement;
-    const focusSpy = spyOn(defaultTriggerBtn, 'focus');
+    const focusSpy = vi.spyOn(defaultTriggerBtn, 'focus').mockReturnValue(undefined);
 
     // Menü schließen simulieren
     menuComponent.onMenuClosed();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(focusSpy).toHaveBeenCalled();
-  }));
+  });
 
-  it('Sollte Panel-Items mit warn/accent Farbe die entsprechende Farbklasse vergeben', fakeAsync(() => {
+  it('Sollte Panel-Items mit warn/accent Farbe die entsprechende Farbklasse vergeben', async () => {
     // Vorbedingungen
     component.generateItems(3);
     component.displayExtended.set(false);
     component.items()[0].color = 'warn';
     component.items()[1].color = 'accent';
     component.items()[2].color = 'primary';
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Menü öffnen
     menuComponent.menuTriggerElRef!.nativeElement.click();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen
     const overlayEl = overlayContainer.getContainerElement();
@@ -265,51 +265,50 @@ describe('LuxMenuComponent', () => {
     expect(accentItems.length).toBe(1);
     expect(primaryItems.length).toBe(1);
 
-    flush();
-    discardPeriodicTasks();
-  }));
+    fixture.detectChanges();
+  });
 
   describe('Attribut "luxDisabledAria"', () => {
-    it('Sollte sichtbare Buttons als aria-disabled markieren (kein natives disabled)', fakeAsync(() => {
+    it('Sollte sichtbare Buttons als aria-disabled markieren (kein natives disabled)', async () => {
       // Vorbedingungen prüfen
       component.generateItems(3);
       component.items()[0].disabledAria = true;
-      updateExtendedMenuItems();
+      await updateExtendedMenuItems();
 
       // Nachbedingungen prüfen
       const ariaDisabledButtons = fixture.debugElement.queryAll(By.css('.lux-menu-item:not(.lux-hidden) button[aria-disabled="true"]'));
       expect(ariaDisabledButtons.length).toBe(1);
-      expect(ariaDisabledButtons[0].nativeElement.hasAttribute('disabled')).toBeFalse();
-    }));
+      expect(ariaDisabledButtons[0].nativeElement.hasAttribute('disabled')).toBe(false);
+    });
 
-    it('Sollte bei sichtbaren Buttons luxClickNotAllowed statt luxClicked emittieren', fakeAsync(() => {
+    it('Sollte bei sichtbaren Buttons luxClickNotAllowed statt luxClicked emittieren', async () => {
       // Vorbedingungen prüfen
-      const clickedSpy = spyOn(component, 'clicked');
-      const notAllowedSpy = spyOn(component, 'clickNotAllowed');
+      const clickedSpy = vi.spyOn(component, 'clicked').mockReturnValue(undefined);
+      const notAllowedSpy = vi.spyOn(component, 'clickNotAllowed').mockReturnValue(undefined);
       component.generateItems(1);
       component.items()[0].disabledAria = true;
-      updateExtendedMenuItems();
+      await updateExtendedMenuItems();
 
       // Änderungen durchführen
       const buttonEl = fixture.debugElement.query(By.css('.lux-menu-item:not(.lux-hidden) button'));
       buttonEl.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(notAllowedSpy).toHaveBeenCalledTimes(1);
       expect(clickedSpy).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('Sollte Panel-Items als aria-disabled markieren, ohne natives disabled (bleiben fokussierbar)', fakeAsync(() => {
+    it('Sollte Panel-Items als aria-disabled markieren, ohne natives disabled (bleiben fokussierbar)', async () => {
       // Vorbedingungen prüfen
       component.generateItems(3);
       component.displayExtended.set(false);
       component.items()[1].disabledAria = true;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Änderungen durchführen
       menuComponent.menuTriggerElRef!.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       const overlayEl = overlayContainer.getContainerElement();
@@ -317,110 +316,105 @@ describe('LuxMenuComponent', () => {
       expect(ariaDisabledItems.length).toBe(1);
       // Kein natives disabled: Item bleibt fokussierbar und wird von der
       // Pfeiltasten-Navigation des mat-menu nicht übersprungen.
-      expect(ariaDisabledItems[0].hasAttribute('disabled')).toBeFalse();
+      expect(ariaDisabledItems[0].hasAttribute('disabled')).toBe(false);
 
-      flush();
-      discardPeriodicTasks();
-    }));
+      fixture.detectChanges();
+    });
 
-    it('Sollte bei Panel-Items luxClickNotAllowed statt luxClicked emittieren', fakeAsync(() => {
+    it('Sollte bei Panel-Items luxClickNotAllowed statt luxClicked emittieren', async () => {
       // Vorbedingungen prüfen
-      const clickedSpy = spyOn(component, 'clicked');
-      const notAllowedSpy = spyOn(component, 'clickNotAllowed');
+      const clickedSpy = vi.spyOn(component, 'clicked').mockReturnValue(undefined);
+      const notAllowedSpy = vi.spyOn(component, 'clickNotAllowed').mockReturnValue(undefined);
       component.generateItems(2);
       component.displayExtended.set(false);
       component.items()[0].disabledAria = true;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Änderungen durchführen
       menuComponent.menuTriggerElRef!.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const overlayEl = overlayContainer.getContainerElement();
       const ariaDisabledItem = overlayEl.querySelector('button.lux-menu-item[aria-disabled="true"]') as HTMLElement;
       ariaDisabledItem.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(notAllowedSpy).toHaveBeenCalledTimes(1);
       expect(clickedSpy).not.toHaveBeenCalled();
 
-      flush();
-      discardPeriodicTasks();
-    }));
+      fixture.detectChanges();
+    });
 
-    it('Sollte aria-disabled behalten, wenn luxDisabled zur Laufzeit von true auf false wechselt', fakeAsync(() => {
+    it('Sollte aria-disabled behalten, wenn luxDisabled zur Laufzeit von true auf false wechselt', async () => {
       // Regression: Das MatMenuItem-Host-Binding (aria-disabled = disabled) schreibt das
       // Attribut bei einer eigenen Wertänderung neu und würde den Direktiven-Wert überschreiben.
       component.generateItems(2);
       component.displayExtended.set(false);
       component.items()[0].disabledAria = true;
       component.items()[0].disabled = true;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       menuComponent.menuTriggerElRef!.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       component.items.update((items) => items.map((item, index) => (index === 0 ? { ...item, disabled: false } : item)));
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const overlayEl = overlayContainer.getContainerElement();
       const ariaDisabledItems = overlayEl.querySelectorAll('button.lux-menu-item[aria-disabled="true"]');
       expect(ariaDisabledItems.length).toBe(1);
-      expect(ariaDisabledItems[0].hasAttribute('disabled')).toBeFalse();
+      expect(ariaDisabledItems[0].hasAttribute('disabled')).toBe(false);
 
-      flush();
-      discardPeriodicTasks();
-    }));
+      fixture.detectChanges();
+    });
 
-    it('Sollte aria-disabled entfernen, wenn luxDisabledAria zurückgesetzt wird', fakeAsync(() => {
+    it('Sollte aria-disabled entfernen, wenn luxDisabledAria zurückgesetzt wird', async () => {
       component.generateItems(2);
       component.displayExtended.set(false);
       component.items()[0].disabledAria = true;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       menuComponent.menuTriggerElRef!.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       component.items.update((items) => items.map((item, index) => (index === 0 ? { ...item, disabledAria: false } : item)));
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const overlayEl = overlayContainer.getContainerElement();
       expect(overlayEl.querySelectorAll('button.lux-menu-item[aria-disabled="true"]').length).toBe(0);
 
-      flush();
-      discardPeriodicTasks();
-    }));
+      fixture.detectChanges();
+    });
 
-    it('Sollte luxHidden unverändert lassen (verstecktes Item erscheint trotz luxDisabledAria nicht im Panel)', fakeAsync(() => {
+    it('Sollte luxHidden unverändert lassen (verstecktes Item erscheint trotz luxDisabledAria nicht im Panel)', async () => {
       component.generateItems(2);
       component.displayExtended.set(false);
       component.items()[0].disabledAria = true;
       component.items()[0].hidden = true;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       menuComponent.menuTriggerElRef!.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       const overlayEl = overlayContainer.getContainerElement();
       expect(overlayEl.querySelectorAll('button.lux-menu-item').length).toBe(1);
       expect(overlayEl.querySelectorAll('button.lux-menu-item[aria-disabled="true"]').length).toBe(0);
 
-      flush();
-      discardPeriodicTasks();
-    }));
+      fixture.detectChanges();
+    });
 
-    it('Sollte luxDisabled unverändert lassen (natives disabled, kein luxClickNotAllowed)', fakeAsync(() => {
+    it('Sollte luxDisabled unverändert lassen (natives disabled, kein luxClickNotAllowed)', async () => {
       // Vorbedingungen prüfen
-      const notAllowedSpy = spyOn(component, 'clickNotAllowed');
+      const notAllowedSpy = vi.spyOn(component, 'clickNotAllowed').mockReturnValue(undefined);
       component.generateItems(2);
       component.displayExtended.set(false);
       component.items()[0].disabled = true;
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Änderungen durchführen
       menuComponent.menuTriggerElRef!.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      fixture.detectChanges();
 
       // Nachbedingungen prüfen
       const overlayEl = overlayContainer.getContainerElement();
@@ -428,15 +422,14 @@ describe('LuxMenuComponent', () => {
       expect(disabledItems.length).toBe(1);
       expect(notAllowedSpy).not.toHaveBeenCalled();
 
-      flush();
-      discardPeriodicTasks();
-    }));
+      fixture.detectChanges();
+    });
   });
 
-  const updateExtendedMenuItems = () => {
-    LuxTestHelper.wait(fixture);
+  const updateExtendedMenuItems = async () => {
+    fixture.detectChanges();
     menuComponent.updateExtendedMenuItems();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
   };
 });
 

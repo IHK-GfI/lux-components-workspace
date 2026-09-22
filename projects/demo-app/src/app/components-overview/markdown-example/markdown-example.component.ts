@@ -1,10 +1,5 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import {
-  LuxFormHintComponent,
-  LuxInputAcComponent,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
-} from '@ihk-gfi/lux-components';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { LuxFormHintComponent, LuxInputComponent, LuxTextareaComponent, LuxToggleComponent } from '@ihk-gfi/lux-components';
 import { LuxSanitizeConfig } from '@ihk-gfi/lux-components/lux-html';
 import { LuxMarkdownComponent } from '@ihk-gfi/lux-components/lux-markdown';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
@@ -15,11 +10,11 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'lux-markdown-example',
   templateUrl: './markdown-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -29,26 +24,21 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class MarkdownExampleComponent {
-  @ViewChild(LuxMarkdownComponent) markdownComponent!: LuxMarkdownComponent;
+  readonly style = signal('');
+  readonly class = signal('');
 
-  style = '';
-  class = '';
+  readonly sanitizeConfig = signal<LuxSanitizeConfig | undefined>(undefined);
 
-  sanitizeConfig?: LuxSanitizeConfig;
+  readonly forbiddenTags = signal('a,b');
+  readonly forbiddenAttributes = signal('style,class');
 
-  _forbiddenTagsToggle = false;
-  forbiddenTags = 'a,b';
-  forbiddenAttributes = 'style,class';
+  readonly allowedTags = signal('h1,p,span');
+  readonly allowedAttributes = signal('class,style');
 
-  _allowedTagsToggle = false;
-  allowedTags = 'h1,p,span';
-  allowedAttributes = 'class,style';
+  readonly addAllowedTags = signal('');
+  readonly addAllowedAttributes = signal('target');
 
-  _addAllowedTagsToggle = false;
-  addAllowedTags = '';
-  addAllowedAttributes = 'target';
-
-  markdownData = `# Title
+  readonly markdownData = signal(`# Title
 ## Subtitle
 Show doch mal bei der [IHK-GfI](https://www.ihk-gfi.de) vorbei!
 
@@ -73,72 +63,74 @@ Target-Attribut. Das Target-Attribut ist im Standard deaktiviert, kann über den
 - B
  - B1
  - B2
-- C`;
+- C`);
+
+  private readonly _forbiddenTagsToggle = signal(false);
+  private readonly _allowedTagsToggle = signal(false);
+  private readonly _addAllowedTagsToggle = signal(false);
 
   set forbiddenTagsToggle(toggle: boolean) {
-    this._forbiddenTagsToggle = toggle;
+    this._forbiddenTagsToggle.set(toggle);
 
-    if (this._forbiddenTagsToggle) {
-      this._allowedTagsToggle = false;
-      this._addAllowedTagsToggle = false;
+    if (toggle) {
+      this._allowedTagsToggle.set(false);
+      this._addAllowedTagsToggle.set(false);
     }
     this.updateTags();
   }
 
   get forbiddenTagsToggle() {
-    return this._forbiddenTagsToggle;
+    return this._forbiddenTagsToggle();
   }
 
   set allowedTagsToggle(toggle: boolean) {
-    this._allowedTagsToggle = toggle;
+    this._allowedTagsToggle.set(toggle);
 
-    if (this._allowedTagsToggle) {
-      this._forbiddenTagsToggle = false;
-      this._addAllowedTagsToggle = false;
+    if (toggle) {
+      this._forbiddenTagsToggle.set(false);
+      this._addAllowedTagsToggle.set(false);
     }
     this.updateTags();
   }
 
   get allowedTagsToggle() {
-    return this._allowedTagsToggle;
+    return this._allowedTagsToggle();
   }
 
   set addAllowedTagsToggle(toggle: boolean) {
-    this._addAllowedTagsToggle = toggle;
+    this._addAllowedTagsToggle.set(toggle);
 
-    if (this._addAllowedTagsToggle) {
-      this._forbiddenTagsToggle = false;
-      this._allowedTagsToggle = false;
+    if (toggle) {
+      this._forbiddenTagsToggle.set(false);
+      this._allowedTagsToggle.set(false);
     }
     this.updateTags();
   }
 
   get addAllowedTagsToggle() {
-    return this._addAllowedTagsToggle;
+    return this._addAllowedTagsToggle();
   }
-
-  constructor() {}
 
   updateTags() {
     const newConfig: LuxSanitizeConfig = {};
     if (this.forbiddenTagsToggle) {
-      newConfig.forbiddenTags = this.forbiddenTags.split(',');
-      newConfig.forbiddenAttrs = this.forbiddenAttributes.split(',');
+      newConfig.forbiddenTags = this.forbiddenTags().split(',');
+      newConfig.forbiddenAttrs = this.forbiddenAttributes().split(',');
     }
 
     if (this.allowedTagsToggle) {
-      newConfig.allowedTags = this.allowedTags.split(',');
-      newConfig.allowedAttrs = this.allowedAttributes.split(',');
+      newConfig.allowedTags = this.allowedTags().split(',');
+      newConfig.allowedAttrs = this.allowedAttributes().split(',');
     }
 
     if (this.addAllowedTagsToggle) {
-      newConfig.addAllowedTags = this.addAllowedTags.split(',');
-      newConfig.addAllowedAttrs = this.addAllowedAttributes.split(',');
+      newConfig.addAllowedTags = this.addAllowedTags().split(',');
+      newConfig.addAllowedAttrs = this.addAllowedAttributes().split(',');
     }
 
-    if (JSON.stringify(this.sanitizeConfig) !== JSON.stringify(newConfig)) {
-      this.sanitizeConfig = newConfig;
-      console.log(this.sanitizeConfig);
+    if (JSON.stringify(this.sanitizeConfig()) !== JSON.stringify(newConfig)) {
+      this.sanitizeConfig.set(newConfig);
+      console.log(this.sanitizeConfig());
     }
   }
 }

@@ -1,24 +1,24 @@
 <mat-expansion-panel
-  [disabled]="luxDisabled"
-  [expanded]="luxExpanded"
-  [hideToggle]="luxHideToggle"
-  [togglePosition]="luxTogglePosition!"
+  [disabled]="effectiveDisabled()"
+  [expanded]="luxExpanded()"
+  [hideToggle]="effectiveHideToggle()"
+  [togglePosition]="effectiveTogglePosition()!"
   (opened)="onOpened()"
   (closed)="onClosed()"
   class="lux-panel"
-  [class.lux-panel-mobile]="mobile"
+  [class.lux-panel-mobile]="mobile()"
   [class.lux-panel-sticky-header]="!!stickyHeader()"
   [style.--lux-panel-sticky-header-offset]="stickyHeaderOffset() ?? null"
 >
   <mat-expansion-panel-header
     class="lux-expansion-panel-header"
-    [class.lux-dynamic-height]="!!luxDynamicHeaderHeight"
-    [expandedHeight]="luxExpandedHeaderHeight ?? '4em'"
-    [collapsedHeight]="luxCollapsedHeaderHeight ?? '4em'"
+    [class.lux-dynamic-height]="!!effectiveDynamicHeaderHeight()"
+    [expandedHeight]="effectiveExpandedHeaderHeight() ?? '4em'"
+    [collapsedHeight]="effectiveCollapsedHeaderHeight() ?? '4em'"
   >
-    <ng-content select="lux-panel-header-title"></ng-content>
-    <ng-content select="lux-panel-header-description"></ng-content>
+    <ng-content select="lux-panel-header-title" />
+    <ng-content select="lux-panel-header-description" />
   </mat-expansion-panel-header>
-  <ng-content select="lux-panel-content"></ng-content>
-  <ng-content select="lux-panel-action"></ng-content>
+  <ng-content select="lux-panel-content" />
+  <ng-content select="lux-panel-action" />
 </mat-expansion-panel>

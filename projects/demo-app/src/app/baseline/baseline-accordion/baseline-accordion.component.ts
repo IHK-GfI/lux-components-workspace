@@ -1,22 +1,20 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   LuxAccordionComponent,
-  LuxAutocompleteAcComponent,
-  LuxCheckboxAcComponent,
-  LuxInputAcComponent,
+  LuxAutocompleteComponent,
+  LuxCheckboxComponent,
+  LuxInputComponent,
   LuxLinkPlainComponent,
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
   LuxPanelHeaderTitleComponent,
-  LuxSelectAcComponent,
-  LuxTextareaAcComponent,
-  LuxTextboxComponent,
-  LuxThemeService
+  LuxSelectComponent,
+  LuxTextareaComponent,
+  LuxTextboxComponent
 } from '@ihk-gfi/lux-components';
-import { Subscription } from 'rxjs';
 
 interface DummyForm {
   checkbox1: FormControl<boolean>;
@@ -50,7 +48,7 @@ interface DummyStateForm {
   selector: 'lux-baseline-accordion',
   templateUrl: './baseline-accordion.component.html',
   styleUrls: ['./baseline-accordion.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxTextboxComponent,
     LuxLinkPlainComponent,
@@ -59,18 +57,17 @@ interface DummyStateForm {
     LuxPanelHeaderTitleComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxInputAcComponent,
+    LuxInputComponent,
     ReactiveFormsModule,
-    LuxAutocompleteAcComponent,
-    LuxCheckboxAcComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxTextareaAcComponent
+    LuxAutocompleteComponent,
+    LuxCheckboxComponent,
+    LuxInputComponent,
+    LuxSelectComponent,
+    LuxTextareaComponent
   ]
 })
 export class BaselineAccordionComponent implements OnInit {
-  private themeService = inject(LuxThemeService);
-  router = inject(Router);
+  readonly router = inject(Router);
 
   // Properties für die Form-Controls
   testHint = 'Hinweistext für ein Form-Control';
@@ -99,9 +96,6 @@ export class BaselineAccordionComponent implements OnInit {
   addressForm: FormGroup<DummyAddressForm>;
   addressForm2: FormGroup<DummyAddressForm>;
   stateForm: FormGroup<DummyStateForm>;
-
-  themeName: string;
-  subscription: Subscription;
 
   loremIpsum =
     'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi distinctio libero, ratione animi dolore esse porro mollitia nulla magnam et, modi doloribus. Distinctio repellat quaerat eveniet iste, error molestiae adipisci culpa et, officia maiores, repudiandae tempora quae veniam fuga odit. At officia reiciendis libero magni architecto, odio dolorum laborum commodi.';
@@ -152,11 +146,6 @@ export class BaselineAccordionComponent implements OnInit {
       errorItem: new FormControl('', { validators: Validators.compose([Validators.required, Validators.minLength(5)]), nonNullable: true }),
       hoverItem: new FormControl('', { nonNullable: true }),
       readonlyItem: new FormControl('', { nonNullable: true })
-    });
-
-    this.themeName = this.themeService.getTheme().name;
-    this.subscription = this.themeService.getThemeAsObservable().subscribe((theme) => {
-      this.themeName = theme.name;
     });
   }
 

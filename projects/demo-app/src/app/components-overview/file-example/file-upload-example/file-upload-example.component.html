@@ -4,22 +4,19 @@
 >
   <example-base-content>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel ohne Reactive-Form</h3>
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
       <lux-file-upload
         luxAutofocus
-        [luxLabel]="label"
-        [luxLabelLink]="labelLink"
-        [luxLabelLinkShort]="labelLinkShort"
-        [luxListOnly]="listOnly"
-        [luxUploadIcon]="uploadIcon"
-        [luxDeleteIcon]="deleteIcon"
-        [luxRequired]="required"
-        [luxReadonly]="readonly"
-        [(luxDisabled)]="disabled"
-        [luxUploadUrl]="uploadUrl"
-        [luxMultiple]="multiple"
-        [luxMaxSizeMiB]="maxSize"
-        [luxMaxFileCount]="maxFileCount"
+        [luxLabel]="label()"
+        [luxLabelLink]="labelLink()"
+        [luxLabelLinkShort]="labelLinkShort()"
+        [luxListOnly]="listOnly()"
+        [luxUploadIcon]="uploadIcon()"
+        [luxDeleteIcon]="deleteIcon()"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMultiple]="multiple()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxMaxFileCount]="maxFileCount()"
         [luxUploadActionConfig]="uploadActionConfig"
         [luxViewActionConfig]="viewActionConfig"
         [luxDownloadActionConfig]="downloadActionConfig"
@@ -27,165 +24,224 @@
         [luxDownloadActionConfig]="downloadActionConfig"
         [luxCustomActionConfigs]="customActionConfigs"
         [luxMaximumExtended]="maximumExtended"
-        [luxCapture]="capture"
-        [luxAccept]="accept"
-        [luxHint]="hint"
-        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-        [luxDnDActive]="dndActive"
-        [luxSelected]="selected"
-        [luxContentsAsBlob]="contentAsBlob"
-        [luxUploadReportProgress]="reportProgress"
-        (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-        (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
-        (luxSelectedChange)="onSelectedChange($event)"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxDnDActive]="dndActive()"
+        [formField]="signalForm"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
         #fileBaseWithoutComponent
-      >
-      </lux-file-upload>
+      />
+      <example-signal-form-value [field]="signalForm" [showValue]="false" />
     </div>
     <div class="lux-flex lux-flex-col">
-      <h3>Beispiel in Reactive-Form</h3>
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
       <div [formGroup]="form">
         <lux-file-upload
-          [luxLabel]="label"
-          [luxLabelLink]="labelLink"
-          [luxLabelLinkShort]="labelLinkShort"
-          [luxListOnly]="listOnly"
-          [luxUploadIcon]="uploadIcon"
-          [luxDeleteIcon]="deleteIcon"
-          [luxReadonly]="readonly"
+          [luxLabel]="label()"
+          [luxLabelLink]="labelLink()"
+          [luxLabelLinkShort]="labelLinkShort()"
+          [luxListOnly]="listOnly()"
+          [luxUploadIcon]="uploadIcon()"
+          [luxDeleteIcon]="deleteIcon()"
+          [luxReadonly]="readonly()"
           [(luxDisabled)]="disabled"
-          [luxUploadUrl]="uploadUrl"
-          [luxMultiple]="multiple"
-          [luxMaxSizeMiB]="maxSize"
-          [luxMaxFileCount]="maxFileCount"
+          [luxUploadUrl]="uploadUrl()"
+          [luxMultiple]="multiple()"
+          [luxMaxSizeMiB]="maxSize()"
+          [luxMaxFileCount]="maxFileCount()"
           [luxUploadActionConfig]="uploadActionConfig"
           [luxViewActionConfig]="viewActionConfigForm"
           [luxDeleteActionConfig]="deleteActionConfig"
           [luxDownloadActionConfig]="downloadActionConfig"
           [luxCustomActionConfigs]="customActionConfigs"
           [luxMaximumExtended]="maximumExtended"
-          [luxCapture]="capture"
-          [luxAccept]="accept"
-          [luxHint]="hint"
-          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus"
-          [luxDnDActive]="dndActive"
+          [luxCapture]="capture()"
+          [luxAccept]="accept()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxDnDActive]="dndActive()"
           [luxControlBinding]="controlBinding"
-          [luxContentsAsBlob]="contentAsBlob"
-          [luxUploadReportProgress]="reportProgress"
-          (luxFocusIn)="log(showOutputEvents, 'luxFocusIn', $event)"
-          (luxFocusOut)="log(showOutputEvents, 'luxFocusOut', $event)"
+          [luxContentsAsBlob]="contentAsBlob()"
+          [luxUploadReportProgress]="reportProgress()"
+          (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
           #fileBaseWithComponent
-        >
-        </lux-file-upload>
-        <example-form-value [form]="form" [controlBinding]="controlBinding" [showValue]="false"></example-form-value>
+        />
+        <example-form-value [form]="form" [controlBinding]="controlBinding" [showValue]="false" />
       </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-file-upload
+        [luxLabel]="label()"
+        [luxLabelLink]="labelLink()"
+        [luxLabelLinkShort]="labelLinkShort()"
+        [luxListOnly]="listOnly()"
+        [luxUploadIcon]="uploadIcon()"
+        [luxDeleteIcon]="deleteIcon()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxDisabled)]="disabled"
+        [(value)]="plainValue"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMultiple]="multiple()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxMaxFileCount]="maxFileCount()"
+        [luxUploadActionConfig]="uploadActionConfig"
+        [luxViewActionConfig]="viewActionConfig"
+        [luxDeleteActionConfig]="deleteActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
+        [luxCustomActionConfigs]="customActionConfigs"
+        [luxMaximumExtended]="maximumExtended"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxDnDActive]="dndActive()"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+      />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxSelected)] @deprecated</code></h3>
+      <lux-file-upload
+        [luxLabel]="label()"
+        [luxLabelLink]="labelLink()"
+        [luxLabelLinkShort]="labelLinkShort()"
+        [luxListOnly]="listOnly()"
+        [luxUploadIcon]="uploadIcon()"
+        [luxDeleteIcon]="deleteIcon()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxDisabled)]="disabled"
+        [(luxSelected)]="selected"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMultiple]="multiple()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxMaxFileCount]="maxFileCount()"
+        [luxUploadActionConfig]="uploadActionConfig"
+        [luxViewActionConfig]="viewActionConfig"
+        [luxDeleteActionConfig]="deleteActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
+        [luxCustomActionConfigs]="customActionConfigs"
+        [luxMaximumExtended]="maximumExtended"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxDnDActive]="dndActive()"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+      />
     </div>
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-input-ac luxLabel="luxLabel" [(luxValue)]="label"></lux-input-ac>
-    <lux-input-ac luxLabel="luxLabelLink" [(luxValue)]="labelLink"></lux-input-ac>
-    <lux-input-ac
+    <lux-input luxLabel="luxLabel" [(value)]="label" />
+    <lux-input luxLabel="luxLabelLink" [(value)]="labelLink" />
+    <lux-input
       luxLabel="luxLabelLinkShort"
       luxHint="Dieses Label wird nur auf kleinen Auflösungen angezeigt und ersetzt den Wert aus luxLabelLink"
-      [(luxValue)]="labelLinkShort"
-    ></lux-input-ac>
-    <lux-input-ac luxLabel="luxHint" [(luxValue)]="hint"></lux-input-ac>
+      [(value)]="labelLinkShort"
+    />
+    <lux-input luxLabel="luxHint" [(value)]="hint" />
 
-    <lux-input-ac luxLabel="luxUploadIcon" [(luxValue)]="uploadIcon"></lux-input-ac>
-    <lux-input-ac luxLabel="luxDeleteIcon" [(luxValue)]="deleteIcon"></lux-input-ac>
+    <lux-input luxLabel="luxUploadIcon" [(value)]="uploadIcon" />
+    <lux-input luxLabel="luxDeleteIcon" [(value)]="deleteIcon" />
 
-    <lux-toggle-ac
-      [(luxChecked)]="listOnly"
+    <lux-toggle
+      [(checked)]="listOnly"
       luxLabel="luxListOnly"
       luxHint="Reine Anzeige der Dateien ohne Upload-Option. Action-Buttons bleiben über ihre Configs steuerbar."
       [luxNoLabels]="true"
-    >
-    </lux-toggle-ac>
+    />
 
-    <lux-toggle-ac
-      [(luxChecked)]="multiple"
+    <lux-toggle
+      [(checked)]="multiple"
       luxLabel="luxMultiple"
       luxHint="Dieses Flag legt fest, ob nur eine oder mehrere Dateien selektiert werden können."
       [luxNoLabels]="true"
-    >
-    </lux-toggle-ac>
+    />
 
-    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
 
-    <lux-toggle-ac
-      [(luxChecked)]="readonly"
+    <lux-toggle
+      [(checked)]="readonly"
       luxLabel="luxReadonly"
       luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
-    >
-    </lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxRequired" (luxCheckedChange)="changeRequired($event)">
+    />
+    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)">
       <lux-form-hint>
         Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
         <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
       </lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac luxLabel="Vorschaulink anzeigen" [luxChecked]="true" (luxCheckedChange)="toogleViewConfig()" [luxNoLabels]="true">
-    </lux-toggle-ac>
+    <lux-toggle luxLabel="Vorschaulink anzeigen" [checked]="true" (checkedChange)="toogleViewConfig()" [luxNoLabels]="true" />
     <div class="lux-grid lux-grid-cols-2 lt-lg:lux-grid-cols-1 lux-gap-4">
-      <lux-toggle-ac luxLabel="Löschbutton anzeigen" [luxChecked]="true" (luxCheckedChange)="toogleDeleteHiddenConfig()" [luxNoLabels]="true">
-      </lux-toggle-ac>
-      <lux-toggle-ac luxLabel="Löschbutton deaktivieren" [luxChecked]="false" (luxCheckedChange)="toogleDeleteDisabledConfig()" [luxNoLabels]="true">
-      </lux-toggle-ac>
-      <lux-toggle-ac luxLabel="Custombutton anzeigen" [luxChecked]="true" (luxCheckedChange)="toogleCustomHiddenActionConfig()" [luxNoLabels]="true">
-      </lux-toggle-ac>
-      <lux-toggle-ac luxLabel="Custombutton deaktivieren" [luxChecked]="false" (luxCheckedChange)="toogleCustomDisabeldActionConfig()" [luxNoLabels]="true">
-      </lux-toggle-ac>
+      <lux-toggle luxLabel="Löschbutton anzeigen" [checked]="true" (checkedChange)="toogleDeleteHiddenConfig()" [luxNoLabels]="true" />
+      <lux-toggle
+        luxLabel="Löschbutton deaktivieren"
+        [checked]="false"
+        (checkedChange)="toogleDeleteDisabledConfig()"
+        [luxNoLabels]="true"
+      />
+      <lux-toggle
+        luxLabel="Custombutton anzeigen"
+        [checked]="true"
+        (checkedChange)="toogleCustomHiddenActionConfig()"
+        [luxNoLabels]="true"
+      />
+      <lux-toggle
+        luxLabel="Custombutton deaktivieren"
+        [checked]="false"
+        (checkedChange)="toogleCustomDisabeldActionConfig()"
+        [luxNoLabels]="true"
+      />
     </div>
-    <lux-toggle-ac
-      luxLabel="Output-Events loggen"
-      luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
-      [luxNoLabels]="true"
-    >
-    </lux-toggle-ac>
+    <lux-toggle luxLabel="Output-Events loggen" luxHint="(Console --> F12/CMD+ALT+I)" [(checked)]="showOutputEvents" [luxNoLabels]="true" />
 
-    <lux-toggle-ac
-      [(luxChecked)]="contentAsBlob"
+    <lux-toggle
+      [(checked)]="contentAsBlob"
       luxLabel="luxContentAsBlob"
       luxHint="Diese Eigenschaft bestimmt ob die Dateien als Blob gespeichert werden sollen oder als Base64-String."
       [luxNoLabels]="true"
-    >
-    </lux-toggle-ac>
+    />
 
-    <lux-input-ac
+    <lux-input
       luxLabel="luxMaxSizeMiB"
       luxHint="Die Property bestimmt die maximale erlaubte Dateigröße in MiB."
-      [(luxValue)]="maxSize"
+      [(value)]="maxSize"
       luxType="number"
     >
-      <lux-input-ac-suffix>&nbsp;MiB</lux-input-ac-suffix>
-    </lux-input-ac>
-    <lux-input-ac
+      <lux-input-suffix>&nbsp;MiB</lux-input-suffix>
+    </lux-input>
+    <lux-input
       luxLabel="luxMaxFileCount"
       luxHint="Diese Property legt die maximal erlaubte Anzahl an Dateien fest."
-      [(luxValue)]="maxFileCount"
+      [(value)]="maxFileCount"
       luxType="number"
-    >
-    </lux-input-ac>
-    <lux-select-ac
+    />
+    <lux-select
       luxLabel="luxCapture"
       luxHint="Diese Property stellt ein ob für Mobilgeräte die Front- oder Rück-Kamera und Mikrophone verwendet werden sollen."
       [luxOptions]="['', 'user', 'environment']"
-      [(luxSelected)]="capture"
-    >
-    </lux-select-ac>
-    <lux-input-ac
+      [(value)]="capture"
+    />
+    <lux-input
       luxLabel="luxAccept"
       luxHint="Über diese Eigenschaft lässt sich einstellen, welche Dateiarten erlaubt sind (z.B. image/*,.pdf)."
-      [(luxValue)]="accept"
-    >
-    </lux-input-ac>
-    <lux-input-ac
+      [(value)]="accept"
+    />
+    <lux-input
       luxLabel="Unlöschbare Dateien"
       luxHint="Komma-separierte Liste von Dateinamen, die nicht gelöscht werden können."
-      [(luxValue)]="undeletableFileNames"
-    ></lux-input-ac>
+      [(value)]="undeletableFileNames"
+    />
   </example-base-advanced-options>
 </example-base-structure>

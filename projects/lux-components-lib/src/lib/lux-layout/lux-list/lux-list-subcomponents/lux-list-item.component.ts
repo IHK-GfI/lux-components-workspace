@@ -1,6 +1,6 @@
 import { FocusableOption } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
-import { Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, contentChild, inject, input, model, output } from '@angular/core';
 import { LuxCardContentComponent } from '../../lux-card/lux-card-subcomponents/lux-card-content.component';
 import { LuxCardCustomHeaderComponent } from '../../lux-card/lux-card-subcomponents/lux-card-custom-header.component';
 import { LuxCardInfoComponent } from '../../lux-card/lux-card-subcomponents/lux-card-info.component';
@@ -10,54 +10,38 @@ import { LuxListItemCustomHeaderComponent } from './lux-list-item-custom-header.
 @Component({
   selector: 'lux-list-item',
   templateUrl: './lux-list-item.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[attr.role]': 'role',
+    '[attr.tabindex]': 'tabindex',
+    '[attr.aria-label]': 'ariaLabel',
+    '[attr.aria-selected]': 'ariaSelected'
+  },
   imports: [LuxCardComponent, NgClass, LuxCardInfoComponent, LuxCardContentComponent, LuxCardCustomHeaderComponent]
 })
 export class LuxListItemComponent implements FocusableOption {
+  readonly luxTitle = input('');
+  readonly luxSubTitle = input('');
+  readonly luxTitleTooltip = input<string | undefined>();
+  readonly luxSubTitleTooltip = input<string | undefined>();
+  readonly luxTitleLineBreak = input(true);
+  readonly luxSelected = model(false);
+
+  readonly luxClicked = output<Event>();
+
+  readonly customHeaderComponent = contentChild(LuxListItemCustomHeaderComponent);
+
   elementRef = inject(ElementRef);
 
-  private _luxTitle = '';
-  private _luxSubTitle = '';
-  private _luxSelected = false;
+  role = 'row';
+  tabindex = '-1';
 
-  @HostBinding('attr.aria-label') ariaLabel?: string;
-  @HostBinding('attr.aria-selected') ariaSelected?: boolean;
-  @HostBinding('attr.role') role = 'row';
-  @HostBinding('attr.tabindex') tabindex = '-1';
-
-  @Input() luxTitleTooltip?: string;
-  @Input() luxSubTitleTooltip?: string;
-  @Input() luxTitleLineBreak = true;
-
-  @Output() luxClicked = new EventEmitter<Event>();
-
-  @ContentChild(LuxListItemCustomHeaderComponent) customHeaderComponent?: LuxListItemCustomHeaderComponent;
-
-  get luxTitle(): string {
-    return this._luxTitle;
+  get ariaLabel() {
+    return this.getLabel();
   }
 
-  @Input() set luxTitle(title: string) {
-    this._luxTitle = title;
-    this.ariaLabel = this.getLabel();
-  }
-
-  get luxSubTitle(): string {
-    return this._luxSubTitle;
-  }
-
-  @Input() set luxSubTitle(subTitle: string) {
-    this._luxSubTitle = subTitle;
-    this.ariaLabel = this.getLabel();
-  }
-
-  get luxSelected(): boolean {
-    return this._luxSelected;
-  }
-
-  @Input() set luxSelected(selected: boolean) {
-    this._luxSelected = selected;
-    this.ariaSelected = selected;
+  get ariaSelected() {
+    return this.luxSelected();
   }
 
   clicked(event: Event) {
@@ -69,6 +53,6 @@ export class LuxListItemComponent implements FocusableOption {
   }
 
   getLabel() {
-    return `${this.luxTitle ? this.luxTitle : ''} ${this.luxSubTitle ? this.luxSubTitle : ''}`;
+    return `${this.luxTitle() ? this.luxTitle() : ''} ${this.luxSubTitle() ? this.luxSubTitle() : ''}`;
   }
 }

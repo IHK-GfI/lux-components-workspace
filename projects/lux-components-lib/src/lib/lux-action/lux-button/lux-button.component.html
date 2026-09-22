@@ -17,7 +17,7 @@
     [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
-    <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxButtonContent" />
   </button>
 } @else if (!luxRaised() && !luxRounded() && luxFlat() && !!luxColor() && !luxStroked()) {
   <button
@@ -38,7 +38,7 @@
     [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
-    <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxButtonContent" />
   </button>
 } @else if (!luxRaised() && !luxRounded() && !luxFlat() && luxStroked()) {
   <button
@@ -59,7 +59,7 @@
     [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
-    <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxButtonContent" />
   </button>
 } @else if (!luxRaised() && !luxRounded() && !luxFlat() && !luxStroked() && luxIconButton()) {
   <button
@@ -88,10 +88,10 @@
         [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
-      ></lux-progress>
+      />
     }
     @if ((!luxLoading() || (luxLoading() && luxDisabled())) && luxIconName()) {
-      <lux-icon [luxIconName]="luxIconName()" luxPadding="unset" luxMargin="unset" class="lux-button-icon"></lux-icon>
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="unset" luxMargin="unset" class="lux-button-icon" />
     }
   </button>
 } @else if (luxRounded() && !luxStroked()) {
@@ -121,10 +121,10 @@
         [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
-      ></lux-progress>
+      />
     }
     @if (!luxLoading() || (luxLoading() && luxDisabled())) {
-      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round"></lux-icon>
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round" />
     }
   </button>
 } @else if (luxRounded() && luxStroked()) {
@@ -154,10 +154,10 @@
         [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
-      ></lux-progress>
+      />
     }
     @if (!luxLoading() || (luxLoading() && luxDisabled())) {
-      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round"></lux-icon>
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon-round" />
     }
   </button>
 } @else {
@@ -179,7 +179,7 @@
     [attr.aria-label]="luxLabel() ? luxLabel() : ''"
     [luxAriaDisabled]="luxDisabledAria() ? 'true' : undefined"
   >
-    <ng-container *ngTemplateOutlet="luxButtonContent"></ng-container>
+    <ng-container *ngTemplateOutlet="luxButtonContent" />
   </button>
 }
 
@@ -194,10 +194,10 @@
         [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
-      ></lux-progress>
+      />
     }
     @if (luxIconName() && !luxIconShowRight() && !luxLoading()) {
-      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon"></lux-icon>
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon" />
     }
     @if (luxLabel()) {
       <span class="lux-button-label">
@@ -218,7 +218,7 @@
       </span>
     }
     @if (luxIconName() && luxIconShowRight() && !luxLoading()) {
-      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon"></lux-icon>
+      <lux-icon [luxIconName]="luxIconName()" luxPadding="0px" luxMargin="0px" class="lux-button-icon" />
     }
     @if (luxLoading() && luxIconShowRight() && !luxDisabled()) {
       <lux-progress
@@ -229,7 +229,7 @@
         [luxValue]="luxSpinnerValue()"
         luxAnimationDuration="slow"
         class="lux-button-spinner"
-      ></lux-progress>
+      />
     }
   </div>
 </ng-template>

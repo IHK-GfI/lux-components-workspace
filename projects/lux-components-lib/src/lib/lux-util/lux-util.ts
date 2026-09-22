@@ -15,7 +15,8 @@ import {
   UP_ARROW
 } from '@angular/cdk/keycodes';
 import { HttpRequest } from '@angular/common/http';
-import { FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, UntypedFormArray, UntypedFormGroup, ValidationErrors } from '@angular/forms';
+import type { ValidationError } from '@angular/forms/signals';
 import { TranslocoService } from '@jsverse/transloco';
 
 export class LuxUtil {
@@ -69,37 +70,106 @@ export class LuxUtil {
    * @returns string
    */
   public static getErrorMessage(tService: TranslocoService, formControl: FormControl<any>): string {
-    if (formControl) {
-      if (formControl.hasError('required')) {
-        return tService.translate('luxc.util.error_message.required');
-      }
+    return formControl ? LuxUtil.getErrorMessageForErrors(tService, formControl.errors) : '';
+  }
 
-      if (formControl.hasError('minlength')) {
-        return tService.translate('luxc.util.error_message.minlength', { minlength: formControl.getError('minlength').requiredLength });
-      }
+  /**
+   * Wie getErrorMessage(), aber direkt auf einem ValidationErrors-Objekt statt auf einem FormControl.
+   * Signal Forms kennt kein FormControl mehr - die Fehler einer LUX-FormComponent werden über
+   * LuxUtil.toLegacyValidationErrors() in diese Form gebracht.
+   * @param tService Der TranslocoService.
+   * @param errors Die Fehler oder null.
+   * @returns string
+   */
+  public static getErrorMessageForErrors(tService: TranslocoService, errors: ValidationErrors | null): string {
+    if (!errors) {
+      return '';
+    }
 
-      if (formControl.hasError('maxlength')) {
-        return tService.translate('luxc.util.error_message.maxlength', { maxlength: formControl.getError('maxlength').requiredLength });
-      }
+    if (errors['required']) {
+      return tService.translate('luxc.util.error_message.required');
+    }
 
-      if (formControl.hasError('email')) {
-        return tService.translate('luxc.util.error_message.email');
-      }
+    if (errors['minlength']) {
+      return tService.translate('luxc.util.error_message.minlength', { minlength: errors['minlength'].requiredLength });
+    }
 
-      if (formControl.hasError('min')) {
-        return tService.translate('luxc.util.error_message.min', { min: formControl.getError('min').min });
-      }
+    if (errors['maxlength']) {
+      return tService.translate('luxc.util.error_message.maxlength', { maxlength: errors['maxlength'].requiredLength });
+    }
 
-      if (formControl.hasError('max')) {
-        return tService.translate('luxc.util.error_message.max', { max: formControl.getError('max').max });
-      }
+    if (errors['email']) {
+      return tService.translate('luxc.util.error_message.email');
+    }
 
-      if (formControl.hasError('pattern')) {
-        const pattern = formControl.getError('pattern').requiredPattern;
-        return tService.translate('luxc.util.error_message.pattern', { pattern: pattern.substring(1, pattern.length - 1) });
+    if (errors['min']) {
+      return tService.translate('luxc.util.error_message.min', { min: errors['min'].min });
+    }
+
+    if (errors['max']) {
+      return tService.translate('luxc.util.error_message.max', { max: errors['max'].max });
+    }
+
+    if (errors['pattern']) {
+      const pattern = errors['pattern'].requiredPattern;
+      // requiredPattern ist entweder "^...$" (Validators.pattern(string)) oder der String eines
+      // RegExp-Literals inkl. Slashes und optionalen Flags (Validators.pattern(RegExp) bzw. der
+      // pattern()-Validator aus Signal Forms). Im zweiten Fall müssen Slashes UND Flags entfernt
+      // werden, sonst bleiben sie in der angezeigten Fehlermeldung sichtbar.
+      const regexLiteral = /^\/(.*)\/[a-z]*$/.exec(pattern);
+      return tService.translate('luxc.util.error_message.pattern', {
+        pattern: regexLiteral ? regexLiteral[1] : pattern.substring(1, pattern.length - 1)
+      });
+    }
+
+    return '';
+  }
+
+  /**
+   * Übersetzt die Fehlerliste aus Signal Forms in das klassische ValidationErrors-Objekt.
+   *
+   * Damit bleiben die bestehenden Signaturen von luxErrorCallback und errorMessageModifier
+   * unverändert gültig. Die Schlüssel folgen bewusst der alten Reactive-Forms-Schreibweise
+   * (minlength/maxlength statt minLength/maxLength), weil bestehende Callbacks genau darauf prüfen.
+   *
+   * @param errors Die Fehler aus Signal Forms.
+   * @returns Das ValidationErrors-Objekt oder null, wenn es keine Fehler gibt.
+   */
+  public static toLegacyValidationErrors(errors: readonly ValidationError.WithOptionalFieldTree[]): ValidationErrors | null {
+    if (!errors || errors.length === 0) {
+      return null;
+    }
+
+    const result: ValidationErrors = {};
+
+    for (const error of errors) {
+      const details = error as unknown as Record<string, unknown>;
+
+      switch (error.kind) {
+        case 'minLength':
+          result['minlength'] = { requiredLength: details['minLength'] };
+          break;
+        case 'maxLength':
+          result['maxlength'] = { requiredLength: details['maxLength'] };
+          break;
+        case 'min':
+          result['min'] = { min: details['min'] };
+          break;
+        case 'max':
+          result['max'] = { max: details['max'] };
+          break;
+        case 'pattern':
+          result['pattern'] = { requiredPattern: String(details['pattern']) };
+          break;
+        default:
+          // required, email, parse, standardSchema und alle eigenen kinds: Der Fehler selbst ist
+          // der Wert, damit ein Callback z.B. auf errors['meinFehler'].message zugreifen kann.
+          result[error.kind] = error;
+          break;
       }
     }
-    return '';
+
+    return result;
   }
 
   /**
@@ -109,6 +179,35 @@ export class LuxUtil {
    */
   public static isDate(value: any) {
     return value instanceof Date && !isNaN(value.valueOf());
+  }
+
+  /**
+   * Parst einen "HH:mm"- oder "HH:mm:ss"-String (wie luxMinTime/luxMaxTime bei LuxTimepickerComponent)
+   * in Sekunden seit Mitternacht. Dieselbe Grammatik wie LuxTimepickerAdapter.parse() - bewusst nicht
+   * dorthin ausgelagert, da der Adapter ein Date zurückgibt und über Angular Material DI aufgelöst
+   * wird, während diese Methode DI-frei bleiben muss, um auch außerhalb einer Component-Instanz
+   * (z.B. in Signal-Forms-Schema-Validatoren wie luxTimepickerMinMax()) nutzbar zu sein.
+   * @param value Der Zeit-String, oder null/undefined.
+   * @returns Sekunden seit Mitternacht, oder null, wenn der String nicht geparst werden kann.
+   */
+  public static parseTimeToSeconds(value: string | null | undefined): number | null {
+    if (!value) {
+      return null;
+    }
+
+    const match = value.trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (!match) {
+      return null;
+    }
+
+    const hours = +match[1];
+    const minutes = +match[2];
+    const seconds = match[3] ? +match[3] : 0;
+    if (hours > 23 || minutes > 59 || seconds > 59) {
+      return null;
+    }
+
+    return hours * 3600 + minutes * 60 + seconds;
   }
 
   /**

@@ -46,6 +46,10 @@ export class RemoveTransUnitItem extends ReplaceItem {
 
 export class AddTransUnitItem extends ReplaceItem {
   constructor(transUnitId: string, newTransUnit: string) {
-    super(new RegExp(String.raw`<trans-unit id="${transUnitId}" datatype="html">`, 'gm'), `${newTransUnit}\n      <trans-unit id="${transUnitId}" datatype="html">`, true);
+    super(
+      new RegExp(String.raw`<trans-unit id="${transUnitId}" datatype="html">`, 'gm'),
+      `${newTransUnit}\n      <trans-unit id="${transUnitId}" datatype="html">`,
+      true
+    );
   }
 }

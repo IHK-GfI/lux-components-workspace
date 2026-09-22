@@ -1,4 +1,6 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
+import type { Mock } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LuxAppHeaderAcSessionTimerDialogComponent, LuxSessionTimerDialogType } from './lux-app-header-ac-session-timer-dialog';
 import { LuxAppHeaderAcSessionTimerService } from '../lux-app-header-ac-session-timer-service/lux-app-header-ac-session-timer.service';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
@@ -11,11 +13,13 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
   let component: LuxAppHeaderAcSessionTimerDialogComponent;
   let fixture: ComponentFixture<LuxAppHeaderAcSessionTimerDialogComponent>;
   let timerService: LuxAppHeaderAcSessionTimerService;
-  let dialogRefMock: { closeDialog: jasmine.Spy };
+  let dialogRefMock: {
+    closeDialog: Mock;
+  };
   let httpController: HttpTestingController;
 
   beforeEach(async () => {
-    dialogRefMock = { closeDialog: jasmine.createSpy('closeDialog') };
+    dialogRefMock = { closeDialog: vi.fn().mockName('closeDialog') };
 
     await TestBed.configureTestingModule({
       imports: [LuxAppHeaderAcSessionTimerDialogComponent],
@@ -57,7 +61,7 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
 
   describe('INFO-Dialog', () => {
     it('sollte bei Klick auf Logout den Nutzer abmelden und den Dialog schließen', () => {
-      spyOn(timerService, 'logoutUser');
+      vi.spyOn(timerService, 'logoutUser').mockReturnValue(undefined);
 
       const logoutButton = fixture.debugElement.query(By.css('[luxTagId="lux-session-timer-button-logout"] button'));
       logoutButton.nativeElement.click();
@@ -67,7 +71,7 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
       expect(dialogRefMock.closeDialog).toHaveBeenCalledWith('logout');
     });
 
-    it('sollte zu WAIT wechseln wenn extendSession einen HTTP-Request startet', fakeAsync(() => {
+    it('sollte zu WAIT wechseln wenn extendSession einen HTTP-Request startet', async () => {
       timerService.canExtendSession = true;
       timerService.url = '/session';
 
@@ -78,15 +82,15 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
       expect(component.currentStep()).toBe(LuxSessionTimerDialogType.WAIT);
 
       httpController.expectOne('/session').flush({});
-      tick();
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       // Da dialogRefMock.closeDialog nur ein Spy ist, bleibt currentStep auf WAIT
       fixture.detectChanges();
       const waitDialog = fixture.debugElement.query(By.css('lux-dialog-structure[luxTagId="lux-session-timer-dialog-wait"]'));
       expect(waitDialog).toBeTruthy();
-    }));
+    });
 
-    it('sollte Dialog mit "confirm" schließen wenn HTTP-Aufruf erfolgreich war', fakeAsync(() => {
+    it('sollte Dialog mit "confirm" schließen wenn HTTP-Aufruf erfolgreich war', async () => {
       timerService.canExtendSession = true;
       timerService.url = '/session';
 
@@ -94,12 +98,12 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
       extendButton.nativeElement.click();
 
       httpController.expectOne('/session').flush({});
-      tick();
+      fixture.detectChanges();
 
       expect(dialogRefMock.closeDialog).toHaveBeenCalledWith('confirmed');
-    }));
+    });
 
-    it('sollte Dialog mit "error" schließen wenn HTTP-Aufruf fehlgeschlagen ist', fakeAsync(() => {
+    it('sollte Dialog mit "error" schließen wenn HTTP-Aufruf fehlgeschlagen ist', async () => {
       timerService.canExtendSession = true;
       timerService.url = '/session';
 
@@ -107,10 +111,10 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
       extendButton.nativeElement.click();
 
       httpController.expectOne('/session').flush('Server Error', { status: 500, statusText: 'Internal Server Error' });
-      tick();
+      fixture.detectChanges();
 
       expect(dialogRefMock.closeDialog).toHaveBeenCalledWith('error');
-    }));
+    });
   });
 
   describe('Not-Extendable Dialog', () => {
@@ -137,7 +141,7 @@ describe('LuxAppHeaderAcSessionTimerDialogComponent', () => {
     });
 
     it('sollte bei Klick auf Logout den Nutzer abmelden und den Dialog schließen', () => {
-      spyOn(timerService, 'logoutUser');
+      vi.spyOn(timerService, 'logoutUser').mockReturnValue(undefined);
 
       const logoutButton = fixture.debugElement.query(By.css('[luxTagId="lux-session-timer-button-logout"] button'));
       logoutButton.nativeElement.click();

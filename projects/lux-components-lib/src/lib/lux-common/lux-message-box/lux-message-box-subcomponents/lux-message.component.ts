@@ -14,11 +14,11 @@ import { ILuxMessage } from '../lux-message-box-model/lux-message.interface';
   imports: [LuxAriaRoleDirective, LuxButtonComponent, LuxAriaLabelDirective, LuxIconComponent, TranslocoPipe, NgClass]
 })
 export class LuxMessageComponent {
-  readonly closing = signal(false);
+  readonly luxMessage = input<ILuxMessage | undefined>(undefined);
 
   luxMessageClosed = output<ILuxMessage>();
 
-  readonly luxMessage = input<ILuxMessage | undefined>(undefined);
+  readonly closing = signal(false);
 
   constructor() {
     effect(() => {

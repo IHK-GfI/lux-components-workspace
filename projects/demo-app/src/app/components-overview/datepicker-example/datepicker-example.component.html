@@ -1,0 +1,309 @@
+<example-base-structure
+  exampleTitle="Datepicker"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90datepicker-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
+      <lux-datepicker
+        luxAutofocus
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxStartDate]="startDate()"
+        [luxCustomFilter]="customFilter()"
+        [luxMinDate]="minDate()"
+        [luxMaxDate]="maxDate()"
+        [luxStartView]="startView()"
+        [luxTouchUi]="touchUi()"
+        [formField]="signalForm.datepickerValue"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        luxTagId="datepicker-signal-form"
+        #test1
+      />
+      <example-signal-form-value [field]="signalForm.datepickerValue" />
+    </div>
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
+      <lux-datepicker
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxStartDate]="startDate()"
+        [luxCustomFilter]="customFilter()"
+        [luxMinDate]="minDate()"
+        [luxMaxDate]="maxDate()"
+        [luxStartView]="startView()"
+        [luxTouchUi]="touchUi()"
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxControlBinding]="controlBinding"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+      />
+      <example-form-value [form]="form" [controlBinding]="controlBinding" suffix="(ISO-Datum)" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-datepicker
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxStartDate]="startDate()"
+        [luxCustomFilter]="customFilter()"
+        [luxMinDate]="minDate()"
+        [luxMaxDate]="maxDate()"
+        [luxStartView]="startView()"
+        [luxTouchUi]="touchUi()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(value)]="plainValue"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        luxTagId="datepicker-plain-value"
+      />
+      <example-value [value]="plainValue()" suffix="(ISO-Datum)" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-datepicker
+        [luxShowToggle]="showToggle()"
+        [luxOpened]="opened()"
+        [luxStartDate]="startDate()"
+        [luxCustomFilter]="customFilter()"
+        [luxMinDate]="minDate()"
+        [luxMaxDate]="maxDate()"
+        [luxStartView]="startView()"
+        [luxTouchUi]="touchUi()"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [luxValue]="value()"
+        (luxValueChange)="value.set($event); log(showOutputEvents(), 'luxValueChange', $event)"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxControlValidators]="controlValidators()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        luxTagId="datepicker-plain-lux-value"
+      />
+      <example-value [value]="value()" suffix="(ISO-Datum)" />
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-input
+      luxName="datepicker_luxLabel"
+      luxLabel="luxLabel"
+      luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
+      [(value)]="label"
+    />
+    <lux-input
+      luxName="datepicker_luxHint"
+      luxLabel="luxHint"
+      luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
+      [(value)]="hint"
+    />
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoTopLabel"
+        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+        [(checked)]="noTopLabel"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoBottomLabel"
+        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+        [(checked)]="noBottomLabel"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoLabels"
+        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+        [(checked)]="noLabels"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <lux-toggle
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(checked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxHintShowOnlyOnFocus"
+      luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
+      [(checked)]="hintShowOnlyOnFocus"
+      [luxNoTopLabel]="true"
+    />
+    <lux-input
+      luxName="datepicker_luxPlaceholder"
+      luxLabel="luxPlaceholder"
+      luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
+      [(value)]="placeholder"
+    />
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
+    <lux-toggle
+      [(checked)]="readonly"
+      luxLabel="luxReadonly"
+      luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
+        <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
+      </lux-form-hint>
+    </lux-toggle>
+    <lux-toggle
+      [(checked)]="denseFormat"
+      luxLabel="luxDense"
+      luxHint="Diese Property veringert das Padding innerhalb des Controls."
+      [luxNoTopLabel]="true"
+    />
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle
+      luxLabel="luxShowToggle"
+      luxHint="Dieses Flag schaltet den Toggle-Button für die Datumsauswahl ein."
+      [(checked)]="showToggle"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxOpened"
+      luxHint="Über diesen Flag kann die Datumsauswahl eingeblendet werden."
+      [(checked)]="opened"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxTouchUi"
+      luxHint="Diese Property schaltet eine vergrößerte und auf Touchscreens ausgelegte Ansicht der Datumsauswahl ein."
+      [(checked)]="touchUi"
+      [luxNoTopLabel]="true"
+    />
+    <lux-select
+      luxLabel="luxStartView"
+      luxHint="Die Property legt fest, welche Ansicht die Datumsauswahl initial besitzt."
+      [(value)]="startView"
+      [luxOptions]="['month', 'year']"
+    />
+    <lux-input luxName="datepicker_luxStartDate" luxLabel="luxStartDate" luxPlaceholder="10.02.2015" [(value)]="startDate">
+      <lux-form-hint>
+        Diese Property definiert das in der Datumsauswahl pre-selektierte Datum.<br />
+        Dazu das Datum einfach als String (z.B. 10.02.2015) eingeben.
+      </lux-form-hint>
+    </lux-input>
+    <lux-input luxName="datepicker_luxMinDate" luxLabel="luxMinDate" luxPlaceholder="01.01.2000" [(value)]="minDate">
+      <lux-form-hint>
+        Diese Property definiert das minimal erlaubte Datum des Datepickers.<br />
+        Dazu das Datum einfach als String (z.B. 01.01.2000) eingeben.
+      </lux-form-hint>
+    </lux-input>
+    <lux-input luxName="datepicker_luxMaxDate" luxLabel="luxMaxDate" luxPlaceholder="31.12.2099" [(value)]="maxDate">
+      <lux-form-hint>
+        Diese Property bestimmt maximal erlaubte Datum.<br />
+        Dazu das Datum einfach als String (z.B. 31.12.2099) eingeben.
+      </lux-form-hint>
+    </lux-input>
+    <lux-toggle
+      luxLabel="luxCustomFilter benutzen"
+      luxHint="Wenn 'true' wird eine eigene Filter-Funktion an den Datepicker übergeben."
+      [(checked)]="useCustomFilter"
+      [luxNoTopLabel]="true"
+    />
+    @if (useCustomFilter()) {
+      <pre class="lux-label"><b>customFilter</b> = {{ customFilterString }}</pre>
+    }
+    <lux-toggle
+      luxLabel="luxErrorMessage verwenden"
+      luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
+      [(checked)]="useErrorMessage"
+      [luxNoTopLabel]="true"
+    />
+    @if (useErrorMessage()) {
+      <lux-input
+        luxName="datepicker_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+                 (unabhängig vom speziellen Validierungsfehler) einstellen."
+        [(value)]="errorMessage"
+      />
+    } @else {
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
+    }
+    <lux-select
+      [luxOptions]="validatorOptions"
+      luxOptionLabelProp="label"
+      [luxMultiple]="true"
+      [luxPickValue]="pickValidatorValueFn"
+      luxLabel="luxControlValidators"
+      [(value)]="controlValidators"
+    >
+      <lux-form-hint>
+        Diese Property ermöglicht es einer Component die <b>nicht in einer Reactive-Form</b> ist, auf einfache Art und Weise trotzdem
+        Validatoren zu übergeben.<br />
+        Diese Property funktioniert nicht für Components in Reactive-Forms, da diese ihre Validatoren über die entsprechende FormControl
+        setzen.
+      </lux-form-hint>
+    </lux-select>
+    <lux-toggle
+      luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
+      luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
+      [luxNoTopLabel]="true"
+      [(checked)]="labelLongFormat"
+    />
+  </example-base-advanced-options>
+</example-base-structure>

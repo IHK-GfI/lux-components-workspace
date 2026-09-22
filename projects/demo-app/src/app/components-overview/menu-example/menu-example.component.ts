@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   LuxAccordionComponent,
   LuxDividerComponent,
   LuxFormHintComponent,
   LuxIconRegistryService,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxMenuPanelHeaderComponent,
@@ -12,9 +12,9 @@ import {
   LuxPanelComponent,
   LuxPanelContentComponent,
   LuxPanelHeaderDescriptionComponent,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxThemePalette,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { StatusMarkerComponent } from '../../base/status-marker/status-marker.component';
 import { DemoMarkerType } from '../../base/status-marker/status-marker.model';
@@ -27,7 +27,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
 @Component({
   selector: 'app-menu-example',
   templateUrl: './menu-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxMenuComponent,
     LuxMenuItemComponent,
@@ -35,9 +35,9 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
     LuxPanelHeaderDescriptionComponent,
     LuxPanelContentComponent,
     LuxPanelComponent,
-    LuxToggleAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
@@ -50,9 +50,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   ]
 })
 export class MenuExampleComponent {
-  private iconService = inject(LuxIconRegistryService);
-
-  showOutputEvents = false;
+  readonly showOutputEvents = signal(false);
   log = logResult;
   readonly markerTypeNew = DemoMarkerType.New;
   readonly markerTypeUpdated = DemoMarkerType.Updated;
@@ -138,12 +136,12 @@ export class MenuExampleComponent {
     }
   ];
 
-  menuSectionHeaderTitle = 'Username';
-  menuSectionHeaderSubtitle = 'User@Email.com';
-  menuSectionTitle = 'Überschrift';
-  menuSectionTitle2 = 'Überschrift 2';
-  menuSectionTitleLarge = 'Bereich Teil eins';
-  menuSectionTitleLarge2 = 'Bereich Teil zwei';
+  readonly menuSectionHeaderTitle = signal('Username');
+  readonly menuSectionHeaderSubtitle = signal('User@Email.com');
+  readonly menuSectionTitle = signal('Überschrift');
+  readonly menuSectionTitle2 = signal('Überschrift 2');
+  readonly menuSectionTitleLarge = signal('Bereich Teil eins');
+  readonly menuSectionTitleLarge2 = signal('Bereich Teil zwei');
 
   menuItemsSections: ExampleMenuItem[] = [
     {
@@ -350,19 +348,15 @@ export class MenuExampleComponent {
     }
   ];
 
-  displayExtended = true;
-  displayMenuLeft = true;
-  maximumExtended = 5;
-  iconName = 'lux-interface-setting-menu-1';
-  menuTriggerIconShowRight = false;
-  menuLabel = '';
-  className = '';
+  readonly displayExtended = signal(true);
+  readonly displayMenuLeft = signal(true);
+  readonly maximumExtended = signal(5);
+  readonly iconName = signal('lux-interface-setting-menu-1');
+  readonly menuTriggerIconShowRight = signal(false);
+  readonly menuLabel = signal('');
+  readonly className = signal('');
 
-  badgeColors: ExampleBadgeColorOption[] = [
-    { value: 'primary', label: 'primary' },
-    { value: 'warn', label: 'warn' },
-    { value: 'accent', label: 'accent' }
-  ];
+  private readonly iconService = inject(LuxIconRegistryService);
 
   constructor() {
     this.registerIcon('app-box', '/', '/assets/svg/box.svg');
@@ -409,9 +403,4 @@ interface ExampleLargeMenuItem {
   buttonBadge?: string;
   buttonBadgeColor?: LuxThemePalette;
   selected: boolean;
-}
-
-interface ExampleBadgeColorOption {
-  value: LuxThemePalette;
-  label: string;
 }

@@ -7,13 +7,11 @@ import { LuxTableColumnHeaderComponent } from './lux-table-column-header.compone
 @Component({
   selector: 'lux-table-column',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<ng-content select="lux-table-column-header"></ng-content>
-    <ng-content select="lux-table-column-content"></ng-content>
-    <ng-content select="lux-table-column-footer"></ng-content>`
+  template: `<ng-content select="lux-table-column-header" />
+    <ng-content select="lux-table-column-content" />
+    <ng-content select="lux-table-column-footer" />`
 })
 export class LuxTableColumnComponent {
-  change$: Subject<void> = new Subject<void>();
-
   readonly luxConfigLabel = input<string>();
   readonly luxColumnDef = input.required<string>();
   readonly luxSortable = input(false);
@@ -24,6 +22,8 @@ export class LuxTableColumnComponent {
   readonly header = contentChild(LuxTableColumnHeaderComponent);
   readonly content = contentChild(LuxTableColumnContentComponent);
   readonly footer = contentChild(LuxTableColumnFooterComponent);
+
+  change$: Subject<void> = new Subject<void>();
 
   constructor() {
     effect(() => {

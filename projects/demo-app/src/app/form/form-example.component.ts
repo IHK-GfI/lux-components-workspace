@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { FieldState } from '@angular/forms/signals';
 import { Router } from '@angular/router';
 import {
   LuxAppFooterButtonInfo,
@@ -11,6 +11,7 @@ import {
 } from '@ihk-gfi/lux-components';
 import { FormCommonComponent } from './form-common/form-common.component';
 import { FormDualColComponent } from './form-dual-col/form-dual-col.component';
+import { FormExampleStateKey, FormExampleStateService } from './form-example-state.service';
 import { FormSingleColComponent } from './form-single-col/form-single-col.component';
 import { FormThreeColComponent } from './form-three-col/form-three-col.component';
 import { TableExampleDataProviderService } from './table-example-data-provider.service';
@@ -30,19 +31,15 @@ import { WebFontDemoComponent } from './web-font-demo/web-font-demo.component';
     FormThreeColComponent,
     WebFontDemoComponent
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableExampleDataProviderService]
 })
 export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterViewInit, OnDestroy {
-  private router = inject(Router);
-  private buttonService = inject(LuxAppFooterButtonService);
-  private snackbar = inject(LuxSnackbarService);
-
-  @ViewChild(FormCommonComponent) formCommon!: FormCommonComponent;
-  @ViewChild(FormSingleColComponent) formSingle!: FormSingleColComponent;
-  @ViewChild(FormDualColComponent) formDuo!: FormDualColComponent;
-  @ViewChild(FormThreeColComponent) formThree!: FormThreeColComponent;
-  @ViewChild(LuxTabsComponent) tabComponent!: LuxTabsComponent;
+  readonly formCommon = viewChild.required(FormCommonComponent);
+  readonly formSingle = viewChild.required(FormSingleColComponent);
+  readonly formDuo = viewChild.required(FormDualColComponent);
+  readonly formThree = viewChild.required(FormThreeColComponent);
+  readonly tabComponent = viewChild.required(LuxTabsComponent);
 
   btnShowErrors = LuxAppFooterButtonInfo.generateInfo({
     cmd: 'btnShowErrors',
@@ -64,6 +61,11 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
     alwaysVisible: false,
     onClick: this.handleSaveClicked.bind(this)
   });
+
+  private router = inject(Router);
+  private buttonService = inject(LuxAppFooterButtonService);
+  private snackbar = inject(LuxSnackbarService);
+  private readonly state = inject(FormExampleStateService);
 
   ngOnInit(): void {
     this.buttonService.buttonInfos = [
@@ -105,31 +107,45 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   }
 
   hasUnsavedData(): boolean {
-    return this.formCommon.myGroup.dirty || this.formSingle.myGroup.dirty || this.formDuo.myGroup.dirty || this.formThree.myGroup.dirty;
+    return (
+      this.formCommon().myForm().dirty() ||
+      this.formSingle().myForm().dirty() ||
+      this.formDuo().myForm().dirty() ||
+      this.formThree().myForm().dirty()
+    );
   }
 
   handleSaveClicked() {
-    let formGroup: FormGroup | null;
-    switch (this.tabComponent.luxActiveTab) {
+    let field: FieldState<unknown> | null;
+    let stateKey: FormExampleStateKey | null;
+    switch (this.tabComponent().luxActiveTab()) {
       case 0:
-        formGroup = this.formCommon.myGroup;
+        field = this.formCommon().myForm();
+        stateKey = 'common';
         break;
       case 1:
-        formGroup = this.formSingle.myGroup;
+        field = this.formSingle().myForm();
+        stateKey = 'single';
         break;
       case 2:
-        formGroup = this.formDuo.myGroup;
+        field = this.formDuo().myForm();
+        stateKey = 'dual';
         break;
       case 3:
-        formGroup = this.formThree.myGroup;
+        field = this.formThree().myForm();
+        stateKey = 'three';
         break;
       default:
-        formGroup = null;
+        field = null;
+        stateKey = null;
         break;
     }
 
-    if (formGroup && formGroup.valid) {
-      formGroup.markAsPristine();
+    if (field && field.valid()) {
+      field.reset();
+      if (stateKey) {
+        this.state.markPristine(stateKey);
+      }
 
       this.snackbar.open(2000, {
         text: 'Daten gespeichert!'
@@ -140,18 +156,18 @@ export class FormExampleComponent implements IUnsavedDataCheck, OnInit, AfterVie
   }
 
   highlightErrors() {
-    switch (this.tabComponent.luxActiveTab) {
+    switch (this.tabComponent().luxActiveTab()) {
       case 0:
-        LuxUtil.showValidationErrors(this.formCommon.myGroup);
+        this.formCommon().myForm().markAsTouched();
         break;
       case 1:
-        LuxUtil.showValidationErrors(this.formSingle.myGroup);
+        this.formSingle().myForm().markAsTouched();
         break;
       case 2:
-        LuxUtil.showValidationErrors(this.formDuo.myGroup);
+        this.formDuo().myForm().markAsTouched();
         break;
       case 3:
-        LuxUtil.showValidationErrors(this.formThree.myGroup);
+        this.formThree().myForm().markAsTouched();
         break;
       default:
         break;

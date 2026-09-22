@@ -7,8 +7,6 @@ import { Observable, Subject } from 'rxjs';
 export class LuxLookupHandlerService {
   private lookupElements = new Map<string, Subject<void>>();
 
-  constructor() {}
-
   /**
    * Fügt ein LookupComponent zu der Map hinzu.
    * @param string name

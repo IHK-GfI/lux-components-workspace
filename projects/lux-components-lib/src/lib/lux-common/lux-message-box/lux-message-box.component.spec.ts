@@ -1,4 +1,5 @@
-import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -18,7 +19,7 @@ describe('LuxMessageBoxComponent', () => {
   let fixture: ComponentFixture<MockMessageBoxComponent>;
   let messageBoxComponent: LuxMessageBoxComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -27,7 +28,7 @@ describe('LuxMessageBoxComponent', () => {
         provideLuxTranslocoTesting()
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MockMessageBoxComponent);
@@ -40,7 +41,7 @@ describe('LuxMessageBoxComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Sollte die Nachrichten anzeigen', fakeAsync(() => {
+  it('Sollte die Nachrichten anzeigen', async () => {
     // Vorbedingungen testen
     let messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -53,7 +54,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen
     component.messages.set([]);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
@@ -64,11 +65,10 @@ describe('LuxMessageBoxComponent', () => {
     expect(messageText).toBeNull();
     expect(messageIcon).toBeNull();
 
-    LuxTestHelper.wait(fixture);
-    flush();
-  }));
+    fixture.detectChanges();
+  });
 
-  it('Sollte mehrere Nachrichtenboxen untereinander anzeigen', fakeAsync(() => {
+  it('Sollte mehrere Nachrichtenboxen untereinander anzeigen', async () => {
     // Vorbedingungen testen
     let singleMessages = fixture.debugElement.queryAll(By.directive(LuxMessageComponent));
 
@@ -77,7 +77,7 @@ describe('LuxMessageBoxComponent', () => {
     // Änderungen durchführen
     component.maxDisplayed.set(2);
     component.messages.set([...component.messages()]);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     singleMessages = fixture.debugElement.queryAll(By.directive(LuxMessageComponent));
@@ -91,18 +91,17 @@ describe('LuxMessageBoxComponent', () => {
       { text: 'Msg 4', iconName: 'lux-programming-bug', color: 'blue' }
     ];
     component.messages.set([...component.messages(), ...newMessages]);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     singleMessages = fixture.debugElement.queryAll(By.directive(LuxMessageComponent));
 
     expect(singleMessages.length).toBe(3);
 
-    LuxTestHelper.wait(fixture);
-    flush();
-  }));
+    fixture.detectChanges();
+  });
 
-  it('Sollte zur speziellen Nachricht springen und fehlerhafte Eingaben abfangen', fakeAsync(() => {
+  it('Sollte zur speziellen Nachricht springen und fehlerhafte Eingaben abfangen', async () => {
     // Vorbedingungen testen
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
 
@@ -111,7 +110,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen
     component.index.set(1);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -121,7 +120,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [Sollte negative Werte abfangen]
     component.index.set(-100);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -131,19 +130,19 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [Sollte zu hohe positive Werte abfangen]
     component.index.set(100);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
 
     expect(messageText).not.toBeNull();
     expect(messageText.nativeElement.textContent).toEqual('Msg 2');
-  }));
+  });
 
-  it('Sollte die Nachrichten wechseln und das Event ausgeben', fakeAsync(() => {
+  it('Sollte die Nachrichten wechseln und das Event ausgeben', async () => {
     // Vorbedingungen testen
     let messageText = fixture.debugElement.query(By.css('.lux-message-text'));
-    const changeSpy = spyOn(component, 'changed').and.callThrough();
+    const changeSpy = vi.spyOn(component, 'changed');
     const paginator: LuxPaginatorComponent = fixture.debugElement.query(By.directive(LuxPaginatorComponent)).componentInstance;
 
     expect(messageText.nativeElement.textContent.trim()).toEqual('Msg 1');
@@ -151,7 +150,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [NACH VORNE STEPPEN]
     paginator.nextPage();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -164,7 +163,7 @@ describe('LuxMessageBoxComponent', () => {
 
     // Änderungen durchführen [NACH HINTEN STEPPEN]
     paginator.previousPage();
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageText = fixture.debugElement.query(By.css('.lux-message-text'));
@@ -174,28 +173,27 @@ describe('LuxMessageBoxComponent', () => {
     expect(component.eventObject).toBeDefined();
     expect(component.eventObject!.previousPage.index).toBe(1);
     expect(component.eventObject!.currentPage.index).toBe(0);
-  }));
+  });
 
-  it('Sollte die Nachrichten schließen und das Event ausgeben', fakeAsync(() => {
+  it('Sollte die Nachrichten schließen und das Event ausgeben', async () => {
     // Vorbedingungen testen
     let messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
-    const changeSpy = spyOn(component, 'closed').and.callThrough();
+    const changeSpy = vi.spyOn(component, 'closed');
 
     expect(messageContainer).not.toBeNull();
     expect(changeSpy).toHaveBeenCalledTimes(0);
 
     // Änderungen durchführen
     component.messages.set([]);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     messageContainer = fixture.debugElement.query(By.css('.lux-message-container'));
     expect(messageContainer).toBeNull();
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
-    LuxTestHelper.wait(fixture);
-    flush();
-  }));
+    fixture.detectChanges();
+  });
 });
 
 @Component({

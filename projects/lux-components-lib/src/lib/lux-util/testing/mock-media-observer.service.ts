@@ -5,8 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class MockMediaObserverService implements OnDestroy {
   mediaQueryChanged: BehaviorSubject<string> = new BehaviorSubject<string>('md');
 
-  constructor() {}
-
   ngOnDestroy() {
     this.mediaQueryChanged.complete();
   }

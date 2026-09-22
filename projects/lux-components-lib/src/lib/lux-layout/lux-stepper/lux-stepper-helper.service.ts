@@ -8,8 +8,6 @@ import { LuxStepperComponent } from './lux-stepper.component';
 export class LuxStepperHelperService {
   private switchStep = new Map<LuxStepperComponent, BehaviorSubject<boolean>>();
 
-  constructor() {}
-
   /**
    * Springt im Stepper zum nächsten Step.
    * Alternativ (ohne Stepper als Parameter) lässt die Funktion alle

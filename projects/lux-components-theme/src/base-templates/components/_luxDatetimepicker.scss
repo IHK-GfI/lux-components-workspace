@@ -8,7 +8,8 @@
   );
 }
 
-lux-datetimepicker-ac {
+lux-datetimepicker-ac,
+lux-datetimepicker {
   @include mat.datepicker-overrides(());
 
   button:not(:disabled) .lux-datetimepicker-toggle-icon {

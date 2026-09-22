@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, Renderer2, inject } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, input, OnDestroy, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
@@ -16,9 +16,9 @@ export class LuxTagIdDirective implements AfterViewInit, OnDestroy {
 
   private configSubscription: Subscription;
 
-  @Input() luxTagId?: string;
-  @Input() luxTagIdStartElement: Element | null = null;
-  @Input() luxTagIdTargetSelf = false;
+  readonly luxTagId = input<string>();
+  readonly luxTagIdStartElement = input<Element | null>(null);
+  readonly luxTagIdTargetSelf = input(false);
 
   generateLuxTagIds = false;
 
@@ -30,12 +30,12 @@ export class LuxTagIdDirective implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     if (this.generateLuxTagIds) {
-      const luxComponent: Element | null = this.findLuxComponent(this.luxTagIdStartElement || this.elementRef.nativeElement);
+      const luxComponent: Element | null = this.findLuxComponent(this.luxTagIdStartElement() || this.elementRef.nativeElement);
 
       if (luxComponent) {
-        const targetElement = this.luxTagIdTargetSelf ? this.elementRef.nativeElement : luxComponent;
+        const targetElement = this.luxTagIdTargetSelf() ? this.elementRef.nativeElement : luxComponent;
 
-        let newTagId = this.luxTagId ?? this.getLuxTagId(luxComponent);
+        let newTagId = this.luxTagId() ?? this.getLuxTagId(luxComponent);
         if (newTagId) {
           newTagId = this.mergeTagIds(
             this.getLuxTagIdParent(luxComponent.parentElement, ''),

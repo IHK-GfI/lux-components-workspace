@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxStepComponent } from '@ihk-gfi/lux-components';
 
 @Component({
   selector: 'app-stepper-external-step-example',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       .step-header {

@@ -1,16 +1,16 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
-    ILuxTourHintStepConfig,
-    LuxButtonComponent,
-    LuxCardActionsComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxInputAcComponent,
-    LuxSelectAcComponent,
-    LuxTextareaAcComponent,
-    LuxToggleAcComponent,
-    LuxTooltipDirective,
-    LuxTourHintService
+  ILuxTourHintStepConfig,
+  LuxButtonComponent,
+  LuxCardActionsComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxInputComponent,
+  LuxSelectComponent,
+  LuxTextareaComponent,
+  LuxToggleComponent,
+  LuxTooltipDirective,
+  LuxTourHintService
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseOptionsActionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-options-actions.component';
@@ -20,17 +20,17 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'tour-hint-example',
   templateUrl: './tour-hint-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxCardActionsComponent,
     LuxCardContentComponent,
     LuxCardComponent,
     LuxTooltipDirective,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxInputAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxInputComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent,
@@ -38,6 +38,24 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class TourHintExampleComponent {
+  public singleHintTargetOptions: string[] = [
+    'Karte_1',
+    'Input_1',
+    'Input_2_Und_3',
+    'Karte_1_Aktionen',
+    'Karte_1_Aktion_1',
+    'Karte_1_Aktion_2',
+    'Karte_2',
+    'Karte_2_Aktion_1'
+  ];
+
+  public readonly singleHintTarget = signal('Karte_1');
+  public readonly singleHintTitle = signal('Test Titel');
+  public readonly singleHintContent = signal('Beschreibung für das Element');
+  public readonly singleHintShowDontShowAgain = signal(true);
+
+  public readonly tourShowDontShowAgain = signal(true);
+
   private tourService = inject(LuxTourHintService);
 
   private complexTourConfigs: ILuxTourHintStepConfig[] = [
@@ -110,48 +128,30 @@ export class TourHintExampleComponent {
     }
   ];
 
-  public singleHintTargetOptions: string[] = [
-    'Karte_1',
-    'Input_1',
-    'Input_2_Und_3',
-    'Karte_1_Aktionen',
-    'Karte_1_Aktion_1',
-    'Karte_1_Aktion_2',
-    'Karte_2',
-    'Karte_2_Aktion_1'
-  ];
-
-  public singleHintTarget = 'Karte_1';
-  public singleHintTitle = 'Test Titel';
-  public singleHintContent = 'Beschreibung für das Element';
-  public singleHintShowDontShowAgain = true;
-
-  public tourShowDontShowAgain = true;
-
   public openHint() {
     this.tourService.open(
       {
-        targetId: this.singleHintTarget,
+        targetId: this.singleHintTarget(),
         data: {
-          title: this.singleHintTitle,
-          content: this.singleHintContent
+          title: this.singleHintTitle(),
+          content: this.singleHintContent()
         }
       },
-      this.singleHintShowDontShowAgain
+      this.singleHintShowDontShowAgain()
     );
   }
 
   public startTour() {
-    this.tourService.open(this.complexTourConfigs, this.tourShowDontShowAgain);
+    this.tourService.open(this.complexTourConfigs, this.tourShowDontShowAgain());
   }
 
   public clearCaches() {
     this.tourService.clearDSACacheForConfig([
       {
-        targetId: this.singleHintTarget,
+        targetId: this.singleHintTarget(),
         data: {
-          title: this.singleHintTitle,
-          content: this.singleHintContent
+          title: this.singleHintTitle(),
+          content: this.singleHintContent()
         }
       }
     ]);

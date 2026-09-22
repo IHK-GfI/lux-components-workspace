@@ -31,4 +31,3 @@ export class LuxConsentDialogLauncherService implements ILuxConsentDialogLaunche
       });
   }
 }
-

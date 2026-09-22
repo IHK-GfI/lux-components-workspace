@@ -1,0 +1,281 @@
+<example-base-structure
+  exampleTitle="Slider"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90slider-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
+      <lux-slider
+        luxAutofocus
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxColor]="color()"
+        [luxShowThumbLabel]="showThumbLabel()"
+        [formField]="signalForm.sliderValue"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxValuePercent)="percentChanged($event)"
+        luxTagId="slider-signal-form"
+      />
+      <example-signal-form-value [field]="signalForm.sliderValue" />
+    </div>
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
+      <lux-slider
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxControlBinding]="controlBinding"
+        [luxColor]="color()"
+        [(luxDisabled)]="disabled"
+        [luxShowThumbLabel]="showThumbLabel()"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxValuePercent)="percentReactiveChanged($event)"
+        luxTagId="slider-reactive"
+      />
+      <example-form-value [form]="form" [controlBinding]="controlBinding" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-slider
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxControlValidators]="controlValidators()"
+        [luxColor]="color()"
+        [luxDisabled]="disabled()"
+        [luxShowThumbLabel]="showThumbLabel()"
+        [(value)]="plainValue"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        luxTagId="slider-plain-value"
+      />
+      <example-value [value]="plainValue()" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-slider
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxControlValidators]="controlValidators()"
+        [luxColor]="color()"
+        [(luxDisabled)]="disabled"
+        [luxShowThumbLabel]="showThumbLabel()"
+        [(luxValue)]="value"
+        [luxMax]="max()"
+        [luxMin]="min()"
+        [luxStep]="step()"
+        [luxReadonly]="readonly()"
+        [luxDense]="denseFormat()"
+        [luxDisplayWith]="useDisplayFn() ? displayFn : undefined"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxValueChange)="log(showOutputEvents(), 'Value changed', $event)"
+        luxTagId="slider-plain-lux-value"
+      />
+      <example-value [value]="value()" />
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(checked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    />
+    <lux-input
+      luxName="slider_luxLabel"
+      luxLabel="luxLabel"
+      luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen."
+      [(value)]="label"
+    />
+    <lux-input
+      luxName="slider_luxHint"
+      luxLabel="luxHint"
+      luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen."
+      [(value)]="hint"
+    />
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoTopLabel"
+        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+        [(checked)]="noTopLabel"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoBottomLabel"
+        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+        [(checked)]="noBottomLabel"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoLabels"
+        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+        [(checked)]="noLabels"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <lux-toggle
+      luxName="slider_luxHintShowOnlyOnFocus"
+      luxLabel="luxHintShowOnlyOnFocus"
+      luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
+      [(checked)]="hintShowOnlyOnFocus"
+      [luxNoTopLabel]="true"
+    />
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled" />
+    <lux-toggle
+      [(checked)]="readonly"
+      luxLabel="luxReadonly"
+      luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      [(checked)]="denseFormat"
+      luxLabel="luxDense"
+      luxHint="Diese Property veringert das Padding innerhalb des Controls."
+      [luxNoTopLabel]="true"
+    />
+    <lux-select
+      [luxOptions]="colorOptions"
+      luxOptionLabelProp="label"
+      luxLabel="luxColor"
+      luxHint="Diese Property bestimmt das Farbschema des Sliders."
+      [value]="colorOptions[0]"
+      (valueChange)="colorChanged($event)"
+    />
+    <lux-input
+      [(value)]="min"
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      luxName="slider_luxMin"
+      luxLabel="luxMin"
+      luxHint="Diese Property bestimmt den minimal möglichen Wert in dem Slider."
+    />
+    <lux-input
+      [(value)]="max"
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      luxName="slider_luxMax"
+      luxLabel="luxMax"
+      luxHint="Diese Property bestimmt den maximal möglichen Wert des Sliders."
+    />
+    <lux-input
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      [(value)]="step"
+      luxName="slider_luxStep"
+      luxLabel="luxStep"
+      luxHint="Über die Property wird die Schrittgröße, in denen der Slider die Werte ändert bestimmt."
+    />
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle
+      [(checked)]="showThumbLabel"
+      luxLabel="luxShowThumbLabel"
+      luxHint="Dieses Flag schaltet die 'ThumbLabel'-Anzeige des aktuellen Wertes ein."
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxDisplayWith"
+      luxHint="Eigene displayWith-Funktion für die Anzeige im 'ThumbLabel' benutzen."
+      [(checked)]="useDisplayFn"
+      [luxNoTopLabel]="true"
+    />
+    @if (useDisplayFn()) {
+      <pre class="lux-label">{{ displayWithFnString }}</pre>
+    }
+    <lux-toggle
+      luxLabel="luxErrorMessage verwenden"
+      luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
+      [(checked)]="useErrorMessage"
+      [luxNoTopLabel]="true"
+    />
+    @if (useErrorMessage()) {
+      <lux-input
+        luxName="slider_luxErrorMessage"
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+                 (unabhängig vom speziellen Validierungsfehler) einstellen."
+        [(value)]="errorMessage"
+        [luxNoTopLabel]="true"
+      />
+    } @else {
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
+    }
+    <lux-select
+      [luxOptions]="validatorOptions"
+      luxOptionLabelProp="label"
+      [luxMultiple]="true"
+      [luxPickValue]="pickValidatorValueFn"
+      luxLabel="luxControlValidators"
+      [(value)]="controlValidators"
+    >
+      <lux-form-hint>
+        Diese Property ermöglicht es einer Component die <b>nicht in einer Reactive-Form</b> ist, auf einfache Art und Weise trotzdem
+        Validatoren zu übergeben.<br />
+        Diese Property funktioniert nicht für Components in Reactive-Forms, da diese ihre Validatoren über die entsprechende FormControl
+        setzen.
+      </lux-form-hint>
+    </lux-select>
+    <lux-toggle
+      luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
+      luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
+      [luxNoTopLabel]="true"
+      [(checked)]="labelLongFormat"
+    />
+  </example-base-advanced-options>
+</example-base-structure>

@@ -3,31 +3,33 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90table-v21"
 >
   <example-base-content class="example-base-content">
-    <div [ngStyle]="{ height: calculateProportions ? tableHeightPx + 'px' : 'unset' }" class="lux-table-example">
+    <div [ngStyle]="{ height: calculateProportions() ? tableHeightPx() + 'px' : 'unset' }" class="lux-table-example">
       <lux-table
-        [luxMinWidthPx]="minWidthPx"
-        [luxData]="dataSource"
-        [luxShowPagination]="pagination"
-        [luxColWidthsPercent]="columnWidthOption"
-        [luxShowFilter]="filter"
-        [luxFilterText]="filterText"
-        [luxShowColumnSelector]="showColumnSelector"
+        [luxMinWidthPx]="minWidthPx()"
+        [luxData]="dataSource()"
+        [luxShowPagination]="pagination()"
+        [luxColWidthsPercent]="columnWidthOption()"
+        [luxShowFilter]="filter()"
+        [luxFilterText]="filterText()"
+        [luxShowColumnSelector]="showColumnSelector()"
         luxColumnStorageKey="lux.app.demo.table"
-        [luxPageSize]="pageSize"
-        [luxClasses]="cssClass"
-        [luxPageSizeOptions]="pageSizeOption"
+        [luxPageSize]="pageSize()"
+        [luxClasses]="cssClass()"
+        [luxPageSizeOptions]="pageSizeOption()"
         [luxMultiSelect]="multiSelect"
-        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick"
-        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty"
-        [luxNoDataText]="noDataText"
-        [luxSelected]="bindLuxSelected ? selected : unboundSelected"
+        [luxMultiSelectOnlyCheckboxClick]="multiSelectOnlyCheckboxClick()"
+        [luxMultiSelectDisabledProperty]="multiSelectDisabledProperty()"
+        [luxNoDataText]="noDataText()"
+        [luxSelected]="bindLuxSelected() ? selected() : unboundSelected()"
+        [luxShowSelectedChangeCursor]="bindLuxSelected() || observeSelectedChange() || observeSelectedAsArrayChange()"
+        [luxShowDoubleClickedCursor]="doubleClickActive"
         [luxCompareWith]="compareFn"
-        [luxHideBorders]="hideBorders"
-        [luxAutoPaginate]="autoPagination"
-        [luxPagerDisabled]="pagerDisabled"
-        [luxPagerTooltip]="pagerTooltip"
-        [luxPagerFirstLastButton]="pagerFirstLastButton"
-        [luxAlignElementsTop]="alignElementsTop"
+        [luxHideBorders]="hideBorders()"
+        [luxAutoPaginate]="autoPagination()"
+        [luxPagerDisabled]="pagerDisabled()"
+        [luxPagerTooltip]="pagerTooltip()"
+        [luxPagerFirstLastButton]="pagerFirstLastButton()"
+        [luxAlignElementsTop]="alignElementsTop()"
         #myTable
       >
         <lux-table-column
@@ -36,7 +38,7 @@
           [luxSortable]="nameConfig.sortable"
           [luxSticky]="nameConfig.sticky"
           [luxResponsiveAt]="nameConfig.responsiveAt"
-          [luxResponsiveBehaviour]="$safeNavigationMigration(nameConfig.responsiveBehaviour?.value)"
+          [luxResponsiveBehaviour]="nameConfig.responsiveBehaviour.value ?? ''"
         >
           <lux-table-column-header>
             <ng-template><span [luxTooltip]="'Tooltip Spalte \'Name\''">Name</span></ng-template>
@@ -56,7 +58,7 @@
           [luxSortable]="symbolConfig.sortable"
           [luxSticky]="symbolConfig.sticky"
           [luxResponsiveAt]="symbolConfig.responsiveAt"
-          [luxResponsiveBehaviour]="$safeNavigationMigration(symbolConfig.responsiveBehaviour?.value)"
+          [luxResponsiveBehaviour]="symbolConfig.responsiveBehaviour.value ?? ''"
         >
           <lux-table-column-header>
             <ng-template>
@@ -72,14 +74,14 @@
             <ng-template> Symbol Footer </ng-template>
           </lux-table-column-footer>
         </lux-table-column>
-        @if (!multiSelect || !multiSelectOnlyCheckboxClick) {
+        @if (!multiSelect || !multiSelectOnlyCheckboxClick()) {
           <lux-table-column
             luxColumnDef="date"
             luxConfigLabel="Datum"
             [luxSortable]="dateConfig.sortable"
             [luxSticky]="dateConfig.sticky"
             [luxResponsiveAt]="dateConfig.responsiveAt"
-            [luxResponsiveBehaviour]="$safeNavigationMigration(dateConfig.responsiveBehaviour?.value)"
+            [luxResponsiveBehaviour]="dateConfig.responsiveBehaviour.value ?? ''"
           >
             <lux-table-column-header>
               <ng-template>Datum</ng-template>
@@ -152,9 +154,9 @@
     </lux-table>
   </example-base-content>
   <example-base-simple-options>
-    <lux-toggle-ac luxLabel="luxShowColumnSelector" [(luxChecked)]="showColumnSelector" [luxNoLabels]="true">
+    <lux-toggle luxLabel="luxShowColumnSelector" [(checked)]="showColumnSelector" [luxNoLabels]="true">
       <lux-form-hint>Dieses Flag steuert, ob oberhalb der Tabelle ein Select zur Spaltenein-/ausblendung angezeigt wird.</lux-form-hint>
-    </lux-toggle-ac>
+    </lux-toggle>
     <table-example-simple-options [tableExample]="this" class="lux-flex lux-flex-col lux-gap-4"></table-example-simple-options>
   </example-base-simple-options>
   <example-base-advanced-options>
@@ -179,7 +181,7 @@
       <lux-menu-item
         luxLabel="Tabelle leeren"
         luxColor="warn"
-        [luxDisabled]="dataSource.length === 0"
+        [luxDisabled]="dataSource().length === 0"
         [luxRaised]="true"
         (luxClicked)="clearData()"
         luxTagId="menu-clear"

@@ -1,21 +1,21 @@
 import { UpperCasePipe } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
-  LuxAutocompleteAcComponent,
+  LuxAutocompleteComponent,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxCheckboxAcComponent,
-  LuxChipAcGroupComponent,
-  LuxChipsAcComponent,
-  LuxDatepickerAcComponent,
+  LuxCheckboxComponent,
+  LuxChipGroupComponent,
+  LuxChipsComponent,
+  LuxDatepickerComponent,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxLinkComponent,
-  LuxRadioAcComponent,
-  LuxSelectAcComponent,
+  LuxRadioComponent,
+  LuxSelectComponent,
   LuxTabIndexDirective,
-  LuxTextareaAcComponent,
-  LuxToggleAcComponent
+  LuxTextareaComponent,
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -24,22 +24,22 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 @Component({
   selector: 'lux-tabindex-example',
   templateUrl: './tabindex-example.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxLinkComponent,
     LuxCardContentComponent,
     LuxCardComponent,
     LuxTabIndexDirective,
-    LuxToggleAcComponent,
-    LuxTextareaAcComponent,
-    LuxSelectAcComponent,
-    LuxRadioAcComponent,
-    LuxInputAcComponent,
-    LuxDatepickerAcComponent,
-    LuxChipsAcComponent,
-    LuxChipAcGroupComponent,
-    LuxCheckboxAcComponent,
-    LuxAutocompleteAcComponent,
+    LuxToggleComponent,
+    LuxTextareaComponent,
+    LuxSelectComponent,
+    LuxRadioComponent,
+    LuxInputComponent,
+    LuxDatepickerComponent,
+    LuxChipsComponent,
+    LuxChipGroupComponent,
+    LuxCheckboxComponent,
+    LuxAutocompleteComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     UpperCasePipe,
@@ -48,9 +48,7 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   ]
 })
 export class TabindexExampleComponent {
-  wrongTabIndex = false;
+  readonly wrongTabIndex = signal(false);
   chipItems = ['Test1', 'Test2'];
   options = [{ label: 'Test1' }, { label: 'Test2' }];
-
-  constructor() {}
 }

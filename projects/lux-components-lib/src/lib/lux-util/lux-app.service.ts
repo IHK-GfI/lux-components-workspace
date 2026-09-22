@@ -12,8 +12,6 @@ export class LuxAppService {
 
   resize$ = new Subject<void>();
 
-  constructor() {}
-
   getHeaderWidth(): number {
     return this.appHeaderEl ? this.appHeaderEl.getBoundingClientRect().width : 0;
   }

@@ -1,12 +1,14 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 // noinspection DuplicatedCode
 
 import { DOWN_ARROW, END, ENTER, ESCAPE, HOME, SPACE, UP_ARROW } from '@angular/cdk/keycodes';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxListItemContentComponent } from './lux-list-subcomponents/lux-list-item-content.component';
@@ -19,11 +21,11 @@ describe('LuxListComponent', () => {
   let fixture: ComponentFixture<MockListComponent>;
   let listComponent: LuxListComponent;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting(), provideLuxTranslocoTesting()]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MockListComponent);
@@ -38,12 +40,12 @@ describe('LuxListComponent', () => {
     expect(testComponent).toBeTruthy();
   });
 
-  it('Sollte Empty-Icon und Empty-Label anzeigen (leere Liste)', fakeAsync(() => {
+  it('Sollte Empty-Icon und Empty-Label anzeigen (leere Liste)', async () => {
     expect(fixture.debugElement.query(By.css('lux-icon.lux-list-empty-icon'))).not.toBeNull();
     expect(fixture.debugElement.query(By.css('span.lux-list-empty-icon-text'))).not.toBeNull();
-  }));
+  });
 
-  it('Sollte LuxListItems anzeigen (gefüllte Liste)', fakeAsync(() => {
+  it('Sollte LuxListItems anzeigen (gefüllte Liste)', async () => {
     // Vorbedingungen testen
     expect(fixture.debugElement.query(By.css('lux-icon.lux-list-empty-icon'))).not.toBeNull();
     expect(fixture.debugElement.query(By.css('span.lux-list-empty-icon-text'))).not.toBeNull();
@@ -51,7 +53,7 @@ describe('LuxListComponent', () => {
 
     // Änderungen durchführen
     testComponent.addListItems(5);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(fixture.debugElement.query(By.css('lux-icon.lux-list-empty-icon'))).toBeNull();
@@ -59,19 +61,19 @@ describe('LuxListComponent', () => {
     expect(fixture.debugElement.queryAll(By.directive(LuxListItemComponent)).length).toBe(5);
     expect(fixture.debugElement.query(By.css('.lux-card-title')).nativeElement.textContent.trim()).toEqual('Title 0');
     expect(fixture.debugElement.query(By.css('.lux-card-subtitle')).nativeElement.textContent.trim()).toEqual('SubTitle 0');
-  }));
+  });
 
-  it('Sollte ein selektiertes LuxListItem haben (max. 1, via LuxListItem)', fakeAsync(() => {
+  it('Sollte ein selektiertes LuxListItem haben (max. 1, via LuxListItem)', async () => {
     // Vorbedingungen testen
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected'))).toBeNull();
 
     // Änderungen durchführen
     testComponent.addListItems(5);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const listItems = fixture.debugElement.queryAll(By.directive(LuxListItemComponent));
-    (listItems[0].componentInstance as LuxListItemComponent).luxSelected = true;
-    LuxTestHelper.wait(fixture);
+    (listItems[0].componentInstance as LuxListItemComponent).luxSelected.set(true);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(fixture.debugElement.queryAll(By.css('.lux-list-item-selected')).length).toBe(1);
@@ -80,31 +82,31 @@ describe('LuxListComponent', () => {
     );
 
     // Änderungen durchführen
-    (listItems[0].componentInstance as LuxListItemComponent).luxSelected = false;
-    LuxTestHelper.wait(fixture);
-    (listItems[1].componentInstance as LuxListItemComponent).luxSelected = true;
-    LuxTestHelper.wait(fixture);
+    (listItems[0].componentInstance as LuxListItemComponent).luxSelected.set(false);
+    fixture.detectChanges();
+    (listItems[1].componentInstance as LuxListItemComponent).luxSelected.set(true);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(fixture.debugElement.queryAll(By.css('.lux-list-item-selected')).length).toBe(1);
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected .lux-card-title')).nativeElement.textContent.trim()).toEqual(
       'Title 1'
     );
-  }));
+  });
 
-  it('Sollte ein selektiertes LuxListItem haben (max. 1, via LuxList)', fakeAsync(() => {
+  it('Sollte ein selektiertes LuxListItem haben (max. 1, via LuxList)', async () => {
     // Vorbedingungen testen
-    const selectedSpy = spyOn(testComponent, 'onSelected');
-    const focusedSpy = spyOn(testComponent, 'onFocused');
-    const focusedItemSpy = spyOn(testComponent, 'onFocusedItem');
+    const selectedSpy = vi.spyOn(testComponent, 'onSelected').mockReturnValue(undefined);
+    const focusedSpy = vi.spyOn(testComponent, 'onFocused').mockReturnValue(undefined);
+    const focusedItemSpy = vi.spyOn(testComponent, 'onFocusedItem').mockReturnValue(undefined);
 
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected'))).toBeNull();
 
     // Änderungen durchführen
     testComponent.addListItems(5);
-    LuxTestHelper.wait(fixture);
-    testComponent.selectedPosition = 0;
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
+    testComponent.selectedPosition.set(0);
+    fixture.detectChanges();
     const listItems = fixture.debugElement.queryAll(By.directive(LuxListItemComponent));
 
     // Nachbedingungen prüfen
@@ -120,8 +122,8 @@ describe('LuxListComponent', () => {
     );
 
     // Änderungen durchführen
-    testComponent.selectedPosition = 1;
-    LuxTestHelper.wait(fixture);
+    testComponent.selectedPosition.set(1);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(selectedSpy).toHaveBeenCalledTimes(2);
@@ -134,19 +136,19 @@ describe('LuxListComponent', () => {
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected .lux-card-title')).nativeElement.textContent.trim()).toEqual(
       'Title 1'
     );
-  }));
+  });
 
-  it('Sollte über die Pfeiltasten LuxListItems fokussieren können', fakeAsync(() => {
+  it('Sollte über die Pfeiltasten LuxListItems fokussieren können', async () => {
     // Vorbedingungen testen
-    const selectedSpy = spyOn(testComponent, 'onSelected');
-    const focusedSpy = spyOn(testComponent, 'onFocused');
-    const focusedItemSpy = spyOn(testComponent, 'onFocusedItem');
+    const selectedSpy = vi.spyOn(testComponent, 'onSelected').mockReturnValue(undefined);
+    const focusedSpy = vi.spyOn(testComponent, 'onFocused').mockReturnValue(undefined);
+    const focusedItemSpy = vi.spyOn(testComponent, 'onFocusedItem').mockReturnValue(undefined);
 
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected'))).toBeNull();
 
     // Änderungen durchführen
     testComponent.addListItems(5);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const listItems = fixture.debugElement.queryAll(By.directive(LuxListItemComponent));
     const listNativeElement = fixture.debugElement.query(By.css('lux-list')).nativeElement;
@@ -163,7 +165,7 @@ describe('LuxListComponent', () => {
     expect(fixture.debugElement.queryAll(By.css('.lux-list-item-selected')).length).toBe(0);
 
     LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', DOWN_ARROW);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(selectedSpy).toHaveBeenCalledTimes(0);
@@ -175,7 +177,7 @@ describe('LuxListComponent', () => {
 
     // Änderungen durchführen
     LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', DOWN_ARROW);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // // Nachbedingungen prüfen
     expect(selectedSpy).toHaveBeenCalledTimes(0);
@@ -187,7 +189,7 @@ describe('LuxListComponent', () => {
 
     // Änderungen durchführen
     LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', UP_ARROW);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // // Nachbedingungen prüfen
     expect(selectedSpy).toHaveBeenCalledTimes(0);
@@ -196,52 +198,52 @@ describe('LuxListComponent', () => {
     expect(focusedItemSpy).toHaveBeenCalledTimes(4);
     expect(focusedItemSpy).toHaveBeenCalledWith(listItems[0].componentInstance as LuxListItemComponent);
     expect(fixture.debugElement.queryAll(By.css('.lux-list-item-selected')).length).toBe(0);
-  }));
+  });
 
-  it('Sollte über die F2-Taste ein LuxListItem selektieren können', fakeAsync(() => {
+  it('Sollte über die F2-Taste ein LuxListItem selektieren können', async () => {
     // Vorbedingungen testen
-    const selectedSpy = spyOn(testComponent, 'onSelected');
+    const selectedSpy = vi.spyOn(testComponent, 'onSelected').mockReturnValue(undefined);
 
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected'))).toBeNull();
 
     // Änderungen durchführen
     testComponent.addListItems(5);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const listNativeElement = fixture.debugElement.query(By.css('lux-list')).nativeElement;
 
     LuxTestHelper.dispatchFakeEvent(listNativeElement, 'focus', true);
     fixture.detectChanges();
     listNativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(selectedSpy).toHaveBeenCalledTimes(1);
     expect(selectedSpy).toHaveBeenCalledWith(0);
     expect(fixture.debugElement.queryAll(By.css('.lux-list-item-selected')).length).toBe(1);
-  }));
+  });
 
-  it('Sollte bei leerer Liste keinen Fehler werfen wenn Space/Enter gedrückt wird', fakeAsync(() => {
+  it('Sollte bei leerer Liste keinen Fehler werfen wenn Space/Enter gedrückt wird', async () => {
     // Liste bleibt leer – kein addListItems()
     const listNativeElement = fixture.debugElement.query(By.css('lux-list')).nativeElement;
 
     expect(() => {
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', SPACE);
-      LuxTestHelper.wait(fixture);
     }).not.toThrow();
-  }));
+    fixture.detectChanges();
+  });
 
-  it('Sollte über die Pfeiltasten + Space/Enter ein LuxListItem selektieren können', fakeAsync(() => {
+  it('Sollte über die Pfeiltasten + Space/Enter ein LuxListItem selektieren können', async () => {
     // Vorbedingungen testen
-    const selectedSpy = spyOn(testComponent, 'onSelected');
-    const focusedSpy = spyOn(testComponent, 'onFocused');
-    const focusedItemSpy = spyOn(testComponent, 'onFocusedItem');
+    const selectedSpy = vi.spyOn(testComponent, 'onSelected').mockReturnValue(undefined);
+    const focusedSpy = vi.spyOn(testComponent, 'onFocused').mockReturnValue(undefined);
+    const focusedItemSpy = vi.spyOn(testComponent, 'onFocusedItem').mockReturnValue(undefined);
 
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected'))).toBeNull();
 
     // Änderungen durchführen
     testComponent.addListItems(5);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     const listItems = fixture.debugElement.queryAll(By.directive(LuxListItemComponent));
     const listNativeElement = fixture.debugElement.query(By.css('lux-list')).nativeElement;
@@ -249,7 +251,7 @@ describe('LuxListComponent', () => {
     LuxTestHelper.dispatchFakeEvent(listNativeElement, 'focus', true);
     fixture.detectChanges();
     LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', SPACE);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(selectedSpy).toHaveBeenCalledTimes(1);
@@ -265,9 +267,9 @@ describe('LuxListComponent', () => {
 
     // Änderungen durchführen
     LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', DOWN_ARROW);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
     LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', ENTER);
-    LuxTestHelper.wait(fixture);
+    fixture.detectChanges();
 
     // Nachbedingungen prüfen
     expect(selectedSpy).toHaveBeenCalledTimes(2);
@@ -280,7 +282,7 @@ describe('LuxListComponent', () => {
     expect(fixture.debugElement.query(By.css('.lux-list-item-selected .lux-card-title')).nativeElement.textContent.trim()).toEqual(
       'Title 1'
     );
-  }));
+  });
 
   describe('Edit-Modus (Grid-Navigation)', () => {
     let fixtureI: ComponentFixture<MockListWithInteractiveComponent>;
@@ -296,10 +298,10 @@ describe('LuxListComponent', () => {
       fixtureI.destroy();
     });
 
-    it('Sollte interaktive Elemente initial tabindex="-1" haben', fakeAsync(() => {
+    it('Sollte interaktive Elemente initial tabindex="-1" haben', async () => {
       // Änderungen durchführen
       testI.addListItems(3);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Nachbedingungen prüfen
       const buttons = fixtureI.debugElement.queryAll(By.css('button'));
@@ -307,18 +309,18 @@ describe('LuxListComponent', () => {
       buttons.forEach((btn) => {
         expect(btn.nativeElement.tabIndex).toBe(-1);
       });
-    }));
+    });
 
-    it('Sollte bei Enter den Edit-Modus aktivieren und Buttons im aktiven Item tabindex="0" setzen', fakeAsync(() => {
+    it('Sollte bei Enter den Edit-Modus aktivieren und Buttons im aktiven Item tabindex="0" setzen', async () => {
       // Änderungen durchführen
       testI.addListItems(3);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       const listNativeElement = fixtureI.debugElement.query(By.css('lux-list')).nativeElement;
       LuxTestHelper.dispatchFakeEvent(listNativeElement, 'focus', true);
       fixtureI.detectChanges();
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', ENTER);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Nachbedingungen prüfen: aktives Item (Index 0) hat tabIndex=0
       const listItems = fixtureI.debugElement.queryAll(By.directive(LuxListItemComponent));
@@ -329,18 +331,18 @@ describe('LuxListComponent', () => {
       listItems[1].queryAll(By.css('button')).forEach((btn) => {
         expect(btn.nativeElement.tabIndex).toBe(-1);
       });
-    }));
+    });
 
-    it('Sollte bei Space den Edit-Modus aktivieren', fakeAsync(() => {
+    it('Sollte bei Space den Edit-Modus aktivieren', async () => {
       // Änderungen durchführen
       testI.addListItems(3);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       const listNativeElement = fixtureI.debugElement.query(By.css('lux-list')).nativeElement;
       LuxTestHelper.dispatchFakeEvent(listNativeElement, 'focus', true);
       fixtureI.detectChanges();
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', SPACE);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Nachbedingungen prüfen
       fixtureI.debugElement
@@ -349,12 +351,12 @@ describe('LuxListComponent', () => {
         .forEach((btn) => {
           expect(btn.nativeElement.tabIndex).toBe(0);
         });
-    }));
+    });
 
-    it('Sollte bei Escape den Edit-Modus beenden und tabindex="-1" wiederherstellen', fakeAsync(() => {
+    it('Sollte bei Escape den Edit-Modus beenden und tabindex="-1" wiederherstellen', async () => {
       // Änderungen durchführen
       testI.addListItems(3);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       const listNativeElement = fixtureI.debugElement.query(By.css('lux-list')).nativeElement;
       LuxTestHelper.dispatchFakeEvent(listNativeElement, 'focus', true);
@@ -362,7 +364,7 @@ describe('LuxListComponent', () => {
 
       // Edit-Modus aktivieren
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', ENTER);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Vorbedingung: Buttons im aktiven Item haben tabIndex=0
       fixtureI.debugElement
@@ -374,39 +376,39 @@ describe('LuxListComponent', () => {
 
       // Edit-Modus beenden via Escape
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', ESCAPE);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Nachbedingungen prüfen: alle Buttons haben wieder tabIndex=-1
       fixtureI.debugElement.queryAll(By.css('button')).forEach((btn) => {
         expect(btn.nativeElement.tabIndex).toBe(-1);
       });
-    }));
+    });
 
-    it('Sollte mit ArrowDown im Normal-Modus zur nächsten Zeile navigieren', fakeAsync(() => {
+    it('Sollte mit ArrowDown im Normal-Modus zur nächsten Zeile navigieren', async () => {
       // Vorbedingungen testen
-      const focusedSpy = spyOn(testI, 'onFocused');
+      const focusedSpy = vi.spyOn(testI, 'onFocused').mockReturnValue(undefined);
 
       // Änderungen durchführen
       testI.addListItems(3);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       const listNativeElement = fixtureI.debugElement.query(By.css('lux-list')).nativeElement;
       LuxTestHelper.dispatchFakeEvent(listNativeElement, 'focus', true);
       fixtureI.detectChanges();
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', DOWN_ARROW);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Nachbedingungen prüfen
       expect(focusedSpy).toHaveBeenCalledWith(1);
-    }));
+    });
 
-    it('Sollte mit Home/End zur ersten und letzten Zeile navigieren', fakeAsync(() => {
+    it('Sollte mit Home/End zur ersten und letzten Zeile navigieren', async () => {
       // Vorbedingungen testen
-      const focusedSpy = spyOn(testI, 'onFocused');
+      const focusedSpy = vi.spyOn(testI, 'onFocused').mockReturnValue(undefined);
 
       // Änderungen durchführen
       testI.addListItems(5);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       const listNativeElement = fixtureI.debugElement.query(By.css('lux-list')).nativeElement;
       LuxTestHelper.dispatchFakeEvent(listNativeElement, 'focus', true);
@@ -415,23 +417,23 @@ describe('LuxListComponent', () => {
       // Zur Mitte navigieren
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', DOWN_ARROW);
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', DOWN_ARROW);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Home → ersten Eintrag
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', HOME);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
       expect(focusedSpy).toHaveBeenCalledWith(0);
 
       // End → letzten Eintrag
       LuxTestHelper.dispatchKeyboardEvent(listNativeElement, 'keydown', END);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
       expect(focusedSpy).toHaveBeenCalledWith(4);
-    }));
+    });
 
-    it('Sollte role="grid" auf lux-list und role="row" auf lux-list-item setzen', fakeAsync(() => {
+    it('Sollte role="grid" auf lux-list und role="row" auf lux-list-item setzen', async () => {
       // Änderungen durchführen
       testI.addListItems(2);
-      LuxTestHelper.wait(fixtureI);
+      fixtureI.detectChanges();
 
       // Nachbedingungen prüfen
       const listNativeElement = fixtureI.debugElement.query(By.css('lux-list')).nativeElement;
@@ -440,9 +442,45 @@ describe('LuxListComponent', () => {
       fixtureI.debugElement.queryAll(By.directive(LuxListItemComponent)).forEach((item) => {
         expect(item.nativeElement.getAttribute('role')).toBe('row');
       });
-    }));
+    });
+  });
+
+  describe('Standardlabel', () => {
+    it('Sollte das Standardlabel nach einem Sprachwechsel zur Laufzeit aktualisieren', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const labelFixture = TestBed.createComponent(MockListWithoutLabelComponent);
+      labelFixture.detectChanges();
+      const listElement: HTMLElement = labelFixture.debugElement.query(By.directive(LuxListComponent)).nativeElement;
+
+      expect(listElement.getAttribute('aria-label')).toBe('Liste');
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+
+      TestBed.inject(TranslocoService).setActiveLang('en');
+      labelFixture.detectChanges();
+
+      expect(listElement.getAttribute('aria-label')).toBe('List');
+      warnSpy.mockRestore();
+    });
+
+    it('Sollte bei gesetztem luxLabel das Label verwenden und nicht warnen', () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const labelFixture = TestBed.createComponent(MockListComponent);
+      labelFixture.detectChanges();
+
+      expect(labelFixture.debugElement.query(By.directive(LuxListComponent)).nativeElement.getAttribute('aria-label')).toBe('Testliste');
+      expect(warnSpy).not.toHaveBeenCalled();
+      warnSpy.mockRestore();
+    });
   });
 });
+
+@Component({
+  selector: 'lux-mock-list-without-label',
+  template: `<lux-list />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxListComponent]
+})
+class MockListWithoutLabelComponent {}
 
 @Component({
   selector: 'lux-mock-list',
@@ -452,30 +490,34 @@ describe('LuxListComponent', () => {
       luxEmptyLabel="Empty-Label"
       luxEmptyIconName="lux-interface-delete-1"
       luxEmptyIconSize="5x"
-      [luxSelectedPosition]="selectedPosition"
+      [luxSelectedPosition]="selectedPosition()"
       (luxSelectedPositionChange)="onSelected($event)"
       (luxFocusedPositionChange)="onFocused($event)"
       (luxFocusedItemChange)="onFocusedItem($event)"
     >
-      @for (item of list; track item.title; let i = $index) {
+      @for (item of list(); track item.title; let i = $index) {
         <lux-list-item [luxTitle]="item.title" [luxSubTitle]="item.subTitle" [luxSelected]="item.selected">
           <lux-list-item-icon>
-            <lux-icon luxIconName="lux-interface-user-single"></lux-icon>
+            <lux-icon luxIconName="lux-interface-user-single" />
           </lux-list-item-icon>
           <lux-list-item-content> Item-Content #{{ i }} </lux-list-item-content>
         </lux-list-item>
       }
     </lux-list>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxListComponent, LuxListItemComponent, LuxListItemContentComponent, LuxListItemIconComponent, LuxIconComponent]
 })
 class MockListComponent {
-  selectedPosition?: number;
+  selectedPosition = signal<number | undefined>(undefined);
 
-  list: { title: string; subTitle: string; selected: boolean }[] = [];
-
-  constructor() {}
+  list = signal<
+    {
+      title: string;
+      subTitle: string;
+      selected: boolean;
+    }[]
+  >([]);
 
   onSelected(event: number) {}
 
@@ -484,13 +526,19 @@ class MockListComponent {
   onFocusedItem(event: LuxListItemComponent) {}
 
   addListItems(amount: number) {
+    const newItems: {
+      title: string;
+      subTitle: string;
+      selected: boolean;
+    }[] = [];
     for (let i = 0; i < amount; i++) {
-      this.list.push({
+      newItems.push({
         title: 'Title ' + i,
         subTitle: 'SubTitle ' + i,
         selected: false
       });
     }
+    this.list.update((current) => [...current, ...newItems]);
   }
 }
 
@@ -498,11 +546,12 @@ class MockListComponent {
   selector: 'lux-mock-list-interactive',
   template: `
     <lux-list
-      [luxSelectedPosition]="selectedPosition"
+      luxLabel="Testliste"
+      [luxSelectedPosition]="selectedPosition()"
       (luxSelectedPositionChange)="onSelected($event)"
       (luxFocusedPositionChange)="onFocused($event)"
     >
-      @for (item of list; track item.title) {
+      @for (item of list(); track item.title) {
         <lux-list-item [luxTitle]="item.title">
           <lux-list-item-content>
             <button type="button" class="btn-a">Button A</button>
@@ -512,20 +561,28 @@ class MockListComponent {
       }
     </lux-list>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxListComponent, LuxListItemComponent, LuxListItemContentComponent]
 })
 class MockListWithInteractiveComponent {
-  selectedPosition?: number;
-  list: { title: string }[] = [];
+  selectedPosition = signal<number | undefined>(undefined);
+  list = signal<
+    {
+      title: string;
+    }[]
+  >([]);
 
   onSelected(event: number) {}
 
   onFocused(event: number) {}
 
   addListItems(amount: number) {
+    const newItems: {
+      title: string;
+    }[] = [];
     for (let i = 0; i < amount; i++) {
-      this.list.push({ title: 'Title ' + i });
+      newItems.push({ title: 'Title ' + i });
     }
+    this.list.update((current) => [...current, ...newItems]);
   }
 }

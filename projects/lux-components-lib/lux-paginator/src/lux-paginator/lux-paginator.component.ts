@@ -42,23 +42,6 @@ const customPaginatorOptions: MatPaginatorDefaultOptions = {
   }
 })
 export class LuxPaginatorComponent {
-  private readonly intlLabelKeys = ['itemsPerPageLabel', 'nextPageLabel', 'previousPageLabel', 'firstPageLabel', 'lastPageLabel'] as const;
-
-  private readonly defaultIntlLabels: Record<(typeof this.intlLabelKeys)[number], string> = {
-    itemsPerPageLabel: '',
-    nextPageLabel: '',
-    previousPageLabel: '',
-    firstPageLabel: '',
-    lastPageLabel: ''
-  };
-
-  private internalIntlChange = false;
-  private defaultRangeLabel: LuxRangeLabelFn = () => '';
-
-  private readonly matPaginator = viewChild(MatPaginator);
-  private readonly paginatorIntl = inject(MatPaginatorIntl);
-  private readonly destroyRef = inject(DestroyRef);
-
   readonly luxLength = input(0);
   readonly luxPageSize = input(50);
   readonly luxPageSizeOptions = input<number[]>([10, 25, 50, 100]);
@@ -74,12 +57,32 @@ export class LuxPaginatorComponent {
   readonly luxFirstPageLabel = input<string | undefined>(undefined);
   readonly luxLastPageLabel = input<string | undefined>(undefined);
   readonly luxGetRangeLabel = input<LuxRangeLabelFn | undefined>(undefined);
+
   readonly luxPageChange = output<LuxPageEvent>();
 
+  private readonly matPaginator = viewChild(MatPaginator);
+
+  readonly luxInitialized: Signal<boolean>;
+
+  private readonly intlLabelKeys = ['itemsPerPageLabel', 'nextPageLabel', 'previousPageLabel', 'firstPageLabel', 'lastPageLabel'] as const;
+
+  private readonly defaultIntlLabels: Record<(typeof this.intlLabelKeys)[number], string> = {
+    itemsPerPageLabel: '',
+    nextPageLabel: '',
+    previousPageLabel: '',
+    firstPageLabel: '',
+    lastPageLabel: ''
+  };
+
+  private internalIntlChange = false;
+  private defaultRangeLabel: LuxRangeLabelFn = () => '';
+  private readonly paginatorIntl = inject(MatPaginatorIntl);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly _luxInitialized = signal(false);
-  readonly luxInitialized: Signal<boolean> = this._luxInitialized.asReadonly();
 
   constructor() {
+    this.luxInitialized = this._luxInitialized.asReadonly();
+
     afterNextRender(() => {
       this._luxInitialized.set(true);
     });

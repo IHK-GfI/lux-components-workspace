@@ -79,8 +79,7 @@ export class LuxTooltipTruncationWatcher {
     const wasTruncated = this.truncated;
     // Horizontal (text-overflow: ellipsis) und vertikal (-webkit-line-clamp) prüfen:
     // Bei line-clamp ist der Überlauf rein vertikal, scrollWidth bleibt gleich clientWidth.
-    this.truncated =
-      this.element.scrollWidth > this.element.clientWidth || this.element.scrollHeight > this.element.clientHeight;
+    this.truncated = this.element.scrollWidth > this.element.clientWidth || this.element.scrollHeight > this.element.clientHeight;
     if (this.truncated !== wasTruncated) {
       this.onTruncationChange();
     }

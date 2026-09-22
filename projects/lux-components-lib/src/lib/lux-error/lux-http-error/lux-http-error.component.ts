@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, inject, output, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-message-box.component';
 import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
@@ -9,47 +9,35 @@ import { LuxHttpErrorInterceptor } from './lux-http-error-interceptor';
   selector: 'lux-http-error',
   templateUrl: 'lux-http-error.component.html',
   styleUrls: ['lux-http-error.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxMessageBoxComponent]
 })
-export class LuxHttpErrorComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(LuxMessageBoxComponent) messageComponent!: LuxMessageBoxComponent;
+export class LuxHttpErrorComponent implements AfterViewInit {
+  readonly luxMessageBoxClosed = output<void>();
 
-  @Output() luxMessageBoxClosed = new EventEmitter<void>();
+  readonly messageComponent = viewChild.required(LuxMessageBoxComponent);
 
-  private subs: Subscription[] = [];
+  readonly errors = signal<ILuxMessage[]>([]);
 
-  errors: ILuxMessage[] = [];
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     // Beim Ansteuern einer neuen Route, die aktuellen Fehler resetten.
-    this.subs.push(
-      inject(Router).events.subscribe((event) => {
-        if (event instanceof NavigationStart) {
-          LuxHttpErrorInterceptor.dataStream.next([]);
-        }
-      })
-    );
-  }
-
-  ngOnInit(): void {
-    this.errors = [];
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        LuxHttpErrorInterceptor.dataStream.next([]);
+      }
+    });
   }
 
   ngAfterViewInit() {
     // Wenn neue Fehler-Objekte kommen, diese umformatieren und in der LuxMessageBoxComponent anzeigen.
-    this.subs.push(
-      LuxHttpErrorInterceptor.dataStream$().subscribe((errors: any[]) => {
+    LuxHttpErrorInterceptor.dataStream$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((errors: any[]) => {
         this.updateErrors(errors);
-      })
-    );
-  }
-
-  ngOnDestroy(): void {
-    // Alle bekannten Subscriptions auflösen.
-    this.subs.forEach((sub) => {
-      sub.unsubscribe();
-    });
+      });
   }
 
   /**
@@ -69,7 +57,7 @@ export class LuxHttpErrorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
     setTimeout(() => {
-      this.errors = errorMessages;
+      this.errors.set(errorMessages);
     });
   }
 

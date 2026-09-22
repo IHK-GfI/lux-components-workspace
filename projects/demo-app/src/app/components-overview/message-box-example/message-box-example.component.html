@@ -3,7 +3,7 @@
   exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90message%E2%80%90box-v21"
 >
   <example-base-content>
-    @if (showInCard) {
+    @if (showInCard()) {
       <lux-card luxTitle="Message-Box in Karte">
         <lux-card-content>
           <p>Klappe die Karte auf und zu, um zu prüfen, ob die Message-Box nach dem erneuten Ausklappen sichtbar bleibt.</p>
@@ -11,81 +11,73 @@
         <lux-card-content-expanded>
           <lux-message-box
             [(luxMessages)]="messages"
-            [luxIndex]="messageIndex"
-            [luxMaximumDisplayed]="maximumDisplayed"
+            [luxIndex]="messageIndex()"
+            [luxMaximumDisplayed]="maximumDisplayed()"
             (luxMessageClosed)="logClosed($event)"
             (luxMessageBoxClosed)="logBoxClosed()"
             (luxMessageChanged)="logChanged($event)"
-          >
-          </lux-message-box>
+          />
         </lux-card-content-expanded>
       </lux-card>
     } @else {
       <lux-message-box
         [(luxMessages)]="messages"
-        [luxIndex]="messageIndex"
-        [luxMaximumDisplayed]="maximumDisplayed"
+        [luxIndex]="messageIndex()"
+        [luxMaximumDisplayed]="maximumDisplayed()"
         (luxMessageClosed)="logClosed($event)"
         (luxMessageBoxClosed)="logBoxClosed()"
         (luxMessageChanged)="logChanged($event)"
-      >
-      </lux-message-box>
+      />
     }
   </example-base-content>
   <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
-    <lux-toggle-ac
+    <lux-toggle
       luxLabel="Output-Events loggen"
       luxHint="(Console --> F12/CMD+ALT+I)"
-      [(luxChecked)]="showOutputEvents"
+      [(checked)]="showOutputEvents"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
-    <lux-toggle-ac
+    />
+    <lux-toggle
       luxLabel="Message-Box in Karte anzeigen"
       luxHint="Schaltet die Message-Box zwischen dem Bereich außerhalb und innerhalb der Karte um."
-      [(luxChecked)]="showInCard"
+      [(checked)]="showInCard"
       [luxNoTopLabel]="true"
-    >
-    </lux-toggle-ac>
-    <lux-input-ac
+    />
+    <lux-input
       luxName="message-box_luxIndex"
       luxLabel="luxIndex"
       luxHint="Diese Property bestimmt die aktuell angezeigte Page aus dem Paginator (maximal die letzte mögliche Seite)."
       luxType="number"
-      [(luxValue)]="messageIndex"
-    >
-    </lux-input-ac>
-    <lux-input-ac luxName="message-box_luxMaximumDisplayed" luxLabel="luxMaximumDisplayed" luxType="number" [(luxValue)]="maximumDisplayed">
+      [(value)]="messageIndex"
+    />
+    <lux-input luxName="message-box_luxMaximumDisplayed" luxLabel="luxMaximumDisplayed" luxType="number" [(value)]="maximumDisplayed">
       <lux-form-hint>
         Die Property legt fest wie viele Nachrichten gleichzeitig dargestellt werden können.<br />
         Wenn mehr Nachrichten vorhanden sind, sind diese über eine Pagination erreichbar.
       </lux-form-hint>
-    </lux-input-ac>
+    </lux-input>
   </example-base-simple-options>
   <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <h3>Neue Message</h3>
     <div class="lux-flex lux-flex-col lux-gap-4">
-      <lux-textarea-ac
+      <lux-textarea
         luxName="message-box_text"
         luxLabel="text"
         luxHint="Die Property bestimmt den Text für die neue Nachricht."
-        [(luxValue)]="newMessage.text"
-      >
-      </lux-textarea-ac>
-      <lux-input-ac
+        [(value)]="newMessage.text"
+      />
+      <lux-input
         luxName="message-box_iconName"
         luxLabel="iconName"
         luxHint="Über diese Property wird optional ein Icon festgelegt."
-        [(luxValue)]="newMessage.iconName"
-      >
-      </lux-input-ac>
-      <lux-select-ac
+        [(value)]="newMessage.iconName"
+      />
+      <lux-select
         luxLabel="color"
         [luxOptions]="colors"
         luxHint="Hier kann eine Farbe aus der Farbpalette aus luxstyles.scss ausgewählt werden."
-        [(luxSelected)]="newMessage.color"
-      >
-      </lux-select-ac>
+        [(value)]="newMessage.color"
+      />
       <lux-button
         luxIconName="lux-interface-add-1"
         luxLabel="Message hinzufügen"
@@ -95,47 +87,49 @@
         [luxDisabled]="!newMessage.text"
         luxTagId="example-msg-add"
         class="lux-mt-4 lux-mb-4"
-      >
-      </lux-button>
+      />
     </div>
 
     <h3>Einzelne Messages</h3>
     <lux-accordion [luxMulti]="false" luxMode="flat" luxExpandedHeaderHeight="65px" luxCollapsedHeaderHeight="65px">
-      @for (message of messages; track message; let i = $index) {
-      <lux-panel [luxHideToggle]="true">
-        <lux-panel-header-title>
-          <div class="lux-flex lux-flex-basis-full lux-justify-between lux-items-center lux-pt-2">
-            <span>{{ message.text }}</span>
-          </div>
-        </lux-panel-header-title>
-        <lux-panel-header-description> </lux-panel-header-description>
-        <lux-panel-content>
-          <div class="lux-flex lux-flex-col lux-pt-3 lux-gap-2">
-            <lux-textarea-ac
-              luxName="message-box_text"
-              luxLabel="text"
-              luxHint="Die Property bestimmt den Text für die Nachricht."
-              [(luxValue)]="message.text"
-            >
-            </lux-textarea-ac>
-            <lux-input-ac
-              luxName="message-box_iconName"
-              luxLabel="iconName"
-              luxHint="Über diese Property wird optional ein Icon festgelegt."
-              [(luxValue)]="message.iconName"
-            >
-            </lux-input-ac>
-            <lux-select-ac
-              luxLabel="color"
-              [luxOptions]="colors"
-              luxHint="Hier kann eine Farbe aus der Farbpalette aus luxstyles.scss ausgewählt werden."
-              [(luxSelected)]="message.color"
-            >
-            </lux-select-ac>
-            <lux-button luxLabel="Löschen" (luxClicked)="remove(i)" [luxStroked]="true" luxColor="warn" luxTagId="example-msg-remove-{{ i }}"></lux-button>
-          </div>
-        </lux-panel-content>
-      </lux-panel>
+      @for (message of messages(); track message; let i = $index) {
+        <lux-panel [luxHideToggle]="true">
+          <lux-panel-header-title>
+            <div class="lux-flex lux-flex-basis-full lux-justify-between lux-items-center lux-pt-2">
+              <span>{{ message.text }}</span>
+            </div>
+          </lux-panel-header-title>
+          <lux-panel-header-description />
+          <lux-panel-content>
+            <div class="lux-flex lux-flex-col lux-pt-3 lux-gap-2">
+              <lux-textarea
+                luxName="message-box_text"
+                luxLabel="text"
+                luxHint="Die Property bestimmt den Text für die Nachricht."
+                [(value)]="message.text"
+              />
+              <lux-input
+                luxName="message-box_iconName"
+                luxLabel="iconName"
+                luxHint="Über diese Property wird optional ein Icon festgelegt."
+                [(value)]="message.iconName"
+              />
+              <lux-select
+                luxLabel="color"
+                [luxOptions]="colors"
+                luxHint="Hier kann eine Farbe aus der Farbpalette aus luxstyles.scss ausgewählt werden."
+                [(value)]="message.color"
+              />
+              <lux-button
+                luxLabel="Löschen"
+                (luxClicked)="remove(i)"
+                [luxStroked]="true"
+                luxColor="warn"
+                luxTagId="example-msg-remove-{{ i }}"
+              />
+            </div>
+          </lux-panel-content>
+        </lux-panel>
       }
     </lux-accordion>
   </example-base-advanced-options>
@@ -146,7 +140,6 @@
       [luxFlat]="true"
       luxColor="primary"
       luxTagId="example-msg-reset"
-    >
-    </lux-button>
+    />
   </example-base-options-actions>
 </example-base-structure>

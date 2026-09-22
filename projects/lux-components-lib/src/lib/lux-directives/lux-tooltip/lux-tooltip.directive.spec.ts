@@ -1,7 +1,8 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, flushMicrotasks, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, DebugElement, signal } from '@angular/core';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
@@ -19,28 +20,32 @@ describe('LuxTooltipDirective', () => {
   let tooltipSpan: HTMLElement;
   let tooltip: LuxTooltipDirective;
 
-  const showTooltip = (wait = 500) => {
-    tooltip.show(mockComp.showDelay);
-    LuxTestHelper.wait(fixture, wait);
+  const showTooltip = async (delay = 0) => {
+    tooltip.show(mockComp.showDelay());
+    await LuxTestHelper.wait(fixture, delay);
   };
 
-  const hideTooltip = (wait = 500) => {
-    tooltip.hide(mockComp.hideDelay);
-    LuxTestHelper.wait(fixture, wait);
-    flushMicrotasks();
+  const hideTooltip = async (delay = 0) => {
+    tooltip.hide(mockComp.hideDelay());
+    await LuxTestHelper.wait(fixture, delay);
   };
 
   // Der Truncation-Watcher plant beim connect() eine erste Messung via setTimeout(0).
-  // In fakeAsync muss dieser Timer geleert werden, bevor deterministisch gemessen wird.
-  const flushTruncationWatch = () => tick(0);
+  // Dieser Timer muss geleert werden, bevor deterministisch gemessen wird. Bei aktiven
+  // Vitest-Fake-Timern wird dazu die virtuelle Zeit um 0ms vorgespult, statt auf einen
+  // echten setTimeout-Tick zu warten (der bei Fake-Timern sonst nie feuern würde).
+  const flushTruncationWatch = async () => {
+    await vi.advanceTimersByTimeAsync(0);
+  };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
+    vi.useFakeTimers();
     TestBed.configureTestingModule({
       providers: [provideNoopAnimations()]
     }).compileComponents();
-  }));
+  });
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(MockComponent);
     mockComp = fixture.componentInstance;
     fixture.detectChanges();
@@ -54,13 +59,21 @@ describe('LuxTooltipDirective', () => {
       overlayContainerElement = oc.getContainerElement();
       focusMonitor = fm;
     })();
-  }));
+  });
 
-  afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
+  afterEach(inject([OverlayContainer], async (currentOverlayContainer: OverlayContainer) => {
+    // Ausstehende Fake-Timer noch im Fake-Modus abarbeiten, bevor die Overlays zerstört und auf
+    // echte Timer zurückgeschaltet wird - sonst kann ein von ngOnDestroy() ausgelöstes
+    // clearTimeout() auf eine Fake-Timer-ID treffen, während bereits die echte Timer-Implementierung
+    // aktiv ist, und ein verwaister Timer feuert später in einem fremden Test.
+    if (vi.isFakeTimers()) {
+      await vi.runAllTimersAsync();
+    }
     // Since we're resetting the testing module in some tests,
     // we can potentially have multiple overlay containers.
     currentOverlayContainer.ngOnDestroy();
     overlayContainer.ngOnDestroy();
+    vi.useRealTimers();
   }));
 
   it('should create an instance', () => {
@@ -68,46 +81,46 @@ describe('LuxTooltipDirective', () => {
     expect(tooltip).toBeTruthy();
   });
 
-  it('should show the correct message', fakeAsync(() => {
+  it('should show the correct message', async () => {
     // Given
-    mockComp.message = 'DEMO';
+    mockComp.message.set('DEMO');
     fixture.detectChanges();
     // When
-    showTooltip();
+    await showTooltip();
     // Then
     expect(tooltip._isTooltipVisible()).toBe(true);
     expect(overlayContainerElement.textContent).toEqual('DEMO');
 
     // When
-    hideTooltip(500);
-    LuxTestHelper.wait(fixture, 500); // Zusatz, weil sonst der Tooltip noch nicht entfernt wurde
+    await hideTooltip(500);
+    await LuxTestHelper.wait(fixture, 500); // Zusatz, weil sonst der Tooltip noch nicht entfernt wurde
     // Then
     expect(tooltip._isTooltipVisible()).toBe(false);
     expect(overlayContainerElement.textContent).toEqual('');
     expect(overlayContainerElement.childElementCount).toBe(0);
-  }));
+  });
 
-  it('should be disabled', fakeAsync(() => {
+  it('should be disabled', async () => {
     // Given
-    mockComp.message = 'DEMO';
-    mockComp.disabled = true;
+    mockComp.message.set('DEMO');
+    mockComp.disabled.set(true);
     fixture.detectChanges();
     // When
-    showTooltip();
+    await showTooltip();
     // Then
     expect(tooltip._isTooltipVisible()).toBe(false);
     expect(overlayContainerElement.textContent).toEqual('');
     expect(overlayContainerElement.childElementCount).toBe(0);
-  }));
+  });
 
-  it('should toggle the tooltip when the host text switches between fitting and truncated', fakeAsync(() => {
+  it('should toggle the tooltip when the host text switches between fitting and truncated', async () => {
     // Given
-    mockComp.message = 'DEMO';
-    mockComp.ifTruncated = true;
-    mockComp.hostWidth = 200;
-    mockComp.label = 'Kurz';
+    mockComp.message.set('DEMO');
+    mockComp.ifTruncated.set(true);
+    mockComp.hostWidth.set(200);
+    mockComp.label.set('Kurz');
     fixture.detectChanges();
-    flushTruncationWatch();
+    await flushTruncationWatch();
     const watcher = (tooltip as any).truncationWatcher;
     Object.defineProperty(tooltipSpan, 'clientWidth', { configurable: true, value: 200 });
 
@@ -128,19 +141,19 @@ describe('LuxTooltipDirective', () => {
     // When it overflows once more, the tooltip actually shows on hover
     Object.defineProperty(tooltipSpan, 'scrollWidth', { configurable: true, value: 260 });
     watcher.refresh();
-    showTooltip();
+    await showTooltip();
 
     // Then
     expect(tooltip._isTooltipVisible()).toBe(true);
     expect(overlayContainerElement.textContent).toEqual('DEMO');
-  }));
+  });
 
-  it('should enable the tooltip when the text is truncated vertically (line-clamp)', fakeAsync(() => {
+  it('should enable the tooltip when the text is truncated vertically (line-clamp)', async () => {
     // Given
-    mockComp.message = 'DEMO';
-    mockComp.ifTruncated = true;
+    mockComp.message.set('DEMO');
+    mockComp.ifTruncated.set(true);
     fixture.detectChanges();
-    flushTruncationWatch();
+    await flushTruncationWatch();
     const watcher = (tooltip as any).truncationWatcher;
     // Kein horizontaler Überlauf (line-clamp kürzt nur vertikal)
     Object.defineProperty(tooltipSpan, 'clientWidth', { configurable: true, value: 200 });
@@ -160,64 +173,65 @@ describe('LuxTooltipDirective', () => {
 
     // Then the tooltip is disabled again
     expect(tooltip.disabled).toBe(true);
-  }));
+  });
 
-  it('should keep the tooltip disabled when explicit disable is set', fakeAsync(() => {
+  it('should keep the tooltip disabled when explicit disable is set', async () => {
     // Given
-    mockComp.message = 'DEMO';
-    mockComp.ifTruncated = true;
-    mockComp.disabled = true;
-    mockComp.hostWidth = 80;
-    mockComp.label = 'Ein deutlich längerer Text, der sicher gekürzt wird';
+    mockComp.message.set('DEMO');
+    mockComp.ifTruncated.set(true);
+    mockComp.disabled.set(true);
+    mockComp.hostWidth.set(80);
+    mockComp.label.set('Ein deutlich längerer Text, der sicher gekürzt wird');
     fixture.detectChanges();
-    LuxTestHelper.wait(fixture);
 
     // When
-    showTooltip();
+    await showTooltip();
 
     // Then
     expect(tooltip.disabled).toBe(true);
     expect(tooltip._isTooltipVisible()).toBe(false);
     expect(overlayContainerElement.textContent).toEqual('');
-  }));
+  });
 
-  it('should show after delay', fakeAsync(() => {
+  it('should show after delay', async () => {
     // Given
-    mockComp.message = 'DEMO';
-    mockComp.showDelay = 1000;
+    mockComp.message.set('DEMO');
+    mockComp.showDelay.set(1000);
     fixture.detectChanges();
     // When
-    showTooltip(500);
+    await showTooltip(500);
     // Then
     expect(tooltip.showDelay).toBe(1000);
     expect(tooltip._isTooltipVisible()).toBe(false);
 
     // When
-    tick(500);
+    await vi.advanceTimersByTimeAsync(500);
+    fixture.detectChanges();
     // Then
     expect(tooltip._isTooltipVisible()).toBe(true);
-  }));
+  });
 
-  it('should hide after delay', fakeAsync(() => {
+  it('should hide after delay', async () => {
     // Given
-    mockComp.message = 'DEMO';
-    mockComp.hideDelay = 1000;
+    mockComp.message.set('DEMO');
+    mockComp.hideDelay.set(1000);
     fixture.detectChanges();
     // When
-    showTooltip(0);
+    await showTooltip(0);
     // Then
     expect(tooltip._isTooltipVisible()).toBe(true);
 
     // When
-    hideTooltip(500);
+    await hideTooltip(500);
     // Then
     expect(tooltip._isTooltipVisible()).toBe(true);
 
     // When
-    tick(500);
+    await vi.advanceTimersByTimeAsync(500);
+    fixture.detectChanges();
     // Then
     expect(tooltip._isTooltipVisible()).toBe(false);
-  }));
+  });
 });
 
 /* Mock-Klassen */
@@ -226,30 +240,30 @@ describe('LuxTooltipDirective', () => {
   selector: 'lux-mock-component',
   template: `<span
     [style.display]="'block'"
-    [style.width.px]="hostWidth"
+    [style.width.px]="hostWidth()"
     [style.overflow]="'hidden'"
     [style.white-space]="'nowrap'"
     [style.text-overflow]="'ellipsis'"
-    [luxTooltip]="message"
-    [luxTooltipHideDelay]="hideDelay"
-    [luxTooltipShowDelay]="showDelay"
-    [luxTooltipPosition]="position"
-    [luxTooltipDisabled]="disabled"
-    [luxTooltipIfTruncated]="ifTruncated"
-    >{{ label }}</span
+    [luxTooltip]="message()"
+    [luxTooltipHideDelay]="hideDelay()"
+    [luxTooltipShowDelay]="showDelay()"
+    [luxTooltipPosition]="position()"
+    [luxTooltipDisabled]="disabled()"
+    [luxTooltipIfTruncated]="ifTruncated()"
+    >{{ label() }}</span
   >`,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxTooltipDirective]
 })
 class MockComponent {
-  message?: string;
-  hideDelay?: number;
-  showDelay?: number;
-  position: TooltipPosition = 'above';
-  disabled?: boolean;
-  ifTruncated = false;
-  hostWidth = 200;
-  label = 'Ich bin ein Demotext';
+  readonly message = signal<string>('???');
+  readonly hideDelay = signal<number>(0);
+  readonly showDelay = signal<number>(0);
+  readonly position = signal<TooltipPosition>('above');
+  readonly disabled = signal<boolean>(false);
+  readonly ifTruncated = signal(false);
+  readonly hostWidth = signal(200);
+  readonly label = signal('Ich bin ein Demotext');
 
   constructor() {}
 }

@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
 @Directive({
@@ -6,38 +6,24 @@ import { LuxAriaBase } from './lux-aria-base';
 })
 export class LuxAriaLabelDirective extends LuxAriaBase<string> {
   protected ariaTagName = 'aria-label';
-  _luxAriaLabel?: string;
 
-  @Input() luxAriaLabelSelector?: string;
-
-  @Input()
-  get luxAriaLabel() {
-    return this._luxAriaLabel;
-  }
-
-  set luxAriaLabel(label: string | undefined) {
-    this._luxAriaLabel = label;
-
-    this.renderAria();
-  }
-
-  constructor() {
-    super();
-    if (!this.luxAriaLabelSelector) {
-      const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
-      if (tagName === 'lux-button') {
-        this.luxAriaLabelSelector = 'button';
-      } else if (tagName === 'lux-app-header-action-nav-item') {
-        this.luxAriaLabelSelector = 'button';
-      }
-    }
-  }
+  readonly luxAriaLabelSelector = input<string>();
+  readonly luxAriaLabel = input<string>();
 
   getSelector(): string | undefined {
-    return this.luxAriaLabelSelector;
+    if (this.luxAriaLabelSelector()) {
+      return this.luxAriaLabelSelector();
+    }
+
+    const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
+    if (tagName === 'lux-button' || tagName === 'lux-app-header-action-nav-item') {
+      return 'button';
+    }
+
+    return undefined;
   }
 
   getValue(): string | undefined {
-    return this._luxAriaLabel;
+    return this.luxAriaLabel();
   }
 }

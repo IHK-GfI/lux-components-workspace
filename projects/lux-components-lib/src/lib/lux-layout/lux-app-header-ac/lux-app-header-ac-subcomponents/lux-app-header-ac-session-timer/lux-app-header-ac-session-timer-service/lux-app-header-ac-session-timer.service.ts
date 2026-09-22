@@ -288,7 +288,12 @@ export class LuxAppHeaderAcSessionTimerService {
 
   private broadcast(type: LuxSessionTimerBroadcastType) {
     if (!this.fromBroadcast) {
-      this.broadcastChannel?.postMessage({ type });
+      try {
+        this.broadcastChannel?.postMessage({ type });
+      } catch {
+        // Der BroadcastChannel kann bereits geschlossen sein (z.B. wenn der Service parallel
+        // zerstört wird, während noch eine Nachricht unterwegs ist). Das Senden ist dann obsolet.
+      }
     }
   }
 

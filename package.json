@@ -11,7 +11,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:watch:components": "ng test lux-components-lib",
     "lint": "ng lint",
+    "format": "npx prettier --write \"projects/**/*.{ts,html,scss,json}\"",
     "smoketest": "npm run pack:all && npm run test:all",
     "pack:demo": "ng build demo-app",
     "pack:components": "ng build lux-components-lib",
@@ -25,9 +27,8 @@
     "tar:updater": "npm run pack:updater && cd dist/updater && npm pack && cd ../..",
     "tar:all": "npm run util:delete-dist && npm run tar:theme && npm run tar:components && npm run tar:updater",
     "test:all": "npm run test:components && npm run test:demo && npm run test:theme && npm run test:updater",
-    "test:components": "ng lint lux-components-lib && ng test lux-components-lib --watch=false --browsers=ChromeHeadless --code-coverage=true",
+    "test:components": "ng lint lux-components-lib && ng test lux-components-lib --watch=false --coverage=true",
     "test:demo": "ng lint demo-app",
-    "test-browser:components": "ng test lux-components-lib",
     "test:theme": "npm run smoketest --workspace=projects/lux-components-theme",
     "test:updater": "npm run smoketest --workspace=projects/lux-components-update",
     "util:check-demo-conditions": "node scripts/check-demo-conditions.js",
@@ -38,6 +39,9 @@
     "watch:components": "npm run watch lux-components-lib",
     "watch:theme": "npm run watch --workspace=projects/lux-components-theme",
     "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,html,scss,json}": "prettier --write"
   },
   "workspaces": [
     "projects/*"
@@ -52,7 +56,6 @@
     "@angular/forms": "^22.0.2",
     "@angular/material": "^22.0.2",
     "@angular/platform-browser": "^22.0.2",
-    "@angular/platform-browser-dynamic": "^22.0.2",
     "@angular/router": "^22.0.2",
     "@ihk-gfi/lux-components-icons-and-fonts": "1.11.0",
     "@ihk-gfi/lux-components-theme": "21.8.0",
@@ -64,7 +67,7 @@
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1",
     "uuid": "11.1.1",
-    "zone.js": "~0.15.1"
+    "zone.js": "~0.16.3"
   },
   "devDependencies": {
     "@angular-devkit/core": "^22.0.3",
@@ -73,26 +76,19 @@
     "@angular/build": "^22.0.3",
     "@angular/cli": "^22.0.3",
     "@angular/compiler-cli": "^22.0.2",
-    "@chiragrupani/karma-chromium-edge-launcher": "^2.4.1",
-    "@types/jasmine": "~5.1.8",
+    "@eslint/js": "^10.0.1",
     "@types/uuid": "^10.0.0",
-    "axe-core": "^4.12.1",
+    "@vitest/coverage-v8": "^4.1.11",
     "angular-eslint": "22.0.0",
+    "axe-core": "^4.12.1",
     "del-cli": "^6.0.0",
-    "eslint": "^9.29.0",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
     "fs-extra": "^11.3.3",
     "glob": "^13.0.0",
     "husky": "^9.1.7",
-    "istanbul-lib-instrument": "^6.0.3",
-    "jasmine": "~5.8.0",
-    "jasmine-axe": "^1.1.0",
-    "karma": "~6.4.4",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.1",
-    "karma-firefox-launcher": "2.1.3",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "karma-viewport": "1.0.9",
+    "jsdom": "^30.0.1",
+    "lint-staged": "^17.4.1",
     "ng-packagr": "^22.0.0",
     "npm-run-all": "^4.1.5",
     "npm-watch": "^0.13.0",
@@ -100,6 +96,7 @@
     "sass": "1.89.2",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.0.0",
+    "vitest": "^4.1.11",
     "wait-on": "^8.0.3"
   }
 }

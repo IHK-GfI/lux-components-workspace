@@ -1,13 +1,13 @@
-import { Component, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   LuxComponentsConfigParameters,
   LuxComponentsConfigService,
   LuxFormHintComponent,
-  LuxInputAcComponent,
+  LuxInputComponent,
   LuxMediaQueryObserverService,
-  LuxSelectAcComponent,
+  LuxSelectComponent,
   LuxTenantLogoComponent,
-  LuxToggleAcComponent
+  LuxToggleComponent
 } from '@ihk-gfi/lux-components';
 import { Subscription } from 'rxjs';
 import { TenantLogoExampleConfigData } from './tenant-logo-example-config-data';
@@ -21,20 +21,15 @@ interface TenantLogoExampleKey {
   selector: 'app-tenant-logo-example-config',
   templateUrl: './tenant-logo-example-config.component.html',
   styleUrls: ['./tenant-logo-example-config.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [LuxToggleAcComponent, LuxSelectAcComponent, LuxInputAcComponent, LuxFormHintComponent]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LuxToggleComponent, LuxSelectComponent, LuxInputComponent, LuxFormHintComponent]
 })
 export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
-  private componentsConfigService = inject(LuxComponentsConfigService);
-  private queryObserver = inject(LuxMediaQueryObserverService);
+  readonly title = input.required<string>();
+
+  readonly tenantLogoConfig = input.required<TenantLogoExampleConfigData>();
 
   pickValueKeyFn = (option: TenantLogoExampleKey) => option.value;
-
-  @Input()
-  public title!: string;
-
-  @Input()
-  public tenantLogoConfig!: TenantLogoExampleConfigData;
 
   public tenantKeyArr: TenantLogoExampleKey[] = [
     { label: '100', value: '100' },
@@ -45,22 +40,23 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
 
   public tenantVariantArr: string[] = ['', 'lang', 'kurz', 'unten'];
 
-  public apiPath = '';
-  public actualTenantVariant?: string = '';
-  private mediaQuery?: string;
+  readonly apiPath = signal('');
 
+  private componentsConfigService = inject(LuxComponentsConfigService);
+  private queryObserver = inject(LuxMediaQueryObserverService);
+  private readonly mediaQuery = signal<string | undefined>(undefined);
   private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
     this.subscriptions.push(
       this.componentsConfigService.config.subscribe((newConfig: LuxComponentsConfigParameters) => {
-        this.apiPath = newConfig.tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl;
+        this.apiPath.set(newConfig.tenantLogoLookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.tenantLogoLookupServiceUrl);
       })
     );
 
     this.subscriptions.push(
       this.queryObserver.getMediaQueryChangedAsObservable().subscribe((mediaQuery: string) => {
-        this.mediaQuery = mediaQuery;
+        this.mediaQuery.set(mediaQuery);
       })
     );
   }
@@ -73,21 +69,27 @@ export class TenantLogoExampleConfigComponent implements OnInit, OnDestroy {
 
   public onShowLogoClickedEvents(toggle: boolean) {
     if (toggle) {
-      this.tenantLogoConfig.luxTenantLogoClicked = () => {
-        console.log('Logo [' + this.tenantLogoConfig.luxTenantKey + '_' + this.actualTenantVariant + '] clicked!');
+      this.tenantLogoConfig().luxTenantLogoClicked = () => {
+        console.log('Logo [' + this.tenantLogoConfig().luxTenantKey + '_' + this.actualTenantVariant + '] clicked!');
       };
     } else {
-      this.tenantLogoConfig.luxTenantLogoClicked = () => {
+      this.tenantLogoConfig().luxTenantLogoClicked = () => {
         /* Do nothing */
       };
     }
   }
 
-  public get logoTenantSrc(): string | undefined {
-    if (!this.apiPath) return;
-    if (!this.mediaQuery) return;
+  public get actualTenantVariant(): string {
+    const mediaQuery = this.mediaQuery();
+    if (!mediaQuery) return '';
 
-    this.actualTenantVariant = this.tenantLogoConfig.luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(this.mediaQuery);
-    return LuxTenantLogoComponent.buildTenantLogoUrl(this.apiPath, this.tenantLogoConfig.luxTenantKey, this.actualTenantVariant);
+    return this.tenantLogoConfig().luxTenantVariant || LuxTenantLogoComponent.getVariantByMediaQuery(mediaQuery);
+  }
+
+  public get logoTenantSrc(): string | undefined {
+    if (!this.apiPath()) return;
+    if (!this.mediaQuery()) return;
+
+    return LuxTenantLogoComponent.buildTenantLogoUrl(this.apiPath(), this.tenantLogoConfig().luxTenantKey, this.actualTenantVariant);
   }
 }

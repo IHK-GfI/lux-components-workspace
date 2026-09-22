@@ -1,111 +1,146 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { applyEach, form, FormField, maxError, min, minError, required, validate } from '@angular/forms/signals';
 import {
-    LuxAutocompleteAcComponent,
-    LuxButtonComponent,
-    LuxCardComponent,
-    LuxCardContentComponent,
-    LuxDatepickerAcComponent,
-    LuxInputAcComponent
+  LuxAutocompleteComponent,
+  LuxButtonComponent,
+  LuxCardComponent,
+  LuxCardContentComponent,
+  LuxDatepickerComponent,
+  LuxInputComponent
 } from '@ihk-gfi/lux-components';
+import { debounceTime } from 'rxjs';
+import { FormExampleSnapshot, FormExampleStateService } from '../form-example-state.service';
 import { ICountry } from '../model/country.interface';
 import { FormBase } from '../model/form-base.class';
 import { TableExampleDataProviderService } from '../table-example-data-provider.service';
 
-interface FormDualDummyForm {
-  customerDetails: FormGroup<FormDualCustomerForm>;
-  orderDetails: FormGroup<FormDualOrderForm>;
+interface FormDualStreet {
+  streetName: string;
+  nr: number | null;
 }
 
-interface FormDualCustomerForm {
-  name: FormControl<string>;
-  zip: FormControl<string>;
-  town: FormControl<string | null>;
-  country: FormControl<string | null>;
-  streets: FormArray<FormGroup<FormDualStreetForm>>;
+interface FormDualModel {
+  customerDetails: {
+    name: string;
+    zip: string;
+    town: string | null;
+    country: string | null;
+    streets: FormDualStreet[];
+  };
+  orderDetails: {
+    orderNo: string;
+    validDate: string;
+    validTime: string | null;
+    value: string;
+  };
 }
 
-interface FormDualOrderForm {
-  orderNo: FormControl<string>;
-  validDate: FormControl<string>;
-  validTime: FormControl<string | null>;
-  value: FormControl<string>;
-}
-
-interface FormDualStreetForm {
-  streetName: FormControl<string>;
-  nr: FormControl<string>;
-}
+type FormDualState = FormExampleSnapshot<FormDualModel>;
 
 @Component({
   selector: 'app-form-dual-col',
   templateUrl: './form-dual-col.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxButtonComponent,
     LuxCardContentComponent,
     LuxCardComponent,
-    LuxInputAcComponent,
-    LuxDatepickerAcComponent,
-    LuxAutocompleteAcComponent,
-    ReactiveFormsModule,
+    LuxInputComponent,
+    LuxDatepickerComponent,
+    LuxAutocompleteComponent,
+    FormField,
     JsonPipe
   ]
 })
 export class FormDualColComponent extends FormBase {
   private dataProvider = inject(TableExampleDataProviderService);
 
-  myGroup: FormGroup<FormDualDummyForm>;
-  streetsFormArray: FormArray<FormGroup<FormDualStreetForm>>;
-  countries: ICountry[] = [];
+  countries: ICountry[] = this.dataProvider.countries;
+
+  readonly model = signal<FormDualModel>({
+    customerDetails: { name: '', zip: '', town: null, country: null, streets: [this.createStreet()] },
+    orderDetails: { orderNo: '', validDate: '', validTime: null, value: '' }
+  });
+
+  readonly myForm = form(this.model, (path) => {
+    required(path.customerDetails.name, { message: 'Bitte einen Namen eingeben' });
+    required(path.customerDetails.zip, { message: 'Bitte eine PLZ eingeben' });
+    applyEach(path.customerDetails.streets, (street) => {
+      required(street.streetName, { message: 'Bitte eine Straße eingeben' });
+      min(street.nr, 1);
+    });
+    required(path.orderDetails.orderNo, { message: 'Bitte eine Bestellnr. eingeben' });
+    required(path.orderDetails.validDate, { message: 'Bitte ein Datum auswählen' });
+    // luxType="text" -> das Feld ist bewusst string-typisiert, die Wertgrenzen werden daher
+    // manuell statt über min()/max() (die einen number-Pfad erwarten) geprüft.
+    validate(path.orderDetails.value, ({ value }) => {
+      const numericValue = Number(value());
+      if (value() === '' || Number.isNaN(numericValue)) {
+        return undefined;
+      }
+      if (numericValue < 1) {
+        return minError(1);
+      }
+      if (numericValue > 1000) {
+        return maxError(1000);
+      }
+      return undefined;
+    });
+  });
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly state = inject(FormExampleStateService);
 
   constructor() {
     super();
 
-    this.myGroup = new FormGroup<FormDualDummyForm>({
-      customerDetails: new FormGroup<FormDualCustomerForm>({
-        name: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-        zip: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-        town: new FormControl<string | null>(null),
-        country: new FormControl<string | null>(null),
-        streets: new FormArray<FormGroup<FormDualStreetForm>>([this.createStreetFormGroup()])
-      }),
-      orderDetails: new FormGroup<FormDualOrderForm>({
-        orderNo: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-        validDate: new FormControl<string>('', { validators: Validators.required, nonNullable: true }),
-        validTime: new FormControl<string | null>(null),
-        value: new FormControl<string>('', { validators: Validators.compose([Validators.min(1), Validators.max(1000)]), nonNullable: true })
-      })
-    });
-    this.streetsFormArray = (this.myGroup.get('customerDetails') as FormGroup).get('streets') as FormArray<FormGroup<FormDualStreetForm>>;
+    const snapshot = this.state.get<FormDualState>('dual');
+    if (snapshot) {
+      this.model.set(snapshot.rawValue);
+      if (snapshot.dirty) {
+        this.myForm().markAsDirty();
+      }
+    }
 
-    this.countries = this.dataProvider.countries;
+    toObservable(this.model)
+      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.saveState());
+    this.destroyRef.onDestroy(() => this.saveState());
   }
 
   hasUnsavedData(): boolean {
-    return this.myGroup.dirty;
+    return this.myForm().dirty();
   }
 
   addStreet() {
-    this.streetsFormArray.push(this.createStreetFormGroup());
+    this.model.update((m) => ({
+      ...m,
+      customerDetails: { ...m.customerDetails, streets: [...m.customerDetails.streets, this.createStreet()] }
+    }));
   }
 
   removeStreet(index: number) {
-    this.streetsFormArray.removeAt(index);
+    this.model.update((m) => ({
+      ...m,
+      customerDetails: { ...m.customerDetails, streets: m.customerDetails.streets.filter((_street, i) => i !== index) }
+    }));
   }
 
-  latestStreetGroupValid() {
-    if (this.streetsFormArray && this.streetsFormArray.length > 0) {
-      return this.streetsFormArray.at(this.streetsFormArray.length - 1).valid;
+  latestStreetGroupValid(): boolean {
+    const streets = this.myForm.customerDetails.streets;
+    if (streets.length > 0) {
+      return streets[streets.length - 1]().valid();
     }
     return true;
   }
 
-  createStreetFormGroup(): FormGroup<FormDualStreetForm> {
-    return new FormGroup<FormDualStreetForm>({
-      streetName: new FormControl('', { validators: Validators.required, nonNullable: true }),
-      nr: new FormControl('', { validators: Validators.min(1), nonNullable: true })
-    });
+  private createStreet(): FormDualStreet {
+    return { streetName: '', nr: null };
+  }
+
+  private saveState(): void {
+    this.state.save<FormDualState>('dual', { rawValue: this.model(), dirty: this.myForm().dirty() });
   }
 }

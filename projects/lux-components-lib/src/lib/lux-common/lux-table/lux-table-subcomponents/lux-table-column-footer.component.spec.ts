@@ -1,21 +1,22 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { Component, TemplateRef } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxTableColumnFooterComponent } from './lux-table-column-footer.component';
 
 describe('LuxTableColumnFooterComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({}).compileComponents();
-  }));
+  });
 
   describe('Mit ng-template', () => {
     let fixture: ComponentFixture<DefaultTestComponent>;
     let footerComponent: LuxTableColumnFooterComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(DefaultTestComponent);
       footerComponent = fixture.debugElement.query(By.directive(LuxTableColumnFooterComponent)).componentInstance;
-    }));
+    });
 
     it('sollte erstellt werden', () => {
       fixture.detectChanges();

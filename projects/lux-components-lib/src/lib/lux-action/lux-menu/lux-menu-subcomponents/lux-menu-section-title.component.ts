@@ -6,5 +6,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   template: ''
 })
 export class LuxMenuSectionTitleComponent {
-  luxTitle = input<string>('');
+  readonly luxTitle = input<string>('');
 }

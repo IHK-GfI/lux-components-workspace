@@ -1,7 +1,8 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, Injectable, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, Injectable, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
@@ -13,7 +14,7 @@ import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 import { LuxLookupLabelComponent } from './lux-lookup-label.component';
 
 describe('LuxLookupLabelComponent', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -25,7 +26,7 @@ describe('LuxLookupLabelComponent', () => {
         { provide: LuxLookupService, useClass: MockLuxLookupLabelService }
       ]
     }).compileComponents();
-  }));
+  });
 
   describe('Außerhalb einer Form', () => {
     let fixture: ComponentFixture<LuxNoFormComponent>;
@@ -37,7 +38,7 @@ describe('LuxLookupLabelComponent', () => {
       fixture.detectChanges();
     });
 
-    it('Sollte den Kurztext des Schlüssels anzeigen', fakeAsync(() => {
+    it('Sollte den Kurztext des Schlüssels anzeigen', async () => {
       const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
 
       expect(myComponent).toBeDefined();
@@ -48,7 +49,7 @@ describe('LuxLookupLabelComponent', () => {
       fixture.detectChanges();
 
       expect(myComponent.nativeElement.innerHTML).toEqual('Altholz (inl. Adresse)');
-    }));
+    });
   });
 
   describe('Aktualisierungen', () => {
@@ -63,34 +64,34 @@ describe('LuxLookupLabelComponent', () => {
       fixture.detectChanges();
     });
 
-    it('Sollte den korrekten Wert des TableKeys laden (tableKey changed)', fakeAsync(() => {
+    it('Sollte den korrekten Wert des TableKeys laden (tableKey changed)', async () => {
       const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
 
       expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/110');
 
-      component.tableKey = '111';
+      component.tableKey.set('111');
       fixture.detectChanges();
 
       expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/111');
-    }));
+    });
 
-    it('Sollte den korrekten Wert des TableKeys laden (tableNo changed)', fakeAsync(() => {
+    it('Sollte den korrekten Wert des TableKeys laden (tableNo changed)', async () => {
       const myComponent = fixture.debugElement.query(By.css('lux-lookup-label > span'));
 
       expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 212/110');
 
-      component.tableNo = '500213';
+      component.tableNo.set('500213');
       fixture.detectChanges();
 
       expect(myComponent.nativeElement.innerHTML).toEqual('Lorem ipsum 213/110');
-    }));
+    });
   });
 });
 
 describe('Parameter-Check', () => {
   let service: LuxLookupService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withXhr(), withInterceptorsFromDi()),
@@ -102,7 +103,7 @@ describe('Parameter-Check', () => {
     }).compileComponents();
 
     service = TestBed.inject(LuxLookupService);
-  }));
+  });
 
   it('Sollte die Standard-Parameter korrekt verarbeiten', () => {
     const params = {
@@ -202,28 +203,28 @@ describe('Parameter-Check', () => {
 
 @Component({
   template: `
-    <lux-lookup-label luxLookupId="meineId" luxLookupKnr="101" [luxTableNo]="tableNo" [luxTableKey]="tableKey"> </lux-lookup-label>
+    <lux-lookup-label luxLookupId="meineId" [luxLookupKnr]="101" [luxTableNo]="tableNo()" [luxTableKey]="tableKey()"> </lux-lookup-label>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupLabelComponent]
 })
 class LuxNoFormComponent {
-  tableNo = '500211';
-  tableKey = '110';
+  tableNo = signal('500211');
+  tableKey = signal('110');
   value?: any;
 }
 
 @Component({
   selector: 'lux-table-500-212-component',
   template: `
-    <lux-lookup-label luxLookupId="meineId" luxLookupKnr="101" [luxTableNo]="tableNo" [luxTableKey]="tableKey"> </lux-lookup-label>
+    <lux-lookup-label luxLookupId="meineId" [luxLookupKnr]="101" [luxTableNo]="tableNo()" [luxTableKey]="tableKey()"> </lux-lookup-label>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LuxLookupLabelComponent]
 })
 class LuxTable500212Component {
-  tableNo = '500212';
-  tableKey = '110';
+  tableNo = signal('500212');
+  tableKey = signal('110');
   value?: any;
 }
 

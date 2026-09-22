@@ -19,9 +19,7 @@ export declare type LuxProgressSizeType = 'small' | 'medium' | 'large';
   imports: [NgClass, MatProgressBar, LuxTagIdDirective, LuxAriaLabelDirective, LuxCustomTagIdDirective, MatProgressSpinner, TranslocoPipe]
 })
 export class LuxProgressComponent {
-  readonly DEFAULT_PROGRESS_COLOR: LuxProgressColor = 'blue';
-
-  animDurationCSS = '';
+  static readonly DEFAULT_PROGRESS_COLOR: LuxProgressColor = 'blue';
 
   readonly luxValue = input(0);
   readonly luxAriaLabel = input('');
@@ -29,8 +27,8 @@ export class LuxProgressComponent {
   readonly luxSize = input<LuxProgressSizeType>('medium');
   readonly luxTagId = input<string | undefined>(undefined);
 
-  readonly luxColor = input<LuxProgressColor, LuxProgressColor | undefined>(this.DEFAULT_PROGRESS_COLOR, {
-    transform: (value) => LuxProgressColors.find((entry) => entry === value) ?? this.DEFAULT_PROGRESS_COLOR
+  readonly luxColor = input<LuxProgressColor, LuxProgressColor | undefined>(LuxProgressComponent.DEFAULT_PROGRESS_COLOR, {
+    transform: (value) => LuxProgressColors.find((entry) => entry === value) ?? LuxProgressComponent.DEFAULT_PROGRESS_COLOR
   });
 
   readonly luxMode = input<LuxProgressModeType, LuxProgressModeType | undefined>('indeterminate', {

@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { describe, it, beforeEach, expect } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
 import { LuxUtil } from '@ihk-gfi/lux-components';
@@ -8,11 +9,11 @@ describe('LuxMarkdownComponent', () => {
   let component: LuxMarkdownComponent;
   let fixture: ComponentFixture<LuxMarkdownComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [LuxMarkdownComponent]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LuxMarkdownComponent);

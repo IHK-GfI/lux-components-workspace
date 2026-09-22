@@ -1,0 +1,636 @@
+import { DestroyRef, ModelSignal, Signal, WritableSignal, effect, inject, untracked } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+// ValidationError besitzt keinen Runtime-Wert (reines Typ-Konstrukt), siehe lux-form-control-base.class.ts.
+import type { ValidationError } from '@angular/forms/signals';
+import { LuxConsoleService } from '../../../lux-util/lux-console.service';
+import { LuxUtil } from '../../../lux-util/lux-util';
+import { LuxValidationErrors, ValidatorFnType } from '../lux-form-component-base.class';
+import { LuxControlStateOverride } from '../lux-form-control-base.class';
+
+const DEFAULT_CTRL_NAME = 'control';
+
+/**
+ * Die Seite der FormComponent, die die Brücke kennen muss.
+ */
+export interface LuxLegacyBridgeHost<T> {
+  readonly stateOverride: WritableSignal<LuxControlStateOverride | undefined>;
+  readonly stateOverrideClaimed: WritableSignal<boolean>;
+  readonly luxControlBinding: Signal<string | undefined>;
+  readonly luxFormGroup: Signal<FormGroup | undefined>;
+  readonly luxFormControl: Signal<FormControl<T> | undefined>;
+  readonly luxControlValidators: Signal<ValidatorFnType>;
+  readonly luxDisabled: ModelSignal<boolean>;
+  readonly luxRequired: ModelSignal<boolean>;
+  /**
+   * Der Vertrags-Input required(), von der [formField]-Direktive automatisch aus dem Signal-Form-
+   * Schema verdrahtet (required(path, {when: ...})). Anders als luxRequired betrifft das NIE das
+   * synthetische FormControl der Brücke - syncState() braucht ihn trotzdem, um required im
+   * stateOverride korrekt widerzuspiegeln, siehe dortige Begründung.
+   */
+  readonly required: Signal<boolean>;
+  /**
+   * Der Vertrags-Input disabled(), aus demselben Grund wie required() hier nötig: Das Schema setzt
+   * einen per disabled(path, {when: ...}) gesteuerten Zustand NIE auf dieses synthetische
+   * FormControl, sondern ausschließlich über diesen automatisch verdrahteten Input. Betrifft vor
+   * allem alwaysEngaged-Controls (z.B. die File-Controls) - dort ist die Brücke immer zuständig,
+   * ohne diese Ergänzung würde stateOverride.disabled dort also NIE auf ein schema-seitiges
+   * disabled() reagieren, siehe isDisabled() in LuxFormControlBase.
+   */
+  readonly disabled: Signal<boolean>;
+  /**
+   * Die Vertrags-Inputs invalid()/errors(), ebenfalls von der [formField]-Direktive verdrahtet.
+   * Aus demselben Grund wie required() nötig: Das synthetische FormControl der Brücke trägt im
+   * Signal-Forms-Betrieb nie die schema-seitigen Fehler, syncState() muss sie hier zusätzlich holen.
+   */
+  readonly invalid: Signal<boolean>;
+  readonly errors: Signal<readonly ValidationError.WithOptionalFieldTree[]>;
+  /** Das Vertrags-Model der Komponente: value bzw. checked. */
+  readonly modelValue: ModelSignal<T>;
+  /** Der Alt-Input: luxValue bzw. luxChecked. */
+  readonly valueInput: Signal<T>;
+  /** Feuert luxValueChange bzw. luxCheckedChange. */
+  emitValueChange(value: T): void;
+  /** Validators.required bzw. Validators.requiredTrue. */
+  getRequiredValidator(): ValidatorFn;
+  /**
+   * Für Controls, die formControl.setErrors()/-.errors auch außerhalb einer echten Form oder eines
+   * gesetzten luxRequired/luxControlValidators als eigentliche Fehlerquelle nutzen (z.B. die
+   * File-Controls mit ihren Upload-/Größen-/Dateityp-Fehlern) - ohne dieses Flag bliebe die Brücke
+   * "nicht zuständig" (engaged === false) und solche Fehler kämen nie im errorMessage()-computed an.
+   * Optional, Default false (keine Verhaltensänderung für alle anderen Controls).
+   */
+  readonly alwaysEngaged?: boolean;
+}
+
+/**
+ * Verbindet eine LUX-FormComponent mit einem klassischen Reactive-Forms-AbstractControl.
+ *
+ * Das ist die vollständige Alt-Mechanik der LUX-FormControls, bewusst an genau einer Stelle
+ * gebündelt statt über die Basisklasse verteilt: Auflösung des FormControls über den injizierten
+ * ControlContainer und luxControlBinding, das synthetische FormControl für den Betrieb ohne
+ * Formular, die Wert- und Status-Subscriptions sowie die Validator-Behandlung.
+ *
+ * Die Komponente selbst weiß davon nichts - sie liest ausschließlich isDisabled(), isRequired(),
+ * isTouched(), errorMessage() usw. aus der Basisklasse. Damit ist diese Datei mit dem Wegfall der
+ * Alt-API ersatzlos löschbar.
+ *
+ * @deprecated Übergangslösung. Neue Formulare binden per [formField] an ein Signal Form.
+ */
+export class LuxLegacyFormBridge<T> {
+  inForm = false;
+  formGroup!: FormGroup;
+  formControl!: FormControl<T>;
+
+  private readonly controlContainer = inject(ControlContainer, { optional: true });
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly logger = inject(LuxConsoleService);
+
+  private initialValue?: T;
+  private validatorsInitialized = false;
+  private initialized = false;
+  /** Verhindert die Rückkopplung modelValue -> FormControl -> modelValue. */
+  private applyingFromFormControl = false;
+  /** Markiert einen Schreibzugriff der Brücke selbst, siehe registerOnChange-Callback in init(). */
+  private applyingToFormControl = false;
+  /** Wird true, sobald der Alt-Input luxValue/luxChecked jemals einen echten Wert geliefert hat. */
+  private legacyValueSeen = false;
+  /**
+   * Ob beim letzten check() ein Required-Validator am FormControl hing. undefined = noch nie
+   * geprüft, dann wird nur gemerkt und (noch) nicht revalidiert. Siehe check().
+   */
+  private lastSeenRequired?: boolean;
+
+  constructor(private readonly host: LuxLegacyBridgeHost<T>) {
+    // Reine Validator-Änderungen dürfen den Required-Validator nicht anfassen, sonst würde ein
+    // per luxRequired gesetzter Validator beim Setzen von luxControlValidators wieder entfernt.
+    effect(() => {
+      const validators = this.host.luxControlValidators();
+
+      untracked(() => {
+        if (this.validatorsInitialized) {
+          this.updateValidators(validators, false);
+        }
+      });
+    });
+
+    // luxRequired-Änderungen (und die Initialisierung) beziehen den Required-Validator mit ein.
+    effect(() => {
+      const required = this.host.luxRequired();
+
+      untracked(() => {
+        if (this.inForm && required !== hasRequiredValidator(this.formControl)) {
+          this.logger.error(
+            `Attention: Use the Required-Validator instead of the ` +
+              `Property "luxRequired" for components within ReactiveForms..\n` +
+              `Affected component: ${this.host.luxControlBinding() ?? 'No binding found'}`
+          );
+        }
+
+        this.validatorsInitialized = true;
+        this.updateValidators(this.host.luxControlValidators(), true);
+      });
+    });
+
+    effect(() => {
+      this.host.luxDisabled();
+
+      untracked(() => {
+        if (this.formControl) {
+          this.handleFormDisabledState();
+        }
+      });
+    });
+
+    // Der Alt-Input luxValue/luxChecked schreibt in das FormControl. Der erste Lauf überschreibt
+    // einen bereits vorhandenen FormControl-Wert (z.B. aus einer Reactive Form) nicht, solange von
+    // aussen kein Wert gebunden wurde.
+    let initialRun = true;
+    effect(() => {
+      const value = this.host.valueInput();
+
+      untracked(() => {
+        if (initialRun) {
+          initialRun = false;
+
+          // undefined ist der Default ALLER Alt-Value-Inputs (luxValue/luxChecked/luxSelected) und
+          // damit das eindeutige Kennzeichen für "nie gebunden": Ein bereits vorhandener
+          // FormControl-Wert (z.B. aus einer Reactive Form) darf dann nicht überschrieben werden.
+          //
+          // Ein gebundenes null ist dagegen eine bewusste Aussage ("kein Wert") und wird - anders
+          // als früher, als beide Fälle denselben Default null teilten und deshalb nicht
+          // unterscheidbar waren - regulär übernommen.
+          if (value === undefined) {
+            return;
+          }
+        }
+
+        // Jede Änderung nach dem ersten Lauf ist eindeutig: Nur eine echte Bindung (Alt-API oder
+        // Two-Way) kann den Alt-Input überhaupt verändern - anders als beim ersten Lauf ist ein
+        // null/undefined-Wert hier also genauso aussagekräftig wie jeder andere.
+        this.legacyValueSeen = true;
+
+        this.setValue(value);
+      });
+    });
+
+    // Das Vertrags-Model (value/checked) schreibt ebenfalls in das FormControl - so funktioniert
+    // [(value)] auch dann, wenn die Komponente an einer Reactive Form hängt.
+    effect(() => {
+      const value = this.host.modelValue();
+
+      untracked(() => {
+        if (!this.initialized || this.applyingFromFormControl) {
+          return;
+        }
+
+        this.setValue(value);
+      });
+    });
+  }
+
+  /** Aus ngOnInit der FormComponent aufzurufen. */
+  init() {
+    this.initFormControl();
+
+    // Synchronisiert die Anzeige auch bei einem direkten setValue() auf das AbstractControl mit
+    // { emitEvent: false } (z.B. um eine Two-Way-Binding-Loop zu brechen): Anders als valueChanges
+    // feuert dieser Callback unabhängig von emitEvent - exakt der Mechanismus, über den früher der
+    // ControlValueAccessor (writeValue) die Anzeige synchron hielt.
+    //
+    // Ein Aufruf, der nicht von der Brücke selbst kommt (applyingToFormControl), bedeutet: Jemand
+    // bedient das AbstractControl direkt an der Brücke vorbei - z.B. ein reales luxFormControl/
+    // luxFormGroup oder ein manuelles setValue() in einem Test. Das zählt wie ein echter
+    // luxValue/luxChecked-Wert als Alt-API-Nutzung, sonst bliebe die Brücke "nicht zuständig"
+    // (engaged === false) und der Wert würde nie im Vertrags-Model ankommen.
+    this.formControl.registerOnChange((value: T) => {
+      if (!this.applyingToFormControl) {
+        this.legacyValueSeen = true;
+      }
+      this.publishValue(value);
+    });
+
+    this.formControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value: T) => {
+      this.host.emitValueChange(value);
+    });
+
+    this.formControl.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
+      if (status === 'DISABLED' && !this.host.luxDisabled()) {
+        this.host.luxDisabled.set(true);
+      } else if ((status === 'VALID' || status === 'INVALID') && this.host.luxDisabled()) {
+        this.host.luxDisabled.set(false);
+      }
+    });
+
+    // formControl.events deckt TouchedChangeEvent/StatusChangeEvent/ValueChangeEvent ab und feuert
+    // auch bei direkten Aufrufen wie markAsTouched() oder formGroup.markAllAsTouched().
+    //
+    // Das war bisher nicht sicher möglich: events feuert synchron mit dem auslösenden Aufruf, also
+    // potenziell bevor Angular geänderte Inputs (z.B. luxErrorMessage) geschrieben hat - eine
+    // eifrige Neuberechnung der Fehlermeldung hätte dort veraltete Inputs gesehen. Inzwischen wird
+    // hier nur noch Rohzustand gespiegelt; die Fehlermeldung berechnet ein computed() der
+    // Basisklasse, das erst beim Rendern und damit nach dem Input-Update ausgewertet wird.
+    //
+    // Die Signal-Schreibweise markiert die OnPush-Komponente automatisch als zu prüfen - ein
+    // manuelles markForCheck() beim Aufrufer ist damit nicht mehr nötig.
+    this.formControl.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.syncState());
+
+    this.initialized = true;
+
+    if (this.initialValue !== null && this.initialValue !== undefined) {
+      this.setValue(this.initialValue);
+    }
+
+    // Die Validator-Effects können bereits gelaufen sein, als es noch kein FormControl gab.
+    this.validatorsInitialized = true;
+    this.updateValidators(this.host.luxControlValidators(), true);
+
+    this.syncState();
+  }
+
+  /**
+   * Aus ngDoCheck der FormComponent aufzurufen.
+   *
+   * Bewusst ngDoCheck und nicht formControl.events: events feuert synchron MIT dem auslösenden
+   * Aufruf (z.B. markAsTouched()), also potenziell BEVOR Angular in derselben Change-Detection-
+   * Runde geänderte Inputs in die Komponente geschrieben hat. ngDoCheck läuft dagegen garantiert
+   * erst nach der Input-Aktualisierung.
+   *
+   * Hier wird ausschliesslich Rohzustand gespiegelt - die Fehlermeldung selbst berechnet die
+   * Basisklasse in einem computed(), das erst beim Rendern ausgewertet wird.
+   */
+  check() {
+    if (this.inForm) {
+      const required = hasRequiredValidator(this.formControl);
+      this.host.luxRequired.set(required);
+
+      // AbstractControl.setValidators() setzt nur die Validator-Liste, löst aber KEINE
+      // Neu-Validierung aus (im Angular-Quelltext verifiziert). Wird der Required-Validator also von
+      // aussen direkt am FormControl gesetzt, bliebe das Control bis zum nächsten beliebigen
+      // Validitäts-Anlass fälschlich "gültig".
+      //
+      // Bewusst FLANKENGESTEUERT statt bei jedem Check: Ein pauschales updateValueAndValidity() pro
+      // Change-Detection-Runde würde bei jedem Lauf statusChanges feuern und damit mit der
+      // luxDisabled-Spiegelung unten kollidieren (ein frisch gesetztes luxDisabled=true wird vom
+      // Effect erst NACH dieser Runde auf das FormControl angewandt - der Status wäre in dieser
+      // Lücke noch VALID/INVALID und würde luxDisabled sofort wieder auf false zurücksetzen).
+      if (this.lastSeenRequired !== undefined && this.lastSeenRequired !== required) {
+        this.formControl.updateValueAndValidity();
+      }
+      this.lastSeenRequired = required;
+    }
+
+    this.syncState();
+  }
+
+  /**
+   * Ob die Alt-Mechanik überhaupt zuständig ist.
+   *
+   * Wird die Komponente über [formField] oder [(value)] genutzt, ist das synthetische FormControl
+   * bedeutungslos - es dürfte sonst mit seinem leeren, validatorlosen Zustand den vom
+   * Signal-Forms-Vertrag gelieferten Zustand überschreiben.
+   *
+   * Bewusst bei jedem Aufruf neu ausgewertet: luxRequired oder luxControlValidators können auch
+   * nachträglich gesetzt werden.
+   */
+  get engaged(): boolean {
+    // Die ControlValueAccessor-Direktive (formControlName) hat Vorrang.
+    if (this.host.stateOverrideClaimed()) {
+      return false;
+    }
+    if (this.host.alwaysEngaged || this.inForm || this.legacyValueSeen || this.host.luxRequired()) {
+      return true;
+    }
+
+    const validators = this.host.luxControlValidators();
+    return Array.isArray(validators) ? validators.length > 0 : !!validators;
+  }
+
+  /**
+   * Meldet eine Nutzer-Interaktion an das gebundene AbstractControl weiter.
+   *
+   * Vor der Signal-Forms-Umstellung erledigte das Angulars Value-Accessor-Maschinerie, die über
+   * [formControl] am nativen Eingabeelement hing (markAsTouched beim Blur, markAsDirty bei jeder
+   * Eingabe). Diese Bindung gibt es nicht mehr, also muss die Brücke es selbst tun - sonst blieben
+   * formGroup.touched und formGroup.dirty dauerhaft false.
+   *
+   * Bewusst an stateOverrideClaimed statt an engaged geprüft: engaged hängt u.a. von luxRequired
+   * ab, das erst NACH dem Touch gesetzt werden kann (z.B. Feld zuerst berühren, dann per Toggle
+   * required setzen). War die Brücke beim Touch noch nicht engaged, ginge der Touch mit einer
+   * engaged-Prüfung hier unwiderruflich verloren - das synthetische FormControl bliebe untouched,
+   * obwohl der Nutzer das Feld längst verlassen hat. stateOverrideClaimed markiert dagegen nur den
+   * einen Fall, in dem eine andere Instanz (die ControlValueAccessor-Direktive) den Zustand
+   * bereits vollständig übernommen hat - nur dann darf die Brücke nicht mitschreiben.
+   */
+  markAsTouched() {
+    if (!this.host.stateOverrideClaimed() && this.formControl && !this.formControl.touched) {
+      this.formControl.markAsTouched();
+    }
+  }
+
+  markAsDirty() {
+    if (!this.host.stateOverrideClaimed() && this.formControl && !this.formControl.dirty) {
+      this.formControl.markAsDirty();
+    }
+  }
+
+  getValue(): T {
+    return this.formControl ? this.formControl.value : (this.initialValue as T);
+  }
+
+  setValue(value: T) {
+    if (!this.formControl) {
+      this.initialValue = value;
+      this.publishValue(value);
+      return;
+    }
+
+    const unchanged = value === this.formControl.value;
+
+    if (!unchanged) {
+      this.applyingToFormControl = true;
+      try {
+        this.formControl.setValue(value);
+      } finally {
+        this.applyingToFormControl = false;
+      }
+    }
+
+    // Ein expliziter setValue()-Aufruf muss auch dann in der Anzeige ankommen, wenn die Alt-Mechanik
+    // nicht zuständig ist (freistehendes Feld ohne luxValue/[(value)]/Formular, z.B. per Template-
+    // Referenz): Dort ist das Model die Quelle, der registerOnChange-Rückweg über publishValue()
+    // wird also verworfen - ohne force bliebe die Anzeige beim alten Text stehen.
+    //
+    // Ist die Brücke zuständig, bleibt es beim bisherigen Verhalten: Ein geänderter Wert läuft über
+    // die valueChanges-Subscription zurück ins Model. Ein zusätzliches Publish an dieser Stelle würde
+    // den Rohwert des Aufrufers schreiben, bevor das Control ihn normalisiert hat (z.B. der Datepicker
+    // bei '03/05/2019'), und über die Two-Way-Bindung eine Endlosschleife auslösen.
+    if (!this.engaged) {
+      this.publishValue(value, true);
+    } else if (unchanged) {
+      this.publishValue(value);
+    }
+  }
+
+  /** Den (noch nicht initialisierten) Startwert setzen, ohne ein Change-Event auszulösen. */
+  setInitialValue(value: T) {
+    this.initialValue = value;
+
+    // undefined = nie gebunden (siehe valueInput-Effect). Jeder andere Wert - auch null - ist eine
+    // bewusste Bindung und wird hier STILL übernommen: initFormControl() setzt ihn direkt auf das
+    // FormControl, bevor die valueChanges-Subscription steht, sodass der Startwert - wie bisher -
+    // kein luxValueChange/luxSelectedChange auslöst.
+    if (value !== undefined) {
+      this.legacyValueSeen = true;
+    }
+  }
+
+  private initFormControl() {
+    const boundFormGroup = this.host.luxFormGroup();
+    const boundFormControl = this.host.luxFormControl();
+
+    if (boundFormGroup) {
+      this.formGroup = boundFormGroup;
+    }
+
+    if (boundFormControl) {
+      this.formControl = boundFormControl;
+    }
+
+    const controlBinding = this.host.luxControlBinding();
+    this.inForm = (!!this.controlContainer || !!this.formGroup) && !!controlBinding;
+
+    if (this.inForm && controlBinding) {
+      if (!this.formGroup) {
+        this.formGroup = this.controlContainer?.control as FormGroup;
+      }
+      if (!this.formControl) {
+        this.formControl = this.formGroup.controls[controlBinding] as FormControl<T>;
+      }
+      this.host.luxRequired.set(hasRequiredValidator(this.formControl));
+    } else {
+      if (!this.formGroup) {
+        this.formGroup = new FormGroup({ control: new FormControl() });
+        this.formControl = this.formGroup.get(DEFAULT_CTRL_NAME) as FormControl<T>;
+      }
+
+      // Ist die Alt-Mechanik nicht zuständig ([formField] oder [(value)]), ist das Model die
+      // Quelle - das synthetische FormControl darf den gebundenen Wert nicht überschreiben.
+      //
+      // Das gilt auch, wenn die Brücke zwar zuständig ist (z.B. nur wegen luxRequired), der Alt-Input
+      // luxValue/luxChecked aber nie gebunden wurde (initialValue === undefined): Sonst würde
+      // [(value)]/[(checked)] zusammen mit [luxRequired] den gebundenen Startwert beim Initialisieren
+      // durch undefined ersetzen und über publishValue() zurück in die Two-Way-Bindung schreiben.
+      const legacyValueBound = this.initialValue !== undefined;
+      this.formControl.setValue(this.engaged && legacyValueBound ? (this.initialValue as T) : this.host.modelValue());
+    }
+
+    if (this.host.luxDisabled()) {
+      this.formControl.disable();
+    }
+
+    this.host.luxDisabled.set(this.formControl.disabled);
+    this.publishValue(this.formControl.value);
+  }
+
+  /** Spiegelt den Rohzustand des FormControls in den stateOverride der Basisklasse. */
+  private syncState() {
+    // Hat die ControlValueAccessor-Direktive den Zustand übernommen (formControlName am Element),
+    // ist das hiesige FormControl nur noch ein Wert-Spiegel und darf den Zustand nicht überschreiben.
+    if (!this.engaged) {
+      // Beim Übergang von zuständig zu nicht zuständig (z.B. luxRequired wird wieder false) muss
+      // der eigene Zustand geräumt werden, sonst bliebe er stehen und würde die Vertrags-Inputs
+      // dauerhaft überstimmen. Einen von der CVA-Direktive beanspruchten Zustand nicht anfassen.
+      if (!this.host.stateOverrideClaimed() && this.host.stateOverride() !== undefined) {
+        this.host.stateOverride.set(undefined);
+      }
+      return;
+    }
+
+    const current = this.host.stateOverride();
+    const next: LuxControlStateOverride = {
+      // Zusätzlich zum synthetischen FormControl auch host.disabled() einbeziehen: Bei
+      // alwaysEngaged-Controls (z.B. File-Controls) ist die Brücke IMMER zuständig, ein
+      // schema-seitiges disabled(path, {when}) landet aber nie auf dem synthetischen FormControl,
+      // sondern ausschließlich im automatisch verdrahteten disabled()-Input - ohne diese Ergänzung
+      // bliebe ein solches Control in Signal Forms für immer aktiviert.
+      disabled: this.formControl.disabled || this.host.disabled(),
+      // Zusätzlich zum synthetischen FormControl auch host.required() einbeziehen: Im Signal-Forms-
+      // Betrieb ([formField]) setzt das Schema (required(path, {when})) den Required-Zustand NIE als
+      // Validator auf diesem synthetischen Control, sondern ausschließlich über den automatisch
+      // verdrahteten required()-Input. Ohne diese Ergänzung überschreibt ein einmal aktiviertes
+      // stateOverride (engaged wird schon durch das erste formControl.setValue() aus onInput() wahr,
+      // unabhängig vom Signal-Forms/Legacy-Modus) den echten required()-Input dauerhaft mit dem
+      // (im Signal-Forms-Betrieb immer falschen) hasRequiredValidator()-Ergebnis - siehe isRequired()
+      // in LuxFormControlBase, das stateOverride().required per ?? bevorzugt.
+      required: hasRequiredValidator(this.formControl) || this.host.required(),
+      touched: this.formControl.touched,
+      dirty: this.formControl.dirty,
+      // Dieselbe Ergänzung wie bei required oben: Die schema-seitige Ungültigkeit/Fehler
+      // (required(), minLength() usw. aus dem Signal-Form) landen nie auf dem synthetischen
+      // FormControl - ohne host.invalid()/host.errors() hier bliebe das Feld nach dem ersten
+      // engagierenden setValue() (z.B. aus onInput()) dauerhaft als gültig/fehlerfrei markiert,
+      // obwohl [formField] längst einen Fehler meldet. errorMessage() liest ausschließlich
+      // legacyErrors() - ohne den Merge würde also gar keine Fehlermeldung mehr angezeigt.
+      invalid: this.formControl.invalid || this.host.invalid(),
+      legacyErrors: mergeLegacyErrors(this.formControl.errors, LuxUtil.toLegacyValidationErrors(this.host.errors()))
+    };
+
+    if (
+      current &&
+      current.disabled === next.disabled &&
+      current.required === next.required &&
+      current.touched === next.touched &&
+      current.dirty === next.dirty &&
+      current.invalid === next.invalid &&
+      errorsEqual(current.legacyErrors, next.legacyErrors)
+    ) {
+      return;
+    }
+
+    this.host.stateOverride.set(next);
+  }
+
+  /**
+   * Schreibt einen Wert aus dem FormControl in das Vertrags-Model, ohne zurückzuschreiben.
+   * @param force - Schreibt auch dann, wenn die Alt-Mechanik nicht zuständig ist (nur für explizite setValue()-Aufrufe).
+   */
+  private publishValue(value: T, force = false) {
+    // Ist die Alt-Mechanik nicht zuständig, ist das Model die Quelle und nicht das FormControl.
+    if ((!force && !this.engaged) || this.host.modelValue() === value) {
+      return;
+    }
+
+    this.applyingFromFormControl = true;
+    try {
+      this.host.modelValue.set(value);
+    } finally {
+      this.applyingFromFormControl = false;
+    }
+  }
+
+  private handleFormDisabledState() {
+    if (this.host.luxDisabled() && !this.formControl.disabled) {
+      this.formControl.disable();
+    }
+
+    if (!this.host.luxDisabled() && this.formControl.disabled) {
+      this.formControl.enable();
+    }
+  }
+
+  private updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
+    // Vor init() gibt es noch kein FormControl. init() holt die Validatoren am Ende selbst nach.
+    if (!this.formControl) {
+      return;
+    }
+
+    const hasValidators = (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0);
+    const requiredValidator = this.host.getRequiredValidator();
+    const controlHasRequired = !!this.formControl && this.formControl.hasValidator(requiredValidator);
+    const shouldHandleRequired = checkRequiredValidator && (this.host.luxRequired() || controlHasRequired);
+
+    if (!hasValidators && !shouldHandleRequired) {
+      return;
+    }
+
+    if (!this.inForm) {
+      // Bewusst synchron - anders als früher, wo das in einem setTimeout lief, um abzuwarten, ob
+      // sich inForm noch ändert. init() läuft in ngOnInit und damit garantiert vor jedem Effect,
+      // sodass inForm hier bereits feststeht.
+      //
+      // Die Verzögerung war bisher unauffällig, weil das alte Template mit [formControl] und
+      // [required] Angulars eigenen RequiredValidator einschleuste, der den Fehler sofort setzte
+      // (genau der Zirkelbezug aus Issue #240). Ohne diese Kopplung muss der Validator hier
+      // unmittelbar greifen.
+      this.formControl.setValidators(validators ?? null);
+
+      if (checkRequiredValidator) {
+        if (this.host.luxRequired()) {
+          this.formControl.addValidators(requiredValidator);
+        } else {
+          this.formControl.removeValidators(requiredValidator);
+        }
+      }
+
+      this.formControl.updateValueAndValidity();
+      this.syncState();
+    } else if (hasValidators) {
+      this.logger.warn(
+        `
+Die Validatoren des Formularelements (luxControlBinding=${this.host.luxControlBinding()}) können ausschließlich über das Formular gesetzt werden,
+aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignoriert!`
+      );
+    }
+  }
+}
+
+/**
+ * Prüft, ob das Control einen required-Validator besitzt.
+ *
+ * Hinweis: Prüft gezielt auf die beiden Validator-Referenzen, statt den komponierten Validator
+ * auszuführen. Ein Verhaltens-Check würde auch den von der nativen [required]-Bindung
+ * eingeschleusten Angular-RequiredValidator erkennen, dessen Zustand selbst wieder von luxRequired
+ * abhängt (Zirkelbezug, siehe Issue #240).
+ */
+export function hasRequiredValidator(control: AbstractControl | undefined): boolean {
+  if (!control) {
+    return false;
+  }
+  return control.hasValidator(Validators.required) || control.hasValidator(Validators.requiredTrue);
+}
+
+/**
+ * Führt die Fehler des synthetischen FormControls (Legacy-Validatoren/luxControlValidators) und die
+ * des Signal-Form-Schemas (bereits über LuxUtil.toLegacyValidationErrors() konvertiert) zusammen.
+ *
+ * Beide Quellen können gleichzeitig Fehler tragen (z.B. ein Legacy-Validator UND ein required() aus
+ * dem Schema), deshalb ein Merge statt einer Bevorzugung.
+ *
+ * Bewusst referenzstabil, wenn eine Quelle leer ist: Liefert dann die ANDERE Quelle unverändert
+ * zurück, statt ein neues Objekt zu spreaden. errorMessage()/errorDismissed() in LuxFormControlBase
+ * hängen an legacyErrors() bzw. dessen Referenz - ein bei jedem syncState()-Aufruf frisch gespreadetes
+ * Objekt (auch bei inhaltlich unveränderten Fehlern, z.B. weil Validators.required() bei jedem
+ * updateValueAndValidity() ein neues { required: true } liefert) würde errorMessage() unnötig
+ * neu auswerten und luxErrorCallback ein zweites Mal mit denselben Fehlern aufrufen - siehe
+ * "Sollte den Fehler über luxErrorCallback anzeigen" in lux-textarea.component.spec.ts.
+ */
+function mergeLegacyErrors(
+  fromFormControl: LuxValidationErrors | null,
+  fromSchema: LuxValidationErrors | null
+): LuxValidationErrors | null {
+  if (!fromSchema) {
+    return fromFormControl;
+  }
+  if (!fromFormControl) {
+    return fromSchema;
+  }
+  return { ...fromSchema, ...fromFormControl };
+}
+
+/**
+ * Wertgleichheit statt Referenzgleichheit für ValidationErrors.
+ *
+ * `AbstractControl.updateValueAndValidity()` lässt die Validatoren jedes Mal neu laufen und erzeugt
+ * dabei ein frisches Fehler-Objekt, selbst wenn sich inhaltlich nichts geändert hat (z.B.
+ * Validators.required liefert immer ein neues { required: true }). Ein Referenzvergleich in
+ * syncState() würde das als Änderung werten und den stateOverride unnötig neu setzen - das
+ * invalidiert das errorMessage()-computed der Basisklasse und ruft luxErrorCallback ein zweites Mal
+ * auf, obwohl sich die Fehlerlage nicht geändert hat.
+ */
+function errorsEqual(a: LuxValidationErrors | null | undefined, b: LuxValidationErrors | null | undefined): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (!a || !b) {
+    return false;
+  }
+
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  }
+
+  return aKeys.every((key) => JSON.stringify(a[key]) === JSON.stringify(b[key]));
+}

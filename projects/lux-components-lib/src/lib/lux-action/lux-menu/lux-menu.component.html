@@ -2,9 +2,9 @@
   <div class="lux-menu-extended lux-flex lux-flex-auto lux-place-content-end lux-items-center" #menuExtendedContainer>
     <!-- Trigger, wenn luxDisplayMenuLeft === false -->
     @if (!luxDisplayMenuLeft()) {
-      <ng-container [ngTemplateOutlet]="menuTriggerTemplate"></ng-container>
+      <ng-container [ngTemplateOutlet]="menuTriggerTemplate" />
     }
-    @for (menuItem of visibleMenuItems; track menuItem) {
+    @for (menuItem of visibleMenuItems(); track menuItem) {
       <lux-button
         class="lux-menu-item"
         [luxLabel]="menuItem.luxHideLabelIfExtended() ? '' : menuItem.luxLabel()"
@@ -27,13 +27,12 @@
         [luxTooltip]="menuItem.luxButtonTooltip()"
         [luxApplyToChildren]="true"
         [ngClass]="menuItem.luxClass() ?? ''"
-        [ngStyle]="{ display: !menuItem.extended || menuItem.luxHidden() ? 'none' : 'inline-block' }"
-      >
-      </lux-button>
+        [ngStyle]="{ display: !menuItem.extended() || menuItem.luxHidden() ? 'none' : 'inline-block' }"
+      />
     }
     <!-- Trigger, wenn luxDisplayMenuLeft === true -->
     @if (luxDisplayMenuLeft()) {
-      <ng-container [ngTemplateOutlet]="menuTriggerTemplate"></ng-container>
+      <ng-container [ngTemplateOutlet]="menuTriggerTemplate" />
     }
   </div>
 </div>
@@ -52,7 +51,7 @@
   @if (!luxShowSections()) {
     <!-- Alle darin angezeigten MenuItems (Vorausgesetzt diese sind nicht als extended gekennzeichnet) -->
     @for (menuItem of menuItems; track menuItem) {
-      @if (!menuItem.extended && !menuItem.luxHidden()) {
+      @if (!menuItem.extended() && !menuItem.luxHidden()) {
         <button
           mat-menu-item
           [disableRipple]="true"
@@ -82,7 +81,7 @@
               [luxMargin]="menuItem.luxIconShowRight() ? '0 0 0 1rem' : '0 1rem 0 0'"
               luxIconSize="unset"
               class="lux-menu-item-icon"
-            ></lux-icon>
+            />
           }
           <span class="lux-button-label">
             {{ menuItem.luxLabel() }}
@@ -153,7 +152,7 @@
                   [luxMargin]="menuItem.luxIconShowRight() ? '0 0 0 1rem' : '0 1rem 0 0'"
                   luxIconSize="unset"
                   class="lux-menu-item-icon"
-                ></lux-icon>
+                />
               }
               <span>
                 <span
@@ -221,7 +220,7 @@
                 [luxMargin]="menuItem.luxIconShowRight() ? '0 0 0 1rem' : '0 1rem 0 0'"
                 luxIconSize="unset"
                 class="lux-menu-item-icon"
-              ></lux-icon>
+              />
             }
             <span
               class="lux-button-label"
@@ -250,7 +249,7 @@
       }
       <!-- Trennstriche im Menu -->
       @if (isItemDivider(menuItem)) {
-        <mat-divider [ngClass]="luxMenuPanelLarge() ? 'lux-menu-item-divider-large' : 'lux-menu-item-divider'"></mat-divider>
+        <mat-divider [ngClass]="luxMenuPanelLarge() ? 'lux-menu-item-divider-large' : 'lux-menu-item-divider'" />
       }
     }
   }
@@ -263,16 +262,16 @@
     role="button"
     luxAriaLabel="{{ luxAriaMenuTriggerLabel() || ('luxc.menu.trigger.btn' | transloco) }}"
     class="lux-menu-trigger lux-color-primary-20"
-    [ngClass]="{ 'lux-display-none-important': hideToggle }"
+    [ngClass]="{ 'lux-display-none-important': hideToggle() }"
     #menuTrigger
     (menuOpened)="onMenuOpened()"
     #triggerdiv
   ></div>
 
   <!-- Custom-Trigger, der über Content-Projection geladen werden kann -->
-  @if (!hideToggle) {
+  @if (!hideToggle()) {
     <div class="lux-menu-custom-trigger">
-      <ng-content select="lux-menu-trigger"> </ng-content>
+      <ng-content select="lux-menu-trigger" />
     </div>
   }
 
@@ -291,7 +290,6 @@
       [luxDisabled]="luxToggleDisabled()"
       (luxClicked)="triggerdiv.click()"
       #defaultTrigger
-    >
-    </lux-button>
+    />
   }
 </ng-template>

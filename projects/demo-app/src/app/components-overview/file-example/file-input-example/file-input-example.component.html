@@ -1,0 +1,248 @@
+<example-base-structure
+  exampleTitle="File-Input"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90file%E2%80%90input-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
+      <lux-file-input
+        luxAutofocus
+        [formField]="signalForm"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxPlaceholder]="placeholder()"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxCustomActionConfigs]="customActionConfigs"
+        [luxUploadActionConfig]="uploadActionConfig"
+        [luxViewActionConfig]="viewActionConfig"
+        [luxDeleteActionConfig]="deleteActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
+        [luxMaximumExtended]="maximumExtended"
+        [luxDnDActive]="dndActive()"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+        [luxClearOnError]="clearOnError()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        #fileinputexamplesignalform
+      />
+      <example-signal-form-value [field]="signalForm" [showValue]="false" />
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
+      <div [formGroup]="form">
+        <lux-file-input
+          [luxLabel]="label()"
+          [luxHint]="hint()"
+          [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+          [luxNoTopLabel]="noTopLabel()"
+          [luxNoBottomLabel]="noBottomLabel()"
+          [luxNoLabels]="noLabels()"
+          [luxPlaceholder]="placeholder()"
+          [luxReadonly]="readonly()"
+          [luxDense]="denseFormat()"
+          [(luxDisabled)]="disabled"
+          [luxUploadUrl]="uploadUrl()"
+          [luxMaxSizeMiB]="maxSize()"
+          [luxCustomActionConfigs]="customActionsConfigsForm"
+          [luxUploadActionConfig]="uploadActionConfig"
+          [luxViewActionConfig]="viewActionConfigForm"
+          [luxDeleteActionConfig]="deleteActionConfig"
+          [luxDownloadActionConfig]="downloadActionConfig"
+          [luxMaximumExtended]="maximumExtended"
+          [luxDnDActive]="dndActive()"
+          [luxCapture]="capture()"
+          [luxAccept]="accept()"
+          [luxContentsAsBlob]="contentAsBlob()"
+          [luxUploadReportProgress]="reportProgress()"
+          [luxControlBinding]="controlBinding"
+          [luxClearOnError]="clearOnError()"
+          [luxLabelLongFormat]="labelLongFormat()"
+          (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+          (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+          (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+          (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+          #fileinputexamplewithform
+        />
+        @if (!clearOnError() && !fileinputexamplewithform.formGroup.valid && fileinputexamplewithform.value()) {
+          <div class="lux-flex lux-gap-4">
+            <p>Datei "{{ fileinputexamplewithform.value()!.name }}" behalten?</p>
+            <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithForm(true)" />
+            <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithForm(false)" />
+          </div>
+        }
+        <example-form-value [form]="form" [controlBinding]="controlBinding" [showValue]="false" />
+      </div>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-file-input
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxPlaceholder]="placeholder()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxDisabled)]="disabled"
+        [(value)]="plainValue"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxCustomActionConfigs]="customActionConfigs"
+        [luxUploadActionConfig]="uploadActionConfig"
+        [luxViewActionConfig]="viewActionConfig"
+        [luxDeleteActionConfig]="deleteActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
+        [luxMaximumExtended]="maximumExtended"
+        [luxDnDActive]="dndActive()"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+        [luxClearOnError]="clearOnError()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        #fileinputexamplewithoutform
+      />
+      @if (!clearOnError() && !fileinputexamplewithoutform.formGroup.valid && fileinputexamplewithoutform.value()) {
+        <div class="lux-flex lux-gap-4">
+          <p>Datei "{{ fileinputexamplewithoutform.value()!.name }}" behalten?</p>
+          <lux-button luxLabel="Ja" (luxClicked)="onKeepFileWithoutForm(true)" />
+          <lux-button luxLabel="Nein" (luxClicked)="onKeepFileWithoutForm(false)" />
+        </div>
+      }
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxSelected)] @deprecated</code></h3>
+      <lux-file-input
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxPlaceholder]="placeholder()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxDisabled)]="disabled"
+        [(luxSelected)]="selectedValue"
+        [luxUploadUrl]="uploadUrl()"
+        [luxMaxSizeMiB]="maxSize()"
+        [luxCustomActionConfigs]="customActionConfigs"
+        [luxUploadActionConfig]="uploadActionConfig"
+        [luxViewActionConfig]="viewActionConfig"
+        [luxDeleteActionConfig]="deleteActionConfig"
+        [luxDownloadActionConfig]="downloadActionConfig"
+        [luxMaximumExtended]="maximumExtended"
+        [luxDnDActive]="dndActive()"
+        [luxCapture]="capture()"
+        [luxAccept]="accept()"
+        [luxContentsAsBlob]="contentAsBlob()"
+        [luxUploadReportProgress]="reportProgress()"
+        [luxClearOnError]="clearOnError()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+      />
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(checked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle luxLabel="Backend mocken" [checked]="mockBackend()" (checkedChange)="changeMockBackend($event)" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Mockt den Http-Client um das Uploaden der Dateien zu simulieren.<br />
+        Dafür muss aber auch "luxUploadUrl" gesetzt sein (beliebiger Wert).
+      </lux-form-hint>
+    </lux-toggle>
+    <lux-input
+      luxLabel="luxPlaceholder"
+      luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
+      [(value)]="placeholder"
+    />
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoTopLabel"
+        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+        [(checked)]="noTopLabel"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoBottomLabel"
+        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+        [(checked)]="noBottomLabel"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoLabels"
+        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+        [(checked)]="noLabels"
+        [luxNoTopLabel]="true"
+      />
+      <app-status-marker [markerType]="markerTypeUpdated" />
+    </div>
+    <lux-toggle
+      [(checked)]="denseFormat"
+      luxLabel="luxDense"
+      luxHint="Diese Property veringert das Padding innerhalb des Controls."
+      [luxNoTopLabel]="true"
+    />
+    <lux-toggle
+      luxLabel="luxClearOnError"
+      luxHint="Gibt an, ob das Control bei einem Validierungsfehler geleert wird."
+      [(checked)]="clearOnError"
+      [luxNoTopLabel]="true"
+    />
+    <app-file-example-simple-options [fileExample]="this" class="lux-flex lux-flex-col lux-gap-4" />
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <app-file-example-advanced-options [fileExample]="this" [showHeaderConfigProperties]="false" />
+    <h4>Custom Action "Akzeptieren"</h4>
+    <div class="lux-flex lux-flex-col lux-gap-4">
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_accept" [(value)]="namePrefixAccept" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_accept" [(value)]="nameSuffixAccept" [luxNoBottomLabel]="true" />
+    </div>
+    <h4>Custom Action "Ablehnen"</h4>
+    <div class="lux-flex lux-flex-col lux-gap-4">
+      <lux-input luxLabel="Präfix" luxName="filelist_prefix_decline" [(value)]="namePrefixDecline" [luxNoBottomLabel]="true" />
+      <lux-input luxLabel="Suffix" luxName="filelist_suffix_decline" [(value)]="nameSuffixDecline" [luxNoBottomLabel]="true" />
+    </div>
+    <lux-toggle
+      luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
+      luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
+      [luxNoTopLabel]="true"
+      [(checked)]="labelLongFormat"
+    />
+  </example-base-advanced-options>
+</example-base-structure>

@@ -1,8 +1,10 @@
-import { Directive, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Directive, OnDestroy, OnInit, inject, input, output } from '@angular/core';
+import { ValidatorFn } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LuxComponentsConfigParameters } from '../../lux-components-config/lux-components-config-parameters.interface';
 import { LuxComponentsConfigService } from '../../lux-components-config/lux-components-config.service';
-import { LuxFormComponentBase, LuxValidationErrors } from '../../lux-form/lux-form-model/lux-form-component-base.class';
+import { LuxValidationErrors } from '../../lux-form/lux-form-model/lux-form-component-base.class';
+import { LuxFormLegacyValueBase } from '../../lux-form/lux-form-model/lux-form-legacy/lux-form-legacy-value-base.class';
 import { LuxLookupHandlerService } from '../lux-lookup-service/lux-lookup-handler.service';
 import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 import { LuxBehandlungsOptionenUngueltige, LuxLookupParameters } from './lux-lookup-parameters';
@@ -65,57 +67,44 @@ export const luxLookupCompareLangText2Fn: LuxLookupCompareFn = (a: LuxLookupTabl
 };
 
 @Directive()
-export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> implements OnInit, OnDestroy {
-  
-  LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige;
-  
-  protected lookupService = inject(LuxLookupService);
-  protected lookupHandler = inject(LuxLookupHandlerService);
+export abstract class LuxLookupComponent<T> extends LuxFormLegacyValueBase<T> implements OnInit, OnDestroy {
+  readonly luxLookupId = input('');
+  readonly luxTableNo = input('');
+  readonly luxRenderProp = input<any>();
+  readonly luxRenderPropNoPropertyLabel = input('---');
+  readonly luxBehandlungUngueltige = input(LuxBehandlungsOptionenUngueltige.ausgrauen);
+  readonly luxParameters = input<LuxLookupParameters | undefined>(undefined);
+  readonly luxCustomStyles = input<object | null | undefined>(undefined);
+  readonly luxCustomInvalidStyles = input<object | null | undefined>(undefined);
+  readonly luxCompareFn = input<LuxLookupCompareFn | undefined>(undefined);
+
+  readonly luxDataLoaded = output<boolean>();
+  readonly luxDataLoadedAsArray = output<T[]>();
 
   entries: LuxLookupTableEntry[] = [];
   apiPath = LuxComponentsConfigService.DEFAULT_CONFIG.lookupServiceUrl;
-
-  @Input() luxPlaceholder = '';
-  @Input() luxLookupId!: string;
-  @Input() luxTableNo!: string;
-  @Input() luxRenderProp: any;
-  @Input() luxRenderPropNoPropertyLabel = '---';
-  @Input() luxBehandlungUngueltige: LuxBehandlungsOptionenUngueltige = LuxBehandlungsOptionenUngueltige.ausgrauen;
-  @Input() luxParameters?: LuxLookupParameters;
-  @Input() luxCustomStyles?: object | null;
-  @Input() luxCustomInvalidStyles?: object | null;
-  @Input() luxCompareFn?: LuxLookupCompareFn;
-  @Input() luxTagId?: string;
-  @Output() luxDataLoaded = new EventEmitter<boolean>();
-  @Output() luxDataLoadedAsArray: EventEmitter<T[]> = new EventEmitter<T[]>();
-  @Output() luxValueChange = new EventEmitter<T>();
-
   subscriptions: Subscription[] = [];
 
-  get luxValue(): T {
-    return this.getValue();
-  }
-
-  @Input() set luxValue(value: T) {
-    this.setValue(value);
-  }
+  protected lookupService = inject(LuxLookupService);
+  protected lookupHandler = inject(LuxLookupHandlerService);
+  protected configService = inject(LuxComponentsConfigService);
 
   override ngOnInit() {
     super.ngOnInit();
 
-    if (!this.luxParameters) {
-      throw Error(`The lookup component with the table number ${this.luxTableNo} has no LookupParameter.`);
+    if (!this.luxParameters()) {
+      throw Error(`The lookup component with the table number ${this.luxTableNo()} has no LookupParameter.`);
     }
 
-    if (!this.luxLookupId) {
-      throw Error(`The lookup component with the table number ${this.luxTableNo} has no LookupId.`);
+    if (!this.luxLookupId()) {
+      throw Error(`The lookup component with the table number ${this.luxTableNo()} has no LookupId.`);
     }
 
-    this.lookupHandler.addLookupElement(this.luxLookupId);
+    this.lookupHandler.addLookupElement(this.luxLookupId());
 
-    const lookupElementObs = this.lookupHandler.getLookupElementObsv(this.luxLookupId);
+    const lookupElementObs = this.lookupHandler.getLookupElementObsv(this.luxLookupId());
     if (!lookupElementObs) {
-      throw Error(`Observable "${this.luxLookupId}" not found."`);
+      throw Error(`Observable "${this.luxLookupId()}" not found."`);
     }
 
     this.subscriptions.push(
@@ -128,14 +117,12 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
       this.configService.config.subscribe((newConfig: LuxComponentsConfigParameters) => {
         this.apiPath = newConfig.lookupServiceUrl ?? LuxComponentsConfigService.DEFAULT_CONFIG.lookupServiceUrl;
 
-        this.lookupHandler.reloadData(this.luxLookupId);
+        this.lookupHandler.reloadData(this.luxLookupId());
       })
     );
   }
 
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-
+  ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
@@ -144,7 +131,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    * @returns boolean
    */
   isRenderPropAFunction(): boolean {
-    return typeof this.luxRenderProp === 'function';
+    return typeof this.luxRenderProp() === 'function';
   }
 
   /**
@@ -177,8 +164,8 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    */
   showUngueltige() {
     return (
-      this.luxBehandlungUngueltige === this.LuxBehandlungsOptionenUngueltige.ausgrauen ||
-      this.luxBehandlungUngueltige === this.LuxBehandlungsOptionenUngueltige.anzeigen
+      this.luxBehandlungUngueltige() === LuxBehandlungsOptionenUngueltige.ausgrauen ||
+      this.luxBehandlungUngueltige() === LuxBehandlungsOptionenUngueltige.anzeigen
     );
   }
 
@@ -187,7 +174,7 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    * @returns boolean
    */
   disableUngueltige() {
-    return this.luxBehandlungUngueltige === this.LuxBehandlungsOptionenUngueltige.ausgrauen;
+    return this.luxBehandlungUngueltige() === LuxBehandlungsOptionenUngueltige.ausgrauen;
   }
 
   /**
@@ -198,9 +185,9 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    */
   getStyles(invalid: boolean | undefined) {
     if (invalid) {
-      return this.luxCustomInvalidStyles ? this.luxCustomInvalidStyles : {};
+      return this.luxCustomInvalidStyles() ? this.luxCustomInvalidStyles() : {};
     }
-    return this.luxCustomStyles ? this.luxCustomStyles : {};
+    return this.luxCustomStyles() ? this.luxCustomStyles() : {};
   }
 
   /**
@@ -215,15 +202,85 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
     return undefined;
   }
 
-  getLabel(entry: any): string {
-    if (this.isRenderPropAFunction()) {
-      return this.luxRenderProp(entry);
+  /**
+   * Jede Wertänderung (intern wie extern) läuft hier zusammen - übernimmt hier die Prüfung auf
+   * ungültige Einträge, die früher LuxLookupErrorStateMatcher.isErrorState() erledigte (dort an
+   * [errorStateMatcher]/NgControl gekoppelt, das ohne [formControl] nicht mehr automatisch läuft).
+   *
+   * Reentrancy-geschützt (emitValueChangeRunning): syncUngueltigValidator() ruft
+   * formControl.updateValueAndValidity() OHNE {emitEvent:false} auf, was auch valueChanges erneut
+   * feuert (nicht nur statusChanges) - ohne diesen Guard würde das sofort wieder emitValueChange()
+   * aufrufen und in einer Endlosschleife enden (siehe LuxDatepickerComponent.processValueChange()
+   * für dasselbe Muster bei einem anderen Auslöser). Ableitende Klassen mit eigener
+   * updateValueAndValidity()-Synchronisation (siehe LuxLookupAutocompleteComponent) prüfen denselben
+   * Guard an ihrem eigenen emitValueChange()-Einstiegspunkt.
+   */
+  override emitValueChange(value: T) {
+    if (this.emitValueChangeRunning) {
+      return;
     }
 
-    if (Object.hasOwn(entry, this.luxRenderProp as string) && entry[this.luxRenderProp as string]) {
-      return entry[this.luxRenderProp as string];
+    try {
+      this.emitValueChangeRunning = true;
+      this.syncUngueltigValidator();
+      super.emitValueChange(value);
+    } finally {
+      this.emitValueChangeRunning = false;
+    }
+  }
+
+  /**
+   * Prüft, ob der aktuelle Wert (ein oder mehrere Einträge) einen ungültigen Eintrag enthält, und
+   * setzt/entfernt den "ungueltig"-Fehler entsprechend. Registriert den Validator beim ersten Aufruf
+   * einmalig (addValidators mit einer stabilen Funktionsreferenz ist idempotent). Der Aufrufer
+   * (emitValueChange()) trägt die Reentrancy-Absicherung.
+   */
+  protected syncUngueltigValidator() {
+    if (!this.formControl) {
+      return;
+    }
+
+    if (!this.ungueltigValidatorRegistered) {
+      this.ungueltigValidatorRegistered = true;
+      this.formControl.addValidators(this.ungueltigValidator);
+    }
+
+    this.formControl.updateValueAndValidity();
+  }
+
+  /**
+   * Schützt vor rekursiven emitValueChange()-Aufrufen, ausgelöst durch ein formControl.
+   * updateValueAndValidity() innerhalb von emitValueChange() selbst (siehe syncUngueltigValidator()
+   * bzw. LuxLookupAutocompleteComponent.syncNoResultValidator()). Geteilt (protected) statt privat,
+   * damit ableitende Klassen an ihrem eigenen emitValueChange()-Einstiegspunkt denselben Schutz
+   * nutzen, statt eine eigene, redundante Guard-Variable anzulegen.
+   */
+  protected emitValueChangeRunning = false;
+
+  private ungueltigValidatorRegistered = false;
+
+  private readonly ungueltigValidator: ValidatorFn = (control) => {
+    const value = control.value;
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    const isEntryUngueltig = (entry: any) => !!entry?.isUngueltig;
+    const invalid = Array.isArray(value) ? value.some(isEntryUngueltig) : isEntryUngueltig(value);
+
+    return invalid ? { ungueltig: 'true' } : null;
+  };
+
+  getLabel(entry: any): string {
+    if (this.isRenderPropAFunction()) {
+      return this.luxRenderProp()(entry);
+    }
+
+    const renderProp = this.luxRenderProp();
+    if (Object.hasOwn(entry, renderProp as string) && entry[renderProp as string]) {
+      return entry[renderProp as string];
     } else {
-      return this.luxRenderPropNoPropertyLabel;
+      return this.luxRenderPropNoPropertyLabel();
     }
   }
 
@@ -231,11 +288,12 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
    * Holt die Lookup-Table Daten vom Backend
    */
   protected fetchLookupData() {
-    if (!this.luxParameters) {
+    const parameters = this.luxParameters();
+    if (!parameters) {
       throw Error('LuxParameters not found!');
     }
 
-    const backendRequest = this.lookupService.getLookupTable(this.luxTableNo, this.luxParameters, this.apiPath);
+    const backendRequest = this.lookupService.getLookupTable(this.luxTableNo(), parameters, this.apiPath);
     this.subscriptions.push(
       backendRequest.subscribe(
         (entries: LuxLookupTableEntry[]) => {
@@ -257,8 +315,9 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
   protected setLookupData(entries: LuxLookupTableEntry[]) {
     this.entries = entries;
 
-    if (this.entries && this.luxCompareFn) {
-      this.entries.sort(this.luxCompareFn);
+    const compareFn = this.luxCompareFn();
+    if (this.entries && compareFn) {
+      this.entries.sort(compareFn);
     }
 
     if (this.entries) {
@@ -268,9 +327,5 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
         entry.isUngueltig = this.isUngueltig(entry);
       });
     }
-  }
-
-  override notifyFormValueChanged(formValue: any) {
-    this.luxValueChange.emit(formValue);
   }
 }

@@ -1,113 +1,105 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, computed, input, signal } from '@angular/core';
 import { MatError, MatHint } from '@angular/material/form-field';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { LuxAriaLabelDirective } from '../../lux-directives/lux-aria/lux-aria-label.directive';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
-import { LuxFormComponentBase } from '../lux-form-model/lux-form-component-base.class';
+import { LuxFormHintComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-hint.component';
+import { LuxFormLabelComponent } from '../lux-form-control/lux-form-control-subcomponents/lux-form-label.component';
+import type { LuxFormControlWrapperState } from '../lux-form-model/lux-form-control-base.class';
 
 export const luxFormControlSelektor = 'lux-form-control-wrapper';
+
+/**
+ * Die Schnittstelle, die eine FormComponent dem Wrapper bieten muss.
+ *
+ * Bewusst ein Interface statt einer konkreten Basisklasse: Der Wrapper bedient sowohl die neuen
+ * Signal-Forms-Komponenten (LuxFormControlBase) als auch die noch nicht migrierten
+ * (LuxFormComponentBase). Beide erfüllen diesen Vertrag.
+ */
+export interface LuxFormControlWrapperHost {
+  readonly uid: Signal<string>;
+  readonly luxLabel: Signal<string>;
+  readonly luxHint: Signal<string>;
+  readonly luxHintShowOnlyOnFocus: Signal<boolean>;
+  readonly luxDense: Signal<boolean>;
+  readonly errorMessage: Signal<string | undefined>;
+  readonly formLabelComponent: Signal<LuxFormLabelComponent | undefined>;
+  readonly formHintComponent: Signal<LuxFormHintComponent | undefined>;
+  readonly wrapperState: Signal<LuxFormControlWrapperState>;
+  dismissError(): void;
+}
 
 @Component({
   selector: 'lux-form-control-wrapper',
   templateUrl: './lux-form-control-wrapper.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  host: {
+    '[class.lux-form-control-no-top-label]': 'luxNoTopLabel()',
+    '[class.lux-form-control-no-labels]': 'luxNoLabels()',
+    '[class.lux-form-control-no-bottom-label]': 'luxNoBottomLabel()'
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, NgTemplateOutlet, MatError, MatHint, LuxIconComponent, LuxAriaLabelDirective, TranslocoPipe]
 })
 export class LuxFormControlWrapperComponent {
-  private cdr = inject(ChangeDetectorRef);
-
-  focused = false;
-
-  @HostBinding('class.lux-form-control-no-top-label') _luxNoTopLabel = false;
-  @HostBinding('class.lux-form-control-no-labels') _luxNoLabels = false;
-  @HostBinding('class.lux-form-control-no-bottom-label') _luxNoBottomLabel = false;
-
   /**
    * Die zugrunde liegende FormComponent
    */
-  @Input() luxFormComponent!: LuxFormComponentBase;
-  @Input() luxFormComponentElementRef!: ElementRef;
-  @Input() luxIgnoreDefaultLabel = false;
-  @Input() luxCounterLabel = '';
-  @Input() luxHideCounterLabel = false;
-  @Input() luxLabelLongFormat = false;
-  @Input() luxNoInputRow = false;
-  @Input() luxDisplayClearErrorButton = false;
+  readonly luxFormComponent = input.required<LuxFormControlWrapperHost>();
+  readonly luxIgnoreDefaultLabel = input(false);
+  readonly luxCounterLabel = input('');
+  readonly luxHideCounterLabel = input(false);
+  readonly luxLabelLongFormat = input(false);
+  readonly luxNoInputRow = input(false);
+  readonly luxDisplayClearErrorButton = input(false);
 
   /**
    * Dient dazu, bei einer Component den Label-Container auszublenden.
-   * @param noLabel
    */
-  @Input() set luxNoTopLabel(noLabel: boolean) {
-    this._luxNoTopLabel = noLabel;
-  }
-
-  get luxNoTopLabel(): boolean {
-    return this._luxNoTopLabel;
-  }
+  readonly luxNoTopLabel = input(false);
 
   /**
    * Dient dazu, bei einer Component den Label-Container und den Misc-Container auszublenden.
-   * @param noLabel
    */
-  @Input() set luxNoLabels(noLabel: boolean) {
-    this._luxNoLabels = noLabel;
-  }
-
-  get luxNoLabels(): boolean {
-    return this._luxNoLabels;
-  }
+  readonly luxNoLabels = input(false);
 
   /**
    * Dient dazu, bei einer Component den Misc-Container auszublenden.
-   * @param noLabel
    */
-  @Input() set luxNoBottomLabel(noLabel: boolean) {
-    this._luxNoBottomLabel = noLabel;
-  }
+  readonly luxNoBottomLabel = input(false);
 
-  get luxNoBottomLabel(): boolean {
-    return this._luxNoBottomLabel;
-  }
+  readonly focused = signal(false);
 
   /**
    * Gibt wieder, ob der Fehler für diese FormComponent dargestellt werden soll.
    */
-  shouldDisplayError() {
-    return this.luxFormComponent.errorMessage && this.luxFormComponent.formControl.touched && !this.luxFormComponent.luxReadonly;
-  }
+  readonly shouldDisplayError = computed(() => this.luxFormComponent().wrapperState().showError);
 
-  shouldDisplayMisc() {
-    return !this.luxNoBottomLabel && !this.luxNoLabels;
-  }
+  readonly shouldDisplayMisc = computed(() => !this.luxNoBottomLabel() && !this.luxNoLabels());
 
-  shouldDisplayLabelByProperty() {
-    return !this.luxFormComponent.formLabelComponent && this.luxFormComponent.luxLabel;
-  }
+  readonly shouldDisplayLabelByProperty = computed(
+    () => !this.luxFormComponent().formLabelComponent() && !!this.luxFormComponent().luxLabel()
+  );
 
-  shouldDisplayHintByProperty() {
-    return this.luxFormComponent.formHintComponent && !this.luxFormComponent.luxHint;
-  }
+  readonly shouldDisplayHintByProperty = computed(
+    () => !!this.luxFormComponent().formHintComponent() && !this.luxFormComponent().luxHint()
+  );
 
   /**
    * Aktiviert den Fokus dieser Component.
    */
   focusin() {
-    this.focused = true;
-    this.cdr.detectChanges();
+    this.focused.set(true);
   }
 
   /**
    * Deaktiviert den Fokus dieser Component.
    */
   focusout() {
-    this.focused = false;
-    this.cdr.detectChanges();
+    this.focused.set(false);
   }
 
   onCloseErrorMessage() {
-    this.luxFormComponent.errorMessage = undefined;
-    this.luxFormComponent.formControl.updateValueAndValidity();
+    this.luxFormComponent().dismissError();
   }
 }

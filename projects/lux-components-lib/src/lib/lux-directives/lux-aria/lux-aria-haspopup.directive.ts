@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { LuxAriaBase } from './lux-aria-base';
 
 @Directive({
@@ -6,38 +6,24 @@ import { LuxAriaBase } from './lux-aria-base';
 })
 export class LuxAriaHaspopupDirective extends LuxAriaBase<boolean> {
   protected ariaTagName = 'aria-haspopup';
-  _luxAriaHasPopup?: boolean | undefined;
 
-  @Input() luxAriaHasPopupSelector?: string;
-
-  @Input()
-  get luxAriaHasPopup() {
-    return this._luxAriaHasPopup;
-  }
-
-  set luxAriaHasPopup(hasPopup: boolean | undefined) {
-    this._luxAriaHasPopup = hasPopup;
-
-    this.renderAria();
-  }
-
-  constructor() {
-    super();
-    if (!this.luxAriaHasPopupSelector) {
-      const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
-      if (tagName === 'lux-button') {
-        this.luxAriaHasPopupSelector = 'button';
-      } else if (tagName === 'lux-app-header-action-nav-item') {
-        this.luxAriaHasPopupSelector = 'button';
-      }
-    }
-  }
+  readonly luxAriaHasPopupSelector = input<string>();
+  readonly luxAriaHasPopup = input<boolean>();
 
   getSelector(): string | undefined {
-    return this.luxAriaHasPopupSelector;
+    if (this.luxAriaHasPopupSelector()) {
+      return this.luxAriaHasPopupSelector();
+    }
+
+    const tagName = this.elementRef.nativeElement.tagName.toLowerCase();
+    if (tagName === 'lux-button' || tagName === 'lux-app-header-action-nav-item') {
+      return 'button';
+    }
+
+    return undefined;
   }
 
   getValue(): boolean | undefined {
-    return this._luxAriaHasPopup;
+    return this.luxAriaHasPopup();
   }
 }

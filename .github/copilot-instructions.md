@@ -10,9 +10,22 @@ applyTo: '**'
 - Core library exports are centralized in [projects/lux-components-lib/src/public_api.ts](projects/lux-components-lib/src/public_api.ts); ng-packagr entry is [projects/lux-components-lib/ng-package.json](projects/lux-components-lib/ng-package.json).
 - Use DestroyRef + takeUntilDestroyed for automatic cleanup of subscriptions in components/services.
 - Use Signal-based APIs for reactive state management in components/services; see Angular docs for best practices.
+- Use self-closing tag for elements without children.
+- Structured order of class members:
+  - static properties
+  - input()/model() signals
+  - output() signals
+  - viewChild()/contentChild() signals
+  - other public properties/signals
+  - private properties/signals
+  - computed() properties
+  - constructor()
+  - lifecycle hooks (in execution order: ngOnInit, ngAfterViewInit, ngOnDestroy, ...)
+  - public methods
+  - private methods
 - Use inject-Function instead of constructor injection where possible for better tree-shaking and simpler code.
 - Use ChangeDetectionStrategy.OnPush change detection for all new components for better performance; use ChangeDetectorRef.markForCheck() when manual checks are needed.
-- Add unit tests for all new components/services using Jasmine/Karma; place tests alongside implementation files with .spec.ts suffix.
+- Add unit tests for all new components/services using Vitest; place tests alongside implementation files with .spec.ts suffix.
 - **Accessibility testing**: Add axe-core tests to all components for automated accessibility checks. Use the `LuxA11yTestHelper` from `@ihk-gfi/lux-components/test-utils` in spec files (do not call `jasmine-axe`/`axe-core` directly). Example: call `LuxA11yTestHelper.addA11yMatchers()` once per spec file (e.g. in `beforeAll`), then `await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement)` in each test. See LuxButtonComponent.spec.ts for reference implementation.
 - The demo app consumes the library and themes; it uses transloco for translations, and theme CSS from dist/theme (see assets in [angular.json](angular.json)).
 - Themes are CSS variables + classes (Material Theme 3). Variables live under projects/lux-components-theme/src/<themeName>/\_variables\*.scss.
@@ -27,7 +40,7 @@ applyTo: '**'
 - Run demo: npm run start:demo (checks demo conditions, then ng serve).
 - Dev watch loop (start dev server): npm run start:dev (builds library + theme in watch mode, then starts demo when dist outputs exist).
 - Build all packages: npm run pack:all (cleans dist, then builds theme, library, updater, demo).
-- Tests: npm run test:components (lint + Karma headless for library), npm run test:all (demo/theme/updater smoke tests).
+- Tests: npm run test:components (lint + Vitest/jsdom for library), npm run test:all (demo/theme/updater smoke tests).
 
 ## Project-specific conventions
 
@@ -39,5 +52,5 @@ applyTo: '**'
 ## Integration points
 
 - Dependencies include Angular 21, Angular Material, Transloco, DOMPurify, marked, ngx-cookie-service, uuid.
-- Accessibility: axe-core and jasmine-axe are configured for automated accessibility testing in Karma. See [axe-core documentation](https://github.com/dequelabs/axe-core) for WCAG compliance details.
+- Accessibility: axe-core is wrapped by a custom Vitest matcher (see `lux-a11y-test-helper.ts`) for automated accessibility testing. See [axe-core documentation](https://github.com/dequelabs/axe-core) for WCAG compliance details.
 - External icon + font package: @ihk-gfi/lux-components-icons-and-fonts (license notes in root README).

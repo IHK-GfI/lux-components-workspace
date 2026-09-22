@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 
-lux-toggle-ac {
+lux-toggle-ac,
+lux-toggle {
   @include mat.slide-toggle-overrides(
     (
       label-text-size: var(--lux-theme-form-control-font-size),

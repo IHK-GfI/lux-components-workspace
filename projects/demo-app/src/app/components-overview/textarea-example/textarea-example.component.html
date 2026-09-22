@@ -1,0 +1,291 @@
+<example-base-structure
+  exampleTitle="Textarea"
+  exampleDocumentationHref="https://github.com/IHK-GfI/lux-components-workspace/wiki/lux%E2%80%90textarea-v21"
+>
+  <example-base-content>
+    <div class="lux-flex lux-flex-col">
+      <h3>Signal Form &mdash; <code>[formField]</code></h3>
+      <lux-textarea
+        luxAutofocus
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [formField]="signalForm.textareaValue"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-signal-form"
+      >
+      </lux-textarea>
+      <example-signal-form-value [field]="signalForm.textareaValue"></example-signal-form-value>
+    </div>
+    <div class="lux-flex lux-flex-col" [formGroup]="form">
+      <h3 class="deprecated">Reactive-Form &mdash; <code>luxControlBinding</code></h3>
+      <lux-textarea
+        [(luxDisabled)]="disabled"
+        [luxReadonly]="readonly()"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [luxControlBinding]="controlBinding"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-reactive"
+      >
+      </lux-textarea>
+      <example-form-value [form]="form" [controlBinding]="controlBinding"></example-form-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3>Freistehend &mdash; <code>[(value)]</code></h3>
+      <lux-textarea
+        [luxDisabled]="disabled()"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(value)]="plainValue"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [luxControlValidators]="controlValidators()"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-plain-value"
+      >
+      </lux-textarea>
+      <example-value [value]="plainValue()"></example-value>
+    </div>
+    <div class="lux-flex lux-flex-col">
+      <h3 class="deprecated">Freistehend &mdash; <code>[(luxValue)] @deprecated</code></h3>
+      <lux-textarea
+        luxName="textarea_withoutForm"
+        [(luxDisabled)]="disabled"
+        [luxRequired]="required()"
+        [luxReadonly]="readonly()"
+        [(luxValue)]="value"
+        [luxAutocomplete]="autocomplete()"
+        [luxPlaceholder]="placeholder()"
+        [luxLabel]="label()"
+        [luxHint]="hint()"
+        [luxHintShowOnlyOnFocus]="hintShowOnlyOnFocus()"
+        [luxNoTopLabel]="noTopLabel()"
+        [luxNoBottomLabel]="noBottomLabel()"
+        [luxNoLabels]="noLabels()"
+        [luxErrorMessage]="useErrorMessage() ? errorMessage() : undefined"
+        [luxErrorCallback]="useErrorMessage() ? emptyCallback : errorCallback"
+        [luxMaxLength]="maxLength()"
+        [luxControlValidators]="controlValidators()"
+        [luxMinRows]="min()"
+        [luxMaxRows]="max()"
+        [luxHideCounterLabel]="hideCounterLabel()"
+        [luxLabelLongFormat]="labelLongFormat()"
+        [luxDense]="denseFormat()"
+        (luxFocus)="log(showOutputEvents(), 'luxFocus', $event)"
+        (luxFocusIn)="log(showOutputEvents(), 'luxFocusIn', $event)"
+        (luxFocusOut)="log(showOutputEvents(), 'luxFocusOut', $event)"
+        (luxBlur)="log(showOutputEvents(), 'luxBlur', $event)"
+        luxTagId="textarea-plain-lux-value"
+      >
+      </lux-textarea>
+      <example-value [value]="value()"></example-value>
+    </div>
+  </example-base-content>
+  <example-base-simple-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle
+      luxLabel="Output-Events loggen"
+      luxHint="(Console --> F12/CMD+ALT+I)"
+      [(checked)]="showOutputEvents"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
+    <lux-input luxLabel="luxLabel" luxHint="Diese Property ermöglicht es, das Label für die Component zu setzen." [(value)]="label">
+    </lux-input>
+    <lux-input luxLabel="luxHint" luxHint="Diese Property ermöglicht es, den Hint für die Component zu setzen." [(value)]="hint">
+    </lux-input>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoTopLabel"
+        luxHint="Blendet das Label nur visuell aus. Es bleibt im DOM und der zugängliche Name bleibt erhalten."
+        [(checked)]="noTopLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoBottomLabel"
+        luxHint="Entfernt den unteren Bereich (Hint, Fehlermeldung, Counter) aus dem DOM."
+        [(checked)]="noBottomLabel"
+        [luxNoTopLabel]="true"
+      ></lux-toggle>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <div class="lux-flex lux-items-center lux-gap-2">
+      <lux-toggle
+        class="lux-flex-auto"
+        luxLabel="luxNoLabels"
+        luxHint="Kombination aus luxNoTopLabel und luxNoBottomLabel."
+        [(checked)]="noLabels"
+        [luxNoTopLabel]="true"
+      ></lux-toggle>
+      <app-status-marker [markerType]="markerTypeUpdated"></app-status-marker>
+    </div>
+    <lux-toggle
+      luxLabel="luxHintShowOnlyOnFocus"
+      luxHint="Erlaubt es, den Hinweis nur einzublenden, wenn das Element den Fokus hat"
+      [(checked)]="hintShowOnlyOnFocus"
+      [luxNoTopLabel]="true"
+    ></lux-toggle>
+    <lux-input
+      luxLabel="luxPlaceholder"
+      luxHint="Diese Property ermöglicht es, den Placeholder für die Component zu setzen."
+      [(value)]="placeholder"
+    >
+    </lux-input>
+    <lux-input
+      luxLabel="luxMaxLength"
+      luxHint="Über diese Property kann die maximale Länge angegeben werden."
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      [(value)]="maxLength"
+    >
+    </lux-input>
+    @if (maxLength()) {
+      <lux-toggle
+        luxLabel="luxHideCounterLabel"
+        luxHint="Mithilfe dieses Flags kann eingestellt werden, ob das Counter-Label ausgeblendet werden soll."
+        [(checked)]="hideCounterLabel"
+        [luxNoTopLabel]="true"
+      >
+      </lux-toggle>
+    }
+    <example-form-disable [form]="form" [controlBinding]="controlBinding" [(disabled)]="disabled"></example-form-disable>
+    <lux-toggle
+      [(checked)]="readonly"
+      luxLabel="luxReadonly"
+      luxHint="Dieses Flag verhindert das Auswählen/die Interaktion mit dieser Component."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle>
+    <lux-toggle luxLabel="luxRequired" (checkedChange)="changeRequired($event)" [luxNoTopLabel]="true">
+      <lux-form-hint>
+        Markiert diese Component als Pflichtfeld. Dies funktioniert direkt nur in Components, die nicht in einer Reactive-Form sind.<br />
+        <b>In diesem Beispiel wird stattdessen für die Reactive-Form Component der Validator.required für das Form-Control gesetzt.</b>
+      </lux-form-hint>
+    </lux-toggle>
+    <lux-toggle
+      [(checked)]="denseFormat"
+      luxLabel="luxDense"
+      luxHint="Diese Property veringert das Padding innerhalb des Controls."
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle>
+    <lux-select
+      luxLabel="luxAutocomplete"
+      luxHint="Dieses Flag schaltet die Einblendung früherer Eingaben für dieses Feld durch den Browser ein."
+      [luxOptions]="autocompleteOptions"
+      [(value)]="autocomplete"
+    >
+    </lux-select>
+    <lux-input
+      [(value)]="min"
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      luxLabel="luxMinRows"
+      luxHint="Diese Property definiert die minimale Anzahl an Reihen für die Textarea."
+    ></lux-input>
+    <lux-input
+      [(value)]="max"
+      luxType="number"
+      [luxNumberAlignLeft]="true"
+      luxLabel="luxMaxRows"
+      luxHint="Diese Property definiert die maximale Anzahl an Reihen für die Textarea."
+    ></lux-input>
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
+    <lux-toggle
+      luxLabel="luxErrorMessage verwenden"
+      luxHint="Wenn 'false', wird luxErrorCallback genutzt. Ist die Message leer, wird der normale Fehlertext genommen."
+      [(checked)]="useErrorMessage"
+      [luxNoTopLabel]="true"
+    >
+    </lux-toggle>
+    @if (useErrorMessage()) {
+      <lux-input
+        luxLabel="luxErrorMessage"
+        luxHint="Über diese Property lässt sich eine feste Fehlermeldung
+                 (unabhängig vom speziellen Validierungsfehler) einstellen."
+        [(value)]="errorMessage"
+      >
+      </lux-input>
+    }
+    @if (!useErrorMessage()) {
+      <pre class="lux-label">{{ errorCallbackString }}</pre>
+    }
+    <lux-select
+      [luxOptions]="validatorOptions"
+      luxOptionLabelProp="label"
+      [luxMultiple]="true"
+      [luxPickValue]="pickValidatorValueFn"
+      luxLabel="luxControlValidators"
+      [(value)]="controlValidators"
+    >
+      <lux-form-hint>
+        Diese Property ermöglicht es einer Component die <b>nicht in einer Reactive-Form</b> ist, auf einfache Art und Weise trotzdem
+        Validatoren zu übergeben.<br />
+        Diese Property funktioniert nicht für Components in Reactive-Forms, da diese ihre Validatoren über die entsprechende FormControl
+        setzen.
+      </lux-form-hint>
+    </lux-select>
+    <lux-toggle
+      luxLabel="Lange Labeltexte mit Zeilenumbruch zulassen"
+      luxHint="Nur für die Darstellung in Spalten empfohlen, da eine Ausrichtung im Raster nicht gewährleistet werden kann."
+      [luxNoTopLabel]="true"
+      [(checked)]="labelLongFormat"
+    >
+    </lux-toggle>
+  </example-base-advanced-options>
+</example-base-structure>

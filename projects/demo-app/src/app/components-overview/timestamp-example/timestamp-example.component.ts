@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
-    LuxButtonComponent,
-    LuxDatepickerAcComponent,
-    LuxFormHintComponent,
-    LuxInputAcComponent,
-    LuxRelativeTimestampPipe
+  LuxButtonComponent,
+  LuxDatepickerComponent,
+  LuxFormHintComponent,
+  LuxInputComponent,
+  LuxRelativeTimestampPipe
 } from '@ihk-gfi/lux-components';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -14,13 +14,13 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
   selector: 'app-timestamp-example',
   templateUrl: './timestamp-example.component.html',
   styleUrls: ['./timestamp-example.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxRelativeTimestampPipe,
     LuxButtonComponent,
-    LuxInputAcComponent,
+    LuxInputComponent,
     LuxFormHintComponent,
-    LuxDatepickerAcComponent,
+    LuxDatepickerComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
     ExampleBaseSimpleOptionsComponent
@@ -28,31 +28,27 @@ import { ExampleBaseStructureComponent } from '../../example-base/example-base-r
 })
 export class TimestampExampleComponent {
   readonly initialNow = Date.now();
-  now: number | null;
-  nowISO: string;
+  readonly now = signal<number | null>(this.initialNow);
+  readonly nowISO = signal(new Date(this.initialNow).toISOString());
 
-  defaultText = '';
-  prefix?: string;
-
-  constructor() {
-    this.now = this.initialNow;
-    this.nowISO = new Date(this.now).toISOString();
-  }
+  readonly defaultText = signal('');
+  readonly prefix = signal<string | undefined>(undefined);
 
   updateNow(timestamp: string) {
     if (timestamp) {
-      this.now = new Date(timestamp).getTime();
-      this.nowISO = new Date(this.now).toISOString();
+      const now = new Date(timestamp).getTime();
+      this.now.set(now);
+      this.nowISO.set(new Date(now).toISOString());
     }
   }
 
   resetNow() {
-    this.now = this.initialNow;
-    this.nowISO = new Date(this.now).toISOString();
+    this.now.set(this.initialNow);
+    this.nowISO.set(new Date(this.initialNow).toISOString());
   }
 
   clearNow() {
-    this.now = null;
-    this.nowISO = '';
+    this.now.set(null);
+    this.nowISO.set('');
   }
 }

@@ -1,8 +1,9 @@
 <lux-card
   class="lux-flex lux-flex-auto lux-m-4 lux-min-height-96"
-  [class]="fullWidth ? '' : 'gt-md:lux-min-width-1/2 gt-md:lux-max-width-1/2'"
-  luxTagId="impressum-card">
+  [class]="fullWidth() ? '' : 'gt-md:lux-min-width-1/2 gt-md:lux-max-width-1/2'"
+  luxTagId="impressum-card"
+>
   <lux-card-content>
-    <div [innerHTML]="content"></div>
+    <div [innerHTML]="content()"></div>
   </lux-card-content>
 </lux-card>
