@@ -118,6 +118,8 @@ Zu großer Inhalt wird optisch weiterhin genauso abgeschnitten wie bisher. Da `c
 
 Der Card-Inhalt ist damit wie bisher innerhalb der Card scrollbar. Innerhalb einer so markierten Card funktioniert `luxStickyHeader` allerdings nicht, da die Card-Content-Box dadurch wieder zum Scroll-Container wird.
 
+**Hinweis (Endlosschleife bei `valueChanges`, betrifft Updates von 21.8.0)**: In Version 21.8.0 konnten Anwendungen, die in ihren `luxValueChange`/`luxCheckedChange`-Handlern wieder `updateValueAndValidity()` aufrufen, in eine Endlosschleife laufen (Issue #284). Ab Version 21.9.0 liefert die `LuxFormComponentBase` ein `luxValueChange`/`luxCheckedChange` nur noch aus, wenn sich der Wert des FormControls tatsächlich geändert hat. Das Update behebt die Endlosschleife ohne Codeänderung.
+
 - LUX-Components-Updater aktualisieren:
   - `npm update @ihk-gfi/lux-components-update`
 - LUX-Components-Updater ausführen:

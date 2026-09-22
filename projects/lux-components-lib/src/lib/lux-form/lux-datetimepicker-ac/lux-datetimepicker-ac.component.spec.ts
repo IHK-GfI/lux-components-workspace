@@ -678,6 +678,27 @@ describe('LuxDatetimepickerAcComponent', () => {
       expect(datepickerComponent.formControl.value).toEqual(expectedDate);
       expect(spy).toHaveBeenCalledTimes(251);
     }));
+
+    it('Sollte den Format-Validator auch nach einer Änderung der luxControlValidators behalten', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxNoFormAttributeTestComponent);
+      fixture.detectChanges();
+      LuxTestHelper.wait(fixture);
+      const datetimepicker: LuxDatetimepickerAcComponent = fixture.debugElement.query(
+        By.directive(LuxDatetimepickerAcComponent)
+      ).componentInstance;
+
+      // Vorbedingungen testen
+      expect(datetimepicker.formControl.hasValidator(datetimepicker.dateTimeValidator)).toBeTrue();
+
+      // Änderungen durchführen
+      // setValidators() ersetzt die Validatoren komplett, der Format-Validator muss danach wieder hängen.
+      fixture.componentInstance.validators = Validators.required;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen
+      expect(datetimepicker.formControl.hasValidator(datetimepicker.dateTimeValidator)).toBeTrue();
+      expect(datetimepicker.formControl.hasValidator(Validators.required)).toBeTrue();
+    }));
   });
 
   describe('A11y', () => {
