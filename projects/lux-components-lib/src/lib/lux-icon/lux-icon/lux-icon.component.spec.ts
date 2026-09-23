@@ -36,6 +36,22 @@ describe('LuxIconComponent', () => {
       expect(fixture.componentInstance.iconName).toEqual(expectedIcon);
       expect(newIconEl.nativeElement.innerHTML).toContain(expectedIcon);
     }));
+
+    it('Unbekanntes Icon fuehrt zur Anzeige des Warn-Icons', fakeAsync(() => {
+      spyOn(console, 'warn');
+
+      // Änderungen durchführen
+      fixture.componentInstance.iconName = 'lux-nicht-vorhandenes-icon';
+      fixture.detectChanges();
+
+      // Nachbedingungen testen
+      const iconComponent = fixture.debugElement.query(By.directive(LuxIconComponent)).componentInstance as LuxIconComponent;
+      expect(console.warn).toHaveBeenCalled();
+      expect(iconComponent.luxIconName).toEqual('lux-interface-alert-warning-diamond');
+
+      const matIconEl = fixture.debugElement.query(By.css('mat-icon'));
+      expect(matIconEl.nativeElement.getAttribute('data-mat-icon-name')).toEqual('lux-interface-alert-warning-diamond');
+    }));
   });
 });
 
