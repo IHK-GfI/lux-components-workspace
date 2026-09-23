@@ -5,7 +5,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioButton } from '@angular/material/radio';
 import { translateSignal } from '@jsverse/transloco';
 import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
-import { LuxListSelectMode } from '../lux-list-select-model/lux-list-select-types';
+import { LuxTooltipDirective } from '../../../lux-directives/lux-tooltip/lux-tooltip.directive';
+import { LuxListSelectMode, LuxListSelectSize } from '../lux-list-select-model/lux-list-select-types';
 
 // Checkbox/Radio in diesem Wrapper sind dauerhaft kein eigener Tab-Stopp, daher von der generischen
 // Tab-Stopp-Verwaltung ausgeschlossen.
@@ -23,7 +24,7 @@ const NAVIGABLE_SELECTORS =
   selector: 'lux-list-select-item',
   templateUrl: './lux-list-select-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCheckbox, MatRadioButton, NgTemplateOutlet, LuxButtonComponent]
+  imports: [MatCheckbox, MatRadioButton, NgTemplateOutlet, LuxButtonComponent, LuxTooltipDirective]
 })
 export class LuxListSelectItemComponent<T = unknown> implements FocusableOption {
   private readonly elementRef = inject(ElementRef<HTMLElement>);
@@ -40,6 +41,7 @@ export class LuxListSelectItemComponent<T = unknown> implements FocusableOption 
 
   readonly luxItem = input.required<T>();
   readonly luxMode = input<LuxListSelectMode>('multi');
+  readonly luxSize = input<LuxListSelectSize>('default');
   readonly luxSelected = input(false);
   readonly luxDisabled = input(false);
   readonly luxLabel = input('');

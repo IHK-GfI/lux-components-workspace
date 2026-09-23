@@ -4,6 +4,7 @@
     <lux-list-select-item
       [luxItem]="item"
       [luxMode]="luxMode()"
+      [luxSize]="luxSize()"
       [luxSelected]="isSelected(item)"
       [luxDisabled]="componentDisabled() || isItemDisabled(item)"
       [luxLabel]="getLabel(item)"
@@ -39,7 +40,7 @@
         <lux-input-ac-suffix>
           <lux-button
             class="lux-list-select-search-clear"
-            [luxRounded]="true"
+            [luxIconButton]="true"
             luxIconName="lux-interface-delete-circle"
             [luxLabel]="'luxc.list-select.search_clear_arialabel' | transloco"
             [luxDisabled]="componentDisabled()"

@@ -5,6 +5,8 @@
   class="lux-list-select-card lux-flex lux-items-center lux-gap-4"
   role="row"
   tabindex="-1"
+  [class.lux-list-select-size-small]="luxSize() === 'small'"
+  [class.lux-list-select-size-xsmall]="luxSize() === 'xsmall'"
   [class.lux-selected]="luxSelected()"
   [class.lux-disabled]="luxDisabled()"
   [attr.aria-selected]="luxSelected()"
@@ -41,13 +43,15 @@
       ></mat-radio-button>
     }
   </div>
-  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto lux-gap-2" role="gridcell" [attr.id]="labelId">
+  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto" role="gridcell" [attr.id]="labelId">
     @if (luxContentTemplate()) {
       <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
     } @else {
-      <span class="lux-list-select-title">{{ luxLabel() }}</span>
+      <span class="lux-list-select-title" [luxTooltip]="luxLabel()" [luxTooltipIfTruncated]="true">{{ luxLabel() }}</span>
       @if (luxSubLabel()) {
-        <span class="lux-list-select-subtitle lux-leading-tight" [attr.id]="subLabelId">{{ luxSubLabel() }}</span>
+        <span class="lux-list-select-subtitle lux-leading-tight" [attr.id]="subLabelId" [luxTooltip]="luxSubLabel() ?? ''" [luxTooltipIfTruncated]="true">{{
+          luxSubLabel()
+        }}</span>
       }
     }
   </div>
@@ -55,7 +59,7 @@
     <div class="lux-list-select-detail-cell lux-flex lux-items-center" role="gridcell">
       <lux-button
         class="lux-list-select-detail"
-        [luxRounded]="true"
+        [luxIconButton]="true"
         [luxIconName]="luxDetailIconName()"
         [luxLabel]="detailAriaLabel()"
         [luxDisabled]="luxDisabled()"

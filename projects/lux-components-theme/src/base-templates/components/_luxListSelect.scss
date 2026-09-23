@@ -25,9 +25,13 @@ lux-list-select {
       border: 2px solid $lux-list-select-scrollbar-track;
     }
 
-    &.lux-list-select-loading .lux-list-select-list {
-      opacity: 0.4; // Liste dezent abdunkeln, solange das Overlay lädt
-      pointer-events: none;
+    &.lux-list-select-loading {
+      min-height: 5rem; // Platz für den Spinner, solange noch keine Karten geladen sind
+
+      .lux-list-select-list {
+        opacity: 0.4; // Liste dezent abdunkeln, solange das Overlay lädt
+        pointer-events: none;
+      }
     }
   }
 
@@ -50,8 +54,7 @@ lux-list-select {
   }
 
   .lux-list-select-card {
-    // Figma: 81px Kartenhöhe = 1px Border + 15px + 49px Inhalt (Titel 22 + Gap 8 + Untertitel 19) + 15px + 1px Border
-    padding: 15px var(--lux-theme-card-padding);
+    padding: var(--lux-theme-card-padding);
     background-color: var(--lux-theme-card-background-color);
     border: 1px solid var(--lux-theme-app-border-color);
     border-radius: var(--lux-theme-radius-sm);
@@ -82,10 +85,27 @@ lux-list-select {
         color: var(--lux-theme-dark-disabled-text);
       }
     }
+
+    // Größenvarianten (Figma "Header size"): small verkleinert das Padding, xsmall zusätzlich Titel und Abstand
+    &.lux-list-select-size-small,
+    &.lux-list-select-size-xsmall {
+      padding: var(--lux-theme-spacing-md);
+    }
+
+    &.lux-list-select-size-xsmall {
+      .lux-list-select-title {
+        font-size: var(--lux-theme-font-size-lg);
+      }
+
+      .lux-list-select-headlines {
+        gap: var(--lux-theme-spacing-xs);
+      }
+    }
   }
 
   .lux-list-select-headlines {
     min-width: 0;
+    gap: var(--lux-theme-spacing-sm);
   }
 
   .lux-list-select-title {

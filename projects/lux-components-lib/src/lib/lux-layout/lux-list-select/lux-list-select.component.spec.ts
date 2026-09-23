@@ -18,7 +18,7 @@ import {
   ILuxListSelectHttpDaoConf,
   ILuxListSelectHttpDaoStructure
 } from './lux-list-select-model/lux-list-select-http-dao.interface';
-import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
+import { LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
 
 interface TestAdresse {
   label: string;
@@ -235,6 +235,30 @@ describe('LuxListSelectComponent', () => {
       // Nachbedingungen prüfen
       const checkboxes = fixture.debugElement.queryAll(By.css('lux-list-select-item mat-checkbox input'));
       expect((checkboxes[1].nativeElement as HTMLInputElement).checked).toBeTrue();
+    });
+  });
+
+  describe('Größenvarianten', () => {
+    it('Sollte die Größenklasse für small und xsmall an die Karten geben', () => {
+      // Vorbedingungen testen
+      const card = () => fixture.debugElement.query(By.css('.lux-list-select-card')).nativeElement as HTMLElement;
+      expect(card().classList).not.toContain('lux-list-select-size-small');
+      expect(card().classList).not.toContain('lux-list-select-size-xsmall');
+
+      // Änderungen durchführen
+      host.size = 'small';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(card().classList).toContain('lux-list-select-size-small');
+
+      // Änderungen durchführen
+      host.size = 'xsmall';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(card().classList).not.toContain('lux-list-select-size-small');
+      expect(card().classList).toContain('lux-list-select-size-xsmall');
     });
   });
 
@@ -1672,6 +1696,7 @@ describe('LuxListSelectComponent', () => {
   template: `
     <lux-list-select
       [luxMode]="mode"
+      [luxSize]="size"
       [luxItems]="items"
       [(luxSelected)]="selected"
       [luxShowDetailButton]="showDetailButton"
@@ -1695,6 +1720,7 @@ describe('LuxListSelectComponent', () => {
 })
 class MockHostComponent {
   mode: LuxListSelectMode = 'multi';
+  size: LuxListSelectSize = 'default';
   items = TEST_ITEMS;
   selected: TestAdresse[] = [];
   showDetailButton = false;

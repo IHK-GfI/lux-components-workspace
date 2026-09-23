@@ -33,7 +33,7 @@ import { LuxInputAcPrefixComponent } from '../../lux-form/lux-input-ac/lux-input
 import { LuxInputAcSuffixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
-import { LuxListSelectMode } from './lux-list-select-model/lux-list-select-types';
+import { LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
 import { LuxListSelectKeyboardController } from './lux-list-select-keyboard-controller';
 import { LuxListSelectDataSource } from './lux-list-select-data-source';
 import { announceSearchResults } from './lux-list-select-search-announcer';
@@ -78,6 +78,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   private readonly uniqueId = LuxListSelectComponent.nextUniqueId++;
 
   readonly luxMode = input<LuxListSelectMode>('multi');
+  readonly luxSize = input<LuxListSelectSize>('default');
   readonly luxItems = input<T[]>([]);
   readonly luxLabelProp = input('label');
   readonly luxSubLabelProp = input('subLabel');
