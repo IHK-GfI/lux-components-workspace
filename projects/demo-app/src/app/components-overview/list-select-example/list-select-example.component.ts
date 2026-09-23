@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal, model, signal } from '@angular/core';
 import {
   ILuxListSelectHttpDao,
+  LuxButtonComponent,
   LuxInputAcComponent,
   LuxListSelectComponent,
   LuxListSelectMode,
+  LuxListSelectSize,
   LuxSelectAcComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
@@ -44,6 +46,7 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxListSelectComponent,
+    LuxButtonComponent,
     LuxSelectAcComponent,
     LuxToggleAcComponent,
     LuxInputAcComponent,
@@ -55,7 +58,19 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
 export class ListSelectExampleComponent {
   log = logResult;
 
-  readonly alleAdressen = ALLE_ADRESSEN;
+  readonly alleAdressen = signal<DemoAdresse[]>(ALLE_ADRESSEN);
+
+  readonly sizeOptions: { label: string; value: LuxListSelectSize }[] = [
+    { label: 'default', value: 'default' },
+    { label: 'small', value: 'small' },
+    { label: 'xsmall', value: 'xsmall' }
+  ];
+
+  readonly pageSizeOptions: { label: string; value: number }[] = [
+    { label: '3', value: 3 },
+    { label: '5', value: 5 },
+    { label: '10', value: 10 }
+  ];
 
   readonly modeOptions: { label: string; value: LuxListSelectMode }[] = [
     { label: 'multi', value: 'multi' },
@@ -69,6 +84,12 @@ export class ListSelectExampleComponent {
   ];
 
   mode = model<LuxListSelectMode>('multi');
+  size = model<LuxListSelectSize>('default');
+  showCounter = model(true);
+  selectAllLabel = model('Alle Adressen');
+  labelProp = model('label');
+  subLabelProp = model('subLabel');
+  detailIconName = model('lux-interface-arrows-expand-5');
   showOutputEvents = model(false);
   showPagination = model(false);
   infiniteScroll = model(false);
@@ -76,7 +97,7 @@ export class ListSelectExampleComponent {
   disabled = model(false);
   errorMessage = model<string>('');
   maxHeight = model('420px');
-  pageSize = 5;
+  pageSize = model(5);
 
   showSearch = model(false);
   searchDelay = model(300);
@@ -85,13 +106,19 @@ export class ListSelectExampleComponent {
 
   pageIndex = model(0);
   selected = signal<DemoAdresse[]>([]);
-  loadedCount = signal(INITIAL_LOADED_COUNT);
+
+  // Sucheingabe sowie ein Wechsel des Modus (Server-DAO an/aus, Infinite Scroll an/aus) setzen
+  // den client-seitig geladenen Ausschnitt auf den Initialwert zurück.
+  loadedCount = linkedSignal({
+    source: () => ({ search: this.searchValue(), dao: this.useHttpDao(), infinite: this.infiniteScroll() }),
+    computation: () => INITIAL_LOADED_COUNT
+  });
 
   // Bei Aktivierung des Toggles wird ein neues DAO-Objekt gebunden (Server-Simulation), bei
   // Deaktivierung liefert der Computed wieder "undefined" -> die Komponente fällt zurück auf
   // luxItems und ihre eigene Client-Filterung/-Slicing.
   httpDao = computed<ILuxListSelectHttpDao<DemoAdresse> | undefined>(() =>
-    this.useHttpDao() ? new ListSelectExampleHttpDao(this.alleAdressen) : undefined
+    this.useHttpDao() ? new ListSelectExampleHttpDao(this.alleAdressen()) : undefined
   );
 
   // Client-Modus (kein luxHttpDao): Bei aktiver Paginierung schneidet die Komponente selbst zu,
@@ -101,20 +128,30 @@ export class ListSelectExampleComponent {
   // "Infinite Scrolling"). Ist ein DAO gebunden, übernimmt dieser Paging/Scrolling serverseitig.
   visibleItems = computed(() => {
     if (this.infiniteScroll() && !this.useHttpDao()) {
-      return this.alleAdressen.slice(0, this.loadedCount());
+      return this.alleAdressen().slice(0, this.loadedCount());
     }
-    return this.alleAdressen;
+    return this.alleAdressen();
   });
 
-  constructor() {
-    // Sucheingabe sowie ein Wechsel des Modus (Server-DAO an/aus, Infinite Scroll an/aus) setzen
-    // den client-seitig geladenen Ausschnitt auf den Initialwert zurück.
-    effect(() => {
-      this.searchValue();
-      this.useHttpDao();
-      this.infiniteScroll();
-      this.loadedCount.set(INITIAL_LOADED_COUNT);
-    });
+  clearItems() {
+    this.alleAdressen.set([]);
+    this.selected.set([]);
+  }
+
+  addItem() {
+    const nr = this.alleAdressen().length + 1;
+    this.alleAdressen.update((items) => [
+      ...items,
+      {
+        label: `Neuer Eintrag ${nr} mit einem sehr langen Titel, der in der Karte abgeschnitten werden muss`,
+        subLabel: `Sehr lange Adresszeile ${nr}, Musterstraße 123, 12345 Musterstadt, Gebäude B, 3. Etage, Raum 301`
+      }
+    ]);
+  }
+
+  resetItems() {
+    this.alleAdressen.set(ALLE_ADRESSEN);
+    this.selected.set([]);
   }
 
   onPageChange(event: LuxPageEvent) {
@@ -124,7 +161,7 @@ export class ListSelectExampleComponent {
   onScrolled() {
     this.log(this.showOutputEvents(), 'luxScrolled');
     if (!this.useHttpDao()) {
-      this.loadedCount.update((count) => Math.min(count + 3, this.alleAdressen.length));
+      this.loadedCount.update((count) => Math.min(count + 3, this.alleAdressen().length));
     }
   }
 

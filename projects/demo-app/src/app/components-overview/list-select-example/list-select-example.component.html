@@ -6,26 +6,36 @@
     <div class="lux-flex lux-flex-col lux-gap-3" style="max-width: 600px">
       <lux-list-select
         [luxMode]="mode()"
+        [luxSize]="size()"
         [luxItems]="visibleItems()"
+        [luxLabelProp]="labelProp()"
+        [luxSubLabelProp]="subLabelProp()"
+        [luxDetailIconName]="detailIconName()"
+        [luxShowCounter]="showCounter()"
+        [luxSelectAllLabel]="selectAllLabel() || undefined"
         [luxSelected]="selected()"
         [luxShowSearch]="showSearch()"
         [luxSearchDelay]="searchDelay()"
         [(luxSearchValue)]="searchValue"
         [luxHttpDao]="httpDao()"
         [luxShowPagination]="showPagination()"
-        [luxPageSize]="pageSize"
+        [luxPageSize]="pageSize()"
         [(luxPageIndex)]="pageIndex"
         [luxInfiniteScroll]="infiniteScroll()"
         [luxMaxHeight]="maxHeight()"
         [luxShowDetailButton]="showDetailButton()"
         [luxDisabled]="disabled()"
         [luxErrorMessage]="errorMessage() || null"
-        luxSelectAllLabel="Alle Adressen"
         (luxSelectedChange)="onSelectedChange($event)"
         (luxPageChange)="onPageChange($event)"
         (luxScrolled)="onScrolled()"
         (luxDetailClicked)="onDetail($event)"
       ></lux-list-select>
+      <div class="lux-flex lux-gap-2 lux-flex-wrap">
+        <lux-button luxLabel="Liste leeren" [luxStroked]="true" (luxClicked)="clearItems()"></lux-button>
+        <lux-button luxLabel="Langen Eintrag hinzufügen" [luxStroked]="true" (luxClicked)="addItem()"></lux-button>
+        <lux-button luxLabel="Zurücksetzen" [luxStroked]="true" (luxClicked)="resetItems()"></lux-button>
+      </div>
     </div>
   </example-base-content>
 
@@ -43,6 +53,18 @@
       [luxPickValue]="(item) => item.value"
       [(luxSelected)]="mode"
     ></lux-select-ac>
+    <lux-select-ac
+      luxLabel="luxSize"
+      [luxOptions]="sizeOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="size"
+    ></lux-select-ac>
+    <lux-toggle-ac luxLabel="luxShowCounter" [(luxChecked)]="showCounter"></lux-toggle-ac>
+    <lux-input-ac luxLabel="luxSelectAllLabel" [(luxValue)]="selectAllLabel"></lux-input-ac>
+    <lux-input-ac luxLabel="luxLabelProp" [(luxValue)]="labelProp"></lux-input-ac>
+    <lux-input-ac luxLabel="luxSubLabelProp" [(luxValue)]="subLabelProp"></lux-input-ac>
+    <lux-input-ac luxLabel="luxDetailIconName" [(luxValue)]="detailIconName"></lux-input-ac>
     <lux-toggle-ac luxLabel="luxShowSearch" [(luxChecked)]="showSearch"></lux-toggle-ac>
     <lux-select-ac
       luxLabel="luxSearchDelay"
@@ -57,6 +79,14 @@
       [(luxChecked)]="useHttpDao"
     ></lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxShowPagination" [(luxChecked)]="showPagination"></lux-toggle-ac>
+    <lux-select-ac
+      luxLabel="luxPageSize"
+      [luxOptions]="pageSizeOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="pageSize"
+    ></lux-select-ac>
+    <lux-input-ac luxLabel="luxPageIndex (aktuell)" [luxValue]="'' + pageIndex()" [luxReadonly]="true"></lux-input-ac>
     <lux-toggle-ac luxLabel="luxInfiniteScroll" [(luxChecked)]="infiniteScroll"></lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxShowDetailButton" [(luxChecked)]="showDetailButton"></lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled"></lux-toggle-ac>
