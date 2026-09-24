@@ -8,8 +8,8 @@
         [luxMode]="mode()"
         [luxSize]="size()"
         [luxItems]="visibleItems()"
-        [luxLabelProp]="labelProp()"
-        [luxSubLabelProp]="subLabelProp()"
+        [luxTitleProp]="titleProp()"
+        [luxSubTitleProp]="subTitleProp()"
         [luxDetailIconName]="detailIconName()"
         [luxShowCounter]="showCounter()"
         [luxSelectAllLabel]="selectAllLabel() || undefined"
@@ -60,37 +60,47 @@
       [luxPickValue]="(item) => item.value"
       [(luxSelected)]="size"
     ></lux-select-ac>
-    <lux-toggle-ac luxLabel="luxShowCounter" [(luxChecked)]="showCounter"></lux-toggle-ac>
-    <lux-input-ac luxLabel="luxSelectAllLabel" [(luxValue)]="selectAllLabel"></lux-input-ac>
-    <lux-input-ac luxLabel="luxLabelProp" [(luxValue)]="labelProp"></lux-input-ac>
-    <lux-input-ac luxLabel="luxSubLabelProp" [(luxValue)]="subLabelProp"></lux-input-ac>
-    <lux-input-ac luxLabel="luxDetailIconName" [(luxValue)]="detailIconName"></lux-input-ac>
-    <lux-toggle-ac luxLabel="luxShowSearch" [(luxChecked)]="showSearch"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxShowSearch" [(luxChecked)]="showSearch" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxShowDetailButton" [(luxChecked)]="showDetailButton" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxShowPagination" [(luxChecked)]="showPagination" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxInfiniteScroll" [(luxChecked)]="infiniteScroll" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="luxHttpDao (Server-Simulation)"
+      luxHint="1 s Latenz, filtert/paginiert serverseitig"
+      [(luxChecked)]="useHttpDao"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-input-ac luxLabel="luxErrorMessage" [(luxValue)]="errorMessage"></lux-input-ac>
+  </example-base-simple-options>
+  <example-base-advanced-options class="lux-flex lux-flex-col lux-gap-4">
     <lux-select-ac
       luxLabel="luxSearchDelay"
+      luxHint="Verzögerung, bis die Suche nach der Eingabe ausgelöst wird."
       [luxOptions]="searchDelayOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
       [(luxSelected)]="searchDelay"
     ></lux-select-ac>
-    <lux-toggle-ac
-      luxLabel="luxHttpDao (Server-Simulation)"
-      luxHint="1 s Latenz, filtert/paginiert serverseitig"
-      [(luxChecked)]="useHttpDao"
-    ></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxShowPagination" [(luxChecked)]="showPagination"></lux-toggle-ac>
     <lux-select-ac
       luxLabel="luxPageSize"
+      luxHint="Seitengröße der Paginierung bzw. Nachladeschritt beim Infinite Scrolling."
       [luxOptions]="pageSizeOptions"
       luxOptionLabelProp="label"
       [luxPickValue]="(item) => item.value"
       [(luxSelected)]="pageSize"
     ></lux-select-ac>
     <lux-input-ac luxLabel="luxPageIndex (aktuell)" [luxValue]="'' + pageIndex()" [luxReadonly]="true"></lux-input-ac>
-    <lux-toggle-ac luxLabel="luxInfiniteScroll" [(luxChecked)]="infiniteScroll"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxShowDetailButton" [(luxChecked)]="showDetailButton"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxDisabled" [(luxChecked)]="disabled"></lux-toggle-ac>
-    <lux-input-ac luxLabel="luxErrorMessage" [(luxValue)]="errorMessage"></lux-input-ac>
-    <lux-input-ac luxLabel="luxMaxHeight" [(luxValue)]="maxHeight"></lux-input-ac>
-  </example-base-simple-options>
+    <lux-toggle-ac
+      luxLabel="luxShowCounter"
+      luxHint="Zähler „x von y ausgewählt“ im Header (nur Multi-Modus)."
+      [(luxChecked)]="showCounter"
+      [luxNoTopLabel]="true"
+    ></lux-toggle-ac>
+    <lux-input-ac luxLabel="luxSelectAllLabel" luxHint="Eigener Text für „Alle auswählen“." [(luxValue)]="selectAllLabel"></lux-input-ac>
+    <lux-input-ac luxLabel="luxTitleProp" luxHint="Property der Items, aus der der Titel gelesen wird." [(luxValue)]="titleProp"></lux-input-ac>
+    <lux-input-ac luxLabel="luxSubTitleProp" luxHint="Property der Items, aus der der Untertitel gelesen wird." [(luxValue)]="subTitleProp"></lux-input-ac>
+    <lux-input-ac luxLabel="luxDetailIconName" [(luxValue)]="detailIconName"></lux-input-ac>
+    <lux-input-ac luxLabel="luxMaxHeight" luxHint="Gesamthöhe der Komponente, die Liste scrollt innerhalb." [(luxValue)]="maxHeight"></lux-input-ac>
+  </example-base-advanced-options>
 </example-base-structure>

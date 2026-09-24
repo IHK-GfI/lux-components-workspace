@@ -16,7 +16,7 @@ export class ListSelectExampleHttpDao implements ILuxListSelectHttpDao<DemoAdres
     if (conf.filter) {
       const term = conf.filter.toLowerCase();
       gefiltert = gefiltert.filter(
-        (adresse) => adresse.label.toLowerCase().includes(term) || adresse.subLabel.toLowerCase().includes(term)
+        (adresse) => adresse.title.toLowerCase().includes(term) || adresse.subTitle.toLowerCase().includes(term)
       );
     }
 

@@ -11,14 +11,15 @@ import {
 } from '@ihk-gfi/lux-components';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
+import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
 import { ExampleBaseStructureComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-structure/example-base-structure.component';
 import { logResult } from '../../example-base/example-base-util/example-base-helper';
 import { ListSelectExampleHttpDao } from './list-select-example-http-dao';
 
 export interface DemoAdresse {
-  label: string;
-  subLabel: string;
+  title: string;
+  subTitle: string;
   disabled?: boolean;
 }
 
@@ -27,17 +28,17 @@ export interface DemoAdresse {
 const INITIAL_LOADED_COUNT = 6;
 
 const ALLE_ADRESSEN: DemoAdresse[] = [
-  { label: 'Anna Müller', subLabel: 'Berliner Str. 12, 10115 Berlin' },
-  { label: 'Thomas Schmidt', subLabel: 'Hauptstr. 45, 80331 München' },
-  { label: 'Laura Weber', subLabel: 'Rheinweg 7, 50667 Köln' },
-  { label: 'Markus Fischer', subLabel: 'Schillerplatz 3, 70173 Stuttgart', disabled: true },
-  { label: 'Sophie Braun', subLabel: 'Alsterufer 22, 20354 Hamburg' },
-  { label: 'Jan Hoffmann', subLabel: 'Goethestr. 18, 60313 Frankfurt' },
-  { label: 'Lisa Schneider', subLabel: 'Marktplatz 9, 01067 Dresden' },
-  { label: 'Felix Wagner', subLabel: 'Kaiserstr. 31, 76131 Karlsruhe' },
-  { label: 'Marie Becker', subLabel: 'Lindenallee 5, 04109 Leipzig' },
-  { label: 'David Zimmermann', subLabel: 'Schlossstr. 14, 40213 Düsseldorf' },
-  { label: 'Clara Hartmann', subLabel: 'Friedrichstr. 28, 30159 Hannover' }
+  { title: 'Anna Müller', subTitle: 'Berliner Str. 12, 10115 Berlin' },
+  { title: 'Thomas Schmidt', subTitle: 'Hauptstr. 45, 80331 München' },
+  { title: 'Laura Weber', subTitle: 'Rheinweg 7, 50667 Köln' },
+  { title: 'Markus Fischer', subTitle: 'Schillerplatz 3, 70173 Stuttgart', disabled: true },
+  { title: 'Sophie Braun', subTitle: 'Alsterufer 22, 20354 Hamburg' },
+  { title: 'Jan Hoffmann', subTitle: 'Goethestr. 18, 60313 Frankfurt' },
+  { title: 'Lisa Schneider', subTitle: 'Marktplatz 9, 01067 Dresden' },
+  { title: 'Felix Wagner', subTitle: 'Kaiserstr. 31, 76131 Karlsruhe' },
+  { title: 'Marie Becker', subTitle: 'Lindenallee 5, 04109 Leipzig' },
+  { title: 'David Zimmermann', subTitle: 'Schlossstr. 14, 40213 Düsseldorf' },
+  { title: 'Clara Hartmann', subTitle: 'Friedrichstr. 28, 30159 Hannover' }
 ];
 
 @Component({
@@ -52,7 +53,8 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
     LuxInputAcComponent,
     ExampleBaseStructureComponent,
     ExampleBaseContentComponent,
-    ExampleBaseSimpleOptionsComponent
+    ExampleBaseSimpleOptionsComponent,
+    ExampleBaseAdvancedOptionsComponent
   ]
 })
 export class ListSelectExampleComponent {
@@ -87,8 +89,8 @@ export class ListSelectExampleComponent {
   size = model<LuxListSelectSize>('default');
   showCounter = model(true);
   selectAllLabel = model('Alle Adressen');
-  labelProp = model('label');
-  subLabelProp = model('subLabel');
+  titleProp = model('title');
+  subTitleProp = model('subTitle');
   detailIconName = model('lux-interface-arrows-expand-5');
   showOutputEvents = model(false);
   showPagination = model(false);
@@ -143,8 +145,8 @@ export class ListSelectExampleComponent {
     this.alleAdressen.update((items) => [
       ...items,
       {
-        label: `Neuer Eintrag ${nr} mit einem sehr langen Titel, der in der Karte abgeschnitten werden muss`,
-        subLabel: `Sehr lange Adresszeile ${nr}, Musterstraße 123, 12345 Musterstadt, Gebäude B, 3. Etage, Raum 301`
+        title: `Neuer Eintrag ${nr} mit einem sehr langen Titel, der in der Karte abgeschnitten werden muss`,
+        subTitle: `Sehr lange Adresszeile ${nr}, Musterstraße 123, 12345 Musterstadt, Gebäude B, 3. Etage, Raum 301`
       }
     ]);
   }
