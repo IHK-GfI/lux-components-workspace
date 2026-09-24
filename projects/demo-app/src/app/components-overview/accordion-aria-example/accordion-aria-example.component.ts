@@ -1,13 +1,8 @@
 import { Component, inject } from '@angular/core';
 import {
-  LuxAccordionAriaComponent,
   LuxAccordionColor,
   LuxCardComponent,
   LuxCardContentComponent,
-  LuxPanelAriaComponent,
-  LuxPanelAriaContentComponent,
-  LuxPanelAriaHeaderDescriptionComponent,
-  LuxPanelAriaHeaderTitleComponent,
   LuxSelectAcComponent,
   LuxToggleAcComponent,
   LuxButtonComponent,
@@ -15,14 +10,21 @@ import {
   LuxRadioAcComponent,
   LuxInputAcComponent,
   LuxModeType,
-  LuxPanelAriaHeaderCustomComponent,
-  LuxAriaTogglePosition,
   LuxDatepickerAcComponent,
   LuxAriaLabelDirective,
   LuxMenuComponent,
   LuxMenuItemComponent,
   LuxSnackbarService
 } from '@ihk-gfi/lux-components';
+import {
+  LuxAccordionAriaComponent,
+  LuxAriaTogglePosition,
+  LuxPanelAriaComponent,
+  LuxPanelAriaContentComponent,
+  LuxPanelAriaHeaderCustomComponent,
+  LuxPanelAriaHeaderDescriptionComponent,
+  LuxPanelAriaHeaderTitleComponent
+} from '@ihk-gfi/lux-components/lux-accordion-aria';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
 import { ExampleBaseSimpleOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-simple-options.component';
@@ -81,10 +83,13 @@ export class AccordionAriaExampleComponent {
   expandedHeaderHeight1Panel: string | undefined = undefined;
   collapsedHeaderHeight1Panel: string | undefined = undefined;
   dynamicHeaderHeight1Panel = false;
+  secondRowForMobile1Panel = false;
   expandedHeaderHeight2Panel: string | undefined = undefined;
   collapsedHeaderHeight2Panel: string | undefined = undefined;
   dynamicHeaderHeight2Panel = false;
+  secondRowForMobile2Panel = false;
   dynamicHeaderHeight3Panel = false;
+  secondRowForMobile3Panel = false;
   _displayMode: LuxModeType = 'default';
   colorOptions = ['primary', 'accent', 'warn', 'neutral'];
   color: LuxAccordionColor = 'primary';

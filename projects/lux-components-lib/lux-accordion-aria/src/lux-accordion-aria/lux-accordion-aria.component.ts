@@ -3,9 +3,8 @@ import { AccordionGroup } from '@angular/aria/accordion';
 import { Component, DestroyRef, OnDestroy, Signal, computed, contentChildren, inject, input } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
+import { LuxAccordionColor, LuxAccordionColors, LuxModeType } from '@ihk-gfi/lux-components';
 import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
-import { LuxModeType } from '../lux-layout/lux-accordion/lux-accordion.component';
-import { LuxAccordionColor, LuxAccordionColors } from '../lux-util/lux-colors.enum';
 import { LuxAccordionAriaBase, LuxAccordionAriaPanel, LuxAccordionAriaTogglePosition } from './lux-accordion-aria-base';
 
 export declare type LuxAccordionMulti = boolean;

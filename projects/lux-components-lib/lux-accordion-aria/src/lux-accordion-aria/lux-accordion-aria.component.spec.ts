@@ -3,12 +3,14 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+
 import { LuxAccordionAriaComponent } from './lux-accordion-aria.component';
 import { LuxPanelAriaComponent } from '../lux-panel-aria/lux-panel-aria.component';
-import { LuxPanelAriaContentComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-content.component';
-import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
 import { LuxPanelAriaHeaderTitleComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
+import { LuxPanelAriaHeaderCustomComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
+import { LuxPanelAriaContentComponent } from '../lux-panel-aria/lux-panel-aria-subcomponents/lux-panel-aria-content.component';
+import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
+import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
 
 describe('LuxAccordionAriaComponent', () => {
   describe('Basis-Funktionalität', () => {
@@ -30,8 +32,6 @@ describe('LuxAccordionAriaComponent', () => {
       fixture = TestBed.createComponent(LuxAccordionAriaTestComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-      // tick();
-      // fixture.detectChanges();
     }));
 
     it('sollte erstellt werden', () => {

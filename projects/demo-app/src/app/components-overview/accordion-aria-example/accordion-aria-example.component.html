@@ -25,6 +25,7 @@
             [luxExpandedHeaderHeight]="expandedHeaderHeight1Panel"
             [luxCollapsedHeaderHeight]="collapsedHeaderHeight1Panel"
             [luxDynamicHeaderHeight]="dynamicHeaderHeight1Panel"
+            [luxSecondRowForMobile]="secondRowForMobile1Panel"
             (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
             (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
             (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
@@ -87,6 +88,7 @@
           [luxExpandedHeaderHeight]="expandedHeaderHeight2Panel"
           [luxCollapsedHeaderHeight]="collapsedHeaderHeight2Panel"
           [luxDynamicHeaderHeight]="dynamicHeaderHeight2Panel"
+          [luxSecondRowForMobile]="secondRowForMobile2Panel"
           (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
           (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
           (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
@@ -121,6 +123,7 @@
           [luxHideToggle]="hideToggle3Panel ? true : undefined"
           [luxDisabled]="disabled3Panel"
           [luxDynamicHeaderHeight]="dynamicHeaderHeight3Panel"
+          [luxSecondRowForMobile]="secondRowForMobile3Panel"
           (luxOpened)="log(showOutputEvents, 'luxOpened', $event)"
           (luxClosed)="log(showOutputEvents, 'luxClosed', $event)"
           (luxExpandedChange)="log(showOutputEvents, 'luxExpandedChange', $event)"
@@ -136,7 +139,7 @@
           @if (showHeaderMenu4Panel && !hideAllCustomHeaders) {
             <lux-panel-aria-header-custom>
               <lux-menu
-                luxMenuIconName="lux-interface-setting-menu-1"
+                luxMenuIconName="lux-interface-setting-menu-vertical"
                 luxTagId="accordion_panel3_menu"
                 [luxDisplayExtended]="true"
                 [luxMaximumExtended]="2"
@@ -318,6 +321,12 @@
         >
           <lux-form-hint> Diese Property bestimmt die Höhe des Panel-Headers im eingeklappten Zustand. </lux-form-hint>
         </lux-input-ac>
+        <lux-toggle-ac luxLabel="luxSecondRowForMobile" [(luxChecked)]="secondRowForMobile1Panel" [luxNoTopLabel]="true">
+          <lux-form-hint>
+            Zeigt den Custom-Header dieses Panels in der mobilen Ansicht unter Titel und Beschreibung an. Diese Option kann für Form
+            Controls benutzt werden. Für Buttons soll das Menü verwendet werden.</lux-form-hint
+          >
+        </lux-toggle-ac>
       </div>
       <div class="lux-flex lux-flex-col lux-gap-4">
         <h3>Panel #{{ panelConfigArr.length + 1 }}</h3>
@@ -344,6 +353,12 @@
         >
           <lux-form-hint> Diese Property bestimmt die Höhe des Panel-Headers im eingeklappten Zustand. </lux-form-hint>
         </lux-input-ac>
+        <lux-toggle-ac luxLabel="luxSecondRowForMobile" [(luxChecked)]="secondRowForMobile2Panel" [luxNoTopLabel]="true">
+          <lux-form-hint>
+            Zeigt den Custom-Header dieses Panels in der mobilen Ansicht unter Titel und Beschreibung an. Diese Option kann für Form
+            Controls benutzt werden. Für Buttons soll das Menü verwendet werden.</lux-form-hint
+          >
+        </lux-toggle-ac>
       </div>
       <div class="lux-flex lux-flex-col lux-gap-4">
         <h3>Panel #{{ panelConfigArr.length + 2 }}</h3>
@@ -365,6 +380,12 @@
           <lux-form-hint>
             Diese Property blendet das Label der Buttons aus, die außerhalb des Menüs angezeigt werden (nur Icon).
           </lux-form-hint>
+        </lux-toggle-ac>
+        <lux-toggle-ac luxLabel="luxSecondRowForMobile" [(luxChecked)]="secondRowForMobile3Panel" [luxNoTopLabel]="true">
+          <lux-form-hint>
+            Zeigt den Custom-Header dieses Panels in der mobilen Ansicht unter Titel und Beschreibung an. Diese Option kann für Form
+            Controls benutzt werden. Für Buttons soll das Menü verwendet werden.</lux-form-hint
+          >
         </lux-toggle-ac>
       </div>
     </div>

@@ -6,6 +6,7 @@
   [class.lux-neutral]="effectiveLuxColor() === 'neutral'"
   [class.lux-panel-expanded]="accordionTrigger().expanded()"
   [class.lux-panel-mobile]="mobile"
+  [class.lux-panel-second-row-for-mobile]="mobile && luxSecondRowForMobile()"
   [class.lux-panel-sticky-header]="!!stickyHeader()"
   [class.lux-panel-sticky-header-scrolled]="hasScrolled()"
   [style.--lux-panel-sticky-header-offset]="stickyHeaderOffset() ?? null"

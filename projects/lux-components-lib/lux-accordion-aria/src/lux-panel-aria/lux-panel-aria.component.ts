@@ -14,11 +14,8 @@ import {
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { LuxMediaQueryObserverService } from '../lux-util/lux-media-query-observer.service';
-import { LuxIconComponent } from '../lux-icon/lux-icon/lux-icon.component';
-import { LuxThemeService } from '../lux-theme/lux-theme.service';
+import { LuxAccordionColor, LuxIconComponent, LuxMediaQueryObserverService, LuxThemeService } from '@ihk-gfi/lux-components';
 import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-accordion-aria/lux-accordion-aria-base';
-import { LuxAccordionColor } from '../lux-util/lux-colors.enum';
 
 @Component({
   selector: 'lux-panel-aria',
@@ -65,6 +62,7 @@ export class LuxPanelAriaComponent {
   luxDynamicHeaderHeight = input<boolean | undefined>(undefined);
   luxStickyHeader = input<boolean | undefined>();
   luxStickyHeaderOffset = input<string | undefined>();
+  luxSecondRowForMobile = input<boolean | undefined>(undefined);
 
   protected effectiveTogglePosition = computed<Exclude<LuxAccordionAriaTogglePosition, undefined>>(
     () => this.luxTogglePosition() ?? this.parent?.effectiveLuxTogglePosition() ?? 'after'

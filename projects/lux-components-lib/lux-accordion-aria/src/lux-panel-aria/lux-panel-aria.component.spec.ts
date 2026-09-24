@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxA11yTestHelper } from '@ihk-gfi/lux-components/test-utils';
-import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaComponent } from './lux-panel-aria.component';
+import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
 import { LuxPanelAriaContentComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-content.component';
 import { LuxPanelAriaHeaderCustomComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-custom.component';
+import { LuxA11yTestHelper } from '../../../test-utils/src/test-utils/lux-a11y-test-helper';
+import { LuxAccordionAriaComponent } from '../lux-accordion-aria/lux-accordion-aria.component';
 import { LuxPanelAriaHeaderDescriptionComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-description.component';
-import { LuxPanelAriaHeaderTitleComponent } from './lux-panel-aria-subcomponents/lux-panel-aria-header-title.component';
 
 describe('LuxPanelAriaComponent', () => {
   let fixture: ComponentFixture<LuxPanelAriaTestComponent>;
@@ -267,6 +267,20 @@ describe('LuxPanelAriaComponent', () => {
     expect(actions.nativeElement.style.display).toBe('');
   }));
 
+  it('sollte den Custom-Header nur mobil in eine zweite Zeile verschieben', () => {
+    const panel = fixture.debugElement.query(By.css('.lux-panel'));
+    const panelComponent = panel.componentInstance as LuxPanelAriaComponent;
+
+    testComponent.secondRowForMobile = true;
+    panelComponent.mobile = false;
+    fixture.detectChanges();
+    expect(panel.nativeElement.classList).not.toContain('lux-panel-second-row-for-mobile');
+
+    panelComponent.mobile = true;
+    fixture.detectChanges();
+    expect(panel.nativeElement.classList).toContain('lux-panel-second-row-for-mobile');
+  });
+
   it('sollte Tastatureingaben in Custom-Header-Actions nicht verhindern', () => {
     const actionButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-custom button'));
     const keydownEvent = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter' });
@@ -365,6 +379,7 @@ describe('LuxPanelAriaComponent A11y', () => {
         [luxDisabled]="disabled"
         [luxHideToggle]="hideToggle"
         [luxDynamicHeaderHeight]="dynamicHeaderHeight"
+        [luxSecondRowForMobile]="secondRowForMobile"
         [luxTogglePosition]="togglePosition"
         [luxStickyHeader]="stickyHeader"
         [luxStickyHeaderOffset]="stickyHeaderOffset"
@@ -388,6 +403,7 @@ class LuxPanelAriaTestComponent {
   disabled = false;
   hideToggle = false;
   dynamicHeaderHeight = false;
+  secondRowForMobile = false;
   stickyHeader = false;
   stickyHeaderOffset?: string;
   truncated = false;

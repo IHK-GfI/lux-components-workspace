@@ -57,10 +57,12 @@ lux-panel-aria {
   .lux-expansion-panel-header-title {
     display: flex;
     align-items: center;
+    overflow-x: hidden;
   }
 
   .lux-expansion-panel-header-description {
     font-family: var(--lux-theme-app-headline-font);
+    overflow-x: hidden;
   }
 
   // Auf-/Zuklapp-Animation nach dem Vorbild von Material (mat-expansion-panel): die
@@ -158,6 +160,15 @@ lux-panel-aria {
 
   &.lux-panel-mobile .lux-expansion-panel-header.lux-dynamic-height {
     padding: 11px var(--lux-theme-spacing-3);
+  }
+
+  .lux-panel.lux-panel-mobile.lux-panel-second-row-for-mobile .lux-expansion-panel-header {
+    flex-wrap: wrap;
+    gap: var(--lux-theme-spacing-sm);
+  }
+
+  .lux-panel.lux-panel-mobile.lux-panel-second-row-for-mobile .lux-expansion-panel-header-custom {
+    flex: 0 0 100%;
   }
 }
 

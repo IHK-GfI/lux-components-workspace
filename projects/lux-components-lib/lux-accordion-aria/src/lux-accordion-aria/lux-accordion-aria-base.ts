@@ -1,5 +1,5 @@
 import { Signal } from '@angular/core';
-import { LuxAccordionColor } from '../lux-util/lux-colors.enum';
+import { LuxAccordionColor } from '@ihk-gfi/lux-components';
 
 export type LuxAccordionAriaTogglePosition = 'before' | 'after' | undefined;
 
