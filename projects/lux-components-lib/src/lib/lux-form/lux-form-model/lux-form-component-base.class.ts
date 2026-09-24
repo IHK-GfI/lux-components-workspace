@@ -28,6 +28,9 @@ export declare type LuxValidationErrors = ValidationErrors;
 export declare type ValidatorFnType = ValidatorFn | ValidatorFn[] | null | undefined;
 export declare type LuxErrorCallbackFnType = (value: any, errors: LuxValidationErrors) => string | undefined;
 
+/** Stand von notifiedVersion, solange noch keine Wertänderung ausgeliefert wurde. */
+const NOT_NOTIFIED = -1;
+
 @Directive()
 export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, OnDestroy {
   protected static readonly DEFAULT_CTRL_NAME: string = 'control';
@@ -44,6 +47,23 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
   protected _luxRequired = false;
   protected _luxControlValidators?: ValidatorFnType;
   private a11yNameCheckTimeout?: ReturnType<typeof setTimeout>;
+  private initialDeliveryTimeout?: ReturnType<typeof setTimeout>;
+
+  /** Der zuletzt beobachtete Wert des FormControls (siehe observeValue). */
+  private lastSeenValue: any;
+  /** Zählt jede beobachtete Wertänderung, auch stille. */
+  private valueVersion = 0;
+  /** Stand von valueVersion bei der letzten Auslieferung an notifyFormValueChanged(). */
+  private notifiedVersion = NOT_NOTIFIED;
+
+  /**
+   * Schreibt jede Wertänderung des FormControls mit - auch eine stille.
+   *
+   * Angular ruft die per registerOnChange() angemeldeten Funktionen in setValue() auf, und zwar
+   * unabhängig von { emitEvent: false }. Da patchValue(), reset() und die Aktualisierung durch eine
+   * FormGroup ebenfalls über setValue() laufen, wird hier jeder Schreibvorgang sichtbar.
+   */
+  private readonly valueObserver = (value: any) => this.observeValue(value);
 
   errorMessage: string | undefined = undefined;
 
@@ -212,6 +232,16 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     this.initFormStateSubscription();
     this.updateValidators(this.luxControlValidators, true);
 
+    // Der Startzustand gilt nach der Initialisierung als ausgeliefert, auch wenn gar nichts
+    // ausgeliefert wurde. Ohne das bliebe der Merker auf NOT_NOTIFIED stehen und die erste spätere
+    // Emission käme durch - auch eine reine Neubewertung, etwa durch ein nachträglich gesetztes
+    // luxRequired. Der Timeout läuft nach dem von updateValidators(), das die Reihenfolge braucht.
+    this.initialDeliveryTimeout = setTimeout(() => {
+      if (this.notifiedVersion === NOT_NOTIFIED) {
+        this.notifiedVersion = this.valueVersion;
+      }
+    });
+
     // Verzögert prüfen, damit der @ContentChild formLabelComponent bereits aufgelöst ist.
     this.a11yNameCheckTimeout = setTimeout(() => this.checkA11yName());
   }
@@ -245,6 +275,18 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
     if (this.a11yNameCheckTimeout) {
       clearTimeout(this.a11yNameCheckTimeout);
+    }
+
+    if (this.initialDeliveryTimeout) {
+      clearTimeout(this.initialDeliveryTimeout);
+    }
+
+    // In Reactive Forms überlebt das FormControl diese Komponente. Ohne das Abmelden würde sich
+    // bei jedem Neuaufbau (z.B. über @if) ein weiterer Beobachter ansammeln.
+    // _unregisterOnChange ist internes Angular-API, deshalb defensiv aufgerufen.
+    const control = this.formControl as unknown as { _unregisterOnChange?: (fn: unknown) => void };
+    if (typeof control?._unregisterOnChange === 'function') {
+      control._unregisterOnChange(this.valueObserver);
     }
   }
 
@@ -427,14 +469,55 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    * Setzt den (optional vorhanden) Initial-Wert und folgende Änderungen über das FormControl.
    */
   protected initFormValueSubscription() {
+    this.lastSeenValue = this.formControl.value;
+    this.formControl.registerOnChange(this.valueObserver);
+
     if (this._initialValue !== null && this._initialValue !== undefined) {
       this.setValue(this._initialValue);
     }
 
     // Aktualisierungen an dem FormControl-Value sollen auch via EventEmitter bekannt gemacht werden.
     this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {
-      this.notifyFormValueChanged(value);
+      this.forwardFormValueChange(value);
     });
+  }
+
+  /**
+   * Schreibt eine Wertänderung des FormControls mit. Idempotent, darf also beliebig oft je
+   * Änderung aufgerufen werden.
+   */
+  private observeValue(value: any) {
+    if (!Object.is(value, this.lastSeenValue)) {
+      this.lastSeenValue = value;
+      this.valueVersion++;
+    }
+  }
+
+  /**
+   * Reicht eine Emission des valueChanges-Observables an notifyFormValueChanged() weiter, sofern
+   * sich der Wert seit der letzten Auslieferung geändert hat.
+   *
+   * Maßgeblich ist bewusst der Zähler und nicht der Wert selbst. Ein Wertvergleich - so wie ihn das
+   * frühere distinctUntilChanged() angestellt hat - bemerkt nicht, dass der Wert zwischendurch still
+   * (emitEvent: false) auf etwas anderes und wieder zurück gesetzt wurde, und verschluckt die
+   * Änderung (Issue #284). Der Zähler steigt bei jeder Änderung, auch bei einer stillen.
+   *
+   * Umgekehrt emittiert updateValueAndValidity() auch dann ein valueChanges, wenn nur die
+   * Validatoren neu ausgewertet wurden. Dabei bleibt der Zähler stehen, sodass daraus kein Event
+   * wird - und ein Zyklus, in dem Change-Handler einander über updateValueAndValidity() aufrufen,
+   * bricht nach dem ersten Durchlauf ab.
+   */
+  private forwardFormValueChange(value: any) {
+    // Fallback: Ein setValue(..., { emitModelToViewChange: false }) übergeht die per
+    // registerOnChange() angemeldeten Funktionen, der Beobachter läuft dann nicht.
+    this.observeValue(value);
+
+    if (this.valueVersion === this.notifiedVersion) {
+      return;
+    }
+
+    this.notifiedVersion = this.valueVersion;
+    this.notifyFormValueChanged(value);
   }
 
   /**
@@ -458,6 +541,14 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     });
   }
 
+  /**
+   * Validatoren, die diese Komponente unabhängig von luxControlValidators immer benötigt
+   * (z.B. eine Formatprüfung). Unterklassen überschreiben das, statt updateValidators() zu kopieren.
+   */
+  protected getAdditionalValidators(): ValidatorFn[] {
+    return [];
+  }
+
   protected getRequiredValidator(): ValidatorFn {
     return Validators.required;
   }
@@ -473,8 +564,9 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     const requiredValidator = this.getRequiredValidator();
     const hasRequiredValidator = !!this.formControl && this.formControl.hasValidator(requiredValidator);
     const shouldHandleRequired = checkRequiredValidator && (this.luxRequired || hasRequiredValidator);
+    const additionalValidators = this.getAdditionalValidators();
 
-    if (!hasValidators && !shouldHandleRequired) {
+    if (!hasValidators && !shouldHandleRequired && additionalValidators.length === 0) {
       return;
     }
 
@@ -492,6 +584,10 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
         this._luxControlValidators = validators;
         this.formControl.setValidators(this.luxControlValidators ?? null);
 
+        if (additionalValidators.length > 0) {
+          this.formControl.addValidators(additionalValidators);
+        }
+
         if (checkRequiredValidator) {
           if (this.luxRequired) {
             this.formControl.addValidators(requiredValidator);
@@ -500,6 +596,10 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
           }
         }
 
+        // Bewusst mit Event: Komponenten wie lux-select-ac (luxPickValue-Normalisierung) oder die
+        // Date-Picker (ISO-Konvertierung) bereiten ihren Initialwert an genau dieser Emission auf.
+        // Dass daraus kein luxValueChange wird, obwohl sich der Wert nicht geändert hat, stellt
+        // forwardFormValueChange() sicher.
         this.formControl.updateValueAndValidity();
       });
     } else if (hasValidators) {

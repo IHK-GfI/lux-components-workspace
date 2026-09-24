@@ -1393,6 +1393,20 @@ describe('LuxSelectAcComponent', () => {
     }));
   });
 
+  describe('Normalisierung des Initialwerts (Issue #284)', () => {
+    it('sollte einen als Objekt gesetzten Startwert über luxPickValue normalisieren', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SelectInitialObjectValueComponent);
+      fixture.detectChanges();
+      LuxTestHelper.wait(fixture);
+      LuxTestHelper.wait(fixture);
+
+      // Die Normalisierung passiert ausschließlich in notifyFormValueChanged(). Sie hängt daran,
+      // dass updateValidators() beim ngOnInit ein valueChanges emittiert.
+      const select: LuxSelectAcComponent = fixture.debugElement.query(By.directive(LuxSelectAcComponent)).componentInstance;
+      expect(select.formControl.value).toEqual('B');
+    }));
+  });
+
   describe('A11y', () => {
     let fixture: ComponentFixture<LuxSelectA11yComponent>;
     let testComponent: LuxSelectA11yComponent;
@@ -1719,6 +1733,32 @@ class SelectValueHookComponent {
     { label: 'Zurückgestellte Aufgaben', value: 'C' },
     { label: 'Vertretungsaufgaben', value: 'D' }
   ];
+
+  hook(option: Option) {
+    return option ? option.value : option;
+  }
+}
+
+@Component({
+  template: `
+    <lux-select-ac
+      luxLabel="Aufgaben"
+      [luxOptions]="options"
+      [luxPickValue]="hook"
+      luxOptionLabelProp="label"
+      [luxRequired]="true"
+      [(luxSelected)]="selectedOption"
+    ></lux-select-ac>
+  `,
+  imports: [LuxSelectAcComponent]
+})
+class SelectInitialObjectValueComponent {
+  options: Option[] = [
+    { label: 'Meine Aufgaben', value: 'A' },
+    { label: 'Gruppenaufgaben', value: 'B' }
+  ];
+  // Startwert bewusst als Objekt, damit die luxPickValue-Normalisierung greifen muss.
+  selectedOption: any = { label: 'Gruppenaufgaben', value: 'B' };
 
   hook(option: Option) {
     return option ? option.value : option;

@@ -292,41 +292,8 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     }
   }
 
-  protected override updateValidators(validators: ValidatorFnType, checkRequiredValidator: boolean) {
-    const hasValidators = (!Array.isArray(validators) && !!validators) || (Array.isArray(validators) && validators.length > 0);
-
-    // Zum Zeitpunkt dieses synchronen Aufrufs ist inForm noch false, weil Angular @Input()-Properties
-    // vor ngOnInit setzt und inForm erst in ngOnInit (initFormControl) initialisiert wird.
-    if (!this.inForm) {
-      setTimeout(() => {
-        // Der setTimeout-Callback feuert asynchron - nach ngOnInit. Zu diesem Zeitpunkt kann inForm
-        // bereits true sein, falls die Komponente an eine Reactive Form gebunden ist. Ohne diesen
-        // Guard würde setValidators() die Validatoren des FormControls überschreiben.
-        if (this.inForm) {
-          return;
-        }
-
-        this._luxControlValidators = validators;
-        this.formControl.setValidators(validators ?? null);
-        this.formControl.addValidators(this.dateTimeValidator);
-
-        if (checkRequiredValidator) {
-          if (this.luxRequired) {
-            this.formControl.addValidators(this.getRequiredValidator());
-          } else {
-            this.formControl.removeValidators(this.getRequiredValidator());
-          }
-        }
-
-        this.formControl.updateValueAndValidity();
-      });
-    } else if (hasValidators) {
-      this.logger.warn(
-        `
-Die Validatoren des Formularelements (luxControlBinding=${this.luxControlBinding}) können ausschließlich über das Formular gesetzt werden,
-aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignoriert!`
-      );
-    }
+  protected override getAdditionalValidators(): ValidatorFn[] {
+    return [this.dateTimeValidator];
   }
 
   private compareDateWithTime(first: Date, second: Date): number {

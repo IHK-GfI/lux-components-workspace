@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -10,6 +10,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
+import { LuxFormControlWrapperComponent } from '../lux-form-control-wrapper/lux-form-control-wrapper.component';
 import { ValidatorFnType } from '../lux-form-model/lux-form-component-base.class';
 import { LuxToggleAcComponent } from './lux-toggle-ac.component';
 
@@ -409,6 +410,160 @@ describe('LuxToggleAcComponent', () => {
         expect(toggleComponent.formControl.valid).toBeFalsy();
       }));
     });
+
+    describe('Neubewertung der Validatoren (Issue #284)', () => {
+      let fixture: ComponentFixture<LuxRevalidationComponent>;
+      let testComponent: LuxRevalidationComponent;
+      let toggleComponent: LuxToggleAcComponent;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxRevalidationComponent);
+        fixture.detectChanges();
+        testComponent = fixture.componentInstance;
+        toggleComponent = fixture.debugElement.query(By.directive(LuxToggleAcComponent)).componentInstance;
+        LuxTestHelper.wait(fixture);
+      }));
+
+      it('Sollte beim Aktivieren von [luxRequired] kein luxCheckedChange auslösen', fakeAsync(() => {
+        // Vorbedingungen testen
+        expect(testComponent.changeCount).toBe(0);
+
+        // Änderungen durchführen
+        // Bewusst ohne vorherige Wertänderung: Die Komponente hat bis hierhin noch nichts
+        // ausgeliefert. Trotzdem darf die reine Neubewertung kein Event erzeugen.
+        testComponent.required = true;
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(toggleComponent.formControl.invalid).toBeTrue();
+        expect(testComponent.changeCount).toBe(0);
+      }));
+
+      it('Sollte bei geänderten [luxControlValidators] kein weiteres luxCheckedChange auslösen', fakeAsync(() => {
+        const toggleEl = fixture.debugElement.query(By.css('button'));
+
+        // Änderungen durchführen
+        // Erst eine echte User-Interaktion, damit die Komponente einen Wert kennt.
+        toggleEl.nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        // Vorbedingungen testen
+        expect(testComponent.changeCount).toBe(1);
+
+        // Änderungen durchführen
+        testComponent.validators = Validators.requiredTrue;
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen: Die Validatoren sind aktiv, es gab aber keine Wertänderung
+        expect(toggleComponent.formControl.hasValidator(Validators.requiredTrue)).toBeTrue();
+        expect(testComponent.changeCount).toBe(1);
+      }));
+
+      it('Sollte beim Schließen der Fehlermeldung kein luxCheckedChange auslösen', fakeAsync(() => {
+        const wrapper: LuxFormControlWrapperComponent = fixture.debugElement.query(
+          By.directive(LuxFormControlWrapperComponent)
+        ).componentInstance;
+
+        // Änderungen durchführen
+        toggleComponent.formControl.setValue(true);
+        LuxTestHelper.wait(fixture);
+        wrapper.onCloseErrorMessage();
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen: Das Schließen wertet nur neu aus, der Wert bleibt unverändert.
+        expect(testComponent.changeCount).toBe(1);
+      }));
+
+      it('Sollte ein stilles setValue mit sofortiger Rückkehr auf den alten Wert nicht verschlucken', fakeAsync(() => {
+        // Änderungen durchführen
+        toggleComponent.formControl.setValue(true);
+        LuxTestHelper.wait(fixture);
+
+        // Vorbedingungen testen
+        expect(testComponent.changeCount).toBe(1);
+
+        // Änderungen durchführen
+        // Still auf false und im selben Tick zurück auf true - ohne Change Detection dazwischen.
+        // Genau hier hat das frühere distinctUntilChanged() das Event verschluckt (Issue #284).
+        toggleComponent.formControl.setValue(false, { emitEvent: false });
+        toggleComponent.formControl.setValue(true);
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(testComponent.changeCount).toBe(2);
+      }));
+
+      it('Sollte bei wiederholtem updateValueAndValidity() kein weiteres luxCheckedChange auslösen', fakeAsync(() => {
+        // Änderungen durchführen
+        toggleComponent.formControl.setValue(true);
+        LuxTestHelper.wait(fixture);
+
+        // Vorbedingungen testen
+        expect(testComponent.changeCount).toBe(1);
+
+        // Änderungen durchführen
+        toggleComponent.formControl.updateValueAndValidity();
+        toggleComponent.formControl.updateValueAndValidity();
+        toggleComponent.formControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(testComponent.changeCount).toBe(1);
+      }));
+
+      it('Sollte nach einem setValidators() von außen weiter korrekt ausliefern', fakeAsync(() => {
+        // Änderungen durchführen
+        // setValidators() ersetzt die Validatoren komplett. Die Beobachtung hängt bewusst nicht
+        // an den Validatoren, sondern an registerOnChange(), und bleibt davon unberührt.
+        toggleComponent.formControl.setValidators(Validators.requiredTrue);
+        LuxTestHelper.wait(fixture);
+        toggleComponent.formControl.setValue(true);
+        LuxTestHelper.wait(fixture);
+
+        // Vorbedingungen testen
+        expect(testComponent.changeCount).toBe(1);
+
+        // Änderungen durchführen
+        // Stille Änderung und Rückkehr: Funktioniert nur, wenn der Beobachter wieder hängt.
+        toggleComponent.formControl.setValue(false, { emitEvent: false });
+        toggleComponent.formControl.setValue(true);
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        expect(testComponent.changeCount).toBe(2);
+      }));
+    });
+
+    describe('Zyklus über mehrere Komponenten (Issue #284)', () => {
+      let fixture: ComponentFixture<LuxMutualUpdateComponent>;
+      let testComponent: LuxMutualUpdateComponent;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxMutualUpdateComponent);
+        fixture.detectChanges();
+        testComponent = fixture.componentInstance;
+        LuxTestHelper.wait(fixture);
+      }));
+
+      it('Sollte sich gegenseitig aktualisierende Change-Handler nicht in eine Endlosschleife laufen lassen', fakeAsync(() => {
+        // Vorbedingungen testen
+        expect(testComponent.countA).toBe(0);
+        expect(testComponent.countB).toBe(0);
+
+        // Änderungen durchführen
+        // Beide Handler rufen updateValueAndValidity() auf dem jeweils anderen FormControl auf.
+        // Ohne Filterung schaukelt sich das synchron endlos hoch.
+        fixture.debugElement.queryAll(By.css('button'))[0].nativeElement.click();
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        // A hat sich wirklich geändert und liefert genau einmal aus. B nicht: Dort wurden nur die
+        // Validatoren neu ausgewertet, der Wert ist derselbe geblieben.
+        expect(testComponent.notbremse).toBeFalse();
+        expect(testComponent.countA).toBe(1);
+        expect(testComponent.countB).toBe(0);
+      }));
+    });
   });
 
   describe('A11y', () => {
@@ -538,6 +693,64 @@ class LuxToggleRequiredInFormAttributeComponent {
 class LuxValidatorsComponent {
   eula?: boolean;
   validators: ValidatorFnType;
+}
+
+@Component({
+  template: `
+    <lux-toggle-ac
+      luxLabel="Eula gelesen?"
+      [luxControlValidators]="validators"
+      [luxRequired]="required"
+      (luxCheckedChange)="onCheckedChange()"
+    ></lux-toggle-ac>
+  `,
+  imports: [LuxToggleAcComponent]
+})
+class LuxRevalidationComponent {
+  validators: ValidatorFnType;
+  required = false;
+  changeCount = 0;
+
+  onCheckedChange() {
+    this.changeCount++;
+  }
+}
+
+@Component({
+  template: `
+    <lux-toggle-ac #a luxLabel="A" [(luxChecked)]="a" (luxCheckedChange)="onA()"></lux-toggle-ac>
+    <lux-toggle-ac #b luxLabel="B" [(luxChecked)]="b" (luxCheckedChange)="onB()"></lux-toggle-ac>
+  `,
+  imports: [LuxToggleAcComponent]
+})
+class LuxMutualUpdateComponent {
+  @ViewChild('a') toggleA!: LuxToggleAcComponent;
+  @ViewChild('b') toggleB!: LuxToggleAcComponent;
+
+  a = false;
+  b = false;
+  countA = 0;
+  countB = 0;
+  /** Verhindert, dass ein Fehlverhalten den Testlauf aufhängt statt fehlzuschlagen. */
+  notbremse = false;
+
+  onA() {
+    this.countA++;
+    if (this.countA + this.countB > 50) {
+      this.notbremse = true;
+      return;
+    }
+    this.toggleB.formControl.updateValueAndValidity();
+  }
+
+  onB() {
+    this.countB++;
+    if (this.countA + this.countB > 50) {
+      this.notbremse = true;
+      return;
+    }
+    this.toggleA.formControl.updateValueAndValidity();
+  }
 }
 
 @Component({
