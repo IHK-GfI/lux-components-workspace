@@ -1,3 +1,5 @@
+import { Injector } from '@angular/core';
+
 /**
  * Standard-Breiten für LuxDialog
  */
@@ -28,6 +30,13 @@ export interface ILuxDialogConfig {
    * des X-Buttons.
    */
   disableBackdropAndEscClose?: boolean;
+  /**
+   * Optionaler Injector, der als Parent-Injector für den Dialog genutzt wird
+   * (Default: Root-Injector). Damit können z.B. lokal auf der aufrufenden
+   * Komponente bereitgestellte Provider (`@Component({ providers: [...] })`)
+   * innerhalb des Dialogs injiziert werden.
+   */
+  injector?: Injector;
 }
 
 export const DEFAULT_DIALOG_CONF: ILuxDialogConfig = {

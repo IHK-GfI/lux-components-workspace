@@ -21,6 +21,8 @@ export class LuxDialogService {
 
   /**
    * Öffnet einen Dialog basierend auf der übergebenen Component und den entsprechenden Daten.
+   * Über `config.injector` kann ein eigener Parent-Injector (z.B. der Injector der aufrufenden
+   * Komponente) übergeben werden, um z.B. lokal bereitgestellte Provider im Dialog verfügbar zu machen.
    * @param component
    * @param config
    * @param data
@@ -102,7 +104,10 @@ export class LuxDialogService {
     // Show-close-button unabhängig von disableBackdropAndEscClose steuern
     dialogRef.showCloseButton = !config.disableClose;
 
-    const injector = Injector.create({ parent: this.parentInjector, providers: [{ provide: LuxDialogRef, useValue: dialogRef }] });
+    const injector = Injector.create({
+      parent: config.injector ?? this.parentInjector,
+      providers: [{ provide: LuxDialogRef, useValue: dialogRef }]
+    });
 
     // MatDialog's disableClose muss true sein, wenn entweder
     // config.disableClose oder config.disableBackdropAndEscClose gesetzt ist.
