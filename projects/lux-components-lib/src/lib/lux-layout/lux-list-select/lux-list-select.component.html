@@ -7,8 +7,8 @@
       [luxSize]="luxSize()"
       [luxSelected]="isSelected(item)"
       [luxDisabled]="componentDisabled() || isItemDisabled(item)"
-      [luxLabel]="getLabel(item)"
-      [luxSubLabel]="getSubLabel(item)"
+      [luxTitle]="getTitle(item)"
+      [luxSubTitle]="getSubTitle(item)"
       [luxShowDetailButton]="luxShowDetailButton()"
       [luxDetailIconName]="luxDetailIconName()"
       [luxContentTemplate]="contentTemplate() ?? null"
@@ -25,29 +25,18 @@
   @if (luxShowSearch()) {
     <lux-input-ac
       class="lux-list-select-search lux-flex-shrink-0"
-      [luxNoLabels]="true"
+      [luxNoTopLabel]="true"
+      [luxClearable]="true"
+      [luxLabel]="'luxc.list-select.search_arialabel' | transloco"
       [luxPlaceholder]="'luxc.list-select.search_arialabel' | transloco"
-      [luxAriaLabel]="'luxc.list-select.search_arialabel' | transloco"
       luxAutocomplete="off"
       [luxDisabled]="componentDisabled()"
       [luxValue]="luxSearchValue()"
       (luxValueChange)="luxSearchValue.set($event ?? '')"
     >
-      <lux-input-ac-prefix class="lux-mr-2">
-        <lux-icon luxIconName="lux-interface-search" luxIconSize="1x"></lux-icon>
+      <lux-input-ac-prefix class="lux-mr-3">
+        <lux-icon luxIconName="lux-interface-search"></lux-icon>
       </lux-input-ac-prefix>
-      @if (luxSearchValue()) {
-        <lux-input-ac-suffix>
-          <lux-button
-            class="lux-list-select-search-clear"
-            [luxIconButton]="true"
-            luxIconName="lux-interface-delete-circle"
-            [luxLabel]="'luxc.list-select.search_clear_arialabel' | transloco"
-            [luxDisabled]="componentDisabled()"
-            (luxClicked)="onSearchClear()"
-          ></lux-button>
-        </lux-input-ac-suffix>
-      }
     </lux-input-ac>
   }
 

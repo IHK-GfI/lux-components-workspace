@@ -27,10 +27,8 @@ import { LuxMessageBoxComponent } from '../../lux-common/lux-message-box/lux-mes
 import { ILuxMessage } from '../../lux-common/lux-message-box/lux-message-box-model/lux-message.interface';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxProgressComponent } from '../../lux-common/lux-progress/lux-progress.component';
-import { LuxButtonComponent } from '../../lux-action/lux-button/lux-button.component';
 import { LuxInputAcComponent } from '../../lux-form/lux-input-ac/lux-input-ac.component';
 import { LuxInputAcPrefixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-prefix.component';
-import { LuxInputAcSuffixComponent } from '../../lux-form/lux-input-ac/lux-input-ac-subcomponents/lux-input-ac-suffix.component';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
 import { LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
@@ -55,10 +53,8 @@ import { announceSearchResults } from './lux-list-select-search-announcer';
     LuxMessageBoxComponent,
     LuxIconComponent,
     LuxProgressComponent,
-    LuxButtonComponent,
     LuxInputAcComponent,
-    LuxInputAcPrefixComponent,
-    LuxInputAcSuffixComponent
+    LuxInputAcPrefixComponent
   ],
   host: {
     class: 'lux-list-select'
@@ -80,8 +76,8 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   readonly luxMode = input<LuxListSelectMode>('multi');
   readonly luxSize = input<LuxListSelectSize>('default');
   readonly luxItems = input<T[]>([]);
-  readonly luxLabelProp = input('label');
-  readonly luxSubLabelProp = input('subLabel');
+  readonly luxTitleProp = input('title');
+  readonly luxSubTitleProp = input('subTitle');
   readonly luxDisabledProp = input('disabled');
   readonly luxCompareWith = input<(a: T, b: T) => boolean>((a, b) => a === b);
   readonly luxLabel = input<string | undefined>(undefined);
@@ -158,7 +154,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
       return items;
     }
     return items.filter(
-      (item) => this.getLabel(item).toLowerCase().includes(term) || (this.getSubLabel(item) ?? '').toLowerCase().includes(term)
+      (item) => this.getTitle(item).toLowerCase().includes(term) || (this.getSubTitle(item) ?? '').toLowerCase().includes(term)
     );
   });
   protected displayedItems = computed(() => {
@@ -291,10 +287,6 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     this.dataSource.loadNextPage();
   }
 
-  protected onSearchClear() {
-    this.luxSearchValue.set('');
-  }
-
   writeValue(value: T[] | null): void {
     let normalized = Array.isArray(value) ? value : [];
     if (this.luxMode() === 'single' && normalized.length > 1) {
@@ -315,13 +307,13 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
     this.cvaDisabled.set(isDisabled);
   }
 
-  protected getLabel(item: T): string {
-    const value = (item as Record<string, unknown>)[this.luxLabelProp()];
+  protected getTitle(item: T): string {
+    const value = (item as Record<string, unknown>)[this.luxTitleProp()];
     return value !== undefined && value !== null ? String(value) : '';
   }
 
-  protected getSubLabel(item: T): string | null {
-    const value = (item as Record<string, unknown>)[this.luxSubLabelProp()];
+  protected getSubTitle(item: T): string | null {
+    const value = (item as Record<string, unknown>)[this.luxSubTitleProp()];
     return value !== undefined && value !== null ? String(value) : null;
   }
 

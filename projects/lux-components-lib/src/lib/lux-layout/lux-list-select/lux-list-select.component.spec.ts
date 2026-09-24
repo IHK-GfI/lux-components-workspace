@@ -21,26 +21,26 @@ import {
 import { LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
 
 interface TestAdresse {
-  label: string;
-  subLabel?: string;
+  title: string;
+  subTitle?: string;
   disabled?: boolean;
 }
 
 const TEST_ITEMS: TestAdresse[] = [
-  { label: 'Anna Müller', subLabel: 'Berliner Str. 12, 10115 Berlin' },
-  { label: 'Thomas Schmidt', subLabel: 'Hauptstr. 45, 80331 München' },
-  { label: 'Laura Weber', subLabel: 'Rheinweg 7, 50667 Köln', disabled: true },
-  { label: 'Markus Fischer', subLabel: 'Schillerplatz 3, 70173 Stuttgart' }
+  { title: 'Anna Müller', subTitle: 'Berliner Str. 12, 10115 Berlin' },
+  { title: 'Thomas Schmidt', subTitle: 'Hauptstr. 45, 80331 München' },
+  { title: 'Laura Weber', subTitle: 'Rheinweg 7, 50667 Köln', disabled: true },
+  { title: 'Markus Fischer', subTitle: 'Schillerplatz 3, 70173 Stuttgart' }
 ];
 
-const OTHER_PAGE_ITEM: TestAdresse = { label: 'Clara Hartmann', subLabel: 'Friedrichstr. 28, 30159 Hannover' };
+const OTHER_PAGE_ITEM: TestAdresse = { title: 'Clara Hartmann', subTitle: 'Friedrichstr. 28, 30159 Hannover' };
 
 const DAO_ITEMS: TestAdresse[] = [
-  { label: 'Anna Müller' },
-  { label: 'Thomas Schmidt' },
-  { label: 'Laura Weber' },
-  { label: 'Markus Fischer' },
-  { label: 'Clara Hartmann' }
+  { title: 'Anna Müller' },
+  { title: 'Thomas Schmidt' },
+  { title: 'Laura Weber' },
+  { title: 'Markus Fischer' },
+  { title: 'Clara Hartmann' }
 ];
 
 class TestListSelectHttpDao implements ILuxListSelectHttpDao<TestAdresse> {
@@ -51,7 +51,7 @@ class TestListSelectHttpDao implements ILuxListSelectHttpDao<TestAdresse> {
     let source = DAO_ITEMS;
     if (conf.filter) {
       const term = conf.filter.toLowerCase();
-      source = source.filter((item) => item.label.toLowerCase().includes(term));
+      source = source.filter((item) => item.title.toLowerCase().includes(term));
     }
     const start = conf.page * conf.pageSize;
     const items = source.slice(start, start + conf.pageSize);
@@ -226,7 +226,7 @@ describe('LuxListSelectComponent', () => {
       // Vorbedingungen testen: luxSelected enthält eine neue Objekt-Instanz mit gleichem Label,
       // nicht die Referenz aus TEST_ITEMS - ohne luxCompareWith würde die Default-Prüfung (===)
       // das Item fälschlich als nicht ausgewählt behandeln
-      host.compareWith = (a, b) => a.label === b.label;
+      host.compareWith = (a, b) => a.title === b.title;
       host.selected = [{ ...TEST_ITEMS[1] }];
 
       // Änderungen durchführen
@@ -632,18 +632,18 @@ describe('LuxListSelectComponent', () => {
       typeSearch('Anna');
       tick(300);
       fixture.detectChanges();
-      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear button'))).not.toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search .lux-input-clear-btn button'))).not.toBeNull();
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(1);
 
       // Änderungen durchführen
-      fixture.debugElement.query(By.css('.lux-list-select-search-clear button')).nativeElement.click();
+      fixture.debugElement.query(By.css('.lux-list-select-search .lux-input-clear-btn button')).nativeElement.click();
       fixture.detectChanges();
       tick(300);
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
       expect(host.searchValue).toBe('');
-      expect(fixture.debugElement.query(By.css('.lux-list-select-search-clear button'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search .lux-input-clear-btn button'))).toBeNull();
       expect(fixture.debugElement.queryAll(By.css('.lux-list-select-card')).length).toBe(4);
     }));
 
@@ -655,9 +655,8 @@ describe('LuxListSelectComponent', () => {
       tick(300);
       fixture.detectChanges();
       const searchInput = fixture.debugElement.query(By.css('.lux-list-select-search input')).nativeElement as HTMLInputElement;
-      const clearButton = fixture.debugElement.query(By.css('.lux-list-select-search-clear button')).nativeElement as HTMLButtonElement;
       expect(searchInput.disabled).toBeFalse();
-      expect(clearButton.disabled).toBeFalse();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search .lux-input-clear-btn button'))).not.toBeNull();
 
       // Änderungen durchführen
       host.disabled = true;
@@ -665,7 +664,7 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen
       expect(searchInput.disabled).toBeTrue();
-      expect(clearButton.disabled).toBeTrue();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-search .lux-input-clear-btn button'))).toBeNull();
     }));
 
     it('Sollte bei vorbelegtem luxSearchValue den luxPageIndex nicht zurücksetzen', fakeAsync(() => {
@@ -1597,7 +1596,7 @@ describe('LuxListSelectComponent', () => {
       const fixtureCT = TestBed.createComponent(MockHostWithContentTemplateComponent);
       fixtureCT.detectChanges();
       const firstCard = fixtureCT.debugElement.query(By.css('lux-list-select-item'));
-      expect(firstCard.nativeElement.textContent).toContain(TEST_ITEMS[0].label);
+      expect(firstCard.nativeElement.textContent).toContain(TEST_ITEMS[0].title);
       expect(firstCard.nativeElement.textContent).toContain('false');
 
       // Änderungen durchführen: Selektion umschalten
@@ -1616,7 +1615,7 @@ describe('LuxListSelectComponent', () => {
       // Vorbedingungen testen: eigene Fixture des Content-Template-Hosts mit einem Item ohne auflösbares Label
       const fixtureCT = TestBed.createComponent(MockHostWithContentTemplateComponent);
       const hostCT = fixtureCT.componentInstance;
-      hostCT.items = [{ label: '' }, ...TEST_ITEMS.slice(1)];
+      hostCT.items = [{ title: '' }, ...TEST_ITEMS.slice(1)];
       fixtureCT.detectChanges();
 
       // Nachbedingungen prüfen
@@ -1624,7 +1623,7 @@ describe('LuxListSelectComponent', () => {
       const headlineCell = fixtureCT.debugElement.query(By.css('lux-list-select-item .lux-list-select-headlines')).nativeElement as HTMLElement;
       expect(checkbox.getAttribute('aria-label')).toBeFalsy();
       expect(checkbox.getAttribute('aria-labelledby')).toContain(headlineCell.id);
-      expect(headlineCell.id).toMatch(/^lux-list-select-item-label-\d+$/);
+      expect(headlineCell.id).toMatch(/^lux-list-select-item-title-\d+$/);
 
       fixtureCT.destroy();
     });
@@ -1646,7 +1645,7 @@ describe('LuxListSelectComponent', () => {
 
       // Nachbedingungen prüfen
       const detailButton = fixture.debugElement.query(By.css('.lux-list-select-detail button')).nativeElement as HTMLButtonElement;
-      expect(detailButton.getAttribute('aria-label')).toContain(TEST_ITEMS[0].label);
+      expect(detailButton.getAttribute('aria-label')).toContain(TEST_ITEMS[0].title);
     });
   });
 
@@ -1747,7 +1746,7 @@ class MockHostComponent {
   template: `
     <lux-list-select [luxMode]="'multi'" [luxItems]="items" [(luxSelected)]="selected" [luxShowDetailButton]="true">
       <ng-template let-item let-selected="selected">
-        <a href="#" class="mock-content-link">{{ item.label }} ({{ selected }})</a>
+        <a href="#" class="mock-content-link">{{ item.title }} ({{ selected }})</a>
       </ng-template>
     </lux-list-select>
   `

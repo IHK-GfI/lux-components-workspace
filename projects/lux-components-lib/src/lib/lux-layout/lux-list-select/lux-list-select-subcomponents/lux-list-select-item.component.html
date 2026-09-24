@@ -21,9 +21,9 @@
         [checked]="luxSelected()"
         [disabled]="luxDisabled()"
         [tabIndex]="-1"
-        [aria-label]="luxLabel()"
-        [aria-labelledby]="luxLabel() ? null : labelId"
-        [aria-describedby]="$any(luxSubLabel() && !luxContentTemplate() ? subLabelId : null)"
+        [aria-label]="luxTitle()"
+        [aria-labelledby]="luxTitle() ? null : titleId"
+        [aria-describedby]="$any(luxSubTitle() && !luxContentTemplate() ? subTitleId : null)"
         (change)="onControlChange()"
       ></mat-checkbox>
     } @else {
@@ -34,23 +34,23 @@
         [disabled]="luxDisabled()"
         [tabIndex]="-1"
         [name]="luxRadioName()"
-        [aria-label]="luxLabel() || null"
-        [aria-labelledby]="luxLabel() ? null : labelId"
-        [aria-describedby]="luxSubLabel() && !luxContentTemplate() ? subLabelId : null"
+        [aria-label]="luxTitle() || null"
+        [aria-labelledby]="luxTitle() ? null : titleId"
+        [aria-describedby]="luxSubTitle() && !luxContentTemplate() ? subTitleId : null"
         [disableRipple]="true"
         color="primary"
         (change)="onControlChange()"
       ></mat-radio-button>
     }
   </div>
-  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto" role="gridcell" [attr.id]="labelId">
+  <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto" role="gridcell" [attr.id]="titleId">
     @if (luxContentTemplate()) {
       <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
     } @else {
-      <span class="lux-list-select-title" [luxTooltip]="luxLabel()" [luxTooltipIfTruncated]="true">{{ luxLabel() }}</span>
-      @if (luxSubLabel()) {
-        <span class="lux-list-select-subtitle lux-leading-tight" [attr.id]="subLabelId" [luxTooltip]="luxSubLabel() ?? ''" [luxTooltipIfTruncated]="true">{{
-          luxSubLabel()
+      <span class="lux-list-select-title" [luxTooltip]="luxTitle()" [luxTooltipIfTruncated]="true">{{ luxTitle() }}</span>
+      @if (luxSubTitle()) {
+        <span class="lux-list-select-subtitle lux-leading-tight" [attr.id]="subTitleId" [luxTooltip]="luxSubTitle() ?? ''" [luxTooltipIfTruncated]="true">{{
+          luxSubTitle()
         }}</span>
       }
     }

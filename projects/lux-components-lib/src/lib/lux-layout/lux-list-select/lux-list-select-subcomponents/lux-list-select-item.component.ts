@@ -31,12 +31,12 @@ export class LuxListSelectItemComponent<T = unknown> implements FocusableOption 
   private static nextItemUid = 0;
   private readonly itemUid = LuxListSelectItemComponent.nextItemUid++;
 
-  protected readonly labelId = `lux-list-select-item-label-${this.itemUid}`;
-  protected readonly subLabelId = `lux-list-select-item-sublabel-${this.itemUid}`;
+  protected readonly titleId = `lux-list-select-item-title-${this.itemUid}`;
+  protected readonly subTitleId = `lux-list-select-item-subtitle-${this.itemUid}`;
   // Itembezogenes Arialabel; ohne auflösbares Label bleibt die generische Ansage.
   protected readonly detailAriaLabel = translateSignal(
-    computed(() => (this.luxLabel() ? 'luxc.list-select.detail_item_arialabel' : 'luxc.list-select.detail_arialabel')),
-    computed(() => ({ label: this.luxLabel() }))
+    computed(() => (this.luxTitle() ? 'luxc.list-select.detail_item_arialabel' : 'luxc.list-select.detail_arialabel')),
+    computed(() => ({ title: this.luxTitle() }))
   );
 
   readonly luxItem = input.required<T>();
@@ -44,8 +44,8 @@ export class LuxListSelectItemComponent<T = unknown> implements FocusableOption 
   readonly luxSize = input<LuxListSelectSize>('default');
   readonly luxSelected = input(false);
   readonly luxDisabled = input(false);
-  readonly luxLabel = input('');
-  readonly luxSubLabel = input<string | null>(null);
+  readonly luxTitle = input('');
+  readonly luxSubTitle = input<string | null>(null);
   readonly luxShowDetailButton = input(false);
   readonly luxDetailIconName = input('lux-interface-arrows-expand-5');
   readonly luxContentTemplate = input<TemplateRef<unknown> | null>(null);

@@ -70,7 +70,7 @@ lux-list-select {
     &:focus-visible {
       outline: var(--lux-theme-outline-dark);
       outline-offset: -2px;
-      background-color: var(--lux-theme-hover-color);
+      background-color: var(--lux-theme-focus-color);
     }
 
     &.lux-selected {

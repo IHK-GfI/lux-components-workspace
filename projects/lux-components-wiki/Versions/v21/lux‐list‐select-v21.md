@@ -38,8 +38,8 @@
 | luxMode             | LuxListSelectMode (`'single'` \| `'multi'`)   | `'multi'`                          | Bestimmt, ob Mehrfachauswahl (Checkboxen) oder Einfachauswahl (Radio-Buttons) angeboten wird.                                                                                                                                      |
 | luxItems            | T[]                                           | `[]`                                | Die anzuzeigenden Listenelemente im Client-Modus (ohne `luxHttpDao`). Die Komponente filtert (bei `luxShowSearch`) und schneidet bei aktiver Paginierung selbst auf die aktuelle Seite zu; bei aktivem Infinite Scrolling ohne DAO liefert weiterhin die aufrufende Seite einen wachsenden Ausschnitt über `luxItems`, siehe [Client- und Server-Modus](#client--und-server-modus). Ist `luxHttpDao` gesetzt, wird `luxItems` vollständig ignoriert. |
 | luxSize             | `'default'` \| `'small'` \| `'xsmall'`     | `'default'`                         | Größenvariante der Karten. `small` verkleinert den Innenabstand der Karten von 20px auf 16px, `xsmall` zusätzlich die Titelschrift (18px statt 20px) und den Abstand zwischen Titel und Untertitel (4px statt 8px).                                          |
-| luxLabelProp        | string                                        | `'label'`                          | Name der Property in `T`, aus der das Haupt-Label je Item gelesen wird. Wird auch für die interne Suche im Client-Modus verwendet. Zu lange Texte werden mit „…“ gekürzt und erhalten dann automatisch einen Tooltip mit dem vollen Text.                                                                                                |
-| luxSubLabelProp     | string                                        | `'subLabel'`                       | Name der Property in `T`, aus der das Sub-Label je Item gelesen wird. Wird auch für die interne Suche im Client-Modus verwendet.                                                                                                  |
+| luxTitleProp        | string                                        | `'title'`                          | Name der Property in `T`, aus der der Titel je Item gelesen wird. Wird auch für die interne Suche im Client-Modus verwendet. Zu lange Texte werden mit „…“ gekürzt und erhalten dann automatisch einen Tooltip mit dem vollen Text.                                                                                                |
+| luxSubTitleProp     | string                                        | `'subTitle'`                       | Name der Property in `T`, aus der der Untertitel je Item gelesen wird. Wird auch für die interne Suche im Client-Modus verwendet.                                                                                                  |
 | luxDisabledProp     | string                                        | `'disabled'`                       | Name der Property in `T`, über die ein einzelnes Item deaktiviert wird (`true` deaktiviert das Item).                                                                                                                              |
 | luxCompareWith      | (a: T, b: T) => boolean                       | `(a, b) => a === b`                | Vergleichsfunktion, mit der geprüft wird, ob ein Item in `luxSelected` enthalten ist. Bei Objektwerten aus einer API sollte hier üblicherweise über eine ID verglichen werden.                                                    |
 | luxLabel            | string \| undefined                           | `undefined`                        | Aria-Label für die Liste. Ohne Angabe wird ein übersetzter Standardtext verwendet.                                                                                                                                                 |
@@ -56,7 +56,7 @@
 | luxIsLoading        | boolean                                       | `false`                             | Zeigt beim Infinite Scrolling im Client-Modus an, dass gerade nachgeladen wird, und unterdrückt währenddessen weitere `luxScrolled`-Events. Im Server-Modus (`luxHttpDao` gesetzt) verwaltet die Komponente den Ladezustand selbst, `luxIsLoading` wird dort nicht ausgewertet. |
 | luxMaxHeight        | string \| null                                | `null`                              | Maximale Gesamthöhe der Komponente (z. B. `'420px'`), inklusive Suchfeld, Kopfzeile (nur im Multi-Modus) mit „Alle auswählen“/Zähler, Paginierung und Fehlermeldung. Die Komponente ist als Flex-Layout aufgebaut, sodass bei Platzmangel ausschließlich der Listenbereich schrumpft und scrollt, die übrigen Bereiche bleiben vollständig sichtbar. |
 | luxErrorMessage     | string \| null                                | `null`                              | Fehlertext, der unterhalb der Liste als `lux-message-box` angezeigt wird. Ohne Angabe (bzw. `null`) wird keine Fehlermeldung angezeigt.                                                                                            |
-| luxShowSearch       | boolean                                       | `false`                             | Zeigt ein Suchfeld oberhalb der Liste an. Im Client-Modus filtert die Komponente `luxItems` intern über `luxLabelProp`/`luxSubLabelProp`. Im Server-Modus wird der Suchbegriff als `filter` an `luxHttpDao` übergeben. Siehe [Client- und Server-Modus](#client--und-server-modus). |
+| luxShowSearch       | boolean                                       | `false`                             | Zeigt ein Suchfeld oberhalb der Liste an. Im Client-Modus filtert die Komponente `luxItems` intern über `luxTitleProp`/`luxSubTitleProp`. Im Server-Modus wird der Suchbegriff als `filter` an `luxHttpDao` übergeben. Siehe [Client- und Server-Modus](#client--und-server-modus). |
 | luxSearchDelay      | number                                        | `300`                                | Verzögerung in Millisekunden zwischen einer Eingabe im Suchfeld und der Anwendung der Suche (Debounce).                                                                                                                             |
 | luxHttpDao          | ILuxListSelectHttpDao\<T> \| undefined        | `undefined`                         | Aktiviert den Server-Modus: Ist ein DAO gesetzt, lädt die Komponente ihre Daten ausschließlich selbst über dessen `loadData(...)`, `luxItems` wird ignoriert. Siehe [Client- und Server-Modus](#client--und-server-modus).        |
 
@@ -87,8 +87,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
 
 interface Adresse {
-  label: string;
-  subLabel: string;
+  title: string;
+  subTitle: string;
 }
 
 @Component({
@@ -104,8 +104,8 @@ interface Adresse {
 })
 export class ExampleComponent {
   items: Adresse[] = [
-    { label: 'Anna Müller', subLabel: 'Berliner Str. 12, 10115 Berlin' },
-    { label: 'Thomas Schmidt', subLabel: 'Hauptstr. 45, 80331 München' }
+    { title: 'Anna Müller', subTitle: 'Berliner Str. 12, 10115 Berlin' },
+    { title: 'Thomas Schmidt', subTitle: 'Hauptstr. 45, 80331 München' }
   ];
 
   adressenControl = new FormControl<Adresse[]>([]);
@@ -116,12 +116,12 @@ export class ExampleComponent {
 
 ### Eigener Item-Inhalt (Content-Projection)
 
-Der Inhalt eines Items (standardmäßig Titel und Untertitel aus `luxLabelProp`/`luxSubLabelProp`) kann über ein projiziertes `ng-template` vollständig ersetzt werden. Das Template erhält als Kontext das jeweilige Item (`$implicit`) und den aktuellen Auswahlstatus (`selected`):
+Der Inhalt eines Items (standardmäßig Titel und Untertitel aus `luxTitleProp`/`luxSubTitleProp`) kann über ein projiziertes `ng-template` vollständig ersetzt werden. Das Template erhält als Kontext das jeweilige Item (`$implicit`) und den aktuellen Auswahlstatus (`selected`):
 
 ```html
 <lux-list-select [luxItems]="items" [(luxSelected)]="selected">
   <ng-template let-item let-selected="selected">
-    <span class="lux-list-select-title">{{ item.label }}</span>
+    <span class="lux-list-select-title">{{ item.title }}</span>
     @if (selected) {
       <lux-icon luxIconName="lux-interface-validation-check" luxIconSize="1x"></lux-icon>
     }
@@ -137,7 +137,7 @@ Interaktive Elemente innerhalb dieses Templates (z. B. Links oder Buttons) werde
 
 ### Client-Modus (ohne luxHttpDao)
 
-Die aufrufende Seite übergibt über `luxItems` die (vollständigen) Elemente. Ist `luxShowSearch` aktiv, filtert die Komponente intern über `luxLabelProp` und `luxSubLabelProp` (Groß-/Kleinschreibung wird ignoriert, leerer Suchbegriff zeigt alle Elemente).
+Die aufrufende Seite übergibt über `luxItems` die (vollständigen) Elemente. Ist `luxShowSearch` aktiv, filtert die Komponente intern über `luxTitleProp` und `luxSubTitleProp` (Groß-/Kleinschreibung wird ignoriert, leerer Suchbegriff zeigt alle Elemente).
 
 Ist zusätzlich `luxShowPagination` aktiv, schneidet die Komponente die gefilterten Elemente auch selbst auf die aktuelle Seite zu (über `luxPageIndex`/`luxPageSize`); die aufrufende Seite übergibt hierfür weiterhin die vollständige Liste über `luxItems` und muss sie nicht mehr selbst zuschneiden. Eine Änderung des Suchbegriffs setzt `luxPageIndex` automatisch auf `0` zurück.
 
@@ -184,8 +184,8 @@ import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 export interface Adresse {
-  label: string;
-  subLabel: string;
+  title: string;
+  subTitle: string;
 }
 
 export class AdressenHttpDao implements ILuxListSelectHttpDao<Adresse> {
@@ -197,7 +197,7 @@ export class AdressenHttpDao implements ILuxListSelectHttpDao<Adresse> {
     if (conf.filter) {
       const term = conf.filter.toLowerCase();
       gefiltert = gefiltert.filter(
-        (adresse) => adresse.label.toLowerCase().includes(term) || adresse.subLabel.toLowerCase().includes(term)
+        (adresse) => adresse.title.toLowerCase().includes(term) || adresse.subTitle.toLowerCase().includes(term)
       );
     }
 
@@ -283,8 +283,8 @@ import { Component, signal } from '@angular/core';
 import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
 
 interface Adresse {
-  label: string;
-  subLabel: string;
+  title: string;
+  subTitle: string;
   disabled?: boolean;
 }
 
@@ -295,9 +295,9 @@ interface Adresse {
 })
 export class ExampleComponent {
   items: Adresse[] = [
-    { label: 'Anna Müller', subLabel: 'Berliner Str. 12, 10115 Berlin' },
-    { label: 'Thomas Schmidt', subLabel: 'Hauptstr. 45, 80331 München' },
-    { label: 'Markus Fischer', subLabel: 'Schillerplatz 3, 70173 Stuttgart', disabled: true }
+    { title: 'Anna Müller', subTitle: 'Berliner Str. 12, 10115 Berlin' },
+    { title: 'Thomas Schmidt', subTitle: 'Hauptstr. 45, 80331 München' },
+    { title: 'Markus Fischer', subTitle: 'Schillerplatz 3, 70173 Stuttgart', disabled: true }
   ];
 
   selected = signal<Adresse[]>([]);
@@ -320,8 +320,8 @@ import { Component, signal } from '@angular/core';
 import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
 
 interface Person {
-  label: string;
-  subLabel: string;
+  title: string;
+  subTitle: string;
 }
 
 @Component({
@@ -331,8 +331,8 @@ interface Person {
 })
 export class ExampleComponent {
   items: Person[] = [
-    { label: 'Anna Müller', subLabel: 'Berliner Str. 12, 10115 Berlin' },
-    { label: 'Thomas Schmidt', subLabel: 'Hauptstr. 45, 80331 München' }
+    { title: 'Anna Müller', subTitle: 'Berliner Str. 12, 10115 Berlin' },
+    { title: 'Thomas Schmidt', subTitle: 'Hauptstr. 45, 80331 München' }
   ];
 
   selected = signal<Person[]>([]);
@@ -366,8 +366,8 @@ import { LuxListSelectComponent } from '@ihk-gfi/lux-components';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 
 interface Adresse {
-  label: string;
-  subLabel: string;
+  title: string;
+  subTitle: string;
 }
 
 @Component({
