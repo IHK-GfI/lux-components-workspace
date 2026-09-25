@@ -1,6 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal, model, signal } from '@angular/core';
-import { LuxButtonComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
-import { ILuxListSelectHttpDao, LuxListSelectComponent, LuxListSelectMode, LuxListSelectSize } from '@ihk-gfi/lux-components/lux-list-select';
+import {
+  LuxButtonComponent,
+  LuxInputAcComponent,
+  LuxMenuComponent,
+  LuxMenuItemComponent,
+  LuxSelectAcComponent,
+  LuxToggleAcComponent
+} from '@ihk-gfi/lux-components';
+import {
+  ILuxListSelectHttpDao,
+  LuxListSelectActionDirective,
+  LuxListSelectActionPosition,
+  LuxListSelectComponent,
+  LuxListSelectMode,
+  LuxListSelectSize
+} from '@ihk-gfi/lux-components/lux-list-select';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';
@@ -39,7 +53,10 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LuxListSelectComponent,
+    LuxListSelectActionDirective,
     LuxButtonComponent,
+    LuxMenuComponent,
+    LuxMenuItemComponent,
     LuxSelectAcComponent,
     LuxToggleAcComponent,
     LuxInputAcComponent,
@@ -58,6 +75,17 @@ export class ListSelectExampleComponent {
     { label: 'default', value: 'default' },
     { label: 'small', value: 'small' },
     { label: 'xsmall', value: 'xsmall' }
+  ];
+
+  readonly actionTypeOptions: { label: string; value: 'none' | 'button' | 'menu' }[] = [
+    { label: 'Keine Aktion', value: 'none' },
+    { label: 'Icon-Button', value: 'button' },
+    { label: 'Menü (lux-menu)', value: 'menu' }
+  ];
+
+  readonly actionPositionOptions: { label: string; value: LuxListSelectActionPosition }[] = [
+    { label: 'right', value: 'right' },
+    { label: 'left', value: 'left' }
   ];
 
   readonly pageSizeOptions: { label: string; value: number }[] = [
@@ -83,11 +111,11 @@ export class ListSelectExampleComponent {
   selectAllLabel = model('Alle Adressen');
   titleProp = model('title');
   subTitleProp = model('subTitle');
-  detailIconName = model('lux-interface-arrows-expand-5');
   showOutputEvents = model(false);
   showPagination = model(false);
   infiniteScroll = model(false);
-  showDetailButton = model(false);
+  actionType = model<'none' | 'button' | 'menu'>('none');
+  actionPosition = model<LuxListSelectActionPosition>('right');
   disabled = model(false);
   errorMessage = model<string>('');
   maxHeight = model('420px');
@@ -164,7 +192,7 @@ export class ListSelectExampleComponent {
     this.log(this.showOutputEvents(), 'luxSelectedChange', selected);
   }
 
-  onDetail(item: DemoAdresse) {
-    this.log(this.showOutputEvents(), 'luxDetailClicked', item);
+  onAction(action: string, item: DemoAdresse) {
+    this.log(this.showOutputEvents(), action, item);
   }
 }

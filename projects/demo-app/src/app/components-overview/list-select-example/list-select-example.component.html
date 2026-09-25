@@ -10,7 +10,6 @@
         [luxItems]="visibleItems()"
         [luxTitleProp]="titleProp()"
         [luxSubTitleProp]="subTitleProp()"
-        [luxDetailIconName]="detailIconName()"
         [luxShowCounter]="showCounter()"
         [luxSelectAllLabel]="selectAllLabel() || undefined"
         [luxSelected]="selected()"
@@ -23,14 +22,32 @@
         [(luxPageIndex)]="pageIndex"
         [luxInfiniteScroll]="infiniteScroll()"
         [luxMaxHeight]="maxHeight()"
-        [luxShowDetailButton]="showDetailButton()"
+        [luxActionPosition]="actionPosition()"
         [luxDisabled]="disabled()"
         [luxErrorMessage]="errorMessage() || null"
         (luxSelectedChange)="onSelectedChange($event)"
         (luxPageChange)="onPageChange($event)"
         (luxScrolled)="onScrolled()"
-        (luxDetailClicked)="onDetail($event)"
-      ></lux-list-select>
+      >
+        @if (actionType() === 'button') {
+          <ng-template luxListSelectAction let-item>
+            <lux-button
+              [luxIconButton]="true"
+              luxIconName="lux-interface-arrows-expand-5"
+              [luxLabel]="'Details anzeigen zu ' + item.title"
+              [luxDisabled]="item.disabled ?? false"
+              (luxClicked)="onAction('Details', item)"
+            ></lux-button>
+          </ng-template>
+        } @else if (actionType() === 'menu') {
+          <ng-template luxListSelectAction let-item>
+            <lux-menu [luxAriaMenuTriggerLabel]="'Aktionen zu ' + item.title" [luxToggleDisabled]="item.disabled ?? false">
+              <lux-menu-item luxLabel="Bearbeiten" luxIconName="lux-interface-edit-pencil" (luxClicked)="onAction('Bearbeiten', item)"></lux-menu-item>
+              <lux-menu-item luxLabel="Löschen" luxIconName="lux-interface-delete-bin-2" (luxClicked)="onAction('Löschen', item)"></lux-menu-item>
+            </lux-menu>
+          </ng-template>
+        }
+      </lux-list-select>
       <div class="lux-flex lux-gap-2 lux-flex-wrap">
         <lux-button luxLabel="Liste leeren" [luxStroked]="true" (luxClicked)="clearItems()"></lux-button>
         <lux-button luxLabel="Langen Eintrag hinzufügen" [luxStroked]="true" (luxClicked)="addItem()"></lux-button>
@@ -61,7 +78,20 @@
       [(luxSelected)]="size"
     ></lux-select-ac>
     <lux-toggle-ac luxLabel="luxShowSearch" [(luxChecked)]="showSearch" [luxNoTopLabel]="true"></lux-toggle-ac>
-    <lux-toggle-ac luxLabel="luxShowDetailButton" [(luxChecked)]="showDetailButton" [luxNoTopLabel]="true"></lux-toggle-ac>
+    <lux-select-ac
+      luxLabel="Aktions-Template (luxListSelectAction)"
+      [luxOptions]="actionTypeOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="actionType"
+    ></lux-select-ac>
+    <lux-select-ac
+      luxLabel="luxActionPosition"
+      [luxOptions]="actionPositionOptions"
+      luxOptionLabelProp="label"
+      [luxPickValue]="(item) => item.value"
+      [(luxSelected)]="actionPosition"
+    ></lux-select-ac>
     <lux-toggle-ac luxLabel="luxShowPagination" [(luxChecked)]="showPagination" [luxNoTopLabel]="true"></lux-toggle-ac>
     <lux-toggle-ac luxLabel="luxInfiniteScroll" [(luxChecked)]="infiniteScroll" [luxNoTopLabel]="true"></lux-toggle-ac>
     <lux-toggle-ac
@@ -100,7 +130,6 @@
     <lux-input-ac luxLabel="luxSelectAllLabel" luxHint="Eigener Text für „Alle auswählen“." [(luxValue)]="selectAllLabel"></lux-input-ac>
     <lux-input-ac luxLabel="luxTitleProp" luxHint="Property der Items, aus der der Titel gelesen wird." [(luxValue)]="titleProp"></lux-input-ac>
     <lux-input-ac luxLabel="luxSubTitleProp" luxHint="Property der Items, aus der der Untertitel gelesen wird." [(luxValue)]="subTitleProp"></lux-input-ac>
-    <lux-input-ac luxLabel="luxDetailIconName" [(luxValue)]="detailIconName"></lux-input-ac>
     <lux-input-ac luxLabel="luxMaxHeight" luxHint="Gesamthöhe der Komponente, die Liste scrollt innerhalb." [(luxValue)]="maxHeight"></lux-input-ac>
   </example-base-advanced-options>
 </example-base-structure>
