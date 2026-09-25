@@ -7,6 +7,7 @@
     @for (menuItem of visibleMenuItems; track menuItem) {
       <lux-button
         class="lux-menu-item"
+        [luxIconShowRight]="menuItem.luxIconShowRight"
         [luxLabel]="menuItem.luxHideLabelIfExtended ? '' : menuItem.luxLabel"
         [luxColor]="menuItem.luxColor"
         [luxRaised]="menuItem.luxRaised"
@@ -79,7 +80,7 @@
             <lux-icon
               [luxIconName]="menuItem.luxIconName"
               luxPadding="0"
-              [luxMargin]="menuItem.luxIconShowRight ? '0 0 0 1rem' : '0 1rem 0 0'"
+              [luxMargin]="'0 1rem 0 0'"
               luxIconSize="unset"
               class="lux-menu-item-icon"
             ></lux-icon>
