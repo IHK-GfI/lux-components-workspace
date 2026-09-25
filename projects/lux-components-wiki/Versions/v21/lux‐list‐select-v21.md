@@ -158,7 +158,7 @@ Menü mit mehreren Aktionen:
   <ng-template luxListSelectAction let-item>
     <lux-menu [luxAriaMenuTriggerLabel]="'Aktionen zu ' + item.title">
       <lux-menu-trigger>
-        <lux-button [luxIconButton]="true" luxIconName="lux-interface-setting-menu-1" [luxLabel]="'Aktionen zu ' + item.title"></lux-button>
+        <lux-button [luxIconButton]="true" luxColor="primary" luxIconName="lux-interface-setting-menu-vertical" [luxLabel]="'Aktionen zu ' + item.title"></lux-button>
       </lux-menu-trigger>
       <lux-menu-item luxLabel="Bearbeiten" luxIconName="lux-interface-edit-pencil" (luxClicked)="edit(item)"></lux-menu-item>
       <lux-menu-item luxLabel="Löschen" luxIconName="lux-interface-delete-bin-2" (luxClicked)="remove(item)"></lux-menu-item>
