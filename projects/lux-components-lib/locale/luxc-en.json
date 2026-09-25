@@ -235,6 +235,13 @@
       "arialabel": "List",
       "empty_label": "No entries available"
     },
+    "list-select": {
+      "arialabel": "Selection list",
+      "counter": "{{selected}} of {{total}} selected",
+      "search_arialabel": "Search",
+      "search_results": "Results: {{count}}",
+      "select_all": "Select all"
+    },
     "lookup": {
       "error_message.invalid": "The selected value is invalid."
     },

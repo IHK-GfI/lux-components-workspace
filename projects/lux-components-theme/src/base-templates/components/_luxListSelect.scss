@@ -1,0 +1,132 @@
+$lux-list-select-scrollbar-track: #fbfafa;
+$lux-list-select-scrollbar-thumb: #8b8b8b;
+
+lux-list-select {
+  display: block;
+
+  .lux-list-select-header {
+    gap: 22px;
+  }
+
+  .lux-list-select-viewport {
+    position: relative; // Positionierungskontext für das Loading-Overlay
+    min-height: 0; // sonst verhindert der Flex-Item-Default-Wert das Schrumpfen unter die Inhaltshöhe
+    scrollbar-width: thin;
+    scrollbar-color: $lux-list-select-scrollbar-thumb $lux-list-select-scrollbar-track;
+
+    &::-webkit-scrollbar {
+      width: 16px;
+      background-color: $lux-list-select-scrollbar-track;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $lux-list-select-scrollbar-thumb;
+      border-radius: var(--lux-theme-radius-xxl);
+      border: 2px solid $lux-list-select-scrollbar-track;
+    }
+
+    &.lux-list-select-loading {
+      min-height: 5rem; // Platz für den Spinner, solange noch keine Karten geladen sind
+
+      .lux-list-select-list {
+        opacity: 0.4; // Liste dezent abdunkeln, solange das Overlay lädt
+        pointer-events: none;
+      }
+    }
+  }
+
+  .lux-list-select-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.6);
+    z-index: 1;
+  }
+
+  .lux-list-select-list {
+    padding: 2px; // verhindert abgeschnittene Borders/Fokusringe (Figma: Padding 2)
+  }
+
+  lux-list-select-item {
+    display: block;
+  }
+
+  .lux-list-select-card {
+    padding: var(--lux-theme-card-padding);
+    background-color: var(--lux-theme-card-background-color);
+    border: 1px solid var(--lux-theme-app-border-color);
+    border-radius: var(--lux-theme-radius-sm);
+    cursor: pointer;
+
+    &:hover:not(.lux-disabled) {
+      background-color: var(--lux-theme-hover-color);
+      border-color: var(--lux-theme-primary-color);
+    }
+
+    // :focus-visible statt :focus-within: die Karte ist selbst fokussierbar (tabindex -1, Grid-Pattern),
+    // :focus-within würde sonst bei jedem Mausklick feuern; :focus-visible zeigt den Ring nur bei Tastaturfokus
+    &:focus-visible {
+      outline: var(--lux-theme-outline-dark);
+      outline-offset: -2px;
+      background-color: var(--lux-theme-focus-color);
+    }
+
+    &.lux-selected {
+      border-color: var(--lux-theme-selected-border-color);
+    }
+
+    &.lux-disabled {
+      cursor: default;
+
+      .lux-list-select-title,
+      .lux-list-select-subtitle {
+        color: var(--lux-theme-dark-disabled-text);
+      }
+    }
+
+    // Größenvarianten (Figma "Header size"): small verkleinert das Padding, xsmall zusätzlich Titel und Abstand
+    &.lux-list-select-size-small,
+    &.lux-list-select-size-xsmall {
+      padding: var(--lux-theme-spacing-md);
+    }
+
+    &.lux-list-select-size-xsmall {
+      .lux-list-select-title {
+        font-size: var(--lux-theme-font-size-lg);
+      }
+
+      .lux-list-select-headlines {
+        gap: var(--lux-theme-spacing-xs);
+      }
+    }
+  }
+
+  .lux-list-select-headlines {
+    min-width: 0;
+    gap: var(--lux-theme-spacing-sm);
+  }
+
+  .lux-list-select-title {
+    font-family: var(--lux-theme-app-headline-font);
+    font-size: var(--lux-theme-font-size-xl);
+    line-height: 1.1; // Figma: 22px bei 20px Schrift; "normal" ergibt mit Blogger Sans im Browser 24px
+    color: var(--lux-theme-dark-primary-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lux-list-select-subtitle {
+    font-size: var(--lux-theme-font-size-md);
+    color: var(--lux-theme-dark-secondary-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lux-list-select-error {
+    display: block;
+  }
+}

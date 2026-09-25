@@ -5,6 +5,7 @@ import {
   END,
   ENTER,
   ESCAPE,
+  F2,
   HOME,
   LEFT_ARROW,
   PAGE_DOWN,
@@ -343,6 +344,16 @@ export class LuxUtil {
     const key = this.getKey(event);
 
     return key === 'Escape' || key === 'Esc' || key === ESCAPE;
+  }
+
+  /**
+   * Diese Methode liefert true zurück, wenn es sich um die F2-Taste handelt, false sonst.
+   * @param event Ein beliebiges KeyboardEvent
+   */
+  public static isKeyF2(event: KeyboardEvent) {
+    const key = this.getKey(event);
+
+    return key === 'F2' || key === F2;
   }
 
   private static getKey(event: KeyboardEvent): string | number {
