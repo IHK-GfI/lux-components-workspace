@@ -4,6 +4,7 @@ import {
   LuxInputAcComponent,
   LuxMenuComponent,
   LuxMenuItemComponent,
+  LuxMenuTriggerComponent,
   LuxSelectAcComponent,
   LuxToggleAcComponent
 } from '@ihk-gfi/lux-components';
@@ -57,6 +58,7 @@ const ALLE_ADRESSEN: DemoAdresse[] = [
     LuxButtonComponent,
     LuxMenuComponent,
     LuxMenuItemComponent,
+    LuxMenuTriggerComponent,
     LuxSelectAcComponent,
     LuxToggleAcComponent,
     LuxInputAcComponent,
