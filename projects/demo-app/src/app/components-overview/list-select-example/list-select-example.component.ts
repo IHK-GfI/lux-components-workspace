@@ -1,14 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal, model, signal } from '@angular/core';
-import {
-  ILuxListSelectHttpDao,
-  LuxButtonComponent,
-  LuxInputAcComponent,
-  LuxListSelectComponent,
-  LuxListSelectMode,
-  LuxListSelectSize,
-  LuxSelectAcComponent,
-  LuxToggleAcComponent
-} from '@ihk-gfi/lux-components';
+import { LuxButtonComponent, LuxInputAcComponent, LuxSelectAcComponent, LuxToggleAcComponent } from '@ihk-gfi/lux-components';
+import { ILuxListSelectHttpDao, LuxListSelectComponent, LuxListSelectMode, LuxListSelectSize } from '@ihk-gfi/lux-components/lux-list-select';
 import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { ExampleBaseContentComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-content/example-base-content.component';
 import { ExampleBaseAdvancedOptionsComponent } from '../../example-base/example-base-root/example-base-subcomponents/example-base-options/example-base-advanced-options.component';

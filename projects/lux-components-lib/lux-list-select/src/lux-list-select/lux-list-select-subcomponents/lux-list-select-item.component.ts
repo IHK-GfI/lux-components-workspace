@@ -4,8 +4,7 @@ import { afterRenderEffect, ChangeDetectionStrategy, Component, computed, Elemen
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRadioButton } from '@angular/material/radio';
 import { translateSignal } from '@jsverse/transloco';
-import { LuxButtonComponent } from '../../../lux-action/lux-button/lux-button.component';
-import { LuxTooltipDirective } from '../../../lux-directives/lux-tooltip/lux-tooltip.directive';
+import { LuxButtonComponent, LuxTooltipDirective } from '@ihk-gfi/lux-components';
 import { LuxListSelectMode, LuxListSelectSize } from '../lux-list-select-model/lux-list-select-types';
 
 // Checkbox/Radio in diesem Wrapper sind dauerhaft kein eigener Tab-Stopp, daher von der generischen

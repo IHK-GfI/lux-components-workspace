@@ -50,7 +50,7 @@
 
 ### Issues
 
-- Issue #270: Neue Komponente lux-list-select für Single- und Multiselect mit einheitlichem Styling (#301)
+- Issue #270: Neue Komponente lux-list-select für Single- und Multiselect mit einheitlichem Styling, eigener Einstiegspunkt `@ihk-gfi/lux-components/lux-list-select` (#301)
 
 ## Version 21.8.0
 

@@ -9,9 +9,9 @@ import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { LuxInfiniteScrollDirective } from '../../lux-directives/lux-infinite-scroll/lux-infinite-scroll.directive';
+import { LuxInfiniteScrollDirective } from '@ihk-gfi/lux-components';
 import { TranslocoService } from '@jsverse/transloco';
-import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
+import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxListSelectComponent } from './lux-list-select.component';
 import {
   ILuxListSelectHttpDao,

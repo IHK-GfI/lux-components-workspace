@@ -1,4 +1,4 @@
-import { ILuxListSelectHttpDao, ILuxListSelectHttpDaoConf, ILuxListSelectHttpDaoStructure } from '@ihk-gfi/lux-components';
+import { ILuxListSelectHttpDao, ILuxListSelectHttpDaoConf, ILuxListSelectHttpDaoStructure } from '@ihk-gfi/lux-components/lux-list-select';
 import { Observable, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { DemoAdresse } from './list-select-example.component';

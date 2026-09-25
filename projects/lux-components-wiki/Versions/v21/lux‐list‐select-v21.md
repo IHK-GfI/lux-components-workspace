@@ -25,9 +25,10 @@
 
 ### Allgemein
 
-| Name     | Beschreibung    |
-| -------- | --------------- |
-| selector | lux-list-select |
+| Name     | Beschreibung                            |
+| -------- | --------------------------------------- |
+| selector | lux-list-select                         |
+| import   | @ihk-gfi/lux-components/lux-list-select |
 
 `LuxListSelectComponent<T>` ist generisch. `T` ist der Typ der Objekte in `luxItems` bzw. in den vom DAO gelieferten Items.
 

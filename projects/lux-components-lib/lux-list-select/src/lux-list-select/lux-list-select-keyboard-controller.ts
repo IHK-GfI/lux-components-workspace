@@ -1,6 +1,6 @@
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { computed, Injector, Signal, signal } from '@angular/core';
-import { LuxUtil } from '../../lux-util/lux-util';
+import { LuxUtil } from '@ihk-gfi/lux-components';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 
 /**
