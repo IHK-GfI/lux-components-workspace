@@ -98,7 +98,8 @@ export class LuxListSelectKeyboardController<T> {
         this.toggleActiveItem();
         break;
       case LuxUtil.isKeyEnter(event):
-        if (this.keyManager.activeItem?.luxShowDetailButton()) {
+        // Enter steigt in die Karte ab, sobald sie innere interaktive Elemente hat, sonst schaltet es die Auswahl um.
+        if (this.keyManager.activeItem?.getFocusableElements().length) {
           this.enterInnerNavigation();
         } else {
           this.toggleActiveItem();

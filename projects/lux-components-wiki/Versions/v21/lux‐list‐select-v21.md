@@ -10,6 +10,7 @@
     - [ControlValueAccessor](#controlvalueaccessor)
   - [Components](#components)
     - [Eigener Item-Inhalt (Content-Projection)](#eigener-item-inhalt-content-projection)
+    - [Aktion je Karte (Aktions-Template)](#aktion-je-karte-aktions-template)
   - [Client- und Server-Modus](#client--und-server-modus)
     - [Client-Modus (ohne luxHttpDao)](#client-modus-ohne-luxhttpdao)
     - [Server-Modus (mit luxHttpDao)](#server-modus-mit-luxhttpdao)
@@ -46,8 +47,7 @@
 | luxLabel            | string \| undefined                           | `undefined`                        | Aria-Label für die Liste. Ohne Angabe wird ein übersetzter Standardtext verwendet.                                                                                                                                                 |
 | luxDisabled         | boolean                                       | `false`                             | Deaktiviert die gesamte Komponente (Suchfeld, alle Items, „Alle auswählen“ und die Paginierung).                                                                                                                                   |
 | luxTagId            | string \| undefined                           | `undefined`                        | Optionale Tag-ID für automatisierte Tests (`luxTagIdHandler`).                                                                                                                                                                     |
-| luxShowDetailButton | boolean                                       | `false`                             | Zeigt je Item einen zusätzlichen Detail-Button an, der unabhängig von der Auswahl das Event `luxDetailClicked` auslöst.                                                                                                            |
-| luxDetailIconName   | string                                        | `'lux-interface-arrows-expand-5'`  | Icon-Name für den Detail-Button.                                                                                                                                                                                                    |
+| luxActionPosition   | `'left'` \| `'right'`                        | `'right'`                           | Position des Aktions-Templates in der Karte: rechts vom Titel oder links zwischen Checkbox/Radio und Titel. Siehe [Aktion je Karte](#aktion-je-karte-aktions-template).                                                        |
 | luxTotalItems       | number \| null                                | `null`                              | Gesamtzahl aller Elemente (über alle Seiten hinweg), z. B. für den Zähler und den Paginator. Ohne Angabe wird im Client-Modus die Anzahl der (ggf. gefilterten) Elemente aus `luxItems` verwendet. Im Server-Modus wird `luxTotalItems` ignoriert, hier zählt ausschließlich die vom DAO gelieferte `totalCount`. Ist `luxTotalItems` im Client-Modus gesetzt und gleichzeitig eine Suche aktiv, bleibt der Zähler bzw. Paginator auf der ungefilterten Gesamtmenge stehen, obwohl die Suche die angezeigten Elemente filtert. |
 | luxSelectAllLabel   | string \| undefined                           | `undefined`                        | Eigener Text für die „Alle auswählen“-Checkbox im Multi-Modus. Ohne Angabe wird ein übersetzter Standardtext verwendet.                                                                                                            |
 | luxShowCounter      | boolean                                       | `true`                              | Zeigt im Multi-Modus in der Kopfzeile den Zähler „X von Y ausgewählt“ an (Opt-out). Im Single-Modus gibt es keine Kopfzeile, `luxShowCounter` hat dort keine Wirkung.                                                             |
@@ -72,7 +72,6 @@ Hinweis: „Alle auswählen“ (nur im Multi-Modus) wirkt ausschließlich auf di
 | luxSelectedChange | EventEmitter\<T[]>      | Emittiert die aktuelle Auswahl bei jeder Änderung, auch bei programmatischen Änderungen über `writeValue` (siehe [ControlValueAccessor](#controlvalueaccessor)). |
 | luxPageChange     | EventEmitter\<LuxPageEvent> | Emittiert, wenn sich bei aktiver Paginierung die Seite ändert.                                                  |
 | luxScrolled       | EventEmitter\<void>     | Emittiert bei aktivem Infinite Scrolling, wenn ans Ende der Liste gescrollt wurde. Im Client-Modus muss die aufrufende Seite darauf mit weiteren Elementen in `luxItems` reagieren, im Server-Modus lädt die Komponente selbst nach. |
-| luxDetailClicked  | EventEmitter\<T>        | Emittiert das jeweilige Item, wenn bei `luxShowDetailButton` der Detail-Button geklickt wurde.                    |
 
 `luxSelected` ist als `model<T[]>` implementiert und damit auch als Zwei-Weg-Bindung `[(luxSelected)]` nutzbar. `luxPageIndex` ist ebenfalls ein `model<number>` und kann analog per `[(luxPageIndex)]` gebunden werden. `luxSearchValue` ist ebenfalls ein `model<string>` (`[(luxSearchValue)]`) und enthält den aktuell im Suchfeld eingegebenen Text, unabhängig vom Debounce über `luxSearchDelay`.
 
@@ -117,11 +116,11 @@ export class ExampleComponent {
 
 ### Eigener Item-Inhalt (Content-Projection)
 
-Der Inhalt eines Items (standardmäßig Titel und Untertitel aus `luxTitleProp`/`luxSubTitleProp`) kann über ein projiziertes `ng-template` vollständig ersetzt werden. Das Template erhält als Kontext das jeweilige Item (`$implicit`) und den aktuellen Auswahlstatus (`selected`):
+Der Inhalt eines Items (standardmäßig Titel und Untertitel aus `luxTitleProp`/`luxSubTitleProp`) kann über ein mit `luxListSelectContent` markiertes `ng-template` vollständig ersetzt werden. Das Template bekommt das jeweilige Item als `let-item` und den aktuellen Auswahlstatus als `let-selected="selected"`:
 
 ```html
 <lux-list-select [luxItems]="items" [(luxSelected)]="selected">
-  <ng-template let-item let-selected="selected">
+  <ng-template luxListSelectContent let-item let-selected="selected">
     <span class="lux-list-select-title">{{ item.title }}</span>
     @if (selected) {
       <lux-icon luxIconName="lux-interface-validation-check" luxIconSize="1x"></lux-icon>
@@ -131,6 +130,41 @@ Der Inhalt eines Items (standardmäßig Titel und Untertitel aus `luxTitleProp`/
 ```
 
 Interaktive Elemente innerhalb dieses Templates (z. B. Links oder Buttons) werden von der Komponente automatisch in die Tab-Reihenfolge eingebunden, siehe [Tastaturnavigation](#tastaturnavigation).
+
+### Aktion je Karte (Aktions-Template)
+
+Jede Karte kann eine Aktion bekommen, z. B. einen Icon-Button oder ein `lux-menu`. Dafür wird ein mit `luxListSelectAction` markiertes `ng-template` projiziert, das je Karte gerendert wird und das Item als `let-item` bekommt. Die Position steuert `luxActionPosition` (`'right'` als Default rechts vom Titel, `'left'` zwischen Checkbox/Radio und Titel). Es gibt genau eine Aktionszelle je Karte; die Komponente bringt keinen eigenen Detail-Button mit.
+
+Icon-Button:
+
+```html
+<lux-list-select [luxItems]="items" [(luxSelected)]="selected">
+  <ng-template luxListSelectAction let-item>
+    <lux-button
+      [luxIconButton]="true"
+      luxIconName="lux-interface-arrows-expand-5"
+      [luxLabel]="'Details anzeigen zu ' + item.title"
+      [luxDisabled]="item.disabled"
+      (luxClicked)="showDetails(item)"
+    ></lux-button>
+  </ng-template>
+</lux-list-select>
+```
+
+Menü mit mehreren Aktionen:
+
+```html
+<lux-list-select [luxItems]="items" [(luxSelected)]="selected" luxActionPosition="right">
+  <ng-template luxListSelectAction let-item>
+    <lux-menu [luxAriaMenuTriggerLabel]="'Aktionen zu ' + item.title">
+      <lux-menu-item luxLabel="Bearbeiten" luxIconName="lux-interface-edit-pencil" (luxClicked)="edit(item)"></lux-menu-item>
+      <lux-menu-item luxLabel="Löschen" luxIconName="lux-interface-delete-bin-2" (luxClicked)="remove(item)"></lux-menu-item>
+    </lux-menu>
+  </ng-template>
+</lux-list-select>
+```
+
+Ein Klick in die Aktionszelle ändert die Auswahl nicht. Für Screenreader sollte die Aktion immer ein itembezogenes Label bekommen (`luxLabel` bzw. `luxAriaMenuTriggerLabel`), damit sich die Buttons der Karten unterscheiden lassen. Die Tastaturbedienung ist in [Innennavigation](#innennavigation) beschrieben.
 
 ## Client- und Server-Modus
 
@@ -249,12 +283,12 @@ Beispiel-DAO mit Infinite Scrolling: Die `loadData`-Methode ist identisch zum Pa
 | `Home`                   | Erste Karte fokussieren                                                                                                                                          |
 | `End`                    | Letzte Karte fokussieren                                                                                                                                         |
 | `Space`                  | Auswahl der aktiven Karte umschalten. Checkbox bzw. Radio-Button sind bewusst kein eigener Tab-Stopp, die Auswahl erfolgt immer über die Karte                                                                                                |
-| `Enter`                  | Ohne `luxShowDetailButton`: Auswahl umschalten (wie `Space`). Mit `luxShowDetailButton`: Innennavigation betreten.                                            |
-| `F2`                     | Innennavigation betreten (nur wenn die Karte interaktive innere Elemente besitzt, z. B. Detail-Button oder interaktive Elemente aus dem projizierten Inhalt) |
+| `Enter`                  | Hat die Karte innere interaktive Elemente (Aktions-Template, projizierter Inhalt): Innennavigation betreten. Sonst Auswahl umschalten (wie `Space`).            |
+| `F2`                     | Innennavigation betreten (nur wenn die Karte interaktive innere Elemente besitzt, z. B. aus dem Aktions-Template oder dem projizierten Inhalt) |
 
 ### Innennavigation
 
-Besitzt die aktive Karte interaktive innere Elemente (Detail-Button, interaktive Elemente aus dem per `ng-template` projizierten Karteninhalt), kann per `Enter` bzw. `F2` in die Karte abgestiegen werden (Innennavigation). Checkbox bzw. Radio-Button sind davon ausgenommen und bleiben dauerhaft kein eigener Tab-Stopp. In der Innennavigation regelt der Browser die Tab-Reihenfolge innerhalb der Karte.
+Besitzt die aktive Karte interaktive innere Elemente (Aktions-Template, interaktive Elemente aus dem projizierten Karteninhalt), kann per `Enter` bzw. `F2` in die Karte abgestiegen werden (Innennavigation). Checkbox bzw. Radio-Button sind davon ausgenommen und bleiben dauerhaft kein eigener Tab-Stopp. In der Innennavigation regelt der Browser die Tab-Reihenfolge innerhalb der Karte.
 
 | Taste                            | Aktion                                                                                                                     |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -1,3 +1,9 @@
+<ng-template #actionCellTpl>
+  <div class="lux-list-select-action-cell lux-flex lux-items-center" role="gridcell">
+    <ng-container *ngTemplateOutlet="luxActionTemplate(); context: { $implicit: luxItem() }"></ng-container>
+  </div>
+</ng-template>
+
 <!-- Klick auf die Karte ist reine Komfort-Erweiterung; die Tastaturbedienung läuft über role="row" und den FocusKeyManager der Hauptkomponente. -->
 <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
 <div
@@ -43,6 +49,9 @@
       ></mat-radio-button>
     }
   </div>
+  @if (luxActionTemplate() && luxActionPosition() === 'left') {
+    <ng-container *ngTemplateOutlet="actionCellTpl"></ng-container>
+  }
   <div class="lux-list-select-headlines lux-flex lux-flex-col lux-flex-auto" role="gridcell" [attr.id]="titleId">
     @if (luxContentTemplate()) {
       <ng-container *ngTemplateOutlet="luxContentTemplate(); context: { $implicit: luxItem(), selected: luxSelected() }"></ng-container>
@@ -55,16 +64,7 @@
       }
     }
   </div>
-  @if (luxShowDetailButton()) {
-    <div class="lux-list-select-detail-cell lux-flex lux-items-center" role="gridcell">
-      <lux-button
-        class="lux-list-select-detail"
-        [luxIconButton]="true"
-        [luxIconName]="luxDetailIconName()"
-        [luxLabel]="detailAriaLabel()"
-        [luxDisabled]="luxDisabled()"
-        (luxClicked)="luxDetail.emit()"
-      ></lux-button>
-    </div>
+  @if (luxActionTemplate() && luxActionPosition() === 'right') {
+    <ng-container *ngTemplateOutlet="actionCellTpl"></ng-container>
   }
 </div>

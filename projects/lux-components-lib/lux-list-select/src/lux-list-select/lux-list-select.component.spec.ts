@@ -9,7 +9,7 @@ import { LuxPageEvent } from '@ihk-gfi/lux-components/lux-paginator';
 import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { Observable, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { LuxInfiniteScrollDirective } from '@ihk-gfi/lux-components';
+import { LuxButtonComponent, LuxInfiniteScrollDirective } from '@ihk-gfi/lux-components';
 import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxListSelectComponent } from './lux-list-select.component';
@@ -18,7 +18,8 @@ import {
   ILuxListSelectHttpDaoConf,
   ILuxListSelectHttpDaoStructure
 } from './lux-list-select-model/lux-list-select-http-dao.interface';
-import { LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
+import { LuxListSelectActionPosition, LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
+import { LuxListSelectActionDirective, LuxListSelectContentDirective } from './lux-list-select-templates.directive';
 
 interface TestAdresse {
   title: string;
@@ -262,20 +263,44 @@ describe('LuxListSelectComponent', () => {
     });
   });
 
-  describe('Detail-Button', () => {
-    it('Sollte den Detail-Button nur bei luxShowDetailButton anzeigen und das Item emittieren', () => {
+  describe('Aktions-Template', () => {
+    it('Sollte das Aktions-Template je Karte rendern und dem Template das Item übergeben', () => {
       // Vorbedingungen testen
-      expect(fixture.debugElement.query(By.css('.lux-list-select-detail button'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.lux-list-select-action-cell'))).toBeNull();
 
       // Änderungen durchführen
-      host.showDetailButton = true;
+      host.showAction = true;
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
-      expect(detailButtons.length).toBe(4);
-      detailButtons[1].nativeElement.click();
+      const actionButtons = fixture.debugElement.queryAll(By.css('.mock-action button'));
+      expect(actionButtons.length).toBe(4);
+      actionButtons[1].nativeElement.click();
       expect(host.lastDetail).toBe(TEST_ITEMS[1]);
+      expect(host.selected).toEqual([]);
+    });
+
+    it('Sollte die Aktionszelle über luxActionPosition links oder rechts vom Titel platzieren', () => {
+      // Vorbedingungen testen: Standard ist rechts
+      host.showAction = true;
+      fixture.detectChanges();
+      const cells = () => Array.from((fixture.debugElement.query(By.css('.lux-list-select-card')).nativeElement as HTMLElement).children);
+      expect(cells().map((cell) => cell.className.split(' ')[0])).toEqual([
+        'lux-list-select-control-cell',
+        'lux-list-select-headlines',
+        'lux-list-select-action-cell'
+      ]);
+
+      // Änderungen durchführen
+      host.actionPosition = 'left';
+      fixture.detectChanges();
+
+      // Nachbedingungen prüfen
+      expect(cells().map((cell) => cell.className.split(' ')[0])).toEqual([
+        'lux-list-select-control-cell',
+        'lux-list-select-action-cell',
+        'lux-list-select-headlines'
+      ]);
     });
   });
 
@@ -1186,7 +1211,7 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte die Liste als grid mit einem Tab-Stopp rendern und Items als row', () => {
       // Vorbedingungen testen
-      host.showDetailButton = true;
+      host.showAction = true;
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: Container ist der einzige Tab-Stopp des Grids
@@ -1205,7 +1230,7 @@ describe('LuxListSelectComponent', () => {
       fixture.debugElement.queryAll(By.css('.lux-list-select-card mat-checkbox')).forEach((checkbox) => {
         expect((checkbox.componentInstance as MatCheckbox).tabIndex).toBe(-1);
       });
-      fixture.debugElement.queryAll(By.css('.lux-list-select-detail button')).forEach((button) => {
+      fixture.debugElement.queryAll(By.css('.mock-action button')).forEach((button) => {
         expect(button.nativeElement.tabIndex).toBe(-1);
       });
     });
@@ -1282,34 +1307,34 @@ describe('LuxListSelectComponent', () => {
       expect(host.selected).toEqual([]);
     });
 
-    it('Sollte einen nachträglich eingeblendeten Detail-Button aus der Tab-Reihenfolge nehmen', () => {
+    it('Sollte ein nachträglich eingeblendetes Aktions-Template aus der Tab-Reihenfolge nehmen', () => {
       // Vorbedingungen testen
-      expect(fixture.debugElement.query(By.css('.lux-list-select-detail button'))).toBeNull();
+      expect(fixture.debugElement.query(By.css('.mock-action button'))).toBeNull();
 
       // Änderungen durchführen
-      host.showDetailButton = true;
+      host.showAction = true;
       fixture.detectChanges();
 
       // Nachbedingungen prüfen: außerhalb der Innennavigation ist kein Detail-Button ein Tab-Stopp
-      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
+      const detailButtons = fixture.debugElement.queryAll(By.css('.mock-action button'));
       expect(detailButtons.length).toBeGreaterThan(0);
       detailButtons.forEach((button) => expect((button.nativeElement as HTMLElement).tabIndex).toBe(-1));
     });
 
-    it('Sollte auch den Detail-Button eines disabled-Items aus der Tab-Reihenfolge nehmen', () => {
+    it('Sollte auch den Aktions-Button eines disabled-Items aus der Tab-Reihenfolge nehmen', () => {
       // Änderungen durchführen (TEST_ITEMS[2] ist disabled)
-      host.showDetailButton = true;
+      host.showAction = true;
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      const disabledButton = cards()[2].query(By.css('.lux-list-select-detail button')).nativeElement as HTMLButtonElement;
+      const disabledButton = cards()[2].query(By.css('.mock-action button')).nativeElement as HTMLButtonElement;
       expect(disabledButton.disabled).toBeTrue();
       expect(disabledButton.tabIndex).toBe(-1);
     });
 
-    it('Sollte mit F2 in den Detail-Button und mit Escape zurück auf die Karte wechseln', () => {
+    it('Sollte mit F2 in den Aktions-Button und mit Escape zurück auf die Karte wechseln', () => {
       // Vorbedingungen testen
-      host.showDetailButton = true;
+      host.showAction = true;
       fixture.detectChanges();
       LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
       fixture.detectChanges();
@@ -1319,7 +1344,7 @@ describe('LuxListSelectComponent', () => {
       fixture.detectChanges();
 
       // Nachbedingungen prüfen
-      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
+      const detailButtons = fixture.debugElement.queryAll(By.css('.mock-action button'));
       expect(document.activeElement).toBe(detailButtons[0].nativeElement);
 
       // Änderungen durchführen: Escape verlässt die Innennavigation wieder
@@ -1440,13 +1465,13 @@ describe('LuxListSelectComponent', () => {
 
     it('Sollte Pfeiltasten und Space nutzen können, wenn in der Innennavigation der Fokus per Tab auf die Karte zurückkehrt (Review-Finding)', () => {
       // Vorbedingungen testen: Innennavigation auf Item 0 betreten (Fokus auf Detail-Button)
-      host.showDetailButton = true;
+      host.showAction = true;
       fixture.detectChanges();
       LuxTestHelper.dispatchFakeEvent(gridContainer(), 'focus', true);
       fixture.detectChanges();
       gridContainer().dispatchEvent(new KeyboardEvent('keydown', { key: 'F2', bubbles: true, cancelable: true }));
       fixture.detectChanges();
-      const detailButtons = fixture.debugElement.queryAll(By.css('.lux-list-select-detail button'));
+      const detailButtons = fixture.debugElement.queryAll(By.css('.mock-action button'));
       expect(document.activeElement).toBe(detailButtons[0].nativeElement);
 
       // Änderungen durchführen: Shift+Tab vom Detail-Button verlässt strukturell die Karte und
@@ -1544,7 +1569,7 @@ describe('LuxListSelectComponent', () => {
       tick();
       const container = fixtureCT.debugElement.query(By.css('.lux-list-select-list')).nativeElement as HTMLElement;
       const link = fixtureCT.debugElement.query(By.css('.mock-content-link')).nativeElement as HTMLElement;
-      const detailButton = fixtureCT.debugElement.query(By.css('.lux-list-select-detail button')).nativeElement as HTMLElement;
+      const detailButton = fixtureCT.debugElement.query(By.css('.mock-action button')).nativeElement as HTMLElement;
       const card = fixtureCT.debugElement.query(By.css('.lux-list-select-card')).nativeElement as HTMLElement;
       expect(link.tabIndex).toBe(-1);
 
@@ -1638,15 +1663,6 @@ describe('LuxListSelectComponent', () => {
       expect(checkbox.getAttribute('aria-describedby')).toContain(subtitle.id);
     });
 
-    it('Sollte das Item-Label ins Detail-Button-Arialabel aufnehmen', () => {
-      // Änderungen durchführen
-      host.showDetailButton = true;
-      fixture.detectChanges();
-
-      // Nachbedingungen prüfen
-      const detailButton = fixture.debugElement.query(By.css('.lux-list-select-detail button')).nativeElement as HTMLButtonElement;
-      expect(detailButton.getAttribute('aria-label')).toContain(TEST_ITEMS[0].title);
-    });
   });
 
   describe('A11y', () => {
@@ -1674,7 +1690,7 @@ describe('LuxListSelectComponent', () => {
       host.mode = 'multi';
       host.showPagination = true;
       host.errorMessage = 'Bitte eine Auswahl treffen.';
-      host.showDetailButton = true;
+      host.showAction = true;
       fixture.detectChanges();
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
@@ -1691,14 +1707,14 @@ describe('LuxListSelectComponent', () => {
 
 @Component({
   selector: 'lux-mock-host',
-  imports: [LuxListSelectComponent],
+  imports: [LuxListSelectComponent, LuxListSelectContentDirective, LuxListSelectActionDirective, LuxButtonComponent],
   template: `
     <lux-list-select
       [luxMode]="mode"
       [luxSize]="size"
       [luxItems]="items"
       [(luxSelected)]="selected"
-      [luxShowDetailButton]="showDetailButton"
+      [luxActionPosition]="actionPosition"
       [luxTotalItems]="totalItems"
       [luxShowPagination]="showPagination"
       [luxPageSize]="pageSize"
@@ -1712,9 +1728,21 @@ describe('LuxListSelectComponent', () => {
       [luxHttpDao]="httpDao"
       [luxCompareWith]="compareWith"
       (luxPageChange)="lastPageEvent = $event"
-      (luxDetailClicked)="lastDetail = $event"
       (luxScrolled)="scrolledCount = scrolledCount + 1"
-    />
+    >
+      @if (showAction) {
+        <ng-template luxListSelectAction let-item>
+          <lux-button
+            class="mock-action"
+            [luxIconButton]="true"
+            luxIconName="lux-interface-arrows-expand-5"
+            [luxLabel]="'Details zu ' + item.title"
+            [luxDisabled]="item.disabled ?? false"
+            (luxClicked)="lastDetail = item"
+          ></lux-button>
+        </ng-template>
+      }
+    </lux-list-select>
   `
 })
 class MockHostComponent {
@@ -1722,7 +1750,8 @@ class MockHostComponent {
   size: LuxListSelectSize = 'default';
   items = TEST_ITEMS;
   selected: TestAdresse[] = [];
-  showDetailButton = false;
+  showAction = false;
+  actionPosition: LuxListSelectActionPosition = 'right';
   lastDetail: TestAdresse | null = null;
   totalItems: number | null = null;
   showPagination = false;
@@ -1742,11 +1771,14 @@ class MockHostComponent {
 
 @Component({
   selector: 'lux-mock-host-content-template',
-  imports: [LuxListSelectComponent],
+  imports: [LuxListSelectComponent, LuxListSelectContentDirective, LuxListSelectActionDirective, LuxButtonComponent],
   template: `
-    <lux-list-select [luxMode]="'multi'" [luxItems]="items" [(luxSelected)]="selected" [luxShowDetailButton]="true">
-      <ng-template let-item let-selected="selected">
+    <lux-list-select [luxMode]="'multi'" [luxItems]="items" [(luxSelected)]="selected">
+      <ng-template luxListSelectContent let-item let-selected="selected">
         <a href="#" class="mock-content-link">{{ item.title }} ({{ selected }})</a>
+      </ng-template>
+      <ng-template luxListSelectAction let-item>
+        <lux-button class="mock-action" [luxIconButton]="true" luxIconName="lux-interface-arrows-expand-5" [luxLabel]="'Details zu ' + item.title"></lux-button>
       </ng-template>
     </lux-list-select>
   `

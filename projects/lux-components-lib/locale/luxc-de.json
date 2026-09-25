@@ -238,8 +238,6 @@
     "list-select": {
       "arialabel": "Auswahlliste",
       "counter": "{{selected}} von {{total}} ausgewählt",
-      "detail_arialabel": "Details anzeigen",
-      "detail_item_arialabel": "Details anzeigen zu {{title}}",
       "search_arialabel": "Suche",
       "search_results": "{{count}} Treffer",
       "select_all": "Alle auswählen"

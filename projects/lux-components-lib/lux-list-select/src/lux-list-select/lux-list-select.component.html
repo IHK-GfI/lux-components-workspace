@@ -9,13 +9,12 @@
       [luxDisabled]="componentDisabled() || isItemDisabled(item)"
       [luxTitle]="getTitle(item)"
       [luxSubTitle]="getSubTitle(item)"
-      [luxShowDetailButton]="luxShowDetailButton()"
-      [luxDetailIconName]="luxDetailIconName()"
-      [luxContentTemplate]="contentTemplate() ?? null"
+      [luxContentTemplate]="contentTemplate()?.templateRef ?? null"
+      [luxActionTemplate]="actionTemplate()?.templateRef ?? null"
+      [luxActionPosition]="luxActionPosition()"
       [luxRadioName]="radioName()"
       [luxInnerNavigation]="innerNavigation() && i === activeItemIndex()"
       (luxToggleSelected)="toggleItem(item)"
-      (luxDetail)="luxDetailClicked.emit(item)"
       (click)="onItemActivated(i)"
     />
   }

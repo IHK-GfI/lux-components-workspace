@@ -11,7 +11,6 @@ import {
   model,
   output,
   signal,
-  TemplateRef,
   viewChildren
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -22,7 +21,8 @@ import { translateSignal, TranslocoPipe } from '@jsverse/transloco';
 import { ILuxMessage, LuxBadgeComponent, LuxIconComponent, LuxInfiniteScrollDirective, LuxInputAcComponent, LuxInputAcPrefixComponent, LuxLabelComponent, LuxMessageBoxComponent, LuxProgressComponent, LuxTagIdDirective } from '@ihk-gfi/lux-components';
 import { LuxListSelectItemComponent } from './lux-list-select-subcomponents/lux-list-select-item.component';
 import { ILuxListSelectHttpDao } from './lux-list-select-model/lux-list-select-http-dao.interface';
-import { LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
+import { LuxListSelectActionPosition, LuxListSelectMode, LuxListSelectSize } from './lux-list-select-model/lux-list-select-types';
+import { LuxListSelectActionDirective, LuxListSelectContentDirective } from './lux-list-select-templates.directive';
 import { LuxListSelectKeyboardController } from './lux-list-select-keyboard-controller';
 import { LuxListSelectDataSource } from './lux-list-select-data-source';
 import { announceSearchResults } from './lux-list-select-search-announcer';
@@ -74,8 +74,7 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   readonly luxLabel = input<string | undefined>(undefined);
   readonly luxDisabled = input(false);
   readonly luxTagId = input<string | undefined>(undefined);
-  readonly luxShowDetailButton = input(false);
-  readonly luxDetailIconName = input('lux-interface-arrows-expand-5');
+  readonly luxActionPosition = input<LuxListSelectActionPosition>('right');
   readonly luxTotalItems = input<number | null>(null);
   readonly luxSelectAllLabel = input<string | undefined>(undefined);
   readonly luxShowCounter = input(true);
@@ -92,11 +91,11 @@ export class LuxListSelectComponent<T = unknown> implements ControlValueAccessor
   readonly luxSelected = model<T[]>([]);
   readonly luxPageIndex = model(0);
   readonly luxSearchValue = model('');
-  readonly luxDetailClicked = output<T>();
   readonly luxPageChange = output<LuxPageEvent>();
   readonly luxScrolled = output<void>();
 
-  readonly contentTemplate = contentChild<TemplateRef<unknown>>(TemplateRef);
+  readonly contentTemplate = contentChild(LuxListSelectContentDirective<T>);
+  readonly actionTemplate = contentChild(LuxListSelectActionDirective<T>);
 
   private onChange: (value: T[]) => void = () => {};
   private onTouched: () => void = () => {};
