@@ -378,6 +378,7 @@ export class MenuExampleComponent {
 
 interface ExampleMenuItem {
   iconName: string;
+  iconShowRight?: boolean;
   raised: boolean;
   color: LuxThemePalette;
   disabled: boolean;

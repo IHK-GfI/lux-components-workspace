@@ -163,6 +163,35 @@ describe('LuxMenuComponent', () => {
     expect(children[0].nativeElement.classList).toContain('lux-menu-trigger');
   }));
 
+  it('Sollte luxIconShowRight nur auf erweiterten Menu-Buttons anwenden', fakeAsync(() => {
+    component.generateItems(1);
+    component.items[0].iconName = 'lux-interface-setting-menu-1';
+    component.items[0].iconShowRight = true;
+    component.items[0].alwaysVisible = true;
+    updateExtendedMenuItems();
+
+    const extendedButton = fixture.debugElement.query(By.css('lux-button.lux-menu-item:not([style*=none]) button')).nativeElement;
+    const extendedContent = extendedButton.querySelector('.lux-button-content-container') as HTMLElement;
+
+    expect(extendedContent.children[0].classList).toContain('lux-button-label');
+    expect(extendedContent.children[1].tagName).toBe('LUX-ICON');
+
+    component.displayExtended = false;
+    LuxTestHelper.wait(fixture);
+    menuComponent.menuTriggerElRef!.nativeElement.click();
+    LuxTestHelper.wait(fixture);
+
+    const overlayEl = overlayContainer.getContainerElement();
+    const menuItem = overlayEl.querySelector('button.lux-menu-item') as HTMLElement;
+    const menuIcon = menuItem.querySelector('lux-icon') as HTMLElement;
+    const menuLabel = menuItem.querySelector('.lux-button-label') as HTMLElement;
+
+    expect(menuIcon.nextElementSibling).toBe(menuLabel);
+
+    flush();
+    discardPeriodicTasks();
+  }));
+
   it('Sollte Menu-Items deaktivieren', fakeAsync(() => {
     // Vorbedingungen testen
     component.generateItems(3);
@@ -453,6 +482,7 @@ describe('LuxMenuComponent', () => {
       <lux-menu-item
         [luxLabel]="item.label"
         [luxIconName]="item.iconName"
+        [luxIconShowRight]="item.iconShowRight"
         [luxTagId]="item.label"
         [luxAlwaysVisible]="item.alwaysVisible"
         [luxDisabled]="item.disabled"
@@ -484,6 +514,7 @@ class MockComponent {
     label: string;
     cmd?: string;
     iconName?: string;
+    iconShowRight?: boolean;
     tagId: string;
     alwaysVisible: boolean;
     disabled: boolean;

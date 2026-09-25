@@ -76,6 +76,7 @@
 | luxButtonBadgeColor    | LuxThemePalette | Farbe der ButtonBadge, die analog zur Button-Farbe gewählt werden kann. Mögliche Werte: "primary", "accent", "warn".                                                                             |
 | luxMenuItemSubtitle    | string          | Wenn im Menü die Properties luxMenuPanelLarge und luxShowSections auf true stehen, wird der Text in einer zweiten Zeile angezeigt.                                                               |
 | luxMenuItemSelected    | boolean         | Wenn im Menü die Property luxShowSections auf true steht, kann ein MenuItem als ausgewählt angezeigt werden.                                                                                     |
+| luxIconShowRight       | boolean         | Zeigt das Icon vom Button rechts vom Label an. Funktioniert nur für die erweiterte-Ansicht und nicht das Menü-Panel.                                                                             |
 
 Hinweis: SVG-Icons mit unterschiedlichen Seitenverhaeltnissen werden im Menu-Panel vollstaendig und proportional innerhalb der maximalen Icon-Breite/-Hoehe dargestellt.
 
