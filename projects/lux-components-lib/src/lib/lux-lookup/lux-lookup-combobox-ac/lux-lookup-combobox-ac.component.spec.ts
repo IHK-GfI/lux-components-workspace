@@ -20,6 +20,10 @@ import { LuxLookupHandlerService } from '../lux-lookup-service/lux-lookup-handle
 import { LuxLookupService } from '../lux-lookup-service/lux-lookup.service';
 import { LuxLookupComboboxAcComponent } from './lux-lookup-combobox-ac.component';
 
+// Tag im Format yyyyMMdd aus Sicht des Nutzers (lokale Zeitzone), wie ihn isUngueltig() verwendet
+const toLocalYYYYMMDD = (date: Date) =>
+  `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
+
 describe('LuxLookupComboboxAcComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -56,9 +60,9 @@ describe('LuxLookupComboboxAcComponent', () => {
       const tomorrowAsDate = new Date();
       tomorrowAsDate.setDate(todayAsDate.getDate() + 1);
 
-      const yesterday = yesterdayAsDate.toISOString().slice(0, 10).replace(/-/g, '');
-      const today = todayAsDate.toISOString().slice(0, 10).replace(/-/g, '');
-      const tomorrow = tomorrowAsDate.toISOString().slice(0, 10).replace(/-/g, '');
+      const yesterday = toLocalYYYYMMDD(yesterdayAsDate);
+      const today = toLocalYYYYMMDD(todayAsDate);
+      const tomorrow = toLocalYYYYMMDD(tomorrowAsDate);
 
       const gueltigOhne: LuxLookupTableEntry = {
         key: '4',
@@ -193,6 +197,29 @@ describe('LuxLookupComboboxAcComponent', () => {
         gueltigkeitBis: tomorrow
       };
       expect(combobox.isUngueltig(gueltigBisMorgenMin)).toBeFalse();
+    });
+
+    it('isUngueltig sollte kurz nach und kurz vor Mitternacht den lokalen Tag verwenden', () => {
+      // Ein Eintrag, der nur am 25.09.2026 gültig ist
+      const nurHeute: LuxLookupTableEntry = {
+        key: '4',
+        kurzText: 'Deutschland',
+        langText1: 'Deutschland',
+        gueltigkeitVon: '20260925',
+        gueltigkeitBis: '20260925'
+      };
+
+      // In jeder Zeitzone außer UTC liegt einer der beiden Zeitpunkte an einem anderen UTC-Tag
+      // (östlich von UTC: 00:30, westlich von UTC: 23:30). Maßgeblich ist aber der lokale Tag.
+      [new Date(2026, 8, 25, 0, 30), new Date(2026, 8, 25, 23, 30)].forEach((now) => {
+        jasmine.clock().install();
+        try {
+          jasmine.clock().mockDate(now);
+          expect(combobox.isUngueltig(nurHeute)).withContext(now.toString()).toBeFalse();
+        } finally {
+          jasmine.clock().uninstall();
+        }
+      });
     });
 
     it('Validatoren setzen und korrekte Fehlermeldung anzeigen', fakeAsync(() => {

@@ -14,9 +14,21 @@ export class LuxTimepickerAdapter extends NativeDateAdapter {
       return '';
     }
 
-    const normalizedDate = typeof date === 'string' ? new Date(date) : new Date(date.getTime());
-    normalizedDate.setMinutes(normalizedDate.getMinutes() + normalizedDate.getTimezoneOffset());
-    return normalizedDate.toLocaleTimeString(this.locale, displayFormat);
+    // Ein String kann hier auch ohne Zeitzoneninfo (kein "Z"/Offset) ankommen; daher wird für Strings
+    // dieselbe UTC-sichere Parsing-Logik wie in parse() genutzt.
+    const normalizedDate = typeof date === 'string' ? LuxUtil.parseISO8601AsUTC(date) : date;
+    // Die Uhrzeit wird als UTC-Uhrzeit angezeigt. Die Zeitzone wird direkt beim Formatieren gesetzt, statt das Datum
+    // um den Offset zu verschieben - sonst würden Uhrzeiten, die es lokal nicht gibt (Umstellung auf Sommerzeit), verschoben.
+    return normalizedDate.toLocaleTimeString(this.locale, { ...displayFormat, timeZone: 'UTC' });
+  }
+
+  // Wird u.a. von Material intern (z.B. MatTimepickerInput#writeValue) statt parse() verwendet,
+  // um Werte aus dem FormControl in ein Date zu konvertieren.
+  override deserialize(value: any): Date | null {
+    if (typeof value === 'string' && LuxUtil.ISO_8601_FULL.test(value)) {
+      return LuxUtil.parseISO8601AsUTC(value);
+    }
+    return super.deserialize(value);
   }
 
   override parse(value: string): Date | null {
@@ -25,7 +37,7 @@ export class LuxTimepickerAdapter extends NativeDateAdapter {
     }
 
     if (LuxUtil.ISO_8601_FULL.test(value)) {
-      return new Date(value);
+      return LuxUtil.parseISO8601AsUTC(value);
     }
 
     const timeMatch = value.trim().match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);

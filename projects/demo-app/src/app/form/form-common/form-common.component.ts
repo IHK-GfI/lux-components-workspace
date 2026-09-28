@@ -127,7 +127,7 @@ export class FormCommonComponent extends FormBase implements OnInit {
       chipsDeletable: new FormControl<string[] | null>([...this.chipItems]),
       chipsFix: new FormControl<string[] | null>([...this.chipItems2]),
       radio: new FormControl<FormCommonOption | null>(this.hobbies[2]),
-      datepicker: new FormControl<string | null>(new Date(2018, 11, 1).toISOString()),
+      datepicker: new FormControl<string | null>('2018-12-01T00:00:00.000Z'),
       autocomplete: new FormControl<string>(this.chipItems2[1], { validators: Validators.required, nonNullable: true })
     });
     this.myGroup.get('description')?.disable();

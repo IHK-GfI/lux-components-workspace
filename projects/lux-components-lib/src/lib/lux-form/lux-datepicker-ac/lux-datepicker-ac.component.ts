@@ -122,6 +122,9 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
     // den Standard-Wert für Autocomplete für Datepicker ausschalten
     this.luxAutocomplete = 'off';
 
+    // Bereits im Konstruktor setzen, da Material den Adapter (z.B. deserialize) früh verwendet
+    (this.dateAdapter as LuxDatepickerAcAdapter).combinedWithTimeProvider = () => !!this.luxReferenceControl;
+
     this.tService.langChanges$.pipe(takeUntilDestroyed()).subscribe((lang) => {
       switch (lang) {
         case 'de':
@@ -156,14 +159,23 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
       this.dateAdapter.setLocale(simpleChanges['luxLocale'].currentValue);
     }
     if (simpleChanges['luxMaxDate'] && typeof simpleChanges['luxMaxDate'].currentValue === 'string') {
-      this.max = this.dateAdapter.parse(simpleChanges['luxMaxDate'].currentValue, {});
+      this.max = this.parseCalendarDate(simpleChanges['luxMaxDate'].currentValue);
     }
     if (simpleChanges['luxMinDate'] && typeof simpleChanges['luxMinDate'].currentValue === 'string') {
-      this.min = this.dateAdapter.parse(simpleChanges['luxMinDate'].currentValue, {});
+      this.min = this.parseCalendarDate(simpleChanges['luxMinDate'].currentValue);
     }
     if (simpleChanges['luxStartDate'] && typeof simpleChanges['luxStartDate'].currentValue === 'string') {
-      this.start = this.dateAdapter.parse(simpleChanges['luxStartDate'].currentValue, {});
+      this.start = this.parseCalendarDate(simpleChanges['luxStartDate'].currentValue);
     }
+  }
+
+  /**
+   * Parst Min-, Max- bzw. Startdatum. Ohne Timepicker wird - wie beim Wert - der gemeinte Kalendertag verwendet
+   * (siehe LuxDatepickerAcAdapter#toCalendarDay), mit Timepicker der UTC-Zeitpunkt.
+   * @param value
+   */
+  private parseCalendarDate(value: string): Date | null {
+    return this.luxReferenceControl ? this.dateAdapter.parse(value, {}) : (this.dateAdapter as LuxDatepickerAcAdapter).toCalendarDay(value);
   }
 
   override ngOnInit() {
@@ -187,6 +199,7 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
   override ngOnDestroy() {
     super.ngOnDestroy();
     (this.dateAdapter as LuxDatepickerAcAdapter).referenceTimeProvider = null;
+    (this.dateAdapter as LuxDatepickerAcAdapter).combinedWithTimeProvider = null;
 
     if (this.mediaSubscription) {
       this.mediaSubscription.unsubscribe();
@@ -349,22 +362,23 @@ export class LuxDatepickerAcComponent<T = any> extends LuxFormInputBaseClass<T> 
       return;
     }
 
-    // Nachfolgend erstellen
-    if (typeof value === 'string') {
-      value = this.dateAdapter.parse(value, {});
-    }
-
-    if (!LuxUtil.isDate(value)) {
-      return;
-    }
-
-    const eventDate: Date = value;
-    const newDate = new Date(0);
-    newDate.setUTCFullYear(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate());
+    let newDate: Date | null;
     if (this.luxReferenceControl) {
+      // Mit Timepicker bilden Datum und Uhrzeit zusammen einen UTC-Zeitpunkt
+      const eventDate = typeof value === 'string' ? this.dateAdapter.parse(value, {}) : value;
+      if (!LuxUtil.isDate(eventDate)) {
+        return;
+      }
+
+      newDate = new Date(0);
+      newDate.setUTCFullYear(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate());
       newDate.setUTCHours(eventDate.getUTCHours(), eventDate.getUTCMinutes(), eventDate.getUTCSeconds(), 0);
     } else {
-      newDate.setUTCHours(0, 0, 0, 0);
+      // Ohne Timepicker wird der gemeinte Kalendertag als UTC-Mitternacht gespeichert
+      newDate = (this.dateAdapter as LuxDatepickerAcAdapter).toCalendarDay(value);
+      if (!newDate) {
+        return;
+      }
     }
     this.lastValue = newDate;
 

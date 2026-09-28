@@ -157,7 +157,10 @@ export abstract class LuxLookupComponent<T> extends LuxFormComponentBase<T> impl
     let isUngueltig = false;
 
     if (entry) {
-      const nowFormatted = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      // Der heutige Tag aus Sicht des Nutzers (lokale Zeitzone) im Format yyyyMMdd.
+      // toISOString() würde den UTC-Tag liefern, der z.B. in Deutschland kurz nach Mitternacht noch der Vortag ist.
+      const now = new Date();
+      const nowFormatted = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
 
       if (entry.gueltigkeitVon) {
         isUngueltig = nowFormatted < entry.gueltigkeitVon;

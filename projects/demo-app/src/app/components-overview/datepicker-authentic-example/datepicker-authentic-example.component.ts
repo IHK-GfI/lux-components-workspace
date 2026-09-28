@@ -65,7 +65,8 @@ export class DatepickerAuthenticExampleComponent {
     { value: Validators.minLength(3), label: 'Validators.minLength(3)' },
     { value: Validators.maxLength(10), label: 'Validators.maxLength(10)' }
   ];
-  value = '2020-05-28T14:15:00.000Z';
+  // Kalendertag im Format des Datepickers (UTC-Mitternacht), damit das Beispiel in jeder Zeitzone den 28.05.2020 zeigt
+  value = '2020-05-28T00:00:00.000Z';
   controlBinding = 'datepickerExample';
   disabled = false;
   readonly = false;
@@ -97,7 +98,8 @@ export class DatepickerAuthenticExampleComponent {
 
   constructor() {
     this.form = new FormGroup<DatepickerDummyForm>({
-      datepickerExample: new FormControl<string | null>(new Date(2020, 5, 28, 14, 15) as any) // Das FormControl wandelt das Date-Objekt in einen String um -> ['2021-09-07T23:00:00.000Z']
+      // Ein Date-Objekt wird vom Datepicker in einen String (UTC-Mitternacht) umgewandelt -> '2020-05-28T00:00:00.000Z'
+      datepickerExample: new FormControl<string | null>(new Date(Date.UTC(2020, 4, 28)) as any)
     });
   }
 
@@ -111,7 +113,8 @@ export class DatepickerAuthenticExampleComponent {
   }
 
   weekendFilterFn(d: Date | null) {
-    const day = d ? d.getDay() : 0;
+    // Der Datepicker liefert jeden Tag als UTC-Mitternacht, daher den UTC-Wochentag prüfen
+    const day = d ? d.getUTCDay() : 0;
     // Samstage und Sonntage als Auswahl unterbinden
     return day !== 0 && day !== 6;
   }

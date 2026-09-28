@@ -11,6 +11,7 @@ import { LuxCardContentComponent } from '../../../lux-layout/lux-card/lux-card-s
 import { LuxCardComponent } from '../../../lux-layout/lux-card/lux-card.component';
 import { LuxDividerComponent } from '../../../lux-layout/lux-divider/lux-divider.component';
 import { LuxThemeService } from '../../../lux-theme/lux-theme.service';
+import { LuxUtil } from '../../../lux-util/lux-util';
 import { LuxDatepickerAcCustomHeaderComponent } from '../../lux-datepicker-ac/lux-datepicker-ac-custom-header/lux-datepicker-ac-custom-header.component';
 import { LuxInputAcComponent } from '../../lux-input-ac/lux-input-ac.component';
 import { LuxDatetimeOverlayAcComponent } from './lux-datetime-overlay-ac.component';
@@ -89,17 +90,14 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
 
   initDate(value?: string) {
     if (value) {
-      const d = new Date(value);
+      const d = LuxUtil.parseISO8601AsUTC(value);
       this.hours = d.getUTCHours() < 10 ? '0' + d.getUTCHours() : '' + d.getUTCHours();
       this.minutes = d.getUTCMinutes() < 10 ? '0' + d.getUTCMinutes() : '' + d.getUTCMinutes();
-      // UTC-Datumskomponenten verwenden, damit bei UTC-Mitternacht in allen Zeitzonen
-      // der korrekte Kalendermonat angezeigt wird (z.B. 2024-04-01T00:00Z → April, nicht März).
-      // Lokales Mitternacht-Datum erstellen, damit mat-calendar (_getCellCompareValue) korrekt arbeitet.
-      this.selected = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-      this.startDate = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+      this.selected = this.toCalendarDate(d);
+      this.startDate = this.toCalendarDate(d);
     } else {
       if (this.dateTimePicker.luxStartDate) {
-        this.startDate = this.dateTimePicker.luxStartDate;
+        this.startDate = this.toCalendarDate(this.dateTimePicker.luxStartDate);
         this.selected = this.startDate;
       }
 
@@ -115,22 +113,23 @@ export class LuxDatetimeOverlayContentAcComponent implements OnInit, AfterViewIn
     }
 
     if (this.dateTimePicker.luxMinDate) {
-      this.minCalendarDate = new Date(0);
-      this.minCalendarDate.setUTCFullYear(
-        this.dateTimePicker.luxMinDate.getUTCFullYear(),
-        this.dateTimePicker.luxMinDate.getUTCMonth(),
-        this.dateTimePicker.luxMinDate.getUTCDate()
-      );
+      this.minCalendarDate = this.toCalendarDate(this.dateTimePicker.luxMinDate);
     }
 
     if (this.dateTimePicker.luxMaxDate) {
-      this.maxCalendarDate = new Date(0);
-      this.maxCalendarDate.setUTCFullYear(
-        this.dateTimePicker.luxMaxDate.getUTCFullYear(),
-        this.dateTimePicker.luxMaxDate.getUTCMonth(),
-        this.dateTimePicker.luxMaxDate.getUTCDate()
-      );
+      this.maxCalendarDate = this.toCalendarDate(this.dateTimePicker.luxMaxDate);
     }
+  }
+
+  /**
+   * Liefert für ein UTC-Datum ein Date mit lokaler Mitternacht desselben Kalendertages.
+   * Der Datetimepicker arbeitet mit UTC-Werten, mat-calendar vergleicht aber über die lokalen Datumsbestandteile.
+   * Ohne diese Umwandlung läge z.B. UTC-Mitternacht westlich von UTC lokal auf dem Vortag
+   * (bzw. 2024-04-01T00:00Z im März statt im April).
+   * @param date ein Date, dessen UTC-Datumsbestandteile den Kalendertag bestimmen.
+   */
+  private toCalendarDate(date: Date): Date {
+    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
   }
 
   constructor() {

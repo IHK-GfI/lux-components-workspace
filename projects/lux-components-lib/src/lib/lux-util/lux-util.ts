@@ -21,6 +21,36 @@ import { TranslocoService } from '@jsverse/transloco';
 export class LuxUtil {
   public static readonly ISO_8601_FULL = new RegExp('^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(\\.\\d+)?(([+-]\\d\\d:\\d\\d)|Z)?$', 'i');
 
+  // Zeitzoneninfo (Z oder +hh:mm/-hh:mm) am Ende eines ISO-8601-Strings
+  private static readonly ISO_8601_TIMEZONE = new RegExp(/(Z|[+-]\d\d:\d\d)$/i);
+
+  /**
+   * Parst einen ISO-8601-String (siehe ISO_8601_FULL). Enthält der String keine Zeitzoneninfo
+   * (kein "Z", kein Offset), würde der native Date-Konstruktor ihn als lokale Zeit des Nutzers
+   * interpretieren. Damit ein solcher String unabhängig von der Zeitzone des Nutzers immer auf
+   * dieselben Datums-/Zeitbestandteile abgebildet wird, wird er in diesem Fall als UTC interpretiert.
+   * Alle anderen Strings werden unverändert an den nativen Date-Konstruktor übergeben.
+   * @param value ein ISO-8601-String, z.B. "2027-03-13T00:00:00" oder "2027-03-13T00:00:00Z".
+   */
+  public static parseISO8601AsUTC(value: string): Date {
+    if (LuxUtil.isISO8601WithoutTimezone(value)) {
+      // Durch das angehängte "Z" übernimmt der native Parser weiterhin die Validierung
+      // (z.B. Monat 13 => Invalid Date) und die Jahre 0-99 werden nicht auf 1900-1999 abgebildet.
+      return new Date(value + 'Z');
+    }
+
+    return new Date(value);
+  }
+
+  /**
+   * Prüft, ob der Wert ein ISO-8601-String (siehe ISO_8601_FULL) ohne Zeitzoneninfo (kein "Z", kein Offset) ist,
+   * z.B. "2027-03-13T00:00:00".
+   * @param value ein beliebiger Wert.
+   */
+  public static isISO8601WithoutTimezone(value: any): boolean {
+    return typeof value === 'string' && LuxUtil.ISO_8601_FULL.test(value) && !LuxUtil.ISO_8601_TIMEZONE.test(value);
+  }
+
   /**
    * Diese Methode wirft einen Fehler, wenn der Wert nicht gesetzt wurde.
    * @param name Ein Name.
