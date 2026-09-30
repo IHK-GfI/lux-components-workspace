@@ -1,10 +1,12 @@
 # Changelog
 
 - [Changelog](#changelog)
-  - [Version 21.8.0](#version-2180)
+  - [Version 21.9.0](#version-2190)
     - [Issues](#issues)
-  - [Version 21.7.0](#version-2170)
+  - [Version 21.8.0](#version-2180)
     - [Issues](#issues-1)
+  - [Version 21.7.0](#version-2170)
+    - [Issues](#issues-2)
   - [Version 21.6.0](#version-2160)
     - [Issues](#issues-2)
   - [Version 21.5.0](#version-2150)
@@ -29,6 +31,15 @@
     - [Issues](#issues-12)
   - [Version 19.0.0](#version-1900)
     - [Issues](#issues-13)
+
+## Version 21.9.0
+
+### Issues
+
+- Issue #38: Neue Komponente lux-chat
+- Issue #230: Neue lux-panel-Komponente mit Header-Buttons, CDK-basiert, WCAG-konform (#299)
+- Issue #270: Neue Komponente lux-list-select für Single- und Multiselect mit einheitlichem Styling (#301)
+- Issue #277: lux-card: overflow-y hidden am Card-Content verhindert position sticky innerhalb von Cards (#287)
 
 ## Version 21.8.0
 
