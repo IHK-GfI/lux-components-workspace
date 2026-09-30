@@ -94,6 +94,7 @@ export class LuxIconComponent {
         `Das Icon "${iconName}" konnte nicht gefunden werden. Stattdessen wird das Icon "${this.notFoundIconName}" verwendet. Bitte anpassen!`
       );
       this._luxIconName = this.notFoundIconName;
+      this.iconReg.registerIcon(this.notFoundIconName);
     }
   }
 }
