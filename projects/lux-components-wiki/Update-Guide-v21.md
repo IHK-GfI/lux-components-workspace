@@ -106,6 +106,22 @@ In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren k
 - `lux-datetimepicker-ac` und `lux-timepicker`: Uhrzeiten an den Tagen der Zeitumstellung werden jetzt korrekt angezeigt und gespeichert. Im Datetimepicker wird ein als `Date`-Objekt gesetzter Wert jetzt formatiert angezeigt, und `luxMinDate`, `luxMaxDate` sowie `luxStartDate` werden im Kalender auch westlich von UTC am richtigen Tag berücksichtigt.
 - Lookups: Die Gültigkeit von Einträgen (`gueltigkeitVon`/`gueltigkeitBis`) wird jetzt anhand des lokalen Tages geprüft. Bisher galt kurz nach Mitternacht noch der Vortag.
 
+**Hinweis (Pflichtfeld-Stern, betrifft Updates von 21.6.0 bis 21.8.0)**: Seit Version 21.6.0 fehlten bei Formularkomponenten in Reactive Forms der Stern (`*`) hinter dem Label sowie die Attribute `required` und `aria-required`, wenn `Validators.required` nicht direkt am FormControl hing, sondern in einem zusammengesetzten Validator steckte (Issue #318). Betroffen waren z.B. `Validators.compose([Validators.required, ...])`, eigene Validatoren, die `Validators.required` aufrufen, und bedingte Validatoren. Die Validierung selbst hat weiterhin funktioniert. Ab Version 21.9.0 erkennen die LUX-Components `required` auch in diesen Fällen wieder. Bei bedingten Validatoren folgt der Stern der Bedingung, sobald `updateValueAndValidity()` am FormControl aufgerufen wird. Eine Codeänderung ist nicht nötig. Nach dem Update bitte Folgendes beachten:
+
+- Die betroffenen Felder zeigen wieder den Stern und werden von Screenreadern wieder als Pflichtfeld vorgelesen. Automatisierte Tests (z.B. E2E-Tests oder Screenshot-Vergleiche), die auf den Stand seit 21.6.0 abgestimmt sind, müssen ggf. angepasst werden.
+- Um `required` zu erkennen, führen die LUX-Components die Validatoren eines FormControls zusätzlich mit dem Wert `null` und ohne Zugriff auf die FormGroup aus. Validatoren sollten deshalb mit `null` umgehen können und keine Seiteneffekte haben (z.B. Werte in der Komponente setzen). Wirft ein Validator bei `null` einen Fehler, wird `required` für dieses Feld nicht erkannt.
+- Nicht erkannt wird `required` weiterhin bei asynchronen Validatoren und bei Bedingungen, die über `control.parent` auf andere Felder zugreifen. In diesen Fällen `Validators.required` direkt setzen bzw. entfernen:
+
+  ```typescript
+  const firma = this.form.get('firma')!;
+  if (selbststaendig) {
+    firma.addValidators(Validators.required);
+  } else {
+    firma.removeValidators(Validators.required);
+  }
+  firma.updateValueAndValidity();
+  ```
+
 **Hinweis**: Die `lux-card` verwendet auf `.lux-card-content` jetzt `overflow: clip` statt `overflow-y: hidden`, damit `luxStickyHeader` (siehe [lux-panel](lux‐panel-v21) / [lux-accordion](lux‐accordion-v21)) auch innerhalb einer `lux-card` funktioniert. Beide Werte schneiden überstehenden Inhalt ab, aber nur `hidden` erzeugt einen Scroll-Container — und genau dieser hat die Sticky-Positionierung innerhalb der Card ausgehebelt.
 
 Zu großer Inhalt wird optisch weiterhin genauso abgeschnitten wie bisher. Da `clip` aber keinen Scroll-Container mehr erzeugt, ist abgeschnittener Inhalt jetzt auf **beiden** Achsen endgültig unerreichbar. Beides sollte nach dem Update geprüft werden:

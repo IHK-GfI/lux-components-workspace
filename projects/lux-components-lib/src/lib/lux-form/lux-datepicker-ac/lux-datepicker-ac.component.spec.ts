@@ -87,6 +87,16 @@ describe('LuxDatepickerAcComponent', () => {
       expect(matErrorEl).not.toBeNull();
       expect(matErrorEl.nativeElement.innerHTML.trim()).toEqual('Darf nicht leer sein');
     }));
+
+    it('Sollte luxRequired auch bei per Validators.compose() gesetztem Validators.required erkennen (Issue #318)', fakeAsync(() => {
+      fixture.detectChanges();
+      LuxTestHelper.wait(fixture);
+
+      expect(datepickerComponent.luxRequired).toBe(true);
+
+      const labelEl = fixture.debugElement.query(By.css('.lux-form-label-authentic'));
+      expect(labelEl.nativeElement.innerHTML).toContain('*');
+    }));
   });
 
   describe('innerhalb eines Formulars', () => {

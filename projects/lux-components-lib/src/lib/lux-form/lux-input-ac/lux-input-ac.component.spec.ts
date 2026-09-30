@@ -2,7 +2,7 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -257,6 +257,186 @@ describe('LuxInputAcComponent', () => {
         expect(luxInput.luxRequired).toBe(false);
         expect(textControl.hasError('required')).toBeFalse();
         expect(textControl.valid).toBeTrue();
+      }));
+
+      it('Sollte required auch in einem Validators.compose erkennen (Issue #318)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputComposedRequiredComponent);
+        fixture.detectChanges();
+        LuxTestHelper.wait(fixture);
+
+        const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#nachname')).componentInstance;
+        const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('#nachname input')).nativeElement;
+        const labelEl: HTMLElement = fixture.debugElement.query(By.css('#nachname label')).nativeElement;
+
+        expect(luxInput.luxRequired).toBe(true);
+        expect(inputEl.required).toBe(true);
+        expect(inputEl.getAttribute('aria-required')).toEqual('true');
+        expect(labelEl.textContent).toContain('*');
+      }));
+
+      it('Sollte ein Validators.compose ohne required nicht als required erkennen (Issue #318)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputExternalRequiredToggleComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#text')).componentInstance;
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+
+        textControl.addValidators(Validators.compose([Validators.minLength(3), startsWithLuxValidator])!);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(false);
+      }));
+
+      it('Sollte required aus Validators.compose extern an- und wieder abschalten können (Issue #318)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputExternalRequiredToggleComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+
+        const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#text')).componentInstance;
+        const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('#text input')).nativeElement;
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+        const composedRequired = Validators.compose([Validators.required, Validators.maxLength(30)])!;
+
+        LuxTestHelper.wait(fixture);
+        expect(luxInput.luxRequired).toBe(false);
+
+        textControl.addValidators(composedRequired);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(true);
+        expect(inputEl.required).toBe(true);
+
+        // Regressionstest (Issue #240): Die native [required]-Bindung ist jetzt aktiv. Ihr
+        // Angular-RequiredValidator darf nicht dazu führen, dass required erkannt bleibt.
+        textControl.removeValidators(composedRequired);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(false);
+        expect(inputEl.required).toBe(false);
+        expect(textControl.hasError('required')).toBeFalse();
+        expect(textControl.valid).toBeTrue();
+      }));
+
+      it('Sollte required bei einem an zwei Komponenten gebundenen Control wieder abschalten können (Issue #318)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputSharedControlComponent);
+        testComponent = fixture.componentInstance;
+        LuxTestHelper.wait(fixture);
+
+        const luxInputA: LuxInputAcComponent = fixture.debugElement.query(By.css('#textA')).componentInstance;
+        const luxInputB: LuxInputAcComponent = fixture.debugElement.query(By.css('#textB')).componentInstance;
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+
+        textControl.addValidators(Validators.required);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInputA.luxRequired).toBe(true);
+        expect(luxInputB.luxRequired).toBe(true);
+
+        // Regressionstest: Die [required]-Bindungen beider Komponenten dürfen sich nicht gegenseitig
+        // aktiv halten. Sonst bliebe das Control dauerhaft required und ungültig.
+        textControl.removeValidators(Validators.required);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInputA.luxRequired).toBe(false);
+        expect(luxInputB.luxRequired).toBe(false);
+        expect(textControl.valid).toBeTrue();
+      }));
+
+      it('Sollte ein von Anfang an gesetztes Validators.required per removeValidators() abschalten können (Issue #318)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputInitialRequiredComponent);
+        testComponent = fixture.componentInstance;
+        LuxTestHelper.wait(fixture);
+
+        const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#text')).componentInstance;
+        const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('#text input')).nativeElement;
+        const textControl = testComponent.formGroup.get('text') as FormControl<string | null>;
+
+        expect(luxInput.luxRequired).toBe(true);
+        expect(inputEl.required).toBe(true);
+
+        // Regressionstest (Issue #240): Die [required]-Bindung ist von Anfang an aktiv. Die erste
+        // Verhaltensprüfung läuft erst jetzt und darf deren RequiredValidator nicht mitzählen.
+        textControl.removeValidators(Validators.required);
+        textControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(false);
+        expect(inputEl.required).toBe(false);
+        expect(textControl.hasError('required')).toBeFalse();
+        expect(textControl.valid).toBeTrue();
+      }));
+
+      it('Sollte nicht abstürzen, wenn ein Validator bei der required-Prüfung einen Fehler wirft (Issue #318)', fakeAsync(() => {
+        // Der Validator geht von einem String aus (nonNullable) und wirft bei der Prüfung mit null.
+        expect(() => {
+          fixture = TestBed.createComponent(LuxInputThrowingValidatorComponent);
+          LuxTestHelper.wait(fixture);
+        }).not.toThrow();
+
+        testComponent = fixture.componentInstance;
+        const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#text')).componentInstance;
+        const textControl = testComponent.formGroup.get('text') as FormControl<string>;
+
+        // required ist dann nicht erkennbar, die echte Validierung funktioniert weiterhin.
+        expect(luxInput.luxRequired).toBe(false);
+        expect(textControl.valid).toBeTrue();
+
+        textControl.setValue('   ');
+        LuxTestHelper.wait(fixture);
+
+        expect(textControl.hasError('blank')).toBeTrue();
+      }));
+
+      it('Sollte einen bedingten required-Validator nach updateValueAndValidity() neu bewerten (Issue #318)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputConditionalRequiredComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+        LuxTestHelper.wait(fixture);
+
+        const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#firma')).componentInstance;
+        const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('#firma input')).nativeElement;
+        const firmaControl = testComponent.formGroup.get('firma') as FormControl<string | null>;
+
+        expect(luxInput.luxRequired).toBe(false);
+
+        testComponent.selbststaendig = true;
+        firmaControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(true);
+        expect(inputEl.required).toBe(true);
+
+        testComponent.selbststaendig = false;
+        firmaControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxInput.luxRequired).toBe(false);
+        expect(inputEl.required).toBe(false);
+      }));
+
+      it('Sollte bei der required-Prüfung keine anderen Controls des Formulars verändern (Issue #318)', fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxInputSideEffectValidatorComponent);
+        testComponent = fixture.componentInstance;
+        fixture.detectChanges();
+        LuxTestHelper.wait(fixture);
+
+        const passwordControl = testComponent.formGroup.get('password') as FormControl<string | null>;
+
+        // Die required-Prüfung läuft mit dem Wert null. Hätte sie Zugriff auf das echte Formular,
+        // würde der Validator am Bestätigungsfeld (zumindest zeitweise) einen mismatch-Fehler setzen.
+        expect(testComponent.mismatchCount).toBe(0);
+
+        // Jeder Statuswechsel löst eine neue required-Prüfung aus.
+        passwordControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(testComponent.mismatchCount).toBe(0);
       }));
     });
 
@@ -1133,6 +1313,64 @@ describe('LuxInputAcComponent', () => {
   });
 });
 
+// Bedingter required-Validator bei gefülltem Feld: Der Status bleibt beim Umschalten VALID. Damit markiert
+// Angular kein Template über das Status-Signal, und ein OnPush-Host bzw. zoneless würde nicht geprüft.
+describe('LuxInputAcComponent: bedingtes required ohne Statuswechsel (Issue #318)', () => {
+  const providers = [
+    LuxConsoleService,
+    provideNoopAnimations(),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClientTesting(),
+    provideLuxTranslocoTesting()
+  ];
+
+  function expectRequired(fixture: ComponentFixture<LuxInputConditionalRequiredOnPushComponent>, required: boolean) {
+    const luxInput: LuxInputAcComponent = fixture.debugElement.query(By.css('#firma')).componentInstance;
+    const labelEl: HTMLElement = fixture.debugElement.query(By.css('#firma label')).nativeElement;
+
+    expect(fixture.componentInstance.formGroup.get('firma')!.valid).toBeTrue();
+    expect(luxInput.luxRequired).toBe(required);
+    expect(labelEl.textContent!.includes('*')).toBe(required);
+  }
+
+  describe('OnPush-Host', () => {
+    beforeEach(() => TestBed.configureTestingModule({ providers }));
+
+    it('Sollte den Stern ohne Event im Template aktualisieren', fakeAsync(() => {
+      const fixture = TestBed.createComponent(LuxInputConditionalRequiredOnPushComponent);
+      LuxTestHelper.wait(fixture);
+      expectRequired(fixture, false);
+
+      fixture.componentInstance.setSelbststaendig(true);
+      LuxTestHelper.wait(fixture);
+      expectRequired(fixture, true);
+
+      fixture.componentInstance.setSelbststaendig(false);
+      LuxTestHelper.wait(fixture);
+      expectRequired(fixture, false);
+    }));
+  });
+
+  describe('zoneless', () => {
+    beforeEach(() => TestBed.configureTestingModule({ providers: [...providers, provideZonelessChangeDetection()] }));
+
+    it('Sollte den Stern ohne Event im Template aktualisieren', async () => {
+      const fixture = TestBed.createComponent(LuxInputConditionalRequiredOnPushComponent);
+      fixture.autoDetectChanges();
+      await fixture.whenStable();
+      expectRequired(fixture, false);
+
+      fixture.componentInstance.setSelbststaendig(true);
+      await fixture.whenStable();
+      expectRequired(fixture, true);
+
+      fixture.componentInstance.setSelbststaendig(false);
+      await fixture.whenStable();
+      expectRequired(fixture, false);
+    });
+  });
+});
+
 @Component({
   template: `
     <form [formGroup]="formGroup">
@@ -1262,6 +1500,132 @@ class LuxInputRequiredReactiveFormComponent {
 class LuxInputExternalRequiredToggleComponent {
   formGroup = new FormGroup({
     text: new FormControl<string | null>(null)
+  });
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxLabel="Text A" luxControlBinding="text" id="textA"></lux-input-ac>
+      <lux-input-ac luxLabel="Text B" luxControlBinding="text" id="textB"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputSharedControlComponent {
+  formGroup = new FormGroup({
+    text: new FormControl<string | null>(null)
+  });
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxLabel="Text" luxControlBinding="text" id="text"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputInitialRequiredComponent {
+  formGroup = new FormGroup({
+    text: new FormControl<string | null>(null, Validators.required)
+  });
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxLabel="Text" luxControlBinding="text" id="text"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputThrowingValidatorComponent {
+  formGroup = new FormGroup({
+    text: new FormControl<string>('abc', {
+      nonNullable: true,
+      validators: (control: AbstractControl) => ((control.value as string).trim().length === 0 ? { blank: true } : null)
+    })
+  });
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxLabel="Nachname" luxControlBinding="nachname" id="nachname"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputComposedRequiredComponent {
+  formGroup = new FormGroup({
+    nachname: new FormControl<string | null>('', Validators.compose([Validators.required, Validators.maxLength(30)]))
+  });
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxLabel="Firma" luxControlBinding="firma" id="firma"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputConditionalRequiredComponent {
+  selbststaendig = false;
+
+  formGroup = new FormGroup({
+    firma: new FormControl<string | null>(null, (control: AbstractControl) => (this.selbststaendig ? Validators.required(control) : null))
+  });
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxLabel="Firma" luxControlBinding="firma" id="firma"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+class LuxInputConditionalRequiredOnPushComponent {
+  private selbststaendig = false;
+
+  formGroup = new FormGroup({
+    firma: new FormControl<string | null>('ACME', (control: AbstractControl) => (this.selbststaendig ? Validators.required(control) : null))
+  });
+
+  // Umschalten ohne Event im Template, z.B. aus einer Subscription heraus.
+  setSelbststaendig(selbststaendig: boolean) {
+    this.selbststaendig = selbststaendig;
+    this.formGroup.get('firma')!.updateValueAndValidity();
+  }
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-input-ac luxLabel="Passwort" luxControlBinding="password" id="password"></lux-input-ac>
+      <lux-input-ac luxLabel="Passwort bestätigen" luxControlBinding="confirm" id="confirm"></lux-input-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxInputAcComponent]
+})
+class LuxInputSideEffectValidatorComponent {
+  mismatchCount = 0;
+
+  formGroup = new FormGroup({
+    // Validator mit Seiteneffekt auf ein anderes Control (Muster "Passwort bestätigen").
+    password: new FormControl<string | null>('geheim', (control: AbstractControl) => {
+      const confirm = control.parent?.get('confirm');
+      const mismatch = !!confirm && confirm.value !== control.value;
+      if (mismatch) {
+        this.mismatchCount++;
+      }
+      confirm?.setErrors(mismatch ? { mismatch: true } : null);
+      return null;
+    }),
+    confirm: new FormControl<string | null>('geheim')
   });
 }
 

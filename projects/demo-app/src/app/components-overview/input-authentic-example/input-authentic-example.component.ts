@@ -119,6 +119,12 @@ export class InputAuthenticExampleComponent {
   exampleNumber = '';
   minLengthValidator = Validators.minLength(3);
   maxLengthValidator = Validators.maxLength(10);
+  // Issue #318: required steckt in einem zusammengesetzten bzw. bedingten Validator.
+  composedRequired = false;
+  composedRequiredValidator = Validators.compose([Validators.required, Validators.maxLength(30)])!;
+  conditionalRequired = false;
+  conditionFulfilled = false;
+  conditionalRequiredValidator: ValidatorFn = (control) => (this.conditionFulfilled ? Validators.required(control) : null);
 
   constructor() {
     this.form = new FormGroup<InputDummyForm>({
@@ -133,12 +139,31 @@ export class InputAuthenticExampleComponent {
 
   changeExtraValidators(enabled: boolean) {
     this.extraValidators = enabled;
+    this.changeValidators([this.minLengthValidator, this.maxLengthValidator], enabled);
+  }
+
+  changeComposedRequired(enabled: boolean) {
+    this.composedRequired = enabled;
+    this.changeValidators([this.composedRequiredValidator], enabled);
+  }
+
+  changeConditionalRequired(enabled: boolean) {
+    this.conditionalRequired = enabled;
+    this.changeValidators([this.conditionalRequiredValidator], enabled);
+  }
+
+  changeConditionFulfilled(fulfilled: boolean) {
+    this.conditionFulfilled = fulfilled;
+    this.form.get(this.controlBinding)?.updateValueAndValidity();
+  }
+
+  private changeValidators(validators: ValidatorFn[], enabled: boolean) {
     const control = this.form.get(this.controlBinding);
     if (control) {
       if (enabled) {
-        control.addValidators([this.minLengthValidator, this.maxLengthValidator]);
+        control.addValidators(validators);
       } else {
-        control.removeValidators([this.minLengthValidator, this.maxLengthValidator]);
+        control.removeValidators(validators);
       }
       control.updateValueAndValidity();
     }

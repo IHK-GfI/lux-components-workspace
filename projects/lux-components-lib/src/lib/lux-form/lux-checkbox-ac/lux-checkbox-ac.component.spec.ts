@@ -173,6 +173,44 @@ describe('LuxCheckboxAcComponent', () => {
         expect(errorElement.nativeElement.innerText.trim()).toEqual('Das ist ein Pflichtfeld');
       }));
     });
+
+    describe('FormGroup (required per Validators.compose)"', () => {
+      let fixture: ComponentFixture<LuxCheckboxComposedRequiredInFormComponent>;
+      let testComponent: LuxCheckboxComposedRequiredInFormComponent;
+
+      beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(LuxCheckboxComposedRequiredInFormComponent);
+        fixture.detectChanges();
+        testComponent = fixture.componentInstance;
+      }));
+
+      it('Sollte requiredTrue aus Validators.compose an- und wieder abschalten können (Issue #318)', fakeAsync(() => {
+        const luxCheckbox: LuxCheckboxAcComponent = fixture.debugElement.query(By.directive(LuxCheckboxAcComponent)).componentInstance;
+        const checkboxEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+        const eulaControl = testComponent.formGroup.get('eula')!;
+        const composedRequired = Validators.compose([Validators.requiredTrue])!;
+
+        LuxTestHelper.wait(fixture);
+        expect(luxCheckbox.luxRequired).toBe(false);
+
+        eulaControl.addValidators(composedRequired);
+        eulaControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxCheckbox.luxRequired).toBe(true);
+        expect(checkboxEl.required).toBe(true);
+
+        // Regressionstest (Issue #240): Die Validatoren der [required]-Bindung (Angular und mat-checkbox)
+        // dürfen nicht dazu führen, dass required erkannt bleibt.
+        eulaControl.removeValidators(composedRequired);
+        eulaControl.updateValueAndValidity();
+        LuxTestHelper.wait(fixture);
+
+        expect(luxCheckbox.luxRequired).toBe(false);
+        expect(checkboxEl.required).toBe(false);
+        expect(eulaControl.valid).toBeTrue();
+      }));
+    });
   });
 
   describe('außerhalb eines Formulars', () => {
@@ -494,6 +532,20 @@ class LuxCheckboxRequiredInFormAttributeComponent {
       eula: new FormControl<boolean | null>(null, Validators.required)
     });
   }
+}
+
+@Component({
+  template: `
+    <form [formGroup]="formGroup">
+      <lux-checkbox-ac luxLabel="Eula gelesen?" luxControlBinding="eula"></lux-checkbox-ac>
+    </form>
+  `,
+  imports: [ReactiveFormsModule, LuxCheckboxAcComponent]
+})
+class LuxCheckboxComposedRequiredInFormComponent {
+  formGroup = new FormGroup({
+    eula: new FormControl<boolean | null>(null)
+  });
 }
 
 @Component({
