@@ -181,6 +181,7 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   // Hover
   --lux-theme-hover-color: var(--mat-option-hover-state-layer-color);
+  --lux-theme-focus-color: var(--mat-option-focus-state-layer-color);
   --lux-theme-on-hover-color: var(--mat-option-label-text-color);
   --lux-theme-hover-color-for-dark-background: var(--lux-theme-primary-40);
 
