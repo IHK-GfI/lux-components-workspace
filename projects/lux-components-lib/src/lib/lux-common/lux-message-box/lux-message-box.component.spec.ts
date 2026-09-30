@@ -1,5 +1,6 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
@@ -194,6 +195,41 @@ describe('LuxMessageBoxComponent', () => {
     expect(changeSpy).toHaveBeenCalledTimes(1);
 
     LuxTestHelper.wait(fixture);
+    flush();
+  }));
+
+  it('Sollte bei vorher sichtbaren Nachrichten und einem leeren Array eine Ansage auslösen', fakeAsync(() => {
+    const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+    const announceSpy = spyOn(liveAnnouncer, 'announce');
+
+    // Vorbedingung: Es gibt vorher sichtbare Nachrichten
+    expect(component.messages.length).toBeGreaterThan(0);
+
+    // Änderungen durchführen
+    component.messages = [];
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen
+    expect(announceSpy).toHaveBeenCalledWith(jasmine.any(String));
+
+    flush();
+  }));
+
+  it('Sollte bei einem Wechsel von leer zu leer keine Ansage auslösen', fakeAsync(() => {
+    // Vorbedingungen herstellen: Es gibt keine sichtbaren Nachrichten
+    component.messages = [];
+    LuxTestHelper.wait(fixture);
+
+    const liveAnnouncer = TestBed.inject(LiveAnnouncer);
+    const announceSpy = spyOn(liveAnnouncer, 'announce');
+
+    // Änderungen durchführen [erneut ein leeres Array setzen]
+    component.messages = [];
+    LuxTestHelper.wait(fixture);
+
+    // Nachbedingungen prüfen
+    expect(announceSpy).not.toHaveBeenCalled();
+
     flush();
   }));
 });

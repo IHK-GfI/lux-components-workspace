@@ -84,12 +84,12 @@ export class LuxMessageBoxComponent {
         }
       });
     } else {
-      // Wenn es vorher Werte gab, ein Closed-Event ausgeben
+      // Wenn es vorher Werte gab, ein Closed-Event ausgeben und den leeren Zustand ansagen
       if (this.luxMessages.length > 0) {
         this.luxMessageBoxClosed.emit();
+        this.liveAnnouncer.announce(this.tService.translate('luxc.message.announce.0_messages'));
       }
       this._luxMessages = [];
-      this.liveAnnouncer.announce(this.tService.translate('luxc.message.announce.0_messages'));
     }
 
     this.luxMessagesChange.emit(this._luxMessages);
