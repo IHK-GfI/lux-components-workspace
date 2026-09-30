@@ -10,10 +10,21 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   ViewChild,
+  ViewChildren,
   inject
 } from '@angular/core';
-import { AbstractControl, ControlContainer, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  ControlContainer,
+  FormControl,
+  FormGroup,
+  NgControl,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
 import { Subscription } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,6 +45,11 @@ const NOT_NOTIFIED = -1;
 @Directive()
 export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, OnDestroy {
   protected static readonly DEFAULT_CTRL_NAME: string = 'control';
+
+  // Validatoren, die die Formular-Direktiven in den Templates aller LUX-Komponenten an ein Control gehängt
+  // haben. Ist dasselbe FormControl an mehrere LUX-Komponenten gebunden, muss jede Komponente auch die
+  // [required]-Validatoren der anderen ausklammern (siehe getAppValidator()).
+  private static readonly templateValidatorsByControl = new WeakMap<AbstractControl, Set<ValidatorFn>>();
 
   protected _formValueChangeSub?: Subscription;
   protected _formStatusChangeSub?: Subscription;
@@ -65,6 +81,14 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
    */
   private readonly valueObserver = (value: any) => this.observeValue(value);
 
+  // Zwischenspeicher für hasComposedRequiredValidator(): Validator-Stand und Ergebnis der letzten Prüfung.
+  private requiredCheckValidatorFn?: ValidatorFn | null;
+  private requiredCheckResult = false;
+  private requiredCheckRunning = false;
+  private requiredProbe?: FormControl;
+  // Eigene Einträge in templateValidatorsByControl, damit sie beim Zerstören wieder entfernt werden.
+  private registeredTemplateValidators = new Set<ValidatorFn>();
+
   errorMessage: string | undefined = undefined;
 
   protected controlContainer = inject(ControlContainer, { optional: true });
@@ -84,6 +108,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
   @ViewChild(LuxFormControlWrapperComponent) formControlWrapperComponent?: LuxFormControlWrapperComponent;
   @ViewChild(LuxFormControlWrapperComponent, { read: ElementRef }) formControlWrapperComponentRef?: ElementRef;
+  // Formular-Direktiven ([formControl]) im eigenen Template, siehe registerTemplateValidators().
+  @ViewChildren(NgControl) private templateNgControls?: QueryList<NgControl>;
 
   @HostBinding('class.lux-form-control-readonly') cssReadonly = false;
 
@@ -288,6 +314,8 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
     if (typeof control?._unregisterOnChange === 'function') {
       control._unregisterOnChange(this.valueObserver);
     }
+
+    this.unregisterTemplateValidators();
   }
 
   /**
@@ -418,18 +446,87 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
 
   /**
    * Prüft, ob das übergebene Control einen required-Validator (Validators.required oder
-   * Validators.requiredTrue) besitzt.
-   *
-   * Hinweis: Prüft gezielt auf diese beiden Validator-Referenzen, statt den komponierten
-   * Validator gegen ein Dummy-Control auszuführen. Ein Verhaltens-Check (Aufruf des
-   * komponierten Validators) würde hier fälschlicherweise auch den von der nativen
-   * [required]-Bindung eingeschleusten Angular-RequiredValidator erkennen, dessen Zustand
-   * selbst wieder von luxRequired abhängt (Zirkelbezug: das eigentlich gewollte Entfernen
-   * von required würde dadurch nie erkannt werden, siehe Issue #240).
+   * Validators.requiredTrue) besitzt. Erkannt wird er auch innerhalb eines komponierten
+   * Validators, z.B. Validators.compose([Validators.required, ...]) (Issue #318).
    * @param abstractControl
    */
   protected hasRequiredValidator(abstractControl: AbstractControl) {
-    return abstractControl.hasValidator(Validators.required) || abstractControl.hasValidator(Validators.requiredTrue);
+    if (abstractControl.hasValidator(Validators.required) || abstractControl.hasValidator(Validators.requiredTrue)) {
+      return true;
+    }
+
+    return this.hasComposedRequiredValidator(abstractControl);
+  }
+
+  /**
+   * Führt die Validatoren der Anwendung gegen ein leeres Hilfs-Control aus und prüft, ob dabei
+   * ein required-Fehler entsteht. Das ist nötig, weil ein komponierter Validator eine neue Funktion
+   * ist, in der hasValidator() die Referenz auf Validators.required nicht findet.
+   *
+   * Das Ergebnis wird zwischengespeichert, weil diese Prüfung aus ngDoCheck heraus aufgerufen wird.
+   * Neu geprüft wird bei einem neuen Validator-Stand (setValidators(), addValidators(),
+   * removeValidators()) und nach jedem Statuswechsel (siehe initFormStateSubscription()). Letzteres
+   * erfasst bedingte Validatoren, deren Ergebnis sich ohne neuen Validator-Stand ändert.
+   * @param control
+   */
+  private hasComposedRequiredValidator(control: AbstractControl): boolean {
+    // Revalidiert ein Validator während der Probe andere Controls (z.B. über eine Closure), kann das
+    // über deren Statuswechsel wieder hierher führen. Dann gilt das bisherige Ergebnis.
+    if (control.validator === this.requiredCheckValidatorFn || this.requiredCheckRunning) {
+      return this.requiredCheckResult;
+    }
+
+    this.requiredCheckRunning = true;
+    let result = false;
+
+    try {
+      const appValidator = this.getAppValidator(control);
+
+      if (appValidator) {
+        // Bewusst ohne Parent: Validatoren mit Seiteneffekten auf andere Controls (z.B. setErrors()
+        // am Nachbarfeld) sollen mit dem Wert null nicht das echte Formular verändern.
+        this.requiredProbe ??= new FormControl(null);
+        result = !!appValidator(this.requiredProbe)?.['required'];
+      }
+    } catch {
+      // Ein Validator, der mit dem Hilfs-Control nicht zurechtkommt (z.B. control.parent!.get(...)),
+      // soll die Komponente nicht lahmlegen. Das Feld gilt dann als nicht required.
+      result = false;
+    } finally {
+      this.requiredCheckRunning = false;
+    }
+
+    this.requiredCheckValidatorFn = control.validator;
+    this.requiredCheckResult = result;
+
+    return result;
+  }
+
+  /**
+   * Liefert den Validator des Controls ohne die Validatoren, die die Formular-Direktiven in den Templates
+   * der LUX-Komponenten beigesteuert haben. Dazu gehört vor allem der Angular-RequiredValidator der nativen
+   * [required]-Bindung. Dessen Zustand hängt selbst wieder von luxRequired ab. Würde er mitgeprüft,
+   * könnte ein einmal gesetztes luxRequired nie wieder zurückgesetzt werden (Zirkelbezug, Issue #240).
+   *
+   * Angular bietet keine lesende API für die einzelnen Validatoren eines Controls. Deshalb werden die
+   * Template-Validatoren kurz entfernt und wieder hinzugefügt. setValidators() löst dabei weder eine
+   * Validierung noch Events aus.
+   * @param control
+   */
+  private getAppValidator(control: AbstractControl): ValidatorFn | null {
+    const templateValidators = [...(LuxFormComponentBase.templateValidatorsByControl.get(control) ?? [])].filter((validator) =>
+      control.hasValidator(validator)
+    );
+
+    if (templateValidators.length === 0) {
+      return control.validator;
+    }
+
+    control.removeValidators(templateValidators);
+    const appValidator = control.validator;
+    control.addValidators(templateValidators);
+
+    return appValidator;
   }
 
   /**
@@ -537,6 +634,15 @@ export abstract class LuxFormComponentBase<T = any> implements OnInit, DoCheck, 
         this.luxDisabled = false;
       }
 
+      if (this.inForm && (status === 'VALID' || status === 'INVALID')) {
+        // Bedingte Validatoren (z.B. required nur bei gesetztem Flag) liefern nach einer Revalidierung
+        // evtl. ein anderes Ergebnis. Deshalb hier sofort neu prüfen: Ändert sich luxRequired, sorgt
+        // markForCheck() in updateValidatorsInForm() dafür, dass der Stern auch bei OnPush-Hosts und
+        // zoneless erscheint, obwohl sich der Status selbst nicht geändert haben muss.
+        this.requiredCheckValidatorFn = undefined;
+        this.updateValidatorsInForm();
+      }
+
       this.notifyFormStatusChanged(status);
     });
   }
@@ -612,11 +718,44 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
   }
 
   private updateValidatorsInForm() {
+    this.registerTemplateValidators();
     const hasRequiredValidator = this.hasRequiredValidator(this.formControl);
 
     if (this._luxRequired !== hasRequiredValidator) {
       this._luxRequired = hasRequiredValidator;
       this.cdr.markForCheck();
+      // Die [required]-Bindung sofort übernehmen: Deren RequiredValidator validiert das Control neu. Liefe das
+      // erst im nächsten Durchlauf, wären dort bereits ausgewertete Bindungen auf formControl.invalid (z.B.
+      // aria-invalid in lux-select-ac oder lux-checkbox-ac) veraltet (ExpressionChangedAfterItHasBeenCheckedError).
+      this.cdr.detectChanges();
     }
+  }
+
+  /**
+   * Trägt die Validatoren der Formular-Direktiven ([formControl]) aus dem eigenen Template in
+   * templateValidatorsByControl ein. Läuft bei jeder required-Prüfung, weil die Direktiven erst mit dem
+   * View entstehen und durch @if-Blöcke wechseln können.
+   */
+  private registerTemplateValidators() {
+    this.templateNgControls?.forEach((ngControl) => {
+      const validator = ngControl.validator;
+
+      if (validator && ngControl.control === this.formControl && !this.registeredTemplateValidators.has(validator)) {
+        let registered = LuxFormComponentBase.templateValidatorsByControl.get(this.formControl);
+        if (!registered) {
+          registered = new Set<ValidatorFn>();
+          LuxFormComponentBase.templateValidatorsByControl.set(this.formControl, registered);
+        }
+
+        registered.add(validator);
+        this.registeredTemplateValidators.add(validator);
+      }
+    });
+  }
+
+  private unregisterTemplateValidators() {
+    const registered = this.formControl ? LuxFormComponentBase.templateValidatorsByControl.get(this.formControl) : undefined;
+    this.registeredTemplateValidators.forEach((validator) => registered?.delete(validator));
+    this.registeredTemplateValidators.clear();
   }
 }

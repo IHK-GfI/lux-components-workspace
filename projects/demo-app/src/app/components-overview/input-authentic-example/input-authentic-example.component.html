@@ -247,6 +247,40 @@
       </lux-form-hint>
     </lux-toggle-ac>
     <lux-toggle-ac
+      luxLabel="Validators.compose([required, maxLength(30)]) auf FormControl setzen"
+      [luxChecked]="composedRequired"
+      (luxCheckedChange)="changeComposedRequired($event)"
+      [luxNoTopLabel]="true"
+    >
+      <lux-form-hint>
+        Fügt dem FormControl der Reactive-Form-Component einen zusammengesetzten Validator hinzu, in dem <b>Validators.required</b> steckt.
+        Die Component erkennt das Pflichtfeld trotzdem und zeigt den Stern an.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Bedingten required-Validator auf FormControl setzen"
+      [luxChecked]="conditionalRequired"
+      (luxCheckedChange)="changeConditionalRequired($event)"
+      [luxNoTopLabel]="true"
+    >
+      <lux-form-hint>
+        Fügt dem FormControl der Reactive-Form-Component einen Validator hinzu, der <b>Validators.required</b> nur anwendet, wenn der Schalter
+        <i>Bedingung erfüllt</i> aktiv ist.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac
+      luxLabel="Bedingung erfüllt"
+      [luxChecked]="conditionFulfilled"
+      (luxCheckedChange)="changeConditionFulfilled($event)"
+      [luxDisabled]="!conditionalRequired"
+      [luxNoTopLabel]="true"
+    >
+      <lux-form-hint>
+        Schaltet die Bedingung des bedingten required-Validators um und ruft danach <code>updateValueAndValidity()</code> auf dem FormControl
+        auf. Nur aktiv, wenn der bedingte required-Validator gesetzt ist.
+      </lux-form-hint>
+    </lux-toggle-ac>
+    <lux-toggle-ac
       [(luxChecked)]="denseFormat"
       luxLabel="luxDense"
       luxHint="Diese Property veringert das Padding innerhalb des Controls."
