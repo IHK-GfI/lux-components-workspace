@@ -50,7 +50,18 @@
 
 ### Issues
 
+- Issue #38: Neue Komponente lux-chat
+- Issue #230: Neue lux-panel-Komponente mit Header-Buttons, CDK-basiert, WCAG-konform (#299)
 - Issue #270: Neue Komponente lux-list-select für Single- und Multiselect mit einheitlichem Styling, eigener Einstiegspunkt `@ihk-gfi/lux-components/lux-list-select` (#301)
+- Issue #277: lux-card: overflow-y hidden am Card-Content verhindert position sticky innerhalb von Cards (#287)
+- Issue #294: lux-message-box: Screenreader-Ansage „Es gibt keine Meldungen." beim Setzen eines leeren Zustands unterdrückt (#313)
+- Issue #297: Wenn ein Icon nicht gefunden wird, wird nun das warn-Icon angezeigt (#314)
+- Issue #298: lux-menu: luxIconShowRight der Menu-Items wird an die Extended-Buttons durchgereicht (#319)
+- Issue #305: LuxDialog wird mit eigenem Injector erstellt (#311)
+- Issue #307: LuxFormComponentBase: updateValueAndValidity() löst luxValueChange nicht mehr ohne Wertänderung aus und verhindert so Endlosschleifen (#308)
+- Issue #310: Barrierefreiheit-Test für lux-list ergänzt (#312)
+- Issue #318: Fehlendes Required-'*' hinter dem Label eines Form Controls behoben (#323)
+- Issue #320: lux-datepicker-ac: Datum wird nicht mehr je nach Format und Zeitzone um einen Tag verschoben (#321)
 
 ## Version 21.8.0
 
