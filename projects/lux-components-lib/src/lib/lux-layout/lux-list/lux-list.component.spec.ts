@@ -6,7 +6,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
+import { LuxA11yTestHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxIconComponent } from '../../lux-icon/lux-icon/lux-icon.component';
 import { LuxListItemContentComponent } from './lux-list-subcomponents/lux-list-item-content.component';
@@ -441,6 +441,34 @@ describe('LuxListComponent', () => {
         expect(item.nativeElement.getAttribute('role')).toBe('row');
       });
     }));
+  });
+
+  describe('A11y', () => {
+    beforeAll(() => {
+      LuxA11yTestHelper.addA11yMatchers();
+    });
+
+    it('Sollte bei leerer Liste keine Barrierefreiheitsverletzungen haben', async () => {
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Sollte bei gefüllter Liste keine Barrierefreiheitsverletzungen haben', async () => {
+      testComponent.addListItems(5);
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
+
+    it('Sollte bei selektiertem LuxListItem keine Barrierefreiheitsverletzungen haben', async () => {
+      testComponent.addListItems(5);
+      fixture.detectChanges();
+      testComponent.selectedPosition = 0;
+      fixture.detectChanges();
+
+      await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
+    });
   });
 });
 
