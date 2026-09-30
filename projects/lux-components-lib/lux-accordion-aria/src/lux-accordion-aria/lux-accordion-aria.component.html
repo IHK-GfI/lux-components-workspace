@@ -1,0 +1,11 @@
+<div
+  class="lux-width-full lux-block"
+  [ngClass]="{
+    'lux-primary': resolvedLuxColor() === 'primary',
+    'lux-accent': resolvedLuxColor() === 'accent',
+    'lux-warn': resolvedLuxColor() === 'warn',
+    'lux-neutral': resolvedLuxColor() === 'neutral'
+  }"
+>
+  <ng-content></ng-content>
+</div>

@@ -1,0 +1,63 @@
+<div
+  class="lux-panel"
+  [class.lux-primary]="effectiveLuxColor() === 'primary'"
+  [class.lux-accent]="effectiveLuxColor() === 'accent'"
+  [class.lux-warn]="effectiveLuxColor() === 'warn'"
+  [class.lux-neutral]="effectiveLuxColor() === 'neutral'"
+  [class.lux-panel-expanded]="accordionTrigger().expanded()"
+  [class.lux-panel-mobile]="mobile"
+  [class.lux-panel-second-row-for-mobile]="mobile && luxSecondRowForMobile()"
+  [class.lux-panel-sticky-header]="!!stickyHeader()"
+  [class.lux-panel-sticky-header-scrolled]="hasScrolled()"
+  [style.--lux-panel-sticky-header-offset]="stickyHeaderOffset() ?? null"
+>
+  <div
+    class="lux-expansion-panel-header"
+    [class.lux-dynamic-height]="effectiveDynamicHeaderHeight()"
+    [style.height]="effectiveDynamicHeaderHeight() ? null : getCurrentHeaderHeight(accordionTrigger().expanded())"
+  >
+    <button
+      ngAccordionTrigger
+      type="button"
+      [panel]="panel"
+      [id]="headerId"
+      [disabled]="effectiveDisabled()"
+      class="lux-expansion-panel-header-toggle lux-gap-4"
+      [class.lux-expansion-toggle-indicator-before]="effectiveTogglePosition() === 'before'"
+      (click)="onHeaderClick($event)"
+      (keydown)="toggleFromKeyboard($event)"
+    >
+      @if (effectiveTogglePosition() === 'before' && !effectiveHideToggle() && !effectiveDisabled()) {
+        <span class="lux-expansion-indicator lux-expansion-indicator-before">
+          <lux-icon [luxIconName]="toggleIconName()" class="lux-color-blue" luxIconSize="1x"></lux-icon>
+        </span>
+      }
+      <span class="lux-expansion-panel-header-content lux-flex lux-flex-col">
+        <ng-content select="lux-panel-aria-header-title"></ng-content>
+        <ng-content select="lux-panel-aria-header-description"></ng-content>
+      </span>
+      @if (effectiveTogglePosition() === 'after' && !effectiveHideToggle() && !effectiveDisabled()) {
+        <span class="lux-expansion-indicator lux-expansion-indicator-after">
+          <lux-icon [luxIconName]="toggleIconName()" class="lux-color-blue" luxIconSize="1x"></lux-icon>
+        </span>
+      }
+    </button>
+    <div
+      class="lux-expansion-panel-header-custom"
+      [style.display]="effectiveDisabled() ? 'none' : null"
+      (keydown)="$event.stopPropagation()"
+      tabindex="-1"
+    >
+      <ng-content select="lux-panel-aria-header-custom"></ng-content>
+    </div>
+  </div>
+  <div ngAccordionPanel [preserveContent]="true" #panel="ngAccordionPanel" [id]="panelId" class="lux-expansion-panel-content-wrapper">
+    <ng-template ngAccordionContent>
+      <div class="lux-expansion-panel-content">
+        <ng-content select="lux-panel-aria-content"></ng-content>
+        <ng-content></ng-content>
+      </div>
+      <ng-content select="lux-panel-aria-action"></ng-content>
+    </ng-template>
+  </div>
+</div>

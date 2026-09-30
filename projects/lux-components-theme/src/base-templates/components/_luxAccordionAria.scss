@@ -1,0 +1,269 @@
+lux-panel-aria {
+  .lux-panel {
+    border-bottom: var(--lux-theme-accordion-aria-panel-border-bottom);
+    border-radius: var(--lux-theme-accordion-aria-panel-border-radius);
+    box-shadow: var(--lux-theme-accordion-aria-panel-box-shadow);
+  }
+
+  &:first-child .lux-panel {
+    border-top: var(--lux-theme-accordion-aria-panel-first-border-top);
+  }
+
+  .lux-expansion-panel-header {
+    align-items: center;
+    display: flex;
+    min-width: 0;
+    padding: 0 var(--lux-theme-spacing-lg);
+  }
+
+  .lux-expansion-panel-header:has(.lux-expansion-panel-header-toggle:focus-visible) {
+    outline: var(--lux-theme-outline-dark);
+    outline-offset: calc(var(--lux-theme-outline-width) * -1);
+  }
+
+  .lux-expansion-panel-header-toggle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    display: flex;
+    flex: 1;
+    gap: 0;
+    min-width: 0;
+    padding: 0 var(--lux-theme-spacing-md) 0 0;
+    text-align: left;
+
+    &:not([aria-disabled="true"]) {
+      cursor: pointer;
+    }
+  }
+
+  .lux-expansion-panel-header-toggle:focus-visible {
+    outline: none;
+  }
+
+  // Ein Menü (z.B. mit luxDisplayExtended) im Custom-Header soll den verfügbaren Platz
+  // beanspruchen dürfen (damit die extended Buttons erscheinen), aber zuerst schrumpfen bzw.
+  // in sein Trigger-Icon kollabieren, bevor der Titel/die Beschreibung Platz abgeben muss.
+  .lux-expansion-panel-header-custom:has(lux-menu) {
+    flex: 1 1 0;
+    max-width: 100%;
+  }
+
+  .lux-expansion-panel-header-content {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .lux-expansion-panel-header-title {
+    display: flex;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  .lux-expansion-panel-header-description {
+    font-family: var(--lux-theme-app-headline-font);
+    overflow-x: hidden;
+  }
+
+  // Auf-/Zuklapp-Animation nach dem Vorbild von Material (mat-expansion-panel): die
+  // Content-Höhe wird über eine Grid-Row animiert (0fr <-> 1fr), statt abrupt ein-/auszublenden.
+  .lux-expansion-panel-content-wrapper {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
+    transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lux-panel.lux-panel-expanded > .lux-expansion-panel-content-wrapper {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .lux-expansion-panel-content {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lux-expansion-panel-content-wrapper {
+      transition: none;
+    }
+  }
+
+  .lux-panel.lux-panel-sticky-header.lux-panel-expanded {
+    overflow: visible;
+
+    .lux-expansion-panel-content-wrapper {
+      overflow: hidden;
+      border-radius: 0 0 var(--lux-theme-app-border-radius) var(--lux-theme-app-border-radius);
+    }
+
+    .lux-expansion-panel-header {
+      position: sticky;
+      z-index: 2;
+    }
+  }
+
+  .lux-panel.lux-panel-sticky-header.lux-panel-expanded.lux-panel-sticky-header-scrolled .lux-expansion-panel-header {
+    top: var(--lux-panel-sticky-header-offset, 0);
+  }
+
+  .lux-expansion-panel-header-toggle:disabled {
+    cursor: default;
+  }
+
+  .lux-dynamic-height {
+    box-sizing: border-box;
+    min-height: 4em;
+    height: unset;
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  .lux-expansion-indicator-before {
+    margin-right: var(--lux-theme-spacing-3);
+  }
+
+  .lux-expansion-indicator-after {
+    margin-left: var(--lux-theme-spacing-3);
+  }
+
+  .lux-expansion-indicator {
+    transition: transform 200ms ease;
+  }
+
+  .lux-panel-expanded .lux-expansion-indicator {
+    transform: rotate(180deg);
+  }
+
+  &:first-of-type .lux-panel.lux-panel-expanded {
+    margin-top: 0;
+  }
+
+  &:last-of-type .lux-panel.lux-panel-expanded {
+    margin-bottom: 0;
+  }
+
+  .lux-expansion-panel-content {
+    padding: 0 var(--lux-theme-spacing-lg) var(--lux-theme-spacing-md);
+    letter-spacing: var(--mat-expansion-container-text-tracking, var(--mat-sys-body-large-tracking));
+    line-height: 24px;
+  }
+
+  .lux-panel:not(.lux-panel-expanded) lux-panel-aria-action {
+    display: none;
+  }
+
+  &.lux-panel-mobile .lux-expansion-panel-header {
+    padding: 0 var(--lux-theme-spacing-3);
+  }
+
+  &.lux-panel-mobile .lux-expansion-panel-header.lux-dynamic-height {
+    padding: 11px var(--lux-theme-spacing-3);
+  }
+
+  .lux-panel.lux-panel-mobile.lux-panel-second-row-for-mobile .lux-expansion-panel-header {
+    flex-wrap: wrap;
+    gap: var(--lux-theme-spacing-sm);
+  }
+
+  .lux-panel.lux-panel-mobile.lux-panel-second-row-for-mobile .lux-expansion-panel-header-custom {
+    flex: 0 0 100%;
+  }
+}
+
+@mixin lux-accordion-aria-colors {
+  .lux-primary {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded {
+      background-color: var(--lux-theme-accordion-header-color-primary);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-primary);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-primary);
+        }
+      }
+    }
+  }
+
+  .lux-accent {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded {
+      background-color: var(--lux-theme-accordion-header-color-accent);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-accent);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-accent);
+        }
+      }
+    }
+  }
+
+  .lux-warn {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded {
+      background-color: var(--lux-theme-accordion-header-color-warn);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-warn);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-warn);
+        }
+      }
+    }
+  }
+
+  .lux-neutral {
+    .lux-expansion-panel-header,
+    .lux-expansion-panel-header.lux-panel-expanded {
+      background-color: var(--lux-theme-accordion-header-color-neutral);
+
+      .lux-expansion-panel-header-content {
+        .lux-expansion-panel-header-title {
+          color: var(--lux-theme-accordion-header-text-color-neutral);
+        }
+
+        .lux-expansion-panel-header-description {
+          color: var(--lux-theme-accordion-header-description-color-neutral);
+        }
+      }
+    }
+  }
+}
+
+lux-panel-aria {
+  @include lux-accordion-aria-colors;
+}
+
+lux-accordion-aria {
+  display: block;
+  padding: var(--lux-theme-accordion-panel-container-elevation-shadow-width);
+
+  &.lux-default {
+    .lux-panel-expanded {
+      margin: var(--lux-theme-spacing-md) 0;
+    }
+
+    .lux-panel:not(.lux-panel-expanded) {
+      margin: 0;
+    }
+  }
+
+  @include lux-accordion-aria-colors;
+
+  .lux-expansion-panel-header,
+  .lux-expansion-panel-header-toggle {
+    border-radius: var(--lux-theme-app-border-radius);
+  }
+}

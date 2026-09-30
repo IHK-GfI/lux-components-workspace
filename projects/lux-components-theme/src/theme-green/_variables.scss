@@ -199,6 +199,10 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
 
   // Accordion
   --lux-theme-accordion-panel-container-elevation-shadow-width: 1px;
+  --lux-theme-accordion-aria-panel-border-bottom: 1px solid var(--lux-theme-app-border-color);
+  --lux-theme-accordion-aria-panel-first-border-top: 1px solid var(--lux-theme-app-border-color);
+  --lux-theme-accordion-aria-panel-border-radius: 0;
+  --lux-theme-accordion-aria-panel-box-shadow: none;
   --lux-theme-accordion-header-color-neutral: var(--lux-theme-app-content-bg);
   --lux-theme-accordion-header-color-on-neutral: var(--lux-theme-dark-primary-text);
   --lux-theme-accordion-header-hover-color-on-neutral: var(--lux-theme-app-content-bg);
@@ -215,6 +219,16 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-accordion-header-color-on-warn: var(--lux-theme-dark-primary-text);
   --lux-theme-accordion-header-hover-color-on-warn: #ffcacf;
   --lux-theme-accordion-header-focus-color-on-warn: #ffcacf;
+
+  // Accordion-Aria
+  --lux-theme-accordion-header-text-color-primary: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-text-color-accent: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-text-color-warn: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-text-color-neutral: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-primary: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-accent: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-warn: var(--lux-theme-dark-primary-text);
+  --lux-theme-accordion-header-description-color-neutral: var(--lux-theme-dark-primary-text);
 
   // LUX-Badge
   --lux-theme-badge-red: var(--lux-theme-custom-red);
@@ -397,9 +411,9 @@ $componentColorNames: ("red", "green", "purple", "blue", "gray", "orange", "blac
   --lux-theme-chat-entry-date-split-text-color: var(--lux-theme-dark-secondary-text);
   --lux-theme-chat-entry-header-text-color: var(--lux-theme-dark-secondary-text);
   --lux-theme-chat-entry-card-border-radius: var(--lux-theme-radius-lg);
-  --lux-theme-chat-entry-card-incomming-background-color: #E4F1E4;
+  --lux-theme-chat-entry-card-incomming-background-color: #e4f1e4;
   --lux-theme-chat-entry-card-incomming-text-color: #003366;
-  --lux-theme-chat-entry-card-outgoing-background-color: #E3EBF5;
+  --lux-theme-chat-entry-card-outgoing-background-color: #e3ebf5;
   --lux-theme-chat-entry-card-outgoing-text-color: #003366;
   --lux-theme-chat-entry-card-padding-top: var(--lux-theme-spacing-md);
   --lux-theme-chat-entry-card-padding-right: var(--lux-theme-spacing-lg);

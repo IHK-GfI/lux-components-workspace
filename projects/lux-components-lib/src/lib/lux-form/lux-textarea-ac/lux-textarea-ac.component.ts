@@ -31,7 +31,6 @@ import { LuxFormInputBaseClass } from '../lux-form-model/lux-form-input-base.cla
   ]
 })
 export class LuxTextareaAcComponent<T = string> extends LuxFormInputBaseClass<T> implements OnInit {
-
   private liveAnnouncer = inject(LiveAnnouncer);
 
   @Input() luxMaxRows = -1;
