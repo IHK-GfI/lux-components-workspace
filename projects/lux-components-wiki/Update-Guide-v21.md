@@ -95,6 +95,17 @@ In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren k
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
 
+**Hinweis (Datums- und Zeitkomponenten)**: Die Verarbeitung von Datumswerten wurde korrigiert (siehe auch [Version 21.5.0](#version-2150)). Dadurch kann sich die Anzeige einzelner Werte ändern:
+
+- `lux-datepicker-ac`: Der Datepicker zeigt jetzt in jeder Zeitzone genau den gespeicherten Tag an (westlich von UTC war es bisher der Vortag). Welcher Tag mit einem übergebenen Wert gemeint ist, wird so bestimmt:
+  - Datum ohne Zeitzone (z.B. `2027-03-13`, `13.03.2027`, `2027-03-13T00:00:00`) oder mit Offset (z.B. `2027-03-13T10:00:00+01:00`): der geschriebene Tag.
+  - UTC-Zeitpunkt (`...Z`) oder `Date`-Objekt genau auf UTC-Mitternacht (z.B. `2027-03-13T00:00:00.000Z`, so speichert der Datepicker selbst): der UTC-Tag.
+  - UTC-Zeitpunkt oder `Date`-Objekt mit anderer Uhrzeit (z.B. `new Date(2027, 2, 13)`): wie bis Version 21.4.0 der lokale Tag des Nutzers.
+  - In Kombination mit einem `lux-timepicker` (`luxReferenceControl`) gilt unverändert der UTC-Zeitpunkt.
+- `lux-datepicker-ac`: Ein eigener Filter (`luxCustomFilter`) erhält jeden Tag als UTC-Mitternacht. Damit er in jeder Zeitzone den richtigen Tag prüft, müssen die UTC-Methoden verwendet werden (z.B. `getUTCDay()` statt `getDay()`).
+- `lux-datetimepicker-ac` und `lux-timepicker`: Uhrzeiten an den Tagen der Zeitumstellung werden jetzt korrekt angezeigt und gespeichert. Im Datetimepicker wird ein als `Date`-Objekt gesetzter Wert jetzt formatiert angezeigt, und `luxMinDate`, `luxMaxDate` sowie `luxStartDate` werden im Kalender auch westlich von UTC am richtigen Tag berücksichtigt.
+- Lookups: Die Gültigkeit von Einträgen (`gueltigkeitVon`/`gueltigkeitBis`) wird jetzt anhand des lokalen Tages geprüft. Bisher galt kurz nach Mitternacht noch der Vortag.
+
 **Hinweis**: Die `lux-card` verwendet auf `.lux-card-content` jetzt `overflow: clip` statt `overflow-y: hidden`, damit `luxStickyHeader` (siehe [lux-panel](lux‐panel-v21) / [lux-accordion](lux‐accordion-v21)) auch innerhalb einer `lux-card` funktioniert. Beide Werte schneiden überstehenden Inhalt ab, aber nur `hidden` erzeugt einen Scroll-Container — und genau dieser hat die Sticky-Positionierung innerhalb der Card ausgehebelt.
 
 Zu großer Inhalt wird optisch weiterhin genauso abgeschnitten wie bisher. Da `clip` aber keinen Scroll-Container mehr erzeugt, ist abgeschnittener Inhalt jetzt auf **beiden** Achsen endgültig unerreichbar. Beides sollte nach dem Update geprüft werden:
@@ -173,6 +184,13 @@ In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren k
 ### Version 21.5.0
 
 In diesem Abschnitt wird beschrieben, wie man die LUX-Components aktualisieren kann. Alle Updates sind inkrementelle Updates. D.h. alle Updates müssen in der korrekten Reihenfolge ausgeführt werden und **es darf kein Update übersprungen werden**, da jedes Update, neben der Versionsaktualisierung in der `package.json`, auch potenziell weitere wichtige Änderungen enthalten kann, die sonst fehlen würden.
+
+**Wichtig (lux-datepicker-ac)**: Seit dieser Version bestimmt der Datepicker den Tag eines übergebenen Werts über UTC statt über die lokale Zeit. Gespeichert wird wie bisher UTC-Mitternacht (z.B. `2027-03-13T00:00:00.000Z`). Übergibt eine Anwendung ein Datum in lokaler Zeit, zeigt der Datepicker zwar das richtige Datum an, im FormControl bzw. in `luxValue` steht bei Nutzern in Deutschland aber der **Vortag**. Da der Wert schon beim Laden umgewandelt wird, landet beim Speichern des Formulars der Vortag im Backend, auch wenn das Feld nicht geändert wurde. Betroffen sind:
+
+- ISO-Strings ohne Zeitzone, z.B. `2027-03-13T00:00:00` (Java `LocalDateTime`, .NET `DateTime`): Ab Version 21.9.0 werden diese wieder korrekt verarbeitet.
+- Lokale Mitternacht als UTC-Zeitpunkt oder `Date`-Objekt, z.B. `2027-03-12T23:00:00.000Z` aus `new Date(2027, 2, 13).toISOString()` bzw. `new Date(2027, 2, 13)`: Ab Version 21.9.0 wird dieser Wert, wie bis Version 21.4.0, wieder dem lokalen Tag zugeordnet.
+
+Empfohlen sind ein reines Datum (`2027-03-13` bzw. `13.03.2027`) oder UTC-Mitternacht (`2027-03-13T00:00:00.000Z`, z.B. mit `new Date(Date.UTC(2027, 2, 13))`). Seit dem Update gespeicherte Datumswerte sollten auf einen Versatz von einem Tag geprüft werden. Weitere Details siehe [lux-datepicker](lux‐datepicker-v21).
 
 - LUX-Components-Updater aktualisieren:
   - `npm update @ihk-gfi/lux-components-update`

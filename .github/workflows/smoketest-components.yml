@@ -21,3 +21,17 @@ jobs:
           npm run test:components
           cd dist/lux-components-lib
           ls -lR
+      # Der Runner läuft in UTC. Dort fallen Zeitzonenfehler bei Datumswerten nicht auf (z.B. lokale Zeit statt UTC),
+      # deshalb werden die Datums-Tests zusätzlich in weiteren Zeitzonen ausgeführt:
+      # Europe/Berlin (Zeitzone der Nutzer, mit Sommerzeit), Etc/GMT+12 (UTC-12) und Pacific/Kiritimati (UTC+14).
+      - name: Datums-Tests in anderen Zeitzonen
+        run: |
+          for tz in Europe/Berlin Etc/GMT+12 Pacific/Kiritimati; do
+            echo "Zeitzone: $tz"
+            TZ=$tz npx ng test lux-components-lib --watch=false --browsers=ChromeHeadless \
+              --include='src/lib/lux-util/**/*.spec.ts' \
+              --include='src/lib/lux-form/lux-datepicker-ac/**/*.spec.ts' \
+              --include='src/lib/lux-form/lux-datetimepicker-ac/**/*.spec.ts' \
+              --include='src/lib/lux-form/lux-timepicker/**/*.spec.ts' \
+              --include='src/lib/lux-lookup/**/*.spec.ts'
+          done

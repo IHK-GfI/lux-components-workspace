@@ -131,7 +131,13 @@ Html
 Ts
 
 ```typescript
-value: string = new Date().toLocaleDateString() + ", 12:45";
+// Variante ohne LuxUtil (alternativ zur Variante darunter):
+// Der heutige Tag aus Sicht des Nutzers (lokale Zeitzone) mit 12:45 Uhr als UTC-Uhrzeit
+// today = new Date();
+// value: string = new Date(Date.UTC(this.today.getFullYear(), this.today.getMonth(), this.today.getDate(), 12, 45)).toISOString();
+
+// Heute, 12:45 Uhr (UTC-Uhrzeit, so wie sie der Datetimepicker anzeigt
+value: string = new Date(LuxUtil.newDateWithoutTime().setUTCHours(12, 45)).toISOString();
 ```
 
 Html
@@ -148,6 +154,8 @@ Html
 ### 4. Eigener Filter
 
 ![Beispielbild 04](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐datetimepicker-v21-img-04.png)
+
+Der Filter erhält jeden Tag als lokale Mitternacht (z.B. `new Date(2029, 4, 26)`). Deshalb werden hier - anders als beim [LUX-Datepicker](lux‐datepicker-v21#4-eigener-filter) - die lokalen Methoden (z.B. `getDay()`, `getDate()`) verwendet.
 
 Ts
 

@@ -193,11 +193,8 @@ export class LuxTimepickerComponent<T = any> extends LuxFormInputBaseClass<T> im
         newDate.setUTCFullYear(referenceValue.getUTCFullYear(), referenceValue.getUTCMonth(), referenceValue.getUTCDate());
       }
       if (typeof referenceValue === 'string' && LuxUtil.ISO_8601_FULL.test(referenceValue)) {
-        newDate.setUTCFullYear(
-          new Date(referenceValue).getUTCFullYear(),
-          new Date(referenceValue).getUTCMonth(),
-          new Date(referenceValue).getUTCDate()
-        );
+        const referenceDate = LuxUtil.parseISO8601AsUTC(referenceValue);
+        newDate.setUTCFullYear(referenceDate.getUTCFullYear(), referenceDate.getUTCMonth(), referenceDate.getUTCDate());
       }
 
       this.updateTimeValue(newDate);

@@ -25,7 +25,7 @@
 
 | Name                   | Typ                                               | Beschreibung                                                                                                                                                                                                                                                                                                               |
 | ---------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| luxValue               | string (ISO 8601 z.B. '2021-09-21T12:15:00.000Z') | Beinhaltet den aktuellen Wert des Datepickers als Date-Objekt. Beinhaltet den aktuellen Wert des Datepickers als String-Objekt. Initial kann auch ein Date-Objekt hereingereicht werden, dieses wird dann von der Component konvertiert.                                                                                   |
+| luxValue               | string (ISO 8601 z.B. '2021-09-21T00:00:00.000Z') | Der aktuelle Wert des Datepickers als String. Der Tag wird immer als UTC-Mitternacht gespeichert (z.B. '2021-09-21T00:00:00.000Z'). Initial können auch ein reines Datum (z.B. '2021-09-21' oder '21.09.2021') oder ein Date-Objekt (z.B. new Date(Date.UTC(2021, 8, 21))) übergeben werden.                               |
 | luxStartView           | 'month' \| 'year' \| 'multi-year'                 | Bestimmt die Startansicht des Datepickers (Jahres- oder Monatsansicht). Mögliche Werte: 'month', 'year'                                                                                                                                                                                                                    |
 | luxTouchUi             | boolean                                           | Aktiviert bzw. Deaktiviert die vergrößerte Touch-Ansicht für den Datepicker (leichtere Eingabe für Mobilgeräte).                                                                                                                                                                                                           |
 | luxOpened              | boolean                                           | Bestimmt, ob das Auswahlfenster ausgeklappt oder eingeklappt ist.                                                                                                                                                                                                                                                          |
@@ -73,7 +73,8 @@
 Ts
 
 ```typescript
-value: string = new Date().toLocaleDateString();
+// Heutiger Tag als UTC-Mitternacht (LuxUtil aus '@ihk-gfi/lux-components')
+value: string = LuxUtil.newDateWithoutTime().toISOString();
 ```
 
 Html
@@ -107,7 +108,8 @@ Ts
 form: FormGroup;
 constructor() {
   this.form = new FormGroup<any>({
-    datepicker: new FormControl<string>(new Date().toLocaleDateString())
+    // Heutiger Tag als UTC-Mitternacht (LuxUtil aus '@ihk-gfi/lux-components')
+    datepicker: new FormControl<string>(LuxUtil.newDateWithoutTime().toISOString())
   });
 }
 ```
@@ -146,6 +148,8 @@ Html
 
 ![Beispielbild 04](https://raw.githubusercontent.com/IHK-GfI/lux-components-workspace/main/projects/lux-components-wiki/Versions/v21/lux‐datepicker-v21-img-04.png)
 
+Der Filter erhält jeden Tag als UTC-Mitternacht (z.B. `2029-05-26T00:00:00.000Z`). Damit der Filter in jeder Zeitzone den richtigen Tag prüft, müssen die UTC-Methoden (z.B. `getUTCDay()`, `getUTCDate()`) verwendet werden.
+
 Ts
 
 ```typescript
@@ -153,7 +157,7 @@ myFilter = (d: Date | null): boolean => {
   let result = false;
 
   if (d) {
-    const day = d.getDay();
+    const day = d.getUTCDay();
     // Samstag und Sonntag in der Date-Auswahl deaktivieren
     result = day !== 0 && day !== 6;
   }

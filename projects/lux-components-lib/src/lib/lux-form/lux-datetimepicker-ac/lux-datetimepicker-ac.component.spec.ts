@@ -9,9 +9,9 @@ import { Component, LOCALE_ID } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LuxA11yTestHelper, LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { LuxA11yTestHelper, LuxOverlayHelper, LuxTestHelper } from '@ihk-gfi/lux-components/test-utils';
 import { provideLuxTranslocoTesting } from '../../../testing/transloco-test.provider';
 import { LuxConsoleService } from '../../lux-util/lux-console.service';
 import { LuxUtil } from '../../lux-util/lux-util';
@@ -205,6 +205,92 @@ describe('LuxDatetimepickerAcComponent', () => {
       expect(datepickerComponent.luxValue).toEqual(utcDate.toISOString());
     }));
 
+    it('Sollte einen ISO-String ohne Zeitzoneninfo unabhängig von der lokalen Zeitzone auf dieselbe Uhrzeit abbilden', fakeAsync(() => {
+      // Vorbedingungen testen
+      expect(testComponent.formControl.value).toBeFalsy();
+      expect(datepickerComponent.luxValue).toBeFalsy();
+
+      // Änderungen durchführen: ISO-String ohne "Z"/Offset (wie z.B. von manchen Backends geliefert)
+      testComponent.formControl.setValue('2027-03-13T14:30:00');
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen: darf unabhängig von der lokalen Zeitzone nicht verschoben werden
+      const expectedDate = '2027-03-13T14:30:00.000Z';
+      const datepickerEl = fixture.debugElement.query(By.css('input'));
+      expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).toEqual('13.03.2027, 14:30');
+      expect(datepickerComponent.luxValue).toEqual(expectedDate);
+    }));
+
+    it('Sollte serialisierte LocalDateTime-Werte (Java) auf dieselbe Uhrzeit abbilden', fakeAsync(() => {
+      // So serialisiert Jackson ein java.time.LocalDateTime standardmäßig (DateTimeFormatter.ISO_LOCAL_DATE_TIME):
+      // ohne Zeitzoneninfo, immer mit Sekunden und mit 0 bis 9 Nachkommastellen.
+      // Sekunden und Millisekunden werden vom Datetimepicker verworfen.
+      const testCases = [
+        { localDateTime: '2027-03-13T00:00:00', expectedDate: '2027-03-13T00:00:00.000Z', expectedText: '13.03.2027, 00:00' },
+        { localDateTime: '2027-03-13T14:30:15', expectedDate: '2027-03-13T14:30:00.000Z', expectedText: '13.03.2027, 14:30' },
+        { localDateTime: '2027-03-13T23:30:00', expectedDate: '2027-03-13T23:30:00.000Z', expectedText: '13.03.2027, 23:30' },
+        { localDateTime: '2027-03-13T14:30:15.5', expectedDate: '2027-03-13T14:30:00.000Z', expectedText: '13.03.2027, 14:30' },
+        { localDateTime: '2027-03-13T14:30:15.123456', expectedDate: '2027-03-13T14:30:00.000Z', expectedText: '13.03.2027, 14:30' },
+        { localDateTime: '2027-03-13T23:59:59.999999999', expectedDate: '2027-03-13T23:59:00.000Z', expectedText: '13.03.2027, 23:59' }
+      ];
+
+      testCases.forEach(({ localDateTime, expectedDate, expectedText }) => {
+        // Änderungen durchführen
+        testComponent.formControl.setValue(localDateTime);
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        const datepickerEl = fixture.debugElement.query(By.css('input'));
+        expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).withContext(localDateTime).toEqual(expectedText);
+        expect(testComponent.formControl.value).withContext(localDateTime).toEqual(expectedDate);
+        expect(datepickerComponent.luxValue).withContext(localDateTime).toEqual(expectedDate);
+      });
+    }));
+
+    it('Sollte Uhrzeiten an den Tagen der Zeitumstellung korrekt anzeigen', fakeAsync(() => {
+      // Die Werte sind UTC-Uhrzeiten. In Europe/Berlin gibt es 02:30 am 28.03.2027 lokal nicht (Umstellung auf Sommerzeit)
+      // und die Stunde 02:00 - 03:00 am 31.10.2027 lokal doppelt (Umstellung auf Winterzeit).
+      const testCases = [
+        { value: '2027-03-28T01:30:00.000Z', expectedText: '28.03.2027, 01:30' },
+        { value: '2027-03-28T02:30:00.000Z', expectedText: '28.03.2027, 02:30' },
+        { value: '2027-10-31T00:30:00.000Z', expectedText: '31.10.2027, 00:30' },
+        { value: '2027-10-31T01:30:00.000Z', expectedText: '31.10.2027, 01:30' },
+        { value: '2027-10-31T02:30:00.000Z', expectedText: '31.10.2027, 02:30' }
+      ];
+
+      testCases.forEach(({ value, expectedText }) => {
+        // Änderungen durchführen
+        testComponent.formControl.setValue(value);
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        const datepickerEl = fixture.debugElement.query(By.css('input'));
+        expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).withContext(value).toEqual(expectedText);
+        expect(datepickerComponent.luxValue).withContext(value).toEqual(value);
+      });
+    }));
+
+    it('Sollte Date-Objekte unabhängig von der lokalen Zeitzone auf dieselbe Uhrzeit abbilden', fakeAsync(() => {
+      // In jeder Zeitzone außer UTC liegt einer der beiden Zeitpunkte lokal an einem anderen Tag
+      // (östlich von UTC: 23:30, westlich von UTC: 00:30).
+      const testCases = [
+        { value: new Date(Date.UTC(2027, 2, 13, 0, 30)), expectedDate: '2027-03-13T00:30:00.000Z', expectedText: '13.03.2027, 00:30' },
+        { value: new Date(Date.UTC(2027, 2, 13, 23, 30)), expectedDate: '2027-03-13T23:30:00.000Z', expectedText: '13.03.2027, 23:30' }
+      ];
+
+      testCases.forEach(({ value, expectedDate, expectedText }) => {
+        // Änderungen durchführen
+        testComponent.formControl.setValue(value);
+        LuxTestHelper.wait(fixture);
+
+        // Nachbedingungen testen
+        const datepickerEl = fixture.debugElement.query(By.css('input'));
+        expect(LuxUtil.stringWithoutASCIIChars(datepickerEl.nativeElement.value)).withContext(expectedDate).toEqual(expectedText);
+        expect(testComponent.formControl.value).withContext(expectedDate).toEqual(expectedDate);
+        expect(datepickerComponent.luxValue).withContext(expectedDate).toEqual(expectedDate);
+      });
+    }));
+
     it('Sollte required sein', fakeAsync(() => {
       testComponent.formControl.setValidators(Validators.required);
       fixture.detectChanges();
@@ -309,7 +395,7 @@ describe('LuxDatetimepickerAcComponent', () => {
       // Änderungen durchführen
       testComponent.minDate = '20.10.2015, 00:00';
       testComponent.maxDate = '25.10.2015, 23:59';
-      testComponent.value = new Date(2015, 9, 23).toISOString();
+      testComponent.value = '2015-10-23T00:00:00.000Z';
       LuxTestHelper.wait(fixture);
 
       matErrorEl = fixture.debugElement.query(By.css('mat-error'));
@@ -341,6 +427,23 @@ describe('LuxDatetimepickerAcComponent', () => {
       expect(matErrorEl.nativeElement.innerText.trim()).toEqual('Das Datum überschreitet den Maximalwert');
     }));
 
+    it('LuxMinDate bei der Umstellung auf Winterzeit', fakeAsync(() => {
+      // In Europe/Berlin kommt die Stunde 02:00 - 03:00 am 31.10.2027 lokal doppelt vor:
+      // 00:30 UTC entspricht lokal 02:30 (Sommerzeit), 01:15 UTC entspricht lokal 02:15 (Winterzeit).
+      // Der Wert liegt trotzdem vor dem Minimum und muss als Unterschreitung erkannt werden.
+      testComponent.minDate = '31.10.2027, 01:15';
+      testComponent.value = '2027-10-31T00:30:00.000Z';
+      LuxTestHelper.wait(fixture);
+      datepickerComponent.formControl.markAsTouched();
+      datepickerComponent.formControl.updateValueAndValidity();
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen
+      const matErrorEl = fixture.debugElement.query(By.css('mat-error'));
+      expect(matErrorEl).not.toBeNull();
+      expect(matErrorEl?.nativeElement.innerText.trim()).toEqual('Das Datum unterschreitet den Minimalwert');
+    }));
+
     it('LuxCustomFilter', fakeAsync(() => {
       // Vorbedingungen testen
       let matErrorEl = fixture.debugElement.query(By.css('mat-error'));
@@ -353,7 +456,7 @@ describe('LuxDatetimepickerAcComponent', () => {
         return day !== 0 && day !== 6;
       };
       LuxTestHelper.wait(fixture);
-      testComponent.value = new Date(2018, 11, 18).toISOString();
+      testComponent.value = '2018-12-18T00:00:00.000Z';
       LuxTestHelper.wait(fixture);
       matErrorEl = fixture.debugElement.query(By.css('mat-error'));
 
@@ -522,6 +625,50 @@ describe('LuxDatetimepickerAcComponent', () => {
       flush();
     }));
 
+    it('Sollte im Kalender LuxMinDate und LuxMaxDate unabhängig von der lokalen Zeitzone berücksichtigen', fakeAsync(() => {
+      // Änderungen durchführen
+      testComponent.minDate = '10.06.2029, 00:00';
+      testComponent.maxDate = '20.06.2029, 23:59';
+      testComponent.value = '2029-06-15T12:00:00.000Z';
+      testComponent.opened = true;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen: nur der 10. bis 20.06.2029 sind auswählbar
+      const enabledDays = Array.from(overlayHelper.selectAllFromOverlay('.mat-calendar-body-cell:not(.mat-calendar-body-disabled)')).map(
+        (cell) => cell.textContent?.trim()
+      );
+      expect(enabledDays.length).toEqual(11);
+      expect(enabledDays[0]).toEqual('10');
+      expect(enabledDays[enabledDays.length - 1]).toEqual('20');
+
+      testComponent.opened = false;
+      LuxTestHelper.wait(fixture);
+      LuxTestHelper.wait(fixture);
+
+      flush();
+    }));
+
+    it('Sollte im Kalender ohne Wert das LuxStartDate unabhängig von der lokalen Zeitzone auswählen', fakeAsync(() => {
+      // Vorbedingungen testen
+      expect(testComponent.value).toBeFalsy();
+
+      // Änderungen durchführen
+      testComponent.startDate = '26.05.2029';
+      testComponent.opened = true;
+      LuxTestHelper.wait(fixture);
+
+      // Nachbedingungen testen: vorausgewählt ist der 26. (westlich von UTC nicht der Vortag)
+      const selectedCell = overlayHelper.selectOneFromOverlay('.mat-calendar-body-selected');
+      expect(selectedCell).not.toBeNull();
+      expect(selectedCell?.textContent?.trim()).toEqual('26');
+
+      testComponent.opened = false;
+      LuxTestHelper.wait(fixture);
+      LuxTestHelper.wait(fixture);
+
+      flush();
+    }));
+
     it('Sollte luxValueChange angemessen oft aufrufen', fakeAsync(() => {
       // Vorbedingungen testen
       const spy = spyOn(testComponent, 'valueChanged');
@@ -530,14 +677,14 @@ describe('LuxDatetimepickerAcComponent', () => {
       expect(spy).toHaveBeenCalledTimes(0);
 
       // Änderungen durchführen
-      testComponent.value = new Date(2015, 9, 19).toISOString();
+      testComponent.value = '2015-10-19T00:00:00.000Z';
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
       expect(spy).toHaveBeenCalledTimes(1);
 
       // Änderungen durchführen
-      testComponent.value = new Date(2015, 9, 20).toISOString();
+      testComponent.value = '2015-10-20T00:00:00.000Z';
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -545,7 +692,7 @@ describe('LuxDatetimepickerAcComponent', () => {
 
       // Änderungen durchführen
       // Absichtlich denselben Wert nochmal, sollte nichts auslösen
-      testComponent.value = new Date(2015, 9, 20).toISOString();
+      testComponent.value = '2015-10-20T00:00:00.000Z';
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen
@@ -563,9 +710,7 @@ describe('LuxDatetimepickerAcComponent', () => {
 
       // Änderungen durchführen
       // ISO-String
-      const testDate = new Date(2000, 5, 10, 10, 15, 0);
-      testDate.setMinutes(testDate.getMinutes() - testDate.getTimezoneOffset());
-      testComponent.value = testDate.toISOString();
+      testComponent.value = '2000-06-10T10:15:00.000Z';
       LuxTestHelper.wait(fixture);
 
       // Nachbedingungen prüfen

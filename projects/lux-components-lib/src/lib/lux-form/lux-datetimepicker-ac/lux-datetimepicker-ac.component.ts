@@ -277,7 +277,8 @@ export class LuxDatetimepickerAcComponent<T = any> extends LuxFormInputBaseClass
     this._formValueChangeSub = this.formControl.valueChanges.subscribe((value: any) => {
       this.updateDateValue(value);
 
-      if (LuxUtil.ISO_8601_FULL.test(value)) {
+      // ISO-Strings und Date-Objekte formatiert anzeigen (sonst stünde z.B. Date#toString() im Eingabefeld)
+      if (LuxUtil.isDate(value) || LuxUtil.ISO_8601_FULL.test(value)) {
         this.dateTimeInputValue = this.formatDateTime(this.formControl.value);
       }
     });
@@ -330,9 +331,10 @@ aber nicht über das Property 'luxControlValidators'. Dieser Aufruf wurde ignori
   }
 
   private compareDateWithTime(first: Date, second: Date): number {
-    return (
-      this.dateTimeAdapter.compareDate(first, second) || first.getHours() - second.getHours() || first.getMinutes() - second.getMinutes()
-    );
+    // Die Zeitpunkte direkt vergleichen (Sekunden und Millisekunden setzt parseDateTime() auf 0).
+    // Ein Vergleich der lokalen Datums-/Zeitbestandteile wäre bei der Umstellung auf Winterzeit falsch,
+    // weil dieselbe lokale Stunde dann zweimal vorkommt.
+    return first.getTime() - second.getTime();
   }
 
   private setISOValue(isoValue: string) {

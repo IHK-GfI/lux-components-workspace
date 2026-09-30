@@ -20,19 +20,21 @@ export class LuxDateTimePickerAcAdapter extends NativeDateAdapter {
     let dateAsString = '';
 
     if (date) {
-      const newDate = typeof date === 'string' ? new Date(date) : new Date(date.getTime());
+      // Ein String kann hier auch ohne Zeitzoneninfo (kein "Z"/Offset) ankommen (z.B. bevor der Wert
+      // intern normalisiert wurde); daher wird für Strings dieselbe UTC-sichere Parsing-Logik wie in parse() genutzt.
+      const newDate = typeof date === 'string' ? LuxUtil.parseISO8601AsUTC(date) : date;
 
-      // Die UTC-Offset-Korrektur ist nur für Formate mit Zeitangabe (Stunde/Minute) notwendig,
-      // um UTC-Timestamps korrekt als UTC-Uhrzeit anzuzeigen (z.B. Eingabefeld "01.04.2024, 00:00").
-      // Für reine Datum-Formate wie monthYearLabel oder dateA11yLabel übergibt mat-calendar
-      // lokale Mitternacht-Dates; hier darf keine Korrektur erfolgen, da sonst das Datum
-      // in UTC+ Zeitzonen um die Differenz zurückversetzt wird (April → März).
+      // Formate mit Zeitangabe (Stunde/Minute) werden in UTC formatiert, um UTC-Timestamps korrekt als UTC-Uhrzeit
+      // anzuzeigen (z.B. Eingabefeld "01.04.2024, 00:00"). Die Zeitzone wird direkt beim Formatieren gesetzt, statt das
+      // Datum um den Offset zu verschieben - sonst würden Uhrzeiten, die es lokal nicht gibt (Umstellung auf Sommerzeit),
+      // verschoben. Für reine Datum-Formate wie monthYearLabel oder dateA11yLabel übergibt mat-calendar lokale
+      // Mitternacht-Dates; diese werden lokal formatiert, da sonst das Datum in UTC+ Zeitzonen um die Differenz
+      // zurückversetzt wird (April → März).
       const hasTimeComponent = displayFormat && 'hour' in (displayFormat as Record<string, unknown>);
-      if (hasTimeComponent) {
-        newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
-      }
 
-      if (displayFormat) {
+      if (hasTimeComponent) {
+        dateAsString = newDate.toLocaleDateString(this.locale, { ...displayFormat, timeZone: 'UTC' });
+      } else if (displayFormat) {
         dateAsString = newDate.toLocaleDateString(this.locale, displayFormat);
       } else {
         dateAsString = newDate.toLocaleDateString(this.locale);
@@ -47,9 +49,10 @@ export class LuxDateTimePickerAcAdapter extends NativeDateAdapter {
 
     if (dateAsString) {
       if (LuxUtil.ISO_8601_FULL.test(dateAsString)) {
-        const newDate = new Date(dateAsString);
-        newDate.setSeconds(0);
-        newDate.setMilliseconds(0);
+        const newDate = LuxUtil.parseISO8601AsUTC(dateAsString);
+        // UTC-Setter verwenden: Lokale Setter würden die Uhrzeit in der doppelten Stunde bei der Umstellung
+        // auf Winterzeit neu berechnen und dabei um eine Stunde verschieben.
+        newDate.setUTCSeconds(0, 0);
         result = newDate;
       } else {
         const dateTimeArr = dateAsString.split(',');
