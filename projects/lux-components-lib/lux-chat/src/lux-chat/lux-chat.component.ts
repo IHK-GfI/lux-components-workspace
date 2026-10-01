@@ -43,6 +43,7 @@ const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     LuxChatRelativeUntilTimestamp,
     LuxAutofocusDirective
   ],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lux-chat.component.html'
 })

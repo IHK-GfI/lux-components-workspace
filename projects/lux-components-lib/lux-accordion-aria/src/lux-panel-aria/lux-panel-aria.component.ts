@@ -24,6 +24,7 @@ import { LuxAccordionAriaBase, LuxAccordionAriaTogglePosition } from '../lux-acc
   styleUrls: ['./lux-panel-aria.component.scss'],
   standalone: true,
   imports: [AccordionPanel, AccordionTrigger, LuxIconComponent, AccordionContent],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   hostDirectives: [AccordionGroup]
 })

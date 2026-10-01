@@ -24,6 +24,7 @@ export type LuxAriaTogglePosition = LuxAccordionAriaTogglePosition;
   // 'disabled' is forwarded under the luxDisabled name so the group's own state stays the single source of truth
   hostDirectives: [{ directive: AccordionGroup, inputs: ['disabled: luxDisabled'] }],
   providers: [{ provide: LuxAccordionAriaBase, useExisting: LuxAccordionAriaComponent }],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     class: 'lux-flex lux-flex-auto',

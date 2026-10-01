@@ -10,6 +10,7 @@ import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-inter
 @Component({
   selector: 'lux-chat-popup',
   imports: [NgClass, LuxIconComponent, MatFabButton, TranslocoPipe],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './lux-chat-popup.component.html'
 })

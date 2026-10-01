@@ -15,6 +15,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     ><ng-content></ng-content
   ></span>`,
   standalone: true,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatTooltip]
 })

@@ -9,11 +9,14 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-// jsdom implementiert weder scrollIntoView noch die Drag&Drop-DataTransfer-API (beides wird von
-// LuxTestHelper bzw. Komponenten wie LuxTourHint/LuxList genutzt, unter echtem Chrome via Karma
+// jsdom implementiert weder scrollIntoView/scrollTo noch die Drag&Drop-DataTransfer-API (wird von
+// LuxTestHelper bzw. Komponenten wie LuxTourHint/LuxList/LuxChat genutzt, unter echtem Chrome via Karma
 // aber real vorhanden). Minimal-Polyfills, damit die betroffenen Tests unter jsdom nicht crashen.
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};
+}
+if (!Element.prototype.scrollTo) {
+  Element.prototype.scrollTo = () => {};
 }
 
 if (typeof (globalThis as any).DataTransfer === 'undefined') {

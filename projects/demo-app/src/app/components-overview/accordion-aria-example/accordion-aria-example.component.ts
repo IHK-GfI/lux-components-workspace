@@ -36,6 +36,7 @@ import { logResult } from '../../example-base/example-base-util/example-base-hel
   templateUrl: './accordion-aria-example.component.html',
   styleUrls: ['./accordion-aria-example.component.scss'],
   standalone: true,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     LuxAccordionAriaComponent,

@@ -1,7 +1,8 @@
+import { describe, it, beforeAll, beforeEach, expect } from 'vitest';
 // noinspection DuplicatedCode
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { LuxAccordionAriaComponent } from './lux-accordion-aria.component';
@@ -17,7 +18,7 @@ describe('LuxAccordionAriaComponent', () => {
     let fixture: ComponentFixture<LuxAccordionAriaTestComponent>;
     let testComponent: LuxAccordionAriaTestComponent;
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         imports: [
           LuxAccordionAriaComponent,
@@ -32,137 +33,137 @@ describe('LuxAccordionAriaComponent', () => {
       fixture = TestBed.createComponent(LuxAccordionAriaTestComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
     it('sollte erstellt werden', () => {
       expect(testComponent).toBeTruthy();
     });
 
-    it('sollte luxTogglePosition auf alle Panels ohne Custom Header anwenden', fakeAsync(() => {
+    it('sollte luxTogglePosition auf alle Panels ohne Custom Header anwenden', async () => {
       const headerButtons = fixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
 
       expect(headerButtons.length).toBe(2);
       headerButtons.forEach((headerButton) => {
-        expect(headerButton.nativeElement.classList.contains('lux-expansion-toggle-indicator-before')).toBeFalse();
+        expect(headerButton.nativeElement.classList.contains('lux-expansion-toggle-indicator-before')).toBe(false);
         expect(headerButton.query(By.css('.lux-expansion-indicator-after'))).toBeTruthy();
       });
 
       testComponent.togglePosition = 'before';
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       fixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle')).forEach((headerButton) => {
-        expect(headerButton.nativeElement.classList.contains('lux-expansion-toggle-indicator-before')).toBeTrue();
+        expect(headerButton.nativeElement.classList.contains('lux-expansion-toggle-indicator-before')).toBe(true);
         expect(headerButton.query(By.css('.lux-expansion-indicator-before'))).toBeTruthy();
         expect(headerButton.query(By.css('.lux-expansion-indicator-after'))).toBeFalsy();
       });
-    }));
+    });
 
-    it('sollte die luxMulti-Eigenschaft respektieren', fakeAsync(() => {
+    it('sollte die luxMulti-Eigenschaft respektieren', async () => {
       testComponent.multi = false;
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       const accordionComponent = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;
       expect(accordionComponent.luxMulti()).toBe(false);
 
       testComponent.multi = true;
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
       fixture.detectChanges();
 
       expect(accordionComponent.luxMulti()).toBe(true);
-    }));
+    });
 
-    it('sollte bei luxMulti=false nur ein Panel gleichzeitig geöffnet lassen', fakeAsync(() => {
+    it('sollte bei luxMulti=false nur ein Panel gleichzeitig geöffnet lassen', async () => {
       const headerButtons = fixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
 
       headerButtons[0].nativeElement.click();
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       headerButtons[1].nativeElement.click();
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
       fixture.detectChanges();
 
       expect(headerButtons[0].nativeElement.getAttribute('aria-expanded')).toBe('false');
       expect(headerButtons[1].nativeElement.getAttribute('aria-expanded')).toBe('true');
-    }));
+    });
 
-    it('sollte verschachtelte Accordions unabhängig voneinander verwalten', fakeAsync(() => {
+    it('sollte verschachtelte Accordions unabhängig voneinander verwalten', async () => {
       const nestedFixture = TestBed.createComponent(LuxNestedAccordionAriaTestComponent);
       nestedFixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const headerButtons = nestedFixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
       headerButtons[0].nativeElement.click();
       nestedFixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const innerHeaderButtons = nestedFixture.debugElement.queryAll(By.css('.lux-expansion-panel-header-toggle'));
       innerHeaderButtons[1].nativeElement.click();
       nestedFixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
       innerHeaderButtons[2].nativeElement.click();
       nestedFixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       expect(innerHeaderButtons[0].nativeElement.getAttribute('aria-expanded')).toBe('true');
       expect(innerHeaderButtons[1].nativeElement.getAttribute('aria-expanded')).toBe('false');
       expect(innerHeaderButtons[2].nativeElement.getAttribute('aria-expanded')).toBe('true');
-    }));
+    });
 
-    it('sollte die luxDisabled-Eigenschaft respektieren', fakeAsync(() => {
+    it('sollte die luxDisabled-Eigenschaft respektieren', async () => {
       const accordionComponent = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;
       expect(accordionComponent.luxDisabled()).toBeFalsy();
 
       testComponent.disabled = true;
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(accordionComponent.luxDisabled()).toBe(true);
-    }));
+    });
 
-    it('sollte Farben-CSS-Klassen anwenden', fakeAsync(() => {
+    it('sollte Farben-CSS-Klassen anwenden', async () => {
       const accordion = fixture.debugElement.query(By.css('lux-accordion-aria > div'));
 
       testComponent.color = 'primary';
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-primary')).toBe(true);
 
       testComponent.color = 'accent';
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-accent')).toBe(true);
 
       testComponent.color = 'warn';
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-warn')).toBe(true);
 
       testComponent.color = 'neutral';
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
       expect(accordion.nativeElement.classList.contains('lux-neutral')).toBe(true);
-    }));
+    });
 
-    it('sollte den Abstand im flat-Modus deaktivieren', fakeAsync(() => {
+    it('sollte den Abstand im flat-Modus deaktivieren', async () => {
       const accordion = fixture.debugElement.query(By.directive(LuxAccordionAriaComponent));
 
       expect(accordion.nativeElement.classList.contains('lux-default')).toBe(true);
       expect(accordion.nativeElement.classList.contains('lux-flat')).toBe(false);
 
       testComponent.mode = 'flat';
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       expect(accordion.nativeElement.classList.contains('lux-default')).toBe(false);
       expect(accordion.nativeElement.classList.contains('lux-flat')).toBe(true);
-    }));
+    });
 
     describe('Custom Header', () => {
-      it('sollte bei einem Custom Header die Toggle-Position auf before setzen', fakeAsync(() => {
+      it('sollte bei einem Custom Header die Toggle-Position auf before setzen', async () => {
         const customFixture = TestBed.createComponent(LuxAccordionAriaCustomHeaderTestComponent);
         customFixture.detectChanges();
-        tick();
+        await LuxTestHelper.wait(fixture);
 
         const accordion = customFixture.debugElement.query(By.directive(LuxAccordionAriaComponent)).componentInstance;
         expect(accordion.effectiveLuxTogglePosition()).toBe('before');
-      }));
+      });
     });
   });
 
@@ -174,7 +175,7 @@ describe('LuxAccordionAriaComponent', () => {
       LuxA11yTestHelper.addA11yMatchers();
     });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
       TestBed.configureTestingModule({
         imports: [
           LuxAccordionAriaComponent,
@@ -187,26 +188,26 @@ describe('LuxAccordionAriaComponent', () => {
       fixture = TestBed.createComponent(LuxAccordionAriaTestComponent);
       fixture.detectChanges();
       testComponent = fixture.componentInstance;
-    }));
+    });
 
     it('Accordion (kollabiert) hat keine Barrierefreiheitsverletzungen', async () => {
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
     });
 
-    it('Accordion (expandiert) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
+    it('Accordion (expandiert) hat keine Barrierefreiheitsverletzungen', async () => {
       const headerButton = fixture.debugElement.query(By.css('.lux-expansion-panel-header-toggle'));
       headerButton.nativeElement.click();
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
-    }));
+    });
 
-    it('Accordion (disabled) hat keine Barrierefreiheitsverletzungen', fakeAsync(async () => {
+    it('Accordion (disabled) hat keine Barrierefreiheitsverletzungen', async () => {
       testComponent.disabled = true;
-      LuxTestHelper.wait(fixture);
+      await LuxTestHelper.wait(fixture);
 
       await LuxA11yTestHelper.expectNoA11yViolations(fixture.nativeElement);
-    }));
+    });
   });
 });
 
@@ -231,6 +232,7 @@ describe('LuxAccordionAriaComponent', () => {
     </lux-accordion-aria>
   `,
   standalone: true,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent]
 })
@@ -252,6 +254,7 @@ class LuxAccordionAriaTestComponent {
     LuxPanelAriaHeaderCustomComponent,
     LuxPanelAriaContentComponent
   ],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-accordion-aria [luxTogglePosition]="'after'">
@@ -269,6 +272,7 @@ class LuxAccordionAriaCustomHeaderTestComponent {}
   selector: 'lux-nested-accordion-aria-test',
   standalone: true,
   imports: [LuxAccordionAriaComponent, LuxPanelAriaComponent, LuxPanelAriaHeaderTitleComponent, LuxPanelAriaContentComponent],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-accordion-aria>

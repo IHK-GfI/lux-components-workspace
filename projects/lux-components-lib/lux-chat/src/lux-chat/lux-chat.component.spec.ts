@@ -1,10 +1,12 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxChatComponent } from './lux-chat.component';
 import { LuxChatData } from './lux-chat-data';
 import { LuxChatMessageData } from './lux-chat-message-data';
+import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
 
 function createMessage(user: string, content: string, time: Date): LuxChatMessageData {
   return new LuxChatMessageData(user, content, time);
@@ -42,7 +44,7 @@ describe('LuxChatComponent', () => {
   // luxChatData
   // ---------------------------------------------------------------------------
   describe('luxChatData', () => {
-    it('sollte den Nachrichteninhalt rendern', fakeAsync(() => {
+    it('sollte den Nachrichteninhalt rendern', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('User1', 'Hallo Welt', now));
@@ -50,14 +52,14 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.componentRef.setInput('luxChatUserName', 'User1');
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const entries = fixture.debugElement.queryAll(By.css('.lux-chat-entry-card p'));
       expect(entries.length).toBe(1);
       expect(entries[0].nativeElement.textContent.trim()).toBe('Hallo Welt');
-    }));
+    });
 
-    it('sollte mehrere Nachrichten rendern', fakeAsync(() => {
+    it('sollte mehrere Nachrichten rendern', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('User1', 'Erste Nachricht', now));
@@ -67,13 +69,13 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.componentRef.setInput('luxChatUserName', 'User1');
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const entries = fixture.debugElement.queryAll(By.css('.lux-chat-entry-card p'));
       expect(entries.length).toBe(3);
-    }));
+    });
 
-    it('sollte _isUser=true für Nachrichten des aktuellen Benutzers setzen', fakeAsync(() => {
+    it('sollte _isUser=true für Nachrichten des aktuellen Benutzers setzen', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       const msg = createMessage('MaxMustermann', 'Hallo', now);
@@ -82,12 +84,12 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatUserName', 'MaxMustermann');
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
-      expect(msg.metadata['_isUser']).toBeTrue();
-    }));
+      expect(msg.metadata['_isUser']).toBe(true);
+    });
 
-    it('sollte _isUser=false für Nachrichten anderer Benutzer setzen', fakeAsync(() => {
+    it('sollte _isUser=false für Nachrichten anderer Benutzer setzen', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       const msg = createMessage('AndereUser', 'Hallo', now);
@@ -96,29 +98,29 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatUserName', 'MaxMustermann');
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
-      expect(msg.metadata['_isUser']).toBeFalse();
-    }));
+      expect(msg.metadata['_isUser']).toBe(false);
+    });
 
-    it('sollte _isUser für Nachrichten setzen, die über addMessage hinzugefügt wurden', fakeAsync(() => {
+    it('sollte _isUser für Nachrichten setzen, die über addMessage hinzugefügt wurden', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
 
       fixture.componentRef.setInput('luxChatUserName', 'User1');
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const msg = createMessage('User1', 'Neue Nachricht', now);
       luxChatData.addMessage(msg);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
-      expect(msg.metadata['_isUser']).toBeTrue();
-    }));
+      expect(msg.metadata['_isUser']).toBe(true);
+    });
 
-    it('sollte eigene Nachrichten auf der rechten Seite rendern', fakeAsync(() => {
+    it('sollte eigene Nachrichten auf der rechten Seite rendern', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('MaxMustermann', 'Eigene Nachricht', now));
@@ -126,14 +128,14 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatUserName', 'MaxMustermann');
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const container = fixture.debugElement.query(By.css('.lux-chat-entry-container'));
-      expect(container.classes['lux-chat-entry-container-right']).toBeTrue();
+      expect(container.classes['lux-chat-entry-container-right']).toBe(true);
       expect(container.classes['lux-chat-entry-container-left']).toBeFalsy();
-    }));
+    });
 
-    it('sollte Nachrichten anderer Benutzer auf der linken Seite rendern', fakeAsync(() => {
+    it('sollte Nachrichten anderer Benutzer auf der linken Seite rendern', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('AndereUser', 'Fremde Nachricht', now));
@@ -141,14 +143,14 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatUserName', 'MaxMustermann');
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const container = fixture.debugElement.query(By.css('.lux-chat-entry-container'));
-      expect(container.classes['lux-chat-entry-container-left']).toBeTrue();
+      expect(container.classes['lux-chat-entry-container-left']).toBe(true);
       expect(container.classes['lux-chat-entry-container-right']).toBeFalsy();
-    }));
+    });
 
-    it('sollte einen Datumstrenner für Nachrichten von verschiedenen Tagen anzeigen', fakeAsync(() => {
+    it('sollte einen Datumstrenner für Nachrichten von verschiedenen Tagen anzeigen', async () => {
       const today = new Date();
       const yesterday = addDays(today, -1);
       const luxChatData = new LuxChatData('Test', today);
@@ -158,13 +160,13 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.componentRef.setInput('luxChatUserName', 'User1');
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const dateSplits = fixture.debugElement.queryAll(By.css('.lux-chat-entry-date-split'));
       expect(dateSplits.length).toBe(2);
-    }));
+    });
 
-    it('sollte keinen doppelten Datumstrenner für Nachrichten desselben Tages anzeigen', fakeAsync(() => {
+    it('sollte keinen doppelten Datumstrenner für Nachrichten desselben Tages anzeigen', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('User1', 'Erste', now));
@@ -173,34 +175,34 @@ describe('LuxChatComponent', () => {
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.componentRef.setInput('luxChatUserName', 'User1');
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const dateSplits = fixture.debugElement.queryAll(By.css('.lux-chat-entry-date-split'));
       expect(dateSplits.length).toBe(1);
-    }));
+    });
   });
 
   // ---------------------------------------------------------------------------
   // chatPopupMode
   // ---------------------------------------------------------------------------
   describe('chatPopupMode', () => {
-    it('sollte keine Header-Buttons rendern, wenn der Input false ist', fakeAsync(() => {
+    it('sollte keine Header-Buttons rendern, wenn der Input false ist', async () => {
       fixture.componentRef.setInput('chatPopupMode', false);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const buttons = fixture.debugElement.queryAll(By.css('.lux-chat-header lux-button'));
       expect(buttons.length).toBe(0);
-    }));
+    });
 
-    it('sollte beide Buttons rendern, wenn der Inputs true ist', fakeAsync(() => {
+    it('sollte beide Buttons rendern, wenn der Inputs true ist', async () => {
       fixture.componentRef.setInput('chatPopupMode', true);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const buttons = fixture.debugElement.queryAll(By.css('.lux-chat-header lux-button'));
       expect(buttons.length).toBe(2);
-    }));
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -208,15 +210,15 @@ describe('LuxChatComponent', () => {
   // ---------------------------------------------------------------------------
   describe('onFullscreenChatClicked', () => {
     it('sollte _chatFullscreen von false auf true umschalten', () => {
-      expect(component._chatFullscreen).toBeFalse();
+      expect(component._chatFullscreen).toBe(false);
       component.onFullscreenChatClicked();
-      expect(component._chatFullscreen).toBeTrue();
+      expect(component._chatFullscreen).toBe(true);
     });
 
     it('sollte _chatFullscreen beim zweiten Aufruf wieder auf false setzen', () => {
       component.onFullscreenChatClicked();
       component.onFullscreenChatClicked();
-      expect(component._chatFullscreen).toBeFalse();
+      expect(component._chatFullscreen).toBe(false);
     });
 
     it('sollte chatFullscreen mit dem neuen Wert emittieren', () => {
@@ -241,7 +243,7 @@ describe('LuxChatComponent', () => {
 
       component.onCloseChatClicked();
 
-      expect(emitted).toBeTrue();
+      expect(emitted).toBe(true);
     });
   });
 
@@ -249,37 +251,37 @@ describe('LuxChatComponent', () => {
   // onChatEntered
   // ---------------------------------------------------------------------------
   describe('onChatEntered', () => {
-    it('sollte preventDefault auf dem übergebenen Event aufrufen', fakeAsync(() => {
+    it('sollte preventDefault auf dem übergebenen Event aufrufen', async () => {
       component.chatInput = 'Test';
-      const mockEvent = { preventDefault: jasmine.createSpy('preventDefault') } as unknown as Event;
+      const mockEvent = { preventDefault: vi.fn() } as unknown as Event;
 
       component.onChatEntered(mockEvent);
-      tick(2);
+      await LuxTestHelper.wait(fixture, 2);
 
       expect(mockEvent.preventDefault).toHaveBeenCalled();
-    }));
+    });
 
-    it('sollte luxChatOutput mit dem aktuellen chatInput-Wert emittieren', fakeAsync(() => {
+    it('sollte luxChatOutput mit dem aktuellen chatInput-Wert emittieren', async () => {
       let emittedValue = '';
       component.luxChatOutput.subscribe((val: string) => (emittedValue = val));
       component.chatInput = 'Meine Nachricht';
-      const mockEvent = { preventDefault: jasmine.createSpy() } as unknown as Event;
+      const mockEvent = { preventDefault: vi.fn() } as unknown as Event;
 
       component.onChatEntered(mockEvent);
-      tick(2);
+      await LuxTestHelper.wait(fixture, 2);
 
       expect(emittedValue).toBe('Meine Nachricht');
-    }));
+    });
 
-    it('sollte chatInput nach dem Senden auf eine leere Zeichenkette zurücksetzen', fakeAsync(() => {
+    it('sollte chatInput nach dem Senden auf eine leere Zeichenkette zurücksetzen', async () => {
       component.chatInput = 'Zu sendender Text';
-      const mockEvent = { preventDefault: jasmine.createSpy() } as unknown as Event;
+      const mockEvent = { preventDefault: vi.fn() } as unknown as Event;
 
       component.onChatEntered(mockEvent);
-      tick(2);
+      await LuxTestHelper.wait(fixture, 2);
 
       expect(component.chatInput).toBe('');
-    }));
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -288,10 +290,10 @@ describe('LuxChatComponent', () => {
   describe('checkShowDateSplit', () => {
     it('sollte true für Index 0 (erste Nachricht) zurückgeben', () => {
       const msg = createMessage('User1', 'hi', new Date());
-      expect(component.checkShowDateSplit(msg, 0)).toBeTrue();
+      expect(component.checkShowDateSplit(msg, 0)).toBe(true);
     });
 
-    it('sollte true zurückgeben, wenn die vorherige Nachricht von einem anderen Tag stammt', fakeAsync(() => {
+    it('sollte true zurückgeben, wenn die vorherige Nachricht von einem anderen Tag stammt', async () => {
       const today = new Date();
       const yesterday = addDays(today, -1);
       const luxChatData = new LuxChatData('Test', today);
@@ -300,13 +302,13 @@ describe('LuxChatComponent', () => {
 
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const todayMsg = luxChatData.messages[1];
-      expect(component.checkShowDateSplit(todayMsg, 1)).toBeTrue();
-    }));
+      expect(component.checkShowDateSplit(todayMsg, 1)).toBe(true);
+    });
 
-    it('sollte false zurückgeben, wenn die vorherige Nachricht vom gleichen Tag stammt', fakeAsync(() => {
+    it('sollte false zurückgeben, wenn die vorherige Nachricht vom gleichen Tag stammt', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('User1', 'Erste', now));
@@ -314,11 +316,11 @@ describe('LuxChatComponent', () => {
 
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const secondMsg = luxChatData.messages[1];
-      expect(component.checkShowDateSplit(secondMsg, 1)).toBeFalse();
-    }));
+      expect(component.checkShowDateSplit(secondMsg, 1)).toBe(false);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -327,10 +329,10 @@ describe('LuxChatComponent', () => {
   describe('checkShowEntryHeaderTime', () => {
     it('sollte true für Index 0 (erste Nachricht) zurückgeben', () => {
       const msg = createMessage('User1', 'hi', new Date());
-      expect(component.checkShowEntryHeaderTime(msg, 0)).toBeTrue();
+      expect(component.checkShowEntryHeaderTime(msg, 0)).toBe(true);
     });
 
-    it('sollte true zurückgeben, wenn der Zeitunterschied größer als 10 Minuten ist', fakeAsync(() => {
+    it('sollte true zurückgeben, wenn der Zeitunterschied größer als 10 Minuten ist', async () => {
       const now = new Date();
       const elevenMinutesLater = addMinutes(now, 11);
       const luxChatData = new LuxChatData('Test', now);
@@ -339,13 +341,13 @@ describe('LuxChatComponent', () => {
 
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const secondMsg = luxChatData.messages[1];
-      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBeTrue();
-    }));
+      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBe(true);
+    });
 
-    it('sollte true zurückgeben, wenn sich der Absender wechselt (innerhalb von 10 Minuten)', fakeAsync(() => {
+    it('sollte true zurückgeben, wenn sich der Absender wechselt (innerhalb von 10 Minuten)', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('User1', 'Erste', now));
@@ -353,13 +355,13 @@ describe('LuxChatComponent', () => {
 
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const secondMsg = luxChatData.messages[1];
-      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBeTrue();
-    }));
+      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBe(true);
+    });
 
-    it('sollte false zurückgeben, wenn derselbe Benutzer innerhalb von 10 Minuten schreibt', fakeAsync(() => {
+    it('sollte false zurückgeben, wenn derselbe Benutzer innerhalb von 10 Minuten schreibt', async () => {
       const now = new Date();
       const luxChatData = new LuxChatData('Test', now);
       luxChatData.messages.push(createMessage('User1', 'Erste', now));
@@ -367,13 +369,13 @@ describe('LuxChatComponent', () => {
 
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const secondMsg = luxChatData.messages[1];
-      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBeFalse();
-    }));
+      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBe(false);
+    });
 
-    it('sollte true zurückgeben, genau an der 10-Minuten-Grenze', fakeAsync(() => {
+    it('sollte true zurückgeben, genau an der 10-Minuten-Grenze', async () => {
       const now = new Date();
       const tenMinutesOneMsLater = new Date(now.getTime() + 10 * 60 * 1000 + 1);
       const luxChatData = new LuxChatData('Test', now);
@@ -382,31 +384,31 @@ describe('LuxChatComponent', () => {
 
       fixture.componentRef.setInput('luxChatData', luxChatData);
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       const secondMsg = luxChatData.messages[1];
-      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBeTrue();
-    }));
+      expect(component.checkShowEntryHeaderTime(secondMsg, 1)).toBe(true);
+    });
   });
 
   // ---------------------------------------------------------------------------
   // locale
   // ---------------------------------------------------------------------------
   describe('locale', () => {
-    it('sollte locale auf "en-US" aktualisieren, wenn die Sprache auf "en" wechselt', fakeAsync(() => {
+    it('sollte locale auf "en-US" aktualisieren, wenn die Sprache auf "en" wechselt', async () => {
       const translocoService = TestBed.inject(TranslocoService);
       translocoService.setActiveLang('en');
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       expect(component.locale).toBe('en-US');
-    }));
+    });
 
-    it('sollte locale auf "fr-FR" aktualisieren, wenn die Sprache auf "fr" wechselt', fakeAsync(() => {
+    it('sollte locale auf "fr-FR" aktualisieren, wenn die Sprache auf "fr" wechselt', async () => {
       const translocoService = TestBed.inject(TranslocoService);
       translocoService.setActiveLang('fr');
-      tick();
+      await LuxTestHelper.wait(fixture);
 
       expect(component.locale).toBe('fr-FR');
-    }));
+    });
   });
 });

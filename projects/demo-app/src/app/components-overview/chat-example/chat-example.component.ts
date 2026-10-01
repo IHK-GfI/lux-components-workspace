@@ -31,6 +31,7 @@ const endOfLastYear = startOfThisYear - DAY_IN_MILLIS;
     LuxInputAcComponent
   ],
   templateUrl: './chat-example.component.html',
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: aus develop übernommen, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './chat-example.component.scss'
 })

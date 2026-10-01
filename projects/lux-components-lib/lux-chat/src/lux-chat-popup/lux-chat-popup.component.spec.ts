@@ -1,11 +1,13 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { LuxMediaQueryObserverService } from '@ihk-gfi/lux-components';
 import { LuxChatComponent } from './../lux-chat/lux-chat.component';
 import { Subject } from 'rxjs';
 import { provideLuxTranslocoTesting } from '../../../src/testing/transloco-test.provider';
 import { LuxChatPopupComponent } from './lux-chat-popup.component';
+import { LuxTestHelper } from '../../../test-utils/src/test-utils/lux-test-helper';
 
 class MockMediaQueryObserverService {
   public activeMediaQuery = 'lg';
@@ -23,6 +25,7 @@ class MockMediaQueryObserverService {
 @Component({
   standalone: true,
   imports: [LuxChatPopupComponent, LuxChatComponent],
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection -- TODO: Test-Host der aus develop übernommenen Komponente, Umstellung auf OnPush folgt separat
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <lux-chat-popup>
@@ -67,21 +70,21 @@ describe('LuxChatPopupComponent', () => {
   // ---------------------------------------------------------------------------
   describe('onChatIconClicked', () => {
     it('sollte chatOpened ohne Parameter umschalten', () => {
-      expect(popupComponent.luxChatOpened()).toBeFalse();
+      expect(popupComponent.luxChatOpened()).toBe(false);
 
       popupComponent.onChatIconClicked();
-      expect(popupComponent.luxChatOpened()).toBeTrue();
+      expect(popupComponent.luxChatOpened()).toBe(true);
 
       popupComponent.onChatIconClicked();
-      expect(popupComponent.luxChatOpened()).toBeFalse();
+      expect(popupComponent.luxChatOpened()).toBe(false);
     });
 
     it('sollte chatOpened auf den übergebenen Wert setzen', () => {
       popupComponent.onChatIconClicked(true);
-      expect(popupComponent.luxChatOpened()).toBeTrue();
+      expect(popupComponent.luxChatOpened()).toBe(true);
 
       popupComponent.onChatIconClicked(false);
-      expect(popupComponent.luxChatOpened()).toBeFalse();
+      expect(popupComponent.luxChatOpened()).toBe(false);
     });
   });
 
@@ -111,7 +114,7 @@ describe('LuxChatPopupComponent', () => {
       fixture.detectChanges();
 
       const chatContainer = fixture.debugElement.query(By.css('.lux-chat-popup-inner-container'));
-      expect(chatContainer.classes['lux-chat-popup-inner-container-fullscreen']).toBeTrue();
+      expect(chatContainer.classes['lux-chat-popup-inner-container-fullscreen']).toBe(true);
     });
 
     it('sollte die Fullscreen-Klasse setzen, wenn mobileView=true ist', () => {
@@ -121,7 +124,7 @@ describe('LuxChatPopupComponent', () => {
       fixture.detectChanges();
 
       const chatContainer = fixture.debugElement.query(By.css('.lux-chat-popup-inner-container'));
-      expect(chatContainer.classes['lux-chat-popup-inner-container-fullscreen']).toBeTrue();
+      expect(chatContainer.classes['lux-chat-popup-inner-container-fullscreen']).toBe(true);
     });
   });
 
@@ -129,31 +132,31 @@ describe('LuxChatPopupComponent', () => {
   // Content Child Integration
   // ---------------------------------------------------------------------------
   describe('Content Child Integration', () => {
-    it('sollte chatPopupMode für das Chat-Child standardmäßig auf true setzen', fakeAsync(() => {
+    it('sollte chatPopupMode für das Chat-Child standardmäßig auf true setzen', async () => {
       fixture.detectChanges();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
-      expect(chatComponent.chatPopupMode()).toBeTrue();
-    }));
+      expect(chatComponent.chatPopupMode()).toBe(true);
+    });
 
-    it('sollte chatOpened auf false setzen, wenn chatClose emittiert wird', fakeAsync(() => {
+    it('sollte chatOpened auf false setzen, wenn chatClose emittiert wird', async () => {
       popupComponent.luxChatOpened.set(true);
 
       chatComponent.chatClose.emit();
-      tick();
+      await LuxTestHelper.wait(fixture);
 
-      expect(popupComponent.luxChatOpened()).toBeFalse();
-    }));
+      expect(popupComponent.luxChatOpened()).toBe(false);
+    });
 
-    it('sollte fullScreen aktualisieren, wenn chatFullscreen emittiert wird', fakeAsync(() => {
+    it('sollte fullScreen aktualisieren, wenn chatFullscreen emittiert wird', async () => {
       chatComponent.chatFullscreen.emit(true);
-      tick();
-      expect(popupComponent.luxFullScreen()).toBeTrue();
+      await LuxTestHelper.wait(fixture);
+      expect(popupComponent.luxFullScreen()).toBe(true);
 
       chatComponent.chatFullscreen.emit(false);
-      tick();
-      expect(popupComponent.luxFullScreen()).toBeFalse();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(popupComponent.luxFullScreen()).toBe(false);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -161,27 +164,27 @@ describe('LuxChatPopupComponent', () => {
   // ---------------------------------------------------------------------------
   describe('Media Query', () => {
     it('sollte mobileView initial auf false setzen, wenn activeMediaQuery nicht xs/sm ist', () => {
-      expect(popupComponent.mobileView).toBeFalse();
+      expect(popupComponent.mobileView).toBe(false);
     });
 
-    it('sollte mobileView auf true setzen, wenn xs oder sm emittiert wird', fakeAsync(() => {
+    it('sollte mobileView auf true setzen, wenn xs oder sm emittiert wird', async () => {
       mediaQueryService.emitMediaQuery('xs');
-      tick();
-      expect(popupComponent.mobileView).toBeTrue();
+      await LuxTestHelper.wait(fixture);
+      expect(popupComponent.mobileView).toBe(true);
 
       mediaQueryService.emitMediaQuery('sm');
-      tick();
-      expect(popupComponent.mobileView).toBeTrue();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(popupComponent.mobileView).toBe(true);
+    });
 
-    it('sollte mobileView auf false setzen, wenn md emittiert wird', fakeAsync(() => {
+    it('sollte mobileView auf false setzen, wenn md emittiert wird', async () => {
       mediaQueryService.emitMediaQuery('xs');
-      tick();
-      expect(popupComponent.mobileView).toBeTrue();
+      await LuxTestHelper.wait(fixture);
+      expect(popupComponent.mobileView).toBe(true);
 
       mediaQueryService.emitMediaQuery('md');
-      tick();
-      expect(popupComponent.mobileView).toBeFalse();
-    }));
+      await LuxTestHelper.wait(fixture);
+      expect(popupComponent.mobileView).toBe(false);
+    });
   });
 });

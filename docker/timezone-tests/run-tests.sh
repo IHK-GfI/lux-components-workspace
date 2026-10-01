@@ -1,9 +1,8 @@
 #!/bin/sh
-# Führt die Karma-Tests der lux-components-lib in mehreren Zeitzonen aus (Aufruf siehe Dockerfile).
+# Führt die Vitest-Tests der lux-components-lib in mehreren Zeitzonen aus (Aufruf siehe Dockerfile).
 set -e
 
 TIMEZONES="${TIMEZONES:-UTC Europe/Berlin Etc/GMT+12 Pacific/Kiritimati}"
-KARMA_CONFIG=/opt/lux-timezone-tests/karma.conf.js
 
 # Farben für die Konsolenausgabe (abschaltbar mit -e NO_COLOR=1)
 if [ -z "$NO_COLOR" ]; then
@@ -38,7 +37,7 @@ if [ "$(cat "$DEPS_HASH_FILE" 2>/dev/null)" != "$DEPS_HASH" ]; then
   echo "$DEPS_HASH" > "$DEPS_HASH_FILE"
 fi
 
-# Die Karma-Konfiguration bindet das Theme aus dist ein und die Specs importieren die test-utils aus dist
+# Die Specs importieren die test-utils und die Secondary Entry Points aus dist (siehe tsconfig.json)
 if [ ! -d dist/theme ]; then
   npm run pack:theme
 fi
@@ -49,8 +48,8 @@ fi
 # Specs: ohne Argumente die Datums-Specs, mit "all" alle Specs, sonst die übergebenen Specs
 if [ "$#" -eq 0 ]; then
   set -- 'src/lib/lux-util/**/*.spec.ts' \
-    'src/lib/lux-form/lux-datepicker-ac/**/*.spec.ts' \
-    'src/lib/lux-form/lux-datetimepicker-ac/**/*.spec.ts' \
+    'src/lib/lux-form/lux-datepicker/**/*.spec.ts' \
+    'src/lib/lux-form/lux-datetimepicker/**/*.spec.ts' \
     'src/lib/lux-form/lux-timepicker/**/*.spec.ts' \
     'src/lib/lux-lookup/**/*.spec.ts'
 fi
@@ -68,7 +67,7 @@ FAILED=''
 for tz in $TIMEZONES; do
   echo ""
   echo "${GREEN}===== Zeitzone: $tz, aktuell $(TZ="$tz" date '+%d.%m.%Y %H:%M:%S %Z (UTC%z)') =====${RESET}"
-  if ! TZ="$tz" npx ng test lux-components-lib --watch=false --karma-config="$KARMA_CONFIG" $INCLUDES; then
+  if ! TZ="$tz" npx ng test lux-components-lib --watch=false $INCLUDES; then
     FAILED="$FAILED $tz"
   fi
 done
